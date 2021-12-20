@@ -5,16 +5,16 @@ import './i18n';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { theme } from './theme';
-import { ThemeProvider } from '@mui/material/styles'
+import {theme} from './theme';
+import {ThemeProvider} from '@mui/material/styles'
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <Suspense fallback={<div>Loading... </div>}>
+    <Suspense fallback={<div>Loading... </div>}>
+      <ThemeProvider theme={theme}>
         <App/>
-      </Suspense>
-    </ThemeProvider>
+      </ThemeProvider>
+    </Suspense>
   </React.StrictMode>,
   document.getElementById('root')
 );
