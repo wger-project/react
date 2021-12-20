@@ -3,11 +3,11 @@ import { BodyWeightType } from "types";
 import { Action, reducer } from "state/reducer";
 
 export type State = {
-    weights: BodyWeightType[] | null,
+    weights: BodyWeightType[],
 };
 
 const initialState: State = {
-    weights: null,
+    weights: [],
 };
 
 export const StateContext = createContext<[State, React.Dispatch<Action>]>([
