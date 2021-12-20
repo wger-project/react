@@ -1,15 +1,15 @@
-import {  BodyWeightType } from "types";
-import { State } from 'state';
-import { SetState } from "./stateTypes";
+import {BodyWeightType} from "types";
+import {State} from 'state';
+import {SetState} from "./stateTypes";
 
-export type Action = 
-        {
-            type: string,
-            payload: BodyWeightType[]
-        }
+export type Action =
+    {
+        type: string,
+        payload: BodyWeightType[]
+    }
 
 export const setWeights = (weights: BodyWeightType[]): Action => {
-    return { type: SetState.SET_WEIGHTS, payload: weights };
+    return {type: SetState.SET_WEIGHTS, payload: weights};
 };
 
 export const reducer = (state: State, action: Action): State => {
