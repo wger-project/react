@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { BodyWeight } from './components';
+import {BodyWeight} from './components';
 import {Trans, useTranslation} from "react-i18next";
 
 
@@ -12,7 +12,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <p>
-          <Trans i18nKey="test"/> {t('test')}
+          <Trans i18nKey="test"/>
         </p>
         <a
           className="App-link"
@@ -23,7 +23,7 @@ function App() {
           Learn React
         </a>
       </header>
-      <BodyWeight />
+      <BodyWeight/>
     </div>
   );
 }
