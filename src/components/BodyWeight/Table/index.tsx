@@ -22,12 +22,11 @@ interface WeightTableProps {
 }
 
 export interface ProcessedWeight {
-  date: Date,
-  weight: number,
-  change: number,
-  days: number,
-  user: number,
-  id: number
+    date: Date,
+    weight: number,
+    change: number,
+    days: number,
+    id: number
 }
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -43,15 +42,13 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 function createData(
-  date: Date,
-  weight: number,
-  change: number,
-  days: number,
-  id: number,
-  user: number
-
+    date: Date,
+    weight: number,
+    change: number,
+    days: number,
+    id: number,
 ) {
-  return { date, weight, change, days, id, user };
+    return {date, weight, change, days, id};
 }
 
 export const WeightTable = ({weights}: WeightTableProps) => {
@@ -62,8 +59,8 @@ export const WeightTable = ({weights}: WeightTableProps) => {
     
     // map to produce rows data for the table
     const rows: ProcessedWeight[] = processed_weights.map(weight => {
-        return createData(weight.date, weight.weight, weight.change, weight.days, weight.id, weight.user)
-    })       
+        return createData(weight.date, weight.weight, weight.change, weight.days, weight.id)
+    })
 
   return (
     <div className={classes.table}>
