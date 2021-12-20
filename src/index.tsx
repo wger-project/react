@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './i18n';
@@ -10,10 +10,11 @@ import {ThemeProvider} from '@mui/material/styles'
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <App/>
-    </ThemeProvider>
-    <App/>
+    <Suspense fallback={<div>Loading... </div>}>
+      <ThemeProvider theme={theme}>
+        <App/>
+      </ThemeProvider>
+    </Suspense>
   </React.StrictMode>,
   document.getElementById('root')
 );
