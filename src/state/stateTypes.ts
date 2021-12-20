@@ -1,3 +1,3 @@
-export const setStateType = {
-    SET_WEIGHTS: 'SET_WEIGHTS',
+export enum SetState {
+    SET_WEIGHTS = 'SET_WEIGHTS',
 };

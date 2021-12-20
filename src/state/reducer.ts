@@ -1,6 +1,6 @@
 import {  BodyWeightType } from "types";
 import { State } from 'state';
-import { setStateType } from "./stateTypes";
+import { SetState } from "./stateTypes";
 
 export type Action = 
         {
@@ -9,13 +9,13 @@ export type Action =
         }
 
 export const setWeights = (weights: BodyWeightType[]): Action => {
-    return { type: setStateType.SET_WEIGHTS, payload: weights };
+    return { type: SetState.SET_WEIGHTS, payload: weights };
 };
 
 export const reducer = (state: State, action: Action): State => {
     switch (action.type) {
 
-        case "SET_WEIGHTS":
+        case SetState.SET_WEIGHTS:
             return {
                 ...state,
                 weights: action.payload

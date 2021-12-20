@@ -7,14 +7,14 @@ interface ResponseType {
     count: number,
     next: number | null,
     previous: number | null,
-    results: [BodyWeightType]
+    results: BodyWeightType[]
 }
 
-export const get_weights = async () => {
+export const get_weights = async () => {    
     const {data: received_weights} = await axios.get<ResponseType>(BASEURL, {
                 headers: {
-                    Authorization: 'Token 31e2ea0322c07b9df583a9b6d1e794f7139e78d4'
+                    Authorization: process.env.REACT_APP_API_KEY as string
                 }
             })
-    return received_weights.results
+    return received_weights.results    
 };
