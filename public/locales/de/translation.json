@@ -1,3 +1,6 @@
 {
-  "test": "das ist ein Testtext"
+  "date": "Datum",
+  "weight": "Gewicht",
+  "change": "Veränderung",
+  "days": "Tage"
 }

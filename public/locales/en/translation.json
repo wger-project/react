@@ -1,3 +1,6 @@
 {
-  "test": "this is a test text"
+  "date": "Date",
+  "weight": "Weight",
+  "change": "Change",
+  "days": "Days"
 }
