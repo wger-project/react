@@ -5,11 +5,18 @@ import './i18n';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {theme} from './theme';
+import {ThemeProvider} from '@mui/material/styles'
+import { StateProvider } from 'state'
 
 ReactDOM.render(
   <React.StrictMode>
     <Suspense fallback={<div>Loading... </div>}>
-      <App/>
+      <StateProvider>
+        <ThemeProvider theme={theme}>
+          <App/>
+        </ThemeProvider>
+      </StateProvider>
     </Suspense>
   </React.StrictMode>,
   document.getElementById('root')

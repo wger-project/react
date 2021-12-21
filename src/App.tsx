@@ -1,6 +1,6 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {BodyWeight} from './components';
 import {Trans, useTranslation} from "react-i18next";
 
 
@@ -11,9 +11,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo"/>
         <p>
-          <Trans i18nKey="test"/> {t('test')}
+          <Trans i18nKey="test"/>
         </p>
         <a
           className="App-link"
@@ -24,6 +23,7 @@ function App() {
           Learn React
         </a>
       </header>
+      <BodyWeight/>
     </div>
   );
 }

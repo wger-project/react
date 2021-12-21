@@ -1,0 +1,47 @@
+.button {
+    color: #2a4c7d;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    position: relative;
+    border-radius: 2px;
+    padding: 0.5rem;
+    transition: all 300ms ease;
+    border: 2px solid transparent;
+
+
+    &:focus {
+        border: 2px solid rgb(122, 122, 122);
+    }
+
+    .actions__list {
+        position: absolute;
+        top: 2rem;
+        left: 0;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        text-align: left;
+        background-color: #fff;
+        padding: 0.5rem 0;
+        border-radius: 5px;
+        border: 2px solid gray;
+        transition: all 500ms ease;
+        z-index: 9999;    
+
+        li {
+            padding: 0.5rem 2rem;
+
+            &:hover {
+                background-color: #e6e6e6;
+            }
+        }
+
+        .actions__link {
+            text-decoration: none;
+            color: rgb(48, 48, 48);
+            font-size: 1rem;
+        }
+    }
+}
