@@ -2,5 +2,8 @@
     "date": "Datum 123",
     "weight": "Gewicht",
     "change": "Veränderung",
-    "days": "Tage"
+    "days": "Tage",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "difference": "Differenz"
 }
