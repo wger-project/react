@@ -4,9 +4,7 @@ import {get_weights} from "services";
 import {BodyWeight} from "./index";
 import {StateProvider} from 'state'
 
-jest.mock("axios");
 jest.mock("services");
-
 
 test('renders without crashing', async () => {
 
