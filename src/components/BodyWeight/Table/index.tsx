@@ -60,10 +60,10 @@ export const WeightTable = ({weights}: WeightTableProps) => {
                 <Table sx={{minWidth: 650}} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center"><Trans>date</Trans></TableCell>
-                            <TableCell align="center"><Trans>weight</Trans></TableCell>
-                            <TableCell align="center"><Trans>change</Trans></TableCell>
-                            <TableCell align="center"><Trans>days</Trans></TableCell>
+                            <TableCell align="center"><Trans i18nKey={'date'}/></TableCell>
+                            <TableCell align="center"><Trans i18nKey={'weight'}/></TableCell>
+                            <TableCell align="center"><Trans i18nKey={'difference'}/></TableCell>
+                            <TableCell align="center"><Trans i18nKey={'days'}/></TableCell>
                             <TableCell align="center"></TableCell>
                         </TableRow>
                     </TableHead>

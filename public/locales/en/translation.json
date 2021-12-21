@@ -1,6 +1,8 @@
 {
+  "edit": "Edit",
+  "delete": "Delete",
   "date": "Date",
   "weight": "Weight",
-  "change": "Change",
+  "difference": "Difference",
   "days": "Days"
 }
