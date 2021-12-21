@@ -1,3 +1,5 @@
+// See https://github.com/i18next/i18next-parser for more options
+
 module.exports = {
     contextSeparator: '_',
 
