@@ -8,13 +8,13 @@ export type Action =
         payload: BodyWeightType[]
     }
 
-export const setWeights = (weights: BodyWeightType[]): Action => {
+export const setWeights = (weights: BodyWeightType[]): Action => {    
     return {type: SetState.SET_WEIGHTS, payload: weights};
 };
 
 export const reducer = (state: State, action: Action): State => {
+    
     switch (action.type) {
-
         case SetState.SET_WEIGHTS:
             return {
                 ...state,

@@ -10,7 +10,7 @@ describe("process_weight tests", () => {
             {id: 2, weight: '95', date: '2021-12-20'},
             {id: 3, weight: '70', date: '2021-12-25'},
         ]);
-
+        
         expect(result[0]).toStrictEqual({
             id: 3,
             weight: 70,

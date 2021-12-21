@@ -52,15 +52,14 @@ function createData(
 }
 
 export const WeightTable = ({weights}: WeightTableProps) => {
-        
-    const processed_weights = process_weight(weights);
-
     const classes = useStyles();
-    
+  
+    const processed_weights = process_weight(weights);
+      
     // map to produce rows data for the table
     const rows: ProcessedWeight[] = processed_weights.map(weight => {
         return createData(weight.date, weight.weight, weight.change, weight.days, weight.id)
-    })
+    })    
 
   return (
     <div className={classes.table}>
