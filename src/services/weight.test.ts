@@ -1,4 +1,4 @@
-import {get_weights} from "./weight";
+import { get_weights } from "./weight";
 import axios from "axios";
 
 jest.mock("axios");
@@ -28,5 +28,4 @@ describe("weight service tests", () => {
             {id: 2, weight: 90, date: '2021-12-20'},
         ]);
     });
-
 });
