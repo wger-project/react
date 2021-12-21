@@ -1,10 +1,13 @@
-# Getting Started with Create React App
+# react components for wger
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository contains the react components for the wger app. Note that this react app is not supposed to be used by
+itself, but rather as a library that is used in wger.
 
-## Available Scripts
+# Getting Started
 
-In the project directory, you can run:
+Copy env.TEMPLATE to .env and edit it to your needs.
+
+Then, in the project directory, you can run:
 
 ### `yarn start`
 
@@ -17,7 +20,8 @@ You will also see any lint errors in the console.
 ### `yarn test`
 
 Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more
+information.
 
 ### `yarn build`
 
@@ -29,18 +33,23 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+You can learn more in
+the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Contact
+
+Feel free to contact us if you found this useful or if there was something that didn't behave as you expected. We can't
+fix what we don't know about, so please report liberally. If you're not sure if something is a bug or not, feel free to
+file a bug anyway.
+
+* **discord:** <https://discord.gg/rPWFv6W>
+* **issue tracker:** <https://github.com/wger-project/react/issues>
+* **twitter:** <https://twitter.com/wger_project>
+
+## License
+
+The application is licensed under the Affero GNU General Public License 3 or later (AGPL 3+).
