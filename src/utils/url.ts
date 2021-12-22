@@ -8,10 +8,7 @@ interface makeUrlInterface {
 /*
  * util function that generates a url string from a base url and a query object
  */
-export function make_url(path: string, params: makeUrlInterface
-)
-//query?: { [key: string]: string | number }): string
-{
+export function make_url(path: string, params: makeUrlInterface) {
     /*
     const queryString = query != null ? Object.keys(query!)
         .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query![key].toString())}`)
@@ -21,7 +18,6 @@ export function make_url(path: string, params: makeUrlInterface
         pathlist.push(`?${queryString}`);
     }
      */
-
     params = params || {};
 
     const serverUrl = params.server || process.env.REACT_APP_API_SERVER;
@@ -31,5 +27,6 @@ export function make_url(path: string, params: makeUrlInterface
         pathlist.push(params.id.toString());
     }
 
-    return `${pathlist.join('/')}/`;
+    pathlist.push('');
+    return pathlist.join('/');
 }
