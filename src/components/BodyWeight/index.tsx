@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import {get_weights} from 'services'
-import {WeightTable} from './Table';
+import React, { useEffect } from 'react';
+import { get_weights } from 'services'
+import { WeightTable } from './Table';
 import styles from './body_weight.module.css';
-import {setWeights, useStateValue} from 'state';
+import { setWeights, useStateValue } from 'state';
 
 export const BodyWeight = () => {
     const [state, dispatch] = useStateValue()
@@ -19,7 +19,7 @@ export const BodyWeight = () => {
         fecth_weights();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-        
+
 
     return (
         <div className={styles.root}>

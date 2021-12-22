@@ -1,29 +1,58 @@
 import React from 'react';
-import {render, screen} from '@testing-library/react';
-import {get_weights} from "services";
-import {BodyWeight} from "./index";
-import {StateProvider} from 'state'
+import { render, screen } from '@testing-library/react';
+import { get_weights } from "services";
+import { BodyWeight } from "./index";
+import { StateProvider } from 'state'
 
 jest.mock("services");
+console.log = jest.fn();
 
-test('renders without crashing', async () => {
+describe("Test BodyWeight component", () => {
+    test('renders without crashing', async () => {
 
-    const weightData = [
-        {id: 1, user: 3, weight: '80', date: '2021-12-10'},
-        {id: 2, user: 2, weight: '90', date: '2021-12-20'},
-    ];
+        // Arrange
+        const weightData = [
+            {id: 1, user: 3, weight: '80', date: '2021-12-10'},
+            {id: 2, user: 2, weight: '90', date: '2021-12-20'},
+        ];
 
-    // @ts-ignore
-    get_weights.mockImplementation(() => Promise.resolve(weightData));
+        // @ts-ignore
+        get_weights.mockImplementation(() => Promise.resolve(weightData));
 
-    // since I used context api to provide state, also need it here
-    render(<StateProvider><BodyWeight/></StateProvider>);
-    expect(get_weights).toHaveBeenCalledTimes(1);
+        // Act
+        render(<StateProvider><BodyWeight/></StateProvider>);
 
-    // Both weights are found in th document
-    const linkElement = await screen.findByText("80");
-    expect(linkElement).toBeInTheDocument();
+        // Assert
+        expect(get_weights).toHaveBeenCalledTimes(1);
 
-    const linkElement2 = await screen.findByText("90");
-    expect(linkElement2).toBeInTheDocument();
+        // Both weights are found in th document
+        const textElement = await screen.findByText("80");
+        expect(textElement).toBeInTheDocument();
+
+        const textElement2 = await screen.findByText("90");
+        expect(textElement2).toBeInTheDocument();
+    });
+
+    test('errors get handled', () => {
+
+        // Arrange
+        // @ts-ignore
+        get_weights.mockImplementation(() => {
+            throw new Error('User not found');
+        });
+
+        // Act
+        render(<StateProvider><BodyWeight/></StateProvider>);
+
+        // Assert
+        expect(get_weights).toHaveBeenCalledTimes(1);
+        expect(console.log).toHaveBeenCalledTimes(1)
+
+        // Both weights are found in th document
+        const linkElement = screen.queryByText("80");
+        expect(linkElement).toBeNull();
+
+        const linkElement2 = screen.queryByText("90");
+        expect(linkElement2).toBeNull();
+    });
 });
