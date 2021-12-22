@@ -1,15 +1,13 @@
 import axios from 'axios';
 import { BodyWeightType } from 'types';
 import { ResponseType } from "./responseType";
-import { make_url } from "utils/url";
+import { makeHeader, makeUrl } from "utils/url";
 
 const WEIGHT_PATH = 'weightentry';
 
 export const get_weights = async () => {
-    const {data: received_weights} = await axios.get<ResponseType<BodyWeightType>>(make_url(WEIGHT_PATH), {
-        headers: {
-            Authorization: process.env.REACT_APP_API_KEY as string
-        }
+    const {data: received_weights} = await axios.get<ResponseType<BodyWeightType>>(makeUrl(WEIGHT_PATH), {
+        headers: makeHeader(),
     })
     return received_weights.results
 };

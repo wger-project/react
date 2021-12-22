@@ -8,7 +8,7 @@ interface makeUrlInterface {
 /*
  * util function that generates a url string from a base url and a query object
  */
-export function make_url(path: string, params: makeUrlInterface) {
+export function makeUrl(path: string, params: makeUrlInterface) {
     /*
     const queryString = query != null ? Object.keys(query!)
         .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query![key].toString())}`)
@@ -29,4 +29,16 @@ export function make_url(path: string, params: makeUrlInterface) {
 
     pathlist.push('');
     return pathlist.join('/');
+}
+
+/*
+ * util function that generates the needed headers
+ */
+export function makeHeader(token?: string) {
+    token = token || process.env.REACT_APP_API_KEY;
+
+    return {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json',
+    };
 }
