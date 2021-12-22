@@ -1,4 +1,6 @@
-// util function that generates a url string from a base url and a query object
+/*
+ * util function that generates a url string from a base url and a query object
+ */
 export function make_url(serverUrl: string,
                          path: string,
                          id?: number)
@@ -14,11 +16,11 @@ export function make_url(serverUrl: string,
     }
      */
 
-    const pathlist = ['api', 'v2', path];
+    const pathlist = [serverUrl, 'api', 'v2', path];
 
     if (id) {
         pathlist.push(id.toString());
     }
 
-    return `${serverUrl}/${pathlist.join('/')}/`;
+    return `${pathlist.join('/')}/`;
 }
