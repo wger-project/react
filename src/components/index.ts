@@ -1,1 +1,1 @@
-export { BodyWeight } from './BodyWeight/index'
+export { BodyWeight } from './BodyWeight/index';

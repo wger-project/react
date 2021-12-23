@@ -1,11 +1,11 @@
-import {process_weight} from "./utils";
+import {processWeight} from "./utils";
 
 jest.mock("axios");
 
 describe("process_weight tests", () => {
     test('process some weight entries', () => {
 
-        const result = process_weight([
+        const result = processWeight([
             {id: 1, weight: '80', date: '2021-12-10'},
             {id: 2, weight: '95', date: '2021-12-20'},
             {id: 3, weight: '70', date: '2021-12-25'},
@@ -35,7 +35,7 @@ describe("process_weight tests", () => {
     });
 
     test('processing an empty weight entry list doesnt crash', () => {
-        const result = process_weight([]);
+        const result = processWeight([]);
         expect(result).toStrictEqual([]);
     });
 });

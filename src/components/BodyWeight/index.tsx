@@ -1,24 +1,24 @@
-import React, {useState, useEffect} from 'react';
-import {get_weights} from 'services'
+import React, { useEffect} from 'react';
+import {getWeights} from 'services';
 import {WeightTable} from './Table';
 import styles from './body_weight.module.css';
 import {setWeights, useStateValue} from 'state';
 
 export const BodyWeight = () => {
-    const [state, dispatch] = useStateValue()
+    const [state, dispatch] = useStateValue();
 
     useEffect(() => {
-        const fecth_weights = async () => {
+        const fecthWeights = async () => {
             try {
-                const received_weights = await get_weights();
-                dispatch(setWeights(received_weights));
+                const receivedWeights = await getWeights();
+                dispatch(setWeights(receivedWeights));
             } catch (error) {
                 console.log(error);
             }
-        }
-        fecth_weights();
+        };
+        fecthWeights();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
         
 
     return (
@@ -26,5 +26,5 @@ export const BodyWeight = () => {
             <div className={styles.chart}>Chart Here</div>
             <WeightTable weights={state.weights}/>
         </div>
-    )
-}
+    );
+};

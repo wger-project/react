@@ -6,8 +6,8 @@ import './i18n';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {theme} from './theme';
-import {ThemeProvider} from '@mui/material/styles'
-import { StateProvider } from 'state'
+import {ThemeProvider} from '@mui/material/styles';
+import { StateProvider } from 'state';
 
 ReactDOM.render(
   <React.StrictMode>

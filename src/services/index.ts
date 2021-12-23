@@ -1,1 +1,1 @@
-export { get_weights } from './weight';
+export { getWeights } from './weight';
