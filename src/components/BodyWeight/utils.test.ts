@@ -1,7 +1,5 @@
 import {processWeight} from "./utils";
 
-jest.mock("axios");
-
 describe("process_weight tests", () => {
     test('process some weight entries', () => {
 
