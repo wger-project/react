@@ -2,7 +2,7 @@ import React, { useEffect} from 'react';
 import {getWeights} from 'services';
 import {WeightTable} from './Table';
 import styles from './body_weight.module.css';
-import {setWeights, useStateValue} from 'state';
+import { setWeights, useStateValue } from 'state';
 
 export const BodyWeight = () => {
     const [state, dispatch] = useStateValue();
