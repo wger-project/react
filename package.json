@@ -12,7 +12,7 @@
     "@testing-library/user-event": "^13.2.1",
     "@types/jest": "^27.0.1",
     "@types/node": "^17.0.4",
-    "@types/react": "^17.0.20",
+    "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.9",
     "axios": "^0.24.0",
     "i18next": "^21.6.3",
