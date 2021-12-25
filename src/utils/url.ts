@@ -8,7 +8,7 @@ interface makeUrlInterface {
 /*
  * util function that generates a url string from a base url and a query object
  */
-export function makeUrl(path: string, params: makeUrlInterface) {
+export function makeUrl(path: string, params?: makeUrlInterface) {
     /*
     const queryString = query != null ? Object.keys(query!)
         .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(query![key].toString())}`)
