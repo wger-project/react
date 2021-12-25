@@ -1,4 +1,4 @@
-import { get_weights } from "./weight";
+import {getWeights} from "./weight";
 import axios from "axios";
 
 jest.mock("axios");
@@ -20,7 +20,7 @@ describe("weight service tests", () => {
         // @ts-ignore
         axios.get.mockImplementation(() => Promise.resolve({data: weightResponse}));
 
-        const result = await get_weights();
+        const result = await getWeights();
         expect(axios.get).toHaveBeenCalledTimes(1);
 
         expect(result).toStrictEqual([
@@ -28,4 +28,5 @@ describe("weight service tests", () => {
             {id: 2, weight: 90, date: '2021-12-20'},
         ]);
     });
+
 });

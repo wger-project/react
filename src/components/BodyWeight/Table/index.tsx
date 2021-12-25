@@ -1,7 +1,7 @@
 import React from 'react';
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme} from '@mui/material';
 import {BodyWeightType} from 'types';
-import {process_weight} from '../utils';
+import {processWeight} from '../utils';
 // import styles from './table.module.css'
 import {ActionButton} from './ActionButton';
 import {makeStyles} from '@mui/styles';
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => {
                 overflowX: 'visible' // this class is for the drop down menu of the actions button to be fully visible
             }
         },
-    }
+    };
 });
 
 function createData(
@@ -47,12 +47,12 @@ function createData(
 export const WeightTable = ({weights}: WeightTableProps) => {
     const classes = useStyles();
 
-    const processed_weights = process_weight(weights);
+    const processedWeights = processWeight(weights);
 
     // map to produce rows data for the table
-    const rows: ProcessedWeight[] = processed_weights.map(weight => {
-        return createData(weight.date, weight.weight, weight.change, weight.days, weight.id)
-    })
+    const rows: ProcessedWeight[] = processedWeights.map(weight => {
+        return createData(weight.date, weight.weight, weight.change, weight.days, weight.id);
+    });
 
     return (
         <div className={classes.table}>
@@ -87,4 +87,4 @@ export const WeightTable = ({weights}: WeightTableProps) => {
             </TableContainer>
         </div>
     );
-}
+};
