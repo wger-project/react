@@ -1,17 +1,14 @@
 import React from 'react';
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme} from '@mui/material';
-import {BodyWeightType} from 'types';
-import {processWeight} from '../utils';
-// import styles from './table.module.css'
-import {ActionButton} from './ActionButton';
-import {makeStyles} from '@mui/styles';
-import {Trans} from "react-i18next";
-
-// import DateObject from "react-date-object";
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
+import { processWeight } from '../utils';
+import { ActionButton } from './ActionButton';
+import { makeStyles } from '@mui/styles';
+import { Trans } from "react-i18next";
+import { WeightEntry } from "components/BodyWeight/model";
 
 
 interface WeightTableProps {
-    weights: BodyWeightType[]
+    weights: WeightEntry[]
 }
 
 export interface ProcessedWeight {
@@ -41,37 +38,37 @@ function createData(
     days: number,
     id: number,
 ) {
-    return {date, weight, change, days, id};
+    return { date, weight, change, days, id };
 }
 
-export const WeightTable = ({weights}: WeightTableProps) => {
+export const WeightTable = ({ weights }: WeightTableProps) => {
     const classes = useStyles();
 
     const processedWeights = processWeight(weights);
 
     // map to produce rows data for the table
     const rows: ProcessedWeight[] = processedWeights.map(weight => {
-        return createData(weight.date, weight.weight, weight.change, weight.days, weight.id);
+        return createData(weight.date, weight.weight, weight.change, weight.days, weight.id!);
     });
 
     return (
         <div className={classes.table}>
             <TableContainer component={Paper}>
-                <Table sx={{minWidth: 650}} aria-label="simple table">
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
                             <TableCell align="center"><Trans i18nKey={'date'}/></TableCell>
                             <TableCell align="center"><Trans i18nKey={'weight'}/></TableCell>
                             <TableCell align="center"><Trans i18nKey={'difference'}/></TableCell>
                             <TableCell align="center"><Trans i18nKey={'days'}/></TableCell>
-                            <TableCell align="center"></TableCell>
+                            <TableCell align="center"/>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {rows.map((row) => (
                             <TableRow
                                 key={row.date.toLocaleDateString()}
-                                sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row" align="center">
                                     {row.date.toLocaleDateString()}

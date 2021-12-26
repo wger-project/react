@@ -1,14 +1,15 @@
-import {processWeight} from "./utils";
+import { processWeight } from "./utils";
+import { WeightEntry } from "components/BodyWeight/model";
 
 describe("process_weight tests", () => {
     test('process some weight entries', () => {
 
         const result = processWeight([
-            {id: 1, weight: '80', date: '2021-12-10'},
-            {id: 2, weight: '95', date: '2021-12-20'},
-            {id: 3, weight: '70', date: '2021-12-25'},
+            new WeightEntry(new Date('2021-12-10'), 80, 1),
+            new WeightEntry(new Date('2021-12-20'), 95, 2),
+            new WeightEntry(new Date('2021-12-25'), 70, 3),
         ]);
-        
+
         expect(result[0]).toStrictEqual({
             id: 3,
             weight: 70,
