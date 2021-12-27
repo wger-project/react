@@ -1,14 +1,13 @@
 import axios from 'axios';
-import {BodyWeightType} from '../types';
-import {ResponseType} from "./responseType";
+import { BodyWeightType } from 'types';
+import { ResponseType } from "./responseType";
+import { makeHeader, makeUrl } from "utils/url";
 
-const BASEURL = 'https://wger-master.rge.uber.space/api/v2/weightentry/';
+const WEIGHT_PATH = 'weightentry';
 
 export const getWeights = async () => {
-    const {data: receivedWeights} = await axios.get<ResponseType<BodyWeightType>>(BASEURL, {
-        headers: {
-            Authorization: process.env.REACT_APP_API_KEY as string
-        }
+    const {data: received_weights} = await axios.get<ResponseType<BodyWeightType>>(makeUrl(WEIGHT_PATH), {
+        headers: makeHeader(),
     });
-    return receivedWeights.results;
+    return received_weights.results;
 };
