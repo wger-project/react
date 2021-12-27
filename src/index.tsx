@@ -2,6 +2,7 @@ import React, {Suspense} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './i18n';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -12,11 +13,13 @@ import { StateProvider } from 'state';
 ReactDOM.render(
   <React.StrictMode>
     <Suspense fallback={<div>Loading... </div>}>
-      <StateProvider>
-        <ThemeProvider theme={theme}>
-          <App/>
-        </ThemeProvider>
-      </StateProvider>
+      <Router>
+        <StateProvider>
+          <ThemeProvider theme={theme}>
+            <App/>
+          </ThemeProvider>
+        </StateProvider>
+      </Router>
     </Suspense>
   </React.StrictMode>,
   document.getElementById('root')
