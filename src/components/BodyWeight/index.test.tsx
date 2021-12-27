@@ -48,7 +48,7 @@ describe("Test BodyWeight component", () => {
         expect(getWeights).toHaveBeenCalledTimes(1);
         expect(console.log).toHaveBeenCalledTimes(1);
 
-        // Both weights are found in th document
+        // No weights are found in th document
         const linkElement = screen.queryByText("80");
         expect(linkElement).toBeNull();
 
