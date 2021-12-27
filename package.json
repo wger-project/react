@@ -5,13 +5,13 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
-    "@mui/material": "^5.2.5",
+    "@mui/material": "^5.2.6",
     "@mui/styles": "^5.2.3",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
     "@types/jest": "^27.0.1",
-    "@types/node": "^17.0.4",
+    "@types/node": "^17.0.5",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.9",
     "axios": "^0.24.0",
@@ -67,8 +67,7 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^8.5.0",
-    "eslint-config-airbnb": "^19.0.2",
+    "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
