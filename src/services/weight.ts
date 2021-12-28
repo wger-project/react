@@ -6,8 +6,8 @@ import { makeHeader, makeUrl } from "utils/url";
 const WEIGHT_PATH = 'weightentry';
 
 export const getWeights = async () => {
-    const {data: received_weights} = await axios.get<ResponseType<BodyWeightType>>(makeUrl(WEIGHT_PATH), {
+    const {data: receivedWeights} = await axios.get<ResponseType<BodyWeightType>>(makeUrl(WEIGHT_PATH), {
         headers: makeHeader(),
     });
-    return received_weights.results;
+    return receivedWeights.results;
 };
