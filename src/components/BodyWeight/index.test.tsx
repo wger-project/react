@@ -1,8 +1,9 @@
 import React from 'react';
-import {render, screen} from '@testing-library/react';
-import {getWeights} from "services";
-import {BodyWeight} from "./index";
-import {StateProvider} from 'state';
+import { render, screen } from '@testing-library/react';
+import { getWeights } from "services";
+import { BodyWeight } from "./index";
+import { StateProvider } from 'state';
+import { WeightEntry } from "components/BodyWeight/model";
 
 jest.mock("services");
 console.log = jest.fn();
@@ -12,8 +13,8 @@ describe("Test BodyWeight component", () => {
 
         // Arrange
         const weightData = [
-            {id: 1, user: 3, weight: '80', date: '2021-12-10'},
-            {id: 2, user: 2, weight: '90', date: '2021-12-20'},
+            new WeightEntry(new Date('2021-12-10'), 80, 1),
+            new WeightEntry(new Date('2021-12-20'), 90, 2),
         ];
 
         // @ts-ignore
