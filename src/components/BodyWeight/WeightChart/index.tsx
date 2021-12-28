@@ -18,8 +18,16 @@ export const WeightChart = ({ weights }: WeightTableProps) => {
     return (
         <ResponsiveContainer width="90%" height={400}>
             <LineChart data={weightData}>
-                <Line type="monotone" dataKey="weight" stroke="#8884d8"/>
-                <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
+                <Line
+                    type="monotone"
+                    dataKey="weight"
+                    stroke="#2A4C7D"
+                    strokeWidth={4}
+                    dot={{ strokeWidth: 4 }}
+                    activeDot={{ stroke: '#2A4C7D', strokeWidth: 2, r: 6 }}/>
+                <CartesianGrid
+                    stroke="#ccc"
+                    strokeDasharray="5 5"/>
                 <XAxis dataKey="date"/>
                 <YAxis domain={['auto', 'auto']}/>
 
