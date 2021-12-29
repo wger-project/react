@@ -20,17 +20,10 @@ export const ActionButton = ({ weight }: ActionButtonProps) => {
 
     return (
         <div>
-            <Button
-                id="basic-button"
-                aria-controls={open ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={handleClick}
-            >
+            <Button onClick={handleClick}>
                 <ArrowDropDownIcon/>
             </Button>
             <Menu
-                id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}

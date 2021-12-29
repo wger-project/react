@@ -1,37 +1,54 @@
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { ActionButton } from './index';
 
 describe("Body weight test", () => {
 
     test('renders without crashing', async () => {
 
-        const weightsData = {id: 1, weight: 80, date: new Date('2021/12/10'), change: 2, days: 3};
-        
-        // since I used context api to provide state, also need it here
-        render(<ActionButton weight={weightsData} />);
+        // Arrange
+        //
+        const weightsData = { id: 1, weight: 80, date: new Date('2021/12/10'), change: 2, days: 3 };
+        render(<ActionButton weight={weightsData}/>);
 
-        //both edit and delete buttons are found in screen
-        const editButton = await screen.findByText("edit");
-        const deleteButton = await screen.findByText("delete");
-        expect(editButton).toBeInTheDocument();
-        expect(deleteButton).toBeInTheDocument();
+        // Act
+        //
+        // Note that MUI renders the menu in a different point in the DOM so they are
+        // not present before clicking the button
+        const button = screen.getByRole("button");
+        const editButton = screen.queryByText("edit");
+        const deleteButton = screen.queryByText("delete");
+        const menuElement = screen.queryByRole('menu');
 
-        const ul = screen.getByRole('list', {hidden: true});
-        expect(ul).toHaveStyle('display: none');
+        // Assert
+        //
+        expect(button).toBeInTheDocument();
+        expect(deleteButton).toBeNull();
+        expect(editButton).toBeNull();
+        expect(menuElement).toBeNull();
     });
 
-    test('should have list of actions hidden', () => {
-        const weightsData = {id: 1, weight: 80, date: new Date('2021/12/10'), change: 2, days: 3};
-        
-        // since I used context api to provide state, also need it here
-        render(<ActionButton weight={weightsData} />);
+    test('should have list of actions hidden', async () => {
+        // Arrange
+        //
+        const weightsData = { id: 1, weight: 80, date: new Date('2021/12/10'), change: 2, days: 3 };
+
+        // Act
+        //
+        render(<ActionButton weight={weightsData}/>);
         const button = screen.getByRole('button');
+        expect(button).toBeInTheDocument();
         fireEvent.click(button);
 
-        const ul = screen.getByRole('list', {hidden: true});
-        expect(ul).not.toHaveStyle('display: none');
+        // Assert
+        //
+        const editButton = await screen.findByText("edit");
+        const deleteButton = await screen.findByText("delete");
+        const menuElement = screen.getByRole('menu');
+        expect(deleteButton).toBeTruthy();
+        expect(editButton).toBeTruthy();
+        expect(menuElement).toBeInTheDocument();
 
     });
-    
+
 });
