@@ -9,7 +9,7 @@ export const BodyWeight = () => {
     const [state, dispatch] = useStateValue();
 
     useEffect(() => {
-        const fecthWeights = async () => {
+        const fetchWeights = async () => {
             try {
                 const receivedWeights = await getWeights();
                 dispatch(setWeights(receivedWeights));
@@ -17,7 +17,7 @@ export const BodyWeight = () => {
                 console.log(error);
             }
         };
-        fecthWeights();
+        fetchWeights();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
