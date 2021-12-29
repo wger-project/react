@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
             "& .MuiPaper-root": {
                 border: "1px solid #bababa",
-                overflowX: 'visible' // this class is for the drop down menu of the actions button to be fully visible
+                
             }
         },
     };
