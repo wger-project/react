@@ -17,7 +17,7 @@ export const ActionButton = ({weight}: ActionButtonProps) => {
     const actionListDisplay = showActions ? "block" : "none";
 
     return (
-        <button className={styles.button} onClick={handleShowActions} onBlur={handleShowActions}>
+        <button className={styles.button} onClick={handleShowActions} onBlur={() => setshowActions(false)}>
             &#9660;
             <ul id='ul' style={{display: actionListDisplay}} className={`${styles.actions__list} `}>
                 <li><a className={styles.actions__link} href="/"><Trans i18nKey={"edit"}/></a></li>
