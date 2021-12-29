@@ -7,7 +7,7 @@ import { Trans } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 
 
-interface WeightTableProps {
+export interface WeightTableProps {
     weights: WeightEntry[]
 }
 
