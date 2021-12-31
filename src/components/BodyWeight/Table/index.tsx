@@ -7,7 +7,7 @@ import { Trans } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 
 
-interface WeightTableProps {
+export interface WeightTableProps {
     weights: WeightEntry[]
 }
 
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
             "& .MuiPaper-root": {
                 border: "1px solid #bababa",
-                overflowX: 'visible' // this class is for the drop down menu of the actions button to be fully visible
+                
             }
         },
     };
