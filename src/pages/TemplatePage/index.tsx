@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Template = () => {
+export const TemplatePage = () => {
     return (
         <div>
             Your Template

@@ -23,7 +23,6 @@ export const BodyWeight = () => {
 
     return (
         <div className={styles.root}>
-            <div className={styles.chart}>Chart Here</div>
             <WeightTable weights={state.weights}/>
         </div>
     );

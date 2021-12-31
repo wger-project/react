@@ -1,9 +1,9 @@
 import React from 'react';
 
-export const CategoryExercise = () => {
+export const ApiPage = () => {
     return (
         <div>
-            Category exercise Page
+            RestApi Page
         </div>
     );
 };

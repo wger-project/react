@@ -42,23 +42,23 @@ export const Header = () => {
                                 </button>
                                 <ul className={styles.subNav} style={{display: showTraining ? "block" : "none"}}>
                                     <div>
-                                        <li><Link to="workout">Workout</Link></li>
-                                        <li><Link to="schedule">Workout Schedule</Link></li>
-                                        <li><Link to="calendar">Calendar</Link></li>
-                                        <li><Link to="gallery">Gallery</Link></li>
+                                        <li><Link to="workout/overview">Workout</Link></li>
+                                        <li><Link to="workout/schedule">Workout Schedule</Link></li>
+                                        <li><Link to="workout/calendar/user">Calendar</Link></li>
+                                        <li><Link to="workout/gallery">Gallery</Link></li>
                                     </div>
                                     <div>
                                         <p>Workout templates</p>
-                                        <li><Link to="/template">Your Templates</Link></li>
-                                        <li><Link to="/template/public">Public Templates</Link></li>
+                                        <li><Link to="workout/template/overview">Your Templates</Link></li>
+                                        <li><Link to="workout/template/public">Public Templates</Link></li>
                                     </div>
                                     <div>
                                         <p>Exercises</p>
-                                        <li><Link to="/exercises/category">by category</Link></li>
-                                        <li><Link to="/exercises/muscle">by muscle</Link></li>
-                                        <li><Link to="/exercises/equipment">by equipment</Link></li>
+                                        <li><Link to="/exercise/category">by category</Link></li>
+                                        <li><Link to="/exercise/muscle">by muscle</Link></li>
+                                        <li><Link to="/exercise/equipment">by equipment</Link></li>
                                     </div>
-                                    <div><Link to="/exercises/add">Add new exercise</Link></div>
+                                    <div><Link to="/exercise/add">Add new exercise</Link></div>
                                 </ul>
                             </li>
                             <li className={styles.nav__item}>
@@ -69,7 +69,7 @@ export const Header = () => {
                                     Body Weight <span>&#9660;</span>
                                 </button>
                                 <ul className={styles.subNav} style={{display: showBodyWeight ? "block" : "none"}}>
-                                    <li><Link to="/weight">Weight Overview</Link></li>
+                                    <li><Link to="/weight/overview">Weight Overview</Link></li>
                                     <li><Link to="weight/add">Add Weight</Link></li>
                                 </ul>
                             </li>
@@ -81,10 +81,10 @@ export const Header = () => {
                                     Nutrition <span>&#9660;</span>
                                 </button>
                                 <ul className={styles.subNav} style={{display: showNutrition ? "block" : "none"}}>
-                                    <li><Link to="/nutrition">Nutritions Plan</Link></li>
+                                    <li><Link to="/nutrition/overview">Nutritions Plan</Link></li>
                                     <li><Link to="/nutrition/calculator/bmi">BMI Calculator</Link></li>
                                     <li><Link to="/nutrition/calculator/calories">Daily calories calculator</Link></li>
-                                    <li><Link to="/nutrition/ingredients">Ingredient overview</Link></li>
+                                    <li><Link to="/nutrition/ingredient/overview">Ingredient overview</Link></li>
                                 </ul>
                             </li>
                             <li className={styles.nav__item}>
@@ -95,7 +95,7 @@ export const Header = () => {
                                     About this software <span>&#9660;</span>
                                 </button>
                                 <ul className={styles.subNav} style={{display: showAbout ? "block" : "none"}}>
-                                    <div className={styles.about}><Link to="/about">About us</Link></div>
+                                    <div className={styles.about}><Link to="/software/about-us">About us</Link></div>
                                     <li>
                                         <Link to="/software/api">Rest API</Link>
                                     </li>
@@ -145,8 +145,8 @@ export const Header = () => {
                                 User <span>&#9660;</span>
                             </button>
                             <ul className={styles.subNav} style={{display: showUserMenu ? "block" : "none"}}>
-                                <li><Link to="/preferences"> My Preferences</Link></li>
-                                <li><Link to="/logout"> 
+                                <li><Link to="/user/preferences"> My Preferences</Link></li>
+                                <li><Link to="/login"> 
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                     </svg>
