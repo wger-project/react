@@ -1379,10 +1379,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@mui/base@5.0.0-alpha.62":
-  version "5.0.0-alpha.62"
-  resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-alpha.62.tgz#d86ff07f33d7b49ebb545f29e184750c0270c3f8"
-  integrity sha512-ItmdSZwHKQbLbAsS3sWguR7OHqYqh2cYWahoVmHb13Kc6bMdmVUTY4x57IlDSU712B0yuA0Q/gPTq7xADKnFow==
+"@mui/base@5.0.0-alpha.63":
+  version "5.0.0-alpha.63"
+  resolved "https://registry.yarnpkg.com/@mui/base/-/base-5.0.0-alpha.63.tgz#8646b9b91dae128a474feadac74748c532ffef2c"
+  integrity sha512-/jURXlBAYqZaWw92XfJgc6aiHnDcNVuRxBskub57HXWCMK3OiVVdfUEWJEdCjOacCKiw3+Etc5alI9Omaqrg2g==
   dependencies:
     "@babel/runtime" "^7.16.3"
     "@emotion/is-prop-valid" "^1.1.1"
@@ -1399,13 +1399,13 @@
   dependencies:
     "@babel/runtime" "^7.16.3"
 
-"@mui/material@^5.2.6":
-  version "5.2.6"
-  resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.2.6.tgz#fda165759281fe7d6f0ec2744a255f283e17b7aa"
-  integrity sha512-yF2bRqyJMo6bYXT7TPA9IU/XLaXHi47Xvmj8duQa5ha3bCpFMXLfGoZcAUl6ZDjjGEz1nCFS+c1qx219xD/aeQ==
+"@mui/material@^5.2.7":
+  version "5.2.7"
+  resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.2.7.tgz#2051da37b3c5176124ee8042d9d4c571af3da93a"
+  integrity sha512-JaDl9GJSV17QLf4OoDUZKvVjZ/7UvqOBAxwLwUTnKZEME4REaGTkaAeHrzLpcKCm0LlNGD2HOKAIeykI6WJiqg==
   dependencies:
     "@babel/runtime" "^7.16.3"
-    "@mui/base" "5.0.0-alpha.62"
+    "@mui/base" "5.0.0-alpha.63"
     "@mui/system" "^5.2.6"
     "@mui/types" "^7.1.0"
     "@mui/utils" "^5.2.3"
@@ -7770,7 +7770,7 @@ prompts@^2.0.1, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.6.1:
+prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.8.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.0.tgz#d237e624c45a9846e469f5f31117f970017ff588"
   integrity sha512-fDGekdaHh65eI3lMi5OnErU6a8Ighg2KjcjQxO7m8VHyWjcPyj5kiOgV1LQDOOOgVy3+5FgjXvdSSX7B8/5/4g==
@@ -7778,15 +7778,6 @@ prop-types@^15.6.1:
     loose-envify "^1.4.0"
     object-assign "^4.1.1"
     react-is "^16.13.1"
-
-prop-types@^15.6.2, prop-types@^15.7.2:
-  version "15.7.2"
-  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
-  integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
-  dependencies:
-    loose-envify "^1.4.0"
-    object-assign "^4.1.1"
-    react-is "^16.8.1"
 
 proxy-addr@~2.0.5:
   version "2.0.7"
@@ -7961,7 +7952,7 @@ react-i18next@^11.15.3:
     html-escaper "^2.0.2"
     html-parse-stringify "^3.0.1"
 
-react-is@^16.10.2, react-is@^16.13.1, react-is@^16.7.0, react-is@^16.8.1:
+react-is@^16.10.2, react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
