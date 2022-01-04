@@ -1,7 +1,7 @@
 import React from 'react';
 import { WeightEntry } from "components/BodyWeight/model";
 import * as yup from 'yup';
-import { useFormik } from "formik";
+import { Form, Formik } from "formik";
 import { Button, TextField } from "@mui/material";
 import { Trans } from "react-i18next";
 import { t } from "i18next";
@@ -10,7 +10,7 @@ import { t } from "i18next";
 //{ weight }: WeightEntry
 export const WeightForm = () => {
 
-    const weight = new WeightEntry(new Date('2020-01-01'), 100, 1);
+    const weightEntry = new WeightEntry(new Date('2020-01-01'), 100, 1);
 
     const validationSchema = yup.object({
         weight: yup
@@ -20,40 +20,49 @@ export const WeightForm = () => {
             .required('Weight field is required'),
     });
 
-    const formik = useFormik({
-        initialValues: {
-            weight: weight.weight,
-            date: weight.date.toISOString().split('T')[0],
-        },
-        validationSchema: validationSchema,
-        onSubmit: (values) => {
-            console.log(JSON.stringify(values, null, 2));
-        },
-    });
 
     return (
-        <div>
-            <form onSubmit={formik.handleSubmit}>
+        <Formik
+            initialValues={{
+                weight: weightEntry.weight,
+                date: weightEntry.date.toISOString().split('T')[0],
+            }}
+            validationSchema={validationSchema}
+            onSubmit={(values) => {
+                console.log(JSON.stringify(values, null, 2));
+            }}
+        >
+            {formik => (
+                <Form>
+                    <TextField
+                        fullWidth
+                        id="weight"
+                        label={t('weight')}
+                        error={
+                            Boolean(formik.errors.weight && formik.touched.weight)
+                        }
+                        helperText={
+                            Boolean(formik.errors.weight && formik.touched.weight)
+                                ? formik.errors.weight
+                                : ''
+                        }
+                        {...formik.getFieldProps('weight')}
+                    />
 
-                <TextField
-                    fullWidth
-                    id="weight"
-                    label={t('weight')}
-                    {...formik.getFieldProps('weight')}
-                />
 
-                <TextField
-                    sx={{ mt: 2 }}
-                    fullWidth
-                    id="date"
-                    type={'date'}
-                    label={t('date')}
-                    {...formik.getFieldProps('date')}
-                />
-                <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
-                    <Trans i18nKey={'submit'} />
-                </Button>
-            </form>
-        </div>
+                    <TextField
+                        fullWidth
+                        id="date"
+                        type={'date'}
+                        label={t('date')}
+                        sx={{ mt: 2 }}
+                        {...formik.getFieldProps('date')}
+                    />
+                    <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
+                        <Trans i18nKey={'submit'} />
+                    </Button>
+                </Form>
+            )}
+        </Formik>
     );
 };
