@@ -2,15 +2,23 @@ import React, { useState } from 'react';
 import styles from './header.module.css';
 import { useMediaQuery } from 'react-responsive';
 import logo from 'assets/images/logo.png';
+import { Link } from "react-router-dom";
+import useComponentVisible from './useComponentVisible';
+import { TrainingSubMenu } from './SubMenus/TrainingSubMenu';
+import { BodyWeightSubMenu } from './SubMenus/BodyWeightSubMenu';
+import { NutritionSubMenu } from './SubMenus/NutritionSubMenu';
+import { AboutSubMenu } from './SubMenus/AboutSubMenu';
+import { UserSubMenu } from './SubMenus/UserSubMenu';
 
 
 export const Header = () => {
     const [showMenu, setShowMenu] = useState(false);
-    const [showTraining, setShowTraining] = useState(false);
-    const [showBodyWeight, setShowBodyWeight] = useState(false);
-    const [showNutrition, setShowNutrition] = useState(false);
-    const [showAbout, setShowAbout] = useState(false);
-    const [showUserMenu, setShowUserMenu] = useState(false);
+
+    const trainingVisibleHook = useComponentVisible(false);
+    const bodyWeightVisibleHook = useComponentVisible(false);
+    const nutritionVisibleHook = useComponentVisible(false);
+    const aboutVisibleHook = useComponentVisible(false);
+    const userVisibleHook = useComponentVisible(false);
 
     const isDesktop = useMediaQuery({ query: `(min-width: 700px)` });    
 
@@ -34,100 +42,57 @@ export const Header = () => {
                         <ul className={styles.primaryNav__list}>
                             <li className={styles.nav__item}>
                                 <button
-                                    onClick={() => setShowTraining(!showTraining)}
-                                    onBlur={() => setShowTraining(false)}
+                                    onClick={() => trainingVisibleHook.setIsComponentVisible(true)}
+                                    // onBlur={() => setShowTraining(false)}
                                 >
                                     Training <span>&#9660;</span>
                                 </button>
-                                <ul className={styles.subNav} style={{display: showTraining ? "block" : "none"}}>
-                                    <div>
-                                        <li><a href="/">Workout</a></li>
-                                        <li><a href="/">Workout Schedule</a></li>
-                                        <li><a href="/">Calendar</a></li>
-                                        <li><a href="/">Gallery</a></li>
-                                    </div>
-                                    <div>
-                                        <p>Workout templates</p>
-                                        <li><a href="/">Your Templates</a></li>
-                                        <li><a href="/">Public Templates</a></li>
-                                    </div>
-                                    <div>
-                                        <p>Exercises</p>
-                                        <li><a href="/">by category</a></li>
-                                        <li><a href="/">by muscle</a></li>
-                                        <li><a href="/">by equipment</a></li>
-                                    </div>
-                                    <div><li><a href="/">Add new exercise</a></li></div>
-                                </ul>
+                                <div ref={trainingVisibleHook.ref}>
+                                    <ul className={styles.subNav} style={{display: trainingVisibleHook.isComponentVisible ? "block" : "none"}}>
+                                        <TrainingSubMenu />
+                                    </ul>
+                                </div>
+                                
                             </li>
                             <li className={styles.nav__item}>
                                 <button
-                                    onClick={() => setShowBodyWeight(!showBodyWeight)}
-                                    onBlur={() => setShowBodyWeight(false)}
+                                    onClick={() => bodyWeightVisibleHook.setIsComponentVisible(true)}
+                                    // onBlur={() => setShowBodyWeight(false)}
                                 >
                                     Body Weight <span>&#9660;</span>
                                 </button>
-                                <ul className={styles.subNav} style={{display: showBodyWeight ? "block" : "none"}}>
-                                    <li><a href="/">Weight Overview</a></li>
-                                    <li><a href="/">Add Weight</a></li>
-                                </ul>
+                                <div ref={bodyWeightVisibleHook.ref}>
+                                    <ul className={styles.subNav} style={{display: bodyWeightVisibleHook.isComponentVisible ? "block" : "none"}}>
+                                        <BodyWeightSubMenu />
+                                    </ul>
+                                </div>
                             </li>
                             <li className={styles.nav__item}>
                                 <button
-                                    onClick={() => setShowNutrition(!showNutrition)}
-                                    onBlur={() => setShowNutrition(false)}
+                                    onClick={() => nutritionVisibleHook.setIsComponentVisible(true)}
+                                    // onBlur={() => setShowNutrition(false)}
                                 >
                                     Nutrition <span>&#9660;</span>
                                 </button>
-                                <ul className={styles.subNav} style={{display: showNutrition ? "block" : "none"}}>
-                                    <li><a href="/">Nutritions Plan</a></li>
-                                    <li><a href="/">BMI Calculator</a></li>
-                                    <li><a href="/">Daily calories calculator</a></li>
-                                    <li><a href="/">Ingredient overview</a></li>
-                                </ul>
+                                <div ref={nutritionVisibleHook.ref}>
+                                    <ul className={styles.subNav} style={{display: nutritionVisibleHook.isComponentVisible ? "block" : "none"}}>
+                                        <NutritionSubMenu />
+                                    </ul>
+                                </div>
                             </li>
                             <li className={styles.nav__item}>
                                 <button
-                                    onClick={() => setShowAbout(!showAbout)}
-                                    onBlur={() => setShowAbout(false)}
+                                    onClick={() => aboutVisibleHook.setIsComponentVisible(true)}
+                                    // onBlur={() => setShowAbout(false)}
                                 >
                                     About this software <span>&#9660;</span>
                                 </button>
-                                <ul className={styles.subNav} style={{display: showAbout ? "block" : "none"}}>
-                                    <div className={styles.about}>About us</div>
-                                    <li>
-                                        <a href="/">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                            </svg>
-                                                License
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                            </svg>
-                                            Developer documentation
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                            </svg>
-                                            Get the code (Github)
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                            </svg>
-                                            Translate
-                                        </a>
-                                    </li>
-                                </ul>
+                                <div ref={aboutVisibleHook.ref}>
+                                    <ul className={styles.subNav} style={{display: aboutVisibleHook.isComponentVisible ? "block" : "none"}}>
+                                        <div className={styles.about}><Link to="/software/about-us">About us</Link></div>
+                                        <AboutSubMenu />
+                                    </ul>
+                                </div>
                             </li>
                         </ul>
                     </nav>
@@ -135,20 +100,16 @@ export const Header = () => {
                     <ul className={styles.secondaryNav__list}>
                         <li className={styles.nav__item}>
                             <button
-                                onClick={() => setShowUserMenu(!showUserMenu)}
-                                onBlur={() => setShowUserMenu(false)}
+                                onClick={() => userVisibleHook.setIsComponentVisible(true)}
+                                // onBlur={() => setShowUserMenu(false)}
                             >
                                 User <span>&#9660;</span>
                             </button>
-                            <ul className={styles.subNav} style={{display: showUserMenu ? "block" : "none"}}>
-                                <li><a href="/"> My Preferences</a></li>
-                                <li><a href="/"> 
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                    </svg>
-                                    Logout
-                                </a></li>
-                            </ul>
+                            <div ref={userVisibleHook.ref}>
+                                <ul className={styles.subNav} style={{display: userVisibleHook.isComponentVisible ? "block" : "none"}}>
+                                    <UserSubMenu />
+                                </ul>
+                            </div>
                         </li>
                     </ul>
                     </nav>

@@ -76,6 +76,7 @@
         border-radius: 5px;
         padding: 0.5rem 1rem;
         border: 1px solid #c2c2c2;
+        z-index: 999;
 
         div {
             border-bottom: 1px solid #bbbbbb;
@@ -162,7 +163,7 @@
     }
 
     .logo {
-        width: 10%;
+        width: 7%;
         display: block;
 
         img {
@@ -170,7 +171,7 @@
         }
         
         @media screen and (min-width: 700px) {
-            width: 3%;
+            width: 4%;
         }
     }
 }
