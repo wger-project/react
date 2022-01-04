@@ -70,6 +70,7 @@
   border-radius: 5px;
   padding: 0.5rem 1rem;
   border: 1px solid #c2c2c2;
+  z-index: 999;
 }
 .header .subNav div {
   border-bottom: 1px solid #bbbbbb;
@@ -141,7 +142,7 @@
   }
 }
 .header .logo {
-  width: 10%;
+  width: 7%;
   display: block;
 }
 .header .logo img {
@@ -149,7 +150,7 @@
 }
 @media screen and (min-width: 700px) {
   .header .logo {
-    width: 3%;
+    width: 4%;
   }
 }
 
