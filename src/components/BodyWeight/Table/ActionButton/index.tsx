@@ -1,8 +1,10 @@
 import React from 'react';
-import { ProcessedWeight } from '..';
-import { Button, Card, CardActions, CardContent, CardHeader, Menu, MenuItem, Modal } from "@mui/material";
+
+import { Button, Menu, MenuItem } from "@mui/material";
 import { Trans } from "react-i18next";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { ProcessedWeight } from "components/BodyWeight/Table/index";
+import { WgerModal } from "components/Core/WgerModal";
 import { WeightForm } from "components/BodyWeight/Form";
 
 interface ActionButtonProps {
@@ -34,20 +36,10 @@ export const ActionButton = ({ weight }: ActionButtonProps) => {
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
 
-    const style = {
-        position: 'absolute' as 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        p: 2,
-        minWidth: '400px'
-    };
-
-
     return (
         <div>
             <Button onClick={handleClick}>
-                <ArrowDropDownIcon/>
+                <ArrowDropDownIcon />
             </Button>
             <Menu
                 anchorEl={anchorEl}
@@ -57,26 +49,13 @@ export const ActionButton = ({ weight }: ActionButtonProps) => {
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                <MenuItem onClick={handleEdit}><Trans i18nKey={"edit"}/></MenuItem>
-                <MenuItem onClick={handleDelete}><Trans i18nKey={"delete"}/></MenuItem>
+                <MenuItem onClick={handleEdit}><Trans i18nKey={"edit"} /></MenuItem>
+                <MenuItem onClick={handleDelete}><Trans i18nKey={"delete"} /></MenuItem>
             </Menu>
-            <Modal
-                open={openModal}
-                onClose={handleCloseModal}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Card sx={style}>
-                    <CardHeader title="Title" subheader="September 14, 2016"/>
-                    <CardContent>
-                        <WeightForm/>
-                        <p>Content goes here...</p>
-                    </CardContent>
-                    <CardActions>
-                        <Button size="small" onClick={handleCloseModal}>Close</Button>
-                    </CardActions>
-                </Card>
-            </Modal>
+
+            <WgerModal title={'Test 12356'} openFn={openModal} closeFn={handleCloseModal}>
+                <WeightForm />
+            </WgerModal>
         </div>
     );
 };

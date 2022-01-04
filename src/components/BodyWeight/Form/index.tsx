@@ -3,6 +3,7 @@ import { WeightEntry } from "components/BodyWeight/model";
 import * as yup from 'yup';
 import { useFormik } from "formik";
 import { Button, TextField } from "@mui/material";
+import { Trans } from "react-i18next";
 
 
 //{ weight }: WeightEntry
@@ -55,7 +56,7 @@ export const WeightForm = () => {
                     helperText={formik.touched.date && formik.errors.date}
                 />
                 <Button color="primary" variant="contained" type="submit">
-                    Submit
+                    <Trans i18nKey={'submit'} />
                 </Button>
             </form>
         </div>
