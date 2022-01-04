@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import { useFormik } from "formik";
 import { Button, TextField } from "@mui/material";
 import { Trans } from "react-i18next";
+import { t } from "i18next";
 
 
 //{ weight }: WeightEntry
@@ -37,25 +38,19 @@ export const WeightForm = () => {
                 <TextField
                     fullWidth
                     id="weight"
-                    name="weight"
-                    label="Weight"
-                    value={formik.values.weight}
-                    onChange={formik.handleChange}
-                    error={formik.touched.weight && Boolean(formik.errors.weight)}
-                    helperText={formik.touched.weight && formik.errors.weight}
+                    label={t('weight')}
+                    {...formik.getFieldProps('weight')}
                 />
+
                 <TextField
+                    sx={{ mt: 2 }}
                     fullWidth
                     id="date"
-                    name="date"
-                    label="Date"
-                    type="date"
-                    value={formik.values.date}
-                    onChange={formik.handleChange}
-                    error={formik.touched.date && Boolean(formik.errors.date)}
-                    helperText={formik.touched.date && formik.errors.date}
+                    type={'date'}
+                    label={t('date')}
+                    {...formik.getFieldProps('date')}
                 />
-                <Button color="primary" variant="contained" type="submit">
+                <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                     <Trans i18nKey={'submit'} />
                 </Button>
             </form>
