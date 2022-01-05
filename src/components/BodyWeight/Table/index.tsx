@@ -72,7 +72,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                                     {row.entry.date.toLocaleDateString()}
                                 </TableCell>
                                 <TableCell align="center">{row.entry.weight}</TableCell>
-                                <TableCell align="center">{row.change}</TableCell>
+                                <TableCell align="center">{+row.change.toFixed(2)}</TableCell>
                                 <TableCell align="center">{row.days}</TableCell>
                                 <TableCell align="center"><ActionButton weight={row.entry} /></TableCell>
                             </TableRow>
