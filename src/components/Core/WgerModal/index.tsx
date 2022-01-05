@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Button, Card, CardActions, CardContent, CardHeader, Modal } from "@mui/material";
+import { Trans } from "react-i18next";
 
 interface WgerModalProps {
     title: String,
@@ -8,7 +9,6 @@ interface WgerModalProps {
 
 }
 
-//(props)
 export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, openFn, closeFn, children }) => {
 
     const style = {
@@ -33,8 +33,9 @@ export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, openFn, cl
                     {children}
                 </CardContent>
                 <CardActions>
-
-                    <Button onClick={closeFn}>Close</Button>
+                    <Button onClick={closeFn}>
+                        <Trans i18nKey={'close'} />
+                    </Button>
                 </CardActions>
             </Card>
         </Modal>
