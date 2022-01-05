@@ -6,11 +6,12 @@ import { Button, TextField } from "@mui/material";
 import { Trans } from "react-i18next";
 import { t } from "i18next";
 
+interface WeightFormProps {
+    weightEntry: WeightEntry
+}
 
-//{ weight }: WeightEntry
-export const WeightForm = () => {
+export const WeightForm = ({ weightEntry }: WeightFormProps) => {
 
-    const weightEntry = new WeightEntry(new Date('2020-01-01'), 100, 1);
 
     const validationSchema = yup.object({
         weight: yup

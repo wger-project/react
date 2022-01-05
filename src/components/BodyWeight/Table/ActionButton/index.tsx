@@ -3,12 +3,12 @@ import React from 'react';
 import { Button, Menu, MenuItem } from "@mui/material";
 import { Trans } from "react-i18next";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { ProcessedWeight } from "components/BodyWeight/Table/index";
 import { WgerModal } from "components/Core/WgerModal";
 import { WeightForm } from "components/BodyWeight/Form";
+import { WeightEntry } from "components/BodyWeight/model";
 
 interface ActionButtonProps {
-    weight: ProcessedWeight
+    weight: WeightEntry
 }
 
 export const ActionButton = ({ weight }: ActionButtonProps) => {
@@ -23,13 +23,13 @@ export const ActionButton = ({ weight }: ActionButtonProps) => {
     };
 
     const handleEdit = () => {
-        console.log("Edit clicked");
+        console.log(`Editing weight ID: ${weight.id}`);
         handleClose();
         handleOpenModal();
     };
 
     const handleDelete = () => {
-        console.log("Delete clicked");
+        console.log(`Deleting weight ID: ${weight.id}`);
         handleClose();
     };
 
@@ -54,7 +54,7 @@ export const ActionButton = ({ weight }: ActionButtonProps) => {
             </Menu>
 
             <WgerModal title={'Test 12356'} openFn={openModal} closeFn={handleCloseModal}>
-                <WeightForm />
+                <WeightForm weightEntry={weight} />
             </WgerModal>
         </div>
     );

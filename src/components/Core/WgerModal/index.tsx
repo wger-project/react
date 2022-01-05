@@ -28,7 +28,7 @@ export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, openFn, cl
             aria-describedby="modal-modal-description"
         >
             <Card sx={style}>
-                <CardHeader title={title} subheader="September 14, 2016" />
+                <CardHeader title={title} subheader="Subtitle with info goes here" />
                 <CardContent>
                     {children}
                 </CardContent>
