@@ -31,13 +31,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
 export const WeightTable = ({ weights }: WeightTableProps) => {
     const classes = useStyles();
-
     const processedWeights = processWeight(weights);
-
-    // map to produce rows data for the table
-    //const rows: ProcessedWeight[] = processedWeights.map(weight => {
-    //    return createData(weight.date, weight.weight, weight.change, weight.days, weight.id!);
-    //});
 
     return (
         <div className={classes.table}>
