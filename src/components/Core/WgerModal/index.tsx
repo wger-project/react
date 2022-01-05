@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Button, Card, CardActions, CardContent, CardHeader, Modal } from "@mui/material";
 import { Trans } from "react-i18next";
 
-interface WgerModalProps {
+export interface WgerModalProps {
     title: String,
     subtitle?: String,
     openFn: boolean,
