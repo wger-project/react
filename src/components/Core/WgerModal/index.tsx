@@ -4,12 +4,13 @@ import { Trans } from "react-i18next";
 
 interface WgerModalProps {
     title: String,
+    subtitle?: String,
     openFn: boolean,
     closeFn: any,
 
 }
 
-export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, openFn, closeFn, children }) => {
+export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, subtitle, openFn, closeFn, children }) => {
 
     const style = {
         position: 'absolute' as 'absolute',
@@ -28,7 +29,7 @@ export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, openFn, cl
             aria-describedby="modal-modal-description"
         >
             <Card sx={style}>
-                <CardHeader title={title} subheader="Subtitle with info goes here" />
+                <CardHeader title={title} subheader={subtitle} />
                 <CardContent>
                     {children}
                 </CardContent>

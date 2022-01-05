@@ -6,6 +6,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { WgerModal } from "components/Core/WgerModal";
 import { WeightForm } from "components/BodyWeight/Form";
 import { WeightEntry } from "components/BodyWeight/model";
+import { t } from "i18next";
 
 interface ActionButtonProps {
     weight: WeightEntry
@@ -53,7 +54,7 @@ export const ActionButton = ({ weight }: ActionButtonProps) => {
                 <MenuItem onClick={handleDelete}><Trans i18nKey={"delete"} /></MenuItem>
             </Menu>
 
-            <WgerModal title={'Test 12356'} openFn={openModal} closeFn={handleCloseModal}>
+            <WgerModal title={t('edit')} openFn={openModal} closeFn={handleCloseModal}>
                 <WeightForm weightEntry={weight} />
             </WgerModal>
         </div>
