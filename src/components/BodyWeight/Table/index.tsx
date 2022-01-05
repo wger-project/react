@@ -29,16 +29,6 @@ const useStyles = makeStyles((theme: Theme) => {
     };
 });
 
-function createData(
-    date: Date,
-    weight: number,
-    change: number,
-    days: number,
-    id: number,
-) {
-    return { date, weight, change, days, id };
-}
-
 export const WeightTable = ({ weights }: WeightTableProps) => {
     const classes = useStyles();
 
