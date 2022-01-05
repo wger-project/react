@@ -1,10 +1,13 @@
 import React from 'react';
-import { WeightEntry } from "components/BodyWeight/model";
+import { WeightAdapter, WeightEntry } from "components/BodyWeight/model";
 import * as yup from 'yup';
 import { Form, Formik } from "formik";
 import { Button, TextField } from "@mui/material";
 import { Trans } from "react-i18next";
 import { t } from "i18next";
+import axios from "axios";
+import { WEIGHT_PATH } from "services/weight";
+import { makeHeader, makeUrl } from "utils/url";
 
 interface WeightFormProps {
     weightEntry: WeightEntry
@@ -30,7 +33,21 @@ export const WeightForm = ({ weightEntry }: WeightFormProps) => {
             }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
-                console.log(JSON.stringify(values, null, 2));
+
+                weightEntry.weight = values.weight;
+                weightEntry.date = new Date(values.date);
+                const adapter = new WeightAdapter();
+
+                // Patch object on server
+                axios.patch(makeUrl(WEIGHT_PATH, { id: weightEntry.id }), adapter.toJson(weightEntry), {
+                    headers: makeHeader(),
+                })
+                    .then(() => {
+                        console.log('success');
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
             }}
         >
             {formik => (

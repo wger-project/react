@@ -1,5 +1,6 @@
 import { Adapter } from "utils";
 import { BodyWeightType } from "types";
+import { dateToYYYYMMDD } from "utils/date";
 
 export class WeightEntry {
 
@@ -23,7 +24,7 @@ export class WeightAdapter implements Adapter<WeightEntry> {
     toJson(item: WeightEntry): any {
         return {
             id: item.id,
-            name: item.date,
+            date: dateToYYYYMMDD(item.date),
             weight: item.weight,
         };
     }
