@@ -1,19 +1,17 @@
 import React from 'react';
 import './App.css';
-import {
-    Header
-} from './components';
-import {useTranslation} from "react-i18next";
+import { Header } from './components';
 import { Route, Routes } from 'react-router-dom';
 import {
     About,
     AddExercise,
     AddWeight,
+    ApiPage,
     BmiCalculator,
     Calendar,
     CaloriesCalculator,
-    ExerciseCategory,
     Equipments,
+    ExerciseCategory,
     Gallery,
     Ingredients,
     Login,
@@ -21,7 +19,6 @@ import {
     NutritionPlans,
     Preferences,
     PublicTemplate,
-    ApiPage,
     TemplatePage,
     WeightOverview,
     Workout,
@@ -57,7 +54,7 @@ function App() {
                     </Route>
                     <Route path="weight">
                         <Route path="overview" element={<WeightOverview />}></Route>
-                        <Route path="add" element={<AddWeight/>}></Route>
+                        <Route path="add" element={<AddWeight />}></Route>
                     </Route>
                     <Route path="nutrition">
                         <Route path="overview" element={<NutritionPlans />}></Route>

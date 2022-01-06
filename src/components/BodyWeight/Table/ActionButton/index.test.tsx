@@ -2,13 +2,11 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ActionButton } from './index';
 import { WeightEntry } from "components/BodyWeight/model";
-import { ProcessedWeight } from '..';
 
 describe("Body weight test", () => {
 
-    const handleDeleteWeight = (weight: ProcessedWeight) => {
+    const handleDeleteWeight = (weight: WeightEntry) => {
         console.log(weight);
-
     };
 
     test('renders without crashing', async () => {

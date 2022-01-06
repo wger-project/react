@@ -31,14 +31,14 @@ const useStyles = makeStyles((theme: Theme) => {
     };
 });
 
-export const WeightTable = ({ weights , fetchNewWeights}: WeightTableProps) => {
+export const WeightTable = ({ weights, fetchNewWeights }: WeightTableProps) => {
     const classes = useStyles();
     const processedWeights = processWeight(weights);
 
-    const handleDeleteWeight = async (weight: ProcessedWeight) => {
+    const handleDeleteWeight = async (weight: WeightEntry) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const statusCode  = await deleteWeight(weight.id);
+            const statusCode = await deleteWeight(weight.id!);
             // call to update weights to newest values after a weight is deleted
             fetchNewWeights();
         } catch (error) {
@@ -71,7 +71,8 @@ export const WeightTable = ({ weights , fetchNewWeights}: WeightTableProps) => {
                                 <TableCell align="center">{row.entry.weight}</TableCell>
                                 <TableCell align="center">{+row.change.toFixed(2)}</TableCell>
                                 <TableCell align="center">{row.days}</TableCell>
-                                <TableCell align="center"><ActionButton handleDeleteWeight={handleDeleteWeight} weight={row.entry} /></TableCell>
+                                <TableCell align="center"><ActionButton handleDeleteWeight={handleDeleteWeight}
+                                                                        weight={row.entry} /></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

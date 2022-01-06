@@ -10,7 +10,7 @@ import { t } from "i18next";
 
 interface ActionButtonProps {
     weight: WeightEntry
-    handleDeleteWeight: (weight: ProcessedWeight) => void
+    handleDeleteWeight: (weight: WeightEntry) => void
 }
 
 export const ActionButton = ({ weight, handleDeleteWeight }: ActionButtonProps) => {
@@ -21,6 +21,12 @@ export const ActionButton = ({ weight, handleDeleteWeight }: ActionButtonProps) 
         setAnchorEl(event.currentTarget);
     };
 
+    const handleEdit = () => {
+        console.log(`Editing weight ID: ${weight.id}`);
+        handleClose();
+        handleOpenModal();
+    };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -29,6 +35,10 @@ export const ActionButton = ({ weight, handleDeleteWeight }: ActionButtonProps) 
         handleDeleteWeight(weight);
         setAnchorEl(null);
     };
+
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
+
 
     return (
         <div>
