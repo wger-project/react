@@ -3,7 +3,8 @@ import React from 'react';
 import { WeightTableProps } from "components/BodyWeight/Table";
 import i18n from "i18next";
 
-export const WeightChart = ({ weights }: WeightTableProps) => {
+// don't require the "fetchNewWeights" prop from the WeightTableProps
+export const WeightChart = ({ weights }: Omit<WeightTableProps, "fetchNewWeights">) => {
 
     // map the list of weights to an array of objects with the date and weight
     const weightData = weights.map(weight => {

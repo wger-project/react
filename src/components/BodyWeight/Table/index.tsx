@@ -5,10 +5,12 @@ import { ActionButton } from './ActionButton';
 import { makeStyles } from '@mui/styles';
 import { Trans } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
+import { deleteWeight } from 'services';
 
 
 export interface WeightTableProps {
     weights: WeightEntry[]
+    fetchNewWeights: () => void
 }
 
 export interface ProcessedWeight {
@@ -41,7 +43,8 @@ function createData(
     return { date, weight, change, days, id };
 }
 
-export const WeightTable = ({ weights }: WeightTableProps) => {
+
+export const WeightTable = ({ weights, fetchNewWeights}: WeightTableProps) => {
     const classes = useStyles();
 
     const processedWeights = processWeight(weights);
@@ -50,6 +53,17 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
     const rows: ProcessedWeight[] = processedWeights.map(weight => {
         return createData(weight.date, weight.weight, weight.change, weight.days, weight.id!);
     });
+
+    const handleDeleteWeight = async (weight: ProcessedWeight) => {
+        try {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const statusCode  = await deleteWeight(weight.id);
+            // call to update weights to newest values after a weight is deleted
+            fetchNewWeights();
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <div className={classes.table}>
@@ -76,7 +90,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                                 <TableCell align="center">{row.weight}</TableCell>
                                 <TableCell align="center">{row.change}</TableCell>
                                 <TableCell align="center">{row.days}</TableCell>
-                                <TableCell align="center"><ActionButton weight={row}/></TableCell>
+                                <TableCell align="center"><ActionButton handleDeleteWeight={handleDeleteWeight} weight={row}/></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
