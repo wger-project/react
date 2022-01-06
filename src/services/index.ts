@@ -1,1 +1,4 @@
-export { getWeights } from './weight';
+export { 
+    getWeights,
+    deleteWeight
+ } from './weight';

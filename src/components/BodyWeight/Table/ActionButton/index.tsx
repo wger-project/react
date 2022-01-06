@@ -10,32 +10,25 @@ import { t } from "i18next";
 
 interface ActionButtonProps {
     weight: WeightEntry
+    handleDeleteWeight: (weight: ProcessedWeight) => void
 }
 
-export const ActionButton = ({ weight }: ActionButtonProps) => {
+export const ActionButton = ({ weight, handleDeleteWeight }: ActionButtonProps) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [openModal, setOpenModal] = React.useState(false);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
 
-    const handleEdit = () => {
-        console.log(`Editing weight ID: ${weight.id}`);
-        handleClose();
-        handleOpenModal();
-    };
-
     const handleDelete = () => {
-        console.log(`Deleting weight ID: ${weight.id}`);
-        handleClose();
+        handleDeleteWeight(weight);
+        setAnchorEl(null);
     };
-
-    const handleOpenModal = () => setOpenModal(true);
-    const handleCloseModal = () => setOpenModal(false);
 
     return (
         <div>

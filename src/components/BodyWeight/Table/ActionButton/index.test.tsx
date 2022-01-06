@@ -2,15 +2,21 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ActionButton } from './index';
 import { WeightEntry } from "components/BodyWeight/model";
+import { ProcessedWeight } from '..';
 
 describe("Body weight test", () => {
+
+    const handleDeleteWeight = (weight: ProcessedWeight) => {
+        console.log(weight);
+
+    };
 
     test('renders without crashing', async () => {
 
         // Arrange
         //
         const entry = new WeightEntry(new Date('2021-12-10'), 80, 1);
-        render(<ActionButton weight={entry} />);
+        render(<ActionButton handleDeleteWeight={handleDeleteWeight} weight={entry} />);
 
         // Act
         //
@@ -37,7 +43,7 @@ describe("Body weight test", () => {
 
         // Act
         //
-        render(<ActionButton weight={entry} />);
+        render(<ActionButton handleDeleteWeight={handleDeleteWeight} weight={entry} />);
         const button = screen.getByRole('button');
         expect(button).toBeInTheDocument();
         fireEvent.click(button);

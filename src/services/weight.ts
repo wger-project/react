@@ -13,3 +13,11 @@ export const getWeights = async (): Promise<WeightEntry[]> => {
     const adapter = new WeightAdapter();
     return receivedWeights.results.map(weight => adapter.fromJson(weight));
 };
+
+export const deleteWeight = async (id: number): Promise<number> => { //
+    const response = await axios.delete<ResponseType<null>>(makeUrl(WEIGHT_PATH, {id: id}), { //
+        headers: makeHeader(),
+    });
+
+    return response.status;
+};
