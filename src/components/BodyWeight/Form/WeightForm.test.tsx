@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { WeightEntry } from "components/BodyWeight/model";
-import { WeightForm } from "components/BodyWeight/Form/index";
+import { WeightForm } from "components/BodyWeight/Form/WeightForm";
 
 describe("Test WeightForm component", () => {
     test('Passing an existing entry renders its values in the form', () => {

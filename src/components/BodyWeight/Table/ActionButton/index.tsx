@@ -4,7 +4,7 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import { Trans } from "react-i18next";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { WgerModal } from "components/Core/WgerModal";
-import { WeightForm } from "components/BodyWeight/Form";
+import { WeightForm } from "components/BodyWeight/Form/WeightForm";
 import { WeightEntry } from "components/BodyWeight/model";
 import { t } from "i18next";
 

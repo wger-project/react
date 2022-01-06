@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { WeightAdapter, WeightEntry } from "components/BodyWeight/model";
 import * as yup from 'yup';
 import { Form, Formik } from "formik";
