@@ -2,7 +2,7 @@ import React from 'react';
 import { WeightAdapter, WeightEntry } from "components/BodyWeight/model";
 import * as yup from 'yup';
 import { Form, Formik } from "formik";
-import { Button, TextField } from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 import { Trans } from "react-i18next";
 import { t } from "i18next";
 
@@ -42,30 +42,32 @@ export const WeightForm = ({ weightEntry }: WeightFormProps) => {
         >
             {formik => (
                 <Form>
-                    <TextField
-                        fullWidth
-                        id="weight"
-                        label={t('weight')}
-                        error={
-                            Boolean(formik.errors.weight && formik.touched.weight)
-                        }
-                        helperText={
-                            Boolean(formik.errors.weight && formik.touched.weight)
-                                ? formik.errors.weight
-                                : ''
-                        }
-                        {...formik.getFieldProps('weight')}
-                    />
+                    <Stack spacing={2}>
+                        <TextField
+                            fullWidth
+                            id="weight"
+                            label={t('weight')}
+                            error={
+                                Boolean(formik.errors.weight && formik.touched.weight)
+                            }
+                            helperText={
+                                Boolean(formik.errors.weight && formik.touched.weight)
+                                    ? formik.errors.weight
+                                    : ''
+                            }
+                            {...formik.getFieldProps('weight')}
+                        />
 
 
-                    <TextField
-                        fullWidth
-                        id="date"
-                        type={'date'}
-                        label={t('date')}
-                        sx={{ mt: 2 }}
-                        {...formik.getFieldProps('date')}
-                    />
+                        <TextField
+                            fullWidth
+                            id="date"
+                            type={'date'}
+                            label={t('date')}
+                            {...formik.getFieldProps('date')}
+                        />
+
+                    </Stack>
                     <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                         <Trans i18nKey={'submit'} />
                     </Button>
