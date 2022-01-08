@@ -5,12 +5,11 @@ import { Trans } from "react-i18next";
 export interface WgerModalProps {
     title: String,
     subtitle?: String,
-    openFn: boolean,
+    isOpen: boolean,
     closeFn: any,
-
 }
 
-export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, subtitle, openFn, closeFn, children }) => {
+export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, subtitle, isOpen, closeFn, children }) => {
 
     const style = {
         position: 'absolute' as 'absolute',
@@ -23,7 +22,7 @@ export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, subtitle, 
 
     return (
         <Modal
-            open={openFn}
+            open={isOpen}
             onClose={closeFn}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"

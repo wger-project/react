@@ -57,7 +57,7 @@ export const ActionButton = ({ weight, handleDeleteWeight }: ActionButtonProps) 
                 <MenuItem onClick={handleDelete}><Trans i18nKey={"delete"} /></MenuItem>
             </Menu>
 
-            <WgerModal title={t('edit')} openFn={openModal} closeFn={handleCloseModal}>
+            <WgerModal title={t('edit')} isOpen={openModal} closeFn={handleCloseModal}>
                 <WeightForm weightEntry={weight} />
             </WgerModal>
         </div>
