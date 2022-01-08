@@ -1,10 +1,12 @@
-import React from 'react';
-import { WeightAdapter, WeightEntry } from "components/BodyWeight/model";
+import React, { useCallback } from 'react';
+import { WeightEntry } from "components/BodyWeight/model";
 import * as yup from 'yup';
 import { Form, Formik } from "formik";
 import { Button, Stack, TextField } from "@mui/material";
 import { Trans } from "react-i18next";
 import { t } from "i18next";
+import { SetState, useStateValue } from "state";
+import { updateWeight } from "services/weight";
 
 interface WeightFormProps {
     weightEntry: WeightEntry
@@ -12,6 +14,12 @@ interface WeightFormProps {
 
 export const WeightForm = ({ weightEntry }: WeightFormProps) => {
 
+    const [state, dispatch] = useStateValue();
+
+    const updateWeightEntry = useCallback(async (entry: WeightEntry) => {
+        const action = { type: SetState.UPDATE_WEIGHT, payload: entry };
+        dispatch(action);
+    }, []);
 
     const validationSchema = yup.object({
         weight: yup
@@ -29,15 +37,12 @@ export const WeightForm = ({ weightEntry }: WeightFormProps) => {
                 date: weightEntry.date.toISOString().split('T')[0],
             }}
             validationSchema={validationSchema}
-            onSubmit={(values) => {
+            onSubmit={async (values) => {
 
                 weightEntry.weight = values.weight;
                 weightEntry.date = new Date(values.date);
-                const adapter = new WeightAdapter();
-
-                // Patch object on server
-                // ...
-
+                const newWeightEntry = await updateWeight(weightEntry);
+                await updateWeightEntry(newWeightEntry);
             }}
         >
             {formik => (

@@ -4,7 +4,7 @@ import { WeightEntry } from "components/BodyWeight/model";
 
 export type Action = {
     type: string,
-    payload: WeightEntry[]
+    payload: any
 }
 
 export const setWeights = (weights: WeightEntry[]): Action => {
@@ -12,22 +12,42 @@ export const setWeights = (weights: WeightEntry[]): Action => {
 };
 
 export const updateWeightEntry = (entry: WeightEntry): Action => {
-    return { type: SetState.UPDATE_WEIGHT, payload: [entry] };
+    return { type: SetState.UPDATE_WEIGHT, payload: entry };
+};
+
+export const addWeightEntry = (entry: WeightEntry): Action => {
+    return { type: SetState.UPDATE_WEIGHT, payload: entry };
 };
 
 export const reducer = (state: State, action: Action): State => {
 
     switch (action.type) {
+        // Load all weights from the server
         case SetState.SET_WEIGHTS:
             return {
                 ...state,
                 weights: action.payload
             };
 
+        // Replace the weight entry with the new one
         case SetState.UPDATE_WEIGHT:
+            const newWeights = state.weights.map(w => {
+                if (w.id === action.payload.id) {
+                    return action.payload;
+                }
+                return w;
+            });
+
             return {
                 ...state,
-                weights: action.payload
+                weights: newWeights
+            };
+
+        // Add a new weight entry
+        case SetState.ADD_WEIGHT:
+            return {
+                ...state,
+                weights: [...state.weights, action.payload]
             };
 
         default:
