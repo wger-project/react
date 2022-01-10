@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { ActionButton } from './index';
+import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
 import { WeightEntry } from "components/BodyWeight/model";
 
 describe("Body weight test", () => {
