@@ -1,8 +1,11 @@
 {
+  "weight": "Weight",
+  "date": "Date",
+  "submit": "Submit",
   "edit": "Edit",
   "delete": "Delete",
-  "date": "Date",
-  "weight": "Weight",
+  "add": "Add",
   "difference": "Difference",
-  "days": "Days"
+  "days": "Days",
+  "close": "Close"
 }
