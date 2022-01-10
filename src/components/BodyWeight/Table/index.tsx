@@ -1,11 +1,12 @@
 import React from 'react';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
 import { processWeight } from '../utils';
-import { ActionButton } from './ActionButton';
+import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
 import { makeStyles } from '@mui/styles';
 import { Trans } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { deleteWeight } from 'services';
+import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
 
 
 export interface WeightTableProps {
@@ -22,7 +23,6 @@ export interface ProcessedWeight {
 const useStyles = makeStyles((theme: Theme) => {
     return {
         table: {
-
             "& .MuiPaper-root": {
                 border: "1px solid #bababa",
 
@@ -78,6 +78,7 @@ export const WeightTable = ({ weights, fetchNewWeights }: WeightTableProps) => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <WeightEntryFab />
         </div>
     );
 };

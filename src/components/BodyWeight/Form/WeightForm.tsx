@@ -6,10 +6,10 @@ import { Button, Stack, TextField } from "@mui/material";
 import { Trans } from "react-i18next";
 import { t } from "i18next";
 import { SetState, useStateValue } from "state";
-import { updateWeight } from "services/weight";
+import { createWeight, updateWeight } from "services/weight";
 
 interface WeightFormProps {
-    weightEntry: WeightEntry,
+    weightEntry?: WeightEntry,
     closeFn?: Function,
 }
 
@@ -19,6 +19,11 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
     const updateWeightEntry = useCallback(async (entry: WeightEntry) => {
         const action = { type: SetState.UPDATE_WEIGHT, payload: entry };
+        dispatch(action);
+    }, [dispatch]);
+
+    const createWeightEntry = useCallback(async (entry: WeightEntry) => {
+        const action = { type: SetState.ADD_WEIGHT, payload: entry };
         dispatch(action);
     }, [dispatch]);
 
@@ -34,23 +39,31 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
     return (
         <Formik
             initialValues={{
-                weight: weightEntry.weight,
-                date: weightEntry.date.toISOString().split('T')[0],
+                weight: weightEntry ? weightEntry.weight : 0,
+                date: weightEntry ? weightEntry.date.toISOString().split('T')[0] : Date.toString(),
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
 
-                weightEntry.weight = values.weight;
-                weightEntry.date = new Date(values.date);
-                const newWeightEntry = await updateWeight(weightEntry);
-                await updateWeightEntry(newWeightEntry);
+                if (weightEntry) {
+                    // Edit existing weight entry
+                    weightEntry.weight = values.weight;
+                    weightEntry.date = new Date(values.date);
+                    const editedWeightEntry = await updateWeight(weightEntry);
+                    await updateWeightEntry(editedWeightEntry);
+
+                } else {
+                    // Create new weight entry
+                    weightEntry = new WeightEntry(new Date(values.date), values.weight);
+                    const newWeightEntry = await createWeight(weightEntry);
+                    await createWeightEntry(newWeightEntry);
+                }
 
                 // if closeFn is defined, close the modal (this form does not have to
                 // be displayed in a modal)
                 if (closeFn) {
                     closeFn();
                 }
-
             }}
         >
             {formik => (

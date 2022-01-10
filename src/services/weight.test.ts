@@ -1,4 +1,4 @@
-import { deleteWeight, getWeights, updateWeight } from "./weight";
+import { createWeight, deleteWeight, getWeights, updateWeight } from "./weight";
 import axios from "axios";
 import { WeightEntry } from "components/BodyWeight/model";
 
@@ -57,6 +57,22 @@ describe("weight service tests", () => {
 
         // Assert
         expect(axios.patch).toHaveBeenCalledTimes(1);
+        expect(result).toStrictEqual(new WeightEntry(new Date('2021-12-10'), 80, 1));
+    });
+
+    test('POST a new weight entry', async () => {
+
+        // Arrange
+        const weightEntry = new WeightEntry(new Date('2021-12-10'), 80, 1);
+        const weightResponse = { data: { id: 1, weight: 80, date: '2021-12-10' } };
+
+        // Act
+        // @ts-ignore
+        axios.post.mockImplementation(() => Promise.resolve(weightResponse));
+        const result = await createWeight(weightEntry);
+
+        // Assert
+        expect(axios.post).toHaveBeenCalledTimes(1);
         expect(result).toStrictEqual(new WeightEntry(new Date('2021-12-10'), 80, 1));
     });
 

@@ -39,3 +39,15 @@ export const updateWeight = async (entry: WeightEntry): Promise<WeightEntry> => 
 
     return adapter.fromJson(response);
 };
+
+/*
+ * Add a new weight entry
+ */
+export const createWeight = async (entry: WeightEntry): Promise<WeightEntry> => { //
+    const adapter = new WeightAdapter();
+    const response = await axios.post(makeUrl(WEIGHT_PATH,), adapter.toJson(entry), {
+        headers: makeHeader(),
+    });
+
+    return adapter.fromJson(response.data);
+};

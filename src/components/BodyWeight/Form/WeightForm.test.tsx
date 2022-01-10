@@ -32,19 +32,41 @@ describe("Test WeightForm component", () => {
         // Arrange
         const weightEntry: WeightEntry = {
             id: 1,
-            date: new Date('2021-12-10'),
+            date: new Date('2022-02-28'),
             weight: 80
         };
 
         // Act
         await render(<WeightForm weightEntry={weightEntry} />);
-        const button = screen.getByRole('button', { name: 'submit' });
+        const submitButton = screen.getByRole('button', { name: 'submit' });
 
         // Assert
-        expect(button).toBeInTheDocument();
-        fireEvent.click(button);
+        expect(submitButton).toBeInTheDocument();
+        fireEvent.click(submitButton);
         await waitFor(() => {
             expect(weightService.updateWeight).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    test('Creating a new weight entry', async () => {
+
+        // Arrange
+        await render(<WeightForm />);
+        const dateInput = await screen.findByLabelText('date');
+        const weightInput = await screen.findByLabelText('weight');
+        const submitButton = screen.getByRole('button', { name: 'submit' });
+
+        // Act
+        fireEvent.input(dateInput, { target: { value: '2022-02-28' } });
+        fireEvent.input(weightInput, { target: { value: '80' } });
+
+        // Assert
+        expect(dateInput).toBeInTheDocument();
+        expect(weightInput).toBeInTheDocument();
+        expect(submitButton).toBeInTheDocument();
+        fireEvent.click(submitButton);
+        await waitFor(() => {
+            expect(weightService.createWeight).toHaveBeenCalledTimes(1);
         });
     });
 
