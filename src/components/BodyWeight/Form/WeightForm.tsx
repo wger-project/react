@@ -9,17 +9,18 @@ import { SetState, useStateValue } from "state";
 import { updateWeight } from "services/weight";
 
 interface WeightFormProps {
-    weightEntry: WeightEntry
+    weightEntry: WeightEntry,
+    closeFn?: Function,
 }
 
-export const WeightForm = ({ weightEntry }: WeightFormProps) => {
+export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
     const [state, dispatch] = useStateValue();
 
     const updateWeightEntry = useCallback(async (entry: WeightEntry) => {
         const action = { type: SetState.UPDATE_WEIGHT, payload: entry };
         dispatch(action);
-    }, []);
+    }, [dispatch]);
 
     const validationSchema = yup.object({
         weight: yup
@@ -43,6 +44,13 @@ export const WeightForm = ({ weightEntry }: WeightFormProps) => {
                 weightEntry.date = new Date(values.date);
                 const newWeightEntry = await updateWeight(weightEntry);
                 await updateWeightEntry(newWeightEntry);
+
+                // if closeFn is defined, close the modal (this form does not have to
+                // be displayed in a modal)
+                if (closeFn) {
+                    closeFn();
+                }
+
             }}
         >
             {formik => (

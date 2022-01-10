@@ -58,7 +58,7 @@ export const ActionButton = ({ weight, handleDeleteWeight }: ActionButtonProps) 
             </Menu>
 
             <WgerModal title={t('edit')} isOpen={openModal} closeFn={handleCloseModal}>
-                <WeightForm weightEntry={weight} />
+                <WeightForm weightEntry={weight} closeFn={handleCloseModal} />
             </WgerModal>
         </div>
     );
