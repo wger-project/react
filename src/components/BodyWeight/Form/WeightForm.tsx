@@ -46,7 +46,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
         <Formik
             initialValues={{
                 weight: weightEntry ? weightEntry.weight : 0,
-                date: weightEntry ? dateToYYYYMMDD(weightEntry.date) : Date.toString(),
+                date: weightEntry ? dateToYYYYMMDD(weightEntry.date) : dateToYYYYMMDD(new Date()),
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
