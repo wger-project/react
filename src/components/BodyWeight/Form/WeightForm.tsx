@@ -46,7 +46,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
         <Formik
             initialValues={{
                 weight: weightEntry ? weightEntry.weight : 0,
-                date: weightEntry ? weightEntry.date.toISOString().split('T')[0] : Date.toString(),
+                date: weightEntry ? dateToYYYYMMDD(weightEntry.date) : Date.toString(),
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
@@ -106,7 +106,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
                                     // Allow the date of the current weight entry, since we are editing it
                                     if (weightEntry && dateToYYYYMMDD(weightEntry.date) === (date as unknown as DateTime).toISODate()) {
-                                        return true;
+                                        return false;
                                     }
 
                                     // if date is in list of weight entries, disable it
@@ -115,7 +115,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                                     }
 
                                     // all other dates are allowed
-                                    return true;
+                                    return false;
                                 }}
                             />
                         </LocalizationProvider>
