@@ -25,7 +25,7 @@ if (rootElement) {
                 </Router>
             </Suspense>
         </React.StrictMode>,
-        document.getElementById('root')
+        rootElement
     );
 }
 
@@ -34,7 +34,13 @@ if (rootElement) {
  */
 const weightOverview = document.getElementById("weight-overview");
 if (weightOverview) {
-    ReactDOM.render(<WeightOverview />, weightOverview);
+    ReactDOM.render(
+        <Suspense fallback={<div>Loading... </div>}>
+            <StateProvider>
+                <WeightOverview />
+            </StateProvider>
+        </Suspense>,
+        weightOverview);
 }
 
 
