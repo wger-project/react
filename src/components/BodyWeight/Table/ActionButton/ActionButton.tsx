@@ -22,7 +22,6 @@ export const ActionButton = ({ weight, handleDeleteWeight }: ActionButtonProps) 
     };
 
     const handleEdit = () => {
-        console.log(`Editing weight ID: ${weight.id}`);
         handleClose();
         handleOpenModal();
     };

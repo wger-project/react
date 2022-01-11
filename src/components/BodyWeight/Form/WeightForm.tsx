@@ -4,9 +4,14 @@ import * as yup from 'yup';
 import { Form, Formik } from "formik";
 import { Button, Stack, TextField } from "@mui/material";
 import { Trans } from "react-i18next";
-import { t } from "i18next";
+import i18n, { t } from "i18next";
 import { SetState, useStateValue } from "state";
 import { createWeight, updateWeight } from "services/weight";
+import AdapterLuxon from "@mui/lab/AdapterLuxon";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { DatePicker } from "@mui/lab";
+import { DateTime } from "luxon";
+import { dateToYYYYMMDD } from "utils/date";
 
 interface WeightFormProps {
     weightEntry?: WeightEntry,
@@ -16,6 +21,7 @@ interface WeightFormProps {
 export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
     const [state, dispatch] = useStateValue();
+    const [dateValue, setDateValue] = React.useState<Date | null>(weightEntry ? weightEntry.date : new Date());
 
     const updateWeightEntry = useCallback(async (entry: WeightEntry) => {
         const action = { type: SetState.UPDATE_WEIGHT, payload: entry };
@@ -84,14 +90,35 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                             {...formik.getFieldProps('weight')}
                         />
 
+                        <LocalizationProvider dateAdapter={AdapterLuxon} locale={i18n.language}>
+                            <DatePicker
+                                label={t('date')}
+                                value={dateValue}
+                                renderInput={(params) => <TextField {...params} {...formik.getFieldProps('date')} />}
+                                disableFuture={true}
+                                onChange={(newValue) => {
+                                    if (newValue) {
+                                        formik.setFieldValue('date', newValue);
+                                    }
+                                    setDateValue(newValue);
+                                }}
+                                shouldDisableDate={(date) => {
 
-                        <TextField
-                            fullWidth
-                            id="date"
-                            type={'date'}
-                            label={t('date')}
-                            {...formik.getFieldProps('date')}
-                        />
+                                    // Allow the date of the current weight entry, since we are editing it
+                                    if (weightEntry && dateToYYYYMMDD(weightEntry.date) === (date as unknown as DateTime).toISODate()) {
+                                        return true;
+                                    }
+
+                                    // if date is in list of weight entries, disable it
+                                    if (date) {
+                                        return state.weights.some(entry => dateToYYYYMMDD(entry.date) === (date as unknown as DateTime).toISODate());
+                                    }
+
+                                    // all other dates are allowed
+                                    return true;
+                                }}
+                            />
+                        </LocalizationProvider>
 
                     </Stack>
                     <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
