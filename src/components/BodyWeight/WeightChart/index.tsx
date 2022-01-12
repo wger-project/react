@@ -40,7 +40,7 @@ export const WeightChart = ({ weights }: Omit<WeightTableProps, "fetchNewWeights
                     <WeightForm weightEntry={currentEntry} />
                 </WgerModal>
             }
-            <ResponsiveContainer width="90%" height={400}>
+            <ResponsiveContainer width="90%" height={300}>
                 <LineChart data={weightData}>
                     <Line
                         type="monotone"
