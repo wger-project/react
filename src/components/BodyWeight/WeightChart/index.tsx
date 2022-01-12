@@ -4,7 +4,7 @@ import { WeightTableProps } from "components/BodyWeight/Table";
 import i18n, { t } from "i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import { WgerModal } from "components/Core/WgerModal";
+import { WgerModal } from "components/Core/WgerModal/WgerModal";
 
 // don't require the "fetchNewWeights" prop from the WeightTableProps
 export const WeightChart = ({ weights }: Omit<WeightTableProps, "fetchNewWeights">) => {

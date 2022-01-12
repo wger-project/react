@@ -3,7 +3,7 @@ import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { t } from "i18next";
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import { WgerModal } from "components/Core/WgerModal";
+import { WgerModal } from "components/Core/WgerModal/WgerModal";
 
 
 export const WeightEntryFab = () => {
