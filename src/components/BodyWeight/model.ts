@@ -1,5 +1,5 @@
-import { Adapter } from "utils";
 import { dateToYYYYMMDD } from "utils/date";
+import { Adapter } from "utils/Adapter";
 
 export class WeightEntry {
 
