@@ -21,7 +21,6 @@ describe("Test WgerModal component", () => {
         expect(screen.getByText('This is some content')).toBeInTheDocument();
         expect(screen.getByText('Test title')).toBeInTheDocument();
         expect(screen.getByText('Test subtitle')).toBeInTheDocument();
-        expect(screen.getByText('close')).toBeInTheDocument();
     });
 
     test('Doesnt render anything when openFn is false', () => {
@@ -42,7 +41,6 @@ describe("Test WgerModal component", () => {
         expect(screen.queryByText('This is some content')).toBeNull();
         expect(screen.queryByText('Test title')).toBeNull();
         expect(screen.queryByText('Test subtitle')).toBeNull();
-        expect(screen.queryByText('close')).toBeNull();
     });
 
 });

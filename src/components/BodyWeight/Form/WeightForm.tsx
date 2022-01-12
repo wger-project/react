@@ -119,11 +119,12 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                                 }}
                             />
                         </LocalizationProvider>
-
+                        <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
+                            <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
+                                <Trans i18nKey={'submit'} />
+                            </Button>
+                        </Stack>
                     </Stack>
-                    <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
-                        <Trans i18nKey={'submit'} />
-                    </Button>
                 </Form>
             )}
         </Formik>

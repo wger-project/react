@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { Button, Card, CardActions, CardContent, CardHeader, Modal } from "@mui/material";
-import { Trans } from "react-i18next";
+import { Card, CardActions, CardContent, CardHeader, Modal } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 
 export interface WgerModalProps {
     title: String,
@@ -28,14 +28,16 @@ export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, subtitle, 
             aria-describedby="modal-modal-description"
         >
             <Card sx={style}>
-                <CardHeader title={title} subheader={subtitle} />
+                <CardHeader
+                    title={title}
+                    subheader={subtitle}
+                    action={<CloseIcon onClick={closeFn} />}
+                />
                 <CardContent>
                     {children}
                 </CardContent>
                 <CardActions>
-                    <Button onClick={closeFn}>
-                        <Trans i18nKey={'close'} />
-                    </Button>
+
                 </CardActions>
             </Card>
         </Modal>
