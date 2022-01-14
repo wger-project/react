@@ -3,3 +3,9 @@ export interface BodyWeightType {
     date: string,
     weight: string,
 }
+
+export interface Notification {
+    notify: boolean
+    message: string
+    success: boolean
+}

@@ -28,16 +28,17 @@ import {
     Workout,
     WorkoutSchedule,
 } from 'pages';
-import { setWeights, useStateValue } from 'state';
+import { useStateValue } from 'state';
 
 
 function App() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [state, dispatch] = useStateValue();
 
     return (
         <div className="App">
             <Header />
-            {notify ? <Notification message="Test notification message" success={false} /> : null}
+            {state.notification.notify ? <Notification message={state.notification.message} success={state.notification.success} /> : null}
             <Routes>
                 <Route path="/">
                     <Route path="workout">

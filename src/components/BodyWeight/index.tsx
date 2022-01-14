@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { getWeights } from 'services';
 import { WeightTable } from './Table';
 import styles from './body_weight.module.css';
@@ -8,8 +8,6 @@ import { Box } from "@mui/material";
 
 export const BodyWeight = () => {
     const [state, dispatch] = useStateValue();
-    const [notify, setNotify] = useState(false);
-    const [notificationContent, setNotificationContent] = useState({message:"", success:false});
 
     // Using useCallback so that I can use this fetchWeight method in
     // useEffect and elsewhere.
@@ -20,30 +18,18 @@ export const BodyWeight = () => {
         } catch (error) {
             console.log(error);
         }
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         fetchWeights();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchWeights]);
 
-<<<<<<< Updated upstream
     return (
         <div className={styles.root}>
             <WeightChart weights={state.weights} />
             <Box sx={{ mt: 4 }} />
             <WeightTable weights={state.weights} />
-=======
-    const fetchNewWeights = () => {
-        fetchWeights();
-    };
-
-    return (
-        <div className={styles.root}>
-            
-            <WeightChart weights={state.weights}/>
-            <WeightTable fetchNewWeights={fetchNewWeights} weights={state.weights}/>
->>>>>>> Stashed changes
         </div>
     );
 };

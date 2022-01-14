@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './notification.module.css';
 
-interface NotificationType {
+export interface NotificationType {
     message: string
     success: boolean
 }
