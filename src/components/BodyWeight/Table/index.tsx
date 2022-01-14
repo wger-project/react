@@ -45,25 +45,27 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             dispatch(setNotification(
                 {
                     notify: true,
-                    message: "Weight removed Successfully",
-                    success: true
+                    message: "Successful",
+                    severity: "success",
+                    title: "Success"
                 }
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({notify: false, message: "", success: false}));
+                dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
             }, 5000);
         } catch (error: unknown) {
             dispatch(setNotification(
                 {
                     notify: true,
-                    message: "Couldn't delete weight",
-                    success: false
+                    message: "Unsuccessful",
+                    severity: "error",
+                    title: "Error"
                 }
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({notify: false, message: "", success: false}));
+                dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
             }, 5000);
         }
     };

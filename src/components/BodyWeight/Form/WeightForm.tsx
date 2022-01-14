@@ -29,13 +29,14 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
         dispatch(setNotification(
             {
                 notify: true,
-                message: "Weight updated Successfully",
-                success: true
+                message: "Successful",
+                severity: "success",
+                title: "Success"
             }
         ));
         // clear out the notifications after some times
         setTimeout(() => {
-            dispatch(setNotification({notify: false, message: "", success: false}));
+            dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
         }, 5000);
     }, [dispatch]);
 
@@ -45,13 +46,14 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
         dispatch(setNotification(
             {
                 notify: true,
-                message: "Weight Created Successfully",
-                success: true
+                message: "Successful",
+                severity: "success",
+                title: "Success"
             }
         ));
         // clear out the notifications after some times
         setTimeout(() => {
-            dispatch(setNotification({notify: false, message: "", success: false}));
+            dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
         }, 5000);
     }, [dispatch]);
 

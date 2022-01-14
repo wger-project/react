@@ -1,3 +1,5 @@
+import { AlertColor } from "@mui/material";
+
 export interface BodyWeightType {
     id: number,
     date: string,
@@ -7,5 +9,6 @@ export interface BodyWeightType {
 export interface Notification {
     notify: boolean
     message: string
-    success: boolean
+    severity: AlertColor | undefined
+    title: string
 }
