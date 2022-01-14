@@ -71,7 +71,7 @@ export function makeHeader(token?: string): AxiosRequestHeaders {
 
     const csrf_cookie = getCookie(DJANGO_CSRF_COOKIE);
     if (process.env.NODE_ENV === "production" && csrf_cookie != undefined) {
-        out['x-csrf-token'] = csrf_cookie;
+        out['X-CSRFToken'] = csrf_cookie;
     }
 
     return out;
