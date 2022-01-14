@@ -14,7 +14,15 @@ export const WeightEntryFab = () => {
 
     return (
         <div>
-            <Fab color="primary" aria-label="add" onClick={handleOpenModal}>
+            <Fab
+                color="primary"
+                aria-label="add"
+                onClick={handleOpenModal}
+                sx={{
+                    position: 'fixed',
+                    bottom: (theme) => theme.spacing(2),
+                    right: (theme) => theme.spacing(2)
+                }}>
                 <AddIcon />
             </Fab>
             <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
