@@ -4,10 +4,13 @@ import { WeightTable } from './Table';
 import styles from './body_weight.module.css';
 import { setWeights, useStateValue } from 'state';
 import { WeightChart } from "components/BodyWeight/WeightChart";
+import { Box } from "@mui/material";
 
 export const BodyWeight = () => {
     const [state, dispatch] = useStateValue();
 
+    // Using useCallback so that I can use this fetchWeight method in
+    // useEffect and elsewhere.
     const fetchWeights = useCallback(async () => {
         try {
             const receivedWeights = await getWeights();
@@ -22,15 +25,11 @@ export const BodyWeight = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchWeights]);
 
-    const fetchNewWeights = () => {
-        fetchWeights();
-    };
-
-
     return (
         <div className={styles.root}>
-            <WeightChart weights={state.weights}/>
-            <WeightTable fetchNewWeights={fetchNewWeights} weights={state.weights}/>
+            <WeightChart weights={state.weights} />
+            <Box sx={{ mt: 4 }} />
+            <WeightTable weights={state.weights} />
         </div>
     );
 };
