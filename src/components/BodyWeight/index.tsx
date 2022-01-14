@@ -8,6 +8,8 @@ import { WeightChart } from "components/BodyWeight/WeightChart";
 export const BodyWeight = () => {
     const [state, dispatch] = useStateValue();
 
+    // Using useCallback so that I can use this fetchWeight method in
+    // useEffect and elsewhere.
     const fetchWeights = useCallback(async () => {
         try {
             const receivedWeights = await getWeights();
@@ -22,15 +24,10 @@ export const BodyWeight = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchWeights]);
 
-    const fetchNewWeights = () => {
-        fetchWeights();
-    };
-
-
     return (
         <div className={styles.root}>
             <WeightChart weights={state.weights}/>
-            <WeightTable fetchNewWeights={fetchNewWeights} weights={state.weights}/>
+            <WeightTable weights={state.weights}/>
         </div>
     );
 };
