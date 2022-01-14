@@ -27,11 +27,23 @@ export const BodyWeight = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchWeights]);
 
+<<<<<<< Updated upstream
     return (
         <div className={styles.root}>
             <WeightChart weights={state.weights} />
             <Box sx={{ mt: 4 }} />
             <WeightTable weights={state.weights} />
+=======
+    const fetchNewWeights = () => {
+        fetchWeights();
+    };
+
+    return (
+        <div className={styles.root}>
+            
+            <WeightChart weights={state.weights}/>
+            <WeightTable fetchNewWeights={fetchNewWeights} weights={state.weights}/>
+>>>>>>> Stashed changes
         </div>
     );
 };
