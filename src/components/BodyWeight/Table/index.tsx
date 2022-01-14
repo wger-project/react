@@ -6,12 +6,13 @@ import { makeStyles } from '@mui/styles';
 import { Trans } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { deleteWeight } from 'services';
+import { useStateValue } from 'state';
+import { removeWeight } from 'state/reducer';
 import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
 
 
 export interface WeightTableProps {
     weights: WeightEntry[]
-    fetchNewWeights: () => void
 }
 
 export interface ProcessedWeight {
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => {
     };
 });
 
-export const WeightTable = ({ weights, fetchNewWeights }: WeightTableProps) => {
+export const WeightTable = ({ weights }: WeightTableProps) => {const [state, dispatch] = useStateValue();
     const classes = useStyles();
     const processedWeights = processWeight(weights);
 
@@ -39,8 +40,7 @@ export const WeightTable = ({ weights, fetchNewWeights }: WeightTableProps) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const statusCode = await deleteWeight(weight.id!);
-            // call to update weights to newest values after a weight is deleted
-            fetchNewWeights();
+            dispatch(removeWeight(weight.id));
         } catch (error) {
             console.log(error);
         }

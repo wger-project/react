@@ -11,12 +11,8 @@ describe("Body weight test", () => {
             new WeightEntry(new Date('2021/12/20'), 90, 2),
         ];
 
-        const fetchNewWeights = () => {
-            return weightsData;
-        };
-
         // since I used context api to provide state, also need it here
-        render(<WeightTable fetchNewWeights={fetchNewWeights} weights={weightsData}/>);
+        render(<WeightTable weights={weightsData}/>);
 
         // Both weights are found in th document
         const weightRow = await screen.findByText('80');
