@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { getWeights } from 'services';
 import { WeightTable } from './Table';
 import styles from './body_weight.module.css';
@@ -8,6 +8,8 @@ import { Box } from "@mui/material";
 
 export const BodyWeight = () => {
     const [state, dispatch] = useStateValue();
+    const [notify, setNotify] = useState(false);
+    const [notificationContent, setNotificationContent] = useState({message:"", success:false});
 
     // Using useCallback so that I can use this fetchWeight method in
     // useEffect and elsewhere.

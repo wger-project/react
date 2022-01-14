@@ -1,6 +1,10 @@
 import React from 'react';
 import './App.css';
-import { Header } from './components';
+import {
+    Header,
+    Notification
+} from './components';
+import {useTranslation} from "react-i18next";
 import { Route, Routes } from 'react-router-dom';
 import {
     About,
@@ -24,13 +28,16 @@ import {
     Workout,
     WorkoutSchedule,
 } from 'pages';
+import { setWeights, useStateValue } from 'state';
 
 
 function App() {
+    const [state, dispatch] = useStateValue();
 
     return (
         <div className="App">
             <Header />
+            {notify ? <Notification message="Test notification message" success={false} /> : null}
             <Routes>
                 <Route path="/">
                     <Route path="workout">
