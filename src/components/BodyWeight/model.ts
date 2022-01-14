@@ -1,5 +1,5 @@
-import { Adapter } from "utils";
-import { BodyWeightType } from "types";
+import { dateToYYYYMMDD } from "utils/date";
+import { Adapter } from "utils/Adapter";
 
 export class WeightEntry {
 
@@ -12,7 +12,7 @@ export class WeightEntry {
 }
 
 export class WeightAdapter implements Adapter<WeightEntry> {
-    fromJson(item: BodyWeightType): WeightEntry {
+    fromJson(item: any): WeightEntry {
         return new WeightEntry(
             new Date(item.date),
             parseFloat(item.weight),
@@ -23,7 +23,7 @@ export class WeightAdapter implements Adapter<WeightEntry> {
     toJson(item: WeightEntry): any {
         return {
             id: item.id,
-            name: item.date,
+            date: dateToYYYYMMDD(item.date),
             weight: item.weight,
         };
     }

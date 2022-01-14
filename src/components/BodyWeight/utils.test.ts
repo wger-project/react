@@ -4,30 +4,34 @@ import { WeightEntry } from "components/BodyWeight/model";
 describe("process_weight tests", () => {
     test('process some weight entries', () => {
 
+        // Arrange
+        //
+        const entry1 = new WeightEntry(new Date('2021-12-10'), 80, 1);
+        const entry2 = new WeightEntry(new Date('2021-12-20'), 95, 2);
+        const entry3 = new WeightEntry(new Date('2021-12-25'), 70, 3);
+
+        // Act
+        //
         const result = processWeight([
-            new WeightEntry(new Date('2021-12-10'), 80, 1),
-            new WeightEntry(new Date('2021-12-20'), 95, 2),
-            new WeightEntry(new Date('2021-12-25'), 70, 3),
+            entry1,
+            entry2,
+            entry3,
         ]);
 
+        // Assert
+        //
         expect(result[0]).toStrictEqual({
-            id: 3,
-            weight: 70,
-            date: new Date("2021-12-25T00:00:00.000Z"),
+            entry: entry3,
             change: -25,
             days: 5
         });
         expect(result[1]).toStrictEqual({
-            id: 2,
-            weight: 95,
-            date: new Date("2021-12-20T00:00:00.000Z"),
+            entry: entry2,
             change: 15,
             days: 10
         });
         expect(result[2]).toStrictEqual({
-            id: 1,
-            weight: 80,
-            date: new Date("2021-12-10T00:00:00.000Z"),
+            entry: entry1,
             change: 0,
             days: 0
         });

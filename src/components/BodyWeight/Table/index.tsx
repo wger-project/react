@@ -1,13 +1,14 @@
 import React from 'react';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
+import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
 import { processWeight } from '../utils';
-import { ActionButton } from './ActionButton';
+import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
 import { makeStyles } from '@mui/styles';
 import { Trans } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { deleteWeight } from 'services';
 import { useStateValue } from 'state';
 import { removeWeight } from 'state/reducer';
+import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
 
 
 export interface WeightTableProps {
@@ -15,52 +16,32 @@ export interface WeightTableProps {
 }
 
 export interface ProcessedWeight {
-    date: Date,
-    weight: number,
+    entry: WeightEntry,
     change: number,
     days: number,
-    id: number
 }
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
         table: {
-
             "& .MuiPaper-root": {
                 border: "1px solid #bababa",
-                
+
             }
         },
     };
 });
 
-function createData(
-    date: Date,
-    weight: number,
-    change: number,
-    days: number,
-    id: number,
-) {
-    return { date, weight, change, days, id };
-}
-
-
-export const WeightTable = ({ weights}: WeightTableProps) => {
+export const WeightTable = ({ weights }: WeightTableProps) => {
     const [state, dispatch] = useStateValue();
     const classes = useStyles();
-
     const processedWeights = processWeight(weights);
 
-    // map to produce rows data for the table
-    const rows: ProcessedWeight[] = processedWeights.map(weight => {
-        return createData(weight.date, weight.weight, weight.change, weight.days, weight.id!);
-    });
-
-    const handleDeleteWeight = async (weight: ProcessedWeight) => {
+    const handleDeleteWeight = async (weight: WeightEntry) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const statusCode  = await deleteWeight(weight.id);
-            dispatch(removeWeight(weight.id));
+            const statusCode = await deleteWeight(weight.id!);
+            dispatch(removeWeight(weight.id!));
         } catch (error) {
             console.log(error);
         }
@@ -72,31 +53,35 @@ export const WeightTable = ({ weights}: WeightTableProps) => {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center"><Trans i18nKey={'date'}/></TableCell>
-                            <TableCell align="center"><Trans i18nKey={'weight'}/></TableCell>
-                            <TableCell align="center"><Trans i18nKey={'difference'}/></TableCell>
-                            <TableCell align="center"><Trans i18nKey={'days'}/></TableCell>
-                            <TableCell align="center"/>
+                            <TableCell align="center"><Trans i18nKey={'date'} /></TableCell>
+                            <TableCell align="center"><Trans i18nKey={'weight'} /></TableCell>
+                            <TableCell align="center"><Trans i18nKey={'difference'} /></TableCell>
+                            <TableCell align="center"><Trans i18nKey={'days'} /></TableCell>
+                            <TableCell align="center" />
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
+                        {processedWeights.map((row) => (
                             <TableRow
-                                key={row.date.toLocaleDateString()}
+                                key={row.entry.date.toLocaleDateString()}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row" align="center">
-                                    {row.date.toLocaleDateString()}
+                                    {row.entry.date.toLocaleDateString()}
                                 </TableCell>
-                                <TableCell align="center">{row.weight}</TableCell>
-                                <TableCell align="center">{row.change}</TableCell>
+                                <TableCell align="center">{row.entry.weight}</TableCell>
+                                <TableCell align="center">{+row.change.toFixed(2)}</TableCell>
                                 <TableCell align="center">{row.days}</TableCell>
-                                <TableCell align="center"><ActionButton handleDeleteWeight={handleDeleteWeight} weight={row}/></TableCell>
+                                <TableCell align="center"><ActionButton handleDeleteWeight={handleDeleteWeight}
+                                                                        weight={row.entry} /></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
+            <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
+                <WeightEntryFab />
+            </Stack>
         </div>
     );
 };

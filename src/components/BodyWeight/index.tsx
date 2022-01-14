@@ -4,6 +4,7 @@ import { WeightTable } from './Table';
 import styles from './body_weight.module.css';
 import { setWeights, useStateValue } from 'state';
 import { WeightChart } from "components/BodyWeight/WeightChart";
+import { Box } from "@mui/material";
 
 export const BodyWeight = () => {
     const [state, dispatch] = useStateValue();
@@ -26,8 +27,9 @@ export const BodyWeight = () => {
 
     return (
         <div className={styles.root}>
-            <WeightChart weights={state.weights}/>
-            <WeightTable weights={state.weights}/>
+            <WeightChart weights={state.weights} />
+            <Box sx={{ mt: 4 }} />
+            <WeightTable weights={state.weights} />
         </div>
     );
 };
