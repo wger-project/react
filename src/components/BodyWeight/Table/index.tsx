@@ -32,7 +32,8 @@ const useStyles = makeStyles((theme: Theme) => {
     };
 });
 
-export const WeightTable = ({ weights }: WeightTableProps) => {const [state, dispatch] = useStateValue();
+export const WeightTable = ({ weights }: WeightTableProps) => {
+    const [state, dispatch] = useStateValue();
     const classes = useStyles();
     const processedWeights = processWeight(weights);
 
@@ -40,7 +41,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {const [state, dis
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const statusCode = await deleteWeight(weight.id!);
-            dispatch(removeWeight(weight.id));
+            dispatch(removeWeight(weight.id!));
         } catch (error) {
             console.log(error);
         }
