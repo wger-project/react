@@ -1,9 +1,6 @@
 import React from 'react';
 import styles from './App.module.css';
-import {
-    Header,
-} from './components';
-import {useTranslation} from "react-i18next";
+import { Header, } from './components';
 import { Route, Routes } from 'react-router-dom';
 import {
     About,
@@ -29,6 +26,7 @@ import {
 } from 'pages';
 import { setNotification, useStateValue } from 'state';
 import { Alert, AlertTitle } from '@mui/lab';
+import { Dashboard } from "components/Dashboard/Dashboard";
 
 
 function App() {
@@ -39,16 +37,21 @@ function App() {
         <div className={styles.app}>
             <Header />
             {state.notification.notify ? <Alert
-                                            className={styles.notification}
-                                            severity={state.notification.severity}
-                                            onClose={() => dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}))}
-                                            // variant="filled"
-                                        >
-                                            <AlertTitle>{state.notification.title}</AlertTitle>
-                                            <strong>{state.notification.message}</strong>
-                                        </Alert> : null}
+                className={styles.notification}
+                severity={state.notification.severity}
+                onClose={() => dispatch(setNotification({
+                    notify: false,
+                    message: "",
+                    severity: undefined,
+                    title: ""
+                }))}
+                // variant="filled"
+            >
+                <AlertTitle>{state.notification.title}</AlertTitle>
+                <strong>{state.notification.message}</strong>
+            </Alert> : null}
             <Routes>
-                <Route path="/">
+                <Route path="/" element={<Dashboard />}>
                     <Route path="workout">
                         <Route path="overview" element={<Workout />}></Route>
                         <Route path="schedule" element={<WorkoutSchedule />}></Route>
