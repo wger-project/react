@@ -3,6 +3,7 @@ import React from 'react';
 import { t } from "i18next";
 import { useStateValue } from "state";
 import { BodyWeight } from "components/BodyWeight";
+import { Link } from "react-router-dom";
 
 export const WeightCard = () => {
 
@@ -16,6 +17,7 @@ export const WeightCard = () => {
             </CardContent>
             <CardActions>
                 <Button size="small">{t('add-entry')}</Button>
+                <Button size="small"><Link to="weight/overview">Weight Overview</Link></Button>
             </CardActions>
         </Card>
     );
