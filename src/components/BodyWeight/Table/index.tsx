@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
 import { processWeight } from '../utils';
 import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
 import { makeStyles } from '@mui/styles';
@@ -102,9 +102,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
-                <WeightEntryFab />
-            </Stack>
+            <WeightEntryFab />
         </div>
     );
 };
