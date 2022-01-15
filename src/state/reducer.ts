@@ -1,11 +1,12 @@
 import { State } from 'state';
 import { SetState } from "./stateTypes";
 import { WeightEntry } from "components/BodyWeight/model";
+import { Notification } from "types";
 
 export type Action =
     {
         type: string,
-        payload: WeightEntry[] | WeightEntry | number
+        payload: WeightEntry[] | WeightEntry | number | Notification
     }
 
 export const setWeights = (weights: WeightEntry[]): Action => {
@@ -24,9 +25,13 @@ export const removeWeight = (id: number): Action => {
     return { type: SetState.REMOVE_WEIGHT, payload: id };
 };
 
-const isWeightEntryArray = (weights: unknown): weights is WeightEntry[] =>{
-    return Array.isArray(weights);
+export const setNotification = (notification: Notification): Action => {
+    return { type: SetState.SET_NOTIFICATION, payload: notification };
 };
+
+// const isWeightEntryArray = (weights: unknown): weights is WeightEntry[] =>{
+//     return Array.isArray(weights);
+// };
 
 export const reducer = (state: State, action: Action): State => {
 
@@ -58,12 +63,20 @@ export const reducer = (state: State, action: Action): State => {
                 weights: [...state.weights, action.payload as WeightEntry]
             };
 
+        // remove a weight from state
         case SetState.REMOVE_WEIGHT:
             const updatedWeightsAfterRemove = state.weights.filter(w => w.id !== action.payload);
 
             return {
                 ...state,
                 weights: updatedWeightsAfterRemove
+            };
+        
+        case SetState.SET_NOTIFICATION:
+
+            return {
+                ...state,
+                notification: action.payload as Notification
             };
 
         default:

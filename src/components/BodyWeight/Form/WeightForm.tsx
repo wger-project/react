@@ -5,7 +5,7 @@ import { Form, Formik } from "formik";
 import { Button, Stack, TextField } from "@mui/material";
 import { Trans } from "react-i18next";
 import i18n, { t } from "i18next";
-import { SetState, useStateValue } from "state";
+import { SetState, useStateValue, setNotification } from "state";
 import { createWeight, updateWeight } from "services/weight";
 import AdapterLuxon from "@mui/lab/AdapterLuxon";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -26,11 +26,35 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
     const updateWeightEntry = useCallback(async (entry: WeightEntry) => {
         const action = { type: SetState.UPDATE_WEIGHT, payload: entry };
         dispatch(action);
+        dispatch(setNotification(
+            {
+                notify: true,
+                message: "Successful",
+                severity: "success",
+                title: "Success"
+            }
+        ));
+        // clear out the notifications after some times
+        setTimeout(() => {
+            dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+        }, 5000);
     }, [dispatch]);
 
     const createWeightEntry = useCallback(async (entry: WeightEntry) => {
         const action = { type: SetState.ADD_WEIGHT, payload: entry };
         dispatch(action);
+        dispatch(setNotification(
+            {
+                notify: true,
+                message: "Successful",
+                severity: "success",
+                title: "Success"
+            }
+        ));
+        // clear out the notifications after some times
+        setTimeout(() => {
+            dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+        }, 5000);
     }, [dispatch]);
 
     const validationSchema = yup.object({

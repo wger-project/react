@@ -1,13 +1,16 @@
 import React, { createContext, useContext, useReducer } from "react";
 import { Action, reducer } from "state/reducer";
 import { WeightEntry } from "components/BodyWeight/model";
+import { Notification } from "types";
 
 export type State = {
     weights: WeightEntry[],
+    notification: Notification
 };
 
 const initialState: State = {
     weights: [],
+    notification: {notify: false, message: "", severity: undefined, title: ""}
 };
 
 export const StateContext = createContext<[State, React.Dispatch<Action>]>([
