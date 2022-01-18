@@ -1,1 +1,11 @@
-{}
+{
+    "weight": "Pes",
+    "date": "Data",
+    "submit": "Tramet",
+    "edit": "Edita",
+    "delete": "Esborra",
+    "add": "Afegeix",
+    "difference": "Diferència",
+    "days": "Dies",
+    "close": "Tanca"
+}
