@@ -18,7 +18,7 @@ export const BodyWeight = () => {
         } catch (error) {
             console.log(error);
         }
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         fetchWeights();

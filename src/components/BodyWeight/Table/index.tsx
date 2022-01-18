@@ -1,13 +1,12 @@
 import React from 'react';
-import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
 import { processWeight } from '../utils';
 import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
 import { makeStyles } from '@mui/styles';
 import { Trans } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { deleteWeight } from 'services';
-import { useStateValue } from 'state';
-import { removeWeight } from 'state/reducer';
+import { useStateValue, removeWeight, setNotification } from 'state';
 import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
 
 
@@ -33,6 +32,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export const WeightTable = ({ weights }: WeightTableProps) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [state, dispatch] = useStateValue();
     const classes = useStyles();
     const processedWeights = processWeight(weights);
@@ -42,8 +42,31 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const statusCode = await deleteWeight(weight.id!);
             dispatch(removeWeight(weight.id!));
-        } catch (error) {
-            console.log(error);
+            dispatch(setNotification(
+                {
+                    notify: true,
+                    message: "Successful",
+                    severity: "success",
+                    title: "Success"
+                }
+            ));
+            // clear out the notifications after some times
+            setTimeout(() => {
+                dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+            }, 5000);
+        } catch (error: unknown) {
+            dispatch(setNotification(
+                {
+                    notify: true,
+                    message: "Unsuccessful",
+                    severity: "error",
+                    title: "Error"
+                }
+            ));
+            // clear out the notifications after some times
+            setTimeout(() => {
+                dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+            }, 5000);
         }
     };
 
@@ -79,9 +102,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
-                <WeightEntryFab />
-            </Stack>
+            <WeightEntryFab />
         </div>
     );
 };

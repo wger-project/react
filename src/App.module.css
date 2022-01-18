@@ -1,0 +1,12 @@
+.app {
+  text-align: center;
+  position: relative;
+}
+.app .notification {
+  position: fixed;
+  top: 5%;
+  right: 5%;
+  width: 20%;
+}
+
+/*# sourceMappingURL=App.module.css.map */

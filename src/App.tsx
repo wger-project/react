@@ -1,6 +1,9 @@
 import React from 'react';
-import './App.css';
-import { Header } from './components';
+import styles from './App.module.css';
+import {
+    Header,
+} from './components';
+import {useTranslation} from "react-i18next";
 import { Route, Routes } from 'react-router-dom';
 import {
     About,
@@ -24,13 +27,26 @@ import {
     Workout,
     WorkoutSchedule,
 } from 'pages';
+import { setNotification, useStateValue } from 'state';
+import { Alert, AlertTitle } from '@mui/lab';
 
 
 function App() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [state, dispatch] = useStateValue();
 
     return (
-        <div className="App">
+        <div className={styles.app}>
             <Header />
+            {state.notification.notify ? <Alert
+                                            className={styles.notification}
+                                            severity={state.notification.severity}
+                                            onClose={() => dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}))}
+                                            // variant="filled"
+                                        >
+                                            <AlertTitle>{state.notification.title}</AlertTitle>
+                                            <strong>{state.notification.message}</strong>
+                                        </Alert> : null}
             <Routes>
                 <Route path="/">
                     <Route path="workout">
