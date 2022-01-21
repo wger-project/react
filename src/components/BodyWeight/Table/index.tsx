@@ -1,13 +1,24 @@
 import React from 'react';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
+import {
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
+    Theme
+} from '@mui/material';
 import { processWeight } from '../utils';
 import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
 import { makeStyles } from '@mui/styles';
 import { Trans } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { deleteWeight } from 'services';
-import { useStateValue, removeWeight, setNotification } from 'state';
+import { removeWeight, setNotification, useStateValue } from 'state';
 import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
+import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 
 
 export interface WeightTableProps {
@@ -32,10 +43,24 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export const WeightTable = ({ weights }: WeightTableProps) => {
+
+    const availableResultsPerPage = [10, 50, 100];
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [state, dispatch] = useStateValue();
     const classes = useStyles();
     const processedWeights = processWeight(weights);
+    const [rowsPerPage, setRowsPerPage] = React.useState(availableResultsPerPage[0]);
+    const [page, setPage] = React.useState(0);
+
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     const handleDeleteWeight = async (weight: WeightEntry) => {
         try {
@@ -52,7 +77,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+                dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "" }));
             }, 5000);
         } catch (error: unknown) {
             dispatch(setNotification(
@@ -65,10 +90,20 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+                dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "" }));
             }, 5000);
         }
     };
+
+    const columns: GridColDef[] = [
+        { field: 'date', headerName: 'Date 123' },
+        { field: 'change', headerName: 'Date 123' },
+        {
+            field: 'weight',
+            headerName: 'weight',
+            valueGetter: (params: GridValueGetterParams) => params.row.entry.weight
+        }
+    ];
 
     return (
         <div className={classes.table}>
@@ -84,7 +119,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {processedWeights.map((row) => (
+                        {processedWeights.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             <TableRow
                                 key={row.entry.date.toLocaleDateString()}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -101,7 +136,17 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                         ))}
                     </TableBody>
                 </Table>
+                <TablePagination
+                    rowsPerPageOptions={availableResultsPerPage}
+                    component="div"
+                    count={processedWeights.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
             </TableContainer>
+
             <WeightEntryFab />
         </div>
     );
