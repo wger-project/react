@@ -19,10 +19,5 @@ export const processWeight = (weights: WeightEntry[]) => {
         };
     });
 
-    // sort array based on date to display from recent to oldest
-    processedWeights.sort((a, b) => {
-        return a.entry.date.getTime() > b.entry.date.getTime() ? -1 : b.entry.date.getTime() > a.entry.date.getTime() ? 1 : 0;
-    });
-
     return processedWeights;
 };
