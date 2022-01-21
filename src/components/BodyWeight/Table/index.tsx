@@ -18,7 +18,6 @@ import { WeightEntry } from "components/BodyWeight/model";
 import { deleteWeight } from 'services';
 import { removeWeight, setNotification, useStateValue } from 'state';
 import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
-import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 
 
 export interface WeightTableProps {
@@ -94,16 +93,6 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             }, 5000);
         }
     };
-
-    const columns: GridColDef[] = [
-        { field: 'date', headerName: 'Date 123' },
-        { field: 'change', headerName: 'Date 123' },
-        {
-            field: 'weight',
-            headerName: 'weight',
-            valueGetter: (params: GridValueGetterParams) => params.row.entry.weight
-        }
-    ];
 
     return (
         <div className={classes.table}>
