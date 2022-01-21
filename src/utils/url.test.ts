@@ -3,7 +3,7 @@ import { makeHeader, makeUrl } from "utils/url";
 describe("test url utility", () => {
 
     test('generate overview URL', () => {
-        const result = makeUrl('endpoint', {server: 'http://localhost:8000'});
+        const result = makeUrl('endpoint', { server: 'http://localhost:8000' });
         expect(result).toStrictEqual('http://localhost:8000/api/v2/endpoint/');
     });
 
@@ -13,12 +13,12 @@ describe("test url utility", () => {
     });
 
     test('generate detail URL', () => {
-        const result = makeUrl('endpoint', {id: 1, server: 'https://example2.com'});
+        const result = makeUrl('endpoint', { id: 1, server: 'https://example2.com' });
         expect(result).toStrictEqual('https://example2.com/api/v2/endpoint/1/');
     });
 
     test('generate detail URL, default server', () => {
-        const result = makeUrl('endpoint', {id: 1});
+        const result = makeUrl('endpoint', { id: 1 });
         expect(result).toStrictEqual('https://example.com/api/v2/endpoint/1/');
     });
 });

@@ -38,6 +38,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "cp-build": "cp build/static/js/main.*.js ../server/wger/core/static/react/main.js && cp build/static/css/main.*.css ../server/wger/core/static/react/main.css && cp -r build/locales ../server/wger/core/static/react/",
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "i18n": "i18next",
