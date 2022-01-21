@@ -10,7 +10,7 @@ export const WEIGHT_PATH = 'weightentry';
  * Fetch all weight entries
  */
 export const getWeights = async (): Promise<WeightEntry[]> => {
-    const url = makeUrl(WEIGHT_PATH, {query: {limit: 900}});
+    const url = makeUrl(WEIGHT_PATH, { query: { ordering: '-date', limit: 900 } });
     const { data: receivedWeights } = await axios.get<ResponseType<BodyWeightType>>(url, {
         headers: makeHeader(),
     });
