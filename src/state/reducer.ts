@@ -17,8 +17,8 @@ export const updateWeightEntry = (entry: WeightEntry): Action => {
     return { type: SetState.UPDATE_WEIGHT, payload: entry };
 };
 
-export const addWeightEntry = (entry: WeightEntry): Action => {
-    return { type: SetState.UPDATE_WEIGHT, payload: entry };
+export const addWeightEntry = (entry: WeightEntry): Action => {    
+    return { type: SetState.ADD_WEIGHT, payload: entry };
 };
 
 export const removeWeight = (id: number): Action => {
@@ -57,7 +57,7 @@ export const reducer = (state: State, action: Action): State => {
             };
 
         // Add a new weight entry
-        case SetState.ADD_WEIGHT:
+        case SetState.ADD_WEIGHT:            
             return {
                 ...state,
                 weights: [...state.weights, action.payload as WeightEntry]

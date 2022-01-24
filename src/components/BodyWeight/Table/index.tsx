@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
 import { processWeight } from '../utils';
 import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
@@ -6,7 +6,7 @@ import { makeStyles } from '@mui/styles';
 import { Trans } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { deleteWeight } from 'services';
-import { useStateValue, removeWeight, setNotification } from 'state';
+import { useStateValue, removeWeight, setNotification, addWeightEntry } from 'state';
 import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
 
 
@@ -37,35 +37,72 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
     const classes = useStyles();
     const processedWeights = processWeight(weights);
 
+    const [deleteTimeoutID, SetDeleteTimeoutID] = useState<ReturnType<typeof setTimeout> | undefined>();
+    const [weightToDelete, SetWeightToDelete] = useState<WeightEntry | undefined>();
+
+    useEffect(() => {        
+        // if true, cancel the timeout that will request a DELETE
+        if (state.notification.undo && deleteTimeoutID) {
+            // cancel the timout that will notify and make request
+            clearTimeout(deleteTimeoutID);
+            // only dispatch if weightToDelete is defined
+            
+            weightToDelete && dispatch(addWeightEntry(weightToDelete));
+            // notify the undone successfully
+            dispatch(setNotification(
+                {
+                    notify: true,
+                    message: "Undone",
+                    severity: "success",
+                    title: "Success",
+                    type: "other"
+                }
+            ));
+            // clear out the notifications after some times
+            setTimeout(() => {
+                dispatch(setNotification({notify: false, message: "", severity: undefined, title: "", type: undefined}));
+            }, 5000);
+        }
+    }, [state.notification.undo, deleteTimeoutID, weightToDelete, dispatch]);
+
     const handleDeleteWeight = async (weight: WeightEntry) => {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const statusCode = await deleteWeight(weight.id!);
             dispatch(removeWeight(weight.id!));
             dispatch(setNotification(
                 {
                     notify: true,
                     message: "Successful",
                     severity: "success",
-                    title: "Success"
+                    title: "Success",
+                    type: "delete"
                 }
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+                dispatch(setNotification({notify: false, message: "", severity: undefined, title: "", type: undefined}));
             }, 5000);
+
+           const timeout = setTimeout(async () => {
+                await deleteWeight(weight.id!);
+                console.log("deleted weight");
+                
+           }, 5000);
+
+        SetDeleteTimeoutID(timeout);
+        SetWeightToDelete(weight);      
         } catch (error: unknown) {
             dispatch(setNotification(
                 {
                     notify: true,
                     message: "Unsuccessful",
                     severity: "error",
-                    title: "Error"
+                    title: "Error",
+                    type: "delete"
                 }
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+                dispatch(setNotification({notify: false, message: "", severity: undefined, title: "", type: undefined}));
             }, 5000);
         }
     };
