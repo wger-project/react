@@ -4,7 +4,6 @@ import { t } from "i18next";
 
 export const WorkoutCard = () => {
 
-
     return (
         <Card>
             <CardHeader title={t('workout')} />
@@ -16,7 +15,7 @@ export const WorkoutCard = () => {
                 <p>Content goes here</p>
             </CardContent>
             <CardActions>
-                <Button size="small">{t('add-entry')}</Button>
+                <Button size="small">{t('addEntry')}</Button>
             </CardActions>
         </Card>
     );

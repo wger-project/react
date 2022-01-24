@@ -6,18 +6,12 @@ import { makeStyles } from '@mui/styles';
 import { Trans } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { deleteWeight } from 'services';
-import { useStateValue, removeWeight, setNotification } from 'state';
+import { removeWeight, setNotification, useStateValue } from 'state';
 import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
 
 
 export interface WeightTableProps {
     weights: WeightEntry[]
-}
-
-export interface ProcessedWeight {
-    entry: WeightEntry,
-    change: number,
-    days: number,
 }
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -52,7 +46,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+                dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "" }));
             }, 5000);
         } catch (error: unknown) {
             dispatch(setNotification(
@@ -65,7 +59,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+                dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "" }));
             }, 5000);
         }
     };

@@ -14,7 +14,7 @@ export const WeightChart = ({ weights }: Omit<WeightTableProps, "fetchNewWeights
     const handleCloseModal = () => setIsModalOpen(false);
 
     // map the list of weights to an array of objects with the date and weight
-    const weightData = weights.map(weight => {
+    const weightData = weights.sort((a, b) => a.date.getTime() - b.date.getTime()).map(weight => {
         return {
             // Format date according to the locale
             date: new Date(weight.date).toLocaleDateString(i18n.language),
