@@ -21,9 +21,9 @@ describe("process_weight tests", () => {
         // Assert
         //
         expect(result[0]).toStrictEqual({
-            entry: entry3,
-            change: -25,
-            days: 5
+            entry: entry1,
+            change: 0,
+            days: 0
         });
         expect(result[1]).toStrictEqual({
             entry: entry2,
@@ -31,9 +31,9 @@ describe("process_weight tests", () => {
             days: 10
         });
         expect(result[2]).toStrictEqual({
-            entry: entry1,
-            change: 0,
-            days: 0
+            entry: entry3,
+            change: -25,
+            days: 5
         });
     });
 
