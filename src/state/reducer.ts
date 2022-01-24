@@ -29,9 +29,6 @@ export const setNotification = (notification: Notification): Action => {
     return { type: SetState.SET_NOTIFICATION, payload: notification };
 };
 
-// const isWeightEntryArray = (weights: unknown): weights is WeightEntry[] =>{
-//     return Array.isArray(weights);
-// };
 
 export const reducer = (state: State, action: Action): State => {
 
@@ -42,25 +39,27 @@ export const reducer = (state: State, action: Action): State => {
                 weights: action.payload as WeightEntry[]
             };
 
-        // Replace the weight entry with the new one
+        // Replace the weight entry with the new one and sort by date
         case SetState.UPDATE_WEIGHT:
-            const newWeights = state.weights.map(w => {
+            const newWeights = (state.weights.map(w => {
                 if (w.id === (action.payload as WeightEntry).id) {
                     return action.payload;
                 }
                 return w;
-            });
+            }) as WeightEntry[]).sort((a, b) => b.date.getTime() - a.date.getTime());
 
             return {
                 ...state,
-                weights: newWeights as WeightEntry[]
+                weights: newWeights
             };
 
-        // Add a new weight entry
-        case SetState.ADD_WEIGHT:            
+        // Add a new weight entry and sort by date
+        case SetState.ADD_WEIGHT:
+            const addWeights = [...state.weights, action.payload as WeightEntry]
+                .sort((a, b) => b.date.getTime() - a.date.getTime());
             return {
                 ...state,
-                weights: [...state.weights, action.payload as WeightEntry]
+                weights: addWeights
             };
 
         // remove a weight from state
@@ -71,7 +70,7 @@ export const reducer = (state: State, action: Action): State => {
                 ...state,
                 weights: updatedWeightsAfterRemove
             };
-        
+
         case SetState.SET_NOTIFICATION:
 
             return {

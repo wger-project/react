@@ -139,9 +139,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
-                <WeightEntryFab />
-            </Stack>
+            <WeightEntryFab />
         </div>
     );
 };
