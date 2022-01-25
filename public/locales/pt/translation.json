@@ -1,1 +1,10 @@
-{}
+{
+    "date": "Data",
+    "days": "Dias",
+    "edit": "Editar",
+    "delete": "Deletar",
+    "add": "Adicionar",
+    "weight": "Peso",
+    "submit": "Enviar",
+    "difference": "Diferença"
+}
