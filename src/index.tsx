@@ -10,6 +10,7 @@ import { theme } from 'theme';
 import { ThemeProvider } from '@mui/material/styles';
 import { StateProvider } from 'state';
 import { WeightOverview } from "pages";
+import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
 
 const rootElement = document.getElementById("root");
 if (rootElement) {
@@ -32,7 +33,7 @@ if (rootElement) {
 /*
  * Components used in the wger django app, don't change the IDs here
  */
-const weightOverview = document.getElementById("weight-overview");
+const weightOverview = document.getElementById("react-weight-overview");
 if (weightOverview) {
     ReactDOM.render(
         <Suspense fallback={<div>Loading... </div>}>
@@ -41,6 +42,17 @@ if (weightOverview) {
             </StateProvider>
         </Suspense>,
         weightOverview);
+}
+
+const weightDashboard = document.getElementById("react-weight-dashboard");
+if (weightDashboard) {
+    ReactDOM.render(
+        <Suspense fallback={<div>Loading... </div>}>
+            <StateProvider>
+                <OverviewDashboard />
+            </StateProvider>
+        </Suspense>,
+        weightDashboard);
 }
 
 

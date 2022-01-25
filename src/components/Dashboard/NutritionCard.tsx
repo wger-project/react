@@ -6,7 +6,7 @@ export const NutritionCard = () => {
 
     return (
         <Card>
-            <CardHeader title={t('nutrition')} />
+            <CardHeader title={t('nutritionalPlan')} />
             <CardContent>
                 <Skeleton animation={false} />
                 <Skeleton variant="text" animation={false} />

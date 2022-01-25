@@ -26,8 +26,8 @@ export const OverviewDashboard = () => {
 
     return (
         <div>
-            <WeightChart weights={state.weights} />
-            <Box sx={{ mt: 2, ml: 3, mr: 3 }}>
+            <WeightChart weights={state.weights} height={200} />
+            <Box sx={{ mt: 2, }}>
                 <WeightTableDashboard weights={state.weights} />
             </Box>
         </div>
