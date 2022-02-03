@@ -79,14 +79,42 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                     // Edit existing weight entry
                     weightEntry.weight = values.weight;
                     weightEntry.date = new Date(values.date);
-                    const editedWeightEntry = await updateWeight(weightEntry);
-                    await updateWeightEntry(editedWeightEntry);
-
+                    try {
+                        const editedWeightEntry = await updateWeight(weightEntry);                        
+                        await updateWeightEntry(editedWeightEntry);
+                    } catch (error) {    
+                        dispatch(setNotification(
+                            {
+                                notify: true,
+                                message: error as string,
+                                severity: "error",
+                                title: "Failed to save"
+                            }
+                        ));
+                        setTimeout(() => {
+                            dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+                        }, 5000);
+                    }
+                    
                 } else {
                     // Create new weight entry
                     weightEntry = new WeightEntry(new Date(values.date), values.weight);
-                    const newWeightEntry = await createWeight(weightEntry);
-                    await createWeightEntry(newWeightEntry);
+                    try {
+                        const newWeightEntry = await createWeight(weightEntry);
+                        await createWeightEntry(newWeightEntry);
+                    } catch (error) {
+                        dispatch(setNotification(
+                            {
+                                notify: true,
+                                message: error as string,
+                                severity: "error",
+                                title: "Failed to save"
+                            }
+                        ));
+                        setTimeout(() => {
+                            dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+                        }, 5000);
+                    }
                 }
 
                 // if closeFn is defined, close the modal (this form does not have to
