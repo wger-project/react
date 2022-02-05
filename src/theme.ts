@@ -4,7 +4,10 @@ const themeOptions: ThemeOptions = {
 
     spacing: 8,
     typography: {
-        fontFamily: `'Open Sans Light'`
+        fontFamily: [
+            '"Open Sans Light"',
+            'sans-serif'
+        ].join(','),
     },
     palette: {
         primary: {
