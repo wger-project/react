@@ -1,12 +1,8 @@
 import React from 'react';
-import {render} from '@testing-library/react';
+import { render } from '@testing-library/react';
 import App from './App';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 test('renders without crashing', () => {
-
-    render(<Router><App/></Router>);
-
-    //const linkElement = screen.getByText("test");
-    //expect(linkElement).toBeInTheDocument();
+    render(<Router><App /></Router>);
 });
