@@ -17,7 +17,6 @@ import { Trans } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { deleteWeight } from 'services';
 import { removeWeight, setNotification, useStateValue } from 'state';
-import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
 
 
 export interface WeightTableProps {
@@ -136,7 +135,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                 />
             </TableContainer>
 
-            <WeightEntryFab />
+            { /*<WeightEntryFab />*/}
         </div>
     );
 };
