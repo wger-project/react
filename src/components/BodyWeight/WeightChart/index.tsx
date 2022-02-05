@@ -12,6 +12,7 @@ export interface WeightChartProps {
 
 export const WeightChart = ({ weights, height }: WeightChartProps) => {
 
+    const NR_OF_WEIGHTS_CHART_DOT = 30;
     height = height || 300;
 
     const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -48,11 +49,12 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
             <ResponsiveContainer width="90%" height={height}>
                 <LineChart data={weightData}>
                     <Line
+
                         type="monotone"
                         dataKey="weight"
                         stroke="#2A4C7D"
-                        strokeWidth={4}
-                        dot={{ strokeWidth: 2, r: 7 }}
+                        strokeWidth={2}
+                        dot={weightData.length > NR_OF_WEIGHTS_CHART_DOT ? false : { strokeWidth: 1, r: 4 }}
                         activeDot={{
                             stroke: '#2A4C7D',
                             strokeWidth: 2,
