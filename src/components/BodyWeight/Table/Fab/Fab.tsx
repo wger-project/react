@@ -21,7 +21,8 @@ export const WeightEntryFab = () => {
                 sx={{
                     position: 'fixed',
                     bottom: (theme) => theme.spacing(2),
-                    right: (theme) => theme.spacing(2)
+                    right: (theme) => theme.spacing(2),
+                    zIndex: 9,
                 }}>
                 <AddIcon />
             </Fab>

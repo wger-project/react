@@ -26,6 +26,7 @@ import {
 } from 'pages';
 import { setNotification, useStateValue } from 'state';
 import { Alert, AlertTitle } from '@mui/lab';
+import { Dashboard } from "components/Dashboard/Dashboard";
 
 
 function App() {
@@ -50,7 +51,8 @@ function App() {
                 <strong>{state.notification.message}</strong>
             </Alert> : null}
             <Routes>
-                <Route path="/">
+                <Route path="/" element={<Dashboard />} />
+                <Route>
                     <Route path="workout">
                         <Route path="overview" element={<Workout />} />
                         <Route path="schedule" element={<WorkoutSchedule />} />

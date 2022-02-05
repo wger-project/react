@@ -21,8 +21,8 @@ export const getWeights = async (): Promise<WeightEntry[]> => {
 /*
  * Delete a weight entry
  */
-export const deleteWeight = async (id: number): Promise<number> => { //
-    const response = await axios.delete<Number>(makeUrl(WEIGHT_PATH, { id: id }), { //
+export const deleteWeight = async (id: number): Promise<number> => {
+    const response = await axios.delete<Number>(makeUrl(WEIGHT_PATH, { id: id }), {
         headers: makeHeader(),
     });
 
@@ -32,7 +32,7 @@ export const deleteWeight = async (id: number): Promise<number> => { //
 /*
  * Update a weight entry
  */
-export const updateWeight = async (entry: WeightEntry): Promise<WeightEntry> => { //
+export const updateWeight = async (entry: WeightEntry): Promise<WeightEntry> => {
     const adapter = new WeightAdapter();
     const response = await axios.patch(makeUrl(WEIGHT_PATH, { id: entry.id }), adapter.toJson(entry), {
         headers: makeHeader(),
@@ -44,7 +44,7 @@ export const updateWeight = async (entry: WeightEntry): Promise<WeightEntry> => 
 /*
  * Add a new weight entry
  */
-export const createWeight = async (entry: WeightEntry): Promise<WeightEntry> => { //
+export const createWeight = async (entry: WeightEntry): Promise<WeightEntry> => {
     const adapter = new WeightAdapter();
     const response = await axios.post(makeUrl(WEIGHT_PATH,), adapter.toJson(entry), {
         headers: makeHeader(),

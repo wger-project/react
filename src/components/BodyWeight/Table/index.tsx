@@ -23,12 +23,6 @@ export interface WeightTableProps {
     weights: WeightEntry[]
 }
 
-export interface ProcessedWeight {
-    entry: WeightEntry,
-    change: number,
-    days: number,
-}
-
 const useStyles = makeStyles((theme: Theme) => {
     return {
         table: {

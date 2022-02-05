@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 import { getWeights } from 'services';
-import styles from './body_weight.module.css';
 import { setWeights, useStateValue } from 'state';
 import { WeightChart } from "components/BodyWeight/WeightChart";
 import { Box } from "@mui/material";
-import { WeightTable } from "components/BodyWeight/Table";
+import { WeightTableDashboard } from "components/BodyWeight/TableDashboard/TableDashboard";
 
-export const BodyWeight = () => {
+export const OverviewDashboard = () => {
     const [state, dispatch] = useStateValue();
 
     // Using useCallback so that I can use this fetchWeight method in
@@ -26,10 +25,11 @@ export const BodyWeight = () => {
     }, [fetchWeights]);
 
     return (
-        <div className={styles.root}>
-            <WeightChart weights={state.weights} />
-            <Box sx={{ mt: 4 }} />
-            <WeightTable weights={state.weights} />
+        <div>
+            <WeightChart weights={state.weights} height={200} />
+            <Box sx={{ mt: 2, }}>
+                <WeightTableDashboard weights={state.weights} />
+            </Box>
         </div>
     );
 };

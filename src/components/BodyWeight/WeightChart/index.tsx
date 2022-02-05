@@ -1,20 +1,25 @@
 import { CartesianGrid, DotProps, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import React from 'react';
-import { WeightTableProps } from "components/BodyWeight/Table";
 import i18n, { t } from "i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
 import { WgerModal } from "components/Core/WgerModal/WgerModal";
 
-// don't require the "fetchNewWeights" prop from the WeightTableProps
-export const WeightChart = ({ weights }: Omit<WeightTableProps, "fetchNewWeights">) => {
+export interface WeightChartProps {
+    weights: WeightEntry[],
+    height?: number,
+}
+
+export const WeightChart = ({ weights, height }: WeightChartProps) => {
+
+    height = height || 300;
 
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const [currentEntry, setCurrentEntry] = React.useState<WeightEntry>();
     const handleCloseModal = () => setIsModalOpen(false);
 
     // map the list of weights to an array of objects with the date and weight
-    const weightData = weights.map(weight => {
+    const weightData = weights.sort((a, b) => a.date.getTime() - b.date.getTime()).map(weight => {
         return {
             // Format date according to the locale
             date: new Date(weight.date).toLocaleDateString(i18n.language),
@@ -40,7 +45,7 @@ export const WeightChart = ({ weights }: Omit<WeightTableProps, "fetchNewWeights
                     <WeightForm weightEntry={currentEntry} />
                 </WgerModal>
             }
-            <ResponsiveContainer width="90%" height={300}>
+            <ResponsiveContainer width="90%" height={height}>
                 <LineChart data={weightData}>
                     <Line
                         type="monotone"
