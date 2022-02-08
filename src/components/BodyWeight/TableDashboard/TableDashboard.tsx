@@ -24,10 +24,6 @@ export const WeightTableDashboard = ({ weights }: WeightTableProps) => {
     const classes = useStyles();
     const WEIGHT_ENTRIES_TO_SHOW = 5;
 
-    // sort weights by date
-    weights.sort((a, b) => {
-        return b.date.getTime() - a.date.getTime();
-    });
     const filteredWeight = weights.slice(0, WEIGHT_ENTRIES_TO_SHOW);
 
     return (
