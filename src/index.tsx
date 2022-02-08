@@ -39,7 +39,9 @@ if (weightOverview) {
     ReactDOM.render(
         <Suspense fallback={<LoadingWidget />}>
             <StateProvider>
-                <WeightOverview />
+                <ThemeProvider theme={theme}>
+                    <WeightOverview />
+                </ThemeProvider>
             </StateProvider>
         </Suspense>,
         weightOverview);
@@ -50,7 +52,9 @@ if (weightDashboard) {
     ReactDOM.render(
         <Suspense fallback={<LoadingWidget />}>
             <StateProvider>
-                <OverviewDashboard />
+                <ThemeProvider theme={theme}>
+                    <OverviewDashboard />
+                </ThemeProvider>
             </StateProvider>
         </Suspense>,
         weightDashboard);

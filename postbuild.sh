@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# TODO: this is a horrible hack to remove Roboto font from the app. For some reason
-#       the font appears in the production build, but not during development.
-sed -i 's/Roboto/Open Sans Light/g' build/static/js/main.*.js
-
 # This script assumes the wger backend is in a folder called "server"
 STATIC_FOLDER=../server/wger/core/static/react
 
