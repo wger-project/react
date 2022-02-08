@@ -11,12 +11,13 @@ import { ThemeProvider } from '@mui/material/styles';
 import { StateProvider } from 'state';
 import { WeightOverview } from "pages";
 import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
+import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 
 const rootElement = document.getElementById("root");
 if (rootElement) {
     ReactDOM.render(
         <React.StrictMode>
-            <Suspense fallback={<div>Loading... </div>}>
+            <Suspense fallback={<LoadingWidget />}>
                 <Router>
                     <StateProvider>
                         <ThemeProvider theme={theme}>
@@ -36,7 +37,7 @@ if (rootElement) {
 const weightOverview = document.getElementById("react-weight-overview");
 if (weightOverview) {
     ReactDOM.render(
-        <Suspense fallback={<div>Loading... </div>}>
+        <Suspense fallback={<LoadingWidget />}>
             <StateProvider>
                 <WeightOverview />
             </StateProvider>
@@ -47,7 +48,7 @@ if (weightOverview) {
 const weightDashboard = document.getElementById("react-weight-dashboard");
 if (weightDashboard) {
     ReactDOM.render(
-        <Suspense fallback={<div>Loading... </div>}>
+        <Suspense fallback={<LoadingWidget />}>
             <StateProvider>
                 <OverviewDashboard />
             </StateProvider>
