@@ -11,7 +11,6 @@ import {
     Calendar,
     CaloriesCalculator,
     Equipments,
-    ExerciseCategory,
     Gallery,
     Ingredients,
     Login,
@@ -27,6 +26,7 @@ import {
 import { setNotification, useStateValue } from 'state';
 import { Alert, AlertTitle } from '@mui/lab';
 import { Dashboard } from "components/Dashboard/Dashboard";
+import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
 
 
 function App() {
@@ -67,7 +67,7 @@ function App() {
                         </Route>
                     </Route>
                     <Route path="exercise">
-                        <Route path="category" element={<ExerciseCategory />} />
+                        <Route path="category" element={<ExerciseOverview />} />
                         <Route path="muscle" element={<MuscleExercise />} />
                         <Route path="equipment" element={<Equipments />} />
                         <Route path="add" element={<AddExercise />} />

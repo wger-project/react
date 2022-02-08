@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BodyWeightType } from 'types';
+import { ApiBodyWeightType } from 'types';
 import { ResponseType } from "./responseType";
 import { WeightAdapter, WeightEntry } from "components/BodyWeight/model";
 import { makeHeader, makeUrl } from "utils/url";
@@ -11,7 +11,7 @@ export const WEIGHT_PATH = 'weightentry';
  */
 export const getWeights = async (): Promise<WeightEntry[]> => {
     const url = makeUrl(WEIGHT_PATH, { query: { ordering: '-date', limit: 900 } });
-    const { data: receivedWeights } = await axios.get<ResponseType<BodyWeightType>>(url, {
+    const { data: receivedWeights } = await axios.get<ResponseType<ApiBodyWeightType>>(url, {
         headers: makeHeader(),
     });
     const adapter = new WeightAdapter();

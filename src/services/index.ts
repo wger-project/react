@@ -1,4 +1,6 @@
-export { 
+export {
     getWeights,
     deleteWeight
- } from './weight';
+} from './weight';
+
+export { getMuscles } from './muscles';

@@ -6,7 +6,7 @@ import { Notification } from "types";
 export type Action =
     {
         type: string,
-        payload: WeightEntry[] | WeightEntry | number | Notification
+        payload: WeightEntry[] | WeightEntry | Notification
     }
 
 export const setWeights = (weights: WeightEntry[]): Action => {
@@ -21,8 +21,8 @@ export const addWeightEntry = (entry: WeightEntry): Action => {
     return { type: SetState.UPDATE_WEIGHT, payload: entry };
 };
 
-export const removeWeight = (id: number): Action => {
-    return { type: SetState.REMOVE_WEIGHT, payload: id };
+export const removeWeight = (entry: WeightEntry): Action => {
+    return { type: SetState.REMOVE_WEIGHT, payload: entry };
 };
 
 export const setNotification = (notification: Notification): Action => {
@@ -64,7 +64,7 @@ export const reducer = (state: State, action: Action): State => {
 
         // remove a weight from state
         case SetState.REMOVE_WEIGHT:
-            const updatedWeightsAfterRemove = state.weights.filter(w => w.id !== action.payload);
+            const updatedWeightsAfterRemove = state.weights.filter(w => w.id !== (action.payload as WeightEntry).id);
 
             return {
                 ...state,

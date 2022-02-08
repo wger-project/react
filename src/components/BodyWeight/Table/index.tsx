@@ -60,7 +60,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const statusCode = await deleteWeight(weight.id!);
-            dispatch(removeWeight(weight.id!));
+            dispatch(removeWeight(weight));
             dispatch(setNotification(
                 {
                     notify: true,
