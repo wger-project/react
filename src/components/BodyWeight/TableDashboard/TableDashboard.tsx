@@ -1,8 +1,8 @@
 import React from 'react';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { Trans } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
+import { useTranslation } from "react-i18next";
 
 
 export interface WeightTableProps {
@@ -21,6 +21,8 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export const WeightTableDashboard = ({ weights }: WeightTableProps) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [t, i18n] = useTranslation();
     const classes = useStyles();
     const WEIGHT_ENTRIES_TO_SHOW = 5;
 
@@ -32,8 +34,8 @@ export const WeightTableDashboard = ({ weights }: WeightTableProps) => {
                 <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center"><Trans i18nKey={'date'} /></TableCell>
-                            <TableCell align="center"><Trans i18nKey={'weight'} /></TableCell>
+                            <TableCell align="center">{t('date')}</TableCell>
+                            <TableCell align="center">{t('weight')}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

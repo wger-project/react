@@ -3,8 +3,7 @@ import { WeightEntry } from "components/BodyWeight/model";
 import * as yup from 'yup';
 import { Form, Formik } from "formik";
 import { Button, Stack, TextField } from "@mui/material";
-import { Trans } from "react-i18next";
-import i18n, { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import { setNotification, SetState, useStateValue } from "state";
 import { createWeight, updateWeight } from "services/weight";
 import AdapterLuxon from "@mui/lab/AdapterLuxon";
@@ -22,6 +21,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
     const [state, dispatch] = useStateValue();
     const [dateValue, setDateValue] = React.useState<Date | null>(weightEntry ? weightEntry.date : new Date());
+    const [t, i18n] = useTranslation();
 
     const updateWeightEntry = useCallback(async (entry: WeightEntry) => {
         const action = { type: SetState.UPDATE_WEIGHT, payload: entry };
@@ -145,7 +145,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                         </LocalizationProvider>
                         <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
-                                <Trans i18nKey={'submit'} />
+                                {t('submit')}
                             </Button>
                         </Stack>
                     </Stack>

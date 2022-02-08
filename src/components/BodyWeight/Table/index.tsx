@@ -13,7 +13,7 @@ import {
 import { processWeight } from '../utils';
 import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
 import { makeStyles } from '@mui/styles';
-import { Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { deleteWeight } from 'services';
 import { removeWeight, setNotification, useStateValue } from 'state';
@@ -40,6 +40,8 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [state, dispatch] = useStateValue();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [t, i18n] = useTranslation();
     const classes = useStyles();
     const processedWeights = processWeight(weights);
     const [rowsPerPage, setRowsPerPage] = React.useState(availableResultsPerPage[0]);
@@ -93,10 +95,10 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center"><Trans i18nKey={'date'} /></TableCell>
-                            <TableCell align="center"><Trans i18nKey={'weight'} /></TableCell>
-                            <TableCell align="center"><Trans i18nKey={'difference'} /></TableCell>
-                            <TableCell align="center"><Trans i18nKey={'days'} /></TableCell>
+                            <TableCell align="center">{t('date')}</TableCell>
+                            <TableCell align="center">{t('weight')}</TableCell>
+                            <TableCell align="center">{t('difference')}</TableCell>
+                            <TableCell align="center">{t('days')}</TableCell>
                             <TableCell align="center" />
                         </TableRow>
                     </TableHead>

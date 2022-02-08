@@ -1,12 +1,11 @@
 import React from 'react';
 
 import { Button, Menu, MenuItem } from "@mui/material";
-import { Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { WgerModal } from "components/Core/WgerModal/WgerModal";
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
 import { WeightEntry } from "components/BodyWeight/model";
-import { t } from "i18next";
 
 interface ActionButtonProps {
     weight: WeightEntry
@@ -14,6 +13,8 @@ interface ActionButtonProps {
 }
 
 export const ActionButton = ({ weight, handleDeleteWeight }: ActionButtonProps) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [t, i18n] = useTranslation();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [openModal, setOpenModal] = React.useState(false);
     const open = Boolean(anchorEl);
@@ -52,8 +53,8 @@ export const ActionButton = ({ weight, handleDeleteWeight }: ActionButtonProps) 
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                <MenuItem onClick={handleEdit}><Trans i18nKey={"edit"} /></MenuItem>
-                <MenuItem onClick={handleDelete}><Trans i18nKey={"delete"} /></MenuItem>
+                <MenuItem onClick={handleEdit}>{t("edit")}</MenuItem>
+                <MenuItem onClick={handleDelete}>{t("delete")}</MenuItem>
             </Menu>
 
             <WgerModal title={t('edit')} isOpen={openModal} closeFn={handleCloseModal}>

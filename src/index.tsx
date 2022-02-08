@@ -44,7 +44,8 @@ if (weightOverview) {
                 </ThemeProvider>
             </StateProvider>
         </Suspense>,
-        weightOverview);
+        weightOverview
+    );
 }
 
 const weightDashboard = document.getElementById("react-weight-dashboard");
@@ -57,7 +58,8 @@ if (weightDashboard) {
                 </ThemeProvider>
             </StateProvider>
         </Suspense>,
-        weightDashboard);
+        weightDashboard
+    );
 }
 
 
