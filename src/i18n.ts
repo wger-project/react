@@ -23,8 +23,8 @@ i18n
         backend: {
             loadPath:
                 process.env.NODE_ENV === "production"
-                    ? ` /static/react/locales/{{lng}}/{{ns}}.json`
-                    : `./locales/{{lng}}/{{ns}}.json`
+                    ? `/static/react/locales/{{lng}}/{{ns}}.json`
+                    : `/locales/{{lng}}/{{ns}}.json`
         },
     });
 
