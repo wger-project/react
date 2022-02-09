@@ -1,23 +1,21 @@
 import React from 'react';
-import { Button, Card, CardActions, CardContent, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 
 export const OverviewCard = () => {
 
     return (
-        <Card sx={{ minWidth: 275 }}>
+        <Card>
+            <CardMedia
+                component="img"
+                image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+                alt="green iguana"
+            />
             <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    Exercise 123
+                <Typography gutterBottom variant="h5" component="div">
+                    Exercise name
                 </Typography>
-                <Typography variant="h5" component="div">
-                    Name here
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                <Typography color="text.secondary">
                     equipment, etc. etc.
-                </Typography>
-                <Typography variant="body2">
-                    Image and so on
-
                 </Typography>
             </CardContent>
             <CardActions>

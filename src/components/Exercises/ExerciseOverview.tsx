@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { getMuscles } from 'services';
 import { useStateValue } from 'state';
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, ImageList, ImageListItem } from "@mui/material";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
 import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
@@ -35,18 +35,32 @@ export const ExerciseOverview = () => {
                     <MuscleFilter />
                 </Grid>
                 <Grid item xs={8}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={4}>
+                    <ImageList cols={3}>
+                        <ImageListItem>
                             <OverviewCard />
-                        </Grid>
-                        <Grid item xs={4}>
+                        </ImageListItem>
+                        <ImageListItem>
                             <OverviewCard />
-                        </Grid>
-                        <Grid item xs={4}>
+                        </ImageListItem>
+                        <ImageListItem>
                             <OverviewCard />
-                        </Grid>
-                    </Grid>
-
+                        </ImageListItem>
+                        <ImageListItem>
+                            <OverviewCard />
+                        </ImageListItem>
+                        <ImageListItem>
+                            <OverviewCard />
+                        </ImageListItem>
+                        <ImageListItem>
+                            <OverviewCard />
+                        </ImageListItem>
+                        <ImageListItem>
+                            <OverviewCard />
+                        </ImageListItem>
+                        <ImageListItem>
+                            <OverviewCard />
+                        </ImageListItem>
+                    </ImageList>
                 </Grid>
             </Grid>
         </Container>
