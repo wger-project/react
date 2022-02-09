@@ -11,10 +11,12 @@ import {
     Typography
 } from "@mui/material";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { useTranslation } from "react-i18next";
 
 export const MuscleFilter = () => {
 
     const [checked, setChecked] = React.useState([0]);
+    const [t, i18n] = useTranslation();
 
     const handleToggle = (value: number) => () => {
         const currentIndex = checked.indexOf(value);
@@ -32,7 +34,7 @@ export const MuscleFilter = () => {
     return (
         <div>
             <Typography gutterBottom variant="h6" component="div">
-                Muscles
+                {t('muscles')}
             </Typography>
             <Paper>
                 <List>

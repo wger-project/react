@@ -1,9 +1,11 @@
 import React from 'react';
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Switch, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export const EquipmentFilter = () => {
 
     const [checked, setChecked] = React.useState([0]);
+    const [t, i18n] = useTranslation();
 
     const handleToggle = (value: number) => () => {
         const currentIndex = checked.indexOf(value);
@@ -21,7 +23,7 @@ export const EquipmentFilter = () => {
     return (
         <div>
             <Typography gutterBottom variant="h6" component="div">
-                Equipment
+                {t('equipment')}
             </Typography>
             <Paper>
                 <List>
