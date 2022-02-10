@@ -12,8 +12,13 @@ import {
 } from "@mui/material";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useTranslation } from "react-i18next";
+import { Muscle } from "components/Exercises/models/muscle";
 
-export const MuscleFilter = () => {
+type MuscleFilterProps = {
+    muscles: Muscle[];
+}
+
+export const MuscleFilter = ({ muscles }: MuscleFilterProps) => {
 
     const [checked, setChecked] = React.useState([0]);
     const [t, i18n] = useTranslation();
@@ -38,12 +43,12 @@ export const MuscleFilter = () => {
             </Typography>
             <Paper>
                 <List>
-                    {[0, 1, 2, 3].map((value) => {
-                        const labelId = `checkbox-list-label-${value}`;
+                    {muscles.map((m) => {
+                        const labelId = `checkbox-list-label-${m.id}`;
 
                         return (
                             <ListItem
-                                key={value}
+                                key={m.id}
                                 disablePadding
                                 secondaryAction={
                                     <IconButton edge="end" aria-label="comments">
@@ -51,17 +56,17 @@ export const MuscleFilter = () => {
                                     </IconButton>
                                 }
                             >
-                                <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+                                <ListItemButton role={undefined} onClick={handleToggle(m.id)} dense>
                                     <ListItemIcon>
                                         <Switch
                                             edge="start"
-                                            checked={checked.indexOf(value) !== -1}
+                                            checked={checked.indexOf(m.id) !== -1}
                                             tabIndex={-1}
                                             disableRipple
                                             inputProps={{ 'aria-labelledby': labelId }}
                                         />
                                     </ListItemIcon>
-                                    <ListItemText id={labelId} primary={`Muscle ${value + 1}`} />
+                                    <ListItemText id={labelId} primary={m.name} />
                                 </ListItemButton>
                             </ListItem>
                         );

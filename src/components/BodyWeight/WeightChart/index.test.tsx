@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { WeightChart } from "./index";
-import { StateProvider } from 'state';
+import { WeightStateProvider } from 'state';
 import { WeightEntry } from "components/BodyWeight/model";
 
 describe("Test BodyWeight component", () => {
@@ -14,7 +14,7 @@ describe("Test BodyWeight component", () => {
         ];
 
         // Act
-        render(<StateProvider><WeightChart weights={weightData}/></StateProvider>);
+        render(<WeightStateProvider><WeightChart weights={weightData} /></WeightStateProvider>);
 
         // Renders without crashing
     });
@@ -25,7 +25,7 @@ describe("Test BodyWeight component", () => {
         const weightData: WeightEntry[] = [];
 
         // Act
-        render(<StateProvider><WeightChart weights={weightData}/></StateProvider>);
+        render(<WeightStateProvider><WeightChart weights={weightData} /></WeightStateProvider>);
 
         // Assert
         // No weights are found in the document

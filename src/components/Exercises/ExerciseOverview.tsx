@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { getMuscles } from 'services';
-import { useStateValue } from 'state';
+import { setMuscles, useExerciseStateValue } from 'state';
 import { Box, Button, Container, Grid, ImageList, ImageListItem, Typography } from "@mui/material";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
 import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
@@ -34,7 +34,7 @@ export const ContributeExerciseBanner = () => {
 };
 
 export const ExerciseOverview = () => {
-    const [state, dispatch] = useStateValue();
+    const [state, dispatch] = useExerciseStateValue();
     const [t, i18n] = useTranslation();
 
     // Using useCallback so that I can use this fetchWeight method in
@@ -42,7 +42,7 @@ export const ExerciseOverview = () => {
     const fetchMuscles = useCallback(async () => {
         try {
             const receivedMuscles = await getMuscles();
-            //dispatch(setWeights(receivedMuscles));
+            dispatch(setMuscles(receivedMuscles));
         } catch (error) {
             console.log(error);
         }
@@ -62,7 +62,7 @@ export const ExerciseOverview = () => {
                 <Grid item xs={3}>
                     <CategoryFilter />
                     <EquipmentFilter />
-                    <MuscleFilter />
+                    <MuscleFilter muscles={state.muscles} />
                 </Grid>
                 <Grid item xs={9}>
                     <ImageList cols={3}>

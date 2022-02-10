@@ -16,7 +16,7 @@ export interface TooltipProps {
     payload?: any,
     label?: string,
 }
-
+ 
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     const [t, i18n] = useTranslation();
 
