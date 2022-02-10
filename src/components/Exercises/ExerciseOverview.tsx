@@ -6,8 +6,8 @@ import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { useTranslation } from "react-i18next";
-import { getCategories, getEquipment, getMuscles } from "services";
-import { setCategories, setEquipment } from "state/exerciseReducer";
+import { getCategories, getEquipment, getExerciseBases, getMuscles } from "services";
+import { setCategories, setEquipment, setExerciseBases } from "state/exerciseReducer";
 
 export const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -37,6 +37,15 @@ export const ContributeExerciseBanner = () => {
 export const ExerciseOverview = () => {
     const [state, dispatch] = useExerciseStateValue();
     const [t, i18n] = useTranslation();
+
+    const fetchExerciseBases = useCallback(async () => {
+        try {
+            const receivedExerciseBases = await getExerciseBases();
+            dispatch(setExerciseBases(receivedExerciseBases));
+        } catch (error) {
+            console.log(error);
+        }
+    }, [dispatch]);
 
     const fetchMuscles = useCallback(async () => {
         try {
@@ -77,6 +86,10 @@ export const ExerciseOverview = () => {
         fetchEquipment();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchEquipment]);
+    useEffect(() => {
+        fetchExerciseBases();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchExerciseBases]);
 
     //console.log(state);
     return (
@@ -92,30 +105,10 @@ export const ExerciseOverview = () => {
                 </Grid>
                 <Grid item xs={9}>
                     <ImageList cols={3}>
-                        <ImageListItem>
-                            <OverviewCard />
-                        </ImageListItem>
-                        <ImageListItem>
-                            <OverviewCard />
-                        </ImageListItem>
-                        <ImageListItem>
-                            <OverviewCard />
-                        </ImageListItem>
-                        <ImageListItem>
-                            <OverviewCard />
-                        </ImageListItem>
-                        <ImageListItem>
-                            <OverviewCard />
-                        </ImageListItem>
-                        <ImageListItem>
-                            <OverviewCard />
-                        </ImageListItem>
-                        <ImageListItem>
-                            <OverviewCard />
-                        </ImageListItem>
-                        <ImageListItem>
-                            <OverviewCard />
-                        </ImageListItem>
+                        {state.exerciseBases.map(b => (<ImageListItem>
+                            <OverviewCard exerciseBase={b} />
+                        </ImageListItem>))}
+                        
                     </ImageList>
                     <ContributeExerciseBanner
                     />

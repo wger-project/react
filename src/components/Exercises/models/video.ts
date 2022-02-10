@@ -1,6 +1,6 @@
 import { Adapter } from "utils/Adapter";
 
-export class ExerciseImage {
+export class ExerciseVideo {
 
     constructor(
         public id: number,
@@ -10,9 +10,9 @@ export class ExerciseImage {
     }
 }
 
-export class ExerciseImageAdapter implements Adapter<ExerciseImage> {
-    fromJson(item: any): ExerciseImage {
-        return new ExerciseImage(
+export class ExerciseVideoAdapter implements Adapter<ExerciseVideo> {
+    fromJson(item: any): ExerciseVideo {
+        return new ExerciseVideo(
             item.id,
             item.uuid,
             item.video,
@@ -20,11 +20,10 @@ export class ExerciseImageAdapter implements Adapter<ExerciseImage> {
         );
     }
 
-    toJson(item: ExerciseImage): any {
+    toJson(item: ExerciseVideo): any {
         return {
             id: item.id,
             video: item.url,
-            is_front: item.isMain
         };
     }
 }

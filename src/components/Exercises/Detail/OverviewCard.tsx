@@ -1,7 +1,13 @@
 import React from 'react';
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
+import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 
-export const OverviewCard = () => {
+type OverviewCardProps = {
+    exerciseBase: ExerciseBase;
+}
+
+
+export const OverviewCard = ({ exerciseBase }: OverviewCardProps) => {
 
     return (
         <Card>
@@ -13,10 +19,11 @@ export const OverviewCard = () => {
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h6" component="div">
-                        Exercise name
+                        ID: {exerciseBase.id}
                     </Typography>
                     <Typography color="text.secondary">
-                        barbell, bench
+                        {exerciseBase.category.name} /
+                        {exerciseBase.equipment.map(e => e.name).join(', ')}
                     </Typography>
                 </CardContent>
             </CardActionArea>
