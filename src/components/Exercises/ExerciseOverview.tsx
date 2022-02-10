@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect } from 'react';
-import { getMuscles } from 'services';
 import { setMuscles, useExerciseStateValue } from 'state';
 import { Box, Button, Container, Grid, ImageList, ImageListItem, Typography } from "@mui/material";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
@@ -7,7 +6,7 @@ import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { useTranslation } from "react-i18next";
-import { getCategories, getEquipment } from "services/muscles";
+import { getCategories, getEquipment, getMuscles } from "services";
 import { setCategories, setEquipment } from "state/exerciseReducer";
 
 export const ContributeExerciseBanner = () => {

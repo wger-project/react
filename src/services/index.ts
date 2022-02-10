@@ -4,3 +4,5 @@ export {
 } from './weight';
 
 export { getMuscles } from './muscles';
+export { getEquipment } from './equipment';
+export { getCategories } from './category';

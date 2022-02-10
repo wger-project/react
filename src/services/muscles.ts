@@ -34,14 +34,3 @@ export const getCategories = async (): Promise<Category[]> => {
     return receivedCategories.results.map(c => adapter.fromJson(c));
 };
 
-/*
- * Fetch all equipment
- */
-export const getEquipment = async (): Promise<Equipment[]> => {
-    const url = makeUrl(EQUIPMENT_PATH);
-    const { data: receivedEquipment } = await axios.get<ResponseType<ApiEquipmentType>>(url, {
-        headers: makeHeader(),
-    });
-    const adapter = new EquipmentAdapter();
-    return receivedEquipment.results.map(e => adapter.fromJson(e));
-};

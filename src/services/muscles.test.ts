@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getMuscles } from "services/muscles";
+import { getMuscles } from "services";
 import { Muscle } from "components/Exercises/models/muscle";
 
 jest.mock("axios");
@@ -41,6 +41,5 @@ describe("muscle service tests", () => {
             new Muscle(1, "Biceps brachii", false),
         ]);
     });
-
-
 });
+
