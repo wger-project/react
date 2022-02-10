@@ -23,33 +23,17 @@ import {
     Workout,
     WorkoutSchedule,
 } from 'pages';
-import { setNotification, useStateValue } from 'state';
-import { Alert, AlertTitle } from '@mui/lab';
+import { Notifications } from 'components/Core/Notifications';
 import { Dashboard } from "components/Dashboard/Dashboard";
 import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
 
 
 function App() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [state, dispatch] = useStateValue();
 
     return (
         <div className={styles.app}>
             <Header />
-            {state.notification.notify ? <Alert
-                className={styles.notification}
-                severity={state.notification.severity}
-                onClose={() => dispatch(setNotification({
-                    notify: false,
-                    message: "",
-                    severity: undefined,
-                    title: ""
-                }))}
-                // variant="filled"
-            >
-                <AlertTitle>{state.notification.title}</AlertTitle>
-                <strong>{state.notification.message}</strong>
-            </Alert> : null}
+             <Notifications />
             <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route>

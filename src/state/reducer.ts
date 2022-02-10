@@ -17,8 +17,8 @@ export const updateWeightEntry = (entry: WeightEntry): Action => {
     return { type: SetState.UPDATE_WEIGHT, payload: entry };
 };
 
-export const addWeightEntry = (entry: WeightEntry): Action => {
-    return { type: SetState.UPDATE_WEIGHT, payload: entry };
+export const addWeightEntry = (entry: WeightEntry): Action => {    
+    return { type: SetState.ADD_WEIGHT, payload: entry };
 };
 
 export const removeWeight = (entry: WeightEntry): Action => {

@@ -10,7 +10,7 @@ export type State = {
 
 const initialState: State = {
     weights: [],
-    notification: {notify: false, message: "", severity: undefined, title: ""}
+    notification: {notify: false, message: "", severity: undefined, title: "", type: undefined}
 };
 
 export const StateContext = createContext<[State, React.Dispatch<Action>]>([

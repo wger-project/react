@@ -19,4 +19,6 @@ export interface Notification {
     message: string
     severity: AlertColor | undefined
     title: string
+    type: "other" | "delete" | undefined
+    undo?: boolean
 }
