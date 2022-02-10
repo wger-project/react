@@ -59,12 +59,12 @@ export const ExerciseOverview = () => {
                 {t('exercises')}
             </Typography>
             <Grid container spacing={2}>
-                <Grid item xs={4}>
+                <Grid item xs={3}>
                     <CategoryFilter />
                     <EquipmentFilter />
                     <MuscleFilter />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={9}>
                     <ImageList cols={3}>
                         <ImageListItem>
                             <OverviewCard />
