@@ -1,13 +1,19 @@
 import React, { createContext, useContext, useReducer } from "react";
 import { Muscle } from "components/Exercises/models/muscle";
 import { ExerciseAction, exerciseReducer } from "state/exerciseReducer";
+import { Category } from "components/Exercises/models/category";
+import { Equipment } from "components/Exercises/models/equipment";
 
 export type ExerciseState = {
     muscles: Muscle[],
+    categories: Category[],
+    equipment: Equipment[],
 };
 
 const initialState: ExerciseState = {
     muscles: [],
+    categories: [],
+    equipment: [],
 };
 
 export const ExerciseStateContext = createContext<[ExerciseState, React.Dispatch<ExerciseAction>]>([

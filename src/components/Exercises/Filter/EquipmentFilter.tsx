@@ -1,8 +1,14 @@
 import React from 'react';
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Switch, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { Equipment } from "components/Exercises/models/equipment";
 
-export const EquipmentFilter = () => {
+
+type EquipmentFilterProps = {
+    equipment: Equipment[];
+}
+
+export const EquipmentFilter = ({ equipment }: EquipmentFilterProps) => {
 
     const [checked, setChecked] = React.useState([0]);
     const [t, i18n] = useTranslation();
@@ -27,25 +33,25 @@ export const EquipmentFilter = () => {
             </Typography>
             <Paper>
                 <List>
-                    {[0, 1, 2, 3].map((value) => {
-                        const labelId = `checkbox-list-label-${value}`;
+                    {equipment.map((equipment) => {
+                        const labelId = `checkbox-list-label-${equipment.id}`;
 
                         return (
                             <ListItem
-                                key={value}
+                                key={equipment.id}
                                 disablePadding
                             >
-                                <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+                                <ListItemButton role={undefined} onClick={handleToggle(equipment.id)} dense>
                                     <ListItemIcon>
                                         <Switch
                                             edge="start"
-                                            checked={checked.indexOf(value) !== -1}
+                                            checked={checked.indexOf(equipment.id) !== -1}
                                             tabIndex={-1}
                                             disableRipple
                                             inputProps={{ 'aria-labelledby': labelId }}
                                         />
                                     </ListItemIcon>
-                                    <ListItemText id={labelId} primary={`Equipment ${value + 1}`} />
+                                    <ListItemText id={labelId} primary={equipment.name} />
                                 </ListItemButton>
                             </ListItem>
                         );

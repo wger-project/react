@@ -5,7 +5,7 @@ import { Notification } from "types";
 
 export type WeightAction =
     {
-        type: string,
+        type: SetWeightState,
         payload: WeightEntry[] | WeightEntry | Notification
     }
 

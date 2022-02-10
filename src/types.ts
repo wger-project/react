@@ -14,6 +14,16 @@ export interface ApiMuscleType {
     image_url_secondary: string,
 }
 
+export interface ApiCategoryType {
+    id: number,
+    name: string,
+}
+
+export interface ApiEquipmentType {
+    id: number,
+    name: string,
+}
+
 export interface Notification {
     notify: boolean
     message: string

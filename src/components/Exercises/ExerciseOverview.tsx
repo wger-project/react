@@ -7,6 +7,8 @@ import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { useTranslation } from "react-i18next";
+import { getCategories, getEquipment } from "services/muscles";
+import { setCategories, setEquipment } from "state/exerciseReducer";
 
 export const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -37,8 +39,6 @@ export const ExerciseOverview = () => {
     const [state, dispatch] = useExerciseStateValue();
     const [t, i18n] = useTranslation();
 
-    // Using useCallback so that I can use this fetchWeight method in
-    // useEffect and elsewhere.
     const fetchMuscles = useCallback(async () => {
         try {
             const receivedMuscles = await getMuscles();
@@ -48,11 +48,38 @@ export const ExerciseOverview = () => {
         }
     }, [dispatch]);
 
+    const fetchEquipment = useCallback(async () => {
+        try {
+            const equipment = await getEquipment();
+            dispatch(setEquipment(equipment));
+        } catch (error) {
+            console.log(error);
+        }
+    }, [dispatch]);
+
+    const fetchCategories = useCallback(async () => {
+        try {
+            const receivedCategories = await getCategories();
+            dispatch(setCategories(receivedCategories));
+        } catch (error) {
+            console.log(error);
+        }
+    }, [dispatch]);
+
     useEffect(() => {
         fetchMuscles();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchMuscles]);
+    useEffect(() => {
+        fetchCategories();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchCategories]);
+    useEffect(() => {
+        fetchEquipment();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchEquipment]);
 
+    //console.log(state);
     return (
         <Container maxWidth="lg">
             <Typography gutterBottom variant="h3" component="div">
@@ -60,8 +87,8 @@ export const ExerciseOverview = () => {
             </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={3}>
-                    <CategoryFilter />
-                    <EquipmentFilter />
+                    <CategoryFilter categories={state.categories} />
+                    <EquipmentFilter equipment={state.equipment} />
                     <MuscleFilter muscles={state.muscles} />
                 </Grid>
                 <Grid item xs={9}>

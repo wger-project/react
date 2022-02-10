@@ -1,8 +1,14 @@
 import React from 'react';
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Switch, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { Category } from "components/Exercises/models/category";
 
-export const CategoryFilter = () => {
+
+type CategoryFilterProps = {
+    categories: Category[];
+}
+
+export const CategoryFilter = ({ categories }: CategoryFilterProps) => {
 
     const [checked, setChecked] = React.useState([0]);
     const [t, i18n] = useTranslation();
@@ -28,25 +34,25 @@ export const CategoryFilter = () => {
             <Paper>
 
                 <List>
-                    {[0, 1, 2, 3].map((value) => {
-                        const labelId = `checkbox-list-label-${value}`;
+                    {categories.map((category) => {
+                        const labelId = `checkbox-list-label-${category.id}`;
 
                         return (
                             <ListItem
-                                key={value}
+                                key={category.id}
                                 disablePadding
                             >
-                                <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+                                <ListItemButton role={undefined} onClick={handleToggle(category.id)} dense>
                                     <ListItemIcon>
                                         <Switch
                                             edge="start"
-                                            checked={checked.indexOf(value) !== -1}
+                                            checked={checked.indexOf(category.id) !== -1}
                                             tabIndex={-1}
                                             disableRipple
                                             inputProps={{ 'aria-labelledby': labelId }}
                                         />
                                     </ListItemIcon>
-                                    <ListItemText id={labelId} primary={`Category ${value + 1}`} />
+                                    <ListItemText id={labelId} primary={category.name} />
                                 </ListItemButton>
                             </ListItem>
                         );
