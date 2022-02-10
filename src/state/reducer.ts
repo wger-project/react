@@ -41,7 +41,7 @@ export const reducer = (state: State, action: Action): State => {
 
         // Replace the weight entry with the new one and sort by date
         case SetState.UPDATE_WEIGHT:
-            const newWeights = (state.weights.map(w => {
+            const updatedWeights = (state.weights.map(w => {
                 if (w.id === (action.payload as WeightEntry).id) {
                     return action.payload;
                 }
@@ -50,7 +50,7 @@ export const reducer = (state: State, action: Action): State => {
 
             return {
                 ...state,
-                weights: newWeights
+                weights: updatedWeights
             };
 
         // Add a new weight entry and sort by date

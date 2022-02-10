@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
+import { Paper, Stack, Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
+    Theme
+} from '@mui/material';
 import { processWeight } from '../utils';
 import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
 import { makeStyles } from '@mui/styles';
-import { Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { deleteWeight } from 'services';
 import { useStateValue, removeWeight, setNotification, addWeightEntry } from 'state';
-import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
 
 
 export interface WeightTableProps {
     weights: WeightEntry[]
-}
-
-export interface ProcessedWeight {
-    entry: WeightEntry,
-    change: number,
-    days: number,
 }
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -32,21 +33,37 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export const WeightTable = ({ weights }: WeightTableProps) => {
+
+    const availableResultsPerPage = [10, 50, 100];
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [state, dispatch] = useStateValue();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [t, i18n] = useTranslation();
     const classes = useStyles();
     const processedWeights = processWeight(weights);
+    const [rowsPerPage, setRowsPerPage] = React.useState(availableResultsPerPage[0]);
+    const [page, setPage] = React.useState(0);
+
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     const [deleteTimeoutID, SetDeleteTimeoutID] = useState<ReturnType<typeof setTimeout> | undefined>();
     const [weightToDelete, SetWeightToDelete] = useState<WeightEntry | undefined>();
 
-    useEffect(() => {        
+    useEffect(() => {
         // if true, cancel the timeout that will request a DELETE
         if (state.notification.undo && deleteTimeoutID) {
             // cancel the timout that will notify and make request
             clearTimeout(deleteTimeoutID);
             // only dispatch if weightToDelete is defined
-            
+
             weightToDelete && dispatch(addWeightEntry(weightToDelete));
             // notify the undone successfully
             dispatch(setNotification(
@@ -79,17 +96,17 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({notify: false, message: "", severity: undefined, title: "", type: undefined}));
+                dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "" , type: undefined}));
             }, 5000);
 
            const timeout = setTimeout(async () => {
                 await deleteWeight(weight.id!);
                 console.log("deleted weight");
-                
+
            }, 5000);
 
         SetDeleteTimeoutID(timeout);
-        SetWeightToDelete(weight);      
+        SetWeightToDelete(weight);
         } catch (error: unknown) {
             dispatch(setNotification(
                 {
@@ -102,7 +119,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({notify: false, message: "", severity: undefined, title: "", type: undefined}));
+                dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "" , type: undefined}));
             }, 5000);
         }
     };
@@ -113,15 +130,15 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center"><Trans i18nKey={'date'} /></TableCell>
-                            <TableCell align="center"><Trans i18nKey={'weight'} /></TableCell>
-                            <TableCell align="center"><Trans i18nKey={'difference'} /></TableCell>
-                            <TableCell align="center"><Trans i18nKey={'days'} /></TableCell>
+                            <TableCell align="center">{t('date')}</TableCell>
+                            <TableCell align="center">{t('weight')}</TableCell>
+                            <TableCell align="center">{t('difference')}</TableCell>
+                            <TableCell align="center">{t('days')}</TableCell>
                             <TableCell align="center" />
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {processedWeights.map((row) => (
+                        {processedWeights.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             <TableRow
                                 key={row.entry.date.toLocaleDateString()}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -138,8 +155,18 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                         ))}
                     </TableBody>
                 </Table>
+                <TablePagination
+                    rowsPerPageOptions={availableResultsPerPage}
+                    component="div"
+                    count={processedWeights.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
             </TableContainer>
-            <WeightEntryFab />
+
+            { /*<WeightEntryFab />*/}
         </div>
     );
 };

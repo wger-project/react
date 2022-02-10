@@ -10,12 +10,14 @@ import { theme } from 'theme';
 import { ThemeProvider } from '@mui/material/styles';
 import { StateProvider } from 'state';
 import { WeightOverview } from "pages";
+import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
+import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 
 const rootElement = document.getElementById("root");
 if (rootElement) {
     ReactDOM.render(
         <React.StrictMode>
-            <Suspense fallback={<div>Loading... </div>}>
+            <Suspense fallback={<LoadingWidget />}>
                 <Router>
                     <StateProvider>
                         <ThemeProvider theme={theme}>
@@ -32,15 +34,32 @@ if (rootElement) {
 /*
  * Components used in the wger django app, don't change the IDs here
  */
-const weightOverview = document.getElementById("weight-overview");
+const weightOverview = document.getElementById("react-weight-overview");
 if (weightOverview) {
     ReactDOM.render(
-        <Suspense fallback={<div>Loading... </div>}>
+        <Suspense fallback={<LoadingWidget />}>
             <StateProvider>
-                <WeightOverview />
+                <ThemeProvider theme={theme}>
+                    <WeightOverview />
+                </ThemeProvider>
             </StateProvider>
         </Suspense>,
-        weightOverview);
+        weightOverview
+    );
+}
+
+const weightDashboard = document.getElementById("react-weight-dashboard");
+if (weightDashboard) {
+    ReactDOM.render(
+        <Suspense fallback={<LoadingWidget />}>
+            <StateProvider>
+                <ThemeProvider theme={theme}>
+                    <OverviewDashboard />
+                </ThemeProvider>
+            </StateProvider>
+        </Suspense>,
+        weightDashboard
+    );
 }
 
 
