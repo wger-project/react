@@ -20,7 +20,18 @@ export class ExerciseBase {
                 public images: ExerciseImage[],
                 public variations: number[],
                 public comments: string[],
-                public translations: ExerciseTranslation[] = [new ExerciseTranslation(1, 'some-uuid', 'Cool name', 'The description', new Language('en', 'English'))]
+                public translations: ExerciseTranslation[] = [
+                    new ExerciseTranslation(Math.floor(Math.random() * 100),
+                        'some-uuid',
+                        `Exercise ${Math.floor(Math.random() * 100)}`,
+                        'The description',
+                        new Language('en', 'English')),
+                    new ExerciseTranslation(Math.floor(Math.random() * 100),
+                        'some-uuid',
+                        `Übung ${Math.floor(Math.random() * 100)}`,
+                        'The description',
+                        new Language('de', 'Deutsch'))
+                ]
                 /*
                 license: number,
                 licenseAuthor: string,
