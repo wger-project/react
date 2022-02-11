@@ -9,6 +9,8 @@ type OverviewCardProps = {
 
 export const OverviewCard = ({ exerciseBase }: OverviewCardProps) => {
 
+    const exercise = exerciseBase.getTranslation('de');
+
     return (
         <Card>
             <CardActionArea>
@@ -19,9 +21,10 @@ export const OverviewCard = ({ exerciseBase }: OverviewCardProps) => {
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h6" component="div">
-                        ID: {exerciseBase.id}
+                        {exercise.name}
                     </Typography>
                     <Typography color="text.secondary">
+                        ID: {exerciseBase.id} /
                         {exerciseBase.category.name} /
                         {exerciseBase.equipment.map(e => e.name).join(', ')}
                     </Typography>

@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect } from 'react';
 import { setMuscles, useExerciseStateValue } from 'state';
-import { Box, Button, Container, Grid, ImageList, ImageListItem, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
 import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
-import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { useTranslation } from "react-i18next";
 import { getCategories, getEquipment, getExerciseBases, getMuscles } from "services";
 import { setCategories, setEquipment, setExerciseBases } from "state/exerciseReducer";
+import { ExerciseGrid } from "components/Exercises/Overview/ExerciseGrid";
 
 export const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -91,7 +91,6 @@ export const ExerciseOverview = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchExerciseBases]);
 
-    //console.log(state);
     return (
         <Container maxWidth="lg">
             <Typography gutterBottom variant="h3" component="div">
@@ -104,14 +103,8 @@ export const ExerciseOverview = () => {
                     <MuscleFilter muscles={state.muscles} />
                 </Grid>
                 <Grid item xs={9}>
-                    <ImageList cols={3}>
-                        {state.exerciseBases.map(b => (<ImageListItem>
-                            <OverviewCard exerciseBase={b} />
-                        </ImageListItem>))}
-                        
-                    </ImageList>
-                    <ContributeExerciseBanner
-                    />
+                    <ExerciseGrid exerciseBases={state.exerciseBases} />
+                    <ContributeExerciseBanner />
                 </Grid>
             </Grid>
         </Container>

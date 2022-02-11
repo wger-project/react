@@ -20,6 +20,7 @@ describe("equipment service tests", () => {
             "previous": null,
             "results": [{
                 "id": 345,
+                "exercise_base_id": 200,
                 "name": "2 Handed Kettlebell Swing",
                 "uuid": "c788d643-150a-4ac7-97ef-84643c6419bf",
                 "description": "<p>Two Handed Russian Style Kettlebell swing</p>",
@@ -97,9 +98,9 @@ describe("equipment service tests", () => {
             "http://localhost:8000/media/exercise-images/9/2fe5f04b-5c9d-448c-a973-3fad6ddd4f74.jpg",
             true);
         expect(axios.get).toHaveBeenCalledTimes(1);
-        expect(result).toStrictEqual([
+        expect(result).toEqual([
             new ExerciseBase(
-                345,
+                200,
                 "c788d643-150a-4ac7-97ef-84643c6419bf",
                 new Date('2015-08-03'),
                 category,

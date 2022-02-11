@@ -4,11 +4,10 @@ import { Equipment, EquipmentAdapter } from "components/Exercises/models/equipme
 import { Muscle, MuscleAdapter } from "components/Exercises/models/muscle";
 import { Category, CategoryAdapter } from "components/Exercises/models/category";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import { Language } from "components/Exercises/models/language";
 
 export class ExerciseBase {
 
-    //translations: ExerciseTranslation[] = [];
+    translations: ExerciseTranslation[] = [];
 
     constructor(public id: number,
                 public uuid: string,
@@ -20,25 +19,31 @@ export class ExerciseBase {
                 public images: ExerciseImage[],
                 public variations: number[],
                 public comments: string[],
-                public translations: ExerciseTranslation[] = [
-                    new ExerciseTranslation(Math.floor(Math.random() * 100),
-                        'some-uuid',
-                        `Exercise ${Math.floor(Math.random() * 100)}`,
-                        'The description',
-                        new Language('en', 'English')),
-                    new ExerciseTranslation(Math.floor(Math.random() * 100),
-                        'some-uuid',
-                        `Übung ${Math.floor(Math.random() * 100)}`,
-                        'The description',
-                        new Language('de', 'Deutsch'))
-                ]
+                translations?: ExerciseTranslation[]
                 /*
                 license: number,
                 licenseAuthor: string,
                  */
     ) {
-
+        if (translations) {
+            this.translations = translations;
+        }
     }
+
+    // Returns the users translation or english as a fallback
+    getTranslation(language: string): ExerciseTranslation {
+        let translation = this.translations.find(t => t.language.nameShort === language);
+        if (!translation) {
+            translation = this.translations.find(t => t.language.nameShort === 'en');
+        }
+
+        if (!translation) {
+            console.error('No translation found for language ' + language);
+            return this.translations[0];
+        }
+        return translation!;
+    }
+
 }
 
 
@@ -46,7 +51,7 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
     fromJson(item: any): ExerciseBase {
 
         return new ExerciseBase(
-            item.id,
+            item.exercise_base_id,
             item.uuid,
             new Date(item.creation_date),
             new CategoryAdapter().fromJson(item.category),

@@ -12,7 +12,7 @@ export class ExerciseTranslation {
 }
 
 
-export class ExerciseAdapter implements Adapter<ExerciseTranslation> {
+export class ExerciseTranslationAdapter implements Adapter<ExerciseTranslation> {
     fromJson(item: any): ExerciseTranslation {
         return new ExerciseTranslation(
             item.id,
