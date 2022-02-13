@@ -7,5 +7,9 @@
     "weight": "Peso",
     "submit": "Enviar",
     "difference": "Diferença",
-    "close": "Fechar"
+    "close": "Fechar",
+    "nutritionalPlan": "Plano nutricional",
+    "currentWeight": "Peso atual",
+    "addEntry": "Adicionar entrada",
+    "workout": "Treino"
 }
