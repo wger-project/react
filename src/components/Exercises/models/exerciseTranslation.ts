@@ -19,7 +19,7 @@ export class ExerciseTranslationAdapter implements Adapter<ExerciseTranslation> 
             item.uuid,
             item.name,
             item.description,
-            new Language('en', 'English'),
+            new Language(1, 'en', 'English'),
         );
     }
 

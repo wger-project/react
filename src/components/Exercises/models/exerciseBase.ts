@@ -11,7 +11,6 @@ export class ExerciseBase {
 
     constructor(public id: number,
                 public uuid: string,
-                public date: Date,
                 public category: Category,
                 public equipment: Equipment[],
                 public muscles: Muscle[],
@@ -51,9 +50,8 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
     fromJson(item: any): ExerciseBase {
 
         return new ExerciseBase(
-            item.exercise_base_id,
+            item.id,
             item.uuid,
-            new Date(item.creation_date),
             new CategoryAdapter().fromJson(item.category),
             item.equipment.map((e: any) => (new EquipmentAdapter().fromJson(e))),
             item.muscles.map((m: any) => (new MuscleAdapter().fromJson(m))),

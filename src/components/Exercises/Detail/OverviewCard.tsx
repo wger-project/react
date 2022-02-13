@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, CardMedia, Chip, Typography } from "@mui/material";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 
 type OverviewCardProps = {
@@ -24,9 +24,11 @@ export const OverviewCard = ({ exerciseBase }: OverviewCardProps) => {
                         {exercise.name}
                     </Typography>
                     <Typography color="text.secondary">
-                        ID: {exerciseBase.id} /
-                        {exerciseBase.category.name} /
-                        {exerciseBase.equipment.map(e => e.name).join(', ')}
+                        <Chip label={exerciseBase.category.name} />
+
+                        {exerciseBase.equipment.map((equipment,) => (
+                            <Chip label={equipment.name} variant={"outlined"} />
+                        ))}
                     </Typography>
                 </CardContent>
             </CardActionArea>

@@ -5,27 +5,28 @@ import { Category } from "components/Exercises/models/category";
 import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
 import { ExerciseImage } from "components/Exercises/models/image";
+import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import { Language } from "components/Exercises/models/language";
 
 jest.mock("axios");
 
 
-describe("equipment service tests", () => {
+describe("Exercise service tests", () => {
 
-    test('GET equipment entries', async () => {
+    test('GET exercise entries', async () => {
 
         // Arrange
         const response = {
             "count": 418,
-            "next": "http://localhost:8000/api/v2/exerciseinfo/?format=json&limit=20&offset=20",
+            "next": "http://localhost:8000/api/v2/exercisebaseinfo/?format=json&limit=20&offset=20",
             "previous": null,
             "results": [{
                 "id": 345,
-                "exercise_base_id": 200,
-                "name": "2 Handed Kettlebell Swing",
                 "uuid": "c788d643-150a-4ac7-97ef-84643c6419bf",
-                "description": "<p>Two Handed Russian Style Kettlebell swing</p>",
-                "creation_date": "2015-08-03",
-                "category": { "id": 10, "name": "Abs" },
+                "category": {
+                    "id": 10,
+                    "name": "Abs"
+                },
                 "muscles": [
                     {
                         "id": 10,
@@ -45,10 +46,15 @@ describe("equipment service tests", () => {
                     }
                 ],
                 "equipment": [
-                    { "id": 10, "name": "Kettlebell" },
-                    { "id": 1, "name": "Test 123" },
+                    {
+                        "id": 10,
+                        "name": "Kettlebell"
+                    },
+                    {
+                        "id": 1,
+                        "name": "Test 123"
+                    },
                 ],
-                "language": { "id": 2, "short_name": "en", "full_name": "English" },
                 "license": {
                     "id": 2,
                     "full_name": "Creative Commons Attribution Share Alike 4",
@@ -76,6 +82,28 @@ describe("equipment service tests", () => {
                     153,
                     266,
                     241
+                ],
+                "exercises": [
+                    {
+                        "id": 111,
+                        "uuid": "583281c7-2362-48e7-95d5-8fd6c455e0fb",
+                        "name": "Squats",
+                        "description": "Do a squat",
+                        "creation_date": "2022-10-22",
+                        "language": 2,
+                        "license": 2,
+                        "license_author": "some dude"
+                    },
+                    {
+                        "id": 9,
+                        "uuid": "dae6f6ed-9408-4e62-a59a-1a33f4e8ab36",
+                        "name": "Kniebeuge",
+                        "description": "Kniebeuge machen",
+                        "creation_date": "2022-01-01",
+                        "language": 1,
+                        "license": 2,
+                        "license_author": "some dude"
+                    }
                 ]
             }]
         };
@@ -87,6 +115,20 @@ describe("equipment service tests", () => {
         const result = await getExerciseBases();
 
         // Assert
+        const language1 = new Language(1, 'en', 'English');
+        const language2 = new Language(2, 'de', 'Deutsch');
+        const exerciseTranslation1 = new ExerciseTranslation(111,
+            '583281c7-2362-48e7-95d5-8fd6c455e0fb',
+            'Squats',
+            'Do a squat',
+            language1
+        );
+        const exerciseTranslation2 = new ExerciseTranslation(9,
+            'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
+            'Kniebeuge',
+            'Kniebeuge machen',
+            language1
+        );
         const category = new Category(10, "Abs");
         const equipment1 = new Equipment(10, "Kettlebell");
         const equipment2 = new Equipment(1, "Test 123");
@@ -100,9 +142,8 @@ describe("equipment service tests", () => {
         expect(axios.get).toHaveBeenCalledTimes(1);
         expect(result).toEqual([
             new ExerciseBase(
-                200,
+                345,
                 "c788d643-150a-4ac7-97ef-84643c6419bf",
-                new Date('2015-08-03'),
                 category,
                 [equipment1, equipment2],
                 [muscle1],
@@ -113,6 +154,10 @@ describe("equipment service tests", () => {
                     "This is a comment",
                     "This is another comment",
                     "This is a third comment"
+                ],
+                [
+                    exerciseTranslation1,
+                    exerciseTranslation2
                 ]
             )
         ]);
