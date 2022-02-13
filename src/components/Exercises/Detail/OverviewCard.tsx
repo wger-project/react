@@ -27,14 +27,11 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                     <Typography gutterBottom variant="h6" component="div">
                         {exercise.name}
                     </Typography>
-                    <Typography color="text.secondary">
-                        { /* TODO: chips tripper an error: <div> cannot appear as a descendant of <p> */}
-                        <Chip label={exerciseBase.category.name} key={exerciseBase.category.id} />
-
-                        {exerciseBase.equipment.map((equipment,) => (
-                            <Chip label={equipment.name} variant={"outlined"} key={equipment.id} />
-                        ))}
-                    </Typography>
+                    
+                    <Chip label={exerciseBase.category.name} key={exerciseBase.category.id} />
+                    {exerciseBase.equipment.map((equipment,) => (
+                        <Chip label={equipment.name} variant={"outlined"} key={equipment.id} />
+                    ))}
                 </CardContent>
             </CardActionArea>
         </Card>
