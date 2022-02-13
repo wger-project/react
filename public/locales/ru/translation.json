@@ -7,5 +7,9 @@
     "difference": "Разница",
     "submit": "Отправить",
     "add": "Добавить",
-    "close": "Закрыть"
+    "close": "Закрыть",
+    "nutritionalPlan": "План питания",
+    "addEntry": "Добавить запись",
+    "currentWeight": "Текущий вес",
+    "workout": "Тренировка"
 }
