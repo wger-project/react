@@ -9,7 +9,7 @@ type OverviewCardProps = {
 
 export const OverviewCard = ({ exerciseBase }: OverviewCardProps) => {
 
-    const exercise = exerciseBase.getTranslation('de');
+    const exercise = exerciseBase.getTranslation(1);
 
     return (
         <Card>

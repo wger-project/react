@@ -1,12 +1,11 @@
 import { Adapter } from "utils/Adapter";
-import { Language } from "components/Exercises/models/language";
 
 export class ExerciseTranslation {
     constructor(public id: number,
                 public uuid: string,
                 public name: string,
                 public description: string,
-                public language: Language,
+                public language: number,
     ) {
     }
 }
@@ -19,7 +18,7 @@ export class ExerciseTranslationAdapter implements Adapter<ExerciseTranslation> 
             item.uuid,
             item.name,
             item.description,
-            new Language(1, 'en', 'English'),
+            item.language,
         );
     }
 

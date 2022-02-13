@@ -10,5 +10,6 @@ export enum SetExerciseState {
     SET_MUSCLES,
     SET_CATEGORIES,
     SET_EQUIPMENT,
-    SET_EXERCISE_BASE
+    SET_EXERCISE_BASE,
+    SET_LANGUAGE
 };

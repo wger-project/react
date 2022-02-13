@@ -4,11 +4,12 @@ import { ExerciseState } from "state/exerciseState";
 import { Equipment } from "components/Exercises/models/equipment";
 import { Category } from "components/Exercises/models/category";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { Language } from "components/Exercises/models/language";
 
 export type ExerciseAction =
     {
         type: SetExerciseState,
-        payload: Muscle[] | Equipment[] | Category[] | ExerciseBase[]
+        payload: Muscle[] | Equipment[] | Category[] | ExerciseBase[] | Language[]
     }
 
 export const setExerciseBases = (bases: ExerciseBase[]): ExerciseAction => {
@@ -17,6 +18,10 @@ export const setExerciseBases = (bases: ExerciseBase[]): ExerciseAction => {
 
 export const setMuscles = (muscles: Muscle[]): ExerciseAction => {
     return { type: SetExerciseState.SET_MUSCLES, payload: muscles };
+};
+
+export const setLanguages = (languages: Language[]): ExerciseAction => {
+    return { type: SetExerciseState.SET_LANGUAGE, payload: languages };
 };
 
 export const setCategories = (categories: Category[]): ExerciseAction => {
@@ -50,6 +55,11 @@ export const exerciseReducer = (state: ExerciseState, action: ExerciseAction): E
             return {
                 ...state,
                 exerciseBases: action.payload as ExerciseBase[]
+            };
+        case SetExerciseState.SET_LANGUAGE:
+            return {
+                ...state,
+                languages: action.payload as Language[]
             };
 
         default:

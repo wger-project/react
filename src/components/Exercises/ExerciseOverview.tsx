@@ -6,8 +6,9 @@ import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
 import { useTranslation } from "react-i18next";
 import { getCategories, getEquipment, getExerciseBases, getMuscles } from "services";
-import { setCategories, setEquipment, setExerciseBases } from "state/exerciseReducer";
+import { setCategories, setEquipment, setExerciseBases, setLanguages } from "state/exerciseReducer";
 import { ExerciseGrid } from "components/Exercises/Overview/ExerciseGrid";
+import { getLanguages } from "services/language";
 
 export const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -74,6 +75,15 @@ export const ExerciseOverview = () => {
         }
     }, [dispatch]);
 
+    const fetchLanguages = useCallback(async () => {
+        try {
+            const receivedLanguages = await getLanguages();
+            dispatch(setLanguages(receivedLanguages));
+        } catch (error) {
+            console.log(error);
+        }
+    }, [dispatch]);
+
     useEffect(() => {
         fetchMuscles();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,6 +100,10 @@ export const ExerciseOverview = () => {
         fetchExerciseBases();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchExerciseBases]);
+    useEffect(() => {
+        fetchLanguages();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchLanguages]);
 
     return (
         <Container maxWidth="lg">

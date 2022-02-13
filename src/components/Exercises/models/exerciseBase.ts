@@ -4,6 +4,7 @@ import { Equipment, EquipmentAdapter } from "components/Exercises/models/equipme
 import { Muscle, MuscleAdapter } from "components/Exercises/models/muscle";
 import { Category, CategoryAdapter } from "components/Exercises/models/category";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 
 export class ExerciseBase {
 
@@ -30,10 +31,15 @@ export class ExerciseBase {
     }
 
     // Returns the users translation or english as a fallback
-    getTranslation(language: string): ExerciseTranslation {
-        let translation = this.translations.find(t => t.language.nameShort === language);
+    //
+    // Note that we still check for the case that no english translation can be
+    // found. While this can't happen for the "regular" wger server, other local
+    // instances might have deleted the english translation or added new exercises
+    // without an english translation.
+    getTranslation(language: number): ExerciseTranslation {
+        let translation = this.translations.find(t => t.language === language);
         if (!translation) {
-            translation = this.translations.find(t => t.language.nameShort === 'en');
+            translation = this.translations.find(t => t.language === ENGLISH_LANGUAGE_ID);
         }
 
         if (!translation) {

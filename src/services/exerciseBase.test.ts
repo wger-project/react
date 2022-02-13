@@ -6,7 +6,6 @@ import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
 import { ExerciseImage } from "components/Exercises/models/image";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import { Language } from "components/Exercises/models/language";
 
 jest.mock("axios");
 
@@ -115,19 +114,17 @@ describe("Exercise service tests", () => {
         const result = await getExerciseBases();
 
         // Assert
-        const language1 = new Language(1, 'en', 'English');
-        const language2 = new Language(2, 'de', 'Deutsch');
         const exerciseTranslation1 = new ExerciseTranslation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Squats',
             'Do a squat',
-            language1
+            2
         );
         const exerciseTranslation2 = new ExerciseTranslation(9,
             'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
             'Kniebeuge',
             'Kniebeuge machen',
-            language1
+            1
         );
         const category = new Category(10, "Abs");
         const equipment1 = new Equipment(10, "Kettlebell");

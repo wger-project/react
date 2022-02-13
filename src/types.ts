@@ -19,6 +19,12 @@ export interface ApiCategoryType {
     name: string,
 }
 
+export interface ApiLanguageType {
+    id: number,
+    short_name: string,
+    full_name: string,
+}
+
 export interface ApiEquipmentType {
     id: number,
     name: string,
