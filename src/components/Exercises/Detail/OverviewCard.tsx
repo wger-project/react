@@ -1,18 +1,22 @@
 import React from 'react';
 import { Card, CardActionArea, CardContent, CardMedia, Chip, Typography } from "@mui/material";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { Language } from "components/Exercises/models/language";
+import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 
 type OverviewCardProps = {
     exerciseBase: ExerciseBase;
+    language?: Language
 }
 
 
-export const OverviewCard = ({ exerciseBase }: OverviewCardProps) => {
+export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
 
-    const exercise = exerciseBase.getTranslation(1);
+
+    const exercise = exerciseBase.getTranslation(language != null ? language.id : ENGLISH_LANGUAGE_ID);
 
     return (
-        <Card>
+        <Card key={exerciseBase.id}>
             <CardActionArea>
                 <CardMedia
                     component="img"
@@ -24,10 +28,11 @@ export const OverviewCard = ({ exerciseBase }: OverviewCardProps) => {
                         {exercise.name}
                     </Typography>
                     <Typography color="text.secondary">
-                        <Chip label={exerciseBase.category.name} />
+                        { /* TODO: chips tripper an error: <div> cannot appear as a descendant of <p> */}
+                        <Chip label={exerciseBase.category.name} key={exerciseBase.category.id} />
 
                         {exerciseBase.equipment.map((equipment,) => (
-                            <Chip label={equipment.name} variant={"outlined"} />
+                            <Chip label={equipment.name} variant={"outlined"} key={equipment.id} />
                         ))}
                     </Typography>
                 </CardContent>

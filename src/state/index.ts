@@ -8,7 +8,7 @@ export {
 } from 'state/weightReducer';
 export { WeightStateProvider, useWeightStateValue } from 'state/weightState';
 export type { WeightState } from 'state/weightState';
-export { SetWeightState } from 'state/stateTypes';
+export { SetWeightState, SetExerciseState } from 'state/stateTypes';
 
 
 export {
@@ -17,4 +17,3 @@ export {
 } from 'state/exerciseReducer';
 export { ExerciseStateProvider, useExerciseStateValue } from 'state/exerciseState';
 export type { ExerciseState } from 'state/exerciseState';
-export { SetExerciseState } from 'state/stateTypes';
