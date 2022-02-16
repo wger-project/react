@@ -14,7 +14,8 @@ describe("Test the CategoryFilter component", () => {
         ];
 
         // Act
-        render(<EquipmentFilter equipment={data} />);
+        render(<EquipmentFilter equipment={data} selectedEquipment={[]} setSelectedEquipment={() => {
+        }} />);
 
         // Assert
         const cat1Element = await screen.findByText("Bench");

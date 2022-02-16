@@ -14,7 +14,8 @@ describe("Test the CategoryFilter component", () => {
         ];
 
         // Act
-        render(<CategoryFilter categories={data} />);
+        render(<CategoryFilter categories={data} selectedCategories={[]} setSelectedCategories={() => {
+        }} />);
 
         // Assert
         const cat1Element = await screen.findByText("Abs");

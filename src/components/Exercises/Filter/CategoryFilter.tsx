@@ -6,16 +6,17 @@ import { Category } from "components/Exercises/models/category";
 
 type CategoryFilterProps = {
     categories: Category[];
+    selectedCategories: Category[];
+    setSelectedCategories: (categories: Category[]) => void;
 }
 
-export const CategoryFilter = ({ categories }: CategoryFilterProps) => {
+export const CategoryFilter = ({ categories, selectedCategories, setSelectedCategories }: CategoryFilterProps) => {
 
-    const [checked, setChecked] = React.useState([0]);
     const [t, i18n] = useTranslation();
 
-    const handleToggle = (value: number) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
+    const handleToggle = (value: Category) => () => {
+        const currentIndex = selectedCategories.indexOf(value);
+        const newChecked = [...selectedCategories];
 
         if (currentIndex === -1) {
             newChecked.push(value);
@@ -23,7 +24,7 @@ export const CategoryFilter = ({ categories }: CategoryFilterProps) => {
             newChecked.splice(currentIndex, 1);
         }
 
-        setChecked(newChecked);
+        setSelectedCategories(newChecked);
     };
 
     return (
@@ -42,11 +43,12 @@ export const CategoryFilter = ({ categories }: CategoryFilterProps) => {
                                 key={category.id}
                                 disablePadding
                             >
-                                <ListItemButton role={undefined} onClick={handleToggle(category.id)} dense>
+                                <ListItemButton role={undefined} onClick={handleToggle(category)} dense>
                                     <ListItemIcon>
                                         <Switch
+                                            key={`category-${category.id}`}
                                             edge="start"
-                                            checked={checked.indexOf(category.id) !== -1}
+                                            checked={selectedCategories.indexOf(category) !== -1}
                                             tabIndex={-1}
                                             disableRipple
                                             inputProps={{ 'aria-labelledby': labelId }}

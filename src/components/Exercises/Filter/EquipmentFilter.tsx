@@ -6,16 +6,17 @@ import { Equipment } from "components/Exercises/models/equipment";
 
 type EquipmentFilterProps = {
     equipment: Equipment[];
+    selectedEquipment: Equipment[];
+    setSelectedEquipment: (equipment: Equipment[]) => void;
 }
 
-export const EquipmentFilter = ({ equipment }: EquipmentFilterProps) => {
+export const EquipmentFilter = ({ equipment, selectedEquipment, setSelectedEquipment }: EquipmentFilterProps) => {
 
-    const [checked, setChecked] = React.useState([0]);
     const [t, i18n] = useTranslation();
 
-    const handleToggle = (value: number) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
+    const handleToggle = (value: Equipment) => () => {
+        const currentIndex = selectedEquipment.indexOf(value);
+        const newChecked = [...selectedEquipment];
 
         if (currentIndex === -1) {
             newChecked.push(value);
@@ -23,7 +24,7 @@ export const EquipmentFilter = ({ equipment }: EquipmentFilterProps) => {
             newChecked.splice(currentIndex, 1);
         }
 
-        setChecked(newChecked);
+        setSelectedEquipment(newChecked);
     };
 
     return (
@@ -41,11 +42,12 @@ export const EquipmentFilter = ({ equipment }: EquipmentFilterProps) => {
                                 key={equipment.id}
                                 disablePadding
                             >
-                                <ListItemButton role={undefined} onClick={handleToggle(equipment.id)} dense>
+                                <ListItemButton role={undefined} onClick={handleToggle(equipment)} dense>
                                     <ListItemIcon>
                                         <Switch
+                                            key={`muscle-${equipment.id}`}
                                             edge="start"
-                                            checked={checked.indexOf(equipment.id) !== -1}
+                                            checked={selectedEquipment.indexOf(equipment) !== -1}
                                             tabIndex={-1}
                                             disableRipple
                                             inputProps={{ 'aria-labelledby': labelId }}

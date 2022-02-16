@@ -13,7 +13,8 @@ describe("Test the CategoryFilter component", () => {
         ];
 
         // Act
-        render(<MuscleFilter muscles={data} />);
+        render(<MuscleFilter muscles={data} selectedMuscles={[]} setSelectedMuscles={() => {
+        }} />);
 
         // Assert
         const cat1Element = await screen.findByText("Anterior deltoid");

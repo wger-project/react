@@ -9,6 +9,9 @@ import { getCategories, getEquipment, getExerciseBases, getMuscles } from "servi
 import { setCategories, setEquipment, setExerciseBases, setLanguages } from "state/exerciseReducer";
 import { ExerciseGrid } from "components/Exercises/Overview/ExerciseGrid";
 import { getLanguages } from "services/language";
+import { Equipment } from "components/Exercises/models/equipment";
+import { Muscle } from "components/Exercises/models/muscle";
+import { Category } from "components/Exercises/models/category";
 
 export const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -38,6 +41,11 @@ export const ContributeExerciseBanner = () => {
 export const ExerciseOverview = () => {
     const [state, dispatch] = useExerciseStateValue();
     const [t, i18n] = useTranslation();
+
+    const [selectedEquipment, setSelectedEquipment] = React.useState<Equipment[]>([]);
+    const [selectedMuscles, setSelectedMuscles] = React.useState<Muscle[]>([]);
+    const [selectedCategories, setSelectedCategories] = React.useState<Category[]>([]);
+
 
     const fetchExerciseBases = useCallback(async () => {
         try {
@@ -105,6 +113,29 @@ export const ExerciseOverview = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchLanguages]);
 
+    let filteredExerciseBases = [...state.exerciseBases];
+    // Filter exercise bases by categories
+    if (selectedCategories.length > 0) {
+        filteredExerciseBases = filteredExerciseBases.filter(exerciseBase => {
+            return selectedCategories.some(category => exerciseBase.category.id === category.id);
+        });
+    }
+
+    // Filter exercises that have one of the selected equipment
+    if (selectedEquipment.length > 0) {
+        filteredExerciseBases = filteredExerciseBases.filter(exerciseBase => {
+            return exerciseBase.equipment.some(equipment => selectedEquipment.some(selectedEquipment => selectedEquipment.id === equipment.id));
+        });
+    }
+
+    // Filter exercises that have one of the selected muscles
+    if (selectedMuscles.length > 0) {
+        filteredExerciseBases = filteredExerciseBases.filter(exerciseBase => {
+            return exerciseBase.muscles.some(muscle => selectedMuscles.some(selectedMuscle => selectedMuscle.id === muscle.id));
+        });
+    }
+
+
     return (
         <Container maxWidth="lg">
             <Typography gutterBottom variant="h3" component="div">
@@ -112,12 +143,26 @@ export const ExerciseOverview = () => {
             </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={3}>
-                    <CategoryFilter categories={state.categories} />
-                    <EquipmentFilter equipment={state.equipment} />
-                    <MuscleFilter muscles={state.muscles} />
+                    <CategoryFilter
+                        categories={state.categories}
+                        selectedCategories={selectedCategories}
+                        setSelectedCategories={setSelectedCategories}
+                    />
+                    <EquipmentFilter
+                        equipment={state.equipment}
+                        selectedEquipment={selectedEquipment}
+                        setSelectedEquipment={setSelectedEquipment}
+                    />
+                    <MuscleFilter
+                        muscles={state.muscles}
+                        selectedMuscles={selectedMuscles}
+                        setSelectedMuscles={setSelectedMuscles}
+                    />
                 </Grid>
                 <Grid item xs={9}>
-                    <ExerciseGrid exerciseBases={state.exerciseBases} />
+                    <ExerciseGrid
+                        exerciseBases={filteredExerciseBases}
+                    />
                     <ContributeExerciseBanner />
                 </Grid>
             </Grid>

@@ -16,16 +16,17 @@ import { Muscle } from "components/Exercises/models/muscle";
 
 type MuscleFilterProps = {
     muscles: Muscle[];
+    selectedMuscles: Muscle[];
+    setSelectedMuscles: (muscles: Muscle[]) => void;
 }
 
-export const MuscleFilter = ({ muscles }: MuscleFilterProps) => {
+export const MuscleFilter = ({ muscles, selectedMuscles, setSelectedMuscles }: MuscleFilterProps) => {
 
-    const [checked, setChecked] = React.useState([0]);
     const [t, i18n] = useTranslation();
 
-    const handleToggle = (value: number) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
+    const handleToggle = (value: Muscle) => () => {
+        const currentIndex = selectedMuscles.indexOf(value);
+        const newChecked = [...selectedMuscles];
 
         if (currentIndex === -1) {
             newChecked.push(value);
@@ -33,7 +34,7 @@ export const MuscleFilter = ({ muscles }: MuscleFilterProps) => {
             newChecked.splice(currentIndex, 1);
         }
 
-        setChecked(newChecked);
+        setSelectedMuscles(newChecked);
     };
 
     return (
@@ -56,11 +57,12 @@ export const MuscleFilter = ({ muscles }: MuscleFilterProps) => {
                                     </IconButton>
                                 }
                             >
-                                <ListItemButton role={undefined} onClick={handleToggle(m.id)} dense>
+                                <ListItemButton role={undefined} onClick={handleToggle(m)} dense>
                                     <ListItemIcon>
                                         <Switch
+                                            key={`muscle-${m.id}`}
                                             edge="start"
-                                            checked={checked.indexOf(m.id) !== -1}
+                                            checked={selectedMuscles.indexOf(m) !== -1}
                                             tabIndex={-1}
                                             disableRipple
                                             inputProps={{ 'aria-labelledby': labelId }}
