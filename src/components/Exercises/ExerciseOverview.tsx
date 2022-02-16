@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { setMuscles, useExerciseStateValue } from 'state';
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Pagination, Stack, Typography } from "@mui/material";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
 import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
@@ -45,6 +45,14 @@ export const ExerciseOverview = () => {
     const [selectedEquipment, setSelectedEquipment] = React.useState<Equipment[]>([]);
     const [selectedMuscles, setSelectedMuscles] = React.useState<Muscle[]>([]);
     const [selectedCategories, setSelectedCategories] = React.useState<Category[]>([]);
+
+    const [page, setPage] = React.useState(1);
+    const handleChange = (event: any, value: number) => {
+        setPage(value);
+    };
+
+    // Should be a multiple of three, since there are three columns in the grid
+    const ITEMS_PER_PAGE = 12;
 
 
     const fetchExerciseBases = useCallback(async () => {
@@ -136,6 +144,10 @@ export const ExerciseOverview = () => {
         });
     }
 
+    // Pagination calculations
+    const pageCount = Math.ceil(filteredExerciseBases.length / ITEMS_PER_PAGE);
+    const paginatedExerciseBases = filteredExerciseBases.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
 
     return (
         <Container maxWidth="lg">
@@ -162,11 +174,20 @@ export const ExerciseOverview = () => {
                 </Grid>
                 <Grid item xs={9}>
                     <ExerciseGrid
-                        exerciseBases={filteredExerciseBases}
+                        exerciseBases={paginatedExerciseBases}
                     />
+                    <Stack spacing={2} alignItems="center">
+                        <Pagination
+                            count={pageCount}
+                            color="primary"
+                            page={page}
+                            onChange={handleChange}
+                        />
+                    </Stack>
                     <ContributeExerciseBanner />
                 </Grid>
             </Grid>
+
         </Container>
     );
 };
