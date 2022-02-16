@@ -114,6 +114,7 @@ export const ExerciseOverview = () => {
     }, [fetchLanguages]);
 
     let filteredExerciseBases = [...state.exerciseBases];
+
     // Filter exercise bases by categories
     if (selectedCategories.length > 0) {
         filteredExerciseBases = filteredExerciseBases.filter(exerciseBase => {

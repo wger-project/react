@@ -28,11 +28,11 @@ export const EquipmentFilter = ({ equipment, selectedEquipment, setSelectedEquip
     };
 
     return (
-        <div>
-            <Typography gutterBottom variant="h6" component="div">
-                {t('equipment')}
-            </Typography>
-            <Paper>
+        <div data-testid={"equipment"}>
+            <Paper sx={{ mt: 2 }}>
+                <Typography gutterBottom variant="h6" component="div">
+                    {t('equipment')}
+                </Typography>
                 <List>
                     {equipment.map((equipment) => {
                         const labelId = `checkbox-list-label-${equipment.id}`;

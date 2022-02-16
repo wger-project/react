@@ -38,11 +38,11 @@ export const MuscleFilter = ({ muscles, selectedMuscles, setSelectedMuscles }: M
     };
 
     return (
-        <div>
-            <Typography gutterBottom variant="h6" component="div">
-                {t('muscles')}
-            </Typography>
-            <Paper>
+        <div data-testid={"muscles"}>
+            <Paper sx={{ mt: 2 }}>
+                <Typography gutterBottom variant="h6" component="div">
+                    {t('muscles')}
+                </Typography>
                 <List>
                     {muscles.map((m) => {
                         const labelId = `checkbox-list-label-${m.id}`;

@@ -28,12 +28,11 @@ export const CategoryFilter = ({ categories, selectedCategories, setSelectedCate
     };
 
     return (
-        <div>
-            <Typography gutterBottom variant="h6" component="div">
-                {t('category')}
-            </Typography>
+        <div data-testid={"categories"}>
             <Paper>
-
+                <Typography gutterBottom variant="h6" component="div">
+                    {t('category')}
+                </Typography>
                 <List>
                     {categories.map((category) => {
                         const labelId = `checkbox-list-label-${category.id}`;
