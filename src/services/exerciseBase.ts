@@ -11,7 +11,7 @@ export const EXERCISE_INFO_PATH = 'exercisebaseinfo';
  * Fetch all exercise bases
  */
 export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
-    const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 30 } });
+    const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 300 } });
     const { data: data } = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
@@ -25,7 +25,6 @@ export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
             for (const e of exerciseBase.exercises) {
                 exerciseBaseObj.translations.push(translationAdapter.fromJson(e));
             }
-
             out.push(exerciseBaseObj);
         } catch (e) {
             console.error("Could not load exercise translations, skipping...", e);

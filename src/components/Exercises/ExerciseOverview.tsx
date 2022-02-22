@@ -12,6 +12,7 @@ import { getLanguages } from "services/language";
 import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
 import { Category } from "components/Exercises/models/category";
+import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 
 export const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -52,7 +53,7 @@ export const ExerciseOverview = () => {
     };
 
     // Should be a multiple of three, since there are three columns in the grid
-    const ITEMS_PER_PAGE = 12;
+    const ITEMS_PER_PAGE = 21;
 
 
     const fetchExerciseBases = useCallback(async () => {
@@ -154,8 +155,10 @@ export const ExerciseOverview = () => {
             <Typography gutterBottom variant="h3" component="div">
                 {t('exercises')}
             </Typography>
+
             <Grid container spacing={2}>
                 <Grid item xs={3}>
+                    <NameAutocompleter />
                     <CategoryFilter
                         categories={state.categories}
                         selectedCategories={selectedCategories}

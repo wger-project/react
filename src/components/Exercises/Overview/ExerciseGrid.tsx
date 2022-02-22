@@ -19,7 +19,7 @@ export const ExerciseGrid = ({ exerciseBases }: ExerciseGridProps) => {
 
     return (
         <ImageList cols={3}>
-            {exerciseBases.map(b => (<ImageListItem key={b.id}>
+            {exerciseBases.map(b => (<ImageListItem key={b.id} sx={{ m: 1 }}>
                 <OverviewCard exerciseBase={b} language={currentUserLanguage} />
             </ImageListItem>))}
         </ImageList>
