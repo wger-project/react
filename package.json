@@ -9,7 +9,7 @@
     "@mui/lab": "^5.0.0-alpha.70",
     "@mui/material": "^5.4.3",
     "@mui/styles": "^5.4.2",
-    "@types/jest": "^27.4.0",
+    "@types/jest": "^27.4.1",
     "@types/luxon": "^2.0.9",
     "@types/node": "^17.0.19",
     "@types/react": "^17.0.39",
