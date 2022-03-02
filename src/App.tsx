@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './App.module.css';
-import { Header, } from './components';
+import { Header, } from 'components';
 import { Route, Routes } from 'react-router-dom';
 import {
     About,
@@ -33,7 +33,7 @@ function App() {
     return (
         <div className={styles.app}>
             <Header />
-             <Notifications />
+            <Notifications />
             <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route>

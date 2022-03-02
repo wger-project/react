@@ -12,7 +12,7 @@ export const EXERCISE_SEARCH_PATH = 'exercise/search';
  */
 export const getExerciseTranslations = async (id: number): Promise<ExerciseTranslation[]> => {
     const url = makeUrl(EXERCISE_PATH, { query: { exercise_base: id } });
-    const { data: data } = await axios.get<ResponseType<any>>(url, {
+    const { data } = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
     const adapter = new ExerciseTranslationAdapter();
@@ -25,7 +25,7 @@ export const getExerciseTranslations = async (id: number): Promise<ExerciseTrans
  */
 export const searchExerciseTranslations = async (name: string): Promise<ExerciseSearchResponse[]> => {
     const url = makeUrl(EXERCISE_SEARCH_PATH, { query: { term: name } });
-    
-    const { data: data } = await axios.get<ExerciseSearchType>(url);
+
+    const { data } = await axios.get<ExerciseSearchType>(url);
     return data.suggestions;
 };

@@ -36,8 +36,6 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
 
     React.useEffect(() => {
 
-        let active = true;
-
         if (inputValue === '') {
             setOptions(value ? [value] : []);
             return undefined;
@@ -46,7 +44,6 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
         fetchName(inputValue);
 
         return () => {
-            active = false;
         };
     }, [value, inputValue, fetchName]);
 

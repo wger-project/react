@@ -4,7 +4,7 @@ export enum SetWeightState {
     UPDATE_WEIGHT,
     ADD_WEIGHT,
     SET_NOTIFICATION
-};
+}
 
 export enum SetExerciseState {
     SET_MUSCLES,
@@ -12,4 +12,4 @@ export enum SetExerciseState {
     SET_EQUIPMENT,
     SET_EXERCISE_BASE,
     SET_LANGUAGE
-};
+}

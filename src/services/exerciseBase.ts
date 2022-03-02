@@ -12,7 +12,7 @@ export const EXERCISE_INFO_PATH = 'exercisebaseinfo';
  */
 export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
     const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 300 } });
-    const { data: data } = await axios.get<ResponseType<any>>(url, {
+    const { data } = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
     const adapter = new ExerciseBaseAdapter();
