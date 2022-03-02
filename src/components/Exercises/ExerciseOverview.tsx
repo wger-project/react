@@ -59,8 +59,7 @@ export const ExerciseOverview = () => {
 
     const fetchExerciseBases = useCallback(async () => {
         try {
-            const receivedExerciseBases = await getExerciseBases();
-            dispatch(setExerciseBases(receivedExerciseBases));
+            dispatch(setExerciseBases(await getExerciseBases()));
         } catch (error) {
             console.log(error);
         }
@@ -68,8 +67,7 @@ export const ExerciseOverview = () => {
 
     const fetchMuscles = useCallback(async () => {
         try {
-            const receivedMuscles = await getMuscles();
-            dispatch(setMuscles(receivedMuscles));
+            dispatch(setMuscles(await getMuscles()));
         } catch (error) {
             console.log(error);
         }
@@ -77,8 +75,7 @@ export const ExerciseOverview = () => {
 
     const fetchEquipment = useCallback(async () => {
         try {
-            const equipment = await getEquipment();
-            dispatch(setEquipment(equipment));
+            dispatch(setEquipment(await getEquipment()));
         } catch (error) {
             console.log(error);
         }
@@ -86,8 +83,7 @@ export const ExerciseOverview = () => {
 
     const fetchCategories = useCallback(async () => {
         try {
-            const receivedCategories = await getCategories();
-            dispatch(setCategories(receivedCategories));
+            dispatch(setCategories(await getCategories()));
         } catch (error) {
             console.log(error);
         }
@@ -95,8 +91,7 @@ export const ExerciseOverview = () => {
 
     const fetchLanguages = useCallback(async () => {
         try {
-            const receivedLanguages = await getLanguages();
-            dispatch(setLanguages(receivedLanguages));
+            dispatch(setLanguages(await getLanguages()));
         } catch (error) {
             console.log(error);
         }
