@@ -15,7 +15,7 @@ import { Category } from "components/Exercises/models/category";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { ExerciseSearchResponse } from "services/responseType";
 
-export const ContributeExerciseBanner = () => {
+const ContributeExerciseBanner = () => {
     const [t] = useTranslation();
 
     return <Box
@@ -24,6 +24,7 @@ export const ContributeExerciseBanner = () => {
         sx={{
             width: "100%",
             backgroundColor: "#ebebeb",
+            textAlign: "center",
         }}
     >
         <Typography gutterBottom variant="h4" component="div">
@@ -37,6 +38,29 @@ export const ContributeExerciseBanner = () => {
         <Button variant="contained">
             {t('contribute-exercise')}
         </Button>
+    </Box>;
+};
+
+const NoResultsBanner = () => {
+    const [t] = useTranslation();
+
+    return <Box
+        marginTop={4}
+        padding={4}
+        sx={{
+            width: "100%",
+            backgroundColor: "#ebebeb",
+            textAlign: "center",
+        }}
+    >
+        <Typography gutterBottom variant="h4" component="div">
+            {t('no-results')}
+        </Typography>
+
+        <Typography gutterBottom variant="body1" component="div">
+            {t('no-results-description')}
+        </Typography>
+
     </Box>;
 };
 
@@ -176,9 +200,14 @@ export const ExerciseOverview = () => {
                     />
                 </Grid>
                 <Grid item xs={9}>
-                    <ExerciseGrid
-                        exerciseBases={paginatedExerciseBases}
-                    />
+                    {paginatedExerciseBases.length > 0 ? (
+                        <ExerciseGrid
+                            exerciseBases={paginatedExerciseBases}
+                        />
+                    ) : (
+                        <NoResultsBanner />
+                    )}
+
                     <Stack spacing={2} alignItems="center" sx={{ mt: 2 }}>
                         <Pagination
                             count={pageCount}
@@ -187,7 +216,10 @@ export const ExerciseOverview = () => {
                             onChange={handleChange}
                         />
                     </Stack>
-                    <ContributeExerciseBanner />
+
+                    { /* We don't do exercise crowdsourcing in this step */}
+                    { /* <ContributeExerciseBanner /> */}
+
                 </Grid>
             </Grid>
 
