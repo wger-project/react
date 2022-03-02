@@ -22,7 +22,7 @@ type MuscleFilterProps = {
 
 export const MuscleFilter = ({ muscles, selectedMuscles, setSelectedMuscles }: MuscleFilterProps) => {
 
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     const handleToggle = (value: Muscle) => () => {
         const currentIndex = selectedMuscles.indexOf(value);

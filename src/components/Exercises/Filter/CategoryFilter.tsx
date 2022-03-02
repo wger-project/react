@@ -12,7 +12,7 @@ type CategoryFilterProps = {
 
 export const CategoryFilter = ({ categories, selectedCategories, setSelectedCategories }: CategoryFilterProps) => {
 
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     const handleToggle = (value: Category) => () => {
         const currentIndex = selectedCategories.indexOf(value);

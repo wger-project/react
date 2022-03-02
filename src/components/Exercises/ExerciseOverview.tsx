@@ -16,7 +16,7 @@ import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter"
 import { ExerciseSearchResponse } from "services/responseType";
 
 export const ContributeExerciseBanner = () => {
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     return <Box
         marginTop={4}
@@ -42,7 +42,7 @@ export const ContributeExerciseBanner = () => {
 
 export const ExerciseOverview = () => {
     const [state, dispatch] = useExerciseStateValue();
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     const [selectedEquipment, setSelectedEquipment] = React.useState<Equipment[]>([]);
     const [selectedMuscles, setSelectedMuscles] = React.useState<Muscle[]>([]);

@@ -12,7 +12,7 @@ type EquipmentFilterProps = {
 
 export const EquipmentFilter = ({ equipment, selectedEquipment, setSelectedEquipment }: EquipmentFilterProps) => {
 
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     const handleToggle = (value: Equipment) => () => {
         const currentIndex = selectedEquipment.indexOf(value);

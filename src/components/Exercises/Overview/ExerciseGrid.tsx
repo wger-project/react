@@ -12,7 +12,8 @@ type ExerciseGridProps = {
 
 export const ExerciseGrid = ({ exerciseBases }: ExerciseGridProps) => {
 
-    const [state, dispatch] = useExerciseStateValue();
+    const [state] = useExerciseStateValue();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [t, i18n] = useTranslation();
 
     const currentUserLanguage = getLanguageByShortName(i18n.language, state.languages);
