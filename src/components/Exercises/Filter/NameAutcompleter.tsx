@@ -8,12 +8,15 @@ import { Box, Grid, Typography } from "@mui/material";
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { useTranslation } from "react-i18next";
 
+type NameAutocompleterProps = {
+    callback: Function;
+}
 
-export function NameAutocompleter() {
+export function NameAutocompleter({ callback }: NameAutocompleterProps) {
     const [value, setValue] = React.useState<ExerciseSearchResponse | null>(null);
     const [inputValue, setInputValue] = React.useState('');
     const [options, setOptions] = React.useState<readonly ExerciseSearchResponse[]>([]);
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     const fetchName = React.useMemo(
         () =>
@@ -61,9 +64,9 @@ export function NameAutocompleter() {
             value={value}
             isOptionEqualToValue={(option, value) => option.value === value.value}
             onChange={(event: any, newValue: ExerciseSearchResponse | null) => {
-                console.log('exercise selected!');
                 setOptions(newValue ? [newValue, ...options] : options);
                 setValue(newValue);
+                callback(newValue);
             }}
             onInputChange={(event, newInputValue) => {
                 setInputValue(newInputValue);

@@ -13,6 +13,7 @@ import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
 import { Category } from "components/Exercises/models/category";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
+import { ExerciseSearchResponse } from "services/responseType";
 
 export const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -149,6 +150,10 @@ export const ExerciseOverview = () => {
     const pageCount = Math.ceil(filteredExerciseBases.length / ITEMS_PER_PAGE);
     const paginatedExerciseBases = filteredExerciseBases.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
+    const exerciseAdded = (exercise: ExerciseSearchResponse) => {
+        console.log(`Added exercise ${exercise.value}`);
+    };
+
 
     return (
         <Container maxWidth="lg">
@@ -158,7 +163,7 @@ export const ExerciseOverview = () => {
 
             <Grid container spacing={2}>
                 <Grid item xs={3}>
-                    <NameAutocompleter />
+                    <NameAutocompleter callback={exerciseAdded} />
                     <CategoryFilter
                         categories={state.categories}
                         selectedCategories={selectedCategories}
