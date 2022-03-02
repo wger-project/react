@@ -28,9 +28,20 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                         {exercise.nameLong}
                     </Typography>
 
-                    <Chip label={exerciseBase.category.name} key={exerciseBase.category.id} />
+                    <Chip
+                        label={exerciseBase.category.name}
+                        key={exerciseBase.category.id}
+                        sx={{ position: "absolute", top: 8, left: 8 }}
+                        color="warning"
+                        size="small"
+                    />
                     {exerciseBase.equipment.map((equipment,) => (
-                        <Chip label={equipment.name} variant={"outlined"} key={equipment.id} />
+                        <Chip
+                            label={equipment.name}
+                            variant={"outlined"}
+                            key={equipment.id}
+                            size="small"
+                        />
                     ))}
                 </CardContent>
             </CardActionArea>

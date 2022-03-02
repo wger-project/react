@@ -184,7 +184,7 @@ export const ExerciseOverview = () => {
                     <ExerciseGrid
                         exerciseBases={paginatedExerciseBases}
                     />
-                    <Stack spacing={2} alignItems="center">
+                    <Stack spacing={2} alignItems="center" sx={{ mt: 2 }}>
                         <Pagination
                             count={pageCount}
                             color="primary"
