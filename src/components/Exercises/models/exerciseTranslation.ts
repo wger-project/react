@@ -1,6 +1,6 @@
 import { Adapter } from "utils/Adapter";
+import { truncateLongNames } from "utils/strings";
 
-const MAX_LENGTH = 20;
 
 export class ExerciseTranslation {
     constructor(public id: number,
@@ -18,7 +18,7 @@ export class ExerciseTranslation {
      * list or similar
      */
     get nameLong(): string {
-        return this.name.length > MAX_LENGTH ? this.name.slice(0, MAX_LENGTH) + '…' : this.name;
+        return truncateLongNames(this.name);
     }
 
 }

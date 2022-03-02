@@ -7,6 +7,7 @@ import { ExerciseSearchResponse } from "services/responseType";
 import { Box, Grid, Typography } from "@mui/material";
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { useTranslation } from "react-i18next";
+import { truncateLongNames } from "utils/strings";
 
 type NameAutocompleterProps = {
     callback: Function;
@@ -96,7 +97,7 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
                                 }
                             </Grid>
                             <Grid item xs>
-                                {option.value}
+                                {truncateLongNames(option.value)}
                                 <Typography variant="body2" color="text.secondary">
                                     {(option.data.category)}
                                 </Typography>
