@@ -1,5 +1,7 @@
 import { Adapter } from "utils/Adapter";
 
+const MAX_LENGTH = 20;
+
 export class ExerciseTranslation {
     constructor(public id: number,
                 public uuid: string,
@@ -8,6 +10,17 @@ export class ExerciseTranslation {
                 public language: number,
     ) {
     }
+
+    /**
+     * Returns the first characters of an exercise name
+     *
+     * This is used in places where we need to display the exercise name in a
+     * list or similar
+     */
+    get nameLong(): string {
+        return this.name.length > MAX_LENGTH ? this.name.slice(0, MAX_LENGTH) + '…' : this.name;
+    }
+
 }
 
 

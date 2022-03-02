@@ -25,9 +25,9 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h6" component="div">
-                        {exercise.name}
+                        {exercise.nameLong}
                     </Typography>
-                    
+
                     <Chip label={exerciseBase.category.name} key={exerciseBase.category.id} />
                     {exerciseBase.equipment.map((equipment,) => (
                         <Chip label={equipment.name} variant={"outlined"} key={equipment.id} />
