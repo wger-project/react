@@ -4,10 +4,11 @@ import Autocomplete from '@mui/material/Autocomplete';
 import throttle from 'lodash/throttle';
 import { searchExerciseTranslations } from "services/exerciseTranslation";
 import { ExerciseSearchResponse } from "services/responseType";
-import { Box, Divider, Grid, Typography } from "@mui/material";
+import { Box, Divider, Grid, InputAdornment, Typography } from "@mui/material";
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { useTranslation } from "react-i18next";
 import { truncateLongNames } from "utils/strings";
+import SearchIcon from '@mui/icons-material/Search';
 
 type NameAutocompleterProps = {
     callback: Function;
@@ -75,6 +76,17 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
                     {...params}
                     label={t('exercises.search-exercise-name')}
                     fullWidth
+                    InputProps={{
+                        ...params.InputProps,
+                        startAdornment: (
+                            <>
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                                {params.InputProps.startAdornment}
+                            </>
+                        )
+                    }}
                 />
             )}
             renderOption={(props, option) => {
