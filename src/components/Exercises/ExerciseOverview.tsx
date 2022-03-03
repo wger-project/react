@@ -176,13 +176,20 @@ export const ExerciseOverview = () => {
 
     return (
         <Container maxWidth="lg">
-            <Typography gutterBottom variant="h3" component="div">
-                {t('exercises')}
-            </Typography>
+            <Stack direction={'row'}>
+                <Typography gutterBottom variant="h3" component="div">
+                    {t('exercises')}
+                </Typography>
+                <Box sx={{ width: '100%' }} />
+                <Box sx={{ width: 500 }} m={1}>
+                    <NameAutocompleter callback={exerciseAdded} />
+                </Box>
+                {/*<Button variant="contained" startIcon={<AddIcon />}> {t('contribute-exercise')}</Button>*/}
+            </Stack>
+
 
             <Grid container spacing={2}>
                 <Grid item xs={3}>
-                    <NameAutocompleter callback={exerciseAdded} />
                     <CategoryFilter
                         categories={state.categories}
                         selectedCategories={selectedCategories}

@@ -70,7 +70,11 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
                 setInputValue(newInputValue);
             }}
             renderInput={(params) => (
-                <TextField {...params} label={t('search-exercise-name')} fullWidth />
+                <TextField
+                    {...params}
+                    label={t('search-exercise-name')}
+                    fullWidth
+                />
             )}
             renderOption={(props, option) => {
                 return (

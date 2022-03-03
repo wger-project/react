@@ -3,6 +3,7 @@ import { Card, CardActionArea, CardContent, CardMedia, Chip, Typography } from "
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { useTranslation } from "react-i18next";
 
 type OverviewCardProps = {
     exerciseBase: ExerciseBase;
@@ -14,6 +15,7 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
 
 
     const exercise = exerciseBase.getTranslation(language != null ? language.id : ENGLISH_LANGUAGE_ID);
+    const [t] = useTranslation();
 
     return (
         <Card key={exerciseBase.id}>
@@ -36,13 +38,15 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                         size="small"
                     />
                     {exerciseBase.equipment.map((equipment,) => (
-                        <Chip
-                            label={equipment.name}
-                            variant={"outlined"}
-                            key={equipment.id}
-                            size="small"
-                        />
+                        <Typography display="inline" mr={1}>
+                            {equipment.name}
+                        </Typography>
                     ))}
+                    {exerciseBase.equipment.length === 0 && (
+                        <Typography color="text.secondary" display="inline" mr={1}>
+                            {t('no-equipment')}
+                        </Typography>
+                    )}
                 </CardContent>
             </CardActionArea>
         </Card>
