@@ -38,7 +38,7 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                         size="small"
                     />
                     {exerciseBase.equipment.map((equipment,) => (
-                        <Typography display="inline" mr={1}>
+                        <Typography display="inline" mr={1} key={equipment.id}>
                             {equipment.name}
                         </Typography>
                     ))}
