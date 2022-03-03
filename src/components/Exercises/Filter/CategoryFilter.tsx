@@ -31,7 +31,7 @@ export const CategoryFilter = ({ categories, selectedCategories, setSelectedCate
     return (
         <div data-testid={"categories"}>
             <Paper>
-                <Typography gutterBottom variant="h6" component="div">
+                <Typography gutterBottom variant="h6" m={2}>
                     {t('exercises.category')}
                 </Typography>
                 <List>

@@ -31,7 +31,7 @@ export const EquipmentFilter = ({ equipment, selectedEquipment, setSelectedEquip
     return (
         <div data-testid={"equipment"}>
             <Paper sx={{ mt: 2 }}>
-                <Typography gutterBottom variant="h6" component="div">
+                <Typography gutterBottom variant="h6" m={2}>
                     {t('exercises.equipment')}
                 </Typography>
                 <List>
