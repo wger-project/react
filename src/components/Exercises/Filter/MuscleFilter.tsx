@@ -41,7 +41,7 @@ export const MuscleFilter = ({ muscles, selectedMuscles, setSelectedMuscles }: M
         <div data-testid={"muscles"}>
             <Paper sx={{ mt: 2 }}>
                 <Typography gutterBottom variant="h6" component="div">
-                    {t('muscles')}
+                    {t('exercises.muscles')}
                 </Typography>
                 <List>
                     {muscles.map((m) => {

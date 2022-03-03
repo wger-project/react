@@ -4,7 +4,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import throttle from 'lodash/throttle';
 import { searchExerciseTranslations } from "services/exerciseTranslation";
 import { ExerciseSearchResponse } from "services/responseType";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Divider, Grid, Typography } from "@mui/material";
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { useTranslation } from "react-i18next";
 import { truncateLongNames } from "utils/strings";
@@ -60,6 +60,7 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
             includeInputInList
             filterSelectedOptions
             value={value}
+            noOptionsText={t('no-results')}
             isOptionEqualToValue={(option, value) => option.value === value.value}
             onChange={(event: any, newValue: ExerciseSearchResponse | null) => {
                 setOptions(newValue ? [newValue, ...options] : options);
@@ -72,14 +73,14 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label={t('search-exercise-name')}
+                    label={t('exercises.search-exercise-name')}
                     fullWidth
                 />
             )}
             renderOption={(props, option) => {
                 return (
                     <li {...props}>
-                        <Grid container alignItems="center">
+                        <Grid container>
                             <Grid item>
                                 {option.data.image ?
                                     <Box
@@ -107,6 +108,7 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
                                 </Typography>
                             </Grid>
                         </Grid>
+                        <Divider />
                     </li>
                 );
             }}

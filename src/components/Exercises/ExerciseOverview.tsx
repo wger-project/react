@@ -28,15 +28,15 @@ const ContributeExerciseBanner = () => {
         }}
     >
         <Typography gutterBottom variant="h4" component="div">
-            {t('missing-exercise')}
+            {t('exercises.missing-exercise')}
         </Typography>
 
         <Typography gutterBottom variant="body1" component="div">
-            {t('missing-exercise-description')}
+            {t('exercises.missing-exercise-description')}
         </Typography>
 
         <Button variant="contained">
-            {t('contribute-exercise')}
+            {t('exercises.contribute-exercise')}
         </Button>
     </Box>;
 };
@@ -178,7 +178,7 @@ export const ExerciseOverview = () => {
         <Container maxWidth="lg">
             <Stack direction={'row'}>
                 <Typography gutterBottom variant="h3" component="div">
-                    {t('exercises')}
+                    {t('exercises.exercises')}
                 </Typography>
                 <Box sx={{ width: '100%' }} />
                 <Box sx={{ width: 500 }} m={1}>
@@ -208,21 +208,23 @@ export const ExerciseOverview = () => {
                 </Grid>
                 <Grid item xs={9}>
                     {paginatedExerciseBases.length > 0 ? (
-                        <ExerciseGrid
-                            exerciseBases={paginatedExerciseBases}
-                        />
+                        <>
+                            <ExerciseGrid
+                                exerciseBases={paginatedExerciseBases}
+                            />
+                            <Stack spacing={2} alignItems="center" sx={{ mt: 2 }}>
+                                <Pagination
+                                    count={pageCount}
+                                    color="primary"
+                                    page={page}
+                                    onChange={handleChange}
+                                />
+                            </Stack>
+                        </>
                     ) : (
                         <NoResultsBanner />
                     )}
 
-                    <Stack spacing={2} alignItems="center" sx={{ mt: 2 }}>
-                        <Pagination
-                            count={pageCount}
-                            color="primary"
-                            page={page}
-                            onChange={handleChange}
-                        />
-                    </Stack>
 
                     { /* We don't do exercise crowdsourcing in this step */}
                     { /* <ContributeExerciseBanner /> */}

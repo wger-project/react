@@ -4,6 +4,7 @@ import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { useTranslation } from "react-i18next";
+import { getTranslationKey } from "utils/strings";
 
 type OverviewCardProps = {
     exerciseBase: ExerciseBase;
@@ -31,7 +32,7 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                     </Typography>
 
                     <Chip
-                        label={exerciseBase.category.name}
+                        label={t(getTranslationKey(exerciseBase.category.name))}
                         key={exerciseBase.category.id}
                         sx={{ position: "absolute", top: 8, left: 8 }}
                         color="warning"
@@ -39,12 +40,12 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                     />
                     {exerciseBase.equipment.map((equipment,) => (
                         <Typography display="inline" mr={1} key={equipment.id}>
-                            {equipment.name}
+                            {t(getTranslationKey(equipment.name))}
                         </Typography>
                     ))}
                     {exerciseBase.equipment.length === 0 && (
                         <Typography color="text.secondary" display="inline" mr={1}>
-                            {t('no-equipment')}
+                            {t('exercises.no-equipment')}
                         </Typography>
                     )}
                 </CardContent>
