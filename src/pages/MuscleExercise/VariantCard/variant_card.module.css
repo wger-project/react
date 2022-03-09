@@ -1,0 +1,51 @@
+.card {
+  display: flex;
+  gap: 20px;
+  padding: 1rem 0;
+  border-bottom: 1px solid #bdbdbd;
+  cursor: pointer;
+}
+.card:hover {
+  border-bottom: 1px solid #6e6e6e;
+}
+@media screen and (min-width: 700px) {
+  .card {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #bdbdbd;
+    border-radius: 5px;
+    padding: 1rem;
+  }
+}
+.card .category_pill {
+  display: inline-block;
+  background-color: #c8d6df;
+  padding: 0.2rem 0.5rem;
+  border-radius: 5px;
+}
+@media screen and (min-width: 700px) {
+  .card .category_pill {
+    position: absolute;
+    top: 10px;
+    left: -5px;
+  }
+}
+.card img {
+  width: 200px;
+  height: 200px;
+  border-radius: 2px;
+}
+.card .card__details {
+  margin: auto 0;
+}
+.card h3 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.card p {
+  margin: 0;
+  font-size: 1rem;
+  color: #6c8399;
+}
+
+/*# sourceMappingURL=variant_card.module.css.map */

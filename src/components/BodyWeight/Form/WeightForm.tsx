@@ -90,11 +90,18 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                                 notify: true,
                                 message: error as string,
                                 severity: "error",
-                                title: "Failed to save"
+                                title: "Failed to save",
+                                type: undefined
                             }
                         ));
                         setTimeout(() => {
-                            dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+                            dispatch(setNotification({
+                                notify: false,
+                                message: "",
+                                severity: undefined,
+                                title: "",
+                                type: undefined
+                            }));
                         }, 5000);
                     }
                     
@@ -110,11 +117,18 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                                 notify: true,
                                 message: error as string,
                                 severity: "error",
-                                title: "Failed to save"
+                                title: "Failed to save",
+                                type: undefined
                             }
                         ));
                         setTimeout(() => {
-                            dispatch(setNotification({notify: false, message: "", severity: undefined, title: ""}));
+                            dispatch(setNotification({
+                                notify: false,
+                                message: "",
+                                severity: undefined,
+                                title: "",
+                                type: undefined
+                            }));
                         }, 5000);
                     }
                 }
