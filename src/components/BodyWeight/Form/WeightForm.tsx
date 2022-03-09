@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { Form, Formik } from "formik";
 import { Button, Stack, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { setNotification, SetState, useStateValue } from "state";
+import { setNotification, SetWeightState, useWeightStateValue } from "state";
 import { createWeight, updateWeight } from "services/weight";
 import AdapterLuxon from "@mui/lab/AdapterLuxon";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -19,12 +19,12 @@ interface WeightFormProps {
 
 export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
-    const [state, dispatch] = useStateValue();
+    const [state, dispatch] = useWeightStateValue();
     const [dateValue, setDateValue] = React.useState<Date | null>(weightEntry ? weightEntry.date : new Date());
     const [t, i18n] = useTranslation();
 
     const updateWeightEntry = useCallback(async (entry: WeightEntry) => {
-        const action = { type: SetState.UPDATE_WEIGHT, payload: entry };
+        const action = { type: SetWeightState.UPDATE_WEIGHT, payload: entry };
         dispatch(action);
         dispatch(setNotification(
             {
@@ -37,12 +37,12 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
         ));
         // clear out the notifications after some times
         setTimeout(() => {
-            dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "" , type: undefined}));
+            dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "", type: undefined }));
         }, 5000);
     }, [dispatch]);
 
     const createWeightEntry = useCallback(async (entry: WeightEntry) => {
-        const action = { type: SetState.ADD_WEIGHT, payload: entry };
+        const action = { type: SetWeightState.ADD_WEIGHT, payload: entry };
         dispatch(action);
         dispatch(setNotification(
             {
@@ -55,7 +55,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
         ));
         // clear out the notifications after some times
         setTimeout(() => {
-            dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "" , type: undefined}));
+            dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "", type: undefined }));
         }, 5000);
     }, [dispatch]);
 
@@ -82,16 +82,16 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                     weightEntry.weight = values.weight;
                     weightEntry.date = new Date(values.date);
                     try {
-                        const editedWeightEntry = await updateWeight(weightEntry);                        
+                        const editedWeightEntry = await updateWeight(weightEntry);
                         await updateWeightEntry(editedWeightEntry);
-                    } catch (error) {    
+                    } catch (error) {
                         dispatch(setNotification(
                             {
                                 notify: true,
                                 message: error as string,
                                 severity: "error",
                                 title: "Failed to save",
-                                type: undefined
+                                type: "other"
                             }
                         ));
                         setTimeout(() => {
@@ -104,7 +104,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                             }));
                         }, 5000);
                     }
-                    
+
                 } else {
                     // Create new weight entry
                     weightEntry = new WeightEntry(new Date(values.date), values.weight);
@@ -118,7 +118,8 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                                 message: error as string,
                                 severity: "error",
                                 title: "Failed to save",
-                                type: undefined
+                                type: "other"
+
                             }
                         ));
                         setTimeout(() => {

@@ -8,7 +8,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { theme } from 'theme';
 import { ThemeProvider } from '@mui/material/styles';
-import { StateProvider } from 'state';
+import { ExerciseStateProvider, WeightStateProvider } from 'state';
 import { WeightOverview } from "pages";
 import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
@@ -19,11 +19,13 @@ if (rootElement) {
         <React.StrictMode>
             <Suspense fallback={<LoadingWidget />}>
                 <Router>
-                    <StateProvider>
-                        <ThemeProvider theme={theme}>
-                            <App />
-                        </ThemeProvider>
-                    </StateProvider>
+                    <ExerciseStateProvider>
+                        <WeightStateProvider>
+                            <ThemeProvider theme={theme}>
+                                <App />
+                            </ThemeProvider>
+                        </WeightStateProvider>
+                    </ExerciseStateProvider>
                 </Router>
             </Suspense>
         </React.StrictMode>,
@@ -38,11 +40,13 @@ const weightOverview = document.getElementById("react-weight-overview");
 if (weightOverview) {
     ReactDOM.render(
         <Suspense fallback={<LoadingWidget />}>
-            <StateProvider>
-                <ThemeProvider theme={theme}>
-                    <WeightOverview />
-                </ThemeProvider>
-            </StateProvider>
+            <ExerciseStateProvider>
+                <WeightStateProvider>
+                    <ThemeProvider theme={theme}>
+                        <WeightOverview />
+                    </ThemeProvider>
+                </WeightStateProvider>
+            </ExerciseStateProvider>
         </Suspense>,
         weightOverview
     );
@@ -52,11 +56,13 @@ const weightDashboard = document.getElementById("react-weight-dashboard");
 if (weightDashboard) {
     ReactDOM.render(
         <Suspense fallback={<LoadingWidget />}>
-            <StateProvider>
-                <ThemeProvider theme={theme}>
-                    <OverviewDashboard />
-                </ThemeProvider>
-            </StateProvider>
+            <ExerciseStateProvider>
+                <WeightStateProvider>
+                    <ThemeProvider theme={theme}>
+                        <OverviewDashboard />
+                    </ThemeProvider>
+                </WeightStateProvider>
+            </ExerciseStateProvider>
         </Suspense>,
         weightDashboard
     );

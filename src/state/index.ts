@@ -1,11 +1,19 @@
 export {
-    reducer,
+    weightReducer,
     setWeights,
     updateWeightEntry,
     addWeightEntry,
     removeWeight,
     setNotification
-} from 'state/reducer';
-export { StateProvider, useStateValue } from 'state/state';
-export type { State } from 'state/state';
-export {  SetState } from 'state/stateTypes';
+} from 'state/weightReducer';
+export { WeightStateProvider, useWeightStateValue } from 'state/weightState';
+export type { WeightState } from 'state/weightState';
+export { SetWeightState, SetExerciseState } from 'state/stateTypes';
+
+
+export {
+    exerciseReducer,
+    setMuscles,
+} from 'state/exerciseReducer';
+export { ExerciseStateProvider, useExerciseStateValue } from 'state/exerciseState';
+export type { ExerciseState } from 'state/exerciseState';

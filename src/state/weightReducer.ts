@@ -1,46 +1,46 @@
-import { State } from 'state';
-import { SetState } from "./stateTypes";
+import { WeightState } from 'state';
+import { SetWeightState } from "./stateTypes";
 import { WeightEntry } from "components/BodyWeight/model";
 import { Notification } from "types";
 
-export type Action =
+export type WeightAction =
     {
-        type: string,
-        payload: WeightEntry[] | WeightEntry | number | Notification
+        type: SetWeightState,
+        payload: WeightEntry[] | WeightEntry | Notification
     }
 
-export const setWeights = (weights: WeightEntry[]): Action => {
-    return { type: SetState.SET_WEIGHTS, payload: weights };
+export const setWeights = (weights: WeightEntry[]): WeightAction => {
+    return { type: SetWeightState.SET_WEIGHTS, payload: weights };
 };
 
-export const updateWeightEntry = (entry: WeightEntry): Action => {
-    return { type: SetState.UPDATE_WEIGHT, payload: entry };
+export const updateWeightEntry = (entry: WeightEntry): WeightAction => {
+    return { type: SetWeightState.UPDATE_WEIGHT, payload: entry };
 };
 
-export const addWeightEntry = (entry: WeightEntry): Action => {    
-    return { type: SetState.ADD_WEIGHT, payload: entry };
+export const addWeightEntry = (entry: WeightEntry): WeightAction => {
+    return { type: SetWeightState.ADD_WEIGHT, payload: entry };
 };
 
-export const removeWeight = (id: number): Action => {
-    return { type: SetState.REMOVE_WEIGHT, payload: id };
+export const removeWeight = (entry: WeightEntry): WeightAction => {
+    return { type: SetWeightState.REMOVE_WEIGHT, payload: entry };
 };
 
-export const setNotification = (notification: Notification): Action => {
-    return { type: SetState.SET_NOTIFICATION, payload: notification };
+export const setNotification = (notification: Notification): WeightAction => {
+    return { type: SetWeightState.SET_NOTIFICATION, payload: notification };
 };
 
 
-export const reducer = (state: State, action: Action): State => {
+export const weightReducer = (state: WeightState, action: WeightAction): WeightState => {
 
     switch (action.type) {
-        case SetState.SET_WEIGHTS:
+        case SetWeightState.SET_WEIGHTS:
             return {
                 ...state,
                 weights: action.payload as WeightEntry[]
             };
 
         // Replace the weight entry with the new one and sort by date
-        case SetState.UPDATE_WEIGHT:
+        case SetWeightState.UPDATE_WEIGHT:
             const updatedWeights = (state.weights.map(w => {
                 if (w.id === (action.payload as WeightEntry).id) {
                     return action.payload;
@@ -54,7 +54,7 @@ export const reducer = (state: State, action: Action): State => {
             };
 
         // Add a new weight entry and sort by date
-        case SetState.ADD_WEIGHT:
+        case SetWeightState.ADD_WEIGHT:
             const addWeights = [...state.weights, action.payload as WeightEntry]
                 .sort((a, b) => b.date.getTime() - a.date.getTime());
             return {
@@ -63,15 +63,15 @@ export const reducer = (state: State, action: Action): State => {
             };
 
         // remove a weight from state
-        case SetState.REMOVE_WEIGHT:
-            const updatedWeightsAfterRemove = state.weights.filter(w => w.id !== action.payload);
+        case SetWeightState.REMOVE_WEIGHT:
+            const updatedWeightsAfterRemove = state.weights.filter(w => w.id !== (action.payload as WeightEntry).id);
 
             return {
                 ...state,
                 weights: updatedWeightsAfterRemove
             };
 
-        case SetState.SET_NOTIFICATION:
+        case SetWeightState.SET_NOTIFICATION:
 
             return {
                 ...state,
