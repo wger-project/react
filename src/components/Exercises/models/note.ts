@@ -13,14 +13,14 @@ export class NoteAdapter implements Adapter<Note> {
     fromJson(item: any): Note {
         return new Note(
             item.id,
-            item.note,
+            item.comment,
         );
     }
 
     toJson(item: Note): any {
         return {
             id: item.id,
-            name: item.note,
+            comment: item.note,
         };
     }
 }
