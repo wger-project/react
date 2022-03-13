@@ -1,14 +1,29 @@
 import { Adapter } from "utils/Adapter";
 import { truncateLongNames } from "utils/strings";
+import { Note, NoteAdapter } from "components/Exercises/models/note";
+import { Alias, AliasAdapter } from "components/Exercises/models/alias";
 
 
 export class ExerciseTranslation {
+
+    notes: Note[] = [];
+    aliases: Alias[] = [];
+
     constructor(public id: number,
                 public uuid: string,
                 public name: string,
                 public description: string,
                 public language: number,
+                notes?: Note[],
+                aliases?: Alias[]
     ) {
+        if (notes) {
+            this.notes = notes;
+        }
+
+        if (aliases) {
+            this.aliases = aliases;
+        }
     }
 
     /**
@@ -20,7 +35,6 @@ export class ExerciseTranslation {
     get nameLong(): string {
         return truncateLongNames(this.name);
     }
-
 }
 
 
@@ -32,6 +46,8 @@ export class ExerciseTranslationAdapter implements Adapter<ExerciseTranslation> 
             item.name,
             item.description,
             item.language,
+            item.notes.map((e: any) => (new NoteAdapter().fromJson(e))),
+            item.aliases.map((e: any) => (new AliasAdapter().fromJson(e))),
         );
     }
 
