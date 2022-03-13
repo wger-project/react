@@ -76,6 +76,7 @@ export function makeHeader(token?: string): AxiosRequestHeaders {
     };
 
     const csrfCookie = getCookie(DJANGO_CSRF_COOKIE);
+    // eslint-disable-next-line eqeqeq
     if (process.env.NODE_ENV === "production" && csrfCookie != undefined) {
         out['X-CSRFToken'] = csrfCookie;
     }

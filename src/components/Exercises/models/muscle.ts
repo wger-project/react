@@ -23,6 +23,7 @@ export class MuscleAdapter implements Adapter<Muscle> {
         return {
             id: item.id,
             name: item.name,
+            // eslint-disable-next-line camelcase
             is_front: item.isFront
         };
     }
