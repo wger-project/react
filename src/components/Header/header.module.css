@@ -85,7 +85,7 @@
   padding: 0;
 }
 .header .subNav li {
-  padding: 0.5rem 0;
+  padding: 0.5rem;
 }
 .header .subNav li:hover {
   background-color: #d6d6d6;

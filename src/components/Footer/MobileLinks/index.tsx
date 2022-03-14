@@ -32,7 +32,7 @@ export const MobileLinks = (children: MobileLinksProp) => {
             </div>
             <div className={styles.mobileFooter__links} style={{display: ShowLinksDisplayStyles}}>
                 {children.links.map(link => {
-                    return <a href={link.url}>{link.text}</a>;
+                    return <a href={link.url} key={link.url}>{link.text}</a>;
                 })}
             </div>
         </div>

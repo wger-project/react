@@ -17,11 +17,9 @@ export const TrainingSubMenu = () => {
                 </div>
                 <div>
                     <p>Exercises</p>
-                    <li><Link to="/exercise/category">by category</Link></li>
-                    <li><Link to="/exercise/muscle">by muscle</Link></li>
-                    <li><Link to="/exercise/equipment">by equipment</Link></li>
+                    <li><Link to="/exercise">exercises</Link></li>
                 </div>
-                <div><Link to="/exercise/add">Add new exercise</Link></div>
+                <div><li><Link to="/exercise/add">Add new exercise</Link></li></div>
             </>
     );
 };

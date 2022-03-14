@@ -15,6 +15,32 @@
 .mobileFooter a:hover {
   font-weight: 900;
 }
+.mobileFooter .external_links .mobileFooter__link {
+  display: block;
+  margin: 1rem 0;
+}
+.mobileFooter .social_logo {
+  color: #fff;
+  cursor: pointer;
+  margin: 0 2rem;
+}
+.mobileFooter .mobileFooter__tools {
+  margin-top: 2rem;
+}
+.mobileFooter .mobileFooter__tools .mobileFooter__language {
+  display: flex;
+  align-items: center;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  width: 20%;
+  gap: 1rem;
+  margin: auto;
+}
+.mobileFooter .mobileFooter__tools .mobileFooter__playstore img {
+  width: 200px;
+  height: 100px;
+}
 
 .footer {
   background-color: #3a3a3a;
@@ -88,11 +114,6 @@
   .logo {
     width: 5%;
   }
-}
-
-.social_logo {
-  color: #fff;
-  background-color: #fff;
 }
 
 /*# sourceMappingURL=footer.module.css.map */

@@ -16,7 +16,45 @@
         }
     }
 
+    .external_links {
+
+        .mobileFooter__link {
+            display: block;
+            margin: 1rem 0;
+        }
+    }
+
+    .social_logo {
+        color: #fff;
+        cursor: pointer;
+        margin: 0 2rem;
+    }
+
+    .mobileFooter__tools {
+        margin-top: 2rem;
+
+        .mobileFooter__language {
+            display: flex;
+            align-items: center;
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 1rem 2rem;
+            width: 20%;
+            gap: 1rem;
+            margin: auto;
+        }
+    
+        .mobileFooter__playstore {
+    
+            img {
+                width: 200px;
+                height: 100px;
+            }
+        }
+    }
+
 }
+
 .footer {
     background-color: rgb(58, 58, 58);
     color: white;
@@ -104,9 +142,4 @@
     @media screen and (min-width: 700px) {
         width: 5%;
     }
-}
-
-.social_logo {
-    color: #fff;
-    background-color: #fff;
 }
