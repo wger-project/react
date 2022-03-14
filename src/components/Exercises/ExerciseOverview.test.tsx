@@ -8,6 +8,7 @@ import { Muscle } from "components/Exercises/models/muscle";
 import { Equipment } from "components/Exercises/models/equipment";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { BrowserRouter } from 'react-router-dom';
 
 jest.mock("services");
 
@@ -158,7 +159,8 @@ describe("Test the ExerciseOverview component", () => {
 
 
         // Act
-        render(<ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider>);
+        // since  OverviewCard inside ExerciseOverview renders a Link, we need to wrap in a BrowserRouter
+        render(<BrowserRouter><ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider></BrowserRouter>);
         await act(() => Promise.resolve());
 
         // Assert
@@ -177,7 +179,8 @@ describe("Test the ExerciseOverview component", () => {
     test('filter one category', async () => {
 
         // Act
-        render(<ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider>);
+        // since  OverviewCard inside ExerciseOverview renders a Link, we need to wrap in a BrowserRouter
+        render(<BrowserRouter><ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider></BrowserRouter>);
         await act(() => Promise.resolve());
         const { getByText: categoriesComponent } = within(screen.getByTestId('categories'));
         fireEvent.click(categoriesComponent("Arms"));
@@ -193,7 +196,8 @@ describe("Test the ExerciseOverview component", () => {
     test('filter two categories', async () => {
 
         // Act
-        render(<ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider>);
+        // since  OverviewCard inside ExerciseOverview renders a Link, we need to wrap in a BrowserRouter
+        render(<BrowserRouter><ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider></BrowserRouter>);
         await act(() => Promise.resolve());
         const { getByText: categoriesComponent } = within(screen.getByTestId('categories'));
         fireEvent.click(categoriesComponent("Arms"));
@@ -210,7 +214,8 @@ describe("Test the ExerciseOverview component", () => {
     test('filter equipment', async () => {
 
         // Act
-        render(<ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider>);
+        // since  OverviewCard inside ExerciseOverview renders a Link, we need to wrap in a BrowserRouter
+        render(<BrowserRouter><ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider></BrowserRouter>);
         await act(() => Promise.resolve());
         const { getByText: equipmentComponent } = within(screen.getByTestId('equipment'));
         fireEvent.click(equipmentComponent("Barbell"));
@@ -226,7 +231,8 @@ describe("Test the ExerciseOverview component", () => {
     test('filter muscles', async () => {
 
         // Act
-        render(<ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider>);
+        // since  OverviewCard inside ExerciseOverview renders a Link, we need to wrap in a BrowserRouter
+        render(<BrowserRouter><ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider></BrowserRouter>);
         await act(() => Promise.resolve());
         const { getByText: musclesComponent } = within(screen.getByTestId('muscles'));
         fireEvent.click(musclesComponent("Big muscle"));
@@ -242,7 +248,8 @@ describe("Test the ExerciseOverview component", () => {
     test('filter equipment and category', async () => {
 
         // Act
-        render(<ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider>);
+        // since  OverviewCard inside ExerciseOverview renders a Link, we need to wrap in a BrowserRouter
+        render(<BrowserRouter><ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider></BrowserRouter>);
         await act(() => Promise.resolve());
 
         const { getByText: categoryComponent } = within(screen.getByTestId('categories'));
