@@ -14,7 +14,7 @@ import {
     Gallery,
     Ingredients,
     Login,
-    MuscleExercise,
+    ExerciseDetails,
     NutritionPlans,
     Preferences,
     PublicTemplate,
@@ -36,7 +36,6 @@ function App() {
              <Notifications />
             <Routes>
                 <Route path="/" element={<Dashboard />} />
-                <Route>
                     <Route path="workout">
                         <Route path="overview" element={<Workout />} />
                         <Route path="schedule" element={<WorkoutSchedule />} />
@@ -51,9 +50,8 @@ function App() {
                         </Route>
                     </Route>
                     <Route path="exercise">
-                        <Route path="category" element={<ExerciseOverview />} />
-                        <Route path="muscle" element={<MuscleExercise />} />
-                        <Route path="equipment" element={<Equipments />} />
+                        <Route index element={<ExerciseOverview />} />
+                        <Route path=":exerciseID" element={<ExerciseDetails />} />
                         <Route path="add" element={<AddExercise />} />
                     </Route>
                     <Route path="weight">
@@ -80,7 +78,15 @@ function App() {
                     <Route path="user">
                         <Route path="preferences" element={<Preferences />} />
                     </Route>
-                </Route>
+                    {/* This route matches when no other route match, so a 404 */}
+                    <Route
+                        path="*"
+                        element={
+                            <main style={{ padding: "1rem" }}>
+                            <p>404, Page NOT FOUND</p>
+                            </main>
+                        }
+                    />
             </Routes>
         </div>
     );

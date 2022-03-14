@@ -15,13 +15,15 @@ export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
     const { data: data } = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
+
+    
     const adapter = new ExerciseBaseAdapter();
     const translationAdapter = new ExerciseTranslationAdapter();
 
     const out: ExerciseBase[] = [];
     for (const exerciseBase of data.results) {
         try {
-            const exerciseBaseObj = adapter.fromJson(exerciseBase);
+            const exerciseBaseObj = adapter.fromJson(exerciseBase);            
             for (const e of exerciseBase.exercises) {
                 exerciseBaseObj.translations.push(translationAdapter.fromJson(e));
             }
@@ -35,3 +37,31 @@ export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
     return out;
 };
 
+
+/*
+ * Fetch exercise with a particular ID
+ */
+export const getExerciseBase = async (id: number): Promise<ExerciseBase> => {
+    const url = makeUrl(EXERCISE_INFO_PATH, { id:  id });
+    const { data: data } = await axios.get<ResponseType<any>>(url, {
+        headers: makeHeader(),
+    });        
+
+    const adapter = new ExerciseBaseAdapter();
+    const translationAdapter = new ExerciseTranslationAdapter();
+
+    // assign data to this any variable so that I can access exercises on line 64
+    const exerciseBase: any = data;
+    
+    // adapt the received object to be used, by filtering out some props and adding others
+    const exerciseBaseObj: ExerciseBase = adapter.fromJson(exerciseBase);
+
+    try {
+        // send the different translations to translation adapter
+        exerciseBaseObj.translations.push(translationAdapter.fromJson(exerciseBase.exercises[0]));
+    } catch (e) {
+        console.error("Could not load exercise translations, skipping...", e);
+    }    
+
+    return exerciseBaseObj;
+};

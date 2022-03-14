@@ -1,0 +1,179 @@
+.root {
+    background-color: rgb(248, 248, 248);
+    padding: 1rem 2rem;
+    
+
+    @media screen and (min-width: 1200px) {
+        padding: 1rem 10rem; // temp padding as the page is all padded as with header
+    }
+
+    .detail_language {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+
+        @media screen and (min-width: 700px) {
+            
+        }
+
+        .detail {
+            display: none;
+
+            a {
+                text-decoration: none;
+                color: #283c5c;
+        
+                &:hover {
+                    color: rgb(17, 17, 17);
+                }
+            }
+
+            @media screen and (min-width: 700px) {
+                display: block;
+            }
+        }
+
+        .detail_arrow {
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            border-radius: 50%;
+            // padding: 0.5rem;
+
+            &:hover {
+                background-color: white;
+            }
+
+            @media screen and (min-width: 700px) {
+                display: none;
+            }
+        }
+
+        .languages {
+            position: relative;
+
+            .language {
+                display: flex;
+                align-items: flex-end;
+                gap: 2rem;
+                border-radius: 0.5rem;
+    
+                @media screen and (min-width: 700px) {
+                    background-color: rgb(228, 228, 228);
+                    padding: 0.5rem 1rem;
+                    border-radius: 0.5rem;
+                }
+            }
+
+            .language_menu {
+                position: absolute;
+                top: 3rem;
+                left: -3rem;
+                background-color: #fff;
+                padding: 0 1rem;
+                border-radius: 10px;
+                border: 1px solid rgb(151, 151, 151);
+                text-align: left;
+
+                h5 {
+                    // padding: 0 2rem;
+                }
+
+                span {
+                    text-transform: uppercase;
+                    color: #5e5e5e;
+                }
+
+                ul {
+                    list-style: none;
+                    padding: 0;
+
+                    li {
+                        margin: 0.5rem 0;
+                        padding: 0.5rem 1rem;
+                        cursor: pointer;
+                        border-radius: 7px;
+
+                        &:hover {
+                            background-color: #c2c2c2;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+
+        .heading {
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+
+                @media screen and (min-width: 700px) {
+                    font-size: 3.5rem;
+                }
+            }
+
+            .tags {
+                display: flex;
+                align-items: center;
+
+                span {
+                    background-color: rgb(142, 167, 185);
+                    padding: 2px 5px;
+                    margin-right: 1rem;
+                    border-radius: 5px;
+                    color: white;
+                    border: 0.5px solid black;
+                }
+            }
+        }
+
+        .toolbar {
+            display: none;
+
+            @media screen and (min-width: 700px) {
+                display: flex;
+                align-self: flex-end;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            img {
+                width: 25px;
+                height: 25px;
+                cursor: pointer;
+            }
+
+            .nav_link {
+                padding: 1rem 0.5rem;
+                text-decoration: none;
+                border-bottom: 3px solid transparent;
+
+                &:hover {
+                    border-bottom: 3px solid black;
+                }
+                
+            }
+
+            .vertical_line {
+                height: 30px;
+                width: 2px;
+                background-color: rgb(153, 153, 153);
+            }
+        }
+    }
+}
+
+.dots {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+
+}
