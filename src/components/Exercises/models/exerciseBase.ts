@@ -83,6 +83,7 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
             category: new CategoryAdapter().fromJson(item.category),
             equipment: item.equipment.map(e => new EquipmentAdapter().toJson(e)),
             muscles: item.muscles.map(m => new MuscleAdapter().toJson(m)),
+            // eslint-disable-next-line camelcase
             muscles_secondary: item.musclesSecondary.map(m => new MuscleAdapter().toJson(m)),
             images: item.images.map(i => new ExerciseImageAdapter().toJson(i)),
         };

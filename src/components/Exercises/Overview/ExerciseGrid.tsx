@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageList, ImageListItem } from "@mui/material";
+import { Grid } from "@mui/material";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { useExerciseStateValue } from "state";
@@ -12,16 +12,17 @@ type ExerciseGridProps = {
 
 export const ExerciseGrid = ({ exerciseBases }: ExerciseGridProps) => {
 
-    const [state, dispatch] = useExerciseStateValue();
+    const [state] = useExerciseStateValue();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [t, i18n] = useTranslation();
-
     const currentUserLanguage = getLanguageByShortName(i18n.language, state.languages);
 
+
     return (
-        <ImageList cols={3}>
-            {exerciseBases.map(b => (<ImageListItem key={b.id}>
+        <Grid container spacing={1}>
+            {exerciseBases.map(b => (<Grid item xs={4} key={b.id} sx={{ display: 'flex' }}>
                 <OverviewCard exerciseBase={b} language={currentUserLanguage} />
-            </ImageListItem>))}
-        </ImageList>
+            </Grid>))}
+        </Grid>
     );
 };

@@ -22,7 +22,7 @@ type MuscleFilterProps = {
 
 export const MuscleFilter = ({ muscles, selectedMuscles, setSelectedMuscles }: MuscleFilterProps) => {
 
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     const handleToggle = (value: Muscle) => () => {
         const currentIndex = selectedMuscles.indexOf(value);
@@ -40,8 +40,8 @@ export const MuscleFilter = ({ muscles, selectedMuscles, setSelectedMuscles }: M
     return (
         <div data-testid={"muscles"}>
             <Paper sx={{ mt: 2 }}>
-                <Typography gutterBottom variant="h6" component="div">
-                    {t('muscles')}
+                <Typography gutterBottom variant="h6" m={2}>
+                    {t('exercises.muscles')}
                 </Typography>
                 <List>
                     {muscles.map((m) => {

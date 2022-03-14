@@ -2,6 +2,7 @@ import React from 'react';
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Switch, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Equipment } from "components/Exercises/models/equipment";
+import { getTranslationKey } from "utils/strings";
 
 
 type EquipmentFilterProps = {
@@ -12,7 +13,7 @@ type EquipmentFilterProps = {
 
 export const EquipmentFilter = ({ equipment, selectedEquipment, setSelectedEquipment }: EquipmentFilterProps) => {
 
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     const handleToggle = (value: Equipment) => () => {
         const currentIndex = selectedEquipment.indexOf(value);
@@ -30,8 +31,8 @@ export const EquipmentFilter = ({ equipment, selectedEquipment, setSelectedEquip
     return (
         <div data-testid={"equipment"}>
             <Paper sx={{ mt: 2 }}>
-                <Typography gutterBottom variant="h6" component="div">
-                    {t('equipment')}
+                <Typography gutterBottom variant="h6" m={2}>
+                    {t('exercises.equipment')}
                 </Typography>
                 <List>
                     {equipment.map((equipment) => {
@@ -53,7 +54,7 @@ export const EquipmentFilter = ({ equipment, selectedEquipment, setSelectedEquip
                                             inputProps={{ 'aria-labelledby': labelId }}
                                         />
                                     </ListItemIcon>
-                                    <ListItemText id={labelId} primary={equipment.name} />
+                                    <ListItemText id={labelId} primary={t(getTranslationKey(equipment.name))} />
                                 </ListItemButton>
                             </ListItem>
                         );

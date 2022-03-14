@@ -1,6 +1,6 @@
 # react components for wger
 
-This repository contains the react components for the wger app. Note that this react app is not supposed to be used by
+This repository contains the React components for the wger app. Note that this React app is not supposed to be used by
 itself, but rather as a library that is used in wger.
 
 # Getting Started

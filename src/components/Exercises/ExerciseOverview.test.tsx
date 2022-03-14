@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
-import { getCategories, getEquipment, getExerciseBases, getMuscles } from "services";
+import { getCategories, getEquipment, getExerciseBases, getLanguages, getMuscles } from "services";
 import { Category } from "components/Exercises/models/category";
 import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
 import { ExerciseStateProvider } from "state";
@@ -8,6 +8,7 @@ import { Muscle } from "components/Exercises/models/muscle";
 import { Equipment } from "components/Exercises/models/equipment";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { Language } from "components/Exercises/models/language";
 import { BrowserRouter } from 'react-router-dom';
 
 jest.mock("services");
@@ -18,6 +19,10 @@ describe("Test the ExerciseOverview component", () => {
         new Category(1, 'Arms'),
         new Category(2, 'Legs'),
         new Category(3, 'Chest')
+    ];
+    const languages = [
+        new Language(1, 'de', 'Deutsch'),
+        new Language(2, 'en', 'English')
     ];
     const muscles = [
         new Muscle(1, 'Big muscle', true),
@@ -139,6 +144,8 @@ describe("Test the ExerciseOverview component", () => {
 
     beforeEach(() => {
         // @ts-ignore
+        getLanguages.mockImplementation(() => Promise.resolve(languages));
+        // @ts-ignore
         getCategories.mockImplementation(() => Promise.resolve(categories));
         // @ts-ignore
         getMuscles.mockImplementation(() => Promise.resolve(muscles));
@@ -183,7 +190,7 @@ describe("Test the ExerciseOverview component", () => {
         render(<BrowserRouter><ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider></BrowserRouter>);
         await act(() => Promise.resolve());
         const { getByText: categoriesComponent } = within(screen.getByTestId('categories'));
-        fireEvent.click(categoriesComponent("Arms"));
+        fireEvent.click(categoriesComponent("exercises.arms"));
 
         // Assert
         expect(screen.queryByText('Benchpress')).not.toBeInTheDocument();
@@ -200,8 +207,8 @@ describe("Test the ExerciseOverview component", () => {
         render(<BrowserRouter><ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider></BrowserRouter>);
         await act(() => Promise.resolve());
         const { getByText: categoriesComponent } = within(screen.getByTestId('categories'));
-        fireEvent.click(categoriesComponent("Arms"));
-        fireEvent.click(categoriesComponent("Legs"));
+        fireEvent.click(categoriesComponent("exercises.arms"));
+        fireEvent.click(categoriesComponent("exercises.legs"));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -218,7 +225,7 @@ describe("Test the ExerciseOverview component", () => {
         render(<BrowserRouter><ExerciseStateProvider><ExerciseOverview /></ExerciseStateProvider></BrowserRouter>);
         await act(() => Promise.resolve());
         const { getByText: equipmentComponent } = within(screen.getByTestId('equipment'));
-        fireEvent.click(equipmentComponent("Barbell"));
+        fireEvent.click(equipmentComponent("exercises.barbell"));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -253,10 +260,10 @@ describe("Test the ExerciseOverview component", () => {
         await act(() => Promise.resolve());
 
         const { getByText: categoryComponent } = within(screen.getByTestId('categories'));
-        fireEvent.click(categoryComponent('Legs'));
+        fireEvent.click(categoryComponent('exercises.legs'));
 
         const { getByText: equipmentComponent } = within(screen.getByTestId('equipment'));
-        fireEvent.click(equipmentComponent('Rocks'));
+        fireEvent.click(equipmentComponent('exercises.rocks'));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();

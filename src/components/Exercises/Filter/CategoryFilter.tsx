@@ -2,6 +2,7 @@ import React from 'react';
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Switch, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Category } from "components/Exercises/models/category";
+import { getTranslationKey } from "utils/strings";
 
 
 type CategoryFilterProps = {
@@ -12,7 +13,7 @@ type CategoryFilterProps = {
 
 export const CategoryFilter = ({ categories, selectedCategories, setSelectedCategories }: CategoryFilterProps) => {
 
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     const handleToggle = (value: Category) => () => {
         const currentIndex = selectedCategories.indexOf(value);
@@ -30,8 +31,8 @@ export const CategoryFilter = ({ categories, selectedCategories, setSelectedCate
     return (
         <div data-testid={"categories"}>
             <Paper>
-                <Typography gutterBottom variant="h6" component="div">
-                    {t('category')}
+                <Typography gutterBottom variant="h6" m={2}>
+                    {t('exercises.category')}
                 </Typography>
                 <List>
                     {categories.map((category) => {
@@ -53,7 +54,7 @@ export const CategoryFilter = ({ categories, selectedCategories, setSelectedCate
                                             inputProps={{ 'aria-labelledby': labelId }}
                                         />
                                     </ListItemIcon>
-                                    <ListItemText id={labelId} primary={category.name} />
+                                    <ListItemText id={labelId} primary={t(getTranslationKey(category.name))} />
                                 </ListItemButton>
                             </ListItem>
                         );
