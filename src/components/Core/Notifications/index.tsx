@@ -1,19 +1,25 @@
 import React from 'react';
-import { useStateValue, setNotification } from 'state';
-import { Alert, AlertTitle } from '@mui/material';
+import { setNotification, useWeightStateValue } from 'state';
+import { Alert, AlertTitle, Button } from '@mui/material';
 import styles from './notifications.module.css';
-import { Button } from '@mui/material';
 
 export const Notifications = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [state, dispatch] = useStateValue();
+    const [state, dispatch] = useWeightStateValue();
 
     const closeNotification = () => {
-        dispatch(setNotification({notify: false, message: "", severity: undefined, title: "", type: undefined}));
+        dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "", type: undefined }));
     };
 
     const undoDelete = () => {
-        dispatch(setNotification({notify: false, message: "", severity: undefined, title: "", type: undefined, undo: true}));
+        dispatch(setNotification({
+            notify: false,
+            message: "",
+            severity: undefined,
+            title: "",
+            type: undefined,
+            undo: true
+        }));
     };
 
     if (!state.notification.notify) {
@@ -37,7 +43,7 @@ export const Notifications = () => {
             </Alert>
         );
     }
-    
+
     return (
         <Alert
             className={styles.notification}

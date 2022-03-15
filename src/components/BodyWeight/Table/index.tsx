@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Paper, Stack, Table,
+import {
+    Paper,
+    Table,
     TableBody,
     TableCell,
     TableContainer,
@@ -14,7 +16,7 @@ import { makeStyles } from '@mui/styles';
 import { useTranslation } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
 import { deleteWeight } from 'services';
-import { useStateValue, removeWeight, setNotification, addWeightEntry } from 'state';
+import { addWeightEntry, removeWeight, setNotification, useWeightStateValue } from 'state';
 
 
 export interface WeightTableProps {
@@ -36,10 +38,8 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
 
     const availableResultsPerPage = [10, 50, 100];
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [state, dispatch] = useStateValue();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [t, i18n] = useTranslation();
+    const [state, dispatch] = useWeightStateValue();
+    const [t] = useTranslation();
     const classes = useStyles();
     const processedWeights = processWeight(weights);
     const [rowsPerPage, setRowsPerPage] = React.useState(availableResultsPerPage[0]);
@@ -77,14 +77,20 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({notify: false, message: "", severity: undefined, title: "", type: undefined}));
+                dispatch(setNotification({
+                    notify: false,
+                    message: "",
+                    severity: undefined,
+                    title: "",
+                    type: undefined
+                }));
             }, 5000);
         }
     }, [state.notification.undo, deleteTimeoutID, weightToDelete, dispatch]);
 
     const handleDeleteWeight = async (weight: WeightEntry) => {
         try {
-            dispatch(removeWeight(weight.id!));
+            dispatch(removeWeight(weight));
             dispatch(setNotification(
                 {
                     notify: true,
@@ -96,17 +102,23 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "" , type: undefined}));
+                dispatch(setNotification({
+                    notify: false,
+                    message: "",
+                    severity: undefined,
+                    title: "",
+                    type: undefined
+                }));
             }, 5000);
 
-           const timeout = setTimeout(async () => {
+            const timeout = setTimeout(async () => {
                 await deleteWeight(weight.id!);
                 console.log("deleted weight");
 
-           }, 5000);
+            }, 5000);
 
-        SetDeleteTimeoutID(timeout);
-        SetWeightToDelete(weight);
+            SetDeleteTimeoutID(timeout);
+            SetWeightToDelete(weight);
         } catch (error: unknown) {
             dispatch(setNotification(
                 {
@@ -119,7 +131,13 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             ));
             // clear out the notifications after some times
             setTimeout(() => {
-                dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "" , type: undefined}));
+                dispatch(setNotification({
+                    notify: false,
+                    message: "",
+                    severity: undefined,
+                    title: "",
+                    type: undefined
+                }));
             }, 5000);
         }
     };

@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { getWeights } from "services";
 import { BodyWeight } from "./index";
-import { StateProvider } from 'state';
+import { WeightStateProvider } from 'state';
 import { WeightEntry } from "components/BodyWeight/model";
 
 jest.mock("services");
@@ -21,7 +21,7 @@ describe("Test BodyWeight component", () => {
         getWeights.mockImplementation(() => Promise.resolve(weightData));
 
         // Act
-        render(<StateProvider><BodyWeight/></StateProvider>);
+        render(<WeightStateProvider><BodyWeight /></WeightStateProvider>);
 
         // Assert
         expect(getWeights).toHaveBeenCalledTimes(1);
@@ -43,7 +43,7 @@ describe("Test BodyWeight component", () => {
         });
 
         // Act
-        render(<StateProvider><BodyWeight/></StateProvider>);
+        render(<WeightStateProvider><BodyWeight /></WeightStateProvider>);
 
         // Assert
         expect(getWeights).toHaveBeenCalledTimes(1);

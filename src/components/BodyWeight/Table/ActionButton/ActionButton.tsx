@@ -13,8 +13,7 @@ interface ActionButtonProps {
 }
 
 export const ActionButton = ({ weight, handleDeleteWeight }: ActionButtonProps) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [openModal, setOpenModal] = React.useState(false);
     const open = Boolean(anchorEl);

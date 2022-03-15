@@ -1,7 +1,15 @@
-export enum SetState {
-    SET_WEIGHTS = 'SET_WEIGHTS',
-    REMOVE_WEIGHT = 'REMOVE_WEIGHT',
-    UPDATE_WEIGHT = 'UPDATE_WEIGHT',
-    ADD_WEIGHT = 'ADD_WEIGHT',
-    SET_NOTIFICATION = "SET_NOTIFICATION"
-};
+export enum SetWeightState {
+    SET_WEIGHTS,
+    REMOVE_WEIGHT,
+    UPDATE_WEIGHT,
+    ADD_WEIGHT,
+    SET_NOTIFICATION
+}
+
+export enum SetExerciseState {
+    SET_MUSCLES,
+    SET_CATEGORIES,
+    SET_EQUIPMENT,
+    SET_EXERCISE_BASE,
+    SET_LANGUAGE
+}

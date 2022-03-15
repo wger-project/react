@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
 import { getWeights } from 'services';
-import { setWeights, useStateValue } from 'state';
+import { setWeights, useWeightStateValue } from 'state';
 import { WeightChart } from "components/BodyWeight/WeightChart";
 import { Box } from "@mui/material";
 import { WeightTableDashboard } from "components/BodyWeight/TableDashboard/TableDashboard";
 
 export const OverviewDashboard = () => {
-    const [state, dispatch] = useStateValue();
+    const [state, dispatch] = useWeightStateValue();
 
     // Using useCallback so that I can use this fetchWeight method in
     // useEffect and elsewhere.

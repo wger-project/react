@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './App.module.css';
-import { Header, } from './components';
+import { Header, } from 'components';
 import { Route, Routes } from 'react-router-dom';
 import {
     About,
@@ -11,7 +11,6 @@ import {
     Calendar,
     CaloriesCalculator,
     Equipments,
-    ExerciseCategory,
     Gallery,
     Ingredients,
     Login,
@@ -26,6 +25,7 @@ import {
 } from 'pages';
 import { Notifications } from 'components/Core/Notifications';
 import { Dashboard } from "components/Dashboard/Dashboard";
+import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
 
 
 function App() {
@@ -33,7 +33,7 @@ function App() {
     return (
         <div className={styles.app}>
             <Header />
-             <Notifications />
+            <Notifications />
             <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route>
@@ -51,7 +51,7 @@ function App() {
                         </Route>
                     </Route>
                     <Route path="exercise">
-                        <Route path="category" element={<ExerciseCategory />} />
+                        <Route path="category" element={<ExerciseOverview />} />
                         <Route path="muscle" element={<MuscleExercise />} />
                         <Route path="equipment" element={<Equipments />} />
                         <Route path="add" element={<AddExercise />} />
