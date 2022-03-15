@@ -33,7 +33,7 @@ export const ExerciseDetails = () => {
         try {
             const exerciseReceived = await getExerciseBase(exerciseID);
             // get the exercise translation according to the user's language
-            const translatedExercise: ExerciseTranslation | undefined = exerciseState?.getTranslation(currentUserLanguageState != null ? currentUserLanguageState.id : ENGLISH_LANGUAGE_ID);
+            const translatedExercise: ExerciseTranslation | undefined = exerciseState?.getTranslation(currentUserLanguageState);
             // all this is so that I can have all the details so I can render
             if (translatedExercise !== undefined) {
                 //replace the translations with the unique desired language to display
@@ -61,17 +61,17 @@ export const ExerciseDetails = () => {
    const steps = exerciseState?.translations[0].description !== undefined ? exerciseState?.translations[0].description : " ";
    
 
-   const changeUserLanguage = (lang: Language) => {
-       const language = getLanguageByShortName(lang.nameShort, state.languages);
-       setCurrentUserLanguageState(language);
-       const newTranslatedExercise = exerciseState?.getTranslation(lang.id);
-       console.log(newTranslatedExercise);
-       
-       if (newTranslatedExercise !== undefined && exerciseState !== undefined) {
-         exerciseState.translations = [newTranslatedExercise];
-         setExerciseState(exerciseState);
-       }
-   };
+    const changeUserLanguage = (lang: Language) => {
+        const language = getLanguageByShortName(lang.nameShort, state.languages);
+        setCurrentUserLanguageState(language);
+        const newTranslatedExercise = exerciseState?.getTranslation(lang);
+        console.log(newTranslatedExercise);
+
+        if (newTranslatedExercise !== undefined && exerciseState !== undefined) {
+            exerciseState.translations = [newTranslatedExercise];
+            setExerciseState(exerciseState);
+        }
+    };
 
     
     return (
