@@ -38,10 +38,8 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
 
     const availableResultsPerPage = [10, 50, 100];
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [state, dispatch] = useWeightStateValue();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
     const classes = useStyles();
     const processedWeights = processWeight(weights);
     const [rowsPerPage, setRowsPerPage] = React.useState(availableResultsPerPage[0]);

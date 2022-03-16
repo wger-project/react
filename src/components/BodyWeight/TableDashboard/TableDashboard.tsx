@@ -21,8 +21,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export const WeightTableDashboard = ({ weights }: WeightTableProps) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
     const classes = useStyles();
     const WEIGHT_ENTRIES_TO_SHOW = 5;
 

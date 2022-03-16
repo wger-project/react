@@ -25,6 +25,7 @@ export class ExerciseImageAdapter implements Adapter<ExerciseImage> {
         return {
             id: item.id,
             image: item.url,
+            // eslint-disable-next-line camelcase
             is_front: item.isMain
         };
     }

@@ -1,9 +1,26 @@
 import createTheme, { ThemeOptions } from '@mui/material/styles/createTheme';
 
+const fontFamilyBold = [
+    '"Open Sans Bold"',
+    'sans-serif'
+].join(',');
+
 const themeOptions: ThemeOptions = {
 
     spacing: 8,
     typography: {
+        h3: {
+            fontFamily: fontFamilyBold,
+        },
+        h4: {
+            fontFamily: fontFamilyBold,
+        },
+        h5: {
+            fontFamily: fontFamilyBold,
+        },
+        h6: {
+            fontFamily: fontFamilyBold,
+        },
         fontFamily: [
             '"Open Sans Light"',
             'sans-serif'

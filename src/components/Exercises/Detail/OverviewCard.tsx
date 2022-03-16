@@ -4,6 +4,8 @@ import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { Link } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
+import { getTranslationKey } from "utils/strings";
 
 type OverviewCardProps = {
     exerciseBase: ExerciseBase;
@@ -15,6 +17,7 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
 
 
     const exercise = exerciseBase.getTranslation(language != null ? language.id : ENGLISH_LANGUAGE_ID);
+    const [t] = useTranslation();
 
     return (
         <Link style={{textDecoration: "none"}} to={`${exerciseBase.id}`}>

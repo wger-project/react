@@ -6,6 +6,8 @@ import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
 import { ExerciseImage } from "components/Exercises/models/image";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import { Note } from "components/Exercises/models/note";
+import { Alias } from "components/Exercises/models/alias";
 
 jest.mock("axios");
 
@@ -91,7 +93,24 @@ describe("Exercise service tests", () => {
                         "creation_date": "2022-10-22",
                         "language": 2,
                         "license": 2,
-                        "license_author": "some dude"
+                        "license_author": "some dude",
+                        "aliases": [
+                            {
+                                "id": 1,
+                                "alias": "test 123"
+                            },
+                            {
+                                "id": 2,
+                                "alias": "another name"
+                            }
+                        ],
+                        "notes": [
+                            {
+                                "id": 133,
+                                "exercise": 174,
+                                "comment": "do the exercise correctly"
+                            }
+                        ]
                     },
                     {
                         "id": 9,
@@ -101,7 +120,9 @@ describe("Exercise service tests", () => {
                         "creation_date": "2022-01-01",
                         "language": 1,
                         "license": 2,
-                        "license_author": "some dude"
+                        "license_author": "some dude",
+                        "aliases": [],
+                        "notes": []
                     }
                 ]
             }]
@@ -118,7 +139,14 @@ describe("Exercise service tests", () => {
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Squats',
             'Do a squat',
-            2
+            2,
+            [
+                new Note(133, 'do the exercise correctly'),
+            ],
+            [
+                new Alias(1, 'test 123'),
+                new Alias(2, 'another name'),
+            ]
         );
         const exerciseTranslation2 = new ExerciseTranslation(9,
             'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
