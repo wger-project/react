@@ -1,6 +1,7 @@
 .side_gallery {
     box-sizing: border-box;
     margin-top: 5rem;
+    width: 500px;
 
     @media screen and (max-width: 700px) {
         display: none;
@@ -23,8 +24,6 @@
             border-radius: 0.5rem;
             overflow: hidden;
         }
-
-        
     }
 
     img {
