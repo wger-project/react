@@ -39,7 +39,7 @@ export const ExerciseDetails = () => {
             const currentUserLanguage = getLanguageByShortName(i18n.language, state.languages);
             // get exercise translation from received exercise and set it
             if (currentUserLanguage) {
-                const newTranslatedExercise = exerciseReceived?.getTranslation(currentUserLanguage.id);
+                const newTranslatedExercise = exerciseReceived?.getTranslation(currentUserLanguage);
                 setCurrentTranslation(newTranslatedExercise);
             }
             setCurrentUserLanguageState(currentUserLanguage);          
@@ -65,7 +65,7 @@ export const ExerciseDetails = () => {
    const changeUserLanguage = (lang: Language) => {
      const language = getLanguageByShortName(lang.nameShort, state.languages);
      setCurrentUserLanguageState(language);
-     const newTranslatedExercise = exerciseState?.getTranslation(lang.id);
+     const newTranslatedExercise = exerciseState?.getTranslation(lang);
      setCurrentTranslation(newTranslatedExercise);
    };
 

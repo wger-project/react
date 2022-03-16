@@ -5,6 +5,7 @@ import { Muscle, MuscleAdapter } from "components/Exercises/models/muscle";
 import { Category, CategoryAdapter } from "components/Exercises/models/category";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { Language } from "components/Exercises/models/language";
 
 export class ExerciseBase {
 
@@ -36,7 +37,9 @@ export class ExerciseBase {
     // found. While this can't happen for the "regular" wger server, other local
     // instances might have deleted the english translation or added new exercises
     // without an english translation.
-    getTranslation(language: number): ExerciseTranslation {
+    getTranslation(userLanguage?: Language): ExerciseTranslation {
+        const language = userLanguage != null ? userLanguage.id : ENGLISH_LANGUAGE_ID;
+        
         let translation = this.translations.find(t => t.language === language);
         if (!translation) {
             translation = this.translations.find(t => t.language === ENGLISH_LANGUAGE_ID);
