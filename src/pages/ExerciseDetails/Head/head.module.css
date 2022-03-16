@@ -71,19 +71,6 @@
   text-transform: uppercase;
   color: #5e5e5e;
 }
-.root .detail_language .languages .language_menu ul {
-  list-style: none;
-  padding: 0;
-}
-.root .detail_language .languages .language_menu ul li {
-  margin: 0.5rem 0;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  border-radius: 7px;
-}
-.root .detail_language .languages .language_menu ul li:hover {
-  background-color: #c2c2c2;
-}
 .root .header {
   display: flex;
   justify-content: space-between;

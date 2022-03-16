@@ -14,63 +14,59 @@ import { useExerciseStateValue } from 'state';
 import { ENGLISH_LANGUAGE_ID } from 'utils/consts';
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
 import { Language } from 'components/Exercises/models/language';
+import { OverviewCard } from 'components/Exercises/Detail/OverviewCard';
 
 export const ExerciseDetails = () => {
     const [exerciseState, setExerciseState] = useState<ExerciseBase>();
     const [currentUserLanguageState, setCurrentUserLanguageState] = useState<Language>();
+    const [currentTranslation, setCurrentTranslation] = useState<ExerciseTranslation>();
     const [state, dispatch] = useExerciseStateValue();
     const params = useParams();
     const exerciseID = params.exerciseID ? parseInt(params.exerciseID) : 0;
     
     // used to detect language from browser
-    const [t, i18n] = useTranslation();
-    
+    const [t, i18n] = useTranslation();    
 
     // to redirect to 404
     const navigate = useNavigate();
 
     const fetchedExercise = useCallback( async () => {
+        // each time an exercise object is set, the current translation is extracted and 
+        // set to state so it can be rendered directly
         try {
             const exerciseReceived = await getExerciseBase(exerciseID);
-            // get the exercise translation according to the user's language
-            const translatedExercise: ExerciseTranslation | undefined = exerciseState?.getTranslation(currentUserLanguageState != null ? currentUserLanguageState.id : ENGLISH_LANGUAGE_ID);
-            // all this is so that I can have all the details so I can render
-            if (translatedExercise !== undefined) {
-                //replace the translations with the unique desired language to display
-                exerciseReceived.translations = [translatedExercise];
-            };
+            //collect user browser's language
+            const currentUserLanguage = getLanguageByShortName(i18n.language, state.languages);
+            // get exercise translation from received exercise and set it
+            if (currentUserLanguage) {
+                const newTranslatedExercise = exerciseReceived?.getTranslation(currentUserLanguage.id);
+                setCurrentTranslation(newTranslatedExercise);
+            }
+            setCurrentUserLanguageState(currentUserLanguage);          
             setExerciseState(exerciseReceived);
+            
         } catch (error) {
+            // this can be done better. It's for cases that the exercise don't exist and
+            // we want to inform the user about it
             navigate('/not-found');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[exerciseID, currentUserLanguageState]);
+
 
     useEffect(() => {
         fetchedExercise();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [exerciseID]);
 
-    // this loads the broswer language the first time user opens app
-    // Used to set the displayed language
-    useEffect(() => {
-        const currentUserLanguage = getLanguageByShortName(i18n.language, state.languages);
-        setCurrentUserLanguageState(currentUserLanguage);
-    }, []);
-
-   const steps = exerciseState?.translations[0].description !== undefined ? exerciseState?.translations[0].description : " ";
+   const steps = currentTranslation?.description !== undefined ? currentTranslation?.description : " ";
    
 
    const changeUserLanguage = (lang: Language) => {
-       const language = getLanguageByShortName(lang.nameShort, state.languages);
-       setCurrentUserLanguageState(language);
-       const newTranslatedExercise = exerciseState?.getTranslation(lang.id);
-       console.log(newTranslatedExercise);
-       
-       if (newTranslatedExercise !== undefined && exerciseState !== undefined) {
-         exerciseState.translations = [newTranslatedExercise];
-         setExerciseState(exerciseState);
-       }
+     const language = getLanguageByShortName(lang.nameShort, state.languages);
+     setCurrentUserLanguageState(language);
+     const newTranslatedExercise = exerciseState?.getTranslation(lang.id);
+     setCurrentTranslation(newTranslatedExercise);
    };
 
     
@@ -81,6 +77,7 @@ export const ExerciseDetails = () => {
                                                 languages={state.languages}
                                                 changeLanguage={changeUserLanguage}
                                                 language={currentUserLanguageState}
+                                                currentTranslation={currentTranslation}
                                             /> : null}
            <div className={styles.body}>
                 <div className={styles.detail_alt_name}>
@@ -166,9 +163,9 @@ export const ExerciseDetails = () => {
                         <h1>Variants</h1>
 
                        <div className={styles.cards}>
-                            <VariantCard />
-                            <VariantCard />
-                            <VariantCard />
+                            {exerciseState && <OverviewCard exerciseBase={exerciseState} language={currentUserLanguageState} />}
+                            {exerciseState && <OverviewCard exerciseBase={exerciseState} language={currentUserLanguageState} />}
+                            {exerciseState && <OverviewCard exerciseBase={exerciseState} language={currentUserLanguageState} />}
                        </div>
                     </div>
                 </article>

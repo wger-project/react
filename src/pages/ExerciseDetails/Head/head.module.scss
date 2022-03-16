@@ -75,31 +75,10 @@
                 border: 1px solid rgb(151, 151, 151);
                 text-align: left;
 
-                h5 {
-                    // padding: 0 2rem;
-                }
-
                 span {
                     text-transform: uppercase;
                     color: #5e5e5e;
                 }
-
-                ul {
-                    list-style: none;
-                    padding: 0;
-
-                    li {
-                        margin: 0.5rem 0;
-                        padding: 0.5rem 1rem;
-                        cursor: pointer;
-                        border-radius: 7px;
-
-                        &:hover {
-                            background-color: #c2c2c2;
-                        }
-                    }
-                }
-
             }
         }
     }
