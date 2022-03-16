@@ -1,28 +1,28 @@
 import React from 'react';
 import styles from './side_gallery.module.css';
 import { Grid } from '@mui/material';
+import { ExerciseImage } from "components/Exercises/models/image";
 
-// While waiting for data with images, we render this dummy
-export const SideGallery = () => {
-    const imgURL = "https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80";
+type SideGalleryProps = {
+    mainImage: ExerciseImage | undefined;
+    sideImages: ExerciseImage[];
+}
 
-  return (
-    <div className={styles.side_gallery}>
-        <Grid container spacing={2}>
-            <Grid item xs={12}>
-                <img src={`${imgURL}`} alt="details" />
+export const SideGallery = ({ mainImage, sideImages }: SideGalleryProps) => {
+
+
+    return (
+        <div className={styles.side_gallery}>
+            <Grid container spacing={2}>
+                {mainImage && <Grid item xs={12}>
+                    <img src={mainImage.url} />
+                </Grid>}
+                {sideImages.map(img => (
+                    <Grid item xs={6} key={img.id}>
+                        <img src={img.url} alt="details" />
+                    </Grid>
+                ))}
             </Grid>
-            <Grid item md={6}>
-                <img src={`${imgURL}`} alt="details" />
-            </Grid>
-            <Grid item md={6}>
-                <img src={`${imgURL}`} alt="details" />
-            </Grid>
-            <Grid item md={6}>
-                <img src={`${imgURL}`} alt="details" />
-            </Grid>
-        </Grid>
-    </div>
-    
-  );
+        </div>
+    );
 };

@@ -1,20 +1,20 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './exerciseDetails.module.css';
-import {Head} from './Head';
-import { VariantCard } from './VariantCard';
+import { Head } from './Head';
 import { Carousel, CarouselItem } from 'components/Carousel';
 import { SideGallery } from './SideGallery';
 import { Footer } from 'components';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getExerciseBase } from 'services';
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { useTranslation } from "react-i18next";
 import { getLanguageByShortName } from "services/language";
 import { useExerciseStateValue } from 'state';
-import { ENGLISH_LANGUAGE_ID } from 'utils/consts';
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
 import { Language } from 'components/Exercises/models/language';
 import { OverviewCard } from 'components/Exercises/Detail/OverviewCard';
+import { Note } from "components/Exercises/models/note";
+import { Muscle } from "components/Exercises/models/muscle";
 
 export const ExerciseDetails = () => {
     const [exerciseState, setExerciseState] = useState<ExerciseBase>();
@@ -23,14 +23,14 @@ export const ExerciseDetails = () => {
     const [state, dispatch] = useExerciseStateValue();
     const params = useParams();
     const exerciseID = params.exerciseID ? parseInt(params.exerciseID) : 0;
-    
+
     // used to detect language from browser
-    const [t, i18n] = useTranslation();    
+    const [t, i18n] = useTranslation();
 
     // to redirect to 404
     const navigate = useNavigate();
 
-    const fetchedExercise = useCallback( async () => {
+    const fetchedExercise = useCallback(async () => {
         // each time an exercise object is set, the current translation is extracted and 
         // set to state so it can be rendered directly
         try {
@@ -42,16 +42,16 @@ export const ExerciseDetails = () => {
                 const newTranslatedExercise = exerciseReceived?.getTranslation(currentUserLanguage);
                 setCurrentTranslation(newTranslatedExercise);
             }
-            setCurrentUserLanguageState(currentUserLanguage);          
+            setCurrentUserLanguageState(currentUserLanguage);
             setExerciseState(exerciseReceived);
-            
+
         } catch (error) {
             // this can be done better. It's for cases that the exercise don't exist and
             // we want to inform the user about it
             navigate('/not-found');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[exerciseID, currentUserLanguageState]);
+    }, [exerciseID, currentUserLanguageState]);
 
 
     useEffect(() => {
@@ -59,48 +59,60 @@ export const ExerciseDetails = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [exerciseID]);
 
-   const steps = currentTranslation?.description !== undefined ? currentTranslation?.description : " ";
-   
+    const description = currentTranslation?.description !== undefined ? currentTranslation?.description : " ";
+    const notes = currentTranslation?.notes;
+    const aliases = currentTranslation?.aliases;
 
-   const changeUserLanguage = (lang: Language) => {
-     const language = getLanguageByShortName(lang.nameShort, state.languages);
-     setCurrentUserLanguageState(language);
-     const newTranslatedExercise = exerciseState?.getTranslation(lang);
-     setCurrentTranslation(newTranslatedExercise);
-   };
 
-    
+    const changeUserLanguage = (lang: Language) => {
+        const language = getLanguageByShortName(lang.nameShort, state.languages);
+        setCurrentUserLanguageState(language);
+        const newTranslatedExercise = exerciseState?.getTranslation(lang);
+        setCurrentTranslation(newTranslatedExercise);
+    };
+
+
     return (
         <div className={styles.root}>
             {exerciseState !== undefined ? <Head
-                                                exercise={exerciseState}
-                                                languages={state.languages}
-                                                changeLanguage={changeUserLanguage}
-                                                language={currentUserLanguageState}
-                                                currentTranslation={currentTranslation}
-                                            /> : null}
-           <div className={styles.body}>
+                exercise={exerciseState}
+                languages={state.languages}
+                changeLanguage={changeUserLanguage}
+                language={currentUserLanguageState}
+                currentTranslation={currentTranslation}
+            /> : null}
+            <div className={styles.body}>
                 <div className={styles.detail_alt_name}>
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
+                    <p>
+                        {t('exercises.also-known-as')} &nbsp;
+                        {aliases?.map(e => e.alias).join(', ')}
+                    </p>
                 </div>
-                
+
                 <section className={styles.hero}>
                     <aside>
                         {/* This carousel only displays on small screens */}
                         <Carousel>
                             <CarouselItem>
-                                <img  style={{width: "100%"}} src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80" alt="detail" />
+                                <img style={{ width: "100%" }}
+                                     src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80"
+                                     alt="detail" />
                             </CarouselItem>
                             <CarouselItem>
-                                <img style={{width: "100%"}} src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80" alt="detail" />
+                                <img style={{ width: "100%" }}
+                                     src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80"
+                                     alt="detail" />
                             </CarouselItem>
                             <CarouselItem>
-                                <img style={{width: "100%"}} src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80" alt="detail" />
+                                <img style={{ width: "100%" }}
+                                     src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80"
+                                     alt="detail" />
                             </CarouselItem>
                         </Carousel>
 
                         {/* This gallery only displays on medium screens upwards */}
-                        <SideGallery />
+                        {exerciseState &&
+                            <SideGallery mainImage={exerciseState.mainImage} sideImages={exerciseState.sideImages} />}
                     </aside>
                     <section>
                         <article>
@@ -110,50 +122,54 @@ export const ExerciseDetails = () => {
                             </div>
 
                             <div className={styles.step}>
-                                <h1>Steps</h1>
+                                <h1>{t('exercises.description')}</h1>
                                 <ol>
                                     <li>
-                                        <div dangerouslySetInnerHTML={{__html: steps}} />
+                                        <div dangerouslySetInnerHTML={{ __html: description }} />
                                     </li>
                                 </ol>
                             </div>
 
                             <div className={styles.notes}>
-                                <h1>Notes</h1>
-                                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Possimus, animi! Obcaecati sint aperiam similique 
-                                    repellat iusto incidunt cupiditate quae cumque.
-                                </p>
+                                <h1>{t('exercises.notes')}</h1>
+
+                                {notes?.map((note: Note) =>
+                                    <li key={note.id}>{note.note}</li>
+                                )}
                             </div>
 
-                            <h1>Muscles</h1>
+                            <h1>{t('exercises.muscles')}</h1>
                             <div className={styles.details}>
-                                
+
                                 <div className={styles.details_image}>
-                                    <img src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80" alt="detail" />
+                                    <img
+                                        src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80"
+                                        alt="detail" />
                                 </div>
                                 <div className={styles.details_details}>
                                     <div className={styles.details_detail_card}>
-                                        <h3>Primary Muscles</h3>
+                                        <h3>{t('exercises.primaryMuscles')}</h3>
                                         <ul>
-                                            <li>Lorem, ipsum dolor.</li>
-                                            <li>Lorem, ipsum dolor.</li>
+                                            {exerciseState?.muscles.map((m: Muscle) =>
+                                                <li key={m.id}>{m.name}</li>
+                                            )}
                                         </ul>
                                     </div>
                                     <div className={styles.details_detail_card}>
-                                        <h3>Secondary Muscle</h3>
+                                        <h3>{t('exercises.secondaryMuscles')}</h3>
                                         <ul>
-                                            <li>Lorem, ipsum dolor.</li>
-                                            <li>Lorem, ipsum dolor.</li>
+                                            {exerciseState?.musclesSecondary.map((m: Muscle) =>
+                                                <li key={m.id}>{m.name}</li>
+                                            )}
                                         </ul>
                                     </div>
-                                    <div className={styles.details_detail_card}></div>
                                 </div>
                             </div>
                         </article>
 
-                        
+
                     </section>
-                    
+
                 </section>
 
                 <hr className={styles.line_break} />
@@ -162,18 +178,23 @@ export const ExerciseDetails = () => {
                     <div className={styles.variants}>
                         <h1>Variants</h1>
 
-                       <div className={styles.cards}>
-                            {exerciseState && <OverviewCard exerciseBase={exerciseState} language={currentUserLanguageState} />}
-                            {exerciseState && <OverviewCard exerciseBase={exerciseState} language={currentUserLanguageState} />}
-                            {exerciseState && <OverviewCard exerciseBase={exerciseState} language={currentUserLanguageState} />}
-                       </div>
+                        <div className={styles.cards}>
+                            {exerciseState &&
+                                <OverviewCard exerciseBase={exerciseState} language={currentUserLanguageState} />}
+                            {exerciseState &&
+                                <OverviewCard exerciseBase={exerciseState} language={currentUserLanguageState} />}
+                            {exerciseState &&
+                                <OverviewCard exerciseBase={exerciseState} language={currentUserLanguageState} />}
+                        </div>
                     </div>
                 </article>
 
-                <p className={styles.license}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum rerum quibusdam veniam est officiis labore a natus commodi aspernatur illum, repellat sit nesciunt magnam esse?</p>
-           </div>
+                <p className={styles.license}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum rerum
+                    quibusdam veniam est officiis labore a natus commodi aspernatur illum, repellat sit nesciunt magnam
+                    esse?</p>
+            </div>
 
-           
+
             <Footer />
         </div>
     );
