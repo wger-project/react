@@ -39,7 +39,7 @@ export class ExerciseBase {
     // without an english translation.
     getTranslation(userLanguage?: Language): ExerciseTranslation {
         const language = userLanguage != null ? userLanguage.id : ENGLISH_LANGUAGE_ID;
-        
+
         let translation = this.translations.find(t => t.language === language);
         if (!translation) {
             translation = this.translations.find(t => t.language === ENGLISH_LANGUAGE_ID);
@@ -50,6 +50,14 @@ export class ExerciseBase {
             return this.translations[0];
         }
         return translation!;
+    }
+
+    get mainImage(): ExerciseImage | undefined {
+        return this.images.find(i => i.isMain);
+    }
+
+    get sideImages(): ExerciseImage[] {
+        return this.images.filter(i => !i.isMain);
     }
 
 }
