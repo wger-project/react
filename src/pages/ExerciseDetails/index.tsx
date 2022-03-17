@@ -1,25 +1,26 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './exerciseDetails.module.css';
 import {Head} from './Head';
-import { VariantCard } from './VariantCard';
 import { Carousel, CarouselItem } from 'components/Carousel';
 import { SideGallery } from './SideGallery';
 import { Footer } from 'components';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getExerciseBase } from 'services';
+import { getExerciseBase, getExerciseBases } from 'services';
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName } from "services/language";
+import { getLanguageByShortName, getLanguages } from "services/language";
 import { useExerciseStateValue } from 'state';
 import { ENGLISH_LANGUAGE_ID } from 'utils/consts';
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
 import { Language } from 'components/Exercises/models/language';
 import { OverviewCard } from 'components/Exercises/Detail/OverviewCard';
+import { setExerciseBases, setLanguages } from 'state/exerciseReducer';
 
 export const ExerciseDetails = () => {
     const [exerciseState, setExerciseState] = useState<ExerciseBase>();
     const [currentUserLanguageState, setCurrentUserLanguageState] = useState<Language>();
     const [currentTranslation, setCurrentTranslation] = useState<ExerciseTranslation>();
+    //
     const [state, dispatch] = useExerciseStateValue();
     const params = useParams();
     const exerciseID = params.exerciseID ? parseInt(params.exerciseID) : 0;
@@ -35,8 +36,10 @@ export const ExerciseDetails = () => {
         // set to state so it can be rendered directly
         try {
             const exerciseReceived = await getExerciseBase(exerciseID);
+            const languages = await getLanguages();
+            const variantExercises = await getExerciseBases();
             //collect user browser's language
-            const currentUserLanguage = getLanguageByShortName(i18n.language, state.languages);
+            const currentUserLanguage = getLanguageByShortName(i18n.language, languages);
             // get exercise translation from received exercise and set it
             if (currentUserLanguage) {
                 const newTranslatedExercise = exerciseReceived?.getTranslation(currentUserLanguage);
@@ -44,6 +47,10 @@ export const ExerciseDetails = () => {
             }
             setCurrentUserLanguageState(currentUserLanguage);          
             setExerciseState(exerciseReceived);
+            dispatch(setLanguages(languages));
+            // slice the first 3 exercises to display in variants
+            // It's been set in the global state thogh
+            dispatch(setExerciseBases(variantExercises.slice(0, 3)));
             
         } catch (error) {
             // this can be done better. It's for cases that the exercise don't exist and
@@ -51,7 +58,7 @@ export const ExerciseDetails = () => {
             navigate('/not-found');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[exerciseID, currentUserLanguageState]);
+    },[exerciseID, currentUserLanguageState, state]);
 
 
     useEffect(() => {
@@ -69,6 +76,9 @@ export const ExerciseDetails = () => {
      setCurrentTranslation(newTranslatedExercise);
    };
 
+   const variantExercises = state.exerciseBases.map(variantExercise => {
+       return <OverviewCard key={variantExercise.id} exerciseBase={variantExercise} language={currentUserLanguageState} />;
+   });
     
     return (
         <div className={styles.root}>
@@ -163,9 +173,7 @@ export const ExerciseDetails = () => {
                         <h1>Variants</h1>
 
                        <div className={styles.cards}>
-                            {exerciseState && <OverviewCard exerciseBase={exerciseState} language={currentUserLanguageState} />}
-                            {exerciseState && <OverviewCard exerciseBase={exerciseState} language={currentUserLanguageState} />}
-                            {exerciseState && <OverviewCard exerciseBase={exerciseState} language={currentUserLanguageState} />}
+                            {variantExercises}
                        </div>
                     </div>
                 </article>
