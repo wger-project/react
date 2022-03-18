@@ -1,0 +1,145 @@
+.mobileFooter {
+    background-color: rgb(58, 58, 58);
+    color: white;
+    padding: 0.5rem 2rem;
+
+    @media screen and (min-width: 700px) {
+        display: none;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+
+        &:hover {
+            font-weight: 900;
+        }
+    }
+
+    .external_links {
+
+        .mobileFooter__link {
+            display: block;
+            margin: 1rem 0;
+        }
+    }
+
+    .social_logo {
+        color: #fff;
+        cursor: pointer;
+        margin: 0 2rem;
+    }
+
+    .mobileFooter__tools {
+        margin-top: 2rem;
+
+        .mobileFooter__language {
+            display: flex;
+            align-items: center;
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 1rem 2rem;
+            width: 20%;
+            gap: 1rem;
+            margin: auto;
+        }
+    
+        .mobileFooter__playstore {
+    
+            img {
+                width: 200px;
+                height: 100px;
+            }
+        }
+    }
+
+}
+
+.footer {
+    background-color: rgb(58, 58, 58);
+    color: white;
+    padding: 0.5rem 2rem;
+
+    @media screen and (min-width: 1200px) {
+        padding: 1rem 10rem; // temp padding as the page is all padded as with header
+    }
+
+    @media screen and (max-width: 700px) {
+        display: none;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+
+        &:hover {
+            font-weight: 900;
+        }
+    }
+
+    .footer__links {
+        display: flex;
+        justify-content: space-between;
+        text-align: left;
+        
+        a {
+            margin: 1rem 0;
+            display: block;
+        }
+
+        div {
+            
+        }
+    }
+
+    .footer__tools {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0;
+
+        .footer__language {
+            display: flex;
+            align-items: center;
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 0 1rem;
+
+        }
+
+        .footer__playstore {
+            width: 15%;
+            height: 15%;
+
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+
+    .logo_wrapper {
+        text-align: left;
+
+        
+    }
+}
+
+.logo {
+    width: 8%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+    span {
+        font-size: 2rem;
+        font-weight: 900;
+    }
+
+    img {
+        width: 100%;
+    }
+    
+    @media screen and (min-width: 700px) {
+        width: 5%;
+    }
+}

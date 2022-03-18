@@ -1,0 +1,28 @@
+.root {
+
+
+    .arrow {
+        width: 5%;
+        height: 5%;
+        cursor: pointer;
+
+        &:hover {
+            color: rgb(188, 198, 207);
+        }
+    }
+
+    .mobileFooter__linksTitle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .mobileFooter__links {
+        transition: all 500ms ease-in-out;
+        
+        a {
+            display: block;
+            margin: 1rem 0;
+        }
+    }
+}

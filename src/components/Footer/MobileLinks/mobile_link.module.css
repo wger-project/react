@@ -1,0 +1,22 @@
+.root .arrow {
+  width: 5%;
+  height: 5%;
+  cursor: pointer;
+}
+.root .arrow:hover {
+  color: #bcc6cf;
+}
+.root .mobileFooter__linksTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.root .mobileFooter__links {
+  transition: all 500ms ease-in-out;
+}
+.root .mobileFooter__links a {
+  display: block;
+  margin: 1rem 0;
+}
+
+/*# sourceMappingURL=mobile_link.module.css.map */

@@ -16,9 +16,11 @@ export const TrainingSubMenu = () => {
                 <li><Link to="workout/template/public">Public Templates</Link></li>
             </div>
             <div>
-                <li><Link to="/exercise/category">Exercise overview</Link></li>
+                <li><Link to="/exercises">Exercises</Link></li>
             </div>
-            <div><Link to="/exercise/add">Add new exercise</Link></div>
+            <div>
+                <li><Link to="/exercise/add">Add new exercise</Link></li>
+            </div>
         </>
     );
 };

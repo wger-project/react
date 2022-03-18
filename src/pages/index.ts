@@ -9,7 +9,7 @@ export { Equipments } from './Equipments';
 export { Gallery } from './Gallery';
 export { Ingredients } from './Ingrdedients';
 export { Login } from './Login';
-export { MuscleExercise } from './MuscleExercise';
+export { ExerciseDetails } from './ExerciseDetails';
 export { NutritionPlans } from './NutritionPlans';
 export { Preferences } from './Preferences';
 export { PublicTemplate } from './PublicTemplate';

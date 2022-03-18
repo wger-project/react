@@ -6,6 +6,7 @@ import { Equipment } from "components/Exercises/models/equipment";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { Language } from "components/Exercises/models/language";
+import { BrowserRouter } from 'react-router-dom';
 
 
 describe("Test the exercise overview card component", () => {
@@ -46,7 +47,8 @@ describe("Test the exercise overview card component", () => {
     test('Render the overview card, no language selected -> use english', () => {
 
         // Act
-        render(<OverviewCard exerciseBase={exerciseBase} />);
+        // since  OverviewCard renders a Link, we need to wrap in a BrowserRouter
+        render(<BrowserRouter><OverviewCard exerciseBase={exerciseBase} /></BrowserRouter>);
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -62,7 +64,8 @@ describe("Test the exercise overview card component", () => {
         const language = new Language(1, "de", "Deutsch");
 
         // Act
-        render(<OverviewCard exerciseBase={exerciseBase} language={language} />);
+        // since  OverviewCard renders a Link, we need to wrap in a BrowserRouter
+        render(<BrowserRouter><OverviewCard exerciseBase={exerciseBase} language={language} /></BrowserRouter>);
 
         // Assert
         expect(screen.queryByText('Squats')).not.toBeInTheDocument();
@@ -79,7 +82,8 @@ describe("Test the exercise overview card component", () => {
         const language = new Language(3, "fr", "Français");
 
         // Act
-        render(<OverviewCard exerciseBase={exerciseBase} language={language} />);
+        // since  OverviewCard renders a Link, we need to wrap in a BrowserRouter
+        render(<BrowserRouter><OverviewCard exerciseBase={exerciseBase} language={language} /></BrowserRouter>);
 
         // Assert
         expect(screen.queryByText('Kniebeuge')).not.toBeInTheDocument();

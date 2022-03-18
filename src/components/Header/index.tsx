@@ -42,7 +42,7 @@ export const Header = () => {
                         <ul className={styles.primaryNav__list}>
                             <li className={styles.nav__item}>
                                 <button
-                                    onClick={() => trainingVisibleHook.setIsComponentVisible(true)}
+                                    onClick={() => trainingVisibleHook.setIsComponentVisible(!trainingVisibleHook.isComponentVisible)}
                                     // onBlur={() => setShowTraining(false)}
                                 >
                                     Training <span>&#9660;</span>
@@ -56,7 +56,7 @@ export const Header = () => {
                             </li>
                             <li className={styles.nav__item}>
                                 <button
-                                    onClick={() => bodyWeightVisibleHook.setIsComponentVisible(true)}
+                                    onClick={() => bodyWeightVisibleHook.setIsComponentVisible(!bodyWeightVisibleHook.isComponentVisible)}
                                     // onBlur={() => setShowBodyWeight(false)}
                                 >
                                     Body Weight <span>&#9660;</span>
@@ -69,7 +69,7 @@ export const Header = () => {
                             </li>
                             <li className={styles.nav__item}>
                                 <button
-                                    onClick={() => nutritionVisibleHook.setIsComponentVisible(true)}
+                                    onClick={() => nutritionVisibleHook.setIsComponentVisible(!nutritionVisibleHook.isComponentVisible)}
                                     // onBlur={() => setShowNutrition(false)}
                                 >
                                     Nutrition <span>&#9660;</span>
@@ -82,7 +82,7 @@ export const Header = () => {
                             </li>
                             <li className={styles.nav__item}>
                                 <button
-                                    onClick={() => aboutVisibleHook.setIsComponentVisible(true)}
+                                    onClick={() => aboutVisibleHook.setIsComponentVisible(!aboutVisibleHook.isComponentVisible)}
                                     // onBlur={() => setShowAbout(false)}
                                 >
                                     About this software <span>&#9660;</span>
@@ -100,7 +100,7 @@ export const Header = () => {
                     <ul className={styles.secondaryNav__list}>
                         <li className={styles.nav__item}>
                             <button
-                                onClick={() => userVisibleHook.setIsComponentVisible(true)}
+                                onClick={() => userVisibleHook.setIsComponentVisible(!userVisibleHook.isComponentVisible)}
                                 // onBlur={() => setShowUserMenu(false)}
                             >
                                 User <span>&#9660;</span>

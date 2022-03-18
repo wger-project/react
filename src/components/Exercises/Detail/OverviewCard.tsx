@@ -3,6 +3,7 @@ import { Card, CardActionArea, CardContent, CardMedia, Chip, Typography } from "
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { getTranslationKey } from "utils/strings";
 
@@ -14,42 +15,42 @@ type OverviewCardProps = {
 
 export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
 
-
-    const exercise = exerciseBase.getTranslation(language != null ? language.id : ENGLISH_LANGUAGE_ID);
-    const [t] = useTranslation();
+    const navigate = useNavigate();
+    const exercise = language ? exerciseBase.getTranslation(language) : exerciseBase.getTranslation(new Language(ENGLISH_LANGUAGE_ID, 'en', 'English'));
+    const [t] = useTranslation();    
 
     return (
-        <Card key={exerciseBase.id}>
-            <CardActionArea>
-                <CardMedia
-                    component="img"
-                    image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-                    alt="green iguana"
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="h6" component="div">
-                        {exercise.nameLong}
-                    </Typography>
-
-                    <Chip
-                        label={t(getTranslationKey(exerciseBase.category.name))}
-                        key={exerciseBase.category.id}
-                        sx={{ position: "absolute", top: 8, left: 8 }}
-                        color="warning"
-                        size="small"
+            <Card key={exerciseBase.id} onClick={() => navigate(`../${exerciseBase.id}`)}>
+                <CardActionArea>
+                    <CardMedia
+                        component="img"
+                        image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+                        alt="green iguana"
                     />
-                    {exerciseBase.equipment.map((equipment,) => (
-                        <Typography display="inline" mr={1} key={equipment.id}>
-                            {t(getTranslationKey(equipment.name))}
+                    <CardContent>
+                        <Typography gutterBottom variant="h6" component="div">
+                            {exercise.nameLong}
                         </Typography>
-                    ))}
-                    {exerciseBase.equipment.length === 0 && (
-                        <Typography color="text.secondary" display="inline" mr={1}>
-                            {t('exercises.no-equipment')}
-                        </Typography>
-                    )}
-                </CardContent>
-            </CardActionArea>
-        </Card>
+
+                        <Chip
+                            label={t(getTranslationKey(exerciseBase.category.name))}
+                            key={exerciseBase.category.id}
+                            sx={{ position: "absolute", top: 8, left: 8 }}
+                            color="warning"
+                            size="small"
+                        />
+                        {exerciseBase.equipment.map((equipment,) => (
+                            <Typography display="inline" mr={1} key={equipment.id}>
+                                {t(getTranslationKey(equipment.name))}
+                            </Typography>
+                        ))}
+                        {exerciseBase.equipment.length === 0 && (
+                            <Typography color="text.secondary" display="inline" mr={1}>
+                                {t('exercises.no-equipment')}
+                            </Typography>
+                        )}
+                    </CardContent>
+                </CardActionArea>
+            </Card>
     );
 };

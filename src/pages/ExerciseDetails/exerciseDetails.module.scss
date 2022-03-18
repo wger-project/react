@@ -1,0 +1,128 @@
+.root {
+   
+    
+    .body {
+        padding: 1rem 2rem; // temp padding as the page is all padded as with header
+        text-align: left;
+
+        @media screen and (min-width: 1200px) {
+            padding: 1rem 10rem; // temp padding as the page is all padded as with header
+        }
+
+        .detail_alt_name {
+            color: rgb(108, 131, 153);
+        }
+
+        .hero {
+            
+
+            @media screen and (min-width: 700px) {
+                display: flex;
+                flex-direction: row-reverse;
+            }
+
+            section {
+                
+
+                @media screen and (min-width: 700px) {
+                    width: 65%;
+                }
+    
+                article {
+    
+                    h1 {
+                        font-size: 1.5rem;
+                        margin-bottom: 0;
+                    }
+    
+                    p {
+                        font-size: 1.2rem;
+                        margin-top: 5px;
+                    }
+    
+                    li {
+                        margin: 1rem 0;
+                    }
+    
+                    .start {
+                        margin: 1rem 0;
+                        
+                        @media screen and (min-width: 700px) {
+                            margin: 4rem 0;
+                        }
+                    }
+    
+                    .step {
+                        margin: 1rem 0;
+
+                        @media screen and (min-width: 700px) {
+                            margin: 4rem 0;
+                        }
+                    }
+    
+                    .notes {
+                        margin: 1rem 0;
+
+                        @media screen and (min-width: 700px) {
+                            margin: 4rem 0;
+                        }
+                    }
+    
+                    .details {
+                        
+
+                        @media screen and (min-width: 700px) {
+                            display: flex;
+                            gap: 2rem;
+                            margin: 1rem 0;
+                        }
+    
+                        img {
+                            width: 100%;
+                            border-radius: 5px;
+
+                            @media screen and (min-width: 700px) {
+                                width: 400px;
+                                height: 400px;
+                            }
+                        }
+                    }
+                    
+                }
+            }
+
+            ol {
+                padding: 0 1rem;
+            }
+
+            aside {
+                // border: 2px solid blue;
+
+                @media screen and (min-width: 700px) {
+                    width: 35%;
+                }
+            }
+        }
+
+        .line_break {
+            margin: 5rem 0;
+        }
+
+        .variants {
+
+            .cards {
+                
+
+                @media screen and (min-width: 700px) {
+                    display: flex;
+                    gap: 2rem;
+                }
+            }
+        }
+
+        .license {
+            margin-top: 10rem;
+            color: rgb(43, 65, 87);
+        }
+    }
+}
