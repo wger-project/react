@@ -4,7 +4,7 @@ import {Head} from './Head';
 import { Carousel, CarouselItem } from 'components/Carousel';
 import { SideGallery } from './SideGallery';
 import { Footer } from 'components';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, NavigateFunction } from 'react-router-dom';
 import { getExerciseBase, getExerciseBases } from 'services';
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { useTranslation } from "react-i18next";
@@ -23,7 +23,7 @@ export const ExerciseDetails = () => {
     const [currentTranslation, setCurrentTranslation] = useState<ExerciseTranslation>();
     //
     const [state, dispatch] = useExerciseStateValue();
-    const params = useParams();
+    const params = useParams<{exerciseID: string}>();
     const exerciseID = params.exerciseID ? parseInt(params.exerciseID) : 0;
 
     // used to detect language from browser
