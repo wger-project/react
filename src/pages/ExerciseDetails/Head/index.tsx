@@ -22,6 +22,9 @@ export const Head = ({ exercise, languages, changeLanguage, language, currentTra
     const openLanguageMenu = Boolean(anchorEl);
     const [t, i18n] = useTranslation();
 
+    // console.log(exercise);
+    // console.log(currentTranslation);
+
     const handleLanguageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };

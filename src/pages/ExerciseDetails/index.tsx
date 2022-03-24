@@ -4,11 +4,10 @@ import {Head} from './Head';
 import { Carousel, CarouselItem } from 'components/Carousel';
 import { SideGallery } from './SideGallery';
 import { Footer } from 'components';
-import { useParams, useNavigate, NavigateFunction } from 'react-router-dom';
-import { getExerciseBase, getExerciseBases } from 'services';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getExerciseBase, getExerciseBases, getLanguageByShortName, getLanguages } from 'services';
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName, getLanguages } from "services/language";
 import { useExerciseStateValue } from 'state';
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
 import { Language } from 'components/Exercises/models/language';
@@ -42,7 +41,7 @@ export const ExerciseDetails = () => {
             //collect user browser's language
             const currentUserLanguage = getLanguageByShortName(i18n.language, languages);
             // get exercise translation from received exercise and set it
-            if (currentUserLanguage) {
+            if (!currentUserLanguage) {
                 const newTranslatedExercise = exerciseReceived?.getTranslation(currentUserLanguage);
                 setCurrentTranslation(newTranslatedExercise);
             }
