@@ -8,4 +8,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+
+    # Allow up to 10 open pull requests
+    open-pull-requests-limit: 10
