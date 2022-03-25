@@ -5,10 +5,9 @@ import { Carousel, CarouselItem } from 'components/Carousel';
 import { SideGallery } from './SideGallery';
 import { Footer } from 'components';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getExerciseBase, getExerciseBases } from 'services';
+import { getExerciseBase, getExerciseBases, getLanguageByShortName, getLanguages } from 'services';
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName, getLanguages } from "services/language";
 import { useExerciseStateValue } from 'state';
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
 import { Language } from 'components/Exercises/models/language';
@@ -23,7 +22,7 @@ export const ExerciseDetails = () => {
     const [currentTranslation, setCurrentTranslation] = useState<ExerciseTranslation>();
     //
     const [state, dispatch] = useExerciseStateValue();
-    const params = useParams();
+    const params = useParams<{exerciseID: string}>();
     const exerciseID = params.exerciseID ? parseInt(params.exerciseID) : 0;
 
     // used to detect language from browser
@@ -42,7 +41,7 @@ export const ExerciseDetails = () => {
             //collect user browser's language
             const currentUserLanguage = getLanguageByShortName(i18n.language, languages);
             // get exercise translation from received exercise and set it
-            if (currentUserLanguage) {
+            if (!currentUserLanguage) {
                 const newTranslatedExercise = exerciseReceived?.getTranslation(currentUserLanguage);
                 setCurrentTranslation(newTranslatedExercise);
             }
