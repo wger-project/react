@@ -4,7 +4,6 @@ export { AddWeight } from './AddWeight';
 export { BmiCalculator } from './BmiCalculator';
 export { Calendar } from './Calendar';
 export { CaloriesCalculator } from './CaloriesCalculator';
-export { ExerciseCategory } from './ExerciseCategory';
 export { Equipments } from './Equipments';
 export { Gallery } from './Gallery';
 export { Ingredients } from './Ingrdedients';

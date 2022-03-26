@@ -174,7 +174,8 @@ describe("Exercise service tests", () => {
                 [muscle1],
                 [muscle2],
                 [image],
-                [228, 66, 153, 266, 241],
+                228,
+                //[228, 66, 153, 266, 241],
                 [
                     "This is a comment",
                     "This is another comment",

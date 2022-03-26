@@ -17,14 +17,10 @@ export class ExerciseBase {
                 public equipment: Equipment[],
                 public muscles: Muscle[],
                 public musclesSecondary: Muscle[],
-                public images: ExerciseImage[],
-                public variations: number[],
+                public images: ExerciseImage[] = [],
+                public variationId: number | null,
                 public comments: string[],
                 translations?: ExerciseTranslation[]
-                /*
-                license: number,
-                licenseAuthor: string,
-                 */
     ) {
         if (translations) {
             this.translations = translations;

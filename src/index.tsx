@@ -12,6 +12,17 @@ import { ExerciseStateProvider, WeightStateProvider } from 'state';
 import { WeightOverview } from "pages";
 import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            // set a stale time of 20 seconds
+            //staleTime: 1000 * 20,
+        },
+    }
+});
 
 const rootElement = document.getElementById("root");
 if (rootElement) {
@@ -22,7 +33,10 @@ if (rootElement) {
                     <ExerciseStateProvider>
                         <WeightStateProvider>
                             <ThemeProvider theme={theme}>
-                                <App />
+                                <QueryClientProvider client={queryClient}>
+                                    <App />
+                                    <ReactQueryDevtools />
+                                </QueryClientProvider>
                             </ThemeProvider>
                         </WeightStateProvider>
                     </ExerciseStateProvider>

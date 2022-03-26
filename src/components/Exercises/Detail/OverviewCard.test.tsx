@@ -35,7 +35,7 @@ describe("Test the exercise overview card component", () => {
         [],
         [],
         [],
-        [],
+        null,
         [],
         [
             exerciseTranslation1,
