@@ -5,10 +5,10 @@ import { Carousel, CarouselItem } from 'components/Carousel';
 import { SideGallery } from './SideGallery';
 import { Footer } from 'components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getExerciseBase } from 'services';
+import { getExerciseBase, getExerciseBasesForVariation, getLanguages } from 'services';
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName, getLanguages } from "services/language";
+import { getLanguageByShortName } from "services/language";
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
 import { Language } from 'components/Exercises/models/language';
 import { OverviewCard } from 'components/Exercises/Detail/OverviewCard';
@@ -16,7 +16,6 @@ import { Note } from "components/Exercises/models/note";
 import { Muscle } from "components/Exercises/models/muscle";
 import { useQuery } from "react-query";
 import { QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL, QUERY_LANGUAGES } from "utils/consts";
-import { getExerciseBasesForVariation } from "services/exerciseBase";
 
 export const ExerciseDetails = () => {
     const [currentUserLanguageState, setCurrentUserLanguageState] = useState<Language>();
@@ -33,26 +32,26 @@ export const ExerciseDetails = () => {
 
 
     const languageQuery = useQuery(QUERY_LANGUAGES, getLanguages);
-    const exerciseQuery = useQuery([QUERY_EXERCISE_DETAIL, exerciseID], async () => {
-        return await getExerciseBase(exerciseID);
-    }, {
-        enabled: languageQuery.isSuccess,
-        onSuccess: (data: ExerciseBase) => {
-            const currentUserLanguage = getLanguageByShortName(i18n.language, languageQuery.data!);
-            // get exercise translation from received exercise and set it
-            if (currentUserLanguage) {
-                const newTranslatedExercise = data?.getTranslation(currentUserLanguage);
-                setCurrentTranslation(newTranslatedExercise);
+    const exerciseQuery = useQuery([QUERY_EXERCISE_DETAIL, exerciseID],
+        async () => await getExerciseBase(exerciseID),
+        {
+            enabled: languageQuery.isSuccess,
+            onSuccess: (data: ExerciseBase) => {
+                const currentUserLanguage = getLanguageByShortName(i18n.language, languageQuery.data!);
+                // get exercise translation from received exercise and set it
+                if (currentUserLanguage) {
+                    const newTranslatedExercise = data?.getTranslation(currentUserLanguage);
+                    setCurrentTranslation(newTranslatedExercise);
+                }
+                setCurrentUserLanguageState(currentUserLanguage);
             }
-            setCurrentUserLanguageState(currentUserLanguage);
-        }
-    });
+        });
     const variationsQuery = useQuery([QUERY_EXERCISE_BASES_VARIATIONS, exerciseQuery.data?.variationId],
         () => getExerciseBasesForVariation(exerciseQuery.data?.variationId),
         { enabled: exerciseQuery.isSuccess }
     );
 
-    if(exerciseQuery.isError || languageQuery.isError || variationsQuery.isError) {
+    if (exerciseQuery.isError || languageQuery.isError || variationsQuery.isError) {
         navigate('/not-found');
         return null;
     }
