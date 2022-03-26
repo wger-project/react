@@ -22,6 +22,9 @@ export const Head = ({ exercise, languages, changeLanguage, language, currentTra
     const openLanguageMenu = Boolean(anchorEl);
     const [t, i18n] = useTranslation();
 
+    // console.log(exercise);
+    // console.log(currentTranslation);
+
     const handleLanguageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -36,11 +39,11 @@ export const Head = ({ exercise, languages, changeLanguage, language, currentTra
 
     const category = exercise.category.name;
     const equipment = <Stack direction="row" spacing={1}>
-        {exercise.equipment.map(e => {
-            return <Chip key={e.id} label={t(getTranslationKey(e.name))} />;
-        })}
-        <Chip label={t(getTranslationKey(category))} />
-    </Stack>;
+                        {exercise.equipment.map(e => {
+                            return <Chip key={e.id} label={t(getTranslationKey(e.name))} />;
+                        })}
+                        <Chip label={t(getTranslationKey(category))} />
+                    </Stack>;
     const languagesList = languages.map(l => {
         return <MenuItem className={styles.languageMenuItem} key={l.nameShort}
                          onClick={() => handleLanguageClick(l)}>{l.nameLong}</MenuItem>;
