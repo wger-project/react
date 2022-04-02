@@ -11,5 +11,32 @@
     "nutritionalPlan": "Plan prehrane",
     "addEntry": "Dodaj unos",
     "currentWeight": "Trenutačna težina",
-    "workout": "Trening"
+    "workout": "Trening",
+    "exercises": {
+        "primaryMuscles": "Primarni mišići",
+        "secondaryMuscles": "Sekundarni mišići",
+        "search-exercise-name": "Traži po imenu vježbe",
+        "also-known-as": "Poznata i kao:",
+        "notes": "Bilješke",
+        "description": "Opis",
+        "arms": "Ruke",
+        "back": "Leđa",
+        "chest": "Prsa",
+        "legs": "Noge",
+        "shoulders": "Ramena",
+        "barbell": "Utezi",
+        "bench": "Klupa",
+        "gym_mat": "Podloga za treniranje",
+        "incline_bench": "Nagnuta klupa",
+        "kettlebell": "Kuglasti uteg",
+        "dumbbell": "Ručni uteg",
+        "no-equipment": "Nema opreme",
+        "missing-exercise": "Nedostaje određena vježba?",
+        "missing-exercise-description": "Pomogni zajednici svojim doprinosom!",
+        "contribute-exercise": "Doprinesi vježbu",
+        "exercises": "Vježbe",
+        "category": "Kategorija",
+        "equipment": "Oprema",
+        "muscles": "Mišići"
+    }
 }
