@@ -37,6 +37,19 @@
         "exercises": "Vježbe",
         "category": "Kategorija",
         "equipment": "Oprema",
-        "muscles": "Mišići"
-    }
+        "muscles": "Mišići",
+        "sz-bar": "SZ prečka",
+        "swiss_ball": "Gimnastička lopta",
+        "none_(bodyweight_exercise)": "ništa (vježba za tjelesnu težinu)",
+        "calves": "Lisni mišići",
+        "kilometers": "Kilometri",
+        "miles": "Milje",
+        "minutes": "Minute",
+        "repetitions": "Ponavljanja",
+        "seconds": "Sekunde",
+        "until_failure": "Do neuspjeha",
+        "pull-up_bar": "Prečka"
+    },
+    "no-results-description": "Za ovaj upit nisu pronađeni rezultati. Smanji broja filtara.",
+    "no-results": "Nema rezultata"
 }
