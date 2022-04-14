@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
 import './i18n';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -12,6 +11,7 @@ import { ExerciseStateProvider, WeightStateProvider } from 'state';
 import { WeightOverview } from "pages";
 import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
+import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
@@ -26,7 +26,8 @@ const queryClient = new QueryClient({
 
 const rootElement = document.getElementById("root");
 if (rootElement) {
-    ReactDOM.render(
+    const root = createRoot(rootElement);
+    root.render(
         <React.StrictMode>
             <Suspense fallback={<LoadingWidget />}>
                 <Router>
@@ -42,8 +43,7 @@ if (rootElement) {
                     </ExerciseStateProvider>
                 </Router>
             </Suspense>
-        </React.StrictMode>,
-        rootElement
+        </React.StrictMode>
     );
 }
 
@@ -52,7 +52,8 @@ if (rootElement) {
  */
 const weightOverview = document.getElementById("react-weight-overview");
 if (weightOverview) {
-    ReactDOM.render(
+    const root = createRoot(weightOverview);
+    root.render(
         <Suspense fallback={<LoadingWidget />}>
             <ExerciseStateProvider>
                 <WeightStateProvider>
@@ -61,14 +62,14 @@ if (weightOverview) {
                     </ThemeProvider>
                 </WeightStateProvider>
             </ExerciseStateProvider>
-        </Suspense>,
-        weightOverview
+        </Suspense>
     );
 }
 
 const weightDashboard = document.getElementById("react-weight-dashboard");
 if (weightDashboard) {
-    ReactDOM.render(
+    const root = createRoot(weightDashboard);
+    root.render(
         <Suspense fallback={<LoadingWidget />}>
             <ExerciseStateProvider>
                 <WeightStateProvider>
@@ -77,8 +78,7 @@ if (weightDashboard) {
                     </ThemeProvider>
                 </WeightStateProvider>
             </ExerciseStateProvider>
-        </Suspense>,
-        weightDashboard
+        </Suspense>
     );
 }
 
