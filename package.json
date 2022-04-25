@@ -8,7 +8,7 @@
     "@mui/icons-material": "^5.6.1",
     "@mui/lab": "^5.0.0-alpha.77",
     "@mui/material": "^5.6.1",
-    "@mui/styles": "^5.6.1",
+    "@mui/styles": "^5.6.2",
     "@types/jest": "^27.4.1",
     "@types/luxon": "^2.3.1",
     "@types/node": "^17.0.24",
