@@ -5298,10 +5298,10 @@ i18next-http-backend@^1.4.0:
   dependencies:
     cross-fetch "3.1.5"
 
-i18next-parser@^6.3.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/i18next-parser/-/i18next-parser-6.3.0.tgz#6f27c1f916066e5650ac3c102f4751e28f89e603"
-  integrity sha512-N/SOiVttbcyNXMI7sxmpxz6+lcxZdpCsgSgXQHfLyJhYclPAzVm08lgwhIW3KIfY6Mqf6wmtyUpO2A5J0GM6kA==
+i18next-parser@^6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/i18next-parser/-/i18next-parser-6.4.0.tgz#20b22db155d1be62ae7ece60abaed12617700eb7"
+  integrity sha512-UjPs2AgjJSs6JEYr9MnWiPoq4CRx5L/9VhXVhtSsz+1qoaDVvK8zgrcc+Vv0itP//B6BWTnRZxw88FOy9frAvQ==
   dependencies:
     "@babel/runtime" "^7.15.4"
     broccoli-plugin "^4.0.7"
