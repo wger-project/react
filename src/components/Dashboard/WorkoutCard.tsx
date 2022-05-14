@@ -1,8 +1,10 @@
 import { Button, Card, CardActions, CardContent, CardHeader, Skeleton, } from '@mui/material';
 import React from 'react';
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 export const WorkoutCard = () => {
+
+    const [t] = useTranslation();
 
     return (
         <Card>
