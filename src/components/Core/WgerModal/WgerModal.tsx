@@ -7,6 +7,7 @@ export interface WgerModalProps {
     subtitle?: String,
     isOpen: boolean,
     closeFn: any,
+    children: any
 }
 
 export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, subtitle, isOpen, closeFn, children }) => {

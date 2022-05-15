@@ -11,7 +11,8 @@ describe("Test WgerModal component", () => {
             subtitle: "Test subtitle",
             closeFn: () => {
             },
-            isOpen: true
+            isOpen: true,
+            children: null
         };
 
         // Act
@@ -31,7 +32,8 @@ describe("Test WgerModal component", () => {
             subtitle: "Test subtitle",
             closeFn: () => {
             },
-            isOpen: false
+            isOpen: false,
+            children: null
         };
 
         // Act

@@ -1,16 +1,17 @@
 import { Button, Card, CardActions, CardContent, CardHeader, } from '@mui/material';
 import React from 'react';
-import { t } from "i18next";
 import { Link } from "react-router-dom";
 import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
 import { WgerModal } from "components/Core/WgerModal/WgerModal";
+import { useTranslation } from "react-i18next";
 
 export const WeightCard = () => {
 
     const [openModal, setOpenModal] = React.useState(false);
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
+    const [t] = useTranslation();
 
     return (
         <div>
