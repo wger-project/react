@@ -72,7 +72,7 @@ function App() {
                     <Route path="about-us" element={<About />} />
                     <Route path="api" element={<ApiPage />} />
                     <Route path="equipment" element={<Equipments />} />
-                    <Route path="add" element={<AddExercise />} />
+
                 </Route>
                 <Route path="login" element={<Login />} />
                 <Route path="user">
