@@ -1,5 +1,6 @@
 import React from "react";
 import {
+    Autocomplete,
     Box,
     Button,
     FormControl,
@@ -15,6 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 import { Form, Formik } from "formik";
+import { Muscle } from "components/Exercises/models/muscle";
 
 export const Step1Basics = (props: { onContinue: React.MouseEventHandler<HTMLButtonElement> | undefined; onBack: React.MouseEventHandler<HTMLButtonElement> | undefined; }) => {
     const [t] = useTranslation();
@@ -23,6 +25,13 @@ export const Step1Basics = (props: { onContinue: React.MouseEventHandler<HTMLBut
     const handleCategoryChange = (event: SelectChangeEvent) => {
         setCategory(event.target.value);
     };
+
+    const muscles = [
+        new Muscle(1, "muscle 1", true),
+        new Muscle(2, "muscle 2", false),
+        new Muscle(3, "muscle 3", false),
+        new Muscle(4, "muscle 4", false),
+    ];
 
 
     const validationSchema = yup.object({
@@ -111,6 +120,32 @@ export const Step1Basics = (props: { onContinue: React.MouseEventHandler<HTMLBut
                                 : ''}
                         </FormHelperText>
                     </FormControl>
+                    <Autocomplete
+                        multiple
+                        id="tags-standard"
+                        options={muscles}
+                        getOptionLabel={(option) => option.name}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="standard"
+                                label={t('exercises.muscles')}
+                            />
+                        )}
+                    />
+                    <Autocomplete
+                        multiple
+                        id="tags-standard"
+                        options={muscles}
+                        getOptionLabel={(option) => option.name}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="standard"
+                                label={t('exercises.secondaryMuscles')}
+                            />
+                        )}
+                    />
 
                 </Stack>
                 <Box sx={{ mb: 2 }}>
