@@ -17,7 +17,7 @@ export const Step4Translations = (props: { onContinue: React.MouseEventHandler<H
                     {t('continue')}
                 </Button>
                 <Button
-                    disabled={true}
+                    disabled={false}
                     onClick={props.onBack}
                     sx={{ mt: 1, mr: 1 }}
                 >

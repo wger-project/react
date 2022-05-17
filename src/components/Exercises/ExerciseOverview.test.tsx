@@ -45,7 +45,7 @@ describe("Test the ExerciseOverview component", () => {
         [muscles[0], muscles[3]],
         [],
         [],
-        [],
+        null,
         [],
         [
             new ExerciseTranslation(111,
@@ -70,7 +70,7 @@ describe("Test the ExerciseOverview component", () => {
         [muscles[1], muscles[2]],
         [],
         [],
-        [],
+        null,
         [],
         [
             new ExerciseTranslation(111,
@@ -89,7 +89,7 @@ describe("Test the ExerciseOverview component", () => {
         [muscles[0], muscles[1]],
         [],
         [],
-        [],
+        null,
         [],
         [
             new ExerciseTranslation(111,
@@ -109,7 +109,7 @@ describe("Test the ExerciseOverview component", () => {
         [muscles[2]],
         [],
         [],
-        [],
+        null,
         [],
         [
             new ExerciseTranslation(111,
@@ -129,7 +129,7 @@ describe("Test the ExerciseOverview component", () => {
         [muscles[3]],
         [],
         [],
-        [],
+        null,
         [],
         [
             new ExerciseTranslation(111,

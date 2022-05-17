@@ -11,14 +11,14 @@ export class ExerciseBase {
 
     translations: ExerciseTranslation[] = [];
 
-    constructor(public id: number,
-                public uuid: string,
+    constructor(public id: number | null,
+                public uuid: string | null,
                 public category: Category,
                 public equipment: Equipment[],
                 public muscles: Muscle[],
                 public musclesSecondary: Muscle[],
                 public images: ExerciseImage[],
-                public variations: number[],
+                public variationId: number | null,
                 public comments: string[],
                 translations?: ExerciseTranslation[]
                 /*

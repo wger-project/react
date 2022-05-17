@@ -17,7 +17,7 @@ export const Step2Variations = (props: { onContinue: React.MouseEventHandler<HTM
                     {t('continue')}
                 </Button>
                 <Button
-                    disabled={true}
+                    disabled={false}
                     onClick={props.onBack}
                     sx={{ mt: 1, mr: 1 }}
                 >

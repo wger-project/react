@@ -77,13 +77,7 @@ describe("Exercise service tests", () => {
                     "This is another comment",
                     "This is a third comment"
                 ],
-                "variations": [
-                    228,
-                    66,
-                    153,
-                    266,
-                    241
-                ],
+                "variations": 228,
                 "exercises": [
                     {
                         "id": 111,
@@ -174,7 +168,7 @@ describe("Exercise service tests", () => {
                 [muscle1],
                 [muscle2],
                 [image],
-                [228, 66, 153, 266, 241],
+                228,
                 [
                     "This is a comment",
                     "This is another comment",

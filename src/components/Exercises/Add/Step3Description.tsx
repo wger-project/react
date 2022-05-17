@@ -17,7 +17,7 @@ export const Step3Description = (props: { onContinue: React.MouseEventHandler<HT
                     {t('continue')}
                 </Button>
                 <Button
-                    disabled={true}
+                    disabled={false}
                     onClick={props.onBack}
                     sx={{ mt: 1, mr: 1 }}
                 >

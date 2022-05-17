@@ -17,7 +17,7 @@ export const Step5Images = (props: { onContinue: React.MouseEventHandler<HTMLBut
                     {t('continue')}
                 </Button>
                 <Button
-                    disabled={true}
+                    disabled={false}
                     onClick={props.onBack}
                     sx={{ mt: 1, mr: 1 }}
                 >
