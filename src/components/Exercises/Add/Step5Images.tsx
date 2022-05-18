@@ -6,7 +6,8 @@ export const Step5Images = (props: { onContinue: React.MouseEventHandler<HTMLBut
     const [t] = useTranslation();
 
     return <>
-        <Typography>12345</Typography>
+        <Typography>Images must be compatible with the CC BY SA license. If in doubt, upload only photos you've taken
+            yourself.</Typography>
         <Box sx={{ mb: 2 }}>
             <div>
                 <Button

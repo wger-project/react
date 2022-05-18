@@ -4,7 +4,6 @@ import {
     Box,
     Button,
     FormControl,
-    FormHelperText,
     InputLabel,
     MenuItem,
     Select,
@@ -42,9 +41,7 @@ export const Step1Basics = (props: { onContinue: React.MouseEventHandler<HTMLBut
             .required(t('forms.field-required')),
         alternativeNames: yup
             .string(),
-        category: yup
-            .string()
-            .required(t('forms.field-required')),
+
 
     });
 
@@ -52,7 +49,6 @@ export const Step1Basics = (props: { onContinue: React.MouseEventHandler<HTMLBut
         initialValues={{
             name: '',
             alternativeNames: '',
-            category: '',
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
@@ -104,21 +100,12 @@ export const Step1Basics = (props: { onContinue: React.MouseEventHandler<HTMLBut
                             value={category}
                             onChange={handleCategoryChange}
                             label="Category"
-                            error={
-                                Boolean(formik.errors.category && formik.touched.category)
-                            }
                         >
                             <MenuItem value={1}>Abs</MenuItem>
                             <MenuItem value={2}>Chest</MenuItem>
                             <MenuItem value={3}>Legs</MenuItem>
                         </Select>
-                        <FormHelperText
-                            error={Boolean(formik.errors.category && formik.touched.category)}
-                        >
-                            {Boolean(formik.errors.category && formik.touched.category)
-                                ? formik.errors.category
-                                : ''}
-                        </FormHelperText>
+
                     </FormControl>
                     <Autocomplete
                         multiple

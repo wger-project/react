@@ -6,7 +6,8 @@ export const Step2Variations = (props: { onContinue: React.MouseEventHandler<HTM
     const [t] = useTranslation();
 
     return <>
-        <Typography>12345</Typography>
+        <Typography>{t('forms.whatVariationsExist')}</Typography>
+        --Variations widget goes here--
         <Box sx={{ mb: 2 }}>
             <div>
                 <Button
