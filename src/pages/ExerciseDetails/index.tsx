@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './exerciseDetails.module.css';
-import {Head} from './Head';
+import { Head } from './Head';
 import { Carousel, CarouselItem } from 'components/Carousel';
 import { SideGallery } from './SideGallery';
 import { Footer } from 'components';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getExerciseBase, getExerciseBases, getLanguageByShortName, getLanguages } from 'services';
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { useTranslation } from "react-i18next";
@@ -17,13 +17,13 @@ import { Note } from "components/Exercises/models/note";
 import { Muscle } from "components/Exercises/models/muscle";
 
 export const ExerciseDetails = () => {
-    const [exerciseState, setExerciseState] = useState<ExerciseBase>();
-    const [currentUserLanguageState, setCurrentUserLanguageState] = useState<Language>();
+    const [exerciseBase, setExerciseBase] = useState<ExerciseBase>();
+    const [currentUserLanguage, setCurrentUserLanguage] = useState<Language>();
     const [currentTranslation, setCurrentTranslation] = useState<ExerciseTranslation>();
     //
     const [state, dispatch] = useExerciseStateValue();
-    const params = useParams<{exerciseID: string}>();
-    const exerciseID = params.exerciseID ? parseInt(params.exerciseID) : 0;
+    const params = useParams<{ baseID: string }>();
+    const exerciseBaseID = params.baseID ? parseInt(params.baseID) : 0;
 
     // used to detect language from browser
     const [t, i18n] = useTranslation();
@@ -33,38 +33,40 @@ export const ExerciseDetails = () => {
 
     const fetchedExercise = useCallback(async () => {
         // each time an exercise object is set, the current translation is extracted and 
-        // set to state so it can be rendered directly
+        // set to state, so it can be rendered directly
         try {
-            const exerciseReceived = await getExerciseBase(exerciseID);
+            const loadedExerciseBase = await getExerciseBase(exerciseBaseID);
             const languages = await getLanguages();
-            const variantExercises = await getExerciseBases();
+            const allExerciseBases = await getExerciseBases();
             //collect user browser's language
             const currentUserLanguage = getLanguageByShortName(i18n.language, languages);
+
+
             // get exercise translation from received exercise and set it
-            if (!currentUserLanguage) {
-                const newTranslatedExercise = exerciseReceived?.getTranslation(currentUserLanguage);
-                setCurrentTranslation(newTranslatedExercise);
-            }
-            setCurrentUserLanguageState(currentUserLanguage);
-            setExerciseState(exerciseReceived);
+            //if (!currentUserLanguage) {
+            const newTranslatedExercise = loadedExerciseBase?.getTranslation(currentUserLanguage);
+            setCurrentTranslation(newTranslatedExercise);
+            //}
+            setCurrentUserLanguage(currentUserLanguage);
+            setExerciseBase(loadedExerciseBase);
             dispatch(setLanguages(languages));
             // slice the first 3 exercises to display in variants
             // It's been set in the global state thogh
-            dispatch(setExerciseBases(variantExercises.slice(0, 3)));
-            
+            dispatch(setExerciseBases(allExerciseBases.slice(0, 3)));
+
         } catch (error) {
             // this can be done better. It's for cases that the exercise don't exist and
             // we want to inform the user about it
             navigate('/not-found');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [exerciseID, currentUserLanguageState]);
+    }, [exerciseBaseID, currentUserLanguage]);
 
 
     useEffect(() => {
         fetchedExercise();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [exerciseID]);
+    }, [exerciseBaseID]);
 
     const description = currentTranslation?.description !== undefined ? currentTranslation?.description : " ";
     const notes = currentTranslation?.notes;
@@ -73,23 +75,24 @@ export const ExerciseDetails = () => {
 
     const changeUserLanguage = (lang: Language) => {
         const language = getLanguageByShortName(lang.nameShort, state.languages);
-        setCurrentUserLanguageState(language);
-        const newTranslatedExercise = exerciseState?.getTranslation(lang);
+        setCurrentUserLanguage(language);
+        const newTranslatedExercise = exerciseBase?.getTranslation(lang);
         setCurrentTranslation(newTranslatedExercise);
     };
 
 
-   const variantExercises = state.exerciseBases.map(variantExercise => {
-       return <OverviewCard key={variantExercise.id} exerciseBase={variantExercise} language={currentUserLanguageState} />;
-   });
-    
+    const variations = state.exerciseBases.map(base => {
+        return <OverviewCard key={base.id} exerciseBase={base} language={currentUserLanguage} />;
+    });
+
+
     return (
         <div className={styles.root}>
-            {exerciseState !== undefined ? <Head
-                exercise={exerciseState}
+            {exerciseBase !== undefined ? <Head
+                exercise={exerciseBase}
                 languages={state.languages}
                 changeLanguage={changeUserLanguage}
-                language={currentUserLanguageState}
+                language={currentUserLanguage}
                 currentTranslation={currentTranslation}
             /> : null}
             <div className={styles.body}>
@@ -122,8 +125,8 @@ export const ExerciseDetails = () => {
                         </Carousel>
 
                         {/* This gallery only displays on medium screens upwards */}
-                        {exerciseState &&
-                            <SideGallery mainImage={exerciseState.mainImage} sideImages={exerciseState.sideImages} />}
+                        {exerciseBase &&
+                            <SideGallery mainImage={exerciseBase.mainImage} sideImages={exerciseBase.sideImages} />}
                     </aside>
                     <section>
                         <article>
@@ -161,7 +164,7 @@ export const ExerciseDetails = () => {
                                     <div className={styles.details_detail_card}>
                                         <h3>{t('exercises.primaryMuscles')}</h3>
                                         <ul>
-                                            {exerciseState?.muscles.map((m: Muscle) =>
+                                            {exerciseBase?.muscles.map((m: Muscle) =>
                                                 <li key={m.id}>{m.name}</li>
                                             )}
                                         </ul>
@@ -169,7 +172,7 @@ export const ExerciseDetails = () => {
                                     <div className={styles.details_detail_card}>
                                         <h3>{t('exercises.secondaryMuscles')}</h3>
                                         <ul>
-                                            {exerciseState?.musclesSecondary.map((m: Muscle) =>
+                                            {exerciseBase?.musclesSecondary.map((m: Muscle) =>
                                                 <li key={m.id}>{m.name}</li>
                                             )}
                                         </ul>
@@ -189,9 +192,9 @@ export const ExerciseDetails = () => {
                     <div className={styles.variants}>
                         <h1>Variants</h1>
 
-                       <div className={styles.cards}>
-                            {variantExercises}
-                       </div>
+                        <div className={styles.cards}>
+                            {variations}
+                        </div>
                     </div>
                 </article>
 

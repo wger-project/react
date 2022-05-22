@@ -82,7 +82,7 @@ describe("Should render with", () => {
 
         render(<MemoryRouter initialEntries={['/exercises/9']}>
             <Routes>
-                <Route path='exercises/:exerciseID' element={<ExerciseDetails />} />
+                <Route path='exercises/:baseID' element={<ExerciseDetails />} />
             </Routes>
         </MemoryRouter>);
 

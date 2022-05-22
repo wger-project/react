@@ -51,7 +51,7 @@ function App() {
                 </Route>
                 <Route path="exercises">
                     <Route index element={<ExerciseOverview />} />
-                    <Route path=":exerciseID" element={<ExerciseDetails />} />
+                    <Route path=":baseID" element={<ExerciseDetails />} />
                     <Route path="add" element={<AddExercise />} />
                 </Route>
                 <Route path="weight">
