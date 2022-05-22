@@ -33,6 +33,7 @@ export const Step3Description = (props: { onContinue: React.MouseEventHandler<HT
                 id="description"
                 label={t('description')}
                 variant="standard"
+                multiline
                 rows={3}
                 error={
                     Boolean(formik.errors.description && formik.touched.description)

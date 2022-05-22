@@ -97,6 +97,7 @@ export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }:
                     <TextField
                         id="alternative-names"
                         label="Alternative names"
+                        multiline
                         rows={3}
                         variant="standard"
                         error={
