@@ -16,8 +16,17 @@ import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 import { Form, Formik } from "formik";
 import { Muscle } from "components/Exercises/models/muscle";
+import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
 
-export const Step1Basics = (props: { onContinue: React.MouseEventHandler<HTMLButtonElement> | undefined; onBack: React.MouseEventHandler<HTMLButtonElement> | undefined; }) => {
+
+type Step1BasicsProps = {
+    onContinue: React.MouseEventHandler<HTMLButtonElement>;
+    setNewExerciseData: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
+    newExerciseData: addExerciseDataType;
+}
+
+
+export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }: Step1BasicsProps) => {
     const [t] = useTranslation();
 
     const [category, setCategory] = React.useState<string>('');
@@ -34,12 +43,12 @@ export const Step1Basics = (props: { onContinue: React.MouseEventHandler<HTMLBut
 
 
     const validationSchema = yup.object({
-        name: yup
+        nameEn: yup
             .string()
             .min(5, t('forms.value-too-short'))
             .max(40, t('forms.value-too-long'))
             .required(t('forms.field-required')),
-        alternativeNames: yup
+        alternativeNamesEn: yup
             .string(),
 
 
@@ -47,16 +56,24 @@ export const Step1Basics = (props: { onContinue: React.MouseEventHandler<HTMLBut
 
     return <Formik
         initialValues={{
-            name: '',
-            alternativeNames: '',
+            nameEn: '',
+            alternativeNamesEn: '',
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
 
             console.log('Submitting the form with values: ', values);
 
+            setNewExerciseData({
+                ...newExerciseData,
+                nameEn: values.nameEn,
+                alternativeNamesEn: values.alternativeNamesEn.split(',').map(name => name.trim()),
+                category: parseInt(category),
+            });
+
+
             // @ts-ignore
-            props.onContinue!(undefined);
+            onContinue!(undefined);
         }}
     >
         {formik => (
@@ -64,18 +81,18 @@ export const Step1Basics = (props: { onContinue: React.MouseEventHandler<HTMLBut
                 <Typography>Help text goes here</Typography>
                 <Stack spacing={2}>
                     <TextField
-                        id="name"
+                        id="nameEn"
                         label="Name"
                         variant="standard"
                         error={
-                            Boolean(formik.errors.name && formik.touched.name)
+                            Boolean(formik.errors.nameEn && formik.touched.nameEn)
                         }
                         helperText={
-                            Boolean(formik.errors.name && formik.touched.name)
-                                ? formik.errors.name
+                            Boolean(formik.errors.nameEn && formik.touched.nameEn)
+                                ? formik.errors.nameEn
                                 : ''
                         }
-                        {...formik.getFieldProps('name')}
+                        {...formik.getFieldProps('nameEn')}
                     />
                     <TextField
                         id="alternative-names"
@@ -83,14 +100,14 @@ export const Step1Basics = (props: { onContinue: React.MouseEventHandler<HTMLBut
                         rows={3}
                         variant="standard"
                         error={
-                            Boolean(formik.errors.alternativeNames && formik.touched.alternativeNames)
+                            Boolean(formik.errors.alternativeNamesEn && formik.touched.alternativeNamesEn)
                         }
                         helperText={
-                            Boolean(formik.errors.alternativeNames && formik.touched.alternativeNames)
-                                ? formik.errors.alternativeNames
+                            Boolean(formik.errors.alternativeNamesEn && formik.touched.alternativeNamesEn)
+                                ? formik.errors.alternativeNamesEn
                                 : ''
                         }
-                        {...formik.getFieldProps('alternativeNames')}
+                        {...formik.getFieldProps('alternativeNamesEn')}
                     />
                     <FormControl fullWidth>
                         <InputLabel id="label-category">Category</InputLabel>
@@ -146,7 +163,6 @@ export const Step1Basics = (props: { onContinue: React.MouseEventHandler<HTMLBut
                         </Button>
                         <Button
                             disabled={true}
-                            onClick={props.onBack}
                             sx={{ mt: 1, mr: 1 }}
                         >
                             {t('back')}

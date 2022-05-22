@@ -100,3 +100,22 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
         };
     }
 }
+
+
+export type addExerciseDataType = {
+    nameEn?: string,
+    descriptionEn?: string,
+    alternativeNamesEn?: string[],
+
+    languageId?: number | null,
+    nameTranslation?: string,
+    alternativeNamesTranslation?: string[],
+    descriptionTranslation?: string,
+
+    category?: number | null,
+    muscles?: number[],
+    musclesSecondary?: number[],
+    variationId?: number | null,
+
+    images?: string[],
+}

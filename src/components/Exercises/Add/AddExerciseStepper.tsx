@@ -6,6 +6,7 @@ import { Step2Variations } from "components/Exercises/Add/Step2Variations";
 import { Step3Description } from "components/Exercises/Add/Step3Description";
 import { Step4Translations } from "components/Exercises/Add/Step4Translations";
 import { Step5Images } from "components/Exercises/Add/Step5Images";
+import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
 
 
 export const AddExerciseStepper = () => {
@@ -25,12 +26,52 @@ export const AddExerciseStepper = () => {
     };
 
 
+    const emptyExerciseData = {
+        nameEn: "",
+        descriptionEn: "",
+        alternativeNamesEn: [],
+        category: null,
+        muscles: [],
+        musclesSecondary: [],
+        variationId: null,
+        languageId: null,
+        nameTranslation: "",
+        alternativeNamesTranslation: [],
+        descriptionTranslation: "",
+        images: [],
+    };
+    const [newExerciseData, setNewExerciseData] = React.useState<addExerciseDataType>(emptyExerciseData);
+
+
     return (
         <Container maxWidth="md">
             <Stack direction={'row'}>
                 <Typography gutterBottom variant="h3" component="div">
                     {t('exercises.contribute-exercise')}
                 </Typography>
+            </Stack>
+
+            <Stack>
+
+                <Paper sx={{ p: 1, bgcolor: "lightgray" }}>
+                    <Typography gutterBottom variant="h5" component="div">
+                        Debug submitted data
+                    </Typography>
+                    <ul>
+                        <li>Name EN: {newExerciseData!.nameEn}</li>
+                        <li>Description EN: {newExerciseData!.descriptionEn}</li>
+                        <li>Alternative names EN: {newExerciseData!.alternativeNamesEn}</li>
+                        <li>Description EN: {newExerciseData!.descriptionEn}</li>
+                        <li>Category ID: {newExerciseData!.category}</li>
+                        <li>Variation ID: {newExerciseData!.variationId}</li>
+                        <li>Language ID: {newExerciseData!.languageId}</li>
+                        <li>Name translation: {newExerciseData!.nameTranslation}</li>
+                        <li>Description translation: {newExerciseData!.descriptionTranslation}</li>
+                        <li>Alternative names translation: {newExerciseData!.alternativeNamesTranslation}</li>
+                        <li>Images: {newExerciseData!.images}</li>
+                    </ul>
+                </Paper>
+
             </Stack>
             <Box>
                 <Typography gutterBottom variant="h5" component="div">
@@ -42,7 +83,10 @@ export const AddExerciseStepper = () => {
                             Basics in English
                         </StepLabel>
                         <StepContent>
-                            <Step1Basics onContinue={handleNext} onBack={handleBack} />
+                            <Step1Basics
+                                onContinue={handleNext}
+                                setNewExerciseData={setNewExerciseData}
+                                newExerciseData={newExerciseData} />
                         </StepContent>
                     </Step>
                     <Step key={2}>
