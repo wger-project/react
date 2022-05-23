@@ -3,6 +3,7 @@ import {
     Autocomplete,
     Box,
     Button,
+    Chip,
     FormControl,
     InputLabel,
     MenuItem,
@@ -30,6 +31,7 @@ export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }:
     const [t] = useTranslation();
 
     const [category, setCategory] = React.useState<string>('');
+    const [alternativeNamesEn, setAlternativeNamesEn] = React.useState<string[]>(newExerciseData.alternativeNamesEn);
     const handleCategoryChange = (event: SelectChangeEvent) => {
         setCategory(event.target.value);
     };
@@ -48,29 +50,22 @@ export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }:
             .min(5, t('forms.value-too-short'))
             .max(40, t('forms.value-too-long'))
             .required(t('forms.field-required')),
-        alternativeNamesEn: yup
-            .string(),
-
-
     });
 
     return <Formik
         initialValues={{
-            nameEn: '',
-            alternativeNamesEn: '',
+            nameEn: newExerciseData.nameEn,
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-
             console.log('Submitting the form with values: ', values);
 
             setNewExerciseData({
                 ...newExerciseData,
                 nameEn: values.nameEn,
-                alternativeNamesEn: values.alternativeNamesEn.split(',').map(name => name.trim()),
+                alternativeNamesEn: alternativeNamesEn,
                 category: parseInt(category),
             });
-
 
             // @ts-ignore
             onContinue!(undefined);
@@ -94,21 +89,27 @@ export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }:
                         }
                         {...formik.getFieldProps('nameEn')}
                     />
-                    <TextField
-                        id="alternative-names"
-                        label="Alternative names"
-                        multiline
-                        rows={3}
-                        variant="standard"
-                        error={
-                            Boolean(formik.errors.alternativeNamesEn && formik.touched.alternativeNamesEn)
+                    <Autocomplete
+                        multiple
+                        id="tags-filled"
+                        options={alternativeNamesEn}
+                        freeSolo
+                        value={alternativeNamesEn}
+                        onChange={(event, newValue) => {
+                            setAlternativeNamesEn(newValue);
+                        }}
+                        renderTags={(value: readonly string[], getTagProps) =>
+                            value.map((option: string, index: number) => (
+                                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                            ))
                         }
-                        helperText={
-                            Boolean(formik.errors.alternativeNamesEn && formik.touched.alternativeNamesEn)
-                                ? formik.errors.alternativeNamesEn
-                                : ''
-                        }
-                        {...formik.getFieldProps('alternativeNamesEn')}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="standard"
+                                label="Alternative names"
+                            />
+                        )}
                     />
                     <FormControl fullWidth>
                         <InputLabel id="label-category">Category</InputLabel>
@@ -119,6 +120,7 @@ export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }:
                             onChange={handleCategoryChange}
                             label="Category"
                         >
+                            <MenuItem value=''></MenuItem>
                             <MenuItem value={1}>Abs</MenuItem>
                             <MenuItem value={2}>Chest</MenuItem>
                             <MenuItem value={3}>Legs</MenuItem>
@@ -151,8 +153,8 @@ export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }:
                             />
                         )}
                     />
-
                 </Stack>
+
                 <Box sx={{ mb: 2 }}>
                     <div>
                         <Button

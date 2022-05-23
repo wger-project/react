@@ -60,7 +60,7 @@ export const AddExerciseStepper = () => {
                     <ul>
                         <li>Name EN: {newExerciseData!.nameEn}</li>
                         <li>Description EN: {newExerciseData!.descriptionEn}</li>
-                        <li>Alternative names EN: {newExerciseData!.alternativeNamesEn}</li>
+                        <li>Alternative names EN: {newExerciseData!.alternativeNamesEn.join(', ')}</li>
                         <li>Description EN: {newExerciseData!.descriptionEn}</li>
                         <li>Category ID: {newExerciseData!.category}</li>
                         <li>Variation ID: {newExerciseData!.variationId}</li>
