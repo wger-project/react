@@ -100,7 +100,7 @@ export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }:
                         }}
                         renderTags={(value: readonly string[], getTagProps) =>
                             value.map((option: string, index: number) => (
-                                <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                                <Chip label={option} {...getTagProps({ index })} />
                             ))
                         }
                         renderInput={(params) => (
