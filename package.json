@@ -19,7 +19,7 @@
     "history": "^5.3.0",
     "i18next": "^21.8.4",
     "i18next-browser-languagedetector": "^6.1.4",
-    "i18next-http-backend": "^1.4.0",
+    "i18next-http-backend": "^1.4.1",
     "luxon": "^2.4.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
