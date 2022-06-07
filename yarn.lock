@@ -8217,10 +8217,10 @@ react-resize-detector@^6.6.3:
     lodash.throttle "^4.1.1"
     resize-observer-polyfill "^1.5.1"
 
-react-responsive@^9.0.0-beta.8:
-  version "9.0.0-beta.8"
-  resolved "https://registry.yarnpkg.com/react-responsive/-/react-responsive-9.0.0-beta.8.tgz#10717874a3faffbba989cd741e07c5fb2d7bc080"
-  integrity sha512-3DH8YMbYCaZZ6GnsabO7/fWUFDxY5/UMdYQn4kYRBvammJvbvTTfDODo7sb4XsnOoglu0U7S6pVupH5VN+oAoQ==
+react-responsive@^9.0.0-beta.10:
+  version "9.0.0-beta.10"
+  resolved "https://registry.yarnpkg.com/react-responsive/-/react-responsive-9.0.0-beta.10.tgz#892db936da48eb30babf5cb7e31737c7b5677209"
+  integrity sha512-41H8g4FYP46ln16rsHvs9/0ZoZxAPfnNiHET86/5pgS+Vw8fSKfLBuOS2SAquaxOxq7DgPviFoHmybgVvSKCNQ==
   dependencies:
     hyphenate-style-name "^1.0.0"
     matchmediaquery "^0.3.0"
