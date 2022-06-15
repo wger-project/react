@@ -27,7 +27,7 @@
     "react-responsive": "^9.0.0-beta.10",
     "react-router-dom": "^6.3.0",
     "recharts": "^2.1.10",
-    "typescript": "^4.6.4",
+    "typescript": "^4.7.3",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },
