@@ -3,10 +3,9 @@ import { Box, Card, CardContent, CardMedia, Grid, Skeleton, } from "@mui/materia
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName, getLanguages } from "services/language";
-import { useQuery } from "react-query";
-import { QUERY_LANGUAGES } from "utils/consts";
+import { getLanguageByShortName } from "services/language";
 import { Language } from "components/Exercises/models/language";
+import { useLanguageQuery } from "components/Exercises/queries";
 
 type ExerciseGridProps = {
     exerciseBases: ExerciseBase[];
@@ -15,7 +14,7 @@ type ExerciseGridProps = {
 
 export const ExerciseGrid = ({ exerciseBases, isLoading }: ExerciseGridProps) => {
 
-    const languageQuery = useQuery(QUERY_LANGUAGES, getLanguages);
+    const languageQuery = useLanguageQuery();
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [t, i18n] = useTranslation();

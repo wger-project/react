@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import { QUERY_CATEGORIES, QUERY_EQUIPMENT, QUERY_EXERCISE_BASES, QUERY_MUSCLES } from "utils/consts";
-import { getCategories, getEquipment, getExerciseBases, getMuscles } from "services";
+import { QUERY_CATEGORIES, QUERY_EQUIPMENT, QUERY_EXERCISE_BASES, QUERY_LANGUAGES, QUERY_MUSCLES } from "utils/consts";
+import { getCategories, getEquipment, getExerciseBases, getLanguages, getMuscles } from "services";
 
 
 export function useBasesQuery() {
@@ -17,4 +17,8 @@ export function useMusclesQuery() {
 
 export function useEquipmentQuery() {
     return useQuery(QUERY_EQUIPMENT, getEquipment);
+}
+
+export function useLanguageQuery() {
+    return useQuery(QUERY_LANGUAGES, getLanguages);
 }
