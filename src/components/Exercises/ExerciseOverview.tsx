@@ -3,16 +3,14 @@ import { Box, Button, CircularProgress, Container, Grid, Pagination, Paper, Stac
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
 import { useTranslation } from "react-i18next";
-import { getCategories, getEquipment, getExerciseBases, getMuscles, } from "services";
 import { ExerciseGrid } from "components/Exercises/Overview/ExerciseGrid";
 import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
 import { Category } from "components/Exercises/models/category";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { ExerciseSearchResponse } from "services/responseType";
-import { useQuery } from "react-query";
-import { QUERY_CATEGORIES, QUERY_EQUIPMENT, QUERY_EXERCISE_BASES, QUERY_MUSCLES, } from "utils/consts";
 import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
+import { useBasesQuery, useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
 
 const ContributeExerciseBanner = () => {
     const [t] = useTranslation();
@@ -72,10 +70,10 @@ function getLoadingPlaceholder() {
 }
 
 export const ExerciseOverview = () => {
-    const basesQuery = useQuery(QUERY_EXERCISE_BASES, getExerciseBases);
-    const categoryQuery = useQuery(QUERY_CATEGORIES, getCategories);
-    const musclesQuery = useQuery(QUERY_MUSCLES, getMuscles);
-    const equipmentQuery = useQuery(QUERY_EQUIPMENT, getEquipment);
+    const basesQuery = useBasesQuery();
+    const categoryQuery = useCategoriesQuery();
+    const musclesQuery = useMusclesQuery();
+    const equipmentQuery = useEquipmentQuery();
 
     const [t] = useTranslation();
 
