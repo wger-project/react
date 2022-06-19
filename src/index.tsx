@@ -7,7 +7,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { theme } from 'theme';
 import { ThemeProvider } from '@mui/material/styles';
-import { ExerciseStateProvider, WeightStateProvider } from 'state';
+import { WeightStateProvider } from 'state';
 import { WeightOverview } from "pages";
 import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
@@ -31,16 +31,14 @@ if (rootElement) {
         <React.StrictMode>
             <Suspense fallback={<LoadingWidget />}>
                 <Router>
-                    <ExerciseStateProvider>
-                        <WeightStateProvider>
-                            <ThemeProvider theme={theme}>
-                                <QueryClientProvider client={queryClient}>
-                                    <App />
-                                    <ReactQueryDevtools />
-                                </QueryClientProvider>
-                            </ThemeProvider>
-                        </WeightStateProvider>
-                    </ExerciseStateProvider>
+                    <WeightStateProvider>
+                        <ThemeProvider theme={theme}>
+                            <QueryClientProvider client={queryClient}>
+                                <App />
+                                <ReactQueryDevtools />
+                            </QueryClientProvider>
+                        </ThemeProvider>
+                    </WeightStateProvider>
                 </Router>
             </Suspense>
         </React.StrictMode>
@@ -55,13 +53,11 @@ if (weightOverview) {
     const root = createRoot(weightOverview);
     root.render(
         <Suspense fallback={<LoadingWidget />}>
-            <ExerciseStateProvider>
-                <WeightStateProvider>
-                    <ThemeProvider theme={theme}>
-                        <WeightOverview />
-                    </ThemeProvider>
-                </WeightStateProvider>
-            </ExerciseStateProvider>
+            <WeightStateProvider>
+                <ThemeProvider theme={theme}>
+                    <WeightOverview />
+                </ThemeProvider>
+            </WeightStateProvider>
         </Suspense>
     );
 }
@@ -71,13 +67,11 @@ if (weightDashboard) {
     const root = createRoot(weightDashboard);
     root.render(
         <Suspense fallback={<LoadingWidget />}>
-            <ExerciseStateProvider>
-                <WeightStateProvider>
-                    <ThemeProvider theme={theme}>
-                        <OverviewDashboard />
-                    </ThemeProvider>
-                </WeightStateProvider>
-            </ExerciseStateProvider>
+            <WeightStateProvider>
+                <ThemeProvider theme={theme}>
+                    <OverviewDashboard />
+                </ThemeProvider>
+            </WeightStateProvider>
         </Suspense>
     );
 }

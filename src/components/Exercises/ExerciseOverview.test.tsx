@@ -3,7 +3,6 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { getCategories, getEquipment, getExerciseBases, getLanguages, getMuscles } from "services";
 import { Category } from "components/Exercises/models/category";
 import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
-import { ExerciseStateProvider } from "state";
 import { Muscle } from "components/Exercises/models/muscle";
 import { Equipment } from "components/Exercises/models/equipment";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
@@ -171,11 +170,9 @@ describe("Test the ExerciseOverview component", () => {
         const queryClient = new QueryClient();
         render(
             <BrowserRouter>
-                <ExerciseStateProvider>
-                    <QueryClientProvider client={queryClient}>
-                        <ExerciseOverview />
-                    </QueryClientProvider>
-                </ExerciseStateProvider>
+                <QueryClientProvider client={queryClient}>
+                    <ExerciseOverview />
+                </QueryClientProvider>
             </BrowserRouter>
         );
         await act(() => Promise.resolve());
@@ -200,11 +197,9 @@ describe("Test the ExerciseOverview component", () => {
         const queryClient = new QueryClient();
         render(
             <BrowserRouter>
-                <ExerciseStateProvider>
-                    <QueryClientProvider client={queryClient}>
-                        <ExerciseOverview />
-                    </QueryClientProvider>
-                </ExerciseStateProvider>
+                <QueryClientProvider client={queryClient}>
+                    <ExerciseOverview />
+                </QueryClientProvider>
             </BrowserRouter>
         );
         await act(() => Promise.resolve());
@@ -226,11 +221,9 @@ describe("Test the ExerciseOverview component", () => {
         const queryClient = new QueryClient();
         render(
             <BrowserRouter>
-                <ExerciseStateProvider>
-                    <QueryClientProvider client={queryClient}>
-                        <ExerciseOverview />
-                    </QueryClientProvider>
-                </ExerciseStateProvider>
+                <QueryClientProvider client={queryClient}>
+                    <ExerciseOverview />
+                </QueryClientProvider>
             </BrowserRouter>
         );
         await act(() => Promise.resolve());
@@ -253,11 +246,9 @@ describe("Test the ExerciseOverview component", () => {
         const queryClient = new QueryClient();
         render(
             <BrowserRouter>
-                <ExerciseStateProvider>
-                    <QueryClientProvider client={queryClient}>
-                        <ExerciseOverview />
-                    </QueryClientProvider>
-                </ExerciseStateProvider>
+                <QueryClientProvider client={queryClient}>
+                    <ExerciseOverview />
+                </QueryClientProvider>
             </BrowserRouter>
         );
         await act(() => Promise.resolve());
@@ -279,11 +270,9 @@ describe("Test the ExerciseOverview component", () => {
         const queryClient = new QueryClient();
         render(
             <BrowserRouter>
-                <ExerciseStateProvider>
-                    <QueryClientProvider client={queryClient}>
-                        <ExerciseOverview />
-                    </QueryClientProvider>
-                </ExerciseStateProvider>
+                <QueryClientProvider client={queryClient}>
+                    <ExerciseOverview />
+                </QueryClientProvider>
             </BrowserRouter>
         );
         await act(() => Promise.resolve());
@@ -305,11 +294,9 @@ describe("Test the ExerciseOverview component", () => {
         const queryClient = new QueryClient();
         render(
             <BrowserRouter>
-                <ExerciseStateProvider>
-                    <QueryClientProvider client={queryClient}>
-                        <ExerciseOverview />
-                    </QueryClientProvider>
-                </ExerciseStateProvider>
+                <QueryClientProvider client={queryClient}>
+                    <ExerciseOverview />
+                </QueryClientProvider>
             </BrowserRouter>
         );
         await act(() => Promise.resolve());
