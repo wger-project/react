@@ -7,16 +7,7 @@ import { ExerciseTranslationAdapter } from "components/Exercises/models/exercise
 export const EXERCISE_INFO_PATH = 'exercisebaseinfo';
 
 
-/*
- * Fetch all exercise bases
- */
-export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
-    const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 300 } });
-    const { data } = await axios.get<ResponseType<any>>(url, {
-        headers: makeHeader(),
-    });
-
-
+function processBaseData(data: any): ExerciseBase[] {
     const adapter = new ExerciseBaseAdapter();
     const translationAdapter = new ExerciseTranslationAdapter();
 
@@ -32,8 +23,19 @@ export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
             console.error("Could not load exercise translations, skipping...", e);
         }
     }
-
     return out;
+}
+
+/*
+ * Fetch all exercise bases
+ */
+export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
+    const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 300 } });
+    const { data } = await axios.get<ResponseType<any>>(url, {
+        headers: makeHeader(),
+    });
+
+    return processBaseData(data);
 };
 
 
@@ -79,21 +81,5 @@ export const getExerciseBasesForVariation = async (id: number | null | undefined
         headers: makeHeader(),
     });
 
-    const adapter = new ExerciseBaseAdapter();
-    const translationAdapter = new ExerciseTranslationAdapter();
-
-    const out: ExerciseBase[] = [];
-    for (const exerciseBase of data.results) {
-        try {
-            const exerciseBaseObj = adapter.fromJson(exerciseBase);
-            for (const e of exerciseBase.exercises) {
-                exerciseBaseObj.translations.push(translationAdapter.fromJson(e));
-            }
-            out.push(exerciseBaseObj);
-        } catch (e) {
-            console.error("Could not load exercise translations, skipping...", e);
-        }
-    }
-
-    return out;
+    return processBaseData(data);
 };
