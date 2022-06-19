@@ -17,6 +17,7 @@ import { Muscle } from "components/Exercises/models/muscle";
 import { useQuery } from "react-query";
 import { QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL, } from "utils/consts";
 import { useLanguageQuery } from "components/Exercises/queries";
+import { Typography } from "@mui/material";
 
 export const ExerciseDetails = () => {
     const [currentUserLanguageState, setCurrentUserLanguageState] =
@@ -110,12 +111,14 @@ export const ExerciseDetails = () => {
                 />
             ) : null}
             <div className={styles.body}>
-                <div className={styles.detail_alt_name}>
-                    <p>
-                        {t("exercises.also-known-as")} &nbsp;
-                        {aliases?.map(e => e.alias).join(", ")}
-                    </p>
-                </div>
+
+                {aliases && aliases.length > 0 ? (
+                    <div className={styles.detail_alt_name}>
+                        <p>
+                            {t("exercises.also-known-as")} &nbsp;
+                            {aliases?.map(e => e.alias).join(", ")}
+                        </p>
+                    </div>) : null}
 
                 <section className={styles.hero}>
                     <aside>
@@ -154,17 +157,13 @@ export const ExerciseDetails = () => {
                     </aside>
                     <section>
                         <article>
-                            <div className={styles.start}>
-                                <h1>Starting position</h1>
-                                <p>No starting position for now.</p>
-                            </div>
 
-                            <div className={styles.step}>
+                            <div>
                                 <h1>{t("exercises.description")}</h1>
                                 <div dangerouslySetInnerHTML={{ __html: description }} />
                             </div>
 
-                            <div className={styles.notes}>
+                            <div>
                                 <h1>{t("exercises.notes")}</h1>
 
                                 {notes?.map((note: Note) => (
@@ -213,11 +212,10 @@ export const ExerciseDetails = () => {
                     </div>
                 </article>
 
-                <p className={styles.license}>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum rerum
-                    quibusdam veniam est officiis labore a natus commodi aspernatur illum,
-                    repellat sit nesciunt magnam esse?
-                </p>
+                <Typography variant="caption" display="block" mt={2}>
+                    The text on this page is available under the
+                    <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4 License</a>.
+                </Typography>
             </div>
 
             <Footer />
