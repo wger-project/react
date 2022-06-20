@@ -111,9 +111,7 @@ describe("Should render with", () => {
         await waitFor(() => {
             expect(screen.getByText(exerciseBase.muscles[0].name)).toBeInTheDocument();
         });
-        expect(screen.getByText('Starting position')).toBeInTheDocument();
         expect(screen.getByText('Variants')).toBeInTheDocument();
-
         expect(screen.getByText("VIEW")).toBeInTheDocument();
 
     });
