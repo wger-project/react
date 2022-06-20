@@ -7,8 +7,7 @@ import { useTranslation } from "react-i18next";
 import { setNotification, SetWeightState, useWeightStateValue } from "state";
 import { createWeight, updateWeight } from "services/weight";
 import AdapterLuxon from "@mui/lab/AdapterLuxon";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { DatePicker } from "@mui/lab";
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { DateTime } from "luxon";
 import { dateToYYYYMMDD } from "utils/date";
 
