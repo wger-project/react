@@ -26,7 +26,7 @@ export const ExerciseDetails = () => {
         useState<ExerciseTranslation>();
 
     const params = useParams<{ baseID: string }>();
-    const exerciseID = params.baseID ? parseInt(params.baseID) : 0;
+    const exerciseBaseID = params.baseID ? parseInt(params.baseID) : 0;
 
     // used to detect language from browser
     const [t, i18n] = useTranslation();
@@ -36,8 +36,8 @@ export const ExerciseDetails = () => {
 
     const languageQuery = useLanguageQuery();
     const exerciseQuery = useQuery(
-        [QUERY_EXERCISE_DETAIL, exerciseID],
-        async () => await getExerciseBase(exerciseID),
+        [QUERY_EXERCISE_DETAIL, exerciseBaseID],
+        async () => await getExerciseBase(exerciseBaseID),
         {
             enabled: languageQuery.isSuccess,
             onSuccess: (data: ExerciseBase) => {

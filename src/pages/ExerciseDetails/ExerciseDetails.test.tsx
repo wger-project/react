@@ -8,7 +8,7 @@ import { Muscle } from 'components/Exercises/models/muscle';
 import { Equipment } from 'components/Exercises/models/equipment';
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
-import { getExerciseBase, getExerciseBasesForVariation, getLanguages } from "services";
+import { getExerciseBase, getExerciseBases, getExerciseBasesForVariation, getLanguages } from "services";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 // jest changes all exports in this module to jest.fn() so that when we call
@@ -37,7 +37,7 @@ describe("Should render with", () => {
         new Equipment(10, "Kettlebell"),
         new Equipment(42, "Rocks"),
     ];
-    
+
     const exerciseBase = new ExerciseBase(
         345,
         "c788d643-150a-4ac7-97ef-84643c6419bf",
@@ -75,6 +75,15 @@ describe("Should render with", () => {
             exerciseBase,
             exerciseBase,
         ]));
+        // @ts-ignore
+        getExerciseBasesForVariation.mockImplementation(() => Promise.resolve(
+            [
+                // TODO: add some variations. Adding a helper function to create variations is probably a good idea.
+                //exerciseBase,
+                //exerciseBase,
+                //exerciseBase,
+            ]
+        ));
         // @ts-ignore
         getLanguages.mockImplementation(() => Promise.resolve(languages));
     });
