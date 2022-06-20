@@ -1,98 +1,48 @@
 .root .body {
   padding: 1rem 2rem;
-  text-align: left;
-}
-@media screen and (min-width: 1200px) {
-  .root .body {
-    padding: 1rem 10rem;
-  }
-}
-.root .body .detail_alt_name {
-  color: #6c8399;
-}
-@media screen and (min-width: 700px) {
-  .root .body .hero {
-    display: flex;
-    flex-direction: row-reverse;
-  }
-}
-@media screen and (min-width: 700px) {
-  .root .body .hero section {
-    width: 65%;
-  }
-}
-.root .body .hero section article h1 {
-  font-size: 1.5rem;
-  margin-bottom: 0;
-}
-.root .body .hero section article p {
-  font-size: 1.2rem;
-  margin-top: 5px;
-}
-.root .body .hero section article li {
-  margin: 1rem 0;
-}
-.root .body .hero section article .start {
-  margin: 1rem 0;
-}
-@media screen and (min-width: 700px) {
-  .root .body .hero section article .start {
-    margin: 4rem 0;
-  }
-}
-.root .body .hero section article .step {
-  margin: 1rem 0;
-}
-@media screen and (min-width: 700px) {
-  .root .body .hero section article .step {
-    margin: 4rem 0;
-  }
-}
-.root .body .hero section article .notes {
-  margin: 1rem 0;
-}
-@media screen and (min-width: 700px) {
-  .root .body .hero section article .notes {
-    margin: 4rem 0;
-  }
-}
-@media screen and (min-width: 700px) {
-  .root .body .hero section article .details {
-    display: flex;
-    gap: 2rem;
-    margin: 1rem 0;
-  }
-}
-.root .body .hero section article .details img {
-  width: 100%;
-  border-radius: 5px;
-}
-@media screen and (min-width: 700px) {
+  text-align: left; }
+  @media screen and (min-width: 1200px) {
+    .root .body {
+      padding: 1rem 10rem; } }
+  .root .body .detail_alt_name {
+    color: #6c8399; }
+  @media screen and (min-width: 700px) {
+    .root .body .hero {
+      display: flex;
+      flex-direction: row-reverse; } }
+  @media screen and (min-width: 700px) {
+    .root .body .hero section {
+      width: 65%; } }
+  .root .body .hero section article h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0; }
+  .root .body .hero section article p {
+    font-size: 1.2rem;
+    margin-top: 5px; }
+  .root .body .hero section article li {
+    margin: 1rem 0; }
+  @media screen and (min-width: 700px) {
+    .root .body .hero section article .details {
+      display: flex;
+      gap: 2rem;
+      margin: 1rem 0; } }
   .root .body .hero section article .details img {
-    width: 400px;
-    height: 400px;
-  }
-}
-.root .body .hero ol {
-  padding: 0 1rem;
-}
-@media screen and (min-width: 700px) {
-  .root .body .hero aside {
-    width: 35%;
-  }
-}
-.root .body .line_break {
-  margin: 5rem 0;
-}
-@media screen and (min-width: 700px) {
-  .root .body .variants .cards {
-    display: flex;
-    gap: 2rem;
-  }
-}
-.root .body .license {
-  margin-top: 10rem;
-  color: #2b4157;
-}
+    width: 100%;
+    border-radius: 5px; }
+    @media screen and (min-width: 700px) {
+      .root .body .hero section article .details img {
+        width: 400px;
+        height: 400px; } }
+  .root .body .hero ol {
+    padding: 0 1rem; }
+  @media screen and (min-width: 700px) {
+    .root .body .hero aside {
+      width: 35%; } }
+  .root .body .line_break {
+    margin: 5rem 0; }
+  @media screen and (min-width: 700px) {
+    .root .body .variants .cards {
+      display: flex;
+      gap: 2rem; } }
 
 /*# sourceMappingURL=exerciseDetails.module.css.map */

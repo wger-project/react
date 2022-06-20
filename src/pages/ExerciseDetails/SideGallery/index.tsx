@@ -15,7 +15,7 @@ export const SideGallery = ({ mainImage, sideImages }: SideGalleryProps) => {
         <div className={styles.side_gallery}>
             <Grid container spacing={2}>
                 {mainImage && <Grid item xs={12}>
-                    <img src={mainImage.url} />
+                    <img src={mainImage.url} alt="" />
                 </Grid>}
                 {sideImages.map(img => (
                     <Grid item xs={6} key={img.id}>
