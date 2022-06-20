@@ -16,8 +16,10 @@ import {
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 import { Form, Formik } from "formik";
-import { Muscle } from "components/Exercises/models/muscle";
 import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
+import { useCategoriesQuery, useMusclesQuery } from "components/Exercises/queries";
+import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
+import { getTranslationKey } from "utils/strings";
 
 
 type Step1BasicsProps = {
@@ -36,13 +38,8 @@ export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }:
         setCategory(event.target.value);
     };
 
-    const muscles = [
-        new Muscle(1, "muscle 1", true),
-        new Muscle(2, "muscle 2", false),
-        new Muscle(3, "muscle 3", false),
-        new Muscle(4, "muscle 4", false),
-    ];
-
+    const categoryQuery = useCategoriesQuery();
+    const musclesQuery = useMusclesQuery();
 
     const validationSchema = yup.object({
         nameEn: yup
@@ -111,48 +108,70 @@ export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }:
                             />
                         )}
                     />
-                    <FormControl fullWidth>
-                        <InputLabel id="label-category">Category</InputLabel>
-                        <Select
-                            labelId="label-category"
-                            id="category"
-                            value={category}
-                            onChange={handleCategoryChange}
-                            label="Category"
-                        >
-                            <MenuItem value=''></MenuItem>
-                            <MenuItem value={1}>Abs</MenuItem>
-                            <MenuItem value={2}>Chest</MenuItem>
-                            <MenuItem value={3}>Legs</MenuItem>
-                        </Select>
+                    {categoryQuery.isLoading ? (
+                        <Box>
+                            <LoadingWidget />
+                        </Box>
+                    ) : (
+                        <FormControl fullWidth>
+                            <InputLabel id="label-category">Category</InputLabel>
+                            <Select
+                                labelId="label-category"
+                                id="category"
+                                value={category}
+                                onChange={handleCategoryChange}
+                                label="Category"
+                            >
+                                <MenuItem value=''></MenuItem>
+                                {categoryQuery.data!.map(category => (
+                                    <MenuItem key={category.id} value={category.id}>
+                                        {t(getTranslationKey(category.name))}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
 
-                    </FormControl>
-                    <Autocomplete
-                        multiple
-                        id="tags-standard"
-                        options={muscles}
-                        getOptionLabel={(option) => option.name}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                variant="standard"
-                                label={t('exercises.muscles')}
-                            />
-                        )}
-                    />
-                    <Autocomplete
-                        multiple
-                        id="tags-standard"
-                        options={muscles}
-                        getOptionLabel={(option) => option.name}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                variant="standard"
-                                label={t('exercises.secondaryMuscles')}
-                            />
-                        )}
-                    />
+                    {musclesQuery.isLoading ? (
+                        <Box>
+                            <LoadingWidget />
+                        </Box>
+                    ) : (
+                        <Autocomplete
+                            multiple
+                            id="tags-standard"
+                            options={musclesQuery.data!}
+                            getOptionLabel={(option) => option.name}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    variant="standard"
+                                    label={t('exercises.muscles')}
+                                />
+                            )}
+                        />
+                    )}
+
+
+                    {musclesQuery.isLoading ? (
+                        <Box>
+                            <LoadingWidget />
+                        </Box>
+                    ) : (
+                        <Autocomplete
+                            multiple
+                            id="tags-standard"
+                            options={musclesQuery.data!}
+                            getOptionLabel={(option) => option.name}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    variant="standard"
+                                    label={t('exercises.secondaryMuscles')}
+                                />
+                            )}
+                        />
+                    )}
                 </Stack>
 
                 <Box sx={{ mb: 2 }}>

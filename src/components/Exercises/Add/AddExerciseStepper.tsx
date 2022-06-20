@@ -63,6 +63,8 @@ export const AddExerciseStepper = () => {
                         <li>Alternative names EN: {newExerciseData!.alternativeNamesEn.join(', ')}</li>
                         <li>Description EN: {newExerciseData!.descriptionEn}</li>
                         <li>Category ID: {newExerciseData!.category}</li>
+                        <li>Muscles: {newExerciseData!.muscles}</li>
+                        <li>Muscles secondary: {newExerciseData!.musclesSecondary}</li>
                         <li>Variation ID: {newExerciseData!.variationId}</li>
                         <li>Language ID: {newExerciseData!.languageId}</li>
                         <li>Name translation: {newExerciseData!.nameTranslation}</li>
