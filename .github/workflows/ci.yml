@@ -1,4 +1,4 @@
-name: Continous Integration
+name: Continuous Integration
 
 on: push
 
@@ -6,8 +6,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install modules
         run: yarn
+
       - name: Run tests
-        run: yarn test
+        run: yarn test -- --coverage
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -8,15 +8,7 @@ import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 export const EXERCISE_INFO_PATH = 'exercisebaseinfo';
 
 
-/*
- * Fetch all exercise bases
- */
-export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
-    const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 300 } });
-    const { data } = await axios.get<ResponseType<any>>(url, {
-        headers: makeHeader(),
-    });
-
+function processBaseData(data: any): ExerciseBase[] {
     const adapter = new ExerciseBaseAdapter();
     const translationAdapter = new ExerciseTranslationAdapter();
 
@@ -37,16 +29,26 @@ export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
             console.error("Could not load exercise translations, skipping...", e);
         }
     }
-
     return out;
+}
+
+/*
+ * Fetch all exercise bases
+ */
+export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
+    const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 300 } });
+    const { data } = await axios.get<ResponseType<any>>(url, {
+        headers: makeHeader(),
+    });
+
+    return processBaseData(data);
 };
 
 
 /*
- * Fetch exercise with a particular ID
+ * Fetch exercise base with a particular ID
  */
 export const getExerciseBase = async (id: number): Promise<ExerciseBase> => {
-
     const url = makeUrl(EXERCISE_INFO_PATH, { id: id });
     const { data: data } = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
@@ -69,4 +71,21 @@ export const getExerciseBase = async (id: number): Promise<ExerciseBase> => {
     }
 
     return exerciseBaseObj;
+};
+
+
+/*
+ * Fetch exercise bases with a given variation ID
+ */
+export const getExerciseBasesForVariation = async (id: number | null | undefined): Promise<ExerciseBase[]> => {
+    if (!id) {
+        return [];
+    }
+
+    const url = makeUrl(EXERCISE_INFO_PATH, { query: { variations: id } });
+    const { data: data } = await axios.get<ResponseType<any>>(url, {
+        headers: makeHeader(),
+    });
+
+    return processBaseData(data);
 };

@@ -34,6 +34,7 @@ export const CategoryFilter = ({ categories, selectedCategories, setSelectedCate
                 <Typography gutterBottom variant="h6" m={2}>
                     {t('exercises.category')}
                 </Typography>
+
                 <List>
                     {categories.map((category) => {
                         const labelId = `checkbox-list-label-${category.id}`;

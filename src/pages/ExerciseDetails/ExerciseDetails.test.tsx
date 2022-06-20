@@ -8,7 +8,8 @@ import { Muscle } from 'components/Exercises/models/muscle';
 import { Equipment } from 'components/Exercises/models/equipment';
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
-import { getExerciseBase, getExerciseBases, getLanguages } from "services";
+import { getExerciseBase, getExerciseBasesForVariation, getLanguages } from "services";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 // jest changes all exports in this module to jest.fn() so that when we call
 //  one of this fxns like getExerciseBase, it calls the jest.fn() that was assigned to it
@@ -36,7 +37,7 @@ describe("Should render with", () => {
         new Equipment(10, "Kettlebell"),
         new Equipment(42, "Rocks"),
     ];
-
+    
     const exerciseBase = new ExerciseBase(
         345,
         "c788d643-150a-4ac7-97ef-84643c6419bf",
@@ -80,17 +81,23 @@ describe("Should render with", () => {
 
     test('should render the exercise to screen', async () => {
 
-        render(<MemoryRouter initialEntries={['/exercises/9']}>
-            <Routes>
-                <Route path='exercises/:baseID' element={<ExerciseDetails />} />
-            </Routes>
-        </MemoryRouter>);
+        const queryClient = new QueryClient();
+        await render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/exercises/9']}>
+                    <Routes>
+                        <Route path='exercises/:baseID' element={<ExerciseDetails />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
 
         await act(() => Promise.resolve());
 
-        expect(getExerciseBase).toBeCalledTimes(1);
         expect(getLanguages).toBeCalled();
-        expect(getExerciseBases).toBeCalled();
+        expect(getExerciseBase).toBeCalled();
+        expect(getExerciseBasesForVariation).toBeCalled();
+
 
         await waitFor(() => {
             expect(screen.getByText("Squats")).toBeInTheDocument();
@@ -101,9 +108,7 @@ describe("Should render with", () => {
         await waitFor(() => {
             expect(screen.getByText(exerciseBase.muscles[0].name)).toBeInTheDocument();
         });
-        expect(screen.getByText('Starting position')).toBeInTheDocument();
         expect(screen.getByText('Variants')).toBeInTheDocument();
-
         expect(screen.getByText("VIEW")).toBeInTheDocument();
 
     });

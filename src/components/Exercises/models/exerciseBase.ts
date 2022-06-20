@@ -17,14 +17,10 @@ export class ExerciseBase {
                 public equipment: Equipment[],
                 public muscles: Muscle[],
                 public musclesSecondary: Muscle[],
-                public images: ExerciseImage[],
+                public images: ExerciseImage[] = [],
                 public variationId: number | null,
                 public comments: string[],
                 translations?: ExerciseTranslation[]
-                /*
-                license: number,
-                licenseAuthor: string,
-                 */
     ) {
         if (translations) {
             this.translations = translations;
@@ -99,23 +95,4 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
             images: item.images.map(i => new ExerciseImageAdapter().toJson(i)),
         };
     }
-}
-
-
-export type addExerciseDataType = {
-    nameEn: string,
-    descriptionEn: string,
-    alternativeNamesEn: string[],
-
-    languageId: number | null,
-    nameTranslation: string,
-    alternativeNamesTranslation: string[],
-    descriptionTranslation: string,
-
-    category: number | null,
-    muscles: number[],
-    musclesSecondary: number[],
-    variationId: number | null,
-
-    images: string[],
 }
