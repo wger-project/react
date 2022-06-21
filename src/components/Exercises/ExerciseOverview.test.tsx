@@ -25,10 +25,10 @@ describe("Test the ExerciseOverview component", () => {
         new Language(2, 'en', 'English')
     ];
     const muscles = [
-        new Muscle(1, 'Big muscle', true),
-        new Muscle(2, 'Finger muscle', true),
-        new Muscle(3, 'Deltoid', false),
-        new Muscle(4, 'Abs', true),
+        new Muscle(1, 'Biggus musculus', 'Big muscle', true),
+        new Muscle(2, 'Musculus dacttilaris', 'Finger muscle', true),
+        new Muscle(3, 'Deltoid', 'Shoulders', false),
+        new Muscle(4, 'Rectus abdominis', 'Abs', true),
     ];
     const equipment = [
         new Equipment(1, 'Barbell'),
@@ -277,7 +277,7 @@ describe("Test the ExerciseOverview component", () => {
         );
         await act(() => Promise.resolve());
         const { getByText: musclesComponent } = within(screen.getByTestId('muscles'));
-        fireEvent.click(musclesComponent("Big muscle"));
+        fireEvent.click(musclesComponent("Biggus musculus"));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();

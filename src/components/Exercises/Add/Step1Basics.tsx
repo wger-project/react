@@ -141,7 +141,7 @@ export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }:
                             multiple
                             id="tags-standard"
                             options={musclesQuery.data!}
-                            getOptionLabel={(option) => option.name}
+                            getOptionLabel={(option) => option.getName()}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
@@ -162,7 +162,7 @@ export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }:
                             multiple
                             id="tags-standard"
                             options={musclesQuery.data!}
-                            getOptionLabel={(option) => option.name}
+                            getOptionLabel={(option) => option.getName()}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}

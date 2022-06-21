@@ -32,6 +32,7 @@ describe("Exercise service tests", () => {
                     {
                         "id": 10,
                         "name": "Quadriceps femoris",
+                        "name_en": "Quads",
                         "is_front": true,
                         "image_url_main": "/static/images/muscles/main/muscle-10.svg",
                         "image_url_secondary": "/static/images/muscles/secondary/muscle-10.svg"
@@ -41,6 +42,7 @@ describe("Exercise service tests", () => {
                     {
                         "id": 11,
                         "name": "Biceps femoris",
+                        "name_en": "Hamstrings",
                         "is_front": false,
                         "image_url_main": "/static/images/muscles/main/muscle-11.svg",
                         "image_url_secondary": "/static/images/muscles/secondary/muscle-11.svg"
@@ -151,8 +153,8 @@ describe("Exercise service tests", () => {
         const category = new Category(10, "Abs");
         const equipment1 = new Equipment(10, "Kettlebell");
         const equipment2 = new Equipment(1, "Test 123");
-        const muscle1 = new Muscle(10, "Quadriceps femoris", true);
-        const muscle2 = new Muscle(11, "Biceps femoris", false);
+        const muscle1 = new Muscle(10, "Quadriceps femoris", "Quads", true);
+        const muscle2 = new Muscle(11, "Biceps femoris", "Hamstrings", false);
         const image = new ExerciseImage(
             7,
             "2fe5f04b-5c9d-448c-a973-3fad6ddd4f74",
