@@ -1,17 +1,16 @@
 import React from "react";
 import {
-    Autocomplete,
-    Box,
-    Button,
-    Chip,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    SelectChangeEvent,
-    Stack,
-    TextField,
-    Typography
+	Autocomplete,
+	Box,
+	Button,
+	Chip,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	Stack,
+	TextField,
+	Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
@@ -23,23 +22,27 @@ import { getTranslationKey } from "utils/strings";
 
 
 type Step1BasicsProps = {
-    onContinue: React.MouseEventHandler<HTMLButtonElement>;
-    setNewExerciseData: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
-    newExerciseData: addExerciseDataType;
-}
+	onContinue: React.MouseEventHandler<HTMLButtonElement>;
+	setNewExerciseData: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
+	newExerciseData: addExerciseDataType;
+};
 
+export const Step1Basics = ({
+	onContinue,
+	setNewExerciseData,
+	newExerciseData,
+}: Step1BasicsProps) => {
+	const [t] = useTranslation();
 
-export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }: Step1BasicsProps) => {
-    const [t] = useTranslation();
+	const [alternativeNamesEn, setAlternativeNamesEn] = React.useState<string[]>(
+		newExerciseData.alternativeNamesEn
+	);
 
-    const [category, setCategory] = React.useState<string>('');
-    const [alternativeNamesEn, setAlternativeNamesEn] = React.useState<string[]>(newExerciseData.alternativeNamesEn);
-    const handleCategoryChange = (event: SelectChangeEvent) => {
-        setCategory(event.target.value);
-    };
+    const [musclesState, setMuscleState] = React.useState<Muscle[]>();
 
     const categoryQuery = useCategoriesQuery();
     const musclesQuery = useMusclesQuery();
+
 
     const validationSchema = yup.object({
         nameEn: yup
@@ -47,151 +50,215 @@ export const Step1Basics = ({ onContinue, setNewExerciseData, newExerciseData }:
             .min(5, t('forms.value-too-short'))
             .max(40, t('forms.value-too-long'))
             .required(t('forms.field-required')),
+        newAlternativeNameEn: yup
+            .string()
+            .min(5, t("forms.value-too-short, min 5 letters"))
+            .max(40, t("forms.value-too-long")),
+        category: yup.number().required(),
     });
 
-    return <Formik
-        initialValues={{
-            nameEn: newExerciseData.nameEn,
-        }}
-        validationSchema={validationSchema}
-        onSubmit={(values) => {
-            console.log('Submitting the form with values: ', values);
+	return (
+		<Formik
+			initialValues={{
+				nameEn: newExerciseData.nameEn,
+				newAlternativeNameEn: "",
+				category: newExerciseData.category,
+				muscles: [0],
+			}}
+			validationSchema={validationSchema}
+			onSubmit={values => {
+				console.log(values);
 
-            setNewExerciseData({
-                ...newExerciseData,
-                nameEn: values.nameEn,
-                alternativeNamesEn: alternativeNamesEn,
-                category: parseInt(category),
-            });
+				setNewExerciseData({
+					...newExerciseData,
+					nameEn: values.nameEn,
+					category: values.category,
+				});
 
-            // @ts-ignore
-            onContinue!(undefined);
-        }}
-    >
-        {formik => (
-            <Form>
-                <Typography>Help text goes here</Typography>
-                <Stack spacing={2}>
-                    <TextField
-                        id="nameEn"
-                        label="Name"
-                        variant="standard"
-                        error={
-                            Boolean(formik.errors.nameEn && formik.touched.nameEn)
-                        }
-                        helperText={
-                            Boolean(formik.errors.nameEn && formik.touched.nameEn)
-                                ? formik.errors.nameEn
-                                : ''
-                        }
-                        {...formik.getFieldProps('nameEn')}
-                    />
-                    <Autocomplete
-                        multiple
-                        id="tags-filled"
-                        options={alternativeNamesEn}
-                        freeSolo
-                        value={alternativeNamesEn}
-                        onChange={(event, newValue) => {
-                            setAlternativeNamesEn(newValue);
-                        }}
-                        renderTags={(value: readonly string[], getTagProps) =>
-                            value.map((option: string, index: number) => (
-                                <Chip label={option} {...getTagProps({ index })} />
-                            ))
-                        }
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                variant="standard"
-                                label="Alternative names"
-                            />
-                        )}
-                    />
-                    {categoryQuery.isLoading ? (
-                        <Box>
-                            <LoadingWidget />
-                        </Box>
-                    ) : (
-                        <FormControl fullWidth>
-                            <InputLabel id="label-category">Category</InputLabel>
-                            <Select
-                                labelId="label-category"
-                                id="category"
-                                value={category}
-                                onChange={handleCategoryChange}
-                                label="Category"
-                            >
-                                <MenuItem value=''></MenuItem>
-                                {categoryQuery.data!.map(category => (
-                                    <MenuItem key={category.id} value={category.id}>
-                                        {t(getTranslationKey(category.name))}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    )}
+				if (values.newAlternativeNameEn) {
+					setNewExerciseData({
+						...newExerciseData,
+						alternativeNamesEn: [
+							...alternativeNamesEn,
+							values.newAlternativeNameEn,
+						],
+					});
+				}
 
-                    {musclesQuery.isLoading ? (
-                        <Box>
-                            <LoadingWidget />
-                        </Box>
-                    ) : (
-                        <Autocomplete
-                            multiple
-                            id="tags-standard"
-                            options={musclesQuery.data!}
-                            getOptionLabel={(option) => option.getName()}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    variant="standard"
-                                    label={t('exercises.muscles')}
-                                />
+				if (values.muscles) {
+					console.log("values.muscles: ", values.muscles);
+					console.log("values.muscles: ", musclesState);
+
+					setNewExerciseData({
+						...newExerciseData,
+						muscles: [...values.muscles],
+					});
+				}
+
+				// @ts-ignore
+				onContinue!(undefined);
+			}}
+		>
+			{formik => {
+				return (
+					<Form>
+						<Typography>Help text goes here</Typography>
+						<Stack spacing={2}>
+							<TextField
+								id="nameEn"
+								label="Name"
+								variant="standard"
+								error={Boolean(formik.errors.nameEn && formik.touched.nameEn)}
+								helperText={
+									Boolean(formik.errors.nameEn && formik.touched.nameEn)
+										? formik.errors.nameEn
+										: ""
+								}
+								{...formik.getFieldProps("nameEn")}
+							/>
+
+							<Autocomplete
+								multiple
+								id="tags-filled"
+								options={alternativeNamesEn}
+								freeSolo
+								value={alternativeNamesEn}
+								onChange={(event, newValue) => {
+									setAlternativeNamesEn(newValue);
+								}}
+								renderTags={(value: readonly string[], getTagProps) =>
+									value.map((option: string, index: number) => (
+										<Chip label={option} {...getTagProps({ index })} />
+									))
+								}
+								renderInput={params => (
+									<TextField
+										{...params}
+										id="newAlternativeNameEn"
+										variant="standard"
+										label="Alternative names"
+										value={formik.getFieldProps("newAlternativeNameEn").value}
+										onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+											formik.setFieldValue(
+												formik.getFieldProps("newAlternativeNameEn").name,
+												event.target.value
+											);
+										}}
+										error={Boolean(
+											formik.touched.newAlternativeNameEn &&
+												formik.errors.newAlternativeNameEn
+										)}
+										helperText={
+											Boolean(
+												formik.errors.newAlternativeNameEn &&
+													formik.touched.newAlternativeNameEn
+											)
+												? formik.errors.newAlternativeNameEn
+												: ""
+										}
+									/>
+								)}
+							/>
+
+                            {musclesQuery.isLoading ? (
+                                <Box>
+                                    <LoadingWidget />
+                                </Box>
+                            ) : (
+							<FormControl fullWidth>
+								<InputLabel id="label-category">Category</InputLabel>
+								<Select
+									labelId="label-category"
+									id="category"
+									value={formik.getFieldProps("category").value}
+									onChange={e => {
+										formik.setFieldValue(
+											formik.getFieldProps("category").name,
+											e.target.value
+										);
+										// setCategory(e.target.value);
+									}}
+									label="Category"
+									error={Boolean(
+										formik.touched.category && formik.errors.category
+									)}
+								>
+									<MenuItem value=""></MenuItem>
+									<MenuItem value={1}>Abs</MenuItem>
+									<MenuItem value={2}>Chest</MenuItem>
+									<MenuItem value={3}>Legs</MenuItem>
+								</Select>
+							</FormControl>
                             )}
-                        />
-                    )}
+                            {musclesQuery.isLoading ? (
+                                <Box>
+                                    <LoadingWidget />
+                                </Box>
+                            ) : (
+							<Autocomplete
+								multiple
+								id="tags-standard"
+                                options={musclesQuery.data!}
+								getOptionLabel={option => option.name}
+								value={musclesState}
+								isOptionEqualToValue={(option, value) => option.id === value.id}
+								onChange={(event, newValue) => {
+									setMuscleState(newValue);
+								}}
+								renderInput={params => (
+									<TextField
+										{...params}
+										variant="standard"
+										label={t("exercises.muscles")}
+										value={formik.getFieldProps("muscles").value}
+										onChange={e => {
+											console.log("event.target.value: ", e.target.value);
 
-
-                    {musclesQuery.isLoading ? (
-                        <Box>
-                            <LoadingWidget />
-                        </Box>
-                    ) : (
-                        <Autocomplete
-                            multiple
-                            id="tags-standard"
-                            options={musclesQuery.data!}
-                            getOptionLabel={(option) => option.getName()}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    variant="standard"
-                                    label={t('exercises.secondaryMuscles')}
-                                />
+											formik.setFieldValue(
+												formik.getFieldProps("muscles").name,
+												e.target.value
+											);
+										}}
+									/>
+								)}
+							/>
+                                )}
+                            {musclesQuery.isLoading ? (
+                                <Box>
+                                    <LoadingWidget />
+                                </Box>
+                            ) : (
+							<Autocomplete
+								multiple
+								// freeSolo
+								id="tags-standard"
+								options={musclesQuery.data!}
+								getOptionLabel={option => option.name}
+								renderInput={params => (
+									<TextField
+										{...params}
+										variant="standard"
+										label={t("exercises.secondaryMuscles")}
+										value={formik.getFieldProps("muscles").value}
+									/>
+								)}
+							/>
                             )}
-                        />
-                    )}
-                </Stack>
+						</Stack>
 
-                <Box sx={{ mb: 2 }}>
-                    <div>
-                        <Button
-                            variant="contained"
-                            type="submit"
-                            sx={{ mt: 1, mr: 1 }}
-                        >
-                            {t('continue')}
-                        </Button>
-                        <Button
-                            disabled={true}
-                            sx={{ mt: 1, mr: 1 }}
-                        >
-                            {t('back')}
-                        </Button>
-                    </div>
-                </Box>
-            </Form>
-        )}
-    </Formik>;
+						<Box sx={{ mb: 2 }}>
+							<div>
+								<Button variant="contained" type="submit" sx={{ mt: 1, mr: 1 }}>
+									{t("continue")}
+								</Button>
+								<Button disabled={true} sx={{ mt: 1, mr: 1 }}>
+									{t("back")}
+								</Button>
+							</div>
+						</Box>
+					</Form>
+				);
+			}}
+		</Formik>
+	);
 };

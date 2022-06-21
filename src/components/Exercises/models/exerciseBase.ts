@@ -1,31 +1,44 @@
 import { Adapter } from "utils/Adapter";
-import { ExerciseImage, ExerciseImageAdapter } from "components/Exercises/models/image";
-import { Equipment, EquipmentAdapter } from "components/Exercises/models/equipment";
+import {
+	ExerciseImage,
+	ExerciseImageAdapter,
+} from "components/Exercises/models/image";
+import {
+	Equipment,
+	EquipmentAdapter,
+} from "components/Exercises/models/equipment";
 import { Muscle, MuscleAdapter } from "components/Exercises/models/muscle";
-import { Category, CategoryAdapter } from "components/Exercises/models/category";
+import {
+	Category,
+	CategoryAdapter,
+} from "components/Exercises/models/category";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { Language } from "components/Exercises/models/language";
 
 export class ExerciseBase {
+	translations: ExerciseTranslation[] = [];
 
-    translations: ExerciseTranslation[] = [];
-
-    constructor(public id: number | null,
-                public uuid: string | null,
-                public category: Category,
-                public equipment: Equipment[],
-                public muscles: Muscle[],
-                public musclesSecondary: Muscle[],
-                public images: ExerciseImage[] = [],
-                public variationId: number | null,
-                public comments: string[],
-                translations?: ExerciseTranslation[]
-    ) {
-        if (translations) {
-            this.translations = translations;
-        }
-    }
+	constructor(
+		public id: number | null,
+		public uuid: string | null,
+		public category: Category,
+		public equipment: Equipment[],
+		public muscles: Muscle[],
+		public musclesSecondary: Muscle[],
+		public images: ExerciseImage[],
+		public variationId: number | null,
+		public comments: string[],
+		translations?: ExerciseTranslation[]
+		/*
+                license: number,
+                licenseAuthor: string,
+                 */
+	) {
+		if (translations) {
+			this.translations = translations;
+		}
+	}
 
     // Returns the users translation or english as a fallback
     //
@@ -99,19 +112,19 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
 
 
 export type addExerciseDataType = {
-    nameEn: string,
-    descriptionEn: string,
-    alternativeNamesEn: string[],
+	nameEn: string;
+	descriptionEn: string;
+	alternativeNamesEn: string[];
 
-    languageId: number | null,
-    nameTranslation: string,
-    alternativeNamesTranslation: string[],
-    descriptionTranslation: string,
+	languageId: number | null;
+	nameTranslation: string;
+	alternativeNamesTranslation: string[];
+	descriptionTranslation: string;
 
-    category: number | null,
-    muscles: number[],
-    musclesSecondary: number[],
-    variationId: number | null,
+	category: number | string | null; // MUI menu option have values number, string or null
+	muscles: number[];
+	musclesSecondary: number[];
+	variationId: number | null;
 
-    images: string[],
-}
+	images: string[];
+};
