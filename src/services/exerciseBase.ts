@@ -50,7 +50,7 @@ export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
  */
 export const getExerciseBase = async (id: number): Promise<ExerciseBase> => {
     const url = makeUrl(EXERCISE_INFO_PATH, { id: id });
-    const { data: data } = await axios.get<ResponseType<any>>(url, {
+    const data = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
 
@@ -83,7 +83,7 @@ export const getExerciseBasesForVariation = async (id: number | null | undefined
     }
 
     const url = makeUrl(EXERCISE_INFO_PATH, { query: { variations: id } });
-    const { data: data } = await axios.get<ResponseType<any>>(url, {
+    const data = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
 

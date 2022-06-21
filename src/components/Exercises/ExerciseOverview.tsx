@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, CircularProgress, Container, Grid, Pagination, Paper, Stack, Typography, } from "@mui/material";
+import { Box, CircularProgress, Container, Grid, Pagination, Paper, Stack, Typography, } from "@mui/material";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
 import { useTranslation } from "react-i18next";
@@ -33,7 +33,9 @@ const ContributeExerciseBanner = () => {
                 {t("exercises.missing-exercise-description")}
             </Typography>
 
-            <Button variant="contained">{t("exercises.contribute-exercise")}</Button>
+            <a href="/exercises/add">
+                {t("exercises.contribute-exercise")}
+            </a>
         </Box>
     );
 };
@@ -198,8 +200,7 @@ export const ExerciseOverview = () => {
                         </>
                     )}
 
-                    {/* We don't do exercise crowdsourcing in this step */}
-                    {/* <ContributeExerciseBanner /> */}
+                    <ContributeExerciseBanner />
                 </Grid>
             </Grid>
         </Container>
