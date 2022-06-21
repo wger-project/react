@@ -190,9 +190,6 @@ export const Step1Basics = ({
                                                 {t(getTranslationKey(category.name))}
                                             </MenuItem>
                                         ))}
-                                        <MenuItem value={1}>Abs</MenuItem>
-                                        <MenuItem value={2}>Chest</MenuItem>
-                                        <MenuItem value={3}>Legs</MenuItem>
                                     </Select>
                                 </FormControl>
                             )}
