@@ -22,7 +22,7 @@
     "i18next-http-backend": "^1.4.1",
     "luxon": "^2.4.0",
     "react": "^18.2.0",
-    "react-dom": "^18.1.0",
+    "react-dom": "^18.2.0",
     "react-i18next": "^11.17.2",
     "react-query": "^3.34.17",
     "react-responsive": "^9.0.0-beta.10",
