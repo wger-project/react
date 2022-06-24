@@ -22,6 +22,7 @@ import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
 export const AddExerciseStepper = () => {
 	const [t] = useTranslation();
 	const [activeStep, setActiveStep] = React.useState(0);
+
 	const handleNext = () => {
 		setActiveStep(prevActiveStep => prevActiveStep + 1);
 	};
@@ -73,9 +74,9 @@ export const AddExerciseStepper = () => {
 						</li>
 						<li>Description EN: {newExerciseData!.descriptionEn}</li>
 						<li>Category ID: {newExerciseData!.category}</li>
-                        <li>Muscles: {newExerciseData!.muscles}</li>
-                        <li>Muscles secondary: {newExerciseData!.musclesSecondary}</li>
-                        <li>Variation ID: {newExerciseData!.variationId}</li>
+						<li>Muscles: {newExerciseData!.muscles}</li>
+						<li>Muscles secondary: {newExerciseData!.musclesSecondary}</li>
+						<li>Variation ID: {newExerciseData!.variationId}</li>
 						<li>Language ID: {newExerciseData!.languageId}</li>
 						<li>Name translation: {newExerciseData!.nameTranslation}</li>
 						<li>
@@ -113,7 +114,12 @@ export const AddExerciseStepper = () => {
 					<Step key={3}>
 						<StepLabel>Description</StepLabel>
 						<StepContent>
-							<Step3Description onContinue={handleNext} onBack={handleBack} />
+							<Step3Description
+								onContinue={handleNext}
+								onBack={handleBack}
+								setNewExerciseData={setNewExerciseData}
+								newExerciseData={newExerciseData}
+							/>
 						</StepContent>
 					</Step>
 					<Step key={4}>
