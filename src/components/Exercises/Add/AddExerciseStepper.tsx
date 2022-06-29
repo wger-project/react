@@ -131,7 +131,12 @@ export const AddExerciseStepper = () => {
 					<Step key={5}>
 						<StepLabel>Images</StepLabel>
 						<StepContent>
-							<Step5Images onContinue={handleNext} onBack={handleBack} />
+							<Step5Images
+								onContinue={handleNext}
+								onBack={handleBack}
+								setNewExerciseData={setNewExerciseData}
+								newExerciseData={newExerciseData}
+							/>
 						</StepContent>
 					</Step>
 				</Stepper>
