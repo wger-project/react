@@ -6,10 +6,10 @@ import { Button, Stack, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { setNotification, SetWeightState, useWeightStateValue } from "state";
 import { createWeight, updateWeight } from "services/weight";
-import AdapterLuxon from "@mui/lab/AdapterLuxon";
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DateTime } from "luxon";
 import { dateToYYYYMMDD } from "utils/date";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 interface WeightFormProps {
     weightEntry?: WeightEntry,
@@ -158,7 +158,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                             {...formik.getFieldProps('weight')}
                         />
 
-                        <LocalizationProvider dateAdapter={AdapterLuxon} locale={i18n.language}>
+                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                             <DatePicker
                                 label={t('date')}
                                 value={dateValue}
