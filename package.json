@@ -24,7 +24,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^11.18.1",
-    "react-query": "^3.34.17",
+    "react-query": "^3.39.2",
     "react-responsive": "^9.0.0-beta.10",
     "react-router-dom": "^6.3.0",
     "recharts": "^2.1.10",
