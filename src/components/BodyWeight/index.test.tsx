@@ -5,8 +5,26 @@ import { BodyWeight } from "./index";
 import { WeightStateProvider } from 'state';
 import { WeightEntry } from "components/BodyWeight/model";
 
+const { ResizeObserver } = window;
+
 jest.mock("services");
 console.log = jest.fn();
+
+// See https://github.com/maslianok/react-resize-detector#testing-with-enzyme-and-jest
+beforeEach(() => {
+    // @ts-ignore
+    delete window.ResizeObserver;
+    window.ResizeObserver = jest.fn().mockImplementation(() => ({
+        observe: jest.fn(),
+        unobserve: jest.fn(),
+        disconnect: jest.fn()
+    }));
+});
+
+afterEach(() => {
+    window.ResizeObserver = ResizeObserver;
+    jest.restoreAllMocks();
+});
 
 describe("Test BodyWeight component", () => {
     test('renders without crashing', async () => {
