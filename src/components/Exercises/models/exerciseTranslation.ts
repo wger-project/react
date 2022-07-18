@@ -61,7 +61,8 @@ export class ExerciseTranslationAdapter implements Adapter<ExerciseTranslation> 
             id: item.id,
             uuid: item.uuid,
             name: item.name,
-            description: item.description
+            description: item.description,
+            language: item.language,
         };
     }
 }
