@@ -1,15 +1,15 @@
 import React from "react";
 import {
-	Box,
-	Button,
-	Container,
-	Paper,
-	Stack,
-	Step,
-	StepContent,
-	StepLabel,
-	Stepper,
-	Typography,
+    Box,
+    Button,
+    Container,
+    Paper,
+    Stack,
+    Step,
+    StepContent,
+    StepLabel,
+    Stepper,
+    Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Step1Basics } from "components/Exercises/Add/Step1Basics";
@@ -70,9 +70,8 @@ export const AddExerciseStepper = () => {
                         <li>Description EN: {newExerciseData!.descriptionEn}</li>
                         <li>
                             Alternative names EN:{" "}
-                            {newExerciseData!.alternativeNamesEn.join(", ")}
+                            {newExerciseData!.alternativeNamesEn.join("/ ")}
                         </li>
-                        <li>Description EN: {newExerciseData!.descriptionEn}</li>
                         <li>Category ID: {newExerciseData!.category}</li>
                         <li>Muscles: {newExerciseData!.muscles}</li>
                         <li>Muscles secondary: {newExerciseData!.musclesSecondary}</li>
