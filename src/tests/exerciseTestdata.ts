@@ -40,7 +40,6 @@ export const testExerciseSquats = new ExerciseBase(
     [],
     [],
     null,
-    [],
     [
         new ExerciseTranslation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
@@ -66,7 +65,6 @@ export const testExerciseBenchPress = new ExerciseBase(
     [],
     [],
     null,
-    [],
     [
         new ExerciseTranslation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
@@ -85,7 +83,6 @@ export const testExerciseCurls = new ExerciseBase(
     [],
     [],
     null,
-    [],
     [
         new ExerciseTranslation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
@@ -105,7 +102,6 @@ export const testExerciseCrunches = new ExerciseBase(
     [],
     [],
     1,
-    [],
     [
         new ExerciseTranslation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
@@ -125,7 +121,6 @@ export const testExerciseSkullCrusher = new ExerciseBase(
     [],
     [],
     2,
-    [],
     [
         new ExerciseTranslation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',

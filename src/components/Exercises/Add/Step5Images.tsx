@@ -114,7 +114,7 @@ export const Step5Images = ({
                         onClick={handleContinue}
                         sx={{ mt: 1, mr: 1 }}
                     >
-                        {t("continue")}
+                        {t("exercises.submit-exercise")}
                     </Button>
                     <Button disabled={false} onClick={onBack} sx={{ mt: 1, mr: 1 }}>
                         {t("back")}

@@ -19,7 +19,6 @@ export class ExerciseBase {
         public musclesSecondary: Muscle[],
         public images: ExerciseImage[],
         public variationId: number | null,
-        public comments: string[],
         translations?: ExerciseTranslation[]
         /*
                 license: number,
@@ -80,7 +79,6 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
             item.muscles_secondary.map((m: any) => (muscleAdapter.fromJson(m))),
             item.images.map((i: any) => (imageAdapter.fromJson(i))),
             item.variations,
-            item.comments
             /*
             item.license,
             item.license_author,
@@ -120,6 +118,7 @@ export type addExerciseDataType = {
     category: number | string | null; // MUI menu option have values number, string or null
     muscles: number[];
     musclesSecondary: number[];
+    equipment: number[];
     variationId: number | null;
 
     images: string[];

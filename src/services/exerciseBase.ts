@@ -6,6 +6,7 @@ import { ExerciseTranslationAdapter } from "components/Exercises/models/exercise
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 
 export const EXERCISE_INFO_PATH = 'exercisebaseinfo';
+export const EXERCISE_BASE_PATH = 'exercise-base';
 
 /*
  * Process the response from the server and return the exercise bases
@@ -83,4 +84,28 @@ export const getExerciseBasesForVariation = async (id: number | null | undefined
     });
 
     return processBaseData(data);
+};
+
+/*
+ * Create a new exercise base
+ */
+export const addExerciseBase = async (categoryId: number,
+                                      equipmentIds: number[],
+                                      muscleIds: number[],
+                                      secondaryMuscleIds: number[],
+): Promise<number> => {
+
+    const url = makeUrl(EXERCISE_BASE_PATH);
+    const baseData = {
+        category: categoryId,
+        equipment: equipmentIds,
+        muscles: muscleIds,
+        // eslint-disable-next-line camelcase
+        muscles_secondary: secondaryMuscleIds
+    };
+    const response = await axios.post(url, baseData, {
+        headers: makeHeader(),
+    });
+
+    return response.data.id;
 };

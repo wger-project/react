@@ -18,6 +18,9 @@ import { Step3Description } from "components/Exercises/Add/Step3Description";
 import { Step4Translations } from "components/Exercises/Add/Step4Translations";
 import { Step5Images } from "components/Exercises/Add/Step5Images";
 import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
+import { addExerciseBase } from "services/exerciseBase";
+import { addExerciseTranslation } from "services/exerciseTranslation";
+import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 
 export const AddExerciseStepper = () => {
     const [t] = useTranslation();
@@ -35,15 +38,38 @@ export const AddExerciseStepper = () => {
         setActiveStep(0);
     };
 
+    const submitExercise = async () => {
+        // Create the base
+        const baseId = await addExerciseBase(
+            newExerciseData.category as number,
+            newExerciseData.equipment,
+            newExerciseData.muscles,
+            newExerciseData.musclesSecondary
+        );
+
+        // Create the English translation
+        await addExerciseTranslation(
+            baseId,
+            ENGLISH_LANGUAGE_ID,
+            newExerciseData.nameEn,
+            newExerciseData.descriptionEn,
+        );
+
+        console.log("Exercise created");
+    };
+
     const emptyExerciseData = {
-        nameEn: "",
-        descriptionEn: "",
-        alternativeNamesEn: [],
         category: "",
         muscles: [],
         musclesSecondary: [],
         variationId: null,
         languageId: null,
+        equipment: [],
+
+        nameEn: "",
+        descriptionEn: "",
+        alternativeNamesEn: [],
+
         nameTranslation: "",
         alternativeNamesTranslation: [],
         descriptionTranslation: "",
@@ -73,8 +99,9 @@ export const AddExerciseStepper = () => {
                             {newExerciseData!.alternativeNamesEn.join("/ ")}
                         </li>
                         <li>Category ID: {newExerciseData!.category}</li>
-                        <li>Muscles: {newExerciseData!.muscles}</li>
-                        <li>Muscles secondary: {newExerciseData!.musclesSecondary}</li>
+                        <li>Muscles: {newExerciseData!.muscles.join("/ ")}</li>
+                        <li>Muscles secondary: {newExerciseData!.musclesSecondary.join("/ ")}</li>
+                        <li>Equipment: {newExerciseData!.equipment.join("/ ")}</li>
                         <li>Variation ID: {newExerciseData!.variationId}</li>
                         <li>Language ID: {newExerciseData!.languageId}</li>
                         <li>Name translation: {newExerciseData!.nameTranslation}</li>
@@ -145,6 +172,9 @@ export const AddExerciseStepper = () => {
                 {activeStep === 5 && (
                     <Paper square sx={{ p: 3 }}>
                         <Typography>Exercise was successfully submitted!</Typography>
+                        <Button onClick={submitExercise} sx={{ mt: 1, mr: 1 }}>
+                            Submit to server
+                        </Button>
                         <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
                             Reset
                         </Button>

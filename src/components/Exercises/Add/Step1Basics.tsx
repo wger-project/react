@@ -1,25 +1,26 @@
 import React from "react";
 import {
-	Autocomplete,
-	Box,
-	Button,
-	Chip,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
-	Stack,
-	TextField,
-	Typography,
+    Autocomplete,
+    Box,
+    Button,
+    Chip,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    Stack,
+    TextField,
+    Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 import { Form, Formik } from "formik";
 import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
-import { useCategoriesQuery, useMusclesQuery, } from "components/Exercises/queries";
+import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery, } from "components/Exercises/queries";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { Muscle } from "components/Exercises/models/muscle";
 import { getTranslationKey } from "utils/strings";
+import { Equipment } from "components/Exercises/models/equipment";
 
 type Step1BasicsProps = {
     onContinue: () => void;
@@ -38,10 +39,14 @@ export const Step1Basics = ({
         newExerciseData.alternativeNamesEn
     );
 
-    const [musclesState, setMuscleState] = React.useState<Muscle[]>();
+    const [muscles, setMuscles] = React.useState<Muscle[]>([]);
+    const [secondaryMuscles, setSecondaryMuscles] = React.useState<Muscle[]>([]);
+    const [equipment, setEquipment] = React.useState<Equipment[]>([]);
 
+    // Load data from server
     const categoryQuery = useCategoriesQuery();
     const musclesQuery = useMusclesQuery();
+    const equipmentQuery = useEquipmentQuery();
 
     const validationSchema = yup.object({
         nameEn: yup
@@ -73,8 +78,9 @@ export const Step1Basics = ({
                     nameEn: values.nameEn,
                     category: values.category,
                     alternativeNamesEn: alternativeNamesEn,
-                    muscles: [...values.muscles],
-                    musclesSecondary: [...values.musclesSecondary],
+                    muscles: muscles.map(m => m.id),
+                    musclesSecondary: secondaryMuscles.map(m => m.id),
+                    equipment: equipment.map(e => e.id),
                 });
 
                 onContinue();
@@ -180,15 +186,15 @@ export const Step1Basics = ({
                             ) : (
                                 <Autocomplete
                                     multiple
-                                    id="tags-standard"
+                                    id="muscles"
                                     options={musclesQuery.data!}
                                     getOptionLabel={option => option.name}
-                                    value={musclesState}
+                                    value={[...muscles]}
                                     isOptionEqualToValue={(option, value) =>
                                         option.id === value.id
                                     }
                                     onChange={(event, newValue) => {
-                                        setMuscleState(newValue);
+                                        setMuscles(newValue);
                                     }}
                                     renderInput={params => (
                                         <TextField
@@ -215,15 +221,48 @@ export const Step1Basics = ({
                             ) : (
                                 <Autocomplete
                                     multiple
-                                    // freeSolo
-                                    id="tags-standard"
+                                    id="secondary-muscles"
                                     options={musclesQuery.data!}
                                     getOptionLabel={option => option.name}
+                                    value={[...secondaryMuscles]}
+                                    isOptionEqualToValue={(option, value) =>
+                                        option.id === value.id
+                                    }
+                                    onChange={(event, newValue) => {
+                                        setSecondaryMuscles(newValue);
+                                    }}
                                     renderInput={params => (
                                         <TextField
                                             {...params}
                                             variant="standard"
                                             label={t("exercises.secondaryMuscles")}
+                                            value={formik.getFieldProps("muscles").value}
+                                        />
+                                    )}
+                                />
+                            )}
+                            {equipmentQuery.isLoading ? (
+                                <Box>
+                                    <LoadingWidget />
+                                </Box>
+                            ) : (
+                                <Autocomplete
+                                    multiple
+                                    id="equipment"
+                                    options={equipmentQuery.data!}
+                                    getOptionLabel={option => option.name}
+                                    value={[...equipment]}
+                                    isOptionEqualToValue={(option, value) =>
+                                        option.id === value.id
+                                    }
+                                    onChange={(event, newValue) => {
+                                        setEquipment(newValue);
+                                    }}
+                                    renderInput={params => (
+                                        <TextField
+                                            {...params}
+                                            variant="standard"
+                                            label={t("exercises.equipment")}
                                             value={formik.getFieldProps("muscles").value}
                                         />
                                     )}

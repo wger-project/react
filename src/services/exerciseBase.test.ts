@@ -52,11 +52,6 @@ const exerciseBase1 = new ExerciseBase(
     [image],
     228,
     [
-        "This is a comment",
-        "This is another comment",
-        "This is a third comment"
-    ],
-    [
         exerciseTranslation1,
         exerciseTranslation2
     ]

@@ -47,7 +47,6 @@ describe("Should render with", () => {
         [],
         [],
         null,
-        [],
         [
             new ExerciseTranslation(111,
                 '583281c7-2362-48e7-95d5-8fd6c455e0fb',
