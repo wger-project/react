@@ -3,21 +3,15 @@ import { Box, Button, Stack, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Form, Formik } from "formik";
 import * as yup from "yup";
-import { addExerciseDataType } from "../models/exerciseBase";
+import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 
-type Step3DescriptionProps = {
-    onContinue: () => void;
-    onBack: React.MouseEventHandler<HTMLButtonElement>;
-    setNewExerciseData: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
-    newExerciseData: addExerciseDataType;
-};
 
 export const Step3Description = ({
                                      onContinue,
                                      onBack,
                                      setNewExerciseData,
                                      newExerciseData,
-                                 }: Step3DescriptionProps) => {
+                                 }: StepProps) => {
     const [t] = useTranslation();
 
     const validationSchema = yup.object({

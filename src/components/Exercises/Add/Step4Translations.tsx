@@ -3,22 +3,14 @@ import { Box, Button, FormControlLabel, FormGroup, Stack, Switch, TextField } fr
 import { useTranslation } from "react-i18next";
 import { Form, Formik } from "formik";
 import * as yup from "yup";
-import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
-
-
-type Step4BasicsProps = {
-    onContinue: () => void;
-    onBack: () => void;
-    setNewExerciseData: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
-    newExerciseData: addExerciseDataType;
-};
+import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 
 export const Step4Translations = ({
                                       setNewExerciseData,
                                       newExerciseData,
                                       onContinue,
                                       onBack,
-                                  }: Step4BasicsProps) => {
+                                  }: StepProps) => {
     const [t] = useTranslation();
     const [translateExercise, setTranslateExercise] = useState<boolean>(false);
 

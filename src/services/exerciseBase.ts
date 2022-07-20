@@ -26,8 +26,8 @@ export function processBaseData(data: any): ExerciseBase[] {
 export function processBaseDataSingle(data: any): ExerciseBase {
     const adapter = new ExerciseBaseAdapter();
     const translationAdapter = new ExerciseTranslationAdapter();
-
     const exerciseBaseObj = adapter.fromJson(data);
+
     try {
         for (const e of data.exercises) {
             exerciseBaseObj.translations.push(translationAdapter.fromJson(e));
@@ -36,6 +36,11 @@ export function processBaseDataSingle(data: any): ExerciseBase {
         if (!exerciseBaseObj.translations.some(t => t.language === ENGLISH_LANGUAGE_ID)) {
             console.info(`No english translation found for exercise base ${exerciseBaseObj.uuid}, skipping`);
         }
+
+        if (exerciseBaseObj.translations.length === 0) {
+            console.error(`No translations found for exercise base ${exerciseBaseObj.uuid}, skipping`);
+        }
+        throw(new Error(`No translations found for exercise base ${exerciseBaseObj.uuid}, skipping`));
 
     } catch (e) {
         console.error("Error loading exercise base data!", e);
@@ -49,11 +54,11 @@ export function processBaseDataSingle(data: any): ExerciseBase {
  */
 export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
     const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 300 } });
-    const { data } = await axios.get<ResponseType<any>>(url, {
+    const response = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
 
-    return processBaseData(data);
+    return processBaseData(response.data);
 };
 
 
@@ -79,11 +84,11 @@ export const getExerciseBasesForVariation = async (id: number | null | undefined
     }
 
     const url = makeUrl(EXERCISE_INFO_PATH, { query: { variations: id } });
-    const data = await axios.get<ResponseType<any>>(url, {
+    const response = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
 
-    return processBaseData(data);
+    return processBaseData(response.data);
 };
 
 /*

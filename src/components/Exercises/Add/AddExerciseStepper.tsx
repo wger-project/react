@@ -23,6 +23,13 @@ import { addExerciseTranslation } from "services/exerciseTranslation";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { postAlias } from "services/alias";
 
+export type StepProps = {
+    onContinue: () => void;
+    onBack?: React.MouseEventHandler<HTMLButtonElement>;
+    setNewExerciseData: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
+    newExerciseData: addExerciseDataType;
+};
+
 export const AddExerciseStepper = () => {
     const [t] = useTranslation();
     const [activeStep, setActiveStep] = React.useState(0);
@@ -140,7 +147,12 @@ export const AddExerciseStepper = () => {
                     <Step key={2}>
                         <StepLabel>Variations</StepLabel>
                         <StepContent>
-                            <Step2Variations onContinue={handleNext} onBack={handleBack} />
+                            <Step2Variations
+                                onContinue={handleNext}
+                                onBack={handleBack}
+                                setNewExerciseData={setNewExerciseData}
+                                newExerciseData={newExerciseData}
+                            />
                         </StepContent>
                     </Step>
                     <Step key={3}>

@@ -1,26 +1,19 @@
 import { Box, Button, IconButton, ImageListItem, ImageListItemBar, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { addExerciseDataType } from "../models/exerciseBase";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import ImageList from '@mui/material/ImageList';
+import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 
-
-type Step5BasicsProps = {
-    onContinue: () => void;
-    onBack: () => void;
-    setNewExerciseData: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
-    newExerciseData: addExerciseDataType;
-};
 
 export const Step5Images = ({
                                 setNewExerciseData,
                                 newExerciseData,
                                 onContinue,
                                 onBack,
-                            }: Step5BasicsProps) => {
+                            }: StepProps) => {
     const [t] = useTranslation();
     const [imagesURLS, setImagesURLS] = useState<string[]>([]);
 

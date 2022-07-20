@@ -14,24 +14,19 @@ import {
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 import { Form, Formik } from "formik";
-import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
 import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery, } from "components/Exercises/queries";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { Muscle } from "components/Exercises/models/muscle";
 import { getTranslationKey } from "utils/strings";
 import { Equipment } from "components/Exercises/models/equipment";
+import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 
-type Step1BasicsProps = {
-    onContinue: () => void;
-    setNewExerciseData: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
-    newExerciseData: addExerciseDataType;
-};
 
 export const Step1Basics = ({
                                 onContinue,
                                 setNewExerciseData,
                                 newExerciseData,
-                            }: Step1BasicsProps) => {
+                            }: StepProps) => {
     const [t] = useTranslation();
 
     const [alternativeNamesEn, setAlternativeNamesEn] = React.useState<string[]>(

@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { useBasesQuery } from "components/Exercises/queries";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
+import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 
 //const ExerciseInfoListItem = () =>
 
@@ -38,7 +39,12 @@ const ExerciseInfoListItem = ({ exerciseBase }: { exerciseBase: ExerciseBase }) 
 };
 
 
-export const Step2Variations = (props: { onContinue: React.MouseEventHandler<HTMLButtonElement> | undefined; onBack: React.MouseEventHandler<HTMLButtonElement> | undefined; }) => {
+export const Step2Variations = ({
+                                    onContinue,
+                                    onBack,
+                                    setNewExerciseData,
+                                    newExerciseData,
+                                }: StepProps) => {
     const [t] = useTranslation();
     const basesQuery = useBasesQuery();
 
@@ -63,14 +69,14 @@ export const Step2Variations = (props: { onContinue: React.MouseEventHandler<HTM
             <div>
                 <Button
                     variant="contained"
-                    onClick={props.onContinue}
+                    onClick={onContinue}
                     sx={{ mt: 1, mr: 1 }}
                 >
                     {t('continue')}
                 </Button>
                 <Button
                     disabled={false}
-                    onClick={props.onBack}
+                    onClick={onBack}
                     sx={{ mt: 1, mr: 1 }}
                 >
                     {t('back')}
