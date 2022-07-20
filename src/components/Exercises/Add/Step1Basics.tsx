@@ -187,6 +187,9 @@ export const Step1Basics = ({
                                     multiple
                                     id="muscles"
                                     options={musclesQuery.data!}
+                                    getOptionDisabled={(option) =>
+                                        secondaryMuscles.includes(option)
+                                    }
                                     getOptionLabel={option => option.name}
                                     value={[...muscles]}
                                     isOptionEqualToValue={(option, value) =>
@@ -222,6 +225,9 @@ export const Step1Basics = ({
                                     multiple
                                     id="secondary-muscles"
                                     options={musclesQuery.data!}
+                                    getOptionDisabled={(option) =>
+                                        muscles.includes(option)
+                                    }
                                     getOptionLabel={option => option.name}
                                     value={[...secondaryMuscles]}
                                     isOptionEqualToValue={(option, value) =>
