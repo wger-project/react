@@ -63,10 +63,21 @@ export const AddExerciseStepper = () => {
             newExerciseData.descriptionEn,
         );
 
-        // For each entry in alternative names, create a translation
+        // For each entry in alternative names, create a new alias
         for (const alias of newExerciseData.alternativeNamesEn) {
             await postAlias(exerciseId, alias);
         }
+
+        // Create the translation if needed
+        if (newExerciseData.languageId !== null) {
+            await addExerciseTranslation(
+                baseId,
+                newExerciseData.languageId,
+                newExerciseData.nameTranslation,
+                newExerciseData.descriptionTranslation,
+            );
+        }
+
 
         console.log("Exercise created");
     };
@@ -123,7 +134,7 @@ export const AddExerciseStepper = () => {
                         </li>
                         <li>
                             Alternative names translation:{" "}
-                            {newExerciseData!.alternativeNamesTranslation}
+                            {newExerciseData!.alternativeNamesTranslation.join("/ ")}
                         </li>
                         <li>Images: {newExerciseData!.images}</li>
                     </ul>
