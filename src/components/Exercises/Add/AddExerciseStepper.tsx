@@ -21,6 +21,7 @@ import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
 import { addExerciseBase } from "services/exerciseBase";
 import { addExerciseTranslation } from "services/exerciseTranslation";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { postAlias } from "services/alias";
 
 export const AddExerciseStepper = () => {
     const [t] = useTranslation();
@@ -48,12 +49,17 @@ export const AddExerciseStepper = () => {
         );
 
         // Create the English translation
-        await addExerciseTranslation(
+        const exerciseId = await addExerciseTranslation(
             baseId,
             ENGLISH_LANGUAGE_ID,
             newExerciseData.nameEn,
             newExerciseData.descriptionEn,
         );
+
+        // For each entry in alternative names, create a translation
+        for (const alias of newExerciseData.alternativeNamesEn) {
+            await postAlias(exerciseId, alias);
+        }
 
         console.log("Exercise created");
     };
@@ -168,6 +174,8 @@ export const AddExerciseStepper = () => {
                             />
                         </StepContent>
                     </Step>
+
+
                 </Stepper>
                 {activeStep === 5 && (
                     <Paper square sx={{ p: 3 }}>

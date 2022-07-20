@@ -10,7 +10,6 @@ import {
     Select,
     Stack,
     TextField,
-    Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
@@ -89,8 +88,8 @@ export const Step1Basics = ({
             {formik => {
                 return (
                     <Form>
-                        <Typography>Help text goes here</Typography>
                         <Stack spacing={2}>
+
                             <TextField
                                 id="nameEn"
                                 label="Name"

@@ -55,7 +55,6 @@ export const addExerciseTranslation = async (
         headers: makeHeader(),
     });
 
-    console.log(response.data);
 
     return response.data.id;
 };
