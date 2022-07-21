@@ -6,7 +6,7 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import ImageList from '@mui/material/ImageList';
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-
+import { ImageFormData } from "components/Exercises/models/exerciseBase";
 
 export const Step5Images = ({
                                 setNewExerciseData,
@@ -15,7 +15,7 @@ export const Step5Images = ({
                                 onBack,
                             }: StepProps) => {
     const [t] = useTranslation();
-    const [imagesURLS, setImagesURLS] = useState<string[]>([]);
+    const [images, setImages] = useState<ImageFormData[]>([]);
 
     const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files?.length) {
@@ -24,16 +24,16 @@ export const Step5Images = ({
         const [uploadedFile] = e.target.files;
         const objectURL = URL.createObjectURL(uploadedFile);
 
-        setImagesURLS(imagesURLS?.concat(objectURL));
+        setImages(images?.concat({ url: objectURL, file: uploadedFile }));
     };
 
     const handleDeleteImage = (imageURL: string) => {
-        const updatedImagesURLS = imagesURLS.filter(i => i !== imageURL);
-        setImagesURLS(updatedImagesURLS);
+        const updatedImagesURLS = images.filter(i => i.url !== imageURL);
+        setImages(updatedImagesURLS);
     };
 
     const handleContinue = () => {
-        setNewExerciseData({ ...newExerciseData, images: imagesURLS });
+        setNewExerciseData({ ...newExerciseData, images: images });
         onContinue();
     };
 
@@ -74,11 +74,11 @@ export const Step5Images = ({
             <ImageList
                 cols={3}
                 style={{ maxHeight: "400px", }}>
-                {imagesURLS.map(imageURL => (
-                    <ImageListItem key={imageURL}>
+                {images.map(imageEntry => (
+                    <ImageListItem key={imageEntry.url}>
                         <img
                             style={{ maxHeight: "400px", maxWidth: "400px" }}
-                            src={imageURL}
+                            src={imageEntry.url}
                             alt=""
                             loading="lazy"
                         />
@@ -88,9 +88,10 @@ export const Step5Images = ({
                                 <IconButton
                                     // title="abc"
                                     // subtitle="def"
+                                    onClick={() => handleDeleteImage(imageEntry.url)}
                                     sx={{ color: 'white' }}
                                 >
-                                    <DeleteOutlineIcon onClick={() => handleDeleteImage(imageURL)} />
+                                    <DeleteOutlineIcon />
                                 </IconButton>
                             }
                         />

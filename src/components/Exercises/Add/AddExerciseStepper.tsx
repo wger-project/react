@@ -18,10 +18,9 @@ import { Step3Description } from "components/Exercises/Add/Step3Description";
 import { Step4Translations } from "components/Exercises/Add/Step4Translations";
 import { Step5Images } from "components/Exercises/Add/Step5Images";
 import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
-import { addExerciseBase } from "services/exerciseBase";
-import { addExerciseTranslation } from "services/exerciseTranslation";
+import { addExerciseBase, addExerciseTranslation, postAlias, postExerciseImage } from "services";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
-import { postAlias } from "services/alias";
+import { Step6Overview } from "components/Exercises/Add/Step6Overview";
 
 export type StepProps = {
     onContinue: () => void;
@@ -66,6 +65,11 @@ export const AddExerciseStepper = () => {
         // For each entry in alternative names, create a new alias
         for (const alias of newExerciseData.alternativeNamesEn) {
             await postAlias(exerciseId, alias);
+        }
+
+        // Post the images
+        for (const image of newExerciseData.images) {
+            await postExerciseImage(baseId, image.file);
         }
 
         // Create the translation if needed
@@ -136,7 +140,7 @@ export const AddExerciseStepper = () => {
                             Alternative names translation:{" "}
                             {newExerciseData!.alternativeNamesTranslation.join("/ ")}
                         </li>
-                        <li>Images: {newExerciseData!.images}</li>
+                        <li>Images:</li>
                     </ul>
                 </Paper>
             </Stack>
@@ -190,6 +194,17 @@ export const AddExerciseStepper = () => {
                         <StepLabel>Images</StepLabel>
                         <StepContent>
                             <Step5Images
+                                onContinue={handleNext}
+                                onBack={handleBack}
+                                setNewExerciseData={setNewExerciseData}
+                                newExerciseData={newExerciseData}
+                            />
+                        </StepContent>
+                    </Step>
+                    <Step key={6}>
+                        <StepLabel>Overview</StepLabel>
+                        <StepContent>
+                            <Step6Overview
                                 onContinue={handleNext}
                                 onBack={handleBack}
                                 setNewExerciseData={setNewExerciseData}
