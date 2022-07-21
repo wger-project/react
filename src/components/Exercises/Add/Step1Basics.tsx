@@ -87,7 +87,7 @@ export const Step1Basics = ({
 
                             <TextField
                                 id="nameEn"
-                                label="Name"
+                                label={t("name")}
                                 variant="standard"
                                 error={Boolean(formik.errors.nameEn && formik.touched.nameEn)}
                                 helperText={
@@ -117,7 +117,7 @@ export const Step1Basics = ({
                                         {...params}
                                         id="newAlternativeNameEn"
                                         variant="standard"
-                                        label="Alternative names"
+                                        label={t("exercises.alternativeNames")}
                                         value={formik.getFieldProps("newAlternativeNameEn").value}
                                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                             formik.setFieldValue(
@@ -147,7 +147,7 @@ export const Step1Basics = ({
                                 </Box>
                             ) : (
                                 <FormControl fullWidth>
-                                    <InputLabel id="label-category">Category</InputLabel>
+                                    <InputLabel id="label-category">{t("category")}</InputLabel>
                                     <Select
                                         labelId="label-category"
                                         id="category"
