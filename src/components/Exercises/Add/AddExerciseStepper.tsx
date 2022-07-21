@@ -1,16 +1,5 @@
 import React from "react";
-import {
-    Box,
-    Button,
-    Container,
-    Paper,
-    Stack,
-    Step,
-    StepContent,
-    StepLabel,
-    Stepper,
-    Typography,
-} from "@mui/material";
+import { Box, Container, Stack, Step, StepContent, StepLabel, Stepper, Typography, } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Step1Basics } from "components/Exercises/Add/Step1Basics";
 import { Step2Variations } from "components/Exercises/Add/Step2Variations";
@@ -18,12 +7,10 @@ import { Step3Description } from "components/Exercises/Add/Step3Description";
 import { Step4Translations } from "components/Exercises/Add/Step4Translations";
 import { Step5Images } from "components/Exercises/Add/Step5Images";
 import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
-import { addExerciseBase, addExerciseTranslation, postAlias, postExerciseImage } from "services";
-import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { Step6Overview } from "components/Exercises/Add/Step6Overview";
 
 export type StepProps = {
-    onContinue: () => void;
+    onContinue?: () => void;
     onBack?: React.MouseEventHandler<HTMLButtonElement>;
     setNewExerciseData: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
     newExerciseData: addExerciseDataType;
@@ -43,47 +30,6 @@ export const AddExerciseStepper = () => {
 
     const handleReset = () => {
         setActiveStep(0);
-    };
-
-    const submitExercise = async () => {
-        // Create the base
-        const baseId = await addExerciseBase(
-            newExerciseData.category as number,
-            newExerciseData.equipment,
-            newExerciseData.muscles,
-            newExerciseData.musclesSecondary
-        );
-
-        // Create the English translation
-        const exerciseId = await addExerciseTranslation(
-            baseId,
-            ENGLISH_LANGUAGE_ID,
-            newExerciseData.nameEn,
-            newExerciseData.descriptionEn,
-        );
-
-        // For each entry in alternative names, create a new alias
-        for (const alias of newExerciseData.alternativeNamesEn) {
-            await postAlias(exerciseId, alias);
-        }
-
-        // Post the images
-        for (const image of newExerciseData.images) {
-            await postExerciseImage(baseId, image.file);
-        }
-
-        // Create the translation if needed
-        if (newExerciseData.languageId !== null) {
-            await addExerciseTranslation(
-                baseId,
-                newExerciseData.languageId,
-                newExerciseData.nameTranslation,
-                newExerciseData.descriptionTranslation,
-            );
-        }
-
-
-        console.log("Exercise created");
     };
 
     const emptyExerciseData = {
@@ -113,44 +59,13 @@ export const AddExerciseStepper = () => {
                     {t("exercises.contribute-exercise")}
                 </Typography>
             </Stack>
-
-            <Stack>
-                <Paper sx={{ p: 1, bgcolor: "lightgray" }}>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Debug submitted data
-                    </Typography>
-                    <ul>
-                        <li>Name EN: {newExerciseData!.nameEn}</li>
-                        <li>Description EN: {newExerciseData!.descriptionEn}</li>
-                        <li>
-                            Alternative names EN:{" "}
-                            {newExerciseData!.alternativeNamesEn.join("/ ")}
-                        </li>
-                        <li>Category ID: {newExerciseData!.category}</li>
-                        <li>Muscles: {newExerciseData!.muscles.join("/ ")}</li>
-                        <li>Muscles secondary: {newExerciseData!.musclesSecondary.join("/ ")}</li>
-                        <li>Equipment: {newExerciseData!.equipment.join("/ ")}</li>
-                        <li>Variation ID: {newExerciseData!.variationId}</li>
-                        <li>Language ID: {newExerciseData!.languageId}</li>
-                        <li>Name translation: {newExerciseData!.nameTranslation}</li>
-                        <li>
-                            Description translation: {newExerciseData!.descriptionTranslation}
-                        </li>
-                        <li>
-                            Alternative names translation:{" "}
-                            {newExerciseData!.alternativeNamesTranslation.join("/ ")}
-                        </li>
-                        <li>Images:</li>
-                    </ul>
-                </Paper>
-            </Stack>
             <Box>
                 <Typography gutterBottom variant="h5" component="div">
                     {t("exercises.contribute-exercise-description")}
                 </Typography>
                 <Stepper activeStep={activeStep} orientation="vertical">
                     <Step key={1}>
-                        <StepLabel>Basics in English</StepLabel>
+                        <StepLabel>{t("exercises.step1-header-basics")}</StepLabel>
                         <StepContent>
                             <Step1Basics
                                 onContinue={handleNext}
@@ -160,7 +75,7 @@ export const AddExerciseStepper = () => {
                         </StepContent>
                     </Step>
                     <Step key={2}>
-                        <StepLabel>Variations</StepLabel>
+                        <StepLabel>{t("exercises.variations")}</StepLabel>
                         <StepContent>
                             <Step2Variations
                                 onContinue={handleNext}
@@ -171,7 +86,7 @@ export const AddExerciseStepper = () => {
                         </StepContent>
                     </Step>
                     <Step key={3}>
-                        <StepLabel>Description</StepLabel>
+                        <StepLabel>{t("description")}</StepLabel>
                         <StepContent>
                             <Step3Description
                                 onContinue={handleNext}
@@ -182,7 +97,7 @@ export const AddExerciseStepper = () => {
                         </StepContent>
                     </Step>
                     <Step key={4}>
-                        <StepLabel>Translation</StepLabel>
+                        <StepLabel>{t("translation")}</StepLabel>
                         <StepContent>
                             <Step4Translations onContinue={handleNext}
                                                onBack={handleBack}
@@ -191,7 +106,7 @@ export const AddExerciseStepper = () => {
                         </StepContent>
                     </Step>
                     <Step key={5}>
-                        <StepLabel>Images</StepLabel>
+                        <StepLabel>{t("images")}</StepLabel>
                         <StepContent>
                             <Step5Images
                                 onContinue={handleNext}
@@ -202,30 +117,16 @@ export const AddExerciseStepper = () => {
                         </StepContent>
                     </Step>
                     <Step key={6}>
-                        <StepLabel>Overview</StepLabel>
+                        <StepLabel>{t("overview")}</StepLabel>
                         <StepContent>
                             <Step6Overview
-                                onContinue={handleNext}
                                 onBack={handleBack}
                                 setNewExerciseData={setNewExerciseData}
                                 newExerciseData={newExerciseData}
                             />
                         </StepContent>
                     </Step>
-
-
                 </Stepper>
-                {activeStep === 5 && (
-                    <Paper square sx={{ p: 3 }}>
-                        <Typography>Exercise was successfully submitted!</Typography>
-                        <Button onClick={submitExercise} sx={{ mt: 1, mr: 1 }}>
-                            Submit to server
-                        </Button>
-                        <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-                            Reset
-                        </Button>
-                    </Paper>
-                )}
             </Box>
         </Container>
     );

@@ -77,7 +77,7 @@ export const Step1Basics = ({
                     equipment: equipment.map(e => e.id),
                 });
 
-                onContinue();
+                onContinue!();
             }}
         >
             {formik => {

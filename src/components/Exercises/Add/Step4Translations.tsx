@@ -69,7 +69,7 @@ export const Step4Translations = ({
                 languageId: values.language,
             });
 
-            onContinue();
+            onContinue!();
         }}
     >{formik => (
         <Form>

@@ -2,18 +2,56 @@ import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
+import { addExerciseBase, addExerciseTranslation, postAlias, postExerciseImage } from "services";
+import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 
 
 export const Step6Overview = ({
                                   newExerciseData,
-                                  onContinue,
+                                  setNewExerciseData,
                                   onBack,
                               }: StepProps) => {
     const [t] = useTranslation();
 
+    const submitExercise = async () => {
+        // Create the base
+        const baseId = await addExerciseBase(
+            newExerciseData.category as number,
+            newExerciseData.equipment,
+            newExerciseData.muscles,
+            newExerciseData.musclesSecondary
+        );
 
-    const handleContinue = () => {
-        onContinue();
+        // Create the English translation
+        const exerciseId = await addExerciseTranslation(
+            baseId,
+            ENGLISH_LANGUAGE_ID,
+            newExerciseData.nameEn,
+            newExerciseData.descriptionEn,
+        );
+
+        // For each entry in alternative names, create a new alias
+        for (const alias of newExerciseData.alternativeNamesEn) {
+            await postAlias(exerciseId, alias);
+        }
+
+        // Post the images
+        for (const image of newExerciseData.images) {
+            await postExerciseImage(baseId, image.file);
+        }
+
+        // Create the translation if needed
+        if (newExerciseData.languageId !== null) {
+            await addExerciseTranslation(
+                baseId,
+                newExerciseData.languageId,
+                newExerciseData.nameTranslation,
+                newExerciseData.descriptionTranslation,
+            );
+        }
+
+
+        console.log("Exercise created");
     };
 
     return (
@@ -61,7 +99,7 @@ export const Step6Overview = ({
                 <div>
                     <Button
                         variant="contained"
-                        onClick={handleContinue}
+                        onClick={submitExercise}
                         sx={{ mt: 1, mr: 1 }}
                     >
                         {t("exercises.submit-exercise")}

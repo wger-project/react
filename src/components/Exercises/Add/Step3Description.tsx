@@ -33,7 +33,7 @@ export const Step3Description = ({
                     descriptionEn: values.description,
                 });
 
-                onContinue();
+                onContinue!();
             }}
         >
             {formik => (

@@ -34,7 +34,7 @@ export const Step5Images = ({
 
     const handleContinue = () => {
         setNewExerciseData({ ...newExerciseData, images: images });
-        onContinue();
+        onContinue!();
     };
 
     return (
