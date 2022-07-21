@@ -78,7 +78,7 @@ export const Step4Translations = ({
                     <FormControlLabel checked={translateExercise}
                                       onClick={() => setTranslateExercise(!translateExercise)}
                                       control={<Switch />}
-                                      label="Translate this exercise now" />
+                                      label={t('exercises.translateExerciseNow')} />
                 </FormGroup>
                 {translateExercise && (
                     <>
@@ -116,7 +116,7 @@ export const Step4Translations = ({
                         )}
                         <TextField
                             id="name"
-                            label="Name"
+                            label={t("name")}
                             variant="standard"
                             error={
                                 Boolean(formik.errors.name && formik.touched.name)
@@ -147,7 +147,7 @@ export const Step4Translations = ({
                                     {...params}
                                     id="newAlternativeNameEn"
                                     variant="standard"
-                                    label="Alternative names"
+                                    label={t("exercises.alternativeNames")}
                                     value={formik.getFieldProps("newAlternativeNameEn").value}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                         formik.setFieldValue(
