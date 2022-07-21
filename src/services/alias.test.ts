@@ -1,5 +1,5 @@
 import axios from "axios";
-import { postAlias } from "services/alias";
+import { postAlias } from "services";
 import { Alias } from "components/Exercises/models/alias";
 
 jest.mock("axios");

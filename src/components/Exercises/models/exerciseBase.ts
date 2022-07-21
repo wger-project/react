@@ -104,6 +104,10 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
     }
 }
 
+export type ImageFormData = {
+    url: string;
+    file: File;
+};
 
 export type addExerciseDataType = {
     nameEn: string;
@@ -121,5 +125,5 @@ export type addExerciseDataType = {
     equipment: number[];
     variationId: number | null;
 
-    images: string[];
+    images: ImageFormData[];
 };

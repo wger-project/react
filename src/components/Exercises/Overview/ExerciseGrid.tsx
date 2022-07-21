@@ -3,7 +3,7 @@ import { Box, Card, CardContent, CardMedia, Grid, Skeleton, } from "@mui/materia
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName } from "services/language";
+import { getLanguageByShortName } from "services";
 import { Language } from "components/Exercises/models/language";
 import { useLanguageQuery } from "components/Exercises/queries";
 

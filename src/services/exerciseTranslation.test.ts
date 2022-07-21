@@ -1,5 +1,5 @@
 import axios from "axios";
-import { addExerciseTranslation } from "services/exerciseTranslation";
+import { addExerciseTranslation } from "services";
 
 jest.mock("axios");
 
