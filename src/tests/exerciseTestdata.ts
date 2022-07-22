@@ -10,6 +10,10 @@ export const testCategories = [
     new Category(2, 'Legs'),
     new Category(3, 'Chest')
 ];
+export const testCategoryArms = testCategories[0];
+export const testCategoryLegs = testCategories[1];
+export const testCategoryChest = testCategories[2];
+
 
 export const testLanguages = [
     new Language(1, 'de', 'Deutsch'),
@@ -35,11 +39,16 @@ export const testEquipment = [
     new Equipment(42, "Rocks"),
 ];
 
+export const testEquipmentBarbell = testEquipment[0];
+export const testEquipmentDumbbell = testEquipment[1];
+export const testEquipmentKettlebell = testEquipment[2];
+export const testEquipmentRocks = testEquipment[3];
+
 export const testExerciseSquats = new ExerciseBase(
     345,
     "c788d643-150a-4ac7-97ef-84643c6419bf",
-    testCategories[1],
-    [testEquipment[0], testEquipment[3]],
+    testCategoryLegs,
+    [testEquipmentBarbell, testEquipmentRocks],
     [testMuscles[0], testMuscles[3]],
     [],
     [],
@@ -63,8 +72,8 @@ export const testExerciseSquats = new ExerciseBase(
 export const testExerciseBenchPress = new ExerciseBase(
     2,
     "abcdef-150a-4ac7-97ef-84643c6419bf",
-    testCategories[1],
-    [testEquipment[0], testEquipment[3]],
+    testCategoryLegs,
+    [testEquipmentBarbell, testEquipmentRocks],
     [testMuscles[1], testMuscles[2]],
     [],
     [],
@@ -81,8 +90,8 @@ export const testExerciseBenchPress = new ExerciseBase(
 export const testExerciseCurls = new ExerciseBase(
     3,
     "abcdef-150a-4ac7-97ef-84643c6419bf",
-    testCategories[0],
-    [testEquipment[1]],
+    testCategoryArms,
+    [testEquipmentDumbbell],
     [testMuscles[0], testMuscles[1]],
     [],
     [],
@@ -100,8 +109,8 @@ export const testExerciseCurls = new ExerciseBase(
 export const testExerciseCrunches = new ExerciseBase(
     4,
     "abcdef-150a-4ac7-97ef-84643c6419bf",
-    testCategories[2],
-    [testEquipment[3]],
+    testCategoryChest,
+    [testEquipmentRocks],
     [testMuscles[2]],
     [],
     [],
@@ -119,8 +128,8 @@ export const testExerciseCrunches = new ExerciseBase(
 export const testExerciseSkullCrusher = new ExerciseBase(
     5,
     "abcdef-150a-4ac7-97ef-84643c6419bf",
-    testCategories[0],
-    [testEquipment[0]],
+    testCategoryArms,
+    [testEquipmentBarbell],
     [testMuscles[3]],
     [],
     [],
