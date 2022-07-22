@@ -111,7 +111,7 @@ export const ExerciseDetails = () => {
                 {aliases && aliases.length > 0 ? (
                     <div className={styles.detail_alt_name}>
                         <p>
-                            {t("exercises.also-known-as")} &nbsp;
+                            {t("exercises.alsoKnownAs")} &nbsp;
                             {aliases?.map(e => e.alias).join(", ")}
                         </p>
                     </div>) : null}

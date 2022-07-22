@@ -12,7 +12,7 @@
   "currentWeight": "Current weight",
   "workout": "Workout",
   "exercises": {
-    "contribute-exercise": "Contribute an exercise",
+    "contributeExercise": "Contribute an exercise",
     "step1HeaderBasics": "Basics in English",
     "variations": "Variations",
     "alternativeNames": "Alternative names",
@@ -22,12 +22,12 @@
     "whatVariationsExist": "Which variations of this exercise exist?",
     "translateExerciseNow": "Translate this exercise now",
     "compatibleImagesCC": "Images must be compatible with the CC BY SA license. If in doubt, upload only photos you've taken yourself.",
-    "submit-exercise": "Submit exercise",
-    "no-equipment": "No equipment",
-    "missing-exercise": "Missing a certain exercise?",
-    "missing-exercise-description": "Help out the community by contributing it!",
+    "submitExercise": "Submit exercise",
+    "noEquipment": "No equipment",
+    "missingExercise": "Missing a certain exercise?",
+    "missingExerciseDescription": "Help out the community by contributing it!",
     "exercises": "Exercises",
-    "search-exercise-name": "Search by exercise name",
+    "searchExerciseName": "Search by exercise name",
     "arms": "Arms",
     "back": "Back",
     "calves": "Calves",
@@ -50,7 +50,7 @@
     "repetitions": "Repetitions",
     "seconds": "Seconds",
     "until_failure": "Until failure",
-    "also-known-as": "Also known as:",
+    "alsoKnownAs": "Also known as:",
     "description": "Description",
     "notes": "Notes",
     "primaryMuscles": "Primary muscles"
@@ -70,6 +70,6 @@
   "continue": "Continue",
   "back": "Back",
   "language": "Language",
-  "no-results": "No results",
-  "no-results-description": "No results found for this query, consider reducing the number of filters."
+  "noResults": "No results",
+  "noResultsDescription": "No results found for this query, consider reducing the number of filters."
 }

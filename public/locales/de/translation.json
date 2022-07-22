@@ -14,12 +14,12 @@
   "addEntry": "Eintrag hinzufügen",
   "workout": "Trainingsplan",
   "exercises": {
-    "no-equipment": "Keine Ausrüstung",
+    "noEquipment": "Keine Ausrüstung",
     "exercises": "Übungen",
     "category": "Kategorie",
     "equipment": "Gerät",
     "muscles": "Muskeln",
-    "search-exercise-name": "Nach Übungsnamen suchen",
+    "searchExerciseName": "Nach Übungsnamen suchen",
     "abs": "Bauch",
     "arms": "Arme",
     "back": "Rücken",
@@ -44,6 +44,6 @@
     "seconds": "",
     "until_failure": ""
   },
-  "no-results": "Keine Ergebnisse",
-  "no-results-description": "Keine Ergebnisse für diese Suche gefunden, bitte reduziere die Anzahl der Filter."
+  "noResults": "Keine Ergebnisse",
+  "noResultsDescription": "Keine Ergebnisse für diese Suche gefunden, bitte reduziere die Anzahl der Filter."
 }

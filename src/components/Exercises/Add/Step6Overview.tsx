@@ -102,7 +102,7 @@ export const Step6Overview = ({
                         onClick={submitExercise}
                         sx={{ mt: 1, mr: 1 }}
                     >
-                        {t("exercises.submit-exercise")}
+                        {t("exercises.submitExercise")}
                     </Button>
                     <Button disabled={false} onClick={onBack} sx={{ mt: 1, mr: 1 }}>
                         {t("back")}

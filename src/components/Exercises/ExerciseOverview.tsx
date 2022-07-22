@@ -26,15 +26,15 @@ const ContributeExerciseBanner = () => {
             }}
         >
             <Typography gutterBottom variant="h4" component="div">
-                {t("exercises.missing-exercise")}
+                {t("exercises.missingExercise")}
             </Typography>
 
             <Typography gutterBottom variant="body1" component="div">
-                {t("exercises.missing-exercise-description")}
+                {t("exercises.missingExerciseDescription")}
             </Typography>
 
             <a href="/exercises/add">
-                {t("exercises.contribute-exercise")}
+                {t("exercises.contributeExercise")}
             </a>
         </Box>
     );
@@ -54,11 +54,11 @@ const NoResultsBanner = () => {
             }}
         >
             <Typography gutterBottom variant="h4" component="div">
-                {t("no-results")}
+                {t("noResults")}
             </Typography>
 
             <Typography gutterBottom variant="body1" component="div">
-                {t("no-results-description")}
+                {t("noResultsDescription")}
             </Typography>
         </Box>
     );
@@ -145,7 +145,7 @@ export const ExerciseOverview = () => {
                 <Box sx={{ width: 500 }} m={1}>
                     <NameAutocompleter callback={exerciseAdded} />
                 </Box>
-                {/*<Button variant="contained" startIcon={<AddIcon />}> {t('contribute-exercise')}</Button>*/}
+                {/*<Button variant="contained" startIcon={<AddIcon />}> {t('contributeExercise')}</Button>*/}
             </Stack>
 
             <Grid container spacing={2}>

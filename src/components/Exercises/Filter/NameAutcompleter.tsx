@@ -60,7 +60,7 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
             includeInputInList
             filterSelectedOptions
             value={value}
-            noOptionsText={t('no-results')}
+            noOptionsText={t('noResults')}
             isOptionEqualToValue={(option, value) => option.value === value.value}
             onChange={(event: any, newValue: ExerciseSearchResponse | null) => {
                 setOptions(newValue ? [newValue, ...options] : options);
@@ -73,7 +73,7 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label={t('exercises.search-exercise-name')}
+                    label={t('exercises.searchExerciseName')}
                     fullWidth
                     InputProps={{
                         ...params.InputProps,

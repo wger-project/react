@@ -56,7 +56,7 @@ export const AddExerciseStepper = () => {
         <Container maxWidth="md">
             <Stack direction={"row"}>
                 <Typography gutterBottom variant="h3" component="div">
-                    {t("exercises.contribute-exercise")}
+                    {t("exercises.contributeExercise")}
                 </Typography>
             </Stack>
             <Box>
