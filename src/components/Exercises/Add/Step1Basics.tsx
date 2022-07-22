@@ -184,7 +184,7 @@ export const Step1Basics = ({
                                     getOptionDisabled={(option) =>
                                         secondaryMuscles.includes(option)
                                     }
-                                    getOptionLabel={option => option.name}
+                                    getOptionLabel={option => option.getName(t)}
                                     value={[...muscles]}
                                     isOptionEqualToValue={(option, value) =>
                                         option.id === value.id
@@ -222,7 +222,7 @@ export const Step1Basics = ({
                                     getOptionDisabled={(option) =>
                                         muscles.includes(option)
                                     }
-                                    getOptionLabel={option => option.name}
+                                    getOptionLabel={option => option.getName(t)}
                                     value={[...secondaryMuscles]}
                                     isOptionEqualToValue={(option, value) =>
                                         option.id === value.id
@@ -249,7 +249,7 @@ export const Step1Basics = ({
                                     multiple
                                     id="equipment"
                                     options={equipmentQuery.data!}
-                                    getOptionLabel={option => option.name}
+                                    getOptionLabel={option => t(getTranslationKey(option.name))}
                                     value={[...equipment]}
                                     isOptionEqualToValue={(option, value) =>
                                         option.id === value.id

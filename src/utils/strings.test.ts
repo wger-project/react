@@ -22,19 +22,19 @@ describe("slugify utilities", () => {
 describe("translation key utilities", () => {
 
     test('key', () => {
-        expect(getTranslationKey('test 123')).toEqual('exercises.test_123');
+        expect(getTranslationKey('test 123')).toEqual('server.test_123');
     });
 
     test('several whitespaces', () => {
-        expect(getTranslationKey('test   123')).toEqual('exercises.test___123');
+        expect(getTranslationKey('test   123')).toEqual('server.test___123');
     });
 
     test('capital letters', () => {
-        expect(getTranslationKey('TeST123')).toEqual('exercises.test123');
+        expect(getTranslationKey('TeST123')).toEqual('server.test123');
     });
 
     test('special chars are kept', () => {
-        expect(getTranslationKey('abc*/&%$§')).toEqual('exercises.abc*/&%$§');
+        expect(getTranslationKey('abc*/&%$§')).toEqual('server.abc*/&%$§');
     });
 });
 

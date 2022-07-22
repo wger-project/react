@@ -83,7 +83,7 @@ describe("Test the ExerciseOverview component", () => {
         );
         await act(() => Promise.resolve());
         const { getByText: categoriesComponent } = within(screen.getByTestId('categories'));
-        fireEvent.click(categoriesComponent("exercises.arms"));
+        fireEvent.click(categoriesComponent("server.arms"));
 
         // Assert
         expect(screen.queryByText('Benchpress')).not.toBeInTheDocument();
@@ -107,8 +107,8 @@ describe("Test the ExerciseOverview component", () => {
         );
         await act(() => Promise.resolve());
         const { getByText: categoriesComponent } = within(screen.getByTestId('categories'));
-        fireEvent.click(categoriesComponent("exercises.arms"));
-        fireEvent.click(categoriesComponent("exercises.legs"));
+        fireEvent.click(categoriesComponent("server.arms"));
+        fireEvent.click(categoriesComponent("server.legs"));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -132,7 +132,7 @@ describe("Test the ExerciseOverview component", () => {
         );
         await act(() => Promise.resolve());
         const { getByText: equipmentComponent } = within(screen.getByTestId('equipment'));
-        fireEvent.click(equipmentComponent("exercises.barbell"));
+        fireEvent.click(equipmentComponent("server.barbell"));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -181,10 +181,10 @@ describe("Test the ExerciseOverview component", () => {
         await act(() => Promise.resolve());
 
         const { getByText: categoryComponent } = within(screen.getByTestId('categories'));
-        fireEvent.click(categoryComponent('exercises.legs'));
+        fireEvent.click(categoryComponent('server.legs'));
 
         const { getByText: equipmentComponent } = within(screen.getByTestId('equipment'));
-        fireEvent.click(equipmentComponent('exercises.rocks'));
+        fireEvent.click(equipmentComponent('server.rocks'));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();

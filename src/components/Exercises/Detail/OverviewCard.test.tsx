@@ -50,9 +50,9 @@ describe("Test the exercise overview card component", () => {
 
         // Assert
         expect(screen.getByText("Squats")).toBeInTheDocument();
-        expect(screen.getByText("exercises.abs")).toBeInTheDocument();
-        expect(screen.getByText("exercises.kettlebell")).toBeInTheDocument();
-        expect(screen.getByText("exercises.test_123")).toBeInTheDocument();
+        expect(screen.getByText("server.abs")).toBeInTheDocument();
+        expect(screen.getByText("server.kettlebell")).toBeInTheDocument();
+        expect(screen.getByText("server.test_123")).toBeInTheDocument();
     });
 
     test("Render the overview card with an existing translation", async () => {
@@ -71,9 +71,9 @@ describe("Test the exercise overview card component", () => {
         expect(screen.queryByText("Squats")).not.toBeInTheDocument();
         expect(screen.getByText("Kniebeuge")).toBeInTheDocument();
 
-        expect(screen.getByText("exercises.abs")).toBeInTheDocument();
-        expect(screen.getByText("exercises.kettlebell")).toBeInTheDocument();
-        expect(screen.getByText("exercises.test_123")).toBeInTheDocument();
+        expect(screen.getByText("server.abs")).toBeInTheDocument();
+        expect(screen.getByText("server.kettlebell")).toBeInTheDocument();
+        expect(screen.getByText("server.test_123")).toBeInTheDocument();
     });
 
     test("Render the overview card with a non existing translation -> fallback to english", async () => {
@@ -91,8 +91,8 @@ describe("Test the exercise overview card component", () => {
         // Assert
         expect(screen.queryByText("Kniebeuge")).not.toBeInTheDocument();
         expect(screen.getByText("Squats")).toBeInTheDocument();
-        expect(screen.getByText("exercises.abs")).toBeInTheDocument();
-        expect(screen.getByText("exercises.kettlebell")).toBeInTheDocument();
-        expect(screen.getByText("exercises.test_123")).toBeInTheDocument();
+        expect(screen.getByText("server.abs")).toBeInTheDocument();
+        expect(screen.getByText("server.kettlebell")).toBeInTheDocument();
+        expect(screen.getByText("server.test_123")).toBeInTheDocument();
     });
 });

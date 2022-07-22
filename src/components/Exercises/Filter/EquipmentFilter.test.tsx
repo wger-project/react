@@ -18,13 +18,13 @@ describe("Test the CategoryFilter component", () => {
         }} />);
 
         // Assert
-        const cat1Element = await screen.findByText("exercises.bench");
+        const cat1Element = await screen.findByText("server.bench");
         expect(cat1Element).toBeInTheDocument();
 
-        const cat2Element = await screen.findByText("exercises.kettlebell");
+        const cat2Element = await screen.findByText("server.kettlebell");
         expect(cat2Element).toBeInTheDocument();
 
-        const cat3Element = await screen.findByText("exercises.dumbbell");
+        const cat3Element = await screen.findByText("server.dumbbell");
         expect(cat3Element).toBeInTheDocument();
     });
 

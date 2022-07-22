@@ -1,4 +1,5 @@
 import { Adapter } from "utils/Adapter";
+import { getTranslationKey } from "utils/strings";
 
 export class Muscle {
     constructor(
@@ -10,10 +11,10 @@ export class Muscle {
     }
 
     // Return the name and english name of the muscle, if available.
-    public getName(): string {
+    public getName(t: Function): string {
         if (this.nameEn) {
             // TODO: translate the English name
-            return `${this.name} (${this.nameEn})`;
+            return `${this.name} (${t(getTranslationKey(this.nameEn))})`;
         } else {
             return this.name;
         }
