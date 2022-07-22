@@ -16,8 +16,7 @@ describe("Test the add-exercise stepper component", () => {
         );
 
         // Assert
-        expect(screen.getByText("exercises.contribute-exercise-description")).toBeInTheDocument();
-        expect(screen.getByText("exercises.step1-header-basics")).toBeInTheDocument();
+        expect(screen.getByText("exercises.step1HeaderBasics")).toBeInTheDocument();
         expect(screen.getByText("exercises.variations")).toBeInTheDocument();
         expect(screen.getByText("description")).toBeInTheDocument();
         expect(screen.getByText("translation")).toBeInTheDocument();

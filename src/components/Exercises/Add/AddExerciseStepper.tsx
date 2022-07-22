@@ -60,12 +60,9 @@ export const AddExerciseStepper = () => {
                 </Typography>
             </Stack>
             <Box>
-                <Typography gutterBottom variant="h5" component="div">
-                    {t("exercises.contribute-exercise-description")}
-                </Typography>
                 <Stepper activeStep={activeStep} orientation="vertical">
                     <Step key={1}>
-                        <StepLabel>{t("exercises.step1-header-basics")}</StepLabel>
+                        <StepLabel>{t("exercises.step1HeaderBasics")}</StepLabel>
                         <StepContent>
                             <Step1Basics
                                 onContinue={handleNext}

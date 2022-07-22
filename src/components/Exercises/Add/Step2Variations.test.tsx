@@ -73,7 +73,7 @@ describe("Test the add exercise step 2 component", () => {
         );
 
         // Assert
-        expect(screen.getByText("forms.whatVariationsExist")).toBeInTheDocument();
+        expect(screen.getByText("exercises.whatVariationsExist")).toBeInTheDocument();
         expect(screen.getByText("Benchpress")).toBeInTheDocument();
         expect(screen.getByText("Curls")).toBeInTheDocument();
     });

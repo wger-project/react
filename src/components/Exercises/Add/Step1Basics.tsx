@@ -45,13 +45,13 @@ export const Step1Basics = ({
     const validationSchema = yup.object({
         nameEn: yup
             .string()
-            .min(5, t("forms.value-too-short"))
-            .max(40, t("forms.value-too-long"))
-            .required(t("forms.field-required")),
+            .min(5, t("forms.valueTooShort"))
+            .max(40, t("forms.valueTooLong"))
+            .required(t("forms.fieldRequired")),
         newAlternativeNameEn: yup
             .string()
-            .min(5, t("forms.value-too-short"))
-            .max(40, t("forms.value-too-long")),
+            .min(5, t("forms.valueTooShort"))
+            .max(40, t("forms.valueTooLong")),
         category: yup.number().required(),
     });
 
@@ -66,7 +66,6 @@ export const Step1Basics = ({
             }}
             validationSchema={validationSchema}
             onSubmit={values => {
-                console.log(values);
                 setNewExerciseData({
                     ...newExerciseData,
                     nameEn: values.nameEn,

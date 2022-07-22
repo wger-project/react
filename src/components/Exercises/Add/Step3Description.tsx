@@ -17,8 +17,8 @@ export const Step3Description = ({
     const validationSchema = yup.object({
         description: yup
             .string()
-            .min(40, t("forms.value-too-short"))
-            .required(t("forms.field-required")),
+            .min(40, t("forms.valueTooShort"))
+            .required(t("forms.fieldRequired")),
     });
 
     return (

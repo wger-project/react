@@ -40,8 +40,8 @@ export const Step5Images = ({
     return (
         <div>
             <Typography>
-                Images must be compatible with the CC BY SA license. If in doubt, upload
-                only photos you've taken yourself.
+                {t("exercises.compatibleImagesCC")}
+                
             </Typography>
             <Stack direction={"row"} justifyContent="center">
                 <div>
@@ -99,7 +99,7 @@ export const Step5Images = ({
                 ))}
             </ImageList>
             <Typography>
-                Only JPEG, PNG and WEBP files below 20Mb are supported
+                {t("forms.supportedImageFormats")}
             </Typography>
             <Box sx={{ mb: 2 }}>
                 <div>
@@ -108,7 +108,7 @@ export const Step5Images = ({
                         onClick={handleContinue}
                         sx={{ mt: 1, mr: 1 }}
                     >
-                        {t("exercises.submit-exercise")}
+                        {t("continue")}
                     </Button>
                     <Button disabled={false} onClick={onBack} sx={{ mt: 1, mr: 1 }}>
                         {t("back")}

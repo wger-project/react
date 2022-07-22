@@ -50,7 +50,7 @@ export const Step2Variations = ({
 
     return <>
         <Paper sx={{ p: 2 }}>
-            <Typography>{t('forms.whatVariationsExist')}</Typography>
+            <Typography>{t('exercises.whatVariationsExist')}</Typography>
 
             {basesQuery.isLoading ? (
                 <Box>

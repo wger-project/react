@@ -39,13 +39,13 @@ export const Step4Translations = ({
         translateExercise ? {
             description: yup
                 .string()
-                .min(40, t('forms.value-too-short'))
-                .required(t('forms.field-required')),
+                .min(40, t('forms.valueTooShort'))
+                .required(t('forms.fieldRequired')),
             name: yup
                 .string()
-                .min(5, t('forms.value-too-short'))
-                .max(40, t('forms.value-too-long'))
-                .required(t('forms.field-required')),
+                .min(5, t('forms.valueTooShort'))
+                .max(40, t('forms.valueTooLong'))
+                .required(t('forms.fieldRequired')),
             alternativeNames: yup
                 .string(),
             language: yup.number().required(),
