@@ -35,20 +35,22 @@ export const Step4Translations = ({
         newExerciseData.alternativeNamesTranslation
     );
 
-    const validationSchema = yup.object({
-        description: yup
-            .string()
-            .min(40, t('forms.value-too-short'))
-            .required(t('forms.field-required')),
-        name: yup
-            .string()
-            .min(5, t('forms.value-too-short'))
-            .max(40, t('forms.value-too-long'))
-            .required(t('forms.field-required')),
-        alternativeNames: yup
-            .string(),
-        language: yup.number().required(),
-    });
+    const validationSchema = yup.object(
+        translateExercise ? {
+            description: yup
+                .string()
+                .min(40, t('forms.value-too-short'))
+                .required(t('forms.field-required')),
+            name: yup
+                .string()
+                .min(5, t('forms.value-too-short'))
+                .max(40, t('forms.value-too-long'))
+                .required(t('forms.field-required')),
+            alternativeNames: yup
+                .string(),
+            language: yup.number().required(),
+        } : {}
+    );
 
 
     return <Formik
