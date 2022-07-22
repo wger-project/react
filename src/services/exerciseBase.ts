@@ -65,11 +65,11 @@ export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
  */
 export const getExerciseBase = async (id: number): Promise<ExerciseBase> => {
     const url = makeUrl(EXERCISE_INFO_PATH, { id: id });
-    const data = await axios.get<ResponseType<any>>(url, {
+    const response = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
 
-    return processBaseDataSingle(data);
+    return processBaseDataSingle(response.data);
 };
 
 
