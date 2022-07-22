@@ -1,4 +1,4 @@
-import { testExerciseSquats, testLanguages } from "tests/exerciseTestdata";
+import { testExerciseSquats, testLanguageEnglish, testLanguageGerman } from "tests/exerciseTestdata";
 import { Language } from "components/Exercises/models/language";
 import { ExerciseBaseAdapter } from "components/Exercises/models/exerciseBase";
 
@@ -14,13 +14,13 @@ describe("Exercise base model tests", () => {
     test('translation helper - explicit language - English', () => {
 
         // Assert
-        expect(testExerciseSquats.getTranslation(testLanguages[1]).name).toBe("Squats");
+        expect(testExerciseSquats.getTranslation(testLanguageEnglish).name).toBe("Squats");
     });
 
     test('translation helper - explicit language - German', () => {
 
         // Assert
-        expect(testExerciseSquats.getTranslation(testLanguages[0]).name).toBe("Kniebeuge");
+        expect(testExerciseSquats.getTranslation(testLanguageGerman).name).toBe("Kniebeuge");
     });
 
     test('translation helper - unknown language', () => {
