@@ -24,9 +24,8 @@ export function processBaseData(data: any): ExerciseBase[] {
  * Process the response from the server and return a single exercise base
  */
 export function processBaseDataSingle(data: any): ExerciseBase {
-    const adapter = new ExerciseBaseAdapter();
     const translationAdapter = new ExerciseTranslationAdapter();
-    const exerciseBaseObj = adapter.fromJson(data);
+    const exerciseBaseObj = new ExerciseBaseAdapter().fromJson(data);
 
     try {
         for (const e of data.exercises) {
@@ -34,13 +33,12 @@ export function processBaseDataSingle(data: any): ExerciseBase {
         }
 
         if (!exerciseBaseObj.translations.some(t => t.language === ENGLISH_LANGUAGE_ID)) {
-            console.info(`No english translation found for exercise base ${exerciseBaseObj.uuid}, skipping`);
+            console.info(`No english translation found for exercise base ${exerciseBaseObj.uuid}!`);
         }
 
         if (exerciseBaseObj.translations.length === 0) {
-            console.error(`No translations found for exercise base ${exerciseBaseObj.uuid}, skipping`);
+            console.error(`No translations found for exercise base ${exerciseBaseObj.uuid}!`);
         }
-        throw(new Error(`No translations found for exercise base ${exerciseBaseObj.uuid}, skipping`));
 
     } catch (e) {
         console.error("Error loading exercise base data!", e);
