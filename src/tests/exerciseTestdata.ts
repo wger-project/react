@@ -5,51 +5,52 @@ import { Equipment } from "components/Exercises/models/equipment";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 
+export const testCategoryArms = new Category(1, 'Arms');
+export const testCategoryLegs = new Category(2, 'Legs');
+export const testCategoryChest = new Category(3, 'Chest');
 export const testCategories = [
-    new Category(1, 'Arms'),
-    new Category(2, 'Legs'),
-    new Category(3, 'Chest')
+    testCategoryArms,
+    testCategoryLegs,
+    testCategoryChest
 ];
-export const testCategoryArms = testCategories[0];
-export const testCategoryLegs = testCategories[1];
-export const testCategoryChest = testCategories[2];
 
-
+export const testLanguageGerman = new Language(1, 'de', 'Deutsch');
+export const testLanguageEnglish = new Language(2, 'en', 'English');
+export const testLanguageFrench = new Language(3, 'fr', 'French');
 export const testLanguages = [
-    new Language(1, 'de', 'Deutsch'),
-    new Language(2, 'en', 'English'),
-    new Language(3, 'fr', 'French')
+    testLanguageGerman,
+    testLanguageEnglish,
+    testLanguageFrench
 ];
 
-export const testLanguageEnglish = testLanguages[1];
-export const testLanguageGerman = testLanguages[0];
-export const testLanguageFrench = testLanguages[2];
-
+export const testMuscleBiggus = new Muscle(1, 'Biggus musculus', 'Big muscle', true);
+export const testMuscleDacttilaris = new Muscle(2, 'Musculus dacttilaris', 'Finger muscle', true);
+export const testMuscleDeltoid = new Muscle(3, 'Deltoid', 'Shoulders', false);
+export const testMuscleRectusAbdominis = new Muscle(4, 'Rectus abdominis', 'Abs', true);
 export const testMuscles = [
-    new Muscle(1, 'Biggus musculus', 'Big muscle', true),
-    new Muscle(2, 'Musculus dacttilaris', 'Finger muscle', true),
-    new Muscle(3, 'Deltoid', 'Shoulders', false),
-    new Muscle(4, 'Rectus abdominis', 'Abs', true),
+    testMuscleBiggus,
+    testMuscleDacttilaris,
+    testMuscleDeltoid,
+    testMuscleRectusAbdominis
 ];
 
+export const testEquipmentBarbell = new Equipment(1, 'Barbell');
+export const testEquipmentDumbbell = new Equipment(2, 'Dumbbell');
+export const testEquipmentKettlebell = new Equipment(10, "Kettlebell");
+export const testEquipmentRocks = new Equipment(42, "Rocks");
 export const testEquipment = [
-    new Equipment(1, 'Barbell'),
-    new Equipment(2, 'Dumbbell'),
-    new Equipment(10, "Kettlebell"),
-    new Equipment(42, "Rocks"),
+    testEquipmentBarbell,
+    testEquipmentDumbbell,
+    testEquipmentKettlebell,
+    testEquipmentRocks,
 ];
-
-export const testEquipmentBarbell = testEquipment[0];
-export const testEquipmentDumbbell = testEquipment[1];
-export const testEquipmentKettlebell = testEquipment[2];
-export const testEquipmentRocks = testEquipment[3];
 
 export const testExerciseSquats = new ExerciseBase(
     345,
     "c788d643-150a-4ac7-97ef-84643c6419bf",
     testCategoryLegs,
     [testEquipmentBarbell, testEquipmentRocks],
-    [testMuscles[0], testMuscles[3]],
+    [testMuscleBiggus, testMuscleRectusAbdominis],
     [],
     [],
     null,
@@ -74,7 +75,7 @@ export const testExerciseBenchPress = new ExerciseBase(
     "abcdef-150a-4ac7-97ef-84643c6419bf",
     testCategoryLegs,
     [testEquipmentBarbell, testEquipmentRocks],
-    [testMuscles[1], testMuscles[2]],
+    [testMuscleDacttilaris, testMuscleDeltoid],
     [],
     [],
     null,
@@ -92,7 +93,7 @@ export const testExerciseCurls = new ExerciseBase(
     "abcdef-150a-4ac7-97ef-84643c6419bf",
     testCategoryArms,
     [testEquipmentDumbbell],
-    [testMuscles[0], testMuscles[1]],
+    [testMuscleBiggus, testMuscleDacttilaris],
     [],
     [],
     null,
@@ -103,7 +104,6 @@ export const testExerciseCurls = new ExerciseBase(
             'curls! yeah!',
             2
         ),
-
     ]
 );
 export const testExerciseCrunches = new ExerciseBase(
@@ -111,7 +111,7 @@ export const testExerciseCrunches = new ExerciseBase(
     "abcdef-150a-4ac7-97ef-84643c6419bf",
     testCategoryChest,
     [testEquipmentRocks],
-    [testMuscles[2]],
+    [testMuscleDeltoid],
     [],
     [],
     1,
@@ -122,7 +122,6 @@ export const testExerciseCrunches = new ExerciseBase(
             'Do some crunches',
             2
         ),
-
     ]
 );
 export const testExerciseSkullCrusher = new ExerciseBase(
@@ -130,7 +129,7 @@ export const testExerciseSkullCrusher = new ExerciseBase(
     "abcdef-150a-4ac7-97ef-84643c6419bf",
     testCategoryArms,
     [testEquipmentBarbell],
-    [testMuscles[3]],
+    [testMuscleRectusAbdominis],
     [],
     [],
     2,
@@ -141,7 +140,6 @@ export const testExerciseSkullCrusher = new ExerciseBase(
             'get some sick triceps pump',
             2
         ),
-
     ]
 );
 
