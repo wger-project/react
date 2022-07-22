@@ -83,7 +83,7 @@ describe("Exercise service API tests", () => {
 
         // Arrange
         // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve(responseApiExerciseBaseInfo.results[0]));
+        axios.get.mockImplementation(() => Promise.resolve({ data: responseApiExerciseBaseInfo.results[0] }));
 
         // Act
         const result = await getExerciseBase(345);

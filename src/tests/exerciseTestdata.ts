@@ -17,6 +17,10 @@ export const testLanguages = [
     new Language(3, 'fr', 'French')
 ];
 
+export const testLanguageEnglish = testLanguages[1];
+export const testLanguageGerman = testLanguages[0];
+export const testLanguageFrench = testLanguages[2];
+
 export const testMuscles = [
     new Muscle(1, 'Biggus musculus', 'Big muscle', true),
     new Muscle(2, 'Musculus dacttilaris', 'Finger muscle', true),
