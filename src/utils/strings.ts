@@ -15,5 +15,5 @@ export function slugify(name: string): string {
 
 // Returns the key used for the translation of the given exercise data
 export function getTranslationKey(name: string): string {
-    return `exercises.${slugify(name)}`;
+    return `server.${slugify(name)}`;
 }

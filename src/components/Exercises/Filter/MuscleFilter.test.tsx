@@ -8,8 +8,8 @@ describe("Test the CategoryFilter component", () => {
 
         // Arrange
         const data = [
-            new Muscle(2, "Anterior deltoid", true),
-            new Muscle(1, "Biceps brachii", false),
+            new Muscle(2, "Anterior deltoid", "Shoulders", true),
+            new Muscle(1, "Biceps brachii", "Biceps", false),
         ];
 
         // Act

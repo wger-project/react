@@ -5,10 +5,9 @@ import { Carousel, CarouselItem } from "components/Carousel";
 import { SideGallery } from "./SideGallery";
 import { Footer } from "components";
 import { useNavigate, useParams } from "react-router-dom";
-import { getExerciseBase, getExerciseBasesForVariation, } from "services";
+import { getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName, } from "services";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName } from "services/language";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 import { Language } from "components/Exercises/models/language";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
@@ -20,13 +19,11 @@ import { useLanguageQuery } from "components/Exercises/queries";
 import { Typography } from "@mui/material";
 
 export const ExerciseDetails = () => {
-    const [currentUserLanguageState, setCurrentUserLanguageState] =
-        useState<Language>();
-    const [currentTranslation, setCurrentTranslation] =
-        useState<ExerciseTranslation>();
+    const [currentLanguage, setCurrentLanguage] = useState<Language>();
+    const [currentTranslation, setCurrentTranslation] = useState<ExerciseTranslation>();
 
-    const params = useParams();
-    const exerciseID = params.exerciseID ? parseInt(params.exerciseID) : 0;
+    const params = useParams<{ baseID: string }>();
+    const exerciseBaseID = params.baseID ? parseInt(params.baseID) : 0;
 
     // used to detect language from browser
     const [t, i18n] = useTranslation();
@@ -36,8 +33,8 @@ export const ExerciseDetails = () => {
 
     const languageQuery = useLanguageQuery();
     const exerciseQuery = useQuery(
-        [QUERY_EXERCISE_DETAIL, exerciseID],
-        async () => await getExerciseBase(exerciseID),
+        [QUERY_EXERCISE_DETAIL, exerciseBaseID],
+        async () => await getExerciseBase(exerciseBaseID),
         {
             enabled: languageQuery.isSuccess,
             onSuccess: (data: ExerciseBase) => {
@@ -47,11 +44,10 @@ export const ExerciseDetails = () => {
                 );
                 // get exercise translation from received exercise and set it
                 if (currentUserLanguage) {
-                    const newTranslatedExercise =
-                        data?.getTranslation(currentUserLanguage);
+                    const newTranslatedExercise = data?.getTranslation(currentUserLanguage);
                     setCurrentTranslation(newTranslatedExercise);
                 }
-                setCurrentUserLanguageState(currentUserLanguage);
+                setCurrentLanguage(currentUserLanguage);
             },
         }
     );
@@ -82,7 +78,7 @@ export const ExerciseDetails = () => {
             lang.nameShort,
             languageQuery.data!
         );
-        setCurrentUserLanguageState(language);
+        setCurrentLanguage(language);
         const newTranslatedExercise = exerciseQuery.data?.getTranslation(lang);
         setCurrentTranslation(newTranslatedExercise);
     };
@@ -93,7 +89,7 @@ export const ExerciseDetails = () => {
                 <OverviewCard
                     key={variantExercise.id}
                     exerciseBase={variantExercise}
-                    language={currentUserLanguageState}
+                    language={currentLanguage}
                 />
             );
         })
@@ -106,7 +102,7 @@ export const ExerciseDetails = () => {
                     exercise={exerciseQuery.data}
                     languages={languageQuery.data}
                     changeLanguage={changeUserLanguage}
-                    language={currentUserLanguageState}
+                    language={currentLanguage}
                     currentTranslation={currentTranslation}
                 />
             ) : null}
@@ -115,7 +111,7 @@ export const ExerciseDetails = () => {
                 {aliases && aliases.length > 0 ? (
                     <div className={styles.detail_alt_name}>
                         <p>
-                            {t("exercises.also-known-as")} &nbsp;
+                            {t("exercises.alsoKnownAs")} &nbsp;
                             {aliases?.map(e => e.alias).join(", ")}
                         </p>
                     </div>) : null}

@@ -21,7 +21,7 @@ export interface HeadProp {
 export const Head = ({ exercise, languages, changeLanguage, language, currentTranslation }: HeadProp) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openLanguageMenu = Boolean(anchorEl);
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     // console.log(exercise);
     // console.log(currentTranslation);

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, CircularProgress, Container, Grid, Pagination, Paper, Stack, Typography, } from "@mui/material";
+import { Box, CircularProgress, Container, Grid, Pagination, Paper, Stack, Typography, } from "@mui/material";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,7 @@ import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
 import { Category } from "components/Exercises/models/category";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { ExerciseSearchResponse } from "services/responseType";
+import { ExerciseSearchResponse } from "services";
 import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
 import { useBasesQuery, useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
 
@@ -26,14 +26,16 @@ const ContributeExerciseBanner = () => {
             }}
         >
             <Typography gutterBottom variant="h4" component="div">
-                {t("exercises.missing-exercise")}
+                {t("exercises.missingExercise")}
             </Typography>
 
             <Typography gutterBottom variant="body1" component="div">
-                {t("exercises.missing-exercise-description")}
+                {t("exercises.missingExerciseDescription")}
             </Typography>
 
-            <Button variant="contained">{t("exercises.contribute-exercise")}</Button>
+            <a href="/exercises/add">
+                {t("exercises.contributeExercise")}
+            </a>
         </Box>
     );
 };
@@ -52,11 +54,11 @@ const NoResultsBanner = () => {
             }}
         >
             <Typography gutterBottom variant="h4" component="div">
-                {t("no-results")}
+                {t("noResults")}
             </Typography>
 
             <Typography gutterBottom variant="body1" component="div">
-                {t("no-results-description")}
+                {t("noResultsDescription")}
             </Typography>
         </Box>
     );
@@ -143,7 +145,7 @@ export const ExerciseOverview = () => {
                 <Box sx={{ width: 500 }} m={1}>
                     <NameAutocompleter callback={exerciseAdded} />
                 </Box>
-                {/*<Button variant="contained" startIcon={<AddIcon />}> {t('contribute-exercise')}</Button>*/}
+                {/*<Button variant="contained" startIcon={<AddIcon />}> {t('contributeExercise')}</Button>*/}
             </Stack>
 
             <Grid container spacing={2}>
@@ -198,8 +200,7 @@ export const ExerciseOverview = () => {
                         </>
                     )}
 
-                    {/* We don't do exercise crowdsourcing in this step */}
-                    {/* <ContributeExerciseBanner /> */}
+                    <ContributeExerciseBanner />
                 </Grid>
             </Grid>
         </Container>

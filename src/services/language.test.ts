@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getLanguageByShortName, getLanguages } from "services/language";
+import { getLanguageByShortName, getLanguages } from "services";
 import { Language } from "components/Exercises/models/language";
 
 jest.mock("axios");

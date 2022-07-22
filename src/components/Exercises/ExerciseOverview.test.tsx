@@ -1,163 +1,42 @@
 import React from 'react';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { getCategories, getEquipment, getExerciseBases, getLanguages, getMuscles } from "services";
-import { Category } from "components/Exercises/models/category";
 import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
-import { Muscle } from "components/Exercises/models/muscle";
-import { Equipment } from "components/Exercises/models/equipment";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { BrowserRouter } from 'react-router-dom';
-import { Language } from "components/Exercises/models/language";
 import { QueryClient, QueryClientProvider } from "react-query";
+import {
+    testCategories,
+    testEquipment,
+    testExerciseBenchPress,
+    testExerciseCrunches,
+    testExerciseCurls,
+    testExerciseSkullCrusher,
+    testExerciseSquats,
+    testLanguages,
+    testMuscles
+} from "tests/exerciseTestdata";
 
 jest.mock("services");
 
 describe("Test the ExerciseOverview component", () => {
 
-    const categories = [
-        new Category(1, 'Arms'),
-        new Category(2, 'Legs'),
-        new Category(3, 'Chest')
-    ];
-    const languages = [
-        new Language(1, 'de', 'Deutsch'),
-        new Language(2, 'en', 'English')
-    ];
-    const muscles = [
-        new Muscle(1, 'Big muscle', true),
-        new Muscle(2, 'Finger muscle', true),
-        new Muscle(3, 'Deltoid', false),
-        new Muscle(4, 'Abs', true),
-    ];
-    const equipment = [
-        new Equipment(1, 'Barbell'),
-        new Equipment(2, 'Dumbbell'),
-        new Equipment(10, "Kettlebell"),
-        new Equipment(42, "Rocks"),
-    ];
-
-    const exerciseBase = new ExerciseBase(
-        345,
-        "c788d643-150a-4ac7-97ef-84643c6419bf",
-        categories[1],
-        [equipment[0], equipment[3]],
-        [muscles[0], muscles[3]],
-        [],
-        [],
-        null,
-        [],
-        [
-            new ExerciseTranslation(111,
-                '583281c7-2362-48e7-95d5-8fd6c455e0fb',
-                'Squats',
-                'Do a squat',
-                2
-            ),
-            new ExerciseTranslation(9,
-                'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
-                'Kniebeuge',
-                'Kniebeuge machen',
-                1
-            )
-        ]
-    );
-    const exerciseBase2 = new ExerciseBase(
-        2,
-        "abcdef-150a-4ac7-97ef-84643c6419bf",
-        categories[1],
-        [equipment[0], equipment[3]],
-        [muscles[1], muscles[2]],
-        [],
-        [],
-        null,
-        [],
-        [
-            new ExerciseTranslation(111,
-                '583281c7-2362-48e7-95d5-8fd6c455e0fb',
-                'Benchpress',
-                'Do a benchpress',
-                2
-            ),
-        ]
-    );
-    const exerciseBase3 = new ExerciseBase(
-        3,
-        "abcdef-150a-4ac7-97ef-84643c6419bf",
-        categories[0],
-        [equipment[1]],
-        [muscles[0], muscles[1]],
-        [],
-        [],
-        null,
-        [],
-        [
-            new ExerciseTranslation(111,
-                '583281c7-2362-48e7-95d5-8fd6c455e0fb',
-                'Curls',
-                'curls! yeah!',
-                2
-            ),
-
-        ]
-    );
-    const exerciseBase4 = new ExerciseBase(
-        4,
-        "abcdef-150a-4ac7-97ef-84643c6419bf",
-        categories[2],
-        [equipment[3]],
-        [muscles[2]],
-        [],
-        [],
-        1,
-        [],
-        [
-            new ExerciseTranslation(111,
-                '583281c7-2362-48e7-95d5-8fd6c455e0fb',
-                'Crunches',
-                'Do some crunches',
-                2
-            ),
-
-        ]
-    );
-    const exerciseBase5 = new ExerciseBase(
-        5,
-        "abcdef-150a-4ac7-97ef-84643c6419bf",
-        categories[0],
-        [equipment[0]],
-        [muscles[3]],
-        [],
-        [],
-        2,
-        [],
-        [
-            new ExerciseTranslation(111,
-                '583281c7-2362-48e7-95d5-8fd6c455e0fb',
-                'Skull crusher',
-                'get some sick triceps pump',
-                2
-            ),
-
-        ]
-    );
 
     beforeEach(() => {
         // @ts-ignore
-        getLanguages.mockImplementation(() => Promise.resolve(languages));
+        getLanguages.mockImplementation(() => Promise.resolve(testLanguages));
         // @ts-ignore
-        getCategories.mockImplementation(() => Promise.resolve(categories));
+        getCategories.mockImplementation(() => Promise.resolve(testCategories));
         // @ts-ignore
-        getMuscles.mockImplementation(() => Promise.resolve(muscles));
+        getMuscles.mockImplementation(() => Promise.resolve(testMuscles));
         // @ts-ignore
-        getEquipment.mockImplementation(() => Promise.resolve(equipment));
+        getEquipment.mockImplementation(() => Promise.resolve(testEquipment));
         // @ts-ignore
         getExerciseBases.mockImplementation(() => Promise.resolve([
-            exerciseBase,
-            exerciseBase2,
-            exerciseBase3,
-            exerciseBase4,
-            exerciseBase5
+            testExerciseSquats,
+            testExerciseBenchPress,
+            testExerciseCurls,
+            testExerciseCrunches,
+            testExerciseSkullCrusher
         ]));
     });
 
@@ -204,7 +83,7 @@ describe("Test the ExerciseOverview component", () => {
         );
         await act(() => Promise.resolve());
         const { getByText: categoriesComponent } = within(screen.getByTestId('categories'));
-        fireEvent.click(categoriesComponent("exercises.arms"));
+        fireEvent.click(categoriesComponent("server.arms"));
 
         // Assert
         expect(screen.queryByText('Benchpress')).not.toBeInTheDocument();
@@ -228,8 +107,8 @@ describe("Test the ExerciseOverview component", () => {
         );
         await act(() => Promise.resolve());
         const { getByText: categoriesComponent } = within(screen.getByTestId('categories'));
-        fireEvent.click(categoriesComponent("exercises.arms"));
-        fireEvent.click(categoriesComponent("exercises.legs"));
+        fireEvent.click(categoriesComponent("server.arms"));
+        fireEvent.click(categoriesComponent("server.legs"));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -253,7 +132,7 @@ describe("Test the ExerciseOverview component", () => {
         );
         await act(() => Promise.resolve());
         const { getByText: equipmentComponent } = within(screen.getByTestId('equipment'));
-        fireEvent.click(equipmentComponent("exercises.barbell"));
+        fireEvent.click(equipmentComponent("server.barbell"));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -277,7 +156,7 @@ describe("Test the ExerciseOverview component", () => {
         );
         await act(() => Promise.resolve());
         const { getByText: musclesComponent } = within(screen.getByTestId('muscles'));
-        fireEvent.click(musclesComponent("Big muscle"));
+        fireEvent.click(musclesComponent("Biggus musculus"));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -302,10 +181,10 @@ describe("Test the ExerciseOverview component", () => {
         await act(() => Promise.resolve());
 
         const { getByText: categoryComponent } = within(screen.getByTestId('categories'));
-        fireEvent.click(categoryComponent('exercises.legs'));
+        fireEvent.click(categoryComponent('server.legs'));
 
         const { getByText: equipmentComponent } = within(screen.getByTestId('equipment'));
-        fireEvent.click(equipmentComponent('exercises.rocks'));
+        fireEvent.click(equipmentComponent('server.rocks'));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();

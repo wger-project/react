@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { WeightEntry } from "components/BodyWeight/model";
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import * as weightService from "services/weight";
+import { createWeight, updateWeight } from "services";
 
 jest.mock("services/weight");
 
@@ -44,7 +44,7 @@ describe("Test WeightForm component", () => {
         expect(submitButton).toBeInTheDocument();
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(weightService.updateWeight).toHaveBeenCalledTimes(1);
+            expect(updateWeight).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -66,7 +66,7 @@ describe("Test WeightForm component", () => {
         expect(submitButton).toBeInTheDocument();
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(weightService.createWeight).toHaveBeenCalledTimes(1);
+            expect(createWeight).toHaveBeenCalledTimes(1);
         });
     });
 
