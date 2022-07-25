@@ -13,7 +13,6 @@ export class Muscle {
     // Return the name and english name of the muscle, if available.
     public getName(t: Function): string {
         if (this.nameEn) {
-            // TODO: translate the English name
             return `${this.name} (${t(getTranslationKey(this.nameEn))})`;
         } else {
             return this.name;

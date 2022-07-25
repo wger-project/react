@@ -5,6 +5,7 @@ import {
     Button,
     Chip,
     FormControl,
+    FormHelperText,
     InputLabel,
     MenuItem,
     Select,
@@ -32,7 +33,6 @@ export const Step1Basics = ({
     const [alternativeNamesEn, setAlternativeNamesEn] = React.useState<string[]>(
         newExerciseData.alternativeNamesEn
     );
-
     const [muscles, setMuscles] = React.useState<Muscle[]>([]);
     const [secondaryMuscles, setSecondaryMuscles] = React.useState<Muscle[]>([]);
     const [equipment, setEquipment] = React.useState<Equipment[]>([]);
@@ -169,7 +169,14 @@ export const Step1Basics = ({
                                                 {t(getTranslationKey(category.name))}
                                             </MenuItem>
                                         ))}
+
                                     </Select>
+                                    {Boolean(
+                                            formik.errors.category && formik.touched.category
+                                        ) &&
+                                        <FormHelperText>{t("forms.fieldRequired")}</FormHelperText>
+                                    }
+
                                 </FormControl>
                             )}
                             {musclesQuery.isLoading ? (

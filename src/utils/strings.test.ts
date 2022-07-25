@@ -14,6 +14,10 @@ describe("slugify utilities", () => {
         expect(slugify('TeST123')).toEqual('test123');
     });
 
+    test('parenthesis', () => {
+        expect(slugify('Test(123)')).toEqual('test_123_');
+    });
+
     test('special chars are kept', () => {
         expect(slugify('abc*/&%$§')).toEqual('abc*/&%$§');
     });

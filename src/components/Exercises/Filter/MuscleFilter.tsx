@@ -13,6 +13,7 @@ import {
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useTranslation } from "react-i18next";
 import { Muscle } from "components/Exercises/models/muscle";
+import { getTranslationKey } from "utils/strings";
 
 type MuscleFilterProps = {
     muscles: Muscle[];
@@ -68,7 +69,10 @@ export const MuscleFilter = ({ muscles, selectedMuscles, setSelectedMuscles }: M
                                             inputProps={{ 'aria-labelledby': labelId }}
                                         />
                                     </ListItemIcon>
-                                    <ListItemText id={labelId} primary={m.name} />
+                                    <ListItemText
+                                        id={labelId}
+                                        primary={m.name}
+                                        secondary={m.nameEn !== '' ? t(getTranslationKey(m.nameEn)) : ''} />
                                 </ListItemButton>
                             </ListItem>
                         );
