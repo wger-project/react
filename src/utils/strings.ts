@@ -13,7 +13,8 @@ export function slugify(name: string): string {
     return name.toLowerCase()
         .replace(/\s/g, '_')
         .replace('(', '_')
-        .replace(')', '_');
+        .replace(')', '_')
+        .replace('-', '_');
 }
 
 // Returns the key used for the translation of the given exercise data

@@ -18,6 +18,10 @@ describe("slugify utilities", () => {
         expect(slugify('Test(123)')).toEqual('test_123_');
     });
 
+    test('dash', () => {
+        expect(slugify('Test-123')).toEqual('test_123');
+    });
+
     test('special chars are kept', () => {
         expect(slugify('abc*/&%$§')).toEqual('abc*/&%$§');
     });
