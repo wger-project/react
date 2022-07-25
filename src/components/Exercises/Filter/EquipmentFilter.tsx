@@ -34,7 +34,7 @@ export const EquipmentFilter = ({ equipment, selectedEquipment, setSelectedEquip
                 <Typography gutterBottom variant="h6" m={2}>
                     {t('exercises.equipment')}
                 </Typography>
-                <List>
+                <List sx={{ maxHeight: "500px", overflowY: "auto" }}>
                     {equipment.map((equipment) => {
                         const labelId = `checkbox-list-label-${equipment.id}`;
 

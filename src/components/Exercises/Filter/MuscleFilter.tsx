@@ -44,7 +44,7 @@ export const MuscleFilter = ({ muscles, selectedMuscles, setSelectedMuscles }: M
                 <Typography gutterBottom variant="h6" m={2}>
                     {t('exercises.muscles')}
                 </Typography>
-                <List>
+                <List sx={{ maxHeight: "500px", overflowY: "auto" }}>
                     {muscles.map((m) => {
                         const labelId = `checkbox-list-label-${m.id}`;
 
