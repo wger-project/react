@@ -51,6 +51,14 @@ export class ExerciseBase {
         return translation!;
     }
 
+
+    /**
+     * Returns a list with the available languages for this exercise
+     */
+    get availableLanguages(): number[] {
+        return this.translations.map(t => t.language);
+    }
+
     get mainImage(): ExerciseImage | undefined {
         return this.images.find(i => i.isMain);
     }

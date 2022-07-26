@@ -19,7 +19,7 @@ import { useLanguageQuery } from "components/Exercises/queries";
 import { Typography } from "@mui/material";
 
 export const ExerciseDetails = () => {
-    const [currentLanguage, setCurrentLanguage] = useState<Language>();
+    const [language, setLanguage] = useState<Language>();
     const [currentTranslation, setCurrentTranslation] = useState<ExerciseTranslation>();
 
     const params = useParams<{ baseID: string }>();
@@ -37,17 +37,17 @@ export const ExerciseDetails = () => {
         async () => await getExerciseBase(exerciseBaseID),
         {
             enabled: languageQuery.isSuccess,
-            onSuccess: (data: ExerciseBase) => {
+            onSuccess: (exerciseBase: ExerciseBase) => {
                 const currentUserLanguage = getLanguageByShortName(
                     i18n.language,
                     languageQuery.data!
                 );
                 // get exercise translation from received exercise and set it
                 if (currentUserLanguage) {
-                    const newTranslatedExercise = data?.getTranslation(currentUserLanguage);
-                    setCurrentTranslation(newTranslatedExercise);
+                    const translation = exerciseBase?.getTranslation(currentUserLanguage);
+                    setCurrentTranslation(translation);
                 }
-                setCurrentLanguage(currentUserLanguage);
+                setLanguage(currentUserLanguage);
             },
         }
     );
@@ -78,7 +78,7 @@ export const ExerciseDetails = () => {
             lang.nameShort,
             languageQuery.data!
         );
-        setCurrentLanguage(language);
+        setLanguage(language);
         const newTranslatedExercise = exerciseQuery.data?.getTranslation(lang);
         setCurrentTranslation(newTranslatedExercise);
     };
@@ -89,7 +89,7 @@ export const ExerciseDetails = () => {
                 <OverviewCard
                     key={variantExercise.id}
                     exerciseBase={variantExercise}
-                    language={currentLanguage}
+                    language={language}
                 />
             );
         })
@@ -101,8 +101,9 @@ export const ExerciseDetails = () => {
                 <Head
                     exercise={exerciseQuery.data}
                     languages={languageQuery.data}
+                    availableLanguages={exerciseQuery.data!.availableLanguages}
                     changeLanguage={changeUserLanguage}
-                    language={currentLanguage}
+                    language={language}
                     currentTranslation={currentTranslation}
                 />
             ) : null}
@@ -202,8 +203,7 @@ export const ExerciseDetails = () => {
 
                 <article>
                     <div className={styles.variants}>
-                        <h1>Variants</h1>
-
+                        <h1>{t('exercises.variations')}</h1>
                         <div className={styles.cards}>{variantExercises}</div>
                     </div>
                 </article>

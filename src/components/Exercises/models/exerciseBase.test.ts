@@ -1,4 +1,9 @@
-import { testExerciseSquats, testLanguageEnglish, testLanguageGerman } from "tests/exerciseTestdata";
+import {
+    testExerciseBenchPress,
+    testExerciseSquats,
+    testLanguageEnglish,
+    testLanguageGerman
+} from "tests/exerciseTestdata";
 import { Language } from "components/Exercises/models/language";
 import { ExerciseBaseAdapter } from "components/Exercises/models/exerciseBase";
 
@@ -47,7 +52,14 @@ describe("Exercise base model tests", () => {
             muscles_secondary: [],
             images: [],
         });
+    });
 
+
+    test('availableLanguages', () => {
+
+        // Assert
+        expect(testExerciseSquats.availableLanguages).toEqual([2, 1]);
+        expect(testExerciseBenchPress.availableLanguages).toEqual([2]);
     });
 });
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Chip, Divider, Menu, MenuItem, Stack } from '@mui/material';
+import { Button, Chip, Divider, ListItemIcon, ListItemText, Menu, MenuItem, Stack } from '@mui/material';
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
 import { Language } from 'components/Exercises/models/language';
@@ -9,16 +9,25 @@ import { getTranslationKey } from "utils/strings";
 import { useTranslation } from "react-i18next";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import RedoIcon from '@mui/icons-material/Redo';
+import AddIcon from '@mui/icons-material/Add';
 
 export interface HeadProp {
     exercise: ExerciseBase
     languages: Language[]
+    availableLanguages: number[]
     changeLanguage: (lang: Language) => void,
     language: Language | undefined // language displayed in the head since it's not found in the translations
     currentTranslation: ExerciseTranslation | undefined
 }
 
-export const Head = ({ exercise, languages, changeLanguage, language, currentTranslation }: HeadProp) => {
+export const Head = ({
+                         exercise,
+                         languages,
+                         availableLanguages,
+                         changeLanguage,
+                         language,
+                         currentTranslation
+                     }: HeadProp) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openLanguageMenu = Boolean(anchorEl);
     const [t] = useTranslation();
@@ -46,8 +55,13 @@ export const Head = ({ exercise, languages, changeLanguage, language, currentTra
         <Chip label={t(getTranslationKey(category))} />
     </Stack>;
     const languagesList = languages.map(l => {
-        return <MenuItem className={styles.languageMenuItem} key={l.nameShort}
-                         onClick={() => handleLanguageClick(l)}>{l.nameLong}</MenuItem>;
+        return <MenuItem
+            className={styles.languageMenuItem}
+            key={l.nameShort}
+            onClick={() => handleLanguageClick(l)}>
+            <ListItemText>{l.nameLong}</ListItemText>
+            <ListItemIcon>{availableLanguages.includes(l.id) ? <RedoIcon /> : <AddIcon />}</ListItemIcon>
+        </MenuItem>;
     });
 
 
