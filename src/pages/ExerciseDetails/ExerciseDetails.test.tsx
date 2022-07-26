@@ -9,7 +9,7 @@ import { Equipment } from 'components/Exercises/models/equipment';
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
 import { getExerciseBase, getExerciseBasesForVariation, getLanguages } from "services";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // jest changes all exports in this module to jest.fn() so that when we call
 //  one of this fxns like getExerciseBase, it calls the jest.fn() that was assigned to it

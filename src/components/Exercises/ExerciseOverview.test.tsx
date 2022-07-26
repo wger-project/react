@@ -9,7 +9,7 @@ import { ExerciseTranslation } from "components/Exercises/models/exerciseTransla
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { BrowserRouter } from 'react-router-dom';
 import { Language } from "components/Exercises/models/language";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 jest.mock("services");
 
