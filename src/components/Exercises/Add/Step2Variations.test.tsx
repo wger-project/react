@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { testExerciseBenchPress, testExerciseCurls } from "tests/exerciseTestdata";
 import { useBasesQuery } from "components/Exercises/queries";
 import { Step2Variations } from "components/Exercises/Add/Step2Variations";

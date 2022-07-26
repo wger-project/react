@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Step1Basics } from "components/Exercises/Add/Step1Basics";
 import { testCategories, testEquipment, testMuscles } from "tests/exerciseTestdata";
 import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";

@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { Step4Translations } from "components/Exercises/Add/Step4Translations";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { testLanguages } from "tests/exerciseTestdata";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 jest.mock("components/Exercises/queries");
 const mockedUseLanguageQuery = useLanguageQuery as jest.Mock;
