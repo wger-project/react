@@ -3,7 +3,7 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { getCategories, getEquipment, getExerciseBases, getLanguages, getMuscles } from "services";
 import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
 import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
     testCategories,
     testEquipment,

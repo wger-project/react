@@ -13,7 +13,7 @@ import { Language } from "components/Exercises/models/language";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { Note } from "components/Exercises/models/note";
 import { Muscle } from "components/Exercises/models/muscle";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL, } from "utils/consts";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { Typography } from "@mui/material";
