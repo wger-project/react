@@ -83,3 +83,5 @@ export function makeHeader(token?: string): AxiosRequestHeaders {
 
     return out;
 }
+
+export const publicUrl = process.env.NODE_ENV === "production" ? "/static/react" : process.env.PUBLIC_URL;

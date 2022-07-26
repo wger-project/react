@@ -21,18 +21,6 @@
     margin-top: 5px; }
   .root .body .hero section article li {
     margin: 1rem 0; }
-  @media screen and (min-width: 700px) {
-    .root .body .hero section article .details {
-      display: flex;
-      gap: 2rem;
-      margin: 1rem 0; } }
-  .root .body .hero section article .details img {
-    width: 100%;
-    border-radius: 5px; }
-    @media screen and (min-width: 700px) {
-      .root .body .hero section article .details img {
-        width: 400px;
-        height: 400px; } }
   .root .body .hero ol {
     padding: 0 1rem; }
   @media screen and (min-width: 700px) {

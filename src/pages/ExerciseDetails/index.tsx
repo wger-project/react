@@ -16,7 +16,8 @@ import { Muscle } from "components/Exercises/models/muscle";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL, } from "utils/consts";
 import { useLanguageQuery } from "components/Exercises/queries";
-import { Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
+import { MuscleOverview } from "components/Muscles/MuscleOverview";
 
 export const ExerciseDetails = () => {
     const [language, setLanguage] = useState<Language>();
@@ -154,7 +155,6 @@ export const ExerciseDetails = () => {
                     </aside>
                     <section>
                         <article>
-
                             <div>
                                 <h1>{t("exercises.description")}</h1>
                                 <div dangerouslySetInnerHTML={{ __html: description }} />
@@ -169,14 +169,16 @@ export const ExerciseDetails = () => {
                             </div>
 
                             <h1>{t("exercises.muscles")}</h1>
-                            <div className={styles.details}>
-                                <div className={styles.details_image}>
-                                    <img
-                                        src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80"
-                                        alt="detail"
-                                    />
-                                </div>
-                                <div className={styles.details_details}>
+                            <Stack direction={"row"}>
+                                <MuscleOverview
+                                    primaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.muscles : []}
+                                    secondaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.musclesSecondary : []}
+                                    isFront={true} />
+                                <MuscleOverview
+                                    primaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.muscles : []}
+                                    secondaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.musclesSecondary : []}
+                                    isFront={false} />
+                                <div>
                                     <div className={styles.details_detail_card}>
                                         <h3>{t("exercises.primaryMuscles")}</h3>
                                         <ul>
@@ -194,7 +196,7 @@ export const ExerciseDetails = () => {
                                         </ul>
                                     </div>
                                 </div>
-                            </div>
+                            </Stack>
                         </article>
                     </section>
                 </section>
