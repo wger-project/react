@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, CircularProgress, Container, Grid, Pagination, Paper, Stack, Typography, } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Grid, Pagination, Paper, Stack, Typography, } from "@mui/material";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,8 @@ import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter"
 import { ExerciseSearchResponse } from "services";
 import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
 import { useBasesQuery, useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
+import AddIcon from '@mui/icons-material/Add';
+import { Link, useNavigate } from "react-router-dom";
 
 const ContributeExerciseBanner = () => {
     const [t] = useTranslation();
@@ -33,9 +35,9 @@ const ContributeExerciseBanner = () => {
                 {t("exercises.missingExerciseDescription")}
             </Typography>
 
-            <a href="/exercises/add">
+            <Link to="/exercises/add">
                 {t("exercises.contributeExercise")}
-            </a>
+            </Link>
         </Box>
     );
 };
@@ -78,10 +80,9 @@ export const ExerciseOverview = () => {
     const equipmentQuery = useEquipmentQuery();
 
     const [t] = useTranslation();
+    const navigate = useNavigate();
 
-    const [selectedEquipment, setSelectedEquipment] = React.useState<Equipment[]>(
-        []
-    );
+    const [selectedEquipment, setSelectedEquipment] = React.useState<Equipment[]>([]);
     const [selectedMuscles, setSelectedMuscles] = React.useState<Muscle[]>([]);
     const [selectedCategories, setSelectedCategories] = React.useState<Category[]>([]);
 
@@ -137,15 +138,19 @@ export const ExerciseOverview = () => {
 
     return (
         <Container maxWidth="lg">
-            <Stack direction={"row"}>
+            <Stack direction={"row"} alignItems="center">
                 <Typography gutterBottom variant="h3" component="div">
                     {t("exercises.exercises")}
                 </Typography>
                 <Box sx={{ width: "100%" }} />
-                <Box sx={{ width: 500 }} m={1}>
+                <Box sx={{ width: 750 }} m={1}>
                     <NameAutocompleter callback={exerciseAdded} />
                 </Box>
-                {/*<Button variant="contained" startIcon={<AddIcon />}> {t('contributeExercise')}</Button>*/}
+                <Box sx={{ width: 620 }}>
+                    <Button variant="contained" startIcon={<AddIcon />} onClick={() => navigate('/exercises/add')}>
+                        {t('exercises.contributeExercise')}
+                    </Button>
+                </Box>
             </Stack>
 
             <Grid container spacing={2}>
