@@ -3,11 +3,12 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import throttle from 'lodash/throttle';
 import { ExerciseSearchResponse, searchExerciseTranslations } from "services";
-import { Box, Divider, Grid, InputAdornment, Typography } from "@mui/material";
-import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import { Avatar, InputAdornment, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { truncateLongNames } from "utils/strings";
 import SearchIcon from '@mui/icons-material/Search';
+import { truncateLongNames } from "utils/strings";
+import PhotoIcon from '@mui/icons-material/Photo';
+import { SERVER_URL } from "utils/url";
 
 type NameAutocompleterProps = {
     callback: Function;
@@ -47,6 +48,8 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
         return () => {
         };
     }, [value, inputValue, fetchName]);
+
+    //<img src={SERVER_URL + option.data.image} alt="" width={48} />
 
     return (
         <Autocomplete
@@ -91,35 +94,16 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
             renderOption={(props, option) => {
                 return (
                     <li {...props}>
-                        <Grid container>
-                            <Grid item>
+                        <ListItem disablePadding>
+                            <ListItemIcon>
                                 {option.data.image ?
-                                    <Box
-                                        style={{
-                                            width: '60px',
-                                            height: '60px',
-                                            borderRadius: '50%',
-                                            overflow: 'hidden',
-                                            backgroundImage: `url(${option.data.image})`,
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
-                                        }}
-                                    />
-                                    :
-                                    <Box
-                                        component={InsertPhotoIcon}
-                                        sx={{ color: 'text.secondary', mr: 2 }}
-                                    />
-                                }
-                            </Grid>
-                            <Grid item xs>
-                                {truncateLongNames(option.value)}
-                                <Typography variant="body2" color="text.secondary">
-                                    {(option.data.category)}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                        <Divider />
+                                    <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />
+                                    : <PhotoIcon fontSize="large" />}
+                            </ListItemIcon>
+                            <ListItemText primary={truncateLongNames(option.value, 18)}
+                                          secondary={option.data.category} />
+                        </ListItem>
+
                     </li>
                 );
             }}
