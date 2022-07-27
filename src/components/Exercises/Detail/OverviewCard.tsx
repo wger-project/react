@@ -1,11 +1,12 @@
 import React from "react";
-import { Card, CardActionArea, CardContent, CardMedia, Chip, Typography, } from "@mui/material";
+import { Box, Card, CardActionArea, CardContent, CardMedia, Chip, Typography, } from "@mui/material";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getTranslationKey } from "utils/strings";
+import PhotoIcon from '@mui/icons-material/Photo';
 
 type OverviewCardProps = {
     exerciseBase: ExerciseBase;
@@ -27,11 +28,19 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
             onClick={() => navigate(`../${exerciseBase.id}`)}
         >
             <CardActionArea>
-                <CardMedia
-                    component="img"
-                    image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-                    alt="green iguana"
-                />
+                {exerciseBase.mainImage ?
+                    <CardMedia
+                        component="img"
+                        image={exerciseBase.mainImage.url}
+                        alt=""
+                    /> : <CardMedia>
+                        <Box sx={{ width: 300, height: 200, backgroundColor: "lightgray" }}
+                             display="flex"
+                             alignItems="center"
+                             justifyContent="center">
+                            <PhotoIcon sx={{ fontSize: 80, color: "gray" }} />
+                        </Box>
+                    </CardMedia>}
                 <CardContent>
                     <Typography gutterBottom variant="h6" component="div">
                         {exercise.nameLong}
