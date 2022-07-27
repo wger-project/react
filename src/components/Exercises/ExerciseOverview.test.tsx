@@ -18,7 +18,7 @@ import {
 
 jest.mock("services");
 
-describe("Test the ExerciseOverview component", () => {
+describe.skip("Test the ExerciseOverview component", () => {
 
 
     beforeEach(() => {
