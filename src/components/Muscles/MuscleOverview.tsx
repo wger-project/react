@@ -1,6 +1,6 @@
 import React from "react";
 import { Muscle } from "components/Exercises/models/muscle";
-import { publicUrl } from "utils/url";
+import { PUBLIC_URL } from "utils/url";
 
 type OverviewCardProps = {
     primaryMuscles: Muscle[];
@@ -22,7 +22,7 @@ export const MuscleOverview = ({ primaryMuscles, secondaryMuscles, isFront }: Ov
             .map(m => `/muscles/secondary/muscle-${m.id}.svg`)
     );
     backgroundStyle.push(isFront ? "/muscles/muscular_system_front.svg" : "/muscles/muscular_system_back.svg");
-    const backgroundUrl = backgroundStyle.map(url => `url(${publicUrl}${url})`).join(", ");
+    const backgroundUrl = backgroundStyle.map(url => `url(${PUBLIC_URL}${url})`).join(", ");
 
     return (
         <div
