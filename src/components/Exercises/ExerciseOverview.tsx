@@ -133,7 +133,7 @@ export const ExerciseOverview = () => {
     );
 
     const exerciseAdded = (exercise: ExerciseSearchResponse) => {
-        console.log(`Added exercise ${exercise.value}`);
+        navigate(`/exercises/${exercise.data.base_id}`);
     };
 
     return (
