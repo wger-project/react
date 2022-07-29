@@ -3,10 +3,8 @@ import styles from "./exerciseDetails.module.css";
 import { Head } from "./Head";
 import { Carousel, CarouselItem } from "components/Carousel";
 import { SideGallery } from "./SideGallery";
-import { Footer } from "components";
 import { useNavigate, useParams } from "react-router-dom";
 import { getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName, } from "services";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { useTranslation } from "react-i18next";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 import { Language } from "components/Exercises/models/language";
@@ -18,6 +16,7 @@ import { QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL, } from "utils/c
 import { useLanguageQuery } from "components/Exercises/queries";
 import { Stack, Typography } from "@mui/material";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
+import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 
 export const ExerciseDetails = () => {
     const [language, setLanguage] = useState<Language>();
@@ -35,7 +34,7 @@ export const ExerciseDetails = () => {
     const languageQuery = useLanguageQuery();
     const exerciseQuery = useQuery(
         [QUERY_EXERCISE_DETAIL, exerciseBaseID],
-        async () => await getExerciseBase(exerciseBaseID),
+        () => getExerciseBase(exerciseBaseID),
         {
             enabled: languageQuery.isSuccess,
             onSuccess: (exerciseBase: ExerciseBase) => {
@@ -45,13 +44,14 @@ export const ExerciseDetails = () => {
                 );
                 // get exercise translation from received exercise and set it
                 if (currentUserLanguage) {
-                    const translation = exerciseBase?.getTranslation(currentUserLanguage);
+                    const translation = exerciseBase.getTranslation(currentUserLanguage);
                     setCurrentTranslation(translation);
                 }
                 setLanguage(currentUserLanguage);
             },
         }
     );
+
     const variationsQuery = useQuery(
         [QUERY_EXERCISE_BASES_VARIATIONS, exerciseQuery.data?.variationId],
         () => getExerciseBasesForVariation(exerciseQuery.data?.variationId),
@@ -183,7 +183,7 @@ export const ExerciseDetails = () => {
                                         <h3>{t("exercises.primaryMuscles")}</h3>
                                         <ul>
                                             {exerciseQuery.data?.muscles.map((m: Muscle) => (
-                                                <li key={m.id}>{m.name}</li>
+                                                <li key={m.id}>{m.getName(t)}</li>
                                             ))}
                                         </ul>
                                     </div>
@@ -191,7 +191,7 @@ export const ExerciseDetails = () => {
                                         <h3>{t("exercises.secondaryMuscles")}</h3>
                                         <ul>
                                             {exerciseQuery.data?.musclesSecondary.map((m: Muscle) => (
-                                                <li key={m.id}>{m.name}</li>
+                                                <li key={m.id}>{m.getName(t)}</li>
                                             ))}
                                         </ul>
                                     </div>
@@ -216,7 +216,7 @@ export const ExerciseDetails = () => {
                 </Typography>
             </div>
 
-            <Footer />
+            { /** <Footer /> **/}
         </div>
     );
 };

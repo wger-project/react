@@ -1,4 +1,4 @@
-import React from "react";
+import { ChangeEvent, useState } from "react";
 import {
     Autocomplete,
     Box,
@@ -30,12 +30,10 @@ export const Step1Basics = ({
                             }: StepProps) => {
     const [t] = useTranslation();
 
-    const [alternativeNamesEn, setAlternativeNamesEn] = React.useState<string[]>(
-        newExerciseData.alternativeNamesEn
-    );
-    const [muscles, setMuscles] = React.useState<Muscle[]>([]);
-    const [secondaryMuscles, setSecondaryMuscles] = React.useState<Muscle[]>([]);
-    const [equipment, setEquipment] = React.useState<Equipment[]>([]);
+    const [alternativeNamesEn, setAlternativeNamesEn] = useState<string[]>(newExerciseData.alternativeNamesEn);
+    const [muscles, setMuscles] = useState<Muscle[]>([]);
+    const [secondaryMuscles, setSecondaryMuscles] = useState<Muscle[]>([]);
+    const [equipment, setEquipment] = useState<Equipment[]>([]);
 
     // Load data from server
     const categoryQuery = useCategoriesQuery();
@@ -118,7 +116,7 @@ export const Step1Basics = ({
                                         variant="standard"
                                         label={t("exercises.alternativeNames")}
                                         value={formik.getFieldProps("newAlternativeNameEn").value}
-                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        onChange={(event: ChangeEvent<HTMLInputElement>) => {
                                             formik.setFieldValue(
                                                 formik.getFieldProps("newAlternativeNameEn").name,
                                                 event.target.value

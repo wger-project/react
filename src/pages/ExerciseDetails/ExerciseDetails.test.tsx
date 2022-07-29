@@ -17,6 +17,7 @@ jest.mock("services");
 jest.mock("components/Exercises/queries");
 
 const mockedUseLanguageQuery = useLanguageQuery as jest.Mock;
+const queryClient = new QueryClient();
 
 describe("Should render with", () => {
 
@@ -43,9 +44,8 @@ describe("Should render with", () => {
         }));
     });
 
-    test.skip('should render the exercise to screen', async () => {
+    test('should render the exercise to screen', async () => {
 
-        const queryClient = new QueryClient();
         await render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/exercises/9']}>
@@ -56,7 +56,9 @@ describe("Should render with", () => {
             </QueryClientProvider>
         );
 
-        await act(() => Promise.resolve());
+        await act(async () => {
+            await new Promise((r) => setTimeout(r, 100));
+        });
 
         expect(mockedUseLanguageQuery).toBeCalled();
         expect(getExerciseBase).toBeCalled();
@@ -65,10 +67,10 @@ describe("Should render with", () => {
         expect(screen.getByText("exercises.description")).toBeInTheDocument();
         expect(screen.getByText("Squats")).toBeInTheDocument();
 
-        expect(screen.getByText(testExerciseSquats.muscles[0].name)).toBeInTheDocument();
-        expect(screen.getByText(testExerciseSquats.muscles[1].name)).toBeInTheDocument();
+        expect(screen.getByText("Biggus musculus (server.big_muscle)")).toBeInTheDocument();
+        expect(screen.getByText('Rectus abdominis (server.abs)')).toBeInTheDocument();
 
-        expect(screen.getByText('Variants')).toBeInTheDocument();
+        expect(screen.getByText('exercises.variations')).toBeInTheDocument();
         expect(screen.getByText("VIEW")).toBeInTheDocument();
 
     });

@@ -18,7 +18,9 @@ import {
 
 jest.mock("services");
 
-describe.skip("Test the ExerciseOverview component", () => {
+const queryClient = new QueryClient();
+
+describe("Test the ExerciseOverview component", () => {
 
 
     beforeEach(() => {
@@ -43,10 +45,7 @@ describe.skip("Test the ExerciseOverview component", () => {
 
     test('renders all exercises', async () => {
 
-
         // Act
-        // since  OverviewCard inside ExerciseOverview renders a Link, we need to wrap in a BrowserRouter
-        const queryClient = new QueryClient();
         render(
             <BrowserRouter>
                 <QueryClientProvider client={queryClient}>
@@ -54,7 +53,9 @@ describe.skip("Test the ExerciseOverview component", () => {
                 </QueryClientProvider>
             </BrowserRouter>
         );
-        await act(() => Promise.resolve());
+        await act(async () => {
+            await new Promise((r) => setTimeout(r, 250));
+        });
 
         // Assert
         expect(getCategories).toHaveBeenCalledTimes(1);
@@ -72,8 +73,6 @@ describe.skip("Test the ExerciseOverview component", () => {
     test('filter one category', async () => {
 
         // Act
-        // since  OverviewCard inside ExerciseOverview renders a Link, we need to wrap in a BrowserRouter
-        const queryClient = new QueryClient();
         render(
             <BrowserRouter>
                 <QueryClientProvider client={queryClient}>
@@ -96,8 +95,6 @@ describe.skip("Test the ExerciseOverview component", () => {
     test('filter two categories', async () => {
 
         // Act
-        // since  OverviewCard inside ExerciseOverview renders a Link, we need to wrap in a BrowserRouter
-        const queryClient = new QueryClient();
         render(
             <BrowserRouter>
                 <QueryClientProvider client={queryClient}>
@@ -121,8 +118,6 @@ describe.skip("Test the ExerciseOverview component", () => {
     test('filter equipment', async () => {
 
         // Act
-        // since  OverviewCard inside ExerciseOverview renders a Link, we need to wrap in a BrowserRouter
-        const queryClient = new QueryClient();
         render(
             <BrowserRouter>
                 <QueryClientProvider client={queryClient}>
@@ -145,8 +140,6 @@ describe.skip("Test the ExerciseOverview component", () => {
     test('filter muscles', async () => {
 
         // Act
-        // since  OverviewCard inside ExerciseOverview renders a Link, we need to wrap in a BrowserRouter
-        const queryClient = new QueryClient();
         render(
             <BrowserRouter>
                 <QueryClientProvider client={queryClient}>
@@ -169,8 +162,6 @@ describe.skip("Test the ExerciseOverview component", () => {
     test('filter equipment and category', async () => {
 
         // Act
-        // since  OverviewCard inside ExerciseOverview renders a Link, we need to wrap in a BrowserRouter
-        const queryClient = new QueryClient();
         render(
             <BrowserRouter>
                 <QueryClientProvider client={queryClient}>
