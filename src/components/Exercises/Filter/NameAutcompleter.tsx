@@ -2,13 +2,14 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import throttle from 'lodash/throttle';
-import { ExerciseSearchResponse, searchExerciseTranslations } from "services";
+import { searchExerciseTranslations } from "services";
 import { Avatar, InputAdornment, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import SearchIcon from '@mui/icons-material/Search';
 import { truncateLongNames } from "utils/strings";
 import PhotoIcon from '@mui/icons-material/Photo';
 import { SERVER_URL } from "utils/url";
+import { ExerciseSearchResponse } from "services/responseType";
 
 type NameAutocompleterProps = {
     callback: Function;
@@ -23,13 +24,7 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
     const fetchName = React.useMemo(
         () =>
             throttle(
-                (
-                    request: string,
-                ) => {
-                    searchExerciseTranslations(request).then(res => {
-                        setOptions(res);
-                    });
-                },
+                (request: string) => searchExerciseTranslations(request).then(res => setOptions(res)),
                 200,
             ),
         [],
@@ -49,7 +44,6 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
         };
     }, [value, inputValue, fetchName]);
 
-    //<img src={SERVER_URL + option.data.image} alt="" width={48} />
 
     return (
         <Autocomplete
@@ -57,6 +51,7 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
             getOptionLabel={(option) =>
                 option.value
             }
+            data-testid="autocomplete"
             filterOptions={(x) => x}
             options={options}
             autoComplete
@@ -93,8 +88,8 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
             )}
             renderOption={(props, option) => {
                 return (
-                    <li {...props}>
-                        <ListItem disablePadding>
+                    <li {...props} id={`exercise${option.data.id}`}>
+                        <ListItem disablePadding component="div">
                             <ListItemIcon>
                                 {option.data.image ?
                                     <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />

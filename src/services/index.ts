@@ -11,5 +11,4 @@ export { addExerciseTranslation, getExerciseTranslations, searchExerciseTranslat
 export { getLanguages, getLanguageByShortName } from './language';
 export { postExerciseImage } from './image';
 export { updateWeight, createWeight } from './weight';
-export type { ExerciseSearchResponse, ExerciseSearchType } from './responseType';
 export { postAlias } from './alias';

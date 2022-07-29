@@ -8,11 +8,11 @@ import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
 import { Category } from "components/Exercises/models/category";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { ExerciseSearchResponse } from "services";
 import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
 import { useBasesQuery, useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
 import AddIcon from '@mui/icons-material/Add';
 import { Link, useNavigate } from "react-router-dom";
+import { ExerciseSearchResponse } from "services/responseType";
 
 const ContributeExerciseBanner = () => {
     const [t] = useTranslation();
