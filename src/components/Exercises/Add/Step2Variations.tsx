@@ -79,7 +79,7 @@ export const Step2Variations = ({
                     onClick={onBack}
                     sx={{ mt: 1, mr: 1 }}
                 >
-                    {t('back')}
+                    {t('goBack')}
                 </Button>
             </div>
         </Box>

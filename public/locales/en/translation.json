@@ -47,7 +47,7 @@
   "name": "Name",
   "category": "Category",
   "continue": "Continue",
-  "back": "Zurück",
+  "goBack": "Zurück",
   "language": "Language",
   "noResults": "No results",
   "noResultsDescription": "No results found for this query, consider reducing the number of filters.",

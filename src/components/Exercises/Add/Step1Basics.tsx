@@ -280,7 +280,7 @@ export const Step1Basics = ({
                                     {t("continue")}
                                 </Button>
                                 <Button disabled={true} sx={{ mt: 1, mr: 1 }}>
-                                    {t("back")}
+                                    {t("goBack")}
                                 </Button>
                             </div>
                         </Box>

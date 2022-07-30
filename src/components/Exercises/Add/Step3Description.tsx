@@ -69,7 +69,7 @@ export const Step3Description = ({
                                     {t("continue")}
                                 </Button>
                                 <Button disabled={false} onClick={onBack} sx={{ mt: 1, mr: 1 }}>
-                                    {t("back")}
+                                    {t('goBack')}
                                 </Button>
                             </div>
                         </Box>

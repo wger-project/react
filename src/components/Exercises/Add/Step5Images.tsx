@@ -41,7 +41,7 @@ export const Step5Images = ({
         <div>
             <Typography>
                 {t("exercises.compatibleImagesCC")}
-                
+
             </Typography>
             <Stack direction={"row"} justifyContent="center">
                 <div>
@@ -111,7 +111,7 @@ export const Step5Images = ({
                         {t("continue")}
                     </Button>
                     <Button disabled={false} onClick={onBack} sx={{ mt: 1, mr: 1 }}>
-                        {t("back")}
+                        {t("goBack")}
                     </Button>
                 </div>
             </Box>
