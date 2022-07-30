@@ -78,7 +78,7 @@ export const testExerciseBenchPress = new ExerciseBase(
     [testMuscleDacttilaris, testMuscleDeltoid],
     [],
     [],
-    null,
+    1,
     [
         new ExerciseTranslation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
@@ -96,7 +96,7 @@ export const testExerciseCurls = new ExerciseBase(
     [testMuscleBiggus, testMuscleDacttilaris],
     [],
     [],
-    null,
+    1,
     [
         new ExerciseTranslation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',

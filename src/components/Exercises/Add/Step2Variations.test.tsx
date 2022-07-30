@@ -31,6 +31,7 @@ describe("Test the add exercise step 2 component", () => {
     beforeEach(() => {
         mockedUseBasesQuery.mockImplementation(() => ({
             isLoading: false,
+            isSuccess: true,
             data: [testExerciseBenchPress, testExerciseCurls]
         }));
         emptyExerciseData = {

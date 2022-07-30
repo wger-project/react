@@ -19,7 +19,7 @@ jest.mock("components/Exercises/queries");
 const mockedUseLanguageQuery = useLanguageQuery as jest.Mock;
 const queryClient = new QueryClient();
 
-describe("Should render with", () => {
+describe("Render tests", () => {
 
     beforeEach(() => {
         // @ts-ignore
@@ -46,7 +46,7 @@ describe("Should render with", () => {
 
     test('should render the exercise to screen', async () => {
 
-        await render(
+        render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/exercises/9']}>
                     <Routes>
@@ -57,7 +57,7 @@ describe("Should render with", () => {
         );
 
         await act(async () => {
-            await new Promise((r) => setTimeout(r, 100));
+            await new Promise((r) => setTimeout(r, 20));
         });
 
         expect(mockedUseLanguageQuery).toBeCalled();

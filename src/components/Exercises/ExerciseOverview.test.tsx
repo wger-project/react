@@ -54,7 +54,7 @@ describe("Test the ExerciseOverview component", () => {
             </BrowserRouter>
         );
         await act(async () => {
-            await new Promise((r) => setTimeout(r, 250));
+            await new Promise((r) => setTimeout(r, 20));
         });
 
         // Assert

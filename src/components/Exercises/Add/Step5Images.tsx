@@ -46,7 +46,7 @@ export const Step5Images = ({
             <Stack direction={"row"} justifyContent="center">
                 <div>
                     <label htmlFor="camera-input">
-                        <CameraAltIcon />
+                        <CameraAltIcon fontSize="large" sx={{ m: 2 }} />
                     </label>
                     <input
                         style={{ display: "none" }}
@@ -59,7 +59,7 @@ export const Step5Images = ({
                 </div>
                 <div>
                     <label htmlFor="image-input">
-                        <CollectionsIcon />
+                        <CollectionsIcon fontSize="large" sx={{ m: 2 }} />
                     </label>
                     <input
                         type="file"
