@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import {
     Autocomplete,
     Box,
@@ -6,6 +6,7 @@ import {
     Chip,
     FormControl,
     FormHelperText,
+    Grid,
     InputLabel,
     MenuItem,
     Select,
@@ -21,6 +22,7 @@ import { Muscle } from "components/Exercises/models/muscle";
 import { getTranslationKey } from "utils/strings";
 import { Equipment } from "components/Exercises/models/equipment";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
+import { MuscleOverview } from "components/Muscles/MuscleOverview";
 
 
 export const Step1Basics = ({
@@ -245,6 +247,22 @@ export const Step1Basics = ({
                                     )}
                                 />
                             )}
+                            <Grid container>
+                                <Grid item xs={6} display="flex" justifyContent={"center"}>
+                                    <MuscleOverview
+                                        primaryMuscles={muscles}
+                                        secondaryMuscles={secondaryMuscles}
+                                        isFront={true}
+                                    />
+                                </Grid>
+                                <Grid item xs={6} display="flex" justifyContent={"center"}>
+                                    <MuscleOverview
+                                        primaryMuscles={muscles}
+                                        secondaryMuscles={secondaryMuscles}
+                                        isFront={false}
+                                    />
+                                </Grid>
+                            </Grid>
                             {equipmentQuery.isLoading ? (
                                 <Box>
                                     <LoadingWidget />
