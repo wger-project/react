@@ -62,7 +62,6 @@ export const Step4Translations = ({
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-            console.log('Submitting the form with values: ', values);
             setNewExerciseData({
                 ...newExerciseData,
                 nameTranslation: values.name,

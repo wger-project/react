@@ -60,9 +60,6 @@ const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
             }
         }
 
-        console.log("variationId: " + variationId);
-        console.log("newVariationId: " + newVariationId);
-
         setNewExerciseData({
             ...newExerciseData,
             variationId: variationId,
