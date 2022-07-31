@@ -15,8 +15,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { useBasesQuery } from "components/Exercises/queries";
 import { addExerciseDataType, ExerciseBase } from "components/Exercises/models/exerciseBase";
-import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
+import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
 
 //const ExerciseInfoListItem = () =>
 
@@ -132,7 +132,7 @@ export const Step2Variations = ({
         <Typography>{t('exercises.whatVariationsExist')}</Typography>
 
         {basesQuery.isLoading ? (
-            <LoadingWidget />
+            <LoadingPlaceholder />
         ) : (
             <List style={{ maxHeight: "400px", overflowY: "scroll" }}>
                 {basesQuery.data!.filter(b => b.variationId === null).map(base =>

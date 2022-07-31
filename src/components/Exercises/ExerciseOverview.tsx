@@ -66,12 +66,15 @@ const NoResultsBanner = () => {
     );
 };
 
-function getLoadingPlaceholder() {
-    return <Paper sx={{ height: 200, alignItems: "center", mt: 2 }} component={Stack} direction="column"
-                  justifyContent="center">
+export const LoadingPlaceholder = () => {
+    return <Paper
+        sx={{ height: 200, alignItems: "center", mt: 2 }}
+        component={Stack}
+        direction="column"
+        justifyContent="center">
         <CircularProgress />
     </Paper>;
-}
+};
 
 export const ExerciseOverview = () => {
     const basesQuery = useBasesQuery();
@@ -155,7 +158,7 @@ export const ExerciseOverview = () => {
 
             <Grid container spacing={2}>
                 <Grid item xs={3}>
-                    {categoryQuery.isLoading ? getLoadingPlaceholder() : (
+                    {categoryQuery.isLoading ? <LoadingPlaceholder /> : (
                         <CategoryFilter
                             categories={categoryQuery.data!}
                             selectedCategories={selectedCategories}
@@ -163,7 +166,7 @@ export const ExerciseOverview = () => {
                         />
                     )}
 
-                    {equipmentQuery.isLoading ? getLoadingPlaceholder() : (
+                    {equipmentQuery.isLoading ? <LoadingPlaceholder /> : (
                         <EquipmentFilter
                             equipment={equipmentQuery.data!}
                             selectedEquipment={selectedEquipment}
@@ -171,7 +174,7 @@ export const ExerciseOverview = () => {
                         />
                     )}
 
-                    {musclesQuery.isLoading ? getLoadingPlaceholder() : (
+                    {musclesQuery.isLoading ? <LoadingPlaceholder /> : (
                         <MuscleFilter
                             muscles={musclesQuery.data!}
                             selectedMuscles={selectedMuscles}
