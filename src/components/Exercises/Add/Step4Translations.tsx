@@ -58,7 +58,7 @@ export const Step4Translations = ({
             name: '',
             alternativeNames: '',
             description: '',
-            language: 1,
+            language: null,
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {

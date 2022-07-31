@@ -37,6 +37,7 @@ export const AddExerciseStepper = () => {
         muscles: [],
         musclesSecondary: [],
         variationId: null,
+        newVariationBaseId: null,
         languageId: null,
         equipment: [],
 

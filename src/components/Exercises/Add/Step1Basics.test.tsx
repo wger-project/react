@@ -14,6 +14,7 @@ let emptyExerciseData = {
     muscles: [],
     musclesSecondary: [],
     variationId: null,
+    newVariationBaseId: null,
     languageId: null,
     equipment: [],
 
@@ -39,6 +40,7 @@ describe("Test the add exercise step 1 component", () => {
             muscles: [],
             musclesSecondary: [],
             variationId: null,
+            newVariationBaseId: null,
             languageId: null,
             equipment: [],
 

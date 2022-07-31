@@ -96,6 +96,7 @@ export const addExerciseBase = async (categoryId: number,
                                       equipmentIds: number[],
                                       muscleIds: number[],
                                       secondaryMuscleIds: number[],
+                                      variationId: number | null,
 ): Promise<number> => {
 
     const url = makeUrl(EXERCISE_BASE_PATH);
@@ -104,11 +105,15 @@ export const addExerciseBase = async (categoryId: number,
         equipment: equipmentIds,
         muscles: muscleIds,
         // eslint-disable-next-line camelcase
-        muscles_secondary: secondaryMuscleIds
+        muscles_secondary: secondaryMuscleIds,
+        // eslint-disable-next-line camelcase
+        variation_id: variationId,
     };
-    const response = await axios.post(url, baseData, {
-        headers: makeHeader(),
-    });
+    const response = await axios.post(
+        url,
+        baseData,
+        { headers: makeHeader() }
+    );
 
     return response.data.id;
 };

@@ -132,6 +132,7 @@ export type addExerciseDataType = {
     musclesSecondary: number[];
     equipment: number[];
     variationId: number | null;
+    newVariationBaseId: number | null;
 
     images: ImageFormData[];
 };

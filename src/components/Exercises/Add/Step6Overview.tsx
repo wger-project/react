@@ -4,22 +4,34 @@ import { useTranslation } from "react-i18next";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { addExerciseBase, addExerciseTranslation, postAlias, postExerciseImage } from "services";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { addVariation } from "services/variation";
+import { useNavigate } from "react-router-dom";
 
 
 export const Step6Overview = ({
                                   newExerciseData,
-                                  setNewExerciseData,
                                   onBack,
                               }: StepProps) => {
     const [t] = useTranslation();
+    const navigate = useNavigate();
 
     const submitExercise = async () => {
+        // Create a new variation object if needed
+        // TODO: PATCH the other exercise base (newVariationBaseId) with the new variation id
+        let variationId = null;
+        if (newExerciseData.newVariationBaseId !== null) {
+            variationId = await addVariation();
+        } else {
+            variationId = newExerciseData.variationId;
+        }
+
         // Create the base
         const baseId = await addExerciseBase(
             newExerciseData.category as number,
             newExerciseData.equipment,
             newExerciseData.muscles,
-            newExerciseData.musclesSecondary
+            newExerciseData.musclesSecondary,
+            variationId,
         );
 
         // Create the English translation
@@ -50,8 +62,8 @@ export const Step6Overview = ({
             );
         }
 
-
         console.log("Exercise created");
+        //navigate(`../${baseId}`);
     };
 
     return (
@@ -66,18 +78,20 @@ export const Step6Overview = ({
                 <li>Muscles: {newExerciseData!.muscles.join("/ ")}</li>
                 <li>Muscles secondary: {newExerciseData!.musclesSecondary.join("/ ")}</li>
                 <li>Equipment: {newExerciseData!.equipment.join("/ ")}</li>
+                <li>Variation ID: {newExerciseData!.variationId}</li>
+                <li>New Variation Base-ID: {newExerciseData!.newVariationBaseId}</li>
             </ul>
             <p>English data:</p>
             <ul>
-                <li>Name EN: {newExerciseData!.nameEn}</li>
-                <li>Description EN: {newExerciseData!.descriptionEn}</li>
+                <li>Name: {newExerciseData!.nameEn}</li>
+                <li>Description: {newExerciseData!.descriptionEn}</li>
                 <li>
-                    Alternative names EN:{" "}
+                    Alternative names:{" "}
                     {newExerciseData!.alternativeNamesEn.join("/ ")}
                 </li>
             </ul>
 
-            <p>Translations:</p>
+            <p>Translation:</p>
             <ul>
                 <li>Language ID: {newExerciseData!.languageId}</li>
                 <li>Name translation: {newExerciseData!.nameTranslation}</li>

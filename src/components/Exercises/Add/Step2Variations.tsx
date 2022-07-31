@@ -4,6 +4,7 @@ import {
     AvatarGroup,
     Box,
     Button,
+    Divider,
     Grid,
     List,
     ListItem,
@@ -43,24 +44,41 @@ const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
     newExerciseData: addExerciseDataType
 }) => {
 
-    const variationId = bases[0].variationId!;
+    const variationId = bases[0].variationId;
     const MAX_EXERCISE_IMAGES = 4;
     const MAX_EXERCISE_NAMES = 5;
 
-    const handleToggle = (variationId: number | null) => () => {
+    const handleToggle = (variationId: number | null, newVariationId: number | null) => () => {
 
-        if (variationId === newExerciseData.variationId) {
-            variationId = null;
+        if (variationId !== null) {
+            if (variationId === newExerciseData.variationId) {
+                variationId = null;
+            }
+        } else {
+            if (newVariationId === newExerciseData.newVariationBaseId) {
+                newVariationId = null;
+            }
         }
+
+        console.log("variationId: " + variationId);
+        console.log("newVariationId: " + newVariationId);
 
         setNewExerciseData({
             ...newExerciseData,
             variationId: variationId,
+            newVariationBaseId: newVariationId
         });
     };
 
+    let isChecked = false;
+    if (variationId === null) {
+        isChecked = newExerciseData.newVariationBaseId === bases[0].id;
+    } else {
+        isChecked = variationId === newExerciseData.variationId;
+    }
+
     return <ListItem>
-        <ListItemButton onClick={handleToggle(variationId)}>
+        <ListItemButton onClick={handleToggle(variationId, bases[0].id)}>
             <Grid container>
                 <Grid item xs={3} display="flex" justifyContent={"start"} alignItems={"center"}>
                     <AvatarGroup max={MAX_EXERCISE_IMAGES}>
@@ -80,10 +98,13 @@ const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
                     <Switch
                         key={`variation-${variationId}`}
                         edge="start"
-                        checked={newExerciseData.variationId === variationId}
+                        checked={isChecked}
                         tabIndex={-1}
                         disableRipple
                     />
+                </Grid>
+                <Grid item xs={12} sx={{ pt: 1 }}>
+                    <Divider />
                 </Grid>
             </Grid>
         </ListItemButton>
@@ -104,6 +125,7 @@ export const Step2Variations = ({
     let groupedBases = new Map<number, ExerciseBase[]>();
     if (basesQuery.isSuccess) {
         groupedBases = groupBy(basesQuery.data.filter(b => b.variationId !== null), (b: ExerciseBase) => b.variationId);
+        //groupedBases = new Map();
     }
 
     return <>
@@ -113,14 +135,23 @@ export const Step2Variations = ({
             <LoadingWidget />
         ) : (
             <List style={{ maxHeight: "400px", overflowY: "scroll" }}>
-                {[...groupedBases.keys()].map(variationId =>
+                {basesQuery.data!.filter(b => b.variationId === null).map(base =>
                     <ExerciseInfoListItem
-                        bases={groupedBases.get(variationId)!}
-                        key={variationId}
+                        bases={[base]}
+                        key={'base-' + base.id}
                         setNewExerciseData={setNewExerciseData}
                         newExerciseData={newExerciseData}
                     />
                 )}
+                {[...groupedBases.keys()].map(variationId =>
+                    <ExerciseInfoListItem
+                        bases={groupedBases.get(variationId)!}
+                        key={'variation-' + variationId}
+                        setNewExerciseData={setNewExerciseData}
+                        newExerciseData={newExerciseData}
+                    />
+                )}
+
             </List>
         )}
 
