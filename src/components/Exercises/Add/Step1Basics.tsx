@@ -18,9 +18,7 @@ import * as yup from "yup";
 import { Form, Formik } from "formik";
 import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery, } from "components/Exercises/queries";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
-import { Muscle } from "components/Exercises/models/muscle";
 import { getTranslationKey } from "utils/strings";
-import { Equipment } from "components/Exercises/models/equipment";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
 
@@ -33,9 +31,9 @@ export const Step1Basics = ({
     const [t] = useTranslation();
 
     const [alternativeNamesEn, setAlternativeNamesEn] = useState<string[]>(newExerciseData.alternativeNamesEn);
-    const [muscles, setMuscles] = useState<Muscle[]>([]);
-    const [secondaryMuscles, setSecondaryMuscles] = useState<Muscle[]>([]);
-    const [equipment, setEquipment] = useState<Equipment[]>([]);
+    const [muscles, setMuscles] = useState<number[]>(newExerciseData.muscles);
+    const [secondaryMuscles, setSecondaryMuscles] = useState<number[]>(newExerciseData.musclesSecondary);
+    const [equipment, setEquipment] = useState<number[]>(newExerciseData.equipment);
 
     // Load data from server
     const categoryQuery = useCategoriesQuery();
@@ -61,8 +59,8 @@ export const Step1Basics = ({
                 nameEn: newExerciseData.nameEn,
                 newAlternativeNameEn: "",
                 category: newExerciseData.category,
-                muscles: [0],
-                musclesSecondary: [0],
+                muscles: newExerciseData.muscles,
+                musclesSecondary: newExerciseData.musclesSecondary,
             }}
             validationSchema={validationSchema}
             onSubmit={values => {
@@ -71,9 +69,9 @@ export const Step1Basics = ({
                     nameEn: values.nameEn,
                     category: values.category,
                     alternativeNamesEn: alternativeNamesEn,
-                    muscles: muscles.map(m => m.id),
-                    musclesSecondary: secondaryMuscles.map(m => m.id),
-                    equipment: equipment.map(e => e.id),
+                    muscles: muscles,
+                    musclesSecondary: secondaryMuscles,
+                    equipment: equipment,
                 });
 
                 onContinue!();
@@ -83,7 +81,6 @@ export const Step1Basics = ({
                 return (
                     <Form>
                         <Stack spacing={2}>
-
                             <TextField
                                 id="nameEn"
                                 label={t("name")}
@@ -158,12 +155,11 @@ export const Step1Basics = ({
                                             );
                                             // setCategory(e.target.value);
                                         }}
-                                        label="Category"
+                                        label={t("category")}
                                         error={Boolean(
                                             formik.touched.category && formik.errors.category
                                         )}
                                     >
-                                        <MenuItem value=""></MenuItem>
                                         {categoryQuery.data!.map(category => (
                                             <MenuItem key={category.id} value={category.id}>
                                                 {t(getTranslationKey(category.name))}
@@ -179,6 +175,30 @@ export const Step1Basics = ({
 
                                 </FormControl>
                             )}
+                            {equipmentQuery.isLoading ? (
+                                <Box>
+                                    <LoadingWidget />
+                                </Box>
+                            ) : (
+                                <Autocomplete
+                                    multiple
+                                    id="equipment"
+                                    options={equipmentQuery.data!.map(e => e.id)}
+                                    value={equipment}
+                                    getOptionLabel={option => t(getTranslationKey(equipmentQuery.data!.find(e => e.id === option)!.name))}
+                                    onChange={(event, newValue) => {
+                                        setEquipment(newValue);
+                                    }}
+                                    renderInput={params => (
+                                        <TextField
+                                            {...params}
+                                            variant="standard"
+                                            label={t("exercises.equipment")}
+                                            value={formik.getFieldProps("muscles").value}
+                                        />
+                                    )}
+                                />
+                            )}
                             {musclesQuery.isLoading ? (
                                 <Box>
                                     <LoadingWidget />
@@ -187,15 +207,12 @@ export const Step1Basics = ({
                                 <Autocomplete
                                     multiple
                                     id="muscles"
-                                    options={musclesQuery.data!}
+                                    options={musclesQuery.data!.map(m => m.id)}
                                     getOptionDisabled={(option) =>
                                         secondaryMuscles.includes(option)
                                     }
-                                    getOptionLabel={option => option.getName(t)}
-                                    value={[...muscles]}
-                                    isOptionEqualToValue={(option, value) =>
-                                        option.id === value.id
-                                    }
+                                    getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName(t)}
+                                    value={muscles}
                                     onChange={(event, newValue) => {
                                         setMuscles(newValue);
                                     }}
@@ -206,8 +223,6 @@ export const Step1Basics = ({
                                             label={t("exercises.muscles")}
                                             value={formik.getFieldProps("muscles").value}
                                             onChange={e => {
-                                                console.log("event.target.value: ", e.target.value);
-
                                                 formik.setFieldValue(
                                                     formik.getFieldProps("muscles").name,
                                                     e.target.value
@@ -225,15 +240,12 @@ export const Step1Basics = ({
                                 <Autocomplete
                                     multiple
                                     id="secondary-muscles"
-                                    options={musclesQuery.data!}
+                                    options={musclesQuery.data!.map(m => m.id)}
                                     getOptionDisabled={(option) =>
                                         muscles.includes(option)
                                     }
-                                    getOptionLabel={option => option.getName(t)}
-                                    value={[...secondaryMuscles]}
-                                    isOptionEqualToValue={(option, value) =>
-                                        option.id === value.id
-                                    }
+                                    getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName(t)}
+                                    value={secondaryMuscles}
                                     onChange={(event, newValue) => {
                                         setSecondaryMuscles(newValue);
                                     }}
@@ -250,46 +262,19 @@ export const Step1Basics = ({
                             <Grid container>
                                 <Grid item xs={6} display="flex" justifyContent={"center"}>
                                     <MuscleOverview
-                                        primaryMuscles={muscles}
-                                        secondaryMuscles={secondaryMuscles}
+                                        primaryMuscles={muscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                        secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                         isFront={true}
                                     />
                                 </Grid>
                                 <Grid item xs={6} display="flex" justifyContent={"center"}>
                                     <MuscleOverview
-                                        primaryMuscles={muscles}
-                                        secondaryMuscles={secondaryMuscles}
+                                        primaryMuscles={muscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                        secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                         isFront={false}
                                     />
                                 </Grid>
                             </Grid>
-                            {equipmentQuery.isLoading ? (
-                                <Box>
-                                    <LoadingWidget />
-                                </Box>
-                            ) : (
-                                <Autocomplete
-                                    multiple
-                                    id="equipment"
-                                    options={equipmentQuery.data!}
-                                    getOptionLabel={option => t(getTranslationKey(option.name))}
-                                    value={[...equipment]}
-                                    isOptionEqualToValue={(option, value) =>
-                                        option.id === value.id
-                                    }
-                                    onChange={(event, newValue) => {
-                                        setEquipment(newValue);
-                                    }}
-                                    renderInput={params => (
-                                        <TextField
-                                            {...params}
-                                            variant="standard"
-                                            label={t("exercises.equipment")}
-                                            value={formik.getFieldProps("muscles").value}
-                                        />
-                                    )}
-                                />
-                            )}
                         </Stack>
 
                         <Box sx={{ mb: 2 }}>

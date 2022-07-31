@@ -30,7 +30,7 @@ export const Step4Translations = ({
                                   }: StepProps) => {
     const [t] = useTranslation();
     const languageQuery = useLanguageQuery();
-    const [translateExercise, setTranslateExercise] = useState<boolean>(false);
+    const [translateExercise, setTranslateExercise] = useState<boolean>(newExerciseData.languageId !== null);
     const [alternativeNames, setAlternativeNames] = React.useState<string[]>(
         newExerciseData.alternativeNamesTranslation
     );
@@ -55,10 +55,10 @@ export const Step4Translations = ({
 
     return <Formik
         initialValues={{
-            name: '',
+            name: newExerciseData.nameTranslation,
             alternativeNames: '',
-            description: '',
-            language: null,
+            description: newExerciseData.descriptionTranslation,
+            language: newExerciseData.languageId === null ? '' : newExerciseData.languageId,
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
@@ -68,7 +68,7 @@ export const Step4Translations = ({
                 nameTranslation: values.name,
                 alternativeNamesTranslation: alternativeNames,
                 descriptionTranslation: values.description,
-                languageId: values.language,
+                languageId: values.language === '' ? null : values.language as unknown as number,
             });
 
             onContinue!();

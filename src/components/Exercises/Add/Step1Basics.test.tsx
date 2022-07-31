@@ -78,7 +78,6 @@ describe("Test the add exercise step 1 component", () => {
         // Assert
         expect(screen.getByText("name")).toBeInTheDocument();
         expect(screen.getByText("exercises.alternativeNames")).toBeInTheDocument();
-        expect(screen.getByText("category")).toBeInTheDocument();
         expect(screen.getByText("exercises.muscles")).toBeInTheDocument();
         expect(screen.getByText("exercises.secondaryMuscles")).toBeInTheDocument();
         expect(screen.getByText("exercises.equipment")).toBeInTheDocument();
