@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Avatar,
     AvatarGroup,
@@ -17,8 +17,6 @@ import { useBasesQuery } from "components/Exercises/queries";
 import { addExerciseDataType, ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
-
-//const ExerciseInfoListItem = () =>
 
 /*
  * Groups a list of objects by a property
@@ -47,6 +45,7 @@ const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
     const variationId = bases[0].variationId;
     const MAX_EXERCISE_IMAGES = 4;
     const MAX_EXERCISE_NAMES = 5;
+    const [showMore, setShowMore] = useState<boolean>(false);
 
     const handleToggle = (variationId: number | null, newVariationId: number | null) => () => {
 
@@ -78,7 +77,7 @@ const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
         <ListItemButton onClick={handleToggle(variationId, bases[0].id)}>
             <Grid container>
                 <Grid item xs={3} display="flex" justifyContent={"start"} alignItems={"center"}>
-                    <AvatarGroup max={MAX_EXERCISE_IMAGES}>
+                    <AvatarGroup max={MAX_EXERCISE_IMAGES} spacing={"small"}>
                         {bases.map((base) => <Avatar key={base.id}
                                                      src={base.mainImage ? base.mainImage.url : "https://mui.com/static/images/cards/contemplative-reptile.jpg"}
                         />)}
@@ -86,10 +85,11 @@ const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
                 </Grid>
                 <Grid item xs={7}>
                     { /* map the bases */}
-                    {bases.slice(0, MAX_EXERCISE_NAMES).map((base) =>
+                    {bases.slice(0, showMore ? bases.length : MAX_EXERCISE_NAMES).map((base) =>
                         <p style={{ margin: 0 }} key={base.id}>{base.getTranslation().name}</p>
                     )}
-                    {bases.length > MAX_EXERCISE_NAMES ? <p style={{ margin: 0 }}>...</p> : null}
+                    {!showMore && bases.length > MAX_EXERCISE_NAMES ?
+                        <p style={{ margin: 0 }} onMouseEnter={() => console.log(setShowMore(true))}>...</p> : null}
                 </Grid>
                 <Grid item xs={2}>
                     <Switch
