@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, ImageListItem, Table, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
@@ -6,6 +6,10 @@ import { addExerciseBase, addExerciseTranslation, postAlias, postExerciseImage }
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { addVariation } from "services/variation";
 import { useNavigate } from "react-router-dom";
+import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
+import { getTranslationKey } from "utils/strings";
+import ImageList from "@mui/material/ImageList";
+import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
 
 
 export const Step6Overview = ({
@@ -14,11 +18,15 @@ export const Step6Overview = ({
                               }: StepProps) => {
     const [t] = useTranslation();
     const navigate = useNavigate();
+    const categoryQuery = useCategoriesQuery();
+    const languageQuery = useLanguageQuery();
+    const musclesQuery = useMusclesQuery();
+    const equipmentQuery = useEquipmentQuery();
 
     const submitExercise = async () => {
         // Create a new variation object if needed
         // TODO: PATCH the other exercise base (newVariationBaseId) with the new variation id
-        let variationId = null;
+        let variationId;
         if (newExerciseData.newVariationBaseId !== null) {
             variationId = await addVariation();
         } else {
@@ -63,66 +71,113 @@ export const Step6Overview = ({
         }
 
         console.log("Exercise created");
-        //navigate(`../${baseId}`);
+        navigate(`../${baseId}`);
     };
 
-    return (
-        <div>
-            <Typography>
-                Please make sure this is correct before continuing, etc. etc.
-            </Typography>
+    return equipmentQuery.isLoading || languageQuery.isLoading || musclesQuery.isLoading || languageQuery.isLoading ?
+        <LoadingPlaceholder /> : (
+            <>
+                <Typography variant={"h6"}>
+                    {t('exercises.step1HeaderBasics')}
+                </Typography>
+                <TableContainer>
+                    <Table>
+                        <TableRow>
+                            <TableCell>{t('name')}</TableCell>
+                            <TableCell>{newExerciseData!.nameEn}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>{t('exercises.alternativeNames')}</TableCell>
+                            <TableCell>{newExerciseData!.alternativeNamesEn.join(", ")}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>{t('description')}</TableCell>
+                            <TableCell>{newExerciseData!.descriptionEn}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>{t('category')}</TableCell>
+                            <TableCell>{t(getTranslationKey(categoryQuery.data!.find(c => c.id === newExerciseData!.category)!.name))}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>{t('exercises.equipment')}</TableCell>
+                            <TableCell>{newExerciseData!.equipment.map(e => t(getTranslationKey(equipmentQuery.data!.find(value => value.id === e)!.name))).join(', ')}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>{t('exercises.muscles')}</TableCell>
+                            <TableCell>{newExerciseData!.muscles.map(m => musclesQuery.data!.find(value => value.id === m)!.getName(t)).join(', ')}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>{t('exercises.secondaryMuscles')}</TableCell>
+                            <TableCell>{newExerciseData!.musclesSecondary.map(m => musclesQuery.data!.find(value => value.id === m)!.getName(t)).join(', ')}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>{t('exercises.variations')}</TableCell>
+                            <TableCell>{newExerciseData!.variationId} / {newExerciseData!.newVariationBaseId}</TableCell>
+                        </TableRow>
+                    </Table>
+                </TableContainer>
+                {newExerciseData!.images.length > 0 && (
+                    <ImageList
+                        cols={3}
+                        style={{ maxHeight: "200px", }}>
+                        {newExerciseData!.images.map(imageEntry => (
+                            <ImageListItem key={imageEntry.url}>
+                                <img
+                                    style={{ maxHeight: "200px", maxWidth: "200px" }}
+                                    src={imageEntry.url}
+                                    alt=""
+                                    loading="lazy"
+                                />
+                            </ImageListItem>
+                        ))}
+                    </ImageList>
+                )}
 
-            <p>Base data:</p>
-            <ul>
-                <li>Category ID: {newExerciseData!.category}</li>
-                <li>Muscles: {newExerciseData!.muscles.join("/ ")}</li>
-                <li>Muscles secondary: {newExerciseData!.musclesSecondary.join("/ ")}</li>
-                <li>Equipment: {newExerciseData!.equipment.join("/ ")}</li>
-                <li>Variation ID: {newExerciseData!.variationId}</li>
-                <li>New Variation Base-ID: {newExerciseData!.newVariationBaseId}</li>
-            </ul>
-            <p>English data:</p>
-            <ul>
-                <li>Name: {newExerciseData!.nameEn}</li>
-                <li>Description: {newExerciseData!.descriptionEn}</li>
-                <li>
-                    Alternative names:{" "}
-                    {newExerciseData!.alternativeNamesEn.join("/ ")}
-                </li>
-            </ul>
 
-            <p>Translation:</p>
-            <ul>
-                <li>Language ID: {newExerciseData!.languageId}</li>
-                <li>Name translation: {newExerciseData!.nameTranslation}</li>
-                <li>
-                    Description translation: {newExerciseData!.descriptionTranslation}
-                </li>
-                <li>
-                    Alternative names translation:{" "}
-                    {newExerciseData!.alternativeNamesTranslation.join("/ ")}
-                </li>
-            </ul>
-            <p>Images:</p>
-            <ul>
-                <li>Images: {newExerciseData!.images.join("/ ")}</li>
-            </ul>
+                {newExerciseData!.languageId !== null && (
+                    <>
+                        <Typography variant={"h6"} sx={{ mt: 3 }}>
+                            {languageQuery.data!.find(l => l.id === newExerciseData!.languageId)!.nameLong}
+                        </Typography>
+                        <TableContainer>
+                            <Table>
+                                <TableRow>
+                                    <TableCell>{t('name')}</TableCell>
+                                    <TableCell>
+                                        {newExerciseData!.nameEn}
+                                    </TableCell>
+                                </TableRow>
+
+                                <TableRow>
+                                    <TableCell>{t('exercises.alternativeNames')}</TableCell>
+                                    <TableCell>{newExerciseData!.alternativeNamesTranslation.join(", ")}</TableCell>
+                                </TableRow>
 
 
-            <Box sx={{ mb: 2 }}>
-                <div>
-                    <Button
-                        variant="contained"
-                        onClick={submitExercise}
-                        sx={{ mt: 1, mr: 1 }}
-                    >
-                        {t("exercises.submitExercise")}
-                    </Button>
-                    <Button disabled={false} onClick={onBack} sx={{ mt: 1, mr: 1 }}>
-                        {t("goBack")}
-                    </Button>
-                </div>
-            </Box>
-        </div>
-    );
+                                <TableRow>
+                                    <TableCell>{t('description')}</TableCell>
+                                    <TableCell>{newExerciseData!.descriptionTranslation}</TableCell>
+                                </TableRow>
+                            </Table>
+                        </TableContainer>
+                    </>
+                )}
+
+
+                <Box sx={{ mb: 2 }}>
+                    <div>
+                        <Button
+                            variant="contained"
+                            onClick={submitExercise}
+                            sx={{ mt: 1, mr: 1 }}
+                        >
+                            {t("exercises.submitExercise")}
+                        </Button>
+                        <Button disabled={false} onClick={onBack} sx={{ mt: 1, mr: 1 }}>
+                            {t("goBack")}
+                        </Button>
+                    </div>
+                </Box>
+            </>
+        );
 };
