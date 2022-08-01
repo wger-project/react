@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { testExerciseBenchPress, testExerciseCurls } from "tests/exerciseTestdata";
+import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls } from "tests/exerciseTestdata";
 import { useBasesQuery } from "components/Exercises/queries";
 import { Step2Variations } from "components/Exercises/Add/Step2Variations";
 
@@ -26,6 +26,9 @@ let emptyExerciseData = {
     images: [],
 };
 
+const mockOnContinue = jest.fn();
+const mockSetExerciseData = jest.fn();
+const queryClient = new QueryClient();
 
 describe("Test the add exercise step 2 component", () => {
 
@@ -33,7 +36,11 @@ describe("Test the add exercise step 2 component", () => {
         mockedUseBasesQuery.mockImplementation(() => ({
             isLoading: false,
             isSuccess: true,
-            data: [testExerciseBenchPress, testExerciseCurls]
+            data: [
+                testExerciseBenchPress,
+                testExerciseCurls,
+                testExerciseCrunches
+            ]
         }));
         emptyExerciseData = {
             category: "",
@@ -60,12 +67,7 @@ describe("Test the add exercise step 2 component", () => {
     });
 
     test("Renders without crashing", () => {
-        // Arrange
-        const mockOnContinue = jest.fn();
-        const mockSetExerciseData = jest.fn();
-
         // Act
-        const queryClient = new QueryClient();
         render(
             <QueryClientProvider client={queryClient}>
                 <Step2Variations
@@ -79,5 +81,60 @@ describe("Test the add exercise step 2 component", () => {
         expect(screen.getByText("exercises.whatVariationsExist")).toBeInTheDocument();
         expect(screen.getByText("Benchpress")).toBeInTheDocument();
         expect(screen.getByText("Curls")).toBeInTheDocument();
+        expect(screen.getByText("Crunches")).toBeInTheDocument();
+    });
+
+    test("Correctly sets the variation ID", () => {
+        // Arrange
+        const expectExerciseData = {
+            ...emptyExerciseData,
+            variationId: 1,
+        };
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Step2Variations
+                    onContinue={mockOnContinue}
+                    newExerciseData={emptyExerciseData}
+                    setNewExerciseData={mockSetExerciseData} />
+            </QueryClientProvider>
+        );
+        const benchpress = screen.getByText("Benchpress");
+        benchpress.click();
+
+        // Assert
+        // Bench press and curls are in the same variation group, clicking on them
+        // should set the variationId to 1 and leave the newVariationBaseId as null
+        expect(mockSetExerciseData).lastCalledWith(
+            expect.objectContaining(expectExerciseData)
+        );
+    });
+
+    test("Correctly sets the newVariationBaseId ID", () => {
+        // Arrange
+        const expectExerciseData = {
+            ...emptyExerciseData,
+            newVariationBaseId: 4,
+        };
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Step2Variations
+                    onContinue={mockOnContinue}
+                    newExerciseData={emptyExerciseData}
+                    setNewExerciseData={mockSetExerciseData} />
+            </QueryClientProvider>
+        );
+        const crunches = screen.getByText("Crunches");
+        crunches.click();
+
+        // Assert
+        // Crunches has no variation, clicking on it should set the newVariationBaseId
+        // to 4 and leave the variationId as null
+        expect(mockSetExerciseData).lastCalledWith(
+            expect.objectContaining(expectExerciseData)
+        );
     });
 });

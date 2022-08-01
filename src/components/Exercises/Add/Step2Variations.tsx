@@ -43,6 +43,7 @@ const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
 }) => {
 
     const variationId = bases[0].variationId;
+    const baseId = bases[0].id;
     const MAX_EXERCISE_IMAGES = 4;
     const MAX_EXERCISE_NAMES = 5;
     const [showMore, setShowMore] = useState<boolean>(false);
@@ -50,10 +51,12 @@ const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
     const handleToggle = (variationId: number | null, newVariationId: number | null) => () => {
 
         if (variationId !== null) {
+            newVariationId = null;
             if (variationId === newExerciseData.variationId) {
                 variationId = null;
             }
         } else {
+            variationId = null;
             if (newVariationId === newExerciseData.newVariationBaseId) {
                 newVariationId = null;
             }
@@ -66,15 +69,15 @@ const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
         });
     };
 
-    let isChecked = false;
+    let isChecked;
     if (variationId === null) {
-        isChecked = newExerciseData.newVariationBaseId === bases[0].id;
+        isChecked = newExerciseData.newVariationBaseId === baseId;
     } else {
         isChecked = variationId === newExerciseData.variationId;
     }
 
     return <ListItem>
-        <ListItemButton onClick={handleToggle(variationId, bases[0].id)}>
+        <ListItemButton onClick={handleToggle(variationId, baseId)}>
             <Grid container>
                 <Grid item xs={3} display="flex" justifyContent={"start"} alignItems={"center"}>
                     <AvatarGroup max={MAX_EXERCISE_IMAGES} spacing={"small"}>
@@ -89,7 +92,7 @@ const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
                         <p style={{ margin: 0 }} key={base.id}>{base.getTranslation().name}</p>
                     )}
                     {!showMore && bases.length > MAX_EXERCISE_NAMES ?
-                        <p style={{ margin: 0 }} onMouseEnter={() => console.log(setShowMore(true))}>...</p> : null}
+                        <p style={{ margin: 0 }} onMouseEnter={() => setShowMore(true)}>...</p> : null}
                 </Grid>
                 <Grid item xs={2}>
                     <Switch
