@@ -1,4 +1,14 @@
-import { Box, Button, ImageListItem, Table, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import {
+    Alert,
+    Box,
+    Button,
+    ImageListItem,
+    Table,
+    TableCell,
+    TableContainer,
+    TableRow,
+    Typography
+} from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
@@ -163,8 +173,11 @@ export const Step6Overview = ({
                     </>
                 )}
 
+                <Alert severity="info" sx={{ mt: 2 }}>
+                    {t('exercises.checkInformationBeforeSubmitting')}
+                </Alert>
 
-                <Box sx={{ mb: 2 }}>
+                <Box sx={{ mt: 2 }}>
                     <div>
                         <Button
                             variant="contained"
