@@ -51,7 +51,7 @@ export function processBaseDataSingle(data: any): ExerciseBase {
  * Fetch all exercise bases
  */
 export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
-    const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 300 } });
+    const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 900 } });
     const response = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
