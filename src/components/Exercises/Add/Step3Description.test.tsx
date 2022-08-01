@@ -72,10 +72,6 @@ describe("Test the add exercise step 3 component", () => {
     test("Correctly set descriptionEn", async () => {
         // Arrange
         const user = userEvent.setup();
-        const expectExerciseData = {
-            ...emptyExerciseData,
-            descriptionEn: 'The wild boar is a suid native to much of Eurasia and North Africa',
-        };
 
         // Act
         render(
@@ -92,6 +88,9 @@ describe("Test the add exercise step 3 component", () => {
 
         // Assert
         expect(mockOnContinue).toHaveBeenCalled();
-        expect(mockSetExerciseData).lastCalledWith(expectExerciseData);
+        expect(mockSetExerciseData).lastCalledWith({
+            ...emptyExerciseData,
+            descriptionEn: 'The wild boar is a suid native to much of Eurasia and North Africa',
+        });
     });
 });

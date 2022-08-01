@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls } from "tests/exerciseTestdata";
 import { useBasesQuery } from "components/Exercises/queries";
 import { Step2Variations } from "components/Exercises/Add/Step2Variations";
+import userEvent from "@testing-library/user-event";
 
 jest.mock("components/Exercises/queries");
 const mockedUseBasesQuery = useBasesQuery as jest.Mock;
@@ -85,12 +86,6 @@ describe("Test the add exercise step 2 component", () => {
     });
 
     test("Correctly sets the variation ID", () => {
-        // Arrange
-        const expectExerciseData = {
-            ...emptyExerciseData,
-            variationId: 1,
-        };
-
         // Act
         render(
             <QueryClientProvider client={queryClient}>
@@ -107,16 +102,41 @@ describe("Test the add exercise step 2 component", () => {
         // Bench press and curls are in the same variation group, clicking on them
         // should set the variationId to 1 and leave the newVariationBaseId as null
         expect(mockSetExerciseData).lastCalledWith(
-            expect.objectContaining(expectExerciseData)
+            {
+                ...emptyExerciseData,
+                variationId: 1,
+            }
         );
     });
 
-    test("Correctly sets the newVariationBaseId ID", () => {
+    test("Correctly unsets the variation ID", async () => {
         // Arrange
-        const expectExerciseData = {
-            ...emptyExerciseData,
-            newVariationBaseId: 4,
-        };
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Step2Variations
+                    onContinue={mockOnContinue}
+                    newExerciseData={{
+                        ...emptyExerciseData,
+                        variationId: 1,
+                    }}
+                    setNewExerciseData={mockSetExerciseData} />
+            </QueryClientProvider>
+        );
+        const benchpress = screen.getByText("Benchpress");
+        await user.click(benchpress);
+        await user.click(benchpress);
+
+        // Assert
+        expect(mockSetExerciseData).toHaveBeenCalledTimes(2);
+        expect(mockSetExerciseData).lastCalledWith(emptyExerciseData);
+    });
+
+    test("Correctly sets the newVariationBaseId ID", async () => {
+        // Arrange
+        const user = userEvent.setup();
 
         // Act
         render(
@@ -128,13 +148,38 @@ describe("Test the add exercise step 2 component", () => {
             </QueryClientProvider>
         );
         const crunches = screen.getByText("Crunches");
-        crunches.click();
+        await user.click(crunches);
 
         // Assert
-        // Crunches has no variation, clicking on it should set the newVariationBaseId
-        // to 4 and leave the variationId as null
         expect(mockSetExerciseData).lastCalledWith(
-            expect.objectContaining(expectExerciseData)
+            {
+                ...emptyExerciseData,
+                newVariationBaseId: 4,
+            }
         );
+    });
+    test("Correctly unsets the newVariationBaseId ID", async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Step2Variations
+                    onContinue={mockOnContinue}
+                    newExerciseData={{
+                        ...emptyExerciseData,
+                        newVariationBaseId: 4,
+                    }}
+                    setNewExerciseData={mockSetExerciseData} />
+            </QueryClientProvider>
+        );
+        const crunches = screen.getByText("Crunches");
+        await user.click(crunches);
+        await user.click(crunches);
+
+        // Assert
+        expect(mockSetExerciseData).toHaveBeenCalledTimes(2);
+        expect(mockSetExerciseData).lastCalledWith(emptyExerciseData);
     });
 });
