@@ -54,8 +54,8 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
         setPage(0);
     };
 
-    const [deleteTimeoutID, SetDeleteTimeoutID] = useState<ReturnType<typeof setTimeout> | undefined>();
-    const [weightToDelete, SetWeightToDelete] = useState<WeightEntry | undefined>();
+    const [deleteTimeoutID, setDeleteTimeoutID] = useState<ReturnType<typeof setTimeout> | undefined>();
+    const [weightToDelete, setWeightToDelete] = useState<WeightEntry | undefined>();
 
     useEffect(() => {
         // if true, cancel the timeout that will request a DELETE
@@ -117,8 +117,8 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
 
             }, 5000);
 
-            SetDeleteTimeoutID(timeout);
-            SetWeightToDelete(weight);
+            setDeleteTimeoutID(timeout);
+            setWeightToDelete(weight);
         } catch (error: unknown) {
             dispatch(setNotification(
                 {
@@ -167,8 +167,10 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                                 <TableCell align="center">{row.entry.weight}</TableCell>
                                 <TableCell align="center">{+row.change.toFixed(2)}</TableCell>
                                 <TableCell align="center">{row.days}</TableCell>
-                                <TableCell align="center"><ActionButton handleDeleteWeight={handleDeleteWeight}
-                                                                        weight={row.entry} /></TableCell>
+                                <TableCell align="center">
+                                    <ActionButton handleDeleteWeight={handleDeleteWeight}
+                                                  weight={row.entry} />
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

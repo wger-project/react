@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
     Autocomplete,
     Box,
@@ -21,19 +21,45 @@ import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { getTranslationKey } from "utils/strings";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
+import * as exerciseState from "state";
 
 
-export const Step1Basics = ({
-                                onContinue,
-                                setNewExerciseData,
-                                newExerciseData,
-                            }: StepProps) => {
+export const Step1Basics = ({ onContinue }: StepProps) => {
     const [t] = useTranslation();
+    const [state, dispatch] = exerciseState.useExerciseStateValue();
 
-    const [alternativeNamesEn, setAlternativeNamesEn] = useState<string[]>(newExerciseData.alternativeNamesEn);
-    const [muscles, setMuscles] = useState<number[]>(newExerciseData.muscles);
-    const [secondaryMuscles, setSecondaryMuscles] = useState<number[]>(newExerciseData.musclesSecondary);
-    const [equipment, setEquipment] = useState<number[]>(newExerciseData.equipment);
+    const [nameEn, setNameEn] = useState<string>(state.nameEn);
+    const [alternativeNamesEn, setAlternativeNamesEn] = useState<string[]>(state.alternativeNamesEn);
+    const [category, setCategory] = useState<number | null>(state.category);
+    const [primaryMuscles, setPrimaryMuscles] = useState<number[]>(state.muscles);
+    const [secondaryMuscles, setSecondaryMuscles] = useState<number[]>(state.musclesSecondary);
+    const [equipment, setEquipment] = useState<number[]>(state.equipment);
+
+
+    useEffect(() => {
+        dispatch(exerciseState.setNameEn(nameEn));
+    }, [dispatch, nameEn]);
+
+    useEffect(() => {
+        dispatch(exerciseState.setAlternativeNamesEn(alternativeNamesEn));
+    }, [dispatch, alternativeNamesEn]);
+
+    useEffect(() => {
+        dispatch(exerciseState.setCategory(category));
+    }, [dispatch, category]);
+
+    useEffect(() => {
+        dispatch(exerciseState.setEquipment(equipment));
+    }, [dispatch, equipment]);
+
+    useEffect(() => {
+        dispatch(exerciseState.setPrimaryMuscles(primaryMuscles));
+    }, [dispatch, primaryMuscles]);
+
+    useEffect(() => {
+        dispatch(exerciseState.setSecondaryMuscles(secondaryMuscles));
+    }, [dispatch, secondaryMuscles]);
+
 
     // Load data from server
     const categoryQuery = useCategoriesQuery();
@@ -56,23 +82,18 @@ export const Step1Basics = ({
     return (
         <Formik
             initialValues={{
-                nameEn: newExerciseData.nameEn,
+                nameEn: state.nameEn,
                 newAlternativeNameEn: "",
-                category: newExerciseData.category,
-                muscles: newExerciseData.muscles,
-                musclesSecondary: newExerciseData.musclesSecondary,
+                category: state.category !== null ? state.category : '',
+                muscles: state.muscles,
+                musclesSecondary: state.musclesSecondary,
             }}
             validationSchema={validationSchema}
             onSubmit={values => {
-                setNewExerciseData({
-                    ...newExerciseData,
-                    nameEn: values.nameEn,
-                    category: values.category,
-                    alternativeNamesEn: alternativeNamesEn,
-                    muscles: muscles,
-                    musclesSecondary: secondaryMuscles,
-                    equipment: equipment,
-                });
+
+                // The other values are set in the respective onChange handlers
+                setNameEn(values.nameEn);
+                setCategory(values.category as number);
 
                 onContinue!();
             }}
@@ -212,9 +233,9 @@ export const Step1Basics = ({
                                         secondaryMuscles.includes(option)
                                     }
                                     getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName(t)}
-                                    value={muscles}
+                                    value={primaryMuscles}
                                     onChange={(event, newValue) => {
-                                        setMuscles(newValue);
+                                        setPrimaryMuscles(newValue);
                                     }}
                                     renderInput={params => (
                                         <TextField
@@ -242,7 +263,7 @@ export const Step1Basics = ({
                                     id="secondary-muscles"
                                     options={musclesQuery.data!.map(m => m.id)}
                                     getOptionDisabled={(option) =>
-                                        muscles.includes(option)
+                                        primaryMuscles.includes(option)
                                     }
                                     getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName(t)}
                                     value={secondaryMuscles}
@@ -262,14 +283,14 @@ export const Step1Basics = ({
                             <Grid container>
                                 <Grid item xs={6} display="flex" justifyContent={"center"}>
                                     <MuscleOverview
-                                        primaryMuscles={muscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                        primaryMuscles={primaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                         secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                         isFront={true}
                                     />
                                 </Grid>
                                 <Grid item xs={6} display="flex" justifyContent={"center"}>
                                     <MuscleOverview
-                                        primaryMuscles={muscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                        primaryMuscles={primaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                         secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                         isFront={false}
                                     />

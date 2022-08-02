@@ -3,11 +3,10 @@ import { SetWeightState } from "./stateTypes";
 import { WeightEntry } from "components/BodyWeight/model";
 import { Notification } from "types";
 
-export type WeightAction =
-    {
-        type: SetWeightState,
-        payload: WeightEntry[] | WeightEntry | Notification
-    }
+export type WeightAction = {
+    type: SetWeightState,
+    payload: WeightEntry[] | WeightEntry | Notification
+}
 
 export const setWeights = (weights: WeightEntry[]): WeightAction => {
     return { type: SetWeightState.SET_WEIGHTS, payload: weights };
@@ -65,14 +64,12 @@ export const weightReducer = (state: WeightState, action: WeightAction): WeightS
         // remove a weight from state
         case SetWeightState.REMOVE_WEIGHT:
             const updatedWeightsAfterRemove = state.weights.filter(w => w.id !== (action.payload as WeightEntry).id);
-
             return {
                 ...state,
                 weights: updatedWeightsAfterRemove
             };
 
         case SetWeightState.SET_NOTIFICATION:
-
             return {
                 ...state,
                 notification: action.payload as Notification

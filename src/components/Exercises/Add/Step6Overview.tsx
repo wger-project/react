@@ -37,18 +37,18 @@ export const Step6Overview = ({
         // Create a new variation object if needed
         // TODO: PATCH the other exercise base (newVariationBaseId) with the new variation id
         let variationId;
-        if (newExerciseData.newVariationBaseId !== null) {
+        if (newExerciseData!.newVariationBaseId !== null) {
             variationId = await addVariation();
         } else {
-            variationId = newExerciseData.variationId;
+            variationId = newExerciseData!.variationId;
         }
 
         // Create the base
         const baseId = await addExerciseBase(
-            newExerciseData.category as number,
-            newExerciseData.equipment,
-            newExerciseData.muscles,
-            newExerciseData.musclesSecondary,
+            newExerciseData!.category as number,
+            newExerciseData!.equipment,
+            newExerciseData!.muscles,
+            newExerciseData!.musclesSecondary,
             variationId,
         );
 
@@ -56,27 +56,27 @@ export const Step6Overview = ({
         const exerciseId = await addExerciseTranslation(
             baseId,
             ENGLISH_LANGUAGE_ID,
-            newExerciseData.nameEn,
-            newExerciseData.descriptionEn,
+            newExerciseData!.nameEn,
+            newExerciseData!.descriptionEn,
         );
 
         // For each entry in alternative names, create a new alias
-        for (const alias of newExerciseData.alternativeNamesEn) {
+        for (const alias of newExerciseData!.alternativeNamesEn) {
             await postAlias(exerciseId, alias);
         }
 
         // Post the images
-        for (const image of newExerciseData.images) {
+        for (const image of newExerciseData!.images) {
             await postExerciseImage(baseId, image.file);
         }
 
         // Create the translation if needed
-        if (newExerciseData.languageId !== null) {
+        if (newExerciseData!.languageId !== null) {
             await addExerciseTranslation(
                 baseId,
-                newExerciseData.languageId,
-                newExerciseData.nameTranslation,
-                newExerciseData.descriptionTranslation,
+                newExerciseData!.languageId,
+                newExerciseData!.nameTranslation,
+                newExerciseData!.descriptionTranslation,
             );
         }
 
@@ -94,43 +94,43 @@ export const Step6Overview = ({
                     <Table>
                         <TableRow>
                             <TableCell>{t('name')}</TableCell>
-                            <TableCell>{newExerciseData!.nameEn}</TableCell>
+                            <TableCell>{newExerciseData!!.nameEn}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.alternativeNames')}</TableCell>
-                            <TableCell>{newExerciseData!.alternativeNamesEn.join(", ")}</TableCell>
+                            <TableCell>{newExerciseData!!.alternativeNamesEn.join(", ")}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('description')}</TableCell>
-                            <TableCell>{newExerciseData!.descriptionEn}</TableCell>
+                            <TableCell>{newExerciseData!!.descriptionEn}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('category')}</TableCell>
-                            <TableCell>{t(getTranslationKey(categoryQuery.data!.find(c => c.id === newExerciseData!.category)!.name))}</TableCell>
+                            <TableCell>{t(getTranslationKey(categoryQuery.data!.find(c => c.id === newExerciseData!!.category)!.name))}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.equipment')}</TableCell>
-                            <TableCell>{newExerciseData!.equipment.map(e => t(getTranslationKey(equipmentQuery.data!.find(value => value.id === e)!.name))).join(', ')}</TableCell>
+                            <TableCell>{newExerciseData!!.equipment.map(e => t(getTranslationKey(equipmentQuery.data!.find(value => value.id === e)!.name))).join(', ')}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.muscles')}</TableCell>
-                            <TableCell>{newExerciseData!.muscles.map(m => musclesQuery.data!.find(value => value.id === m)!.getName(t)).join(', ')}</TableCell>
+                            <TableCell>{newExerciseData!!.muscles.map(m => musclesQuery.data!.find(value => value.id === m)!.getName(t)).join(', ')}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.secondaryMuscles')}</TableCell>
-                            <TableCell>{newExerciseData!.musclesSecondary.map(m => musclesQuery.data!.find(value => value.id === m)!.getName(t)).join(', ')}</TableCell>
+                            <TableCell>{newExerciseData!!.musclesSecondary.map(m => musclesQuery.data!.find(value => value.id === m)!.getName(t)).join(', ')}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.variations')}</TableCell>
-                            <TableCell>{newExerciseData!.variationId} / {newExerciseData!.newVariationBaseId}</TableCell>
+                            <TableCell>{newExerciseData!!.variationId} / {newExerciseData!!.newVariationBaseId}</TableCell>
                         </TableRow>
                     </Table>
                 </TableContainer>
-                {newExerciseData!.images.length > 0 && (
+                {newExerciseData!!.images.length > 0 && (
                     <ImageList
                         cols={3}
                         style={{ maxHeight: "200px", }}>
-                        {newExerciseData!.images.map(imageEntry => (
+                        {newExerciseData!!.images.map(imageEntry => (
                             <ImageListItem key={imageEntry.url}>
                                 <img
                                     style={{ maxHeight: "200px", maxWidth: "200px" }}
@@ -144,29 +144,29 @@ export const Step6Overview = ({
                 )}
 
 
-                {newExerciseData!.languageId !== null && (
+                {newExerciseData!!.languageId !== null && (
                     <>
                         <Typography variant={"h6"} sx={{ mt: 3 }}>
-                            {languageQuery.data!.find(l => l.id === newExerciseData!.languageId)!.nameLong}
+                            {languageQuery.data!.find(l => l.id === newExerciseData!!.languageId)!.nameLong}
                         </Typography>
                         <TableContainer>
                             <Table>
                                 <TableRow>
                                     <TableCell>{t('name')}</TableCell>
                                     <TableCell>
-                                        {newExerciseData!.nameEn}
+                                        {newExerciseData!!.nameEn}
                                     </TableCell>
                                 </TableRow>
 
                                 <TableRow>
                                     <TableCell>{t('exercises.alternativeNames')}</TableCell>
-                                    <TableCell>{newExerciseData!.alternativeNamesTranslation.join(", ")}</TableCell>
+                                    <TableCell>{newExerciseData!!.alternativeNamesTranslation.join(", ")}</TableCell>
                                 </TableRow>
 
 
                                 <TableRow>
                                     <TableCell>{t('description')}</TableCell>
-                                    <TableCell>{newExerciseData!.descriptionTranslation}</TableCell>
+                                    <TableCell>{newExerciseData!!.descriptionTranslation}</TableCell>
                                 </TableRow>
                             </Table>
                         </TableContainer>

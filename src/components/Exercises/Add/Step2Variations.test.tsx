@@ -5,6 +5,7 @@ import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls } from 
 import { useBasesQuery } from "components/Exercises/queries";
 import { Step2Variations } from "components/Exercises/Add/Step2Variations";
 import userEvent from "@testing-library/user-event";
+import { ExerciseStateProvider } from "state";
 
 jest.mock("components/Exercises/queries");
 const mockedUseBasesQuery = useBasesQuery as jest.Mock;
@@ -85,18 +86,22 @@ describe("Test the add exercise step 2 component", () => {
         expect(screen.getByText("Crunches")).toBeInTheDocument();
     });
 
-    test("Correctly sets the variation ID", () => {
+    test("Correctly sets the variation ID", async () => {
         // Act
-        render(
-            <QueryClientProvider client={queryClient}>
-                <Step2Variations
-                    onContinue={mockOnContinue}
-                    newExerciseData={emptyExerciseData}
-                    setNewExerciseData={mockSetExerciseData} />
-            </QueryClientProvider>
+        const view = render(
+            <ExerciseStateProvider>
+                <QueryClientProvider client={queryClient}>
+                    <Step2Variations
+                        onContinue={mockOnContinue}
+                        newExerciseData={emptyExerciseData}
+                        setNewExerciseData={mockSetExerciseData} />
+                </QueryClientProvider>
+            </ExerciseStateProvider>
         );
         const benchpress = screen.getByText("Benchpress");
-        benchpress.click();
+        await userEvent.click(benchpress);
+
+        console.log(view);
 
         // Assert
         // Bench press and curls are in the same variation group, clicking on them

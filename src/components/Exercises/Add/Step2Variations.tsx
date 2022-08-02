@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Avatar,
     AvatarGroup,
@@ -14,9 +14,10 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useBasesQuery } from "components/Exercises/queries";
-import { addExerciseDataType, ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
+import * as exerciseState from "state";
 
 /*
  * Groups a list of objects by a property
@@ -36,48 +37,56 @@ function groupBy(list: any[], keyGetter: Function) {
 }
 
 // New component that displays the exercise info in a ListItem
-const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
+const ExerciseInfoListItem = ({ bases }: {
     bases: ExerciseBase[],
-    setNewExerciseData: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
-    newExerciseData: addExerciseDataType
 }) => {
-
-    const variationId = bases[0].variationId;
-    const baseId = bases[0].id;
     const MAX_EXERCISE_IMAGES = 4;
     const MAX_EXERCISE_NAMES = 5;
+    const basesVariationId = bases[0].variationId;
+    const baseId = bases[0].id;
+
+    const [state, dispatch] = exerciseState.useExerciseStateValue();
     const [showMore, setShowMore] = useState<boolean>(false);
+
+    const [stateVariationId, setStateVariationId] = useState<number | null>(state.variationId);
+    const [stateNewBaseVariationId, setStateNewBaseVariationId] = useState<number | null>(state.newVariationBaseId);
+
+    useEffect(() => {
+        dispatch(exerciseState.setVariationId(stateVariationId));
+    }, [dispatch, stateVariationId]);
+
+    useEffect(() => {
+        dispatch(exerciseState.setNewBaseVariationId(stateNewBaseVariationId));
+    }, [dispatch, stateNewBaseVariationId]);
+
 
     const handleToggle = (variationId: number | null, newVariationId: number | null) => () => {
 
         if (variationId !== null) {
             newVariationId = null;
-            if (variationId === newExerciseData.variationId) {
+            if (variationId === state.variationId) {
                 variationId = null;
             }
         } else {
             variationId = null;
-            if (newVariationId === newExerciseData.newVariationBaseId) {
+            if (newVariationId === state.newVariationBaseId) {
                 newVariationId = null;
             }
         }
 
-        setNewExerciseData({
-            ...newExerciseData,
-            variationId: variationId,
-            newVariationBaseId: newVariationId
-        });
+        setStateVariationId(variationId);
+        setStateNewBaseVariationId(newVariationId);
     };
 
     let isChecked;
-    if (variationId === null) {
-        isChecked = newExerciseData.newVariationBaseId === baseId;
+    if (basesVariationId === null) {
+        isChecked = state.newVariationBaseId === baseId;
     } else {
-        isChecked = variationId === newExerciseData.variationId;
+        isChecked = basesVariationId === state.variationId;
     }
 
     return <ListItem>
-        <ListItemButton onClick={handleToggle(variationId, baseId)}>
+        <ListItemButton onClick={handleToggle(basesVariationId, baseId)}>
             <Grid container>
                 <Grid item xs={3} display="flex" justifyContent={"start"} alignItems={"center"}>
                     <AvatarGroup max={MAX_EXERCISE_IMAGES} spacing={"small"}>
@@ -96,7 +105,7 @@ const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
                 </Grid>
                 <Grid item xs={2}>
                     <Switch
-                        key={`variation-${variationId}`}
+                        key={`variation-${basesVariationId}`}
                         edge="start"
                         checked={isChecked}
                         tabIndex={-1}
@@ -112,12 +121,7 @@ const ExerciseInfoListItem = ({ bases, setNewExerciseData, newExerciseData }: {
 };
 
 
-export const Step2Variations = ({
-                                    onContinue,
-                                    onBack,
-                                    setNewExerciseData,
-                                    newExerciseData,
-                                }: StepProps) => {
+export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
     const basesQuery = useBasesQuery();
 
@@ -125,7 +129,6 @@ export const Step2Variations = ({
     let groupedBases = new Map<number, ExerciseBase[]>();
     if (basesQuery.isSuccess) {
         groupedBases = groupBy(basesQuery.data.filter(b => b.variationId !== null), (b: ExerciseBase) => b.variationId);
-        //groupedBases = new Map();
     }
 
     return <>
@@ -139,16 +142,12 @@ export const Step2Variations = ({
                     <ExerciseInfoListItem
                         bases={[base]}
                         key={'base-' + base.id}
-                        setNewExerciseData={setNewExerciseData}
-                        newExerciseData={newExerciseData}
                     />
                 )}
                 {[...groupedBases.keys()].map(variationId =>
                     <ExerciseInfoListItem
                         bases={groupedBases.get(variationId)!}
                         key={'variation-' + variationId}
-                        setNewExerciseData={setNewExerciseData}
-                        newExerciseData={newExerciseData}
                     />
                 )}
 

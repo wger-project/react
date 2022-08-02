@@ -24,12 +24,12 @@ export const Step3Description = ({
     return (
         <Formik
             initialValues={{
-                description: newExerciseData.descriptionEn,
+                description: newExerciseData!.descriptionEn,
             }}
             validationSchema={validationSchema}
             onSubmit={values => {
-                setNewExerciseData({
-                    ...newExerciseData,
+                setNewExerciseData!({
+                    ...newExerciseData!,
                     descriptionEn: values.description,
                 });
 

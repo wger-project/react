@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Container, Stack, Step, StepContent, StepLabel, Stepper, Typography, } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Step1Basics } from "components/Exercises/Add/Step1Basics";
@@ -8,12 +8,13 @@ import { Step4Translations } from "components/Exercises/Add/Step4Translations";
 import { Step5Images } from "components/Exercises/Add/Step5Images";
 import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
 import { Step6Overview } from "components/Exercises/Add/Step6Overview";
+import * as exerciseState from "state";
 
 export type StepProps = {
     onContinue?: () => void;
     onBack?: React.MouseEventHandler<HTMLButtonElement>;
-    setNewExerciseData: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
-    newExerciseData: addExerciseDataType;
+    setNewExerciseData?: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
+    newExerciseData?: addExerciseDataType;
 };
 
 export const AddExerciseStepper = () => {
@@ -53,79 +54,89 @@ export const AddExerciseStepper = () => {
     const [newExerciseData, setNewExerciseData] =
         React.useState<addExerciseDataType>(emptyExerciseData);
 
+    const [state, dispatch] = exerciseState.useExerciseStateValue();
+
+    // Clear exercise data
+    useEffect(() => {
+        dispatch(exerciseState.reset());
+    });
+
+
     return (
-        <Container maxWidth="md">
-            <Stack direction={"row"}>
-                <Typography gutterBottom variant="h3" component="div">
-                    {t("exercises.contributeExercise")}
-                </Typography>
-            </Stack>
-            <Box>
-                <Stepper activeStep={activeStep} orientation="vertical">
-                    <Step key={1}>
-                        <StepLabel>{t("exercises.step1HeaderBasics")}</StepLabel>
-                        <StepContent>
-                            <Step1Basics
-                                onContinue={handleNext}
-                                setNewExerciseData={setNewExerciseData}
-                                newExerciseData={newExerciseData}
-                            />
-                        </StepContent>
-                    </Step>
-                    <Step key={2}>
-                        <StepLabel>{t("exercises.variations")}</StepLabel>
-                        <StepContent>
-                            <Step2Variations
-                                onContinue={handleNext}
-                                onBack={handleBack}
-                                setNewExerciseData={setNewExerciseData}
-                                newExerciseData={newExerciseData}
-                            />
-                        </StepContent>
-                    </Step>
-                    <Step key={3}>
-                        <StepLabel>{t("description")}</StepLabel>
-                        <StepContent>
-                            <Step3Description
-                                onContinue={handleNext}
-                                onBack={handleBack}
-                                setNewExerciseData={setNewExerciseData}
-                                newExerciseData={newExerciseData}
-                            />
-                        </StepContent>
-                    </Step>
-                    <Step key={4}>
-                        <StepLabel>{t("translation")}</StepLabel>
-                        <StepContent>
-                            <Step4Translations onContinue={handleNext}
-                                               onBack={handleBack}
-                                               setNewExerciseData={setNewExerciseData}
-                                               newExerciseData={newExerciseData} />
-                        </StepContent>
-                    </Step>
-                    <Step key={5}>
-                        <StepLabel>{t("images")}</StepLabel>
-                        <StepContent>
-                            <Step5Images
-                                onContinue={handleNext}
-                                onBack={handleBack}
-                                setNewExerciseData={setNewExerciseData}
-                                newExerciseData={newExerciseData}
-                            />
-                        </StepContent>
-                    </Step>
-                    <Step key={6}>
-                        <StepLabel>{t("overview")}</StepLabel>
-                        <StepContent>
-                            <Step6Overview
-                                onBack={handleBack}
-                                setNewExerciseData={setNewExerciseData}
-                                newExerciseData={newExerciseData}
-                            />
-                        </StepContent>
-                    </Step>
-                </Stepper>
-            </Box>
-        </Container>
+        <exerciseState.ExerciseStateProvider>
+            <Container maxWidth="md">
+                <Stack direction={"row"}>
+                    <Typography gutterBottom variant="h3" component="div">
+                        {t("exercises.contributeExercise")}
+                    </Typography>
+                </Stack>
+                <Box>
+                    <Stepper activeStep={activeStep} orientation="vertical">
+                        <Step key={1}>
+                            <StepLabel>{t("exercises.step1HeaderBasics")}</StepLabel>
+                            <StepContent>
+                                <Step1Basics
+                                    onContinue={handleNext}
+                                    setNewExerciseData={setNewExerciseData}
+                                    newExerciseData={newExerciseData}
+                                />
+                            </StepContent>
+                        </Step>
+                        <Step key={2}>
+                            <StepLabel>{t("exercises.variations")}</StepLabel>
+                            <StepContent>
+                                <Step2Variations
+                                    onContinue={handleNext}
+                                    onBack={handleBack}
+                                    setNewExerciseData={setNewExerciseData}
+                                    newExerciseData={newExerciseData}
+                                />
+                            </StepContent>
+                        </Step>
+                        <Step key={3}>
+                            <StepLabel>{t("description")}</StepLabel>
+                            <StepContent>
+                                <Step3Description
+                                    onContinue={handleNext}
+                                    onBack={handleBack}
+                                    setNewExerciseData={setNewExerciseData}
+                                    newExerciseData={newExerciseData}
+                                />
+                            </StepContent>
+                        </Step>
+                        <Step key={4}>
+                            <StepLabel>{t("translation")}</StepLabel>
+                            <StepContent>
+                                <Step4Translations onContinue={handleNext}
+                                                   onBack={handleBack}
+                                                   setNewExerciseData={setNewExerciseData}
+                                                   newExerciseData={newExerciseData} />
+                            </StepContent>
+                        </Step>
+                        <Step key={5}>
+                            <StepLabel>{t("images")}</StepLabel>
+                            <StepContent>
+                                <Step5Images
+                                    onContinue={handleNext}
+                                    onBack={handleBack}
+                                    setNewExerciseData={setNewExerciseData}
+                                    newExerciseData={newExerciseData}
+                                />
+                            </StepContent>
+                        </Step>
+                        <Step key={6}>
+                            <StepLabel>{t("overview")}</StepLabel>
+                            <StepContent>
+                                <Step6Overview
+                                    onBack={handleBack}
+                                    setNewExerciseData={setNewExerciseData}
+                                    newExerciseData={newExerciseData}
+                                />
+                            </StepContent>
+                        </Step>
+                    </Stepper>
+                </Box>
+            </Container>
+        </exerciseState.ExerciseStateProvider>
     );
 };
