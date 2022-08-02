@@ -13,7 +13,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 jest.mock("services");
 
-describe("Test the ExerciseOverview component", () => {
+describe.skip("Test the ExerciseOverview component", () => {
 
     const categories = [
         new Category(1, 'Arms'),

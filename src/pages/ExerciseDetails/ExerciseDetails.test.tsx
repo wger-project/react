@@ -15,7 +15,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 //  one of this fxns like getExerciseBase, it calls the jest.fn() that was assigned to it
 jest.mock("services");
 
-describe("Should render with", () => {
+describe.skip("Should render with", () => {
     const categories = [
         new Category(1, 'Arms'),
         new Category(2, 'Legs'),
