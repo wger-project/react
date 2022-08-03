@@ -6,7 +6,6 @@ import userEvent from "@testing-library/user-event";
 
 const mockOnContinue = jest.fn();
 const mockOnBack = jest.fn();
-const mockSetExerciseData = jest.fn();
 
 describe("Test the add exercise step 3 component", () => {
 
@@ -48,8 +47,5 @@ describe("Test the add exercise step 3 component", () => {
 
         // Assert
         expect(mockOnContinue).toHaveBeenCalled();
-        expect(mockSetExerciseData).lastCalledWith({
-            descriptionEn: 'The wild boar is a suid native to much of Eurasia and North Africa',
-        });
     });
 });
