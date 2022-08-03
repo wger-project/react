@@ -52,9 +52,6 @@ export const setImages = (images: ImageFormData[]): ExerciseAction => {
 
 export const exerciseReducer = (state: ExerciseState, action: ExerciseAction): ExerciseState => {
 
-    console.log("exerciseReducer", state, action);
-    console.log('__________________________________________________');
-
     switch (action.type) {
         case SetExerciseState.RESET:
             return exerciseInitialState;
@@ -129,6 +126,12 @@ export const exerciseReducer = (state: ExerciseState, action: ExerciseAction): E
             return {
                 ...state,
                 descriptionI18n: action.payload as string
+            };
+
+        case SetExerciseState.SET_ALIASES_I18N:
+            return {
+                ...state,
+                alternativeNamesI18n: action.payload as string[]
             };
 
         case SetExerciseState.SET_IMAGES:

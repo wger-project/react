@@ -31,18 +31,18 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
 
     const [translateExercise, setTranslateExercise] = useState<boolean>(state.languageId !== null);
 
-    const [localLanguageId, setLocalLanguageId] = React.useState<number | null>(state.languageId);
-    const [LocalNameI18n, setLocalNameI18n] = React.useState<string>(state.nameI18n);
-    const [localDescriptionI18n, setLocalDescriptionI18n] = React.useState<string>(state.descriptionI18n);
-    const [localAlternativeNamesI18n, setLocalAlternativeNamesI18n] = React.useState<string[]>(state.alternativeNamesI18n);
+    const [localLanguageId, setLocalLanguageId] = useState<number | null>(state.languageId);
+    const [localNameI18n, setLocalNameI18n] = useState<string>(state.nameI18n);
+    const [localAlternativeNamesI18n, setLocalAlternativeNamesI18n] = useState<string[]>(state.alternativeNamesI18n);
+    const [localDescriptionI18n, setLocalDescriptionI18n] = useState<string>(state.descriptionI18n);
 
     useEffect(() => {
         dispatch(setLanguageId(localLanguageId));
     }, [dispatch, localLanguageId]);
 
     useEffect(() => {
-        dispatch(setNameI18n(LocalNameI18n));
-    }, [dispatch, LocalNameI18n]);
+        dispatch(setNameI18n(localNameI18n));
+    }, [dispatch, localNameI18n]);
 
     useEffect(() => {
         dispatch(setDescriptionI18n(localDescriptionI18n));
@@ -69,7 +69,6 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
         } : {}
     );
 
-
     return <Formik
         initialValues={{
             name: state.nameI18n,
@@ -83,7 +82,6 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
             setLocalNameI18n(values.name);
             setLocalDescriptionI18n(values.description);
             setLocalLanguageId(values.language === '' ? null : values.language as unknown as number);
-
 
             onContinue!();
         }}
@@ -109,13 +107,11 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
                                     labelId="label-language"
                                     id="language"
                                     value={formik.getFieldProps("language").value}
-
                                     onChange={e => {
                                         formik.setFieldValue(
                                             formik.getFieldProps("language").name,
                                             e.target.value
                                         );
-                                        // setCategory(e.target.value);
                                     }}
                                     label={t('language')}
                                     error={Boolean(
