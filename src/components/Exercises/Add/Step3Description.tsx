@@ -1,18 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Stack, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Form, Formik } from "formik";
 import * as yup from "yup";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
+import { useExerciseStateValue } from "state";
+import { setDescriptionEn } from "state/exerciseReducer";
 
 
-export const Step3Description = ({
-                                     onContinue,
-                                     onBack,
-                                     setNewExerciseData,
-                                     newExerciseData,
-                                 }: StepProps) => {
+export const Step3Description = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
+    const [state, dispatch] = useExerciseStateValue();
+    const [localDescriptionEn, setLocalDescriptionEn] = useState<string>(state.descriptionEn);
+
+    useEffect(() => {
+        dispatch(setDescriptionEn(localDescriptionEn));
+    }, [dispatch, localDescriptionEn]);
 
     const validationSchema = yup.object({
         description: yup
@@ -24,15 +27,11 @@ export const Step3Description = ({
     return (
         <Formik
             initialValues={{
-                description: newExerciseData!.descriptionEn,
+                description: state.descriptionEn,
             }}
             validationSchema={validationSchema}
             onSubmit={values => {
-                setNewExerciseData!({
-                    ...newExerciseData!,
-                    descriptionEn: values.description,
-                });
-
+                setLocalDescriptionEn(values.description as string);
                 onContinue!();
             }}
         >

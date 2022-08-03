@@ -1,7 +1,12 @@
 import { ImageFormData } from "components/Exercises/models/exerciseBase";
 import React, { createContext, useContext, useReducer } from "react";
-import { ExerciseAction, exerciseReducer } from "state/exerciseReducer";
+import { exerciseReducer } from "state/exerciseReducer";
+import { SetExerciseState } from "state/stateTypes";
 
+export type ExerciseAction = {
+    type: SetExerciseState,
+    payload?: number | number[] | string | string[] | null | ImageFormData[],
+}
 
 export type ExerciseState = {
     nameEn: string;
@@ -9,9 +14,9 @@ export type ExerciseState = {
     alternativeNamesEn: string[];
 
     languageId: number | null;
-    nameTranslation: string;
-    alternativeNamesTranslation: string[];
-    descriptionTranslation: string;
+    nameI18n: string;
+    alternativeNamesI18n: string[];
+    descriptionI18n: string;
 
     category: number | null;
     muscles: number[];
@@ -36,9 +41,9 @@ export const exerciseInitialState: ExerciseState = {
     descriptionEn: "",
     alternativeNamesEn: [],
 
-    nameTranslation: "",
-    alternativeNamesTranslation: [],
-    descriptionTranslation: "",
+    nameI18n: "",
+    alternativeNamesI18n: [],
+    descriptionI18n: "",
     images: [],
 };
 

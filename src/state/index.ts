@@ -12,6 +12,7 @@ export { SetWeightState, SetExerciseState } from 'state/stateTypes';
 
 
 export type { ExerciseState } from 'state/exerciseState';
+/*
 export {
     exerciseReducer,
     setNameEn,
@@ -24,7 +25,9 @@ export {
     setNewBaseVariationId,
     reset
 } from 'state/exerciseReducer';
-export type { ExerciseAction } from 'state/exerciseReducer';
+
+ */
+//export type { ExerciseAction } from 'state/exerciseReducer';
 export { ExerciseStateProvider, useExerciseStateValue, exerciseInitialState } from 'state/exerciseState';
 
 

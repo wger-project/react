@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Box, Container, Stack, Step, StepContent, StepLabel, Stepper, Typography, } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Step1Basics } from "components/Exercises/Add/Step1Basics";
@@ -29,10 +29,6 @@ export const AddExerciseStepper = () => {
         setActiveStep(prevActiveStep => prevActiveStep - 1);
     };
 
-    const handleReset = () => {
-        setActiveStep(0);
-    };
-
     const emptyExerciseData = {
         category: "",
         muscles: [],
@@ -54,14 +50,6 @@ export const AddExerciseStepper = () => {
     const [newExerciseData, setNewExerciseData] =
         React.useState<addExerciseDataType>(emptyExerciseData);
 
-    const [state, dispatch] = exerciseState.useExerciseStateValue();
-
-    // Clear exercise data
-    useEffect(() => {
-        dispatch(exerciseState.reset());
-    });
-
-
     return (
         <exerciseState.ExerciseStateProvider>
             <Container maxWidth="md">
@@ -77,8 +65,6 @@ export const AddExerciseStepper = () => {
                             <StepContent>
                                 <Step1Basics
                                     onContinue={handleNext}
-                                    setNewExerciseData={setNewExerciseData}
-                                    newExerciseData={newExerciseData}
                                 />
                             </StepContent>
                         </Step>
@@ -88,8 +74,6 @@ export const AddExerciseStepper = () => {
                                 <Step2Variations
                                     onContinue={handleNext}
                                     onBack={handleBack}
-                                    setNewExerciseData={setNewExerciseData}
-                                    newExerciseData={newExerciseData}
                                 />
                             </StepContent>
                         </Step>
@@ -99,18 +83,16 @@ export const AddExerciseStepper = () => {
                                 <Step3Description
                                     onContinue={handleNext}
                                     onBack={handleBack}
-                                    setNewExerciseData={setNewExerciseData}
-                                    newExerciseData={newExerciseData}
                                 />
                             </StepContent>
                         </Step>
                         <Step key={4}>
                             <StepLabel>{t("translation")}</StepLabel>
                             <StepContent>
-                                <Step4Translations onContinue={handleNext}
-                                                   onBack={handleBack}
-                                                   setNewExerciseData={setNewExerciseData}
-                                                   newExerciseData={newExerciseData} />
+                                <Step4Translations
+                                    onContinue={handleNext}
+                                    onBack={handleBack}
+                                />
                             </StepContent>
                         </Step>
                         <Step key={5}>

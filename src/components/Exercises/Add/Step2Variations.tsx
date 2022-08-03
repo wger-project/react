@@ -17,7 +17,8 @@ import { useBasesQuery } from "components/Exercises/queries";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
-import * as exerciseState from "state";
+import { useExerciseStateValue } from "state";
+import { setNewBaseVariationId, setVariationId } from "state/exerciseReducer";
 
 /*
  * Groups a list of objects by a property
@@ -45,18 +46,18 @@ const ExerciseInfoListItem = ({ bases }: {
     const basesVariationId = bases[0].variationId;
     const baseId = bases[0].id;
 
-    const [state, dispatch] = exerciseState.useExerciseStateValue();
+    const [state, dispatch] = useExerciseStateValue();
     const [showMore, setShowMore] = useState<boolean>(false);
 
     const [stateVariationId, setStateVariationId] = useState<number | null>(state.variationId);
     const [stateNewBaseVariationId, setStateNewBaseVariationId] = useState<number | null>(state.newVariationBaseId);
 
     useEffect(() => {
-        dispatch(exerciseState.setVariationId(stateVariationId));
+        dispatch(setVariationId(stateVariationId));
     }, [dispatch, stateVariationId]);
 
     useEffect(() => {
-        dispatch(exerciseState.setNewBaseVariationId(stateNewBaseVariationId));
+        dispatch(setNewBaseVariationId(stateNewBaseVariationId));
     }, [dispatch, stateNewBaseVariationId]);
 
 

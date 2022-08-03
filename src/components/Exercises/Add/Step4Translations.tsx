@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Autocomplete,
     Box,
@@ -21,19 +21,36 @@ import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { useExerciseStateValue } from "state";
+import { setAlternativeNamesI18n, setDescriptionI18n, setLanguageId, setNameI18n } from "state/exerciseReducer";
 
-export const Step4Translations = ({
-                                      setNewExerciseData,
-                                      newExerciseData,
-                                      onContinue,
-                                      onBack,
-                                  }: StepProps) => {
+export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
     const languageQuery = useLanguageQuery();
-    const [translateExercise, setTranslateExercise] = useState<boolean>(newExerciseData!.languageId !== null);
-    const [alternativeNames, setAlternativeNames] = React.useState<string[]>(
-        newExerciseData!.alternativeNamesTranslation
-    );
+    const [state, dispatch] = useExerciseStateValue();
+
+    const [translateExercise, setTranslateExercise] = useState<boolean>(state.languageId !== null);
+
+    const [localLanguageId, setLocalLanguageId] = React.useState<number | null>(state.languageId);
+    const [LocalNameI18n, setLocalNameI18n] = React.useState<string>(state.nameI18n);
+    const [localDescriptionI18n, setLocalDescriptionI18n] = React.useState<string>(state.descriptionI18n);
+    const [localAlternativeNamesI18n, setLocalAlternativeNamesI18n] = React.useState<string[]>(state.alternativeNamesI18n);
+
+    useEffect(() => {
+        dispatch(setLanguageId(localLanguageId));
+    }, [dispatch, localLanguageId]);
+
+    useEffect(() => {
+        dispatch(setNameI18n(LocalNameI18n));
+    }, [dispatch, LocalNameI18n]);
+
+    useEffect(() => {
+        dispatch(setDescriptionI18n(localDescriptionI18n));
+    }, [dispatch, localDescriptionI18n]);
+
+    useEffect(() => {
+        dispatch(setAlternativeNamesI18n(localAlternativeNamesI18n));
+    }, [dispatch, localAlternativeNamesI18n]);
 
     const validationSchema = yup.object(
         translateExercise ? {
@@ -55,20 +72,18 @@ export const Step4Translations = ({
 
     return <Formik
         initialValues={{
-            name: newExerciseData!.nameTranslation,
+            name: state.nameI18n,
             alternativeNames: '',
-            description: newExerciseData!.descriptionTranslation,
-            language: newExerciseData!.languageId === null ? '' : newExerciseData!.languageId,
+            description: state.descriptionI18n,
+            language: state.languageId === null ? '' : state.languageId,
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-            setNewExerciseData!({
-                ...newExerciseData!,
-                nameTranslation: values.name,
-                alternativeNamesTranslation: alternativeNames,
-                descriptionTranslation: values.description,
-                languageId: values.language === '' ? null : values.language as unknown as number,
-            });
+
+            setLocalNameI18n(values.name);
+            setLocalDescriptionI18n(values.description);
+            setLocalLanguageId(values.language === '' ? null : values.language as unknown as number);
+
 
             onContinue!();
         }}
@@ -132,11 +147,11 @@ export const Step4Translations = ({
                         <Autocomplete
                             multiple
                             id="tags-filled"
-                            options={alternativeNames}
+                            options={localAlternativeNamesI18n}
                             freeSolo
-                            value={alternativeNames}
+                            value={localAlternativeNamesI18n}
                             onChange={(event, newValue) => {
-                                setAlternativeNames(newValue);
+                                setLocalAlternativeNamesI18n(newValue);
                             }}
                             renderTags={(value: readonly string[], getTagProps) =>
                                 value.map((option: string, index: number) => (

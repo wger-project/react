@@ -21,12 +21,13 @@ import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { getTranslationKey } from "utils/strings";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
-import * as exerciseState from "state";
+import { useExerciseStateValue } from "state";
+import * as exerciseReducer from "state/exerciseReducer";
 
 
 export const Step1Basics = ({ onContinue }: StepProps) => {
     const [t] = useTranslation();
-    const [state, dispatch] = exerciseState.useExerciseStateValue();
+    const [state, dispatch] = useExerciseStateValue();
 
     const [nameEn, setNameEn] = useState<string>(state.nameEn);
     const [alternativeNamesEn, setAlternativeNamesEn] = useState<string[]>(state.alternativeNamesEn);
@@ -37,27 +38,27 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
 
 
     useEffect(() => {
-        dispatch(exerciseState.setNameEn(nameEn));
+        dispatch(exerciseReducer.setNameEn(nameEn));
     }, [dispatch, nameEn]);
 
     useEffect(() => {
-        dispatch(exerciseState.setAlternativeNamesEn(alternativeNamesEn));
+        dispatch(exerciseReducer.setAlternativeNamesEn(alternativeNamesEn));
     }, [dispatch, alternativeNamesEn]);
 
     useEffect(() => {
-        dispatch(exerciseState.setCategory(category));
+        dispatch(exerciseReducer.setCategory(category));
     }, [dispatch, category]);
 
     useEffect(() => {
-        dispatch(exerciseState.setEquipment(equipment));
+        dispatch(exerciseReducer.setEquipment(equipment));
     }, [dispatch, equipment]);
 
     useEffect(() => {
-        dispatch(exerciseState.setPrimaryMuscles(primaryMuscles));
+        dispatch(exerciseReducer.setPrimaryMuscles(primaryMuscles));
     }, [dispatch, primaryMuscles]);
 
     useEffect(() => {
-        dispatch(exerciseState.setSecondaryMuscles(secondaryMuscles));
+        dispatch(exerciseReducer.setSecondaryMuscles(secondaryMuscles));
     }, [dispatch, secondaryMuscles]);
 
 
