@@ -6,15 +6,12 @@ import { Step2Variations } from "components/Exercises/Add/Step2Variations";
 import { Step3Description } from "components/Exercises/Add/Step3Description";
 import { Step4Translations } from "components/Exercises/Add/Step4Translations";
 import { Step5Images } from "components/Exercises/Add/Step5Images";
-import { addExerciseDataType } from "components/Exercises/models/exerciseBase";
 import { Step6Overview } from "components/Exercises/Add/Step6Overview";
 import * as exerciseState from "state";
 
 export type StepProps = {
     onContinue?: () => void;
     onBack?: React.MouseEventHandler<HTMLButtonElement>;
-    setNewExerciseData?: React.Dispatch<React.SetStateAction<addExerciseDataType>>;
-    newExerciseData?: addExerciseDataType;
 };
 
 export const AddExerciseStepper = () => {
@@ -28,28 +25,7 @@ export const AddExerciseStepper = () => {
     const handleBack = () => {
         setActiveStep(prevActiveStep => prevActiveStep - 1);
     };
-
-    const emptyExerciseData = {
-        category: "",
-        muscles: [],
-        musclesSecondary: [],
-        variationId: null,
-        newVariationBaseId: null,
-        languageId: null,
-        equipment: [],
-
-        nameEn: "",
-        descriptionEn: "",
-        alternativeNamesEn: [],
-
-        nameTranslation: "",
-        alternativeNamesTranslation: [],
-        descriptionTranslation: "",
-        images: [],
-    };
-    const [newExerciseData, setNewExerciseData] =
-        React.useState<addExerciseDataType>(emptyExerciseData);
-
+    
     return (
         <exerciseState.ExerciseStateProvider>
             <Container maxWidth="md">
@@ -101,8 +77,6 @@ export const AddExerciseStepper = () => {
                                 <Step5Images
                                     onContinue={handleNext}
                                     onBack={handleBack}
-                                    setNewExerciseData={setNewExerciseData}
-                                    newExerciseData={newExerciseData}
                                 />
                             </StepContent>
                         </Step>
@@ -111,8 +85,6 @@ export const AddExerciseStepper = () => {
                             <StepContent>
                                 <Step6Overview
                                     onBack={handleBack}
-                                    setNewExerciseData={setNewExerciseData}
-                                    newExerciseData={newExerciseData}
                                 />
                             </StepContent>
                         </Step>

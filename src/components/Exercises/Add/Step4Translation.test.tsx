@@ -12,48 +12,12 @@ const mockOnBack = jest.fn();
 const mockSetExerciseData = jest.fn();
 const queryClient = new QueryClient();
 
-let emptyExerciseData = {
-    category: "",
-    muscles: [],
-    musclesSecondary: [],
-    variationId: null,
-    newVariationBaseId: null,
-    languageId: null,
-    equipment: [],
-
-    nameEn: "",
-    descriptionEn: "",
-    alternativeNamesEn: [],
-
-    nameTranslation: "",
-    alternativeNamesTranslation: [],
-    descriptionTranslation: "",
-    images: [],
-};
-
 describe("Test the add exercise step 4 component", () => {
 
     beforeEach(() => {
 
         mockedUseLanguageQuery.mockImplementation(() => ({ isLoading: false, data: testLanguages }));
-        emptyExerciseData = {
-            category: "",
-            muscles: [],
-            musclesSecondary: [],
-            variationId: null,
-            newVariationBaseId: null,
-            languageId: null,
-            equipment: [],
 
-            nameEn: "",
-            descriptionEn: "",
-            alternativeNamesEn: [],
-
-            nameTranslation: "",
-            alternativeNamesTranslation: [],
-            descriptionTranslation: "",
-            images: [],
-        };
     });
 
 
@@ -64,8 +28,7 @@ describe("Test the add exercise step 4 component", () => {
                 <Step4Translations
                     onContinue={mockOnContinue}
                     onBack={mockOnBack}
-                    newExerciseData={emptyExerciseData}
-                    setNewExerciseData={mockSetExerciseData} />
+                />
             </QueryClientProvider>
         );
 
@@ -83,8 +46,7 @@ describe("Test the add exercise step 4 component", () => {
                 <Step4Translations
                     onContinue={mockOnContinue}
                     onBack={mockOnBack}
-                    newExerciseData={emptyExerciseData}
-                    setNewExerciseData={mockSetExerciseData} />
+                />
             </QueryClientProvider>
         );
         const button = screen.getByRole('checkbox');

@@ -117,22 +117,3 @@ export type ImageFormData = {
     file: File;
 };
 
-export type addExerciseDataType = {
-    nameEn: string;
-    descriptionEn: string;
-    alternativeNamesEn: string[];
-
-    languageId: number | null;
-    nameTranslation: string;
-    alternativeNamesTranslation: string[];
-    descriptionTranslation: string;
-
-    category: number | string | null; // MUI menu option have values number, string or null
-    muscles: number[];
-    musclesSecondary: number[];
-    equipment: number[];
-    variationId: number | null;
-    newVariationBaseId: number | null;
-
-    images: ImageFormData[];
-};
