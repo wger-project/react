@@ -14,6 +14,8 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useTranslation } from "react-i18next";
 import { Muscle } from "components/Exercises/models/muscle";
 import { getTranslationKey } from "utils/strings";
+import { MuscleOverview } from "components/Muscles/MuscleOverview";
+import { LightTooltip } from "components/Core/Tooltips/LightToolTip";
 
 type MuscleFilterProps = {
     muscles: Muscle[];
@@ -53,9 +55,20 @@ export const MuscleFilter = ({ muscles, selectedMuscles, setSelectedMuscles }: M
                                 key={m.id}
                                 disablePadding
                                 secondaryAction={
-                                    <IconButton edge="end" aria-label="comments">
-                                        <InfoOutlinedIcon />
-                                    </IconButton>
+                                    <LightTooltip
+                                        title={
+                                            <MuscleOverview
+                                                primaryMuscles={[m]}
+                                                secondaryMuscles={[]}
+                                                isFront={m.isFront}
+                                            />
+                                        }
+                                        placement="right"
+                                        arrow>
+                                        <IconButton edge="end" aria-label="comments">
+                                            <InfoOutlinedIcon />
+                                        </IconButton>
+                                    </LightTooltip>
                                 }
                             >
                                 <ListItemButton role={undefined} onClick={handleToggle(m)} dense>
@@ -69,10 +82,12 @@ export const MuscleFilter = ({ muscles, selectedMuscles, setSelectedMuscles }: M
                                             inputProps={{ 'aria-labelledby': labelId }}
                                         />
                                     </ListItemIcon>
+
                                     <ListItemText
                                         id={labelId}
                                         primary={m.name}
                                         secondary={m.nameEn !== '' ? t(getTranslationKey(m.nameEn)) : ''} />
+
                                 </ListItemButton>
                             </ListItem>
                         );
