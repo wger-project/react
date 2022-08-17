@@ -70,7 +70,7 @@ export const Head = ({
             <div className={styles.detail_language}>
 
                 <div className={styles.detail}>
-                    <Link to='/exercises'>Exercise</Link>  &gt; {currentTranslation?.name}
+                    <Link to='../overview'>Exercises</Link>  &gt; {currentTranslation?.name}
                 </div>
                 <div className={styles.languages}>
                     <div className={styles.language}>

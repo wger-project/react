@@ -23,11 +23,8 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
     const [t] = useTranslation();
 
     return (
-        <Card
-            key={exerciseBase.id}
-            onClick={() => navigate(`../${exerciseBase.id}`)}
-        >
-            <CardActionArea>
+        <Card key={exerciseBase.id}>
+            <CardActionArea href={`${exerciseBase.id}`}>
                 {exerciseBase.mainImage ?
                     <CardMedia
                         component="img"
@@ -66,5 +63,6 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                 </CardContent>
             </CardActionArea>
         </Card>
+
     );
 };
