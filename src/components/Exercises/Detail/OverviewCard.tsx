@@ -14,7 +14,6 @@ type OverviewCardProps = {
 };
 
 export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
-    const navigate = useNavigate();
     const exercise = language
         ? exerciseBase.getTranslation(language)
         : exerciseBase.getTranslation(

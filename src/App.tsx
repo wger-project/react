@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './App.module.css';
-import { Header, } from 'components';
-import { Route, Routes } from 'react-router-dom';
+import {Header,} from 'components';
+import {Route, Routes} from 'react-router-dom';
 import {
     About,
     AddExercise,
@@ -11,7 +11,6 @@ import {
     Calendar,
     CaloriesCalculator,
     Equipments,
-    ExerciseDetails,
     Gallery,
     Ingredients,
     Login,
@@ -23,9 +22,10 @@ import {
     Workout,
     WorkoutSchedule,
 } from 'pages';
-import { Notifications } from 'components/Core/Notifications';
-import { Dashboard } from "components/Dashboard/Dashboard";
-import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
+import {Notifications} from 'components/Core/Notifications';
+import {Dashboard} from "components/Dashboard/Dashboard";
+import {ExerciseOverview} from "components/Exercises/ExerciseOverview";
+import {ExerciseDetailPage} from "pages/ExerciseDetails";
 
 
 function App() {
@@ -52,11 +52,10 @@ function App() {
                     <Route path="exercise">
                         <Route index element={<ExerciseOverview />} />
                         <Route path="overview" element={<ExerciseOverview />} />
-                        <Route path=":baseID" element={<ExerciseDetails />}>
-                            <Route path="view" element={<ExerciseDetails />} />
-                            <Route path="view/:slug" element={<ExerciseDetails />} />
+                        <Route path=":baseID" element={<ExerciseDetailPage />}>
+                            <Route path="view" element={<ExerciseDetailPage />} />
+                            <Route path="view/:slug" element={<ExerciseDetailPage />} />
                         </Route>
-
                         <Route path="add" element={<AddExercise />} />
                     </Route>
                     <Route path="weight">
@@ -90,7 +89,7 @@ function App() {
                 <Route
                     path="*"
                     element={
-                        <main style={{ padding: "1rem" }}>
+                        <main style={{padding: "1rem"}}>
                             <p>404, Page NOT FOUND</p>
                         </main>
                     }
