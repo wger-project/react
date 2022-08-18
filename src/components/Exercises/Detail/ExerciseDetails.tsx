@@ -84,8 +84,8 @@ export const ExerciseDetails = () => {
         setCurrentTranslation(newTranslatedExercise);
     };
 
-    const variantExercises = variationsQuery.isSuccess
-        ? variationsQuery.data!.map(variantExercise => {
+    const variations = variationsQuery.isSuccess
+        ? variationsQuery.data!.filter((b) => b.id !== exerciseBaseID).map(variantExercise => {
             return (
                 <OverviewCard
                     key={variantExercise.id}
