@@ -2,7 +2,12 @@ import React from 'react';
 import {act, render, screen} from '@testing-library/react';
 import {ExerciseDetails} from './ExerciseDetails';
 import {MemoryRouter, Route, Routes} from 'react-router';
-import {getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName, getLanguages} from "services";
+import {
+    getExerciseBase,
+    getExerciseBasesForVariation,
+    getLanguageByShortName,
+    getLanguages
+} from "services";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {
     testExerciseCrunches,
@@ -50,7 +55,7 @@ describe("Render tests", () => {
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/exercises/9']}>
                     <Routes>
-                        <Route path='exercises/:baseID' element={<ExerciseDetails/>}/>
+                        <Route path='exercises/:baseID' element={<ExerciseDetails />} />
                     </Routes>
                 </MemoryRouter>
             </QueryClientProvider>

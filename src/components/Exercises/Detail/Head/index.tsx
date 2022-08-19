@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
-import { Button, Chip, Divider, ListItemIcon, ListItemText, Menu, MenuItem, Stack } from '@mui/material';
-import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
-import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
-import { Language } from 'components/Exercises/models/language';
-import { Link } from 'react-router-dom';
+import React, {useState} from 'react';
+import {
+    Button,
+    Chip,
+    Divider,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Stack
+} from '@mui/material';
+import {ExerciseBase} from 'components/Exercises/models/exerciseBase';
+import {ExerciseTranslation} from 'components/Exercises/models/exerciseTranslation';
+import {Language} from 'components/Exercises/models/language';
+import {Link} from 'react-router-dom';
 import styles from './head.module.css';
-import { getTranslationKey } from "utils/strings";
-import { useTranslation } from "react-i18next";
+import {getTranslationKey} from "utils/strings";
+import {useTranslation} from "react-i18next";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import RedoIcon from '@mui/icons-material/Redo';
 import AddIcon from '@mui/icons-material/Add';
@@ -18,6 +27,7 @@ export interface HeadProp {
     changeLanguage: (lang: Language) => void,
     language: Language | undefined // language displayed in the head since it's not found in the translations
     currentTranslation: ExerciseTranslation | undefined
+    setEditMode: Function
 }
 
 export const Head = ({
@@ -26,14 +36,12 @@ export const Head = ({
                          availableLanguages,
                          changeLanguage,
                          language,
-                         currentTranslation
+                         currentTranslation,
+                         setEditMode
                      }: HeadProp) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openLanguageMenu = Boolean(anchorEl);
     const [t] = useTranslation();
-
-    // console.log(exercise);
-    // console.log(currentTranslation);
 
     const handleLanguageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -47,20 +55,24 @@ export const Head = ({
         handleClose();
     };
 
-    const category = exercise.category.name;
     const equipment = <Stack direction="row" spacing={1}>
         {exercise.equipment.map(e => {
             return <Chip key={e.id} label={t(getTranslationKey(e.name))} />;
         })}
-        <Chip label={t(getTranslationKey(category))} />
+        <Chip label={t(getTranslationKey(exercise.category.name))} />
     </Stack>;
+
     const languagesList = languages.map(l => {
         return <MenuItem
-            className={styles.languageMenuItem}
             key={l.nameShort}
-            onClick={() => handleLanguageClick(l)}>
+            onClick={() => handleLanguageClick(l)}
+            selected={language?.id === l.id}>
             <ListItemText>{l.nameLong}</ListItemText>
-            <ListItemIcon>{availableLanguages.includes(l.id) ? <RedoIcon /> : <AddIcon />}</ListItemIcon>
+            <ListItemIcon>
+                {availableLanguages.includes(l.id)
+                    ? <RedoIcon />
+                    : <AddIcon />}
+            </ListItemIcon>
         </MenuItem>;
     });
 
@@ -91,9 +103,9 @@ export const Head = ({
                             MenuListProps={{
                                 'aria-labelledby': 'basic-button',
                             }}
-                            sx={{ padding: 20 }}
+                            sx={{padding: 20}}
                         >
-                            <MenuItem disabled={true}>Change this exercise's language</MenuItem>
+                            <MenuItem disabled>Change this exercise's language</MenuItem>
                             <Divider />
                             {languagesList}
                         </Menu>
@@ -106,6 +118,7 @@ export const Head = ({
                     {equipment}
                 </div>
                 <nav className={styles.toolbar}>
+                    <Button onClick={() => setEditMode(true)}>EDIT</Button>
                     <Link to='#' className={styles.nav_link}>VIEW</Link>
                     <Link to='#' className={styles.nav_link}>EDIT</Link>
                     <div className={styles.vertical_line} />

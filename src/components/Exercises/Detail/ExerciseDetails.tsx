@@ -1,26 +1,30 @@
-import React, { useState } from "react";
-import styles from "./exerciseDetails.module.css";
-import { Head } from "./Head";
-import { Carousel, CarouselItem } from "components/Carousel";
-import { SideGallery } from "./SideGallery";
-import { useNavigate, useParams } from "react-router-dom";
-import { getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName, } from "services";
-import { useTranslation } from "react-i18next";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import { Language } from "components/Exercises/models/language";
-import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
-import { Note } from "components/Exercises/models/note";
-import { Muscle } from "components/Exercises/models/muscle";
-import { useQuery } from "@tanstack/react-query";
-import { QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL, } from "utils/consts";
-import { useLanguageQuery } from "components/Exercises/queries";
-import { Divider, Grid, Stack, Typography } from "@mui/material";
-import { MuscleOverview } from "components/Muscles/MuscleOverview";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import React, {useState} from "react";
+import {Head} from "./Head";
+import {Carousel, CarouselItem} from "components/Carousel";
+import {SideGallery} from "./SideGallery";
+import {useNavigate, useParams} from "react-router-dom";
+import {getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName,} from "services";
+import {useTranslation} from "react-i18next";
+import {ExerciseTranslation} from "components/Exercises/models/exerciseTranslation";
+import {Language} from "components/Exercises/models/language";
+import {OverviewCard} from "components/Exercises/Detail/OverviewCard";
+import {Note} from "components/Exercises/models/note";
+import {Muscle} from "components/Exercises/models/muscle";
+import {useQuery} from "@tanstack/react-query";
+import {QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL,} from "utils/consts";
+import {useLanguageQuery} from "components/Exercises/queries";
+import {Box, Container, Divider, Grid, Stack, Typography} from "@mui/material";
+import {MuscleOverview} from "components/Muscles/MuscleOverview";
+import {ExerciseBase} from "components/Exercises/models/exerciseBase";
+
+export const PaddingBox = () => {
+    return <Box sx={{height: 40}} />;
+};
 
 export const ExerciseDetails = () => {
     const [language, setLanguage] = useState<Language>();
     const [currentTranslation, setCurrentTranslation] = useState<ExerciseTranslation>();
+    const [editMode, setEditMode] = useState<boolean>();
 
     const params = useParams<{ baseID: string }>();
     const exerciseBaseID = params.baseID ? parseInt(params.baseID) : 0;
@@ -55,7 +59,7 @@ export const ExerciseDetails = () => {
     const variationsQuery = useQuery(
         [QUERY_EXERCISE_BASES_VARIATIONS, exerciseQuery.data?.variationId],
         () => getExerciseBasesForVariation(exerciseQuery.data?.variationId),
-        { enabled: exerciseQuery.isSuccess }
+        {enabled: exerciseQuery.isSuccess}
     );
 
     if (
@@ -80,8 +84,7 @@ export const ExerciseDetails = () => {
             languageQuery.data!
         );
         setLanguage(language);
-        const newTranslatedExercise = exerciseQuery.data?.getTranslation(lang);
-        setCurrentTranslation(newTranslatedExercise);
+        setCurrentTranslation(exerciseQuery.data?.getTranslation(lang));
     };
 
     const variations = variationsQuery.isSuccess
@@ -89,7 +92,7 @@ export const ExerciseDetails = () => {
         : [];
 
     return (
-        <div className={styles.root}>
+        <>
             {exerciseQuery.isSuccess && languageQuery.isSuccess ? (
                 <Head
                     exercise={exerciseQuery.data}
@@ -98,39 +101,86 @@ export const ExerciseDetails = () => {
                     changeLanguage={changeUserLanguage}
                     language={language}
                     currentTranslation={currentTranslation}
+                    setEditMode={setEditMode}
                 />
             ) : null}
-            <div className={styles.body}>
+            <PaddingBox />
+            <Container maxWidth="lg">
+                <Grid container>
+                    <Grid item md={8}>
+                        {aliases && aliases.length > 0 ? (
+                            <div>
+                                <p>
+                                    {t("exercises.alsoKnownAs")} &nbsp;
+                                    {aliases?.map(e => e.alias).join(", ")}
+                                </p>
+                                <PaddingBox />
+                            </div>) : null}
 
-                {aliases && aliases.length > 0 ? (
-                    <div className={styles.detail_alt_name}>
-                        <p>
-                            {t("exercises.alsoKnownAs")} &nbsp;
-                            {aliases?.map(e => e.alias).join(", ")}
-                        </p>
-                    </div>) : null}
+                        <div>
+                            <Typography variant="h5">{t("exercises.description")}</Typography>
+                            <div dangerouslySetInnerHTML={{__html: description}} />
+                            <PaddingBox />
+                        </div>
 
-                <section className={styles.hero}>
-                    <aside>
-                        {/* This carousel only displays on small screens */}
+                        <div>
+                            <Typography variant="h5">{t("exercises.notes")}</Typography>
+                            {notes?.map((note: Note) => (
+                                <li key={note.id}>{note.note}</li>
+                            ))}
+                            <PaddingBox />
+                        </div>
+
+                        <Typography variant="h5">{t("exercises.muscles")}</Typography>
+                        <Stack direction={"row"}>
+                            <MuscleOverview
+                                primaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.muscles : []}
+                                secondaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.musclesSecondary : []}
+                                isFront={true} />
+                            <MuscleOverview
+                                primaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.muscles : []}
+                                secondaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.musclesSecondary : []}
+                                isFront={false} />
+                            <div>
+                                <div>
+                                    <h3>{t("exercises.primaryMuscles")}</h3>
+                                    <ul>
+                                        {exerciseQuery.data?.muscles.map((m: Muscle) => (
+                                            <li key={m.id}>{m.getName(t)}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h3>{t("exercises.secondaryMuscles")}</h3>
+                                    <ul>
+                                        {exerciseQuery.data?.musclesSecondary.map((m: Muscle) => (
+                                            <li key={m.id}>{m.getName(t)}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </Stack>
+                        <PaddingBox />
+                    </Grid>
+                    <Grid item md={4}>
                         <Carousel>
                             <CarouselItem>
                                 <img
-                                    style={{ width: "100%" }}
+                                    style={{width: "100%"}}
                                     src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80"
                                     alt="detail"
                                 />
                             </CarouselItem>
                             <CarouselItem>
                                 <img
-                                    style={{ width: "100%" }}
+                                    style={{width: "100%"}}
                                     src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80"
                                     alt="detail"
                                 />
                             </CarouselItem>
                             <CarouselItem>
                                 <img
-                                    style={{ width: "100%" }}
+                                    style={{width: "100%"}}
                                     src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80"
                                     alt="detail"
                                 />
@@ -144,77 +194,35 @@ export const ExerciseDetails = () => {
                                 sideImages={exerciseQuery.data.sideImages}
                             />
                         )}
-                    </aside>
-                    <section>
-                        <article>
-                            <div>
-                                <h1>{t("exercises.description")}</h1>
-                                <div dangerouslySetInnerHTML={{ __html: description }} />
-                            </div>
+                    </Grid>
 
-                            <div>
-                                <h1>{t("exercises.notes")}</h1>
+                    <Grid item md={12}>
 
-                                {notes?.map((note: Note) => (
-                                    <li key={note.id}>{note.note}</li>
-                                ))}
-                            </div>
+                        <Divider />
+                        <PaddingBox />
 
-                            <h1>{t("exercises.muscles")}</h1>
-                            <Stack direction={"row"}>
-                                <MuscleOverview
-                                    primaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.muscles : []}
-                                    secondaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.musclesSecondary : []}
-                                    isFront={true} />
-                                <MuscleOverview
-                                    primaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.muscles : []}
-                                    secondaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.musclesSecondary : []}
-                                    isFront={false} />
-                                <div>
-                                    <div className={styles.details_detail_card}>
-                                        <h3>{t("exercises.primaryMuscles")}</h3>
-                                        <ul>
-                                            {exerciseQuery.data?.muscles.map((m: Muscle) => (
-                                                <li key={m.id}>{m.getName(t)}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    <div className={styles.details_detail_card}>
-                                        <h3>{t("exercises.secondaryMuscles")}</h3>
-                                        <ul>
-                                            {exerciseQuery.data?.musclesSecondary.map((m: Muscle) => (
-                                                <li key={m.id}>{m.getName(t)}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </div>
-                            </Stack>
-                        </article>
-                    </section>
-                </section>
-
-                <Divider />
-
-                <Typography variant={"h5"}>{t('exercises.variations')}</Typography>
-                <Grid container spacing={2}>
-                    {variations.map((variation: ExerciseBase) =>
-                        <Grid item xs={2} key={variation.id}>
-                            <OverviewCard
-                                key={variation.id}
-                                exerciseBase={variation}
-                                language={language}
-                            />
+                        <Typography variant={"h5"}>{t('exercises.variations')}</Typography>
+                        <Grid container spacing={2}>
+                            {variations.map((variation: ExerciseBase) =>
+                                <Grid item xs={2} key={variation.id}>
+                                    <OverviewCard
+                                        key={variation.id}
+                                        exerciseBase={variation}
+                                        language={language}
+                                    />
+                                </Grid>
+                            )}
                         </Grid>
-                    )}
+                    </Grid>
+                    <Grid item md={12}>
+                        <Typography variant="caption" display="block" mt={2}>
+                            The text on this page is available under the <a
+                            href="components/Exercises/Detail/ExerciseDetails.tsx">CC BY-SA 4
+                            License</a>.
+                        </Typography>
+                    </Grid>
                 </Grid>
-
-                <Typography variant="caption" display="block" mt={2}>
-                    The text on this page is available under the <a
-                    href="components/Exercises/Detail/ExerciseDetails.tsx">CC BY-SA 4 License</a>.
-                </Typography>
-            </div>
-
-            { /** <Footer /> **/}
-        </div>
+            </Container>
+        </>
     );
 };
