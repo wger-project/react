@@ -7,11 +7,13 @@ import {
     Button,
     Divider,
     Grid,
+    InputAdornment,
     List,
     ListItem,
     ListItemButton,
     Paper,
     Switch,
+    TextField,
     Typography
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -21,6 +23,7 @@ import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
 import { useExerciseStateValue } from "state";
 import { setNewBaseVariationId, setVariationId } from "state/exerciseReducer";
+import SearchIcon from '@mui/icons-material/Search';
 
 /*
  * Groups a list of objects by a property
@@ -128,21 +131,45 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
     const basesQuery = useBasesQuery();
 
+    const [searchTerm, setSearchTerms] = useState<string>('');
+
     // Group bases by variationId
+    let bases: ExerciseBase[] = [];
     let groupedBases = new Map<number, ExerciseBase[]>();
     if (basesQuery.isSuccess) {
-        groupedBases = groupBy(basesQuery.data.filter(b => b.variationId !== null), (b: ExerciseBase) => b.variationId);
+        bases = basesQuery.data;
+        if (searchTerm !== '') {
+            bases = bases.filter((base) => base.getTranslation().name.toLowerCase().includes(searchTerm.toLowerCase()));
+        }
     }
+    groupedBases = groupBy(bases.filter(b => b.variationId !== null), (b: ExerciseBase) => b.variationId);
 
     return <>
-        <Typography>{t('exercises.whatVariationsExist')}</Typography>
+        <Grid container>
+            <Grid item xs={12} sm={6}>
+                <Typography>{t('exercises.whatVariationsExist')}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} display="flex" justifyContent={"end"}>
+                <TextField label={t('exercises.filterVariations')}
+                           variant="standard"
+                           onChange={(event) => setSearchTerms(event.target.value)}
+                           InputProps={{
+                               startAdornment: (
+                                   <InputAdornment position="start">
+                                       <SearchIcon />
+                                   </InputAdornment>
+                               ),
+                           }}
+                />
+            </Grid>
+        </Grid>
 
         {basesQuery.isLoading ? (
             <LoadingPlaceholder />
         ) : (
-            <Paper elevation={2}>
+            <Paper elevation={2} sx={{ mt: 2 }}>
                 <List style={{ maxHeight: "400px", overflowY: "scroll" }}>
-                    {basesQuery.data!.filter(b => b.variationId === null).map(base =>
+                    {bases.filter(b => b.variationId === null).map(base =>
                         <ExerciseInfoListItem
                             bases={[base]}
                             key={'base-' + base.id}

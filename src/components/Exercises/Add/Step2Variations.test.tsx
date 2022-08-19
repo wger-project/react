@@ -65,6 +65,8 @@ describe("Test the add exercise step 2 component", () => {
 
         // Assert
         expect(screen.getByText("exercises.whatVariationsExist")).toBeInTheDocument();
+        expect(screen.getByText("exercises.filterVariations")).toBeInTheDocument();
+        expect(screen.getByText("exercises.identicalExercisePleaseDiscard")).toBeInTheDocument();
         expect(screen.getByText("Benchpress")).toBeInTheDocument();
         expect(screen.getByText("Curls")).toBeInTheDocument();
         expect(screen.getByText("Crunches")).toBeInTheDocument();
@@ -140,5 +142,34 @@ describe("Test the add exercise step 2 component", () => {
         await user.click(crunches);
 
         // Assert
+    });
+
+    test("can correctly filter the exercises", async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Step2Variations onContinue={mockOnContinue} />
+            </QueryClientProvider>
+        );
+        const input = screen.getByLabelText('exercises.filterVariations');
+
+        // Assert
+        expect(screen.getByText("Benchpress")).toBeInTheDocument();
+        expect(screen.getByText("Curls")).toBeInTheDocument();
+        expect(screen.getByText("Crunches")).toBeInTheDocument();
+
+        await user.type(input, 'cru');
+        expect(screen.queryByText("Benchpress")).not.toBeInTheDocument();
+        expect(screen.queryByText("Curls")).not.toBeInTheDocument();
+        expect(screen.getByText("Crunches")).toBeInTheDocument();
+
+        await user.clear(input);
+        await user.type(input, 'Bench');
+        expect(screen.getByText("Benchpress")).toBeInTheDocument();
+        expect(screen.queryByText("Curls")).not.toBeInTheDocument();
+        expect(screen.queryByText("Crunches")).not.toBeInTheDocument();
     });
 });
