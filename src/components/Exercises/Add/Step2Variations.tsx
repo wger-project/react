@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+    Alert,
     Avatar,
     AvatarGroup,
     Box,
@@ -9,6 +10,7 @@ import {
     List,
     ListItem,
     ListItemButton,
+    Paper,
     Switch,
     Typography
 } from "@mui/material";
@@ -86,17 +88,17 @@ const ExerciseInfoListItem = ({ bases }: {
         isChecked = basesVariationId === state.variationId;
     }
 
-    return <ListItem>
+    return <ListItem disableGutters>
         <ListItemButton onClick={handleToggle(basesVariationId, baseId)}>
             <Grid container>
-                <Grid item xs={3} display="flex" justifyContent={"start"} alignItems={"center"}>
+                <Grid item xs={12} sm={3} display="flex" justifyContent={"start"} alignItems={"center"}>
                     <AvatarGroup max={MAX_EXERCISE_IMAGES} spacing={"small"}>
                         {bases.map((base) => <Avatar key={base.id}
                                                      src={base.mainImage ? base.mainImage.url : "https://mui.com/static/images/cards/contemplative-reptile.jpg"}
                         />)}
                     </AvatarGroup>
                 </Grid>
-                <Grid item xs={7}>
+                <Grid item xs={10} sm={7}>
                     { /* map the bases */}
                     {bases.slice(0, showMore ? bases.length : MAX_EXERCISE_NAMES).map((base) =>
                         <p style={{ margin: 0 }} key={base.id}>{base.getTranslation().name}</p>
@@ -104,7 +106,7 @@ const ExerciseInfoListItem = ({ bases }: {
                     {!showMore && bases.length > MAX_EXERCISE_NAMES ?
                         <p style={{ margin: 0 }} onMouseEnter={() => setShowMore(true)}>...</p> : null}
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={2} sm={2} display="flex" justifyContent={"end"}>
                     <Switch
                         key={`variation-${basesVariationId}`}
                         edge="start"
@@ -113,8 +115,8 @@ const ExerciseInfoListItem = ({ bases }: {
                         disableRipple
                     />
                 </Grid>
-                <Grid item xs={12} sx={{ pt: 1 }}>
-                    <Divider />
+                <Grid item xs={12}>
+                    <Divider sx={{ pt: 1 }} />
                 </Grid>
             </Grid>
         </ListItemButton>
@@ -135,25 +137,31 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
     return <>
         <Typography>{t('exercises.whatVariationsExist')}</Typography>
 
+
         {basesQuery.isLoading ? (
             <LoadingPlaceholder />
         ) : (
-            <List style={{ maxHeight: "400px", overflowY: "scroll" }}>
-                {basesQuery.data!.filter(b => b.variationId === null).map(base =>
-                    <ExerciseInfoListItem
-                        bases={[base]}
-                        key={'base-' + base.id}
-                    />
-                )}
-                {[...groupedBases.keys()].map(variationId =>
-                    <ExerciseInfoListItem
-                        bases={groupedBases.get(variationId)!}
-                        key={'variation-' + variationId}
-                    />
-                )}
-
-            </List>
+            <Paper elevation={2}>
+                <List style={{ maxHeight: "400px", overflowY: "scroll" }}>
+                    {basesQuery.data!.filter(b => b.variationId === null).map(base =>
+                        <ExerciseInfoListItem
+                            bases={[base]}
+                            key={'base-' + base.id}
+                        />
+                    )}
+                    {[...groupedBases.keys()].map(variationId =>
+                        <ExerciseInfoListItem
+                            bases={groupedBases.get(variationId)!}
+                            key={'variation-' + variationId}
+                        />
+                    )}
+                </List>
+            </Paper>
         )}
+
+        <Alert severity="info" sx={{ mt: 2 }}>
+            {t('exercises.identicalExercisePleaseDiscard')}
+        </Alert>
 
         <Box sx={{ mb: 2 }}>
             <div>
