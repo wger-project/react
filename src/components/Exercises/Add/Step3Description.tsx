@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Stack, TextField } from "@mui/material";
+import { Box, Button, Grid, Stack, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Form, Formik } from "formik";
 import * as yup from "yup";
@@ -62,16 +62,28 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
                             }
                             // {...formik.getFieldProps("description")}
                         />
-                        <Box sx={{ mb: 2 }}>
-                            <div>
-                                <Button variant="contained" type="submit" sx={{ mt: 1, mr: 1 }}>
-                                    {t("continue")}
-                                </Button>
-                                <Button disabled={false} onClick={onBack} sx={{ mt: 1, mr: 1 }}>
-                                    {t('goBack')}
-                                </Button>
-                            </div>
-                        </Box>
+
+                        <Grid container>
+                            <Grid item xs={12} display="flex" justifyContent={"end"}>
+                                <Box sx={{ mb: 2 }}>
+                                    <div>
+                                        <Button
+                                            onClick={onBack}
+                                            sx={{ mt: 1, mr: 1 }}
+                                        >
+                                            {t('goBack')}
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            type="submit"
+                                            sx={{ mt: 1, mr: 1 }}
+                                        >
+                                            {t('continue')}
+                                        </Button>
+                                    </div>
+                                </Box>
+                            </Grid>
+                        </Grid>
                     </Stack>
                 </Form>
             )}

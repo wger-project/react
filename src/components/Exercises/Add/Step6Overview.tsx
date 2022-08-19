@@ -2,6 +2,7 @@ import {
     Alert,
     Box,
     Button,
+    Grid,
     ImageListItem,
     Table,
     TableCell,
@@ -178,20 +179,27 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                     {t('exercises.checkInformationBeforeSubmitting')}
                 </Alert>
 
-                <Box sx={{ mt: 2 }}>
-                    <div>
-                        <Button
-                            variant="contained"
-                            onClick={submitExercise}
-                            sx={{ mt: 1, mr: 1 }}
-                        >
-                            {t("exercises.submitExercise")}
-                        </Button>
-                        <Button disabled={false} onClick={onBack} sx={{ mt: 1, mr: 1 }}>
-                            {t("goBack")}
-                        </Button>
-                    </div>
-                </Box>
+                <Grid container>
+                    <Grid item xs={12} display="flex" justifyContent={"end"}>
+                        <Box sx={{ mb: 2 }}>
+                            <div>
+                                <Button
+                                    onClick={onBack}
+                                    sx={{ mt: 1, mr: 1 }}
+                                >
+                                    {t('goBack')}
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    onClick={submitExercise}
+                                    sx={{ mt: 1, mr: 1 }}
+                                >
+                                    {t('exercises.submitExercise')}
+                                </Button>
+                            </div>
+                        </Box>
+                    </Grid>
+                </Grid>
             </>
         );
 };

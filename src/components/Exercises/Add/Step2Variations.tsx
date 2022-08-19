@@ -137,7 +137,6 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
     return <>
         <Typography>{t('exercises.whatVariationsExist')}</Typography>
 
-
         {basesQuery.isLoading ? (
             <LoadingPlaceholder />
         ) : (
@@ -163,23 +162,27 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
             {t('exercises.identicalExercisePleaseDiscard')}
         </Alert>
 
-        <Box sx={{ mb: 2 }}>
-            <div>
-                <Button
-                    variant="contained"
-                    onClick={onContinue}
-                    sx={{ mt: 1, mr: 1 }}
-                >
-                    {t('continue')}
-                </Button>
-                <Button
-                    disabled={false}
-                    onClick={onBack}
-                    sx={{ mt: 1, mr: 1 }}
-                >
-                    {t('goBack')}
-                </Button>
-            </div>
-        </Box>
+        <Grid container>
+            <Grid item xs={12} display="flex" justifyContent={"end"}>
+                <Box sx={{ mb: 2 }}>
+                    <div>
+                        <Button
+                            disabled={false}
+                            onClick={onBack}
+                            sx={{ mt: 1, mr: 1 }}
+                        >
+                            {t('goBack')}
+                        </Button>
+                        <Button
+                            variant="contained"
+                            onClick={onContinue}
+                            sx={{ mt: 1, mr: 1 }}
+                        >
+                            {t('continue')}
+                        </Button>
+                    </div>
+                </Box>
+            </Grid>
+        </Grid>
     </>;
 };

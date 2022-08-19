@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, ImageListItem, ImageListItemBar, Stack, Typography } from "@mui/material";
+import { Box, Button, Grid, IconButton, ImageListItem, ImageListItemBar, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -102,20 +102,27 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
             <Typography>
                 {t("forms.supportedImageFormats")}
             </Typography>
-            <Box sx={{ mb: 2 }}>
-                <div>
-                    <Button
-                        variant="contained"
-                        onClick={handleContinue}
-                        sx={{ mt: 1, mr: 1 }}
-                    >
-                        {t("continue")}
-                    </Button>
-                    <Button disabled={false} onClick={onBack} sx={{ mt: 1, mr: 1 }}>
-                        {t("goBack")}
-                    </Button>
-                </div>
-            </Box>
+            <Grid container>
+                <Grid item xs={12} display="flex" justifyContent={"end"}>
+                    <Box sx={{ mb: 2 }}>
+                        <div>
+                            <Button
+                                onClick={onBack}
+                                sx={{ mt: 1, mr: 1 }}
+                            >
+                                {t('goBack')}
+                            </Button>
+                            <Button
+                                variant="contained"
+                                onClick={handleContinue}
+                                sx={{ mt: 1, mr: 1 }}
+                            >
+                                {t('continue')}
+                            </Button>
+                        </div>
+                    </Box>
+                </Grid>
+            </Grid>
         </div>
     );
 };

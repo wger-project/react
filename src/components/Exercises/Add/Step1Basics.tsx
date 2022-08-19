@@ -299,16 +299,21 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
                             </Grid>
                         </Stack>
 
-                        <Box sx={{ mb: 2 }}>
-                            <div>
-                                <Button variant="contained" type="submit" sx={{ mt: 1, mr: 1 }}>
-                                    {t("continue")}
-                                </Button>
-                                <Button disabled={true} sx={{ mt: 1, mr: 1 }}>
-                                    {t("goBack")}
-                                </Button>
-                            </div>
-                        </Box>
+                        <Grid container>
+                            <Grid item xs={12} display="flex" justifyContent={"end"}>
+                                <Box sx={{ mb: 2 }}>
+                                    <div>
+                                        <Button
+                                            variant="contained"
+                                            type="submit"
+                                            sx={{ mt: 1, mr: 1 }}
+                                        >
+                                            {t('continue')}
+                                        </Button>
+                                    </div>
+                                </Box>
+                            </Grid>
+                        </Grid>
                     </Form>
                 );
             }}
