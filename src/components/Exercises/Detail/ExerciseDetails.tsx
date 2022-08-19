@@ -1,22 +1,22 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import styles from "./exerciseDetails.module.css";
-import {Head} from "./Head";
-import {Carousel, CarouselItem} from "components/Carousel";
-import {SideGallery} from "./SideGallery";
-import {useNavigate, useParams} from "react-router-dom";
-import {getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName,} from "services";
-import {useTranslation} from "react-i18next";
-import {ExerciseTranslation} from "components/Exercises/models/exerciseTranslation";
-import {Language} from "components/Exercises/models/language";
-import {OverviewCard} from "components/Exercises/Detail/OverviewCard";
-import {Note} from "components/Exercises/models/note";
-import {Muscle} from "components/Exercises/models/muscle";
-import {useQuery} from "@tanstack/react-query";
-import {QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL,} from "utils/consts";
-import {useLanguageQuery} from "components/Exercises/queries";
-import {Stack, Typography} from "@mui/material";
-import {MuscleOverview} from "components/Muscles/MuscleOverview";
-import {ExerciseBase} from "components/Exercises/models/exerciseBase";
+import { Head } from "./Head";
+import { Carousel, CarouselItem } from "components/Carousel";
+import { SideGallery } from "./SideGallery";
+import { useNavigate, useParams } from "react-router-dom";
+import { getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName, } from "services";
+import { useTranslation } from "react-i18next";
+import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import { Language } from "components/Exercises/models/language";
+import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
+import { Note } from "components/Exercises/models/note";
+import { Muscle } from "components/Exercises/models/muscle";
+import { useQuery } from "@tanstack/react-query";
+import { QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL, } from "utils/consts";
+import { useLanguageQuery } from "components/Exercises/queries";
+import { Divider, Grid, Stack, Typography } from "@mui/material";
+import { MuscleOverview } from "components/Muscles/MuscleOverview";
+import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 
 export const ExerciseDetails = () => {
     const [language, setLanguage] = useState<Language>();
@@ -55,7 +55,7 @@ export const ExerciseDetails = () => {
     const variationsQuery = useQuery(
         [QUERY_EXERCISE_BASES_VARIATIONS, exerciseQuery.data?.variationId],
         () => getExerciseBasesForVariation(exerciseQuery.data?.variationId),
-        {enabled: exerciseQuery.isSuccess}
+        { enabled: exerciseQuery.isSuccess }
     );
 
     if (
@@ -85,15 +85,7 @@ export const ExerciseDetails = () => {
     };
 
     const variations = variationsQuery.isSuccess
-        ? variationsQuery.data!.filter((b) => b.id !== exerciseBaseID).map(variantExercise => {
-            return (
-                <OverviewCard
-                    key={variantExercise.id}
-                    exerciseBase={variantExercise}
-                    language={language}
-                />
-            );
-        })
+        ? variationsQuery.data!.filter((b) => b.id !== exerciseBaseID)
         : [];
 
     return (
@@ -124,21 +116,21 @@ export const ExerciseDetails = () => {
                         <Carousel>
                             <CarouselItem>
                                 <img
-                                    style={{width: "100%"}}
+                                    style={{ width: "100%" }}
                                     src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80"
                                     alt="detail"
                                 />
                             </CarouselItem>
                             <CarouselItem>
                                 <img
-                                    style={{width: "100%"}}
+                                    style={{ width: "100%" }}
                                     src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80"
                                     alt="detail"
                                 />
                             </CarouselItem>
                             <CarouselItem>
                                 <img
-                                    style={{width: "100%"}}
+                                    style={{ width: "100%" }}
                                     src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80"
                                     alt="detail"
                                 />
@@ -157,7 +149,7 @@ export const ExerciseDetails = () => {
                         <article>
                             <div>
                                 <h1>{t("exercises.description")}</h1>
-                                <div dangerouslySetInnerHTML={{__html: description}}/>
+                                <div dangerouslySetInnerHTML={{ __html: description }} />
                             </div>
 
                             <div>
@@ -173,11 +165,11 @@ export const ExerciseDetails = () => {
                                 <MuscleOverview
                                     primaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.muscles : []}
                                     secondaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.musclesSecondary : []}
-                                    isFront={true}/>
+                                    isFront={true} />
                                 <MuscleOverview
                                     primaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.muscles : []}
                                     secondaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.musclesSecondary : []}
-                                    isFront={false}/>
+                                    isFront={false} />
                                 <div>
                                     <div className={styles.details_detail_card}>
                                         <h3>{t("exercises.primaryMuscles")}</h3>
@@ -201,18 +193,24 @@ export const ExerciseDetails = () => {
                     </section>
                 </section>
 
-                <hr className={styles.line_break}/>
+                <Divider />
 
-                <article>
-                    <div className={styles.variants}>
-                        <h1>{t('exercises.variations')}</h1>
-                        <div className={styles.cards}>{variantExercises}</div>
-                    </div>
-                </article>
+                <Typography variant={"h5"}>{t('exercises.variations')}</Typography>
+                <Grid container spacing={2}>
+                    {variations.map((variation: ExerciseBase) =>
+                        <Grid item xs={2} key={variation.id}>
+                            <OverviewCard
+                                key={variation.id}
+                                exerciseBase={variation}
+                                language={language}
+                            />
+                        </Grid>
+                    )}
+                </Grid>
 
                 <Typography variant="caption" display="block" mt={2}>
-                    The text on this page is available under the
-                    <a href="components/Exercises/Detail/ExerciseDetails.tsx">CC BY-SA 4 License</a>.
+                    The text on this page is available under the <a
+                    href="components/Exercises/Detail/ExerciseDetails.tsx">CC BY-SA 4 License</a>.
                 </Typography>
             </div>
 

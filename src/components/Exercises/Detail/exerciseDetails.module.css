@@ -26,11 +26,5 @@
   @media screen and (min-width: 700px) {
     .root .body .hero aside {
       width: 35%; } }
-  .root .body .line_break {
-    margin: 5rem 0; }
-  @media screen and (min-width: 700px) {
-    .root .body .variants .cards {
-      display: flex;
-      gap: 2rem; } }
 
 /*# sourceMappingURL=exerciseDetails.module.css.map */

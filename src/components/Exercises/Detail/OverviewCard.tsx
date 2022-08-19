@@ -3,7 +3,6 @@ import { Box, Card, CardActionArea, CardContent, CardMedia, Chip, Typography, } 
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getTranslationKey } from "utils/strings";
 import PhotoIcon from '@mui/icons-material/Photo';
@@ -22,15 +21,17 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
     const [t] = useTranslation();
 
     return (
-        <Card key={exerciseBase.id}>
-            <CardActionArea href={`${exerciseBase.id}`}>
+        <Card key={exerciseBase.id} sx={{ width: '100%' }}>
+            <CardActionArea href={`${exerciseBase.id}`} sx={{ minHeight: 330 }}>
                 {exerciseBase.mainImage ?
                     <CardMedia
                         component="img"
                         image={exerciseBase.mainImage.url}
+                        sx={{ height: 200 }}
                         alt=""
                     /> : <CardMedia>
-                        <Box sx={{ width: 300, height: 200, backgroundColor: "lightgray" }}
+                        <Box sx={{ backgroundColor: "lightgray", height: 200 }}
+
                              display="flex"
                              alignItems="center"
                              justifyContent="center">
