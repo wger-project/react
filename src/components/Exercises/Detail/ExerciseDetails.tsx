@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import {Head} from "./Head";
-import {Carousel, CarouselItem} from "components/Carousel";
 import {SideGallery} from "./SideGallery";
 import {useNavigate, useParams} from "react-router-dom";
 import {getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName,} from "services";
@@ -13,7 +12,7 @@ import {Muscle} from "components/Exercises/models/muscle";
 import {useQuery} from "@tanstack/react-query";
 import {QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL,} from "utils/consts";
 import {useLanguageQuery} from "components/Exercises/queries";
-import {Box, Container, Divider, Grid, Stack, Typography} from "@mui/material";
+import {Box, Container, Divider, Grid, Typography} from "@mui/material";
 import {MuscleOverview} from "components/Muscles/MuscleOverview";
 import {ExerciseBase} from "components/Exercises/models/exerciseBase";
 
@@ -107,7 +106,7 @@ export const ExerciseDetails = () => {
             <PaddingBox />
             <Container maxWidth="lg">
                 <Grid container>
-                    <Grid item md={8}>
+                    <Grid item xs={12} sm={7} md={8} order={{xs: 2, sm: 1}}>
                         {aliases && aliases.length > 0 ? (
                             <div>
                                 <p>
@@ -132,37 +131,44 @@ export const ExerciseDetails = () => {
                         </div>
 
                         <Typography variant="h5">{t("exercises.muscles")}</Typography>
-                        <Stack direction={"row"}>
-                            <MuscleOverview
-                                primaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.muscles : []}
-                                secondaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.musclesSecondary : []}
-                                isFront={true} />
-                            <MuscleOverview
-                                primaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.muscles : []}
-                                secondaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.musclesSecondary : []}
-                                isFront={false} />
-                            <div>
-                                <div>
-                                    <h3>{t("exercises.primaryMuscles")}</h3>
-                                    <ul>
-                                        {exerciseQuery.data?.muscles.map((m: Muscle) => (
-                                            <li key={m.id}>{m.getName(t)}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h3>{t("exercises.secondaryMuscles")}</h3>
-                                    <ul>
-                                        {exerciseQuery.data?.musclesSecondary.map((m: Muscle) => (
-                                            <li key={m.id}>{m.getName(t)}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        </Stack>
+                        <Grid container>
+                            <Grid item xs={6} md={3} order={{xs: 1}}>
+                                <MuscleOverview
+                                    primaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.muscles : []}
+                                    secondaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.musclesSecondary : []}
+                                    isFront={true} />
+                            </Grid>
+                            <Grid item xs={6} md={3} order={{xs: 2, md: 3}}>
+                                <h3>{t("exercises.primaryMuscles")}</h3>
+                                <ul>
+                                    {exerciseQuery.data?.muscles.map((m: Muscle) => (
+                                        <li key={m.id}>{m.getName(t)}</li>
+                                    ))}
+                                </ul>
+                            </Grid>
+
+                            <Grid item xs={6} md={3} order={{xs: 3, md: 2}}>
+                                <MuscleOverview
+                                    primaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.muscles : []}
+                                    secondaryMuscles={exerciseQuery.isSuccess ? exerciseQuery.data!.musclesSecondary : []}
+                                    isFront={false} />
+                            </Grid>
+
+
+                            <Grid item xs={6} md={3} order={{xs: 4}}>
+                                <h3>{t("exercises.secondaryMuscles")}</h3>
+                                <ul>
+                                    {exerciseQuery.data?.musclesSecondary.map((m: Muscle) => (
+                                        <li key={m.id}>{m.getName(t)}</li>
+                                    ))}
+                                </ul>
+                            </Grid>
+
+                        </Grid>
                         <PaddingBox />
                     </Grid>
-                    <Grid item md={4}>
+                    <Grid item xs={12} sm={5} md={4} order={{xs: 1, sm: 2}}>
+                        { /*
                         <Carousel>
                             <CarouselItem>
                                 <img
@@ -186,6 +192,7 @@ export const ExerciseDetails = () => {
                                 />
                             </CarouselItem>
                         </Carousel>
+                        */}
 
                         {/* This gallery only displays on medium screens upwards */}
                         {exerciseQuery.isSuccess && (
@@ -196,7 +203,7 @@ export const ExerciseDetails = () => {
                         )}
                     </Grid>
 
-                    <Grid item md={12}>
+                    <Grid item xs={12} order={{xs: 3}}>
 
                         <Divider />
                         <PaddingBox />
@@ -204,7 +211,7 @@ export const ExerciseDetails = () => {
                         <Typography variant={"h5"}>{t('exercises.variations')}</Typography>
                         <Grid container spacing={2}>
                             {variations.map((variation: ExerciseBase) =>
-                                <Grid item xs={2} key={variation.id}>
+                                <Grid item xs={12} md={2} key={variation.id}>
                                     <OverviewCard
                                         key={variation.id}
                                         exerciseBase={variation}
@@ -214,7 +221,7 @@ export const ExerciseDetails = () => {
                             )}
                         </Grid>
                     </Grid>
-                    <Grid item md={12}>
+                    <Grid item xs={12} order={{xs: 4}}>
                         <Typography variant="caption" display="block" mt={2}>
                             The text on this page is available under the <a
                             href="components/Exercises/Detail/ExerciseDetails.tsx">CC BY-SA 4
