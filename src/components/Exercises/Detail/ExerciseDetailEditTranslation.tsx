@@ -12,6 +12,9 @@ import {
     nameValidator
 } from "components/Exercises/forms/yupValidators";
 import { Formik } from "formik";
+import { ExerciseName } from "components/Exercises/forms/ExerciseName";
+import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
+import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
 
 export interface ViewProps {
     exercise: ExerciseBase
@@ -35,10 +38,12 @@ export const ExerciseDetailEditTranslation = ({
         description: descriptionValidator(t)
     });
 
+    console.log(exerciseTranslation.name);
+
     return <Formik
         initialValues={{
-            nameEn: exerciseTranslation.name,
-            alternativeNames: exerciseTranslation.aliases,
+            name: exerciseTranslation.name,
+            alternativeNames: exerciseTranslation.aliases.map(a => a.alias),
             description: exerciseTranslation.description,
         }}
         validationSchema={validationSchema}
@@ -70,12 +75,8 @@ export const ExerciseDetailEditTranslation = ({
                         </ul>
                     </Grid>
                     <Grid item sm={6}>
-                        {exerciseTranslation.name}
-                        <ul>
-                            {exerciseTranslation.aliases.map((alias) => (
-                                <li key={alias.id}>{alias.alias}</li>
-                            ))}
-                        </ul>
+                        <ExerciseName fieldName={'name'} />
+                        <ExerciseAliases fieldName={'alternativeNames'} />
                     </Grid>
                     <Grid item xs={12}>
                         <Divider />
@@ -87,10 +88,10 @@ export const ExerciseDetailEditTranslation = ({
                         <Typography variant={'h6'}>{t('exercises.description')}</Typography>
                     </Grid>
                     <Grid item sm={6}>
-                        {exerciseEnglish.description}
+                        <div dangerouslySetInnerHTML={{__html: exerciseEnglish.description!}} />
                     </Grid>
                     <Grid item sm={6}>
-                        {exerciseTranslation.description}
+                        <ExerciseDescription fieldName={"description"} />
                     </Grid>
                     <Grid item xs={12}>
                         <Divider />

@@ -1,9 +1,8 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Autocomplete,
     Box,
     Button,
-    Chip,
     FormControl,
     FormHelperText,
     Grid,
@@ -29,6 +28,7 @@ import { useExerciseStateValue } from "state";
 import * as exerciseReducer from "state/exerciseReducer";
 import { ExerciseName } from "components/Exercises/forms/ExerciseName";
 import { alternativeNameValidator, nameValidator } from "components/Exercises/forms/yupValidators";
+import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
 
 export const Step1Basics = ({onContinue}: StepProps) => {
     const [t] = useTranslation();
@@ -81,17 +81,17 @@ export const Step1Basics = ({onContinue}: StepProps) => {
     return <Formik
         initialValues={{
             nameEn: state.nameEn,
-            newAlternativeNameEn: "",
+            newAlternativeNameEn: state.alternativeNamesEn,
             category: state.category !== null ? state.category : '',
             muscles: state.muscles,
             musclesSecondary: state.musclesSecondary,
         }}
         validationSchema={validationSchema}
         onSubmit={values => {
-
-            // The other values are set in the respective onChange handlers
+            console.log(values);
             setNameEn(values.nameEn);
             setCategory(values.category as number);
+            setAlternativeNamesEn(values.newAlternativeNameEn);
 
             onContinue!();
         }}
@@ -101,49 +101,7 @@ export const Step1Basics = ({onContinue}: StepProps) => {
                 <Form>
                     <Stack spacing={2}>
                         <ExerciseName fieldName={'nameEn'} />
-
-                        <Autocomplete
-                            multiple
-                            id="tags-filled"
-                            options={alternativeNamesEn}
-                            freeSolo
-                            value={alternativeNamesEn}
-                            onChange={(event, newValue) => {
-                                setAlternativeNamesEn(newValue);
-                            }}
-                            renderTags={(value: readonly string[], getTagProps) =>
-                                value.map((option: string, index: number) => (
-                                    <Chip label={option} {...getTagProps({index})} />
-                                ))
-                            }
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    id="newAlternativeNameEn"
-                                    variant="standard"
-                                    label={t("exercises.alternativeNames")}
-                                    value={formik.getFieldProps("newAlternativeNameEn").value}
-                                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                                        formik.setFieldValue(
-                                            formik.getFieldProps("newAlternativeNameEn").name,
-                                            event.target.value
-                                        );
-                                    }}
-                                    error={Boolean(
-                                        formik.touched.newAlternativeNameEn &&
-                                        formik.errors.newAlternativeNameEn
-                                    )}
-                                    helperText={
-                                        Boolean(
-                                            formik.errors.newAlternativeNameEn &&
-                                            formik.touched.newAlternativeNameEn
-                                        )
-                                            ? formik.errors.newAlternativeNameEn
-                                            : ""
-                                    }
-                                />
-                            )}
-                        />
+                        <ExerciseAliases fieldName={'newAlternativeNameEn'} />
 
                         {categoryQuery.isLoading ? (
                             <Box>

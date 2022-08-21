@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
-    Autocomplete,
     Box,
     Button,
-    Chip,
     FormControl,
     FormControlLabel,
     FormGroup,
@@ -12,8 +10,7 @@ import {
     MenuItem,
     Select,
     Stack,
-    Switch,
-    TextField
+    Switch
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Form, Formik } from "formik";
@@ -30,8 +27,13 @@ import {
     setNameI18n
 } from "state/exerciseReducer";
 import { ExerciseName } from "components/Exercises/forms/ExerciseName";
-import { descriptionValidator, nameValidator } from "components/Exercises/forms/yupValidators";
+import {
+    alternativeNameValidator,
+    descriptionValidator,
+    nameValidator
+} from "components/Exercises/forms/yupValidators";
 import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
+import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
 
 export const Step4Translations = ({onContinue, onBack}: StepProps) => {
     const [t] = useTranslation();
@@ -65,8 +67,7 @@ export const Step4Translations = ({onContinue, onBack}: StepProps) => {
         translateExercise ? {
             description: descriptionValidator(t),
             name: nameValidator(t),
-            alternativeNames: yup
-                .string(),
+            alternativeNames: alternativeNameValidator(t),
             language: yup
                 .number()
                 .required(),
@@ -76,7 +77,7 @@ export const Step4Translations = ({onContinue, onBack}: StepProps) => {
     return <Formik
         initialValues={{
             name: state.nameI18n,
-            alternativeNames: '',
+            alternativeNames: state.alternativeNamesI18n,
             description: state.descriptionI18n,
             language: state.languageId === null ? '' : state.languageId,
         }}
@@ -85,6 +86,7 @@ export const Step4Translations = ({onContinue, onBack}: StepProps) => {
 
             setLocalNameI18n(values.name);
             setLocalDescriptionI18n(values.description);
+            setLocalAlternativeNamesI18n(values.alternativeNames);
             setLocalLanguageId(values.language === '' ? null : values.language as unknown as number);
 
             onContinue!();
@@ -132,48 +134,8 @@ export const Step4Translations = ({onContinue, onBack}: StepProps) => {
                         )}
                         <ExerciseName fieldName={'name'} />
 
-                        <Autocomplete
-                            multiple
-                            id="tags-filled"
-                            options={localAlternativeNamesI18n}
-                            freeSolo
-                            value={localAlternativeNamesI18n}
-                            onChange={(event, newValue) => {
-                                setLocalAlternativeNamesI18n(newValue);
-                            }}
-                            renderTags={(value: readonly string[], getTagProps) =>
-                                value.map((option: string, index: number) => (
-                                    <Chip label={option} {...getTagProps({index})} />
-                                ))
-                            }
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    id="newAlternativeNameEn"
-                                    variant="standard"
-                                    label={t("exercises.alternativeNames")}
-                                    value={formik.getFieldProps("newAlternativeNameEn").value}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        formik.setFieldValue(
-                                            formik.getFieldProps("newAlternativeNameEn").name,
-                                            event.target.value
-                                        );
-                                    }}
-                                    error={Boolean(
-                                        formik.touched.alternativeNames &&
-                                        formik.errors.alternativeNames
-                                    )}
-                                    helperText={
-                                        Boolean(
-                                            formik.errors.alternativeNames &&
-                                            formik.touched.alternativeNames
-                                        )
-                                            ? formik.errors.alternativeNames
-                                            : ""
-                                    }
-                                />
-                            )}
-                        />
+                        <ExerciseAliases fieldName={'alternativeNames'} />
+
                         <ExerciseDescription fieldName={'description'} />
                     </>
                 )}
