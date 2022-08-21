@@ -38,8 +38,6 @@ export const ExerciseDetailEditTranslation = ({
         description: descriptionValidator(t)
     });
 
-    console.log(exerciseTranslation.name);
-
     return <Formik
         initialValues={{
             name: exerciseTranslation.name,
