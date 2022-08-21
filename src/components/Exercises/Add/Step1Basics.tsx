@@ -16,16 +16,20 @@ import {
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 import { Form, Formik } from "formik";
-import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery, } from "components/Exercises/queries";
+import {
+    useCategoriesQuery,
+    useEquipmentQuery,
+    useMusclesQuery,
+} from "components/Exercises/queries";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { getTranslationKey } from "utils/strings";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { useExerciseStateValue } from "state";
 import * as exerciseReducer from "state/exerciseReducer";
+import { ExerciseName } from "components/Exercises/forms/ExerciseName";
 
-
-export const Step1Basics = ({ onContinue }: StepProps) => {
+export const Step1Basics = ({onContinue}: StepProps) => {
     const [t] = useTranslation();
     const [state, dispatch] = useExerciseStateValue();
 
@@ -103,18 +107,7 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
                 return (
                     <Form>
                         <Stack spacing={2}>
-                            <TextField
-                                id="nameEn"
-                                label={t("name")}
-                                variant="standard"
-                                error={Boolean(formik.errors.nameEn && formik.touched.nameEn)}
-                                helperText={
-                                    Boolean(formik.errors.nameEn && formik.touched.nameEn)
-                                        ? formik.errors.nameEn
-                                        : ""
-                                }
-                                {...formik.getFieldProps("nameEn")}
-                            />
+                            <ExerciseName fieldName={'nameEn'} formik={formik} />
 
                             <Autocomplete
                                 multiple
@@ -127,7 +120,7 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
                                 }}
                                 renderTags={(value: readonly string[], getTagProps) =>
                                     value.map((option: string, index: number) => (
-                                        <Chip label={option} {...getTagProps({ index })} />
+                                        <Chip label={option} {...getTagProps({index})} />
                                     ))
                                 }
                                 renderInput={params => (
@@ -301,12 +294,12 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
 
                         <Grid container>
                             <Grid item xs={12} display="flex" justifyContent={"end"}>
-                                <Box sx={{ mb: 2 }}>
+                                <Box sx={{mb: 2}}>
                                     <div>
                                         <Button
                                             variant="contained"
                                             type="submit"
-                                            sx={{ mt: 1, mr: 1 }}
+                                            sx={{mt: 1, mr: 1}}
                                         >
                                             {t('continue')}
                                         </Button>

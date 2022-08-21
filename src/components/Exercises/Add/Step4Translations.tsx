@@ -23,9 +23,15 @@ import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { useExerciseStateValue } from "state";
-import { setAlternativeNamesI18n, setDescriptionI18n, setLanguageId, setNameI18n } from "state/exerciseReducer";
+import {
+    setAlternativeNamesI18n,
+    setDescriptionI18n,
+    setLanguageId,
+    setNameI18n
+} from "state/exerciseReducer";
+import { ExerciseName } from "components/Exercises/forms/ExerciseName";
 
-export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
+export const Step4Translations = ({onContinue, onBack}: StepProps) => {
     const [t] = useTranslation();
     const languageQuery = useLanguageQuery();
     const [state, dispatch] = useExerciseStateValue();
@@ -127,20 +133,8 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
                                 </Select>
                             </FormControl>
                         )}
-                        <TextField
-                            id="name"
-                            label={t("name")}
-                            variant="standard"
-                            error={
-                                Boolean(formik.errors.name && formik.touched.name)
-                            }
-                            helperText={
-                                Boolean(formik.errors.name && formik.touched.name)
-                                    ? formik.errors.name
-                                    : ''
-                            }
-                            {...formik.getFieldProps('name')}
-                        />
+                        <ExerciseName fieldName={'name'} formik={formik} />
+
                         <Autocomplete
                             multiple
                             id="tags-filled"
@@ -152,7 +146,7 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
                             }}
                             renderTags={(value: readonly string[], getTagProps) =>
                                 value.map((option: string, index: number) => (
-                                    <Chip label={option} {...getTagProps({ index })} />
+                                    <Chip label={option} {...getTagProps({index})} />
                                 ))
                             }
                             renderInput={params => (
@@ -205,18 +199,18 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
 
             <Grid container>
                 <Grid item xs={12} display="flex" justifyContent={"end"}>
-                    <Box sx={{ mb: 2 }}>
+                    <Box sx={{mb: 2}}>
                         <div>
                             <Button
                                 onClick={onBack}
-                                sx={{ mt: 1, mr: 1 }}
+                                sx={{mt: 1, mr: 1}}
                             >
                                 {t('goBack')}
                             </Button>
                             <Button
                                 variant="contained"
                                 type="submit"
-                                sx={{ mt: 1, mr: 1 }}
+                                sx={{mt: 1, mr: 1}}
                             >
                                 {t('continue')}
                             </Button>

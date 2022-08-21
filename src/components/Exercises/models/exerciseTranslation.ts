@@ -1,7 +1,7 @@
-import { Adapter } from "utils/Adapter";
-import { truncateLongNames } from "utils/strings";
-import { Note, NoteAdapter } from "components/Exercises/models/note";
-import { Alias, AliasAdapter } from "components/Exercises/models/alias";
+import {Adapter} from "utils/Adapter";
+import {truncateLongNames} from "utils/strings";
+import {Note, NoteAdapter} from "components/Exercises/models/note";
+import {Alias, AliasAdapter} from "components/Exercises/models/alias";
 
 
 export class ExerciseTranslation {

@@ -27,7 +27,8 @@ export interface HeadProp {
     changeLanguage: (lang: Language) => void,
     language: Language | undefined // language displayed in the head since it's not found in the translations
     currentTranslation: ExerciseTranslation | undefined
-    setEditMode: Function
+    setEditMode: Function,
+    editMode: boolean
 }
 
 export const Head = ({
@@ -37,7 +38,8 @@ export const Head = ({
                          changeLanguage,
                          language,
                          currentTranslation,
-                         setEditMode
+                         setEditMode,
+                         editMode
                      }: HeadProp) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openLanguageMenu = Boolean(anchorEl);
@@ -118,12 +120,8 @@ export const Head = ({
                     {equipment}
                 </div>
                 <nav className={styles.toolbar}>
-                    <Button onClick={() => setEditMode(true)}>EDIT</Button>
-                    <Link to='#' className={styles.nav_link}>VIEW</Link>
-                    <Link to='#' className={styles.nav_link}>EDIT</Link>
-                    <div className={styles.vertical_line} />
-                    <RedoIcon />
-                    <MoreVertIcon />
+                    <Button onClick={() => setEditMode(true)} disabled={editMode}>EDIT</Button>
+                    <Button onClick={() => setEditMode(false)} disabled={!editMode}>VIEW</Button>
                 </nav>
             </div>
         </div>
