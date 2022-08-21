@@ -100,7 +100,7 @@ export const Step1Basics = ({onContinue}: StepProps) => {
             return (
                 <Form>
                     <Stack spacing={2}>
-                        <ExerciseName fieldName={'nameEn'} formik={formik} />
+                        <ExerciseName fieldName={'nameEn'} />
 
                         <Autocomplete
                             multiple

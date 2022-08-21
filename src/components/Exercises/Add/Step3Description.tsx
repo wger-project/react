@@ -34,36 +34,33 @@ export const Step3Description = ({onContinue, onBack}: StepProps) => {
                 onContinue!();
             }}
         >
-            {formik => (
-                <Form>
-                    <Stack>
-                        <ExerciseDescription fieldName={"description"} formik={formik} />
-                        
+            <Form>
+                <Stack>
+                    <ExerciseDescription fieldName={"description"} />
 
-                        <Grid container>
-                            <Grid item xs={12} display="flex" justifyContent={"end"}>
-                                <Box sx={{mb: 2}}>
-                                    <div>
-                                        <Button
-                                            onClick={onBack}
-                                            sx={{mt: 1, mr: 1}}
-                                        >
-                                            {t('goBack')}
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            type="submit"
-                                            sx={{mt: 1, mr: 1}}
-                                        >
-                                            {t('continue')}
-                                        </Button>
-                                    </div>
-                                </Box>
-                            </Grid>
+                    <Grid container>
+                        <Grid item xs={12} display="flex" justifyContent={"end"}>
+                            <Box sx={{mb: 2}}>
+                                <div>
+                                    <Button
+                                        onClick={onBack}
+                                        sx={{mt: 1, mr: 1}}
+                                    >
+                                        {t('goBack')}
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        type="submit"
+                                        sx={{mt: 1, mr: 1}}
+                                    >
+                                        {t('continue')}
+                                    </Button>
+                                </div>
+                            </Box>
                         </Grid>
-                    </Stack>
-                </Form>
-            )}
+                    </Grid>
+                </Stack>
+            </Form>
         </Formik>
     );
 };

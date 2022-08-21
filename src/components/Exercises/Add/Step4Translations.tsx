@@ -130,7 +130,7 @@ export const Step4Translations = ({onContinue, onBack}: StepProps) => {
                                 </Select>
                             </FormControl>
                         )}
-                        <ExerciseName fieldName={'name'} formik={formik} />
+                        <ExerciseName fieldName={'name'} />
 
                         <Autocomplete
                             multiple
@@ -174,7 +174,7 @@ export const Step4Translations = ({onContinue, onBack}: StepProps) => {
                                 />
                             )}
                         />
-                        <ExerciseDescription fieldName={'description'} formik={formik} />
+                        <ExerciseDescription fieldName={'description'} />
                     </>
                 )}
             </Stack>
