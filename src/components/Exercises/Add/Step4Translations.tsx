@@ -30,6 +30,8 @@ import {
     setNameI18n
 } from "state/exerciseReducer";
 import { ExerciseName } from "components/Exercises/forms/ExerciseName";
+import { descriptionValidator, nameValidator } from "components/Exercises/forms/yupValidators";
+import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
 
 export const Step4Translations = ({onContinue, onBack}: StepProps) => {
     const [t] = useTranslation();
@@ -61,18 +63,13 @@ export const Step4Translations = ({onContinue, onBack}: StepProps) => {
 
     const validationSchema = yup.object(
         translateExercise ? {
-            description: yup
-                .string()
-                .min(40, t('forms.valueTooShort'))
-                .required(t('forms.fieldRequired')),
-            name: yup
-                .string()
-                .min(5, t('forms.valueTooShort'))
-                .max(40, t('forms.valueTooLong'))
-                .required(t('forms.fieldRequired')),
+            description: descriptionValidator(t),
+            name: nameValidator(t),
             alternativeNames: yup
                 .string(),
-            language: yup.number().required(),
+            language: yup
+                .number()
+                .required(),
         } : {}
     );
 
@@ -177,22 +174,7 @@ export const Step4Translations = ({onContinue, onBack}: StepProps) => {
                                 />
                             )}
                         />
-                        <TextField
-                            id="description"
-                            label={t('description')}
-                            variant="standard"
-                            multiline
-                            rows={3}
-                            error={
-                                Boolean(formik.errors.description && formik.touched.description)
-                            }
-                            helperText={
-                                Boolean(formik.errors.description && formik.touched.description)
-                                    ? formik.errors.description
-                                    : ''
-                            }
-                            {...formik.getFieldProps('description')}
-                        />
+                        <ExerciseDescription fieldName={'description'} formik={formik} />
                     </>
                 )}
             </Stack>
