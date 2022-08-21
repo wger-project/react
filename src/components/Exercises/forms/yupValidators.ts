@@ -30,3 +30,7 @@ export const descriptionValidator = (t: Function) => yup
     .string()
     .min(40, t("forms.valueTooShort"))
     .required(t("forms.fieldRequired"));
+
+export const categoryValidator = (t: Function) => yup
+    .number()
+    .required(t("forms.fieldRequired"));

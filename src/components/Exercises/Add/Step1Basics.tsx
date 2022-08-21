@@ -1,17 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-    Autocomplete,
-    Box,
-    Button,
-    FormControl,
-    FormHelperText,
-    Grid,
-    InputLabel,
-    MenuItem,
-    Select,
-    Stack,
-    TextField,
-} from "@mui/material";
+import { Autocomplete, Box, Button, Grid, MenuItem, Stack, TextField, } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 import { Form, Formik } from "formik";
@@ -27,8 +15,13 @@ import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { useExerciseStateValue } from "state";
 import * as exerciseReducer from "state/exerciseReducer";
 import { ExerciseName } from "components/Exercises/forms/ExerciseName";
-import { alternativeNameValidator, nameValidator } from "components/Exercises/forms/yupValidators";
+import {
+    alternativeNameValidator,
+    categoryValidator,
+    nameValidator
+} from "components/Exercises/forms/yupValidators";
 import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
+import { ExerciseSelect } from "components/Exercises/forms/ExerciseSelect";
 
 export const Step1Basics = ({onContinue}: StepProps) => {
     const [t] = useTranslation();
@@ -75,7 +68,7 @@ export const Step1Basics = ({onContinue}: StepProps) => {
     const validationSchema = yup.object({
         nameEn: nameValidator(t),
         newAlternativeNameEn: alternativeNameValidator(t),
-        category: yup.number().required(),
+        category: categoryValidator(t),
     });
 
     return <Formik
@@ -84,6 +77,7 @@ export const Step1Basics = ({onContinue}: StepProps) => {
             newAlternativeNameEn: state.alternativeNamesEn,
             category: state.category !== null ? state.category : '',
             muscles: state.muscles,
+            equipment: state.equipment,
             musclesSecondary: state.musclesSecondary,
         }}
         validationSchema={validationSchema}
@@ -92,6 +86,7 @@ export const Step1Basics = ({onContinue}: StepProps) => {
             setNameEn(values.nameEn);
             setCategory(values.category as number);
             setAlternativeNamesEn(values.newAlternativeNameEn);
+            setEquipment(values.equipment);
 
             onContinue!();
         }}
@@ -103,49 +98,21 @@ export const Step1Basics = ({onContinue}: StepProps) => {
                         <ExerciseName fieldName={'nameEn'} />
                         <ExerciseAliases fieldName={'newAlternativeNameEn'} />
 
-                        {categoryQuery.isLoading ? (
-                            <Box>
-                                <LoadingWidget />
-                            </Box>
-                        ) : (
-                            <FormControl fullWidth>
-                                <InputLabel id="label-category">{t("category")}</InputLabel>
-                                <Select
-                                    labelId="label-category"
-                                    id="category"
-                                    value={formik.getFieldProps("category").value}
-                                    onChange={e => {
-                                        formik.setFieldValue(
-                                            formik.getFieldProps("category").name,
-                                            e.target.value
-                                        );
-                                        // setCategory(e.target.value);
-                                    }}
-                                    label={t("category")}
-                                    error={Boolean(
-                                        formik.touched.category && formik.errors.category
-                                    )}
-                                >
-                                    {categoryQuery.data!.map(category => (
-                                        <MenuItem key={category.id} value={category.id}>
-                                            {t(getTranslationKey(category.name))}
-                                        </MenuItem>
-                                    ))}
+                        {categoryQuery.isLoading
+                            ? <Box> <LoadingWidget /> </Box>
+                            : <ExerciseSelect
+                                fieldName={'category'}
+                                options={categoryQuery.data!.map(category => (
+                                    <MenuItem key={category.id} value={category.id}>
+                                        {t(getTranslationKey(category.name))}
+                                    </MenuItem>
+                                ))}
+                            />
+                        }
 
-                                </Select>
-                                {Boolean(
-                                        formik.errors.category && formik.touched.category
-                                    ) &&
-                                    <FormHelperText>{t("forms.fieldRequired")}</FormHelperText>
-                                }
-
-                            </FormControl>
-                        )}
-                        {equipmentQuery.isLoading ? (
-                            <Box>
-                                <LoadingWidget />
-                            </Box>
-                        ) : (
+                        {equipmentQuery.isLoading
+                            ? <Box> <LoadingWidget /> </Box>
+                            :
                             <Autocomplete
                                 multiple
                                 id="equipment"
@@ -164,7 +131,8 @@ export const Step1Basics = ({onContinue}: StepProps) => {
                                     />
                                 )}
                             />
-                        )}
+                        }
+
                         {musclesQuery.isLoading ? (
                             <Box>
                                 <LoadingWidget />
