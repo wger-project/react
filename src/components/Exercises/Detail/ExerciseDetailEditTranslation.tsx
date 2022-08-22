@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Alert, Button, Divider, Grid, Typography } from "@mui/material";
+import { Alert, Button, Grid, IconButton, Typography } from "@mui/material";
 import React from "react";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
@@ -18,6 +18,7 @@ import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescript
 import { postAlias } from "services";
 import { deleteAlias } from "services/alias";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import CloseIcon from '@mui/icons-material/Close';
 
 export interface ViewProps {
     exercise: ExerciseBase
@@ -98,7 +99,22 @@ export const ExerciseDetailEditTranslation = ({
             <Grid container>
                 {alertIsVisible &&
                     <Grid item xs={12}>
-                        <Alert severity="success">{t('exercises.successfullyUpdated')}</Alert>
+                        <Alert
+                            severity="success"
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    onClick={() => {
+                                        setAlertIsVisible(false);
+                                    }}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                        >
+                            {t('exercises.successfullyUpdated')}
+                        </Alert>
                         <PaddingBox />
                     </Grid>}
 
@@ -140,12 +156,12 @@ export const ExerciseDetailEditTranslation = ({
                 <Grid item sm={6}>
                     <ExerciseDescription fieldName={"description"} />
                 </Grid>
+
+                {/*
                 <Grid item xs={12}>
                     <PaddingBox />
                 </Grid>
 
-
-                {/*
                 <Grid item xs={12}>
                     <Typography variant={'h6'}>{t('exercises.notes')}</Typography>
                 </Grid>
@@ -189,7 +205,6 @@ export const ExerciseDetailEditTranslation = ({
 
 
                 <Grid item xs={12}>
-                    <Divider />
                     <PaddingBox />
                     <Button
                         variant="contained"
