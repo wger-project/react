@@ -1,15 +1,15 @@
-import {useTranslation} from "react-i18next";
-import {Divider, Grid, Typography} from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { Divider, Grid, Typography } from "@mui/material";
 import React from "react";
-import {ExerciseBase} from "components/Exercises/models/exerciseBase";
-import {ExerciseTranslation} from "components/Exercises/models/exerciseTranslation";
-import {Note} from "components/Exercises/models/note";
-import {MuscleOverview} from "components/Muscles/MuscleOverview";
-import {Muscle} from "components/Exercises/models/muscle";
-import {SideGallery} from "components/Exercises/Detail/SideGallery";
-import {OverviewCard} from "components/Exercises/Detail/OverviewCard";
-import {Language} from "components/Exercises/models/language";
-import {PaddingBox} from "components/Exercises/Detail/ExerciseDetails";
+import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import { Note } from "components/Exercises/models/note";
+import { MuscleOverview } from "components/Muscles/MuscleOverview";
+import { Muscle } from "components/Exercises/models/muscle";
+import { SideGallery } from "components/Exercises/Detail/SideGallery";
+import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
+import { Language } from "components/Exercises/models/language";
+import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 
 
 export interface ViewProps {
@@ -26,8 +26,8 @@ export const ExerciseDetailView = ({
                                        language
                                    }: ViewProps) => {
     const [t] = useTranslation();
-    return <>
-        <Grid item xs={12} sm={7} md={8} order={{xs: 2, sm: 1}}>
+    return <Grid container>
+        <Grid item xs={12} sm={7} md={8} order={{ xs: 2, sm: 1 }}>
             {currentTranslation?.aliases && currentTranslation?.aliases.length > 0 ? (
                 <div>
                     <p>
@@ -40,7 +40,7 @@ export const ExerciseDetailView = ({
             <div>
                 <Typography variant="h5">{t("exercises.description")}</Typography>
                 <div
-                    dangerouslySetInnerHTML={{__html: currentTranslation?.description!}} />
+                    dangerouslySetInnerHTML={{ __html: currentTranslation?.description! }} />
                 <PaddingBox />
             </div>
 
@@ -56,13 +56,13 @@ export const ExerciseDetailView = ({
 
             <Typography variant="h5">{t("exercises.muscles")}</Typography>
             <Grid container>
-                <Grid item xs={6} md={3} order={{xs: 1}}>
+                <Grid item xs={6} md={3} order={{ xs: 1 }}>
                     <MuscleOverview
                         primaryMuscles={exercise.muscles}
                         secondaryMuscles={exercise.musclesSecondary}
                         isFront={true} />
                 </Grid>
-                <Grid item xs={6} md={3} order={{xs: 2, md: 3}}>
+                <Grid item xs={6} md={3} order={{ xs: 2, md: 3 }}>
                     <h3>{t("exercises.primaryMuscles")}</h3>
                     <ul>
                         {exercise.muscles.map((m: Muscle) => (
@@ -71,7 +71,7 @@ export const ExerciseDetailView = ({
                     </ul>
                 </Grid>
 
-                <Grid item xs={6} md={3} order={{xs: 3, md: 2}}>
+                <Grid item xs={6} md={3} order={{ xs: 3, md: 2 }}>
                     <MuscleOverview
                         primaryMuscles={exercise.muscles}
                         secondaryMuscles={exercise.musclesSecondary}
@@ -79,7 +79,7 @@ export const ExerciseDetailView = ({
                 </Grid>
 
 
-                <Grid item xs={6} md={3} order={{xs: 4}}>
+                <Grid item xs={6} md={3} order={{ xs: 4 }}>
                     <h3>{t("exercises.secondaryMuscles")}</h3>
                     <ul>
                         {exercise.musclesSecondary.map((m: Muscle) => (
@@ -91,7 +91,7 @@ export const ExerciseDetailView = ({
             </Grid>
             <PaddingBox />
         </Grid>
-        <Grid item xs={12} sm={5} md={4} order={{xs: 1, sm: 2}}>
+        <Grid item xs={12} sm={5} md={4} order={{ xs: 1, sm: 2 }}>
             { /*
                         <Carousel>
                             <CarouselItem>
@@ -125,7 +125,7 @@ export const ExerciseDetailView = ({
             />
         </Grid>
 
-        <Grid item xs={12} order={{xs: 3}}>
+        <Grid item xs={12} order={{ xs: 3 }}>
 
             <Divider />
             <PaddingBox />
@@ -143,12 +143,12 @@ export const ExerciseDetailView = ({
                 )}
             </Grid>
         </Grid>
-        <Grid item xs={12} order={{xs: 4}}>
+        <Grid item xs={12} order={{ xs: 4 }}>
             <Typography variant="caption" display="block" mt={2}>
                 The text on this page is available under the <a
                 href="https://creativecommons.org/licenses/by-sa/4.0/deed">CC BY-SA 4
                 License</a>.
             </Typography>
         </Grid>
-    </>;
+    </Grid>;
 };

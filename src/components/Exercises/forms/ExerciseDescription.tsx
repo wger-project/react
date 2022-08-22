@@ -8,6 +8,7 @@ export function ExerciseDescription(props: { fieldName: string }) {
     const [field, meta] = useField(props.fieldName);
 
     return <TextField
+        fullWidth
         id="description"
         label={t("description")}
         variant="standard"

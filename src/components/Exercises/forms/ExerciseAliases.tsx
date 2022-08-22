@@ -18,7 +18,7 @@ export function ExerciseAliases(props: { fieldName: string }) {
         }}
         renderTags={(value: readonly string[], getTagProps) => {
             return value.map((option: string, index: number) => (
-                <Chip label={option} {...getTagProps({index})} />
+                <Chip label={option} {...getTagProps({ index })} />
             ));
         }}
         onBlur={field.onBlur}

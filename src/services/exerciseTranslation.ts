@@ -58,3 +58,32 @@ export const addExerciseTranslation = async (
 
     return response.data.id;
 };
+
+/*
+ * Edit an existing exercise translation
+ */
+export const editExerciseTranslation = async (
+    id: number,
+    exerciseBaseId: number,
+    languageId: number,
+    name: string,
+    description: string,
+): Promise<ExerciseTranslation> => {
+    const url = makeUrl(EXERCISE_TRANSLATION_PATH, { id: id });
+    const baseData = {
+        // eslint-disable-next-line camelcase
+        exercise_base: exerciseBaseId,
+        language: languageId,
+        name: name,
+        description: description,
+    };
+    const response = await axios.patch(
+        url,
+        baseData,
+        { headers: makeHeader() }
+    );
+
+    const adapter = new ExerciseTranslationAdapter();
+
+    return adapter.fromJson(response.data);
+};

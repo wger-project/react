@@ -1,24 +1,22 @@
-import React, {useState} from "react";
-import {Head} from "./Head";
-import {useNavigate, useParams} from "react-router-dom";
-import {getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName,} from "services";
-import {useTranslation} from "react-i18next";
-import {ExerciseTranslation} from "components/Exercises/models/exerciseTranslation";
-import {Language} from "components/Exercises/models/language";
-import {useQuery} from "@tanstack/react-query";
-import {QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL,} from "utils/consts";
-import {useLanguageQuery} from "components/Exercises/queries";
-import {Box, Container, Grid} from "@mui/material";
-import {ExerciseBase} from "components/Exercises/models/exerciseBase";
-import {ExerciseDetailView} from "components/Exercises/Detail/ExerciseDetailView";
-import {LoadingWidget} from "components/Core/LoadingWidget/LoadingWidget";
-import {
-    ExerciseDetailEditTranslation
-} from "components/Exercises/Detail/ExerciseDetailEditTranslation";
+import React, { useState } from "react";
+import { Head } from "./Head";
+import { useNavigate, useParams } from "react-router-dom";
+import { getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName, } from "services";
+import { useTranslation } from "react-i18next";
+import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import { Language } from "components/Exercises/models/language";
+import { useQuery } from "@tanstack/react-query";
+import { QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL, } from "utils/consts";
+import { useLanguageQuery } from "components/Exercises/queries";
+import { Box, Container } from "@mui/material";
+import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailView";
+import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
+import { ExerciseDetailEditTranslation } from "components/Exercises/Detail/ExerciseDetailEditTranslation";
 
 
 export const PaddingBox = () => {
-    return <Box sx={{height: 40}} />;
+    return <Box sx={{ height: 40 }} />;
 };
 
 export const ExerciseDetails = () => {
@@ -56,7 +54,7 @@ export const ExerciseDetails = () => {
     const variationsQuery = useQuery(
         [QUERY_EXERCISE_BASES_VARIATIONS, exerciseQuery.data?.variationId],
         () => getExerciseBasesForVariation(exerciseQuery.data?.variationId),
-        {enabled: exerciseQuery.isSuccess}
+        { enabled: exerciseQuery.isSuccess }
     );
 
     if (
@@ -113,12 +111,12 @@ export const ExerciseDetails = () => {
             }
             <PaddingBox />
             <Container maxWidth="lg">
-                {exerciseQuery.isLoading && languageQuery.isLoading &&
-                    <LoadingWidget />
+                {
+                    exerciseQuery.isLoading
+                    && languageQuery.isLoading
+                    && <LoadingWidget />
                 }
-                <Grid container>
-                    {out}
-                </Grid>
+                {out}
             </Container>
         </>
     );

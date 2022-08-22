@@ -7,8 +7,8 @@ export function ExerciseName(props: { fieldName: string }) {
     const [t] = useTranslation();
     const [field, meta] = useField(props.fieldName);
 
-
     return <TextField
+        fullWidth
         id={props.fieldName}
         label={t("name")}
         variant="standard"
