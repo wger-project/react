@@ -108,66 +108,59 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
                             : <ExerciseEquipmentSelect fieldName={'equipment'} options={equipmentQuery.data!} />
                         }
 
-                        {musclesQuery.isLoading ? (
-                            <Box>
-                                <LoadingWidget />
-                            </Box>
-                        ) : (
-                            <Autocomplete
-                                multiple
-                                id="muscles"
-                                options={musclesQuery.data!.map(m => m.id)}
-                                getOptionDisabled={(option) =>
-                                    secondaryMuscles.includes(option)
-                                }
-                                getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName(t)}
-                                value={primaryMuscles}
-                                onChange={(event, newValue) => {
-                                    setPrimaryMuscles(newValue);
-                                }}
-                                renderInput={params => (
-                                    <TextField
-                                        {...params}
-                                        variant="standard"
-                                        label={t("exercises.muscles")}
-                                        value={formik.getFieldProps("muscles").value}
-                                        onChange={e => {
-                                            formik.setFieldValue(
-                                                formik.getFieldProps("muscles").name,
-                                                e.target.value
-                                            );
-                                        }}
-                                    />
-                                )}
-                            />
-                        )}
-                        {musclesQuery.isLoading ? (
-                            <Box>
-                                <LoadingWidget />
-                            </Box>
-                        ) : (
-                            <Autocomplete
-                                multiple
-                                id="secondary-muscles"
-                                options={musclesQuery.data!.map(m => m.id)}
-                                getOptionDisabled={(option) =>
-                                    primaryMuscles.includes(option)
-                                }
-                                getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName(t)}
-                                value={secondaryMuscles}
-                                onChange={(event, newValue) => {
-                                    setSecondaryMuscles(newValue);
-                                }}
-                                renderInput={params => (
-                                    <TextField
-                                        {...params}
-                                        variant="standard"
-                                        label={t("exercises.secondaryMuscles")}
-                                        value={formik.getFieldProps("muscles").value}
-                                    />
-                                )}
-                            />
-                        )}
+                        {musclesQuery.isLoading
+                            ? <Box> <LoadingWidget /> </Box>
+                            : <>
+                                <Autocomplete
+                                    multiple
+                                    id="muscles"
+                                    options={musclesQuery.data!.map(m => m.id)}
+                                    getOptionDisabled={(option) =>
+                                        secondaryMuscles.includes(option)
+                                    }
+                                    getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName(t)}
+                                    value={primaryMuscles}
+                                    onChange={(event, newValue) => {
+                                        setPrimaryMuscles(newValue);
+                                    }}
+                                    renderInput={params => (
+                                        <TextField
+                                            {...params}
+                                            variant="standard"
+                                            label={t("exercises.muscles")}
+                                            value={formik.getFieldProps("muscles").value}
+                                            onChange={e => {
+                                                formik.setFieldValue(
+                                                    formik.getFieldProps("muscles").name,
+                                                    e.target.value
+                                                );
+                                            }}
+                                        />
+                                    )}
+                                />
+                                <Autocomplete
+                                    multiple
+                                    id="secondary-muscles"
+                                    options={musclesQuery.data!.map(m => m.id)}
+                                    getOptionDisabled={(option) =>
+                                        primaryMuscles.includes(option)
+                                    }
+                                    getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName(t)}
+                                    value={secondaryMuscles}
+                                    onChange={(event, newValue) => {
+                                        setSecondaryMuscles(newValue);
+                                    }}
+                                    renderInput={params => (
+                                        <TextField
+                                            {...params}
+                                            variant="standard"
+                                            label={t("exercises.secondaryMuscles")}
+                                            value={formik.getFieldProps("muscles").value}
+                                        />
+                                    )}
+                                />
+                            </>
+                        }
                         <Grid container>
                             <Grid item xs={6} display="flex" justifyContent={"center"}>
                                 <MuscleOverview
