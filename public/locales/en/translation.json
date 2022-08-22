@@ -29,6 +29,8 @@
     "submitExercise": "Submit exercise",
     "successfullyUpdated": "The exercise was successfully updated. Due to caching it might take some time till the changes are visible throughout the application.",
     "description": "Description",
+    "exerciseNotTranslated": "No translation available",
+    "exerciseNotTranslatedBody": "This exercise is currently not available in the currently selected language. Do you want to contribute a translation?",
     "alsoKnownAs": "Also known as:",
     "notes": "Notes",
     "primaryMuscles": "Primary muscles",

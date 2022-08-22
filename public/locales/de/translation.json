@@ -20,7 +20,10 @@
     "muscles": "Muskeln",
     "secondaryMuscles": "Sekundärmuskeln",
     "noEquipment": "Keine Ausrüstung",
-    "searchExerciseName": "Nach Übungsnamen suchen"
+    "searchExerciseName": "Nach Übungsnamen suchen",
+    "exerciseNotTranslated": "Keine Übersetzung verfügbar",
+    "exerciseNotTranslatedBody": "Diese Übung ist derzeit nicht in der gewählten Sprache verfügbar. Möchtest du eine Übersetzung beisteuern?",
+    "translateExerciseNow": "Diese Übung jetzt übersetzen"
   },
   "noResults": "Keine Ergebnisse",
   "noResultsDescription": "Keine Ergebnisse für diese Suche gefunden, bitte reduziere die Anzahl der Filter.",

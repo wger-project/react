@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Divider, Grid, Typography } from "@mui/material";
+import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 import React from "react";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
@@ -12,21 +12,61 @@ import { Language } from "components/Exercises/models/language";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 
 
+const TranslateExerciseBanner = ({ setEditMode }: { setEditMode: (mode: boolean) => void }) => {
+    const [t] = useTranslation();
+
+    return (
+        <Box
+            padding={3}
+            sx={{
+                width: "100%",
+                backgroundColor: "#ebebeb",
+                textAlign: "center",
+            }}
+        >
+            <Typography variant={"h5"}>
+                {t("exercises.exerciseNotTranslated")}
+            </Typography>
+
+            <Typography gutterBottom variant="body1" component="div">
+                {t("exercises.exerciseNotTranslatedBody")}
+            </Typography>
+
+            <Button variant="contained" onClick={() => setEditMode(true)}>
+                {t("exercises.translateExerciseNow")}
+            </Button>
+
+        </Box>
+    );
+};
+
 export interface ViewProps {
     exercise: ExerciseBase
-    currentTranslation: ExerciseTranslation | undefined,
+    currentTranslation: ExerciseTranslation, // | undefined,
     variations: ExerciseBase[],
-    language: Language
+    language: Language,
+    setEditMode: (mode: boolean) => void
 }
 
 export const ExerciseDetailView = ({
                                        exercise,
                                        currentTranslation,
                                        variations,
-                                       language
+                                       language,
+                                       setEditMode
                                    }: ViewProps) => {
     const [t] = useTranslation();
+    const isNewTranslation = language && language.id !== currentTranslation.language;
+
     return <Grid container>
+        <Grid item xs={12} sm={7} md={8} order={{ xs: 2, sm: 1 }}>
+            {
+                isNewTranslation
+                && <TranslateExerciseBanner
+                    setEditMode={setEditMode}
+                />
+            }
+        </Grid>
         <Grid item xs={12} sm={7} md={8} order={{ xs: 2, sm: 1 }}>
             {currentTranslation?.aliases && currentTranslation?.aliases.length > 0 ? (
                 <div>

@@ -81,17 +81,16 @@ export const ExerciseDetails = () => {
 
     let out;
     if (exerciseQuery.isSuccess && languageQuery.isSuccess) {
-        if (editMode) {
-            out = <ExerciseDetailEditTranslation
+        out = editMode
+            ? <ExerciseDetailEditTranslation
                 exercise={exerciseQuery.data}
-                language={language!} />;
-        } else {
-            out = <ExerciseDetailView
+                language={language!} />
+            : <ExerciseDetailView
                 exercise={exerciseQuery.data}
-                currentTranslation={currentTranslation}
+                currentTranslation={currentTranslation!}
                 language={language!}
-                variations={variations} />;
-        }
+                variations={variations}
+                setEditMode={setEditMode} />;
     }
 
     return (
