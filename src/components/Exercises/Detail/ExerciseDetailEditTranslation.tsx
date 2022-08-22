@@ -104,6 +104,7 @@ export const ExerciseDetailEditTranslation = ({
                             action={
                                 <IconButton
                                     aria-label="close"
+                                    size="small"
                                     color="inherit"
                                     onClick={() => {
                                         setAlertIsVisible(false);
