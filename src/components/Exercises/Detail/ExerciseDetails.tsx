@@ -96,8 +96,10 @@ export const ExerciseDetails = () => {
 
     return (
         <>
-            {exerciseQuery.isSuccess && languageQuery.isSuccess
-                ? <Head
+            {
+                exerciseQuery.isSuccess
+                && languageQuery.isSuccess
+                && <Head
                     exercise={exerciseQuery.data}
                     languages={languageQuery.data}
                     availableLanguages={exerciseQuery.data!.availableLanguages}
@@ -106,7 +108,6 @@ export const ExerciseDetails = () => {
                     currentTranslation={currentTranslation}
                     setEditMode={setEditMode}
                     editMode={editMode} />
-                : null
             }
             <PaddingBox />
             <Container maxWidth="lg">
