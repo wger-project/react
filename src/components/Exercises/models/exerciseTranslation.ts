@@ -1,7 +1,7 @@
-import {Adapter} from "utils/Adapter";
-import {truncateLongNames} from "utils/strings";
-import {Note, NoteAdapter} from "components/Exercises/models/note";
-import {Alias, AliasAdapter} from "components/Exercises/models/alias";
+import { Adapter } from "utils/Adapter";
+import { truncateLongNames } from "utils/strings";
+import { Note, NoteAdapter } from "components/Exercises/models/note";
+import { Alias, AliasAdapter } from "components/Exercises/models/alias";
 
 
 export class ExerciseTranslation {
@@ -46,8 +46,8 @@ export class ExerciseTranslationAdapter implements Adapter<ExerciseTranslation> 
             item.name,
             item.description,
             item.language,
-            item.notes.map((e: any) => (new NoteAdapter().fromJson(e))),
-            item.aliases.map((e: any) => (new AliasAdapter().fromJson(e))),
+            item.notes?.map((e: any) => (new NoteAdapter().fromJson(e))),
+            item.aliases?.map((e: any) => (new AliasAdapter().fromJson(e))),
         );
     }
 

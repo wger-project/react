@@ -117,3 +117,33 @@ export const addExerciseBase = async (categoryId: number,
 
     return response.data.id;
 };
+
+/*
+ * Update an existing exercise base
+ */
+export const editExerciseBase = async (id: number,
+                                       categoryId: number,
+                                       equipmentIds: number[],
+                                       muscleIds: number[],
+                                       secondaryMuscleIds: number[],
+                                       variationId: number | null,
+): Promise<number> => {
+
+    const url = makeUrl(EXERCISE_BASE_PATH, { id: id });
+    const baseData = {
+        category: categoryId,
+        equipment: equipmentIds,
+        muscles: muscleIds,
+        // eslint-disable-next-line camelcase
+        muscles_secondary: secondaryMuscleIds,
+        // eslint-disable-next-line camelcase
+        variation_id: variationId,
+    };
+    const response = await axios.patch(
+        url,
+        baseData,
+        { headers: makeHeader() }
+    );
+
+    return response.data.id;
+};

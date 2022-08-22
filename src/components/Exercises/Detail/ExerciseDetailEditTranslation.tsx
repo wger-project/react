@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Button, Divider, Grid, Typography } from "@mui/material";
+import { Alert, Button, Divider, Grid, Typography } from "@mui/material";
 import React from "react";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
@@ -15,6 +15,8 @@ import { ExerciseName } from "components/Exercises/forms/ExerciseName";
 import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
 import { editExerciseTranslation } from "services/exerciseTranslation";
 import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
+import { postAlias } from "services";
+import { deleteAlias } from "services/alias";
 
 export interface ViewProps {
     exercise: ExerciseBase
@@ -29,6 +31,7 @@ export const ExerciseDetailEditTranslation = ({
                                               }: ViewProps) => {
     const [t] = useTranslation();
 
+    const [alertIsVisible, setAlertIsVisible] = React.useState(false);
     const exerciseTranslation = exercise.getTranslation(language);
     const exerciseEnglish = exercise.getTranslation();
 
@@ -44,8 +47,11 @@ export const ExerciseDetailEditTranslation = ({
             alternativeNames: exerciseTranslation.aliases.map(a => a.alias),
             description: exerciseTranslation.description,
         }}
+        enableReinitialize
         validationSchema={validationSchema}
         onSubmit={async values => {
+
+            //console.log(values);
 
             // Edit exercise translation
             await editExerciseTranslation(
@@ -55,10 +61,39 @@ export const ExerciseDetailEditTranslation = ({
                 values.name,
                 values.description,
             );
+
+            // Edit aliases (this is currently really hacky)
+            // Since we only get the string from the form, we need to compare them to the list of
+            // current aliases and decide which stay the same and which will be updated (which we
+            // can't directly do, so the old one gets deleted and a new one created)
+
+            // https://stackoverflow.com/questions/1187518/
+            const aliasOrig = exerciseTranslation.aliases.map(a => a.alias);
+            const aliasNew = values.alternativeNames;
+            const aliasToCreate = aliasNew.filter(x => !aliasOrig.includes(x));
+            let aliasToDelete = aliasOrig.filter(x => !aliasNew.includes(x));
+
+            aliasToCreate.forEach(alias => {
+                postAlias(exerciseTranslation.id, alias);
+            });
+
+            aliasToDelete.forEach(alias => {
+                deleteAlias(exerciseTranslation.aliases.find(a => a.alias === alias)!.id);
+            });
+
+
+            // Notify the user
+            setAlertIsVisible(true);
         }}
     >
         <Form>
             <Grid container>
+                {alertIsVisible &&
+                    <Grid item xs={12}>
+                        <Alert severity="success">{t('exercises.successfullyUpdated')}</Alert>
+                        <PaddingBox />
+                    </Grid>}
+
                 <Grid item xs={6}>
                     <Typography variant={'h5'}>{t('English')}</Typography>
                 </Grid>
