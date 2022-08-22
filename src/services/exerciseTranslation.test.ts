@@ -39,7 +39,9 @@ describe("Exercise translation service API tests", () => {
 
         // Assert
         expect(axios.post).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(886);
+        expect(result.id).toEqual(886);
+        expect(result.name).toEqual("Test exercise");
+        expect(result.description).toEqual("Test description");
     });
 
 

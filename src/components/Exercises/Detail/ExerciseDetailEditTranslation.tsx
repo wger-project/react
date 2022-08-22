@@ -13,10 +13,11 @@ import {
 import { Form, Formik } from "formik";
 import { ExerciseName } from "components/Exercises/forms/ExerciseName";
 import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
-import { editExerciseTranslation } from "services/exerciseTranslation";
+import { addExerciseTranslation, editExerciseTranslation } from "services/exerciseTranslation";
 import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
 import { postAlias } from "services";
 import { deleteAlias } from "services/alias";
+import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 
 export interface ViewProps {
     exercise: ExerciseBase
@@ -30,8 +31,12 @@ export const ExerciseDetailEditTranslation = ({
     const [t] = useTranslation();
 
     const [alertIsVisible, setAlertIsVisible] = React.useState(false);
-    const exerciseTranslation = exercise.getTranslation(language);
+    const translationFromBase = exercise.getTranslation(language);
+    const isNewTranslation = language.id !== translationFromBase.language;
+
+    const exerciseTranslation = isNewTranslation ? new ExerciseTranslation(null, null, '', '', language.id) : translationFromBase;
     const exerciseEnglish = exercise.getTranslation();
+
 
     const validationSchema = yup.object({
         name: nameValidator(t),
@@ -49,16 +54,21 @@ export const ExerciseDetailEditTranslation = ({
         validationSchema={validationSchema}
         onSubmit={async values => {
 
-            //console.log(values);
-
-            // Edit exercise translation
-            await editExerciseTranslation(
-                exerciseTranslation.id,
-                exercise.id!,
-                exerciseTranslation.language,
-                values.name,
-                values.description,
-            );
+            // Exercise translation
+            const translation = exerciseTranslation.id
+                ? await editExerciseTranslation(
+                    exerciseTranslation.id,
+                    exercise.id!,
+                    exerciseTranslation.language,
+                    values.name,
+                    values.description,
+                )
+                : await addExerciseTranslation(
+                    exercise.id!,
+                    language.id,
+                    values.name,
+                    values.description
+                );
 
             // Edit aliases (this is currently really hacky)
             // Since we only get the string from the form, we need to compare them to the list of
@@ -72,7 +82,7 @@ export const ExerciseDetailEditTranslation = ({
             let aliasToDelete = aliasOrig.filter(x => !aliasNew.includes(x));
 
             aliasToCreate.forEach(alias => {
-                postAlias(exerciseTranslation.id, alias);
+                postAlias(translation.id!, alias);
             });
 
             aliasToDelete.forEach(alias => {

@@ -17,19 +17,14 @@ import { addExerciseBase, addExerciseTranslation, postAlias, postExerciseImage }
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { addVariation } from "services/variation";
 import { useNavigate } from "react-router-dom";
-import {
-    useCategoriesQuery,
-    useEquipmentQuery,
-    useLanguageQuery,
-    useMusclesQuery
-} from "components/Exercises/queries";
+import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
 import { getTranslationKey } from "utils/strings";
 import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
 import { useExerciseStateValue } from "state";
 
 
-export const Step6Overview = ({onBack}: StepProps) => {
+export const Step6Overview = ({ onBack }: StepProps) => {
     const [t] = useTranslation();
     const [state] = useExerciseStateValue();
 
@@ -60,7 +55,7 @@ export const Step6Overview = ({onBack}: StepProps) => {
         );
 
         // Create the English translation
-        const exerciseId = await addExerciseTranslation(
+        const exercise = await addExerciseTranslation(
             baseId,
             ENGLISH_LANGUAGE_ID,
             state.nameEn,
@@ -69,7 +64,7 @@ export const Step6Overview = ({onBack}: StepProps) => {
 
         // For each entry in alternative names, create a new alias
         for (const alias of state.alternativeNamesEn) {
-            await postAlias(exerciseId, alias);
+            await postAlias(exercise.id!, alias);
         }
 
         // Post the images
@@ -136,11 +131,11 @@ export const Step6Overview = ({onBack}: StepProps) => {
                 {state.images.length > 0 && (
                     <ImageList
                         cols={3}
-                        style={{maxHeight: "200px",}}>
+                        style={{ maxHeight: "200px", }}>
                         {state.images.map(imageEntry => (
                             <ImageListItem key={imageEntry.url}>
                                 <img
-                                    style={{maxHeight: "200px", maxWidth: "200px"}}
+                                    style={{ maxHeight: "200px", maxWidth: "200px" }}
                                     src={imageEntry.url}
                                     alt=""
                                     loading="lazy"
@@ -153,7 +148,7 @@ export const Step6Overview = ({onBack}: StepProps) => {
 
                 {state.languageId !== null && (
                     <>
-                        <Typography variant={"h6"} sx={{mt: 3}}>
+                        <Typography variant={"h6"} sx={{ mt: 3 }}>
                             {languageQuery.data!.find(l => l.id === state.languageId)!.nameLong}
                         </Typography>
                         <TableContainer>
@@ -180,24 +175,24 @@ export const Step6Overview = ({onBack}: StepProps) => {
                     </>
                 )}
 
-                <Alert severity="info" sx={{mt: 2}}>
+                <Alert severity="info" sx={{ mt: 2 }}>
                     {t('exercises.checkInformationBeforeSubmitting')}
                 </Alert>
 
                 <Grid container>
                     <Grid item xs={12} display="flex" justifyContent={"end"}>
-                        <Box sx={{mb: 2}}>
+                        <Box sx={{ mb: 2 }}>
                             <div>
                                 <Button
                                     onClick={onBack}
-                                    sx={{mt: 1, mr: 1}}
+                                    sx={{ mt: 1, mr: 1 }}
                                 >
                                     {t('goBack')}
                                 </Button>
                                 <Button
                                     variant="contained"
                                     onClick={submitExercise}
-                                    sx={{mt: 1, mr: 1}}
+                                    sx={{ mt: 1, mr: 1 }}
                                 >
                                     {t('exercises.submitExercise')}
                                 </Button>

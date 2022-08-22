@@ -41,7 +41,7 @@ export const addExerciseTranslation = async (
     languageId: number,
     name: string,
     description: string,
-): Promise<number> => {
+): Promise<ExerciseTranslation> => {
 
     const url = makeUrl(EXERCISE_TRANSLATION_PATH);
     const baseData = {
@@ -55,8 +55,8 @@ export const addExerciseTranslation = async (
         headers: makeHeader(),
     });
 
-
-    return response.data.id;
+    const adapter = new ExerciseTranslationAdapter();
+    return adapter.fromJson(response.data);
 };
 
 /*
@@ -84,6 +84,5 @@ export const editExerciseTranslation = async (
     );
 
     const adapter = new ExerciseTranslationAdapter();
-
     return adapter.fromJson(response.data);
 };

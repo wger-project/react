@@ -9,8 +9,8 @@ export class ExerciseTranslation {
     notes: Note[] = [];
     aliases: Alias[] = [];
 
-    constructor(public id: number,
-                public uuid: string,
+    constructor(public id: number | null,
+                public uuid: string | null,
                 public name: string,
                 public description: string,
                 public language: number,
