@@ -4,6 +4,7 @@ import { Muscle } from "components/Exercises/models/muscle";
 import { Equipment } from "components/Exercises/models/equipment";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import { Alias } from "components/Exercises/models/alias";
 
 export const testCategoryArms = new Category(1, 'Arms');
 export const testCategoryLegs = new Category(2, 'Legs');
@@ -64,8 +65,13 @@ export const testExerciseSquats = new ExerciseBase(
         new ExerciseTranslation(9,
             'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
             'Kniebeuge',
-            'Kniebeuge machen',
-            1
+            'Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur',
+            1,
+            [],
+            [
+                new Alias(1, 'Königsübung'),
+                new Alias(2, 'Beinverdicker'),
+            ]
         )
     ]
 );
