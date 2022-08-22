@@ -20,13 +20,11 @@ import { deleteAlias } from "services/alias";
 
 export interface ViewProps {
     exercise: ExerciseBase
-    variations: ExerciseBase[],
     language: Language
 }
 
 export const ExerciseDetailEditTranslation = ({
                                                   exercise,
-                                                  variations,
                                                   language
                                               }: ViewProps) => {
     const [t] = useTranslation();

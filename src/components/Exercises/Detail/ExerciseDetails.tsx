@@ -84,8 +84,7 @@ export const ExerciseDetails = () => {
         if (editMode) {
             out = <ExerciseDetailEditTranslation
                 exercise={exerciseQuery.data}
-                language={language!}
-                variations={variations} />;
+                language={language!} />;
         } else {
             out = <ExerciseDetailView
                 exercise={exerciseQuery.data}
