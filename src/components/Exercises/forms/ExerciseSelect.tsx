@@ -7,24 +7,21 @@ export function ExerciseSelect(props: { fieldName: string, options: any }) {
     const [t] = useTranslation();
     const [field, meta] = useField(props.fieldName);
 
-    console.log(meta.error);
-
     return <FormControl fullWidth>
         <InputLabel id="label-category">{t("category")}</InputLabel>
         <Select
             labelId="label-category"
             id="category"
-            {...field}
             label={t("category")}
             error={meta.touched && Boolean(meta.error)}
+            {...field}
         >
             {props.options}
-
         </Select>
-        {meta.touched && Boolean(meta.error) &&
-            <FormHelperText error>{meta.error}</FormHelperText>
+        {
+            meta.touched
+            && Boolean(meta.error)
+            && <FormHelperText error>{meta.error}</FormHelperText>
         }
-
-
     </FormControl>;
 }

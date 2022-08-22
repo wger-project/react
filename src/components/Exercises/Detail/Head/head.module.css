@@ -84,16 +84,6 @@
         width: 25px;
         height: 25px;
         cursor: pointer; }
-      .root .header .toolbar .nav_link {
-        padding: 1rem 0.5rem;
-        text-decoration: none;
-        border-bottom: 3px solid transparent; }
-        .root .header .toolbar .nav_link:hover {
-          border-bottom: 3px solid black; }
-      .root .header .toolbar .vertical_line {
-        height: 30px;
-        width: 2px;
-        background-color: #999999; }
 
 .dots {
   height: 20px;

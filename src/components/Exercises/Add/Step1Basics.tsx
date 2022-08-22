@@ -3,11 +3,7 @@ import { Autocomplete, Box, Button, Grid, MenuItem, Stack, TextField, } from "@m
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 import { Form, Formik } from "formik";
-import {
-    useCategoriesQuery,
-    useEquipmentQuery,
-    useMusclesQuery,
-} from "components/Exercises/queries";
+import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery, } from "components/Exercises/queries";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { getTranslationKey } from "utils/strings";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
@@ -15,15 +11,12 @@ import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { useExerciseStateValue } from "state";
 import * as exerciseReducer from "state/exerciseReducer";
 import { ExerciseName } from "components/Exercises/forms/ExerciseName";
-import {
-    alternativeNameValidator,
-    categoryValidator,
-    nameValidator
-} from "components/Exercises/forms/yupValidators";
+import { alternativeNameValidator, categoryValidator, nameValidator } from "components/Exercises/forms/yupValidators";
 import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
 import { ExerciseSelect } from "components/Exercises/forms/ExerciseSelect";
+import { ExerciseEquipmentSelect } from "components/Exercises/forms/ExerciseEquipmentSelect";
 
-export const Step1Basics = ({onContinue}: StepProps) => {
+export const Step1Basics = ({ onContinue }: StepProps) => {
     const [t] = useTranslation();
     const [state, dispatch] = useExerciseStateValue();
 
@@ -112,25 +105,7 @@ export const Step1Basics = ({onContinue}: StepProps) => {
 
                         {equipmentQuery.isLoading
                             ? <Box> <LoadingWidget /> </Box>
-                            :
-                            <Autocomplete
-                                multiple
-                                id="equipment"
-                                options={equipmentQuery.data!.map(e => e.id)}
-                                value={equipment}
-                                getOptionLabel={option => t(getTranslationKey(equipmentQuery.data!.find(e => e.id === option)!.name))}
-                                onChange={(event, newValue) => {
-                                    setEquipment(newValue);
-                                }}
-                                renderInput={params => (
-                                    <TextField
-                                        {...params}
-                                        variant="standard"
-                                        label={t("exercises.equipment")}
-                                        value={formik.getFieldProps("muscles").value}
-                                    />
-                                )}
-                            />
+                            : <ExerciseEquipmentSelect fieldName={'equipment'} options={equipmentQuery.data!} />
                         }
 
                         {musclesQuery.isLoading ? (
@@ -213,12 +188,12 @@ export const Step1Basics = ({onContinue}: StepProps) => {
 
                     <Grid container>
                         <Grid item xs={12} display="flex" justifyContent={"end"}>
-                            <Box sx={{mb: 2}}>
+                            <Box sx={{ mb: 2 }}>
                                 <div>
                                     <Button
                                         variant="contained"
                                         type="submit"
-                                        sx={{mt: 1, mr: 1}}
+                                        sx={{ mt: 1, mr: 1 }}
                                     >
                                         {t('continue')}
                                     </Button>
