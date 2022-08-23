@@ -22,6 +22,8 @@ import { getTranslationKey } from "utils/strings";
 import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
 import { useExerciseStateValue } from "state";
+import { addNote } from "services/note";
+import { Note } from "components/Exercises/models/note";
 
 
 export const Step6Overview = ({ onBack }: StepProps) => {
@@ -72,14 +74,28 @@ export const Step6Overview = ({ onBack }: StepProps) => {
             await postExerciseImage(baseId, image.file);
         }
 
+        // Post the notes
+        for (const note of state.notesEn) {
+            await addNote(new Note(null, exercise.id!, note));
+        }
+
+
         // Create the translation if needed
         if (state.languageId !== null) {
-            await addExerciseTranslation(
+            const exerciseI18n = await addExerciseTranslation(
                 baseId,
                 state.languageId,
                 state.nameI18n,
                 state.descriptionI18n,
             );
+
+            for (const alias of state.alternativeNamesI18n) {
+                await postAlias(exerciseI18n.id!, alias);
+            }
+
+            for (const note of state.notesI18n) {
+                await addNote(new Note(null, exerciseI18n.id!, note));
+            }
         }
 
         console.log("Exercise created");
@@ -105,6 +121,10 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                         <TableRow>
                             <TableCell>{t('description')}</TableCell>
                             <TableCell>{state.descriptionEn}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell>{t('exercises.notes')}</TableCell>
+                            <TableCell>{state.notesEn.map(note => <>{note}<br /></>)}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('category')}</TableCell>
@@ -169,6 +189,12 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                                 <TableRow>
                                     <TableCell>{t('description')}</TableCell>
                                     <TableCell>{state.descriptionI18n}</TableCell>
+                                </TableRow>
+
+
+                                <TableRow>
+                                    <TableCell>{t('exercises.notes')}</TableCell>
+                                    <TableCell>{state.notesI18n.map(note => <>{note}<br /></>)}</TableCell>
                                 </TableRow>
                             </Table>
                         </TableContainer>

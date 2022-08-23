@@ -7,5 +7,6 @@ export const QUERY_LANGUAGES = 'languages';
 export const QUERY_CATEGORIES = 'categories';
 export const QUERY_EQUIPMENT = 'equipment';
 export const QUERY_MUSCLES = 'muscles';
+export const QUERY_NOTES = 'notes';
 
 export const QUERY_PERMISSION = 'permission';

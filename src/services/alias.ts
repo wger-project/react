@@ -6,7 +6,7 @@ export const ALIAS_PATH = 'exercisealias';
 
 
 /*
- * Fetch all aliases
+ * Create a new alias
  */
 export const postAlias = async (exerciseId: number, alias: string): Promise<Alias> => {
     const url = makeUrl(ALIAS_PATH);

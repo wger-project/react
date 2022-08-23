@@ -12,11 +12,13 @@ export type ExerciseState = {
     nameEn: string;
     descriptionEn: string;
     alternativeNamesEn: string[];
+    notesEn: string[];
 
     languageId: number | null;
     nameI18n: string;
     alternativeNamesI18n: string[];
     descriptionI18n: string;
+    notesI18n: string[];
 
     category: number | null;
     muscles: number[];
@@ -40,10 +42,13 @@ export const exerciseInitialState: ExerciseState = {
     nameEn: "",
     descriptionEn: "",
     alternativeNamesEn: [],
+    notesEn: [],
 
     nameI18n: "",
     alternativeNamesI18n: [],
     descriptionI18n: "",
+    notesI18n: [],
+
     images: [],
 };
 

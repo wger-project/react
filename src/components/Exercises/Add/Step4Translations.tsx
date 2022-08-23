@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
     Box,
     Button,
@@ -24,50 +24,35 @@ import {
     setAlternativeNamesI18n,
     setDescriptionI18n,
     setLanguageId,
-    setNameI18n
+    setNameI18n,
+    setNotesI18n
 } from "state/exerciseReducer";
 import { ExerciseName } from "components/Exercises/forms/ExerciseName";
 import {
     alternativeNameValidator,
     descriptionValidator,
-    nameValidator
+    nameValidator,
+    noteValidator
 } from "components/Exercises/forms/yupValidators";
 import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
 import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
+import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
+import { ExerciseNotes } from "components/Exercises/forms/ExerciseNotes";
 
-export const Step4Translations = ({onContinue, onBack}: StepProps) => {
+export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
     const languageQuery = useLanguageQuery();
     const [state, dispatch] = useExerciseStateValue();
 
     const [translateExercise, setTranslateExercise] = useState<boolean>(state.languageId !== null);
 
-    const [localLanguageId, setLocalLanguageId] = useState<number | null>(state.languageId);
-    const [localNameI18n, setLocalNameI18n] = useState<string>(state.nameI18n);
-    const [localAlternativeNamesI18n, setLocalAlternativeNamesI18n] = useState<string[]>(state.alternativeNamesI18n);
-    const [localDescriptionI18n, setLocalDescriptionI18n] = useState<string>(state.descriptionI18n);
-
-    useEffect(() => {
-        dispatch(setLanguageId(localLanguageId));
-    }, [dispatch, localLanguageId]);
-
-    useEffect(() => {
-        dispatch(setNameI18n(localNameI18n));
-    }, [dispatch, localNameI18n]);
-
-    useEffect(() => {
-        dispatch(setDescriptionI18n(localDescriptionI18n));
-    }, [dispatch, localDescriptionI18n]);
-
-    useEffect(() => {
-        dispatch(setAlternativeNamesI18n(localAlternativeNamesI18n));
-    }, [dispatch, localAlternativeNamesI18n]);
 
     const validationSchema = yup.object(
         translateExercise ? {
             description: descriptionValidator(t),
             name: nameValidator(t),
             alternativeNames: alternativeNameValidator(t),
+            notes: noteValidator(t),
             language: yup
                 .number()
                 .required(),
@@ -80,14 +65,16 @@ export const Step4Translations = ({onContinue, onBack}: StepProps) => {
             alternativeNames: state.alternativeNamesI18n,
             description: state.descriptionI18n,
             language: state.languageId === null ? '' : state.languageId,
+            notes: state.notesI18n
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
 
-            setLocalNameI18n(values.name);
-            setLocalDescriptionI18n(values.description);
-            setLocalAlternativeNamesI18n(values.alternativeNames);
-            setLocalLanguageId(values.language === '' ? null : values.language as unknown as number);
+            dispatch(setNameI18n(values.name));
+            dispatch(setDescriptionI18n(values.description));
+            dispatch(setAlternativeNamesI18n(values.alternativeNames));
+            dispatch(setLanguageId(values.language === '' ? null : values.language as unknown as number));
+            dispatch(setNotesI18n(values.notes));
 
             onContinue!();
         }}
@@ -137,24 +124,27 @@ export const Step4Translations = ({onContinue, onBack}: StepProps) => {
                         <ExerciseAliases fieldName={'alternativeNames'} />
 
                         <ExerciseDescription fieldName={'description'} />
+
+                        <PaddingBox />
+                        <ExerciseNotes fieldName={'notes'} />
                     </>
                 )}
             </Stack>
 
             <Grid container>
                 <Grid item xs={12} display="flex" justifyContent={"end"}>
-                    <Box sx={{mb: 2}}>
+                    <Box sx={{ mb: 2 }}>
                         <div>
                             <Button
                                 onClick={onBack}
-                                sx={{mt: 1, mr: 1}}
+                                sx={{ mt: 1, mr: 1 }}
                             >
                                 {t('goBack')}
                             </Button>
                             <Button
                                 variant="contained"
                                 type="submit"
-                                sx={{mt: 1, mr: 1}}
+                                sx={{ mt: 1, mr: 1 }}
                             >
                                 {t('continue')}
                             </Button>

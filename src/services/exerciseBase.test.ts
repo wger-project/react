@@ -25,7 +25,7 @@ const exerciseTranslation1 = new ExerciseTranslation(111,
     'Do a squat',
     2,
     [
-        new Note(133, 'do the exercise correctly'),
+        new Note(133, 174, 'do the exercise correctly'),
     ],
     [
         new Alias(1, 'test 123'),

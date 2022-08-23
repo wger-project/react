@@ -6,20 +6,28 @@ import { ImageFormData } from "components/Exercises/models/exerciseBase";
 export const reset = (): ExerciseAction => {
     return { type: SetExerciseState.RESET, payload: null };
 };
+
 export const setNameEn = (name: string): ExerciseAction => {
     return { type: SetExerciseState.SET_NAME_EN, payload: name };
-};
-export const setNameI18n = (name: string): ExerciseAction => {
-    return { type: SetExerciseState.SET_NAME_I18N, payload: name };
 };
 export const setDescriptionEn = (description: string): ExerciseAction => {
     return { type: SetExerciseState.SET_DESCRIPTION_EN, payload: description };
 };
-export const setDescriptionI18n = (description: string): ExerciseAction => {
-    return { type: SetExerciseState.SET_DESCRIPTION_I18N, payload: description };
+export const setNotesEn = (notes: string[]): ExerciseAction => {
+    return { type: SetExerciseState.SET_NOTES_EN, payload: notes };
 };
 export const setAlternativeNamesEn = (names: string[]): ExerciseAction => {
     return { type: SetExerciseState.SET_ALIASES_EN, payload: names };
+};
+
+export const setNameI18n = (name: string): ExerciseAction => {
+    return { type: SetExerciseState.SET_NAME_I18N, payload: name };
+};
+export const setDescriptionI18n = (description: string): ExerciseAction => {
+    return { type: SetExerciseState.SET_DESCRIPTION_I18N, payload: description };
+};
+export const setNotesI18n = (notes: string[]): ExerciseAction => {
+    return { type: SetExerciseState.SET_NOTES_I18N, payload: notes };
 };
 export const setAlternativeNamesI18n = (names: string[]): ExerciseAction => {
     return { type: SetExerciseState.SET_ALIASES_I18N, payload: names };
@@ -66,6 +74,12 @@ export const exerciseReducer = (state: ExerciseState, action: ExerciseAction): E
             return {
                 ...state,
                 descriptionEn: action.payload as string
+            };
+
+        case SetExerciseState.SET_NOTES_EN:
+            return {
+                ...state,
+                notesEn: action.payload as string[]
             };
 
         case SetExerciseState.SET_ALIASES_EN:
@@ -126,6 +140,12 @@ export const exerciseReducer = (state: ExerciseState, action: ExerciseAction): E
             return {
                 ...state,
                 descriptionI18n: action.payload as string
+            };
+
+        case SetExerciseState.SET_NOTES_I18N:
+            return {
+                ...state,
+                notesI18n: action.payload as string[]
             };
 
         case SetExerciseState.SET_ALIASES_I18N:

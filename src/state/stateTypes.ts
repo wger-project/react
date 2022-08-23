@@ -12,6 +12,7 @@ export enum SetExerciseState {
     SET_NAME_EN,
     SET_ALIASES_EN,
     SET_DESCRIPTION_EN,
+    SET_NOTES_EN,
     SET_CATEGORY,
     SET_EQUIPMENT,
     SET_PRIMARY_MUSCLES,
@@ -22,5 +23,6 @@ export enum SetExerciseState {
     SET_NAME_I18N,
     SET_ALIASES_I18N,
     SET_DESCRIPTION_I18N,
+    SET_NOTES_I18N,
     SET_IMAGES
 }
