@@ -1,5 +1,15 @@
 import React from "react";
-import { Box, Button, CircularProgress, Container, Grid, Pagination, Paper, Stack, Typography, } from "@mui/material";
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Container,
+    Grid,
+    Pagination,
+    Paper,
+    Stack,
+    Typography,
+} from "@mui/material";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
 import { useTranslation } from "react-i18next";
@@ -9,10 +19,16 @@ import { Muscle } from "components/Exercises/models/muscle";
 import { Category } from "components/Exercises/models/category";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
-import { useBasesQuery, useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
+import {
+    useBasesQuery,
+    useCategoriesQuery,
+    useEquipmentQuery,
+    useMusclesQuery
+} from "components/Exercises/queries";
 import AddIcon from '@mui/icons-material/Add';
 import { Link, useNavigate } from "react-router-dom";
 import { ExerciseSearchResponse } from "services/responseType";
+import { useProfileQuery } from "components/User/queries";
 
 const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -81,6 +97,7 @@ export const ExerciseOverview = () => {
     const categoryQuery = useCategoriesQuery();
     const musclesQuery = useMusclesQuery();
     const equipmentQuery = useEquipmentQuery();
+    const profileQuery = useProfileQuery();
 
     const [t, i18n] = useTranslation();
     const navigate = useNavigate();
@@ -93,6 +110,8 @@ export const ExerciseOverview = () => {
     const handlePageChange = (event: any, value: number) => {
         setPage(value);
     };
+
+    const userIsAnonymous = profileQuery.isSuccess && profileQuery.data === null;
 
     // Should be a multiple of three, since there are three columns in the grid
     const ITEMS_PER_PAGE = 21;
@@ -152,6 +171,7 @@ export const ExerciseOverview = () => {
                 <Box sx={{ width: 620 }}>
                     <Button
                         variant="contained"
+                        disabled={userIsAnonymous}
                         startIcon={<AddIcon />}
                         onClick={() => navigate(`/${i18n.language}/exercise/add`)}
                     >

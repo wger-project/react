@@ -10,3 +10,4 @@ export const QUERY_MUSCLES = 'muscles';
 export const QUERY_NOTES = 'notes';
 
 export const QUERY_PERMISSION = 'permission';
+export const QUERY_PROFILE = 'profile';

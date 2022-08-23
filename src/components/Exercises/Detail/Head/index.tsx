@@ -24,7 +24,7 @@ import { useTranslation } from "react-i18next";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import RedoIcon from '@mui/icons-material/Redo';
 import AddIcon from '@mui/icons-material/Add';
-import { usePermissionQuery } from "components/User/queries";
+import { usePermissionQuery, useProfileQuery } from "components/User/queries";
 import { WgerPermissions } from "permissions";
 import { deleteExerciseTranslation } from "services";
 
@@ -56,6 +56,8 @@ export const Head = ({
 
     const deletePermissionQuery = usePermissionQuery(WgerPermissions.DELETE_EXERCISE);
     const editPermissionQuery = usePermissionQuery(WgerPermissions.EDIT_EXERCISE);
+    const profileQuery = useProfileQuery();
+    const userIsAnonymous = profileQuery.isSuccess && profileQuery.data === null;
 
     const handleLanguageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorMenuEl(event.currentTarget);
@@ -123,7 +125,7 @@ export const Head = ({
             <div className={styles.detail_language}>
 
                 <div className={styles.detail}>
-                    <Link to='../overview'>Exercises</Link>  &gt; {currentTranslation?.name}
+                    <Link to="../overview">Exercises</Link>  &gt; {currentTranslation?.name}
                 </div>
                 <div className={styles.languages}>
                     <div className={styles.language}>
@@ -144,7 +146,7 @@ export const Head = ({
                             MenuListProps={{
                                 'aria-labelledby': 'basic-button',
                             }}
-                            sx={{ padding: 20 }}
+                            sx={{padding: 20}}
                         >
                             <MenuItem disabled>Change this exercise's language</MenuItem>
                             <Divider />
@@ -158,20 +160,24 @@ export const Head = ({
                     <h1>{currentTranslation?.name}</h1>
                     {equipment}
                 </div>
-                <nav className={styles.toolbar}>
-                    {
-                        false
-                        && deletePermissionQuery.isSuccess
-                        && deletePermissionQuery.data
-                        && <Button onClick={() => setOpenDialog(true)}>DELETE</Button>
-                    }
-                    {
-                        editPermissionQuery.isSuccess
-                        && editPermissionQuery.data
-                        && <Button onClick={() => setEditMode(true)} disabled={editMode}>EDIT</Button>
-                    }
-                    <Button onClick={() => setEditMode(false)} disabled={!editMode}>VIEW</Button>
-                </nav>
+                {!userIsAnonymous &&
+                    <nav className={styles.toolbar}>
+                        {
+                            false
+                            && deletePermissionQuery.isSuccess
+                            && deletePermissionQuery.data
+                            && <Button onClick={() => setOpenDialog(true)}>DELETE</Button>
+                        }
+                        {
+                            editPermissionQuery.isSuccess
+                            && editPermissionQuery.data
+                            && <Button onClick={() => setEditMode(true)}
+                                       disabled={editMode}>EDIT</Button>
+                        }
+                        <Button onClick={() => setEditMode(false)}
+                                disabled={!editMode}>VIEW</Button>
+                    </nav>
+                }
             </div>
         </div>
     );
