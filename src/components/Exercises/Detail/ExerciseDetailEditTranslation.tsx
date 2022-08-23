@@ -13,10 +13,8 @@ import {
 import { Form, Formik } from "formik";
 import { ExerciseName } from "components/Exercises/forms/ExerciseName";
 import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
-import { addExerciseTranslation, editExerciseTranslation } from "services/exerciseTranslation";
 import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
-import { postAlias } from "services";
-import { deleteAlias } from "services/alias";
+import { addExerciseTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -34,8 +32,10 @@ export const ExerciseDetailEditTranslation = ({
     const [alertIsVisible, setAlertIsVisible] = React.useState(false);
     const translationFromBase = exercise.getTranslation(language);
     const isNewTranslation = language.id !== translationFromBase.language;
-
-    const exerciseTranslation = isNewTranslation ? new ExerciseTranslation(null, null, '', '', language.id) : translationFromBase;
+    const exerciseTranslation =
+        isNewTranslation
+            ? new ExerciseTranslation(null, null, '', '', language.id)
+            : translationFromBase;
     const exerciseEnglish = exercise.getTranslation();
 
 
