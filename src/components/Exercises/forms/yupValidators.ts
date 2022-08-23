@@ -33,7 +33,7 @@ export const noteValidator = (t: Function) => yup
     .of(
         yup
             .string()
-            .min(20, t("forms.valueTooShort"))
+            .min(15, t("forms.valueTooShort"))
     );
 
 export const categoryValidator = (t: Function) => yup

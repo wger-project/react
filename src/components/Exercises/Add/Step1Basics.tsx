@@ -19,30 +19,8 @@ import { ExerciseEquipmentSelect } from "components/Exercises/forms/ExerciseEqui
 export const Step1Basics = ({ onContinue }: StepProps) => {
     const [t] = useTranslation();
     const [state, dispatch] = useExerciseStateValue();
-
-    const [nameEn, setNameEn] = useState<string>(state.nameEn);
-    const [alternativeNamesEn, setAlternativeNamesEn] = useState<string[]>(state.alternativeNamesEn);
-    const [category, setCategory] = useState<number | null>(state.category);
     const [primaryMuscles, setPrimaryMuscles] = useState<number[]>(state.muscles);
     const [secondaryMuscles, setSecondaryMuscles] = useState<number[]>(state.musclesSecondary);
-    const [equipment, setEquipment] = useState<number[]>(state.equipment);
-
-
-    useEffect(() => {
-        dispatch(exerciseReducer.setNameEn(nameEn));
-    }, [dispatch, nameEn]);
-
-    useEffect(() => {
-        dispatch(exerciseReducer.setAlternativeNamesEn(alternativeNamesEn));
-    }, [dispatch, alternativeNamesEn]);
-
-    useEffect(() => {
-        dispatch(exerciseReducer.setCategory(category));
-    }, [dispatch, category]);
-
-    useEffect(() => {
-        dispatch(exerciseReducer.setEquipment(equipment));
-    }, [dispatch, equipment]);
 
     useEffect(() => {
         dispatch(exerciseReducer.setPrimaryMuscles(primaryMuscles));
@@ -75,11 +53,10 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
         }}
         validationSchema={validationSchema}
         onSubmit={values => {
-            console.log(values);
-            setNameEn(values.nameEn);
-            setCategory(values.category as number);
-            setAlternativeNamesEn(values.newAlternativeNameEn);
-            setEquipment(values.equipment);
+            dispatch(exerciseReducer.setNameEn(values.nameEn));
+            dispatch(exerciseReducer.setCategory(values.category as number));
+            dispatch(exerciseReducer.setAlternativeNamesEn(values.newAlternativeNameEn));
+            dispatch(exerciseReducer.setEquipment(values.equipment));
 
             onContinue!();
         }}
