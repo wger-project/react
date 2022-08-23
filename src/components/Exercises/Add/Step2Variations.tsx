@@ -24,6 +24,7 @@ import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
 import { useExerciseStateValue } from "state";
 import { setNewBaseVariationId, setVariationId } from "state/exerciseReducer";
 import SearchIcon from '@mui/icons-material/Search';
+import PhotoIcon from '@mui/icons-material/Photo';
 
 /*
  * Groups a list of objects by a property
@@ -96,9 +97,11 @@ const ExerciseInfoListItem = ({ bases }: {
             <Grid container>
                 <Grid item xs={12} sm={3} display="flex" justifyContent={"start"} alignItems={"center"}>
                     <AvatarGroup max={MAX_EXERCISE_IMAGES} spacing={"small"}>
-                        {bases.map((base) => <Avatar key={base.id}
-                                                     src={base.mainImage ? base.mainImage.url : "https://mui.com/static/images/cards/contemplative-reptile.jpg"}
-                        />)}
+                        {bases.map((base) =>
+                            base.mainImage
+                                ? <Avatar key={base.id} src={base.mainImage.url} />
+                                : <Avatar children={<PhotoIcon />} />
+                        )}
                     </AvatarGroup>
                 </Grid>
                 <Grid item xs={10} sm={7}>
