@@ -1,4 +1,5 @@
-export enum ExercisePermissions {
+export enum WgerPermissions {
+    // Exercises
     EDIT_EXERCISE = 'exercises.change_exercise',
     DELETE_EXERCISE = 'exercises.delete_exercise',
 

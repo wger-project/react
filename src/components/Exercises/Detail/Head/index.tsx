@@ -1,7 +1,12 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
     Button,
     Chip,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     Divider,
     ListItemIcon,
     ListItemText,
@@ -9,16 +14,19 @@ import {
     MenuItem,
     Stack
 } from '@mui/material';
-import {ExerciseBase} from 'components/Exercises/models/exerciseBase';
-import {ExerciseTranslation} from 'components/Exercises/models/exerciseTranslation';
-import {Language} from 'components/Exercises/models/language';
-import {Link} from 'react-router-dom';
+import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
+import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
+import { Language } from 'components/Exercises/models/language';
+import { Link } from 'react-router-dom';
 import styles from './head.module.css';
-import {getTranslationKey} from "utils/strings";
-import {useTranslation} from "react-i18next";
+import { getTranslationKey } from "utils/strings";
+import { useTranslation } from "react-i18next";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import RedoIcon from '@mui/icons-material/Redo';
 import AddIcon from '@mui/icons-material/Add';
+import { usePermissionQuery } from "components/User/queries";
+import { WgerPermissions } from "permissions";
+import { deleteExerciseTranslation } from "services";
 
 export interface HeadProp {
     exercise: ExerciseBase
@@ -41,20 +49,23 @@ export const Head = ({
                          setEditMode,
                          editMode
                      }: HeadProp) => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const openLanguageMenu = Boolean(anchorEl);
+    const [anchorMenuEl, setAnchorMenuEl] = useState<null | HTMLElement>(null);
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const openLanguageMenu = Boolean(anchorMenuEl);
     const [t] = useTranslation();
 
-    const handleLanguageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const deletePermissionQuery = usePermissionQuery(WgerPermissions.DELETE_EXERCISE);
+    const editPermissionQuery = usePermissionQuery(WgerPermissions.EDIT_EXERCISE);
 
+    const handleLanguageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorMenuEl(event.currentTarget);
+    };
+    const handleMenuClose = () => {
+        setAnchorMenuEl(null);
+    };
     const handleLanguageClick = (lang: Language) => {
         changeLanguage(lang);
-        handleClose();
+        handleMenuClose();
     };
 
     const equipment = <Stack direction="row" spacing={1}>
@@ -81,6 +92,34 @@ export const Head = ({
 
     return (
         <div className={styles.root}>
+            <Dialog
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {t('exercises.deleteExerciseTranslation')}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {t('exercises.deleteExerciseTranslationBody',
+                            {
+                                language: language?.nameLong,
+                                name: currentTranslation?.name
+                            })}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenDialog(false)}>{t('cancel')}</Button>
+                    <Button
+                        onClick={() => deleteExerciseTranslation(currentTranslation?.id!)}
+                        variant="contained"
+                        autoFocus
+                    >
+                        {t('delete')}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
             <div className={styles.detail_language}>
 
                 <div className={styles.detail}>
@@ -99,13 +138,13 @@ export const Head = ({
 
                         <Menu
                             id="basic-menu"
-                            anchorEl={anchorEl}
+                            anchorEl={anchorMenuEl}
                             open={openLanguageMenu}
-                            onClose={handleClose}
+                            onClose={handleMenuClose}
                             MenuListProps={{
                                 'aria-labelledby': 'basic-button',
                             }}
-                            sx={{padding: 20}}
+                            sx={{ padding: 20 }}
                         >
                             <MenuItem disabled>Change this exercise's language</MenuItem>
                             <Divider />
@@ -120,7 +159,17 @@ export const Head = ({
                     {equipment}
                 </div>
                 <nav className={styles.toolbar}>
-                    <Button onClick={() => setEditMode(true)} disabled={editMode}>EDIT</Button>
+                    {
+                        false
+                        && deletePermissionQuery.isSuccess
+                        && deletePermissionQuery.data
+                        && <Button onClick={() => setOpenDialog(true)}>DELETE</Button>
+                    }
+                    {
+                        editPermissionQuery.isSuccess
+                        && editPermissionQuery.data
+                        && <Button onClick={() => setEditMode(true)} disabled={editMode}>EDIT</Button>
+                    }
                     <Button onClick={() => setEditMode(false)} disabled={!editMode}>VIEW</Button>
                 </nav>
             </div>

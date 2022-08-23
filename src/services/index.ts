@@ -8,7 +8,11 @@ export { getEquipment } from './equipment';
 export { getCategories } from './category';
 export { getExerciseBases, getExerciseBase, getExerciseBasesForVariation, addExerciseBase } from './exerciseBase';
 export {
-    addExerciseTranslation, editExerciseTranslation, getExerciseTranslations, searchExerciseTranslations
+    addExerciseTranslation,
+    editExerciseTranslation,
+    getExerciseTranslations,
+    searchExerciseTranslations,
+    deleteExerciseTranslation
 } from './exerciseTranslation';
 export { getLanguages, getLanguageByShortName } from './language';
 export { postExerciseImage } from './image';

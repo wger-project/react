@@ -34,6 +34,8 @@
     "alsoKnownAs": "Also known as:",
     "notes": "Notes",
     "primaryMuscles": "Primary muscles",
+    "deleteExerciseTranslation": "Delete current translation?",
+    "deleteExerciseTranslationBody": "You are about to delete the {{language}} translation for exercise '{{name}}'. This action can't be undone. Proceed?",
     "noEquipment": "No equipment",
     "missingExercise": "Missing a certain exercise?",
     "missingExerciseDescription": "Help out the community by contributing it!",
@@ -57,6 +59,7 @@
   "category": "Category",
   "English": "English",
   "save": "Save",
+  "cancel": "Cancel",
   "noResults": "No results",
   "noResultsDescription": "No results found for this query, consider reducing the number of filters.",
   "server": {

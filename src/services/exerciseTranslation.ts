@@ -86,3 +86,18 @@ export const editExerciseTranslation = async (
     const adapter = new ExerciseTranslationAdapter();
     return adapter.fromJson(response.data);
 };
+
+/*
+ * Edit an existing exercise translation
+ */
+export const deleteExerciseTranslation = async (id: number): Promise<boolean> => {
+    const url = makeUrl(EXERCISE_TRANSLATION_PATH, { id: id });
+    const response = await axios.delete(
+        url,
+        { headers: makeHeader() }
+    );
+
+    console.log(response);
+
+    return true;
+};
