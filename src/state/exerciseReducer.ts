@@ -4,7 +4,7 @@ import { ImageFormData } from "components/Exercises/models/exerciseBase";
 
 
 export const reset = (): ExerciseAction => {
-    return { type: SetExerciseState.RESET, payload: null };
+    return { type: SetExerciseState.RESET };
 };
 
 export const setNameEn = (name: string): ExerciseAction => {

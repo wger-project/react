@@ -23,6 +23,4 @@ describe("Test the add-exercise stepper component", () => {
         expect(screen.getByText("images")).toBeInTheDocument();
         expect(screen.getByText("overview")).toBeInTheDocument();
     });
-
-
 });
