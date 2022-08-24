@@ -28,15 +28,9 @@ jest.mock("state/exerciseReducer", () => {
     };
 });
 
-
 const mockedUseCategoriesQuery = useCategoriesQuery as jest.Mock;
 const mockedMuscleQuery = useMusclesQuery as jest.Mock;
 const mockedUseEquipmentQuery = useEquipmentQuery as jest.Mock;
-const mockedSetAlternativeNamesEn = setAlternativeNamesEn as jest.Mock;
-const mockedSetEquipment = setEquipment as jest.Mock;
-
-const mockedSetName = setNameEn as jest.Mock;
-const mockedSetCategory = setCategory as jest.Mock;
 
 
 describe("<Step1Basics />", () => {
@@ -117,13 +111,14 @@ describe("<Step1Basics />", () => {
         await user.click(screen.getByLabelText('exercises.muscles'));
         await user.click(screen.getByText(/abdominis/i));
 
+
         await user.click(screen.getByText('continue'));
 
         // Assert
         expect(mockOnContinue).toHaveBeenCalled();
-        expect(mockedSetName).toHaveBeenCalledWith('Biceps enlarger');
-        expect(mockedSetCategory).toHaveBeenCalledWith(1);
-        expect(mockedSetAlternativeNamesEn).toHaveBeenCalledWith(['Biceps enlarger 2000', 'Arms exploder']);
-        expect(mockedSetEquipment).toHaveBeenCalledWith([42]);
+        expect(setNameEn).toHaveBeenCalledWith('Biceps enlarger');
+        expect(setCategory).toHaveBeenCalledWith(1);
+        expect(setAlternativeNamesEn).toHaveBeenCalledWith(['Biceps enlarger 2000', 'Arms exploder']);
+        expect(setEquipment).toHaveBeenCalledWith([42]);
     });
 });

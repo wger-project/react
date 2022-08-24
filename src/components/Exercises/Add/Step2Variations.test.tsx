@@ -1,39 +1,23 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls } from "tests/exerciseTestdata";
+import {
+    testExerciseBenchPress,
+    testExerciseCrunches,
+    testExerciseCurls
+} from "tests/exerciseTestdata";
 import { useBasesQuery } from "components/Exercises/queries";
 import { Step2Variations } from "components/Exercises/Add/Step2Variations";
 import userEvent from "@testing-library/user-event";
 import { ExerciseStateProvider } from "state";
 
 jest.mock('components/Exercises/queries');
-/*
-jest.mock('state/exerciseReducer', () => {
-    const originalModule = jest.requireActual('state/exerciseReducer');
-
-    return {
-        __esModule: true,
-        ...originalModule,
-        setVariationId: jest.fn(() => {
-            console.log("MOCKsetVariationId!");
-            return { type: 8, payload: 1 };
-        }),
-        setNewBaseVariationId: jest.fn(() => {
-            return { type: 9, payload: 1 };
-        }),
-
-    };
-});
-
- */
 
 
 const mockedUseBasesQuery = useBasesQuery as jest.Mock;
 
 
 const mockOnContinue = jest.fn();
-const mockSetExerciseData = jest.fn();
 const queryClient = new QueryClient();
 
 describe("Test the add exercise step 2 component", () => {
@@ -83,16 +67,9 @@ describe("Test the add exercise step 2 component", () => {
         );
         const benchPress = screen.getByText("Benchpress");
         await userEvent.click(benchPress);
-        //const spy = jest.spyOn(Component.prototype, 'getData');
-        //const spySetVariationId = jest.spyOn(allReducer, 'setVariationId');
-        //const spySetNewBaseVariationId = jest.spyOn(allReducer, 'setNewBaseVariationId');
-
-        //console.log(view);
 
         // Assert
-        //expect(spySetVariationId).toHaveBeenCalled();
-        //expect(spySetVariationId).lastCalledWith(1);
-        //expect(setVariationId).lastCalledWith(1);
+        //...
     });
 
     test("Correctly unsets the variation ID", async () => {
