@@ -5,6 +5,7 @@ import {
     Grid,
     ImageListItem,
     Table,
+    TableBody,
     TableCell,
     TableContainer,
     TableRow,
@@ -17,7 +18,12 @@ import { addExerciseBase, addExerciseTranslation, postAlias, postExerciseImage }
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { addVariation } from "services/variation";
 import { useNavigate } from "react-router-dom";
-import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
+import {
+    useCategoriesQuery,
+    useEquipmentQuery,
+    useLanguageQuery,
+    useMusclesQuery
+} from "components/Exercises/queries";
 import { getTranslationKey } from "utils/strings";
 import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
@@ -102,14 +108,15 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         navigate(`../${baseId}`);
     };
 
-    return equipmentQuery.isLoading || languageQuery.isLoading || musclesQuery.isLoading || languageQuery.isLoading ?
-        <LoadingPlaceholder /> : (
-            <>
-                <Typography variant={"h6"}>
-                    {t('exercises.step1HeaderBasics')}
-                </Typography>
-                <TableContainer>
-                    <Table>
+    return equipmentQuery.isLoading || languageQuery.isLoading || musclesQuery.isLoading || categoryQuery.isLoading
+        ? <LoadingPlaceholder />
+        : <>
+            <Typography variant={"h6"}>
+                {t('exercises.step1HeaderBasics')}
+            </Typography>
+            <TableContainer>
+                <Table>
+                    <TableBody>
                         <TableRow>
                             <TableCell>{t('name')}</TableCell>
                             <TableCell>{state.nameEn}</TableCell>
@@ -146,33 +153,35 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                             <TableCell>{t('exercises.variations')}</TableCell>
                             <TableCell>{state.variationId} / {state.newVariationBaseId}</TableCell>
                         </TableRow>
-                    </Table>
-                </TableContainer>
-                {state.images.length > 0 && (
-                    <ImageList
-                        cols={3}
-                        style={{ maxHeight: "200px", }}>
-                        {state.images.map(imageEntry => (
-                            <ImageListItem key={imageEntry.url}>
-                                <img
-                                    style={{ maxHeight: "200px", maxWidth: "200px" }}
-                                    src={imageEntry.url}
-                                    alt=""
-                                    loading="lazy"
-                                />
-                            </ImageListItem>
-                        ))}
-                    </ImageList>
-                )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            {state.images.length > 0 && (
+                <ImageList
+                    cols={3}
+                    style={{ maxHeight: "200px", }}>
+                    {state.images.map(imageEntry => (
+                        <ImageListItem key={imageEntry.url}>
+                            <img
+                                style={{ maxHeight: "200px", maxWidth: "200px" }}
+                                src={imageEntry.url}
+                                alt=""
+                                loading="lazy"
+                            />
+                        </ImageListItem>
+                    ))}
+                </ImageList>
+            )}
 
 
-                {state.languageId !== null && (
-                    <>
-                        <Typography variant={"h6"} sx={{ mt: 3 }}>
-                            {languageQuery.data!.find(l => l.id === state.languageId)!.nameLong}
-                        </Typography>
-                        <TableContainer>
-                            <Table>
+            {state.languageId !== null && (
+                <>
+                    <Typography variant={"h6"} sx={{ mt: 3 }}>
+                        {languageQuery.data!.find(l => l.id === state.languageId)!.nameLong}
+                    </Typography>
+                    <TableContainer>
+                        <Table>
+                            <TableBody>
                                 <TableRow>
                                     <TableCell>{t('name')}</TableCell>
                                     <TableCell>
@@ -196,36 +205,36 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                                     <TableCell>{t('exercises.notes')}</TableCell>
                                     <TableCell>{state.notesI18n.map(note => <>{note}<br /></>)}</TableCell>
                                 </TableRow>
-                            </Table>
-                        </TableContainer>
-                    </>
-                )}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </>
+            )}
 
-                <Alert severity="info" sx={{ mt: 2 }}>
-                    {t('exercises.checkInformationBeforeSubmitting')}
-                </Alert>
+            <Alert severity="info" sx={{ mt: 2 }}>
+                {t('exercises.checkInformationBeforeSubmitting')}
+            </Alert>
 
-                <Grid container>
-                    <Grid item xs={12} display="flex" justifyContent={"end"}>
-                        <Box sx={{ mb: 2 }}>
-                            <div>
-                                <Button
-                                    onClick={onBack}
-                                    sx={{ mt: 1, mr: 1 }}
-                                >
-                                    {t('goBack')}
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    onClick={submitExercise}
-                                    sx={{ mt: 1, mr: 1 }}
-                                >
-                                    {t('exercises.submitExercise')}
-                                </Button>
-                            </div>
-                        </Box>
-                    </Grid>
+            <Grid container>
+                <Grid item xs={12} display="flex" justifyContent={"end"}>
+                    <Box sx={{ mb: 2 }}>
+                        <div>
+                            <Button
+                                onClick={onBack}
+                                sx={{ mt: 1, mr: 1 }}
+                            >
+                                {t('goBack')}
+                            </Button>
+                            <Button
+                                variant="contained"
+                                onClick={submitExercise}
+                                sx={{ mt: 1, mr: 1 }}
+                            >
+                                {t('exercises.submitExercise')}
+                            </Button>
+                        </div>
+                    </Box>
                 </Grid>
-            </>
-        );
+            </Grid>
+        </>;
 };

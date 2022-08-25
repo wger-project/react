@@ -44,7 +44,7 @@ export const ExerciseGrid = ({ exerciseBases, isLoading }: ExerciseGridProps) =>
             </Grid>
         ))
         : exerciseBases.map(b => (
-            <Grid item xs={4} key={b.id} sx={{ display: "flex" }}>
+            <Grid item xs={6} md={4} key={b.id} sx={{ display: "flex" }}>
                 <OverviewCard exerciseBase={b} language={currentUserLanguage} />
             </Grid>
         ));
