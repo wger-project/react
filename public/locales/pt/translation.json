@@ -13,7 +13,7 @@
     "addEntry": "Adicionar entrada",
     "workout": "Treino",
     "exercises": {
-        "search-exercise-name": "Procurar pelo nome do exercício",
+        "searchExerciseName": "Procurar pelo nome do exercício",
         "notes": "Notas",
         "description": "Descrição",
         "arms": "Braços",
@@ -36,20 +36,20 @@
         "seconds": "Segundos",
         "until_failure": "Até a falha",
         "primaryMuscles": "Músculos primários",
-        "also-known-as": "Também conhecido como:",
+        "alsoKnownAs": "Também conhecido como:",
         "secondaryMuscles": "Músculos secundários",
         "back": "Costas",
         "barbell": "Barra",
         "bench": "Supino",
-        "no-equipment": "Sem equipamento",
-        "missing-exercise": "Sentindo falta de algum exercício?",
-        "missing-exercise-description": "Ajuda a comunidade ao contribuir!",
-        "contribute-exercise": "Contribua um exercício",
+        "noEquipment": "Sem equipamento",
+        "missingExercise": "Sentindo falta de algum exercício?",
+        "missingExerciseDescription": "Ajuda a comunidade ao contribuir!",
+        "contributeExercise": "Contribua um exercício",
         "exercises": "Exercícios",
         "category": "Categoria",
         "equipment": "Equipamento",
         "muscles": "Músculos"
     },
-    "no-results": "Sem resultados",
-    "no-results-description": "Nenhum resultado encontrado para essa consulta, considere reduzir o número de filtros."
+    "noResults": "Sem resultados",
+    "noResultsDescription": "Nenhum resultado encontrado para essa consulta, considere reduzir o número de filtros."
 }
