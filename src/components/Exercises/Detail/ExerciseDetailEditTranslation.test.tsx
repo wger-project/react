@@ -6,6 +6,9 @@ import userEvent from "@testing-library/user-event";
 import { addExerciseTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 
+// It seems we run into a timeout when running the tests on github actions
+jest.setTimeout(15000);
+
 jest.mock("services");
 
 describe("Exercise translation edit tests", () => {

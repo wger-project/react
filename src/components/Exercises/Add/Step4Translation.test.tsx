@@ -5,12 +5,10 @@ import { useLanguageQuery } from "components/Exercises/queries";
 import { testLanguages } from "tests/exerciseTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import userEvent from "@testing-library/user-event";
-import {
-    setAlternativeNamesI18n,
-    setDescriptionI18n,
-    setLanguageId,
-    setNameI18n
-} from "state/exerciseReducer";
+import { setAlternativeNamesI18n, setDescriptionI18n, setLanguageId, setNameI18n } from "state/exerciseReducer";
+
+// It seems we run into a timeout when running the tests on github actions
+jest.setTimeout(15000);
 
 jest.mock("components/Exercises/queries");
 jest.mock("state/exerciseReducer", () => {
@@ -38,7 +36,11 @@ describe("Test the add exercise step 4 component", () => {
             isLoading: false,
             data: testLanguages
         }));
+    });
 
+
+    test("Renders without crashing", () => {
+        // Act
         render(
             <QueryClientProvider client={queryClient}>
                 <Step4Translations
@@ -47,10 +49,6 @@ describe("Test the add exercise step 4 component", () => {
                 />
             </QueryClientProvider>
         );
-    });
-
-
-    test("Renders without crashing", () => {
 
         // Assert
         expect(screen.getByText("exercises.translateExerciseNow")).toBeInTheDocument();
@@ -64,6 +62,14 @@ describe("Test the add exercise step 4 component", () => {
         const user = userEvent.setup();
 
         // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Step4Translations
+                    onContinue={mockOnContinue}
+                    onBack={mockOnBack}
+                />
+            </QueryClientProvider>
+        );
         const button = screen.getByRole('checkbox');
         await user.click(button);
 
@@ -79,6 +85,14 @@ describe("Test the add exercise step 4 component", () => {
         const text = 'Der Armvernichter ist eine ein alter chinesische Kraftübung, die...';
 
         // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <Step4Translations
+                    onContinue={mockOnContinue}
+                    onBack={mockOnBack}
+                />
+            </QueryClientProvider>
+        );
         const button = screen.getByRole('checkbox');
         await user.click(button);
 
