@@ -181,7 +181,7 @@ export const ExerciseOverview = () => {
             </Stack>
 
             <Grid container spacing={2}>
-                <Grid item xs={3}>
+                <Grid item xs={12} sm={3}>
                     {categoryQuery.isLoading ? <LoadingPlaceholder /> : (
                         <CategoryFilter
                             categories={categoryQuery.data!}
@@ -206,7 +206,7 @@ export const ExerciseOverview = () => {
                         />
                     )}
                 </Grid>
-                <Grid item xs={9}>
+                <Grid item xs={12} sm={9}>
                     {/* Pagination */}
                     {basesQuery.isLoading ? (
                         <>
