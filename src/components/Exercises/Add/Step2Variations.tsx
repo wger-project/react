@@ -100,7 +100,7 @@ const ExerciseInfoListItem = ({ bases }: {
                         {bases.map((base) =>
                             base.mainImage
                                 ? <Avatar key={base.id} src={base.mainImage.url} />
-                                : <Avatar children={<PhotoIcon />} />
+                                : <Avatar key={base.id} children={<PhotoIcon />} />
                         )}
                     </AvatarGroup>
                 </Grid>
