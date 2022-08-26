@@ -11,7 +11,7 @@ jobs:
         run: yarn
 
       - name: Run tests
-        run: yarn test --coverage
+        run: yarn test --coverage --collectCoverageFrom='!src/pages/**/*.tsx'
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
