@@ -11,6 +11,7 @@ if [ -d "$STATIC_FOLDER" ]; then
     cp build/static/js/main.*.js $STATIC_FOLDER/main.js
     cp build/static/css/main.*.css $STATIC_FOLDER/main.css
     cp -r build/locales $STATIC_FOLDER/
+    cp -r build/muscles $STATIC_FOLDER/
     echo -e "${GREEN}*** SUCCESS ***: Build files copied to django static folder: ${STATIC_FOLDER} ${NC}"
 else
   echo -e "${RED}*** ERROR ***: Django static folder ${STATIC_FOLDER} not found"

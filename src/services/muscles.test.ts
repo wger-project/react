@@ -16,6 +16,7 @@ describe("muscle service tests", () => {
                 {
                     "id": 2,
                     "name": "Anterior deltoid",
+                    "name_en": "Shoulders",
                     "is_front": true,
                     "image_url_main": "/static/images/muscles/main/muscle-2.svg",
                     "image_url_secondary": "/static/images/muscles/secondary/muscle-2.svg"
@@ -23,6 +24,7 @@ describe("muscle service tests", () => {
                 {
                     "id": 1,
                     "name": "Biceps brachii",
+                    "name_en": "Biceps",
                     "is_front": false,
                     "image_url_main": "/static/images/muscles/main/muscle-1.svg",
                     "image_url_secondary": "/static/images/muscles/secondary/muscle-1.svg"
@@ -37,8 +39,8 @@ describe("muscle service tests", () => {
         expect(axios.get).toHaveBeenCalledTimes(1);
 
         expect(result).toStrictEqual([
-            new Muscle(2, "Anterior deltoid", true),
-            new Muscle(1, "Biceps brachii", false),
+            new Muscle(2, "Anterior deltoid", "Shoulders", true),
+            new Muscle(1, "Biceps brachii", "Biceps", false),
         ]);
     });
 });

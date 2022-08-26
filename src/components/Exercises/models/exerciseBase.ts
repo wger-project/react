@@ -1,26 +1,29 @@
 import { Adapter } from "utils/Adapter";
-import { ExerciseImage, ExerciseImageAdapter } from "components/Exercises/models/image";
-import { Equipment, EquipmentAdapter } from "components/Exercises/models/equipment";
+import { ExerciseImage, ExerciseImageAdapter, } from "components/Exercises/models/image";
+import { Equipment, EquipmentAdapter, } from "components/Exercises/models/equipment";
 import { Muscle, MuscleAdapter } from "components/Exercises/models/muscle";
-import { Category, CategoryAdapter } from "components/Exercises/models/category";
+import { Category, CategoryAdapter, } from "components/Exercises/models/category";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { Language } from "components/Exercises/models/language";
 
 export class ExerciseBase {
-
     translations: ExerciseTranslation[] = [];
 
-    constructor(public id: number,
-                public uuid: string,
-                public category: Category,
-                public equipment: Equipment[],
-                public muscles: Muscle[],
-                public musclesSecondary: Muscle[],
-                public images: ExerciseImage[] = [],
-                public variationId: number | null,
-                public comments: string[],
-                translations?: ExerciseTranslation[]
+    constructor(
+        public id: number | null,
+        public uuid: string | null,
+        public category: Category,
+        public equipment: Equipment[],
+        public muscles: Muscle[],
+        public musclesSecondary: Muscle[],
+        public images: ExerciseImage[],
+        public variationId: number | null,
+        translations?: ExerciseTranslation[]
+        /*
+                license: number,
+                licenseAuthor: string,
+                 */
     ) {
         if (translations) {
             this.translations = translations;
@@ -42,10 +45,18 @@ export class ExerciseBase {
         }
 
         if (!translation) {
-            console.warn(`No translation found for exercise ${this.id} for language ${language}`);
+            console.warn(`No translation found for exercise base ${this.uuid} (${this.id}) for language ${language}`);
             return this.translations[0];
         }
         return translation!;
+    }
+
+
+    /**
+     * Returns a list with the available languages for this exercise
+     */
+    get availableLanguages(): number[] {
+        return this.translations.map(t => t.language);
     }
 
     get mainImage(): ExerciseImage | undefined {
@@ -62,16 +73,20 @@ export class ExerciseBase {
 export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
     fromJson(item: any): ExerciseBase {
 
+        const categoryAdapter = new CategoryAdapter();
+        const equipmentAdapter = new EquipmentAdapter();
+        const muscleAdapter = new MuscleAdapter();
+        const imageAdapter = new ExerciseImageAdapter();
+
         return new ExerciseBase(
             item.id,
             item.uuid,
-            new CategoryAdapter().fromJson(item.category),
-            item.equipment.map((e: any) => (new EquipmentAdapter().fromJson(e))),
-            item.muscles.map((m: any) => (new MuscleAdapter().fromJson(m))),
-            item.muscles_secondary.map((m: any) => (new MuscleAdapter().fromJson(m))),
-            item.images.map((i: any) => (new ExerciseImageAdapter().fromJson(i))),
+            categoryAdapter.fromJson(item.category),
+            item.equipment.map((e: any) => (equipmentAdapter.fromJson(e))),
+            item.muscles.map((m: any) => (muscleAdapter.fromJson(m))),
+            item.muscles_secondary.map((m: any) => (muscleAdapter.fromJson(m))),
+            item.images.map((i: any) => (imageAdapter.fromJson(i))),
             item.variations,
-            item.comments
             /*
             item.license,
             item.license_author,
@@ -87,12 +102,18 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
         return {
             id: item.id,
             uuid: item.uuid,
-            category: new CategoryAdapter().fromJson(item.category),
-            equipment: item.equipment.map(e => new EquipmentAdapter().toJson(e)),
-            muscles: item.muscles.map(m => new MuscleAdapter().toJson(m)),
+            category: item.category.id,
+            equipment: item.equipment.map(e => e.id),
+            muscles: item.muscles.map(m => m.id),
             // eslint-disable-next-line camelcase
-            muscles_secondary: item.musclesSecondary.map(m => new MuscleAdapter().toJson(m)),
+            muscles_secondary: item.musclesSecondary.map(m => m.id),
             images: item.images.map(i => new ExerciseImageAdapter().toJson(i)),
         };
     }
 }
+
+export type ImageFormData = {
+    url: string;
+    file: File;
+};
+

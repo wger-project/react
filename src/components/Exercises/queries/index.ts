@@ -22,3 +22,8 @@ export function useEquipmentQuery() {
 export function useLanguageQuery() {
     return useQuery([QUERY_LANGUAGES], getLanguages);
 }
+
+
+export function useNotesQuery(translationId: number) {
+    return useQuery([QUERY_LANGUAGES, translationId], getLanguages);
+}

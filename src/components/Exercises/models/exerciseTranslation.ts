@@ -9,8 +9,8 @@ export class ExerciseTranslation {
     notes: Note[] = [];
     aliases: Alias[] = [];
 
-    constructor(public id: number,
-                public uuid: string,
+    constructor(public id: number | null,
+                public uuid: string | null,
                 public name: string,
                 public description: string,
                 public language: number,
@@ -46,8 +46,8 @@ export class ExerciseTranslationAdapter implements Adapter<ExerciseTranslation> 
             item.name,
             item.description,
             item.language,
-            item.notes.map((e: any) => (new NoteAdapter().fromJson(e))),
-            item.aliases.map((e: any) => (new AliasAdapter().fromJson(e))),
+            item.notes?.map((e: any) => (new NoteAdapter().fromJson(e))),
+            item.aliases?.map((e: any) => (new AliasAdapter().fromJson(e))),
         );
     }
 
@@ -61,7 +61,8 @@ export class ExerciseTranslationAdapter implements Adapter<ExerciseTranslation> 
             id: item.id,
             uuid: item.uuid,
             name: item.name,
-            description: item.description
+            description: item.description,
+            language: item.language,
         };
     }
 }

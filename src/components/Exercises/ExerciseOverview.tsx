@@ -1,5 +1,15 @@
 import React from "react";
-import { Box, Button, CircularProgress, Container, Grid, Pagination, Paper, Stack, Typography, } from "@mui/material";
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Container,
+    Grid,
+    Pagination,
+    Paper,
+    Stack,
+    Typography,
+} from "@mui/material";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
 import { useTranslation } from "react-i18next";
@@ -8,12 +18,20 @@ import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
 import { Category } from "components/Exercises/models/category";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { ExerciseSearchResponse } from "services/responseType";
 import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
-import { useBasesQuery, useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
+import {
+    useBasesQuery,
+    useCategoriesQuery,
+    useEquipmentQuery,
+    useMusclesQuery
+} from "components/Exercises/queries";
+import AddIcon from '@mui/icons-material/Add';
+import { Link, useNavigate } from "react-router-dom";
+import { ExerciseSearchResponse } from "services/responseType";
+import { useProfileQuery } from "components/User/queries";
 
 const ContributeExerciseBanner = () => {
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
 
     return (
         <Box
@@ -26,14 +44,16 @@ const ContributeExerciseBanner = () => {
             }}
         >
             <Typography gutterBottom variant="h4" component="div">
-                {t("exercises.missing-exercise")}
+                {t("exercises.missingExercise")}
             </Typography>
 
             <Typography gutterBottom variant="body1" component="div">
-                {t("exercises.missing-exercise-description")}
+                {t("exercises.missingExerciseDescription")}
             </Typography>
 
-            <Button variant="contained">{t("exercises.contribute-exercise")}</Button>
+            <Link to={`/${i18n.language}/exercise/add`}>
+                {t("exercises.contributeExercise")}
+            </Link>
         </Box>
     );
 };
@@ -52,34 +72,37 @@ const NoResultsBanner = () => {
             }}
         >
             <Typography gutterBottom variant="h4" component="div">
-                {t("no-results")}
+                {t("noResults")}
             </Typography>
 
             <Typography gutterBottom variant="body1" component="div">
-                {t("no-results-description")}
+                {t("noResultsDescription")}
             </Typography>
         </Box>
     );
 };
 
-function getLoadingPlaceholder() {
-    return <Paper sx={{ height: 200, alignItems: "center", mt: 2 }} component={Stack} direction="column"
-                  justifyContent="center">
+export const LoadingPlaceholder = () => {
+    return <Paper
+        sx={{ height: 200, alignItems: "center", mt: 2 }}
+        component={Stack}
+        direction="column"
+        justifyContent="center">
         <CircularProgress />
     </Paper>;
-}
+};
 
 export const ExerciseOverview = () => {
     const basesQuery = useBasesQuery();
     const categoryQuery = useCategoriesQuery();
     const musclesQuery = useMusclesQuery();
     const equipmentQuery = useEquipmentQuery();
+    const profileQuery = useProfileQuery();
 
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
+    const navigate = useNavigate();
 
-    const [selectedEquipment, setSelectedEquipment] = React.useState<Equipment[]>(
-        []
-    );
+    const [selectedEquipment, setSelectedEquipment] = React.useState<Equipment[]>([]);
     const [selectedMuscles, setSelectedMuscles] = React.useState<Muscle[]>([]);
     const [selectedCategories, setSelectedCategories] = React.useState<Category[]>([]);
 
@@ -87,6 +110,8 @@ export const ExerciseOverview = () => {
     const handlePageChange = (event: any, value: number) => {
         setPage(value);
     };
+
+    const userIsAnonymous = profileQuery.isSuccess && profileQuery.data === null;
 
     // Should be a multiple of three, since there are three columns in the grid
     const ITEMS_PER_PAGE = 21;
@@ -130,25 +155,34 @@ export const ExerciseOverview = () => {
     );
 
     const exerciseAdded = (exercise: ExerciseSearchResponse) => {
-        console.log(`Added exercise ${exercise.value}`);
+        navigate(`/${i18n.language}/exercise/${exercise.data.base_id}`);
     };
 
     return (
         <Container maxWidth="lg">
-            <Stack direction={"row"}>
+            <Stack direction={"row"} alignItems="center">
                 <Typography gutterBottom variant="h3" component="div">
                     {t("exercises.exercises")}
                 </Typography>
                 <Box sx={{ width: "100%" }} />
-                <Box sx={{ width: 500 }} m={1}>
+                <Box sx={{ width: 750 }} m={1}>
                     <NameAutocompleter callback={exerciseAdded} />
                 </Box>
-                {/*<Button variant="contained" startIcon={<AddIcon />}> {t('contribute-exercise')}</Button>*/}
+                <Box sx={{ width: 620 }}>
+                    <Button
+                        variant="contained"
+                        disabled={userIsAnonymous}
+                        startIcon={<AddIcon />}
+                        onClick={() => navigate(`/${i18n.language}/exercise/add`)}
+                    >
+                        {t('exercises.contributeExercise')}
+                    </Button>
+                </Box>
             </Stack>
 
             <Grid container spacing={2}>
-                <Grid item xs={3}>
-                    {categoryQuery.isLoading ? getLoadingPlaceholder() : (
+                <Grid item xs={12} sm={3}>
+                    {categoryQuery.isLoading ? <LoadingPlaceholder /> : (
                         <CategoryFilter
                             categories={categoryQuery.data!}
                             selectedCategories={selectedCategories}
@@ -156,7 +190,7 @@ export const ExerciseOverview = () => {
                         />
                     )}
 
-                    {equipmentQuery.isLoading ? getLoadingPlaceholder() : (
+                    {equipmentQuery.isLoading ? <LoadingPlaceholder /> : (
                         <EquipmentFilter
                             equipment={equipmentQuery.data!}
                             selectedEquipment={selectedEquipment}
@@ -164,7 +198,7 @@ export const ExerciseOverview = () => {
                         />
                     )}
 
-                    {musclesQuery.isLoading ? getLoadingPlaceholder() : (
+                    {musclesQuery.isLoading ? <LoadingPlaceholder /> : (
                         <MuscleFilter
                             muscles={musclesQuery.data!}
                             selectedMuscles={selectedMuscles}
@@ -172,7 +206,7 @@ export const ExerciseOverview = () => {
                         />
                     )}
                 </Grid>
-                <Grid item xs={9}>
+                <Grid item xs={12} sm={9}>
                     {/* Pagination */}
                     {basesQuery.isLoading ? (
                         <>
@@ -198,8 +232,7 @@ export const ExerciseOverview = () => {
                         </>
                     )}
 
-                    {/* We don't do exercise crowdsourcing in this step */}
-                    {/* <ContributeExerciseBanner /> */}
+                    <ContributeExerciseBanner />
                 </Grid>
             </Grid>
         </Container>

@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 
 export const TrainingSubMenu = () => {
+
+    const { i18n } = useTranslation();
 
     return (
         <>
@@ -16,10 +19,10 @@ export const TrainingSubMenu = () => {
                 <li><Link to="workout/template/public">Public Templates</Link></li>
             </div>
             <div>
-                <li><Link to="/exercises">Exercises</Link></li>
+                <li><Link to={i18n.language + '/exercise/overview'}>Exercises</Link></li>
             </div>
             <div>
-                <li><Link to="/exercise/add">Add new exercise</Link></li>
+                <li><Link to={i18n.language + '/exercise/add'}>Add new exercise</Link></li>
             </div>
         </>
     );

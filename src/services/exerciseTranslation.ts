@@ -4,6 +4,7 @@ import { makeHeader, makeUrl } from "utils/url";
 import { ExerciseTranslation, ExerciseTranslationAdapter } from "components/Exercises/models/exerciseTranslation";
 
 export const EXERCISE_PATH = 'exercise';
+export const EXERCISE_TRANSLATION_PATH = 'exercise-translation';
 export const EXERCISE_SEARCH_PATH = 'exercise/search';
 
 
@@ -29,4 +30,74 @@ export const searchExerciseTranslations = async (name: string): Promise<Exercise
 
     const { data } = await axios.get<ExerciseSearchType>(url);
     return data.suggestions;
+};
+
+
+/*
+ * Create a new exercise translation
+ */
+export const addExerciseTranslation = async (
+    exerciseBaseId: number,
+    languageId: number,
+    name: string,
+    description: string,
+): Promise<ExerciseTranslation> => {
+
+    const url = makeUrl(EXERCISE_TRANSLATION_PATH);
+    const baseData = {
+        // eslint-disable-next-line camelcase
+        exercise_base: exerciseBaseId,
+        language: languageId,
+        name: name,
+        description: description,
+    };
+    const response = await axios.post(url, baseData, {
+        headers: makeHeader(),
+    });
+
+    const adapter = new ExerciseTranslationAdapter();
+    return adapter.fromJson(response.data);
+};
+
+/*
+ * Edit an existing exercise translation
+ */
+export const editExerciseTranslation = async (
+    id: number,
+    exerciseBaseId: number,
+    languageId: number,
+    name: string,
+    description: string,
+): Promise<ExerciseTranslation> => {
+    const url = makeUrl(EXERCISE_TRANSLATION_PATH, { id: id });
+    const baseData = {
+        // eslint-disable-next-line camelcase
+        exercise_base: exerciseBaseId,
+        language: languageId,
+        name: name,
+        description: description,
+    };
+    const response = await axios.patch(
+        url,
+        baseData,
+        { headers: makeHeader() }
+    );
+
+    const adapter = new ExerciseTranslationAdapter();
+    return adapter.fromJson(response.data);
+};
+
+/*
+ * Edit an existing exercise translation
+ */
+export const deleteExerciseTranslation = async (id: number): Promise<boolean> => {
+    const url = makeUrl(EXERCISE_TRANSLATION_PATH, { id: id });
+    const response = await axios.delete(
+        url,
+        { headers: makeHeader() }
+    );
+
+    console.log(response);
+
+    return true;
 };

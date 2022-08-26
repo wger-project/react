@@ -5,7 +5,7 @@ import { Form, Formik } from "formik";
 import { Button, Stack, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { setNotification, SetWeightState, useWeightStateValue } from "state";
-import { createWeight, updateWeight } from "services/weight";
+import { createWeight, updateWeight } from "services";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DateTime } from "luxon";
 import { dateToYYYYMMDD } from "utils/date";

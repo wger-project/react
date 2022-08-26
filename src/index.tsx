@@ -14,6 +14,7 @@ import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -72,6 +73,22 @@ if (weightDashboard) {
                     <OverviewDashboard />
                 </ThemeProvider>
             </WeightStateProvider>
+        </Suspense>
+    );
+}
+
+const exerciseOverview = document.getElementById("react-exercise-overview");
+if (exerciseOverview) {
+    const root = createRoot(exerciseOverview);
+    root.render(
+        <Suspense fallback={<LoadingWidget />}>
+            <Router>
+                <ThemeProvider theme={theme}>
+                    <QueryClientProvider client={queryClient}>
+                        <ExerciseOverview />
+                    </QueryClientProvider>
+                </ThemeProvider>
+            </Router>
         </Suspense>
     );
 }

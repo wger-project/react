@@ -3,7 +3,7 @@ import { Box, Card, CardContent, CardMedia, Grid, Skeleton, } from "@mui/materia
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName } from "services/language";
+import { getLanguageByShortName } from "services";
 import { Language } from "components/Exercises/models/language";
 import { useLanguageQuery } from "components/Exercises/queries";
 
@@ -44,7 +44,7 @@ export const ExerciseGrid = ({ exerciseBases, isLoading }: ExerciseGridProps) =>
             </Grid>
         ))
         : exerciseBases.map(b => (
-            <Grid item xs={4} key={b.id} sx={{ display: "flex" }}>
+            <Grid item xs={6} md={4} key={b.id} sx={{ display: "flex" }}>
                 <OverviewCard exerciseBase={b} language={currentUserLanguage} />
             </Grid>
         ));

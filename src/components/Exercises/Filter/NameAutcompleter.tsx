@@ -2,13 +2,14 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import throttle from 'lodash/throttle';
-import { searchExerciseTranslations } from "services/exerciseTranslation";
-import { ExerciseSearchResponse } from "services/responseType";
-import { Box, Divider, Grid, InputAdornment, Typography } from "@mui/material";
-import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import { searchExerciseTranslations } from "services";
+import { Avatar, InputAdornment, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { truncateLongNames } from "utils/strings";
 import SearchIcon from '@mui/icons-material/Search';
+import { truncateLongNames } from "utils/strings";
+import PhotoIcon from '@mui/icons-material/Photo';
+import { SERVER_URL } from "utils/url";
+import { ExerciseSearchResponse } from "services/responseType";
 
 type NameAutocompleterProps = {
     callback: Function;
@@ -23,13 +24,7 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
     const fetchName = React.useMemo(
         () =>
             throttle(
-                (
-                    request: string,
-                ) => {
-                    searchExerciseTranslations(request).then(res => {
-                        setOptions(res);
-                    });
-                },
+                (request: string) => searchExerciseTranslations(request).then(res => setOptions(res)),
                 200,
             ),
         [],
@@ -49,19 +44,21 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
         };
     }, [value, inputValue, fetchName]);
 
+
     return (
         <Autocomplete
             id="exercise-name-autocomplete"
             getOptionLabel={(option) =>
                 option.value
             }
+            data-testid="autocomplete"
             filterOptions={(x) => x}
             options={options}
             autoComplete
             includeInputInList
             filterSelectedOptions
             value={value}
-            noOptionsText={t('no-results')}
+            noOptionsText={t('noResults')}
             isOptionEqualToValue={(option, value) => option.value === value.value}
             onChange={(event: any, newValue: ExerciseSearchResponse | null) => {
                 setOptions(newValue ? [newValue, ...options] : options);
@@ -74,7 +71,7 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label={t('exercises.search-exercise-name')}
+                    label={t('exercises.searchExerciseName')}
                     fullWidth
                     InputProps={{
                         ...params.InputProps,
@@ -91,36 +88,17 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
             )}
             renderOption={(props, option) => {
                 return (
-                    <li {...props}>
-                        <Grid container>
-                            <Grid item>
+                    <li {...props} id={`exercise${option.data.id}`}>
+                        <ListItem disablePadding component="div">
+                            <ListItemIcon>
                                 {option.data.image ?
-                                    <Box
-                                        style={{
-                                            width: '60px',
-                                            height: '60px',
-                                            borderRadius: '50%',
-                                            overflow: 'hidden',
-                                            backgroundImage: `url(${option.data.image})`,
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
-                                        }}
-                                    />
-                                    :
-                                    <Box
-                                        component={InsertPhotoIcon}
-                                        sx={{ color: 'text.secondary', mr: 2 }}
-                                    />
-                                }
-                            </Grid>
-                            <Grid item xs>
-                                {truncateLongNames(option.value)}
-                                <Typography variant="body2" color="text.secondary">
-                                    {(option.data.category)}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                        <Divider />
+                                    <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />
+                                    : <PhotoIcon fontSize="large" />}
+                            </ListItemIcon>
+                            <ListItemText primary={truncateLongNames(option.value, 18)}
+                                          secondary={option.data.category} />
+                        </ListItem>
+
                     </li>
                 );
             }}
