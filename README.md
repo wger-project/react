@@ -40,6 +40,12 @@ the [Create React App documentation](https://facebook.github.io/create-react-app
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
+## Translation
+
+Translate the app to your language on [Weblate](https://hosted.weblate.org/engage/wger/).
+
+[![translation status](https://hosted.weblate.org/widgets/wger/-/frontend/multi-blue.svg)](https://hosted.weblate.org/engage/wger/)
+
 ## Contact
 
 Feel free to contact us if you found this useful or if there was something that didn't behave as you expected. We can't
