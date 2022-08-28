@@ -160,15 +160,16 @@ export const ExerciseOverview = () => {
 
     return (
         <Container maxWidth="lg">
-            <Stack direction={"row"} alignItems="center">
-                <Typography gutterBottom variant="h3" component="div">
-                    {t("exercises.exercises")}
-                </Typography>
-                <Box sx={{ width: "100%" }} />
-                <Box sx={{ width: 750 }} m={1}>
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                    <Typography gutterBottom variant="h3" component="div">
+                        {t("exercises.exercises")}
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} sm={3}>
                     <NameAutocompleter callback={exerciseAdded} />
-                </Box>
-                <Box sx={{ width: 620 }}>
+                </Grid>
+                <Grid item xs={12} sm={3}>
                     <Button
                         variant="contained"
                         disabled={userIsAnonymous}
@@ -177,34 +178,40 @@ export const ExerciseOverview = () => {
                     >
                         {t('exercises.contributeExercise')}
                     </Button>
-                </Box>
-            </Stack>
+                </Grid>
 
-            <Grid container spacing={2}>
                 <Grid item xs={12} sm={3}>
-                    {categoryQuery.isLoading ? <LoadingPlaceholder /> : (
-                        <CategoryFilter
-                            categories={categoryQuery.data!}
-                            selectedCategories={selectedCategories}
-                            setSelectedCategories={setSelectedCategories}
-                        />
-                    )}
+                    <Grid container spacing={1}>
+                        {categoryQuery.isLoading ? <LoadingPlaceholder /> : (
+                            <Grid item xs={6} sm={12}>
+                                <CategoryFilter
+                                    categories={categoryQuery.data!}
+                                    selectedCategories={selectedCategories}
+                                    setSelectedCategories={setSelectedCategories}
+                                />
+                            </Grid>
+                        )}
 
-                    {equipmentQuery.isLoading ? <LoadingPlaceholder /> : (
-                        <EquipmentFilter
-                            equipment={equipmentQuery.data!}
-                            selectedEquipment={selectedEquipment}
-                            setSelectedEquipment={setSelectedEquipment}
-                        />
-                    )}
+                        {equipmentQuery.isLoading ? <LoadingPlaceholder /> : (
+                            <Grid item xs={6} sm={12}>
+                                <EquipmentFilter
+                                    equipment={equipmentQuery.data!}
+                                    selectedEquipment={selectedEquipment}
+                                    setSelectedEquipment={setSelectedEquipment}
+                                />
+                            </Grid>
+                        )}
 
-                    {musclesQuery.isLoading ? <LoadingPlaceholder /> : (
-                        <MuscleFilter
-                            muscles={musclesQuery.data!}
-                            selectedMuscles={selectedMuscles}
-                            setSelectedMuscles={setSelectedMuscles}
-                        />
-                    )}
+                        {musclesQuery.isLoading ? <LoadingPlaceholder /> : (
+                            <Grid item xs={12}>
+                                <MuscleFilter
+                                    muscles={musclesQuery.data!}
+                                    selectedMuscles={selectedMuscles}
+                                    setSelectedMuscles={setSelectedMuscles}
+                                />
+                            </Grid>
+                        )}
+                    </Grid>
                 </Grid>
                 <Grid item xs={12} sm={9}>
                     {/* Pagination */}
