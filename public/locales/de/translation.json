@@ -18,7 +18,7 @@
         "equipment": "Gerät",
         "exercises": "Übungen",
         "muscles": "Muskeln",
-        "secondaryMuscles": "Sekundärmuskeln",
+        "secondaryMuscles": "Sekundäre Muskeln",
         "noEquipment": "Keine Ausrüstung",
         "searchExerciseName": "Nach Übungsnamen suchen",
         "exerciseNotTranslated": "Keine Übersetzung verfügbar",
@@ -43,7 +43,8 @@
         "filterVariations": "Name der Übung eingeben, um Variationen zu filtern",
         "submitExercise": "Übung einreichen",
         "compatibleImagesCC": "Die Bilder müssen mit der CC BY SA-Lizenz kompatibel sein. Im Zweifelsfall solltest du nur Fotos hochladen, die du selbst aufgenommen hast.",
-        "alternativeNames": "Alternative Namen"
+        "alternativeNames": "Alternative Namen",
+        "missingExerciseDescription": "Hilf der Community und leiste einen Beitrag!"
     },
     "noResults": "Keine Ergebnisse",
     "noResultsDescription": "Keine Ergebnisse für diese Suche gefunden, bitte reduziere die Anzahl der Filter.",
@@ -83,5 +84,18 @@
     "submit": "Abschicken",
     "weight": "Gewicht",
     "workout": "Trainingsplan",
-    "images": "Bilder"
+    "images": "Bilder",
+    "description": "Beschreibung",
+    "translation": "Übersetzung",
+    "overview": "Übersicht",
+    "goBack": "Zurück",
+    "language": "Sprache",
+    "forms": {
+        "supportedImageFormats": "Es werden nur JPEG-, PNG- und WEBP-Dateien unter 20Mb unterstützt",
+        "valueTooShort": "Der Wert ist zu gering",
+        "valueTooLong": "Der Wert ist zu groß",
+        "fieldRequired": "Pflichtfeld"
+    },
+    "name": "Name",
+    "cancel": "Abbrechen"
 }
