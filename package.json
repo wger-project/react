@@ -22,7 +22,7 @@
     "i18next": "^21.9.1",
     "i18next-browser-languagedetector": "^6.1.5",
     "i18next-http-backend": "^1.4.1",
-    "luxon": "^3.0.2",
+    "luxon": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^11.18.5",
