@@ -4,65 +4,11 @@ import {
     editExerciseBase,
     getExerciseBase,
     getExerciseBases,
-    processBaseData,
-    processBaseDataSingle
+    processBaseData
 } from "services/exerciseBase";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
-import { Category } from "components/Exercises/models/category";
-import { Equipment } from "components/Exercises/models/equipment";
-import { Muscle } from "components/Exercises/models/muscle";
-import { ExerciseImage } from "components/Exercises/models/image";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import { Note } from "components/Exercises/models/note";
-import { Alias } from "components/Exercises/models/alias";
-import { responseApiExerciseBaseInfo } from "tests/exerciseTestdata";
+import { responseApiExerciseBaseInfo, testApiExerciseBase1 } from "tests/responseApi";
 
 jest.mock("axios");
-
-const exerciseTranslation1 = new ExerciseTranslation(111,
-    '583281c7-2362-48e7-95d5-8fd6c455e0fb',
-    'Squats',
-    'Do a squat',
-    2,
-    [
-        new Note(133, 174, 'do the exercise correctly'),
-    ],
-    [
-        new Alias(1, 'test 123'),
-        new Alias(2, 'another name'),
-    ]
-);
-const exerciseTranslation2 = new ExerciseTranslation(9,
-    'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
-    'Kniebeuge',
-    'Kniebeuge machen',
-    1
-);
-const category = new Category(10, "Abs");
-const equipment1 = new Equipment(10, "Kettlebell");
-const equipment2 = new Equipment(1, "Test 123");
-const muscle1 = new Muscle(10, "Quadriceps femoris", "Quads", true);
-const muscle2 = new Muscle(11, "Biceps femoris", "Hamstrings", false);
-const image = new ExerciseImage(
-    7,
-    "2fe5f04b-5c9d-448c-a973-3fad6ddd4f74",
-    "http://localhost:8000/media/exercise-images/9/2fe5f04b-5c9d-448c-a973-3fad6ddd4f74.jpg",
-    true);
-
-const exerciseBase1 = new ExerciseBase(
-    345,
-    "c788d643-150a-4ac7-97ef-84643c6419bf",
-    category,
-    [equipment1, equipment2],
-    [muscle1],
-    [muscle2],
-    [image],
-    228,
-    [
-        exerciseTranslation1,
-        exerciseTranslation2
-    ]
-);
 
 describe("Exercise service API tests", () => {
 
@@ -77,7 +23,7 @@ describe("Exercise service API tests", () => {
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
-        expect(result).toEqual([exerciseBase1]);
+        expect(result).toEqual([testApiExerciseBase1]);
     });
 
     test('GET exercise base data for single entry', async () => {
@@ -91,7 +37,7 @@ describe("Exercise service API tests", () => {
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(exerciseBase1);
+        expect(result).toEqual(testApiExerciseBase1);
     });
 
     test('POST a new exercise base', async () => {
@@ -160,14 +106,6 @@ describe("Exercise base service parser tests", () => {
         const result = processBaseData(responseApiExerciseBaseInfo);
 
         // Assert
-        expect(result).toEqual([exerciseBase1]);
-    });
-    test('processBaseDataSingle', () => {
-
-        // Act
-        const result = processBaseDataSingle(responseApiExerciseBaseInfo.results[0]);
-
-        // Assert
-        expect(result).toEqual(exerciseBase1);
+        expect(result).toEqual([testApiExerciseBase1]);
     });
 });

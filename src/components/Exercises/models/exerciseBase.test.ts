@@ -6,6 +6,7 @@ import {
 } from "tests/exerciseTestdata";
 import { Language } from "components/Exercises/models/language";
 import { ExerciseBaseAdapter } from "components/Exercises/models/exerciseBase";
+import { responseApiExerciseBaseInfo, testApiExerciseBase1 } from "tests/responseApi";
 
 
 describe("Exercise base model tests", () => {
@@ -35,6 +36,16 @@ describe("Exercise base model tests", () => {
 
         // Assert
         expect(testExerciseSquats.getTranslation(unknownLanguage).name).toBe("Squats");
+    });
+
+    test('adapter - from json', () => {
+
+        // Act
+        const adapter = new ExerciseBaseAdapter();
+        const result = adapter.fromJson(responseApiExerciseBaseInfo.results[0]);
+
+        // Assert
+        expect(result).toEqual(testApiExerciseBase1);
     });
 
 

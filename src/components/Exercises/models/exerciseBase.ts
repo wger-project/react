@@ -3,12 +3,17 @@ import { ExerciseImage, ExerciseImageAdapter, } from "components/Exercises/model
 import { Equipment, EquipmentAdapter, } from "components/Exercises/models/equipment";
 import { Muscle, MuscleAdapter } from "components/Exercises/models/muscle";
 import { Category, CategoryAdapter, } from "components/Exercises/models/category";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import {
+    ExerciseTranslation,
+    ExerciseTranslationAdapter
+} from "components/Exercises/models/exerciseTranslation";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { Language } from "components/Exercises/models/language";
+import { ExerciseVideo, ExerciseVideoAdapter } from "components/Exercises/models/video";
 
 export class ExerciseBase {
     translations: ExerciseTranslation[] = [];
+    videos: ExerciseVideo[] = [];
 
     constructor(
         public id: number | null,
@@ -19,14 +24,19 @@ export class ExerciseBase {
         public musclesSecondary: Muscle[],
         public images: ExerciseImage[],
         public variationId: number | null,
-        translations?: ExerciseTranslation[]
+        translations?: ExerciseTranslation[],
+        videos?: ExerciseVideo[]
         /*
-                license: number,
-                licenseAuthor: string,
-                 */
+            license: number,
+            licenseAuthorS: string[],
+         */
     ) {
         if (translations) {
             this.translations = translations;
+        }
+
+        if (videos) {
+            this.videos = videos;
         }
     }
 
@@ -71,14 +81,18 @@ export class ExerciseBase {
 
 
 export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
+    /*
+     * needs the items from exercisebaseinfo
+     */
     fromJson(item: any): ExerciseBase {
-
         const categoryAdapter = new CategoryAdapter();
         const equipmentAdapter = new EquipmentAdapter();
         const muscleAdapter = new MuscleAdapter();
         const imageAdapter = new ExerciseImageAdapter();
+        const translationAdapter = new ExerciseTranslationAdapter();
+        const videoAdapter = new ExerciseVideoAdapter();
 
-        return new ExerciseBase(
+        const base = new ExerciseBase(
             item.id,
             item.uuid,
             categoryAdapter.fromJson(item.category),
@@ -90,8 +104,21 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
             /*
             item.license,
             item.license_author,
-             */
+            */
         );
+
+        base.translations = item.exercises.map((t: any) => translationAdapter.fromJson(t));
+        //base.videos = item.videos.map((t: any) => videoAdapter.fromJson(t));
+
+        if (!base.translations.some(t => t.language === ENGLISH_LANGUAGE_ID)) {
+            console.info(`No english translation found for exercise base ${base.uuid}!`);
+        }
+
+        if (base.translations.length === 0) {
+            console.error(`No translations found for exercise base ${base.uuid}!`);
+        }
+
+        return base;
     }
 
     /**
