@@ -6,6 +6,7 @@ import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
 import { ExerciseImage } from "components/Exercises/models/image";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { ExerciseVideo } from "components/Exercises/models/video";
 
 const testExerciseTranslation1 = new ExerciseTranslation(111,
     '583281c7-2362-48e7-95d5-8fd6c455e0fb',
@@ -49,6 +50,14 @@ export const testApiExerciseBase1 = new ExerciseBase(
     [
         testExerciseTranslation1,
         testExerciseTranslation2
+    ],
+    [
+        new ExerciseVideo(
+            1,
+            "b1c934fa-c4f8-4d84-8cb4-7802be0d284c",
+            "http://localhost:8000/media/exercise-video/258/b1c934fa-c4f8-4d84-8cb4-7802be0d284c.mp4",
+            false
+        )
     ]
 );
 
@@ -110,7 +119,24 @@ export const responseApiExerciseBaseInfo = {
             "status": "2",
             "style": "4"
         }],
-        "videos": [],
+        "videos": [
+            {
+                "id": 1,
+                "uuid": "b1c934fa-c4f8-4d84-8cb4-7802be0d284c",
+                "exercise_base": 418,
+                "exercise_base_uuid": "6260e3aa-e46b-4b4b-8ada-58bfd0922d3a",
+                "video": "http://localhost:8000/media/exercise-video/258/b1c934fa-c4f8-4d84-8cb4-7802be0d284c.mp4",
+                "is_main": false,
+                "size": 0,
+                "duration": "0.00",
+                "width": 0,
+                "height": 0,
+                "codec": "",
+                "codec_long": "",
+                "license": 2,
+                "license_author": null
+            }
+        ],
         "comments": [
             "This is a comment",
             "This is another comment",

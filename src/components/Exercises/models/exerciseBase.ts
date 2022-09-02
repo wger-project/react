@@ -106,9 +106,8 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
             item.license_author,
             */
         );
-
         base.translations = item.exercises.map((t: any) => translationAdapter.fromJson(t));
-        //base.videos = item.videos.map((t: any) => videoAdapter.fromJson(t));
+        base.videos = item.videos.map((t: any) => videoAdapter.fromJson(t));
 
         if (!base.translations.some(t => t.language === ENGLISH_LANGUAGE_ID)) {
             console.info(`No english translation found for exercise base ${base.uuid}!`);
