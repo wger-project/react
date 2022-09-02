@@ -29,6 +29,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Link, useNavigate } from "react-router-dom";
 import { ExerciseSearchResponse } from "services/responseType";
 import { useProfileQuery } from "components/User/queries";
+import { ExerciseGridSkeleton } from "components/Exercises/Overview/ExerciseGridLoadingSkeleton";
 
 const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -214,20 +215,10 @@ export const ExerciseOverview = () => {
                     </Grid>
                 </Grid>
                 <Grid item xs={12} sm={9}>
-                    {/* Pagination */}
-                    {basesQuery.isLoading ? (
-                        <>
-                            <ExerciseGrid
-                                exerciseBases={paginatedExerciseBases}
-                                isLoading={basesQuery.isLoading}
-                            />
-                        </>
-                    ) : (
-                        <>
-                            <ExerciseGrid
-                                exerciseBases={paginatedExerciseBases}
-                                isLoading={basesQuery.isLoading}
-                            />
+                    {basesQuery.isLoading
+                        ? <ExerciseGridSkeleton />
+                        : <>
+                            <ExerciseGrid exerciseBases={paginatedExerciseBases} />
                             <Stack spacing={2} alignItems="center" sx={{ mt: 2 }}>
                                 <Pagination
                                     count={pageCount}
@@ -237,7 +228,7 @@ export const ExerciseOverview = () => {
                                 />
                             </Stack>
                         </>
-                    )}
+                    }
 
                     <ContributeExerciseBanner />
                 </Grid>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Card, CardContent, CardMedia, Grid, Skeleton, } from "@mui/material";
+import { Grid, } from "@mui/material";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { useTranslation } from "react-i18next";
@@ -9,10 +9,9 @@ import { useLanguageQuery } from "components/Exercises/queries";
 
 type ExerciseGridProps = {
     exerciseBases: ExerciseBase[];
-    isLoading: boolean;
 };
 
-export const ExerciseGrid = ({ exerciseBases, isLoading }: ExerciseGridProps) => {
+export const ExerciseGrid = ({ exerciseBases }: ExerciseGridProps) => {
 
     const languageQuery = useLanguageQuery();
 
@@ -27,31 +26,13 @@ export const ExerciseGrid = ({ exerciseBases, isLoading }: ExerciseGridProps) =>
         );
     }
 
-    const loadingSkeleton = isLoading && languageQuery.isSuccess
-        ? Array.apply(null, Array(21)).map((skeletonBase, idx) => (
-            <Grid item xs={4} key={idx} sx={{ display: "flex" }}>
-                <Card>
-                    <CardMedia>
-                        <Skeleton variant="rectangular" width={250} height={150} />
-                    </CardMedia>
-                    <CardContent>
-                        <Box sx={{ pt: 0.5 }}>
-                            <Skeleton width="60%" />
-                            <Skeleton />
-                        </Box>
-                    </CardContent>
-                </Card>
-            </Grid>
-        ))
-        : exerciseBases.map(b => (
-            <Grid item xs={6} md={4} key={b.id} sx={{ display: "flex" }}>
-                <OverviewCard exerciseBase={b} language={currentUserLanguage} />
-            </Grid>
-        ));
-
     return (
         <Grid container spacing={1}>
-            {loadingSkeleton}
+            {exerciseBases.map(b => (
+                <Grid item xs={6} md={4} key={b.id} sx={{ display: "flex" }}>
+                    <OverviewCard exerciseBase={b} language={currentUserLanguage} />
+                </Grid>
+            ))}
         </Grid>
     );
 };
