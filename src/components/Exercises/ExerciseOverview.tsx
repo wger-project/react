@@ -110,6 +110,11 @@ export const ExerciseOverview = () => {
     const [page, setPage] = React.useState(1);
     const handlePageChange = (event: any, value: number) => {
         setPage(value);
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     };
 
     const userIsAnonymous = profileQuery.isSuccess && profileQuery.data === null;
