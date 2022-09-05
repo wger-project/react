@@ -1,12 +1,13 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import { testExerciseSquats, testLanguageFrench, testLanguageGerman } from "tests/exerciseTestdata";
-import { ExerciseDetailEditTranslation } from "components/Exercises/Detail/ExerciseDetailEditTranslation";
+import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
 import userEvent from "@testing-library/user-event";
 import { addExerciseTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-// It seems we run into a timeout when running the tests on github actions
+// It seems we run into a timeout when running the tests on GitHub actions
 jest.setTimeout(15000);
 
 jest.mock("services");
@@ -43,13 +44,17 @@ describe("Exercise translation edit tests", () => {
     });
 
     test('correctly renders the form', () => {
+        // Arrange
+        const queryClient = new QueryClient();
 
         // Act
         render(
-            <ExerciseDetailEditTranslation
-                exercise={testExerciseSquats}
-                language={testLanguageGerman}
-            />
+            <QueryClientProvider client={queryClient}>
+                <ExerciseDetailEdit
+                    exercise={testExerciseSquats}
+                    language={testLanguageGerman}
+                />
+            </QueryClientProvider>
         );
 
         // Assert
@@ -68,13 +73,16 @@ describe("Exercise translation edit tests", () => {
     test('correctly updates the exercise', async () => {
         // Arrange
         const user = userEvent.setup();
+        const queryClient = new QueryClient();
 
         // Act
         render(
-            <ExerciseDetailEditTranslation
-                exercise={testExerciseSquats}
-                language={testLanguageGerman}
-            />
+            <QueryClientProvider client={queryClient}>
+                <ExerciseDetailEdit
+                    exercise={testExerciseSquats}
+                    language={testLanguageGerman}
+                />
+            </QueryClientProvider>
         );
         const name = screen.getByLabelText('name');
         await user.clear(name);
@@ -99,13 +107,16 @@ describe("Exercise translation edit tests", () => {
     test('correctly updates the aliases', async () => {
         // Arrange
         const user = userEvent.setup();
+        const queryClient = new QueryClient();
 
         // Act
         render(
-            <ExerciseDetailEditTranslation
-                exercise={testExerciseSquats}
-                language={testLanguageGerman}
-            />
+            <QueryClientProvider client={queryClient}>
+                <ExerciseDetailEdit
+                    exercise={testExerciseSquats}
+                    language={testLanguageGerman}
+                />
+            </QueryClientProvider>
         );
         // Remove one alias
         const button = screen.getByRole('button', { name: 'Beinverdicker' });
@@ -129,13 +140,16 @@ describe("Exercise translation edit tests", () => {
     test('creates a new translation if the language is not available', async () => {
         // Arrange
         const user = userEvent.setup();
+        const queryClient = new QueryClient();
 
         // Act
         render(
-            <ExerciseDetailEditTranslation
-                exercise={testExerciseSquats}
-                language={testLanguageFrench}
-            />
+            <QueryClientProvider client={queryClient}>
+                <ExerciseDetailEdit
+                    exercise={testExerciseSquats}
+                    language={testLanguageFrench}
+                />
+            </QueryClientProvider>
         );
 
         // Enter description

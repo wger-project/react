@@ -22,14 +22,14 @@ import { WgerPermissions } from "permissions";
 import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCard";
 
 export interface ViewProps {
-    exercise: ExerciseBase
-    language: Language
+    exercise: ExerciseBase;
+    language: Language;
 }
 
-export const ExerciseDetailEditTranslation = ({
-                                                  exercise,
-                                                  language
-                                              }: ViewProps) => {
+export const ExerciseDetailEdit = ({
+                                       exercise,
+                                       language
+                                   }: ViewProps) => {
     const [t] = useTranslation();
 
     const [alertIsVisible, setAlertIsVisible] = React.useState(false);

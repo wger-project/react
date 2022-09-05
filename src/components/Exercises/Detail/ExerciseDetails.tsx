@@ -12,7 +12,7 @@ import { Box, Container } from "@mui/material";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailView";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
-import { ExerciseDetailEditTranslation } from "components/Exercises/Detail/ExerciseDetailEditTranslation";
+import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
 
 
 export const PaddingBox = () => {
@@ -82,7 +82,7 @@ export const ExerciseDetails = () => {
     let out;
     if (exerciseQuery.isSuccess && languageQuery.isSuccess) {
         out = editMode
-            ? <ExerciseDetailEditTranslation
+            ? <ExerciseDetailEdit
                 exercise={exerciseQuery.data}
                 language={language!} />
             : <ExerciseDetailView
