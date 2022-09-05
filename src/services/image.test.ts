@@ -1,6 +1,7 @@
 import axios from "axios";
 import { postExerciseImage } from "services";
 import { ExerciseImage } from "components/Exercises/models/image";
+import { deleteExerciseImage } from "services/image";
 
 jest.mock("axios");
 
@@ -37,7 +38,30 @@ describe("Image service API tests", () => {
         );
 
         // Assert
-        expect(axios.post).toHaveBeenCalledTimes(1);
+        expect(axios.post).toHaveBeenCalled();
+        expect(axios.post).toHaveBeenCalledWith(
+            'https://example.com/api/v2/exerciseimage/',
+            expect.objectContaining({ "exercise_base": 101 }),
+            expect.anything()
+        );
         expect(result).toEqual(image);
+    });
+
+    test('DELETE an existing image', async () => {
+
+        // Arrange
+        // @ts-ignore
+        axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
+
+        // Act
+        const result = await deleteExerciseImage(101);
+
+        // Assert
+        expect(axios.delete).toHaveBeenCalled();
+        expect(axios.delete).toHaveBeenCalledWith(
+            'https://example.com/api/v2/exerciseimage/101/',
+            expect.anything()
+        );
+        expect(result).toEqual(204);
     });
 });
