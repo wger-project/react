@@ -5,7 +5,7 @@ itself, but rather as a library that is used in wger.
 
 # Getting Started
 
-Copy `.env.TEMPLATE` to `.env` and edit it to your needs.
+Copy `.env.TEMPLATE` to `.env.development` and edit it to your needs.
 
 Then, in the project directory, you can run:
 
