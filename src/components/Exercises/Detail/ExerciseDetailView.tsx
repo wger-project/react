@@ -17,7 +17,8 @@ const TranslateExerciseBanner = ({ setEditMode }: { setEditMode: (mode: boolean)
 
     return (
         <Box
-            padding={3}
+            mb={2}
+            paddingY={2}
             sx={{
                 width: "100%",
                 backgroundColor: "#ebebeb",
@@ -59,40 +60,34 @@ export const ExerciseDetailView = ({
     const isNewTranslation = language && language.id !== currentTranslation.language;
 
     return <Grid container>
+        {isNewTranslation
+            && <Grid item xs={12} sm={7} md={12} order={{ xs: 2, sm: 1 }}>
+                <TranslateExerciseBanner setEditMode={setEditMode} />
+            </Grid>
+        }
         <Grid item xs={12} sm={7} md={8} order={{ xs: 2, sm: 1 }}>
-            {
-                isNewTranslation
-                && <TranslateExerciseBanner
-                    setEditMode={setEditMode}
-                />
-            }
-        </Grid>
-        <Grid item xs={12} sm={7} md={8} order={{ xs: 2, sm: 1 }}>
-            {currentTranslation?.aliases && currentTranslation?.aliases.length > 0 ? (
-                <div>
+
+            {currentTranslation?.aliases.length > 0
+                && <>
                     <p>
                         {t("exercises.alsoKnownAs")} &nbsp;
                         {currentTranslation?.aliases?.map(e => e.alias).join(", ")}
                     </p>
                     <PaddingBox />
-                </div>) : null}
+                </>}
 
-            <div>
-                <Typography variant="h5">{t("exercises.description")}</Typography>
-                <div
-                    dangerouslySetInnerHTML={{ __html: currentTranslation?.description! }} />
-                <PaddingBox />
-            </div>
+            <Typography variant="h5">{t("exercises.description")}</Typography>
+            <div
+                dangerouslySetInnerHTML={{ __html: currentTranslation?.description! }} />
+            <PaddingBox />
 
-            <div>
-                <Typography variant="h5">{t("exercises.notes")}</Typography>
-                <ul>
-                    {currentTranslation?.notes.map((note: Note) => (
-                        <li key={note.id}>{note.note}</li>
-                    ))}
-                </ul>
-                <PaddingBox />
-            </div>
+            <Typography variant="h5">{t("exercises.notes")}</Typography>
+            <ul>
+                {currentTranslation?.notes.map((note: Note) => (
+                    <li key={note.id}>{note.note}</li>
+                ))}
+            </ul>
+            <PaddingBox />
 
             <Typography variant="h5">{t("exercises.muscles")}</Typography>
             <Grid container>

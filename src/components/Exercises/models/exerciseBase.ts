@@ -55,7 +55,7 @@ export class ExerciseBase {
         }
 
         if (!translation) {
-            console.warn(`No translation found for exercise base ${this.uuid} (${this.id}) for language ${language}`);
+            //console.warn(`No translation found for exercise base ${this.uuid} (${this.id}) for language ${language}`);
             return this.translations[0];
         }
         return translation!;
