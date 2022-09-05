@@ -1,5 +1,5 @@
 import axios from "axios";
-import { addExerciseTranslation } from "services";
+import { addExerciseTranslation, deleteExerciseTranslation } from "services";
 import { editExerciseTranslation } from "services/exerciseTranslation";
 
 jest.mock("axios");
@@ -78,5 +78,23 @@ describe("Exercise translation service API tests", () => {
         // Assert
         expect(axios.patch).toHaveBeenCalledTimes(1);
         expect(result.name).toEqual("A new, cooler name!!!");
+    });
+
+    test('DELETE an exercise translation', async () => {
+
+        // Arrange
+        // @ts-ignore
+        axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
+
+        // Act
+        const result = await deleteExerciseTranslation(1234);
+
+        // Assert
+        expect(axios.delete).toHaveBeenCalled();
+        expect(axios.delete).toHaveBeenCalledWith(
+            'https://example.com/api/v2/exercise-translation/1234/',
+            expect.anything()
+        );
+        expect(result).toEqual(204);
     });
 });

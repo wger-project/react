@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { ExerciseSearchResponse, ExerciseSearchType, ResponseType } from "./responseType";
 import { makeHeader, makeUrl } from "utils/url";
-import { ExerciseTranslation, ExerciseTranslationAdapter } from "components/Exercises/models/exerciseTranslation";
+import {
+    ExerciseTranslation,
+    ExerciseTranslationAdapter
+} from "components/Exercises/models/exerciseTranslation";
 
 export const EXERCISE_PATH = 'exercise';
 export const EXERCISE_TRANSLATION_PATH = 'exercise-translation';
@@ -90,14 +93,12 @@ export const editExerciseTranslation = async (
 /*
  * Edit an existing exercise translation
  */
-export const deleteExerciseTranslation = async (id: number): Promise<boolean> => {
+export const deleteExerciseTranslation = async (id: number): Promise<number> => {
     const url = makeUrl(EXERCISE_TRANSLATION_PATH, { id: id });
     const response = await axios.delete(
         url,
         { headers: makeHeader() }
     );
 
-    console.log(response);
-
-    return true;
+    return response.status;
 };

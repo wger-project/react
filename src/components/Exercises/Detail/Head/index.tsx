@@ -70,6 +70,12 @@ export const Head = ({
         handleMenuClose();
     };
 
+    const handleDeleteTranslation = async () => {
+        await deleteExerciseTranslation(currentTranslation?.id!);
+        setOpenDialog(false);
+        changeLanguage(languages[0]);
+    };
+
     const equipment = <Stack direction="row" spacing={1}>
         {exercise.equipment.map(e => {
             return <Chip key={e.id} label={t(getTranslationKey(e.name))} />;
@@ -90,7 +96,6 @@ export const Head = ({
             </ListItemIcon>
         </MenuItem>;
     });
-
 
     return (
         <div className={styles.root}>
@@ -113,7 +118,7 @@ export const Head = ({
                 <DialogActions>
                     <Button onClick={() => setOpenDialog(false)}>{t('cancel')}</Button>
                     <Button
-                        onClick={() => deleteExerciseTranslation(currentTranslation?.id!)}
+                        onClick={() => handleDeleteTranslation()}
                         variant="contained"
                         autoFocus
                     >
@@ -146,7 +151,7 @@ export const Head = ({
                             MenuListProps={{
                                 'aria-labelledby': 'basic-button',
                             }}
-                            sx={{padding: 20}}
+                            sx={{ padding: 20 }}
                         >
                             <MenuItem disabled>Change this exercise's language</MenuItem>
                             <Divider />
@@ -163,10 +168,12 @@ export const Head = ({
                 {!userIsAnonymous &&
                     <nav className={styles.toolbar}>
                         {
-                            false
-                            && deletePermissionQuery.isSuccess
+                            deletePermissionQuery.isSuccess
                             && deletePermissionQuery.data
-                            && <Button onClick={() => setOpenDialog(true)}>DELETE</Button>
+                            && language?.id === currentTranslation?.language
+                            && <Button onClick={() => setOpenDialog(true)}>
+                                {t('delete')}
+                            </Button>
                         }
                         {
                             editPermissionQuery.isSuccess
