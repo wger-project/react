@@ -5,4 +5,7 @@ export enum WgerPermissions {
 
     EDIT_IMAGE = 'exercises.change_exerciseimage',
     DELETE_IMAGE = 'exercises.delete_exerciseimage',
+
+    EDIT_VIDEO = 'exercises.change_exercisevideo',
+    DELETE_VIDEO = 'exercises.delete_exercisevideo',
 }

@@ -6,7 +6,7 @@ import { ExerciseTranslation } from "components/Exercises/models/exerciseTransla
 import { Note } from "components/Exercises/models/note";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { Muscle } from "components/Exercises/models/muscle";
-import { SideGallery } from "components/Exercises/Detail/SideGallery";
+import { SideGallery, SideVideoGallery } from "components/Exercises/Detail/SideGallery";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { Language } from "components/Exercises/models/language";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
@@ -158,7 +158,11 @@ export const ExerciseDetailView = ({
                 mainImage={exercise.mainImage}
                 sideImages={exercise.sideImages}
             />
+
+            <PaddingBox />
+            <SideVideoGallery videos={exercise.videos} />
         </Grid>
+
 
         <Grid item xs={12} order={{ xs: 3 }}>
 

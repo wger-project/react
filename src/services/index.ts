@@ -6,7 +6,9 @@ export {
 export { getMuscles } from './muscles';
 export { getEquipment } from './equipment';
 export { getCategories } from './category';
-export { getExerciseBases, getExerciseBase, getExerciseBasesForVariation, addExerciseBase } from './exerciseBase';
+export {
+    getExerciseBases, getExerciseBase, getExerciseBasesForVariation, addExerciseBase
+} from './exerciseBase';
 export {
     addExerciseTranslation,
     editExerciseTranslation,
@@ -18,3 +20,4 @@ export { getLanguages, getLanguageByShortName } from './language';
 export { postExerciseImage } from './image';
 export { updateWeight, createWeight } from './weight';
 export { postAlias, deleteAlias } from './alias';
+export { postExerciseVideo, deleteExerciseVideo } from './video';

@@ -20,6 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { usePermissionQuery } from "components/User/queries";
 import { WgerPermissions } from "permissions";
 import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCard";
+import { AddVideoCard, VideoEditCard } from "components/Exercises/forms/VideoCard";
 
 export interface ViewProps {
     exercise: ExerciseBase;
@@ -42,6 +43,7 @@ export const ExerciseDetailEdit = ({
     const exerciseEnglish = exercise.getTranslation();
 
     const deleteImagePermissionQuery = usePermissionQuery(WgerPermissions.DELETE_IMAGE);
+    const deleteVideoPermissionQuery = usePermissionQuery(WgerPermissions.DELETE_VIDEO);
 
     const validationSchema = yup.object({
         name: nameValidator(t),
@@ -226,16 +228,38 @@ export const ExerciseDetailEdit = ({
         {/* Images */}
         {deleteImagePermissionQuery.isSuccess
             && deleteImagePermissionQuery.data
-            && <Grid container spacing={2} mt={2}>
-                {exercise.images.map(img => (
-                    <Grid item md={3} key={img.id}>
-                        <ImageEditCard image={img} />
+            && <>
+                <PaddingBox />
+                <Typography variant={'h6'}>{t('images')}</Typography>
+                <Grid container spacing={2} mt={2}>
+                    {exercise.images.map(img => (
+                        <Grid item md={3} key={img.id}>
+                            <ImageEditCard image={img} />
+                        </Grid>
+                    ))}
+                    <Grid item md={3} key={'add'}>
+                        <AddImageCard baseId={exercise.id!} />
                     </Grid>
-                ))}
-                <Grid item md={3} key={'add'}>
-                    <AddImageCard baseId={exercise.id!} />
+                </Grid></>
+        }
+
+        {/* Videos */}
+        {deleteVideoPermissionQuery.isSuccess
+            && deleteVideoPermissionQuery.data
+            && <>
+                <PaddingBox />
+                <Typography variant={'h6'}>{t('videos')}</Typography>
+                <Grid container spacing={2} mt={2}>
+                    {exercise.videos.map(video => (
+                        <Grid item md={3} key={video.id}>
+                            <VideoEditCard video={video} />
+                        </Grid>
+                    ))}
+                    <Grid item md={3} key={'add'}>
+                        <AddVideoCard baseId={exercise.id!} />
+                    </Grid>
                 </Grid>
-            </Grid>
+            </>
         }
     </>;
 };
