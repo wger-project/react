@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Alert, Button, Grid, IconButton, Typography } from "@mui/material";
+import { Alert, Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import React from "react";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
@@ -146,7 +146,9 @@ export const ExerciseDetailEdit = ({
                         </ul>
                     </Grid>
                     <Grid item sm={6}>
-                        <ExerciseName fieldName={'name'} />
+                        <Box mb={2}>
+                            <ExerciseName fieldName={'name'} />
+                        </Box>
                         <ExerciseAliases fieldName={'alternativeNames'} />
                     </Grid>
                     <Grid item xs={12}>

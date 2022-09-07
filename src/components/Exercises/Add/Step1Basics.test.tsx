@@ -8,7 +8,7 @@ import { ExerciseStateProvider } from "state";
 import userEvent from "@testing-library/user-event";
 import { setAlternativeNamesEn, setCategory, setEquipment, setNameEn } from "state/exerciseReducer";
 
-// It seems we run into a timeout when running the tests on github actions
+// It seems we run into a timeout when running the tests on GitHub actions
 jest.setTimeout(15000);
 
 jest.mock("components/Exercises/queries");
