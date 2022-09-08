@@ -160,6 +160,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
                         <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                             <DatePicker
+                                inputFormat="yyyy-MM-dd"
                                 label={t('date')}
                                 value={dateValue}
                                 renderInput={(params) => <TextField {...params} {...formik.getFieldProps('date')} />}
