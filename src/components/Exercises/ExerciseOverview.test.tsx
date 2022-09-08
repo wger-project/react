@@ -15,8 +15,11 @@ import {
     testLanguages,
     testMuscles
 } from "tests/exerciseTestdata";
+import { useProfileQuery } from "components/User/queries";
+import { testProfileDataVerified } from "tests/userTestdata";
 
 jest.mock("services");
+jest.mock("components/User/queries");
 
 const queryClient = new QueryClient();
 
@@ -40,6 +43,11 @@ describe("Test the ExerciseOverview component", () => {
             testExerciseCrunches,
             testExerciseSkullCrusher
         ]));
+        // @ts-ignore
+        useProfileQuery.mockImplementation(() => ({
+            isSuccess: true,
+            data: testProfileDataVerified
+        }));
     });
 
 
