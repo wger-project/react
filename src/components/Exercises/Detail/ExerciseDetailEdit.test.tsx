@@ -167,8 +167,8 @@ describe("Exercise translation edit tests", () => {
 
         const wrapper = screen.getByTestId('jodit-editor');
 
-        const textarea = container.querySelector('textarea');
-        await user.click(textarea!);
+        //const textarea = container.querySelector('textarea');
+        //await user.click(textarea!);
         //await user.type(textarea!, "Le sanglier d'Europe, est une espèce de mammifères de la famille des Suidés");
         //await user.keyboard("Le sanglier d'Europe, est une espèce de mammifères de la famille des Suidés");
 

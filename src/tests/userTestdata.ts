@@ -4,7 +4,7 @@ export const testProfileDataVerified = new Profile(
     'admin',
     'root@example.com',
     true,
-    new Date(2022, 3, 27, 19, 52, 38, 867),
+    new Date("2022-04-27 17:52:38.867000+00:00"),
     true
 );
 

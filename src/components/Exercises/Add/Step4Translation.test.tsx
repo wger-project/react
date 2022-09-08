@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import userEvent from "@testing-library/user-event";
 
 // It seems we run into a timeout when running the tests on github actions
-jest.setTimeout(15000);
+jest.setTimeout(20000);
 
 jest.mock("components/Exercises/queries");
 jest.mock("state/exerciseReducer", () => {
