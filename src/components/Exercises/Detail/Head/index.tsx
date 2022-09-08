@@ -59,6 +59,11 @@ export const Head = ({
     const profileQuery = useProfileQuery();
     const userIsAnonymous = profileQuery.isSuccess && profileQuery.data === null;
 
+    let canUserContribute = false;
+    if (profileQuery.isSuccess && editPermissionQuery.isSuccess) {
+        canUserContribute = editPermissionQuery.data || profileQuery.data!.isTrustworthy;
+    }
+
     const handleLanguageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorMenuEl(event.currentTarget);
     };
@@ -176,8 +181,7 @@ export const Head = ({
                             </Button>
                         }
                         {
-                            editPermissionQuery.isSuccess
-                            && editPermissionQuery.data
+                            canUserContribute
                             && <Button onClick={() => setEditMode(true)}
                                        disabled={editMode}>EDIT</Button>
                         }

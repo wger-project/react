@@ -12,11 +12,13 @@ import {
     testLanguages
 } from "tests/exerciseTestdata";
 import { useLanguageQuery } from "components/Exercises/queries";
+import { usePermissionQuery, useProfileQuery } from "components/User/queries";
+import { testProfileDataVerified } from "tests/userTestdata";
 
 jest.mock("services");
 jest.mock("components/Exercises/queries");
+jest.mock("components/User/queries");
 
-const mockedUseLanguageQuery = useLanguageQuery as jest.Mock;
 const queryClient = new QueryClient();
 
 describe("Render tests", () => {
@@ -33,10 +35,24 @@ describe("Render tests", () => {
         ));
         // @ts-ignore
         getLanguageByShortName.mockImplementation(() => Promise.resolve(testLanguageEnglish));
+
         // @ts-ignore
         getLanguages.mockImplementation(() => Promise.resolve(languages));
 
-        mockedUseLanguageQuery.mockImplementation(() => ({
+        // @ts-ignore
+        useProfileQuery.mockImplementation(() => Promise.resolve({
+            isSuccess: true,
+            data: testProfileDataVerified
+        }));
+
+        // @ts-ignore
+        usePermissionQuery.mockImplementation(() => ({
+            isSuccess: true,
+            data: true
+        }));
+
+        // @ts-ignore
+        useLanguageQuery.mockImplementation(() => ({
             isLoading: false,
             isSuccess: true,
             isError: false,
@@ -50,7 +66,7 @@ describe("Render tests", () => {
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/exercises/9']}>
                     <Routes>
-                        <Route path='exercises/:baseID' element={<ExerciseDetails />} />
+                        <Route path="exercises/:baseID" element={<ExerciseDetails />} />
                     </Routes>
                 </MemoryRouter>
             </QueryClientProvider>
@@ -60,7 +76,9 @@ describe("Render tests", () => {
             await new Promise((r) => setTimeout(r, 20));
         });
 
-        expect(mockedUseLanguageQuery).toBeCalled();
+        expect(useLanguageQuery).toBeCalled();
+        expect(usePermissionQuery).toBeCalled();
+        expect(useProfileQuery).toBeCalled();
         expect(getExerciseBase).toBeCalled();
         expect(getExerciseBasesForVariation).toBeCalled();
 

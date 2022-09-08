@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 import React from "react";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 import { Note } from "components/Exercises/models/note";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { Muscle } from "components/Exercises/models/muscle";
@@ -10,6 +9,8 @@ import { SideGallery, SideVideoGallery } from "components/Exercises/Detail/SideG
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { Language } from "components/Exercises/models/language";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
+import { usePermissionQuery, useProfileQuery } from "components/User/queries";
+import { WgerPermissions } from "permissions";
 
 
 const TranslateExerciseBanner = ({ setEditMode }: { setEditMode: (mode: boolean) => void }) => {
@@ -43,7 +44,6 @@ const TranslateExerciseBanner = ({ setEditMode }: { setEditMode: (mode: boolean)
 
 export interface ViewProps {
     exercise: ExerciseBase
-    currentTranslation: ExerciseTranslation, // | undefined,
     variations: ExerciseBase[],
     language: Language,
     setEditMode: (mode: boolean) => void
@@ -51,16 +51,25 @@ export interface ViewProps {
 
 export const ExerciseDetailView = ({
                                        exercise,
-                                       currentTranslation,
                                        variations,
                                        language,
                                        setEditMode
                                    }: ViewProps) => {
     const [t] = useTranslation();
+    const profileQuery = useProfileQuery();
+    const editExercisePermissionQuery = usePermissionQuery(WgerPermissions.EDIT_EXERCISE);
+    const currentTranslation = exercise.getTranslation(language);
     const isNewTranslation = language && language.id !== currentTranslation.language;
+
+    let canUserContribute = false;
+
+    if (profileQuery.isSuccess && editExercisePermissionQuery.isSuccess) {
+        canUserContribute = editExercisePermissionQuery.data || (profileQuery.data !== null && profileQuery.data?.isTrustworthy);
+    }
 
     return <Grid container>
         {isNewTranslation
+            && canUserContribute
             && <Grid item xs={12} sm={7} md={12} order={{ xs: 2, sm: 1 }}>
                 <TranslateExerciseBanner setEditMode={setEditMode} />
             </Grid>
@@ -95,7 +104,8 @@ export const ExerciseDetailView = ({
                     <MuscleOverview
                         primaryMuscles={exercise.muscles}
                         secondaryMuscles={exercise.musclesSecondary}
-                        isFront={true} />
+                        isFront={true}
+                    />
                 </Grid>
                 <Grid item xs={6} md={3} order={{ xs: 2, md: 3 }}>
                     <h3>{t("exercises.primaryMuscles")}</h3>
@@ -110,7 +120,8 @@ export const ExerciseDetailView = ({
                     <MuscleOverview
                         primaryMuscles={exercise.muscles}
                         secondaryMuscles={exercise.musclesSecondary}
-                        isFront={false} />
+                        isFront={false}
+                    />
                 </Grid>
 
 

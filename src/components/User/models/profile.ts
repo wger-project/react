@@ -5,6 +5,8 @@ export class Profile {
         public username: string,
         public email: string,
         public emailVerified: boolean,
+        public dateJoined: Date,
+        public isTrustworthy: boolean
     ) {
     }
 }
@@ -14,15 +16,15 @@ export class ProfileAdapter implements Adapter<Profile> {
         return new Profile(
             item.username,
             item.email,
-            item.email_verified
+            item.email_verified,
+            new Date(item.date_joined),
+            item.is_trustworthy
         );
     }
 
     toJson(item: Profile): any {
         return {
-            username: item.username,
             email: item.email,
-            email_verified: item.emailVerified
         };
     }
 }

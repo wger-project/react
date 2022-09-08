@@ -162,7 +162,8 @@ describe("Exercise translation edit tests", () => {
         const name = screen.getByLabelText('name');
         await user.type(name, 'Sanglier');
 
-        window.focus = () => console.log('focus!');
+        window.focus = () => {
+        };
 
         const wrapper = screen.getByTestId('jodit-editor');
 
