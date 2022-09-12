@@ -10,7 +10,7 @@
     "@mui/material": "^5.10.2",
     "@mui/styles": "^5.10.2",
     "@mui/x-date-pickers": "^5.0.1",
-    "@tanstack/react-query": "^4.2.3",
+    "@tanstack/react-query": "^4.3.4",
     "@types/jest": "^28.1.8",
     "@types/luxon": "^3.0.1",
     "@types/node": "^18.7.16",
