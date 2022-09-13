@@ -86,11 +86,13 @@ describe("Exercise service API tests", () => {
         // Act
         const result = await editExerciseBase(
             749,
-            3,
-            [1, 2],
-            [3, 4],
-            [9],
-            null);
+            {
+                category: 3,
+                equipment: [1, 2],
+                muscles: [3, 4],
+                muscles_secondary: [9]
+            }
+        );
 
         // Assert
         expect(axios.patch).toHaveBeenCalled();

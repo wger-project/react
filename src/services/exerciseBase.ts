@@ -95,27 +95,19 @@ export const addExerciseBase = async (categoryId: number,
 /*
  * Update an existing exercise base
  */
-export const editExerciseBase = async (id: number,
-                                       categoryId: number,
-                                       equipmentIds: number[],
-                                       muscleIds: number[],
-                                       secondaryMuscleIds: number[],
-                                       variationId: number | null,
-): Promise<number> => {
+type editBaseProps = {
+    category?: number,
+    equipment?: number[],
+    muscles?: number[],
+    muscles_secondary?: number[],
+    variation_id?: number | null,
+}
+export const editExerciseBase = async (id: number, data: editBaseProps): Promise<number> => {
 
     const url = makeUrl(EXERCISE_BASE_PATH, { id: id });
-    const baseData = {
-        category: categoryId,
-        equipment: equipmentIds,
-        muscles: muscleIds,
-        // eslint-disable-next-line camelcase
-        muscles_secondary: secondaryMuscleIds,
-        // eslint-disable-next-line camelcase
-        variation_id: variationId,
-    };
     const response = await axios.patch(
         url,
-        baseData,
+        data,
         { headers: makeHeader() }
     );
 

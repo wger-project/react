@@ -21,6 +21,7 @@ import { usePermissionQuery } from "components/User/queries";
 import { WgerPermissions } from "permissions";
 import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCard";
 import { AddVideoCard, VideoEditCard } from "components/Exercises/forms/VideoCard";
+import { EditExerciseCategory } from "components/Exercises/forms/Category";
 
 export interface ViewProps {
     exercise: ExerciseBase;
@@ -263,5 +264,8 @@ export const ExerciseDetailEdit = ({
                 </Grid>
             </>
         }
+
+        <PaddingBox />
+        <EditExerciseCategory baseId={exercise.id!} initial={exercise.category.id} />
     </>;
 };
