@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
     addExerciseBase,
+    deleteExerciseBase,
     editExerciseBase,
     getExerciseBase,
     getExerciseBases,
@@ -95,6 +96,21 @@ describe("Exercise service API tests", () => {
         expect(axios.patch).toHaveBeenCalled();
         expect(result).toEqual(749);
     });
+
+    test('DELETE exercise base', async () => {
+
+        // Arrange
+        // @ts-ignore
+        axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
+
+        // Act
+        const result = await deleteExerciseBase(1);
+
+        // Assert
+        expect(axios.delete).toHaveBeenCalled();
+        expect(result).toEqual(204);
+    });
+
 });
 
 

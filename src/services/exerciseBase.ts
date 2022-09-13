@@ -121,3 +121,16 @@ export const editExerciseBase = async (id: number,
 
     return response.data.id;
 };
+
+/*
+ * Delete an existing exercise base
+ */
+export const deleteExerciseBase = async (id: number): Promise<number> => {
+    const url = makeUrl(EXERCISE_BASE_PATH, { id: id });
+    const response = await axios.delete(
+        url,
+        { headers: makeHeader() }
+    );
+
+    return response.status;
+};
