@@ -32,7 +32,6 @@ import { deleteExerciseBase } from "services/exerciseBase";
 export interface HeadProp {
     exercise: ExerciseBase
     languages: Language[]
-    availableLanguages: number[]
     changeLanguage: (lang: Language) => void,
     language: Language | undefined // language displayed in the head since it's not found in the translations
     currentTranslation: ExerciseTranslation | undefined
@@ -43,7 +42,6 @@ export interface HeadProp {
 export const Head = ({
                          exercise,
                          languages,
-                         availableLanguages,
                          changeLanguage,
                          language,
                          currentTranslation,
@@ -103,7 +101,7 @@ export const Head = ({
             selected={language?.id === l.id}>
             <ListItemText>{l.nameLong}</ListItemText>
             <ListItemIcon>
-                {availableLanguages.includes(l.id)
+                {exercise.availableLanguages.includes(l.id)
                     ? <RedoIcon />
                     : <AddIcon />}
             </ListItemIcon>

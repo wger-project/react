@@ -27,7 +27,7 @@ export const ExerciseDetails = () => {
     const params = useParams<{ baseID: string }>();
     const exerciseBaseID = params.baseID ? parseInt(params.baseID) : 0;
 
-    const [t, i18n] = useTranslation();
+    const { i18n } = useTranslation();
     const navigate = useNavigate();
 
     const languageQuery = useLanguageQuery();
@@ -100,12 +100,11 @@ export const ExerciseDetails = () => {
                 && <Head
                     exercise={exerciseQuery.data}
                     languages={languageQuery.data}
-                    availableLanguages={exerciseQuery.data!.availableLanguages}
                     changeLanguage={changeUserLanguage}
                     language={language}
                     currentTranslation={currentTranslation}
                     setEditMode={setEditMode}
-                    editMode={editMode} />
+                    editMode={editMode}></Head>
             }
             <PaddingBox />
             <Container maxWidth="lg">
