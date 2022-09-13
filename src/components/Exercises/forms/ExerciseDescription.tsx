@@ -1,21 +1,22 @@
-import { useTranslation } from "react-i18next";
 import React, { useRef } from "react";
 import { useField } from "formik";
 import JoditEditor from "jodit-react";
 import { FormHelperText } from "@mui/material";
+import { Jodit } from "jodit";
+import { IJodit } from "jodit/types";
 
 export function ExerciseDescription(props: { fieldName: string }) {
 
-    const [t] = useTranslation();
     const [field, meta, helpers] = useField(props.fieldName);
     const editor = useRef(null);
 
     // See https://xdsoft.net/jodit/docs/,
-    const config = {
-        readonly: false,
-        buttons: ['bold', 'italic', '|', 'ul', 'ol', '|', 'undo', 'redo',],
-        placeholder: t("description"),
-        toolbarAdaptive: false,
+    const buttons = ['bold', 'italic', '|', 'ul', 'ol', '|', 'undo', 'redo'];
+    const config: IJodit['options'] = {
+        ...Jodit.defaultOptions, readonly: false,
+        buttons: buttons,
+        buttonsMD: buttons,
+        buttonsSM: buttons,
         disablePlugins: "ordered-list",
         defaultActionOnPaste: 'insert_as_html',
     };
