@@ -1,29 +1,29 @@
-import { getTranslationKey, slugify, truncateLongNames } from "utils/strings";
+import { getTranslationKey, makeServerKey, truncateLongNames } from "utils/strings";
 
 describe("slugify utilities", () => {
 
     test('whitespace', () => {
-        expect(slugify('test 123')).toEqual('test_123');
+        expect(makeServerKey('test 123')).toEqual('test_123');
     });
 
     test('several whitespaces', () => {
-        expect(slugify('test   123')).toEqual('test___123');
+        expect(makeServerKey('test   123')).toEqual('test___123');
     });
 
     test('capital letters', () => {
-        expect(slugify('TeST123')).toEqual('test123');
+        expect(makeServerKey('TeST123')).toEqual('test123');
     });
 
     test('parenthesis', () => {
-        expect(slugify('Test(123)')).toEqual('test_123_');
+        expect(makeServerKey('Test(123)')).toEqual('test_123_');
     });
 
     test('dash', () => {
-        expect(slugify('Test-123')).toEqual('test_123');
+        expect(makeServerKey('Test-123')).toEqual('test_123');
     });
 
     test('special chars are kept', () => {
-        expect(slugify('abc*/&%$§')).toEqual('abc*/&%$§');
+        expect(makeServerKey('abc*/&%$§')).toEqual('abc*/&%$§');
     });
 });
 
