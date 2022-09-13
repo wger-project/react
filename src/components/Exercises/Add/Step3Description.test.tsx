@@ -33,7 +33,6 @@ describe("Test the add exercise step 3 component", () => {
         );
 
         // Assert
-        expect(screen.getByText("description")).toBeInTheDocument();
         expect(screen.getByText("continue")).toBeInTheDocument();
     });
 

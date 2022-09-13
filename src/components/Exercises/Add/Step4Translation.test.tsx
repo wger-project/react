@@ -74,7 +74,6 @@ describe("Test the add exercise step 4 component", () => {
 
         expect(screen.getByText("name")).toBeInTheDocument();
         expect(screen.getByText("exercises.alternativeNames")).toBeInTheDocument();
-        expect(screen.getByText("description")).toBeInTheDocument();
     });
 
 
