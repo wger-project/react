@@ -22,6 +22,7 @@ import { WgerPermissions } from "permissions";
 import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCard";
 import { AddVideoCard, VideoEditCard } from "components/Exercises/forms/VideoCard";
 import { EditExerciseCategory } from "components/Exercises/forms/Category";
+import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
 
 export interface ViewProps {
     exercise: ExerciseBase;
@@ -267,5 +268,7 @@ export const ExerciseDetailEdit = ({
 
         <PaddingBox />
         <EditExerciseCategory baseId={exercise.id!} initial={exercise.category.id} />
+        <EditExerciseEquipment baseId={exercise.id!} initial={exercise.equipment.map(e => e.id)} />
+        <PaddingBox />
     </>;
 };

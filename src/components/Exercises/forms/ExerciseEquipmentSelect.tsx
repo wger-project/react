@@ -8,7 +8,6 @@ export function ExerciseEquipmentSelect(props: { fieldName: string, options: any
     const [t] = useTranslation();
     const [field, meta, helpers] = useField(props.fieldName);
 
-
     return <Autocomplete
         multiple
         id={props.fieldName}
