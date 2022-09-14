@@ -1,15 +1,5 @@
 import React from "react";
-import {
-    Box,
-    Button,
-    CircularProgress,
-    Container,
-    Grid,
-    Pagination,
-    Paper,
-    Stack,
-    Typography,
-} from "@mui/material";
+import { Box, Button, CircularProgress, Container, Grid, Pagination, Paper, Stack, Typography, } from "@mui/material";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
 import { useTranslation } from "react-i18next";
@@ -19,12 +9,7 @@ import { Muscle } from "components/Exercises/models/muscle";
 import { Category } from "components/Exercises/models/category";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
-import {
-    useBasesQuery,
-    useCategoriesQuery,
-    useEquipmentQuery,
-    useMusclesQuery
-} from "components/Exercises/queries";
+import { useBasesQuery, useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
 import AddIcon from '@mui/icons-material/Add';
 import { Link, useNavigate } from "react-router-dom";
 import { ExerciseSearchResponse } from "services/responseType";
@@ -166,7 +151,7 @@ export const ExerciseOverview = () => {
 
     return (
         <Container maxWidth="lg">
-            <Grid container spacing={2}>
+            <Grid container spacing={2} mt={2}>
                 <Grid item xs={12} sm={6}>
                     <Typography gutterBottom variant="h3" component="div">
                         {t("exercises.exercises")}
