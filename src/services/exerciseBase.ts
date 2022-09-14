@@ -111,7 +111,7 @@ export const editExerciseBase = async (id: number, data: editBaseProps): Promise
         { headers: makeHeader() }
     );
 
-    return response.data.id;
+    return response.status;
 };
 
 /*

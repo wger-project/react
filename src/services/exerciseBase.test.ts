@@ -81,7 +81,7 @@ describe("Exercise service API tests", () => {
             "variations": null
         };
         // @ts-ignore
-        axios.patch.mockImplementation(() => Promise.resolve({ data: response }));
+        axios.patch.mockImplementation(() => Promise.resolve({ data: response, status: 200 }));
 
         // Act
         const result = await editExerciseBase(
@@ -96,7 +96,7 @@ describe("Exercise service API tests", () => {
 
         // Assert
         expect(axios.patch).toHaveBeenCalled();
-        expect(result).toEqual(749);
+        expect(result).toEqual(200);
     });
 
     test('DELETE exercise base', async () => {
