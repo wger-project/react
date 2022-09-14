@@ -23,6 +23,9 @@ import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCar
 import { AddVideoCard, VideoEditCard } from "components/Exercises/forms/VideoCard";
 import { EditExerciseCategory } from "components/Exercises/forms/Category";
 import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
+import { EditExerciseMuscle } from "components/Exercises/forms/Muscle";
+import { MuscleOverview } from "components/Muscles/MuscleOverview";
+import { useMusclesQuery } from "components/Exercises/queries";
 
 export interface ViewProps {
     exercise: ExerciseBase;
@@ -36,6 +39,8 @@ export const ExerciseDetailEdit = ({
     const [t] = useTranslation();
 
     const [alertIsVisible, setAlertIsVisible] = React.useState(false);
+    const [mainMuscles, setMainMuscles] = React.useState<number[]>(exercise.muscles.map((m) => m.id));
+    const [secondaryMuscles, setSecondaryMuscles] = React.useState<number[]>(exercise.musclesSecondary.map((m) => m.id));
     const translationFromBase = exercise.getTranslation(language);
     const isNewTranslation = language.id !== translationFromBase.language;
     const exerciseTranslation =
@@ -46,6 +51,8 @@ export const ExerciseDetailEdit = ({
 
     const deleteImagePermissionQuery = usePermissionQuery(WgerPermissions.DELETE_IMAGE);
     const deleteVideoPermissionQuery = usePermissionQuery(WgerPermissions.DELETE_VIDEO);
+    const editBasePermissionQuery = usePermissionQuery(WgerPermissions.EDIT_EXERCISE);
+    const musclesQuery = useMusclesQuery();
 
     const validationSchema = yup.object({
         name: nameValidator(t),
@@ -266,9 +273,52 @@ export const ExerciseDetailEdit = ({
             </>
         }
 
-        <PaddingBox />
-        <EditExerciseCategory baseId={exercise.id!} initial={exercise.category.id} />
-        <EditExerciseEquipment baseId={exercise.id!} initial={exercise.equipment.map(e => e.id)} />
-        <PaddingBox />
+        {/* Base data */}
+        {editBasePermissionQuery.isSuccess
+            && editBasePermissionQuery.data
+            && musclesQuery.isSuccess
+            && <>
+                <PaddingBox />
+                <EditExerciseCategory baseId={exercise.id!} initial={exercise.category.id} />
+                <EditExerciseEquipment baseId={exercise.id!} initial={exercise.equipment.map(e => e.id)} />
+                
+                <Grid container mt={1}>
+                    <Grid item sm={7}>
+                        <EditExerciseMuscle
+                            baseId={exercise.id!}
+                            value={mainMuscles}
+                            setValue={setMainMuscles}
+                            blocked={secondaryMuscles}
+                            isMain
+                        />
+                        <EditExerciseMuscle
+                            baseId={exercise.id!}
+                            value={secondaryMuscles}
+                            setValue={setSecondaryMuscles}
+                            blocked={mainMuscles}
+                            isMain={false}
+                        />
+                    </Grid>
+                    <Grid item sm={5}>
+                        <Grid container>
+                            <Grid item xs={6} display="flex" justifyContent={"center"}>
+                                <MuscleOverview
+                                    primaryMuscles={mainMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                    secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                    isFront={true}
+                                />
+                            </Grid>
+                            <Grid item xs={6} display="flex" justifyContent={"center"}>
+                                <MuscleOverview
+                                    primaryMuscles={mainMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                    secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                    isFront={false}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </>
+        }
     </>;
 };

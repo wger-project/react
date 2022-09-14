@@ -1,4 +1,3 @@
-import axios from "axios";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 import { testEquipment } from "tests/exerciseTestdata";
@@ -7,7 +6,6 @@ import userEvent from "@testing-library/user-event";
 import { editExerciseBase } from "services/exerciseBase";
 import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
 
-jest.mock("axios");
 jest.mock("components/Exercises/queries");
 jest.mock("services/exerciseBase");
 
@@ -72,8 +70,6 @@ describe("Test the edit widget to live edit the equipment", () => {
         });
 
         await user.click(textbox);
-        screen.logTestingPlaygroundURL();
-
         const rocks = await screen.getByRole('option', { name: /dumbbell/i });
         await user.click(rocks);
         expect(editExerciseBase).toHaveBeenCalledWith(100, { "equipment": [1] });

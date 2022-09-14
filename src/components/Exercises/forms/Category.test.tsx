@@ -1,4 +1,3 @@
-import axios from "axios";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 import { EditExerciseCategory } from "components/Exercises/forms/Category";
@@ -7,7 +6,6 @@ import { useCategoriesQuery } from "components/Exercises/queries";
 import userEvent from "@testing-library/user-event";
 import { editExerciseBase } from "services/exerciseBase";
 
-jest.mock("axios");
 jest.mock("components/Exercises/queries");
 jest.mock("services/exerciseBase");
 
