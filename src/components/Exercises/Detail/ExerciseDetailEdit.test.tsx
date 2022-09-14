@@ -1,18 +1,26 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
-import { testExerciseSquats, testLanguageFrench, testLanguageGerman } from "tests/exerciseTestdata";
+import {
+    testCategories,
+    testEquipment,
+    testExerciseSquats,
+    testLanguageFrench,
+    testLanguageGerman
+} from "tests/exerciseTestdata";
 import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
 import userEvent from "@testing-library/user-event";
 import { addExerciseTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { usePermissionQuery } from "components/User/queries";
+import { useCategoriesQuery, useEquipmentQuery } from "components/Exercises/queries";
 
 // It seems we run into a timeout when running the tests on GitHub actions
 jest.setTimeout(15000);
 
 jest.mock("services");
 jest.mock("components/User/queries");
+jest.mock("components/Exercises/queries");
 
 describe("Exercise translation edit tests", () => {
 
@@ -45,7 +53,13 @@ describe("Exercise translation edit tests", () => {
         ));
 
         // @ts-ignore
-        usePermissionQuery.mockImplementation(() => Promise.resolve({ data: true }));
+        usePermissionQuery.mockImplementation(() => Promise.resolve({ isSuccess: true, data: true }));
+
+        // @ts-ignore
+        useCategoriesQuery.mockImplementation(() => Promise.resolve({ isSuccess: true, data: testCategories }));
+
+        // @ts-ignore
+        useEquipmentQuery.mockImplementation(() => Promise.resolve({ isSuccess: true, data: testEquipment }));
     });
 
     test('correctly renders the form', () => {
