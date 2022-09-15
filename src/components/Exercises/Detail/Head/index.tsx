@@ -153,7 +153,7 @@ export const Head = ({
             <div className={styles.detail_language}>
 
                 <div className={styles.detail}>
-                    <Link to="../overview">Exercises</Link>  &gt; {currentTranslation?.name}
+                    <Link to="../overview">{t('exercises.exercises')}</Link>  &gt; {currentTranslation?.name}
                 </div>
                 <div className={styles.languages}>
                     <div className={styles.language}>
@@ -176,7 +176,7 @@ export const Head = ({
                             }}
                             sx={{ padding: 20 }}
                         >
-                            <MenuItem disabled>Change this exercise's language</MenuItem>
+                            <MenuItem disabled>{t('exercises.changeExerciseLanguage')}</MenuItem>
                             <Divider />
                             {languagesList}
                         </Menu>

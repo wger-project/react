@@ -37,10 +37,11 @@
     "deleteExerciseBody": "Do you want to delete the exercise \"{{name}}\"? You can either delete the current {{language}} translation or the complete exercise with all translations, images, etc.",
     "deleteTranslation": "Delete translation",
     "deleteExerciseFull": "Delete full exercise",
+    "exercises": "Exercises",
+    "changeExerciseLanguage": "Change this exercise's language",
     "noEquipment": "No equipment",
     "missingExercise": "Missing a certain exercise?",
     "missingExerciseDescription": "Help out the community by contributing it!",
-    "exercises": "Exercises",
     "searchExerciseName": "Search by exercise name",
     "newNote": "New note",
     "notesHelpText": "Notes are short comments on how to perform the exercise such as \"keep your body straight\""
