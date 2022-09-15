@@ -61,7 +61,7 @@ export const Head = ({
 
     let canUserContribute = false;
     if (profileQuery.isSuccess && editPermissionQuery.isSuccess) {
-        canUserContribute = editPermissionQuery.data || profileQuery.data!.isTrustworthy;
+        canUserContribute = editPermissionQuery.data || (profileQuery.data !== null && profileQuery.data!.isTrustworthy);
     }
 
     const handleLanguageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
