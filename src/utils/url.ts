@@ -71,9 +71,12 @@ export function makeHeader(token?: string): AxiosRequestHeaders {
     const DJANGO_CSRF_COOKIE = 'csrftoken';
 
     let out: AxiosRequestHeaders = {
-        'Authorization': `Token ${token}`,
         'Content-Type': 'application/json',
     };
+
+    if (token) {
+        out['Authorization'] = `Token ${token}`;
+    }
 
     const csrfCookie = getCookie(DJANGO_CSRF_COOKIE);
     // eslint-disable-next-line eqeqeq
