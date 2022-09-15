@@ -17,7 +17,7 @@ export const getProfile = async (): Promise<Profile | null> => {
     try {
         const response = await axios.get(
             url,
-            {headers: makeHeader()}
+            { headers: makeHeader() }
         );
         return adapter.fromJson(response.data);
     } catch (error) {

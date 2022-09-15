@@ -3,10 +3,7 @@ import { ExerciseImage, ExerciseImageAdapter, } from "components/Exercises/model
 import { Equipment, EquipmentAdapter, } from "components/Exercises/models/equipment";
 import { Muscle, MuscleAdapter } from "components/Exercises/models/muscle";
 import { Category, CategoryAdapter, } from "components/Exercises/models/category";
-import {
-    ExerciseTranslation,
-    ExerciseTranslationAdapter
-} from "components/Exercises/models/exerciseTranslation";
+import { ExerciseTranslation, ExerciseTranslationAdapter } from "components/Exercises/models/exerciseTranslation";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { Language } from "components/Exercises/models/language";
 import { ExerciseVideo, ExerciseVideoAdapter } from "components/Exercises/models/video";
