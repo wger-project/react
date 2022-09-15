@@ -14,7 +14,7 @@ import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
+import { WgerRoutes } from "routes";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -85,7 +85,7 @@ if (exerciseOverview) {
             <Router>
                 <ThemeProvider theme={theme}>
                     <QueryClientProvider client={queryClient}>
-                        <ExerciseOverview />
+                        <WgerRoutes />
                     </QueryClientProvider>
                 </ThemeProvider>
             </Router>
@@ -93,6 +93,21 @@ if (exerciseOverview) {
     );
 }
 
+const exerciseDetail = document.getElementById("react-exercise-detail");
+if (exerciseDetail) {
+    const root = createRoot(exerciseDetail);
+    root.render(
+        <Suspense fallback={<LoadingWidget />}>
+            <Router>
+                <ThemeProvider theme={theme}>
+                    <QueryClientProvider client={queryClient}>
+                        <WgerRoutes />
+                    </QueryClientProvider>
+                </ThemeProvider>
+            </Router>
+        </Suspense>
+    );
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
