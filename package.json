@@ -9,7 +9,7 @@
     "@mui/lab": "^5.0.0-alpha.99",
     "@mui/material": "^5.10.5",
     "@mui/styles": "^5.10.3",
-    "@mui/x-date-pickers": "^5.0.1",
+    "@mui/x-date-pickers": "^5.0.2",
     "@tanstack/react-query": "^4.2.3",
     "@types/jest": "^29.0.1",
     "@types/luxon": "^3.0.1",
