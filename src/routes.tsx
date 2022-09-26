@@ -24,6 +24,11 @@ import { ExerciseDetailPage } from "pages/ExerciseDetails";
 import { Dashboard } from "components/Dashboard/Dashboard";
 import React from "react";
 
+/*
+ * Routes for the application
+ *
+ * Don't change the routes of the elements which are also used in the django application
+ */
 export const WgerRoutes = () => {
     return <Routes>
         <Route path="/:lang">

@@ -46,3 +46,25 @@ const themeOptions: ThemeOptions = {
 };
 
 export const theme = createTheme(themeOptions);
+export const makeTheme = (element: HTMLDivElement) => createTheme(
+    {
+        ...themeOptions,
+        components: {
+            MuiPopover: {
+                defaultProps: {
+                    container: element,
+                },
+            },
+            MuiPopper: {
+                defaultProps: {
+                    container: element,
+                },
+            },
+            MuiModal: {
+                defaultProps: {
+                    container: element,
+                },
+            },
+        },
+    }
+);
