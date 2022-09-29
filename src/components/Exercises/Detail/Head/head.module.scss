@@ -1,11 +1,6 @@
 .root {
   background-color: rgb(248, 248, 248);
-  padding: 1rem 2rem;
-
-
-  @media screen and (min-width: 1200px) {
-    padding: 1rem 10rem; // temp padding as the page is all padded as with header
-  }
+  padding: 1rem 1rem;
 
   .detail_language {
     display: flex;
@@ -86,32 +81,6 @@
   .header {
     display: flex;
     justify-content: space-between;
-
-    .heading {
-
-      h1 {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-
-        @media screen and (min-width: 700px) {
-          font-size: 3.5rem;
-        }
-      }
-
-      .tags {
-        display: flex;
-        align-items: center;
-
-        span {
-          background-color: rgb(142, 167, 185);
-          padding: 2px 5px;
-          margin-right: 1rem;
-          border-radius: 5px;
-          color: white;
-          border: 0.5px solid black;
-        }
-      }
-    }
 
     .toolbar {
       display: none;

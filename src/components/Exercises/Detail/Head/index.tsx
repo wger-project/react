@@ -8,11 +8,13 @@ import {
     DialogContentText,
     DialogTitle,
     Divider,
+    Grid,
     ListItemIcon,
     ListItemText,
     Menu,
     MenuItem,
-    Stack
+    Stack,
+    Typography
 } from '@mui/material';
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
@@ -87,13 +89,6 @@ export const Head = ({
         navigate('../overview');
     };
 
-    const equipment = <Stack direction="row" spacing={1}>
-        {exercise.equipment.map(e => {
-            return <Chip key={e.id} label={t(getTranslationKey(e.name))} />;
-        })}
-        <Chip label={t(getTranslationKey(exercise.category.name))} />
-    </Stack>;
-
     const languagesList = languages.map(l => {
         return <MenuItem
             key={l.nameShort}
@@ -109,105 +104,115 @@ export const Head = ({
     });
 
     return (
-        <div className={styles.root}>
-            <Dialog
-                open={openDialog}
-                onClose={() => setOpenDialog(false)}
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {t('delete')}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        <p>
-                            {t('exercises.deleteExerciseBody',
-                                {
-                                    name: currentTranslation?.name,
-                                    language: language?.nameLong
-                                })}
-                        </p>
-                        <p>
-                            {t('cannotBeUndone')}
-                        </p>
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenDialog(false)}>{t('cancel')}</Button>
-                    <Button
-                        onClick={() => handleDeleteTranslation()}
-                        variant="contained"
-                        autoFocus
+        <Grid container>
+            <Grid item xs={12}>
+                <div className={styles.root}>
+                    <Dialog
+                        open={openDialog}
+                        onClose={() => setOpenDialog(false)}
                     >
-                        {t('exercises.deleteTranslation')}
-                    </Button>
-                    <Button
-                        onClick={() => handleDeleteBase()}
-                        variant="contained"
-                        autoFocus
-                    >
-                        {t('exercises.deleteExerciseFull')}
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
-            <div className={styles.detail_language}>
-
-                <div className={styles.detail}>
-                    <Link to="../overview">{t('exercises.exercises')}</Link>  &gt; {currentTranslation?.name}
-                </div>
-                <div className={styles.languages}>
-                    <div className={styles.language}>
-                        <Button
-                            size="small"
-                            id="basic-button"
-                            onClick={handleLanguageButtonClick}
-                            startIcon={<MoreVertIcon />}
-                        >
-                            {language?.nameLong}
-                        </Button>
-
-                        <Menu
-                            id="basic-menu"
-                            anchorEl={anchorMenuEl}
-                            open={openLanguageMenu}
-                            onClose={handleMenuClose}
-                            MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                            }}
-                            sx={{ padding: 20 }}
-                        >
-                            <MenuItem disabled>{t('exercises.changeExerciseLanguage')}</MenuItem>
-                            <Divider />
-                            {languagesList}
-                        </Menu>
-                    </div>
-                </div>
-            </div>
-            <div className={styles.header}>
-                <div className={styles.heading}>
-                    <h1>{currentTranslation?.name}</h1>
-                    {equipment}
-                </div>
-                {!userIsAnonymous &&
-                    <nav className={styles.toolbar}>
-                        {
-                            deletePermissionQuery.isSuccess
-                            && deletePermissionQuery.data
-                            && language?.id === currentTranslation?.language
-                            && <Button onClick={() => setOpenDialog(true)}>
-                                {t('delete')}
+                        <DialogTitle id="alert-dialog-title">
+                            {t('delete')}
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                <p>
+                                    {t('exercises.deleteExerciseBody',
+                                        {
+                                            name: currentTranslation?.name,
+                                            language: language?.nameLong
+                                        })}
+                                </p>
+                                <p>
+                                    {t('cannotBeUndone')}
+                                </p>
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setOpenDialog(false)}>{t('cancel')}</Button>
+                            <Button
+                                onClick={() => handleDeleteTranslation()}
+                                variant="contained"
+                                autoFocus
+                            >
+                                {t('exercises.deleteTranslation')}
                             </Button>
+                            <Button
+                                onClick={() => handleDeleteBase()}
+                                variant="contained"
+                                autoFocus
+                            >
+                                {t('exercises.deleteExerciseFull')}
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <div className={styles.detail_language}>
+
+                        <div className={styles.detail}>
+                            <Link to="../overview">{t('exercises.exercises')}</Link>  &gt; {currentTranslation?.name}
+                        </div>
+                        <div className={styles.languages}>
+                            <div className={styles.language}>
+                                <Button
+                                    size="small"
+                                    id="basic-button"
+                                    onClick={handleLanguageButtonClick}
+                                    startIcon={<MoreVertIcon />}
+                                >
+                                    {language?.nameLong}
+                                </Button>
+
+                                <Menu
+                                    id="basic-menu"
+                                    anchorEl={anchorMenuEl}
+                                    open={openLanguageMenu}
+                                    onClose={handleMenuClose}
+                                    MenuListProps={{
+                                        'aria-labelledby': 'basic-button',
+                                    }}
+                                    sx={{ padding: 20 }}
+                                >
+                                    <MenuItem disabled>{t('exercises.changeExerciseLanguage')}</MenuItem>
+                                    <Divider />
+                                    {languagesList}
+                                </Menu>
+                            </div>
+                        </div>
+                    </div>
+                    <div className={styles.header}>
+                        <Typography gutterBottom variant="h2" margin={0} sx={{ mt: 2 }}>
+                            {currentTranslation?.name}
+                        </Typography>
+                        {!userIsAnonymous &&
+                            <nav className={styles.toolbar}>
+                                {
+                                    deletePermissionQuery.isSuccess
+                                    && deletePermissionQuery.data
+                                    && language?.id === currentTranslation?.language
+                                    && <Button onClick={() => setOpenDialog(true)}>
+                                        {t('delete')}
+                                    </Button>
+                                }
+                                {
+                                    canUserContribute
+                                    && <Button onClick={() => setEditMode(true)}
+                                               disabled={editMode}>EDIT</Button>
+                                }
+                                <Button onClick={() => setEditMode(false)}
+                                        disabled={!editMode}>VIEW</Button>
+                            </nav>
                         }
-                        {
-                            canUserContribute
-                            && <Button onClick={() => setEditMode(true)}
-                                       disabled={editMode}>EDIT</Button>
-                        }
-                        <Button onClick={() => setEditMode(false)}
-                                disabled={!editMode}>VIEW</Button>
-                    </nav>
-                }
-            </div>
-        </div>
+                    </div>
+                    <Stack direction="row" spacing={1} mt={2}>
+                        <Chip label={t(getTranslationKey(exercise.category.name))} size="small" />
+                        {exercise.equipment.map(e => {
+                            return <Chip key={e.id} label={t(getTranslationKey(e.name))} variant="outlined"
+                                         size="small" />;
+                        })}
+                    </Stack>
+                </div>
+            </Grid>
+        </Grid>
     );
 };
