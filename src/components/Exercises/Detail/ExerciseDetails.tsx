@@ -14,7 +14,6 @@ import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailVi
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
 
-
 export const PaddingBox = () => {
     return <Box sx={{ height: 40 }} />;
 };
@@ -97,14 +96,16 @@ export const ExerciseDetails = () => {
             {
                 exerciseQuery.isSuccess
                 && languageQuery.isSuccess
-                && <Head
-                    exercise={exerciseQuery.data}
-                    languages={languageQuery.data}
-                    changeLanguage={changeUserLanguage}
-                    language={language}
-                    currentTranslation={currentTranslation}
-                    setEditMode={setEditMode}
-                    editMode={editMode}></Head>
+                && <Container>
+                    <Head
+                        exercise={exerciseQuery.data}
+                        languages={languageQuery.data}
+                        changeLanguage={changeUserLanguage}
+                        language={language}
+                        currentTranslation={currentTranslation}
+                        setEditMode={setEditMode}
+                        editMode={editMode} />
+                </Container>
             }
             <PaddingBox />
             <Container maxWidth="lg">
