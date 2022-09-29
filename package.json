@@ -61,6 +61,9 @@
       "react-app",
       "react-app/jest"
     ],
+    "ignorePatterns": [
+      "build/**"
+    ],
     "rules": {},
     "overrides": [
       {
