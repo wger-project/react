@@ -45,5 +45,19 @@ describe("Exercise translation model tests", () => {
             language: 1,
         });
     });
+
+    test('slug apadpter', () => {
+        // Arrange
+        const e1 = new ExerciseTranslation(
+            2,
+            "uuid",
+            "Grüß Göttles",
+            "description",
+            1
+        );
+
+        // Assert
+        expect(e1.nameSlug).toEqual('gruss-gottles');
+    });
 });
 

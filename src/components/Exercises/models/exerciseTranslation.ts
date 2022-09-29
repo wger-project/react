@@ -2,6 +2,7 @@ import { Adapter } from "utils/Adapter";
 import { truncateLongNames } from "utils/strings";
 import { Note, NoteAdapter } from "components/Exercises/models/note";
 import { Alias, AliasAdapter } from "components/Exercises/models/alias";
+import slug from "slug";
 
 
 export class ExerciseTranslation {
@@ -34,6 +35,10 @@ export class ExerciseTranslation {
      */
     get nameLong(): string {
         return truncateLongNames(this.name);
+    }
+
+    get nameSlug(): string {
+        return slug(this.name);
     }
 }
 

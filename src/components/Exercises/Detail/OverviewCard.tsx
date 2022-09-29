@@ -1,13 +1,5 @@
 import React from "react";
-import {
-    Box,
-    Card,
-    CardActionArea,
-    CardContent,
-    CardMedia,
-    Chip,
-    Typography,
-} from "@mui/material";
+import { Box, Card, CardActionArea, CardContent, CardMedia, Chip, Typography, } from "@mui/material";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
@@ -30,7 +22,8 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
 
     return (
         <Card key={exerciseBase.id} sx={{ width: '100%' }}>
-            <CardActionArea href={`${exerciseBase.id}`} sx={{ minHeight: 330 }}>
+            <CardActionArea href={`/de/exercise/${exerciseBase.id}/view-base/${exercise.nameSlug}`}
+                            sx={{ minHeight: 330 }}>
                 {exerciseBase.mainImage
                     ? <CardMedia
                         component="img"
