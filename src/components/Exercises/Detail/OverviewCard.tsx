@@ -18,11 +18,11 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
         : exerciseBase.getTranslation(
             new Language(ENGLISH_LANGUAGE_ID, "en", "English")
         );
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
 
     return (
         <Card key={exerciseBase.id} sx={{ width: '100%' }}>
-            <CardActionArea href={`/de/exercise/${exerciseBase.id}/view-base/${exercise.nameSlug}`}
+            <CardActionArea href={`/${i18n.language}/exercise/${exerciseBase.id}/view-base/${exercise.nameSlug}`}
                             sx={{ minHeight: 330 }}>
                 {exerciseBase.mainImage
                     ? <CardMedia

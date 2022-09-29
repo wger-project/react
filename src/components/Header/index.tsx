@@ -25,7 +25,9 @@ export const Header = () => {
                     onClose={() => setAnchorElWorkout(null)}
                 >
                     <MenuItem component={Link} to={`${i18n.language}/exercise/overview`}>Exercise overview</MenuItem>
-                    <MenuItem component={Link} to={`${i18n.language}/exercise/add`}>Contribute exercise</MenuItem>
+                    <MenuItem component={Link} to={`${i18n.language}/exercise/contribute`}>
+                        Contribute exercise
+                    </MenuItem>
                 </Menu>
 
                 <Button color="inherit" onClick={(event) => setAnchorElWeight(event.currentTarget)}>

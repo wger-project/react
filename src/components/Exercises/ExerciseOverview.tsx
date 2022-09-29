@@ -37,7 +37,7 @@ const ContributeExerciseBanner = () => {
                 {t("exercises.missingExerciseDescription")}
             </Typography>
 
-            <Link to={`/${i18n.language}/exercise/add`}>
+            <Link to={`/${i18n.language}/exercise/contribute`}>
                 {t("exercises.contributeExercise")}
             </Link>
         </Box>
@@ -165,7 +165,7 @@ export const ExerciseOverview = () => {
                         variant="contained"
                         disabled={userIsAnonymous}
                         startIcon={<AddIcon />}
-                        onClick={() => navigate(`/${i18n.language}/exercise/add`)}
+                        onClick={() => navigate(`/${i18n.language}/exercise/contribute`)}
                     >
                         {t('exercises.contributeExercise')}
                     </Button>

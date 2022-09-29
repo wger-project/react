@@ -126,6 +126,11 @@ if (exerciseOverview) {
     renderComponentShadowDom(exerciseOverview);
 }
 
+const contributeExercise = document.getElementById("react-exercise-contribute");
+if (contributeExercise) {
+    renderComponentShadowDom(contributeExercise);
+}
+
 const exerciseDetail = document.getElementById("react-exercise-detail");
 if (exerciseDetail) {
     const root = createRoot(exerciseDetail);
