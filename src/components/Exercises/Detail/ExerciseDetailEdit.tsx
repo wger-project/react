@@ -17,7 +17,6 @@ import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescript
 import { addExerciseTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 import CloseIcon from '@mui/icons-material/Close';
-import { usePermissionQuery } from "components/User/queries";
 import { WgerPermissions } from "permissions";
 import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCard";
 import { AddVideoCard, VideoEditCard } from "components/Exercises/forms/VideoCard";
@@ -26,6 +25,7 @@ import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
 import { EditExerciseMuscle } from "components/Exercises/forms/Muscle";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { useMusclesQuery } from "components/Exercises/queries";
+import { usePermissionQuery } from "components/User/queries/permission";
 
 export interface ViewProps {
     exercise: ExerciseBase;
@@ -281,7 +281,7 @@ export const ExerciseDetailEdit = ({
                 <PaddingBox />
                 <EditExerciseCategory baseId={exercise.id!} initial={exercise.category.id} />
                 <EditExerciseEquipment baseId={exercise.id!} initial={exercise.equipment.map(e => e.id)} />
-                
+
                 <Grid container mt={1}>
                     <Grid item sm={7}>
                         <EditExerciseMuscle

@@ -9,8 +9,7 @@ import { SideGallery, SideVideoGallery } from "components/Exercises/Detail/SideG
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { Language } from "components/Exercises/models/language";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
-import { usePermissionQuery, useProfileQuery } from "components/User/queries";
-import { WgerPermissions } from "permissions";
+import { useCanContributeExercises } from "components/User/queries/contribute";
 
 
 const TranslateExerciseBanner = ({ setEditMode }: { setEditMode: (mode: boolean) => void }) => {
@@ -56,20 +55,15 @@ export const ExerciseDetailView = ({
                                        setEditMode
                                    }: ViewProps) => {
     const [t] = useTranslation();
-    const profileQuery = useProfileQuery();
-    const editExercisePermissionQuery = usePermissionQuery(WgerPermissions.EDIT_EXERCISE);
     const currentTranslation = exercise.getTranslation(language);
     const isNewTranslation = language && language.id !== currentTranslation.language;
 
-    let canUserContribute = false;
+    const contributeQuery = useCanContributeExercises();
 
-    if (profileQuery.isSuccess && editExercisePermissionQuery.isSuccess) {
-        canUserContribute = editExercisePermissionQuery.data || (profileQuery.data !== null && profileQuery.data?.isTrustworthy);
-    }
 
     return <Grid container>
         {isNewTranslation
-            && canUserContribute
+            && contributeQuery.canContribute
             && <Grid item xs={12} sm={7} md={12} order={{ xs: 2, sm: 1 }}>
                 <TranslateExerciseBanner setEditMode={setEditMode} />
             </Grid>

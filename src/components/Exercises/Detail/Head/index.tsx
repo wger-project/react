@@ -26,10 +26,11 @@ import { useTranslation } from "react-i18next";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import RedoIcon from '@mui/icons-material/Redo';
 import AddIcon from '@mui/icons-material/Add';
-import { usePermissionQuery, useProfileQuery } from "components/User/queries";
 import { WgerPermissions } from "permissions";
 import { deleteExerciseTranslation } from "services";
 import { deleteExerciseBase } from "services/exerciseBase";
+import { usePermissionQuery } from "components/User/queries/permission";
+import { useProfileQuery } from "components/User/queries/profile";
 
 export interface HeadProp {
     exercise: ExerciseBase

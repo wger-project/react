@@ -15,11 +15,11 @@ import {
     testLanguages,
     testMuscles
 } from "tests/exerciseTestdata";
-import { useProfileQuery } from "components/User/queries";
 import { testProfileDataVerified } from "tests/userTestdata";
+import { useProfileQuery } from "components/User/queries/profile";
 
 jest.mock("services");
-jest.mock("components/User/queries");
+jest.mock("components/User/queries/profile");
 
 const queryClient = new QueryClient();
 

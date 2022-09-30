@@ -13,8 +13,9 @@ import { useBasesQuery, useCategoriesQuery, useEquipmentQuery, useMusclesQuery }
 import AddIcon from '@mui/icons-material/Add';
 import { Link, useNavigate } from "react-router-dom";
 import { ExerciseSearchResponse } from "services/responseType";
-import { useProfileQuery } from "components/User/queries";
 import { ExerciseGridSkeleton } from "components/Exercises/Overview/ExerciseGridLoadingSkeleton";
+import { useProfileQuery } from "components/User/queries/profile";
+import { useCanContributeExercises } from "components/User/queries/contribute";
 
 const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -84,6 +85,7 @@ export const ExerciseOverview = () => {
     const musclesQuery = useMusclesQuery();
     const equipmentQuery = useEquipmentQuery();
     const profileQuery = useProfileQuery();
+    const canContributeQuery = useCanContributeExercises();
 
     const [t, i18n] = useTranslation();
     const navigate = useNavigate();
@@ -220,7 +222,7 @@ export const ExerciseOverview = () => {
                         </>
                     }
 
-                    <ContributeExerciseBanner />
+                    {canContributeQuery.canContribute && <ContributeExerciseBanner />}
                 </Grid>
             </Grid>
         </Container>

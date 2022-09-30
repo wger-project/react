@@ -12,12 +12,14 @@ import {
     testLanguages
 } from "tests/exerciseTestdata";
 import { useLanguageQuery } from "components/Exercises/queries";
-import { usePermissionQuery, useProfileQuery } from "components/User/queries";
 import { testProfileDataVerified } from "tests/userTestdata";
+import { usePermissionQuery } from "components/User/queries/permission";
+import { useProfileQuery } from "components/User/queries/profile";
 
 jest.mock("services");
 jest.mock("components/Exercises/queries");
-jest.mock("components/User/queries");
+jest.mock("components/User/queries/profile");
+jest.mock("components/User/queries/permission");
 
 const queryClient = new QueryClient();
 

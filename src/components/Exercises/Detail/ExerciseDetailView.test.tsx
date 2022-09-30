@@ -2,13 +2,15 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { testExerciseCrunches, testLanguageEnglish, testLanguageFrench } from "tests/exerciseTestdata";
-import { usePermissionQuery, useProfileQuery } from "components/User/queries";
 import { testProfileDataNotVerified, testProfileDataVerified } from "tests/userTestdata";
 import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailView";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
+import { usePermissionQuery } from "components/User/queries/permission";
+import { useProfileQuery } from "components/User/queries/profile";
 
-jest.mock("components/User/queries");
+jest.mock("components/User/queries/profile");
+jest.mock("components/User/queries/permission");
 
 const queryClient = new QueryClient();
 

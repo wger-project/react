@@ -13,14 +13,14 @@ import userEvent from "@testing-library/user-event";
 import { addExerciseTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { usePermissionQuery } from "components/User/queries";
 import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
+import { usePermissionQuery } from "components/User/queries/permission";
 
 // It seems we run into a timeout when running the tests on GitHub actions
 jest.setTimeout(15000);
 
 jest.mock("services");
-jest.mock("components/User/queries");
+jest.mock("components/User/queries/permission");
 jest.mock("components/Exercises/queries");
 
 describe("Exercise translation edit tests", () => {
