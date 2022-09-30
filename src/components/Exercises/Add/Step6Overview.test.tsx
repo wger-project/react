@@ -6,9 +6,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
 import { testCategories, testEquipment, testLanguages, testMuscles } from "tests/exerciseTestdata";
 import { useExerciseStateValue } from "state";
+import { useProfileQuery } from "components/User/queries/profile";
+import { testProfileDataVerified } from "tests/userTestdata";
 
 
 jest.mock("components/Exercises/queries");
+jest.mock("components/User/queries/profile");
 jest.mock("state");
 
 const mockOnContinue = jest.fn();
@@ -17,6 +20,7 @@ const mockedMuscleQuery = useMusclesQuery as jest.Mock;
 const mockedUseEquipmentQuery = useEquipmentQuery as jest.Mock;
 const mockedLanguageQuery = useLanguageQuery as jest.Mock;
 const mockedUseExerciseStateValue = useExerciseStateValue as jest.Mock;
+const mockedUseProfileQuery = useProfileQuery as jest.Mock;
 
 const queryClient = new QueryClient();
 
@@ -34,6 +38,10 @@ describe("Test the add exercise step 6 component", () => {
         ));
         mockedLanguageQuery.mockImplementation(() => (
             { isLoading: false, data: testLanguages }
+        ));
+
+        mockedUseProfileQuery.mockImplementation(() => (
+            { isLoading: false, data: testProfileDataVerified }
         ));
 
         // there must be a better way to do this!!!

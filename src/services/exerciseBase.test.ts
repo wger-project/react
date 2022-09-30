@@ -59,7 +59,14 @@ describe("Exercise service API tests", () => {
         axios.post.mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
-        const result = await addExerciseBase(3, [1, 2], [3, 4], [9], null);
+        const result = await addExerciseBase(
+            3,
+            [1, 2],
+            [3, 4],
+            [9],
+            null,
+            'Jules Verne'
+        );
 
         // Assert
         expect(axios.post).toHaveBeenCalledTimes(1);

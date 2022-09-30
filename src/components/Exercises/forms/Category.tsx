@@ -4,15 +4,22 @@ import React from "react";
 import { getTranslationKey } from "utils/strings";
 import { useCategoriesQuery } from "components/Exercises/queries";
 import { editExerciseBase } from "services/exerciseBase";
+import { useProfileQuery } from "components/User/queries/profile";
 
 export function EditExerciseCategory(props: { baseId: number, initial: number }) {
     const { t } = useTranslation();
     const [value, setValue] = React.useState<string>(props.initial.toString());
     const categoryQuery = useCategoriesQuery();
+    const profileQuery = useProfileQuery();
 
     const handleOnChange = async (e: SelectChangeEvent) => {
         setValue(e.target.value);
-        await editExerciseBase(props.baseId, { category: parseInt(e.target.value) });
+        await editExerciseBase(props.baseId, {
+            category: parseInt(e.target.value),
+
+            // eslint-disable-next-line camelcase
+            license_author: profileQuery.data!.username
+        });
     };
 
     return categoryQuery.isSuccess

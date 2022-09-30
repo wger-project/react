@@ -35,6 +35,7 @@ describe("Exercise translation service API tests", () => {
             2,
             "Test exercise",
             "Test description",
+            "Asimov"
         );
 
         // Assert

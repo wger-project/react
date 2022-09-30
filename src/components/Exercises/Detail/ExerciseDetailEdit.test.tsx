@@ -15,12 +15,15 @@ import { ExerciseTranslation } from "components/Exercises/models/exerciseTransla
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
 import { usePermissionQuery } from "components/User/queries/permission";
+import { testProfileDataVerified } from "tests/userTestdata";
+import { useProfileQuery } from "components/User/queries/profile";
 
 // It seems we run into a timeout when running the tests on GitHub actions
 jest.setTimeout(15000);
 
 jest.mock("services");
 jest.mock("components/User/queries/permission");
+jest.mock("components/User/queries/profile");
 jest.mock("components/Exercises/queries");
 
 describe("Exercise translation edit tests", () => {
@@ -28,6 +31,9 @@ describe("Exercise translation edit tests", () => {
     beforeEach(() => {
         // @ts-ignore
         editExerciseTranslation.mockImplementation(() => Promise.resolve(testExerciseSquats.translations[1]));
+
+        // @ts-ignore
+        useProfileQuery.mockImplementation(() => Promise.resolve(testProfileDataVerified));
 
         // @ts-ignore
         addExerciseTranslation.mockImplementation(() => Promise.resolve(

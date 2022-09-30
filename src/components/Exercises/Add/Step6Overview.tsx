@@ -18,18 +18,14 @@ import { addExerciseBase, addExerciseTranslation, postAlias, postExerciseImage }
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { addVariation } from "services/variation";
 import { useNavigate } from "react-router-dom";
-import {
-    useCategoriesQuery,
-    useEquipmentQuery,
-    useLanguageQuery,
-    useMusclesQuery
-} from "components/Exercises/queries";
+import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
 import { getTranslationKey } from "utils/strings";
 import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
 import { useExerciseStateValue } from "state";
 import { addNote } from "services/note";
 import { Note } from "components/Exercises/models/note";
+import { useProfileQuery } from "components/User/queries/profile";
 
 
 export const Step6Overview = ({ onBack }: StepProps) => {
@@ -41,7 +37,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
     const languageQuery = useLanguageQuery();
     const musclesQuery = useMusclesQuery();
     const equipmentQuery = useEquipmentQuery();
-
+    const profileQuery = useProfileQuery();
 
     const submitExercise = async () => {
         // Create a new variation object if needed
@@ -60,6 +56,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
             state.muscles,
             state.musclesSecondary,
             variationId,
+            profileQuery.data!.username
         );
 
         // Create the English translation
@@ -68,6 +65,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
             ENGLISH_LANGUAGE_ID,
             state.nameEn,
             state.descriptionEn,
+            profileQuery.data!.username
         );
 
         // For each entry in alternative names, create a new alias
@@ -93,6 +91,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                 state.languageId,
                 state.nameI18n,
                 state.descriptionI18n,
+                profileQuery.data!.username
             );
 
             for (const alias of state.alternativeNamesI18n) {

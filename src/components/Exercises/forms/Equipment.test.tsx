@@ -5,7 +5,10 @@ import { useEquipmentQuery } from "components/Exercises/queries";
 import userEvent from "@testing-library/user-event";
 import { editExerciseBase } from "services/exerciseBase";
 import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
+import { useProfileQuery } from "components/User/queries/profile";
+import { testProfileDataVerified } from "tests/userTestdata";
 
+jest.mock("components/User/queries/profile");
 jest.mock("components/Exercises/queries");
 jest.mock("services/exerciseBase");
 
@@ -15,6 +18,11 @@ describe("Test the edit widget to live edit the equipment", () => {
         // @ts-ignore
         useEquipmentQuery.mockImplementation(() => (
             { isSuccess: true, data: testEquipment }
+        ));
+
+        // @ts-ignore
+        useProfileQuery.mockImplementation(() => (
+            { isSuccess: true, data: testProfileDataVerified }
         ));
 
         // @ts-ignore
@@ -48,7 +56,9 @@ describe("Test the edit widget to live edit the equipment", () => {
         await user.click(textbox);
         const rocks = await screen.findByText(/rocks/i);
         await user.click(rocks);
-        expect(editExerciseBase).toHaveBeenCalledWith(100, { "equipment": [1, 2, 42] });
+
+        // eslint-disable-next-line camelcase
+        expect(editExerciseBase).toHaveBeenCalledWith(100, { equipment: [1, 2, 42], license_author: "admin" });
     });
 
     test('Clicking on an existing equipment, removes it', async () => {
@@ -72,6 +82,8 @@ describe("Test the edit widget to live edit the equipment", () => {
         await user.click(textbox);
         const rocks = screen.getByRole('option', { name: /dumbbell/i });
         await user.click(rocks);
-        expect(editExerciseBase).toHaveBeenCalledWith(100, { "equipment": [1] });
+
+        // eslint-disable-next-line camelcase
+        expect(editExerciseBase).toHaveBeenCalledWith(100, { equipment: [1], license_author: "admin" });
     });
 });

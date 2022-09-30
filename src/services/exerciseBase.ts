@@ -66,11 +66,13 @@ export const getExerciseBasesForVariation = async (id: number | null | undefined
 /*
  * Create a new exercise base
  */
-export const addExerciseBase = async (categoryId: number,
-                                      equipmentIds: number[],
-                                      muscleIds: number[],
-                                      secondaryMuscleIds: number[],
-                                      variationId: number | null,
+export const addExerciseBase = async (
+    categoryId: number,
+    equipmentIds: number[],
+    muscleIds: number[],
+    secondaryMuscleIds: number[],
+    variationId: number | null,
+    author: string | null
 ): Promise<number> => {
 
     const url = makeUrl(EXERCISE_BASE_PATH);
@@ -82,6 +84,8 @@ export const addExerciseBase = async (categoryId: number,
         muscles_secondary: secondaryMuscleIds,
         // eslint-disable-next-line camelcase
         variation_id: variationId,
+        // eslint-disable-next-line camelcase
+        license_author: author
     };
     const response = await axios.post(
         url,
@@ -101,6 +105,7 @@ type editBaseProps = {
     muscles?: number[],
     muscles_secondary?: number[],
     variation_id?: number | null,
+    license_author?: string | null
 }
 export const editExerciseBase = async (id: number, data: editBaseProps): Promise<number> => {
 

@@ -26,6 +26,7 @@ import { EditExerciseMuscle } from "components/Exercises/forms/Muscle";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { useMusclesQuery } from "components/Exercises/queries";
 import { usePermissionQuery } from "components/User/queries/permission";
+import { useProfileQuery } from "components/User/queries/profile";
 
 export interface ViewProps {
     exercise: ExerciseBase;
@@ -53,6 +54,7 @@ export const ExerciseDetailEdit = ({
     const deleteVideoPermissionQuery = usePermissionQuery(WgerPermissions.DELETE_VIDEO);
     const editBasePermissionQuery = usePermissionQuery(WgerPermissions.EDIT_EXERCISE);
     const musclesQuery = useMusclesQuery();
+    const profileQuery = useProfileQuery();
 
     const validationSchema = yup.object({
         name: nameValidator(t),
@@ -84,7 +86,8 @@ export const ExerciseDetailEdit = ({
                         exercise.id!,
                         language.id,
                         values.name,
-                        values.description
+                        values.description,
+                        profileQuery.data!.username
                     );
 
                 // Edit aliases (this is currently really hacky)

@@ -41,6 +41,7 @@ export const addExerciseTranslation = async (
     languageId: number,
     name: string,
     description: string,
+    author: string
 ): Promise<ExerciseTranslation> => {
 
     const url = makeUrl(EXERCISE_TRANSLATION_PATH);
@@ -50,6 +51,8 @@ export const addExerciseTranslation = async (
         language: languageId,
         name: name,
         description: description,
+        // eslint-disable-next-line camelcase
+        license_author: author
     };
     const response = await axios.post(url, baseData, {
         headers: makeHeader(),
