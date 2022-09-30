@@ -90,6 +90,7 @@ describe("Exercise service API tests", () => {
                 category: 3,
                 equipment: [1, 2],
                 muscles: [3, 4],
+                // eslint-disable-next-line camelcase
                 muscles_secondary: [9]
             }
         );

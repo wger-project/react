@@ -16,6 +16,7 @@ export const postExerciseVideo = async (exerciseBase: number, video: File): Prom
     // eslint-disable-next-line camelcase
     const response = await axios.post(
         url,
+        // eslint-disable-next-line camelcase
         { exercise_base: exerciseBase, video: video },
         { headers: headers }
     );

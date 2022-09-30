@@ -70,7 +70,7 @@ describe("Test the edit widget to live edit the equipment", () => {
         });
 
         await user.click(textbox);
-        const rocks = await screen.getByRole('option', { name: /dumbbell/i });
+        const rocks = screen.getByRole('option', { name: /dumbbell/i });
         await user.click(rocks);
         expect(editExerciseBase).toHaveBeenCalledWith(100, { "equipment": [1] });
     });

@@ -39,7 +39,7 @@ describe("Test the widget to live edit the muscles", () => {
         expect(await screen.findByText(/biggus/i)).toBeInTheDocument();
         expect(await screen.findByText(/dacttilaris/i)).toBeInTheDocument();
 
-        await user.click(await screen.getByRole('combobox', { name: /exercises\.muscles/i }));
+        await user.click(screen.getByRole('combobox', { name: /exercises\.muscles/i }));
         const shoulders = await screen.findByText(/shoulders/i);
         await user.click(shoulders);
         expect(editExerciseBase).toHaveBeenCalledWith(100, { "muscles": [1, 2, 3] });
@@ -65,9 +65,10 @@ describe("Test the widget to live edit the muscles", () => {
         expect(await screen.findByText(/biggus/i)).toBeInTheDocument();
         expect(await screen.findByText(/dacttilaris/i)).toBeInTheDocument();
 
-        await user.click(await screen.getByRole('combobox', { name: /exercises\.secondarymuscles/i }));
+        await user.click(screen.getByRole('combobox', { name: /exercises\.secondarymuscles/i }));
         const shoulders = await screen.findByText(/shoulders/i);
         await user.click(shoulders);
+        // eslint-disable-next-line camelcase
         expect(editExerciseBase).toHaveBeenCalledWith(1234, { muscles_secondary: [1, 2, 3] });
     });
 });

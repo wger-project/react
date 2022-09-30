@@ -3,12 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { Step6Overview } from "components/Exercises/Add/Step6Overview";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-    useCategoriesQuery,
-    useEquipmentQuery,
-    useLanguageQuery,
-    useMusclesQuery
-} from "components/Exercises/queries";
+import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
 import { testCategories, testEquipment, testLanguages, testMuscles } from "tests/exerciseTestdata";
 import { useExerciseStateValue } from "state";
 
@@ -94,7 +89,7 @@ describe("Test the add exercise step 6 component", () => {
         expect(screen.getByText('Ce très bel exercice va vous époustoufler')).toBeInTheDocument();
     });
 
-    test("Test that the correct calls to the API are made", () => {
+    test("that the correct calls to the API are made", () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>

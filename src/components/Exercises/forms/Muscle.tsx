@@ -3,7 +3,6 @@ import { Autocomplete, TextField } from "@mui/material";
 import React from "react";
 import { useMusclesQuery } from "components/Exercises/queries";
 import { editExerciseBase } from "services/exerciseBase";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function EditExerciseMuscle(props: {
     baseId: number,
