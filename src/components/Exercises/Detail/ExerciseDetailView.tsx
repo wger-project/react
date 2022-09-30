@@ -55,11 +55,9 @@ export const ExerciseDetailView = ({
                                        setEditMode
                                    }: ViewProps) => {
     const [t] = useTranslation();
+    const contributeQuery = useCanContributeExercises();
     const currentTranslation = exercise.getTranslation(language);
     const isNewTranslation = language && language.id !== currentTranslation.language;
-
-    const contributeQuery = useCanContributeExercises();
-
 
     return <Grid container>
         {isNewTranslation

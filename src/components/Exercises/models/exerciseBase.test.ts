@@ -48,7 +48,6 @@ describe("Exercise base model tests", () => {
         expect(result).toEqual(testApiExerciseBase1);
     });
 
-
     test('adapter - to json', () => {
 
         // Assert
@@ -64,7 +63,6 @@ describe("Exercise base model tests", () => {
             images: [],
         });
     });
-
 
     test('availableLanguages', () => {
 

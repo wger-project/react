@@ -58,6 +58,11 @@ export const testApiExerciseBase1 = new ExerciseBase(
             "http://localhost:8000/media/exercise-video/258/b1c934fa-c4f8-4d84-8cb4-7802be0d284c.mp4",
             false
         )
+    ],
+    [
+        "wger.de",
+        "author 1",
+        "somebody else"
     ]
 );
 
@@ -183,6 +188,11 @@ export const responseApiExerciseBaseInfo = {
                 "aliases": [],
                 "notes": []
             }
+        ],
+        "author_history": [
+            "wger.de",
+            "author 1",
+            "somebody else"
         ]
     }]
 };

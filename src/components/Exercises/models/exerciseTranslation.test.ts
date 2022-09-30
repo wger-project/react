@@ -9,7 +9,10 @@ describe("Exercise translation model tests", () => {
         "uuid",
         "a very long name that should be truncated",
         "description",
-        1
+        1,
+        [],
+        [],
+        ['author1', 'author2', 'author3']
     );
 
     test('name helper', () => {
@@ -30,6 +33,8 @@ describe("Exercise translation model tests", () => {
             language: 1,
             notes: [],
             aliases: [],
+            // eslint-disable-next-line camelcase
+            author_history: ['author1', 'author2', 'author3']
         })).toStrictEqual(e1);
     });
 

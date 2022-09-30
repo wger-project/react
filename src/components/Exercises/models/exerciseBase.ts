@@ -11,6 +11,7 @@ import { ExerciseVideo, ExerciseVideoAdapter } from "components/Exercises/models
 export class ExerciseBase {
     translations: ExerciseTranslation[] = [];
     videos: ExerciseVideo[] = [];
+    authors: string[] = [];
 
     constructor(
         public id: number | null,
@@ -22,7 +23,8 @@ export class ExerciseBase {
         public images: ExerciseImage[],
         public variationId: number | null,
         translations?: ExerciseTranslation[],
-        videos?: ExerciseVideo[]
+        videos?: ExerciseVideo[],
+        authors?: string[]
         /*
             license: number,
             licenseAuthorS: string[],
@@ -34,6 +36,10 @@ export class ExerciseBase {
 
         if (videos) {
             this.videos = videos;
+        }
+
+        if (authors) {
+            this.authors = authors;
         }
     }
 
@@ -98,13 +104,10 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
             item.muscles_secondary.map((m: any) => (muscleAdapter.fromJson(m))),
             item.images.map((i: any) => (imageAdapter.fromJson(i))),
             item.variations,
-            /*
-            item.license,
-            item.license_author,
-            */
+            item.exercises.map((t: any) => translationAdapter.fromJson(t)),
+            item.videos.map((t: any) => videoAdapter.fromJson(t)),
+            item.author_history
         );
-        base.translations = item.exercises.map((t: any) => translationAdapter.fromJson(t));
-        base.videos = item.videos.map((t: any) => videoAdapter.fromJson(t));
 
         if (!base.translations.some(t => t.language === ENGLISH_LANGUAGE_ID)) {
             console.info(`No english translation found for exercise base ${base.uuid}!`);
