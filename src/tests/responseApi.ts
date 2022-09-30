@@ -8,7 +8,8 @@ import { ExerciseImage } from "components/Exercises/models/image";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { ExerciseVideo } from "components/Exercises/models/video";
 
-const testExerciseTranslation1 = new ExerciseTranslation(111,
+const testExerciseTranslation1 = new ExerciseTranslation(
+    111,
     '583281c7-2362-48e7-95d5-8fd6c455e0fb',
     'Squats',
     'Do a squat',
@@ -21,7 +22,8 @@ const testExerciseTranslation1 = new ExerciseTranslation(111,
         new Alias(2, 'another name'),
     ]
 );
-const testExerciseTranslation2 = new ExerciseTranslation(9,
+const testExerciseTranslation2 = new ExerciseTranslation(
+    9,
     'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
     'Kniebeuge',
     'Kniebeuge machen',
@@ -36,7 +38,8 @@ const image = new ExerciseImage(
     7,
     "2fe5f04b-5c9d-448c-a973-3fad6ddd4f74",
     "http://localhost:8000/media/exercise-images/9/2fe5f04b-5c9d-448c-a973-3fad6ddd4f74.jpg",
-    true);
+    true
+);
 
 export const testApiExerciseBase1 = new ExerciseBase(
     345,
@@ -114,7 +117,6 @@ export const responseApiExerciseBaseInfo = {
             "short_name": "CC-BY-SA 4",
             "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
         },
-        "license_author": "deusinvictus",
         "images": [{
             "id": 7,
             "uuid": "2fe5f04b-5c9d-448c-a973-3fad6ddd4f74",
