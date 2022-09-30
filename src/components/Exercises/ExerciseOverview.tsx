@@ -14,8 +14,6 @@ import AddIcon from '@mui/icons-material/Add';
 import { Link, useNavigate } from "react-router-dom";
 import { ExerciseSearchResponse } from "services/responseType";
 import { ExerciseGridSkeleton } from "components/Exercises/Overview/ExerciseGridLoadingSkeleton";
-import { useProfileQuery } from "components/User/queries/profile";
-import { useCanContributeExercises } from "components/User/queries/contribute";
 
 const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -84,9 +82,6 @@ export const ExerciseOverview = () => {
     const categoryQuery = useCategoriesQuery();
     const musclesQuery = useMusclesQuery();
     const equipmentQuery = useEquipmentQuery();
-    const profileQuery = useProfileQuery();
-    const canContributeQuery = useCanContributeExercises();
-
     const [t, i18n] = useTranslation();
     const navigate = useNavigate();
 
@@ -103,8 +98,6 @@ export const ExerciseOverview = () => {
             behavior: 'smooth'
         });
     };
-
-    const userIsAnonymous = profileQuery.isSuccess && profileQuery.data === null;
 
     // Should be a multiple of three, since there are three columns in the grid
     const ITEMS_PER_PAGE = 21;
@@ -165,7 +158,6 @@ export const ExerciseOverview = () => {
                 <Grid item xs={12} sm={3}>
                     <Button
                         variant="contained"
-                        disabled={userIsAnonymous}
                         startIcon={<AddIcon />}
                         onClick={() => navigate(`/${i18n.language}/exercise/contribute`)}
                     >
@@ -222,7 +214,7 @@ export const ExerciseOverview = () => {
                         </>
                     }
 
-                    {canContributeQuery.canContribute && <ContributeExerciseBanner />}
+                    <ContributeExerciseBanner />
                 </Grid>
             </Grid>
         </Container>

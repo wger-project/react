@@ -1,8 +1,15 @@
 import React from 'react';
-import {AddExerciseStepper} from "components/Exercises/Add/AddExerciseStepper";
+import { AddExerciseStepper } from "components/Exercises/Add/AddExerciseStepper";
+import { useCanContributeExercises } from "components/User/queries/contribute";
+import { NotEnoughRights } from "components/Exercises/Add/NotEnoughRights";
 
 export const AddExercise = () => {
-    return (
-        <AddExerciseStepper/>
-    );
+    const contributeQuery = useCanContributeExercises();
+
+    return <>
+        {contributeQuery.canContribute && false
+            ? <AddExerciseStepper />
+            : <NotEnoughRights />}
+
+    </>;
 };
