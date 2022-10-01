@@ -241,14 +241,13 @@ export const ExerciseDetailEdit = ({
 
         {/* Images */}
         {deleteImagePermissionQuery.isSuccess
-            && deleteImagePermissionQuery.data
             && <>
                 <PaddingBox />
                 <Typography variant={'h6'}>{t('images')}</Typography>
                 <Grid container spacing={2} mt={2}>
                     {exercise.images.map(img => (
                         <Grid item md={3} key={img.id}>
-                            <ImageEditCard image={img} />
+                            <ImageEditCard image={img} canDelete={deleteImagePermissionQuery.data} />
                         </Grid>
                     ))}
                     <Grid item md={3} key={'add'}>
@@ -259,14 +258,13 @@ export const ExerciseDetailEdit = ({
 
         {/* Videos */}
         {deleteVideoPermissionQuery.isSuccess
-            && deleteVideoPermissionQuery.data
             && <>
                 <PaddingBox />
                 <Typography variant={'h6'}>{t('videos')}</Typography>
                 <Grid container spacing={2} mt={2}>
                     {exercise.videos.map(video => (
                         <Grid item md={3} key={video.id}>
-                            <VideoEditCard video={video} />
+                            <VideoEditCard video={video} canDelete={deleteVideoPermissionQuery.data} />
                         </Grid>
                     ))}
                     <Grid item md={3} key={'add'}>

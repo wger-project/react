@@ -7,9 +7,10 @@ import { deleteExerciseVideo, postExerciseVideo } from "services";
 
 type VideoCardProps = {
     video: ExerciseVideo;
+    canDelete: boolean;
 };
 
-export const VideoEditCard = ({ video }: VideoCardProps) => {
+export const VideoEditCard = ({ video, canDelete }: VideoCardProps) => {
     const [t] = useTranslation();
 
     return <Card>
@@ -21,12 +22,14 @@ export const VideoEditCard = ({ video }: VideoCardProps) => {
             preload="metadata"
         />
         <CardActions>
-            <Button
-                color="primary"
-                onClick={() => deleteExerciseVideo(video.id)}
-            >
-                {t('delete')}
-            </Button>
+            {canDelete &&
+                <Button
+                    color="primary"
+                    onClick={() => deleteExerciseVideo(video.id)}
+                >
+                    {t('delete')}
+                </Button>
+            }
         </CardActions>
     </Card>;
 };

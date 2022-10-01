@@ -7,9 +7,10 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 type ImageCardProps = {
     image: ExerciseImage;
+    canDelete: boolean
 };
 
-export const ImageEditCard = ({ image }: ImageCardProps) => {
+export const ImageEditCard = ({ image, canDelete }: ImageCardProps) => {
     const [t] = useTranslation();
     return <Card>
         <CardMedia
@@ -19,12 +20,13 @@ export const ImageEditCard = ({ image }: ImageCardProps) => {
             alt=""
         />
         <CardActions>
-            <Button
-                color="primary"
-                onClick={() => deleteExerciseImage(image.id)}
-            >
-                {t('delete')}
-            </Button>
+            {canDelete &&
+                <Button
+                    color="primary"
+                    onClick={() => deleteExerciseImage(image.id)}
+                >
+                    {t('delete')}
+                </Button>}
         </CardActions>
     </Card>;
 };
