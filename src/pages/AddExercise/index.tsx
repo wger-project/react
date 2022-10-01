@@ -7,7 +7,7 @@ export const AddExercise = () => {
     const contributeQuery = useCanContributeExercises();
 
     return <>
-        {contributeQuery.canContribute && false
+        {contributeQuery.canContribute
             ? <AddExerciseStepper />
             : <NotEnoughRights />}
 
