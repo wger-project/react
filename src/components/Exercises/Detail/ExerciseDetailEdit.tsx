@@ -245,14 +245,15 @@ export const ExerciseDetailEdit = ({
                 <PaddingBox />
                 <Typography variant={'h6'}>{t('images')}</Typography>
                 <Grid container spacing={2} mt={2}>
+                    <Grid item md={3} key={'add'}>
+                        <AddImageCard baseId={exercise.id!} />
+                    </Grid>
+                    
                     {exercise.images.map(img => (
                         <Grid item md={3} key={img.id}>
                             <ImageEditCard image={img} canDelete={deleteImagePermissionQuery.data} />
                         </Grid>
                     ))}
-                    <Grid item md={3} key={'add'}>
-                        <AddImageCard baseId={exercise.id!} />
-                    </Grid>
                 </Grid></>
         }
 
@@ -262,14 +263,15 @@ export const ExerciseDetailEdit = ({
                 <PaddingBox />
                 <Typography variant={'h6'}>{t('videos')}</Typography>
                 <Grid container spacing={2} mt={2}>
+                    <Grid item md={3} key={'add'}>
+                        <AddVideoCard baseId={exercise.id!} />
+                    </Grid>
+
                     {exercise.videos.map(video => (
                         <Grid item md={3} key={video.id}>
                             <VideoEditCard video={video} canDelete={deleteVideoPermissionQuery.data} />
                         </Grid>
                     ))}
-                    <Grid item md={3} key={'add'}>
-                        <AddVideoCard baseId={exercise.id!} />
-                    </Grid>
                 </Grid>
             </>
         }
