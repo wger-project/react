@@ -149,7 +149,7 @@ export const ExerciseDetailEdit = ({
                         <PaddingBox />
                         <Typography variant={'h6'}>{t('name')}</Typography>
                     </Grid>
-                    <Grid item sm={6}>
+                    <Grid item xs={6}>
                         {exerciseEnglish.name}
                         <ul>
                             {exerciseEnglish.aliases.map((alias) => (
@@ -157,7 +157,7 @@ export const ExerciseDetailEdit = ({
                             ))}
                         </ul>
                     </Grid>
-                    <Grid item sm={6}>
+                    <Grid item xs={6}>
                         <Box mb={2}>
                             <ExerciseName fieldName={'name'} />
                         </Box>
@@ -171,10 +171,10 @@ export const ExerciseDetailEdit = ({
                     <Grid item xs={12}>
                         <Typography variant={'h6'}>{t('exercises.description')}</Typography>
                     </Grid>
-                    <Grid item sm={6}>
+                    <Grid item xs={12} md={6}>
                         <div dangerouslySetInnerHTML={{ __html: exerciseEnglish.description! }} />
                     </Grid>
-                    <Grid item sm={6}>
+                    <Grid item xs={12} md={6}>
                         <ExerciseDescription fieldName={"description"} />
                     </Grid>
 
