@@ -18,6 +18,7 @@ export function ExerciseDescription(props: { fieldName: string }) {
         ...Jodit.defaultOptions,
         readonly: false,
         buttons: buttons,
+        buttonsXS: buttons,
         buttonsMD: buttons,
         buttonsSM: buttons,
         disablePlugins: "ordered-list",
