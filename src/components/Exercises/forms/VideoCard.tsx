@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { ExerciseVideo } from "components/Exercises/models/video";
 import { deleteExerciseVideo, postExerciseVideo } from "services";
+import { useProfileQuery } from "components/User/queries/profile";
 
 type VideoCardProps = {
     video: ExerciseVideo;
@@ -42,13 +43,16 @@ type AddVideoCardProps = {
 export const AddVideoCard = ({ baseId }: AddVideoCardProps) => {
 
     const [t] = useTranslation();
+    const profileQuery = useProfileQuery();
 
     const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files?.length) {
             return;
         }
         const [uploadedFile] = e.target.files;
-        await postExerciseVideo(baseId, uploadedFile);
+        if (profileQuery.isSuccess) {
+            await postExerciseVideo(baseId, profileQuery.data!.username, uploadedFile);
+        }
     };
 
     return <Card>

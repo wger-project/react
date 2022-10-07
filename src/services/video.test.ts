@@ -41,6 +41,7 @@ describe("Exercise video service API tests", () => {
         // Act
         const result = await postExerciseVideo(
             42,
+            'Prostetnic Vogon Jeltz',
             new File([], "test.mp4")
         );
 

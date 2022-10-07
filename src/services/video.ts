@@ -8,7 +8,7 @@ export const VIDEO_PATH = 'video';
 /*
  * Post a new exercise video
  */
-export const postExerciseVideo = async (exerciseBase: number, video: File): Promise<ExerciseVideo> => {
+export const postExerciseVideo = async (exerciseBase: number, author: string, video: File): Promise<ExerciseVideo> => {
     const url = makeUrl(VIDEO_PATH);
     const headers = makeHeader();
     headers['Content-Type'] = 'multipart/form-data';
@@ -17,7 +17,7 @@ export const postExerciseVideo = async (exerciseBase: number, video: File): Prom
     const response = await axios.post(
         url,
         // eslint-disable-next-line camelcase
-        { exercise_base: exerciseBase, video: video },
+        { exercise_base: exerciseBase, license_author: author, video: video },
         { headers: headers }
     );
     return new ExerciseVideoAdapter().fromJson(response.data);
