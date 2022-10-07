@@ -4,6 +4,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { ExerciseImage } from "components/Exercises/models/image";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { useProfileQuery } from "components/User/queries/profile";
 
 type ImageCardProps = {
     image: ExerciseImage;
@@ -38,13 +39,16 @@ type AddImageCardProps = {
 export const AddImageCard = ({ baseId }: AddImageCardProps) => {
 
     const [t] = useTranslation();
+    const profileQuery = useProfileQuery();
 
     const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files?.length) {
             return;
         }
         const [uploadedFile] = e.target.files;
-        await postExerciseImage(baseId, uploadedFile);
+        if (profileQuery.isSuccess) {
+            await postExerciseImage(baseId, profileQuery.data!.username, uploadedFile);
+        }
     };
 
     return <Card>

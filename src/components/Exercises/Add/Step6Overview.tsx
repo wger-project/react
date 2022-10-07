@@ -75,7 +75,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
         // Post the images
         for (const image of state.images) {
-            await postExerciseImage(baseId, image.file);
+            await postExerciseImage(baseId, profileQuery.data!.username, image.file);
         }
 
         // Post the notes

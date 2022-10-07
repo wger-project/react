@@ -8,15 +8,17 @@ export const IMAGE_PATH = 'exerciseimage';
 /*
  * Post a new exercise image
  */
-export const postExerciseImage = async (exerciseBase: number, image: File): Promise<ExerciseImage> => {
+export const postExerciseImage = async (exerciseBase: number, author: string, image: File): Promise<ExerciseImage> => {
     const url = makeUrl(IMAGE_PATH);
     const headers = makeHeader();
     headers['Content-Type'] = 'multipart/form-data';
 
-    // eslint-disable-next-line camelcase
-    const response = await axios.post(url, { exercise_base: exerciseBase, image: image }, {
-        headers: headers,
-    });
+    const response = await axios.post(
+        url,
+        // eslint-disable-next-line camelcase
+        { exercise_base: exerciseBase, license_author: author, image: image },
+        { headers: headers }
+    );
     return new ExerciseImageAdapter().fromJson(response.data);
 };
 

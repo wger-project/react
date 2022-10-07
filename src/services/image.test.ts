@@ -34,6 +34,7 @@ describe("Image service API tests", () => {
         // Act
         const result = await postExerciseImage(
             101,
+            'Dr Merkel',
             new File([], "test.jpg")
         );
 
