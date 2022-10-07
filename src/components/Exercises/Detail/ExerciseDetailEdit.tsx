@@ -239,6 +239,9 @@ export const ExerciseDetailEdit = ({
             </Form>
         </Formik>
 
+        <PaddingBox />
+        <Typography variant={'h5'}>{t('exercises.basics')}</Typography>
+
         {/* Images */}
         {deleteImagePermissionQuery.isSuccess
             && <>
@@ -248,7 +251,7 @@ export const ExerciseDetailEdit = ({
                     <Grid item md={3} key={'add'}>
                         <AddImageCard baseId={exercise.id!} />
                     </Grid>
-                    
+
                     {exercise.images.map(img => (
                         <Grid item md={3} key={img.id}>
                             <ImageEditCard image={img} canDelete={deleteImagePermissionQuery.data} />
@@ -263,9 +266,11 @@ export const ExerciseDetailEdit = ({
                 <PaddingBox />
                 <Typography variant={'h6'}>{t('videos')}</Typography>
                 <Grid container spacing={2} mt={2}>
-                    <Grid item md={3} key={'add'}>
-                        <AddVideoCard baseId={exercise.id!} />
-                    </Grid>
+                    {deleteVideoPermissionQuery.data
+                        && <Grid item md={3} key={'add'}>
+                            <AddVideoCard baseId={exercise.id!} />
+                        </Grid>
+                    }
 
                     {exercise.videos.map(video => (
                         <Grid item md={3} key={video.id}>

@@ -1,96 +1,73 @@
 .root {
-  background-color: rgb(248, 248, 248);
-  padding: 1rem 1rem;
-}
-.root .detail_language {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-.root .detail_language .detail {
-  display: none;
-}
-.root .detail_language .detail a {
-  text-decoration: none;
-  color: #283c5c;
-}
-.root .detail_language .detail a:hover {
-  color: rgb(17, 17, 17);
-}
-@media screen and (min-width: 700px) {
-  .root .detail_language .detail {
-    display: block;
-  }
-}
-.root .detail_language .detail_arrow {
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-  border-radius: 50%;
-}
-.root .detail_language .detail_arrow:hover {
-  background-color: white;
-}
-@media screen and (min-width: 700px) {
-  .root .detail_language .detail_arrow {
-    display: none;
-  }
-}
-.root .detail_language .languages {
-  position: relative;
-}
-.root .detail_language .languages .language {
-  display: flex;
-  align-items: flex-end;
-  gap: 2rem;
-  border-radius: 0.5rem;
-}
-@media screen and (min-width: 700px) {
-  .root .detail_language .languages .language {
-    background-color: rgb(228, 228, 228);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-  }
-}
-.root .detail_language .languages .language_menu {
-  position: absolute;
-  top: 3rem;
-  left: -3rem;
-  background-color: #fff;
-  padding: 0 1rem;
-  border-radius: 10px;
-  border: 1px solid rgb(151, 151, 151);
-  text-align: left;
-}
-.root .detail_language .languages .language_menu span {
-  text-transform: uppercase;
-  color: #5e5e5e;
-}
-.root .header {
-  display: flex;
-  justify-content: space-between;
-}
-.root .header .toolbar {
-  display: none;
-}
-@media screen and (min-width: 700px) {
-  .root .header .toolbar {
+  background-color: #f8f8f8;
+  padding: 1rem 1rem; }
+  .root .detail_language {
     display: flex;
-    align-self: flex-end;
-    align-items: center;
-    justify-content: center;
-  }
-}
-.root .header .toolbar img {
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-}
+    justify-content: space-between;
+    align-items: flex-start; }
+    .root .detail_language .detail {
+      display: none; }
+      .root .detail_language .detail a {
+        text-decoration: none;
+        color: #283c5c; }
+        .root .detail_language .detail a:hover {
+          color: #111111; }
+      @media screen and (min-width: 700px) {
+        .root .detail_language .detail {
+          display: block; } }
+    .root .detail_language .detail_arrow {
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      border-radius: 50%; }
+      .root .detail_language .detail_arrow:hover {
+        background-color: white; }
+      @media screen and (min-width: 700px) {
+        .root .detail_language .detail_arrow {
+          display: none; } }
+    .root .detail_language .languages {
+      position: relative; }
+      .root .detail_language .languages .language {
+        display: flex;
+        align-items: flex-end;
+        gap: 2rem;
+        border-radius: 0.5rem; }
+        @media screen and (min-width: 700px) {
+          .root .detail_language .languages .language {
+            background-color: #e4e4e4;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem; } }
+      .root .detail_language .languages .language_menu {
+        position: absolute;
+        top: 3rem;
+        left: -3rem;
+        background-color: #fff;
+        padding: 0 1rem;
+        border-radius: 10px;
+        border: 1px solid #979797;
+        text-align: left; }
+        .root .detail_language .languages .language_menu span {
+          text-transform: uppercase;
+          color: #5e5e5e; }
+  .root .header {
+    display: flex;
+    justify-content: space-between; }
+    .root .header .toolbar {
+      display: none; }
+      @media screen and (min-width: 700px) {
+        .root .header .toolbar {
+          display: flex;
+          align-self: flex-end;
+          align-items: center;
+          justify-content: center; } }
+      .root .header .toolbar img {
+        width: 25px;
+        height: 25px;
+        cursor: pointer; }
 
 .dots {
   height: 20px;
   width: 20px;
-  cursor: pointer;
-}
+  cursor: pointer; }
 
 /*# sourceMappingURL=head.module.css.map */
