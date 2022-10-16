@@ -42,7 +42,9 @@
         "whatVariationsExist": "Varsa, bu alıştırmanın hangi varyasyonları mevcuttur?",
         "notesHelpText": "Notlar \"vücudunuzu dik tutun\" gibi egzersizin nasıl yapılacağına dair kısa yorumlardır",
         "filterVariations": "Varyasyonları filtrelemek için egzersiz adı girin",
-        "deleteExerciseBody": "\"{{name}}\" egzersizini silmek istiyor musunuz? İster {{language}} çeviriyi silebilirsiniz, isterseniz alıştırmanın tamamını silebilirsiniz tüm çeviriler, resimler vb."
+        "deleteExerciseBody": "\"{{name}}\" egzersizini silmek istiyor musunuz? İster {{language}} çeviriyi silebilirsiniz, isterseniz alıştırmanın tamamını silebilirsiniz tüm çeviriler, resimler vb.",
+        "step1HeaderBasics": "İngilizce'de temel bilgiler",
+        "identicalExercisePleaseDiscard": "Eklediğiniz egzersizle aynı olan bir egzersiz fark ederseniz, lütfen taslağınızı atın ve bunun yerine o egzersizi düzenleyin."
     },
     "noResults": "Sonuç yok",
     "noResultsDescription": "Bu sorgu için sonuç bulunamadı, filtre sayısını azaltmayı düşünün.",
