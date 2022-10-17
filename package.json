@@ -23,7 +23,7 @@
     "i18next": "^21.10.0",
     "i18next-browser-languagedetector": "^6.1.8",
     "i18next-http-backend": "^1.4.4",
-    "jodit-react": "^1.3.21",
+    "jodit-react": "^1.3.22",
     "luxon": "^3.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
