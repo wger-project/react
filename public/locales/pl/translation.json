@@ -42,7 +42,8 @@
         "deleteExerciseBody": "Czy chcesz usunąć ćwiczenie „{{name}}”? Możesz usunąć bieżące tłumaczenie {{language}} lub całe ćwiczenie ze wszystkimi tłumaczeniami, obrazami itp.",
         "deleteExerciseFull": "Usuń całe ćwiczenie",
         "compatibleImagesCC": "Obrazy muszą być zgodne z licencją CC BY SA. Jeśli masz wątpliwości przesyłaj tylko zdjęcia które sam zrobiłeś.",
-        "deleteTranslation": "Usuń tłumaczenie"
+        "deleteTranslation": "Usuń tłumaczenie",
+        "step1HeaderBasics": "Podstawy po angielsku"
     },
     "noResults": "Brak wyników",
     "noResultsDescription": "Nie znaleziono wyników dla tego zapytania, rozważ zmniejszenie liczby filtrów.",
@@ -74,7 +75,13 @@
         "biceps": "Biceps",
         "lower_back": "Dolna część pleców",
         "triceps": "Triceps",
-        "none__bodyweight_exercise_": "brak (ćwiczenie z masą ciała)"
+        "none__bodyweight_exercise_": "brak (ćwiczenie z masą ciała)",
+        "sz_bar": "Gryf łamany",
+        "glutes": "Pośladki",
+        "lats": "Mięsień najszerszy grzbietu",
+        "quads": "Mięsień czworogłowy uda",
+        "hamstrings": "Mięsień dwugłowy uda",
+        "abs": "Brzuch"
     },
     "submit": "Wyślij",
     "weight": "Waga",
