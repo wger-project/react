@@ -14,6 +14,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Link, useNavigate } from "react-router-dom";
 import { ExerciseSearchResponse } from "services/responseType";
 import { ExerciseGridSkeleton } from "components/Exercises/Overview/ExerciseGridLoadingSkeleton";
+import { makeLink, WgerLink } from "utils/url";
 
 const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -36,7 +37,7 @@ const ContributeExerciseBanner = () => {
                 {t("exercises.missingExerciseDescription")}
             </Typography>
 
-            <Link to={`/${i18n.language}/exercise/contribute`}>
+            <Link to={makeLink(WgerLink.EXERCISE_CONTRIBUTE, i18n.language)}>
                 {t("exercises.contributeExercise")}
             </Link>
         </Box>
@@ -141,7 +142,7 @@ export const ExerciseOverview = () => {
     );
 
     const exerciseAdded = (exercise: ExerciseSearchResponse) => {
-        navigate(`/${i18n.language}/exercise/${exercise.data.base_id}`);
+        navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: exercise.data.base_id }));
     };
 
     return (
@@ -159,7 +160,7 @@ export const ExerciseOverview = () => {
                     <Button
                         variant="contained"
                         startIcon={<AddIcon />}
-                        onClick={() => navigate(`/${i18n.language}/exercise/contribute`)}
+                        onClick={() => navigate(makeLink(WgerLink.EXERCISE_CONTRIBUTE, i18n.language))}
                     >
                         {t('exercises.contributeExercise')}
                     </Button>

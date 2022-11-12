@@ -6,6 +6,7 @@ import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { useTranslation } from "react-i18next";
 import { getTranslationKey } from "utils/strings";
 import PhotoIcon from '@mui/icons-material/Photo';
+import { makeLink, WgerLink } from "utils/url";
 
 type OverviewCardProps = {
     exerciseBase: ExerciseBase;
@@ -22,7 +23,10 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
 
     return (
         <Card key={exerciseBase.id} sx={{ width: '100%' }}>
-            <CardActionArea href={`/${i18n.language}/exercise/${exerciseBase.id}/view-base/${exercise.nameSlug}`}
+            <CardActionArea href={makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, {
+                id: exerciseBase.id!,
+                slug: exercise.nameSlug
+            })}
                             sx={{ minHeight: 330 }}>
                 {exerciseBase.mainImage
                     ? <CardMedia

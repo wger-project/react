@@ -26,10 +26,11 @@ import { useExerciseStateValue } from "state";
 import { addNote } from "services/note";
 import { Note } from "components/Exercises/models/note";
 import { useProfileQuery } from "components/User/queries/profile";
+import { makeLink, WgerLink } from "utils/url";
 
 
 export const Step6Overview = ({ onBack }: StepProps) => {
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
     const [state] = useExerciseStateValue();
 
     const navigate = useNavigate();
@@ -104,7 +105,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         }
 
         console.log("Exercise created");
-        navigate(`../${baseId}`);
+        navigate(makeLink(WgerLink.EXERCISE_OVERVIEW, i18n.language, { id: baseId, slug: state.nameEn }));
     };
 
     return equipmentQuery.isLoading || languageQuery.isLoading || musclesQuery.isLoading || categoryQuery.isLoading

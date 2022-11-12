@@ -1,4 +1,4 @@
-import { makeHeader, makeUrl } from "utils/url";
+import { makeHeader, makeLink, makeUrl, WgerLink } from "utils/url";
 
 describe("test url utility", () => {
 
@@ -63,6 +63,44 @@ describe("test the header utility", () => {
             'Content-Type': 'application/json',
         });
     });
+});
 
+
+describe("test the clickable url utility", () => {
+
+    test('link to dashboard', () => {
+        const result = makeLink(WgerLink.DASHBOARD, 'de');
+        expect(result).toEqual('/');
+    });
+
+    test('link to exercise overview - simple language code', () => {
+        const result = makeLink(WgerLink.EXERCISE_OVERVIEW, 'de');
+        expect(result).toEqual('/de/exercise/overview');
+    });
+
+    test('link to exercise overview - complex language code', () => {
+        const result = makeLink(WgerLink.EXERCISE_OVERVIEW, 'de-DE');
+        expect(result).toEqual('/de/exercise/overview');
+    });
+
+    test('link to exercise contribution page', () => {
+        const result = makeLink(WgerLink.EXERCISE_CONTRIBUTE, 'de');
+        expect(result).toEqual('/de/exercise/contribute');
+    });
+
+    test('link to exercise detail page - with slug', () => {
+        const result = makeLink(WgerLink.EXERCISE_DETAIL, 'de', { id: 123, slug: 'foobar' });
+        expect(result).toEqual('/de/exercise/123/view-base/foobar');
+    });
+
+    test('link to exercise detail page - no slug', () => {
+        const result = makeLink(WgerLink.EXERCISE_DETAIL, 'de', { id: 123 });
+        expect(result).toEqual('/de/exercise/123/view-base');
+    });
+
+    test('link to weight overview page', () => {
+        const result = makeLink(WgerLink.WEIGHT_OVERVIEW, 'de',);
+        expect(result).toEqual('/de/weight/overview');
+    });
 
 });

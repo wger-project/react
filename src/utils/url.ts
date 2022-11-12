@@ -1,4 +1,5 @@
 import { AxiosRequestHeaders } from "axios";
+import slug from "slug";
 
 interface makeUrlInterface {
     id?: number,
@@ -37,6 +38,63 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
     }
 
     return pathlist.join('/');
+}
+
+
+export enum WgerLink {
+    DASHBOARD,
+
+    EXERCISE_DETAIL,
+    EXERCISE_OVERVIEW,
+    EXERCISE_CONTRIBUTE,
+
+    WEIGHT_OVERVIEW,
+    WEIGHT_ADD
+}
+
+type ExerciseDetailUrlParams = { id: number, slug?: string };
+
+type UrlParams = ExerciseDetailUrlParams;
+
+
+/*
+ * Util function that generates a clickable url
+ *
+ * These URLs need to be kept in sync with the ones used in django
+ */
+export function makeLink(link: WgerLink, language: string, params?: UrlParams): string {
+
+    // If the name is in the form of "en-US", remove the country code since
+    // our django app can't work with that at the moment.
+    const shortName = language.split('-')[0];
+
+    switch (link) {
+        // Exercises
+        case WgerLink.EXERCISE_CONTRIBUTE:
+            return `/${shortName}/exercise/contribute`;
+
+        case WgerLink.EXERCISE_DETAIL:
+            if (params!.slug) {
+                return `/${shortName}/exercise/${params!.id}/view-base/${slug(params!.slug)}`;
+            } else {
+                return `/${shortName}/exercise/${params!.id}/view-base`;
+            }
+
+        case WgerLink.EXERCISE_OVERVIEW:
+            return `/${shortName}/exercise/overview`;
+
+        // Weight
+        case WgerLink.WEIGHT_OVERVIEW:
+            return `/${shortName}/weight/overview`;
+
+        case WgerLink.WEIGHT_ADD:
+            return `/${shortName}/weight/add`;
+
+        // Dashboard
+        case WgerLink.DASHBOARD:
+        default:
+            return "/";
+    }
 }
 
 /*
