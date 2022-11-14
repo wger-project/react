@@ -6631,10 +6631,10 @@ jest@^27.4.3:
     import-local "^3.0.2"
     jest-cli "^27.4.5"
 
-jodit-react@^1.3.24:
-  version "1.3.24"
-  resolved "https://registry.yarnpkg.com/jodit-react/-/jodit-react-1.3.24.tgz#0a4a10bae2b96f882d01d65cdba824e804b9d3ce"
-  integrity sha512-oCPCW/EdtChrGYok9qrb9o09uo9wSx82XUuvwNsQZOS4HRMo/JowPfp8W+5yXRiAlPWsHCI08mRStfrT+tkK/A==
+jodit-react@^1.3.25:
+  version "1.3.25"
+  resolved "https://registry.yarnpkg.com/jodit-react/-/jodit-react-1.3.25.tgz#74dd054e8a37fd085299fc76084dd3c32eee5ec8"
+  integrity sha512-qmUsMoSKT3JciJIpi/x2J8AhznD/UIrgJzpJqvt1d340HoCb8+V2hFj+PRW4RIq0oOnZQyRJunlXyaGksO66qQ==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.36.2"
     "@typescript-eslint/parser" "^5.36.2"
