@@ -21,7 +21,22 @@
         "notes": "Note",
         "primaryMuscles": "Muscoli primari",
         "searchExerciseName": "Cerca per nome dell'esercizio",
-        "secondaryMuscles": "Muscoli secondari"
+        "secondaryMuscles": "Muscoli secondari",
+        "deleteTranslation": "Cancella traduzione",
+        "deleteExerciseFull": "Cancella tutto l'esercizio",
+        "exerciseNotTranslated": "Nessuna traduzione disponibile",
+        "notEnoughRightsHeader": "Non puoi contribuire agli esercizi",
+        "notEnoughRights": "Puoi contribuire agli esercizi solo se il tuo account è più vecchio di {{days}} giorni e hai verificato il tuo indirizzo mail",
+        "alternativeNames": "Nomi alternativi",
+        "changeExerciseLanguage": "Modifica la lingua dell'esercizio",
+        "filterVariations": "Inserisci il nome dell'esercizio per filtrare le variazioni",
+        "translateExerciseNow": "Traduci l'esercizio adesso",
+        "compatibleImagesCC": "Le immagini devono essere compatibili con la licenza CC BY SA. In caso di dubbi, inserisci una foto che hai fatto personalmente",
+        "submitExercise": "Invia esercizio",
+        "whatVariationsExist": "Quali variazioni esistono per l'esercizio?",
+        "variations": "Variazioni",
+        "identicalExercisePleaseDiscard": "Se l'esercizio è identico a quello che stai aggiungendo, per favore elimina la bozza e modifica l'esercizio già presente",
+        "checkInformationBeforeSubmitting": "Per favore controlla che le informazioni inserite siano corrette prima di confermare l'esercizio"
     },
     "noResults": "Nessun risultato",
     "noResultsDescription": "Nessun risultato trovato. Prova a ridurre i termini di ricerca.",
@@ -52,5 +67,10 @@
     },
     "submit": "Invia",
     "weight": "Peso",
-    "workout": "Allenamento"
+    "workout": "Allenamento",
+    "description": "Descrizione",
+    "save": "Salva",
+    "category": "Categoria",
+    "name": "Nome",
+    "loading": "Caricamento..."
 }
