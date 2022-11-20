@@ -16,7 +16,8 @@ export function makeServerKey(name: string): string {
         .replace(')', '_')
         .replace('-', '_');
 }
+
 // Returns the key used for the translation of the given exercise data
-export function getTranslationKey(name: string): string {
+export function getTranslationKey(name: string): any {
     return `server.${makeServerKey(name)}`;
 }

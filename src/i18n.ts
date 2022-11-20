@@ -2,6 +2,13 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
+import common from "locales/en/translation.json";
+
+export const resources = {
+    en: {
+        common,
+    },
+} as const;
 
 i18n
     .use(Backend)
@@ -9,7 +16,9 @@ i18n
     .use(LanguageDetector)
     .init({
         fallbackLng: 'en',
-        //lng: "de", // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
+
+        //lng: "de",
+        // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
         // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
         // if you're using a language detector, do not define the lng option
 
@@ -26,6 +35,10 @@ i18n
                     ? `/static/react/locales/{{lng}}/{{ns}}.json`
                     : `/locales/{{lng}}/{{ns}}.json`
         },
+
+        ns: ["common",],
+        defaultNS: 'common',
+        resources
     });
 
 export default i18n;

@@ -1,13 +1,14 @@
 import React from 'react';
 import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { t } from "i18next";
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
 import { WgerModal } from "components/Core/WgerModal/WgerModal";
+import { useTranslation } from "react-i18next";
 
 
 export const WeightEntryFab = () => {
 
+    const [t] = useTranslation();
     const [openModal, setOpenModal] = React.useState(false);
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
