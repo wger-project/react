@@ -36,7 +36,6 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                         alt="" />
                     : <CardMedia>
                         <Box sx={{ backgroundColor: "lightgray", height: 200 }}
-
                              display="flex"
                              alignItems="center"
                              justifyContent="center">
@@ -52,7 +51,7 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                         label={t(getTranslationKey(exerciseBase.category.name))}
                         key={exerciseBase.category.id}
                         sx={{ position: "absolute", top: 8, left: 8 }}
-                        color="warning"
+                        color="primary"
                         size="small"
                     />
                     {exerciseBase.equipment.map(equipment => (
