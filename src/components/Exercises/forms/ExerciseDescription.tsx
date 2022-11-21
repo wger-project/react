@@ -1,39 +1,52 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useField } from "formik";
-import JoditEditor from "jodit-react";
 import { FormHelperText } from "@mui/material";
-import { Jodit } from "jodit";
-import { IJodit } from "jodit/types";
-import { useTranslation } from "react-i18next";
+import {
+    BtnBold,
+    BtnBulletList,
+    BtnItalic,
+    BtnNumberedList,
+    BtnRedo,
+    BtnUnderline,
+    BtnUndo,
+    Editor,
+    EditorProps,
+    EditorProvider,
+    Separator,
+    Toolbar,
+} from "react-simple-wysiwyg";
+
+export function ExerciseEditor(props: EditorProps) {
+    return (
+        <EditorProvider>
+            <Editor {...props}>
+                <Toolbar>
+                    <BtnBold />
+                    <BtnItalic />
+                    <BtnUnderline />
+                    <Separator />
+                    <BtnBulletList />
+                    <BtnNumberedList />
+                    <Separator />
+                    <BtnUndo />
+                    <BtnRedo />
+                    { /* <HtmlButton /> */}
+                </Toolbar>
+            </Editor>
+        </EditorProvider>
+    );
+}
+
 
 export function ExerciseDescription(props: { fieldName: string }) {
 
-    const { i18n } = useTranslation();
     const [field, meta, helpers] = useField(props.fieldName);
-    const editor = useRef(null);
-
-    // See https://xdsoft.net/jodit/docs/,
-    const buttons = ['bold', 'italic', '|', 'ul', 'ol', '|', 'undo', 'redo'];
-    const config: IJodit['options'] = {
-        ...Jodit.defaultOptions,
-        readonly: false,
-        buttons: buttons,
-        buttonsXS: buttons,
-        buttonsMD: buttons,
-        buttonsSM: buttons,
-        disablePlugins: "ordered-list",
-        defaultActionOnPaste: 'insert_as_html',
-        language: i18n.language
-    };
 
     return <>
         <div data-testid={'jodit-editor'}>
-            <JoditEditor
-                ref={editor}
+            <ExerciseEditor
                 value={field.value}
-                config={config}
-                onBlur={(newValue) => helpers.setValue(newValue)}
-                onChange={(newValue) => field.onChange(newValue)}
+                onChange={(newValue) => helpers.setValue(newValue.target.value)}
             />
         </div>
         {meta.touched
