@@ -82,7 +82,7 @@ export const ExerciseDetailView = ({
                 dangerouslySetInnerHTML={{ __html: currentTranslation?.description! }} />
             <PaddingBox />
 
-            <Typography variant="h5">{t("exercises.notes")}</Typography>
+            {currentTranslation?.notes.length > 0 && <Typography variant="h5">{t("exercises.notes")}</Typography>}
             <ul>
                 {currentTranslation?.notes.map((note: Note) => (
                     <li key={note.id}>{note.note}</li>
@@ -172,7 +172,7 @@ export const ExerciseDetailView = ({
             <Divider />
             <PaddingBox />
 
-            <Typography variant={"h5"}>{t('exercises.variations')}</Typography>
+            {variations.length > 0 && <Typography variant={"h5"}>{t('exercises.variations')}</Typography>}
             <Grid container spacing={2}>
                 {variations.map((variation: ExerciseBase) =>
                     <Grid item xs={6} md={2} key={variation.id}>
