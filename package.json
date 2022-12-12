@@ -17,7 +17,7 @@
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",
     "@types/slug": "^5.0.3",
-    "axios": "^0.27.2",
+    "axios": "^1.2.1",
     "formik": "^2.2.9",
     "history": "^5.3.0",
     "i18next": "^22.0.8",
