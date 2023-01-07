@@ -53,5 +53,8 @@
     "submit": "Надіслати",
     "weight": "Вага",
     "workout": "Тренування",
-    "name": "Ім'я"
+    "name": "Ім'я",
+    "translation": "Переклад",
+    "images": "Зображення",
+    "language": "Мова"
 }
