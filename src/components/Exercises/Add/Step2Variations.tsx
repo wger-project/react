@@ -26,6 +26,7 @@ import { useExerciseStateValue } from "state";
 import { setNewBaseVariationId, setVariationId } from "state/exerciseReducer";
 import SearchIcon from '@mui/icons-material/Search';
 import PhotoIcon from '@mui/icons-material/Photo';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 /*
  * Groups a list of objects by a property
@@ -110,8 +111,10 @@ const ExerciseInfoListItem = ({ bases }: {
                     {bases.slice(0, showMore ? bases.length : MAX_EXERCISE_NAMES).map((base) =>
                         <p style={{ margin: 0 }} key={base.id}>{base.getTranslation().name}</p>
                     )}
-                    {!showMore && bases.length > MAX_EXERCISE_NAMES ?
-                        <p style={{ margin: 0 }} onMouseEnter={() => setShowMore(true)}>...</p> : null}
+                    {!showMore && bases.length > MAX_EXERCISE_NAMES
+                        ? <ExpandMoreIcon onMouseEnter={() => setShowMore(true)} />
+                        : null
+                    }
                 </Grid>
                 <Grid item xs={2} sm={2} display="flex" justifyContent={"end"}>
                     <Switch
