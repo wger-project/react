@@ -32,6 +32,7 @@
     "checkInformationBeforeSubmitting": "Please check that the information you entered is correct before submitting the exercise",
     "submitExercise": "Submit exercise",
     "successfullyUpdated": "The exercise was successfully updated. Due to caching it might take some time till the changes are visible throughout the application.",
+    "cacheWarning": "Due to caching it might take some time till the changes are visible throughout the application.",
     "description": "Description",
     "basics": "Basics",
     "exerciseNotTranslated": "No translation available",
@@ -72,6 +73,7 @@
   "cannotBeUndone": "This action can't be undone.",
   "cancel": "Cancel",
   "noResults": "No results",
+  "success": "Success!",
   "noResultsDescription": "No results found for this query, consider reducing the number of filters.",
   "server": {
     "abs": "Abs",

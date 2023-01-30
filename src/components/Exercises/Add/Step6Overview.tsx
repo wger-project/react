@@ -1,5 +1,6 @@
 import {
     Alert,
+    AlertTitle,
     Box,
     Button,
     Grid,
@@ -11,7 +12,7 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { addExerciseBase, addExerciseTranslation, postAlias, postExerciseImage } from "services";
@@ -27,7 +28,7 @@ import { addNote } from "services/note";
 import { Note } from "components/Exercises/models/note";
 import { useProfileQuery } from "components/User/queries/profile";
 import { makeLink, WgerLink } from "utils/url";
-
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 export const Step6Overview = ({ onBack }: StepProps) => {
     const [t, i18n] = useTranslation();
@@ -40,7 +41,14 @@ export const Step6Overview = ({ onBack }: StepProps) => {
     const equipmentQuery = useEquipmentQuery();
     const profileQuery = useProfileQuery();
 
+    // This could be handled better and more cleanly...
+    type submissionStatus = 'initial' | 'loading' | 'done';
+    const [submissionState, setSubmissionState] = useState<submissionStatus>('initial',);
+
     const submitExercise = async () => {
+
+        setSubmissionState('loading');
+
         // Create a new variation object if needed
         // TODO: PATCH the other exercise base (newVariationBaseId) with the new variation id
         let variationId;
@@ -105,7 +113,11 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         }
 
         console.log("Exercise created");
-        navigate(makeLink(WgerLink.EXERCISE_OVERVIEW, i18n.language, { id: baseId, slug: state.nameEn }));
+        setSubmissionState('done');
+    };
+
+    const navigateToOverview = () => {
+        navigate(makeLink(WgerLink.EXERCISE_OVERVIEW, i18n.language));
     };
 
     return equipmentQuery.isLoading || languageQuery.isLoading || musclesQuery.isLoading || categoryQuery.isLoading
@@ -211,27 +223,50 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                 </>
             )}
 
-            <Alert severity="info" sx={{ mt: 2 }}>
-                {t('exercises.checkInformationBeforeSubmitting')}
-            </Alert>
+            {!(submissionState === 'done')
+                ? <Alert severity="info" sx={{ mt: 2 }}>
+                    {t('exercises.checkInformationBeforeSubmitting')}
+                </Alert>
+                : <Alert severity="success" sx={{ mt: 2 }}>
+                    <AlertTitle>{t('success')}</AlertTitle>
+                    {t('exercises.cacheWarning')}
+                </Alert>
+            }
 
             <Grid container>
                 <Grid item xs={12} display="flex" justifyContent={"end"}>
                     <Box sx={{ mb: 2 }}>
                         <div>
-                            <Button
-                                onClick={onBack}
-                                sx={{ mt: 1, mr: 1 }}
-                            >
-                                {t('goBack')}
-                            </Button>
-                            <Button
-                                variant="contained"
-                                onClick={submitExercise}
-                                sx={{ mt: 1, mr: 1 }}
-                            >
-                                {t('exercises.submitExercise')}
-                            </Button>
+                            {submissionState !== 'done' &&
+                                <Button
+                                    onClick={onBack}
+                                    sx={{ mt: 1, mr: 1 }}
+                                >
+                                    {t('goBack')}
+                                </Button>
+                            }
+                            {submissionState !== 'done'
+                                && <Button
+                                    variant="contained"
+                                    disabled={submissionState !== 'initial'}
+                                    onClick={submitExercise}
+                                    sx={{ mt: 1, mr: 1 }}
+                                    color='info'
+                                >
+                                    {t('exercises.submitExercise')}
+                                </Button>
+                            }
+                            {submissionState === 'done'
+                                && <Button
+                                    variant="contained"
+                                    onClick={navigateToOverview}
+                                    sx={{ mt: 1, mr: 1 }}
+                                    color='success'
+                                >
+                                    {t('overview')}
+                                    <NavigateNextIcon />
+                                </Button>
+                            }
                         </div>
                     </Box>
                 </Grid>
