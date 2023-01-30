@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
     Alert,
+    AlertTitle,
     Avatar,
     AvatarGroup,
     Box,
@@ -188,7 +189,8 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
             </Paper>
         )}
 
-        <Alert severity="info" sx={{ mt: 2 }}>
+        <Alert severity="info" variant="filled" sx={{ mt: 2 }}>
+            <AlertTitle>{t("exercises.identicalExercise")}</AlertTitle>
             {t('exercises.identicalExercisePleaseDiscard')}
         </Alert>
 
