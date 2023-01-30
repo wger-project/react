@@ -1,4 +1,4 @@
-import { AxiosRequestHeaders } from "axios";
+import { AxiosHeaders, AxiosRequestHeaders } from "axios";
 import slug from "slug";
 
 interface makeUrlInterface {
@@ -128,18 +128,17 @@ export function makeHeader(token?: string): AxiosRequestHeaders {
     token = token || process.env.REACT_APP_API_KEY;
     const DJANGO_CSRF_COOKIE = 'csrftoken';
 
-    let out: AxiosRequestHeaders = {
-        'Content-Type': 'application/json',
-    };
+    let out = new AxiosHeaders();
+    out.set('Content-Type', 'application/json');
 
     if (token) {
-        out['Authorization'] = `Token ${token}`;
+        out.set('Authorization', `Token ${token}`);
     }
 
     const csrfCookie = getCookie(DJANGO_CSRF_COOKIE);
     // eslint-disable-next-line eqeqeq
     if (process.env.NODE_ENV === "production" && csrfCookie != undefined) {
-        out['X-CSRFToken'] = csrfCookie;
+        out.set('X-CSRFToken', csrfCookie);
     }
 
     return out;
