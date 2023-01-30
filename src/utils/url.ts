@@ -1,4 +1,3 @@
-import { AxiosHeaders, AxiosRequestHeaders } from "axios";
 import slug from "slug";
 
 interface makeUrlInterface {
@@ -124,21 +123,21 @@ function getCookie(name: string) {
  * Only during production when the script is embedded in the django application
  * do we need to add the CSRF token to the headers
  */
-export function makeHeader(token?: string): AxiosRequestHeaders {
+export function makeHeader(token?: string) {
     token = token || process.env.REACT_APP_API_KEY;
     const DJANGO_CSRF_COOKIE = 'csrftoken';
 
-    let out = new AxiosHeaders();
-    out.set('Content-Type', 'application/json');
+    let out: any = {};
+    out['Content-Type'] = 'application/json';
 
     if (token) {
-        out.set('Authorization', `Token ${token}`);
+        out['Authorization'] = `Token ${token}`;
     }
 
     const csrfCookie = getCookie(DJANGO_CSRF_COOKIE);
     // eslint-disable-next-line eqeqeq
     if (process.env.NODE_ENV === "production" && csrfCookie != undefined) {
-        out.set('X-CSRFToken', csrfCookie);
+        out['X-CSRFToken'] = csrfCookie;
     }
 
     return out;
