@@ -23,6 +23,7 @@ import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
 import { ExerciseDetailPage } from "pages/ExerciseDetails";
 import { Dashboard } from "components/Dashboard/Dashboard";
 import React from "react";
+import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
 
 /*
  * Routes for the application
@@ -44,6 +45,10 @@ export const WgerRoutes = () => {
                     <Route path="overview" element={<TemplatePage />} />
                     <Route path="public" element={<PublicTemplate />} />
                 </Route>
+            </Route>
+            <Route path="routines">
+                <Route index element={<RoutineOverview />} />
+                <Route path="overview" element={<RoutineOverview />} />
             </Route>
             <Route path="exercise">
                 <Route index element={<ExerciseOverview />} />

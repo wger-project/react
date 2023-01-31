@@ -12,6 +12,10 @@
   "addEntry": "Add entry",
   "currentWeight": "Current weight",
   "workout": "Workout",
+  "routines": {
+    "routine": "Routine",
+    "routines": "Routines"
+  },
   "exercises": {
     "contributeExercise": "Contribute an exercise",
     "step1HeaderBasics": "Basics in English",

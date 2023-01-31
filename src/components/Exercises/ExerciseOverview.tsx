@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, CircularProgress, Container, Grid, Pagination, Paper, Stack, Typography, } from "@mui/material";
+import { Box, Button, Container, Grid, Pagination, Stack, Typography, } from "@mui/material";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
 import { useTranslation } from "react-i18next";
@@ -15,6 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ExerciseSearchResponse } from "services/responseType";
 import { ExerciseGridSkeleton } from "components/Exercises/Overview/ExerciseGridLoadingSkeleton";
 import { makeLink, WgerLink } from "utils/url";
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 
 const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -66,16 +67,6 @@ const NoResultsBanner = () => {
             </Typography>
         </Box>
     );
-};
-
-export const LoadingPlaceholder = () => {
-    return <Paper
-        sx={{ height: 200, alignItems: "center", mt: 2 }}
-        component={Stack}
-        direction="column"
-        justifyContent="center">
-        <CircularProgress />
-    </Paper>;
 };
 
 export const ExerciseOverview = () => {

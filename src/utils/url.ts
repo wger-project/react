@@ -43,6 +43,9 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
 export enum WgerLink {
     DASHBOARD,
 
+    ROUTINE_OVERVIEW,
+    ROUTINE_DETAIL,
+
     EXERCISE_DETAIL,
     EXERCISE_OVERVIEW,
     EXERCISE_CONTRIBUTE,
@@ -68,6 +71,10 @@ export function makeLink(link: WgerLink, language: string, params?: UrlParams): 
     const shortName = language.split('-')[0];
 
     switch (link) {
+        // Workout
+        case WgerLink.ROUTINE_OVERVIEW:
+            return `/${shortName}/routines/overview`;
+
         // Exercises
         case WgerLink.EXERCISE_CONTRIBUTE:
             return `/${shortName}/exercise/contribute`;
