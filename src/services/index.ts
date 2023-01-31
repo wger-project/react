@@ -27,5 +27,6 @@ export { postExerciseVideo, deleteExerciseVideo } from './video';
 
 export {
     getWorkoutRoutinesShallow,
+    getWorkoutRoutine,
     getWorkoutRoutines,
 } from './workoutRoutine';

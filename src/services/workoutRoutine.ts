@@ -22,13 +22,18 @@ export const processRoutineShallow = (routineData: any): WorkoutRoutine => {
 /*
  * Processes a workout routine with all sub-object
  */
-export const processWorkoutRoutine = async (routineData: any): Promise<WorkoutRoutine> => {
+export const processWorkoutRoutine = async (id: number): Promise<WorkoutRoutine> => {
     const routineAdapter = new WorkoutRoutineAdapter();
     const dayAdapter = new DayAdapter();
     const setAdapter = new SetAdapter();
     const settingAdapter = new SettingAdapter();
 
-    const routine = routineAdapter.fromJson(routineData);
+    const url = makeUrl(WORKOUT_API_PATH, { id: id });
+    const response = await axios.get(
+        url,
+        { headers: makeHeader() }
+    );
+    const routine = routineAdapter.fromJson(response.data);
 
     // Process the days
     const dayResponse = await axios.get<ResponseType<Day>>(
@@ -81,9 +86,12 @@ export const getWorkoutRoutines = async (): Promise<WorkoutRoutine[]> => {
 
     const out: WorkoutRoutine[] = [];
     for (const routineData of response.data.results) {
-        out.push(await processWorkoutRoutine(routineData));
+        out.push(await processWorkoutRoutine(routineData.id));
     }
     return out;
+};
+export const getWorkoutRoutine = async (id: number): Promise<WorkoutRoutine> => {
+    return await processWorkoutRoutine(id);
 };
 
 /*

@@ -71,9 +71,12 @@ export function makeLink(link: WgerLink, language: string, params?: UrlParams): 
     const shortName = language.split('-')[0];
 
     switch (link) {
-        // Workout
+        // Routines
         case WgerLink.ROUTINE_OVERVIEW:
             return `/${shortName}/routines/overview`;
+
+        case WgerLink.ROUTINE_DETAIL:
+            return `/${shortName}/routines/${params!.id}/view`;
 
         // Exercises
         case WgerLink.EXERCISE_CONTRIBUTE:

@@ -15,4 +15,5 @@ export const QUERY_PERMISSION = 'permission';
 export const QUERY_PROFILE = 'profile';
 
 export const QUERY_ROUTINES = 'routines';
+export const QUERY_ROUTINE_DETAIL = 'routine';
 export const QUERY_ROUTINES_SHALLOW = 'routines-shallow';

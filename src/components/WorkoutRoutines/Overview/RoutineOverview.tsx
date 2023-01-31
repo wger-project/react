@@ -15,12 +15,15 @@ import { useTranslation } from "react-i18next";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WorkoutRoutine } from "components/WorkoutRoutines/models/WorkoutRoutine";
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { makeLink, WgerLink } from "utils/url";
 
 const RoutineList = (props: { routine: WorkoutRoutine }) => {
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
+    const detailUrl = makeLink(WgerLink.ROUTINE_DETAIL, i18n.language, { id: props.routine.id });
+
     return <>
         <ListItem sx={{ p: 0 }}>
-            <ListItemButton>
+            <ListItemButton component="a" href={detailUrl}>
                 <ListItemText
                     primary={props.routine.name !== '' ? props.routine.name : t('routines.routine')}
                     secondary={props.routine.date.toLocaleDateString()}
@@ -54,7 +57,7 @@ export const RoutineOverview = () => {
 
             </Grid>
             <Grid item xs={12} sm={4}>
-                abc
+
             </Grid>
         </Grid>
 
