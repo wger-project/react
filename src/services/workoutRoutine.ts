@@ -5,6 +5,7 @@ import { WorkoutRoutine, WorkoutRoutineAdapter } from "components/WorkoutRoutine
 import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
 import { SetAdapter, WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
 import { SettingAdapter, WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
+import { getExerciseBase } from "services/exerciseBase";
 
 export const WORKOUT_API_PATH = 'workout';
 export const DAY_API_PATH = 'day';
@@ -53,11 +54,16 @@ export const processWorkoutRoutine = async (id: number): Promise<WorkoutRoutine>
 
             // Process the settings
             const settingResponse = await axios.get<ResponseType<WorkoutSetting>>(
-                makeUrl(SET_API_PATH, { query: { set: set.id.toString() } }),
+                makeUrl(
+                    SETTING_API_PATH,
+                    {
+                        query: { set: set.id.toString() }
+                    }),
                 { headers: makeHeader() },
             );
             for (const settingData of settingResponse.data.results) {
                 const setting = settingAdapter.fromJson(settingData);
+                setting.base = await getExerciseBase(setting.baseId);
 
                 set.settings.push(setting);
             }

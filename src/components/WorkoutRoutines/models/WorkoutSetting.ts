@@ -1,8 +1,11 @@
 /* eslint-disable camelcase */
 
 import { Adapter } from "utils/Adapter";
+import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 
 export class WorkoutSetting {
+
+    base: ExerciseBase | undefined;
 
     constructor(
         public id: number,
