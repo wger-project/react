@@ -4,7 +4,7 @@ import { makeHeader, makeUrl } from "utils/url";
 import { WorkoutRoutine, WorkoutRoutineAdapter } from "components/WorkoutRoutines/models/WorkoutRoutine";
 import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
 import { SetAdapter, WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
-import { SettingAdapter, WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
+import { SettingAdapter } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { getExerciseBase } from "services/exerciseBase";
 
 export const WORKOUT_API_PATH = 'workout';
@@ -21,7 +21,7 @@ export const processRoutineShallow = (routineData: any): WorkoutRoutine => {
 };
 
 /*
- * Processes a workout routine with all sub-object
+ * Processes a workout routine with all sub-objects
  */
 export const processWorkoutRoutine = async (id: number): Promise<WorkoutRoutine> => {
     const routineAdapter = new WorkoutRoutineAdapter();
@@ -29,9 +29,8 @@ export const processWorkoutRoutine = async (id: number): Promise<WorkoutRoutine>
     const setAdapter = new SetAdapter();
     const settingAdapter = new SettingAdapter();
 
-    const url = makeUrl(WORKOUT_API_PATH, { id: id });
     const response = await axios.get(
-        url,
+        makeUrl(WORKOUT_API_PATH, { id: id }),
         { headers: makeHeader() }
     );
     const routine = routineAdapter.fromJson(response.data);
@@ -51,29 +50,35 @@ export const processWorkoutRoutine = async (id: number): Promise<WorkoutRoutine>
         );
         for (const setData of setResponse.data.results) {
             const set = setAdapter.fromJson(setData);
-
-            // Process the settings
-            const settingResponse = await axios.get<ResponseType<WorkoutSetting>>(
-                makeUrl(
-                    SETTING_API_PATH,
-                    {
-                        query: { set: set.id.toString() }
-                    }),
-                { headers: makeHeader() },
-            );
-            for (const settingData of settingResponse.data.results) {
-                const setting = settingAdapter.fromJson(settingData);
-                setting.base = await getExerciseBase(setting.baseId);
-
-                set.settings.push(setting);
-            }
-
             day.sets.push(set);
         }
 
+        // Process the settings
+        const settingPromises = setResponse.data.results.map((setData: any) => {
+            return axios.get<ResponseType<any>>(
+                makeUrl(SETTING_API_PATH, { query: { set: setData.id } }),
+                { headers: makeHeader() },
+            );
+        });
+        const settingsResponses = await Promise.all(settingPromises);
+
+        for (const settingsData of settingsResponses) {
+            for (const settingData of settingsData.data.results) {
+                const set = day.sets.find(e => e.id === settingData.set);
+                const setting = settingAdapter.fromJson(settingData);
+
+                // TODO: use some global state or cache for this
+                //       We will need to access individual exercises throughout the app
+                const tmpSetting = set!.settings.find(e => e.baseId === setting.baseId);
+                setting.base = tmpSetting !== undefined ? tmpSetting.base : await getExerciseBase(setting.baseId);
+
+                set!.settings.push(setting);
+            }
+        }
         routine.days.push(day);
     }
 
+    // console.log(routine);
     return routine;
 };
 
