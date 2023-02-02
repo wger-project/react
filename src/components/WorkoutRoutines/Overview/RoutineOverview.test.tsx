@@ -27,7 +27,7 @@ describe("Test the RoutineOverview component", () => {
             </QueryClientProvider>
         );
         await act(async () => {
-            await new Promise((r) => setTimeout(r, 1));
+            await new Promise((r) => setTimeout(r, 20));
         });
 
         // Assert
