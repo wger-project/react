@@ -53,7 +53,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "postbuild": "./postbuild.sh",
-    "test": "react-scripts test --watchAll=false --transformIgnorePatterns \"node_modules/(?!axios)/\"",
+    "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "i18n": "i18next",
     "lint": "eslint ."
@@ -95,5 +95,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^axios$": "axios/dist/axios.js"
+    }
   }
 }

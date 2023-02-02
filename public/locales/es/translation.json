@@ -47,7 +47,9 @@
         "deleteExerciseFull": "Eliminar ejercicio completo",
         "deleteTranslation": "Eliminar traducción",
         "changeExerciseLanguage": "Cambiar el idioma de este ejercicio",
-        "missingExercise": "¿Falta algún ejercicio?"
+        "missingExercise": "¿Falta algún ejercicio?",
+        "identicalExercise": "Evitar los ejercicios duplicados",
+        "cacheWarning": "Debido al almacenamiento en caché, puede pasar algún tiempo hasta que los cambios sean visibles en toda la aplicación."
     },
     "loading": "Cargando...",
     "images": "Imágenes",
@@ -104,5 +106,6 @@
     },
     "preferences": "Preferencias",
     "cancel": "Cancelar",
-    "noResults": "Sin resultados"
+    "noResults": "Sin resultados",
+    "success": "¡Exitoso!"
 }
