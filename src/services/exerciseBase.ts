@@ -14,7 +14,11 @@ export function processBaseData(data: any): ExerciseBase[] {
 
     const out: ExerciseBase[] = [];
     for (const baseData of data.results) {
-        out.push(adapter.fromJson(baseData));
+        try {
+            out.push(adapter.fromJson(baseData));
+        } catch (e) {
+            console.error('An error happened, skipping base:', e);
+        }
     }
     return out;
 }
