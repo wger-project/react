@@ -8,7 +8,7 @@
     "@mui/icons-material": "^5.11.0",
     "@mui/lab": "^5.0.0-alpha.118",
     "@mui/material": "^5.11.7",
-    "@mui/styles": "^5.11.2",
+    "@mui/styles": "^5.11.7",
     "@mui/x-date-pickers": "^5.0.17",
     "@tanstack/react-query": "^4.2.3",
     "@types/jest": "^29.4.0",
