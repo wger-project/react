@@ -36,9 +36,10 @@ i18n
                     : `/locales/{{lng}}/{{ns}}.json`
         },
 
-        ns: ["common",],
-        defaultNS: 'common',
-        resources
+        // TOOD: https://github.com/wger-project/react/issues/630
+        //ns: ["common",],
+        //defaultNS: 'common',
+        //resources
     });
 
 export default i18n;
