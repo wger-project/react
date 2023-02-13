@@ -12,9 +12,20 @@ export const resources = {
 
 i18n
     .use(Backend)
-    .use(initReactI18next) // passes i18n down to react-i18next
     .use(LanguageDetector)
+    .use(initReactI18next) // passes i18n down to react-i18next
     .init({
+
+        load: 'languageOnly',
+
+        // Options for the language detection
+        // https://github.com/i18next/i18next-browser-languageDetector
+        detection: {
+            // order and from where user language should be detected
+            order: ['path', 'navigator', 'htmlTag'],
+
+        },
+
         fallbackLng: 'en',
 
         //lng: "de",
