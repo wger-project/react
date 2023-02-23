@@ -43,7 +43,8 @@
         "deleteExerciseFull": "Usuń całe ćwiczenie",
         "compatibleImagesCC": "Obrazy muszą być zgodne z licencją CC BY SA. Jeśli masz wątpliwości przesyłaj tylko zdjęcia które sam zrobiłeś.",
         "deleteTranslation": "Usuń tłumaczenie",
-        "step1HeaderBasics": "Podstawy po angielsku"
+        "step1HeaderBasics": "Podstawy po angielsku",
+        "identicalExercise": "Unikaj powielania ćwiczeń"
     },
     "noResults": "Brak wyników",
     "noResultsDescription": "Nie znaleziono wyników dla tego zapytania, rozważ zmniejszenie liczby filtrów.",
