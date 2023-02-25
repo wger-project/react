@@ -45,7 +45,8 @@
         "whatVariationsExist": "Quelles sont les variantes de cet exercice, s'il en existe ?",
         "filterVariations": "Entrer un nom d'exercice pour filtrer les variantes",
         "newNote": "Nouvelle note",
-        "notesHelpText": "Les notes sont de brefs commentaires sur la façon d'exécuter l'exercice, par exemple \"gardez votre corps droit\""
+        "notesHelpText": "Les notes sont de brefs commentaires sur la façon d'exécuter l'exercice, par exemple \"gardez votre corps droit\"",
+        "primaryMuscles": "Muscles primaires"
     },
     "server": {
         "arms": "Bras",
