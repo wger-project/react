@@ -48,8 +48,11 @@
         "exercises": "Exercícios",
         "category": "Categoria",
         "equipment": "Equipamento",
-        "muscles": "Músculos"
+        "muscles": "Músculos",
+        "notEnoughRightsHeader": "Você não pode contribuir com exercícios",
+        "variations": "Variações"
     },
     "noResults": "Sem resultados",
-    "noResultsDescription": "Nenhum resultado encontrado para essa consulta, considere reduzir o número de filtros."
+    "noResultsDescription": "Nenhum resultado encontrado para essa consulta, considere reduzir o número de filtros.",
+    "loading": "Carregando..."
 }
