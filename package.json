@@ -34,7 +34,7 @@
     "slug": "^8.2.2",
     "typescript": "^5.0.4",
     "web-vitals": "^3.3.1",
-    "yup": "^1.0.2"
+    "yup": "^1.1.1"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^4.2.3",
