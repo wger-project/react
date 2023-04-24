@@ -8912,10 +8912,10 @@ react-scripts@^5.0.1:
   optionalDependencies:
     fsevents "^2.3.2"
 
-react-simple-wysiwyg@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/react-simple-wysiwyg/-/react-simple-wysiwyg-2.2.2.tgz#34a455ed857ca5568bb5a5e6edfaaf0b427dd039"
-  integrity sha512-aXZL3IbAIJyqZ3BDvZcmxZiCUZ9B/R/+3DHdjpCIAqvg165QahWQ6TZZ3jujMYakMDEw7LUj04QJ3VL23og9VA==
+react-simple-wysiwyg@^2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/react-simple-wysiwyg/-/react-simple-wysiwyg-2.2.5.tgz#804881576ef81e9e685a49002ba6f4ba7045e81c"
+  integrity sha512-cNut1O8wAavVJKi3cobLlM3VIjiJG4clBSJDEz4Rgc6V+ww7bmjp8KGTuJJw79ZAsJDYGfN1ic/80u2et8GZZg==
 
 react-smooth@^2.0.1:
   version "2.0.1"
