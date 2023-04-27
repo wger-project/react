@@ -1,4 +1,14 @@
-import { Box, Button, Grid, IconButton, ImageListItem, ImageListItemBar, Stack, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Grid,
+    IconButton,
+    ImageListItem,
+    ImageListItemBar,
+    Modal,
+    Stack,
+    Typography
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -9,11 +19,23 @@ import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { ImageFormData } from "components/Exercises/models/exerciseBase";
 import { useExerciseStateValue } from "state";
 import { setImages } from "state/exerciseReducer";
+import { Form, Formik } from "formik";
+import { LicenseAuthor } from "components/Common/forms/LicenseAuthor";
+import { LicenseTitle } from "components/Common/forms/LicenseTitle";
+import { LicenseObjectUrl } from "components/Common/forms/LicenseObjectUrl";
+import { LicenseAuthorUrl } from "components/Common/forms/LicenseAuthorUrl";
+import { ImageStyleToggle } from "components/Exercises/forms/ImageStyle";
+import { LicenseDerivativeSourceUrl } from "components/Common/forms/LicenseDerivativeSourceUrl";
 
 export const Step5Images = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
     const [state, dispatch] = useExerciseStateValue();
     const [localImages, setLocalImages] = useState<ImageFormData[]>(state.images);
+    const [popupImage, setPopupImage] = useState<ImageFormData | undefined>(undefined);
+
+    const [openModal, setOpenModal] = React.useState(false);
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
 
     useEffect(() => {
         dispatch(setImages(localImages));
@@ -26,7 +48,10 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
         const [uploadedFile] = e.target.files;
         const objectURL = URL.createObjectURL(uploadedFile);
 
-        setLocalImages(localImages?.concat({ url: objectURL, file: uploadedFile }));
+        setOpenModal(true);
+
+        setPopupImage({ url: objectURL, file: uploadedFile });
+        //setLocalImages(localImages?.concat({ url: objectURL, file: uploadedFile }));
     };
 
     const handleDeleteImage = (imageURL: string) => {
@@ -38,8 +63,83 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
         onContinue!();
     };
 
+    const style = {
+        position: 'absolute' as 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 600,
+        bgcolor: 'background.paper',
+        //border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
+
     return (
         <div>
+            <Modal
+                open={openModal}
+                onClose={handleCloseModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Image details
+                    </Typography>
+
+                    <Grid container spacing={2}>
+                        <Grid item xs={4}>
+                            {popupImage && <img
+                                style={{ width: "100%", }}
+                                src={popupImage.url}
+                                alt=""
+                                loading="lazy"
+                            />}
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Formik
+                                initialValues={{
+                                    nameEn: state.nameEn,
+                                    newAlternativeNameEn: state.alternativeNamesEn,
+                                    category: state.category !== null ? state.category : '',
+                                    muscles: state.muscles,
+                                    equipment: state.equipment,
+                                    musclesSecondary: state.musclesSecondary,
+                                }}
+                                onSubmit={values => {
+
+                                }}
+                            >
+                                {formik => {
+                                    return (
+                                        <Form>
+                                            <Stack spacing={2}>
+                                                <LicenseAuthor fieldName={'licenseAuthor'} />
+                                                <LicenseAuthorUrl fieldName={'licenseAuthorUrl'} />
+                                                <LicenseTitle fieldName={'licenseTitle'} />
+                                                <LicenseObjectUrl fieldName={'licenseObjectUrl'} />
+                                                <LicenseDerivativeSourceUrl fieldName={'licenseDerivativeSourceUrl'} />
+                                                <ImageStyleToggle fieldName={'imageStyle'} />
+                                            </Stack>
+                                        </Form>
+                                    );
+                                }}
+                            </Formik>
+                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                            </Typography>
+                        </Grid>
+                    </Grid>
+
+
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                    </Typography>
+                </Box>
+            </Modal>
+
             <Typography>
                 {t("exercises.compatibleImagesCC")}
 
