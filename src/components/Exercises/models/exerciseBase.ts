@@ -114,7 +114,7 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
         }
 
         if (base.translations.length === 0) {
-            console.error(`No translations found for exercise base ${base.uuid}!`);
+            throw new Error(`No translations found for exercise base ${base.uuid}!`);
         }
 
         return base;

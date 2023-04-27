@@ -1,11 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-    testExerciseBenchPress,
-    testExerciseCrunches,
-    testExerciseCurls
-} from "tests/exerciseTestdata";
+import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls } from "tests/exerciseTestdata";
 import { useBasesQuery } from "components/Exercises/queries";
 import { Step2Variations } from "components/Exercises/Add/Step2Variations";
 import userEvent from "@testing-library/user-event";
@@ -58,7 +54,7 @@ describe("Test the add exercise step 2 component", () => {
 
     test("Correctly sets the variation ID", async () => {
         // Act
-        const view = render(
+        render(
             <ExerciseStateProvider>
                 <QueryClientProvider client={queryClient}>
                     <Step2Variations onContinue={mockOnContinue} />
