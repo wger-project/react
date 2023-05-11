@@ -25,6 +25,16 @@ export interface ApiLanguageType {
     full_name: string,
 }
 
+export interface ApiSettingWeightUnitType {
+    id: number,
+    name: string,
+}
+
+export interface ApiSettingRepUnitType {
+    id: number,
+    name: string,
+}
+
 export interface ApiEquipmentType {
     id: number,
     name: string,

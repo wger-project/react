@@ -6,6 +6,7 @@ import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
 import { SetAdapter, WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
 import { SettingAdapter } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { getExerciseBase } from "services/exerciseBase";
+import { getRepUnits, getWeightUnits } from "services/workoutUnits";
 
 export const WORKOUT_API_PATH = 'workout';
 export const DAY_API_PATH = 'day';
@@ -40,6 +41,11 @@ export const processWorkoutRoutine = async (id: number): Promise<WorkoutRoutine>
         makeUrl(DAY_API_PATH, { query: { training: routine.id.toString() } }),
         { headers: makeHeader() },
     );
+
+    const unitResponses = await Promise.all([getRepUnits(), getWeightUnits()]);
+    const repUnits = unitResponses[0];
+    const weightUnits = unitResponses[1];
+
     for (const dayData of dayResponse.data.results) {
         const day = dayAdapter.fromJson(dayData);
 
@@ -68,9 +74,15 @@ export const processWorkoutRoutine = async (id: number): Promise<WorkoutRoutine>
                 const setting = settingAdapter.fromJson(settingData);
 
                 // TODO: use some global state or cache for this
-                //       We will need to access individual exercises throughout the app
+                //       we will need to access individual exercises throughout the app
+                //       as well as the weight and repetition units
+                const weightUnit = weightUnits.find(e => e.id === setting.weightUnit);
+                const repUnit = repUnits.find(e => e.id === setting.repetitionUnit);
+
                 const tmpSetting = set!.settings.find(e => e.baseId === setting.baseId);
                 setting.base = tmpSetting !== undefined ? tmpSetting.base : await getExerciseBase(setting.baseId);
+                setting.weightUnitObj = weightUnit;
+                setting.repetitionUnitObj = repUnit;
 
                 set!.settings.push(setting);
             }

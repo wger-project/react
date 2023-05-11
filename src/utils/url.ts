@@ -3,6 +3,7 @@ import slug from "slug";
 interface makeUrlInterface {
     id?: number,
     server?: string,
+    objectMethod?: string,
     query?: object,
 }
 
@@ -15,13 +16,18 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
 
     // Base data
     const serverUrl = params.server || process.env.REACT_APP_API_SERVER;
-    const pathlist = [serverUrl, 'api', 'v2', path];
+    const paths = [serverUrl, 'api', 'v2', path];
+
+    // append objectmethod to the path
+    if (params.objectMethod) {
+        paths.push(params.objectMethod);
+    }
 
     // Detail view
     if (params.id) {
-        pathlist.push(params.id.toString());
+        paths.push(params.id.toString());
     }
-    pathlist.push('');
+    paths.push('');
 
     // Query parameters
     if (params.query) {
@@ -32,11 +38,11 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
                 querylist.push(`${encodeURIComponent(key)}=${encodeURIComponent(params.query[key])}`);
             }
         }
-        pathlist.pop();
-        pathlist.push(`?${querylist.join('&')}`);
+        paths.pop();
+        paths.push(`?${querylist.join('&')}`);
     }
 
-    return pathlist.join('/');
+    return paths.join('/');
 }
 
 

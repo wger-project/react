@@ -2,6 +2,8 @@
 
 import { Adapter } from "utils/Adapter";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
+import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
 
 export class WorkoutSetting {
 
@@ -12,12 +14,22 @@ export class WorkoutSetting {
         public baseId: number,
         public repetitionUnit: number,
         public reps: number,
-        public weight: number,
+        public weight: number | null,
         public weightUnit: number,
         public rir: string | null,
         public order: number,
-        public comment: string
+        public comment: string,
+        public repetitionUnitObj?: RepetitionUnit,
+        public weightUnitObj?: WeightUnit,
     ) {
+
+        if (repetitionUnitObj) {
+            this.repetitionUnitObj = repetitionUnitObj;
+        }
+        if (repetitionUnitObj) {
+            this.repetitionUnitObj = repetitionUnitObj;
+
+        }
     }
 }
 
@@ -29,15 +41,16 @@ export class SettingAdapter implements Adapter<WorkoutSetting> {
             item.exercise_base,
             item.repetition_unit,
             item.reps,
-            item.weight,
+            item.weight === null ? null : Number.parseFloat(item.weight),
             item.weight_unit,
             item.rir,
             item.order,
-            item.comment
+            item.comment,
         );
     }
 
-    toJson(item: WorkoutSetting): any {
+    toJson(item: WorkoutSetting):
+        any {
         return {
             id: item.id,
             exercise_base: item.baseId,
