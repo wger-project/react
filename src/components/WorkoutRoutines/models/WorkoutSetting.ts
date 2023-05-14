@@ -26,8 +26,8 @@ export class WorkoutSetting {
         if (repetitionUnitObj) {
             this.repetitionUnitObj = repetitionUnitObj;
         }
-        if (repetitionUnitObj) {
-            this.repetitionUnitObj = repetitionUnitObj;
+        if (weightUnitObj) {
+            this.weightUnitObj = weightUnitObj;
 
         }
     }
