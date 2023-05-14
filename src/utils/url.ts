@@ -51,6 +51,16 @@ export enum WgerLink {
 
     ROUTINE_OVERVIEW,
     ROUTINE_DETAIL,
+    ROUTINE_ADD,
+    ROUTINE_DELETE,
+    ROUTINE_ADD_LOG,
+    ROUTINE_EDIT_DAY,
+    ROUTINE_ADD_DAY,
+    ROUTINE_DELETE_DAY,
+    ROUTINE_ADD_SET,
+    ROUTINE_EDIT_SET,
+    ROUTINE_DELETE_SET,
+
 
     EXERCISE_DETAIL,
     EXERCISE_OVERVIEW,
@@ -70,7 +80,9 @@ type UrlParams = ExerciseDetailUrlParams;
  *
  * These URLs need to be kept in sync with the ones used in django
  */
-export function makeLink(link: WgerLink, language: string, params?: UrlParams): string {
+export function makeLink(link: WgerLink, language?: string, params?: UrlParams): string {
+
+    language = language || 'en-us';
 
     // If the name is in the form of "en-US", remove the country code since
     // our django app can't work with that at the moment.
@@ -80,9 +92,20 @@ export function makeLink(link: WgerLink, language: string, params?: UrlParams): 
         // Workout routines
         case WgerLink.ROUTINE_OVERVIEW:
             return `/${langShort}/routine/overview`;
-
         case WgerLink.ROUTINE_DETAIL:
             return `/${langShort}/routine/${params!.id}/view`;
+        case WgerLink.ROUTINE_ADD:
+            return `/${langShort}/routine/add`;
+        case WgerLink.ROUTINE_ADD_DAY:
+            return `/${langShort}/routine/day/${params!.id}/add`;
+        case WgerLink.ROUTINE_ADD_LOG:
+            return `/${langShort}/routine/day/${params!.id}/log/add`;
+        case WgerLink.ROUTINE_EDIT_DAY:
+            return `/${langShort}/routine/day/${params!.id}/edit`;
+        case WgerLink.ROUTINE_DELETE_DAY:
+            return `/${langShort}/routine/day/${params!.id}/delete`;
+        case WgerLink.ROUTINE_ADD_SET:
+            return `/${langShort}/routine/set/${params!.id}/add`;
 
         // Exercises
         case WgerLink.EXERCISE_CONTRIBUTE:

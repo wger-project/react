@@ -84,14 +84,19 @@ describe("test the clickable url utility", () => {
         expect(result).toEqual('/');
     });
 
-    test('link to exercise overview - simple language code', () => {
+    test('link to exercise overview, simple language code', () => {
         const result = makeLink(WgerLink.EXERCISE_OVERVIEW, 'de');
         expect(result).toEqual('/de/exercise/overview');
     });
 
-    test('link to exercise overview - complex language code', () => {
+    test('link to exercise overview, complex language code', () => {
         const result = makeLink(WgerLink.EXERCISE_OVERVIEW, 'de-DE');
         expect(result).toEqual('/de/exercise/overview');
+    });
+
+    test('link to exercise overview, no language code', () => {
+        const result = makeLink(WgerLink.EXERCISE_OVERVIEW,);
+        expect(result).toEqual('/en/exercise/overview');
     });
 
     test('link to exercise contribution page', () => {

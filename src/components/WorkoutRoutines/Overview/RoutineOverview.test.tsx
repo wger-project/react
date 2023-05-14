@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
 import { getWorkoutRoutinesShallow } from "services";
 import { testRoutines } from "tests/workoutRoutinesTestData";
+import { BrowserRouter } from "react-router-dom";
 
 jest.mock("services");
 
@@ -22,9 +23,11 @@ describe("Test the RoutineOverview component", () => {
 
         // Act
         render(
-            <QueryClientProvider client={queryClient}>
-                <RoutineOverview />
-            </QueryClientProvider>
+            <BrowserRouter>
+                <QueryClientProvider client={queryClient}>
+                    <RoutineOverview />
+                </QueryClientProvider>
+            </BrowserRouter>
         );
         await act(async () => {
             await new Promise((r) => setTimeout(r, 20));

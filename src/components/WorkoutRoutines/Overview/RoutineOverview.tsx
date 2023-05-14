@@ -16,6 +16,7 @@ import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget"
 import { WorkoutRoutine } from "components/WorkoutRoutines/models/WorkoutRoutine";
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { makeLink, WgerLink } from "utils/url";
+import { AddWorkoutFab } from "components/WorkoutRoutines/Overview/fab";
 
 const RoutineList = (props: { routine: WorkoutRoutine }) => {
     const [t, i18n] = useTranslation();
@@ -60,6 +61,8 @@ export const RoutineOverview = () => {
 
             </Grid>
         </Grid>
+
+        <AddWorkoutFab />
 
     </Container>;
 };
