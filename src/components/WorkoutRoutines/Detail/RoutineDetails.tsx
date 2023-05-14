@@ -11,7 +11,8 @@ import {
     IconButton,
     Menu,
     MenuItem,
-    Stack
+    Stack,
+    Typography
 } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
@@ -54,8 +55,9 @@ export const RoutineDetails = () => {
 };
 
 function SettingDetails(props: { setting: WorkoutSetting, set: WorkoutSet }) {
+
     // @ts-ignore
-    return <Grid container alignItems="center">
+    return <Grid container alignItems="center" sx={{ height: "100px" }}>
         <Grid item xs={2} md={1}>
             {props.setting.base?.images.length !== 0
                 ? <img
@@ -63,14 +65,17 @@ function SettingDetails(props: { setting: WorkoutSetting, set: WorkoutSet }) {
                     width="80%"
                     alt={props.setting.base?.getTranslation().name}
                 />
-                : <ExerciseImagePlaceholder backgroundColor={"white"} iconColor={"lightgray"} height={150} />
+                : <ExerciseImagePlaceholder backgroundColor={"white"} iconColor={"lightgray"} height={100} />
             }
 
         </Grid>
         <Grid item xs={10}>
             <Stack spacing={0}>
-                <h3>{props.setting.base?.getTranslation().name}</h3>
-                <p>{props.setting.id} - {props.set.getSmartRepr(props.setting.base!)}</p>
+                <Typography variant={"h6"}>{props.setting.base?.getTranslation().name}</Typography>
+                <Typography>
+                    {props.setting.id} - {props.set.getSettingsTextRepresentation(props.setting.base!)}
+                </Typography>
+
             </Stack>
         </Grid>
     </Grid>;
@@ -104,10 +109,6 @@ const DayDetails = (props: { day: Day }) => {
     };
     const handleClose = () => {
         setAnchorEl(null);
-    };
-
-    const onDragEnd = (result: any) => {
-        console.log(result);
     };
 
 

@@ -1,7 +1,7 @@
 import { Adapter } from "utils/Adapter";
 import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
-import { repTextWithUnit } from "components/WorkoutRoutines/utils/repText";
+import { settingsToText } from "components/WorkoutRoutines/utils/repText";
 
 export class WorkoutSet {
 
@@ -38,13 +38,12 @@ export class WorkoutSet {
         return out;
     }
 
-
     filterSettingsByExercise(exerciseBase: ExerciseBase): WorkoutSetting[] {
         return this.settings.filter((element) => element.baseId === exerciseBase.id);
     }
 
-    getSmartRepr(exerciseBase: ExerciseBase): string {
-        return repTextWithUnit(this.sets, this.filterSettingsByExercise(exerciseBase));
+    getSettingsTextRepresentation(exerciseBase: ExerciseBase): string {
+        return settingsToText(this.sets, this.filterSettingsByExercise(exerciseBase));
     }
 }
 

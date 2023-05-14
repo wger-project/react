@@ -1,34 +1,35 @@
 import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
+import { REP_UNIT_REPETITIONS, REP_UNIT_TILL_FAILURE } from "utils/consts";
 
 
-function roundToTwoDecimalPlaces(num: number): number {
-    if (Number.isInteger(num)) {
-        return num; // Return the number as-is if it has no decimal places
-    } else {
-        return Math.round((num + Number.EPSILON) * 100) / 100; // Round to two decimal places
-    }
-}
+/*
+ * Converts a list of workout settings into a human-readable string like "3 × 5"
+ */
+export function settingsToText(sets: number, settingsList: WorkoutSetting[]) {
 
-export function repTextWithUnit(sets: number, settingsList: WorkoutSetting[]): string {
-    const REP_UNIT_TILL_FAILURE = 2;
-    const REP_UNITS_REP_FAILURE = [1, 2];
+    // TODO: translate "RiR"
+    const getRir = (setting: WorkoutSetting) => setting.rir
+        ? `${setting.rir} RiR`
+        : "";
 
-    const getRirRepresentation = (setting: WorkoutSetting): string => setting.rir ? `${setting.rir} RiR` : "";
+    const getReps = (setting: WorkoutSetting) => {
+        if (setting.repetitionUnit === REP_UNIT_TILL_FAILURE) {
+            return "∞";
+        }
 
-    const getRepsRepresentation = (setting: WorkoutSetting, repUnit: string): string => {
-        return setting.repetitionUnit === REP_UNIT_TILL_FAILURE ? "∞" : `${setting.reps} ${repUnit}`;
+        const repUnit = setting.repetitionUnit !== REP_UNIT_REPETITIONS
+            ? _(setting.repetitionUnitObj!.name)
+            : '';
+
+        return `${setting.reps} ${repUnit}`;
     };
 
     // TODO: actually translate the names
-    const _ = (str: string): string => {
+    const _ = (str: string) => {
         return str;
     };
 
-
-    const getRepUnitRepresentation = (setting: WorkoutSetting): string => {
-        return !REP_UNITS_REP_FAILURE.includes(setting.repetitionUnit) ? _(setting.repetitionUnitObj!.name) : '';
-    };
-    const normalizeWeight = (weight: number | null): string => {
+    const normalizeWeight = (weight: number | null) => {
         if (weight === null) {
             return '';
         } else if (Number.isInteger(weight)) {
@@ -38,12 +39,12 @@ export function repTextWithUnit(sets: number, settingsList: WorkoutSetting[]): s
         }
     };
 
-    const getSettingText = (currentSetting: WorkoutSetting, multi: boolean = false): string => {
-        const repUnit = getRepUnitRepresentation(currentSetting);
-        const reps = getRepsRepresentation(currentSetting, repUnit);
+    const getSettingText = (currentSetting: WorkoutSetting, multi: boolean = false) => {
+        const reps = getReps(currentSetting);
         const weightUnit = currentSetting.weightUnitObj!.name;
         const weight = normalizeWeight(currentSetting.weight);
-        const rir = getRirRepresentation(currentSetting);
+        const rir = getRir(currentSetting);
+
         let out = multi ? reps : `${sets} × ${reps}`.trim();
 
         if (weight) {
@@ -56,15 +57,9 @@ export function repTextWithUnit(sets: number, settingsList: WorkoutSetting[]): s
         return out;
     };
 
-    let settingText = "";
-
-
     if (settingsList.length === 1) {
-        settingText = getSettingText(settingsList[0]);
-    } else if (settingsList.length > 1) {
-        settingText = settingsList.map((setting) => getSettingText(setting, true)).join(" – ");
+        return getSettingText(settingsList[0]);
+    } else {
+        return settingsList.map((setting) => getSettingText(setting, true)).join(" – ");
     }
-
-    return settingText;
-
 }
