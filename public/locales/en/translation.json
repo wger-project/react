@@ -76,8 +76,9 @@
   "noResults": "No results",
   "noResultsDescription": "No results found for this query, consider reducing the number of filters.",
   "routines": {
-    "routine": "Routine",
     "addDay": "Add training day",
+    "addWeightLog": "Add weight log",
+    "routine": "Routine",
     "routines": "Routines"
   },
   "server": {

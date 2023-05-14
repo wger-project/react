@@ -181,15 +181,15 @@ const DayDetails = (props: { day: Day }) => {
                 }}
             >
                 <MenuItem onClick={navigateAddLog}>
-                    Add weight log
+                    {t('routines.addWeightLog')}
                 </MenuItem>
                 <MenuItem onClick={navigateEditSet}>
-                    Edit
+                    {t('edit')}
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={navigateDeleteDay}>
                     <Delete />
-                    Delete
+                    {t('delete')}
                 </MenuItem>
             </Menu>
             <CardContent>
