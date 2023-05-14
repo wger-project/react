@@ -42,8 +42,10 @@ export class WorkoutSet {
         return this.settings.filter((element) => element.baseId === exerciseBase.id);
     }
 
-    getSettingsTextRepresentation(exerciseBase: ExerciseBase): string {
-        return settingsToText(this.sets, this.filterSettingsByExercise(exerciseBase));
+    getSettingsTextRepresentation(exerciseBase: ExerciseBase, translate?: (key: string) => string): string {
+        translate = translate || (str => str);
+
+        return settingsToText(this.sets, this.filterSettingsByExercise(exerciseBase), translate);
     }
 }
 

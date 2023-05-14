@@ -23,13 +23,15 @@ import { WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
 import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { daysOfWeek } from "utils/date";
 import { ExerciseImagePlaceholder } from "components/Exercises/Detail/OverviewCard";
+import { useTranslation } from "react-i18next";
+import { getTranslationKey } from "utils/strings";
 
 
 export const RoutineDetails = () => {
 
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
-
+    const [t] = useTranslation();
     const routineQuery = useRoutineDetailQuery(routineId);
 
     return (
@@ -39,10 +41,13 @@ export const RoutineDetails = () => {
                     routineQuery.isLoading
                         ? <LoadingPlaceholder />
                         : <>
-                            <h1>
-                                {routineQuery.data!.name}
-                            </h1>
-                            <Stack spacing={2}>
+                            <Typography variant={"h3"}>
+                                {routineQuery.data!.name !== '' ? routineQuery.data!.name : t('routines.routine')}
+                            </Typography>
+                            <Typography variant={"h6"}>
+                                {routineQuery.data!.description}
+                            </Typography>
+                            <Stack spacing={2} sx={{ mt: 2 }}>
                                 {routineQuery.data!.days.map((day: Day) => (
                                     <DayDetails day={day} key={day.id} />
                                 ))}
@@ -56,6 +61,10 @@ export const RoutineDetails = () => {
 
 function SettingDetails(props: { setting: WorkoutSetting, set: WorkoutSet }) {
 
+    const [t] = useTranslation();
+
+    const useTranslate = (input: string) => t(getTranslationKey(input));
+
     // @ts-ignore
     return <Grid container alignItems="center" sx={{ height: "100px" }}>
         <Grid item xs={2} md={1}>
@@ -67,17 +76,19 @@ function SettingDetails(props: { setting: WorkoutSetting, set: WorkoutSet }) {
                 />
                 : <ExerciseImagePlaceholder backgroundColor={"white"} iconColor={"lightgray"} height={100} />
             }
-
         </Grid>
+
         <Grid item xs={10}>
             <Stack spacing={0}>
-                <Typography variant={"h6"}>{props.setting.base?.getTranslation().name}</Typography>
-                <Typography>
-                    {props.setting.id} - {props.set.getSettingsTextRepresentation(props.setting.base!)}
+                <Typography variant={"h6"}>
+                    {props.setting.base?.getTranslation().name}
                 </Typography>
-
+                <Typography>
+                    {props.setting.id} - {props.set.getSettingsTextRepresentation(props.setting.base!, useTranslate)}
+                </Typography>
             </Stack>
         </Grid>
+
     </Grid>;
 }
 
@@ -88,7 +99,7 @@ function SetList(props: {
     index: number,
 }) {
 
-    return <Stack spacing={2}>
+    return <Stack spacing={0}>
         {props.set.settingsFiltered.map((setting) =>
             <SettingDetails
                 setting={setting}

@@ -147,6 +147,17 @@ if (exerciseDetail) {
     );
 }
 
+
+const routineOverview = document.getElementById("react-routine-overview");
+if (routineOverview) {
+    renderComponentShadowDom(routineOverview);
+}
+
+const routineDetail = document.getElementById("react-routine-detail");
+if (routineDetail) {
+    renderComponentShadowDom(routineDetail);
+}
+
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

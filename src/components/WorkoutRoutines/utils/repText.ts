@@ -5,7 +5,11 @@ import { REP_UNIT_REPETITIONS, REP_UNIT_TILL_FAILURE } from "utils/consts";
 /*
  * Converts a list of workout settings into a human-readable string like "3 × 5"
  */
-export function settingsToText(sets: number, settingsList: WorkoutSetting[]) {
+export function settingsToText(sets: number, settingsList: WorkoutSetting[], translate?: (str: string) => string) {
+
+    // If translate is not provided, just return the same string
+    translate = translate || (str => str);
+
 
     // TODO: translate "RiR"
     const getRir = (setting: WorkoutSetting) => setting.rir
@@ -18,15 +22,10 @@ export function settingsToText(sets: number, settingsList: WorkoutSetting[]) {
         }
 
         const repUnit = setting.repetitionUnit !== REP_UNIT_REPETITIONS
-            ? _(setting.repetitionUnitObj!.name)
+            ? translate!(setting.repetitionUnitObj!.name)
             : '';
 
         return `${setting.reps} ${repUnit}`;
-    };
-
-    // TODO: actually translate the names
-    const _ = (str: string) => {
-        return str;
     };
 
     const normalizeWeight = (weight: number | null) => {

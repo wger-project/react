@@ -74,36 +74,36 @@ export function makeLink(link: WgerLink, language: string, params?: UrlParams): 
 
     // If the name is in the form of "en-US", remove the country code since
     // our django app can't work with that at the moment.
-    const shortName = language.split('-')[0];
+    const langShort = language.split('-')[0];
 
     switch (link) {
-        // Routines
+        // Workout routines
         case WgerLink.ROUTINE_OVERVIEW:
-            return `/${shortName}/routines/overview`;
+            return `/${langShort}/routine/overview`;
 
         case WgerLink.ROUTINE_DETAIL:
-            return `/${shortName}/routines/${params!.id}/view`;
+            return `/${langShort}/routine/${params!.id}/view`;
 
         // Exercises
         case WgerLink.EXERCISE_CONTRIBUTE:
-            return `/${shortName}/exercise/contribute`;
+            return `/${langShort}/exercise/contribute`;
 
         case WgerLink.EXERCISE_DETAIL:
             if (params!.slug) {
-                return `/${shortName}/exercise/${params!.id}/view-base/${slug(params!.slug)}`;
+                return `/${langShort}/exercise/${params!.id}/view-base/${slug(params!.slug)}`;
             } else {
-                return `/${shortName}/exercise/${params!.id}/view-base`;
+                return `/${langShort}/exercise/${params!.id}/view-base`;
             }
 
         case WgerLink.EXERCISE_OVERVIEW:
-            return `/${shortName}/exercise/overview`;
+            return `/${langShort}/exercise/overview`;
 
         // Weight
         case WgerLink.WEIGHT_OVERVIEW:
-            return `/${shortName}/weight/overview`;
+            return `/${langShort}/weight/overview`;
 
         case WgerLink.WEIGHT_ADD:
-            return `/${shortName}/weight/add`;
+            return `/${langShort}/weight/add`;
 
         // Dashboard
         case WgerLink.DASHBOARD:

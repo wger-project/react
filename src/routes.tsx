@@ -47,7 +47,7 @@ export const WgerRoutes = () => {
                     <Route path="public" element={<PublicTemplate />} />
                 </Route>
             </Route>
-            <Route path="routines">
+            <Route path="routine">
                 <Route index element={<RoutineOverview />} />
                 <Route path="overview" element={<RoutineOverview />} />
                 <Route path=":routineId" element={<RoutineDetails />}>
