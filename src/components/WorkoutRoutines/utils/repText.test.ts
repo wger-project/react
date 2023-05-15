@@ -20,6 +20,7 @@ describe("test the reps and weight utility", () => {
     beforeEach(() => {
         setting1 = new WorkoutSetting(
             1,
+            new Date(2020, 1, 1),
             123,
             repUnit.id,
             4,
@@ -34,6 +35,7 @@ describe("test the reps and weight utility", () => {
 
         setting2 = new WorkoutSetting(
             2,
+            new Date(2020, 1, 1),
             123,
             repUnit.id,
             6,
@@ -48,6 +50,7 @@ describe("test the reps and weight utility", () => {
 
         setting3 = new WorkoutSetting(
             3,
+            new Date(2020, 1, 1),
             123,
             1,
             8,

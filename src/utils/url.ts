@@ -1,4 +1,5 @@
 import slug from "slug";
+import { AxiosRequestConfig } from "axios";
 
 interface makeUrlInterface {
     id?: number,
@@ -166,7 +167,7 @@ export function makeHeader(token?: string) {
     token = token || process.env.REACT_APP_API_KEY;
     const DJANGO_CSRF_COOKIE = 'csrftoken';
 
-    let out: any = {};
+    let out: AxiosRequestConfig['headers'] = {};
     out['Content-Type'] = 'application/json';
 
     if (token) {
