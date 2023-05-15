@@ -50,11 +50,11 @@ export const RoutineDetails = () => {
                             {/*<Typography variant={"h3"}>*/}
                             {/*    {routineQuery.data!.name !== '' ? routineQuery.data!.name : t('routines.routine')}*/}
                             {/*</Typography>*/}
-                            <Typography variant={"h6"}>
+                            <Typography variant={"caption"}>
                                 {routineQuery.data!.description}
                             </Typography>
                             <Stack spacing={2} sx={{ mt: 2 }}>
-                                {routineQuery.data!.days.map((day: Day) => (
+                                {routineQuery.data!.days.map((day) => (
                                     <DayDetails day={day} key={day.id} />
                                 ))}
                             </Stack>
@@ -98,6 +98,9 @@ function SettingDetails(props: { setting: WorkoutSetting, set: WorkoutSet }) {
                 </Typography>
                 <Typography>
                     {props.setting.id} - {props.set.getSettingsTextRepresentation(props.setting.base!, useTranslate)}
+                </Typography>
+                <Typography variant={"caption"}>
+                    {props.set.comment}
                 </Typography>
             </Stack>
         </Grid>

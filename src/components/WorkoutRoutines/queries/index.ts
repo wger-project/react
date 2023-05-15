@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { QUERY_ROUTINE_DETAIL, QUERY_ROUTINES, QUERY_ROUTINES_SHALLOW, } from "utils/consts";
+import { QUERY_ROUTINE_DETAIL, QUERY_ROUTINE_LOGS, QUERY_ROUTINES, QUERY_ROUTINES_SHALLOW, } from "utils/consts";
 import { getWorkoutRoutine, getWorkoutRoutines, getWorkoutRoutinesShallow, } from "services";
+import { getRoutineLogs } from "services/workoutRoutine";
 
 
 export function useRoutinesQuery() {
@@ -10,6 +11,12 @@ export function useRoutinesQuery() {
 export function useRoutineDetailQuery(id: number) {
     return useQuery([QUERY_ROUTINE_DETAIL, id],
         () => getWorkoutRoutine(id)
+    );
+}
+
+export function useRoutineLogQuery(id: number) {
+    return useQuery([QUERY_ROUTINE_LOGS, id],
+        () => getRoutineLogs(id)
     );
 }
 
