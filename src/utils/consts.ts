@@ -35,7 +35,7 @@ export const QUERY_ROUTINE_LOGS = 'routines-logs';
  *
  * https://www.learnui.design/tools/data-color-picker.html#palette
  */
-export const LIST_OF_COLORS = [
+export const LIST_OF_COLORS8 = [
     "#2a4c7d",
     "#5b5291",
     "#8e5298",
@@ -43,6 +43,13 @@ export const LIST_OF_COLORS = [
     "#e7537e",
     "#ff6461",
     "#ff813d",
+    "#ffa600",
+];
+export const LIST_OF_COLORS5 = [
+    "#2a4c7d",
+    "#825298",
+    "#d45089",
+    "#ff6a59",
     "#ffa600",
 ];
 export const LIST_OF_COLORS3 = [

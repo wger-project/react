@@ -29,10 +29,11 @@ import {
     YAxis
 } from "recharts";
 import { DateTime } from "luxon";
-import { LIST_OF_COLORS3, REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
+import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
 import { NameType, ValueType, } from 'recharts/src/component/DefaultTooltipContent';
+import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { generateChartColors } from "utils/colors";
 
-type GroupedLogEntries = Map<number, WorkoutLog[]>;
 
 export const RoutineLogs = () => {
 
@@ -41,16 +42,15 @@ export const RoutineLogs = () => {
     const [t, i18n] = useTranslation();
     const logsQuery = useRoutineLogQuery(routineId, true);
 
-    // Group by baseId
-    let result: GroupedLogEntries = new Map();
+    // Group by base
+    let result: Map<ExerciseBase, WorkoutLog[]> = new Map();
     if (logsQuery.isSuccess) {
         result = logsQuery.data!.reduce(function (r, a) {
-            r.set(a.baseId, r.get(a.baseId) || []);
-            r.get(a.baseId)!.push(a);
+            r.set(a.baseObj, r.get(a.baseObj) || []);
+            r.get(a.baseObj)!.push(a);
             return r;
         }, new Map());
     }
-
 
     // TODO: remove this when we add the logic in react
     // TODO: correctly pass the day ID
@@ -68,8 +68,7 @@ export const RoutineLogs = () => {
                 </Typography>
                 <p>
                     Notes
-                    This page shows the weight logs belonging to this workout only. Click on an exercise to see all the
-                    historical data for it.
+                    This page shows the weight logs belonging to this workout only.
                 </p>
                 <p>
 
@@ -92,11 +91,11 @@ export const RoutineLogs = () => {
                                 logEntries = logEntries.filter((log) => [WEIGHT_UNIT_KG, WEIGHT_UNIT_LB].includes(log.weightUnit));
                                 logEntries = logEntries.filter((log) => log.repetitionUnit === REP_UNIT_REPETITIONS);
 
-                                return <div key={key}>
-                                    <Typography variant={"h5"}>
-                                        {key}
+                                return <div key={key.id}>
+                                    <Typography variant={"h5"} sx={{ mt: 4 }}>
+                                        {key.getTranslation().name}
                                     </Typography>
-                                    <TableContainer sx={{ my: 3 }}>
+                                    <TableContainer>
                                         <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                             <TableHead>
                                                 <TableRow>
@@ -121,9 +120,12 @@ export const RoutineLogs = () => {
                                                 ))}
                                             </TableBody>
                                         </Table>
+
                                     </TableContainer>
 
-                                    <TimeSeriesChart data={logEntries} key={key} />
+                                    <Box sx={{ mt: 2 }}>
+                                        <TimeSeriesChart data={logEntries} key={key.id} />
+                                    </Box>
                                 </div>;
                             })}
 
@@ -152,7 +154,6 @@ export const formatData = (data: WorkoutLog[]) =>
 
 export const CustomTooltip = ({ active, payload, label, }: TooltipProps<ValueType, NameType>) => {
     if (active) {
-        console.table(payload);
         return (
             <div style={{ backgroundColor: "white" }}>
                 <p>{payload?.[1].value}{payload?.[1].unit}</p>
@@ -166,15 +167,15 @@ export const CustomTooltip = ({ active, payload, label, }: TooltipProps<ValueTyp
 
 export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
 
-
     // Group by rep count
-    let result: GroupedLogEntries;
+    let result: Map<number, WorkoutLog[]>;
     result = props.data.reduce(function (r, a) {
-
         r.set(a.reps, r.get(a.reps) || []);
         r.get(a.reps)!.push(a);
         return r;
     }, new Map());
+
+    const colorGenerator = generateChartColors(result.size);
 
 
     // JSX
@@ -199,9 +200,9 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
 
                     {Array.from(result).map(([key, value]) => {
 
-                            const color = LIST_OF_COLORS3[key % LIST_OF_COLORS3.length];
+                            const color = colorGenerator.next().value!;
                             const formattedData = formatData(value);
-                            formattedData.sort((a, b) => b.time - a.time);
+                            //formattedData.sort((a, b) => b.time - a.time);
 
                             return <Scatter
                                 key={key}
@@ -221,7 +222,6 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
                     <Legend />
                 </ScatterChart>
             </ResponsiveContainer>
-
         </Box>
     );
 };
