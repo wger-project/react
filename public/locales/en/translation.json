@@ -78,6 +78,8 @@
   "routines": {
     "addDay": "Add training day",
     "addWeightLog": "Add weight log",
+    "logsHeader": "Weight log for routine",
+    "addLogToDay": "Add log to this day",
     "routine": "Routine",
     "routines": "Routines"
   },

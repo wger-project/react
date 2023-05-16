@@ -1,4 +1,6 @@
 import { WorkoutRoutine } from "components/WorkoutRoutines/models/WorkoutRoutine";
+import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
+import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
 
 export const testRoutine1 = new WorkoutRoutine(
     1,
@@ -87,3 +89,49 @@ export const responseApiSetting = {
         }
     ]
 };
+export const responseRoutineLogs = {
+    "count": 2,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 2,
+            "reps": 12,
+            "weight": "10.00",
+            "date": "2023-05-10",
+            "rir": "",
+            "exercise_base": 100,
+            "workout": 1,
+            "repetition_unit": 1,
+            "weight_unit": 1
+        },
+        {
+            "id": 1,
+            "reps": 10,
+            "weight": "20.00",
+            "date": "2023-05-13",
+            "rir": "",
+            "exercise_base": 100,
+            "workout": 1,
+            "repetition_unit": 1,
+            "weight_unit": 1
+        }
+    ]
+};
+
+export const testWeightUnit1 = new WeightUnit(
+    1,
+    'kg',
+);
+export const testWeightUnit2 = new WeightUnit(
+    2,
+    'stone',
+);
+export const testRepUnit1 = new RepetitionUnit(
+    1,
+    'reps',
+);
+export const testRepUnit2 = new RepetitionUnit(
+    2,
+    'minutes',
+);

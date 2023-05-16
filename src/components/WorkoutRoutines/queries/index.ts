@@ -14,9 +14,9 @@ export function useRoutineDetailQuery(id: number) {
     );
 }
 
-export function useRoutineLogQuery(id: number) {
+export function useRoutineLogQuery(id: number, loadBases = false) {
     return useQuery([QUERY_ROUTINE_LOGS, id],
-        () => getRoutineLogs(id)
+        () => getRoutineLogs(id, loadBases)
     );
 }
 

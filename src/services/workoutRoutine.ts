@@ -9,6 +9,7 @@ import { getExerciseBase } from "services/exerciseBase";
 import { getRepUnits, getWeightUnits } from "services/workoutUnits";
 import { WorkoutLog, WorkoutLogAdapter } from "components/WorkoutRoutines/models/WorkoutLog";
 import { fetchPaginated } from "utils/requests";
+import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 
 export const WORKOUT_API_PATH = 'workout';
 export const WORKOUT_LOG_API_PATH = 'workoutlog';
@@ -142,7 +143,7 @@ export const getWorkoutRoutinesShallow = async (): Promise<WorkoutRoutine[]> => 
 /*
  * Retrieves the weight logs for a routine
  */
-export const getRoutineLogs = async (id: number): Promise<WorkoutLog[]> => {
+export const getRoutineLogs = async (id: number, loadBases = false): Promise<WorkoutLog[]> => {
     const adapter = new WorkoutLogAdapter();
     const url = makeUrl(WORKOUT_LOG_API_PATH, { query: { workout: id.toString(), limit: '999' } });
 
@@ -150,12 +151,22 @@ export const getRoutineLogs = async (id: number): Promise<WorkoutLog[]> => {
     const repUnits = unitResponses[0];
     const weightUnits = unitResponses[1];
 
+    const exercises: Map<number, ExerciseBase> = new Map();
+
     const out: WorkoutLog[] = [];
     for await  (const page of fetchPaginated(url)) {
         for (const logData of page) {
             const log = adapter.fromJson(logData);
             log.repetitionUnitObj = repUnits.find(e => e.id === log.repetitionUnit);
             log.weightUnitObj = weightUnits.find(e => e.id === log.weightUnit);
+
+            // Load the base object
+            if (loadBases) {
+                if (exercises.get(log.baseId) === undefined) {
+                    exercises.set(log.baseId, await getExerciseBase(log.baseId));
+                }
+                log.baseObj = exercises.get(log.baseId)!;
+            }
 
             out.push(log);
         }

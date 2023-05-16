@@ -7,7 +7,7 @@ import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
 
 export class WorkoutLog {
 
-    base: ExerciseBase | undefined;
+    baseObj: ExerciseBase | undefined;
 
     constructor(
         public id: number,

@@ -10,10 +10,8 @@ export function settingsToText(sets: number, settingsList: WorkoutSetting[], tra
     // If translate is not provided, just return the same string
     translate = translate || (str => str);
 
-
-    // TODO: translate "RiR"
     const getRir = (setting: WorkoutSetting) => setting.rir
-        ? `${setting.rir} RiR`
+        ? `${setting.rir} ${translate!('rir')}`
         : "";
 
     const getReps = (setting: WorkoutSetting) => {

@@ -68,20 +68,20 @@ describe("test the reps and weight utility", () => {
 
         test("repetitions, weight in kg and RiR, all sets equal", () => {
             const result = settingsToText(4, [setting1]);
-            expect(result).toEqual("4 × 4 (100 kg, 2 RiR)");
+            expect(result).toEqual("4 × 4 (100 kg, 2 rir)");
         });
 
         test("repetitions, weight with comma in kg and RiR, all sets equal", () => {
             setting1.weight = 100.5;
 
             const result = settingsToText(4, [setting1]);
-            expect(result).toEqual("4 × 4 (100.50 kg, 2 RiR)");
+            expect(result).toEqual("4 × 4 (100.50 kg, 2 rir)");
         });
 
         // TODO: fix the function so that it returns "4 (100 kg, 2 RiR)", with only one space
         test("repetitions, weight in kg and RiR, different sets", () => {
             const result = settingsToText(3, [setting1, setting2, setting3]);
-            expect(result).toEqual("4  (100 kg, 2 RiR) – 6  (90 kg, 1.5 RiR) – 8  (80 kg)");
+            expect(result).toEqual("4  (100 kg, 2 rir) – 6  (90 kg, 1.5 rir) – 8  (80 kg)");
         });
 
         test("repetitions, weight in kg, no RiR, all sets equal", () => {
