@@ -24,11 +24,16 @@ export class WorkoutSet {
         }
     }
 
+    // Return all unique exercise bases from settings
+    get exercises(): ExerciseBase[] {
+        return this.settingsFiltered.map(element => element.base!);
+    }
+
     get settingsFiltered(): WorkoutSetting[] {
         const out: WorkoutSetting[] = [];
 
         for (const setting of this.settings) {
-            const foundSettings = out.filter(element => element.baseId === setting.baseId);
+            const foundSettings = out.filter(s => s.baseId === setting.baseId);
 
             if (foundSettings.length === 0) {
                 out.push(setting);

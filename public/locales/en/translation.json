@@ -79,6 +79,7 @@
     "addDay": "Add training day",
     "addWeightLog": "Add weight log",
     "logsHeader": "Weight log for routine",
+    "logsFilterNote": "Note that only entries with a weight unit of kg or lb and repetitions are charted, other combinations such as time or until failure are ignored here",
     "addLogToDay": "Add log to this day",
     "routine": "Routine",
     "routines": "Routines"

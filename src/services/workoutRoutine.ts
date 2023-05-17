@@ -145,7 +145,10 @@ export const getWorkoutRoutinesShallow = async (): Promise<WorkoutRoutine[]> => 
  */
 export const getRoutineLogs = async (id: number, loadBases = false): Promise<WorkoutLog[]> => {
     const adapter = new WorkoutLogAdapter();
-    const url = makeUrl(WORKOUT_LOG_API_PATH, { query: { workout: id.toString(), limit: '999' } });
+    const url = makeUrl(
+        WORKOUT_LOG_API_PATH,
+        { query: { workout: id.toString(), limit: '999', ordering: '-date' } }
+    );
 
     const unitResponses = await Promise.all([getRepUnits(), getWeightUnits()]);
     const repUnits = unitResponses[0];

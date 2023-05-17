@@ -1,6 +1,6 @@
 import axios from "axios";
 import { WorkoutRoutine } from "components/WorkoutRoutines/models/WorkoutRoutine";
-import { getWorkoutRoutinesShallow } from "services";
+import { getExerciseBase, getWorkoutRoutinesShallow } from "services";
 import { getRepUnits, getWeightUnits } from "services/workoutUnits";
 import {
     responseApiWorkoutRoutine,
@@ -12,10 +12,13 @@ import {
 } from "tests/workoutRoutinesTestData";
 import { getRoutineLogs } from "services/workoutRoutine";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
+import { testExerciseSquats } from "tests/exerciseTestdata";
 
 jest.mock("axios");
 jest.mock("services/workoutUnits");
 jest.mock("services/workoutUnits");
+jest.mock("services/exerciseBase");
+
 
 describe("workout routine service tests", () => {
 
@@ -64,7 +67,7 @@ describe("workout routine service tests", () => {
         expect(axios.get).toHaveBeenCalledTimes(1);
         expect(result).toStrictEqual([
             new WorkoutLog(
-                1,
+                2,
                 new Date("2023-05-10"),
                 100,
                 1,
@@ -72,19 +75,70 @@ describe("workout routine service tests", () => {
                 10.00,
                 1,
                 "",
-                "",
+                testRepUnit1,
+                testWeightUnit1
             ),
 
             new WorkoutLog(
                 1,
-                new Date("2023-05-10"),
+                new Date("2023-05-13"),
                 100,
                 1,
                 10,
+                20,
+                1,
+                "",
+                testRepUnit1,
+                testWeightUnit1
+            ),
+        ]);
+    });
+
+
+    test('GET the routine logs and the exercise bases', async () => {
+
+        // Arrange
+        // @ts-ignore
+        axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
+        // @ts-ignore
+        getRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
+        // @ts-ignore
+        getWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
+// @ts-ignore
+        getExerciseBase.mockImplementation(() => Promise.resolve(testExerciseSquats));
+
+        // Act
+        const result = await getRoutineLogs(1, true);
+
+        // Assert
+        expect(axios.get).toHaveBeenCalledTimes(1);
+        expect(result).toStrictEqual([
+            new WorkoutLog(
+                2,
+                new Date("2023-05-10"),
+                100,
+                1,
+                12,
                 10.00,
                 1,
                 "",
+                testRepUnit1,
+                testWeightUnit1,
+                testExerciseSquats
+            ),
+
+            new WorkoutLog(
+                1,
+                new Date("2023-05-13"),
+                100,
+                1,
+                10,
+                20,
+                1,
                 "",
+                testRepUnit1,
+                testWeightUnit1,
+                testExerciseSquats
             ),
         ]);
     });

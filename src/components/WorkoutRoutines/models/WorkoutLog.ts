@@ -7,8 +7,6 @@ import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
 
 export class WorkoutLog {
 
-    baseObj: ExerciseBase | undefined;
-
     constructor(
         public id: number,
         public date: Date,
@@ -18,18 +16,25 @@ export class WorkoutLog {
         public weight: number | null,
         public weightUnit: number,
         public rir: string | null,
-        public comment: string,
         public repetitionUnitObj?: RepetitionUnit,
         public weightUnitObj?: WeightUnit,
+        public baseObj?: ExerciseBase,
     ) {
-
         if (repetitionUnitObj) {
             this.repetitionUnitObj = repetitionUnitObj;
         }
+
         if (weightUnitObj) {
             this.weightUnitObj = weightUnitObj;
-
         }
+
+        if (baseObj) {
+            this.baseObj = baseObj;
+        }
+    }
+
+    get rirString(): string {
+        return this.rir === null || this.rir === "" ? "-/-" : this.rir;
     }
 }
 
@@ -45,7 +50,6 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
             item.weight === null ? null : Number.parseFloat(item.weight),
             item.weight_unit,
             item.rir,
-            item.comment,
         );
     }
 
@@ -59,7 +63,6 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
             weight: item.weight,
             weight_unit: item.weightUnit,
             rir: item.rir,
-            comment: item.comment,
         };
     }
 }
