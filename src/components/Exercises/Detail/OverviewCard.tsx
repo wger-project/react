@@ -13,6 +13,24 @@ type OverviewCardProps = {
     language?: Language;
 };
 
+export const ExerciseImagePlaceholder = (props: {
+    backgroundColor?: string | undefined,
+    iconColor?: string | undefined,
+    height?: number | undefined,
+}) => {
+
+    const backgroundColor = props.backgroundColor || "lightgray";
+    const iconColor = props.iconColor || "gray";
+    const height = props.height || 200;
+
+    return <Box sx={{ backgroundColor: backgroundColor, height: height }}
+                display="flex"
+                alignItems="center"
+                justifyContent="center">
+        <PhotoIcon sx={{ fontSize: 80, color: iconColor }} />
+    </Box>;
+};
+
 export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
     const exercise = language
         ? exerciseBase.getTranslation(language)
@@ -35,12 +53,7 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                         sx={{ height: 200 }}
                         alt="" />
                     : <CardMedia>
-                        <Box sx={{ backgroundColor: "lightgray", height: 200 }}
-                             display="flex"
-                             alignItems="center"
-                             justifyContent="center">
-                            <PhotoIcon sx={{ fontSize: 80, color: "gray" }} />
-                        </Box>
+                        <ExerciseImagePlaceholder />
                     </CardMedia>}
                 <CardContent>
                     <Typography gutterBottom variant="h6" component="div">

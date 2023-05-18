@@ -21,7 +21,7 @@ export const WeightEntryFab = () => {
                 onClick={handleOpenModal}
                 sx={{
                     position: 'fixed',
-                    bottom: (theme) => theme.spacing(2),
+                    bottom: '5rem',
                     right: (theme) => theme.spacing(2),
                     zIndex: 9,
                 }}>

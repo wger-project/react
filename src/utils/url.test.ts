@@ -7,10 +7,21 @@ describe("test url utility", () => {
         expect(result).toStrictEqual('http://localhost:8000/api/v2/endpoint/');
     });
 
+    test('generate object method URL', () => {
+        const result = makeUrl('endpoint', { server: 'http://localhost:8000', objectMethod: 'foo' });
+        expect(result).toStrictEqual('http://localhost:8000/api/v2/endpoint/foo/');
+    });
+
     test('generate overview URL, with query parameters', () => {
         const params = { server: 'http://localhost:8000', query: { limit: 900 } };
         const result = makeUrl('endpoint', params);
         expect(result).toStrictEqual('http://localhost:8000/api/v2/endpoint/?limit=900');
+    });
+
+    test('generate overview URL, with query parameters and an object method', () => {
+        const params = { server: 'http://localhost:8000', query: { limit: 900 }, objectMethod: 'calculate_foo' };
+        const result = makeUrl('endpoint', params);
+        expect(result).toStrictEqual('http://localhost:8000/api/v2/endpoint/calculate_foo/?limit=900');
     });
 
     test('generate overview URL, default server', () => {
@@ -73,14 +84,19 @@ describe("test the clickable url utility", () => {
         expect(result).toEqual('/');
     });
 
-    test('link to exercise overview - simple language code', () => {
+    test('link to exercise overview, simple language code', () => {
         const result = makeLink(WgerLink.EXERCISE_OVERVIEW, 'de');
         expect(result).toEqual('/de/exercise/overview');
     });
 
-    test('link to exercise overview - complex language code', () => {
+    test('link to exercise overview, complex language code', () => {
         const result = makeLink(WgerLink.EXERCISE_OVERVIEW, 'de-DE');
         expect(result).toEqual('/de/exercise/overview');
+    });
+
+    test('link to exercise overview, no language code', () => {
+        const result = makeLink(WgerLink.EXERCISE_OVERVIEW,);
+        expect(result).toEqual('/en/exercise/overview');
     });
 
     test('link to exercise contribution page', () => {

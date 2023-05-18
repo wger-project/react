@@ -1,8 +1,10 @@
 import slug from "slug";
+import { AxiosRequestConfig } from "axios";
 
 interface makeUrlInterface {
     id?: number,
     server?: string,
+    objectMethod?: string,
     query?: object,
 }
 
@@ -15,13 +17,18 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
 
     // Base data
     const serverUrl = params.server || process.env.REACT_APP_API_SERVER;
-    const pathlist = [serverUrl, 'api', 'v2', path];
+    const paths = [serverUrl, 'api', 'v2', path];
+
+    // append objectmethod to the path
+    if (params.objectMethod) {
+        paths.push(params.objectMethod);
+    }
 
     // Detail view
     if (params.id) {
-        pathlist.push(params.id.toString());
+        paths.push(params.id.toString());
     }
-    pathlist.push('');
+    paths.push('');
 
     // Query parameters
     if (params.query) {
@@ -32,16 +39,31 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
                 querylist.push(`${encodeURIComponent(key)}=${encodeURIComponent(params.query[key])}`);
             }
         }
-        pathlist.pop();
-        pathlist.push(`?${querylist.join('&')}`);
+        paths.pop();
+        paths.push(`?${querylist.join('&')}`);
     }
 
-    return pathlist.join('/');
+    return paths.join('/');
 }
 
 
 export enum WgerLink {
     DASHBOARD,
+
+    ROUTINE_OVERVIEW,
+    ROUTINE_DETAIL,
+    ROUTINE_ADD,
+    ROUTINE_DELETE,
+    ROUTINE_ADD_LOG,
+    ROUTINE_EDIT_LOG,
+    ROUTINE_DELETE_LOG,
+    ROUTINE_EDIT_DAY,
+    ROUTINE_ADD_DAY,
+    ROUTINE_DELETE_DAY,
+    ROUTINE_ADD_SET,
+    ROUTINE_EDIT_SET,
+    ROUTINE_DELETE_SET,
+
 
     EXERCISE_DETAIL,
     EXERCISE_OVERVIEW,
@@ -61,33 +83,57 @@ type UrlParams = ExerciseDetailUrlParams;
  *
  * These URLs need to be kept in sync with the ones used in django
  */
-export function makeLink(link: WgerLink, language: string, params?: UrlParams): string {
+export function makeLink(link: WgerLink, language?: string, params?: UrlParams): string {
+
+    language = language || 'en-us';
 
     // If the name is in the form of "en-US", remove the country code since
     // our django app can't work with that at the moment.
-    const shortName = language.split('-')[0];
+    const langShort = language.split('-')[0];
 
     switch (link) {
+        // Workout routines
+        case WgerLink.ROUTINE_OVERVIEW:
+            return `/${langShort}/routine/overview`;
+        case WgerLink.ROUTINE_DETAIL:
+            return `/${langShort}/routine/${params!.id}/view`;
+        case WgerLink.ROUTINE_ADD:
+            return `/${langShort}/routine/add`;
+        case WgerLink.ROUTINE_ADD_DAY:
+            return `/${langShort}/routine/day/${params!.id}/add`;
+        case WgerLink.ROUTINE_ADD_LOG:
+            return `/${langShort}/routine/day/${params!.id}/log/add`;
+        case WgerLink.ROUTINE_EDIT_LOG:
+            return `/${langShort}/routine/log/${params!.id}/edit`;
+        case WgerLink.ROUTINE_DELETE_LOG:
+            return `/${langShort}/routine/log/${params!.id}/delete`;
+        case WgerLink.ROUTINE_EDIT_DAY:
+            return `/${langShort}/routine/day/${params!.id}/edit`;
+        case WgerLink.ROUTINE_DELETE_DAY:
+            return `/${langShort}/routine/day/${params!.id}/delete`;
+        case WgerLink.ROUTINE_ADD_SET:
+            return `/${langShort}/routine/set/${params!.id}/add`;
+
         // Exercises
         case WgerLink.EXERCISE_CONTRIBUTE:
-            return `/${shortName}/exercise/contribute`;
+            return `/${langShort}/exercise/contribute`;
 
         case WgerLink.EXERCISE_DETAIL:
             if (params!.slug) {
-                return `/${shortName}/exercise/${params!.id}/view-base/${slug(params!.slug)}`;
+                return `/${langShort}/exercise/${params!.id}/view-base/${slug(params!.slug)}`;
             } else {
-                return `/${shortName}/exercise/${params!.id}/view-base`;
+                return `/${langShort}/exercise/${params!.id}/view-base`;
             }
 
         case WgerLink.EXERCISE_OVERVIEW:
-            return `/${shortName}/exercise/overview`;
+            return `/${langShort}/exercise/overview`;
 
         // Weight
         case WgerLink.WEIGHT_OVERVIEW:
-            return `/${shortName}/weight/overview`;
+            return `/${langShort}/weight/overview`;
 
         case WgerLink.WEIGHT_ADD:
-            return `/${shortName}/weight/add`;
+            return `/${langShort}/weight/add`;
 
         // Dashboard
         case WgerLink.DASHBOARD:
@@ -127,7 +173,7 @@ export function makeHeader(token?: string) {
     token = token || process.env.REACT_APP_API_KEY;
     const DJANGO_CSRF_COOKIE = 'csrftoken';
 
-    let out: any = {};
+    let out: AxiosRequestConfig['headers'] = {};
     out['Content-Type'] = 'application/json';
 
     if (token) {

@@ -24,6 +24,9 @@ export const Header = () => {
                     open={Boolean(anchorElWorkout)}
                     onClose={() => setAnchorElWorkout(null)}
                 >
+                    <MenuItem component={Link} to={makeLink(WgerLink.ROUTINE_OVERVIEW, i18n.language)}>
+                        Routine overview
+                    </MenuItem>
                     <MenuItem component={Link} to={makeLink(WgerLink.EXERCISE_OVERVIEW, i18n.language)}>
                         Exercise overview
                     </MenuItem>
