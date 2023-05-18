@@ -93,7 +93,7 @@ function SettingDetails(props: { setting: WorkoutSetting, set: WorkoutSet }) {
         {/* ml only needed because in the django app the css breaks a bit */}
         <Grid item xs={10} sx={{ ml: 1 }}>
             <Stack spacing={0}>
-                <Typography variant={"h6"}>
+                <Typography variant={"subtitle1"}>
                     {props.setting.base?.getTranslation().name}
                 </Typography>
                 <Typography>
