@@ -1,34 +1,16 @@
 import React from "react";
-import { Box, Card, CardActionArea, CardContent, CardMedia, Chip, Typography, } from "@mui/material";
+import { Card, CardActionArea, CardContent, CardMedia, Chip, Typography, } from "@mui/material";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { useTranslation } from "react-i18next";
 import { getTranslationKey } from "utils/strings";
-import PhotoIcon from '@mui/icons-material/Photo';
 import { makeLink, WgerLink } from "utils/url";
+import { ExerciseImagePlaceholder } from "components/Exercises/Detail/ExerciseImagePlaceholder";
 
 type OverviewCardProps = {
     exerciseBase: ExerciseBase;
     language?: Language;
-};
-
-export const ExerciseImagePlaceholder = (props: {
-    backgroundColor?: string | undefined,
-    iconColor?: string | undefined,
-    height?: number | undefined,
-}) => {
-
-    const backgroundColor = props.backgroundColor || "lightgray";
-    const iconColor = props.iconColor || "gray";
-    const height = props.height || 200;
-
-    return <Box sx={{ backgroundColor: backgroundColor, height: height }}
-                display="flex"
-                alignItems="center"
-                justifyContent="center">
-        <PhotoIcon sx={{ fontSize: 80, color: iconColor }} />
-    </Box>;
 };
 
 export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {

@@ -24,10 +24,10 @@ import { Add, Delete } from "@mui/icons-material";
 import { WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
 import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { daysOfWeek } from "utils/date";
-import { ExerciseImagePlaceholder } from "components/Exercises/Detail/OverviewCard";
 import { useTranslation } from "react-i18next";
 import { getTranslationKey } from "utils/strings";
 import { makeLink, WgerLink } from "utils/url";
+import { ExerciseImagePlaceholder } from "components/Exercises/Detail/ExerciseImagePlaceholder";
 
 
 export const RoutineDetails = () => {

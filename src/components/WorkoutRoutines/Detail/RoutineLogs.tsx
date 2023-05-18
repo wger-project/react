@@ -173,6 +173,12 @@ export const RoutineLogs = () => {
     const logsQuery = useRoutineLogQuery(routineId, false);
     const routineQuery = useRoutineDetailQuery(routineId);
 
+    const navigateAddLogToDay = (id: number) => window.location.href = makeLink(
+        WgerLink.ROUTINE_ADD_LOG,
+        i18n.language,
+        { id: id }
+    );
+
     // Group by base
     let groupedWorkoutLogs: Map<number, WorkoutLog[]> = new Map();
     if (logsQuery.isSuccess) {
@@ -207,39 +213,30 @@ export const RoutineLogs = () => {
                 </Typography>
                 {logsQuery.isSuccess && routineQuery.isSuccess
                     ? <>
-                        {routineQuery.data!.days.map((day) => {
+                        {routineQuery.data!.days.map((day) => <div key={day.id}>
+                                <Stack
+                                    direction={{ xs: 'column', sm: 'row' }}
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    sx={{ mt: 4 }}
+                                >
+                                    <Typography variant={"h4"}>
+                                        {day.description}
+                                    </Typography>
+                                    <Button variant="contained" onClick={() => navigateAddLogToDay(day.id)}>
+                                        {t('routines.addLogToDay')}
+                                    </Button>
+                                </Stack>
 
-                                const navigateAddLogToDay = () => window.location.href = makeLink(
-                                    WgerLink.ROUTINE_ADD_LOG,
-                                    i18n.language,
-                                    { id: day.id }
-                                );
-
-                                return <div key={day.id}>
-                                    <Stack
-                                        direction={{ xs: 'column', sm: 'row' }}
-                                        justifyContent="space-between"
-                                        alignItems="center"
-                                        sx={{ mt: 4 }}
-                                    >
-                                        <Typography variant={"h4"}>
-                                            {day.description}
-                                        </Typography>
-                                        <Button variant="contained" onClick={navigateAddLogToDay}>
-                                            {t('routines.addLogToDay')}
-                                        </Button>
-                                    </Stack>
-
-                                    {day.sets.map(workoutSet =>
-                                        workoutSet.exercises.map(base =>
-                                            <ExerciseLog
-                                                key={workoutSet.id + base.uuid!}
-                                                exerciseBase={base}
-                                                logEntries={groupedWorkoutLogs.get(base.id!)!}
-                                            />)
-                                    )}
-                                </div>;
-                            }
+                                {day.sets.map(workoutSet =>
+                                    workoutSet.exercises.map(base =>
+                                        <ExerciseLog
+                                            key={workoutSet.id + base.uuid!}
+                                            exerciseBase={base}
+                                            logEntries={groupedWorkoutLogs.get(base.id!)!}
+                                        />)
+                                )}
+                            </div>
                         )}
                     </>
                     : <LoadingPlaceholder />
