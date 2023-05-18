@@ -80,9 +80,9 @@ function SettingDetails(props: { setting: WorkoutSetting, set: WorkoutSet }) {
     // @ts-ignore
     return <Grid container alignItems="center" sx={{ height: "100px" }}>
         <Grid item xs={2} md={1}>
-            {props.setting.base?.images.length !== 0
+            {props.setting.base?.mainImage !== undefined
                 ? <img
-                    src={props.setting.base?.images.length !== 0 ? props.setting.base?.mainImage?.url : "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e?w=242&h=242&fit=crop&auto=format"}
+                    src={props.setting.base?.mainImage.url}
                     width="80%"
                     alt={props.setting.base?.getTranslation().name}
                 />
