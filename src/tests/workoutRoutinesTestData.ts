@@ -6,6 +6,14 @@ import { WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
 import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { testExerciseSquats } from "tests/exerciseTestdata";
 
+export const testWeightUnitKg = new WeightUnit(1, "kg");
+export const testWeightUnitLb = new WeightUnit(2, "lb");
+export const testWeightUnitPlates = new WeightUnit(3, "Plates");
+
+export const testRepUnitRepetitions = new RepetitionUnit(1, "Repetitions");
+export const testRepUnitUnitFailure = new RepetitionUnit(2, "Unit failure");
+export const testRepUnitUnitMinutes = new RepetitionUnit(3, "Minutes");
+
 const testSetting1 = new WorkoutSetting(
     5,
     new Date(2011, 1, 1),
@@ -17,8 +25,8 @@ const testSetting1 = new WorkoutSetting(
     "1.5",
     1,
     "this is a comment",
-    //repetitionUnitObj?: RepetitionUnit,
-    //weightUnitObj?: WeightUnit,
+    testRepUnitRepetitions,
+    testWeightUnitKg
 );
 testSetting1.base = testExerciseSquats;
 
