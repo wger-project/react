@@ -40,7 +40,7 @@ import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { generateChartColors } from "utils/colors";
 
 
-export const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog[] }) => {
+const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog[] }) => {
 
     const availableResultsPerPage = [5, 10, 20];
     const [rowsPerPage, setRowsPerPage] = React.useState(availableResultsPerPage[0]);
@@ -154,7 +154,7 @@ export const RoutineLogs = () => {
                     ? <>
                         {routineQuery.data!.days.map((day) => {
 
-                                const navigateAddDay = () => window.location.href = makeLink(
+                                const navigateAddLogToDay = () => window.location.href = makeLink(
                                     WgerLink.ROUTINE_ADD_LOG,
                                     i18n.language,
                                     { id: day.id }
@@ -170,7 +170,7 @@ export const RoutineLogs = () => {
                                         <Typography variant={"h4"}>
                                             {day.description}
                                         </Typography>
-                                        <Button variant="contained" onClick={navigateAddDay}>
+                                        <Button variant="contained" onClick={navigateAddLogToDay}>
                                             {t('routines.addLogToDay')}
                                         </Button>
                                     </Stack>
@@ -194,18 +194,24 @@ export const RoutineLogs = () => {
     );
 };
 
-export const formatData = (data: WorkoutLog[]) =>
-    data.map((entry) => {
+/*
+ * Format the log entries so that they can be passed to the chart
+ *
+ * This is mostly due to the time, which needs to be a number to be shown
+ * in the scatter plot
+ */
+const formatData = (data: WorkoutLog[]) =>
+    data.map((log) => {
         return {
-            id: entry.id,
-            value: entry.weight,
-            time: entry.date.getTime(),
-            entry: entry,
+            id: log.id,
+            value: log.weight,
+            time: log.date.getTime(),
+            entry: log,
         };
     });
 
 
-export const CustomTooltip = ({ active, payload, label, }: TooltipProps<ValueType, NameType>) => {
+const ExerciseLogTooltip = ({ active, payload, label, }: TooltipProps<ValueType, NameType>) => {
     if (active) {
 
         // TODO: translate rir
@@ -286,8 +292,7 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
                         }
                     )}
 
-                    {/*<Tooltip />*/}
-                    <Tooltip content={<CustomTooltip />} />
+                    <Tooltip content={<ExerciseLogTooltip />} />
                     <CartesianGrid strokeDasharray="3 3" />
                     <Legend />
                 </ScatterChart>
