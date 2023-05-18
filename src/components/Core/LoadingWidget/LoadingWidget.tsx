@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, CircularProgress, Paper, Stack } from "@mui/material";
+import { Box, CircularProgress, Stack } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 export const LoadingWidget = () => {
@@ -12,11 +12,11 @@ export const LoadingWidget = () => {
 };
 
 export const LoadingPlaceholder = () => {
-    return <Paper
+    return <Box
         sx={{ height: 200, alignItems: "center", mt: 2 }}
         component={Stack}
         direction="column"
         justifyContent="center">
         <CircularProgress />
-    </Paper>;
+    </Box>;
 };
