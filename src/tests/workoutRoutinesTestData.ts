@@ -1,13 +1,49 @@
 import { WorkoutRoutine } from "components/WorkoutRoutines/models/WorkoutRoutine";
 import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
 import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
+import { Day } from "components/WorkoutRoutines/models/Day";
+import { WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
+import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
+import { testExerciseSquats } from "tests/exerciseTestdata";
+
+const testSetting1 = new WorkoutSetting(
+    5,
+    new Date(2011, 1, 1),
+    1,
+    2,
+    8,
+    80,
+    1,
+    "1.5",
+    1,
+    "this is a comment",
+    //repetitionUnitObj?: RepetitionUnit,
+    //weightUnitObj?: WeightUnit,
+);
+testSetting1.base = testExerciseSquats;
+
+const testSet1 = new WorkoutSet(10,
+    4,
+    1,
+    "range of motion!!",
+    [testSetting1]
+);
+
+const testDayLegs = new Day(5,
+    "Every day is leg day 🦵🏻",
+    [1, 2, 3],
+    [testSet1]
+);
 
 export const testRoutine1 = new WorkoutRoutine(
     1,
     'Test routine 1',
-    '',
-    new Date('2023-01-01')
+    'Full body routine',
+    new Date('2023-01-01'),
+    [testDayLegs]
 );
+
+
 export const testRoutine2 = new WorkoutRoutine(
     2,
     '',

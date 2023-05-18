@@ -12,7 +12,6 @@ const queryClient = new QueryClient();
 
 describe("Test the RoutineOverview component", () => {
 
-
     beforeEach(() => {
         // @ts-ignore
         getWorkoutRoutinesShallow.mockImplementation(() => Promise.resolve(testRoutines));
@@ -39,5 +38,4 @@ describe("Test the RoutineOverview component", () => {
         expect(screen.getByText('routines.routine')).toBeInTheDocument();
         expect(screen.getByText('routines.routines')).toBeInTheDocument();
     });
-
 });

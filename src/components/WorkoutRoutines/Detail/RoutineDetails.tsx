@@ -51,10 +51,10 @@ export const RoutineDetails = () => {
                             {/*    {routineQuery.data!.name !== '' ? routineQuery.data!.name : t('routines.routine')}*/}
                             {/*</Typography>*/}
                             <Typography variant={"caption"}>
-                                {routineQuery.data!.description}
+                                {routineQuery.data?.description}
                             </Typography>
                             <Stack spacing={2} sx={{ mt: 2 }}>
-                                {routineQuery.data!.days.map((day) => (
+                                {routineQuery.data?.days.map((day) => (
                                     <DayDetails day={day} key={day.id} />
                                 ))}
                             </Stack>
@@ -82,7 +82,7 @@ function SettingDetails(props: { setting: WorkoutSetting, set: WorkoutSet }) {
         <Grid item xs={2} md={1}>
             {props.setting.base?.images.length !== 0
                 ? <img
-                    src={props.setting.base?.images.length !== 0 ? props.setting.base!.mainImage?.url : "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e?w=242&h=242&fit=crop&auto=format"}
+                    src={props.setting.base?.images.length !== 0 ? props.setting.base?.mainImage?.url : "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e?w=242&h=242&fit=crop&auto=format"}
                     width="80%"
                     alt={props.setting.base?.getTranslation().name}
                 />
