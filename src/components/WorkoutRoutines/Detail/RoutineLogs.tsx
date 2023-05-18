@@ -142,7 +142,7 @@ const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog
                         </TableHead>
                         <TableBody>
                             {props.logEntries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((log) =>
-                                <LogTableRow log={log} />
+                                <LogTableRow log={log} key={log.id} />
                             )}
                         </TableBody>
                     </Table>
