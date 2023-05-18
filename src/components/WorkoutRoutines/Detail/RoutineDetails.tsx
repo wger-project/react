@@ -58,7 +58,7 @@ export const RoutineDetails = () => {
                                     <DayDetails day={day} key={day.id} />
                                 ))}
                             </Stack>
-                            <Box textAlign='center' sx={{ mt: 4 }}>
+                            <Box textAlign="center" sx={{ mt: 4 }}>
                                 <Button variant="outlined" onClick={navigateAddDay}>
                                     {t('routines.addDay')}
                                 </Button>
@@ -179,9 +179,7 @@ const DayDetails = (props: { day: Day }) => {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                }}
+                MenuListProps={{ 'aria-labelledby': 'basic-button' }}
             >
                 <MenuItem onClick={navigateAddLog}>
                     {t('routines.addWeightLog')}
@@ -196,7 +194,6 @@ const DayDetails = (props: { day: Day }) => {
                 </MenuItem>
             </Menu>
             <CardContent>
-
                 {props.day.sets.map((set, index) => (
                     <SetList
                         set={set}

@@ -55,6 +55,8 @@ export enum WgerLink {
     ROUTINE_ADD,
     ROUTINE_DELETE,
     ROUTINE_ADD_LOG,
+    ROUTINE_EDIT_LOG,
+    ROUTINE_DELETE_LOG,
     ROUTINE_EDIT_DAY,
     ROUTINE_ADD_DAY,
     ROUTINE_DELETE_DAY,
@@ -101,6 +103,10 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/routine/day/${params!.id}/add`;
         case WgerLink.ROUTINE_ADD_LOG:
             return `/${langShort}/routine/day/${params!.id}/log/add`;
+        case WgerLink.ROUTINE_EDIT_LOG:
+            return `/${langShort}/routine/log/${params!.id}/edit`;
+        case WgerLink.ROUTINE_DELETE_LOG:
+            return `/${langShort}/routine/log/${params!.id}/delete`;
         case WgerLink.ROUTINE_EDIT_DAY:
             return `/${langShort}/routine/day/${params!.id}/edit`;
         case WgerLink.ROUTINE_DELETE_DAY:

@@ -7,6 +7,9 @@ import {
     CardContent,
     Container,
     Grid,
+    IconButton,
+    Menu,
+    MenuItem,
     Stack,
     Table,
     TableBody,
@@ -38,7 +41,70 @@ import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/cons
 import { NameType, ValueType, } from 'recharts/src/component/DefaultTooltipContent';
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { generateChartColors } from "utils/colors";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Delete, Edit } from "@mui/icons-material";
 
+
+const LogTableRow = (props: { log: WorkoutLog }) => {
+    const [t, i18n] = useTranslation();
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const navigateEditLog = () => window.location.href = makeLink(
+        WgerLink.ROUTINE_EDIT_LOG,
+        i18n.language,
+        { id: props.log.id }
+    );
+    const navigateDeleteLog = () => window.location.href = makeLink(
+        WgerLink.ROUTINE_DELETE_LOG,
+        i18n.language,
+        { id: props.log.id }
+    );
+
+
+    return <TableRow key={props.log.id}>
+        <TableCell component="th" scope="row">
+            {DateTime.fromJSDate(props.log.date).toLocaleString(DateTime.DATE_MED)}
+        </TableCell>
+        <TableCell>
+            {props.log.reps}
+        </TableCell>
+        <TableCell>
+            {props.log.weight}{props.log.weightUnitObj?.name}
+        </TableCell>
+        <TableCell>
+            {props.log.rirString}
+        </TableCell>
+        <TableCell>
+            <IconButton aria-label="settings" onClick={handleClick}>
+                <MoreVertIcon fontSize={"small"} />
+            </IconButton>
+            <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{ 'aria-labelledby': 'basic-button' }}
+            >
+                <MenuItem onClick={navigateEditLog}>
+                    <Edit />
+                    {t('edit')}
+                </MenuItem>
+                <MenuItem onClick={navigateDeleteLog}>
+                    <Delete />
+                    {t('delete')}
+                </MenuItem>
+            </Menu>
+
+        </TableCell>
+    </TableRow>;
+};
 
 const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog[] }) => {
 
@@ -55,6 +121,7 @@ const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog
         setPage(0);
     };
 
+
     return <>
         <Typography variant={"h6"} sx={{ mt: 4 }}>
             {props.exerciseBase.getTranslation().name}
@@ -70,25 +137,13 @@ const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog
                                 <TableCell>Reps</TableCell>
                                 <TableCell>Weight</TableCell>
                                 <TableCell>RiR</TableCell>
+                                <TableCell></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {props.logEntries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((log) => (
-                                <TableRow key={log.id}>
-                                    <TableCell component="th" scope="row">
-                                        {DateTime.fromJSDate(log.date).toLocaleString(DateTime.DATE_MED)}
-                                    </TableCell>
-                                    <TableCell>
-                                        {log.reps}
-                                    </TableCell>
-                                    <TableCell>
-                                        {log.weight}{log.weightUnitObj?.name}
-                                    </TableCell>
-                                    <TableCell>
-                                        {log.rirString}
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {props.logEntries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((log) =>
+                                <LogTableRow log={log} />
+                            )}
                         </TableBody>
                     </Table>
                     <TablePagination
@@ -264,7 +319,6 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
                         dataKey="time"
                         domain={["auto", "auto"]}
                         name="Time"
-
                         tickFormatter={unixTime => DateTime.fromMillis(unixTime).toLocaleString(DateTime.DATE_MED)}
                         type="number"
                     />
@@ -276,7 +330,6 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
                     />
 
                     {Array.from(result).map(([key, value]) => {
-
                             const color = colorGenerator.next().value!;
                             const formattedData = formatData(value);
 
