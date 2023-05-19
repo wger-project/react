@@ -113,6 +113,10 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/routine/day/${params!.id}/delete`;
         case WgerLink.ROUTINE_ADD_SET:
             return `/${langShort}/routine/set/${params!.id}/add`;
+        case WgerLink.ROUTINE_EDIT_SET:
+            return `/${langShort}/routine/set/${params!.id}/edit`;
+        case WgerLink.ROUTINE_DELETE_SET:
+            return `/${langShort}/routine/set/${params!.id}/delete`;
 
         // Exercises
         case WgerLink.EXERCISE_CONTRIBUTE:

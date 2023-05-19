@@ -25,7 +25,6 @@ import { WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
 import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { daysOfWeek } from "utils/date";
 import { useTranslation } from "react-i18next";
-import { getTranslationKey } from "utils/strings";
 import { makeLink, WgerLink } from "utils/url";
 import { ExerciseImagePlaceholder } from "components/Exercises/Detail/ExerciseImagePlaceholder";
 
@@ -40,42 +39,38 @@ export const RoutineDetails = () => {
     // TODO: remove this when we add the logic in react
     const navigateAddDay = () => window.location.href = makeLink(WgerLink.ROUTINE_ADD_DAY, i18n.language, { id: routineId });
 
-    return (
-        <>
-            <Container maxWidth="lg">
-                {
-                    routineQuery.isLoading
-                        ? <LoadingPlaceholder />
-                        : <>
-                            {/*<Typography variant={"h3"}>*/}
-                            {/*    {routineQuery.data!.name !== '' ? routineQuery.data!.name : t('routines.routine')}*/}
-                            {/*</Typography>*/}
-                            <Typography variant={"caption"}>
-                                {routineQuery.data?.description}
-                            </Typography>
-                            <Stack spacing={2} sx={{ mt: 2 }}>
-                                {routineQuery.data?.days.map((day) => (
-                                    <DayDetails day={day} key={day.id} />
-                                ))}
-                            </Stack>
-                            <Box textAlign="center" sx={{ mt: 4 }}>
-                                <Button variant="outlined" onClick={navigateAddDay}>
-                                    {t('routines.addDay')}
-                                </Button>
-                            </Box>
-
-                        </>
-                }
-            </Container>
-        </>
-    );
+    return <>
+        <Container maxWidth="lg">
+            {routineQuery.isLoading
+                ? <LoadingPlaceholder />
+                : <>
+                    {/*<Typography variant={"h3"}>*/}
+                    {/*    {routineQuery.data!.name !== '' ? routineQuery.data!.name : t('routines.routine')}*/}
+                    {/*</Typography>*/}
+                    <Typography variant={"caption"}>
+                        {routineQuery.data?.description}
+                    </Typography>
+                    <Stack spacing={2} sx={{ mt: 2 }}>
+                        {routineQuery.data?.days.map((day) => (
+                            <DayDetails day={day} key={day.id} />
+                        ))}
+                    </Stack>
+                    <Box textAlign="center" sx={{ mt: 4 }}>
+                        <Button variant="outlined" onClick={navigateAddDay}>
+                            {t('routines.addDay')}
+                        </Button>
+                    </Box>
+                </>
+            }
+        </Container>
+    </>;
 };
 
 function SettingDetails(props: { setting: WorkoutSetting, set: WorkoutSet }) {
 
     const [t] = useTranslation();
 
-    const useTranslate = (input: string) => t(getTranslationKey(input));
+    const useTranslate = (input: string) => t(input as any);
 
     // @ts-ignore
     return <Grid container alignItems="center" sx={{ height: "100px" }}>
@@ -104,7 +99,6 @@ function SettingDetails(props: { setting: WorkoutSetting, set: WorkoutSet }) {
                 </Typography>
             </Stack>
         </Grid>
-
     </Grid>;
 }
 
@@ -113,17 +107,63 @@ function SetList(props: {
     set: WorkoutSet,
     index: number,
 }) {
+    const [t, i18n] = useTranslation();
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
-    return <Stack spacing={0}>
-        {props.set.settingsFiltered.map((setting) =>
-            <SettingDetails
-                setting={setting}
-                set={props.set}
-                key={setting.id}
-            />
-        )}
-        <Divider />
-    </Stack>;
+    const navigateEditSet = () => window.location.href = makeLink(
+        WgerLink.ROUTINE_EDIT_SET,
+        i18n.language,
+        { id: props.set.id }
+    );
+    const navigateDeleteSet = () => window.location.href = makeLink(
+        WgerLink.ROUTINE_DELETE_SET,
+        i18n.language,
+        { id: props.set.id }
+    );
+
+
+    return <Grid
+        container
+        spacing={2}
+        justifyContent="space-between"
+        alignItems="flex-start"
+    >
+        <Grid item xs={11}>
+            {props.set.settingsFiltered.map((setting) =>
+                <SettingDetails
+                    setting={setting}
+                    set={props.set}
+                    key={setting.id}
+                />
+            )}
+        </Grid>
+        <Grid item xs={1} textAlign={"right"}>
+            <IconButton aria-label="settings" onClick={handleClick}>
+                <MoreVertIcon fontSize="small" />
+            </IconButton>
+            <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{ 'aria-labelledby': 'basic-button' }}
+            >
+                <MenuItem onClick={navigateEditSet}>
+                    {t('edit')}
+                </MenuItem>
+                <MenuItem onClick={navigateDeleteSet}>
+                    {t('delete')}
+                </MenuItem>
+            </Menu>
+        </Grid>
+    </Grid>;
 }
 
 // Day component that accepts a Day as a prop
@@ -139,7 +179,7 @@ const DayDetails = (props: { day: Day }) => {
 
     const [t, i18n] = useTranslation();
 
-    const navigateEditSet = () => window.location.href = makeLink(
+    const navigateEditDay = () => window.location.href = makeLink(
         WgerLink.ROUTINE_EDIT_DAY,
         i18n.language,
         { id: props.day.id }
@@ -184,7 +224,7 @@ const DayDetails = (props: { day: Day }) => {
                 <MenuItem onClick={navigateAddLog}>
                     {t('routines.addWeightLog')}
                 </MenuItem>
-                <MenuItem onClick={navigateEditSet}>
+                <MenuItem onClick={navigateEditDay}>
                     {t('edit')}
                 </MenuItem>
                 <Divider />
@@ -194,13 +234,15 @@ const DayDetails = (props: { day: Day }) => {
                 </MenuItem>
             </Menu>
             <CardContent>
-                {props.day.sets.map((set, index) => (
-                    <SetList
-                        set={set}
-                        index={index}
-                        key={set.id}
-                    />
-                ))}
+                <Stack divider={<Divider flexItem />}>
+                    {props.day.sets.map((set, index) => (
+                        <SetList
+                            set={set}
+                            index={index}
+                            key={set.id}
+                        />
+                    ))}
+                </Stack>
             </CardContent>
             <CardActions>
                 <IconButton onClick={navigateAddSet}>

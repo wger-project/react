@@ -1,5 +1,6 @@
 import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { REP_UNIT_REPETITIONS, REP_UNIT_TILL_FAILURE } from "utils/consts";
+import { getTranslationKey } from "utils/strings";
 
 
 /*
@@ -11,7 +12,7 @@ export function settingsToText(sets: number, settingsList: WorkoutSetting[], tra
     translate = translate || (str => str);
 
     const getRir = (setting: WorkoutSetting) => setting.rir
-        ? `${setting.rir} ${translate!('rir')}`
+        ? `${setting.rir} ${translate!('routines.rir')}`
         : "";
 
     const getReps = (setting: WorkoutSetting) => {
@@ -20,7 +21,7 @@ export function settingsToText(sets: number, settingsList: WorkoutSetting[], tra
         }
 
         const repUnit = setting.repetitionUnit !== REP_UNIT_REPETITIONS
-            ? translate!(setting.repetitionUnitObj!.name)
+            ? translate!(getTranslationKey(setting.repetitionUnitObj!.name))
             : '';
 
         return `${setting.reps} ${repUnit}`;
