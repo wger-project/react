@@ -97,7 +97,7 @@ function SettingDetails(props: { setting: WorkoutSetting, set: WorkoutSet }) {
                     {props.setting.base?.getTranslation().name}
                 </Typography>
                 <Typography>
-                    {props.setting.id} - {props.set.getSettingsTextRepresentation(props.setting.base!, useTranslate)}
+                    {props.set.getSettingsTextRepresentation(props.setting.base!, useTranslate)}
                 </Typography>
                 <Typography variant={"caption"}>
                     {props.set.comment}
