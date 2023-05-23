@@ -106,7 +106,9 @@ const LogTableRow = (props: { log: WorkoutLog }) => {
     </TableRow>;
 };
 
-const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog[] }) => {
+const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog[] | undefined }) => {
+
+    let logEntries = props.logEntries ?? [];
 
     const availableResultsPerPage = [5, 10, 20];
     const [rowsPerPage, setRowsPerPage] = React.useState(availableResultsPerPage[0]);
@@ -141,7 +143,7 @@ const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {props.logEntries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((log) =>
+                            {logEntries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((log) =>
                                 <LogTableRow log={log} key={log.id} />
                             )}
                         </TableBody>
@@ -149,7 +151,7 @@ const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog
                     <TablePagination
                         rowsPerPageOptions={availableResultsPerPage}
                         component="div"
-                        count={props.logEntries.length}
+                        count={logEntries.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
@@ -159,7 +161,7 @@ const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog
 
             </Grid>
             <Grid item xs={12} md={7}>
-                <TimeSeriesChart data={props.logEntries} key={props.exerciseBase.id} />
+                <TimeSeriesChart data={logEntries} key={props.exerciseBase.id} />
             </Grid>
         </Grid>
     </>;
