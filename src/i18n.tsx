@@ -30,6 +30,7 @@ const DummyComponent = () => {
     t("server.kilometers_per_hour");
     t("server.lats");
     t("server.legs");
+    t("server.max_reps");
     t("server.miles");
     t("server.miles_per_hour");
     t("server.minutes");
