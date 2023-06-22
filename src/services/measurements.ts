@@ -3,7 +3,7 @@ import { ApiMeasurementCategoryType, ApiMeasurementEntryType } from 'types';
 import { ResponseType } from "./responseType";
 import { makeHeader, makeUrl } from "utils/url";
 import { MeasurementCategory, MeasurementCategoryAdapter } from "components/Measurements/models/Category";
-import { MeasurementEntry, MeasurementEntryAdapter } from "components/Measurements/models/Entry";
+import { MeasurementEntryAdapter } from "components/Measurements/models/Entry";
 
 export const API_MEASUREMENTS_CATEGORY_PATH = 'measurement-category';
 export const API_MEASUREMENTS_ENTRY_PATH = 'measurement';
@@ -31,7 +31,7 @@ export const getMeasurementCategories = async (): Promise<MeasurementCategory[]>
     let categoryId: number;
     settingsResponses.forEach((response) => {
         const entries = response.data.results.map(l => new MeasurementEntryAdapter().fromJson(l));
-        
+
         if (entries.length > 0) {
             categoryId = entries[0].category;
             categories.findLast(c => c.id === categoryId)!.entries = entries;
@@ -41,12 +41,21 @@ export const getMeasurementCategories = async (): Promise<MeasurementCategory[]>
     return categories;
 };
 
-export const getMeasurementEntries = async (id: number): Promise<MeasurementEntry[]> => {
+export const getMeasurementCategory = async (id: number): Promise<MeasurementCategory> => {
+    const { data: receivedCategories } = await axios.get<ApiMeasurementCategoryType>(
+        makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: id }),
+        { headers: makeHeader() },
+    );
+
+    const category = new MeasurementCategoryAdapter().fromJson(receivedCategories);
+
     const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: id.toString() } });
     const { data: receivedEntries } = await axios.get<ResponseType<ApiMeasurementEntryType>>(url, {
         headers: makeHeader(),
     });
     const adapter = new MeasurementEntryAdapter();
-    return receivedEntries.results.map(l => adapter.fromJson(l));
+    category.entries = receivedEntries.results.map(l => adapter.fromJson(l));
+
+    return category;
 };
 
