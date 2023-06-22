@@ -85,6 +85,9 @@
     "routines": "Routines",
     "rir": "RiR"
   },
+  "measurements": {
+    "measurements": "Measurements"
+  },
   "server": {
     "abs": "Abs",
     "arms": "Arms",

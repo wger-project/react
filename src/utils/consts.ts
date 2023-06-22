@@ -26,6 +26,9 @@ export const QUERY_ROUTINE_DETAIL = 'routine';
 export const QUERY_ROUTINES_SHALLOW = 'routines-shallow';
 export const QUERY_ROUTINE_LOGS = 'routines-logs';
 
+export const QUERY_MEASUREMENTS = 'measurements';
+export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
+
 
 /*
  * List of colors to use in charts

@@ -26,6 +26,7 @@ import React from "react";
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
 import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
 import { RoutineLogs } from "components/WorkoutRoutines/Detail/RoutineLogs";
+import { MeasurementCategoryOverview } from "components/Measurements/Overview/MeasurementCategoryOverview";
 
 /*
  * Routes for the application
@@ -59,6 +60,10 @@ export const WgerRoutes = () => {
                         <Route path="view" element={<RoutineLogs />} />
                     </Route>
                 </Route>
+            </Route>
+            <Route path="measurement">
+                <Route index element={<MeasurementCategoryOverview />} />
+                <Route path="overview" element={<MeasurementCategoryOverview />} />
             </Route>
             <Route path="exercise">
                 <Route index element={<ExerciseOverview />} />
