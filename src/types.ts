@@ -35,6 +35,20 @@ export interface ApiSettingRepUnitType {
     name: string,
 }
 
+export interface ApiMeasurementCategoryType {
+    id: number,
+    name: string,
+    unit: string
+}
+
+export interface ApiMeasurementEntryType {
+    id: number,
+    category: number,
+    date: Date,
+    value: number,
+    notes: string
+}
+
 export interface ApiEquipmentType {
     id: number,
     name: string,

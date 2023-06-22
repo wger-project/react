@@ -64,13 +64,15 @@ export enum WgerLink {
     ROUTINE_EDIT_SET,
     ROUTINE_DELETE_SET,
 
-
     EXERCISE_DETAIL,
     EXERCISE_OVERVIEW,
     EXERCISE_CONTRIBUTE,
 
     WEIGHT_OVERVIEW,
-    WEIGHT_ADD
+    WEIGHT_ADD,
+
+    MEASUREMENT_OVERVIEW,
+    MEASUREMENT_DETAIL
 }
 
 type ExerciseDetailUrlParams = { id: number, slug?: string };
@@ -138,6 +140,11 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
 
         case WgerLink.WEIGHT_ADD:
             return `/${langShort}/weight/add`;
+
+
+        // Measurements
+        case WgerLink.MEASUREMENT_OVERVIEW:
+            return `/${langShort}/measurement/overview`;
 
         // Dashboard
         case WgerLink.DASHBOARD:

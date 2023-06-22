@@ -16,15 +16,13 @@ export interface TooltipProps {
     payload?: any,
     label?: string,
 }
- 
+
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     const [t, i18n] = useTranslation();
 
     if (active && payload && payload.length) {
         return (
-            <Paper style={{
-                padding: 8
-            }}>
+            <Paper style={{ padding: 8 }}>
                 <p><strong>{new Date(label!).toLocaleDateString(i18n.language)}</strong></p>
                 <p>{t('weight')}: {payload[0].value}</p>
             </Paper>
