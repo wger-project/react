@@ -1,21 +1,42 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { getMeasurementCategory } from "services";
-import { MeasurementCategoryOverview } from "components/Measurements/Overview/MeasurementCategoryOverview";
 import { TEST_MEASUREMENT_CATEGORY_1 } from "tests/measurementsTestData";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { MeasurementCategoryDetail } from "components/Measurements/Overview/MeasurementCategoryDetail";
+import { useMeasurementsQuery } from "components/Measurements/queries";
 
-jest.mock("services");
+jest.mock("components/Measurements/queries");
+
 
 const queryClient = new QueryClient();
 
 describe("Test the MeasurementCategoryDetail component", () => {
 
+    // See https://github.com/maslianok/react-resize-detector#testing-with-enzyme-and-jest
+    const { ResizeObserver } = window;
+
     beforeEach(() => {
+
         // @ts-ignore
-        getMeasurementCategory.mockImplementation(() => Promise.resolve(TEST_MEASUREMENT_CATEGORY_1));
+        useMeasurementsQuery.mockImplementation(() => ({
+            isSuccess: true,
+            isLoading: false,
+            data: TEST_MEASUREMENT_CATEGORY_1
+        }));
+
+        // @ts-ignore
+        delete window.ResizeObserver;
+        window.ResizeObserver = jest.fn().mockImplementation(() => ({
+            observe: jest.fn(),
+            unobserve: jest.fn(),
+            disconnect: jest.fn()
+        }));
+    });
+
+    afterEach(() => {
+        window.ResizeObserver = ResizeObserver;
+        jest.restoreAllMocks();
     });
 
 
@@ -26,21 +47,18 @@ describe("Test the MeasurementCategoryDetail component", () => {
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/measurement/category/42']}>
                     <Routes>
-                        <Route path="measurement/category/:categoryId" element={<MeasurementCategoryOverview />} />
+                        <Route path="measurement/category/:categoryId" element={<MeasurementCategoryDetail />} />
                     </Routes>
                 </MemoryRouter>
             </QueryClientProvider>
         );
-        // await act(async () => {
-        //     await new Promise((r) => setTimeout(r, 20));
-        // });
 
         // Assert
-        expect(useRoutineDetailQuery).toHaveBeenCalledWith(42);
+        expect(useMeasurementsQuery).toHaveBeenCalled();
         expect(screen.getByText('Biceps')).toBeInTheDocument();
-        expect(screen.getByText('10')).toBeInTheDocument();
+        expect(await screen.findAllByText('10')).toHaveLength(2);
         expect(screen.getByText('test note')).toBeInTheDocument();
+        expect(screen.getByText(/2\/3\/2023/i)).toBeInTheDocument();
         expect(screen.getByText('important note')).toBeInTheDocument();
-        expect(screen.getByText('this day was good')).toBeInTheDocument();
     });
 });

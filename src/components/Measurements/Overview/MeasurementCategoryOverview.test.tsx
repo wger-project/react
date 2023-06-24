@@ -1,22 +1,39 @@
 import React from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { getMeasurementCategories } from "services";
 import { BrowserRouter } from "react-router-dom";
 import { MeasurementCategoryOverview } from "components/Measurements/Overview/MeasurementCategoryOverview";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "tests/measurementsTestData";
+import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
 
-jest.mock("services");
+jest.mock("components/Measurements/queries");
 
 const queryClient = new QueryClient();
 
 describe("Test the MeasurementCategoryOverview component", () => {
 
+    const { ResizeObserver } = window;
+
     beforeEach(() => {
         // @ts-ignore
-        getMeasurementCategories.mockImplementation(() => Promise.resolve(
-            [TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2]
-        ));
+        useMeasurementsCategoryQuery.mockImplementation(() => ({
+            isSuccess: true,
+            isLoading: false,
+            data: [TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2]
+        }));
+
+        // @ts-ignore
+        delete window.ResizeObserver;
+        window.ResizeObserver = jest.fn().mockImplementation(() => ({
+            observe: jest.fn(),
+            unobserve: jest.fn(),
+            disconnect: jest.fn()
+        }));
+    });
+
+    afterEach(() => {
+        window.ResizeObserver = ResizeObserver;
+        jest.restoreAllMocks();
     });
 
 
@@ -35,7 +52,8 @@ describe("Test the MeasurementCategoryOverview component", () => {
         });
 
         // Assert
-        expect(getMeasurementCategories).toHaveBeenCalledTimes(1);
+        expect(useMeasurementsCategoryQuery).toHaveBeenCalledTimes(1);
+        expect(screen.getByText('measurements.measurements')).toBeInTheDocument();
         expect(screen.getByText('Biceps')).toBeInTheDocument();
         expect(screen.getByText('Body fat')).toBeInTheDocument();
     });
