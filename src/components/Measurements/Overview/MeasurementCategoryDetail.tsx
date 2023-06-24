@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Container, Grid, Stack, Typography, } from "@mui/material";
+import { Box, Button, Stack, } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import {
     useDeleteMeasurementsQuery,
@@ -29,6 +29,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import { PAGINATION_OPTIONS } from "utils/consts";
+import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 
 interface EditToolbarProps {
     setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -47,7 +48,7 @@ function EditToolbar(props: EditToolbarProps) {
     const handleClick = () => {
         //const id = getRandomInt(1000);
         const id = -1;
-        setRows((oldRows) => [...oldRows, { id, date: '', value: '', isNew: true }]);
+        setRows((oldRows) => [...oldRows, { id, date: '', value: '', notes: '', isNew: true }]);
         setRowModesModel((oldModel) => ({
             ...oldModel,
             [id]: { mode: GridRowModes.Edit, fieldToFocus: 'value' },
@@ -244,32 +245,14 @@ export const MeasurementCategoryDetail = () => {
 
     const categoryQuery = useMeasurementsQuery(categoryId);
 
-    return <Container maxWidth="lg">
-
-        <Grid container>
-            <Grid item xs={12} sm={8}>
-
-                {categoryQuery.isLoading
-                    ? <LoadingPlaceholder />
-                    : <>
-                        <Typography gutterBottom variant="h3" component="div">
-                            {categoryQuery.data!.name}
-                        </Typography>
-
-                        <Stack spacing={2}>
-                            <MeasurementChart category={categoryQuery.data!} />
-                            <CategoryDetailDataTable category={categoryQuery.data!} />
-                        </Stack>
-                    </>
-                }
-
-            </Grid>
-            <Grid item xs={12} sm={4}>
-
-            </Grid>
-        </Grid>
-
-        <AddMeasurementEntryFab />
-
-    </Container>;
+    return categoryQuery.isLoading
+        ? <LoadingPlaceholder />
+        : <WgerContainerRightSidebar
+            title={categoryQuery.data!.name}
+            mainContent={<Stack spacing={2}>
+                <MeasurementChart category={categoryQuery.data!} />
+                <CategoryDetailDataTable category={categoryQuery.data!} />
+            </Stack>}
+            fab={<AddMeasurementEntryFab />}
+        />;
 };

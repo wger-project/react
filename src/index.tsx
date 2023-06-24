@@ -29,7 +29,13 @@ const queryClient = new QueryClient({
 });
 
 
-const renderComponentShadowDom = (rootElement: HTMLElement) => {
+const renderComponentShadowDom = (divId: string) => {
+
+    const rootElement = document.getElementById(divId);
+    if (rootElement === null) {
+        return;
+    }
+
     const shadow = rootElement.attachShadow({ mode: 'open' });
     const shadowRoot = document.createElement('div');
     const styleElement = document.createElement('style');
@@ -121,15 +127,9 @@ if (weightDashboard) {
     );
 }
 
-const exerciseOverview = document.getElementById("react-exercise-overview");
-if (exerciseOverview) {
-    renderComponentShadowDom(exerciseOverview);
-}
+renderComponentShadowDom("react-exercise-overview");
+renderComponentShadowDom("react-exercise-contribute");
 
-const contributeExercise = document.getElementById("react-exercise-contribute");
-if (contributeExercise) {
-    renderComponentShadowDom(contributeExercise);
-}
 
 const exerciseDetail = document.getElementById("react-exercise-detail");
 if (exerciseDetail) {
@@ -148,20 +148,13 @@ if (exerciseDetail) {
 }
 
 
-const routineOverview = document.getElementById("react-routine-overview");
-if (routineOverview) {
-    renderComponentShadowDom(routineOverview);
-}
+renderComponentShadowDom("react-routine-overview");
+renderComponentShadowDom("react-routine-detail");
+renderComponentShadowDom("react-routine-logs");
 
-const routineDetail = document.getElementById("react-routine-detail");
-if (routineDetail) {
-    renderComponentShadowDom(routineDetail);
-}
 
-const routineLogs = document.getElementById("react-routine-logs");
-if (routineLogs) {
-    renderComponentShadowDom(routineLogs);
-}
+renderComponentShadowDom("react-measurements-overview");
+renderComponentShadowDom("react-measurements-detail");
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
