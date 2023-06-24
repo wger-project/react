@@ -1,6 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { QUERY_MEASUREMENTS, QUERY_MEASUREMENTS_CATEGORIES, } from "utils/consts";
-import { getMeasurementCategories, getMeasurementCategory } from "services/measurements";
+import {
+    deleteMeasurementEntry,
+    editMeasurementEntry,
+    editMeasurementParams,
+    getMeasurementCategories,
+    getMeasurementCategory
+} from "services/measurements";
 
 
 export function useMeasurementsCategoryQuery() {
@@ -12,3 +18,21 @@ export function useMeasurementsQuery(id: number) {
         () => getMeasurementCategory(id)
     );
 }
+
+export const useEditMeasurementsQuery = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: editMeasurementParams) => editMeasurementEntry(data),
+        onSuccess: () => queryClient.invalidateQueries([QUERY_MEASUREMENTS,])
+    });
+};
+
+export const useDeleteMeasurementsQuery = (/*id: number*/) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: number) => deleteMeasurementEntry(id),
+        onSuccess: () => queryClient.invalidateQueries([QUERY_MEASUREMENTS,])
+    });
+};

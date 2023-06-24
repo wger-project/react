@@ -60,3 +60,9 @@ export const LIST_OF_COLORS3 = [
     "#d45089",
     "#ffa600",
 ];
+
+
+export const PAGINATION_OPTIONS = {
+    pageSizeOptions: [5, 10, 25, 50, 100],
+    pageSize: 10,
+};

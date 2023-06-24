@@ -14,11 +14,11 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { useTranslation } from "react-i18next";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { AddWorkoutFab } from "components/WorkoutRoutines/Overview/fab";
 import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
 import { MeasurementCategory } from "components/Measurements/models/Category";
 import { MeasurementChart } from "components/Measurements/charts/MeasurementChart";
 import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
+import { AddMeasurementCategoryFab } from "components/Measurements/widgets/fab";
 
 
 const CategoryList = (props: { category: MeasurementCategory }) => {
@@ -63,7 +63,7 @@ export const MeasurementCategoryOverview = () => {
             </Grid>
         </Grid>
 
-        <AddWorkoutFab />
+        <AddMeasurementCategoryFab />
 
     </Container>;
 };
