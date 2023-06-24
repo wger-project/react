@@ -3,7 +3,8 @@ import { ApiMeasurementCategoryType, ApiMeasurementEntryType } from 'types';
 import { ResponseType } from "./responseType";
 import { makeHeader, makeUrl } from "utils/url";
 import { MeasurementCategory, MeasurementCategoryAdapter } from "components/Measurements/models/Category";
-import { MeasurementEntryAdapter } from "components/Measurements/models/Entry";
+import { MeasurementEntry, MeasurementEntryAdapter } from "components/Measurements/models/Entry";
+import { dateToYYYYMMDD } from "utils/date";
 
 export const API_MEASUREMENTS_CATEGORY_PATH = 'measurement-category';
 export const API_MEASUREMENTS_ENTRY_PATH = 'measurement';
@@ -59,3 +60,32 @@ export const getMeasurementCategory = async (id: number): Promise<MeasurementCat
     return category;
 };
 
+export const deleteMeasurementEntry = async (id: number): Promise<void> => {
+    await axios.delete(makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: id }), { headers: makeHeader() });
+};
+
+export interface editMeasurementParams {
+    id: number,
+    categoryId: number;
+    date: Date;
+    value: number;
+    notes: string;
+}
+
+export const editMeasurementEntry = async (data: editMeasurementParams): Promise<MeasurementEntry> => {
+    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: data.id });
+    const baseData = {
+        category: data.categoryId,
+        date: dateToYYYYMMDD(data.date),
+        value: data.value,
+        notes: data.notes
+    };
+    const response = await axios.patch(
+        url,
+        baseData,
+        { headers: makeHeader() }
+    );
+
+    const adapter = new MeasurementEntryAdapter();
+    return adapter.fromJson(response.data);
+};
