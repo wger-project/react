@@ -139,7 +139,7 @@ const CategoryDetailDataTable = (props: { category: MeasurementCategory }) => {
         {
             field: 'value',
             headerName: `Value (${props.category.unit})`,
-            width: 150,
+            width: 80,
             editable: true,
             //valueGetter: (params: GridValueGetterParams) => params.row.value + props.category.unit
         },
@@ -147,7 +147,16 @@ const CategoryDetailDataTable = (props: { category: MeasurementCategory }) => {
             field: 'date',
             headerName: 'Date',
             type: 'date',
-            width: 310,
+            width: 120,
+            editable: true,
+            //valueGetter: (params: GridValueGetterParams) =>
+            //    DateTime.fromJSDate(params.row.date).toLocaleString(DateTime.DATE_MED)
+        },
+        {
+            field: 'notes',
+            headerName: 'Notes',
+            type: 'string',
+            flex: 1,
             editable: true,
             //valueGetter: (params: GridValueGetterParams) =>
             //    DateTime.fromJSDate(params.row.date).toLocaleString(DateTime.DATE_MED)
@@ -249,7 +258,7 @@ export const MeasurementCategoryDetail = () => {
 
                         <Stack spacing={2}>
                             <MeasurementChart category={categoryQuery.data!} />
-                            {<CategoryDetailDataTable category={categoryQuery.data!} />}
+                            <CategoryDetailDataTable category={categoryQuery.data!} />
                         </Stack>
                     </>
                 }

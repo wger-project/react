@@ -30,3 +30,8 @@ export {
     getWorkoutRoutine,
     getWorkoutRoutines,
 } from './workoutRoutine';
+
+export {
+    getMeasurementCategories,
+    getMeasurementCategory
+} from './measurements';
