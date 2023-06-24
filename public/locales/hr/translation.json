@@ -46,7 +46,7 @@
         "basics": "Osnove",
         "cacheWarning": "Zbog predmemoriranja, vidljivost promjena u aplikaciji može nešto potrajati.",
         "notEnoughRightsHeader": "Ne možeš dodati vježbe",
-        "notEnoughRights": "Vježbe možeš dodati samo ako je tvoj račun stariji od {days} dana i ako si potvrdio/la tvoju e-mail adresu"
+        "notEnoughRights": "Vježbe možeš dodati samo ako je tvoj račun stariji od {{days}} dana i ako si potvrdio/la tvoju e-mail adresu"
     },
     "noResults": "Nema rezultata",
     "noResultsDescription": "Za ovaj upit nisu pronađeni rezultati. Smanji broja filtara.",
@@ -54,7 +54,7 @@
     "server": {
         "arms": "Ruke",
         "back": "Leđa",
-        "barbell": "Utezi",
+        "barbell": "Šipka",
         "bench": "Klupa",
         "calves": "Lisni mišići",
         "chest": "Prsa",
@@ -78,7 +78,7 @@
         "quads": "Ekstenzije nogu",
         "triceps": "Triceps",
         "pull_up_bar": "Prečka",
-        "sz_bar": "Štanga za utege",
+        "sz_bar": "Zaobljena šipka",
         "none__bodyweight_exercise_": "ništa (vježba za tjelesnu težinu)",
         "biceps": "Bicepsi",
         "hamstrings": "Tetive koljena",
@@ -91,7 +91,8 @@
         "miles_per_hour": "Milja na sat",
         "lb": "lb",
         "kg": "kg",
-        "plates": "Ploče"
+        "plates": "Ploče",
+        "max_reps": "Maks. broj ponavljanja"
     },
     "submit": "Pošalji",
     "weight": "Težina",
@@ -125,7 +126,8 @@
         "routine": "Rutina",
         "routines": "Rutine",
         "logsFilterNote": "Prikazuju se samo unosi s jedinicom težine kg ili lb i ponavljanja, ostale kombinacije kao što su vrijeme ili do neuspjeha se ovdje zanemaruju",
-        "logsHeader": "Dnevnik težine za trening"
+        "logsHeader": "Dnevnik težine za trening",
+        "rir": "Teoretski moguća ponavljanja"
     },
     "preferences": "Postavke"
 }
