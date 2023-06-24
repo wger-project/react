@@ -59,7 +59,7 @@ export const testRoutine2 = new WorkoutRoutine(
     new Date('2023-02-01')
 );
 
-export const testRoutines = [testRoutine1, testRoutine2];
+export const TEST_ROUTINES = [testRoutine1, testRoutine2];
 
 
 export const responseApiWorkoutRoutine = {
