@@ -3,10 +3,10 @@ import { QUERY_MEASUREMENTS, QUERY_MEASUREMENTS_CATEGORIES, } from "utils/consts
 import {
     deleteMeasurementEntry,
     editMeasurementEntry,
-    editMeasurementParams,
     getMeasurementCategories,
     getMeasurementCategory
-} from "services/measurements";
+} from "services";
+import { editMeasurementParams } from "services/measurements";
 
 
 export function useMeasurementsCategoryQuery() {

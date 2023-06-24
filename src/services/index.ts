@@ -33,5 +33,7 @@ export {
 
 export {
     getMeasurementCategories,
-    getMeasurementCategory
+    getMeasurementCategory,
+    deleteMeasurementEntry,
+    editMeasurementEntry,
 } from './measurements';
