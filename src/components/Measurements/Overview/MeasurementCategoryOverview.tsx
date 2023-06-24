@@ -1,16 +1,5 @@
 import React from "react";
-import {
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    CardHeader,
-    Container,
-    Grid,
-    IconButton,
-    Stack,
-    Typography,
-} from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardHeader, IconButton, Stack, } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import { useTranslation } from "react-i18next";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
@@ -19,9 +8,15 @@ import { MeasurementCategory } from "components/Measurements/models/Category";
 import { MeasurementChart } from "components/Measurements/charts/MeasurementChart";
 import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
 import { AddMeasurementCategoryFab } from "components/Measurements/widgets/fab";
+import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
+import { makeLink, WgerLink } from "utils/url";
+import { Link } from "react-router-dom";
+import { t } from "i18next";
 
 
 const CategoryList = (props: { category: MeasurementCategory }) => {
+
+    const { i18n } = useTranslation();
 
     return <Card>
         <CardHeader title={props.category.name} subheader={props.category.unit} />
@@ -30,7 +25,12 @@ const CategoryList = (props: { category: MeasurementCategory }) => {
             <MeasurementChart category={props.category} />
         </CardContent>
         <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
-            <Button variant="text">See details</Button>
+            <Button size="small">
+                <Link to={makeLink(WgerLink.MEASUREMENT_DETAIL, i18n.language, { id: props.category.id })}>
+                    {t("seeDetails")}
+                </Link>
+            </Button>
+
             <IconButton>
                 <AddIcon />
             </IconButton>
@@ -41,29 +41,15 @@ export const MeasurementCategoryOverview = () => {
     const categoryQuery = useMeasurementsCategoryQuery();
     const [t] = useTranslation();
 
-    return <Container maxWidth="lg">
-
-        <Grid container>
-            <Grid item xs={12} sm={8}>
-                <Typography gutterBottom variant="h3" component="div">
-                    {t("measurements.measurements")}
-                </Typography>
-
-                {categoryQuery.isLoading
-                    ? <LoadingPlaceholder />
-                    : <Stack spacing={2}>
-                        {categoryQuery.data!.length === 0 && <OverviewEmpty />}
-                        {categoryQuery.data!.map(c => <CategoryList category={c} key={c.id} />)}
-                    </Stack>
-                }
-
-            </Grid>
-            <Grid item xs={12} sm={4}>
-
-            </Grid>
-        </Grid>
-
-        <AddMeasurementCategoryFab />
-
-    </Container>;
+    return categoryQuery.isLoading
+        ? <LoadingPlaceholder />
+        : <WgerContainerRightSidebar
+            title={t("measurements.measurements")}
+            mainContent={<Stack spacing={2}>
+                {categoryQuery.data!.length === 0 && <OverviewEmpty />}
+                {categoryQuery.data!.map(c => <CategoryList category={c} key={c.id} />)}
+            </Stack>
+            }
+            fab={<AddMeasurementCategoryFab />}
+        />;
 };
