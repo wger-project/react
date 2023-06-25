@@ -13,6 +13,9 @@
   "currentWeight": "Current weight",
   "workout": "Workout",
   "seeDetails": "See details",
+  "actions": "Actions",
+  "notes": "Notes",
+  "value": "Value",
   "exercises": {
     "contributeExercise": "Contribute an exercise",
     "step1HeaderBasics": "Basics in English",
