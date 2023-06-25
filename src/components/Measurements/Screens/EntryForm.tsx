@@ -3,10 +3,16 @@ import * as yup from 'yup';
 import { Form, Formik } from "formik";
 import { Button, Stack, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useAddMeasurementEntryQuery, useEditMeasurementEntryQuery } from "components/Measurements/queries";
+import {
+    useAddMeasurementEntryQuery,
+    useEditMeasurementEntryQuery,
+    useMeasurementsQuery
+} from "components/Measurements/queries";
 import { MeasurementEntry } from "components/Measurements/models/Entry";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { dateToYYYYMMDD } from "utils/date";
 
 interface EntryFormProps {
     entry?: MeasurementEntry,
@@ -19,6 +25,8 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
     const [t, i18n] = useTranslation();
     const useAddEntryQuery = useAddMeasurementEntryQuery();
     const useEditEntryQuery = useEditMeasurementEntryQuery();
+    const categoryQuery = useMeasurementsQuery(categoryId);
+
     const [dateValue, setDateValue] = React.useState<Date | null>(entry ? entry.date : new Date());
 
     const validationSchema = yup.object({
@@ -78,37 +86,43 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                             }
                             {...formik.getFieldProps('value')}
                         />
-                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                            <DatePicker
-                                inputFormat="yyyy-MM-dd"
-                                label={t('date')}
-                                value={dateValue}
-                                renderInput={(params) => <TextField {...params} {...formik.getFieldProps('date')} />}
-                                //disableFuture={true}
-                                onChange={(newValue) => {
-                                    if (newValue) {
-                                        // @ts-ignore - new value is a Luxon DateTime!
-                                        formik.setFieldValue('date', newValue.toJSDate());
-                                    }
-                                    setDateValue(newValue);
-                                }}
-                                // shouldDisableDate={(date) => {
-                                //
-                                //     // Allow the date of the current weight entry, since we are editing it
-                                //     if (entry && dateToYYYYMMDD(entry.date) === (date as unknown as DateTime).toISODate()) {
-                                //         return false;
-                                //     }
-                                //
-                                //     // if date is in list of weight entries, disable it
-                                //     if (date) {
-                                //         //    return state.weights.some(entry => dateToYYYYMMDD(entry.date) === (date as unknown as DateTime).toISODate());
-                                //     }
-                                //
-                                //     // all other dates are allowed
-                                //     return false;
-                                // }}
-                            />
-                        </LocalizationProvider>
+                        {categoryQuery.isLoading
+                            ? <LoadingPlaceholder />
+                            : <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                                <DatePicker
+                                    inputFormat="yyyy-MM-dd"
+                                    label={t('date')}
+                                    value={dateValue}
+                                    renderInput={(params) =>
+                                        <TextField {...params} {...formik.getFieldProps('date')} />}
+                                    disableFuture={true}
+                                    onChange={(newValue) => {
+                                        if (newValue) {
+                                            // @ts-ignore - new value is a Luxon DateTime!
+                                            formik.setFieldValue('date', newValue.toJSDate());
+                                        }
+                                        setDateValue(newValue);
+                                    }}
+                                    shouldDisableDate={(date) => {
+
+                                        // Allow the date of the current weight entry, since we are editing it
+                                        // @ts-ignore - date is a Luxon DateTime!
+                                        if (entry && dateToYYYYMMDD(entry.date) === dateToYYYYMMDD(date.toJSDate())) {
+                                            return false;
+                                        }
+
+                                        // if date is in list of existing entries, disable it
+                                        if (date) {
+                                            // @ts-ignore - date is a Luxon DateTime!
+                                            return categoryQuery.data!.entries.some(entry => dateToYYYYMMDD(entry.date) === dateToYYYYMMDD(date.toJSDate()));
+                                        }
+
+                                        // all other dates are allowed
+                                        return false;
+                                    }}
+                                />
+                            </LocalizationProvider>}
+
                         <TextField
                             fullWidth
                             id="notes"
