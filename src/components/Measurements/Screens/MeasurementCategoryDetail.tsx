@@ -18,10 +18,12 @@ export const MeasurementCategoryDetail = () => {
         ? <LoadingPlaceholder />
         : <WgerContainerRightSidebar
             title={categoryQuery.data!.name}
-            mainContent={<Stack spacing={2}>
-                <MeasurementChart category={categoryQuery.data!} />
-                <CategoryDetailDataGrid category={categoryQuery.data!} />
-            </Stack>}
+            mainContent={
+                <Stack spacing={2}>
+                    <MeasurementChart category={categoryQuery.data!} />
+                    <CategoryDetailDataGrid category={categoryQuery.data!} />
+                </Stack>
+            }
             fab={<AddMeasurementEntryFab />}
         />;
 };

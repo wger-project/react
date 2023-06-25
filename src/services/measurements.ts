@@ -60,13 +60,56 @@ export const getMeasurementCategory = async (id: number): Promise<MeasurementCat
     return category;
 };
 
+export interface addMeasurementCategoryParams {
+    name: string;
+    unit: string;
+}
+
+export const addMeasurementCategory = async (data: addMeasurementCategoryParams): Promise<MeasurementCategory> => {
+    const url = makeUrl(API_MEASUREMENTS_CATEGORY_PATH,);
+    const baseData = {
+        name: data.name,
+        unit: data.unit
+    };
+    const response = await axios.post(
+        url,
+        baseData,
+        { headers: makeHeader() }
+    );
+
+    const adapter = new MeasurementCategoryAdapter();
+    return adapter.fromJson(response.data);
+};
+
+export interface editMeasurementCategoryParams {
+    id: number,
+    name: string;
+    unit: string;
+}
+
+export const editMeasurementCategory = async (data: editMeasurementCategoryParams): Promise<MeasurementCategory> => {
+    const url = makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: data.id });
+    const baseData = {
+        name: data.name,
+        unit: data.unit
+    };
+    const response = await axios.patch(
+        url,
+        baseData,
+        { headers: makeHeader() }
+    );
+
+    const adapter = new MeasurementCategoryAdapter();
+    return adapter.fromJson(response.data);
+};
+
+
 export const deleteMeasurementEntry = async (id: number): Promise<void> => {
     await axios.delete(makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: id }), { headers: makeHeader() });
 };
 
 export interface editMeasurementParams {
     id: number,
-    categoryId: number;
     date: Date;
     value: number;
     notes: string;
@@ -75,7 +118,6 @@ export interface editMeasurementParams {
 export const editMeasurementEntry = async (data: editMeasurementParams): Promise<MeasurementEntry> => {
     const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: data.id });
     const baseData = {
-        category: data.categoryId,
         date: dateToYYYYMMDD(data.date),
         value: data.value,
         notes: data.notes
@@ -83,6 +125,30 @@ export const editMeasurementEntry = async (data: editMeasurementParams): Promise
     const response = await axios.patch(
         url,
         baseData,
+        { headers: makeHeader() }
+    );
+
+    const adapter = new MeasurementEntryAdapter();
+    return adapter.fromJson(response.data);
+};
+
+export interface addMeasurementParams {
+    categoryId: number;
+    date: Date;
+    value: number;
+    notes: string;
+}
+
+export const addMeasurementEntry = async (data: addMeasurementParams): Promise<MeasurementEntry> => {
+
+    const response = await axios.post(
+        makeUrl(API_MEASUREMENTS_ENTRY_PATH),
+        {
+            category: data.categoryId,
+            date: dateToYYYYMMDD(data.date),
+            value: data.value,
+            notes: data.notes
+        },
         { headers: makeHeader() }
     );
 
