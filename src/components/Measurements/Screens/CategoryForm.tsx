@@ -16,8 +16,6 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     const [t] = useTranslation();
     const useAddCategoryQuery = useAddMeasurementCategoryQuery();
     const useEditCategoryQuery = useEditMeasurementCategoryQuery();
-
-
     const validationSchema = yup.object({
         name: yup
             .string()
@@ -75,7 +73,6 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             fullWidth
                             id="unit"
                             label={t('unit')}
-
                             error={
                                 Boolean(formik.errors.unit && formik.touched.unit)
                             }
@@ -86,8 +83,6 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             }
                             {...formik.getFieldProps('unit')}
                         />
-
-
                         <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                                 {t('submit')}

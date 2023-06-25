@@ -24,7 +24,17 @@ export const TEST_MEASUREMENT_ENTRIES_2 = [
 ];
 
 
-export const TEST_MEASUREMENT_CATEGORY_1 = new MeasurementCategory(1, "Biceps", "cm", TEST_MEASUREMENT_ENTRIES_1,);
+export const TEST_MEASUREMENT_CATEGORY_1 = new MeasurementCategory(
+    1,
+    "Biceps",
+    "cm",
+    TEST_MEASUREMENT_ENTRIES_1,
+);
 
 
-export const TEST_MEASUREMENT_CATEGORY_2 = new MeasurementCategory(2, "Body fat", "%", TEST_MEASUREMENT_ENTRIES_2);
+export const TEST_MEASUREMENT_CATEGORY_2 = new MeasurementCategory(
+    2,
+    "Body fat",
+    "%",
+    TEST_MEASUREMENT_ENTRIES_2
+);
