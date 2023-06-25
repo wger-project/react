@@ -17,8 +17,7 @@ import { WgerModal } from "components/Core/WgerModal/WgerModal";
 
 const CategoryList = (props: { category: MeasurementCategory }) => {
 
-    const { i18n } = useTranslation();
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
     const [openModal, setOpenModal] = React.useState(false);
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
@@ -46,6 +45,7 @@ const CategoryList = (props: { category: MeasurementCategory }) => {
         </WgerModal>
     </>;
 };
+
 export const MeasurementCategoryOverview = () => {
     const categoryQuery = useMeasurementsCategoryQuery();
     const [t] = useTranslation();
