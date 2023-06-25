@@ -20,10 +20,17 @@ import { WeightOverview } from "pages";
 
 
 const queryClient = new QueryClient({
+    // -> https://tanstack.com/query/v4/docs/react/reference/QueryClient
+    // time in milliseconds,  1000 * 30 = 30seconds
+
     defaultOptions: {
         queries: {
-            // set a stale time of 20 seconds
-            //staleTime: 1000 * 20,
+            retry: 2,
+            staleTime: 1000 * 30,
+            cacheTime: 1000 * 30,
+            refetchOnMount: true,
+            refetchOnWindowFocus: true,
+            refetchOnReconnect: "always"
         },
     }
 });
