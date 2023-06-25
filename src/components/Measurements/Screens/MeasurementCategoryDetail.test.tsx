@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TEST_MEASUREMENT_CATEGORY_1 } from "tests/measurementsTestData";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { MeasurementCategoryDetail } from "components/Measurements/Overview/MeasurementCategoryDetail";
+import { MeasurementCategoryDetail } from "components/Measurements/Screens/MeasurementCategoryDetail";
 import { useMeasurementsQuery } from "components/Measurements/queries";
 
 jest.mock("components/Measurements/queries");
@@ -60,7 +60,7 @@ describe("Test the MeasurementCategoryDetail component", () => {
         expect(screen.getByText('10cm')).toBeInTheDocument();
         expect(screen.getByText(/feb 1, 2023/i)).toBeInTheDocument();
         expect(screen.getByText('test note')).toBeInTheDocument();
-        
+
         expect(screen.getByText('20cm')).toBeInTheDocument();
         expect(screen.getByText(/feb 2, 2023/i)).toBeInTheDocument();
         expect(screen.getByText('important note')).toBeInTheDocument();

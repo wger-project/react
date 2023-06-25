@@ -2,7 +2,7 @@ import React from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
-import { MeasurementCategoryOverview } from "components/Measurements/Overview/MeasurementCategoryOverview";
+import { MeasurementCategoryOverview } from "components/Measurements/Screens/MeasurementCategoryOverview";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "tests/measurementsTestData";
 import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
 

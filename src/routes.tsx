@@ -26,8 +26,8 @@ import React from "react";
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
 import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
 import { RoutineLogs } from "components/WorkoutRoutines/Detail/RoutineLogs";
-import { MeasurementCategoryOverview } from "components/Measurements/Overview/MeasurementCategoryOverview";
-import { MeasurementCategoryDetail } from "components/Measurements/Overview/MeasurementCategoryDetail";
+import { MeasurementCategoryOverview } from "components/Measurements/Screens/MeasurementCategoryOverview";
+import { MeasurementCategoryDetail } from "components/Measurements/Screens/MeasurementCategoryDetail";
 
 /*
  * Routes for the application

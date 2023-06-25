@@ -1,15 +1,4 @@
-import React from "react";
-import { Box, Stack, } from "@mui/material";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import {
-    useDeleteMeasurementsQuery,
-    useEditMeasurementsQuery,
-    useMeasurementsQuery
-} from "components/Measurements/queries";
-import { MeasurementCategory } from "components/Measurements/models/Category";
-import { MeasurementChart } from "components/Measurements/charts/MeasurementChart";
-import { useParams } from "react-router-dom";
-import { AddMeasurementEntryFab } from "components/Measurements/widgets/fab";
+import { MeasurementEntry } from "components/Measurements/models/Entry";
 import {
     DataGrid,
     GridActionsCellItem,
@@ -22,16 +11,18 @@ import {
     GridRowModesModel,
     GridRowsProp,
     GridValueFormatterParams
-} from '@mui/x-data-grid';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
-import { PAGINATION_OPTIONS } from "utils/consts";
-import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
-import { MeasurementEntry } from "components/Measurements/models/Entry";
-import { DateTime } from "luxon";
+} from "@mui/x-data-grid";
+import { MeasurementCategory } from "components/Measurements/models/Category";
 import { useTranslation } from "react-i18next";
+import { useDeleteMeasurementsQuery, useEditMeasurementsQuery } from "components/Measurements/queries";
+import React from "react";
+import { DateTime } from "luxon";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import { Box } from "@mui/material";
+import { PAGINATION_OPTIONS } from "utils/consts";
 
 const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp => {
     return entries.map((entry) => {
@@ -44,8 +35,7 @@ const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp => {
         };
     });
 };
-
-const CategoryDetailDataTable = (props: { category: MeasurementCategory }) => {
+export const CategoryDetailDataGrid = (props: { category: MeasurementCategory }) => {
 
     const [t] = useTranslation();
     const data: GridRowsProp = convertEntriesToObj(props.category.entries);
@@ -222,21 +212,4 @@ const CategoryDetailDataTable = (props: { category: MeasurementCategory }) => {
             }}
         />
     </Box>;
-};
-export const MeasurementCategoryDetail = () => {
-    const params = useParams<{ categoryId: string }>();
-    const categoryId = params.categoryId ? parseInt(params.categoryId) : 0;
-
-    const categoryQuery = useMeasurementsQuery(categoryId);
-
-    return categoryQuery.isLoading
-        ? <LoadingPlaceholder />
-        : <WgerContainerRightSidebar
-            title={categoryQuery.data!.name}
-            mainContent={<Stack spacing={2}>
-                <MeasurementChart category={categoryQuery.data!} />
-                <CategoryDetailDataTable category={categoryQuery.data!} />
-            </Stack>}
-            fab={<AddMeasurementEntryFab />}
-        />;
 };
