@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Stack, } from "@mui/material";
+import { Box, Stack, } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import {
     useDeleteMeasurementsQuery,
@@ -21,61 +21,39 @@ import {
     GridRowModes,
     GridRowModesModel,
     GridRowsProp,
-    GridToolbarContainer
+    GridValueFormatterParams
 } from '@mui/x-data-grid';
-import AddIcon from "@mui/icons-material/Add";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import { PAGINATION_OPTIONS } from "utils/consts";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
+import { MeasurementEntry } from "components/Measurements/models/Entry";
+import { DateTime } from "luxon";
+import { useTranslation } from "react-i18next";
 
-interface EditToolbarProps {
-    setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-    setRowModesModel: (
-        newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
-    ) => void;
-}
-
-function getRandomInt(max: number) {
-    return Math.floor(Math.random() * max);
-}
-
-function EditToolbar(props: EditToolbarProps) {
-    const { setRows, setRowModesModel } = props;
-
-    const handleClick = () => {
-        //const id = getRandomInt(1000);
-        const id = -1;
-        setRows((oldRows) => [...oldRows, { id, date: '', value: '', notes: '', isNew: true }]);
-        setRowModesModel((oldModel) => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'value' },
-        }));
-    };
-
-    return (
-        <GridToolbarContainer>
-            <Button color="primary" startIcon={<AddIcon />} onClick={handleClick} />
-        </GridToolbarContainer>
-    );
-}
-
-interface EditToolbarProps {
-    setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-    setRowModesModel: (
-        newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
-    ) => void;
-}
-
+const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp => {
+    return entries.map((entry) => {
+        return {
+            id: entry.id,
+            category: entry.category,
+            date: entry.date,
+            value: entry.value,
+            notes: entry.notes
+        };
+    });
+};
 
 const CategoryDetailDataTable = (props: { category: MeasurementCategory }) => {
 
+    const [t] = useTranslation();
+    const data: GridRowsProp = convertEntriesToObj(props.category.entries);
     const updateEntryQuery = useEditMeasurementsQuery();
     const deleteEntryQuery = useDeleteMeasurementsQuery();
-    const [rows, setRows] = React.useState(props.category.entries);
+    const [rows, setRows] = React.useState(data);
     const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -93,7 +71,7 @@ const CategoryDetailDataTable = (props: { category: MeasurementCategory }) => {
 
     const handleDeleteClick = (id: GridRowId) => async () => {
         console.log('deleting entry', id);
-        deleteEntryQuery.mutate(id);
+        deleteEntryQuery.mutate(parseInt(id.toString()));
         setRows(rows.filter((row) => row.id !== id));
     };
 
@@ -110,6 +88,7 @@ const CategoryDetailDataTable = (props: { category: MeasurementCategory }) => {
         }
     };
 
+
     const processRowUpdate = async (newRow: GridRowModel) => {
 
         updateEntryQuery.mutate({
@@ -125,10 +104,11 @@ const CategoryDetailDataTable = (props: { category: MeasurementCategory }) => {
         return updatedRow;
     };
 
-    const onProcessRowUpdateError = (error: any, newRow: GridRowModel) => {
+    const onProcessRowUpdateError = (error: any) => {
 
         console.log(error);
-        setRows(rows.map((row) => (row.id === newRow.id ? newRow : row)));
+        //setRows(rows.map((row) => (row.id === newRow.id ? newRow : row)));
+
     };
 
     const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
@@ -139,33 +119,40 @@ const CategoryDetailDataTable = (props: { category: MeasurementCategory }) => {
     const columns: GridColDef[] = [
         {
             field: 'value',
-            headerName: `Value (${props.category.unit})`,
+            headerName: t('value'),
             width: 80,
             editable: true,
-            //valueGetter: (params: GridValueGetterParams) => params.row.value + props.category.unit
+            valueFormatter: (params: GridValueFormatterParams<number>) => {
+                if (params.value == null) {
+                    return '';
+                }
+                return params.value + props.category.unit;
+            },
         },
         {
             field: 'date',
-            headerName: 'Date',
+            headerName: t('date'),
             type: 'date',
             width: 120,
             editable: true,
-            //valueGetter: (params: GridValueGetterParams) =>
-            //    DateTime.fromJSDate(params.row.date).toLocaleString(DateTime.DATE_MED)
+            valueFormatter: (params: GridValueFormatterParams<Date>) => {
+                if (params.value == null) {
+                    return '';
+                }
+                return DateTime.fromJSDate(params.value).toLocaleString(DateTime.DATE_MED);
+            },
         },
         {
             field: 'notes',
-            headerName: 'Notes',
+            headerName: t('notes'),
             type: 'string',
             flex: 1,
             editable: true,
-            //valueGetter: (params: GridValueGetterParams) =>
-            //    DateTime.fromJSDate(params.row.date).toLocaleString(DateTime.DATE_MED)
         },
         {
             field: 'actions',
             type: 'actions',
-            headerName: 'Actions',
+            headerName: t('actions'),
             width: 100,
             cellClassName: 'actions',
             getActions: ({ id }) => {
@@ -214,7 +201,7 @@ const CategoryDetailDataTable = (props: { category: MeasurementCategory }) => {
     return <Box sx={{ width: '100%' }}>
         <DataGrid
             editMode="row"
-            rows={props.category.entries}
+            rows={data}
             columns={columns}
             initialState={{
                 pagination: {
@@ -230,9 +217,6 @@ const CategoryDetailDataTable = (props: { category: MeasurementCategory }) => {
             onRowEditStop={handleRowEditStop}
             processRowUpdate={processRowUpdate}
             onProcessRowUpdateError={onProcessRowUpdateError}
-            slots={{
-                toolbar: EditToolbar,
-            }}
             slotProps={{
                 toolbar: { setRows, setRowModesModel },
             }}

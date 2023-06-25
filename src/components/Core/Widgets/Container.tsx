@@ -14,7 +14,7 @@ export const WgerContainerRightSidebar = (props: WgerTemplateContainerProps) => 
     return <Container maxWidth="lg">
 
         <Grid container>
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
                 <Typography gutterBottom variant="h3">
                     {props.title}
                 </Typography>

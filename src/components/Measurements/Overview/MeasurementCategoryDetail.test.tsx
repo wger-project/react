@@ -56,9 +56,13 @@ describe("Test the MeasurementCategoryDetail component", () => {
         // Assert
         expect(useMeasurementsQuery).toHaveBeenCalled();
         expect(screen.getByText('Biceps')).toBeInTheDocument();
-        expect(await screen.findAllByText('10')).toHaveLength(2);
+
+        expect(screen.getByText('10cm')).toBeInTheDocument();
+        expect(screen.getByText(/feb 1, 2023/i)).toBeInTheDocument();
         expect(screen.getByText('test note')).toBeInTheDocument();
-        expect(screen.getByText(/2\/3\/2023/i)).toBeInTheDocument();
+        
+        expect(screen.getByText('20cm')).toBeInTheDocument();
+        expect(screen.getByText(/feb 2, 2023/i)).toBeInTheDocument();
         expect(screen.getByText('important note')).toBeInTheDocument();
     });
 });
