@@ -11,31 +11,40 @@ import { AddMeasurementCategoryFab } from "components/Measurements/widgets/fab";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { makeLink, WgerLink } from "utils/url";
 import { Link } from "react-router-dom";
-import { t } from "i18next";
+import { EntryForm } from "components/Measurements/Screens/EntryForm";
+import { WgerModal } from "components/Core/WgerModal/WgerModal";
 
 
 const CategoryList = (props: { category: MeasurementCategory }) => {
 
     const { i18n } = useTranslation();
+    const [t] = useTranslation();
+    const [openModal, setOpenModal] = React.useState(false);
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
 
-    return <Card>
-        <CardHeader title={props.category.name} subheader={props.category.unit} />
-        <CardContent>
+    return <>
+        <Card>
+            <CardHeader title={props.category.name} subheader={props.category.unit} />
+            <CardContent>
+                <MeasurementChart category={props.category} />
+            </CardContent>
+            <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
+                <Button size="small">
+                    <Link to={makeLink(WgerLink.MEASUREMENT_DETAIL, i18n.language, { id: props.category.id })}>
+                        {t("seeDetails")}
+                    </Link>
+                </Button>
 
-            <MeasurementChart category={props.category} />
-        </CardContent>
-        <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
-            <Button size="small">
-                <Link to={makeLink(WgerLink.MEASUREMENT_DETAIL, i18n.language, { id: props.category.id })}>
-                    {t("seeDetails")}
-                </Link>
-            </Button>
-
-            <IconButton>
-                <AddIcon />
-            </IconButton>
-        </CardActions>
-    </Card>;
+                <IconButton onClick={handleOpenModal}>
+                    <AddIcon />
+                </IconButton>
+            </CardActions>
+        </Card>
+        <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
+            <EntryForm closeFn={handleCloseModal} categoryId={props.category.id} />
+        </WgerModal>
+    </>;
 };
 export const MeasurementCategoryOverview = () => {
     const categoryQuery = useMeasurementsCategoryQuery();

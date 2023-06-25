@@ -14,7 +14,7 @@ import {
 } from "@mui/x-data-grid";
 import { MeasurementCategory } from "components/Measurements/models/Category";
 import { useTranslation } from "react-i18next";
-import { useDeleteMeasurementsQuery, useEditMeasurementsQuery } from "components/Measurements/queries";
+import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "components/Measurements/queries";
 import React from "react";
 import { DateTime } from "luxon";
 import SaveIcon from "@mui/icons-material/Save";
@@ -39,7 +39,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
 
     const [t] = useTranslation();
     const data: GridRowsProp = convertEntriesToObj(props.category.entries);
-    const updateEntryQuery = useEditMeasurementsQuery();
+    const updateEntryQuery = useEditMeasurementEntryQuery();
     const deleteEntryQuery = useDeleteMeasurementsQuery();
     const [rows, setRows] = React.useState(data);
     const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
