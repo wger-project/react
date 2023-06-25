@@ -10,8 +10,7 @@ import { CategoryDetailDataGrid } from "components/Measurements/widgets/Category
 
 export const MeasurementCategoryDetail = () => {
     const params = useParams<{ categoryId: string }>();
-    const categoryId = params.categoryId ? parseInt(params.categoryId) : 0;
-
+    const categoryId = parseInt(params.categoryId!);
     const categoryQuery = useMeasurementsQuery(categoryId);
 
     return categoryQuery.isLoading
