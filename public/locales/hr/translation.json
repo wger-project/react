@@ -37,7 +37,7 @@
         "exerciseNotTranslated": "Nema prijevoda",
         "submitExercise": "Podnesi vježbu",
         "successfullyUpdated": "Vježba je uspješno aktualizirana. Zbog predmemoriranja može potrajati neko vrijeme dok promjene ne budu vidljive u cijeloj aplikaciji.",
-        "checkInformationBeforeSubmitting": "Prije podnošenja vježbe provjeri jesu li tvoji uneseni podaci točni",
+        "checkInformationBeforeSubmitting": "Prije podnošenja vježbe provjeri jesu li tvoji upisani podaci točni",
         "exerciseNotTranslatedBody": "Ova vježba trenutačno nije dostupna na trenutačno odabranom jeziku. Želiš li doprinijeti prijevodu?",
         "newNote": "Nova bilješka",
         "notesHelpText": "Bilješke su kratki komentari o tome kako izvesti vježbu, poput „drži tijelo ravno”",
@@ -94,7 +94,7 @@
         "plates": "Ploče",
         "max_reps": "Maks. broj ponavljanja"
     },
-    "submit": "Pošalji",
+    "submit": "Podnesi",
     "weight": "Težina",
     "workout": "Trening",
     "goBack": "Natrag",
