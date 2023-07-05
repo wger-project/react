@@ -13,6 +13,10 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { dateToYYYYMMDD } from "utils/date";
+import { Settings } from "luxon";
+import { TIMEZONE } from "utils/consts";
+
+Settings.defaultZone = TIMEZONE;
 
 interface EntryFormProps {
     entry?: MeasurementEntry,
@@ -104,7 +108,6 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                                         setDateValue(newValue);
                                     }}
                                     shouldDisableDate={(date) => {
-
                                         // Allow the date of the current weight entry, since we are editing it
                                         // @ts-ignore - date is a Luxon DateTime!
                                         if (entry && dateToYYYYMMDD(entry.date) === dateToYYYYMMDD(date.toJSDate())) {
