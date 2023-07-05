@@ -26,6 +26,9 @@ export const QUERY_ROUTINE_DETAIL = 'routine';
 export const QUERY_ROUTINES_SHALLOW = 'routines-shallow';
 export const QUERY_ROUTINE_LOGS = 'routines-logs';
 
+export const QUERY_MEASUREMENTS = 'measurements';
+export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
+
 
 /*
  * List of colors to use in charts
@@ -57,3 +60,12 @@ export const LIST_OF_COLORS3 = [
     "#d45089",
     "#ffa600",
 ];
+
+
+export const PAGINATION_OPTIONS = {
+    pageSizeOptions: [5, 10, 25, 50, 100],
+    pageSize: 10,
+};
+
+
+export const TIMEZONE = process.env.TIME_ZONE || 'Europe/Berlin';

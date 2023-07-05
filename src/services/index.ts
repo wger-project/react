@@ -30,3 +30,10 @@ export {
     getWorkoutRoutine,
     getWorkoutRoutines,
 } from './workoutRoutine';
+
+export {
+    getMeasurementCategories,
+    getMeasurementCategory,
+    deleteMeasurementEntry,
+    editMeasurementEntry,
+} from './measurements';
