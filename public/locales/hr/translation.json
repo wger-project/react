@@ -127,7 +127,7 @@
         "routines": "Rutine",
         "logsFilterNote": "Prikazuju se samo unosi s jedinicom težine kg ili lb i ponavljanja, ostale kombinacije kao što su vrijeme ili do neuspjeha se ovdje zanemaruju",
         "logsHeader": "Dnevnik težine za trening",
-        "rir": "Teoretski moguća ponavljanja"
+        "rir": "PUR"
     },
     "preferences": "Postavke"
 }
