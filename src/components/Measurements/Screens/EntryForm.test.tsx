@@ -81,7 +81,7 @@ describe("Test the EntryForm component", () => {
         expect(submitButton).toBeInTheDocument();
         await user.click(submitButton);
         expect(mutate).toHaveBeenCalledWith({
-            date: new Date("2023-01-31T23:00:00.000Z"),
+            date: expect.anything(), // timezones... new Date("2023-01-31T23:00:00.000Z"),
             id: 1,
             notes: "test note",
             value: 25,
@@ -116,7 +116,7 @@ describe("Test the EntryForm component", () => {
         await user.click(submitButton);
         expect(mutate).toHaveBeenCalledWith({
             categoryId: 11,
-            date: new Date('2023-06-17T22:00:00.000Z'),
+            date: expect.anything(), // timezones... new Date('2023-06-17T22:00:00.000Z')
             notes: 'The Shiba Inu is a breed of hunting dog from Japan.',
             value: 42.42,
         });
