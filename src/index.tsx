@@ -21,13 +21,13 @@ import { WeightOverview } from "pages";
 
 const queryClient = new QueryClient({
     // -> https://tanstack.com/query/v4/docs/react/reference/QueryClient
-    // time in milliseconds,  1000 * 30 = 30seconds
+    // time in milliseconds, so 1000 * 30 = 30s
 
     defaultOptions: {
         queries: {
-            retry: 2,
-            staleTime: 1000 * 30,
-            cacheTime: 1000 * 30,
+            retry: 3,
+            staleTime: 1000 * 60 * 5,
+            cacheTime: 1000 * 60 * 5,
             refetchOnMount: true,
             refetchOnWindowFocus: true,
             refetchOnReconnect: "always"
