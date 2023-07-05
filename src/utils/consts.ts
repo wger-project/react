@@ -66,3 +66,6 @@ export const PAGINATION_OPTIONS = {
     pageSizeOptions: [5, 10, 25, 50, 100],
     pageSize: 10,
 };
+
+
+export const TIMEZONE = process.env.TIME_ZONE || 'Europe/Berlin';
