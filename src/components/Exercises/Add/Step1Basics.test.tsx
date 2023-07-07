@@ -6,7 +6,14 @@ import { testCategories, testEquipment, testMuscles } from "tests/exerciseTestda
 import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
 import { ExerciseStateProvider } from "state";
 import userEvent from "@testing-library/user-event";
-import { setAlternativeNamesEn, setCategory, setEquipment, setNameEn } from "state/exerciseReducer";
+import {
+    setAlternativeNamesEn,
+    setCategory,
+    setEquipment,
+    setNameEn,
+    setPrimaryMuscles,
+    setSecondaryMuscles
+} from "state/exerciseReducer";
 
 // It seems we run into a timeout when running the tests on GitHub actions
 jest.setTimeout(15000);
@@ -21,6 +28,8 @@ jest.mock("state/exerciseReducer", () => {
         setCategory: jest.fn(),
         setAlternativeNamesEn: jest.fn(),
         setEquipment: jest.fn(),
+        setPrimaryMuscles: jest.fn(),
+        setSecondaryMuscles: jest.fn()
 
         // TODO: mocking primary and secondary muscles break the test
         // setPrimaryMuscles: jest.fn()
@@ -107,14 +116,18 @@ describe("<Step1Basics />", () => {
         await user.click(muscles);
         await user.click(screen.getByText(/dacttilaris/i));
 
-        await user.click(screen.getByLabelText('exercises.muscles'));
+        await user.click(screen.getByLabelText('exercises.secondaryMuscles'));
         await user.click(screen.getByText(/abdominis/i));
-
 
         await user.click(screen.getByText('continue'));
 
         // Assert
         expect(mockOnContinue).toHaveBeenCalled();
+        expect(setPrimaryMuscles).toHaveBeenNthCalledWith(1, []);
+        expect(setPrimaryMuscles).toHaveBeenNthCalledWith(2, [1]);
+        expect(setPrimaryMuscles).toHaveBeenNthCalledWith(3, [1, 2]);
+        expect(setSecondaryMuscles).toHaveBeenNthCalledWith(1, []);
+        expect(setSecondaryMuscles).toHaveBeenNthCalledWith(2, [4]);
         expect(setNameEn).toHaveBeenCalledWith('Biceps enlarger');
         expect(setCategory).toHaveBeenCalledWith(1);
         expect(setAlternativeNamesEn).toHaveBeenCalledWith(['Biceps enlarger 2000', 'Arms exploder']);
