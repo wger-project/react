@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { AddMeasurementEntryFab } from "components/Measurements/widgets/fab";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { CategoryDetailDataGrid } from "components/Measurements/widgets/CategoryDetailDataGrid";
+import { CategoryDetailDropdown } from "components/Measurements/widgets/CategoryDetailDropdown";
 
 export const MeasurementCategoryDetail = () => {
     const params = useParams<{ categoryId: string }>();
@@ -17,6 +18,7 @@ export const MeasurementCategoryDetail = () => {
         ? <LoadingPlaceholder />
         : <WgerContainerRightSidebar
             title={categoryQuery.data!.name}
+            optionsMenu={<CategoryDetailDropdown category={categoryQuery.data!} />}
             mainContent={
                 <Stack spacing={2}>
                     <MeasurementChart category={categoryQuery.data!} />

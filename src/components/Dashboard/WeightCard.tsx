@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import { WgerModal } from "components/Core/WgerModal/WgerModal";
+import { WgerModal } from "components/Core/Modals/WgerModal";
 import { useTranslation } from "react-i18next";
 
 export const WeightCard = () => {

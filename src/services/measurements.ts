@@ -103,6 +103,10 @@ export const editMeasurementCategory = async (data: editMeasurementCategoryParam
     return adapter.fromJson(response.data);
 };
 
+export const deleteMeasurementCategory = async (id: number): Promise<void> => {
+    await axios.delete(makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: id }), { headers: makeHeader() });
+};
+
 
 export const deleteMeasurementEntry = async (id: number): Promise<void> => {
     await axios.delete(makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: id }), { headers: makeHeader() });
@@ -110,6 +114,7 @@ export const deleteMeasurementEntry = async (id: number): Promise<void> => {
 
 export interface editMeasurementParams {
     id: number,
+    categoryId?: number,
     date: Date;
     value: number;
     notes: string;

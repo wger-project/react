@@ -11,6 +11,7 @@ import {
     addMeasurementCategoryParams,
     addMeasurementEntry,
     addMeasurementParams,
+    deleteMeasurementCategory,
     editMeasurementCategory,
     editMeasurementCategoryParams,
     editMeasurementParams
@@ -30,12 +31,27 @@ export const useAddMeasurementCategoryQuery = () => {
     });
 };
 
-export const useEditMeasurementCategoryQuery = () => {
+export const useEditMeasurementCategoryQuery = (id: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: (data: editMeasurementCategoryParams) => editMeasurementCategory(data),
-        onSuccess: () => queryClient.invalidateQueries([QUERY_MEASUREMENTS_CATEGORIES,])
+        onSuccess: () => {
+            queryClient.invalidateQueries([QUERY_MEASUREMENTS, id]);
+            queryClient.invalidateQueries([QUERY_MEASUREMENTS_CATEGORIES,]);
+        }
+    });
+};
+
+export const useDeleteMeasurementCategoryQuery = (id: number) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: number) => deleteMeasurementCategory(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries([QUERY_MEASUREMENTS, id]);
+            queryClient.invalidateQueries([QUERY_MEASUREMENTS_CATEGORIES,]);
+        }
     });
 };
 

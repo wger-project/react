@@ -6,6 +6,11 @@ const fontFamilyBold = [
     'sans-serif'
 ].join(',');
 
+const fontFamilyLight = [
+    '"Open Sans Light"',
+    'sans-serif'
+].join(',');
+
 const themeOptions: ThemeOptions = {
 
     spacing: 8,
@@ -22,10 +27,7 @@ const themeOptions: ThemeOptions = {
         h6: {
             fontFamily: fontFamilyBold,
         },
-        fontFamily: [
-            '"Open Sans Light"',
-            'sans-serif'
-        ].join(','),
+        fontFamily: fontFamilyLight,
     },
     palette: {
         primary: {

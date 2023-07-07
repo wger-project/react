@@ -12,7 +12,7 @@ import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { makeLink, WgerLink } from "utils/url";
 import { Link } from "react-router-dom";
 import { EntryForm } from "components/Measurements/Screens/EntryForm";
-import { WgerModal } from "components/Core/WgerModal/WgerModal";
+import { WgerModal } from "components/Core/Modals/WgerModal";
 
 
 const CategoryList = (props: { category: MeasurementCategory }) => {

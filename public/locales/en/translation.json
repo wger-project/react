@@ -4,6 +4,7 @@
   "submit": "Submit",
   "edit": "Edit",
   "delete": "Delete",
+  "deleteConfirmation": "Are you sure you want to delete \"{{name}}\"?",
   "add": "Add",
   "difference": "Difference",
   "days": "Days",
@@ -96,7 +97,8 @@
   },
   "measurements": {
     "measurements": "Measurements",
-    "unitFormHelpText": "The unit in which the category will be measured, such as cm or %"
+    "unitFormHelpText": "The unit in which the category will be measured, such as cm or %",
+    "deleteInfo": "This will delete the category as well as all its entries"
   },
   "server": {
     "abs": "Abs",

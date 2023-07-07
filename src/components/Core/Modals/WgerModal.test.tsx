@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { WgerModal, WgerModalProps } from "components/Core/WgerModal/WgerModal";
+import { WgerModal, WgerModalProps } from "components/Core/Modals/WgerModal";
 
 describe("Test WgerModal component", () => {
     test('Renders title and subtitle when openFn is true', () => {
@@ -24,7 +24,7 @@ describe("Test WgerModal component", () => {
         expect(screen.getByText('Test subtitle')).toBeInTheDocument();
     });
 
-    test('Doesnt render anything when openFn is false', () => {
+    test('Doesnt render anything when isOpen is false', () => {
 
         // Arrange
         const props: WgerModalProps = {

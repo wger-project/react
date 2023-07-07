@@ -15,7 +15,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
 
     const [t] = useTranslation();
     const useAddCategoryQuery = useAddMeasurementCategoryQuery();
-    const useEditCategoryQuery = useEditMeasurementCategoryQuery();
+    const useEditCategoryQuery = useEditMeasurementCategoryQuery(category?.id!);
     const validationSchema = yup.object({
         name: yup
             .string()

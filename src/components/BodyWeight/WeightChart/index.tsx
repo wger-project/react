@@ -2,7 +2,7 @@ import { CartesianGrid, DotProps, Line, LineChart, ResponsiveContainer, Tooltip,
 import React from 'react';
 import { WeightEntry } from "components/BodyWeight/model";
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import { WgerModal } from "components/Core/WgerModal/WgerModal";
+import { WgerModal } from "components/Core/Modals/WgerModal";
 import { useTranslation } from "react-i18next";
 import { Paper, useTheme } from "@mui/material";
 
