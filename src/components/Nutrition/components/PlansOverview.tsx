@@ -16,7 +16,7 @@ export const PlansOverview = () => {
     return plansQuery.isLoading
         ? <LoadingPlaceholder />
         : <WgerContainerRightSidebar
-            title={t("measurements.measurements")}
+            title={t("nutrition.plans")}
             mainContent={<Stack spacing={2}>
                 {plansQuery.data!.length === 0 && <OverviewEmpty />}
                 <PlanList plans={plansQuery.data!} />
