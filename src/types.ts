@@ -41,6 +41,34 @@ export interface ApiMeasurementCategoryType {
     unit: string
 }
 
+export interface ApiIngredientType {
+    id: number,
+    uuid: string,
+    code: string,
+    name: string,
+    energy: number,
+    protein: string,
+    carbohydrates: string,
+    carbohydrates_sugar: string | null,
+    fat: string,
+    fat_saturated: string | null,
+    fibres: string | null,
+    sodium: string | null,
+}
+
+export interface ApiNutritionalPlanType {
+    id: number,
+    creation_date: string,
+    description: "string"
+}
+
+export interface ApiMealType {
+    id: number,
+    order: number,
+    time: string,
+    name: string
+}
+
 export interface ApiMeasurementEntryType {
     id: number,
     category: number,

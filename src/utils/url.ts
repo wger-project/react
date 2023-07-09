@@ -72,7 +72,10 @@ export enum WgerLink {
     WEIGHT_ADD,
 
     MEASUREMENT_OVERVIEW,
-    MEASUREMENT_DETAIL
+    MEASUREMENT_DETAIL,
+
+    NUTRITION_OVERVIEW,
+    NUTRITION_DETAIL,
 }
 
 type ExerciseDetailUrlParams = { id: number, slug?: string };
@@ -145,6 +148,12 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/measurement/overview`;
         case WgerLink.MEASUREMENT_DETAIL:
             return `/${langShort}/measurement/category/${params!.id}`;
+
+        // Nutrition
+        case WgerLink.NUTRITION_OVERVIEW:
+            return `/${langShort}/nutrition/overview`;
+        case WgerLink.NUTRITION_DETAIL:
+            return `/${langShort}/nutrition/${params!.id}/view`;
 
         // Dashboard
         case WgerLink.DASHBOARD:

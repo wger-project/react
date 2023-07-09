@@ -28,6 +28,7 @@ import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails
 import { RoutineLogs } from "components/WorkoutRoutines/Detail/RoutineLogs";
 import { MeasurementCategoryOverview } from "components/Measurements/Screens/MeasurementCategoryOverview";
 import { MeasurementCategoryDetail } from "components/Measurements/Screens/MeasurementCategoryDetail";
+import { PlansOverview } from "components/Nutrition/components/PlansOverview";
 
 /*
  * Routes for the application
@@ -80,6 +81,9 @@ export const WgerRoutes = () => {
             <Route path="weight">
                 <Route path="overview" element={<WeightOverview />} />
                 <Route path="add" element={<AddWeight />} />
+            </Route>
+            <Route path="nutrition">
+                <Route path="overview" element={<PlansOverview />} />
             </Route>
             <Route path="nutrition">
                 <Route path="overview" element={<NutritionPlans />} />

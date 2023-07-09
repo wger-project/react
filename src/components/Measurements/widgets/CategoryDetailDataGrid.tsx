@@ -95,7 +95,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
     };
 
     const onProcessRowUpdateError = (error: any) => {
-
         console.log(error);
         //setRows(rows.map((row) => (row.id === newRow.id ? newRow : row)));
 

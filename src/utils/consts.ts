@@ -29,6 +29,9 @@ export const QUERY_ROUTINE_LOGS = 'routines-logs';
 export const QUERY_MEASUREMENTS = 'measurements';
 export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
 
+export const QUERY_NUTRITIONAL_PLANS = 'nutritional-plans';
+export const QUERY_NUTRITIONAL_PLAN = 'nutritional-plan';
+
 
 /*
  * List of colors to use in charts
