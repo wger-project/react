@@ -9,8 +9,7 @@ describe("Test WgerModal component", () => {
         const props: WgerModalProps = {
             title: "Test title",
             subtitle: "Test subtitle",
-            closeFn: () => {
-            },
+            closeFn: jest.fn(),
             isOpen: true,
             children: null
         };
@@ -30,8 +29,7 @@ describe("Test WgerModal component", () => {
         const props: WgerModalProps = {
             title: "Test title",
             subtitle: "Test subtitle",
-            closeFn: () => {
-            },
+            closeFn: jest.fn(),
             isOpen: false,
             children: null
         };
@@ -44,5 +42,4 @@ describe("Test WgerModal component", () => {
         expect(screen.queryByText('Test title')).toBeNull();
         expect(screen.queryByText('Test subtitle')).toBeNull();
     });
-
 });

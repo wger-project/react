@@ -54,5 +54,4 @@ describe("Test the DeleteConfirmationModal component", () => {
         // Assert
         expect(props.deleteFn).toHaveBeenCalledTimes(1);
     });
-
 });

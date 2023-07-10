@@ -69,6 +69,15 @@ export interface ApiMealType {
     name: string
 }
 
+export interface ApiMealItemType {
+    id: number,
+    meal: number,
+    ingredient: number,
+    weight_unit: number,
+    order: number,
+    amount: number
+}
+
 export interface ApiMeasurementEntryType {
     id: number,
     category: number,

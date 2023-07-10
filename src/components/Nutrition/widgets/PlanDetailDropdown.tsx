@@ -1,19 +1,19 @@
-import { MeasurementCategory } from "components/Measurements/models/Category";
 import { useTranslation } from "react-i18next";
 import React from "react";
 import { Button, Menu, MenuItem } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
 import { WgerModal } from "components/Core/Modals/WgerModal";
-import { CategoryForm } from "components/Measurements/widgets/CategoryForm";
 import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
-import { useDeleteMeasurementCategoryQuery } from "components/Measurements/queries";
 import { useNavigate } from "react-router-dom";
 import { makeLink, WgerLink } from "utils/url";
+import { useDeleteNutritionalPlanQuery } from "components/Nutrition/queries";
+import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
+import { PlanForm } from "components/Nutrition/widgets/PlanForm";
 
 
-export const CategoryDetailDropdown = (props: { category: MeasurementCategory }) => {
+export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
 
-    const deleteCategoryQuery = useDeleteMeasurementCategoryQuery(props.category.id);
+    const deletePlanQuery = useDeleteNutritionalPlanQuery(props.plan.id);
     const navigate = useNavigate();
 
     const [t] = useTranslation();
@@ -40,8 +40,8 @@ export const CategoryDetailDropdown = (props: { category: MeasurementCategory })
     };
 
     const performDelete = () => {
-        deleteCategoryQuery.mutate(props.category.id);
-        navigate((makeLink(WgerLink.MEASUREMENT_OVERVIEW)));
+        deletePlanQuery.mutate(props.plan.id);
+        navigate((makeLink(WgerLink.NUTRITION_OVERVIEW)));
     };
 
 
@@ -69,11 +69,11 @@ export const CategoryDetailDropdown = (props: { category: MeasurementCategory })
             </Menu>
 
             <WgerModal title={t('edit')} isOpen={openEditModal} closeFn={handleCloseEditModal}>
-                <CategoryForm category={props.category} closeFn={handleCloseEditModal} />
+                <PlanForm plan={props.plan} closeFn={handleCloseEditModal} />
             </WgerModal>
 
             <DeleteConfirmationModal
-                title={t('deleteConfirmation', { name: props.category.name })}
+                title={t('deleteConfirmation', { name: props.plan.description })}
                 message={t('measurements.deleteInfo')}
                 isOpen={openDeleteModal}
                 closeFn={handleCloseDeleteModal}

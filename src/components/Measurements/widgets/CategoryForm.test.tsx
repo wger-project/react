@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "components/Measurements/queries";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "tests/measurementsTestData";
 import userEvent from "@testing-library/user-event";
-import { CategoryForm } from "components/Measurements/Screens/CategoryForm";
+import { CategoryForm } from "components/Measurements/widgets/CategoryForm";
 
 jest.mock("services/weight");
 
@@ -85,10 +85,7 @@ describe("Test the CategoryForm component", () => {
         const nameInput = await screen.findByLabelText('name');
         const unitInput = await screen.findByLabelText('unit');
         const submitButton = screen.getByRole('button', { name: 'submit' });
-
-        // await user.clear(nameInput);
         await user.type(nameInput, 'calves');
-        // await user.clear(unitInput);
         await user.type(unitInput, 'cm');
 
         // Assert

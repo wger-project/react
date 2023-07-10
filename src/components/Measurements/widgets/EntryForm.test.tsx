@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { EntryForm } from "components/Measurements/Screens/EntryForm";
+import { EntryForm } from "components/Measurements/widgets/EntryForm";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
     useAddMeasurementEntryQuery,

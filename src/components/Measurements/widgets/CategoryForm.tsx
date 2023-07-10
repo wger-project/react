@@ -10,7 +10,7 @@ interface CategoryFormProps {
     category?: MeasurementCategory,
     closeFn?: Function,
 }
-
+ 
 export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
 
     const [t] = useTranslation();

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useNutritionalPlansQuery } from "components/Nutrition/queries";
+import { useFetchNutritionalPlansQuery } from "components/Nutrition/queries";
 import { TEST_NUTRITIONAL_PLAN_1, TEST_NUTRITIONAL_PLAN_2 } from "tests/nutrition";
 import { PlansOverview } from "components/Nutrition/components/PlansOverview";
 
@@ -12,7 +12,7 @@ describe("Test the PlansOverview component", () => {
 
     beforeEach(() => {
         // @ts-ignore
-        useNutritionalPlansQuery.mockImplementation(() => ({
+        useFetchNutritionalPlansQuery.mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: [TEST_NUTRITIONAL_PLAN_1, TEST_NUTRITIONAL_PLAN_2]
@@ -30,7 +30,7 @@ describe("Test the PlansOverview component", () => {
         );
 
         // Assert
-        expect(useNutritionalPlansQuery).toHaveBeenCalled();
+        expect(useFetchNutritionalPlansQuery).toHaveBeenCalled();
         expect(screen.getByText('nutrition.plans')).toBeInTheDocument();
         expect(screen.getByText('Summer body!!!')).toBeInTheDocument();
         expect(screen.getByText('Bulking till we puke')).toBeInTheDocument();

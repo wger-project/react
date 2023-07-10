@@ -3,14 +3,15 @@ import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget"
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { Divider, List, ListItem, ListItemButton, ListItemText, Paper, Stack } from "@mui/material";
 import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
-import { AddMeasurementCategoryFab } from "components/Measurements/widgets/fab";
 import React from "react";
-import { useNutritionalPlansQuery } from "components/Nutrition/queries";
+import { useFetchNutritionalPlansQuery } from "components/Nutrition/queries";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { AddNutritionalPlanFab } from "components/Nutrition/widgets/Fab";
+import { makeLink, WgerLink } from "utils/url";
 
 export const PlansOverview = () => {
-    const plansQuery = useNutritionalPlansQuery();
+    const plansQuery = useFetchNutritionalPlansQuery();
     const [t] = useTranslation();
 
     return plansQuery.isLoading
@@ -22,30 +23,34 @@ export const PlansOverview = () => {
                 <PlanList plans={plansQuery.data!} />
             </Stack>
             }
-            fab={<AddMeasurementCategoryFab />}
+            fab={<AddNutritionalPlanFab />}
         />;
 };
 
 
+const PlanListItem = (props: { plan: NutritionalPlan }) => {
+    const [t, i18n] = useTranslation();
+    const detailUrl = makeLink(WgerLink.NUTRITION_DETAIL, i18n.language, { id: props.plan.id });
+
+    return <>
+        <ListItem sx={{ p: 0 }}>
+            <ListItemButton component="a" href={detailUrl}>
+                <ListItemText
+                    primary={props.plan.description !== '' ? props.plan.description : t('routines.routine')}
+                    secondary={props.plan.creationDate.toLocaleDateString()}
+                />
+                <ChevronRightIcon />
+            </ListItemButton>
+        </ListItem>
+        <Divider component="li" />
+    </>;
+};
+
 const PlanList = (props: { plans: NutritionalPlan[] }) => {
-
-    const [t] = useTranslation();
-
 
     return <Paper>
         <List sx={{ py: 0 }} key={'abc'}>
-            {props.plans.map((plan) => <><ListItem sx={{ p: 0 }}>
-                    <ListItemButton component="a" href={""}>
-                        <ListItemText
-                            primary={plan.description !== '' ? plan.description : t('routines.routine')}
-                            secondary={plan.creationDate.toLocaleDateString()}
-                        />
-                        <ChevronRightIcon />
-                    </ListItemButton>
-                </ListItem>
-                    <Divider component="li" />
-                </>
-            )}
+            {props.plans.map((plan) => <PlanListItem plan={plan} key={plan.id} />)}
         </List>
     </Paper>;
 };

@@ -11,7 +11,7 @@ import { AddMeasurementCategoryFab } from "components/Measurements/widgets/fab";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { makeLink, WgerLink } from "utils/url";
 import { Link } from "react-router-dom";
-import { EntryForm } from "components/Measurements/Screens/EntryForm";
+import { EntryForm } from "components/Measurements/widgets/EntryForm";
 import { WgerModal } from "components/Core/Modals/WgerModal";
 
 

@@ -11,13 +11,13 @@ export const API_MEASUREMENTS_ENTRY_PATH = 'measurement';
 
 
 export const getMeasurementCategories = async (): Promise<MeasurementCategory[]> => {
-    const url = makeUrl(API_MEASUREMENTS_CATEGORY_PATH);
-    const { data: receivedCategories } = await axios.get<ResponseType<ApiMeasurementCategoryType>>(url, {
-        headers: makeHeader(),
-    });
     const adapter = new MeasurementCategoryAdapter();
+    const entryAdapter = new MeasurementEntryAdapter();
+    const { data: receivedCategories } = await axios.get<ResponseType<ApiMeasurementCategoryType>>(
+        makeUrl(API_MEASUREMENTS_CATEGORY_PATH),
+        { headers: makeHeader(), }
+    );
     const categories = receivedCategories.results.map(l => adapter.fromJson(l));
-
 
     // Load entries for each category
     const entryResponses = categories.map((category) => {
@@ -31,7 +31,7 @@ export const getMeasurementCategories = async (): Promise<MeasurementCategory[]>
     // Save entries to each category
     let categoryId: number;
     settingsResponses.forEach((response) => {
-        const entries = response.data.results.map(l => new MeasurementEntryAdapter().fromJson(l));
+        const entries = response.data.results.map(l => entryAdapter.fromJson(l));
 
         if (entries.length > 0) {
             categoryId = entries[0].category;
@@ -50,10 +50,10 @@ export const getMeasurementCategory = async (id: number): Promise<MeasurementCat
 
     const category = new MeasurementCategoryAdapter().fromJson(receivedCategories);
 
-    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: id.toString() } });
-    const { data: receivedEntries } = await axios.get<ResponseType<ApiMeasurementEntryType>>(url, {
-        headers: makeHeader(),
-    });
+    const { data: receivedEntries } = await axios.get<ResponseType<ApiMeasurementEntryType>>(
+        makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: id.toString() } }),
+        { headers: makeHeader(), }
+    );
     const adapter = new MeasurementEntryAdapter();
     category.entries = receivedEntries.results.map(l => adapter.fromJson(l));
 
@@ -66,14 +66,12 @@ export interface addMeasurementCategoryParams {
 }
 
 export const addMeasurementCategory = async (data: addMeasurementCategoryParams): Promise<MeasurementCategory> => {
-    const url = makeUrl(API_MEASUREMENTS_CATEGORY_PATH,);
-    const baseData = {
-        name: data.name,
-        unit: data.unit
-    };
     const response = await axios.post(
-        url,
-        baseData,
+        makeUrl(API_MEASUREMENTS_CATEGORY_PATH,),
+        {
+            name: data.name,
+            unit: data.unit
+        },
         { headers: makeHeader() }
     );
 
@@ -88,14 +86,12 @@ export interface editMeasurementCategoryParams {
 }
 
 export const editMeasurementCategory = async (data: editMeasurementCategoryParams): Promise<MeasurementCategory> => {
-    const url = makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: data.id });
-    const baseData = {
-        name: data.name,
-        unit: data.unit
-    };
     const response = await axios.patch(
-        url,
-        baseData,
+        makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: data.id }),
+        {
+            name: data.name,
+            unit: data.unit
+        },
         { headers: makeHeader() }
     );
 
@@ -121,15 +117,13 @@ export interface editMeasurementParams {
 }
 
 export const editMeasurementEntry = async (data: editMeasurementParams): Promise<MeasurementEntry> => {
-    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: data.id });
-    const baseData = {
-        date: dateToYYYYMMDD(data.date),
-        value: data.value,
-        notes: data.notes
-    };
     const response = await axios.patch(
-        url,
-        baseData,
+        makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: data.id }),
+        {
+            date: dateToYYYYMMDD(data.date),
+            value: data.value,
+            notes: data.notes
+        },
         { headers: makeHeader() }
     );
 

@@ -1,7 +1,10 @@
 import { Adapter } from "utils/Adapter";
 import { ApiNutritionalPlanType } from "types";
+import { Meal } from "components/Nutrition/models/meal";
 
 export class NutritionalPlan {
+
+    meals: Meal[] = [];
 
     constructor(
         public id: number,

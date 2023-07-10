@@ -11,7 +11,6 @@ import {
     Gallery,
     Ingredients,
     Login,
-    NutritionPlans,
     Preferences,
     PublicTemplate,
     TemplatePage,
@@ -28,6 +27,7 @@ import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails
 import { RoutineLogs } from "components/WorkoutRoutines/Detail/RoutineLogs";
 import { MeasurementCategoryOverview } from "components/Measurements/Screens/MeasurementCategoryOverview";
 import { MeasurementCategoryDetail } from "components/Measurements/Screens/MeasurementCategoryDetail";
+import { PlanDetail } from "components/Nutrition/components/PlanDetail";
 import { PlansOverview } from "components/Nutrition/components/PlansOverview";
 
 /*
@@ -84,9 +84,7 @@ export const WgerRoutes = () => {
             </Route>
             <Route path="nutrition">
                 <Route path="overview" element={<PlansOverview />} />
-            </Route>
-            <Route path="nutrition">
-                <Route path="overview" element={<NutritionPlans />} />
+                <Route path=":planId/view" element={<PlanDetail />} />
                 <Route path="calculator">
                     <Route path="bmi" element={<BmiCalculator />} />
                     <Route path="calories" element={<CaloriesCalculator />} />
