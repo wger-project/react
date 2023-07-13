@@ -141,6 +141,8 @@
     "actions": "Radnje",
     "measurements": {
         "measurements": "Mjerenja",
-        "unitFormHelpText": "Jedinica za mjerenje kategorije, npr. cm ili %"
-    }
+        "unitFormHelpText": "Jedinica za mjerenje kategorije, npr. cm ili %",
+        "deleteInfo": "Ovo će izbrisati kategoriju kao i sve njezine unose"
+    },
+    "deleteConfirmation": "Stvarno želiš izbrisati „{{name}}”?"
 }
