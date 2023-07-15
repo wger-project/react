@@ -15,8 +15,8 @@ export class MealItem {
         public ingredientObj?: Ingredient,
         public weightUnitObj?: Ingredient
     ) {
-        
     }
+
 
     get nutritionalValues(): NutritionalValues {
         const out = new NutritionalValues();

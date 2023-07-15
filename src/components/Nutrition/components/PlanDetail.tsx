@@ -7,7 +7,14 @@ import {
     List,
     ListItem,
     ListItemText,
-    Stack
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
@@ -21,7 +28,106 @@ import { MealItem } from "components/Nutrition/models/mealItem";
 import { Add } from "@mui/icons-material";
 import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
 import { MacrosPieChart } from "components/Nutrition/widgets/MacrosPieChart";
+import { useTranslation } from "react-i18next";
+import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
 
+
+const NutritionalValuesPlan = (props: { values: NutritionalValues }) => {
+    const [t] = useTranslation();
+
+    return <TableContainer>
+        <Table size="small">
+            <TableHead>
+                <TableRow>
+                    <TableCell>{t('nutrition.macronutrient')}</TableCell>
+                    <TableCell>{t('total')}</TableCell>
+                    <TableCell align="right">{t('nutrition.percentEnergy')}</TableCell>
+                    <TableCell align="right">{t('nutrition.gPerBodyKg')}</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                <TableRow>
+                    <TableCell>{t('nutrition.energy')}</TableCell>
+                    <TableCell>
+                        {props.values.energy.toFixed(0)} kcal
+                        / {props.values.energyKj.toFixed(0)} kJ
+                    </TableCell>
+                    <TableCell align="right"></TableCell>
+                    <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>{t('nutrition.protein')}</TableCell>
+                    <TableCell>
+                        {t('nutrition.valueUnitG', { value: props.values.protein.toFixed(1) })}
+                    </TableCell>
+                    <TableCell align="right">
+                        {t('nutrition.valueUnitPercent', { value: props.values.percent.protein.toFixed(1) })}
+                    </TableCell>
+                    <TableCell align="right">...</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>{t('nutrition.carbohydrates')}</TableCell>
+                    <TableCell>
+                        {t('nutrition.valueUnitG', { value: props.values.carbohydrates.toFixed(1) })}
+                    </TableCell>
+                    <TableCell align="right">
+                        {t('nutrition.valueUnitPercent', { value: props.values.percent.carbohydrates.toFixed(1) })}
+                    </TableCell>
+                    <TableCell align="right">...</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell sx={{ pl: 5 }}>{t('nutrition.ofWhichSugars')}</TableCell>
+                    <TableCell>
+                        {t('nutrition.valueUnitG', { value: props.values.carbohydratesSugar.toFixed(1) })}
+                    </TableCell>
+                    <TableCell align="right"></TableCell>
+                    <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>{t('nutrition.fat')}</TableCell>
+                    <TableCell>
+                        {t('nutrition.valueUnitG', { value: props.values.fat.toFixed(1) })}
+                    </TableCell>
+                    <TableCell align="right">
+                        {t('nutrition.valueUnitPercent', { value: props.values.percent.fat.toFixed(1) })}
+                    </TableCell>
+                    <TableCell align="right">...</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell sx={{ pl: 5 }}>{t('nutrition.ofWhichFat')}</TableCell>
+                    <TableCell>
+                        {t('nutrition.valueUnitG', { value: props.values.fatSaturated.toFixed(1) })}
+                    </TableCell>
+                    <TableCell align="right"></TableCell>
+                    <TableCell align="right"></TableCell>
+                </TableRow>
+
+                <TableRow>
+                    <TableCell>{t('nutrition.others')}</TableCell>
+                    <TableCell> </TableCell>
+                    <TableCell align="right"></TableCell>
+                    <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>{t('nutrition.fibres')}</TableCell>
+                    <TableCell>
+                        {t('nutrition.valueUnitG', { value: props.values.fibres.toFixed(1) })}
+                    </TableCell>
+                    <TableCell align="right"></TableCell>
+                    <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>{t('nutrition.sodium')}</TableCell>
+                    <TableCell>
+                        {t('nutrition.valueUnitG', { value: props.values.sodium.toFixed(1) })}
+                    </TableCell>
+                    <TableCell align="right"></TableCell>
+                    <TableCell align="right"></TableCell>
+                </TableRow>
+            </TableBody>
+        </Table>
+    </TableContainer>;
+};
 
 const MealItemListItem = (props: { mealItem: MealItem }) => {
     return <ListItem disablePadding>
@@ -62,7 +168,7 @@ const MealDetail = (props: { meal: Meal }) => {
 
 
 export const PlanDetail = () => {
-
+    const [t] = useTranslation();
     const params = useParams<{ planId: string }>();
     const planId = parseInt(params.planId!);
     const planQuery = useFetchNutritionalPlanQuery(planId);
@@ -76,10 +182,16 @@ export const PlanDetail = () => {
                 <>
                     <Stack spacing={2}>
                         {planQuery.data!.meals.map(meal => <MealDetail meal={meal} key={meal.id} />)}
-                        <p>aaaa</p>
+                        <Typography gutterBottom variant="h5">
+                            {t('nutrition.nutritionalData')}
+                        </Typography>
+                        <NutritionalValuesPlan values={planQuery.data!.nutritionalValues} />
                         <MacrosPieChart data={planQuery.data!.nutritionalValues} />
-                    </Stack>
 
+                        <Typography gutterBottom variant="h5">
+                            {t('nutrition.nutritionalDiary')}
+                        </Typography>
+                    </Stack>
                 </>
             }
             fab={<AddNutritionDiaryEntryFab plan={planQuery.data!} />}

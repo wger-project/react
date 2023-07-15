@@ -7,10 +7,19 @@ type NutritionalValuesConstructor = {
     fatSaturated?: number;
     fibres?: number;
     sodium?: number;
+    bodyWeight?: number;
 }
 
+// in kcal per g
+export const ENERGY_FACTOR = {
+    protein: 4,
+    carbohydrates: 4,
+    fat: 9
+};
 
 export class NutritionalValues {
+    bodyWeight: number = 0;
+
     energy: number = 0;
     protein: number = 0;
     carbohydrates: number = 0;
@@ -19,6 +28,26 @@ export class NutritionalValues {
     fatSaturated: number = 0;
     fibres: number = 0;
     sodium: number = 0;
+
+    get energyKj(): number {
+        return this.energy * 4.184;
+    }
+
+    get percent() {
+        return {
+            protein: this.protein * ENERGY_FACTOR.protein / this.energy * 100,
+            carbohydrates: this.carbohydrates * ENERGY_FACTOR.carbohydrates / this.energy * 100,
+            fat: this.fat * ENERGY_FACTOR.fat / this.energy * 100
+        };
+    }
+
+    get perBodyKg() {
+        return {
+            protein: this.bodyWeight > 0 ? this.protein / this.bodyWeight : 0,
+            carbohydrates: this.bodyWeight > 0 ? this.carbohydrates / this.bodyWeight : 0,
+            fat: this.bodyWeight > 0 ? this.fat / this.bodyWeight : 0,
+        };
+    };
 
 
     constructor(values?: NutritionalValuesConstructor) {
@@ -30,11 +59,9 @@ export class NutritionalValues {
         this.fatSaturated = values?.fatSaturated ?? 0;
         this.fibres = values?.fibres ?? 0;
         this.sodium = values?.sodium ?? 0;
+        this.bodyWeight = values?.bodyWeight ?? 0;
     }
 
-    get energyKj(): number {
-        return this.energy * 4.184;
-    }
 
     add(data: NutritionalValues) {
         this.energy += data.energy;

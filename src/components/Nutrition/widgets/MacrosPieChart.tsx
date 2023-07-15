@@ -5,7 +5,7 @@ import { generateChartColors } from "utils/colors";
 
 export const MacrosPieChart = (props: { data: NutritionalValues }) => {
     const data = [
-        { name: 'carbs', value: props.data.energy },
+        { name: 'carbs', value: props.data.carbohydrates },
         { name: 'protein', value: props.data.protein },
         { name: 'fat', value: props.data.fat },
     ];
