@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
-import { TEST_NUTRITIONAL_PLAN_2 } from "tests/nutrition";
+import { TEST_NUTRITIONAL_PLAN_2 } from "tests/nutritionTestdata";
 import { PlanDetail } from "components/Nutrition/components/PlanDetail";
+import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
 
 jest.mock("components/Nutrition/queries");
 

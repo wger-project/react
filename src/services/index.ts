@@ -37,3 +37,5 @@ export {
     deleteMeasurementEntry,
     editMeasurementEntry,
 } from './measurements';
+
+export { searchIngredient, getIngredient } from './ingredient';

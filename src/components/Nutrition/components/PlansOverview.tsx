@@ -4,11 +4,11 @@ import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { Divider, List, ListItem, ListItemButton, ListItemText, Paper, Stack } from "@mui/material";
 import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
 import React from "react";
-import { useFetchNutritionalPlansQuery } from "components/Nutrition/queries";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { AddNutritionalPlanFab } from "components/Nutrition/widgets/Fab";
 import { makeLink, WgerLink } from "utils/url";
+import { useFetchNutritionalPlansQuery } from "components/Nutrition/queries";
 
 export const PlansOverview = () => {
     const plansQuery = useFetchNutritionalPlansQuery();

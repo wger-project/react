@@ -6,9 +6,9 @@ import { WgerModal } from "components/Core/Modals/WgerModal";
 import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
 import { useNavigate } from "react-router-dom";
 import { makeLink, WgerLink } from "utils/url";
-import { useDeleteNutritionalPlanQuery } from "components/Nutrition/queries";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 import { PlanForm } from "components/Nutrition/widgets/PlanForm";
+import { useDeleteNutritionalPlanQuery } from "components/Nutrition/queries";
 
 
 export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {

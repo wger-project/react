@@ -4,6 +4,7 @@ import { makeHeader, makeUrl } from "utils/url";
 import { NutritionalPlan, NutritionalPlanAdapter } from "components/Nutrition/models/nutritionalPlan";
 import { ResponseType } from "services/responseType";
 import { getMealsForPlan } from "services/meal";
+import { getNutritionalDiaryEntries } from "services/nutritionalDiary";
 
 export const API_NUTRITIONAL_PLAN_PATH = 'nutritionplan';
 
@@ -24,20 +25,22 @@ export const getNutritionalPlanFull = async (id: number): Promise<NutritionalPla
     );
     const adapter = new NutritionalPlanAdapter();
     const plan = adapter.fromJson(receivedPlan);
-    plan.meals = await getMealsForPlan(id);
+    const responses = await Promise.all([getMealsForPlan(id), getNutritionalDiaryEntries(id)]);
+
+    plan.meals = responses[0];
+    plan.diaryEntries = responses[1];
     return plan;
 };
 
-export interface addNutritionalPlanParams {
+export interface AddNutritionalPlanParams {
     description: string;
 }
 
-export interface editNutritionalPlanParams {
+export interface EditNutritionalPlanParams extends AddNutritionalPlanParams {
     id: number,
-    description: string;
 }
 
-export const addNutritionalPlan = async (data: addNutritionalPlanParams): Promise<NutritionalPlan> => {
+export const addNutritionalPlan = async (data: AddNutritionalPlanParams): Promise<NutritionalPlan> => {
     const response = await axios.post(
         makeUrl(API_NUTRITIONAL_PLAN_PATH,),
         { description: data.description, },
@@ -48,7 +51,7 @@ export const addNutritionalPlan = async (data: addNutritionalPlanParams): Promis
     return adapter.fromJson(response.data);
 };
 
-export const editNutritionalPlan = async (data: editNutritionalPlanParams): Promise<NutritionalPlan> => {
+export const editNutritionalPlan = async (data: EditNutritionalPlanParams): Promise<NutritionalPlan> => {
     const response = await axios.patch(
         makeUrl(API_NUTRITIONAL_PLAN_PATH, { id: data.id }),
         { description: data.description, },

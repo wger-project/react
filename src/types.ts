@@ -78,6 +78,16 @@ export interface ApiMealItemType {
     amount: number
 }
 
+export interface ApiNutritionDiaryType {
+    id: number,
+    plan: number,
+    meal: number | null,
+    ingredient: number,
+    weight_unit: number,
+    datetime: Date,
+    amount: number
+}
+
 export interface ApiMeasurementEntryType {
     id: number,
     category: number,

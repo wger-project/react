@@ -60,12 +60,12 @@ export const getMeasurementCategory = async (id: number): Promise<MeasurementCat
     return category;
 };
 
-export interface addMeasurementCategoryParams {
+export interface AddMeasurementCategoryParams {
     name: string;
     unit: string;
 }
 
-export const addMeasurementCategory = async (data: addMeasurementCategoryParams): Promise<MeasurementCategory> => {
+export const addMeasurementCategory = async (data: AddMeasurementCategoryParams): Promise<MeasurementCategory> => {
     const response = await axios.post(
         makeUrl(API_MEASUREMENTS_CATEGORY_PATH,),
         {
@@ -131,14 +131,14 @@ export const editMeasurementEntry = async (data: editMeasurementParams): Promise
     return adapter.fromJson(response.data);
 };
 
-export interface addMeasurementParams {
+export interface AddMeasurementParams {
     categoryId: number;
     date: Date;
     value: number;
     notes: string;
 }
 
-export const addMeasurementEntry = async (data: addMeasurementParams): Promise<MeasurementEntry> => {
+export const addMeasurementEntry = async (data: AddMeasurementParams): Promise<MeasurementEntry> => {
 
     const response = await axios.post(
         makeUrl(API_MEASUREMENTS_ENTRY_PATH),

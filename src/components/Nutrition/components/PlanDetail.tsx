@@ -1,14 +1,26 @@
-import { Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemText, Stack } from "@mui/material";
-import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
+import {
+    Card,
+    CardActions,
+    CardContent,
+    CardHeader,
+    IconButton,
+    List,
+    ListItem,
+    ListItemText,
+    Stack
+} from "@mui/material";
 import { useParams } from "react-router-dom";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import React from "react";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { AddNutritionalPlanFab } from "components/Nutrition/widgets/Fab";
+import { AddNutritionDiaryEntryFab } from "components/Nutrition/widgets/Fab";
 import { PlanDetailDropdown } from "components/Nutrition/widgets/PlanDetailDropdown";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Meal } from "components/Nutrition/models/meal";
 import { MealItem } from "components/Nutrition/models/mealItem";
+import { Add } from "@mui/icons-material";
+import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
+import { MacrosPieChart } from "components/Nutrition/widgets/MacrosPieChart";
 
 
 const MealItemListItem = (props: { mealItem: MealItem }) => {
@@ -40,6 +52,11 @@ const MealDetail = (props: { meal: Meal }) => {
                 ))}
             </List>
         </CardContent>
+        <CardActions>
+            <IconButton onClick={() => console.log(props)}>
+                <Add />
+            </IconButton>
+        </CardActions>
     </Card>;
 };
 
@@ -50,20 +67,21 @@ export const PlanDetail = () => {
     const planId = parseInt(params.planId!);
     const planQuery = useFetchNutritionalPlanQuery(planId);
 
-    if (planQuery.isSuccess) {
-        console.log(planQuery.data);
-    }
-
     return planQuery.isLoading
         ? <LoadingPlaceholder />
         : <WgerContainerRightSidebar
             title={planQuery.data!.description}
             optionsMenu={<PlanDetailDropdown plan={planQuery.data!} />}
             mainContent={
-                <Stack spacing={2}>
-                    {planQuery.data!.meals.map(meal => <MealDetail meal={meal} />)}
-                </Stack>
+                <>
+                    <Stack spacing={2}>
+                        {planQuery.data!.meals.map(meal => <MealDetail meal={meal} key={meal.id} />)}
+                        <p>aaaa</p>
+                        <MacrosPieChart data={planQuery.data!.nutritionalValues} />
+                    </Stack>
+
+                </>
             }
-            fab={<AddNutritionalPlanFab />}
+            fab={<AddNutritionDiaryEntryFab plan={planQuery.data!} />}
         />;
 };

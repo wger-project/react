@@ -58,7 +58,9 @@
     "notesHelpText": "Notes are short comments on how to perform the exercise such as \"keep your body straight\""
   },
   "nutrition": {
-    "plans": "Nutritional plans"
+    "plans": "Nutritional plans",
+    "addNutritionalDiary": "Add nutritional diary entry",
+    "searchIngredientName": "Search by ingredient name"
   },
   "description": "Description",
   "translation": "Translation",

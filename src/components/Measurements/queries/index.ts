@@ -8,9 +8,9 @@ import {
 } from "services";
 import {
     addMeasurementCategory,
-    addMeasurementCategoryParams,
+    AddMeasurementCategoryParams,
     addMeasurementEntry,
-    addMeasurementParams,
+    AddMeasurementParams,
     deleteMeasurementCategory,
     editMeasurementCategory,
     editMeasurementCategoryParams,
@@ -26,7 +26,7 @@ export const useAddMeasurementCategoryQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: addMeasurementCategoryParams) => addMeasurementCategory(data),
+        mutationFn: (data: AddMeasurementCategoryParams) => addMeasurementCategory(data),
         onSuccess: () => queryClient.invalidateQueries([QUERY_MEASUREMENTS_CATEGORIES,])
     });
 };
@@ -66,7 +66,7 @@ export const useAddMeasurementEntryQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: addMeasurementParams) => addMeasurementEntry(data),
+        mutationFn: (data: AddMeasurementParams) => addMeasurementEntry(data),
         onError: (error: any) => {
             console.log(error);
             // toast.error(error.message);

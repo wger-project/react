@@ -33,6 +33,8 @@ export const QUERY_NUTRITIONAL_PLANS = 'nutritional-plans';
 export const QUERY_NUTRITIONAL_PLAN = 'nutritional-plan';
 
 
+export const API_MAX_PAGE_SIZE = '999';
+
 /*
  * List of colors to use in charts
  *

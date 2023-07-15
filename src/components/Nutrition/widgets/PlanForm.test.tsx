@@ -2,8 +2,9 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import userEvent from "@testing-library/user-event";
-import { TEST_NUTRITIONAL_PLAN_1 } from "tests/nutrition";
+import { TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
 import { PlanForm } from "components/Nutrition/widgets/PlanForm";
+
 import { useAddNutritionalPlanQueryQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
 
 jest.mock("services/weight");

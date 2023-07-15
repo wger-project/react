@@ -10,6 +10,7 @@ import { getRepUnits, getWeightUnits } from "services/workoutUnits";
 import { WorkoutLog, WorkoutLogAdapter } from "components/WorkoutRoutines/models/WorkoutLog";
 import { fetchPaginated } from "utils/requests";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { API_MAX_PAGE_SIZE } from "utils/consts";
 
 export const WORKOUT_API_PATH = 'workout';
 export const WORKOUT_LOG_API_PATH = 'workoutlog';
@@ -147,7 +148,7 @@ export const getRoutineLogs = async (id: number, loadBases = false): Promise<Wor
     const adapter = new WorkoutLogAdapter();
     const url = makeUrl(
         WORKOUT_LOG_API_PATH,
-        { query: { workout: id.toString(), limit: '999', ordering: '-date' } }
+        { query: { workout: id.toString(), limit: API_MAX_PAGE_SIZE, ordering: '-date' } }
     );
 
     const unitResponses = await Promise.all([getRepUnits(), getWeightUnits()]);
