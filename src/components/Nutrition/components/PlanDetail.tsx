@@ -42,7 +42,7 @@ const NutritionalValuesTable = (props: { values: NutritionalValues }) => {
             <TableHead>
                 <TableRow>
                     <TableCell>{t('nutrition.macronutrient')}</TableCell>
-                    <TableCell>{t('total')}</TableCell>
+                    <TableCell align="right">{t('total')}</TableCell>
                     <TableCell align="right">{t('nutrition.percentEnergy')}</TableCell>
                     <TableCell align="right">{t('nutrition.gPerBodyKg')}</TableCell>
                 </TableRow>
@@ -50,10 +50,10 @@ const NutritionalValuesTable = (props: { values: NutritionalValues }) => {
             <TableBody>
                 <TableRow>
                     <TableCell>{t('nutrition.energy')}</TableCell>
-                    <TableCell>
+                    <TableCell align="right">
                         {t('nutrition.valueEnergyKcalKj', {
-                            kcal: props.values.energy.toFixed(0),
-                            kj: props.values.energyKj.toFixed(0)
+                            kcal: props.values.energy.toFixed(),
+                            kj: props.values.energyKj.toFixed()
                         })}
                     </TableCell>
                     <TableCell align="right"></TableCell>
@@ -61,46 +61,46 @@ const NutritionalValuesTable = (props: { values: NutritionalValues }) => {
                 </TableRow>
                 <TableRow>
                     <TableCell>{t('nutrition.protein')}</TableCell>
-                    <TableCell>
-                        {t('nutrition.valueUnitG', { value: props.values.protein.toFixed(1) })}
+                    <TableCell align="right">
+                        {t('nutrition.valueUnitG', { value: props.values.protein.toFixed() })}
                     </TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitPercent', { value: props.values.percent.protein.toFixed(1) })}
+                        {t('nutrition.valueUnitPercent', { value: props.values.percent.protein.toFixed() })}
                     </TableCell>
                     <TableCell align="right">...</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell>{t('nutrition.carbohydrates')}</TableCell>
-                    <TableCell>
-                        {t('nutrition.valueUnitG', { value: props.values.carbohydrates.toFixed(1) })}
+                    <TableCell align="right">
+                        {t('nutrition.valueUnitG', { value: props.values.carbohydrates.toFixed() })}
                     </TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitPercent', { value: props.values.percent.carbohydrates.toFixed(1) })}
+                        {t('nutrition.valueUnitPercent', { value: props.values.percent.carbohydrates.toFixed() })}
                     </TableCell>
                     <TableCell align="right">...</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell sx={{ pl: 5 }}>{t('nutrition.ofWhichSugars')}</TableCell>
-                    <TableCell>
-                        {t('nutrition.valueUnitG', { value: props.values.carbohydratesSugar.toFixed(1) })}
+                    <TableCell align="right">
+                        {t('nutrition.valueUnitG', { value: props.values.carbohydratesSugar.toFixed() })}
                     </TableCell>
                     <TableCell align="right"></TableCell>
                     <TableCell align="right"></TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell>{t('nutrition.fat')}</TableCell>
-                    <TableCell>
-                        {t('nutrition.valueUnitG', { value: props.values.fat.toFixed(1) })}
+                    <TableCell align="right">
+                        {t('nutrition.valueUnitG', { value: props.values.fat.toFixed() })}
                     </TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitPercent', { value: props.values.percent.fat.toFixed(1) })}
+                        {t('nutrition.valueUnitPercent', { value: props.values.percent.fat.toFixed() })}
                     </TableCell>
                     <TableCell align="right">...</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell sx={{ pl: 5 }}>{t('nutrition.ofWhichSaturated')}</TableCell>
-                    <TableCell>
-                        {t('nutrition.valueUnitG', { value: props.values.fatSaturated.toFixed(1) })}
+                    <TableCell align="right">
+                        {t('nutrition.valueUnitG', { value: props.values.fatSaturated.toFixed() })}
                     </TableCell>
                     <TableCell align="right"></TableCell>
                     <TableCell align="right"></TableCell>
@@ -114,16 +114,16 @@ const NutritionalValuesTable = (props: { values: NutritionalValues }) => {
                 </TableRow>
                 <TableRow>
                     <TableCell>{t('nutrition.fibres')}</TableCell>
-                    <TableCell>
-                        {t('nutrition.valueUnitG', { value: props.values.fibres.toFixed(1) })}
+                    <TableCell align="right">
+                        {t('nutrition.valueUnitG', { value: props.values.fibres.toFixed() })}
                     </TableCell>
                     <TableCell align="right"></TableCell>
                     <TableCell align="right"></TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell>{t('nutrition.sodium')}</TableCell>
-                    <TableCell>
-                        {t('nutrition.valueUnitG', { value: props.values.sodium.toFixed(1) })}
+                    <TableCell align="right">
+                        {t('nutrition.valueUnitG', { value: props.values.sodium.toFixed() })}
                     </TableCell>
                     <TableCell align="right"></TableCell>
                     <TableCell align="right"></TableCell>

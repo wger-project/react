@@ -22,10 +22,10 @@ export const DiaryOverview = (props: { entries: Map<string, GroupedDiaryEntries>
                     <TableRow key={key}>
                         <TableCell>{key}</TableCell>
                         <TableCell align="right">
-                            {props.entries.get(key)?.nutritionalValues.energy.toFixed(2)}
+                            {props.entries.get(key)?.nutritionalValues.energy.toFixed()}
                         </TableCell>
                         <TableCell align="right">
-                            {(props.planValues.energy - props.entries.get(key)?.nutritionalValues.energy!).toFixed(2)}
+                            {(props.planValues.energy - props.entries.get(key)?.nutritionalValues.energy!).toFixed()}
                         </TableCell>
                     </TableRow>)
                 }
