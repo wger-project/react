@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
 import { generateChartColors } from "utils/colors";
 import { useTranslation } from "react-i18next";
@@ -14,7 +14,7 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
     const [t] = useTranslation();
     const colorGenerator = generateChartColors(3);
 
-    const data2 = [
+    const data = [
         {
             name: t('nutrition.protein'),
             planned: planned.protein.toFixed(2),
@@ -54,45 +54,45 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
 
 
     return (
-        <BarChart
-            width={700}
-            height={300}
-            data={data2}
-            margin={{
-                top: 20,
-                right: 30,
-                left: 20,
-                bottom: 5,
-            }}
-        >
-            <CartesianGrid strokeDasharray="3 4" />
-            <XAxis dataKey="name" />
-            <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
-            <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
-            <Tooltip />
-            <Legend />
-            <Bar
-                yAxisId="left"
-                dataKey="planned"
-                unit={'g'}
-                name={t('nutrition.planned')}
-                fill={colorGenerator.next().value!}
-            />
-            <Bar
-                yAxisId="left"
-                dataKey="today"
-                unit={'g'}
-                name={t('nutrition.today')}
-                fill={colorGenerator.next().value!}
-            />
-            <Bar
-                yAxisId="left"
-                dataKey="avg7Days"
-                unit={'g'}
-                name={t('nutrition.7dayAvg')}
-                fill={colorGenerator.next().value!}
-            />
-            {/*<Bar yAxisId="right" dataKey="uv" fill="#82ca9d" />*/}
-        </BarChart>
+        <ResponsiveContainer width={"100%"} height={300}>
+            <BarChart
+                data={data}
+                margin={{
+                    top: 20,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                }}
+            >
+                <CartesianGrid strokeDasharray="3 4" />
+                <XAxis dataKey="name" />
+                <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
+                <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
+                <Tooltip />
+                <Legend />
+                <Bar
+                    yAxisId="left"
+                    dataKey="planned"
+                    unit={'g'}
+                    name={t('nutrition.planned')}
+                    fill={colorGenerator.next().value!}
+                />
+                <Bar
+                    yAxisId="left"
+                    dataKey="today"
+                    unit={'g'}
+                    name={t('nutrition.today')}
+                    fill={colorGenerator.next().value!}
+                />
+                <Bar
+                    yAxisId="left"
+                    dataKey="avg7Days"
+                    unit={'g'}
+                    name={t('nutrition.7dayAvg')}
+                    fill={colorGenerator.next().value!}
+                />
+                {/*<Bar yAxisId="right" dataKey="uv" fill="#82ca9d" />*/}
+            </BarChart>
+        </ResponsiveContainer>
     );
 };

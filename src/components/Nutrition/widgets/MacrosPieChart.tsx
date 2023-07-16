@@ -1,5 +1,5 @@
 import React from "react";
-import { Cell, Pie, PieChart } from 'recharts';
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
 import { generateChartColors } from "utils/colors";
 import { useTranslation } from "react-i18next";
@@ -44,19 +44,21 @@ export const MacrosPieChart = (props: { data: NutritionalValues }) => {
         );
     };
 
-    return <PieChart width={400} height={400}>
-        <Pie
-            data={data}
-            labelLine={false}
-            label={renderCustomizedLabel}
-            //outerRadius={80}
-            fill="#8884d8"
-            dataKey="value"
-            //label
-        >
-            {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={colorGenerator.next().value!} />
-            ))}
-        </Pie>
-    </PieChart>;
+    return <ResponsiveContainer width={"100%"} height={300}>
+        <PieChart>
+            <Pie
+                data={data}
+                labelLine={false}
+                label={renderCustomizedLabel}
+                //outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+                //label
+            >
+                {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={colorGenerator.next().value!} />
+                ))}
+            </Pie>
+        </PieChart>
+    </ResponsiveContainer>;
 };
