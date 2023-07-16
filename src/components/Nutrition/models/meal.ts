@@ -35,7 +35,7 @@ export class MealAdapter implements Adapter<Meal> {
         );
     }
 
-    toJson(item: Meal): any {
+    toJson(item: Meal) {
         return {
             name: item.name,
             order: item.order,

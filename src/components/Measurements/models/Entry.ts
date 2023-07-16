@@ -24,7 +24,7 @@ export class MeasurementEntryAdapter implements Adapter<MeasurementEntry> {
         );
     }
 
-    toJson(item: MeasurementEntry): any {
+    toJson(item: MeasurementEntry) {
         return {
             id: item.id,
             category: item.category,

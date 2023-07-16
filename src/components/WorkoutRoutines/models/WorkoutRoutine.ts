@@ -32,7 +32,7 @@ export class WorkoutRoutineAdapter implements Adapter<WorkoutRoutine> {
         );
     }
 
-    toJson(item: WorkoutRoutine): any {
+    toJson(item: WorkoutRoutine) {
         return {
             id: item.id,
             name: item.name,

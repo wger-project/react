@@ -58,11 +58,12 @@ export class DiaryEntryAdapter implements Adapter<DiaryEntry> {
         );
     }
 
-    toJson(item: DiaryEntry): any {
+    toJson(item: DiaryEntry) {
         return {
             plan: item.planId,
             meal: item.mealId,
             ingredient: item.ingredientId,
+
             // eslint-disable-next-line camelcase
             weight_unit: item.weightUnitId,
             amount: item.amount.toString(),

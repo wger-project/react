@@ -19,10 +19,7 @@ export class RepetitionUnitAdapter implements Adapter<RepetitionUnit> {
         );
     }
 
-    toJson(item: RepetitionUnit): any {
-        return {
-            id: item.id,
-            name: item.name,
-        };
+    toJson(item: RepetitionUnit) {
+        return {};
     }
 }

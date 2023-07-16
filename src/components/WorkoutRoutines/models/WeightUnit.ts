@@ -19,10 +19,7 @@ export class WeightUnitAdapter implements Adapter<WeightUnit> {
         );
     }
 
-    toJson(item: WeightUnit): any {
-        return {
-            id: item.id,
-            name: item.name,
-        };
+    toJson(item: WeightUnit) {
+        return {};
     }
 }

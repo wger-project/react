@@ -22,7 +22,7 @@ export class ProfileAdapter implements Adapter<Profile> {
         );
     }
 
-    toJson(item: Profile): any {
+    toJson(item: Profile) {
         return {
             email: item.email,
         };

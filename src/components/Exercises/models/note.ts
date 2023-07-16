@@ -18,7 +18,7 @@ export class NoteAdapter implements Adapter<Note> {
         );
     }
 
-    toJson(item: Note): any {
+    toJson(item: Note) {
         return {
             id: item.id,
             comment: item.note,

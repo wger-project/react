@@ -27,7 +27,7 @@ export class DayAdapter implements Adapter<Day> {
         );
     }
 
-    toJson(item: Day): any {
+    toJson(item: Day) {
         return {
             id: item.id,
             description: item.description,

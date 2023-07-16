@@ -55,9 +55,10 @@ export class MealItemAdapter implements Adapter<MealItem> {
         );
     }
 
-    toJson(item: MealItem): any {
+    toJson(item: MealItem) {
         return {
             ingredient: item.ingredientId,
+
             // eslint-disable-next-line camelcase
             weight_unit: item.weightUnitId,
             amount: item.amount,

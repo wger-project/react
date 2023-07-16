@@ -31,16 +31,7 @@ export class MuscleAdapter implements Adapter<Muscle> {
         );
     }
 
-    toJson(item: Muscle): any {
-        return {
-            id: item.id,
-            name: item.name,
-
-            // eslint-disable-next-line camelcase
-            name_en: item.nameEn,
-
-            // eslint-disable-next-line camelcase
-            is_front: item.isFront
-        };
+    toJson(item: Muscle) {
+        return {};
     }
 }

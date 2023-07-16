@@ -39,20 +39,7 @@ export class IngredientAdapter implements Adapter<Ingredient> {
         );
     }
 
-    toJson(item: Ingredient): any {
-        return {
-            id: item.id,
-            name: item.name,
-            energy: item.energy,
-            protein: item.protein,
-            carbohydrates: item.carbohydrates,
-            // eslint-disable-next-line camelcase
-            carbohydrates_sugar: item.carbohydratesSugar,
-            fat: item.fat,
-            // eslint-disable-next-line camelcase
-            fat_saturated: item.fatSaturated,
-            fibres: item.fibres,
-            sodium: item.sodium,
-        };
+    toJson(item: Ingredient) {
+        return {};
     }
 }

@@ -65,7 +65,7 @@ export class SetAdapter implements Adapter<WorkoutSet> {
         );
     }
 
-    toJson(item: WorkoutSet): any {
+    toJson(item: WorkoutSet) {
         return {
             id: item.id,
             sets: item.sets,

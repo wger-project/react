@@ -20,13 +20,7 @@ export class LanguageAdapter implements Adapter<Language> {
         );
     }
 
-    toJson(item: Language): any {
-        return {
-            id: item.id,
-            // eslint-disable-next-line camelcase
-            short_name: item.nameShort,
-            // eslint-disable-next-line camelcase
-            full_name: item.nameLong
-        };
+    toJson(item: Language) {
+        return {};
     }
 }
