@@ -30,6 +30,7 @@ import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
 import { MacrosPieChart } from "components/Nutrition/widgets/MacrosPieChart";
 import { useTranslation } from "react-i18next";
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { NutritionDiaryChart } from "components/Nutrition/widgets/NutritionDiaryChart";
 
 
 const NutritionalValuesPlan = (props: { values: NutritionalValues }) => {
@@ -49,8 +50,10 @@ const NutritionalValuesPlan = (props: { values: NutritionalValues }) => {
                 <TableRow>
                     <TableCell>{t('nutrition.energy')}</TableCell>
                     <TableCell>
-                        {props.values.energy.toFixed(0)} kcal
-                        / {props.values.energyKj.toFixed(0)} kJ
+                        {t('nutrition.valueEnergyKcalKj', {
+                            kcal: props.values.energy.toFixed(0),
+                            kj: props.values.energyKj.toFixed(0)
+                        })}
                     </TableCell>
                     <TableCell align="right"></TableCell>
                     <TableCell align="right"></TableCell>
@@ -131,7 +134,7 @@ const NutritionalValuesPlan = (props: { values: NutritionalValues }) => {
 
 const MealItemListItem = (props: { mealItem: MealItem }) => {
     return <ListItem disablePadding>
-        <ListItemText primary={props.mealItem.ingredientObj?.name} />
+        <ListItemText primary={props.mealItem.ingredient?.name} />
     </ListItem>;
 };
 
@@ -191,6 +194,11 @@ export const PlanDetail = () => {
                         <Typography gutterBottom variant="h5">
                             {t('nutrition.nutritionalDiary')}
                         </Typography>
+                        <NutritionDiaryChart
+                            planned={planQuery.data!.nutritionalValues}
+                            today={planQuery.data!.nutritionalValuesDiaryToday}
+                            avg7Days={planQuery.data!.nutritionalValues7DayAvg}
+                        />
                     </Stack>
                 </>
             }

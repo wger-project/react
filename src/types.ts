@@ -56,6 +56,14 @@ export interface ApiIngredientType {
     sodium: string | null,
 }
 
+export type ApiIngredientWeightUnitType = {
+    id: number,
+    amount: number,
+    ingredient: number,
+    gram: number,
+    unit: number
+}
+
 export interface ApiNutritionalPlanType {
     id: number,
     creation_date: string,
@@ -85,7 +93,7 @@ export interface ApiNutritionDiaryType {
     ingredient: number,
     weight_unit: number,
     datetime: Date,
-    amount: number
+    amount: string
 }
 
 export interface ApiMeasurementEntryType {
@@ -102,10 +110,10 @@ export interface ApiEquipmentType {
 }
 
 export interface Notification {
-    notify: boolean
-    message: string
-    severity: AlertColor | undefined
-    title: string
-    type: "other" | "delete" | undefined
-    undo?: boolean
+    notify: boolean;
+    message: string;
+    severity: AlertColor | undefined;
+    title: string;
+    type: "other" | "delete" | undefined;
+    undo?: boolean;
 }

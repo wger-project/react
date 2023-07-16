@@ -2,18 +2,19 @@ import { Adapter } from "utils/Adapter";
 import { ApiMealItemType } from "types";
 import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
 
 export class MealItem {
 
 
     constructor(
         public id: number,
-        public ingredient: number,
-        public weightUnit: number | null,
+        public ingredientId: number,
+        public weightUnitId: number | null,
         public amount: number,
         public order: number,
-        public ingredientObj?: Ingredient,
-        public weightUnitObj?: Ingredient
+        public ingredient?: Ingredient,
+        public weightUnit?: NutritionWeightUnit | null
     ) {
     }
 
@@ -21,20 +22,22 @@ export class MealItem {
     get nutritionalValues(): NutritionalValues {
         const out = new NutritionalValues();
 
-        if (this.ingredientObj == null) {
+        if (this.ingredient == null) {
             return out;
         }
-        //weight = this.weightUnit == null ? amount : amount * weightUnit.amount * weightUnit.grams;
-        const weight = this.amount;
 
-        out.energy = this.ingredientObj.energy * weight / 100;
-        out.protein = this.ingredientObj.protein * weight / 100;
-        out.carbohydrates = this.ingredientObj.carbohydrates * weight / 100;
-        out.carbohydratesSugar = this.ingredientObj.carbohydratesSugar ? this.ingredientObj.carbohydratesSugar * weight / 100 : 0;
-        out.fat = this.ingredientObj.fat * weight / 100;
-        out.fatSaturated = this.ingredientObj.fatSaturated ? this.ingredientObj.fatSaturated * weight / 100 : 0;
-        out.fibres = this.ingredientObj.fibres ? this.ingredientObj.fibres * weight / 100 : 0;
-        out.sodium = this.ingredientObj.sodium ? this.ingredientObj.sodium * weight / 100 : 0;
+        const weight = this.weightUnit == null
+            ? this.amount
+            : this.amount * this.weightUnit.amount * this.weightUnit.grams;
+
+        out.energy = this.ingredient.energy * weight / 100;
+        out.protein = this.ingredient.protein * weight / 100;
+        out.carbohydrates = this.ingredient.carbohydrates * weight / 100;
+        out.carbohydratesSugar = this.ingredient.carbohydratesSugar ? this.ingredient.carbohydratesSugar * weight / 100 : 0;
+        out.fat = this.ingredient.fat * weight / 100;
+        out.fatSaturated = this.ingredient.fatSaturated ? this.ingredient.fatSaturated * weight / 100 : 0;
+        out.fibres = this.ingredient.fibres ? this.ingredient.fibres * weight / 100 : 0;
+        out.sodium = this.ingredient.sodium ? this.ingredient.sodium * weight / 100 : 0;
 
         return out;
     }
@@ -54,9 +57,9 @@ export class MealItemAdapter implements Adapter<MealItem> {
 
     toJson(item: MealItem): any {
         return {
-            ingredient: item.ingredient,
+            ingredient: item.ingredientId,
             // eslint-disable-next-line camelcase
-            weight_unit: item.weightUnit,
+            weight_unit: item.weightUnitId,
             amount: item.amount,
             order: item.order,
         };

@@ -5,6 +5,7 @@ import { ResponseType } from "services/responseType";
 import { Meal, MealAdapter } from "components/Nutrition/models/meal";
 import { MealItemAdapter } from "components/Nutrition/models/mealItem";
 import { getIngredient } from "services/ingredient";
+import { getWeightUnit } from "services/ingredientweightunit";
 
 export const API_MEAL_PATH = 'meal';
 export const API_MEAL_ITEM_PATH = 'mealitem';
@@ -26,7 +27,12 @@ export const getMealsForPlan = async (planId: number): Promise<Meal[]> => {
 
         const items = receivedMealItems.results.map((item) => mealItemAdapter.fromJson(item));
         for (const item of items) {
-            item.ingredientObj = await getIngredient(item.ingredient);
+            const responses = await Promise.all([
+                getIngredient(item.ingredientId),
+                getWeightUnit(item.weightUnitId)
+            ]);
+            item.ingredient = responses[0];
+            item.weightUnit = responses[1];
         }
 
         meal.items = items;

@@ -59,10 +59,11 @@
   },
   "nutrition": {
     "plans": "Nutritional plans",
-    "addNutritionalDiary": "Add nutritional diary entry",
-    "nutritionalDiary": "Nutritional diary",
+    "addNutritionalDiary": "Add nutrition diary entry",
+    "nutritionalDiary": "Nutrition diary",
     "valueUnitG": "{{value}}g",
     "valueUnitPercent": "{{value}}%",
+    "valueEnergyKcalKj": "{{kcal}} kcal / {{kj}} kJ",
     "searchIngredientName": "Search by ingredient name",
     "nutritionalData": "Nutritional data",
     "macronutrient": "Macronutrient",

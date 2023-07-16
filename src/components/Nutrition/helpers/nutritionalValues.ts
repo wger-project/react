@@ -63,15 +63,17 @@ export class NutritionalValues {
     }
 
 
-    add(data: NutritionalValues) {
-        this.energy += data.energy;
-        this.protein += data.protein;
-        this.carbohydrates += data.carbohydrates;
-        this.carbohydratesSugar += data.carbohydratesSugar;
-        this.fat += data.fat;
-        this.fatSaturated += data.fatSaturated;
-        this.fibres += data.fibres;
-        this.sodium += data.sodium;
+    add(other: NutritionalValues) {
+        this.energy += other.energy;
+        this.protein += other.protein;
+        this.carbohydrates += other.carbohydrates;
+        this.carbohydratesSugar += other.carbohydratesSugar;
+        this.fat += other.fat;
+        this.fatSaturated += other.fatSaturated;
+        this.fibres += other.fibres;
+        this.sodium += other.sodium;
+
+        return this;
     }
 
     toString(): string {
