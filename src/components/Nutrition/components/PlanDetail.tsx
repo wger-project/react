@@ -31,9 +31,10 @@ import { MacrosPieChart } from "components/Nutrition/widgets/MacrosPieChart";
 import { useTranslation } from "react-i18next";
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
 import { NutritionDiaryChart } from "components/Nutrition/widgets/NutritionDiaryChart";
+import { DiaryOverview } from "components/Nutrition/widgets/DiaryOverview";
 
 
-const NutritionalValuesPlan = (props: { values: NutritionalValues }) => {
+const NutritionalValuesTable = (props: { values: NutritionalValues }) => {
     const [t] = useTranslation();
 
     return <TableContainer>
@@ -188,7 +189,7 @@ export const PlanDetail = () => {
                         <Typography gutterBottom variant="h5">
                             {t('nutrition.nutritionalData')}
                         </Typography>
-                        <NutritionalValuesPlan values={planQuery.data!.nutritionalValues} />
+                        <NutritionalValuesTable values={planQuery.data!.nutritionalValues} />
                         <MacrosPieChart data={planQuery.data!.nutritionalValues} />
 
                         <Typography gutterBottom variant="h5">
@@ -198,6 +199,10 @@ export const PlanDetail = () => {
                             planned={planQuery.data!.nutritionalValues}
                             today={planQuery.data!.nutritionalValuesDiaryToday}
                             avg7Days={planQuery.data!.nutritionalValues7DayAvg}
+                        />
+                        <DiaryOverview
+                            entries={planQuery.data!.groupDiaryEntries}
+                            planValues={planQuery.data!.nutritionalValues}
                         />
                     </Stack>
                 </>

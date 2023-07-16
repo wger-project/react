@@ -59,4 +59,30 @@ describe("Test the nutritional plan model", () => {
         expect(values.fibres).toBeCloseTo(1.75, 2);
         expect(values.sodium).toBeCloseTo(0.0213, 2);
     });
+
+    test('correctly groups the diary entries by date', async () => {
+
+        // Act
+        const values = TEST_NUTRITIONAL_PLAN_1.groupDiaryEntries;
+
+        // Assert
+        expect([...values.keys()]).toStrictEqual([
+            "2023-07-01",
+            "2023-07-02",
+            "2023-07-03",
+            "2023-07-04",
+            "2023-07-05",
+            "2023-07-06",
+            "2023-07-07",
+            "2023-07-08",
+            "2023-06-01",
+            "2023-06-15",
+            "2023-06-20",
+        ]);
+        expect(values.get("2023-07-01")!.entries.length).toBe(3);
+        expect(values.get("2023-07-01")!.nutritionalValues.energy).toBeCloseTo(296.7, 2);
+
+        expect(values.get("2023-07-02")!.entries.length).toBe(1);
+        expect(values.get("2023-07-02")!.nutritionalValues.energy).toBeCloseTo(12, 2);
+    });
 });

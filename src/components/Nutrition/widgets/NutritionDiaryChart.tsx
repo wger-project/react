@@ -21,7 +21,19 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
             today: today.protein.toFixed(1),
             avg7Days: avg7Days.protein.toFixed(1),
         },
+        {
+            name: t('nutrition.carbohydrates'),
+            planned: planned.carbohydrates.toFixed(1),
+            today: today.carbohydrates.toFixed(1),
+            avg7Days: avg7Days.carbohydrates.toFixed(1),
+        },
 
+        {
+            name: t('nutrition.sugar'),
+            planned: planned.carbohydratesSugar.toFixed(1),
+            today: today.carbohydratesSugar.toFixed(1),
+            avg7Days: avg7Days.carbohydratesSugar.toFixed(1),
+        },
         {
             name: t('nutrition.fat'),
             planned: planned.fat.toFixed(1),
@@ -29,10 +41,10 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
             avg7Days: avg7Days.fat.toFixed(1),
         },
         {
-            name: t('nutrition.carbohydrates'),
-            planned: planned.carbohydrates.toFixed(1),
-            today: today.carbohydrates.toFixed(1),
-            avg7Days: avg7Days.carbohydrates.toFixed(1),
+            name: t('nutrition.saturatedFat'),
+            planned: planned.fatSaturated.toFixed(1),
+            today: today.fatSaturated.toFixed(1),
+            avg7Days: avg7Days.fatSaturated.toFixed(1),
         },
         // {
         //     name: "Energy (kcal)",
@@ -43,7 +55,7 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
 
     return (
         <BarChart
-            width={500}
+            width={700}
             height={300}
             data={data2}
             margin={{

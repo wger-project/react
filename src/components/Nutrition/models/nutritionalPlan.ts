@@ -5,6 +5,12 @@ import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
 import { isSameDay } from "utils/date";
 
+export type GroupedDiaryEntries = {
+    entries: DiaryEntry[];
+    nutritionalValues: NutritionalValues;
+}
+
+
 export class NutritionalPlan {
 
     meals: Meal[] = [];
@@ -67,6 +73,22 @@ export class NutritionalPlan {
         out.fibres = sum.fibres / nrOfEntries;
         out.sodium = sum.sodium / nrOfEntries;
         return out;
+    }
+
+    /*
+     * Returns a map of diary entries grouped by day
+     */
+    get groupDiaryEntries(): Map<string, GroupedDiaryEntries> {
+
+        return this.diaryEntries.reduce((map, entry) => {
+            const dateKey = entry.datetime.toISOString().split('T')[0]; // Use ISO string format as the key
+            const entriesForDay = map.get(dateKey) || { entries: [], nutritionalValues: new NutritionalValues() };
+            entriesForDay.entries.push(entry);
+            entriesForDay.nutritionalValues.add(entry.nutritionalValues);
+            map.set(dateKey, entriesForDay);
+
+            return map;
+        }, new Map<string, GroupedDiaryEntries>());
     }
 }
 
