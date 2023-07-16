@@ -2,14 +2,16 @@ import React from "react";
 import { Cell, Pie, PieChart } from 'recharts';
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
 import { generateChartColors } from "utils/colors";
+import { useTranslation } from "react-i18next";
 
 export const MacrosPieChart = (props: { data: NutritionalValues }) => {
+    const [t] = useTranslation();
     const colorGenerator = generateChartColors(3);
 
     const data = [
-        { name: 'carbs', value: props.data.carbohydrates },
-        { name: 'protein', value: props.data.protein },
-        { name: 'fat', value: props.data.fat },
+        { name: t('nutrition.carbohydrates'), value: props.data.carbohydrates },
+        { name: t('nutrition.protein'), value: props.data.protein },
+        { name: t('nutrition.fat'), value: props.data.fat },
     ];
 
     const RADIAN = Math.PI / 180;

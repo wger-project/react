@@ -97,7 +97,7 @@ const NutritionalValuesPlan = (props: { values: NutritionalValues }) => {
                     <TableCell align="right">...</TableCell>
                 </TableRow>
                 <TableRow>
-                    <TableCell sx={{ pl: 5 }}>{t('nutrition.ofWhichFat')}</TableCell>
+                    <TableCell sx={{ pl: 5 }}>{t('nutrition.ofWhichSaturated')}</TableCell>
                     <TableCell>
                         {t('nutrition.valueUnitG', { value: props.values.fatSaturated.toFixed(1) })}
                     </TableCell>

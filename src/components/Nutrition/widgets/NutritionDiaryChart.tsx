@@ -2,6 +2,7 @@ import React from 'react';
 import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
 import { generateChartColors } from "utils/colors";
+import { useTranslation } from "react-i18next";
 
 type NutritionDiaryChartProps = {
     planned: NutritionalValues;
@@ -10,24 +11,25 @@ type NutritionDiaryChartProps = {
 }
 
 export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiaryChartProps) => {
+    const [t] = useTranslation();
     const colorGenerator = generateChartColors(3);
 
     const data2 = [
         {
-            name: "Protein",
+            name: t('nutrition.protein'),
             planned: planned.protein.toFixed(2),
             today: today.protein.toFixed(1),
             avg7Days: avg7Days.protein.toFixed(1),
         },
 
         {
-            name: "Fat",
+            name: t('nutrition.fat'),
             planned: planned.fat.toFixed(1),
             today: today.fat.toFixed(1),
             avg7Days: avg7Days.fat.toFixed(1),
         },
         {
-            name: "Carbohydrates",
+            name: t('nutrition.carbohydrates'),
             planned: planned.carbohydrates.toFixed(1),
             today: today.carbohydrates.toFixed(1),
             avg7Days: avg7Days.carbohydrates.toFixed(1),
@@ -57,9 +59,27 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
             <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
             <Tooltip />
             <Legend />
-            <Bar yAxisId="left" dataKey="planned" fill={colorGenerator.next().value!} />
-            <Bar yAxisId="left" dataKey="today" fill={colorGenerator.next().value!} />
-            <Bar yAxisId="left" dataKey="avg7Days" fill={colorGenerator.next().value!} />
+            <Bar
+                yAxisId="left"
+                dataKey="planned"
+                unit={'g'}
+                name={t('nutrition.planned')}
+                fill={colorGenerator.next().value!}
+            />
+            <Bar
+                yAxisId="left"
+                dataKey="today"
+                unit={'g'}
+                name={t('nutrition.today')}
+                fill={colorGenerator.next().value!}
+            />
+            <Bar
+                yAxisId="left"
+                dataKey="avg7Days"
+                unit={'g'}
+                name={t('nutrition.7dayAvg')}
+                fill={colorGenerator.next().value!}
+            />
             {/*<Bar yAxisId="right" dataKey="uv" fill="#82ca9d" />*/}
         </BarChart>
     );
