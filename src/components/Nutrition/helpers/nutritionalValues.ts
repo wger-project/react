@@ -33,6 +33,10 @@ export class NutritionalValues {
         return this.energy * 4.184;
     }
 
+    get isEmpty(): boolean {
+        return this.energy === 0 && this.protein === 0 && this.carbohydrates === 0 && this.fat === 0;
+    }
+
     get percent() {
         return {
             protein: this.protein * ENERGY_FACTOR.protein / this.energy * 100,

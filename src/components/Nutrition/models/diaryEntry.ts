@@ -1,8 +1,8 @@
-import { Adapter } from "utils/Adapter";
-import { ApiNutritionDiaryType } from "types";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
+import { ApiNutritionDiaryType } from "types";
+import { Adapter } from "utils/Adapter";
 
 export class DiaryEntry {
 
@@ -18,6 +18,10 @@ export class DiaryEntry {
         public ingredient?: Ingredient,
         public weightUnit?: NutritionWeightUnit | null
     ) {
+    }
+
+    get amountString(): string {
+        return this.amount.toFixed().toString() + (this.weightUnitId !== null ? ` ${this.weightUnit?.name}` : 'g');
     }
 
     get nutritionalValues(): NutritionalValues {

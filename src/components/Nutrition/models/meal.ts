@@ -1,11 +1,14 @@
-import { Adapter } from "utils/Adapter";
-import { ApiMealType } from "types";
-import { MealItem } from "components/Nutrition/models/mealItem";
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
+import { MealItem } from "components/Nutrition/models/mealItem";
+import { ApiMealType } from "types";
+import { Adapter } from "utils/Adapter";
+import { isSameDay } from "utils/date";
 
 export class Meal {
 
     items: MealItem[] = [];
+    diaryEntries: DiaryEntry[] = [];
 
     constructor(
         public id: number,
@@ -15,11 +18,34 @@ export class Meal {
     ) {
     }
 
+    /*
+     * Returns the diary entries for the current day.
+     */
+    get diaryEntriesToday(): DiaryEntry[] {
+        return this.diaryEntries.filter(entry => isSameDay(entry.datetime, new Date()));
+    }
+
     get nutritionalValues(): NutritionalValues {
         const out = new NutritionalValues();
-        for (const item of this.items)
+        for (const item of this.items) {
             out.add(item.nutritionalValues);
+        }
+        return out;
+    }
 
+    get nutritionalValuesDiary(): NutritionalValues {
+        const out = new NutritionalValues();
+        for (const entry of this.diaryEntries) {
+            out.add(entry.nutritionalValues);
+        }
+        return out;
+    }
+
+    get nutritionalValuesDiaryToday(): NutritionalValues {
+        const out = new NutritionalValues();
+        for (const entry of this.diaryEntriesToday) {
+            out.add(entry.nutritionalValues);
+        }
         return out;
     }
 }

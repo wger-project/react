@@ -83,7 +83,7 @@ export interface ApiMealItemType {
     ingredient: number,
     weight_unit: number,
     order: number,
-    amount: number
+    amount: string
 }
 
 export interface ApiNutritionDiaryType {

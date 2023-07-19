@@ -1,8 +1,8 @@
-import { Adapter } from "utils/Adapter";
-import { ApiMealItemType } from "types";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
+import { ApiMealItemType } from "types";
+import { Adapter } from "utils/Adapter";
 
 export class MealItem {
 
@@ -16,6 +16,10 @@ export class MealItem {
         public ingredient?: Ingredient,
         public weightUnit?: NutritionWeightUnit | null
     ) {
+    }
+
+    get amountString(): string {
+        return this.amount.toFixed().toString() + (this.weightUnitId !== null ? ` ${this.weightUnit?.name}` : 'g');
     }
 
 
@@ -50,7 +54,7 @@ export class MealItemAdapter implements Adapter<MealItem> {
             item.id,
             item.ingredient,
             item.weight_unit,
-            item.amount,
+            parseFloat(item.amount),
             item.order,
         );
     }
@@ -61,7 +65,7 @@ export class MealItemAdapter implements Adapter<MealItem> {
 
             // eslint-disable-next-line camelcase
             weight_unit: item.weightUnitId,
-            amount: item.amount,
+            amount: item.amount.toString(),
             order: item.order,
         };
     }

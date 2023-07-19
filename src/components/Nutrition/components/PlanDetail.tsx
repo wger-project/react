@@ -1,11 +1,20 @@
+import { Add } from "@mui/icons-material";
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PhotoIcon from "@mui/icons-material/Photo";
 import {
+    Avatar,
     Card,
     CardActions,
     CardContent,
     CardHeader,
+    Collapse,
     IconButton,
     List,
     ListItem,
+    ListItemAvatar,
     ListItemText,
     Stack,
     Table,
@@ -16,22 +25,23 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
-import React from "react";
+import Tooltip from "@mui/material/Tooltip";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { AddNutritionDiaryEntryFab } from "components/Nutrition/widgets/Fab";
-import { PlanDetailDropdown } from "components/Nutrition/widgets/PlanDetailDropdown";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
+import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { Meal } from "components/Nutrition/models/meal";
 import { MealItem } from "components/Nutrition/models/mealItem";
-import { Add } from "@mui/icons-material";
 import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
-import { MacrosPieChart } from "components/Nutrition/widgets/MacrosPieChart";
-import { useTranslation } from "react-i18next";
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { NutritionDiaryChart } from "components/Nutrition/widgets/NutritionDiaryChart";
 import { DiaryOverview } from "components/Nutrition/widgets/DiaryOverview";
+import { AddNutritionDiaryEntryFab } from "components/Nutrition/widgets/Fab";
+import { MacrosPieChart } from "components/Nutrition/widgets/MacrosPieChart";
+import { NutritionalValuesPlannedLoggedChart } from "components/Nutrition/widgets/NutritionalValuesPlannedLoggedChart";
+import { NutritionDiaryChart } from "components/Nutrition/widgets/NutritionDiaryChart";
+import { PlanDetailDropdown } from "components/Nutrition/widgets/PlanDetailDropdown";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 
 const NutritionalValuesTable = (props: { values: NutritionalValues }) => {
@@ -134,12 +144,54 @@ const NutritionalValuesTable = (props: { values: NutritionalValues }) => {
 };
 
 const MealItemListItem = (props: { mealItem: MealItem }) => {
-    return <ListItem disablePadding>
-        <ListItemText primary={props.mealItem.ingredient?.name} />
+    return <ListItem>
+        <ListItemAvatar>
+            <Avatar>
+                {/*{props.mealItem.ingredient?.image ?*/}
+                {/*    <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />*/}
+                {/*    : <PhotoIcon fontSize="large" />}*/}
+                {/*<ImageIcon />*/}
+                <PhotoIcon />
+            </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary={`${props.mealItem.amountString} ${props.mealItem.ingredient?.name}`} />
     </ListItem>;
 };
 
+const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
+    const [t] = useTranslation();
+
+    return <TableRow key={props.item.id}>
+        <TableCell>
+            <Avatar>
+                <PhotoIcon />
+            </Avatar>
+        </TableCell>
+        <TableCell>
+            {props.item.amountString} {props.item.ingredient?.name}
+        </TableCell>
+        <TableCell align={'right'}>
+            {t('nutrition.valueEnergyKcalKj', {
+                kcal: props.item.nutritionalValues.energy.toFixed(),
+                kj: props.item.nutritionalValues.energyKj.toFixed()
+            })}
+        </TableCell>
+        <TableCell align="right">
+            {t('nutrition.valueUnitG', { value: props.item.nutritionalValues.carbohydrates.toFixed() })}
+        </TableCell>
+        <TableCell align="right">
+            {t('nutrition.valueUnitG', { value: props.item.nutritionalValues.fat.toFixed() })}
+        </TableCell>
+        <TableCell align="right">
+            {t('nutrition.valueUnitG', { value: props.item.nutritionalValues.protein.toFixed() })}
+        </TableCell>
+    </TableRow>;
+};
+
 const MealDetail = (props: { meal: Meal }) => {
+    const [t] = useTranslation();
+    const [expandedView, setExpandedView] = useState(false);
+    const handleToggleExpandedView = () => setExpandedView(!expandedView);
 
     return <Card sx={{ minWidth: 275 }}>
         <CardHeader
@@ -153,19 +205,97 @@ const MealDetail = (props: { meal: Meal }) => {
             subheader={props.meal.time}
         />
         <CardContent>
-            <List>
-                {props.meal.items.map((item) => (
-                    <MealItemListItem
-                        mealItem={item}
-                        key={item.id}
-                    />
-                ))}
-            </List>
+            <Collapse in={expandedView} timeout="auto" unmountOnExit>
+                <Typography gutterBottom variant="h6">
+                    {t('nutrition.planned')}
+                </Typography>
+
+
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell></TableCell>
+                                <TableCell></TableCell>
+                                <TableCell align={'right'}>{t('nutrition.energy')}</TableCell>
+                                <TableCell align="right">{t('nutrition.protein')}</TableCell>
+                                <TableCell align="right">{t('nutrition.carbohydrates')}</TableCell>
+                                <TableCell align="right">{t('nutrition.fat')}</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {props.meal.items.map((item) => (
+                                <IngredientTableRow item={item} key={item.id} />
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
+                <Typography gutterBottom variant="h6" sx={{ my: 2 }}>
+                    {t('nutrition.loggedToday')}
+                </Typography>
+
+                {!props.meal.nutritionalValues.isEmpty &&
+                    <NutritionalValuesPlannedLoggedChart
+                        logged={props.meal.nutritionalValues}
+                        planned={props.meal.nutritionalValuesDiaryToday}
+                    />}
+
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell></TableCell>
+                                <TableCell></TableCell>
+                                <TableCell align={'right'}>{t('nutrition.energy')}</TableCell>
+                                <TableCell align="right">{t('nutrition.protein')}</TableCell>
+                                <TableCell align="right">{t('nutrition.carbohydrates')}</TableCell>
+                                <TableCell align="right">{t('nutrition.fat')}</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {props.meal.diaryEntriesToday.map((item) => (
+                                <IngredientTableRow item={item} key={item.id} />
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
+            </Collapse>
+
+            {!expandedView &&
+                <List>
+                    {props.meal.items.map((item) => (
+                        <MealItemListItem
+                            mealItem={item}
+                            key={item.id}
+                        />
+                    ))}
+                </List>}
+
         </CardContent>
         <CardActions>
-            <IconButton onClick={() => console.log(props)}>
-                <Add />
-            </IconButton>
+            <Tooltip title={t('add')}>
+                <IconButton onClick={handleToggleExpandedView}>
+                    {expandedView
+                        ? <ExpandLessIcon />
+                        : <ExpandMoreIcon />
+                    }
+                </IconButton>
+            </Tooltip>
+
+            <Tooltip title={t('add')}>
+                <IconButton onClick={() => console.log(props)}>
+                    <Add />
+                </IconButton>
+
+            </Tooltip>
+
+            <Tooltip title={t('nutrition.addNutritionalDiary')}>
+                <IconButton onClick={() => console.log(props)}>
+                    <HistoryEduIcon />
+                </IconButton>
+            </Tooltip>
         </CardActions>
     </Card>;
 };
@@ -186,15 +316,16 @@ export const PlanDetail = () => {
                 <>
                     <Stack spacing={2}>
                         {planQuery.data!.meals.map(meal => <MealDetail meal={meal} key={meal.id} />)}
+                        <MealDetail meal={planQuery.data!.pseudoMealOthers} key={-1} />
                         <Typography gutterBottom variant="h5">
                             {t('nutrition.nutritionalData')}
                         </Typography>
                         <NutritionalValuesTable values={planQuery.data!.nutritionalValues} />
                         <MacrosPieChart data={planQuery.data!.nutritionalValues} />
-
                         <Typography gutterBottom variant="h5">
                             {t('nutrition.nutritionalDiary')}
                         </Typography>
+
                         <NutritionDiaryChart
                             planned={planQuery.data!.nutritionalValues}
                             today={planQuery.data!.nutritionalValuesDiaryToday}
@@ -207,6 +338,10 @@ export const PlanDetail = () => {
                     </Stack>
                 </>
             }
+            sideBar={<NutritionalValuesPlannedLoggedChart
+                planned={planQuery.data!.nutritionalValues}
+                logged={planQuery.data!.loggedNutritionalValues}
+            />}
             fab={<AddNutritionDiaryEntryFab plan={planQuery.data!} />}
         />;
 };

@@ -1,8 +1,8 @@
-import { Adapter } from "utils/Adapter";
-import { ApiNutritionalPlanType } from "types";
-import { Meal } from "components/Nutrition/models/meal";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
+import { Meal } from "components/Nutrition/models/meal";
+import { ApiNutritionalPlanType } from "types";
+import { Adapter } from "utils/Adapter";
 import { isSameDay } from "utils/date";
 
 export type GroupedDiaryEntries = {
@@ -29,6 +29,17 @@ export class NutritionalPlan {
     get nutritionalValues(): NutritionalValues {
         const out = new NutritionalValues();
         for (const item of this.meals)
+            out.add(item.nutritionalValues);
+
+        return out;
+    }
+
+    /*
+     * Returns the logged nutritional values
+     */
+    get loggedNutritionalValues(): NutritionalValues {
+        const out = new NutritionalValues();
+        for (const item of this.diaryEntries)
             out.add(item.nutritionalValues);
 
         return out;
@@ -89,6 +100,23 @@ export class NutritionalPlan {
 
             return map;
         }, new Map<string, GroupedDiaryEntries>());
+    }
+
+    /*
+     * Returns a synthetic meal object for the pseudo meal 'Others'
+     *
+     * This contains all logs which were not logged to any of the other meals
+     */
+    get pseudoMealOthers(): Meal {
+        const out = new Meal(
+            -1,
+            -1,
+            '',
+            'Others'
+        );
+        out.diaryEntries = this.diaryEntries.filter((entry) => entry.mealId === null);
+
+        return out;
     }
 }
 

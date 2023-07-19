@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { ApiNutritionalPlanType } from 'types';
-import { makeHeader, makeUrl } from "utils/url";
 import { NutritionalPlan, NutritionalPlanAdapter } from "components/Nutrition/models/nutritionalPlan";
-import { ResponseType } from "services/responseType";
 import { getMealsForPlan } from "services/meal";
 import { getNutritionalDiaryEntries } from "services/nutritionalDiary";
+import { ResponseType } from "services/responseType";
+import { ApiNutritionalPlanType } from 'types';
+import { makeHeader, makeUrl } from "utils/url";
 
 export const API_NUTRITIONAL_PLAN_PATH = 'nutritionplan';
 
@@ -29,6 +29,11 @@ export const getNutritionalPlanFull = async (id: number): Promise<NutritionalPla
 
     plan.meals = responses[0];
     plan.diaryEntries = responses[1];
+
+    plan.meals.forEach((meal) => {
+        meal.diaryEntries = plan.diaryEntries.filter((entry) => entry.mealId === meal.id);
+    });
+
     return plan;
 };
 
