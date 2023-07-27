@@ -30,8 +30,8 @@ export const NutritionDiaryEntryForm = ({ plan, entry, meal, closeFn }: Nutritio
         amount: yup
             .number()
             .required(t('forms.fieldRequired'))
-            .max(1000, t('forms.maxValue', { chars: '1000' }))
-            .min(1, t('forms.minValue', { chars: '1' })),
+            .max(1000, t('forms.maxValue', { value: '1000' }))
+            .min(1, t('forms.minValue', { value: '1' })),
         ingredient: yup
             .number()
             .required(t('forms.fieldRequired')),
@@ -70,8 +70,6 @@ export const NutritionDiaryEntryForm = ({ plan, entry, meal, closeFn }: Nutritio
                 if (closeFn) {
                     closeFn();
                 }
-
-
             }}
         >
             {formik => (
@@ -83,14 +81,8 @@ export const NutritionDiaryEntryForm = ({ plan, entry, meal, closeFn }: Nutritio
                             fullWidth
                             id="amount"
                             label={'amount'}
-                            error={
-                                Boolean(formik.errors.amount && formik.touched.amount)
-                            }
-                            helperText={
-                                Boolean(formik.errors.amount && formik.touched.amount)
-                                    ? formik.errors.amount
-                                    : ''
-                            }
+                            error={formik.touched.amount && Boolean(formik.errors.amount)}
+                            helperText={formik.touched.amount && formik.errors.amount}
                             {...formik.getFieldProps('amount')}
                         />
                         <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
