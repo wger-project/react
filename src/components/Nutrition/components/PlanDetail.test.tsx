@@ -6,12 +6,13 @@ import { MemoryRouter, Route, Routes } from "react-router";
 import { TEST_NUTRITIONAL_PLAN_2 } from "tests/nutritionTestdata";
 
 jest.mock("components/Nutrition/queries");
+jest.useFakeTimers();
 
 const { ResizeObserver } = window;
 const queryClient = new QueryClient();
 
 describe("Test the PlanDetail component", () => {
-
+    
     beforeEach(() => {
         // @ts-ignore
         useFetchNutritionalPlanQuery.mockImplementation(() => ({
@@ -26,11 +27,14 @@ describe("Test the PlanDetail component", () => {
             unobserve: jest.fn(),
             disconnect: jest.fn()
         }));
+
+        jest.setSystemTime(new Date('2023-07-01'));
     });
 
     afterEach(() => {
         window.ResizeObserver = ResizeObserver;
         jest.restoreAllMocks();
+        jest.useRealTimers();
     });
 
     test('renders the current nutritional plan correctly', async () => {

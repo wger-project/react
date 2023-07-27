@@ -18,7 +18,7 @@ export interface ExerciseSearchResponse {
 }
 
 export interface ExerciseSearchType {
-    suggestions: ExerciseSearchResponse[]
+    suggestions: ExerciseSearchResponse[];
 }
 
 export interface IngredientSearchResponse {
@@ -26,12 +26,11 @@ export interface IngredientSearchResponse {
     data: {
         id: number,
         name: string,
-        category: string,
         image: string | null,
         image_thumbnail: string | null,
     }
 }
 
 export interface IngredientSearchType {
-    suggestions: IngredientSearchResponse[]
+    suggestions: IngredientSearchResponse[];
 }

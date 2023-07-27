@@ -1,5 +1,5 @@
-import { Adapter } from "utils/Adapter";
 import { ApiIngredientWeightUnitType } from "types";
+import { Adapter } from "utils/Adapter";
 
 export class NutritionWeightUnit {
 
@@ -17,7 +17,7 @@ export class NutritionWeightUnitAdapter implements Adapter<NutritionWeightUnit> 
     fromJson(item: ApiIngredientWeightUnitType) {
         return new NutritionWeightUnit(
             item.id,
-            item.amount,
+            parseFloat(item.amount),
             item.gram,
         );
     }

@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { QUERY_NUTRITIONAL_PLAN } from "utils/consts";
 import {
     AddDiaryEntryParams,
     addNutritionalDiaryEntry,
@@ -8,9 +7,13 @@ import {
     editNutritionalDiaryEntry,
     getNutritionalDiaryEntries
 } from "services/nutritionalDiary";
+import { QUERY_NUTRITIONAL_PLAN } from "utils/consts";
 
 export function useFetchDiaryEntriesQuery(planId: number) {
-    return useQuery([QUERY_NUTRITIONAL_PLAN, planId], getNutritionalDiaryEntries);
+    return useQuery(
+        [QUERY_NUTRITIONAL_PLAN, planId],
+        () => getNutritionalDiaryEntries(planId)
+    );
 }
 
 export const useAddDiaryEntryQuery = (planId: number) => {

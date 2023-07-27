@@ -1,17 +1,17 @@
-import React from 'react';
-import * as yup from 'yup';
-import { Form, Formik } from "formik";
 import { Button, Stack, TextField } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 
 import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
+import { Form, Formik } from "formik";
+import React from 'react';
+import { useTranslation } from "react-i18next";
 import { IngredientSearchResponse } from "services/responseType";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { dateToYYYYMMDD } from "utils/date";
+import * as yup from "yup";
 
 type NutritionDiaryEntryFormProps = {
     plan: NutritionalPlan,
@@ -25,7 +25,7 @@ export const NutritionDiaryEntryForm = ({ plan, entry, meal, closeFn }: Nutritio
     const [t, i18n] = useTranslation();
     const useAddDiaryQuery = useAddDiaryEntryQuery(plan.id!);
     const useEditDiaryQuery = useEditDiaryEntryQuery(plan.id!);
-    const [dateValue, setDateValue] = React.useState<Date | null>(entry ? entry.weightEntry.date : new Date());
+    const [dateValue, setDateValue] = React.useState<Date | null>(entry ? entry.datetime : new Date());
     const validationSchema = yup.object({
         amount: yup
             .number()
@@ -45,14 +45,20 @@ export const NutritionDiaryEntryForm = ({ plan, entry, meal, closeFn }: Nutritio
         <Formik
             initialValues={{
                 datetime: new Date(),
-                amount: undefined,
-                ingredient: undefined
+                amount: 0,
+                ingredient: 0,
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
 
-                // eslint-disable-next-line camelcase
-                const data = { ...values, plan: plan.id, meal: meal, weight_unit: null };
+                const data = {
+                    ...values,
+                    plan: plan.id,
+                    meal: meal,
+                    // eslint-disable-next-line camelcase
+                    weight_unit: null,
+                    datetime: values.datetime.toISOString()
+                };
 
                 if (entry) {
                     useEditDiaryQuery.mutate({ ...data, id: entry.id });
@@ -64,12 +70,15 @@ export const NutritionDiaryEntryForm = ({ plan, entry, meal, closeFn }: Nutritio
                 if (closeFn) {
                     closeFn();
                 }
+
+
             }}
         >
             {formik => (
                 <Form>
                     <Stack spacing={2}>
-                        <IngredientAutocompleter callback={(value: IngredientSearchResponse) => console.log(value)} />
+                        <IngredientAutocompleter
+                            callback={(value: IngredientSearchResponse) => formik.setFieldValue('ingredient', value.data.id)} />
                         <TextField
                             fullWidth
                             id="amount"

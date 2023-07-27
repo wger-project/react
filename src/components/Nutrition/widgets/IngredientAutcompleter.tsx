@@ -1,16 +1,14 @@
+import PhotoIcon from '@mui/icons-material/Photo';
+import SearchIcon from '@mui/icons-material/Search';
+import { Autocomplete, Avatar, InputAdornment, ListItem, ListItemIcon, ListItemText, TextField } from "@mui/material";
+import throttle from 'lodash/throttle';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import throttle from 'lodash/throttle';
-import { Avatar, InputAdornment, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import SearchIcon from '@mui/icons-material/Search';
-import { truncateLongNames } from "utils/strings";
-import PhotoIcon from '@mui/icons-material/Photo';
-import { SERVER_URL } from "utils/url";
-import { IngredientSearchResponse } from "services/responseType";
 import { searchIngredient } from "services";
+import { IngredientSearchResponse } from "services/responseType";
+import { truncateLongNames } from "utils/strings";
+import { SERVER_URL } from "utils/url";
 
 type IngredientAutocompleterProps = {
     callback: Function;
@@ -92,12 +90,11 @@ export function IngredientAutocompleter({ callback }: IngredientAutocompleterPro
                     <li {...props} id={`ingredient-${option.data.id}`}>
                         <ListItem disablePadding component="div">
                             <ListItemIcon>
-                                {option.data.image ?
-                                    <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />
+                                {option.data.image
+                                    ? <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />
                                     : <PhotoIcon fontSize="large" />}
                             </ListItemIcon>
-                            <ListItemText primary={truncateLongNames(option.value, 35)}
-                                          secondary={option.data.category} />
+                            <ListItemText primary={truncateLongNames(option.value, 35)} />
                         </ListItem>
                     </li>
                 );

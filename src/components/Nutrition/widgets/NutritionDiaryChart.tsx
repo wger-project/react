@@ -1,8 +1,8 @@
-import React from 'react';
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { generateChartColors } from "utils/colors";
+import React from 'react';
 import { useTranslation } from "react-i18next";
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { generateChartColors } from "utils/colors";
 
 type NutritionDiaryChartProps = {
     planned: NutritionalValues;
@@ -46,10 +46,6 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
             today: today.fatSaturated.toFixed(),
             avg7Days: avg7Days.fatSaturated.toFixed(),
         },
-        // {
-        //     name: "Energy (kcal)",
-        //     value: props.data.energy,
-        // },
     ];
 
 
@@ -66,32 +62,27 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
             >
                 <CartesianGrid strokeDasharray="3 4" />
                 <XAxis dataKey="name" />
-                <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
-                <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
+                <YAxis orientation="left" stroke="#8884d8" unit={'g'} />
                 <Tooltip />
                 <Legend />
                 <Bar
-                    yAxisId="left"
                     dataKey="planned"
                     unit={'g'}
                     name={t('nutrition.planned')}
                     fill={colorGenerator.next().value!}
                 />
                 <Bar
-                    yAxisId="left"
                     dataKey="today"
                     unit={'g'}
                     name={t('nutrition.today')}
                     fill={colorGenerator.next().value!}
                 />
                 <Bar
-                    yAxisId="left"
                     dataKey="avg7Days"
                     unit={'g'}
                     name={t('nutrition.7dayAvg')}
                     fill={colorGenerator.next().value!}
                 />
-                {/*<Bar yAxisId="right" dataKey="uv" fill="#82ca9d" />*/}
             </BarChart>
         </ResponsiveContainer>
     );

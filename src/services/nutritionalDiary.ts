@@ -41,7 +41,7 @@ export interface AddDiaryEntryParams {
     plan: number,
     meal?: number,
     ingredient: number,
-    weight_unit: number,
+    weight_unit: number | null,
     datetime: string,
     amount: number
 }
@@ -54,7 +54,7 @@ export const addNutritionalDiaryEntry = async (data: AddDiaryEntryParams): Promi
     const response = await axios.post(
         makeUrl(API_NUTRITIONAL_DIARY_PATH,),
         // eslint-disable-next-line camelcase
-        { plan: data.plan, ingredient: data.ingredient, weight_unit: data.weight_unit, amount: data.amount },
+        data,
         { headers: makeHeader() }
     );
 
@@ -65,7 +65,7 @@ export const editNutritionalDiaryEntry = async (data: EditDiaryEntryParams): Pro
     const response = await axios.patch(
         makeUrl(API_NUTRITIONAL_DIARY_PATH, { id: data.id }),
         // eslint-disable-next-line camelcase
-        { plan: data.plan, ingredient: data.ingredient, weight_unit: data.weight_unit, amount: data.amount },
+        data,
         { headers: makeHeader() }
     );
 

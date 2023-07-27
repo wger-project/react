@@ -58,7 +58,7 @@ export interface ApiIngredientType {
 
 export type ApiIngredientWeightUnitType = {
     id: number,
-    amount: number,
+    amount: string,
     ingredient: number,
     gram: number,
     unit: number
