@@ -1,20 +1,20 @@
-import React from 'react';
-import * as yup from 'yup';
-import { Form, Formik } from "formik";
 import { Button, Stack, TextField } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { MeasurementEntry } from "components/Measurements/models/Entry";
 import {
     useAddMeasurementEntryQuery,
     useEditMeasurementEntryQuery,
     useMeasurementsQuery
 } from "components/Measurements/queries";
-import { MeasurementEntry } from "components/Measurements/models/Entry";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { dateToYYYYMMDD } from "utils/date";
+import { Form, Formik } from "formik";
 import { Settings } from "luxon";
+import React from 'react';
+import { useTranslation } from "react-i18next";
 import { TIMEZONE } from "utils/consts";
+import { dateToYYYYMMDD } from "utils/date";
+import * as yup from 'yup';
 
 Settings.defaultZone = TIMEZONE;
 
@@ -80,14 +80,8 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                             id="value"
                             type={"number"}
                             label={t('value')}
-                            error={
-                                Boolean(formik.errors.value && formik.touched.value)
-                            }
-                            helperText={
-                                Boolean(formik.errors.value && formik.touched.value)
-                                    ? formik.errors.value
-                                    : ''
-                            }
+                            error={formik.touched.value && Boolean(formik.errors.value)}
+                            helperText={formik.touched.value && formik.errors.value}
                             {...formik.getFieldProps('value')}
                         />
                         {categoryQuery.isLoading
@@ -131,14 +125,8 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                             id="notes"
                             label={t('notes')}
                             multiline
-                            error={
-                                Boolean(formik.errors.notes && formik.touched.notes)
-                            }
-                            helperText={
-                                Boolean(formik.errors.notes && formik.touched.notes)
-                                    ? formik.errors.notes
-                                    : ''
-                            }
+                            error={formik.touched.notes && Boolean(formik.errors.notes)}
+                            helperText={formik.touched.notes && formik.errors.notes}
                             {...formik.getFieldProps('notes')}
                         />
 

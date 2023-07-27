@@ -1,11 +1,11 @@
-import React from 'react';
-import * as yup from 'yup';
-import { Form, Formik } from "formik";
 import { Button, Stack, TextField } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 
 import { useAddNutritionalPlanQueryQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
+import { Form, Formik } from "formik";
+import React from 'react';
+import { useTranslation } from "react-i18next";
+import * as yup from 'yup';
 
 interface PlanFormProps {
     plan?: NutritionalPlan,
@@ -52,14 +52,8 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                             fullWidth
                             id="description"
                             label={t('description')}
-                            error={
-                                Boolean(formik.errors.description && formik.touched.description)
-                            }
-                            helperText={
-                                Boolean(formik.errors.description && formik.touched.description)
-                                    ? formik.errors.description
-                                    : ''
-                            }
+                            error={formik.touched.description && Boolean(formik.errors.description)}
+                            helperText={formik.touched.description && formik.errors.description}
                             {...formik.getFieldProps('description')}
                         />
                         <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>

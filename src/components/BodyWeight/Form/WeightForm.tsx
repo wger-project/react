@@ -1,15 +1,15 @@
-import React, { useCallback } from 'react';
-import { WeightEntry } from "components/BodyWeight/model";
-import * as yup from 'yup';
-import { Form, Formik } from "formik";
 import { Button, Stack, TextField } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import { setNotification, SetWeightState, useWeightStateValue } from "state";
-import { createWeight, updateWeight } from "services";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { DateTime } from "luxon";
-import { dateToYYYYMMDD } from "utils/date";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { WeightEntry } from "components/BodyWeight/model";
+import { Form, Formik } from "formik";
+import { DateTime } from "luxon";
+import React, { useCallback } from 'react';
+import { useTranslation } from "react-i18next";
+import { createWeight, updateWeight } from "services";
+import { setNotification, SetWeightState, useWeightStateValue } from "state";
+import { dateToYYYYMMDD } from "utils/date";
+import * as yup from 'yup';
 
 interface WeightFormProps {
     weightEntry?: WeightEntry,
@@ -147,14 +147,8 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                             fullWidth
                             id="weight"
                             label={t('weight')}
-                            error={
-                                Boolean(formik.errors.weight && formik.touched.weight)
-                            }
-                            helperText={
-                                Boolean(formik.errors.weight && formik.touched.weight)
-                                    ? formik.errors.weight
-                                    : ''
-                            }
+                            error={formik.touched.weight && Boolean(formik.touched.weight)}
+                            helperText={formik.touched.weight && formik.errors.weight}
                             {...formik.getFieldProps('weight')}
                         />
 

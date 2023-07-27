@@ -1,16 +1,16 @@
-import React from 'react';
-import * as yup from 'yup';
-import { Form, Formik } from "formik";
 import { Button, Stack, TextField } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import { MeasurementCategory } from "components/Measurements/models/Category";
 import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "components/Measurements/queries";
+import { Form, Formik } from "formik";
+import React from 'react';
+import { useTranslation } from "react-i18next";
+import * as yup from 'yup';
 
 interface CategoryFormProps {
     category?: MeasurementCategory,
     closeFn?: Function,
 }
- 
+
 export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
 
     const [t] = useTranslation();
@@ -59,25 +59,17 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             fullWidth
                             id="name"
                             label={t('name')}
-                            error={
-                                Boolean(formik.errors.name && formik.touched.name)
-                            }
-                            helperText={
-                                Boolean(formik.errors.name && formik.touched.name)
-                                    ? formik.errors.name
-                                    : ''
-                            }
+                            error={formik.touched.name && Boolean(formik.touched.name)}
+                            helperText={formik.touched.name && formik.errors.name}
                             {...formik.getFieldProps('name')}
                         />
                         <TextField
                             fullWidth
                             id="unit"
                             label={t('unit')}
-                            error={
-                                Boolean(formik.errors.unit && formik.touched.unit)
-                            }
+                            error={formik.touched.unit && Boolean(formik.errors.unit)}
                             helperText={
-                                Boolean(formik.errors.unit && formik.touched.unit)
+                                Boolean(formik.touched.unit && formik.errors.unit)
                                     ? formik.errors.unit
                                     : t('measurements.unitFormHelpText')
                             }
