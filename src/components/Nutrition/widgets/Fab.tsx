@@ -4,8 +4,8 @@ import AddIcon from "@mui/icons-material/Add";
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 import { useTranslation } from "react-i18next";
 import { WgerModal } from "components/Core/Modals/WgerModal";
-import { PlanForm } from "components/Nutrition/widgets/PlanForm";
-import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/NutritionDiaryEntryForm";
+import { PlanForm } from "components/Nutrition/widgets/forms/PlanForm";
+import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 
 export const AddNutritionalPlanFab = () => {

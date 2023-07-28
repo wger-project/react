@@ -33,10 +33,12 @@ import { MealItem } from "components/Nutrition/models/mealItem";
 import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
 import { DiaryOverview } from "components/Nutrition/widgets/DiaryOverview";
 import { AddNutritionDiaryEntryFab } from "components/Nutrition/widgets/Fab";
-import { MacrosPieChart } from "components/Nutrition/widgets/MacrosPieChart";
-import { NutritionalValuesPlannedLoggedChart } from "components/Nutrition/widgets/NutritionalValuesPlannedLoggedChart";
+import { MacrosPieChart } from "components/Nutrition/widgets/charts/MacrosPieChart";
+import {
+    NutritionalValuesPlannedLoggedChart
+} from "components/Nutrition/widgets/charts/NutritionalValuesPlannedLoggedChart";
 import { NutritionalValuesTable } from "components/Nutrition/widgets/NutritionalValuesTable";
-import { NutritionDiaryChart } from "components/Nutrition/widgets/NutritionDiaryChart";
+import { NutritionDiaryChart } from "components/Nutrition/widgets/charts/NutritionDiaryChart";
 import { PlanDetailDropdown } from "components/Nutrition/widgets/PlanDetailDropdown";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";

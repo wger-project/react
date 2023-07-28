@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import userEvent from "@testing-library/user-event";
 import { TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
-import { PlanForm } from "components/Nutrition/widgets/PlanForm";
+import { PlanForm } from "components/Nutrition/widgets/forms/PlanForm";
 
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
 

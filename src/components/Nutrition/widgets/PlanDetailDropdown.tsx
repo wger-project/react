@@ -7,7 +7,7 @@ import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmati
 import { useNavigate } from "react-router-dom";
 import { makeLink, WgerLink } from "utils/url";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { PlanForm } from "components/Nutrition/widgets/PlanForm";
+import { PlanForm } from "components/Nutrition/widgets/forms/PlanForm";
 import { useDeleteNutritionalPlanQuery } from "components/Nutrition/queries";
 
 

@@ -6,6 +6,7 @@ import { Meal, MealAdapter } from "components/Nutrition/models/meal";
 import { MealItemAdapter } from "components/Nutrition/models/mealItem";
 import { getIngredient } from "services/ingredient";
 import { getWeightUnit } from "services/ingredientweightunit";
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 
 export const API_MEAL_PATH = 'meal';
 export const API_MEAL_ITEM_PATH = 'mealitem';
@@ -50,7 +51,7 @@ export const deleteMeal = async (id: number): Promise<void> => {
     );
 };
 
-export const getMealsForPlan = async (planId: number): Promise<Meal[]> => {
+export const getMealsForPlan = async (planId: number, ingredientCache: Map<number, Ingredient>): Promise<Meal[]> => {
 
     const mealAdapter = new MealAdapter();
     const mealItemAdapter = new MealItemAdapter();
@@ -68,13 +69,15 @@ export const getMealsForPlan = async (planId: number): Promise<Meal[]> => {
         const items = receivedMealItems.results.map((item) => mealItemAdapter.fromJson(item));
         for (const item of items) {
             const responses = await Promise.all([
-                getIngredient(item.ingredientId),
+                ingredientCache.get(item.ingredientId) !== undefined
+                    ? ingredientCache.get(item.ingredientId)
+                    : getIngredient(item.ingredientId),
                 getWeightUnit(item.weightUnitId)
             ]);
             item.ingredient = responses[0];
             item.weightUnit = responses[1];
+            ingredientCache.set(item.ingredientId, item.ingredient!);
         }
-
         meal.items = items;
     }
     return meals;

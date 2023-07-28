@@ -9,28 +9,26 @@ import { makeHeader, makeUrl } from "utils/url";
 
 export const API_NUTRITIONAL_DIARY_PATH = 'nutritiondiary';
 
-export const getNutritionalDiaryEntries = async (planId: number): Promise<DiaryEntry[]> => {
+export const getNutritionalDiaryEntries = async (planId: number, ingredientCache: Map<number, Ingredient>): Promise<DiaryEntry[]> => {
     const adapter = new DiaryEntryAdapter();
     const url = makeUrl(API_NUTRITIONAL_DIARY_PATH, { query: { plan: planId, limit: API_MAX_PAGE_SIZE } });
     const out: DiaryEntry[] = [];
 
-    // Mini ingredient cache
-    const ingredients = new Map<number, Ingredient>();
-
-    for await  (const page of fetchPaginated(url, makeHeader())) {
+    for await (const page of fetchPaginated(url, makeHeader())) {
         for (const logData of page) {
             let entry = adapter.fromJson(logData);
 
             const responses = await Promise.all([
-                ingredients.get(entry.ingredientId) !== undefined
-                    ? ingredients.get(entry.ingredientId)
+                ingredientCache.get(entry.ingredientId) !== undefined
+                    ? ingredientCache.get(entry.ingredientId)
                     : getIngredient(entry.ingredientId),
                 getWeightUnit(entry.weightUnitId)
             ]);
             entry.ingredient = responses[0];
             entry.weightUnit = responses[1];
-            ingredients.set(entry.ingredientId, entry.ingredient!);
             out.push(entry);
+
+            ingredientCache.set(entry.ingredientId, entry.ingredient!);
         }
     }
     return out;

@@ -5,6 +5,7 @@ import { getNutritionalDiaryEntries } from "services/nutritionalDiary";
 import { ResponseType } from "services/responseType";
 import { ApiNutritionalPlanType } from 'types';
 import { makeHeader, makeUrl } from "utils/url";
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 
 export const API_NUTRITIONAL_PLAN_PATH = 'nutritionplan';
 
@@ -24,13 +25,18 @@ export const getNutritionalPlanFull = async (id: number): Promise<NutritionalPla
         { headers: makeHeader() },
     );
 
+    // Poor man's cache. This doesn't catch everything, but it does reduce the nr of requests
+    const ingredientCache = new Map<number, Ingredient>();
+
     const adapter = new NutritionalPlanAdapter();
     const plan = adapter.fromJson(receivedPlan);
-    const responses = await Promise.all([getMealsForPlan(id), getNutritionalDiaryEntries(id)]);
+    const responses = await Promise.all([
+        getMealsForPlan(id, ingredientCache),
+        getNutritionalDiaryEntries(id, ingredientCache)
+    ]);
 
     plan.meals = responses[0];
     plan.diaryEntries = responses[1];
-
     plan.meals.forEach((meal) => {
         meal.diaryEntries = plan.diaryEntries.filter((entry) => entry.mealId === meal.id);
     });
