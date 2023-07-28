@@ -21,7 +21,7 @@ export function useFetchNutritionalPlanQuery(planId: number) {
     );
 }
 
-export const useAddNutritionalPlanQueryQuery = () => {
+export const useAddNutritionalPlanQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({

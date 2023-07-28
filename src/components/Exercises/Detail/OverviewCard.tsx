@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { getTranslationKey } from "utils/strings";
 import { makeLink, WgerLink } from "utils/url";
 import { ExerciseImagePlaceholder } from "components/Exercises/Detail/ExerciseImagePlaceholder";
+import Tooltip from "@mui/material/Tooltip";
 
 type OverviewCardProps = {
     exerciseBase: ExerciseBase;
@@ -38,9 +39,11 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                         <ExerciseImagePlaceholder />
                     </CardMedia>}
                 <CardContent>
-                    <Typography gutterBottom variant="h6" component="div">
-                        {exercise.nameLong}
-                    </Typography>
+                    <Tooltip title={exercise.name} placement="top" arrow>
+                        <Typography gutterBottom variant="h6" component="div" noWrap>
+                            {exercise.name}
+                        </Typography>
+                    </Tooltip>
 
                     <Chip
                         label={t(getTranslationKey(exerciseBase.category.name))}

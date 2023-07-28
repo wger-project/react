@@ -10,6 +10,46 @@ import { getWeightUnit } from "services/ingredientweightunit";
 export const API_MEAL_PATH = 'meal';
 export const API_MEAL_ITEM_PATH = 'mealitem';
 
+
+export interface AddMealParams {
+    plan: number;
+    name: string;
+    time: string
+}
+
+export interface EditMealParams extends AddMealParams {
+    id: number,
+}
+
+export const addMeal = async (data: AddMealParams): Promise<Meal> => {
+    const response = await axios.post(
+        makeUrl(API_MEAL_PATH,),
+        data,
+        { headers: makeHeader() }
+    );
+
+    const adapter = new MealAdapter();
+    return adapter.fromJson(response.data);
+};
+
+export const editMeal = async (data: EditMealParams): Promise<Meal> => {
+    const response = await axios.patch(
+        makeUrl(API_MEAL_PATH, { id: data.id }),
+        data,
+        { headers: makeHeader() }
+    );
+
+    const adapter = new MealAdapter();
+    return adapter.fromJson(response.data);
+};
+
+export const deleteMeal = async (id: number): Promise<void> => {
+    await axios.delete(
+        makeUrl(API_MEAL_PATH, { id: id }),
+        { headers: makeHeader() },
+    );
+};
+
 export const getMealsForPlan = async (planId: number): Promise<Meal[]> => {
 
     const mealAdapter = new MealAdapter();

@@ -6,7 +6,6 @@ import { searchExerciseTranslations } from "services";
 import { Avatar, InputAdornment, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import SearchIcon from '@mui/icons-material/Search';
-import { truncateLongNames } from "utils/strings";
 import PhotoIcon from '@mui/icons-material/Photo';
 import { SERVER_URL } from "utils/url";
 import { ExerciseSearchResponse } from "services/responseType";
@@ -95,8 +94,17 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
                                     <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />
                                     : <PhotoIcon fontSize="large" />}
                             </ListItemIcon>
-                            <ListItemText primary={truncateLongNames(option.value, 18)}
-                                          secondary={option.data.category} />
+                            <ListItemText
+                                primary={option.value}
+                                primaryTypographyProps={{
+                                    style: {
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis'
+                                    }
+                                }}
+                                secondary={option.data.category}
+                            />
                         </ListItem>
 
                     </li>

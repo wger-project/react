@@ -53,7 +53,7 @@ describe("Test the NameAutocompleter component", () => {
 
         expect(screen.getByLabelText("exercises.searchExerciseName")).toBeInTheDocument();
         expect(screen.getByText("noResults")).toBeInTheDocument();
-        expect(screen.queryByText("Crunches an Negati…")).not.toBeInTheDocument();
+        expect(screen.queryByText("Crunches an Negativbank")).not.toBeInTheDocument();
         expect(screen.queryByText("Bauch")).not.toBeInTheDocument();
         expect(screen.queryByText("Crunches am Seil")).not.toBeInTheDocument();
         expect(screen.queryByText("Brust")).not.toBeInTheDocument();
@@ -63,7 +63,7 @@ describe("Test the NameAutocompleter component", () => {
             await new Promise((r) => setTimeout(r, 250));
         });
         expect(searchExerciseTranslations).toBeCalled();
-        expect(screen.getByText("Crunches an Negati…")).toBeInTheDocument();
+        expect(screen.getByText("Crunches an Negativbank")).toBeInTheDocument();
         expect(screen.getByText("Bauch")).toBeInTheDocument();
         expect(screen.getByText("Crunches am Seil")).toBeInTheDocument();
         expect(screen.getByText("Brust")).toBeInTheDocument();

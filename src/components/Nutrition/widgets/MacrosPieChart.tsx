@@ -37,7 +37,7 @@ export const MacrosPieChart = (props: { data: NutritionalValues }) => {
                 textAnchor={x > cx ? "start" : "end"}
                 dominantBaseline="central"
             >
-                {t('nutrition.valueUnitG', { value: payload.value })}
+                {t('nutrition.valueUnitG', { value: payload.value.toFixed() })}
             </text>
         );
     };
@@ -48,7 +48,7 @@ export const MacrosPieChart = (props: { data: NutritionalValues }) => {
             <Pie
                 data={data}
                 labelLine={false}
-                //outerRadius={80}
+                // outerRadius={80}
                 label={renderCustomizedLabel}
                 fill="#8884d8"
                 dataKey="value"

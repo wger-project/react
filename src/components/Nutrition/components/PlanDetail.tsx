@@ -2,7 +2,6 @@ import { Add } from "@mui/icons-material";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PhotoIcon from "@mui/icons-material/Photo";
 import {
     Avatar,
@@ -42,6 +41,8 @@ import { PlanDetailDropdown } from "components/Nutrition/widgets/PlanDetailDropd
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { MealForm } from "components/Nutrition/widgets/forms/MealForm";
+import { MealDetailDropdown } from "components/Nutrition/widgets/MealDetailDropdown";
 
 
 const MealItemListItem = (props: { mealItem: MealItem }) => {
@@ -63,7 +64,7 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
     const [t] = useTranslation();
 
     return <TableRow key={props.item.id}>
-        <TableCell>
+        <TableCell sx={{ pr: 0 }}>
             <Avatar>
                 <PhotoIcon />
             </Avatar>
@@ -89,7 +90,7 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
     </TableRow>;
 };
 
-const MealDetail = (props: { meal: Meal }) => {
+const MealDetail = (props: { meal: Meal, planId: number }) => {
     const [t] = useTranslation();
     const [expandedView, setExpandedView] = useState(false);
     const handleToggleExpandedView = () => setExpandedView(!expandedView);
@@ -97,11 +98,7 @@ const MealDetail = (props: { meal: Meal }) => {
     return <Card sx={{ minWidth: 275 }}>
         <CardHeader
             sx={{ bgcolor: "lightgray" }}
-            action={
-                <IconButton aria-label="settings" onClick={() => console.log(props.meal)}>
-                    <MoreVertIcon />
-                </IconButton>
-            }
+            action={<MealDetailDropdown meal={props.meal} planId={props.planId} />}
             title={props.meal.name}
             subheader={props.meal.time}
         />
@@ -189,7 +186,6 @@ const MealDetail = (props: { meal: Meal }) => {
                 <IconButton onClick={() => console.log(props)}>
                     <Add />
                 </IconButton>
-
             </Tooltip>
 
             <Tooltip title={t('nutrition.addNutritionalDiary')}>
@@ -198,6 +194,7 @@ const MealDetail = (props: { meal: Meal }) => {
                 </IconButton>
             </Tooltip>
         </CardActions>
+
     </Card>;
 };
 
@@ -207,38 +204,51 @@ export const PlanDetail = () => {
     const params = useParams<{ planId: string }>();
     const planId = parseInt(params.planId!);
     const planQuery = useFetchNutritionalPlanQuery(planId);
+    const [expandedForm, setExpandedForm] = useState(false);
+    const handleToggleExpandedForm = () => setExpandedForm(!expandedForm);
 
     return planQuery.isLoading
         ? <LoadingPlaceholder />
         : <WgerContainerRightSidebar
             title={planQuery.data!.description}
             optionsMenu={<PlanDetailDropdown plan={planQuery.data!} />}
-            mainContent={
-                <>
-                    <Stack spacing={2}>
-                        {planQuery.data!.meals.map(meal => <MealDetail meal={meal} key={meal.id} />)}
-                        <MealDetail meal={planQuery.data!.pseudoMealOthers} key={-1} />
-                        <Typography gutterBottom variant="h5">
-                            {t('nutrition.nutritionalData')}
-                        </Typography>
-                        <NutritionalValuesTable values={planQuery.data!.nutritionalValues} />
-                        <MacrosPieChart data={planQuery.data!.nutritionalValues} />
-                        <Typography gutterBottom variant="h5">
-                            {t('nutrition.nutritionalDiary')}
-                        </Typography>
+            mainContent={<>
+                <Stack spacing={2}>
+                    {planQuery.data!.meals.map(meal =>
+                        <MealDetail meal={meal} planId={planQuery.data!.id} key={meal.id} />
+                    )}
+                    <MealDetail meal={planQuery.data!.pseudoMealOthers} planId={planQuery.data!.id} key={-1} />
+                    <Tooltip title={t('add')}>
+                        <IconButton onClick={handleToggleExpandedForm}>
+                            <Add />
+                        </IconButton>
+                    </Tooltip>
+                    <Collapse in={expandedForm} timeout="auto" unmountOnExit>
+                        <CardContent>
+                            <MealForm planId={planQuery.data!.id} closeFn={handleToggleExpandedForm} />
+                        </CardContent>
+                    </Collapse>
 
-                        <NutritionDiaryChart
-                            planned={planQuery.data!.nutritionalValues}
-                            today={planQuery.data!.nutritionalValuesDiaryToday}
-                            avg7Days={planQuery.data!.nutritionalValues7DayAvg}
-                        />
-                        <DiaryOverview
-                            entries={planQuery.data!.groupDiaryEntries}
-                            planValues={planQuery.data!.nutritionalValues}
-                        />
-                    </Stack>
-                </>
-            }
+                    <Typography gutterBottom variant="h5">
+                        {t('nutrition.nutritionalData')}
+                    </Typography>
+                    <NutritionalValuesTable values={planQuery.data!.nutritionalValues} />
+                    <MacrosPieChart data={planQuery.data!.nutritionalValues} />
+                    <Typography gutterBottom variant="h5">
+                        {t('nutrition.nutritionalDiary')}
+                    </Typography>
+
+                    <NutritionDiaryChart
+                        planned={planQuery.data!.nutritionalValues}
+                        today={planQuery.data!.nutritionalValuesDiaryToday}
+                        avg7Days={planQuery.data!.nutritionalValues7DayAvg}
+                    />
+                    <DiaryOverview
+                        entries={planQuery.data!.groupDiaryEntries}
+                        planValues={planQuery.data!.nutritionalValues}
+                    />
+                </Stack>
+            </>}
             sideBar={<NutritionalValuesPlannedLoggedChart
                 planned={planQuery.data!.nutritionalValues}
                 logged={planQuery.data!.loggedNutritionalValues}

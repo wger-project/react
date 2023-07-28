@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
 import { PlanForm } from "components/Nutrition/widgets/PlanForm";
 
-import { useAddNutritionalPlanQueryQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
+import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
 
 jest.mock("services/weight");
 jest.mock("components/Nutrition/queries");
@@ -21,7 +21,7 @@ describe("Test the PlanForm component", () => {
             mutate: mutate
         }));
 
-        useAddNutritionalPlanQueryQuery.mockImplementation(() => ({
+        useAddNutritionalPlanQuery.mockImplementation(() => ({
             mutate: mutate
         }));
     });

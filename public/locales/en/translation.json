@@ -85,7 +85,8 @@
     "saturatedFat": "Saturated fat",
     "others": "Others",
     "fibres": "Fibres",
-    "sodium": "Sodium"
+    "sodium": "Sodium",
+    "mealDeleteInfo": "Nutrition diary entries to this meal will not be deleted and appear under \"others\""
   },
   "total": "Total",
   "description": "Description",

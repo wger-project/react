@@ -1,25 +1,22 @@
 import { useTranslation } from "react-i18next";
-import React from "react";
-import { Button, Menu, MenuItem } from "@mui/material";
-import SettingsIcon from '@mui/icons-material/Settings';
+import { IconButton, Menu, MenuItem } from "@mui/material";
+import { useDeleteMealQuery } from "components/Nutrition/queries";
+import { Meal } from "components/Nutrition/models/meal";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useState } from "react";
 import { WgerModal } from "components/Core/Modals/WgerModal";
+import { MealForm } from "components/Nutrition/widgets/forms/MealForm";
 import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
-import { useNavigate } from "react-router-dom";
-import { makeLink, WgerLink } from "utils/url";
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { PlanForm } from "components/Nutrition/widgets/PlanForm";
-import { useDeleteNutritionalPlanQuery } from "components/Nutrition/queries";
 
 
-export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
+export const MealDetailDropdown = (props: { meal: Meal, planId: number }) => {
 
-    const deletePlanQuery = useDeleteNutritionalPlanQuery(props.plan.id);
-    const navigate = useNavigate();
+    const deleteMealQuery = useDeleteMealQuery(props.planId);
 
     const [t] = useTranslation();
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [openEditModal, setOpenEditModal] = React.useState(false);
-    const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -40,8 +37,7 @@ export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
     };
 
     const performDelete = () => {
-        deletePlanQuery.mutate(props.plan.id);
-        navigate((makeLink(WgerLink.NUTRITION_OVERVIEW)));
+        deleteMealQuery.mutate(props.meal.id);
     };
 
 
@@ -52,9 +48,9 @@ export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
 
 
     return <>
-        <Button onClick={handleClick}>
-            <SettingsIcon />
-        </Button>
+        <IconButton aria-label="settings" onClick={handleClick}>
+            <MoreVertIcon />
+        </IconButton>
         <Menu
             anchorEl={anchorEl}
             open={open}
@@ -68,12 +64,12 @@ export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
         </Menu>
 
         <WgerModal title={t('edit')} isOpen={openEditModal} closeFn={handleCloseEditModal}>
-            <PlanForm plan={props.plan} closeFn={handleCloseEditModal} />
+            <MealForm meal={props.meal} closeFn={handleCloseEditModal} planId={props.planId} />
         </WgerModal>
 
         <DeleteConfirmationModal
-            title={t('deleteConfirmation', { name: props.plan.description })}
-            message={t('measurements.deleteInfo')}
+            title={t('deleteConfirmation', { name: props.meal.name })}
+            message={t('nutrition.mealDeleteInfo')}
             isOpen={openDeleteModal}
             closeFn={handleCloseDeleteModal}
             deleteFn={performDelete}

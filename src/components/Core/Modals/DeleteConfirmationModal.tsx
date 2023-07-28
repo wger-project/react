@@ -33,6 +33,11 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
         minWidth: '400px'
     };
 
+    const handleDelete = () => {
+        deleteFn();
+        closeFn();
+    };
+
     return (
         <Modal
             open={isOpen}
@@ -53,7 +58,7 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button color="error" variant="contained" onClick={deleteFn}>
+                    <Button color="error" variant="contained" onClick={handleDelete}>
                         {t('delete')}
                     </Button>
                     <Button color="primary" onClick={closeFn}>

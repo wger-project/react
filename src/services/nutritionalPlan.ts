@@ -23,6 +23,7 @@ export const getNutritionalPlanFull = async (id: number): Promise<NutritionalPla
         makeUrl(API_NUTRITIONAL_PLAN_PATH, { id: id }),
         { headers: makeHeader() },
     );
+
     const adapter = new NutritionalPlanAdapter();
     const plan = adapter.fromJson(receivedPlan);
     const responses = await Promise.all([getMealsForPlan(id), getNutritionalDiaryEntries(id)]);
@@ -48,7 +49,7 @@ export interface EditNutritionalPlanParams extends AddNutritionalPlanParams {
 export const addNutritionalPlan = async (data: AddNutritionalPlanParams): Promise<NutritionalPlan> => {
     const response = await axios.post(
         makeUrl(API_NUTRITIONAL_PLAN_PATH,),
-        { description: data.description, },
+        data,
         { headers: makeHeader() }
     );
 
@@ -59,7 +60,7 @@ export const addNutritionalPlan = async (data: AddNutritionalPlanParams): Promis
 export const editNutritionalPlan = async (data: EditNutritionalPlanParams): Promise<NutritionalPlan> => {
     const response = await axios.patch(
         makeUrl(API_NUTRITIONAL_PLAN_PATH, { id: data.id }),
-        { description: data.description, },
+        data,
         { headers: makeHeader() }
     );
 

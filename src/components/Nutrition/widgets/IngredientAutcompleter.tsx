@@ -7,7 +7,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { searchIngredient } from "services";
 import { IngredientSearchResponse } from "services/responseType";
-import { truncateLongNames } from "utils/strings";
 import { SERVER_URL } from "utils/url";
 
 type IngredientAutocompleterProps = {
@@ -94,7 +93,16 @@ export function IngredientAutocompleter({ callback }: IngredientAutocompleterPro
                                     ? <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />
                                     : <PhotoIcon fontSize="large" />}
                             </ListItemIcon>
-                            <ListItemText primary={truncateLongNames(option.value, 35)} />
+                            <ListItemText
+                                primary={option.value}
+                                primaryTypographyProps={{
+                                    style: {
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis'
+                                    }
+                                }}
+                            />
                         </ListItem>
                     </li>
                 );

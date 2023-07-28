@@ -1,7 +1,7 @@
 import { Button, Stack, TextField } from "@mui/material";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 
-import { useAddNutritionalPlanQueryQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
+import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
 import { Form, Formik } from "formik";
 import React from 'react';
 import { useTranslation } from "react-i18next";
@@ -15,8 +15,8 @@ interface PlanFormProps {
 export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
 
     const [t] = useTranslation();
-    const useAddPlanQuery = useAddNutritionalPlanQueryQuery();
-    const useEditPlanQuery = useEditNutritionalPlanQuery(plan?.id!);
+    const addPlanQuery = useAddNutritionalPlanQuery();
+    const editPlanQuery = useEditNutritionalPlanQuery(plan?.id!);
     const validationSchema = yup.object({
         description: yup
             .string()
@@ -34,9 +34,9 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             onSubmit={async (values) => {
 
                 if (plan) {
-                    useEditPlanQuery.mutate({ ...values, id: plan.id });
+                    editPlanQuery.mutate({ ...values, id: plan.id });
                 } else {
-                    useAddPlanQuery.mutate(values);
+                    addPlanQuery.mutate(values);
                 }
 
                 // if closeFn is defined, close the modal (this form does not have to be displayed in one)
@@ -57,7 +57,10 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                             {...formik.getFieldProps('description')}
                         />
                         <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
-                            <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
+                            <Button color="primary"
+                                    variant="contained"
+                                    type="submit"
+                                    sx={{ mt: 2 }}>
                                 {t('submit')}
                             </Button>
                         </Stack>
