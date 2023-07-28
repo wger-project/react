@@ -32,14 +32,26 @@ export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
 export const QUERY_NUTRITIONAL_PLANS = 'nutritional-plans';
 
 
+/*
+ * Keys used for the queries
+ *
+ * These don't have any meaning, they just need to be globally unique
+ */
 export enum QueryKey {
     NUTRITIONAL_PLAN = 'nutritional-plan',
     INGREDIENT = 'ingredient'
 }
 
+/*
+ * List of API endpoints
+ */
 export enum ApiPath {
     MEAL = 'meal',
-    MEAL_ITEM = 'mealitem'
+    MEAL_ITEM = 'mealitem',
+    NUTRITIONAL_DIARY = 'nutritiondiary',
+    INGREDIENT_PATH = 'ingredient',
+    INGREDIENT_SEARCH_PATH = ApiPath.INGREDIENT_PATH + '/search',
+    INGREDIENT_WEIGHT_UNIT = 'ingredientweightunit'
 }
 
 

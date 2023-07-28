@@ -15,11 +15,11 @@ import * as yup from "yup";
 type NutritionDiaryEntryFormProps = {
     planId: number,
     entry?: DiaryEntry,
-    meal?: number,
+    mealId?: number,
     closeFn?: Function,
 }
 
-export const NutritionDiaryEntryForm = ({ planId, entry, meal, closeFn }: NutritionDiaryEntryFormProps) => {
+export const NutritionDiaryEntryForm = ({ planId, entry, mealId, closeFn }: NutritionDiaryEntryFormProps) => {
 
     const [t, i18n] = useTranslation();
     const addDiaryQuery = useAddDiaryEntryQuery(planId);
@@ -53,7 +53,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, meal, closeFn }: Nutrit
                 const data = {
                     ...values,
                     plan: planId,
-                    meal: meal,
+                    meal: mealId,
                     // eslint-disable-next-line camelcase
                     weight_unit: null,
                     datetime: values.datetime.toISOString()
