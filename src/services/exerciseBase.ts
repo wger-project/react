@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { ResponseType } from "./responseType";
-import { makeHeader, makeUrl } from "utils/url";
 import { ExerciseBase, ExerciseBaseAdapter } from "components/Exercises/models/exerciseBase";
+import { makeHeader, makeUrl } from "utils/url";
+import { ResponseType } from "./responseType";
 
 export const EXERCISE_INFO_PATH = 'exercisebaseinfo';
 export const EXERCISE_BASE_PATH = 'exercise-base';

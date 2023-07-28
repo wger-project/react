@@ -31,20 +31,21 @@ import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { Meal } from "components/Nutrition/models/meal";
 import { MealItem } from "components/Nutrition/models/mealItem";
 import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
-import { DiaryOverview } from "components/Nutrition/widgets/DiaryOverview";
-import { AddNutritionDiaryEntryFab } from "components/Nutrition/widgets/Fab";
 import { MacrosPieChart } from "components/Nutrition/widgets/charts/MacrosPieChart";
 import {
     NutritionalValuesPlannedLoggedChart
 } from "components/Nutrition/widgets/charts/NutritionalValuesPlannedLoggedChart";
-import { NutritionalValuesTable } from "components/Nutrition/widgets/NutritionalValuesTable";
 import { NutritionDiaryChart } from "components/Nutrition/widgets/charts/NutritionDiaryChart";
+import { DiaryOverview } from "components/Nutrition/widgets/DiaryOverview";
+import { AddNutritionDiaryEntryFab } from "components/Nutrition/widgets/Fab";
+import { MealForm } from "components/Nutrition/widgets/forms/MealForm";
+import { MealItemForm } from "components/Nutrition/widgets/forms/MealItemForm";
+import { MealDetailDropdown } from "components/Nutrition/widgets/MealDetailDropdown";
+import { NutritionalValuesTable } from "components/Nutrition/widgets/NutritionalValuesTable";
 import { PlanDetailDropdown } from "components/Nutrition/widgets/PlanDetailDropdown";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { MealForm } from "components/Nutrition/widgets/forms/MealForm";
-import { MealDetailDropdown } from "components/Nutrition/widgets/MealDetailDropdown";
 
 
 const MealItemListItem = (props: { mealItem: MealItem }) => {
@@ -94,8 +95,11 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
 
 const MealDetail = (props: { meal: Meal, planId: number }) => {
     const [t] = useTranslation();
-    const [expandedView, setExpandedView] = useState(false);
-    const handleToggleExpandedView = () => setExpandedView(!expandedView);
+    const [expandedViewStats, setExpandedViewStats] = useState(false);
+    const handleToggleExpandedViewStats = () => setExpandedViewStats(!expandedViewStats);
+
+    const [expandedViewItemForm, setExpandedViewItemForm] = useState(false);
+    const handleToggleExpandedViewItemForm = () => setExpandedViewItemForm(!expandedViewItemForm);
 
     return <Card sx={{ minWidth: 275 }}>
         <CardHeader
@@ -105,7 +109,7 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
             subheader={props.meal.time}
         />
         <CardContent>
-            <Collapse in={expandedView} timeout="auto" unmountOnExit>
+            <Collapse in={expandedViewStats} timeout="auto" unmountOnExit>
                 <Typography gutterBottom variant="h6">
                     {t('nutrition.planned')}
                 </Typography>
@@ -163,7 +167,7 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
 
             </Collapse>
 
-            {!expandedView &&
+            {!expandedViewStats &&
                 <List>
                     {props.meal.items.map((item) => (
                         <MealItemListItem
@@ -176,8 +180,8 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
         </CardContent>
         <CardActions>
             <Tooltip title={t('add')}>
-                <IconButton onClick={handleToggleExpandedView}>
-                    {expandedView
+                <IconButton onClick={handleToggleExpandedViewStats}>
+                    {expandedViewStats
                         ? <ExpandLessIcon />
                         : <ExpandMoreIcon />
                     }
@@ -185,7 +189,7 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
             </Tooltip>
 
             <Tooltip title={t('add')}>
-                <IconButton onClick={() => console.log(props)}>
+                <IconButton onClick={handleToggleExpandedViewItemForm}>
                     <Add />
                 </IconButton>
             </Tooltip>
@@ -196,6 +200,11 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
                 </IconButton>
             </Tooltip>
         </CardActions>
+        <CardContent>
+            <Collapse in={expandedViewItemForm} timeout="auto" unmountOnExit>
+                <MealItemForm planId={props.planId} mealId={props.meal.id} closeFn={handleToggleExpandedViewItemForm} />
+            </Collapse>
+        </CardContent>
 
     </Card>;
 };

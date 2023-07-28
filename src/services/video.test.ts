@@ -1,6 +1,6 @@
 import axios from "axios";
-import { deleteExerciseVideo, postExerciseVideo } from "services";
 import { ExerciseVideo } from "components/Exercises/models/video";
+import { deleteExerciseVideo, postExerciseVideo } from "services";
 
 jest.mock("axios");
 

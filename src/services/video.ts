@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { makeHeader, makeUrl } from "utils/url";
 import { ExerciseVideo, ExerciseVideoAdapter } from "components/Exercises/models/video";
+import { makeHeader, makeUrl } from "utils/url";
 
 export const VIDEO_PATH = 'video';
 

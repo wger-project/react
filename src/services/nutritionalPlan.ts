@@ -1,11 +1,11 @@
 import axios from 'axios';
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { NutritionalPlan, NutritionalPlanAdapter } from "components/Nutrition/models/nutritionalPlan";
 import { getMealsForPlan } from "services/meal";
 import { getNutritionalDiaryEntries } from "services/nutritionalDiary";
 import { ResponseType } from "services/responseType";
 import { ApiNutritionalPlanType } from 'types';
 import { makeHeader, makeUrl } from "utils/url";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
 
 export const API_NUTRITIONAL_PLAN_PATH = 'nutritionplan';
 

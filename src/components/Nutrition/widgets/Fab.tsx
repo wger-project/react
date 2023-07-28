@@ -1,12 +1,12 @@
-import React from "react";
-import { Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
-import { useTranslation } from "react-i18next";
+import { Fab } from "@mui/material";
 import { WgerModal } from "components/Core/Modals/WgerModal";
-import { PlanForm } from "components/Nutrition/widgets/forms/PlanForm";
-import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
+import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
+import { PlanForm } from "components/Nutrition/widgets/forms/PlanForm";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 export const AddNutritionalPlanFab = () => {
     const [t] = useTranslation();
@@ -58,7 +58,7 @@ export const AddNutritionDiaryEntryFab = (props: { plan: NutritionalPlan }) => {
                 <HistoryEduIcon />
             </Fab>
             <WgerModal title={t('nutrition.addNutritionalDiary')} isOpen={openModal} closeFn={handleCloseModal}>
-                <NutritionDiaryEntryForm closeFn={handleCloseModal} plan={props.plan} />
+                <NutritionDiaryEntryForm closeFn={handleCloseModal} planId={props.plan.id} />
             </WgerModal>
         </div>
     );

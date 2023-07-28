@@ -1,6 +1,6 @@
 import axios from "axios";
-import { getNutritionalPlansSparse } from "services/nutritionalPlan";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
+import { getNutritionalPlansSparse } from "services/nutritionalPlan";
 
 jest.mock("axios");
 

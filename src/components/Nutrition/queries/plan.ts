@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { QUERY_NUTRITIONAL_PLAN, QUERY_NUTRITIONAL_PLANS } from "utils/consts";
 import {
     addNutritionalPlan,
     AddNutritionalPlanParams,
@@ -9,6 +8,7 @@ import {
     getNutritionalPlanFull,
     getNutritionalPlansSparse
 } from "services/nutritionalPlan";
+import { QUERY_NUTRITIONAL_PLANS, QueryKey } from "utils/consts";
 
 export function useFetchNutritionalPlansQuery() {
     return useQuery([QUERY_NUTRITIONAL_PLANS], getNutritionalPlansSparse);
@@ -16,7 +16,7 @@ export function useFetchNutritionalPlansQuery() {
 
 export function useFetchNutritionalPlanQuery(planId: number) {
     return useQuery(
-        [QUERY_NUTRITIONAL_PLAN, planId],
+        [QueryKey.NUTRITIONAL_PLAN, planId],
         () => getNutritionalPlanFull(planId)
     );
 }
@@ -28,7 +28,7 @@ export const useAddNutritionalPlanQuery = () => {
         mutationFn: (data: AddNutritionalPlanParams) => addNutritionalPlan(data),
         onSuccess: () => {
             queryClient.invalidateQueries([QUERY_NUTRITIONAL_PLANS,]);
-            queryClient.invalidateQueries([QUERY_NUTRITIONAL_PLAN,]);
+            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN,]);
         }
     });
 };
@@ -38,8 +38,8 @@ export const useDeleteNutritionalPlanQuery = (id: number) => {
     return useMutation({
         mutationFn: (id: number) => deleteNutritionalPlan(id),
         onSuccess: () => {
-            queryClient.invalidateQueries([QUERY_NUTRITIONAL_PLAN, id]);
             queryClient.invalidateQueries([QUERY_NUTRITIONAL_PLANS,]);
+            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, id]);
         }
     });
 };
@@ -49,7 +49,7 @@ export const useEditNutritionalPlanQuery = (id: number) => {
     return useMutation({
         mutationFn: (data: EditNutritionalPlanParams) => editNutritionalPlan(data),
         onSuccess: () => {
-            queryClient.invalidateQueries([QUERY_NUTRITIONAL_PLAN, id]);
+            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, id]);
             queryClient.invalidateQueries([QUERY_NUTRITIONAL_PLANS,]);
         }
     });

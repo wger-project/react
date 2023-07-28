@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "utils/consts";
 import { getIngredient } from "services";
+import { QueryKey } from "utils/consts";
 
 
 export function useFetchIngredientQuery(ingredientId: number) {
     return useQuery(
-        [QueryKeys.INGREDIENT, ingredientId],
+        [QueryKey.INGREDIENT, ingredientId],
         () => getIngredient(ingredientId)
     );
 }

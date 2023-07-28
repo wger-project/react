@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { makeHeader, makeUrl } from "utils/url";
 import { Profile, ProfileAdapter } from "components/User/models/profile";
+import { makeHeader, makeUrl } from "utils/url";
 
 export const API_PROFILE_PATH = 'userprofile';
 

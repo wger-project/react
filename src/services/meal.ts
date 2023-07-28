@@ -1,15 +1,13 @@
 import axios from 'axios';
-import { ApiMealItemType, ApiMealType } from 'types';
-import { makeHeader, makeUrl } from "utils/url";
-import { ResponseType } from "services/responseType";
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { Meal, MealAdapter } from "components/Nutrition/models/meal";
 import { MealItemAdapter } from "components/Nutrition/models/mealItem";
 import { getIngredient } from "services/ingredient";
 import { getWeightUnit } from "services/ingredientweightunit";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-
-export const API_MEAL_PATH = 'meal';
-export const API_MEAL_ITEM_PATH = 'mealitem';
+import { ResponseType } from "services/responseType";
+import { ApiMealItemType, ApiMealType } from 'types';
+import { ApiPath } from "utils/consts";
+import { makeHeader, makeUrl } from "utils/url";
 
 
 export interface AddMealParams {
@@ -22,9 +20,10 @@ export interface EditMealParams extends AddMealParams {
     id: number,
 }
 
+
 export const addMeal = async (data: AddMealParams): Promise<Meal> => {
     const response = await axios.post(
-        makeUrl(API_MEAL_PATH,),
+        makeUrl(ApiPath.MEAL),
         data,
         { headers: makeHeader() }
     );
@@ -35,7 +34,7 @@ export const addMeal = async (data: AddMealParams): Promise<Meal> => {
 
 export const editMeal = async (data: EditMealParams): Promise<Meal> => {
     const response = await axios.patch(
-        makeUrl(API_MEAL_PATH, { id: data.id }),
+        makeUrl(ApiPath.MEAL, { id: data.id }),
         data,
         { headers: makeHeader() }
     );
@@ -46,7 +45,7 @@ export const editMeal = async (data: EditMealParams): Promise<Meal> => {
 
 export const deleteMeal = async (id: number): Promise<void> => {
     await axios.delete(
-        makeUrl(API_MEAL_PATH, { id: id }),
+        makeUrl(ApiPath.MEAL, { id: id }),
         { headers: makeHeader() },
     );
 };
@@ -56,13 +55,13 @@ export const getMealsForPlan = async (planId: number, ingredientCache: Map<numbe
     const mealAdapter = new MealAdapter();
     const mealItemAdapter = new MealItemAdapter();
     const { data: receivedMeals } = await axios.get<ResponseType<ApiMealType>>(
-        makeUrl(API_MEAL_PATH, { query: { plan: planId } }),
+        makeUrl(ApiPath.MEAL, { query: { plan: planId } }),
         { headers: makeHeader() },
     );
     const meals = receivedMeals.results.map((meal) => mealAdapter.fromJson(meal));
     for (const meal of meals) {
         const { data: receivedMealItems } = await axios.get<ResponseType<ApiMealItemType>>(
-            makeUrl(API_MEAL_ITEM_PATH, { query: { meal: meal.id } }),
+            makeUrl(ApiPath.MEAL_ITEM, { query: { meal: meal.id } }),
             { headers: makeHeader() },
         );
 

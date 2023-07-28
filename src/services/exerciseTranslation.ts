@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { ExerciseSearchResponse, ExerciseSearchType, ResponseType } from "./responseType";
-import { makeHeader, makeUrl } from "utils/url";
 import { ExerciseTranslation, ExerciseTranslationAdapter } from "components/Exercises/models/exerciseTranslation";
+import { makeHeader, makeUrl } from "utils/url";
+import { ExerciseSearchResponse, ExerciseSearchType, ResponseType } from "./responseType";
 
 export const EXERCISE_PATH = 'exercise';
 export const EXERCISE_TRANSLATION_PATH = 'exercise-translation';

@@ -1,32 +1,34 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addMeal, AddMealParams, deleteMeal, editMeal, EditMealParams } from "services/meal";
+import { addMealItem, AddMealItemParams, deleteMealItem, editMealItem, EditMealItemParams } from "services/mealItem";
 import { QueryKey } from "utils/consts";
 
-export const useAddMealQuery = (planId: number) => {
+export const useAddMealItemQuery = (planId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: AddMealParams) => addMeal(data),
+        mutationFn: (data: AddMealItemParams) => addMealItem(data),
         onSuccess: () => {
             queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, planId]);
         }
     });
 };
-export const useDeleteMealQuery = (planId: number) => {
+
+export const useEditMealItemQuery = (planId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (id: number) => deleteMeal(id),
+        mutationFn: (data: EditMealItemParams) => editMealItem(data),
         onSuccess: () => {
             queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, planId]);
         }
     });
 };
-export const useEditMealQuery = (planId: number) => {
+
+export const useDeleteMealItemQuery = (planId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: EditMealParams) => editMeal(data),
+        mutationFn: (id: number) => deleteMealItem(id),
         onSuccess: () => {
             queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, planId]);
         }

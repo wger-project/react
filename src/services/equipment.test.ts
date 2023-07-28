@@ -1,6 +1,6 @@
 import axios from "axios";
-import { getEquipment } from "services";
 import { Equipment } from "components/Exercises/models/equipment";
+import { getEquipment } from "services";
 
 jest.mock("axios");
 

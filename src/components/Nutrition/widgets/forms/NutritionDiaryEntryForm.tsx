@@ -2,7 +2,6 @@ import { Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 
 import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
@@ -14,17 +13,17 @@ import { dateToYYYYMMDD } from "utils/date";
 import * as yup from "yup";
 
 type NutritionDiaryEntryFormProps = {
-    plan: NutritionalPlan,
+    planId: number,
     entry?: DiaryEntry,
     meal?: number,
     closeFn?: Function,
 }
 
-export const NutritionDiaryEntryForm = ({ plan, entry, meal, closeFn }: NutritionDiaryEntryFormProps) => {
+export const NutritionDiaryEntryForm = ({ planId, entry, meal, closeFn }: NutritionDiaryEntryFormProps) => {
 
     const [t, i18n] = useTranslation();
-    const useAddDiaryQuery = useAddDiaryEntryQuery(plan.id!);
-    const useEditDiaryQuery = useEditDiaryEntryQuery(plan.id!);
+    const addDiaryQuery = useAddDiaryEntryQuery(planId);
+    const editDiaryQuery = useEditDiaryEntryQuery(planId);
     const [dateValue, setDateValue] = React.useState<Date | null>(entry ? entry.datetime : new Date());
     const validationSchema = yup.object({
         amount: yup
@@ -53,7 +52,7 @@ export const NutritionDiaryEntryForm = ({ plan, entry, meal, closeFn }: Nutritio
 
                 const data = {
                     ...values,
-                    plan: plan.id,
+                    plan: planId,
                     meal: meal,
                     // eslint-disable-next-line camelcase
                     weight_unit: null,
@@ -61,9 +60,9 @@ export const NutritionDiaryEntryForm = ({ plan, entry, meal, closeFn }: Nutritio
                 };
 
                 if (entry) {
-                    useEditDiaryQuery.mutate({ ...data, id: entry.id });
+                    editDiaryQuery.mutate({ ...data, id: entry.id });
                 } else {
-                    useAddDiaryQuery.mutate(data);
+                    addDiaryQuery.mutate(data);
                 }
 
                 // if closeFn is defined, close the modal (this form does not have to be displayed in one)

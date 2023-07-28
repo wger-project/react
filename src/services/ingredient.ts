@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { ApiIngredientType } from 'types';
-import { makeHeader, makeUrl } from "utils/url";
 import { Ingredient, IngredientAdapter } from "components/Nutrition/models/Ingredient";
 import { IngredientSearchResponse, IngredientSearchType } from "services/responseType";
+import { ApiIngredientType } from 'types';
+import { makeHeader, makeUrl } from "utils/url";
 
 export const API_INGREDIENT_PATH = 'ingredient';
 

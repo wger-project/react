@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { ApiSettingRepUnitType, ApiSettingWeightUnitType } from 'types';
-import { ResponseType } from "./responseType";
-import { makeHeader, makeUrl } from "utils/url";
 import { RepetitionUnit, RepetitionUnitAdapter } from "components/WorkoutRoutines/models/RepetitionUnit";
 import { WeightUnit, WeightUnitAdapter } from "components/WorkoutRoutines/models/WeightUnit";
+import { ApiSettingRepUnitType, ApiSettingWeightUnitType } from 'types';
+import { makeHeader, makeUrl } from "utils/url";
+import { ResponseType } from "./responseType";
 
 export const API_SETTING_REP_UNIT_PATH = 'setting-repetitionunit';
 export const API_SETTING_WEIGHT_UNIT_PATH = 'setting-weightunit';

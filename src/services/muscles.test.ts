@@ -1,6 +1,6 @@
 import axios from "axios";
-import { getMuscles } from "services";
 import { Muscle } from "components/Exercises/models/muscle";
+import { getMuscles } from "services";
 
 jest.mock("axios");
 

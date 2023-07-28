@@ -30,11 +30,16 @@ export const QUERY_MEASUREMENTS = 'measurements';
 export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
 
 export const QUERY_NUTRITIONAL_PLANS = 'nutritional-plans';
-export const QUERY_NUTRITIONAL_PLAN = 'nutritional-plan';
 
 
-export enum QueryKeys {
+export enum QueryKey {
+    NUTRITIONAL_PLAN = 'nutritional-plan',
     INGREDIENT = 'ingredient'
+}
+
+export enum ApiPath {
+    MEAL = 'meal',
+    MEAL_ITEM = 'mealitem'
 }
 
 

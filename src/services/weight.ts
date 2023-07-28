@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { ApiBodyWeightType } from 'types';
-import { ResponseType } from "./responseType";
 import { WeightAdapter, WeightEntry } from "components/BodyWeight/model";
+import { ApiBodyWeightType } from 'types';
 import { makeHeader, makeUrl } from "utils/url";
+import { ResponseType } from "./responseType";
 
 export const WEIGHT_PATH = 'weightentry';
 

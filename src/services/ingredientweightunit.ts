@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { ApiIngredientWeightUnitType } from 'types';
-import { ResponseType } from "./responseType";
-import { makeHeader, makeUrl } from "utils/url";
 import { NutritionWeightUnit, NutritionWeightUnitAdapter } from "components/Nutrition/models/weightUnit";
+import { ApiIngredientWeightUnitType } from 'types';
+import { makeHeader, makeUrl } from "utils/url";
+import { ResponseType } from "./responseType";
 
 export const API_WEIGHT_UNIT_PATH = 'ingredientweightunit';
 

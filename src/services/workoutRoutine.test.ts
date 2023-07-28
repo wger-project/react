@@ -1,7 +1,10 @@
 import axios from "axios";
+import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import { WorkoutRoutine } from "components/WorkoutRoutines/models/WorkoutRoutine";
 import { getExerciseBase, getWorkoutRoutinesShallow } from "services";
+import { getRoutineLogs } from "services/workoutRoutine";
 import { getRepUnits, getWeightUnits } from "services/workoutUnits";
+import { testExerciseSquats } from "tests/exerciseTestdata";
 import {
     responseApiWorkoutRoutine,
     responseRoutineLogs,
@@ -10,9 +13,6 @@ import {
     testWeightUnit1,
     testWeightUnit2
 } from "tests/workoutRoutinesTestData";
-import { getRoutineLogs } from "services/workoutRoutine";
-import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
-import { testExerciseSquats } from "tests/exerciseTestdata";
 
 jest.mock("axios");
 jest.mock("services/workoutUnits");
