@@ -212,7 +212,7 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
                 <NutritionDiaryEntryForm
                     closeFn={handleToggleExpandDiaryForm}
                     planId={props.planId}
-                    mealId={props.meal.id} />
+                    mealId={props.meal.id !== PSEUDO_MEAL_ID ? props.meal.id : null} />
             </Collapse>
         </CardContent>
 
