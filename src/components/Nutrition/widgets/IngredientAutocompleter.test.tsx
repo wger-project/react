@@ -1,40 +1,18 @@
 import { act, render, screen, within } from '@testing-library/react';
-import { searchIngredient } from 'services';
-import { IngredientAutocompleter } from 'components/Nutrition/widgets/IngredientAutcompleter';
 import userEvent from "@testing-library/user-event";
+import { IngredientAutocompleter } from 'components/Nutrition/widgets/IngredientAutcompleter';
+import { searchIngredient } from 'services';
+import { INGREDIENT_SEARCH } from "tests/api/ingredientSearch";
 
 jest.mock("services");
-const mockCallback = jest.fn();
 
 describe("Test the IngredientAutocompleter component", () => {
 
     // Arrange
-    const response = [
-        {
-            "value": "Baguette with cheese",
-            "data": {
-                "id": 1234,
-                "name": "Baguette with cheese",
-                "category": "Desserts",
-                "image": null,
-                "image_thumbnail": null
-            }
-        },
-        {
-            "value": "Blue cheese",
-            "data": {
-                "id": 4321,
-                "name": "Blue cheese",
-                "category": "Beverages",
-                "image": null,
-                "image_thumbnail": null
-            }
-        }
-    ];
-
+    const mockCallback = jest.fn();
     beforeEach(() => {
         // @ts-ignore
-        searchIngredient.mockImplementation(() => Promise.resolve(response));
+        searchIngredient.mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
     });
 
     test('renders correct results', async () => {
@@ -78,6 +56,6 @@ describe("Test the IngredientAutocompleter component", () => {
         await user.keyboard('{ArrowDown}{Enter}');
 
         // Assert
-        expect(mockCallback).lastCalledWith(response[0]);
+        expect(mockCallback).lastCalledWith(INGREDIENT_SEARCH[0]);
     });
 });

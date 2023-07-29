@@ -2,7 +2,6 @@ import { Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-
 import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
