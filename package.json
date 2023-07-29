@@ -55,7 +55,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "postbuild": "./postbuild.sh",
-    "test": "react-scripts test --watchAll=false",
+    "test": "LANG=de_de react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "i18n": "i18next",
     "lint": "eslint ."
