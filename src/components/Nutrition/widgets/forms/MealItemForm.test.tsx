@@ -1,13 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { UserEvent } from "@testing-library/user-event/setup/setup";
-import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
-import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
-import React from 'react';
+import { useAddMealItemQuery, useEditMealItemQuery } from "components/Nutrition/queries";
+import { MealItemForm } from "components/Nutrition/widgets/forms/MealItemForm";
 import { searchIngredient } from "services";
 import { INGREDIENT_SEARCH } from "tests/api/ingredientSearch";
-import { TEST_DIARY_ENTRY_1 } from "tests/nutritionDiaryTestdata";
+import { TEST_MEAL_ITEM_1 } from "tests/nutritionTestdata";
 
 jest.mock('components/Nutrition/queries');
 jest.mock('services');
@@ -46,24 +45,23 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         closeFnMock = jest.fn();
 
         // @ts-ignore
-        useEditDiaryEntryQuery.mockImplementation(() => ({ mutate: mutateEditMock }));
+        useEditMealItemQuery.mockImplementation(() => ({ mutate: mutateEditMock }));
 
         // @ts-ignore
-        useAddDiaryEntryQuery.mockImplementation(() => ({ mutate: mutateAddMock }));
+        useAddMealItemQuery.mockImplementation(() => ({ mutate: mutateAddMock }));
 
         // @ts-ignore
         searchIngredient.mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
     });
 
-
-    test('A new entry should be added - no meal', async () => {
+    test('A new entry should be added', async () => {
         // Arrange
         const user = userEvent.setup();
 
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <NutritionDiaryEntryForm planId={123} closeFn={closeFnMock} />
+                <MealItemForm mealId={123} planId={987} closeFn={closeFnMock} />
             </QueryClientProvider>
         );
         await fillInEntry(user);
@@ -75,22 +73,20 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(closeFnMock).toBeCalled();
         expect(mutateAddMock).toHaveBeenCalledWith({
             amount: "120",
-            datetime: expect.anything(),
             ingredient: 1234,
-            meal: undefined,
-            plan: 123,
+            meal: 123,
             // eslint-disable-next-line camelcase
             weight_unit: null,
         });
     });
-    test('A new entry should be added - passing meal ID', async () => {
+    test('An existing entry should be updated', async () => {
         // Arrange
         const user = userEvent.setup();
 
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <NutritionDiaryEntryForm planId={123} mealId={456} closeFn={closeFnMock} />
+                <MealItemForm mealId={123} planId={987} item={TEST_MEAL_ITEM_1} closeFn={closeFnMock} />
             </QueryClientProvider>
         );
         await fillInEntry(user);
@@ -98,68 +94,13 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Assert
         expect(screen.getByDisplayValue('Baguette with cheese')).toBeInTheDocument();
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
-        expect(mutateEditMock).not.toHaveBeenCalled();
-        expect(closeFnMock).toBeCalled();
-        expect(mutateAddMock).toHaveBeenCalledWith({
-            amount: "120",
-            datetime: expect.anything(),
-            ingredient: 1234,
-            meal: 456,
-            plan: 123,
-            // eslint-disable-next-line camelcase
-            weight_unit: null,
-        });
-    });
-
-    test('An existing diary entry should be edited', async () => {
-        // Arrange
-        const user = userEvent.setup();
-
-        // Act
-        render(
-            <QueryClientProvider client={queryClient}>
-                <NutritionDiaryEntryForm planId={123} entry={TEST_DIARY_ENTRY_1} closeFn={closeFnMock} />
-            </QueryClientProvider>
-        );
-        await fillInEntry(user);
-
-        // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
         expect(closeFnMock).toBeCalled();
         expect(mutateEditMock).toHaveBeenCalledWith({
             id: 42,
             amount: "120",
-            datetime: expect.anything(),
             ingredient: 1234,
-            meal: undefined,
-            plan: 123,
-            // eslint-disable-next-line camelcase
-            weight_unit: null,
-        });
-    });
-
-    test('An existing diary entry should be edited - passing a meal Id', async () => {
-        // Arrange
-        const user = userEvent.setup();
-
-        // Act
-        render(
-            <QueryClientProvider client={queryClient}>
-                <NutritionDiaryEntryForm planId={123} mealId={456} entry={TEST_DIARY_ENTRY_1} closeFn={closeFnMock} />
-            </QueryClientProvider>
-        );
-        await fillInEntry(user);
-
-        // Assert
-        expect(mutateAddMock).not.toHaveBeenCalled();
-        expect(closeFnMock).toBeCalled();
-        expect(mutateEditMock).toHaveBeenCalledWith({
-            id: 42,
-            amount: "120",
-            datetime: expect.anything(),
-            ingredient: 1234,
-            meal: 456,
-            plan: 123,
+            meal: 123,
             // eslint-disable-next-line camelcase
             weight_unit: null,
         });

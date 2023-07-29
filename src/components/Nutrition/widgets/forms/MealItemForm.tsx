@@ -1,6 +1,6 @@
 import { Button, Stack, TextField } from "@mui/material";
 import { MealItem } from "components/Nutrition/models/mealItem";
-import { useAddMealItemQuery, useEditMealItemQuery } from "components/Nutrition/queries/mealItem";
+import { useAddMealItemQuery, useEditMealItemQuery } from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
 import { useTranslation } from "react-i18next";
@@ -43,7 +43,6 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                 const data = {
                     ...values,
                     meal: mealId,
-                    item: item?.id,
                     // eslint-disable-next-line camelcase
                     weight_unit: null
                 };
