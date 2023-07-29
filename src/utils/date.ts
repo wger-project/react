@@ -23,3 +23,23 @@ export function isSameDay(date1: Date, date2: Date): boolean {
         date1.getDate() === date2.getDate()
     );
 }
+
+export function dateTimeToHHMM(dateTime: Date | null) {
+    if (dateTime == null) {
+        return null;
+    }
+
+    return dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+export function HHMMToDateTime(time: string | null) {
+    if (time == null) {
+        return null;
+    }
+
+    const [hour, minute] = time.split(':');
+    const dateTime = new Date();
+    dateTime.setHours(parseInt(hour));
+    dateTime.setMinutes(parseInt(minute));
+    return dateTime;
+}

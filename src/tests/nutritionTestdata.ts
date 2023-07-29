@@ -1,6 +1,6 @@
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 import { Meal } from "components/Nutrition/models/meal";
 import { MealItem } from "components/Nutrition/models/mealItem";
+import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
 import {
     TEST_INGREDIENT_1,
@@ -15,6 +15,8 @@ import {
     TEST_DIARY_ENTRY_11,
     TEST_DIARY_ENTRY_12,
     TEST_DIARY_ENTRY_13,
+    TEST_DIARY_ENTRY_14,
+    TEST_DIARY_ENTRY_15,
     TEST_DIARY_ENTRY_2,
     TEST_DIARY_ENTRY_3,
     TEST_DIARY_ENTRY_4,
@@ -24,6 +26,7 @@ import {
     TEST_DIARY_ENTRY_8,
     TEST_DIARY_ENTRY_9
 } from "tests/nutritionDiaryTestdata";
+import { HHMMToDateTime } from "utils/date";
 
 export const TEST_WEIGHT_UNIT_SLICE = new NutritionWeightUnit(
     5432,
@@ -112,7 +115,7 @@ export const TEST_MEAL_ITEM_8 = new MealItem(
 export const TEST_MEAL_1 = new Meal(
     78,
     2,
-    '12:30',
+    HHMMToDateTime('12:30'),
     'Second breakfast',
 );
 TEST_MEAL_1.items = [TEST_MEAL_ITEM_1, TEST_MEAL_ITEM_2, TEST_MEAL_ITEM_3];
@@ -121,7 +124,7 @@ TEST_MEAL_1.items = [TEST_MEAL_ITEM_1, TEST_MEAL_ITEM_2, TEST_MEAL_ITEM_3];
 export const TEST_MEAL_2 = new Meal(
     999,
     3,
-    '22:30',
+    HHMMToDateTime('22:30'),
     'evening snack',
 );
 TEST_MEAL_2.items = [TEST_MEAL_ITEM_4];
@@ -129,7 +132,7 @@ TEST_MEAL_2.items = [TEST_MEAL_ITEM_4];
 export const TEST_MEAL_3 = new Meal(
     1,
     1,
-    '6:30',
+    HHMMToDateTime('6:30'),
     'breakfast',
 );
 TEST_MEAL_3.items = [TEST_MEAL_ITEM_5, TEST_MEAL_ITEM_6];
@@ -137,7 +140,7 @@ TEST_MEAL_3.items = [TEST_MEAL_ITEM_5, TEST_MEAL_ITEM_6];
 export const TEST_MEAL_4 = new Meal(
     2,
     1,
-    '7:45',
+    HHMMToDateTime('7:45'),
     'Cake time',
 );
 TEST_MEAL_4.items = [TEST_MEAL_ITEM_7];
@@ -145,7 +148,7 @@ TEST_MEAL_4.items = [TEST_MEAL_ITEM_7];
 export const TEST_MEAL_5 = new Meal(
     22,
     2,
-    '12:00',
+    HHMMToDateTime('12:00'),
     'Time to visit McDonalds',
 );
 TEST_MEAL_5.items = [TEST_MEAL_ITEM_8];
@@ -174,7 +177,9 @@ TEST_NUTRITIONAL_PLAN_1.diaryEntries = [
     TEST_DIARY_ENTRY_10,
     TEST_DIARY_ENTRY_11,
     TEST_DIARY_ENTRY_12,
-    TEST_DIARY_ENTRY_13
+    TEST_DIARY_ENTRY_13,
+    TEST_DIARY_ENTRY_14,
+    TEST_DIARY_ENTRY_15,
 ];
 
 

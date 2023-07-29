@@ -13,7 +13,7 @@ import { makeHeader, makeUrl } from "utils/url";
 export interface AddMealParams {
     plan: number;
     name: string;
-    time: string
+    time: string | null
 }
 
 export interface EditMealParams extends AddMealParams {

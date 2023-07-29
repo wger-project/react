@@ -73,7 +73,7 @@ export interface ApiNutritionalPlanType {
 export interface ApiMealType {
     id: number,
     order: number,
-    time: string,
+    time: string | null,
     name: string
 }
 

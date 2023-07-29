@@ -3,7 +3,7 @@ import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { MealItem } from "components/Nutrition/models/mealItem";
 import { ApiMealType } from "types";
 import { Adapter } from "utils/Adapter";
-import { isSameDay } from "utils/date";
+import { dateTimeToHHMM, HHMMToDateTime, isSameDay } from "utils/date";
 
 export class Meal {
 
@@ -13,9 +13,13 @@ export class Meal {
     constructor(
         public id: number,
         public order: number,
-        public time: string,
+        public time: Date | null,
         public name: string
     ) {
+    }
+
+    get timeHHMM() {
+        return dateTimeToHHMM(this.time);
     }
 
     /*
@@ -56,7 +60,7 @@ export class MealAdapter implements Adapter<Meal> {
         return new Meal(
             item.id,
             item.order,
-            item.time,
+            HHMMToDateTime(item.time),
             item.name,
         );
     }
@@ -65,7 +69,7 @@ export class MealAdapter implements Adapter<Meal> {
         return {
             name: item.name,
             order: item.order,
-            time: item.time
+            time: dateTimeToHHMM(item.time)
         };
     }
 }

@@ -34,13 +34,13 @@ describe("Test the nutritional plan model", () => {
         const values = TEST_NUTRITIONAL_PLAN_1.nutritionalValues7DayAvg;
 
         // Assert
-        expect(values.energy).toBeCloseTo(53.67, 2);
-        expect(values.protein).toBeCloseTo(1.738, 2);
-        expect(values.carbohydrates).toBeCloseTo(13.687, 2);
-        expect(values.carbohydratesSugar).toBeCloseTo(9.147, 2);
-        expect(values.fat).toBeCloseTo(0.651, 2);
-        expect(values.fatSaturated).toBeCloseTo(0.158, 2);
-        expect(values.fibres).toBeCloseTo(0.525, 2);
+        expect(values.energy).toBeCloseTo(67.18, 2);
+        expect(values.protein).toBeCloseTo(2.731, 2);
+        expect(values.carbohydrates).toBeCloseTo(12.105, 2);
+        expect(values.carbohydratesSugar).toBeCloseTo(7.733, 2);
+        expect(values.fat).toBeCloseTo(1.7675, 2);
+        expect(values.fatSaturated).toBeCloseTo(0.89, 2);
+        expect(values.fibres).toBeCloseTo(2.1875, 2);
         expect(values.sodium).toBeCloseTo(0.0088, 2);
     });
 
@@ -78,11 +78,22 @@ describe("Test the nutritional plan model", () => {
             "2023-06-01",
             "2023-06-15",
             "2023-06-20",
+            "2023-08-20",
         ]);
         expect(values.get("2023-07-01")!.entries.length).toBe(3);
         expect(values.get("2023-07-01")!.nutritionalValues.energy).toBeCloseTo(296.7, 2);
 
         expect(values.get("2023-07-02")!.entries.length).toBe(1);
         expect(values.get("2023-07-02")!.nutritionalValues.energy).toBeCloseTo(12, 2);
+    });
+
+    test('correctly generates the synthetic meal entry', async () => {
+
+        // Act
+        const meal = TEST_NUTRITIONAL_PLAN_1.pseudoMealOthers;
+
+        // Assert
+        expect(meal.id).toBe(-1);
+        expect(meal.diaryEntries.length).toBe(2);
     });
 });

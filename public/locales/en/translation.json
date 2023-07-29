@@ -1,6 +1,7 @@
 {
   "weight": "Weight",
   "date": "Date",
+  "timeOfDay": "Time of day",
   "submit": "Submit",
   "edit": "Edit",
   "delete": "Delete",

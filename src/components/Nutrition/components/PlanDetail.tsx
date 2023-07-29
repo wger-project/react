@@ -30,6 +30,7 @@ import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { Meal } from "components/Nutrition/models/meal";
 import { MealItem } from "components/Nutrition/models/mealItem";
+import { PSEUDO_MEAL_ID } from "components/Nutrition/models/nutritionalPlan";
 import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
 import { MacrosPieChart } from "components/Nutrition/widgets/charts/MacrosPieChart";
 import {
@@ -108,16 +109,15 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
     return <Card>
         <CardHeader
             sx={{ bgcolor: "lightgray" }}
-            action={<MealDetailDropdown meal={props.meal} planId={props.planId} />}
+            action={props.meal.id !== PSEUDO_MEAL_ID && <MealDetailDropdown meal={props.meal} planId={props.planId} />}
             title={props.meal.name}
-            subheader={props.meal.time}
+            subheader={props.meal.timeHHMM}
         />
         <CardContent>
             <Collapse in={expandViewStats} timeout="auto" unmountOnExit>
                 <Typography gutterBottom variant="h6">
                     {t('nutrition.planned')}
                 </Typography>
-
 
                 <TableContainer>
                     <Table>
@@ -192,11 +192,11 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
                 </IconButton>
             </Tooltip>
 
-            <Tooltip title={t('add')}>
+            {props.meal.id !== PSEUDO_MEAL_ID && <Tooltip title={t('add')}>
                 <IconButton onClick={handleToggleExpandItemForm}>
                     <Add />
                 </IconButton>
-            </Tooltip>
+            </Tooltip>}
 
             <Tooltip title={t('nutrition.addNutritionalDiary')}>
                 <IconButton onClick={handleToggleExpandDiaryForm}>

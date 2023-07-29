@@ -10,6 +10,8 @@ export type GroupedDiaryEntries = {
     nutritionalValues: NutritionalValues;
 }
 
+export const PSEUDO_MEAL_ID = -1;
+
 
 export class NutritionalPlan {
 
@@ -109,9 +111,9 @@ export class NutritionalPlan {
      */
     get pseudoMealOthers(): Meal {
         const out = new Meal(
+            PSEUDO_MEAL_ID,
             -1,
-            -1,
-            '',
+            null,
             'Others'
         );
         out.diaryEntries = this.diaryEntries.filter((entry) => entry.mealId === null);

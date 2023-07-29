@@ -144,3 +144,24 @@ export const TEST_DIARY_ENTRY_13 = new DiaryEntry(
     new Date("2023-06-20"),
     TEST_INGREDIENT_4
 );
+
+export const TEST_DIARY_ENTRY_14 = new DiaryEntry(
+    54,
+    1,
+    null,
+    104,
+    null,
+    20,
+    new Date("2023-08-20"),
+    TEST_INGREDIENT_4
+);
+export const TEST_DIARY_ENTRY_15 = new DiaryEntry(
+    54,
+    1,
+    null,
+    103,
+    null,
+    50,
+    new Date("2023-08-20"),
+    TEST_INGREDIENT_4
+);
