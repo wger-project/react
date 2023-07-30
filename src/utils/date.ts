@@ -24,7 +24,10 @@ export function isSameDay(date1: Date, date2: Date): boolean {
     );
 }
 
-export function dateTimeToHHMM(dateTime: Date | null) {
+/*
+ * Returns the localized time from a date object
+ */
+export function dateTimeToLocaleHHMM(dateTime: Date | null) {
     if (dateTime == null) {
         return null;
     }
@@ -32,6 +35,23 @@ export function dateTimeToHHMM(dateTime: Date | null) {
     return dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
+/*
+ * Converts a date object to a non localized string in the format HH:MM
+ */
+export function dateTimeToHHMM(date: Date | null) {
+    if (date == null) {
+        return null;
+    }
+    const [hour, minute] = date.toTimeString().split(':');
+    return `${hour}:${minute}`;
+}
+
+/*
+ * Converts HH:MM to a date object
+ *
+ * Note that this is only used when converting times from the api, so we don't
+ * have to consider that there could be annoying AMs and PMs in the string
+ */
 export function HHMMToDateTime(time: string | null) {
     if (time == null) {
         return null;

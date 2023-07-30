@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { Meal } from "components/Nutrition/models/meal";
@@ -27,14 +27,9 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
             .max(25, t('forms.maxLength', { chars: '25' }))
             .min(3, t('forms.minLength', { chars: '3' })),
         time: yup
-            .string()
-            .max(25, t('forms.maxLength', { chars: '25' }))
-            .min(3, t('forms.minLength', { chars: '3' })),
+            .date()
+            .required()
     });
-
-    if (closeFn && (addMealQuery.isSuccess || editMealQuery.isSuccess)) {
-        closeFn();
-    }
 
 
     return (
@@ -51,7 +46,6 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
                     // @ts-ignore
                     values.time = values.time.toJSDate();
                 }
-
                 const data = { ...values, time: dateTimeToHHMM(values.time) };
 
                 if (meal) {
@@ -76,28 +70,29 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
                             helperText={formik.touched.name && formik.errors.name}
                             {...formik.getFieldProps('name')}
                         />
+
                         <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                             <TimePicker
                                 label={t('timeOfDay')}
                                 value={formik.values.time}
                                 onChange={(newValue) => formik.setFieldValue('time', newValue)}
-                                renderInput={(params) => <TextField {...params} {...formik.getFieldProps('time')} />}
+                                renderInput={(params) => <TextField
+                                    {...params}
+                                    {...formik.getFieldProps('time')}
+                                    type={"text"}
+                                />}
                             />
                         </LocalizationProvider>
                         <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
                             <Button
-                                disabled={addMealQuery.isLoading || editMealQuery.isLoading || addMealQuery.isSuccess || editMealQuery.isSuccess}
+                                disabled={addMealQuery.isLoading || editMealQuery.isLoading}
                                 color="primary"
                                 variant="contained"
                                 type="submit"
                                 sx={{ mt: 2 }}
                             >
-                                {addMealQuery.isSuccess || editMealQuery.isSuccess
-                                    ? <CircularProgress />
-                                    : t('submit')
-                                }
+                                {t('submit')}
                             </Button>
-
                         </Stack>
                     </Stack>
                 </Form>
