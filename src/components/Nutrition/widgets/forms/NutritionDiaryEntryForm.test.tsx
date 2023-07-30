@@ -77,7 +77,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
             amount: "120",
             datetime: expect.anything(),
             ingredient: 1234,
-            meal: undefined,
+            meal: null,
             plan: 123,
             // eslint-disable-next-line camelcase
             weight_unit: null,
@@ -131,7 +131,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
             amount: "120",
             datetime: expect.anything(),
             ingredient: 1234,
-            meal: undefined,
+            meal: null,
             plan: 123,
             // eslint-disable-next-line camelcase
             weight_unit: null,

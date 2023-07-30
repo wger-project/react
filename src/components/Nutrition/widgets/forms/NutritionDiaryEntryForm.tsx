@@ -14,11 +14,13 @@ import * as yup from "yup";
 type NutritionDiaryEntryFormProps = {
     planId: number,
     entry?: DiaryEntry,
-    mealId?: number,
+    mealId?: number | null,
     closeFn?: Function,
 }
 
 export const NutritionDiaryEntryForm = ({ planId, entry, mealId, closeFn }: NutritionDiaryEntryFormProps) => {
+
+    const meal = mealId === undefined ? null : mealId;
 
     const [t, i18n] = useTranslation();
     const addDiaryQuery = useAddDiaryEntryQuery(planId);
@@ -52,7 +54,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, closeFn }: Nutr
                 const data = {
                     ...values,
                     plan: planId,
-                    meal: mealId,
+                    meal: meal,
                     // eslint-disable-next-line camelcase
                     weight_unit: null,
                     datetime: values.datetime.toISOString()

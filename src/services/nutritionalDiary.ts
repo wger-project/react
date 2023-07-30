@@ -36,7 +36,7 @@ export const getNutritionalDiaryEntries = async (planId: number, ingredientCache
 
 export interface AddDiaryEntryParams {
     plan: number,
-    meal?: number,
+    meal?: number | null,
     ingredient: number,
     weight_unit: number | null,
     datetime: string,
