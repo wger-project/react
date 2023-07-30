@@ -51,7 +51,7 @@ export const TEST_MEAL_ITEM_1 = new MealItem(
     TEST_INGREDIENT_1
 );
 export const TEST_MEAL_ITEM_2 = new MealItem(
-    42,
+    43,
     102,
     null,
     220,

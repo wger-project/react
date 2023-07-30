@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { PlanDetail } from "components/Nutrition/components/PlanDetail";
 import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { TEST_NUTRITIONAL_PLAN_2 } from "tests/nutritionTestdata";
+import { TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
 
 jest.mock("components/Nutrition/queries");
 jest.useFakeTimers();
@@ -12,12 +12,12 @@ const { ResizeObserver } = window;
 const queryClient = new QueryClient();
 
 describe("Test the PlanDetail component", () => {
-    
+
     beforeEach(() => {
         // @ts-ignore
         useFetchNutritionalPlanQuery.mockImplementation(() => ({
             isSuccess: true,
-            data: TEST_NUTRITIONAL_PLAN_2
+            data: TEST_NUTRITIONAL_PLAN_1
         }));
 
         // @ts-ignore
@@ -52,8 +52,8 @@ describe("Test the PlanDetail component", () => {
 
         // Assert
         expect(useFetchNutritionalPlanQuery).toHaveBeenCalled();
-        expect(screen.getByText('Bulking till we puke')).toBeInTheDocument();
-        expect(screen.getByText('Cake time')).toBeInTheDocument();
-        expect(screen.getByText('Time to visit McDonalds')).toBeInTheDocument();
+        expect(screen.getByText('Second breakfast')).toBeInTheDocument();
+        expect(screen.getByText('evening snack')).toBeInTheDocument();
+        expect(screen.getByText('breakfast')).toBeInTheDocument();
     });
 });
