@@ -112,8 +112,12 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, closeFn }: Nutr
                                 }}
                             />
                         </LocalizationProvider>
-                        <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
-                            <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
+                        <Stack direction="row" justifyContent="end" spacing={2}>
+                            {closeFn !== undefined
+                                && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
+                                    {t('close')}
+                                </Button>}
+                            <Button color="primary" variant="contained" type="submit">
                                 {t('submit')}
                             </Button>
                         </Stack>

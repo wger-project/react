@@ -11,10 +11,25 @@ import { SERVER_URL } from "utils/url";
 
 type IngredientAutocompleterProps = {
     callback: Function;
+    initialIngredient?: string | null;
 }
 
-export function IngredientAutocompleter({ callback }: IngredientAutocompleterProps) {
-    const [value, setValue] = useState<IngredientSearchResponse | null>(null);
+export function IngredientAutocompleter({ callback, initialIngredient }: IngredientAutocompleterProps) {
+    const initialData = initialIngredient
+        ? {
+            value: initialIngredient,
+            data: {
+                id: -1,
+                name: initialIngredient,
+                image: null,
+                // eslint-disable-next-line camelcase
+                image_thumbnail: null,
+            }
+        }
+        : null;
+
+
+    const [value, setValue] = useState<IngredientSearchResponse | null>(initialData);
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState<readonly IngredientSearchResponse[]>([]);
     const [t] = useTranslation();
@@ -46,9 +61,7 @@ export function IngredientAutocompleter({ callback }: IngredientAutocompleterPro
     return (
         <Autocomplete
             id="ingredient-autocomplete"
-            getOptionLabel={(option) =>
-                option.value
-            }
+            getOptionLabel={(option) => option.value}
             data-testid="autocomplete"
             filterOptions={(x) => x}
             options={options}

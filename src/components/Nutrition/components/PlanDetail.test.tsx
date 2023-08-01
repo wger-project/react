@@ -42,7 +42,7 @@ describe("Test the PlanDetail component", () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <MemoryRouter initialEntries={['/nutrition/42/view']}>
+                <MemoryRouter initialEntries={['/nutrition/101/view']}>
                     <Routes>
                         <Route path="nutrition/:planId/view" element={<PlanDetail />} />
                     </Routes>

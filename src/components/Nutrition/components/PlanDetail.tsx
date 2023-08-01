@@ -50,23 +50,43 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 
-const MealItemListItem = (props: { mealItem: MealItem }) => {
-    return <ListItem>
-        <ListItemAvatar>
-            <Avatar>
-                {/*{props.mealItem.ingredient?.image ?*/}
-                {/*    <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />*/}
-                {/*    : <PhotoIcon fontSize="large" />}*/}
-                {/*<ImageIcon />*/}
-                <PhotoIcon />
-            </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary={`${props.mealItem.amountString} ${props.mealItem.ingredient?.name}`} />
-    </ListItem>;
+const MealItemListItem = (props: { mealItem: MealItem, planId: number, mealId: number }) => {
+    const [expandForm, setExpandForm] = useState(false);
+    const handleToggleForm = () => setExpandForm(!expandForm);
+
+
+    return <>
+        <ListItem>
+            <ListItemAvatar onClick={handleToggleForm}>
+                <Avatar>
+                    {/*{props.mealItem.ingredient?.image ?*/}
+                    {/*    <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />*/}
+                    {/*    : <PhotoIcon fontSize="large" />}*/}
+                    {/*<ImageIcon />*/}
+                    <PhotoIcon />
+                </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={`${props.mealItem.amountString} ${props.mealItem.ingredient?.name}`} />
+
+        </ListItem>
+        <ListItem>
+            <Collapse in={expandForm} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
+                <ListItemText>
+                    <MealItemForm
+                        planId={props.planId}
+                        mealId={props.mealId}
+                        item={props.mealItem}
+                        closeFn={handleToggleForm}
+                    />
+                </ListItemText>
+            </Collapse>
+        </ListItem>
+    </>;
 };
 
 const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
     const [t] = useTranslation();
+
 
     return <TableRow key={props.item.id}>
         <TableCell sx={{ pr: 0 }}>
@@ -101,10 +121,16 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
     const handleToggleExpandStats = () => setExpandViewStats(!expandViewStats);
 
     const [expandItemForm, setExpandItemForm] = useState(false);
-    const handleToggleExpandItemForm = () => setExpandItemForm(!expandItemForm);
+    const handleToggleExpandItemForm = () => {
+        setExpandItemForm(!expandItemForm);
+        setExpandDiaryForm(false);
+    };
 
     const [expandDiaryForm, setExpandDiaryForm] = useState(false);
-    const handleToggleExpandDiaryForm = () => setExpandDiaryForm(!expandDiaryForm);
+    const handleToggleExpandDiaryForm = () => {
+        setExpandDiaryForm(!expandDiaryForm);
+        setExpandItemForm(false);
+    };
 
     return <Card>
         <CardHeader
@@ -176,6 +202,8 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
                     {props.meal.items.map((item) => (
                         <MealItemListItem
                             mealItem={item}
+                            planId={props.planId}
+                            mealId={props.meal.id}
                             key={item.id}
                         />
                     ))}
@@ -192,7 +220,7 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
                 </IconButton>
             </Tooltip>
 
-            {props.meal.id !== PSEUDO_MEAL_ID && <Tooltip title={t('add')}>
+            {props.meal.id !== PSEUDO_MEAL_ID && <Tooltip title={t('nutrition.addMeal')}>
                 <IconButton onClick={handleToggleExpandItemForm}>
                     <Add />
                 </IconButton>
@@ -206,16 +234,20 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
         </CardActions>
         <CardContent>
             <Collapse in={expandItemForm} timeout="auto" unmountOnExit>
-                <MealItemForm planId={props.planId} mealId={props.meal.id} closeFn={handleToggleExpandItemForm} />
+                <p><b>{t('nutrition.addMealItem')}</b></p>
+                <MealItemForm
+                    planId={props.planId}
+                    mealId={props.meal.id}
+                    closeFn={handleToggleExpandItemForm} />
             </Collapse>
             <Collapse in={expandDiaryForm} timeout="auto" unmountOnExit>
+                <p><b>{t('nutrition.addNutritionalDiary')}</b></p>
                 <NutritionDiaryEntryForm
                     closeFn={handleToggleExpandDiaryForm}
                     planId={props.planId}
                     mealId={props.meal.id !== PSEUDO_MEAL_ID ? props.meal.id : null} />
             </Collapse>
         </CardContent>
-
     </Card>;
 };
 
@@ -239,15 +271,16 @@ export const PlanDetail = () => {
                         <MealDetail meal={meal} planId={planQuery.data!.id} key={meal.id} />
                     )}
                     <MealDetail meal={planQuery.data!.pseudoMealOthers} planId={planQuery.data!.id} key={-1} />
-                    <Tooltip title={t('add')}>
+
+                    <Tooltip title={t('nutrition.addMeal')}>
                         <IconButton onClick={handleToggleExpandedForm}>
                             <Add />
                         </IconButton>
                     </Tooltip>
+
                     <Collapse in={expandedForm} timeout="auto" unmountOnExit>
-                        <CardContent>
-                            <MealForm planId={planQuery.data!.id} closeFn={handleToggleExpandedForm} />
-                        </CardContent>
+                        <p><b>{t('nutrition.addMeal')}</b></p>
+                        <MealForm planId={planQuery.data!.id} closeFn={handleToggleExpandedForm} />
                     </Collapse>
 
                     <Typography gutterBottom variant="h5">

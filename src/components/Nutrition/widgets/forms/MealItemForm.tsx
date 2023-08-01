@@ -1,6 +1,6 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, InputAdornment, Stack, TextField } from "@mui/material";
 import { MealItem } from "components/Nutrition/models/mealItem";
-import { useAddMealItemQuery, useEditMealItemQuery } from "components/Nutrition/queries";
+import { useAddMealItemQuery, useDeleteMealItemQuery, useEditMealItemQuery } from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,7 @@ type MealItemFormProps = {
     planId: number,
     mealId: number,
     item?: MealItem,
-    closeFn?: Function,
+    closeFn?: () => void,
 }
 
 export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProps) => {
@@ -19,6 +19,18 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
     const [t] = useTranslation();
     const addMealItemQuery = useAddMealItemQuery(planId);
     const editMealItemQuery = useEditMealItemQuery(planId);
+    const deleteMealItemQuery = useDeleteMealItemQuery(planId);
+
+    const handleDelete = () => {
+        if (item) {
+            deleteMealItemQuery.mutate(item.id);
+        }
+
+        if (closeFn) {
+            closeFn();
+        }
+    };
+
     const validationSchema = yup.object({
         amount: yup
             .number()
@@ -34,8 +46,8 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
     return (
         <Formik
             initialValues={{
-                amount: 0,
-                ingredient: 0,
+                amount: item ? item.amount : 0,
+                ingredient: item ? item.ingredientId : 0,
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
@@ -62,18 +74,34 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                 <Form>
                     <Stack spacing={2}>
                         <IngredientAutocompleter
-                            callback={(value: IngredientSearchResponse) => formik.setFieldValue('ingredient', value.data.id)} />
+                            callback={(value: IngredientSearchResponse | null) => formik.setFieldValue('ingredient', value ? value.data.id : null)}
+                            initialIngredient={item ? item.ingredient?.name : null}
+                        />
                         <TextField
                             fullWidth
                             id="amount"
                             label={'amount'}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">{t('nutrition.gramShort')}</InputAdornment>
+                            }}
+
                             error={formik.touched.amount && Boolean(formik.errors.amount)}
                             helperText={formik.touched.amount && formik.errors.amount}
                             {...formik.getFieldProps('amount')}
                         />
 
-                        <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
-                            <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
+                        <Stack direction="row" justifyContent="end" spacing={2}>
+                            {closeFn !== undefined
+                                && <Button color="error" variant="outlined" onClick={handleDelete}>
+                                    {t('delete')}
+                                </Button>}
+
+                            {closeFn !== undefined
+                                && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
+                                    {t('close')}
+                                </Button>}
+
+                            <Button color="primary" variant="contained" type="submit">
                                 {t('submit')}
                             </Button>
                         </Stack>
