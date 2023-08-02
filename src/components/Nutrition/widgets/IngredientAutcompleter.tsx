@@ -99,7 +99,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
             )}
             renderOption={(props, option) => {
                 return (
-                    <li {...props} id={`ingredient-${option.data.id}`}>
+                    <li {...props} key={`ingredient-${option.data.id}`}>
                         <ListItem disablePadding component="div">
                             <ListItemIcon>
                                 {option.data.image

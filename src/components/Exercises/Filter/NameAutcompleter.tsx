@@ -1,14 +1,12 @@
-import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import throttle from 'lodash/throttle';
-import { searchExerciseTranslations } from "services";
-import { Avatar, InputAdornment, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import SearchIcon from '@mui/icons-material/Search';
 import PhotoIcon from '@mui/icons-material/Photo';
-import { SERVER_URL } from "utils/url";
+import SearchIcon from '@mui/icons-material/Search';
+import { Autocomplete, Avatar, InputAdornment, ListItem, ListItemIcon, ListItemText, TextField } from "@mui/material";
+import throttle from 'lodash/throttle';
+import * as React from 'react';
+import { useTranslation } from "react-i18next";
+import { searchExerciseTranslations } from "services";
 import { ExerciseSearchResponse } from "services/responseType";
+import { SERVER_URL } from "utils/url";
 
 type NameAutocompleterProps = {
     callback: Function;
@@ -87,7 +85,7 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
             )}
             renderOption={(props, option) => {
                 return (
-                    <li {...props} id={`exercise${option.data.id}`}>
+                    <li {...props} key={`exercise${option.data.id}`}>
                         <ListItem disablePadding component="div">
                             <ListItemIcon>
                                 {option.data.image ?
