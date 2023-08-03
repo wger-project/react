@@ -76,7 +76,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, closeFn }: Nutr
                 <Form>
                     <Stack spacing={2}>
                         <IngredientAutocompleter
-                            callback={(value: IngredientSearchResponse) => formik.setFieldValue('ingredient', value.data.id)} />
+                            callback={(value: IngredientSearchResponse | null) => formik.setFieldValue('ingredient', value?.data.id)} />
                         <TextField
                             fullWidth
                             id="amount"
