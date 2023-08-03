@@ -15,7 +15,7 @@ describe("Test the nutritional plan model", () => {
     test('correctly calculates the planned nutritional values', async () => {
 
         // Act
-        const values = TEST_NUTRITIONAL_PLAN_1.nutritionalValues;
+        const values = TEST_NUTRITIONAL_PLAN_1.plannedNutritionalValues;
 
         // Assert
         expect(values.energy).toBeCloseTo(3534, 2);
@@ -31,7 +31,7 @@ describe("Test the nutritional plan model", () => {
     test('correctly calculates the average nutritional values for the last 7 days', async () => {
 
         // Act
-        const values = TEST_NUTRITIONAL_PLAN_1.nutritionalValues7DayAvg;
+        const values = TEST_NUTRITIONAL_PLAN_1.loggedNutritionalValues7DayAvg;
 
         // Assert
         expect(values.energy).toBeCloseTo(67.18, 2);
@@ -47,7 +47,7 @@ describe("Test the nutritional plan model", () => {
     test('correctly calculates the average nutritional values for the current day', async () => {
 
         // Act
-        const values = TEST_NUTRITIONAL_PLAN_1.nutritionalValuesDiaryToday;
+        const values = TEST_NUTRITIONAL_PLAN_1.loggedNutritionalValuesToday;
 
         // Assert
         expect(values.energy).toBeCloseTo(98.8999, 2);

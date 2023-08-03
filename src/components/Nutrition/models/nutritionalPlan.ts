@@ -28,63 +28,69 @@ export class NutritionalPlan {
     /*
      * Returns the nutritional values for the planned meals
      */
-    get nutritionalValues(): NutritionalValues {
+    get plannedNutritionalValues(): NutritionalValues {
         const out = new NutritionalValues();
-        for (const item of this.meals)
+        for (const item of this.meals) {
             out.add(item.nutritionalValues);
+        }
 
         return out;
     }
 
-    /*
-     * Returns the logged nutritional values
-     */
-    get loggedNutritionalValues(): NutritionalValues {
-        const out = new NutritionalValues();
-        for (const item of this.diaryEntries)
-            out.add(item.nutritionalValues);
-
-        return out;
-    }
 
     /*
      * Returns the average nutritional values of the last 7 days.
      *
      * If no entries are available, the function returns an empty NutritionalValues object.
      */
-    get nutritionalValues7DayAvg(): NutritionalValues {
+    get loggedNutritionalValues7DayAvg(): NutritionalValues {
         const today = new Date();
         const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
         const relevantEntries = this.diaryEntries.filter(entry => entry.datetime >= sevenDaysAgo);
 
-        return this.calculateNutritionalValues(relevantEntries);
+        return this.getAverageNutritionalValuesFromDiaryEntries(relevantEntries);
     }
 
     /*
      * Returns the nutritional values for the logged meals for today
      */
-    get nutritionalValuesDiaryToday(): NutritionalValues {
+    get loggedNutritionalValuesToday() {
         const relevantEntries = this.diaryEntries.filter(entry => isSameDay(entry.datetime, new Date()));
-        return this.calculateNutritionalValues(relevantEntries);
+        return this.getNutritionalValuesFromDiaryEntries(relevantEntries);
     }
 
-    calculateNutritionalValues(entries: DiaryEntry[]): NutritionalValues {
-        const out = new NutritionalValues();
 
-        if (entries.length === 0)
+    getAverageNutritionalValuesFromDiaryEntries(entries: DiaryEntry[]) {
+        const out = this.getNutritionalValuesFromDiaryEntries(entries);
+
+        if (entries.length === 0) {
             return out;
-
-        const sum = entries.reduce((accumulator, entry) => accumulator.add(entry.nutritionalValues), new NutritionalValues());
+        }
         const nrOfEntries = entries.length;
 
-        out.energy = sum.energy / nrOfEntries;
-        out.protein = sum.protein / nrOfEntries;
-        out.carbohydrates = sum.carbohydrates / nrOfEntries;
-        out.carbohydratesSugar = sum.carbohydratesSugar / nrOfEntries;
-        out.fat = sum.fat / nrOfEntries;
-        out.fatSaturated = sum.fatSaturated / nrOfEntries;
-        out.fibres = sum.fibres / nrOfEntries;
-        out.sodium = sum.sodium / nrOfEntries;
+        out.energy = out.energy / nrOfEntries;
+        out.protein = out.protein / nrOfEntries;
+        out.carbohydrates = out.carbohydrates / nrOfEntries;
+        out.carbohydratesSugar = out.carbohydratesSugar / nrOfEntries;
+        out.fat = out.fat / nrOfEntries;
+        out.fatSaturated = out.fatSaturated / nrOfEntries;
+        out.fibres = out.fibres / nrOfEntries;
+        out.sodium = out.sodium / nrOfEntries;
+        return out;
+    }
+
+    getNutritionalValuesFromDiaryEntries(entries: DiaryEntry[]) {
+        const out = new NutritionalValues();
+        const sum = entries.reduce((accumulator, entry) => accumulator.add(entry.nutritionalValues), new NutritionalValues());
+
+        out.energy = sum.energy;
+        out.protein = sum.protein;
+        out.carbohydrates = sum.carbohydrates;
+        out.carbohydratesSugar = sum.carbohydratesSugar;
+        out.fat = sum.fat;
+        out.fatSaturated = sum.fatSaturated;
+        out.fibres = sum.fibres;
+        out.sodium = sum.sodium;
         return out;
     }
 
