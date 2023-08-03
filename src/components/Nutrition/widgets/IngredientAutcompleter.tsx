@@ -1,12 +1,25 @@
 import PhotoIcon from '@mui/icons-material/Photo';
 import SearchIcon from '@mui/icons-material/Search';
-import { Autocomplete, Avatar, InputAdornment, ListItem, ListItemIcon, ListItemText, TextField } from "@mui/material";
+import {
+    Autocomplete,
+    Avatar,
+    FormControlLabel,
+    FormGroup,
+    InputAdornment,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Stack,
+    Switch,
+    TextField
+} from "@mui/material";
 import throttle from 'lodash/throttle';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { searchIngredient } from "services";
 import { IngredientSearchResponse } from "services/responseType";
+import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 import { SERVER_URL } from "utils/url";
 
 type IngredientAutocompleterProps = {
@@ -15,6 +28,8 @@ type IngredientAutocompleterProps = {
 }
 
 export function IngredientAutocompleter({ callback, initialIngredient }: IngredientAutocompleterProps) {
+
+
     const initialData = initialIngredient
         ? {
             value: initialIngredient,
@@ -29,15 +44,16 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
         : null;
 
 
+    const [searchEnglish, setSearchEnglish] = useState<boolean>(true);
     const [value, setValue] = useState<IngredientSearchResponse | null>(initialData);
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState<readonly IngredientSearchResponse[]>([]);
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
 
     const fetchName = useMemo(
         () =>
             throttle(
-                (request: string) => searchIngredient(request).then(res => setOptions(res)),
+                (request: string) => searchIngredient(request, i18n.language, searchEnglish).then(res => setOptions(res)),
                 200,
             ),
         [],
@@ -58,7 +74,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     }, [value, inputValue, fetchName]);
 
 
-    return (
+    return <Stack>
         <Autocomplete
             id="ingredient-autocomplete"
             getOptionLabel={(option) => option.value}
@@ -121,5 +137,10 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                 );
             }}
         />
-    );
+        {i18n.language !== LANGUAGE_SHORT_ENGLISH && <FormGroup>
+            <FormControlLabel
+                control={<Switch checked={searchEnglish} onChange={(event, checked) => setSearchEnglish(checked)} />}
+                label={t('alsoSearchEnglish')} />
+        </FormGroup>}
+    </Stack>;
 }

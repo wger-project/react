@@ -30,7 +30,7 @@ describe("Test the IngredientAutocompleter component", () => {
         await act(async () => {
             await new Promise((r) => setTimeout(r, 250));
         });
-        expect(searchIngredient).toBeCalled();
+        expect(searchIngredient).toHaveBeenCalled();
         expect(screen.getByText('Blue cheese')).toBeInTheDocument();
         expect(screen.getByText('Baguette with cheese')).toBeInTheDocument();
     });
