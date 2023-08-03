@@ -21,8 +21,4 @@ export class NutritionWeightUnitAdapter implements Adapter<NutritionWeightUnit> 
             item.gram,
         );
     }
-
-    toJson(item: NutritionWeightUnit) {
-        return {};
-    }
 }

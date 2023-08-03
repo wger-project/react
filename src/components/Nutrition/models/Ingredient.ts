@@ -1,5 +1,5 @@
-import { Adapter } from "utils/Adapter";
 import { ApiIngredientType } from "types";
+import { Adapter } from "utils/Adapter";
 
 export class Ingredient {
 
@@ -37,9 +37,5 @@ export class IngredientAdapter implements Adapter<Ingredient> {
             item.fibres === null ? null : parseFloat(item.fibres),
             item.sodium === null ? null : parseFloat(item.sodium),
         );
-    }
-
-    toJson(item: Ingredient) {
-        return {};
     }
 }
