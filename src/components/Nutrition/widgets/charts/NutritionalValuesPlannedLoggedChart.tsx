@@ -1,8 +1,8 @@
-import React from 'react';
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { generateChartColors } from "utils/colors";
+import React from 'react';
 import { useTranslation } from "react-i18next";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { generateChartColors } from "utils/colors";
 
 
 export const NutritionalValuesPlannedLoggedChart = (props: {
@@ -11,23 +11,22 @@ export const NutritionalValuesPlannedLoggedChart = (props: {
 }) => {
     const [t] = useTranslation();
     const colorGenerator = generateChartColors(3);
-
     const data = [
         {
             name: t('nutrition.energy'),
-            value: props.planned.energy / props.logged.energy * 100,
+            value: props.logged.energy / props.planned.energy * 100,
         },
         {
             name: t('nutrition.protein'),
-            value: props.planned.protein / props.logged.protein * 100,
+            value: props.logged.protein / props.planned.protein * 100,
         },
         {
             name: t('nutrition.carbohydrates'),
-            value: props.planned.carbohydrates / props.logged.carbohydrates * 100,
+            value: props.logged.carbohydrates / props.planned.carbohydrates * 100,
         },
         {
             name: t('nutrition.fat'),
-            value: props.planned.fat / props.logged.fat * 100,
+            value: props.logged.fat / props.planned.fat * 100,
         },
     ];
 
