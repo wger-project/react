@@ -96,3 +96,5 @@ export const PAGINATION_OPTIONS = {
 
 
 export const TIMEZONE = process.env.TIME_ZONE || 'Europe/Berlin';
+
+export const LANGUAGE_SHORT_ENGLISH = 'en';
