@@ -1,1 +1,60 @@
-{}
+{
+    "routines": {
+        "rir": "RIR",
+        "routine": "Rotina",
+        "routines": "Rotinas",
+        "addDay": "Adicionar dia de treinamento",
+        "addWeightLog": "Adicionar registro de peso",
+        "logsHeader": "Registro de peso para exercícios",
+        "logsFilterNote": "Observe que somente as entradas com uma unidade de peso de kg ou lb e repetições são registradas; outras combinações, como tempo ou até a falha, são ignoradas aqui",
+        "addLogToDay": "Adicionar registro a este dia"
+    },
+    "server": {
+        "glutes": "Glúteos",
+        "gym_mat": "Tapete de academia",
+        "hamstrings": "Isquiotibiais",
+        "abs": "Abs",
+        "arms": "Braços",
+        "back": "Volta",
+        "barbell": "Barra",
+        "bench": "Bancada",
+        "biceps": "Bíceps",
+        "calves": "Panturrilha",
+        "cardio": "Cardio",
+        "chest": "Peitoral",
+        "dumbbell": "Haltere",
+        "body_weight": "Peso corporal"
+    },
+    "forms": {
+        "maxLength": "Insira menos de {{chars}} caracteres",
+        "minValue": "O valor desse campo deve ser maior que {{value}}",
+        "minLength": "Insira mais de {{chars}} caracteres",
+        "maxValue": "O valor desse campo deve ser menor que {{value}}",
+        "valueTooShort": "O valor é muito pequeno",
+        "supportedImageFormats": "Apenas são suportados arquivos JPEG, PNG e WEBP com menos de 20Mb",
+        "valueTooLong": "O valor é muito longo",
+        "fieldRequired": "Este campo é obrigatório"
+    },
+    "translation": "Tradução",
+    "name": "Nome",
+    "cancel": "Cancelar",
+    "noResults": "Sem resultados",
+    "measurements": {
+        "unitFormHelpText": "A unidade na qual a categoria será medida, como cm ou %",
+        "measurements": "Medições",
+        "deleteInfo": "Isso excluirá a categoria, bem como todas as suas entradas"
+    },
+    "category": "Categoria",
+    "success": "Sucesso!",
+    "English": "Inglês",
+    "save": "Salvar",
+    "videos": "Vídeos",
+    "cannotBeUndone": "Essa ação não pode ser desfeita.",
+    "images": "Imagens",
+    "overview": "Visão geral",
+    "preferences": "Preferências",
+    "continue": "Continuar",
+    "goBack": "Voltar",
+    "language": "Linguagem",
+    "noResultsDescription": "Não foram encontrados resultados para essa consulta, considere a possibilidade de reduzir o número de filtros."
+}
