@@ -1,14 +1,14 @@
-import { useTranslation } from "react-i18next";
-import React from "react";
-import { Button, Menu, MenuItem } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
-import { WgerModal } from "components/Core/Modals/WgerModal";
+import { Button, Menu, MenuItem } from "@mui/material";
 import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
+import { WgerModal } from "components/Core/Modals/WgerModal";
+import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
+import { useDeleteNutritionalPlanQuery } from "components/Nutrition/queries";
+import { PlanForm } from "components/Nutrition/widgets/forms/PlanForm";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { makeLink, WgerLink } from "utils/url";
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { PlanForm } from "components/Nutrition/widgets/forms/PlanForm";
-import { useDeleteNutritionalPlanQuery } from "components/Nutrition/queries";
 
 
 export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {

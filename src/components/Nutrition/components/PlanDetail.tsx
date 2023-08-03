@@ -22,7 +22,8 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography
+    Typography,
+    useTheme
 } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
@@ -69,8 +70,8 @@ const MealItemListItem = (props: { mealItem: MealItem, planId: number, mealId: n
             <ListItemText primary={`${props.mealItem.amountString} ${props.mealItem.ingredient?.name}`} />
 
         </ListItem>
-        <ListItem>
-            <Collapse in={expandForm} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
+        <Collapse in={expandForm} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
+            <ListItem>
                 <ListItemText>
                     <MealItemForm
                         planId={props.planId}
@@ -79,8 +80,8 @@ const MealItemListItem = (props: { mealItem: MealItem, planId: number, mealId: n
                         closeFn={handleToggleForm}
                     />
                 </ListItemText>
-            </Collapse>
-        </ListItem>
+            </ListItem>
+        </Collapse>
     </>;
 };
 
@@ -116,6 +117,7 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
 };
 
 const MealDetail = (props: { meal: Meal, planId: number }) => {
+    const theme = useTheme();
     const [t] = useTranslation();
     const [expandViewStats, setExpandViewStats] = useState(false);
     const handleToggleExpandStats = () => setExpandViewStats(!expandViewStats);
@@ -134,16 +136,16 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
 
     return <Card>
         <CardHeader
-            sx={{ bgcolor: "lightgray" }}
+            sx={{ bgcolor: theme.palette.grey["300"] }}
             action={props.meal.id !== PSEUDO_MEAL_ID && <MealDetailDropdown meal={props.meal} planId={props.planId} />}
             title={props.meal.name}
             subheader={props.meal.timeHHMM}
         />
-        <CardContent>
+        <CardContent sx={{ paddingY: 0 }}>
             <Collapse in={expandViewStats} timeout="auto" unmountOnExit>
-                <Typography gutterBottom variant="h6">
-                    {t('nutrition.planned')}
-                </Typography>
+                {/*<Typography gutterBottom variant="h6">*/}
+                {/*    {t('nutrition.planned')}*/}
+                {/*</Typography>*/}
 
                 <TableContainer>
                     <Table>
@@ -211,14 +213,9 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
 
         </CardContent>
         <CardActions>
-            <Tooltip title={t('add')}>
-                <IconButton onClick={handleToggleExpandStats}>
-                    {expandViewStats
-                        ? <ExpandLessIcon />
-                        : <ExpandMoreIcon />
-                    }
-                </IconButton>
-            </Tooltip>
+            <IconButton onClick={handleToggleExpandStats}>
+                {expandViewStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </IconButton>
 
             {props.meal.id !== PSEUDO_MEAL_ID && <Tooltip title={t('nutrition.addMeal')}>
                 <IconButton onClick={handleToggleExpandItemForm}>
@@ -232,22 +229,26 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
                 </IconButton>
             </Tooltip>
         </CardActions>
-        <CardContent>
-            <Collapse in={expandItemForm} timeout="auto" unmountOnExit>
+
+        <Collapse in={expandItemForm} timeout="auto" unmountOnExit>
+            <CardContent sx={{ paddingY: 0 }}>
                 <p><b>{t('nutrition.addMealItem')}</b></p>
                 <MealItemForm
                     planId={props.planId}
                     mealId={props.meal.id}
                     closeFn={handleToggleExpandItemForm} />
-            </Collapse>
-            <Collapse in={expandDiaryForm} timeout="auto" unmountOnExit>
+            </CardContent>
+        </Collapse>
+        <Collapse in={expandDiaryForm} timeout="auto" unmountOnExit>
+            <CardContent sx={{ paddingY: 0 }}>
                 <p><b>{t('nutrition.addNutritionalDiary')}</b></p>
                 <NutritionDiaryEntryForm
                     closeFn={handleToggleExpandDiaryForm}
                     planId={props.planId}
                     mealId={props.meal.id !== PSEUDO_MEAL_ID ? props.meal.id : null} />
-            </Collapse>
-        </CardContent>
+            </CardContent>
+        </Collapse>
+
     </Card>;
 };
 
@@ -267,6 +268,9 @@ export const PlanDetail = () => {
             optionsMenu={<PlanDetailDropdown plan={planQuery.data!} />}
             mainContent={<>
                 <Stack spacing={2}>
+                    <Typography gutterBottom variant="h4">
+                        {t('nutrition.planned')}
+                    </Typography>
                     {planQuery.data!.meals.map(meal =>
                         <MealDetail meal={meal} planId={planQuery.data!.id} key={meal.id} />
                     )}
@@ -286,26 +290,26 @@ export const PlanDetail = () => {
                     <Typography gutterBottom variant="h5">
                         {t('nutrition.nutritionalData')}
                     </Typography>
-                    <NutritionalValuesTable values={planQuery.data!.nutritionalValues} />
-                    <MacrosPieChart data={planQuery.data!.nutritionalValues} />
-                    <Typography gutterBottom variant="h5">
-                        {t('nutrition.nutritionalDiary')}
-                    </Typography>
+                    <NutritionalValuesTable values={planQuery.data!.plannedNutritionalValues} />
+                    <MacrosPieChart data={planQuery.data!.plannedNutritionalValues} />
 
+                    <Typography gutterBottom variant="h4">
+                        {t('nutrition.logged')}
+                    </Typography>
                     <NutritionDiaryChart
-                        planned={planQuery.data!.nutritionalValues}
-                        today={planQuery.data!.nutritionalValuesDiaryToday}
-                        avg7Days={planQuery.data!.nutritionalValues7DayAvg}
+                        planned={planQuery.data!.plannedNutritionalValues}
+                        today={planQuery.data!.loggedNutritionalValuesToday}
+                        avg7Days={planQuery.data!.loggedNutritionalValues7DayAvg}
                     />
                     <DiaryOverview
                         entries={planQuery.data!.groupDiaryEntries}
-                        planValues={planQuery.data!.nutritionalValues}
+                        planValues={planQuery.data!.plannedNutritionalValues}
                     />
                 </Stack>
             </>}
             sideBar={<NutritionalValuesPlannedLoggedChart
-                planned={planQuery.data!.nutritionalValues}
-                logged={planQuery.data!.loggedNutritionalValues}
+                planned={planQuery.data!.plannedNutritionalValues}
+                logged={planQuery.data!.loggedNutritionalValuesToday}
             />}
             fab={<AddNutritionDiaryEntryFab plan={planQuery.data!} />}
         />;
