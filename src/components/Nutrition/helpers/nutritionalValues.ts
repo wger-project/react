@@ -1,3 +1,6 @@
+import { Ingredient } from "components/Nutrition/models/Ingredient";
+import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
+
 type NutritionalValuesConstructor = {
     energy?: number;
     protein?: number;
@@ -64,6 +67,26 @@ export class NutritionalValues {
         this.fibres = values?.fibres ?? 0;
         this.sodium = values?.sodium ?? 0;
         this.bodyWeight = values?.bodyWeight ?? 0;
+    }
+
+    static fromIngredient(ingredient: Ingredient, amount: number, weightUnit: NutritionWeightUnit | null) {
+        const out = new NutritionalValues();
+
+        const weight = weightUnit === null
+            ? amount
+            : amount * weightUnit.amount * weightUnit.grams;
+
+        // divide by 100 because nutrition values are per 100g
+        out.energy = ingredient.energy * weight / 100;
+        out.protein = ingredient.protein * weight / 100;
+        out.carbohydrates = ingredient.carbohydrates * weight / 100;
+        out.carbohydratesSugar = ingredient.carbohydratesSugar ? ingredient.carbohydratesSugar * weight / 100 : 0;
+        out.fat = ingredient.fat * weight / 100;
+        out.fatSaturated = ingredient.fatSaturated ? ingredient.fatSaturated * weight / 100 : 0;
+        out.fibres = ingredient.fibres ? ingredient.fibres * weight / 100 : 0;
+        out.sodium = ingredient.sodium ? ingredient.sodium * weight / 100 : 0;
+
+        return out;
     }
 
 
