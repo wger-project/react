@@ -1,4 +1,4 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, InputAdornment, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
@@ -81,6 +81,9 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, closeFn }: Nutr
                             fullWidth
                             id="amount"
                             label={'amount'}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">{t('nutrition.gramShort')}</InputAdornment>
+                            }}
                             error={formik.touched.amount && Boolean(formik.errors.amount)}
                             helperText={formik.touched.amount && formik.errors.amount}
                             {...formik.getFieldProps('amount')}
