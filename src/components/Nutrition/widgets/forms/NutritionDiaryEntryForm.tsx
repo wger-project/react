@@ -1,11 +1,12 @@
-import { Button, InputAdornment, Stack, TextField } from "@mui/material";
+import { Autocomplete, Button, InputAdornment, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
+import { Meal } from "components/Nutrition/models/meal";
 import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { IngredientSearchResponse } from "services/responseType";
 import { dateToYYYYMMDD } from "utils/date";
@@ -15,17 +16,20 @@ type NutritionDiaryEntryFormProps = {
     planId: number,
     entry?: DiaryEntry,
     mealId?: number | null,
+    meals?: Meal[],
     closeFn?: Function,
 }
 
-export const NutritionDiaryEntryForm = ({ planId, entry, mealId, closeFn }: NutritionDiaryEntryFormProps) => {
+export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn }: NutritionDiaryEntryFormProps) => {
 
     const meal = mealId === undefined ? null : mealId;
+    const mealObjs = meals === undefined ? [] : meals;
 
     const [t, i18n] = useTranslation();
     const addDiaryQuery = useAddDiaryEntryQuery(planId);
     const editDiaryQuery = useEditDiaryEntryQuery(planId);
-    const [dateValue, setDateValue] = React.useState<Date | null>(entry ? entry.datetime : new Date());
+    const [dateValue, setDateValue] = useState<Date | null>(entry ? entry.datetime : new Date());
+    const [selectedMeal, setSelectedMeal] = useState<number | null>(meal);
     const validationSchema = yup.object({
         amount: yup
             .number()
@@ -54,7 +58,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, closeFn }: Nutr
                 const data = {
                     ...values,
                     plan: planId,
-                    meal: meal,
+                    meal: selectedMeal,
                     // eslint-disable-next-line camelcase
                     weight_unit: null,
                     datetime: values.datetime.toISOString()
@@ -88,6 +92,20 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, closeFn }: Nutr
                             helperText={formik.touched.amount && formik.errors.amount}
                             {...formik.getFieldProps('amount')}
                         />
+                        {mealObjs.length > 0 && <Autocomplete
+                            value={selectedMeal}
+                            options={mealObjs.map(e => e.id)}
+                            getOptionLabel={option => mealObjs.find(e => e.id === option)!.name}
+                            onChange={(event, newValue) => setSelectedMeal(newValue)}
+                            renderInput={params => (
+                                <TextField
+
+                                    label={t("nutrition.meal")}
+                                    value={selectedMeal}
+                                    {...params}
+                                />
+                            )}
+                        />}
                         <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
 
                             <DateTimePicker
