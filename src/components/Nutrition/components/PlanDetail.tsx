@@ -34,6 +34,7 @@ import { MealItem } from "components/Nutrition/models/mealItem";
 import { PSEUDO_MEAL_ID } from "components/Nutrition/models/nutritionalPlan";
 import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
 import { MacrosPieChart } from "components/Nutrition/widgets/charts/MacrosPieChart";
+import { NutritionalValuesDashboardChart } from "components/Nutrition/widgets/charts/NutritionalValuesDashboardChart";
 import {
     NutritionalValuesPlannedLoggedChart
 } from "components/Nutrition/widgets/charts/NutritionalValuesPlannedLoggedChart";
@@ -307,7 +308,7 @@ export const PlanDetail = () => {
                     />
                 </Stack>
             </>}
-            sideBar={<NutritionalValuesPlannedLoggedChart
+            sideBar={<NutritionalValuesDashboardChart
                 planned={planQuery.data!.plannedNutritionalValues}
                 logged={planQuery.data!.loggedNutritionalValuesToday}
             />}
