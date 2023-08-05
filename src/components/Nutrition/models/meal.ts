@@ -18,7 +18,7 @@ export class Meal {
     ) {
     }
 
-    get timeHHMM() {
+    get timeHHMMLocale() {
         return dateTimeToLocaleHHMM(this.time);
     }
 
@@ -29,7 +29,7 @@ export class Meal {
         return this.diaryEntries.filter(entry => isSameDay(entry.datetime, new Date()));
     }
 
-    get nutritionalValues(): NutritionalValues {
+    get plannedNutritionalValues(): NutritionalValues {
         const out = new NutritionalValues();
         for (const item of this.items) {
             out.add(item.nutritionalValues);
@@ -37,7 +37,7 @@ export class Meal {
         return out;
     }
 
-    get nutritionalValuesDiary(): NutritionalValues {
+    get loggedNutritionalValues(): NutritionalValues {
         const out = new NutritionalValues();
         for (const entry of this.diaryEntries) {
             out.add(entry.nutritionalValues);
@@ -45,7 +45,7 @@ export class Meal {
         return out;
     }
 
-    get nutritionalValuesDiaryToday(): NutritionalValues {
+    get loggedNutritionalValuesToday(): NutritionalValues {
         const out = new NutritionalValues();
         for (const entry of this.diaryEntriesToday) {
             out.add(entry.nutritionalValues);

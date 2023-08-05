@@ -140,7 +140,7 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
             sx={{ bgcolor: theme.palette.grey["300"] }}
             action={props.meal.id !== PSEUDO_MEAL_ID && <MealDetailDropdown meal={props.meal} planId={props.planId} />}
             title={props.meal.name}
-            subheader={props.meal.timeHHMM}
+            subheader={props.meal.timeHHMMLocale}
         />
         <CardContent sx={{ paddingY: 0 }}>
             <Collapse in={expandViewStats} timeout="auto" unmountOnExit>
@@ -172,10 +172,10 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
                     {t('nutrition.loggedToday')}
                 </Typography>
 
-                {!props.meal.nutritionalValues.isEmpty &&
+                {!props.meal.plannedNutritionalValues.isEmpty &&
                     <NutritionalValuesPlannedLoggedChart
-                        logged={props.meal.nutritionalValues}
-                        planned={props.meal.nutritionalValuesDiaryToday}
+                        logged={props.meal.plannedNutritionalValues}
+                        planned={props.meal.loggedNutritionalValuesToday}
                     />}
 
                 <TableContainer>

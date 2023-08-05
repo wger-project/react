@@ -31,7 +31,7 @@ export class NutritionalPlan {
     get plannedNutritionalValues(): NutritionalValues {
         const out = new NutritionalValues();
         for (const item of this.meals) {
-            out.add(item.nutritionalValues);
+            out.add(item.plannedNutritionalValues);
         }
 
         return out;

@@ -18,7 +18,7 @@ describe('Test the meal model', () => {
         const meal = adapter.fromJson(apiResponse);
 
         // Assert
-        expect(meal.timeHHMM).toBe('22:31');
+        expect(meal.timeHHMMLocale).toBe('22:31');
     });
 
     test('correctly creates a meal from the API response - no date', () => {
@@ -35,7 +35,7 @@ describe('Test the meal model', () => {
         const meal = adapter.fromJson(apiResponse);
 
         // Assert
-        expect(meal.timeHHMM).toBe(null);
+        expect(meal.timeHHMMLocale).toBe(null);
     });
 
     test('correctly creates a JSON response from a meal', () => {
