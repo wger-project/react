@@ -7,21 +7,22 @@ import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 
 export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValues, planned: NutritionalValues }) => {
 
-    const energyDiff = props.logged.energy / props.planned.energy * 100;
-    const proteinDiff = props.logged.protein / props.planned.protein * 100;
-    const carbohydratesDiff = props.logged.carbohydrates / props.planned.carbohydrates * 100;
-    const fatDiff = props.logged.fat / props.planned.fat * 100;
+    const energyPercentage = props.logged.energy / props.planned.energy * 100;
+    const energyDiff = props.planned.energy - props.logged.energy;
+    const proteinPercentage = props.logged.protein / props.planned.protein * 100;
+    const carbohydratesPercentage = props.logged.carbohydrates / props.planned.carbohydrates * 100;
+    const fatPercentage = props.logged.fat / props.planned.fat * 100;
 
     const theme = useTheme();
     const [t] = useTranslation();
     const data = [
         {
             name: t('nutrition.energy'),
-            value: energyDiff,
+            value: energyPercentage,
         },
         {
             name: t('nutrition.protein'),
-            value: energyDiff < 100 ? 100 - energyDiff : 0,
+            value: energyPercentage < 100 ? 100 - energyPercentage : 0,
         },
     ];
     const COLORS = [theme.palette.primary.main, '#C5C5C5'];
@@ -35,8 +36,8 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
                     // cy={'10'}
                     height={100}
                     data={data}
-                    startAngle={180}
-                    endAngle={0}
+                    startAngle={200}
+                    endAngle={-20}
                     innerRadius={60}
                     outerRadius={70}
                     paddingAngle={2}
@@ -47,29 +48,41 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
                     ))}
                 </Pie>
                 <g>
-                    <text x={'50%'} y={'50%'} fontSize="1.4em" textAnchor="middle">{/*fill="#333"*/}
-                        {t('nutrition.valueEnergyKcal', { value: (props.planned.energy - props.logged.energy).toFixed() })}
+                    <text x={'50%'} y={'45%'} fontSize="1.25em" textAnchor="middle">{/*fill="#333"*/}
+                        {t('nutrition.valueEnergyKcal', { value: energyDiff.toFixed() })}
+                    </text>
+                    <text x={'50%'} y={'60%'} fontSize="1em" textAnchor="middle">
+                        {t(energyPercentage < 100 ? 'nutrition.valueRemaining' : 'nutrition.valueTooMany')}
                     </text>
                 </g>
             </PieChart>
         </ResponsiveContainer>
         <Stack width={'50%'}>
             <span>
-                <LinearProgress variant="determinate" value={proteinDiff < 100 ? proteinDiff : 100} />
+                <LinearProgress
+                    variant="determinate"
+                    value={proteinPercentage < 100 ? proteinPercentage : 100}
+                />
                 <Typography variant={'caption'}>
                     {t('nutrition.protein')} — {t('nutrition.valueUnitG', { value: props.logged.protein.toFixed() })} / {props.planned.protein.toFixed()}
                 </Typography>
             </span>
 
             <span>
-                <LinearProgress variant="determinate" value={carbohydratesDiff < 100 ? carbohydratesDiff : 100} />
+                <LinearProgress
+                    variant="determinate"
+                    value={carbohydratesPercentage < 100 ? carbohydratesPercentage : 100}
+                />
                 <Typography variant={'caption'}>
                     {t('nutrition.carbohydrates')} — {t('nutrition.valueUnitG', { value: props.logged.carbohydrates.toFixed() })} / {props.planned.carbohydrates.toFixed()}
                 </Typography>
             </span>
 
             <span>
-                <LinearProgress variant="determinate" value={fatDiff < 100 ? fatDiff : 100} />
+                <LinearProgress
+                    variant="determinate"
+                    value={fatPercentage < 100 ? fatPercentage : 100}
+                />
                 <Typography variant={'caption'}>
                     {t('nutrition.fat')} — {t('nutrition.valueUnitG', { value: props.logged.fat.toFixed() })} / {props.planned.fat.toFixed()}
                 </Typography>
