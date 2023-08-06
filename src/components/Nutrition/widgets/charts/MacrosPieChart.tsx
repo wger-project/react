@@ -1,8 +1,8 @@
-import React from "react";
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from 'recharts';
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { generateChartColors } from "utils/colors";
+import React from "react";
 import { useTranslation } from "react-i18next";
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from 'recharts';
+import { generateChartColors } from "utils/colors";
 
 export const MacrosPieChart = (props: { data: NutritionalValues }) => {
     const [t] = useTranslation();
@@ -29,17 +29,15 @@ export const MacrosPieChart = (props: { data: NutritionalValues }) => {
         const x = cx + radius * Math.cos(-midAngle * RADIAN);
         const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-        return (
-            <text
-                x={x}
-                y={y}
-                fill="white"
-                textAnchor={x > cx ? "start" : "end"}
-                dominantBaseline="central"
-            >
-                {t('nutrition.valueUnitG', { value: payload.value.toFixed() })}
-            </text>
-        );
+        return <text
+            x={x}
+            y={y}
+            fill="white"
+            textAnchor="middle"
+            dominantBaseline="central"
+        >
+            {t('nutrition.valueUnitG', { value: payload.value.toFixed() })}
+        </text>;
     };
 
 
