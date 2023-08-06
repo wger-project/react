@@ -16,6 +16,14 @@ export const useAddDiaryEntryQuery = (planId: number) => {
         onSuccess: () => queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, planId])
     });
 };
+export const useAddDiaryEntriesQuery = (planId: number) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: AddDiaryEntryParams[]) => Promise.all(data.map(d => addNutritionalDiaryEntry(d))),
+        onSuccess: () => queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, planId])
+    });
+};
 export const useDeleteDiaryEntryQuery = (planId: number) => {
     const queryClient = useQueryClient();
 
