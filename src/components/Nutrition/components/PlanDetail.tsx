@@ -59,7 +59,7 @@ const MealItemListItem = (props: { mealItem: MealItem, planId: number, mealId: n
 
     return <>
         <ListItem>
-            <ListItemAvatar onClick={handleToggleForm}>
+            <ListItemAvatar onClick={handleToggleForm} sx={{ '&:hover': { cursor: 'pointer' } }}>
                 <Avatar>
                     {/*{props.mealItem.ingredient?.image ?*/}
                     {/*    <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />*/}
