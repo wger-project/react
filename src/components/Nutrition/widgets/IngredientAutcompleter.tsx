@@ -56,7 +56,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                 (request: string) => searchIngredient(request, i18n.language, searchEnglish).then(res => setOptions(res)),
                 200,
             ),
-        [],
+        [i18n.language, searchEnglish],
     );
 
 
