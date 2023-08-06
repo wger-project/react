@@ -3,7 +3,6 @@ import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValue
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
-import { generateChartColors } from "utils/colors";
 
 
 export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValues, planned: NutritionalValues }) => {
@@ -15,7 +14,6 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
 
     const theme = useTheme();
     const [t] = useTranslation();
-    const colorGenerator = generateChartColors(3);
     const data = [
         {
             name: t('nutrition.energy'),
@@ -23,7 +21,7 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
         },
         {
             name: t('nutrition.protein'),
-            value: 100,
+            value: energyDiff < 100 ? 100 - energyDiff : 0,
         },
     ];
     const COLORS = [theme.palette.primary.main, '#C5C5C5'];
@@ -49,7 +47,6 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
                     ))}
                 </Pie>
                 <g>
-
                     <text x={'50%'} y={'50%'} fontSize="1.4em" textAnchor="middle">{/*fill="#333"*/}
                         {t('nutrition.valueEnergyKcal', { value: (props.planned.energy - props.logged.energy).toFixed() })}
                     </text>
@@ -58,22 +55,23 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
         </ResponsiveContainer>
         <Stack width={'50%'}>
             <span>
-                <LinearProgress variant="determinate" value={proteinDiff} />
+                <LinearProgress variant="determinate" value={proteinDiff < 100 ? proteinDiff : 100} />
                 <Typography variant={'caption'}>
-                    {t('nutrition.protein')}
+                    {t('nutrition.protein')} — {t('nutrition.valueUnitG', { value: props.logged.protein.toFixed() })} / {props.planned.protein.toFixed()}
                 </Typography>
+            </span>
 
-            </span>
             <span>
-                <LinearProgress variant="determinate" value={carbohydratesDiff} />
+                <LinearProgress variant="determinate" value={carbohydratesDiff < 100 ? carbohydratesDiff : 100} />
                 <Typography variant={'caption'}>
-                    {t('nutrition.carbohydrates')}
+                    {t('nutrition.carbohydrates')} — {t('nutrition.valueUnitG', { value: props.logged.carbohydrates.toFixed() })} / {props.planned.carbohydrates.toFixed()}
                 </Typography>
             </span>
+
             <span>
-                <LinearProgress variant="determinate" value={fatDiff} />
+                <LinearProgress variant="determinate" value={fatDiff < 100 ? fatDiff : 100} />
                 <Typography variant={'caption'}>
-                    {t('nutrition.fat')}
+                    {t('nutrition.fat')} — {t('nutrition.valueUnitG', { value: props.logged.fat.toFixed() })} / {props.planned.fat.toFixed()}
                 </Typography>
             </span>
         </Stack>
