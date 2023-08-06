@@ -17,34 +17,34 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
     const data = [
         {
             name: t('nutrition.protein'),
-            planned: planned.protein.toFixed(),
-            today: today.protein.toFixed(),
-            avg7Days: avg7Days.protein.toFixed(),
+            planned: planned.protein,
+            today: today.protein,
+            avg7Days: avg7Days.protein,
         },
         {
             name: t('nutrition.carbohydrates'),
-            planned: planned.carbohydrates.toFixed(),
-            today: today.carbohydrates.toFixed(),
-            avg7Days: avg7Days.carbohydrates.toFixed(),
+            planned: planned.carbohydrates,
+            today: today.carbohydrates,
+            avg7Days: avg7Days.carbohydrates,
         },
 
         {
             name: t('nutrition.sugar'),
-            planned: planned.carbohydratesSugar.toFixed(),
-            today: today.carbohydratesSugar.toFixed(),
-            avg7Days: avg7Days.carbohydratesSugar.toFixed(),
+            planned: planned.carbohydratesSugar,
+            today: today.carbohydratesSugar,
+            avg7Days: avg7Days.carbohydratesSugar,
         },
         {
             name: t('nutrition.fat'),
-            planned: planned.fat.toFixed(),
-            today: today.fat.toFixed(),
-            avg7Days: avg7Days.fat.toFixed(),
+            planned: planned.fat,
+            today: today.fat,
+            avg7Days: avg7Days.fat,
         },
         {
             name: t('nutrition.saturatedFat'),
-            planned: planned.fatSaturated.toFixed(),
-            today: today.fatSaturated.toFixed(),
-            avg7Days: avg7Days.fatSaturated.toFixed(),
+            planned: planned.fatSaturated,
+            today: today.fatSaturated,
+            avg7Days: avg7Days.fatSaturated,
         },
     ];
 
@@ -62,24 +62,29 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
             >
                 <CartesianGrid strokeDasharray="3 4" />
                 <XAxis dataKey="name" />
-                <YAxis orientation="left" stroke="#8884d8" unit={'g'} />
-                <Tooltip />
+                <YAxis
+                    type="number"
+                    orientation="left"
+                    stroke="#8884d8"
+                    unit={t('nutrition.gramShort')}
+                />
+                <Tooltip formatter={(value: number) => value.toFixed()} />
                 <Legend />
                 <Bar
                     dataKey="planned"
-                    unit={'g'}
+                    unit={t('nutrition.gramShort')}
                     name={t('nutrition.planned')}
                     fill={colorGenerator.next().value!}
                 />
                 <Bar
                     dataKey="today"
-                    unit={'g'}
+                    unit={t('nutrition.gramShort')}
                     name={t('nutrition.today')}
                     fill={colorGenerator.next().value!}
                 />
                 <Bar
                     dataKey="avg7Days"
-                    unit={'g'}
+                    unit={t('nutrition.gramShort')}
                     name={t('nutrition.7dayAvg')}
                     fill={colorGenerator.next().value!}
                 />
