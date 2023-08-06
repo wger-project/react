@@ -91,7 +91,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                         />
 
                         <Stack direction="row" justifyContent="end" spacing={2}>
-                            {closeFn !== undefined
+                            {(closeFn !== undefined && item !== undefined)
                                 && <Button color="error" variant="outlined" onClick={handleDelete}>
                                     {t('delete')}
                                 </Button>}
