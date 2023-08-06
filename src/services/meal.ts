@@ -13,7 +13,7 @@ import { makeHeader, makeUrl } from "utils/url";
 export interface AddMealParams {
     plan: number;
     name: string;
-    time: string | null
+    time: string | null;
 }
 
 export interface EditMealParams extends AddMealParams {
@@ -73,7 +73,7 @@ export const getMealsForPlan = async (planId: number, ingredientCache: Map<numbe
                     : getIngredient(item.ingredientId),
                 getWeightUnit(item.weightUnitId)
             ]);
-            item.ingredient = responses[0];
+            item.ingredient = responses[0]!;
             item.weightUnit = responses[1];
             ingredientCache.set(item.ingredientId, item.ingredient!);
         }
