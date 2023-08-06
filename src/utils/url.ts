@@ -1,5 +1,5 @@
-import slug from "slug";
 import { AxiosRequestConfig } from "axios";
+import slug from "slug";
 
 interface makeUrlInterface {
     id?: number,
@@ -76,11 +76,10 @@ export enum WgerLink {
 
     NUTRITION_OVERVIEW,
     NUTRITION_DETAIL,
+    NUTRITION_DIARY
 }
 
-type ExerciseDetailUrlParams = { id: number, slug?: string };
-
-type UrlParams = ExerciseDetailUrlParams;
+type UrlParams = { id: number, slug?: string, date?: string };
 
 
 /*
@@ -154,6 +153,8 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/nutrition/overview`;
         case WgerLink.NUTRITION_DETAIL:
             return `/${langShort}/nutrition/${params!.id}/view`;
+        case WgerLink.NUTRITION_DIARY:
+            return `/${langShort}/nutrition/${params!.id}/${params!.date}`;
 
         // Dashboard
         case WgerLink.DASHBOARD:

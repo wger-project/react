@@ -1,4 +1,13 @@
-import { Route, Routes } from "react-router-dom";
+import { Dashboard } from "components/Dashboard/Dashboard";
+import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
+import { MeasurementCategoryDetail } from "components/Measurements/Screens/MeasurementCategoryDetail";
+import { MeasurementCategoryOverview } from "components/Measurements/Screens/MeasurementCategoryOverview";
+import { NutritionDiaryOverview } from "components/Nutrition/components/NutritionDiaryOverview";
+import { PlanDetail } from "components/Nutrition/components/PlanDetail";
+import { PlansOverview } from "components/Nutrition/components/PlansOverview";
+import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
+import { RoutineLogs } from "components/WorkoutRoutines/Detail/RoutineLogs";
+import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
 import {
     About,
     AddExercise,
@@ -18,17 +27,9 @@ import {
     Workout,
     WorkoutSchedule
 } from "pages";
-import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
 import { ExerciseDetailPage } from "pages/ExerciseDetails";
-import { Dashboard } from "components/Dashboard/Dashboard";
 import React from "react";
-import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
-import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
-import { RoutineLogs } from "components/WorkoutRoutines/Detail/RoutineLogs";
-import { MeasurementCategoryOverview } from "components/Measurements/Screens/MeasurementCategoryOverview";
-import { MeasurementCategoryDetail } from "components/Measurements/Screens/MeasurementCategoryDetail";
-import { PlanDetail } from "components/Nutrition/components/PlanDetail";
-import { PlansOverview } from "components/Nutrition/components/PlansOverview";
+import { Route, Routes } from "react-router-dom";
 
 /*
  * Routes for the application
@@ -73,8 +74,9 @@ export const WgerRoutes = () => {
                 <Route index element={<ExerciseOverview />} />
                 <Route path="overview" element={<ExerciseOverview />} />
                 <Route path=":baseID" element={<ExerciseDetailPage />}>
-                    <Route path="view-base" element={<ExerciseDetailPage />} />
-                    <Route path="view-base/:slug" element={<ExerciseDetailPage />} />
+                    <Route path="view-base" element={<ExerciseDetailPage />}>
+                        <Route path=":slug" element={<ExerciseDetailPage />} />
+                    </Route>
                 </Route>
                 <Route path="contribute" element={<AddExercise />} />
             </Route>
@@ -84,7 +86,11 @@ export const WgerRoutes = () => {
             </Route>
             <Route path="nutrition">
                 <Route path="overview" element={<PlansOverview />} />
-                <Route path=":planId/view" element={<PlanDetail />} />
+                <Route path=":planId">
+                    <Route path="view" element={<PlanDetail />} />
+                    <Route path=":date" element={<NutritionDiaryOverview />} />
+                    <Route path="diary" element={<NutritionDiaryOverview />} />
+                </Route>
                 <Route path="calculator">
                     <Route path="bmi" element={<BmiCalculator />} />
                     <Route path="calories" element={<CaloriesCalculator />} />

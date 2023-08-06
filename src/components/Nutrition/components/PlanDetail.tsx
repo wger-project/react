@@ -26,6 +26,7 @@ export const PlanDetail = () => {
     const [expandedForm, setExpandedForm] = useState(false);
     const handleToggleExpandedForm = () => setExpandedForm(!expandedForm);
 
+
     return planQuery.isLoading
         ? <LoadingPlaceholder />
         : <WgerContainerRightSidebar

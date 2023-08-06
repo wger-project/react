@@ -59,6 +59,20 @@ export class NutritionalPlan {
         return this.getNutritionalValuesFromDiaryEntries(relevantEntries);
     }
 
+    /*
+     * Returns the nutritional values for the logged meals for a given date
+     */
+    loggedNutritionalValuesDate(date: Date) {
+        return this.getNutritionalValuesFromDiaryEntries(this.loggedEntriesDate(date));
+    }
+
+    /*
+     * Returns the diary entries for a given date
+     */
+    loggedEntriesDate(date: Date) {
+        return this.diaryEntries.filter(entry => isSameDay(entry.datetime, date));
+    }
+
 
     getAverageNutritionalValuesFromDiaryEntries(entries: DiaryEntry[]) {
         const out = this.getNutritionalValuesFromDiaryEntries(entries);

@@ -27,6 +27,17 @@ export function isSameDay(date1: Date, date2: Date): boolean {
 /*
  * Returns the localized time from a date object
  */
+export function dateTimeToLocaleYYYYMMDD(dateTime: Date | null) {
+    if (dateTime == null) {
+        return null;
+    }
+
+    return dateTime.toLocaleDateString([]);
+}
+
+/*
+ * Returns the localized time from a date object
+ */
 export function dateTimeToLocaleHHMM(dateTime: Date | null) {
     if (dateTime == null) {
         return null;

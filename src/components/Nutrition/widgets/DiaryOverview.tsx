@@ -1,12 +1,15 @@
-import { GroupedDiaryEntries } from "components/Nutrition/models/nutritionalPlan";
-import { useTranslation } from "react-i18next";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import React from "react";
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { GroupedDiaryEntries } from "components/Nutrition/models/nutritionalPlan";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { makeLink, WgerLink } from "utils/url";
 
 export const DiaryOverview = (props: { entries: Map<string, GroupedDiaryEntries>, planValues: NutritionalValues }) => {
 
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
+
 
     return <TableContainer>
         <Table size="small">
@@ -20,7 +23,11 @@ export const DiaryOverview = (props: { entries: Map<string, GroupedDiaryEntries>
             <TableBody>
                 {Array.from(props.entries).map(([key]) =>
                     <TableRow key={key}>
-                        <TableCell>{key}</TableCell>
+                        <TableCell>
+                            <Link to={makeLink(WgerLink.NUTRITION_DIARY, i18n.language, { id: 1, date: key })}>
+                                {new Date(key).toLocaleDateString(i18n.language)}
+                            </Link>
+                        </TableCell>
                         <TableCell align="right">
                             {props.entries.get(key)?.nutritionalValues.energy.toFixed()}
                         </TableCell>
