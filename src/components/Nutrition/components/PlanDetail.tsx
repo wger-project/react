@@ -91,7 +91,7 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
 
 
     return <TableRow key={props.item.id}>
-        <TableCell sx={{ pr: 0 }}>
+        <TableCell>
             <Avatar>
                 <PhotoIcon />
             </Avatar>
@@ -119,6 +119,7 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
 
 const MealDetail = (props: { meal: Meal, planId: number }) => {
     const theme = useTheme();
+    const isRealMeal = props.meal.id !== PSEUDO_MEAL_ID;
     const [t] = useTranslation();
     const [expandViewStats, setExpandViewStats] = useState(false);
     const handleToggleExpandStats = () => setExpandViewStats(!expandViewStats);
@@ -164,6 +165,28 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
                             {props.meal.items.map((item) => (
                                 <IngredientTableRow item={item} key={item.id} />
                             ))}
+                            {isRealMeal && <TableRow>
+                                <TableCell>
+                                </TableCell>
+                                <TableCell>
+                                    Σ
+                                </TableCell>
+                                <TableCell align={'right'}>
+                                    {t('nutrition.valueEnergyKcalKj', {
+                                        kcal: props.meal.plannedNutritionalValues.energy.toFixed(),
+                                        kj: props.meal.plannedNutritionalValues.energyKj.toFixed()
+                                    })}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {t('nutrition.valueUnitG', { value: props.meal.plannedNutritionalValues.carbohydrates.toFixed() })}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {t('nutrition.valueUnitG', { value: props.meal.plannedNutritionalValues.fat.toFixed() })}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {t('nutrition.valueUnitG', { value: props.meal.plannedNutritionalValues.protein.toFixed() })}
+                                </TableCell>
+                            </TableRow>}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -195,6 +218,28 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
                                 <IngredientTableRow item={item} key={item.id} />
                             ))}
                         </TableBody>
+                        <TableRow>
+                            <TableCell>
+                            </TableCell>
+                            <TableCell>
+                                Σ
+                            </TableCell>
+                            <TableCell align={'right'}>
+                                {t('nutrition.valueEnergyKcalKj', {
+                                    kcal: props.meal.loggedNutritionalValuesToday.energy.toFixed(),
+                                    kj: props.meal.loggedNutritionalValuesToday.energyKj.toFixed()
+                                })}
+                            </TableCell>
+                            <TableCell align="right">
+                                {t('nutrition.valueUnitG', { value: props.meal.loggedNutritionalValuesToday.carbohydrates.toFixed() })}
+                            </TableCell>
+                            <TableCell align="right">
+                                {t('nutrition.valueUnitG', { value: props.meal.loggedNutritionalValuesToday.fat.toFixed() })}
+                            </TableCell>
+                            <TableCell align="right">
+                                {t('nutrition.valueUnitG', { value: props.meal.loggedNutritionalValuesToday.protein.toFixed() })}
+                            </TableCell>
+                        </TableRow>
                     </Table>
                 </TableContainer>
 
@@ -218,7 +263,7 @@ const MealDetail = (props: { meal: Meal, planId: number }) => {
                 {expandViewStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </IconButton>
 
-            {props.meal.id !== PSEUDO_MEAL_ID && <Tooltip title={t('nutrition.addMeal')}>
+            {isRealMeal && <Tooltip title={t('nutrition.addMeal')}>
                 <IconButton onClick={handleToggleExpandItemForm}>
                     <Add />
                 </IconButton>
