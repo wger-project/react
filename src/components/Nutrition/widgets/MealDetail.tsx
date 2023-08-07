@@ -95,7 +95,7 @@ export const MealDetail = (props: { meal: Meal, planId: number }) => {
         <CardContent sx={{ paddingY: 0 }}>
             <Collapse in={expandViewStats} timeout="auto" unmountOnExit>
                 <IngredientDetailTable
-                    isRealMeal={isRealMeal}
+                    showSum={isRealMeal}
                     items={props.meal.items}
                     values={props.meal.plannedNutritionalValues}
                 />
@@ -111,7 +111,7 @@ export const MealDetail = (props: { meal: Meal, planId: number }) => {
                     />}
 
                 <IngredientDetailTable
-                    isRealMeal={isRealMeal}
+                    showSum={isRealMeal}
                     items={props.meal.diaryEntriesToday}
                     values={props.meal.loggedNutritionalValuesToday}
                 />

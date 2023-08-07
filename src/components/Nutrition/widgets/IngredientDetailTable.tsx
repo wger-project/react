@@ -38,7 +38,7 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
 export const IngredientDetailTable = (props: {
     items: MealItem[] | DiaryEntry[],
     values: NutritionalValues,
-    isRealMeal: boolean
+    showSum: boolean
 }) => {
     const [t] = useTranslation();
 
@@ -48,17 +48,17 @@ export const IngredientDetailTable = (props: {
                 <TableRow>
                     <TableCell></TableCell>
                     <TableCell></TableCell>
-                    <TableCell align={'right'}>{t('nutrition.energy')}</TableCell>
-                    <TableCell align="right">{t('nutrition.protein')}</TableCell>
-                    <TableCell align="right">{t('nutrition.carbohydrates')}</TableCell>
-                    <TableCell align="right">{t('nutrition.fat')}</TableCell>
+                    <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.energy')}</TableCell>
+                    <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.protein')}</TableCell>
+                    <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.carbohydrates')}</TableCell>
+                    <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.fat')}</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
                 {props.items.map((item) => (
                     <IngredientTableRow item={item} key={item.id} />
                 ))}
-                {props.isRealMeal && <TableRow>
+                {props.showSum && <TableRow>
                     <TableCell sx={{ paddingX: 1 }}> </TableCell>
                     <TableCell sx={{ paddingX: 1 }}>
                         Σ
@@ -69,13 +69,13 @@ export const IngredientDetailTable = (props: {
                             kj: props.values.energyKj.toFixed()
                         })}
                     </TableCell>
-                    <TableCell align="right" sx={{ paddingX: 1 }}>
+                    <TableCell align={'right'} sx={{ paddingX: 1 }}>
                         {t('nutrition.valueUnitG', { value: props.values.protein.toFixed() })}
                     </TableCell>
-                    <TableCell align="right" sx={{ paddingX: 1 }}>
+                    <TableCell align={'right'} sx={{ paddingX: 1 }}>
                         {t('nutrition.valueUnitG', { value: props.values.carbohydrates.toFixed() })}
                     </TableCell>
-                    <TableCell align="right" sx={{ paddingX: 1 }}>
+                    <TableCell align={'right'} sx={{ paddingX: 1 }}>
                         {t('nutrition.valueUnitG', { value: props.values.fat.toFixed() })}
                     </TableCell>
                 </TableRow>}
