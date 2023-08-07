@@ -181,8 +181,8 @@ export const MealDetail = (props: { meal: Meal, planId: number }) => {
 
                 {!props.meal.plannedNutritionalValues.isEmpty &&
                     <NutritionalValuesPlannedLoggedChart
-                        logged={props.meal.plannedNutritionalValues}
-                        planned={props.meal.loggedNutritionalValuesToday}
+                        logged={props.meal.loggedNutritionalValuesToday}
+                        planned={props.meal.plannedNutritionalValues}
                     />}
 
                 <TableContainer>
