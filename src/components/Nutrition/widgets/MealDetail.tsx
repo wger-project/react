@@ -15,17 +15,10 @@ import {
     ListItem,
     ListItemAvatar,
     ListItemText,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
     Typography,
     useTheme
 } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { Meal } from "components/Nutrition/models/meal";
 import { MealItem } from "components/Nutrition/models/mealItem";
 import { PSEUDO_MEAL_ID } from "components/Nutrition/models/nutritionalPlan";
@@ -34,6 +27,7 @@ import {
 } from "components/Nutrition/widgets/charts/NutritionalValuesPlannedLoggedChart";
 import { MealItemForm } from "components/Nutrition/widgets/forms/MealItemForm";
 import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
+import { IngredientDetailTable } from "components/Nutrition/widgets/IngredientDetailTable";
 import { MealDetailDropdown } from "components/Nutrition/widgets/MealDetailDropdown";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -71,36 +65,7 @@ const MealItemListItem = (props: { mealItem: MealItem, planId: number, mealId: n
         </Collapse>
     </>;
 };
-const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
-    const [t] = useTranslation();
 
-
-    return <TableRow key={props.item.id}>
-        <TableCell>
-            <Avatar>
-                <PhotoIcon />
-            </Avatar>
-        </TableCell>
-        <TableCell>
-            {props.item.amountString} {props.item.ingredient?.name}
-        </TableCell>
-        <TableCell align={'right'}>
-            {t('nutrition.valueEnergyKcalKj', {
-                kcal: props.item.nutritionalValues.energy.toFixed(),
-                kj: props.item.nutritionalValues.energyKj.toFixed()
-            })}
-        </TableCell>
-        <TableCell align="right">
-            {t('nutrition.valueUnitG', { value: props.item.nutritionalValues.carbohydrates.toFixed() })}
-        </TableCell>
-        <TableCell align="right">
-            {t('nutrition.valueUnitG', { value: props.item.nutritionalValues.fat.toFixed() })}
-        </TableCell>
-        <TableCell align="right">
-            {t('nutrition.valueUnitG', { value: props.item.nutritionalValues.protein.toFixed() })}
-        </TableCell>
-    </TableRow>;
-};
 export const MealDetail = (props: { meal: Meal, planId: number }) => {
     const theme = useTheme();
     const isRealMeal = props.meal.id !== PSEUDO_MEAL_ID;
@@ -129,51 +94,11 @@ export const MealDetail = (props: { meal: Meal, planId: number }) => {
         />
         <CardContent sx={{ paddingY: 0 }}>
             <Collapse in={expandViewStats} timeout="auto" unmountOnExit>
-                {/*<Typography gutterBottom variant="h6">*/}
-                {/*    {t('nutrition.planned')}*/}
-                {/*</Typography>*/}
-
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell></TableCell>
-                                <TableCell></TableCell>
-                                <TableCell align={'right'}>{t('nutrition.energy')}</TableCell>
-                                <TableCell align="right">{t('nutrition.protein')}</TableCell>
-                                <TableCell align="right">{t('nutrition.carbohydrates')}</TableCell>
-                                <TableCell align="right">{t('nutrition.fat')}</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {props.meal.items.map((item) => (
-                                <IngredientTableRow item={item} key={item.id} />
-                            ))}
-                            {isRealMeal && <TableRow>
-                                <TableCell>
-                                </TableCell>
-                                <TableCell>
-                                    Σ
-                                </TableCell>
-                                <TableCell align={'right'}>
-                                    {t('nutrition.valueEnergyKcalKj', {
-                                        kcal: props.meal.plannedNutritionalValues.energy.toFixed(),
-                                        kj: props.meal.plannedNutritionalValues.energyKj.toFixed()
-                                    })}
-                                </TableCell>
-                                <TableCell align="right">
-                                    {t('nutrition.valueUnitG', { value: props.meal.plannedNutritionalValues.carbohydrates.toFixed() })}
-                                </TableCell>
-                                <TableCell align="right">
-                                    {t('nutrition.valueUnitG', { value: props.meal.plannedNutritionalValues.fat.toFixed() })}
-                                </TableCell>
-                                <TableCell align="right">
-                                    {t('nutrition.valueUnitG', { value: props.meal.plannedNutritionalValues.protein.toFixed() })}
-                                </TableCell>
-                            </TableRow>}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <IngredientDetailTable
+                    isRealMeal={isRealMeal}
+                    items={props.meal.items}
+                    values={props.meal.plannedNutritionalValues}
+                />
 
                 <Typography gutterBottom variant="h6" sx={{ my: 2 }}>
                     {t('nutrition.loggedToday')}
@@ -185,47 +110,11 @@ export const MealDetail = (props: { meal: Meal, planId: number }) => {
                         planned={props.meal.plannedNutritionalValues}
                     />}
 
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell></TableCell>
-                                <TableCell></TableCell>
-                                <TableCell align={'right'}>{t('nutrition.energy')}</TableCell>
-                                <TableCell align="right">{t('nutrition.protein')}</TableCell>
-                                <TableCell align="right">{t('nutrition.carbohydrates')}</TableCell>
-                                <TableCell align="right">{t('nutrition.fat')}</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {props.meal.diaryEntriesToday.map((item) => (
-                                <IngredientTableRow item={item} key={item.id} />
-                            ))}
-                        </TableBody>
-                        <TableRow>
-                            <TableCell>
-                            </TableCell>
-                            <TableCell>
-                                Σ
-                            </TableCell>
-                            <TableCell align={'right'}>
-                                {t('nutrition.valueEnergyKcalKj', {
-                                    kcal: props.meal.loggedNutritionalValuesToday.energy.toFixed(),
-                                    kj: props.meal.loggedNutritionalValuesToday.energyKj.toFixed()
-                                })}
-                            </TableCell>
-                            <TableCell align="right">
-                                {t('nutrition.valueUnitG', { value: props.meal.loggedNutritionalValuesToday.carbohydrates.toFixed() })}
-                            </TableCell>
-                            <TableCell align="right">
-                                {t('nutrition.valueUnitG', { value: props.meal.loggedNutritionalValuesToday.fat.toFixed() })}
-                            </TableCell>
-                            <TableCell align="right">
-                                {t('nutrition.valueUnitG', { value: props.meal.loggedNutritionalValuesToday.protein.toFixed() })}
-                            </TableCell>
-                        </TableRow>
-                    </Table>
-                </TableContainer>
+                <IngredientDetailTable
+                    isRealMeal={isRealMeal}
+                    items={props.meal.diaryEntriesToday}
+                    values={props.meal.loggedNutritionalValuesToday}
+                />
 
             </Collapse>
 
