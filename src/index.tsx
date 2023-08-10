@@ -1,22 +1,22 @@
-import React, { Suspense } from 'react';
-import './index.css';
-import './i18n';
-import { BrowserRouter as Router } from 'react-router-dom';
-
-import App from './App';
 import createCache from '@emotion/cache';
-import reportWebVitals from './reportWebVitals';
-import { makeTheme, theme } from 'theme';
+import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from '@mui/material/styles';
-import { WeightStateProvider } from 'state';
-import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
-import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { WgerRoutes } from "routes";
-import { CacheProvider } from "@emotion/react";
 import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
+import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { WeightOverview } from "pages";
+import React, { Suspense } from 'react';
+import { createRoot } from "react-dom/client";
+import { BrowserRouter as Router } from 'react-router-dom';
+import { WgerRoutes } from "routes";
+import { WeightStateProvider } from 'state';
+import { makeTheme, theme } from 'theme';
+
+import App from './App';
+import './i18n';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
 
 
 const queryClient = new QueryClient({
@@ -162,6 +162,10 @@ renderComponentShadowDom("react-routine-logs");
 
 renderComponentShadowDom("react-measurements-overview");
 renderComponentShadowDom("react-measurements-detail");
+
+renderComponentShadowDom('react-nutrition-overview');
+renderComponentShadowDom('react-nutrition-detail');
+renderComponentShadowDom('react-nutrition-log');
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
