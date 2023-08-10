@@ -40,11 +40,11 @@ const MealItemListItem = (props: { mealItem: MealItem, planId: number, mealId: n
     return <>
         <ListItem>
             <ListItemAvatar onClick={handleToggleForm} sx={{ '&:hover': { cursor: 'pointer' } }}>
-                <Avatar>
-                    {/*{props.mealItem.ingredient?.image ?*/}
-                    {/*    <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />*/}
-                    {/*    : <PhotoIcon fontSize="large" />}*/}
-                    {/*<ImageIcon />*/}
+                <Avatar
+                    alt={props.mealItem.ingredient?.name}
+                    src={props.mealItem.ingredient?.image?.url}
+                    sx={{ width: 45, height: 45 }}
+                >
                     <PhotoIcon />
                 </Avatar>
             </ListItemAvatar>

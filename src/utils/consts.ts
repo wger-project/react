@@ -49,8 +49,8 @@ export enum ApiPath {
     MEAL = 'meal',
     MEAL_ITEM = 'mealitem',
     NUTRITIONAL_DIARY = 'nutritiondiary',
-    INGREDIENT_PATH = 'ingredient',
-    INGREDIENT_SEARCH_PATH = ApiPath.INGREDIENT_PATH + '/search',
+    INGREDIENT_PATH = 'ingredientinfo',
+    INGREDIENT_SEARCH_PATH = 'ingredient/search',
     INGREDIENT_WEIGHT_UNIT = 'ingredientweightunit'
 }
 

@@ -7,13 +7,18 @@ import { useTranslation } from "react-i18next";
 import { numberGramLocale, numberLocale } from "utils/numbers";
 
 const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
 
     return <TableRow key={props.item.id}>
         <TableCell sx={{ paddingX: 1 }}>
-            <Avatar>
+            <Avatar
+                alt={props.item.ingredient?.name}
+                src={props.item.ingredient?.image?.url}
+                sx={{ width: 45, height: 45 }}
+            >
                 <PhotoIcon />
             </Avatar>
+
         </TableCell>
         <TableCell sx={{ paddingX: 1 }}>
             {props.item.amountString} {props.item.ingredient?.name}

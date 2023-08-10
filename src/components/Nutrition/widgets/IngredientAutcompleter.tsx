@@ -118,9 +118,11 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                     <li {...props} key={`ingredient-${option.data.id}`}>
                         <ListItem disablePadding component="div">
                             <ListItemIcon>
-                                {option.data.image
-                                    ? <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />
-                                    : <PhotoIcon fontSize="large" />}
+                                <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded">
+                                    <PhotoIcon />
+                                </Avatar>
+
+
                             </ListItemIcon>
                             <ListItemText
                                 primary={option.value}
