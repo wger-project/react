@@ -68,15 +68,11 @@ export const PlanDetail = () => {
                         avg7Days={planQuery.data!.loggedNutritionalValues7DayAvg}
                     />
                     <DiaryOverview
-                        entries={planQuery.data!.groupDiaryEntries}
-                        planValues={planQuery.data!.plannedNutritionalValues}
+                        logged={planQuery.data!.groupDiaryEntries}
+                        planned={planQuery.data!.plannedNutritionalValues}
                     />
                 </Stack>
             </>}
-            sideBar={<NutritionalValuesDashboardChart
-                planned={planQuery.data!.plannedNutritionalValues}
-                logged={planQuery.data!.loggedNutritionalValuesToday}
-            />}
             fab={<AddNutritionDiaryEntryFab plan={planQuery.data!} />}
         />;
 };

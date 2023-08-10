@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { numberLocale } from "utils/numbers";
 import { makeLink, WgerLink } from "utils/url";
 
-export const DiaryOverview = (props: { entries: Map<string, GroupedDiaryEntries>, planValues: NutritionalValues }) => {
+export const DiaryOverview = (props: { logged: Map<string, GroupedDiaryEntries>, planned: NutritionalValues }) => {
 
     const [t, i18n] = useTranslation();
 
@@ -22,7 +22,7 @@ export const DiaryOverview = (props: { entries: Map<string, GroupedDiaryEntries>
                 </TableRow>
             </TableHead>
             <TableBody>
-                {Array.from(props.entries).map(([key]) =>
+                {Array.from(props.logged).map(([key]) =>
                     <TableRow key={key}>
                         <TableCell>
                             <Link to={makeLink(WgerLink.NUTRITION_DIARY, i18n.language, { id: 1, date: key })}>
