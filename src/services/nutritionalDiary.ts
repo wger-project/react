@@ -4,13 +4,25 @@ import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { getIngredient } from "services/ingredient";
 import { getWeightUnit } from "services/ingredientweightunit";
 import { API_MAX_PAGE_SIZE, ApiPath } from "utils/consts";
+import { dateToYYYYMMDD } from "utils/date";
 import { fetchPaginated } from "utils/requests";
 import { makeHeader, makeUrl } from "utils/url";
 
 
-export const getNutritionalDiaryEntries = async (planId: number, ingredientCache: Map<number, Ingredient>): Promise<DiaryEntry[]> => {
+export const getNutritionalDiaryEntries = async (
+    planId: number,
+    ingredientCache: Map<number, Ingredient>,
+    date?: Date
+): Promise<DiaryEntry[]> => {
     const adapter = new DiaryEntryAdapter();
-    const url = makeUrl(ApiPath.NUTRITIONAL_DIARY, { query: { plan: planId, limit: API_MAX_PAGE_SIZE } });
+
+    const query = { plan: planId, limit: API_MAX_PAGE_SIZE };
+    if (date) {
+        // @ts-ignore
+        // eslint-disable-next-line camelcase
+        query.datetime__date = dateToYYYYMMDD(date);
+    }
+    const url = makeUrl(ApiPath.NUTRITIONAL_DIARY, { query: query });
     const out: DiaryEntry[] = [];
 
     for await (const page of fetchPaginated(url, makeHeader())) {
@@ -23,7 +35,7 @@ export const getNutritionalDiaryEntries = async (planId: number, ingredientCache
                     : getIngredient(entry.ingredientId),
                 getWeightUnit(entry.weightUnitId)
             ]);
-            entry.ingredient = responses[0];
+            entry.ingredient = responses[0]!;
             entry.weightUnit = responses[1];
             out.push(entry);
 

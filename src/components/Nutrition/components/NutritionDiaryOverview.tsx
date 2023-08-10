@@ -1,7 +1,7 @@
 import { Stack, Typography } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
-import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
+import { useFetchNutritionalPlanDateQuery } from "components/Nutrition/queries";
 import { IngredientDetailTable } from "components/Nutrition/widgets/IngredientDetailTable";
 import { LoggedPlannedNutritionalValuesTable } from "components/Nutrition/widgets/LoggedPlannedNutritionalValuesTable";
 import React from "react";
@@ -15,7 +15,7 @@ export const NutritionDiaryOverview = () => {
 
     const planId = parseInt(params.planId!);
     const date = new Date(params.date!);
-    const planQuery = useFetchNutritionalPlanQuery(planId);
+    const planQuery = useFetchNutritionalPlanDateQuery(planId, params.date!);
 
     return planQuery.isLoading
         ? <LoadingPlaceholder />
