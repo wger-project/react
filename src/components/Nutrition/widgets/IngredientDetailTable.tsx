@@ -4,6 +4,7 @@ import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValue
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { MealItem } from "components/Nutrition/models/mealItem";
 import { useTranslation } from "react-i18next";
+import { numberGramLocale, numberLocale } from "utils/numbers";
 
 const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
     const [t] = useTranslation();
@@ -19,18 +20,18 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
         </TableCell>
         <TableCell align={'right'} sx={{ paddingX: 1 }}>
             {t('nutrition.valueEnergyKcalKj', {
-                kcal: props.item.nutritionalValues.energy.toFixed(),
-                kj: props.item.nutritionalValues.energyKj.toFixed()
+                kcal: numberLocale(props.item.nutritionalValues.energy, i18n.language),
+                kj: numberLocale(props.item.nutritionalValues.energyKj, i18n.language)
             })}
         </TableCell>
         <TableCell align="right" sx={{ paddingX: 1 }}>
-            {t('nutrition.valueUnitG', { value: props.item.nutritionalValues.protein.toFixed() })}
+            {numberGramLocale(props.item.nutritionalValues.protein, i18n.language)}
         </TableCell>
         <TableCell align="right" sx={{ paddingX: 1 }}>
-            {t('nutrition.valueUnitG', { value: props.item.nutritionalValues.carbohydrates.toFixed() })}
+            {numberGramLocale(props.item.nutritionalValues.carbohydrates, i18n.language)}
         </TableCell>
         <TableCell align="right" sx={{ paddingX: 1 }}>
-            {t('nutrition.valueUnitG', { value: props.item.nutritionalValues.fat.toFixed() })}
+            {numberGramLocale(props.item.nutritionalValues.fat, i18n.language)}
         </TableCell>
     </TableRow>;
 };
@@ -40,7 +41,7 @@ export const IngredientDetailTable = (props: {
     values: NutritionalValues,
     showSum: boolean
 }) => {
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
 
     return <TableContainer>
         <Table>
@@ -65,18 +66,18 @@ export const IngredientDetailTable = (props: {
                     </TableCell>
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>
                         {t('nutrition.valueEnergyKcalKj', {
-                            kcal: props.values.energy.toFixed(),
-                            kj: props.values.energyKj.toFixed()
+                            kcal: numberLocale(props.values.energy, i18n.language),
+                            kj: numberLocale(props.values.energyKj, i18n.language)
                         })}
                     </TableCell>
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>
-                        {t('nutrition.valueUnitG', { value: props.values.protein.toFixed() })}
+                        {numberGramLocale(props.values.protein, i18n.language)}
                     </TableCell>
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>
-                        {t('nutrition.valueUnitG', { value: props.values.carbohydrates.toFixed() })}
+                        {numberGramLocale(props.values.carbohydrates, i18n.language)}
                     </TableCell>
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>
-                        {t('nutrition.valueUnitG', { value: props.values.fat.toFixed() })}
+                        {numberGramLocale(props.values.fat, i18n.language)}
                     </TableCell>
                 </TableRow>}
             </TableBody>

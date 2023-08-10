@@ -15,7 +15,6 @@ export const NutritionDiaryOverview = () => {
 
     const planId = parseInt(params.planId!);
     const date = new Date(params.date!);
-
     const planQuery = useFetchNutritionalPlanQuery(planId);
 
     return planQuery.isLoading

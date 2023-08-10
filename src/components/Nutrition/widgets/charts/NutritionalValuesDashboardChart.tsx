@@ -3,6 +3,7 @@ import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValue
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
+import { numberGramLocale } from "utils/numbers";
 
 
 export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValues, planned: NutritionalValues }) => {
@@ -14,7 +15,7 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
     const fatPercentage = props.logged.fat / props.planned.fat * 100;
 
     const theme = useTheme();
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
     const data = [
         {
             name: t('nutrition.energy'),
@@ -29,7 +30,7 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
 
 
     return <Stack direction={'row'}>
-        <ResponsiveContainer width={'100%'} height={140}>
+        <ResponsiveContainer width={'50%'} height={140}>
             <PieChart>
                 <Pie
                     // cx={0}
@@ -64,7 +65,7 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
                     value={proteinPercentage < 100 ? proteinPercentage : 100}
                 />
                 <Typography variant={'caption'}>
-                    {t('nutrition.protein')} — {t('nutrition.valueUnitG', { value: props.logged.protein.toFixed() })} / {props.planned.protein.toFixed()}
+                    {t('nutrition.protein')} — {numberGramLocale(props.logged.protein, i18n.language)} / {numberGramLocale(props.planned.protein, i18n.language)}
                 </Typography>
             </span>
 
@@ -74,7 +75,7 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
                     value={carbohydratesPercentage < 100 ? carbohydratesPercentage : 100}
                 />
                 <Typography variant={'caption'}>
-                    {t('nutrition.carbohydrates')} — {t('nutrition.valueUnitG', { value: props.logged.carbohydrates.toFixed() })} / {props.planned.carbohydrates.toFixed()}
+                    {t('nutrition.carbohydrates')} — {numberGramLocale(props.logged.carbohydrates, i18n.language)} / {numberGramLocale(props.planned.carbohydrates, i18n.language)}
                 </Typography>
             </span>
 
@@ -84,7 +85,7 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
                     value={fatPercentage < 100 ? fatPercentage : 100}
                 />
                 <Typography variant={'caption'}>
-                    {t('nutrition.fat')} — {t('nutrition.valueUnitG', { value: props.logged.fat.toFixed() })} / {props.planned.fat.toFixed()}
+                    {t('nutrition.fat')} — {numberGramLocale(props.logged.fat, i18n.language)} / {numberGramLocale(props.planned.fat, i18n.language)}
                 </Typography>
             </span>
         </Stack>

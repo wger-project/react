@@ -4,6 +4,7 @@ import { GroupedDiaryEntries } from "components/Nutrition/models/nutritionalPlan
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { numberLocale } from "utils/numbers";
 import { makeLink, WgerLink } from "utils/url";
 
 export const DiaryOverview = (props: { entries: Map<string, GroupedDiaryEntries>, planValues: NutritionalValues }) => {
@@ -29,10 +30,10 @@ export const DiaryOverview = (props: { entries: Map<string, GroupedDiaryEntries>
                             </Link>
                         </TableCell>
                         <TableCell align="right">
-                            {props.entries.get(key)?.nutritionalValues.energy.toFixed()}
+                            {numberLocale(props.logged.get(key)?.nutritionalValues.energy!, i18n.language)}
                         </TableCell>
                         <TableCell align="right">
-                            {(props.planValues.energy - props.entries.get(key)?.nutritionalValues.energy!).toFixed()}
+                            {numberLocale(props.logged.get(key)?.nutritionalValues.energy! - props.planned.energy, i18n.language)}
                         </TableCell>
                     </TableRow>)
                 }

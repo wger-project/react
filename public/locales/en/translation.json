@@ -68,8 +68,6 @@
     "addMealItem": "Add ingredient to meal",
     "nutritionalDiary": "Nutrition diary",
     "gramShort": "g",
-    "valueUnitG": "{{value}}g",
-    "valueUnitPercent": "{{value}}%",
     "valueEnergyKcal": "{{value}} kcal",
     "valueEnergyKcalKj": "{{kcal}} kcal / {{kj}} kJ",
     "searchIngredientName": "Search by ingredient name",

@@ -3,6 +3,7 @@ import React from 'react';
 import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { generateChartColors } from "utils/colors";
+import { numberLocale } from "utils/numbers";
 
 type NutritionDiaryChartProps = {
     planned: NutritionalValues;
@@ -11,7 +12,7 @@ type NutritionDiaryChartProps = {
 }
 
 export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiaryChartProps) => {
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
     const colorGenerator = generateChartColors(3);
 
     const data = [
@@ -68,7 +69,7 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
                     stroke="#8884d8"
                     unit={t('nutrition.gramShort')}
                 />
-                <Tooltip formatter={(value: number) => value.toFixed()} />
+                <Tooltip formatter={(value: number) => numberLocale(value, i18n.language)} />
                 <Legend />
                 <Bar
                     dataKey="planned"

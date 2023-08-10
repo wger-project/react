@@ -3,9 +3,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from 'recharts';
 import { generateChartColors } from "utils/colors";
+import { numberGramLocale } from "utils/numbers";
 
 export const MacrosPieChart = (props: { data: NutritionalValues }) => {
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
     const colorGenerator = generateChartColors(3);
 
     const data = [
@@ -36,7 +37,7 @@ export const MacrosPieChart = (props: { data: NutritionalValues }) => {
             textAnchor="middle"
             dominantBaseline="central"
         >
-            {t('nutrition.valueUnitG', { value: payload.value.toFixed() })}
+            {numberGramLocale(payload.value, i18n.language)}
         </text>;
     };
 

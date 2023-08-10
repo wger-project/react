@@ -1,9 +1,10 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
 import { useTranslation } from "react-i18next";
+import { numberGramLocale, numberLocale, numberPercentLocale } from "utils/numbers";
 
 export const NutritionalValuesTable = (props: { values: NutritionalValues }) => {
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
 
     return <TableContainer>
         <Table size="small">
@@ -20,8 +21,8 @@ export const NutritionalValuesTable = (props: { values: NutritionalValues }) => 
                     <TableCell>{t('nutrition.energy')}</TableCell>
                     <TableCell align="right">
                         {t('nutrition.valueEnergyKcalKj', {
-                            kcal: props.values.energy.toFixed(),
-                            kj: props.values.energyKj.toFixed()
+                            kcal: numberLocale(props.values.energy, i18n.language),
+                            kj: numberLocale(props.values.energyKj, i18n.language)
                         })}
                     </TableCell>
                     <TableCell align="right"></TableCell>
@@ -30,27 +31,27 @@ export const NutritionalValuesTable = (props: { values: NutritionalValues }) => 
                 <TableRow>
                     <TableCell>{t('nutrition.protein')}</TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitG', { value: props.values.protein.toFixed() })}
+                        {numberGramLocale(props.values.protein, i18n.language)}
                     </TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitPercent', { value: props.values.percent.protein.toFixed() })}
+                        {numberPercentLocale(props.values.percent.protein, i18n.language)}
                     </TableCell>
                     <TableCell align="right">...</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell>{t('nutrition.carbohydrates')}</TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitG', { value: props.values.carbohydrates.toFixed() })}
+                        {numberGramLocale(props.values.carbohydrates, i18n.language)}
                     </TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitPercent', { value: props.values.percent.carbohydrates.toFixed() })}
+                        {numberPercentLocale(props.values.percent.carbohydrates, i18n.language)}
                     </TableCell>
                     <TableCell align="right">...</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell sx={{ pl: 5 }}>{t('nutrition.ofWhichSugars')}</TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitG', { value: props.values.carbohydratesSugar.toFixed() })}
+                        {numberGramLocale(props.values.carbohydratesSugar, i18n.language)}
                     </TableCell>
                     <TableCell align="right"></TableCell>
                     <TableCell align="right"></TableCell>
@@ -58,17 +59,17 @@ export const NutritionalValuesTable = (props: { values: NutritionalValues }) => 
                 <TableRow>
                     <TableCell>{t('nutrition.fat')}</TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitG', { value: props.values.fat.toFixed() })}
+                        {numberGramLocale(props.values.fat, i18n.language)}
                     </TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitPercent', { value: props.values.percent.fat.toFixed() })}
+                        {numberPercentLocale(props.values.percent.fat, i18n.language)}
                     </TableCell>
                     <TableCell align="right">...</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell sx={{ pl: 5 }}>{t('nutrition.ofWhichSaturated')}</TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitG', { value: props.values.fatSaturated.toFixed() })}
+                        {numberGramLocale(props.values.fatSaturated, i18n.language)}
                     </TableCell>
                     <TableCell align="right"></TableCell>
                     <TableCell align="right"></TableCell>
@@ -83,7 +84,7 @@ export const NutritionalValuesTable = (props: { values: NutritionalValues }) => 
                 <TableRow>
                     <TableCell>{t('nutrition.fibres')}</TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitG', { value: props.values.fibres.toFixed() })}
+                        {numberGramLocale(props.values.fibres, i18n.language)}
                     </TableCell>
                     <TableCell align="right"></TableCell>
                     <TableCell align="right"></TableCell>
@@ -91,7 +92,7 @@ export const NutritionalValuesTable = (props: { values: NutritionalValues }) => 
                 <TableRow>
                     <TableCell>{t('nutrition.sodium')}</TableCell>
                     <TableCell align="right">
-                        {t('nutrition.valueUnitG', { value: props.values.sodium.toFixed() })}
+                        {numberGramLocale(props.values.sodium, i18n.language)}
                     </TableCell>
                     <TableCell align="right"></TableCell>
                     <TableCell align="right"></TableCell>
