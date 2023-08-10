@@ -13,6 +13,7 @@ describe("Test the NutritionDiaryOverview component", () => {
         // @ts-ignore
         useFetchNutritionalPlanDateQuery.mockImplementation(() => ({
             isSuccess: true,
+            isLoading: false,
             data: TEST_NUTRITIONAL_PLAN_1
         }));
     });
