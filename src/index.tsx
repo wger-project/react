@@ -155,17 +155,7 @@ if (exerciseDetail) {
 }
 
 
-renderComponentShadowDom("react-routine-overview");
-renderComponentShadowDom("react-routine-detail");
-renderComponentShadowDom("react-routine-logs");
-
-
-renderComponentShadowDom("react-measurements-overview");
-renderComponentShadowDom("react-measurements-detail");
-
-renderComponentShadowDom('react-nutrition-overview');
-renderComponentShadowDom('react-nutrition-detail');
-renderComponentShadowDom('react-nutrition-log');
+renderComponentShadowDom('react-page');
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
