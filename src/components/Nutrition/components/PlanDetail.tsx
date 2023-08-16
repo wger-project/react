@@ -5,7 +5,6 @@ import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget"
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
 import { MacrosPieChart } from "components/Nutrition/widgets/charts/MacrosPieChart";
-import { NutritionalValuesDashboardChart } from "components/Nutrition/widgets/charts/NutritionalValuesDashboardChart";
 import { NutritionDiaryChart } from "components/Nutrition/widgets/charts/NutritionDiaryChart";
 import { DiaryOverview } from "components/Nutrition/widgets/DiaryOverview";
 import { AddNutritionDiaryEntryFab } from "components/Nutrition/widgets/Fab";
@@ -68,6 +67,7 @@ export const PlanDetail = () => {
                         avg7Days={planQuery.data!.loggedNutritionalValues7DayAvg}
                     />
                     <DiaryOverview
+                        planId={planQuery.data!.id}
                         logged={planQuery.data!.groupDiaryEntries}
                         planned={planQuery.data!.plannedNutritionalValues}
                     />

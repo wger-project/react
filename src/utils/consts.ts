@@ -39,6 +39,7 @@ export const QUERY_NUTRITIONAL_PLANS = 'nutritional-plans';
  */
 export enum QueryKey {
     NUTRITIONAL_PLAN = 'nutritional-plan',
+    NUTRITIONAL_PLAN_LAST = 'nutritional-plan-last',
     INGREDIENT = 'ingredient'
 }
 

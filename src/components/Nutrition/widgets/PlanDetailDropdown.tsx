@@ -73,7 +73,7 @@ export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
 
         <DeleteConfirmationModal
             title={t('deleteConfirmation', { name: props.plan.description })}
-            message={t('measurements.deleteInfo')}
+            message={t('nutrition.planDeleteInfo')}
             isOpen={openDeleteModal}
             closeFn={handleCloseDeleteModal}
             deleteFn={performDelete}

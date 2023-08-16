@@ -19,6 +19,18 @@ export const getNutritionalPlansSparse = async (): Promise<NutritionalPlan[]> =>
     return receivedPlans.results.map((plan) => adapter.fromJson(plan));
 };
 
+export const getLastNutritionalPlan = async (): Promise<number | null> => {
+    const { data: receivedPlan } = await axios.get<ResponseType<ApiNutritionalPlanType>>(
+        makeUrl(API_NUTRITIONAL_PLAN_PATH, { query: { limit: '1' } }),
+        { headers: makeHeader() },
+    );
+
+    if (receivedPlan.count === 0) {
+        return null;
+    }
+    return receivedPlan.results[0].id;
+};
+
 export const getNutritionalPlanFull = async (id: number, date?: Date): Promise<NutritionalPlan> => {
     const { data: receivedPlan } = await axios.get<ApiNutritionalPlanType>(
         makeUrl(API_NUTRITIONAL_PLAN_PATH, { id: id }),

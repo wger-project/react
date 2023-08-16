@@ -38,12 +38,13 @@ export function dateTimeToLocaleYYYYMMDD(dateTime: Date | null) {
 /*
  * Returns the localized time from a date object
  */
-export function dateTimeToLocaleHHMM(dateTime: Date | null) {
+export function dateTimeToLocaleHHMM(dateTime: Date | null, locale?: string) {
     if (dateTime == null) {
         return null;
     }
 
-    return dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    return dateTime.toLocaleTimeString(locale ? [locale] : [], { hour: '2-digit', minute: '2-digit' });
 }
 
 /*

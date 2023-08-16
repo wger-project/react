@@ -1,10 +1,14 @@
 import { Grid } from '@mui/material';
-import React from 'react';
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { NutritionCard } from "components/Dashboard/NutritionCard";
 import { WeightCard } from "components/Dashboard/WeightCard";
 import { WorkoutCard } from "components/Dashboard/WorkoutCard";
-import { NutritionCard } from "components/Dashboard/NutritionCard";
+import { useFetchLastNutritionalPlanIdQuery } from "components/Nutrition/queries";
+import React from 'react';
 
 export const Dashboard = () => {
+
+    const planQuery = useFetchLastNutritionalPlanIdQuery();
 
     return (
         <Grid container spacing={2}>
@@ -12,7 +16,10 @@ export const Dashboard = () => {
                 <WorkoutCard />
             </Grid>
             <Grid item xs={4}>
-                <NutritionCard />
+                {planQuery.isLoading
+                    ? <LoadingPlaceholder />
+                    : <NutritionCard planId={planQuery.data!} />
+                }
             </Grid>
             <Grid item xs={4}>
                 <WeightCard />
