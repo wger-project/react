@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { NutritionalPlan, NutritionalPlanAdapter } from "components/Nutrition/models/nutritionalPlan";
+import { getIngredients } from "services/ingredient";
 import { getMealsForPlan } from "services/meal";
 import { getNutritionalDiaryEntries } from "services/nutritionalDiary";
 import { ResponseType } from "services/responseType";
@@ -19,7 +19,7 @@ export const getNutritionalPlansSparse = async (): Promise<NutritionalPlan[]> =>
     return receivedPlans.results.map((plan) => adapter.fromJson(plan));
 };
 
-export const getLastNutritionalPlan = async (): Promise<number | null> => {
+export const getLastNutritionalPlanId = async (): Promise<number | null> => {
     const { data: receivedPlan } = await axios.get<ResponseType<ApiNutritionalPlanType>>(
         makeUrl(API_NUTRITIONAL_PLAN_PATH, { query: { limit: '1' } }),
         { headers: makeHeader() },
@@ -37,18 +37,30 @@ export const getNutritionalPlanFull = async (id: number, date?: Date): Promise<N
         { headers: makeHeader() },
     );
 
-    // Poor man's cache. This doesn't catch everything, but it does reduce the nr of requests
-    const ingredientCache = new Map<number, Ingredient>();
+    // Collect the ingredient ids from the  diary entries
+    const ingredientIds: number[] = [];
 
     const adapter = new NutritionalPlanAdapter();
     const plan = adapter.fromJson(receivedPlan);
     const responses = await Promise.all([
-        getMealsForPlan(id, ingredientCache),
-        getNutritionalDiaryEntries(id, ingredientCache, date)
+        getMealsForPlan(id),
+        getNutritionalDiaryEntries(id, date)
     ]);
 
     plan.meals = responses[0];
     plan.diaryEntries = responses[1];
+
+    // Fetch and set the ingredients
+    plan.diaryEntries.forEach((entry) => {
+        if (!ingredientIds.includes(entry.ingredientId)) {
+            ingredientIds.push(entry.ingredientId);
+        }
+    });
+    const ingredients = await getIngredients(ingredientIds);
+    plan.diaryEntries.forEach((entry) => {
+        entry.ingredient = ingredients.find((ingredient) => ingredient.id === entry.ingredientId)!;
+    });
+
     plan.meals.forEach((meal) => {
         meal.diaryEntries = plan.diaryEntries.filter((entry) => entry.mealId === meal.id);
     });

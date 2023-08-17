@@ -29,14 +29,14 @@ export const PlanDetail = () => {
     return planQuery.isLoading
         ? <LoadingPlaceholder />
         : <WgerContainerRightSidebar
-            title={planQuery.data!.description}
+            title={planQuery.data?.description}
             optionsMenu={<PlanDetailDropdown plan={planQuery.data!} />}
             mainContent={<>
                 <Stack spacing={2}>
                     <Typography gutterBottom variant="h4">
                         {t('nutrition.planned')}
                     </Typography>
-                    {planQuery.data!.meals.map(meal =>
+                    {planQuery.data?.meals.map(meal =>
                         <MealDetail meal={meal} planId={planQuery.data!.id} key={meal.id} />
                     )}
                     <MealDetail meal={planQuery.data!.pseudoMealOthers} planId={planQuery.data!.id} key={-1} />

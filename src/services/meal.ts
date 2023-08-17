@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { Meal, MealAdapter } from "components/Nutrition/models/meal";
 import { MealItemAdapter } from "components/Nutrition/models/mealItem";
-import { getIngredient } from "services/ingredient";
+import { getIngredients } from "services/ingredient";
 import { getWeightUnit } from "services/ingredientweightunit";
 import { ResponseType } from "services/responseType";
 import { ApiMealItemType, ApiMealType } from 'types';
@@ -50,8 +49,9 @@ export const deleteMeal = async (id: number): Promise<void> => {
     );
 };
 
-export const getMealsForPlan = async (planId: number, ingredientCache: Map<number, Ingredient>): Promise<Meal[]> => {
+export const getMealsForPlan = async (planId: number): Promise<Meal[]> => {
 
+    let ingredientIds: number[] = [];
     const mealAdapter = new MealAdapter();
     const mealItemAdapter = new MealItemAdapter();
     const { data: receivedMeals } = await axios.get<ResponseType<ApiMealType>>(
@@ -60,22 +60,22 @@ export const getMealsForPlan = async (planId: number, ingredientCache: Map<numbe
     );
     const meals = receivedMeals.results.map((meal) => mealAdapter.fromJson(meal));
     for (const meal of meals) {
+        ingredientIds = [];
+
         const { data: receivedMealItems } = await axios.get<ResponseType<ApiMealItemType>>(
             makeUrl(ApiPath.MEAL_ITEM, { query: { meal: meal.id } }),
             { headers: makeHeader() },
         );
-
         const items = receivedMealItems.results.map((item) => mealItemAdapter.fromJson(item));
+
         for (const item of items) {
-            const responses = await Promise.all([
-                ingredientCache.get(item.ingredientId) !== undefined
-                    ? ingredientCache.get(item.ingredientId)
-                    : getIngredient(item.ingredientId),
-                getWeightUnit(item.weightUnitId)
-            ]);
-            item.ingredient = responses[0]!;
-            item.weightUnit = responses[1];
-            ingredientCache.set(item.ingredientId, item.ingredient!);
+            ingredientIds.push(item.ingredientId);
+        }
+        const ingredients = await getIngredients(ingredientIds);
+
+        for (const item of items) {
+            item.weightUnit = await getWeightUnit(item.weightUnitId);
+            item.ingredient = ingredients.find((ingredient) => ingredient.id === item.ingredientId)!;
         }
         meal.items = items;
     }

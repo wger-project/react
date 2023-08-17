@@ -1,7 +1,5 @@
 import axios from 'axios';
 import { DiaryEntry, DiaryEntryAdapter } from "components/Nutrition/models/diaryEntry";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { getIngredient } from "services/ingredient";
 import { getWeightUnit } from "services/ingredientweightunit";
 import { API_MAX_PAGE_SIZE, ApiPath } from "utils/consts";
 import { dateToYYYYMMDD } from "utils/date";
@@ -11,7 +9,6 @@ import { makeHeader, makeUrl } from "utils/url";
 
 export const getNutritionalDiaryEntries = async (
     planId: number,
-    ingredientCache: Map<number, Ingredient>,
     date?: Date
 ): Promise<DiaryEntry[]> => {
     const adapter = new DiaryEntryAdapter();
@@ -29,17 +26,8 @@ export const getNutritionalDiaryEntries = async (
         for (const logData of page) {
             let entry = adapter.fromJson(logData);
 
-            const responses = await Promise.all([
-                ingredientCache.get(entry.ingredientId) !== undefined
-                    ? ingredientCache.get(entry.ingredientId)
-                    : getIngredient(entry.ingredientId),
-                getWeightUnit(entry.weightUnitId)
-            ]);
-            entry.ingredient = responses[0]!;
-            entry.weightUnit = responses[1];
+            entry.weightUnit = await getWeightUnit(entry.weightUnitId);
             out.push(entry);
-
-            ingredientCache.set(entry.ingredientId, entry.ingredient!);
         }
     }
     return out;

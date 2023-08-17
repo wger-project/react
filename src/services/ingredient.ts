@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Ingredient, IngredientAdapter } from "components/Nutrition/models/Ingredient";
-import { IngredientSearchResponse, IngredientSearchType } from "services/responseType";
+import { IngredientSearchResponse, IngredientSearchType, ResponseType } from "services/responseType";
 import { ApiIngredientType } from 'types';
 import { ApiPath, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
@@ -13,6 +13,16 @@ export const getIngredient = async (id: number): Promise<Ingredient> => {
     );
 
     return new IngredientAdapter().fromJson(receivedIngredient);
+};
+
+export const getIngredients = async (ids: number[]): Promise<Ingredient[]> => {
+    const { data: receivedIngredients } = await axios.get<ResponseType<ApiIngredientType>>(
+        // eslint-disable-next-line camelcase
+        makeUrl(ApiPath.INGREDIENT_PATH, { query: { id__in: ids.join(',') } }),
+        { headers: makeHeader() },
+    );
+
+    return receivedIngredients.results.map((meal) => new IngredientAdapter().fromJson(meal));
 };
 
 
