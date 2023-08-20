@@ -52,9 +52,6 @@ export const PlanDetail = () => {
                         <MealForm planId={planQuery.data!.id} closeFn={handleToggleExpandedForm} />
                     </Collapse>
 
-                    <Typography gutterBottom variant="h5">
-                        {t('nutrition.nutritionalData')}
-                    </Typography>
                     <NutritionalValuesTable values={planQuery.data!.plannedNutritionalValues} />
                     {planQuery.data!.plannedNutritionalValues.energy > 0 &&
                         <MacrosPieChart data={planQuery.data!.plannedNutritionalValues} />}

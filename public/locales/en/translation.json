@@ -71,7 +71,6 @@
     "valueEnergyKcal": "{{value}} kcal",
     "valueEnergyKcalKj": "{{kcal}} kcal / {{kj}} kJ",
     "searchIngredientName": "Search by ingredient name",
-    "nutritionalData": "Nutritional data",
     "macronutrient": "Macronutrient",
     "percentEnergy": "Percent of energy",
     "gPerBodyKg": "g per body-kg",
