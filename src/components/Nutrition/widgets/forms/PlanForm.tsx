@@ -20,6 +20,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
     const validationSchema = yup.object({
         description: yup
             .string()
+            .required()
             .max(25, t('forms.maxLength', { chars: '25' }))
             .min(3, t('forms.minLength', { chars: '3' })),
     });
@@ -28,7 +29,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
     return (
         <Formik
             initialValues={{
-                description: plan ? plan.description : "",
+                description: plan ? plan.description : t('nutrition.plan'),
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
@@ -53,6 +54,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                             id="description"
                             label={t('description')}
                             error={formik.touched.description && Boolean(formik.errors.description)}
+                            // @ts-ignore - the description might come from t(), which might be undefined
                             helperText={formik.touched.description && formik.errors.description}
                             {...formik.getFieldProps('description')}
                         />

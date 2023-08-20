@@ -62,6 +62,7 @@
   },
   "nutrition": {
     "plans": "Nutritional plans",
+    "plan": "Nutritional plan",
     "addNutritionalDiary": "Add nutrition diary entry",
     "meal": "Meal",
     "addMeal": "Add meal",
