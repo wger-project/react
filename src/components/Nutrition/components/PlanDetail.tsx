@@ -56,8 +56,8 @@ export const PlanDetail = () => {
                         {t('nutrition.nutritionalData')}
                     </Typography>
                     <NutritionalValuesTable values={planQuery.data!.plannedNutritionalValues} />
-                    <MacrosPieChart data={planQuery.data!.plannedNutritionalValues} />
-
+                    {planQuery.data!.plannedNutritionalValues.energy > 0 &&
+                        <MacrosPieChart data={planQuery.data!.plannedNutritionalValues} />}
                     <Typography gutterBottom variant="h4">
                         {t('nutrition.logged')}
                     </Typography>
