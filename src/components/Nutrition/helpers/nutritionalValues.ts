@@ -42,9 +42,9 @@ export class NutritionalValues {
 
     get percent() {
         return {
-            protein: this.protein * ENERGY_FACTOR.protein / this.energy * 100,
-            carbohydrates: this.carbohydrates * ENERGY_FACTOR.carbohydrates / this.energy * 100,
-            fat: this.fat * ENERGY_FACTOR.fat / this.energy * 100
+            protein: this.protein > 0 ? this.protein * ENERGY_FACTOR.protein / this.energy * 100 : 0,
+            carbohydrates: this.carbohydrates > 0 ? this.carbohydrates * ENERGY_FACTOR.carbohydrates / this.energy * 100 : 0,
+            fat: this.fat > 0 ? this.fat * ENERGY_FACTOR.fat / this.energy * 100 : 0
         };
     }
 
