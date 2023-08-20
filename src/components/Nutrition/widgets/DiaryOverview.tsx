@@ -35,7 +35,9 @@ export const DiaryOverview = (props: {
                             </Link>
                         </TableCell>
                         <TableCell align="right">
-                            {numberLocale(props.logged.get(key)?.nutritionalValues.energy!, i18n.language)}
+                            {t('nutrition.valueEnergyKcal',
+                                { value: numberLocale(props.logged.get(key)?.nutritionalValues.energy!, i18n.language) }
+                            )}
                         </TableCell>
                         <TableCell align="right">
                             {numberLocale(props.logged.get(key)?.nutritionalValues.energy! - props.planned.energy, i18n.language)}
