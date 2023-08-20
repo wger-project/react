@@ -51,7 +51,7 @@
         "identicalExercise": "Evitar los ejercicios duplicados",
         "cacheWarning": "Debido al almacenamiento en caché, puede pasar algún tiempo hasta que los cambios sean visibles en toda la aplicación."
     },
-    "loading": "Cargando...",
+    "loading": "Cargando…",
     "images": "Imágenes",
     "translation": "Traducción",
     "description": "Descripción",
@@ -119,7 +119,7 @@
     "preferences": "Preferencias",
     "cancel": "Cancelar",
     "noResults": "Sin resultados",
-    "success": "¡Éxito!",
+    "success": "¡Éxitoso!",
     "routines": {
         "rir": "Repeticiones",
         "addDay": "Añadir un día de entrenamiento",
