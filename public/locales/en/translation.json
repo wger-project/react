@@ -92,7 +92,7 @@
     "others": "Others",
     "fibres": "Fibres",
     "sodium": "Sodium",
-    "planDeleteInfo": "This is delete all nutrition diary entries as well",
+    "planDeleteInfo": "This will delete all nutrition diary entries as well",
     "mealDeleteInfo": "Nutrition diary entries to this meal will not be deleted and will appear under \"others\"",
     "diaryEntrySaved": "Diary entry successfully saved",
     "logThisMeal": "Log this meal as-is to the nutrition diary",
