@@ -3,13 +3,15 @@ import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValue
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
-import { numberGramLocale } from "utils/numbers";
+import { numberGramLocale, numberLocale } from "utils/numbers";
 
 
 export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValues, planned: NutritionalValues }) => {
 
+    const hasPlannedValues = props.planned.energy > 0;
+
     const energyPercentage = props.logged.energy / props.planned.energy * 100;
-    const energyDiff = props.planned.energy - props.logged.energy;
+    const energyDiff = hasPlannedValues ? props.planned.energy - props.logged.energy : props.logged.energy;
     const proteinPercentage = props.logged.protein / props.planned.protein * 100;
     const carbohydratesPercentage = props.logged.carbohydrates / props.planned.carbohydrates * 100;
     const fatPercentage = props.logged.fat / props.planned.fat * 100;
@@ -18,11 +20,11 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
     const [t, i18n] = useTranslation();
     const data = [
         {
-            name: t('nutrition.energy'),
+            name: '',
             value: energyPercentage,
         },
         {
-            name: t('nutrition.protein'),
+            name: '',
             value: energyPercentage < 100 ? 100 - energyPercentage : 0,
         },
     ];
@@ -50,10 +52,10 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
                 </Pie>
                 <g>
                     <text x={'50%'} y={'45%'} fontSize="1.25em" textAnchor="middle">{/*fill="#333"*/}
-                        {t('nutrition.valueEnergyKcal', { value: energyDiff.toFixed() })}
+                        {t('nutrition.valueEnergyKcal', { value: numberLocale(energyDiff, i18n.language) })}
                     </text>
                     <text x={'50%'} y={'60%'} fontSize="1em" textAnchor="middle">
-                        {t(energyPercentage < 100 ? 'nutrition.valueRemaining' : 'nutrition.valueTooMany')}
+                        {hasPlannedValues && t(energyPercentage < 100 ? 'nutrition.valueRemaining' : 'nutrition.valueTooMany')}
                     </text>
                 </g>
             </PieChart>
@@ -65,7 +67,8 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
                     value={proteinPercentage < 100 ? proteinPercentage : 100}
                 />
                 <Typography variant={'caption'}>
-                    {t('nutrition.protein')} — {numberGramLocale(props.logged.protein, i18n.language)} / {numberGramLocale(props.planned.protein, i18n.language)}
+                    {t('nutrition.protein')} — {numberGramLocale(props.logged.protein, i18n.language)}
+                    {hasPlannedValues && <>/ {numberGramLocale(props.planned.protein, i18n.language)}</>}
                 </Typography>
             </span>
 
@@ -75,7 +78,8 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
                     value={carbohydratesPercentage < 100 ? carbohydratesPercentage : 100}
                 />
                 <Typography variant={'caption'}>
-                    {t('nutrition.carbohydrates')} — {numberGramLocale(props.logged.carbohydrates, i18n.language)} / {numberGramLocale(props.planned.carbohydrates, i18n.language)}
+                    {t('nutrition.carbohydrates')} — {numberGramLocale(props.logged.carbohydrates, i18n.language)}
+                    {hasPlannedValues && <>/ {numberGramLocale(props.planned.carbohydrates, i18n.language)}</>}
                 </Typography>
             </span>
 
@@ -85,7 +89,8 @@ export const NutritionalValuesDashboardChart = (props: { logged: NutritionalValu
                     value={fatPercentage < 100 ? fatPercentage : 100}
                 />
                 <Typography variant={'caption'}>
-                    {t('nutrition.fat')} — {numberGramLocale(props.logged.fat, i18n.language)} / {numberGramLocale(props.planned.fat, i18n.language)}
+                    {t('nutrition.fat')} — {numberGramLocale(props.logged.fat, i18n.language)}
+                    {hasPlannedValues && <>/ {numberGramLocale(props.planned.fat, i18n.language)}</>}
                 </Typography>
             </span>
         </Stack>
