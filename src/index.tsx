@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
+import { NutritionCard } from "components/Dashboard/NutritionCard";
 import { WeightOverview } from "pages";
 import React, { Suspense } from 'react';
 import { createRoot } from "react-dom/client";
@@ -130,6 +131,20 @@ if (weightDashboard) {
                     <OverviewDashboard />
                 </ThemeProvider>
             </WeightStateProvider>
+        </Suspense>
+    );
+}
+
+const nutritionDashboard = document.getElementById('react-nutrition-dashboard');
+if (nutritionDashboard) {
+    const root = createRoot(nutritionDashboard);
+    root.render(
+        <Suspense fallback={<LoadingWidget />}>
+            <ThemeProvider theme={theme}>
+                <QueryClientProvider client={queryClient}>
+                    <NutritionCard planId={1} />
+                </QueryClientProvider>
+            </ThemeProvider>
         </Suspense>
     );
 }

@@ -22,6 +22,10 @@ export class Meal {
         return dateTimeToLocaleHHMM(this.time);
     }
 
+    get displayName() {
+        return this.name ? this.name : this.timeHHMMLocale;
+    }
+
     /*
      * Returns the diary entries for the current day.
      */

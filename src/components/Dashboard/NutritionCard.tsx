@@ -68,17 +68,20 @@ const MealListItem = (props: { meal: Meal, planId: number }) => {
         setOpenSnackbar(true);
     };
 
+    const primaryHeader = props.meal.name ? props.meal.name : dateTimeToLocaleHHMM(props.meal.time, i18n.language);
+    const secondaryHeader = props.meal.name ? dateTimeToLocaleHHMM(props.meal.time, i18n.language) : null;
+
     return <>
         <ListItemButton onClick={handleToggleExpand}>
             <ListItemIcon>
                 {expandView ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </ListItemIcon>
-            <ListItemText primary={props.meal.name} secondary={dateTimeToLocaleHHMM(props.meal.time, i18n.language)} />
+            <ListItemText primary={primaryHeader} secondary={secondaryHeader} />
 
         </ListItemButton>
         <Collapse in={expandView} timeout="auto" unmountOnExit>
             <List>
-                {props.meal.items.map((item) => <ListItem secondaryAction={
+                {props.meal.items.map((item) => <ListItem key={item.id} secondaryAction={
                     <Tooltip title={t('nutrition.logThisMealItem')}>
                         <IconButton edge="end" onClick={() => handleAddDiaryEntry(item)}>
                             <HistoryEduIcon />

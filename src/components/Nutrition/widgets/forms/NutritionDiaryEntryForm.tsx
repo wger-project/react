@@ -95,11 +95,10 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         {mealObjs.length > 0 && <Autocomplete
                             value={selectedMeal}
                             options={mealObjs.map(e => e.id)}
-                            getOptionLabel={option => mealObjs.find(e => e.id === option)!.name}
+                            getOptionLabel={option => mealObjs.find(e => e.id === option)!.displayName!}
                             onChange={(event, newValue) => setSelectedMeal(newValue)}
                             renderInput={params => (
                                 <TextField
-
                                     label={t("nutrition.meal")}
                                     value={selectedMeal}
                                     {...params}
