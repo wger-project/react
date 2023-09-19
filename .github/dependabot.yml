@@ -17,14 +17,18 @@ updates:
     groups:
       mui:
         patterns:
-          - "@mui.*"
+          - "@mui*"
+          - ^@mui/.*
+          - ^mui$
         update-types:
           - "minor"
           - "patch"
 
       types:
         patterns:
-          - "@types.*"
+          - "@types*"
+          - ^@types/.*
+          - ^types$
         update-types:
           - "minor"
           - "patch"
