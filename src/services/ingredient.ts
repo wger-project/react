@@ -16,6 +16,13 @@ export const getIngredient = async (id: number): Promise<Ingredient> => {
 };
 
 export const getIngredients = async (ids: number[]): Promise<Ingredient[]> => {
+
+    // If IDs is an empty list, return. Otherwise, the resulting empty id__in will
+    // cause the API to not filter at all
+    if (ids.length === 0) {
+        return [];
+    }
+
     const { data: receivedIngredients } = await axios.get<ResponseType<ApiIngredientType>>(
         // eslint-disable-next-line camelcase
         makeUrl(ApiPath.INGREDIENT_PATH, { query: { id__in: ids.join(',') } }),
