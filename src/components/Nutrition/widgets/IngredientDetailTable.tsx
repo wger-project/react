@@ -67,7 +67,7 @@ export const IngredientDetailTable = (props: {
                 {props.showSum && <TableRow>
                     <TableCell sx={{ paddingX: 1 }}> </TableCell>
                     <TableCell sx={{ paddingX: 1 }}>
-                        Σ
+                        {t('total')}
                     </TableCell>
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>
                         {t('nutrition.valueEnergyKcalKj', {
