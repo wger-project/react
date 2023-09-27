@@ -32,9 +32,9 @@ describe("Test the PlanForm component", () => {
 
         // Act
         render(
-            <QueryClientProvider client={queryClient}>
-                <PlanForm plan={TEST_NUTRITIONAL_PLAN_1} />
-            </QueryClientProvider>
+                <QueryClientProvider client={queryClient}>
+                    <PlanForm plan={TEST_NUTRITIONAL_PLAN_1} />
+                </QueryClientProvider>
         );
 
         // Assert
@@ -49,9 +49,9 @@ describe("Test the PlanForm component", () => {
 
         // Act
         render(
-            <QueryClientProvider client={queryClient}>
-                <PlanForm plan={TEST_NUTRITIONAL_PLAN_1} />
-            </QueryClientProvider>
+                <QueryClientProvider client={queryClient}>
+                    <PlanForm plan={TEST_NUTRITIONAL_PLAN_1} />
+                </QueryClientProvider>
         );
         const descriptionInput = await screen.findByLabelText('description');
         await user.clear(descriptionInput);
@@ -71,11 +71,13 @@ describe("Test the PlanForm component", () => {
 
         // Act
         render(
-            <QueryClientProvider client={queryClient}>
-                <PlanForm />
-            </QueryClientProvider>
+                <QueryClientProvider client={queryClient}>
+                    <PlanForm />
+                </QueryClientProvider>
         );
-        await user.type(await screen.findByLabelText('description'), 'a new, cool plan');
+        const descriptionInput = await screen.findByLabelText('description');
+        await user.clear(descriptionInput);
+        await user.type(descriptionInput, 'a new, cool plan');
 
         // Assert
         await user.click(screen.getByRole('button', { name: 'submit' }));
