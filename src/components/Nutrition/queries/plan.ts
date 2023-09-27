@@ -34,11 +34,12 @@ export function useFetchNutritionalPlanQuery(planId: number) {
  * Fetches the full nutritional plan (meals, etc.), but only the diary entries for
  * the given date
  */
-export function useFetchNutritionalPlanDateQuery(planId: number, dateStr: string) {
-    return useQuery(
-        [QueryKey.NUTRITIONAL_PLAN, planId, dateStr],
-        () => getNutritionalPlanFull(planId, new Date(dateStr))
-    );
+export function useFetchNutritionalPlanDateQuery(planId: number, dateStr: string, enabled = true) {
+    return useQuery({
+        queryKey: [QueryKey.NUTRITIONAL_PLAN, planId, dateStr],
+        queryFn: () => getNutritionalPlanFull(planId, new Date(dateStr)),
+        enabled: enabled,
+    });
 }
 
 export const useAddNutritionalPlanQuery = () => {

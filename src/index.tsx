@@ -69,17 +69,17 @@ const renderComponentShadowDom = (divId: string) => {
 
     const root = createRoot(shadowRoot);
     root.render(
-        <CacheProvider value={cache}>
-            <Suspense fallback={<LoadingWidget />}>
-                <Router>
-                    <ThemeProvider theme={makeTheme(shadowRoot)}>
-                        <QueryClientProvider client={queryClient}>
-                            <WgerRoutes />
-                        </QueryClientProvider>
-                    </ThemeProvider>
-                </Router>
-            </Suspense>
-        </CacheProvider>
+            <CacheProvider value={cache}>
+                <Suspense fallback={<LoadingWidget />}>
+                    <Router>
+                        <ThemeProvider theme={makeTheme(shadowRoot)}>
+                            <QueryClientProvider client={queryClient}>
+                                <WgerRoutes />
+                            </QueryClientProvider>
+                        </ThemeProvider>
+                    </Router>
+                </Suspense>
+            </CacheProvider>
     );
 };
 
@@ -87,20 +87,20 @@ const rootElement = document.getElementById("root");
 if (rootElement) {
     const root = createRoot(rootElement);
     root.render(
-        <React.StrictMode>
-            <Suspense fallback={<LoadingWidget />}>
-                <Router>
-                    <WeightStateProvider>
-                        <ThemeProvider theme={theme}>
-                            <QueryClientProvider client={queryClient}>
-                                <App />
-                                <ReactQueryDevtools />
-                            </QueryClientProvider>
-                        </ThemeProvider>
-                    </WeightStateProvider>
-                </Router>
-            </Suspense>
-        </React.StrictMode>
+            <React.StrictMode>
+                <Suspense fallback={<LoadingWidget />}>
+                    <Router>
+                        <WeightStateProvider>
+                            <ThemeProvider theme={theme}>
+                                <QueryClientProvider client={queryClient}>
+                                    <App />
+                                    <ReactQueryDevtools />
+                                </QueryClientProvider>
+                            </ThemeProvider>
+                        </WeightStateProvider>
+                    </Router>
+                </Suspense>
+            </React.StrictMode>
     );
 }
 
@@ -111,13 +111,13 @@ const weightOverview = document.getElementById("react-weight-overview");
 if (weightOverview) {
     const root = createRoot(weightOverview);
     root.render(
-        <Suspense fallback={<LoadingWidget />}>
-            <WeightStateProvider>
-                <ThemeProvider theme={theme}>
-                    <WeightOverview />
-                </ThemeProvider>
-            </WeightStateProvider>
-        </Suspense>
+            <Suspense fallback={<LoadingWidget />}>
+                <WeightStateProvider>
+                    <ThemeProvider theme={theme}>
+                        <WeightOverview />
+                    </ThemeProvider>
+                </WeightStateProvider>
+            </Suspense>
     );
 }
 
@@ -125,13 +125,13 @@ const weightDashboard = document.getElementById("react-weight-dashboard");
 if (weightDashboard) {
     const root = createRoot(weightDashboard);
     root.render(
-        <Suspense fallback={<LoadingWidget />}>
-            <WeightStateProvider>
-                <ThemeProvider theme={theme}>
-                    <OverviewDashboard />
-                </ThemeProvider>
-            </WeightStateProvider>
-        </Suspense>
+            <Suspense fallback={<LoadingWidget />}>
+                <WeightStateProvider>
+                    <ThemeProvider theme={theme}>
+                        <OverviewDashboard />
+                    </ThemeProvider>
+                </WeightStateProvider>
+            </Suspense>
     );
 }
 
@@ -139,13 +139,13 @@ const nutritionDashboard = document.getElementById('react-nutrition-dashboard');
 if (nutritionDashboard) {
     const root = createRoot(nutritionDashboard);
     root.render(
-        <Suspense fallback={<LoadingWidget />}>
-            <ThemeProvider theme={theme}>
-                <QueryClientProvider client={queryClient}>
-                    <NutritionCard planId={1} />
-                </QueryClientProvider>
-            </ThemeProvider>
-        </Suspense>
+            <Suspense fallback={<LoadingWidget />}>
+                <ThemeProvider theme={theme}>
+                    <QueryClientProvider client={queryClient}>
+                        <NutritionCard />
+                    </QueryClientProvider>
+                </ThemeProvider>
+            </Suspense>
     );
 }
 
@@ -157,15 +157,15 @@ const exerciseDetail = document.getElementById("react-exercise-detail");
 if (exerciseDetail) {
     const root = createRoot(exerciseDetail);
     root.render(
-        <Suspense fallback={<LoadingWidget />}>
-            <Router>
-                <ThemeProvider theme={theme}>
-                    <QueryClientProvider client={queryClient}>
-                        <WgerRoutes />
-                    </QueryClientProvider>
-                </ThemeProvider>
-            </Router>
-        </Suspense>
+            <Suspense fallback={<LoadingWidget />}>
+                <Router>
+                    <ThemeProvider theme={theme}>
+                        <QueryClientProvider client={queryClient}>
+                            <WgerRoutes />
+                        </QueryClientProvider>
+                    </ThemeProvider>
+                </Router>
+            </Suspense>
     );
 }
 

@@ -25,13 +25,12 @@ import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget"
 import { WgerModal } from "components/Core/Modals/WgerModal";
 import { Meal } from "components/Nutrition/models/meal";
 import { MealItem } from "components/Nutrition/models/mealItem";
-import { useFetchNutritionalPlanDateQuery } from "components/Nutrition/queries";
+import { useFetchLastNutritionalPlanIdQuery, useFetchNutritionalPlanDateQuery } from "components/Nutrition/queries";
 import { useAddDiaryEntriesQuery } from "components/Nutrition/queries/diary";
 import { NutritionalValuesDashboardChart } from "components/Nutrition/widgets/charts/NutritionalValuesDashboardChart";
 import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
 import { dateTimeToLocaleHHMM, dateToYYYYMMDD } from "utils/date";
 import { numberGramLocale } from "utils/numbers";
@@ -113,10 +112,12 @@ const MealListItem = (props: { meal: Meal, planId: number }) => {
 };
 
 
-export const NutritionCard = (props: { planId: number }) => {
+export const NutritionCard = () => {
 
     const [t, i18n] = useTranslation();
-    const planQuery = useFetchNutritionalPlanDateQuery(props.planId, dateToYYYYMMDD(new Date()));
+    const lastPlanQuery = useFetchLastNutritionalPlanIdQuery();
+
+    const planQuery = useFetchNutritionalPlanDateQuery(lastPlanQuery.data!, dateToYYYYMMDD(new Date()), lastPlanQuery.isSuccess);
 
     const [openModal, setOpenModal] = React.useState(false);
     const handleOpenModal = () => setOpenModal(true);
@@ -141,8 +142,10 @@ export const NutritionCard = (props: { planId: number }) => {
                     </CardContent>
                     <CardActions>
                         <Button size="small" onClick={handleOpenModal}>{t('nutrition.addNutritionalDiary')}</Button>
-                        <Button size="small" component={Link}
-                                to={makeLink(WgerLink.NUTRITION_DETAIL, i18n.language, { id: planQuery.data!.id })}>{t('seeDetails')}</Button>
+                        <Button size="small"
+                                href={makeLink(WgerLink.NUTRITION_DETAIL, i18n.language, { id: planQuery.data!.id })}>
+                            {t('seeDetails')}
+                        </Button>
                     </CardActions>
                 </Card>
                 <WgerModal title={t('nutrition.addNutritionalDiary')} isOpen={openModal} closeFn={handleCloseModal}>
@@ -152,6 +155,7 @@ export const NutritionCard = (props: { planId: number }) => {
                         meals={planQuery.data!.meals}
                     />
                 </WgerModal>
-            </>}
+            </>
+        }
     </>;
 };
