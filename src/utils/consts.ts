@@ -29,15 +29,13 @@ export const QUERY_ROUTINE_LOGS = 'routines-logs';
 export const QUERY_MEASUREMENTS = 'measurements';
 export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
 
-export const QUERY_NUTRITIONAL_PLANS = 'nutritional-plans';
-
-
 /*
  * Keys used for the queries
  *
  * These don't have any meaning, they just need to be globally unique
  */
 export enum QueryKey {
+    NUTRITIONAL_PLANS = 'nutritional-plans',
     NUTRITIONAL_PLAN = 'nutritional-plan',
     NUTRITIONAL_PLAN_LAST = 'nutritional-plan-last',
     INGREDIENT = 'ingredient'

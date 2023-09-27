@@ -9,10 +9,10 @@ import {
     getNutritionalPlanFull,
     getNutritionalPlansSparse
 } from "services/nutritionalPlan";
-import { QUERY_NUTRITIONAL_PLANS, QueryKey } from "utils/consts";
+import { QueryKey } from "utils/consts";
 
 export function useFetchNutritionalPlansQuery() {
-    return useQuery([QUERY_NUTRITIONAL_PLANS], getNutritionalPlansSparse);
+    return useQuery([QueryKey.NUTRITIONAL_PLANS], getNutritionalPlansSparse);
 }
 
 
@@ -48,7 +48,7 @@ export const useAddNutritionalPlanQuery = () => {
     return useMutation({
         mutationFn: (data: AddNutritionalPlanParams) => addNutritionalPlan(data),
         onSuccess: () => {
-            queryClient.invalidateQueries([QUERY_NUTRITIONAL_PLANS,]);
+            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLANS,]);
             queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN,]);
         }
     });
@@ -59,7 +59,7 @@ export const useDeleteNutritionalPlanQuery = (id: number) => {
     return useMutation({
         mutationFn: (id: number) => deleteNutritionalPlan(id),
         onSuccess: () => {
-            queryClient.invalidateQueries([QUERY_NUTRITIONAL_PLANS,]);
+            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLANS,]);
             queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, id]);
         }
     });
@@ -71,7 +71,7 @@ export const useEditNutritionalPlanQuery = (id: number) => {
         mutationFn: (data: EditNutritionalPlanParams) => editNutritionalPlan(data),
         onSuccess: () => {
             queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, id]);
-            queryClient.invalidateQueries([QUERY_NUTRITIONAL_PLANS,]);
+            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLANS,]);
         }
     });
 };
