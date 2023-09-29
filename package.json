@@ -33,7 +33,7 @@
     "react-router-dom": "^6.16.0",
     "react-simple-wysiwyg": "^2.2.5",
     "recharts": "^2.1.12",
-    "slug": "^8.2.2",
+    "slug": "^8.2.3",
     "typescript": "^5.0.4",
     "web-vitals": "^3.4.0",
     "yup": "^1.2.0"
