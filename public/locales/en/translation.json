@@ -63,6 +63,7 @@
   "nutrition": {
     "plans": "Nutritional plans",
     "plan": "Nutritional plan",
+    "onlyLoggingHelpText": "Only track calories. Check the box if you only want to log your calories and don't want to setup a detailed nutritional plan with specific meals",
     "addNutritionalDiary": "Add nutrition diary entry",
     "meal": "Meal",
     "addMeal": "Add meal",

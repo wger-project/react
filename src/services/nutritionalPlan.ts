@@ -37,7 +37,7 @@ export const getNutritionalPlanFull = async (id: number, date?: Date): Promise<N
         { headers: makeHeader() },
     );
 
-    // Collect the ingredient ids from the  diary entries
+    // Collect the ingredient ids from the diary entries
     const ingredientIds: number[] = [];
 
     const adapter = new NutritionalPlanAdapter();
@@ -70,6 +70,7 @@ export const getNutritionalPlanFull = async (id: number, date?: Date): Promise<N
 
 export interface AddNutritionalPlanParams {
     description: string;
+    only_logging: boolean;
 }
 
 export interface EditNutritionalPlanParams extends AddNutritionalPlanParams {

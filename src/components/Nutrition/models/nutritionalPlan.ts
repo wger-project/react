@@ -22,6 +22,7 @@ export class NutritionalPlan {
         public id: number,
         public creationDate: Date,
         public description: string,
+        public onlyLogging: boolean
     ) {
     }
 
@@ -36,7 +37,6 @@ export class NutritionalPlan {
 
         return out;
     }
-
 
     /*
      * Returns the average nutritional values of the last 7 days.
@@ -56,56 +56,9 @@ export class NutritionalPlan {
      */
     get loggedNutritionalValuesToday() {
         const relevantEntries = this.diaryEntries.filter(entry => isSameDay(entry.datetime, new Date()));
+        // console.log(relevantEntries);
+        // console.log(this.getNutritionalValuesFromDiaryEntries(relevantEntries));
         return this.getNutritionalValuesFromDiaryEntries(relevantEntries);
-    }
-
-    /*
-     * Returns the nutritional values for the logged meals for a given date
-     */
-    loggedNutritionalValuesDate(date: Date) {
-        return this.getNutritionalValuesFromDiaryEntries(this.loggedEntriesDate(date));
-    }
-
-    /*
-     * Returns the diary entries for a given date
-     */
-    loggedEntriesDate(date: Date) {
-        return this.diaryEntries.filter(entry => isSameDay(entry.datetime, date));
-    }
-
-
-    getAverageNutritionalValuesFromDiaryEntries(entries: DiaryEntry[]) {
-        const out = this.getNutritionalValuesFromDiaryEntries(entries);
-
-        if (entries.length === 0) {
-            return out;
-        }
-        const nrOfEntries = entries.length;
-
-        out.energy = out.energy / nrOfEntries;
-        out.protein = out.protein / nrOfEntries;
-        out.carbohydrates = out.carbohydrates / nrOfEntries;
-        out.carbohydratesSugar = out.carbohydratesSugar / nrOfEntries;
-        out.fat = out.fat / nrOfEntries;
-        out.fatSaturated = out.fatSaturated / nrOfEntries;
-        out.fibres = out.fibres / nrOfEntries;
-        out.sodium = out.sodium / nrOfEntries;
-        return out;
-    }
-
-    getNutritionalValuesFromDiaryEntries(entries: DiaryEntry[]) {
-        const out = new NutritionalValues();
-        const sum = entries.reduce((accumulator, entry) => accumulator.add(entry.nutritionalValues), new NutritionalValues());
-
-        out.energy = sum.energy;
-        out.protein = sum.protein;
-        out.carbohydrates = sum.carbohydrates;
-        out.carbohydratesSugar = sum.carbohydratesSugar;
-        out.fat = sum.fat;
-        out.fatSaturated = sum.fatSaturated;
-        out.fibres = sum.fibres;
-        out.sodium = sum.sodium;
-        return out;
     }
 
     /*
@@ -140,6 +93,45 @@ export class NutritionalPlan {
 
         return out;
     }
+
+    /*
+     * Returns the nutritional values for the logged meals for a given date
+     */
+    loggedNutritionalValuesDate(date: Date) {
+        return this.getNutritionalValuesFromDiaryEntries(this.loggedEntriesDate(date));
+    }
+
+    /*
+     * Returns the diary entries for a given date
+     */
+    loggedEntriesDate(date: Date) {
+        return this.diaryEntries.filter(entry => isSameDay(entry.datetime, date));
+    }
+
+    getAverageNutritionalValuesFromDiaryEntries(entries: DiaryEntry[]) {
+        const nrOfEntries = entries.length;
+        const out = this.getNutritionalValuesFromDiaryEntries(entries);
+
+        if (nrOfEntries === 0) {
+            return out;
+        }
+
+        out.energy = out.energy / nrOfEntries;
+        out.protein = out.protein / nrOfEntries;
+        out.carbohydrates = out.carbohydrates / nrOfEntries;
+        out.carbohydratesSugar = out.carbohydratesSugar / nrOfEntries;
+        out.fat = out.fat / nrOfEntries;
+        out.fatSaturated = out.fatSaturated / nrOfEntries;
+        out.fibres = out.fibres / nrOfEntries;
+        out.sodium = out.sodium / nrOfEntries;
+        return out;
+    }
+
+    getNutritionalValuesFromDiaryEntries(entries: DiaryEntry[]) {
+        return entries.reduce(
+            (acc, entry) => acc.add(entry.nutritionalValues), new NutritionalValues()
+        );
+    }
 }
 
 
@@ -148,7 +140,8 @@ export class NutritionalPlanAdapter implements Adapter<NutritionalPlan> {
         return new NutritionalPlan(
             item.id,
             new Date(item.creation_date),
-            item.description
+            item.description,
+            item.only_logging
         );
     }
 

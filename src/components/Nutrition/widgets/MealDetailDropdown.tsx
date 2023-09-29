@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
 
 
-export const MealDetailDropdown = (props: { meal: Meal, planId: number }) => {
+export const MealDetailDropdown = (props: { meal: Meal, planId: number, onlyLogging: boolean }) => {
 
     const addDiaryEntriesQuery = useAddDiaryEntriesQuery(props.planId);
     const deleteMealQuery = useDeleteMealQuery(props.planId);
@@ -79,11 +79,11 @@ export const MealDetailDropdown = (props: { meal: Meal, planId: number }) => {
 
 
     return <>
-        <Tooltip title={t('nutrition.logThisMeal')}>
+        {!props.onlyLogging && <Tooltip title={t('nutrition.logThisMeal')}>
             <IconButton aria-label="settings" onClick={handleAddDiaryEntry}>
                 <HistoryEduIcon />
             </IconButton>
-        </Tooltip>
+        </Tooltip>}
         <IconButton aria-label="settings" onClick={handleClick}>
             <MoreVertIcon />
         </IconButton>

@@ -12,6 +12,54 @@ describe("Test the nutritional plan model", () => {
         jest.useRealTimers();
     });
 
+    test('correctly calculates the nutritional values logged for today', async () => {
+
+        // Act
+        const values = TEST_NUTRITIONAL_PLAN_1.loggedNutritionalValuesToday;
+
+        // Assert
+        expect(values.energy).toBeCloseTo(296.7, 2);
+        expect(values.protein).toBeCloseTo(13.82, 2);
+        expect(values.carbohydrates).toBeCloseTo(80.87, 2);
+        expect(values.carbohydratesSugar).toBeCloseTo(44.35, 2);
+        expect(values.fat).toBeCloseTo(6.51, 2);
+        expect(values.fatSaturated).toBeCloseTo(1.58, 2);
+        expect(values.fibres).toBeCloseTo(5.25, 2);
+        expect(values.sodium).toBeCloseTo(0.064, 2);
+    });
+
+    test('correctly calculates the nutritional values logged on a specific date', async () => {
+
+        // Act
+        const values = TEST_NUTRITIONAL_PLAN_1.loggedNutritionalValuesDate(new Date('2023-07-07'));
+
+        // Assert
+        expect(values.energy).toBeCloseTo(48, 2);
+        expect(values.protein).toBeCloseTo(0.71, 2);
+        expect(values.carbohydrates).toBeCloseTo(11.2, 2);
+        expect(values.carbohydratesSugar).toBeCloseTo(9.424, 2);
+        expect(values.fat).toBeCloseTo(0, 2);
+        expect(values.fatSaturated).toBeCloseTo(0, 2);
+        expect(values.fibres).toBeCloseTo(0, 2);
+        expect(values.sodium).toBeCloseTo(0.0048, 2);
+    });
+
+    test('correctly calculates the average nutritional values logged for the last 7 days', async () => {
+
+        // Act
+        const values = TEST_NUTRITIONAL_PLAN_1.loggedNutritionalValues7DayAvg;
+
+        // Assert
+        expect(values.energy).toBeCloseTo(67.18, 2);
+        expect(values.protein).toBeCloseTo(2.73, 2);
+        expect(values.carbohydrates).toBeCloseTo(12.105, 2);
+        expect(values.carbohydratesSugar).toBeCloseTo(7.73, 2);
+        expect(values.fat).toBeCloseTo(1.77, 2);
+        expect(values.fatSaturated).toBeCloseTo(0.89, 2);
+        expect(values.fibres).toBeCloseTo(2.19, 2);
+        expect(values.sodium).toBeCloseTo(0.0085, 2);
+    });
+
     test('correctly calculates the planned nutritional values', async () => {
 
         // Act

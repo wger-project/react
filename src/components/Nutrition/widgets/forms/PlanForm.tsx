@@ -1,4 +1,4 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Stack, TextField } from "@mui/material";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
@@ -23,6 +23,9 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             .required()
             .max(25, t('forms.maxLength', { chars: '25' }))
             .min(3, t('forms.minLength', { chars: '3' })),
+        // eslint-disable-next-line camelcase
+        only_logging: yup
+            .boolean()
     });
 
 
@@ -30,6 +33,8 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
         <Formik
             initialValues={{
                 description: plan ? plan.description : t('nutrition.plan'),
+                // eslint-disable-next-line camelcase
+                only_logging: plan ? plan.onlyLogging : false,
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
@@ -58,6 +63,17 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                             helperText={formik.touched.description && formik.errors.description}
                             {...formik.getFieldProps('description')}
                         />
+                        <FormControlLabel
+                            label={t('nutrition.onlyLoggingHelpText')}
+                            control={
+                                <Checkbox
+                                    id="onlyLogging"
+                                    checked={formik.values.only_logging}
+                                    {...formik.getFieldProps('only_logging')}
+                                />}
+
+                        />
+
                         <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
                             <Button color="primary"
                                     variant="contained"

@@ -66,7 +66,7 @@ const MealItemListItem = (props: { mealItem: MealItem, planId: number, mealId: n
     </>;
 };
 
-export const MealDetail = (props: { meal: Meal, planId: number }) => {
+export const MealDetail = (props: { meal: Meal, planId: number, onlyLogging: boolean }) => {
     const theme = useTheme();
     const isRealMeal = props.meal.id !== PSEUDO_MEAL_ID;
     const [t] = useTranslation();
@@ -88,17 +88,22 @@ export const MealDetail = (props: { meal: Meal, planId: number }) => {
     return <Card>
         <CardHeader
             sx={{ bgcolor: theme.palette.grey["300"] }}
-            action={props.meal.id !== PSEUDO_MEAL_ID && <MealDetailDropdown meal={props.meal} planId={props.planId} />}
+            action={props.meal.id !== PSEUDO_MEAL_ID &&
+                <MealDetailDropdown
+                    meal={props.meal}
+                    planId={props.planId}
+                    onlyLogging={props.onlyLogging}
+                />}
             title={props.meal.name}
             subheader={props.meal.timeHHMMLocale}
         />
         <CardContent sx={{ paddingY: 0 }}>
             <Collapse in={expandViewStats} timeout="auto" unmountOnExit>
-                <IngredientDetailTable
+                {!props.onlyLogging && <IngredientDetailTable
                     showSum={isRealMeal}
                     items={props.meal.items}
                     values={props.meal.plannedNutritionalValues}
-                />
+                />}
 
                 <Typography gutterBottom variant="h6" sx={{ my: 2 }}>
                     {t('nutrition.loggedToday')}
@@ -136,7 +141,7 @@ export const MealDetail = (props: { meal: Meal, planId: number }) => {
                 {expandViewStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </IconButton>
 
-            {isRealMeal && <Tooltip title={t('nutrition.addMeal')}>
+            {!props.onlyLogging && <Tooltip title={t('nutrition.addMealItem')}>
                 <IconButton onClick={handleToggleExpandItemForm}>
                     <Add />
                 </IconButton>

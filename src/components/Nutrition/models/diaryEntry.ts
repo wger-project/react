@@ -37,6 +37,7 @@ export class DiaryEntry {
         if (this.ingredient) {
             return NutritionalValues.fromIngredient(this.ingredient, this.amount, this.weightUnit);
         }
+        console.log('Diary entry has no ingredient, returning empty NutritionalValues object');
         return new NutritionalValues();
     }
 }

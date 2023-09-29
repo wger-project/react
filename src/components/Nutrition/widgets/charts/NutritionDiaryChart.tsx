@@ -6,12 +6,13 @@ import { generateChartColors } from "utils/colors";
 import { numberLocale } from "utils/numbers";
 
 type NutritionDiaryChartProps = {
+    onlyLogging: boolean,
     planned: NutritionalValues;
     today: NutritionalValues;
     avg7Days: NutritionalValues;
 }
 
-export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiaryChartProps) => {
+export const NutritionDiaryChart = ({ onlyLogging, planned, today, avg7Days }: NutritionDiaryChartProps) => {
     const [t, i18n] = useTranslation();
     const colorGenerator = generateChartColors(3);
 
@@ -28,7 +29,6 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
             today: today.carbohydrates,
             avg7Days: avg7Days.carbohydrates,
         },
-
         {
             name: t('nutrition.sugar'),
             planned: planned.carbohydratesSugar,
@@ -49,7 +49,6 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
         },
     ];
 
-
     return (
         <ResponsiveContainer width={"100%"} height={300}>
             <BarChart
@@ -66,17 +65,18 @@ export const NutritionDiaryChart = ({ planned, today, avg7Days }: NutritionDiary
                 <YAxis
                     type="number"
                     orientation="left"
-                    stroke="#8884d8"
                     unit={t('nutrition.gramShort')}
                 />
                 <Tooltip formatter={(value: number) => numberLocale(value, i18n.language)} />
                 <Legend />
-                <Bar
-                    dataKey="planned"
-                    unit={t('nutrition.gramShort')}
-                    name={t('nutrition.planned')}
-                    fill={colorGenerator.next().value!}
-                />
+                {!onlyLogging &&
+                    <Bar
+                        dataKey="planned"
+                        unit={t('nutrition.gramShort')}
+                        name={t('nutrition.planned')}
+                        fill={colorGenerator.next().value!}
+                    />
+                }
                 <Bar
                     dataKey="today"
                     unit={t('nutrition.gramShort')}

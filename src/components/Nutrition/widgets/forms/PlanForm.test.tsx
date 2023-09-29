@@ -32,9 +32,9 @@ describe("Test the PlanForm component", () => {
 
         // Act
         render(
-                <QueryClientProvider client={queryClient}>
-                    <PlanForm plan={TEST_NUTRITIONAL_PLAN_1} />
-                </QueryClientProvider>
+            <QueryClientProvider client={queryClient}>
+                <PlanForm plan={TEST_NUTRITIONAL_PLAN_1} />
+            </QueryClientProvider>
         );
 
         // Assert
@@ -49,9 +49,9 @@ describe("Test the PlanForm component", () => {
 
         // Act
         render(
-                <QueryClientProvider client={queryClient}>
-                    <PlanForm plan={TEST_NUTRITIONAL_PLAN_1} />
-                </QueryClientProvider>
+            <QueryClientProvider client={queryClient}>
+                <PlanForm plan={TEST_NUTRITIONAL_PLAN_1} />
+            </QueryClientProvider>
         );
         const descriptionInput = await screen.findByLabelText('description');
         await user.clear(descriptionInput);
@@ -71,9 +71,9 @@ describe("Test the PlanForm component", () => {
 
         // Act
         render(
-                <QueryClientProvider client={queryClient}>
-                    <PlanForm />
-                </QueryClientProvider>
+            <QueryClientProvider client={queryClient}>
+                <PlanForm />
+            </QueryClientProvider>
         );
         const descriptionInput = await screen.findByLabelText('description');
         await user.clear(descriptionInput);
@@ -83,6 +83,8 @@ describe("Test the PlanForm component", () => {
         await user.click(screen.getByRole('button', { name: 'submit' }));
         expect(mutate).toHaveBeenCalledWith({
             description: 'a new, cool plan',
+            // eslint-disable-next-line camelcase
+            only_logging: false
         });
     });
 });

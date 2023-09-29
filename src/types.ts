@@ -95,7 +95,8 @@ export type ApiIngredientWeightUnitType = {
 export interface ApiNutritionalPlanType {
     id: number,
     creation_date: string,
-    description: "string"
+    description: string,
+    only_logging: boolean
 }
 
 export interface ApiMealType {

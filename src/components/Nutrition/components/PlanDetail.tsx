@@ -25,51 +25,56 @@ export const PlanDetail = () => {
     const [expandedForm, setExpandedForm] = useState(false);
     const handleToggleExpandedForm = () => setExpandedForm(!expandedForm);
 
+    const plan = planQuery.data!;
+
 
     return planQuery.isLoading
         ? <LoadingPlaceholder />
         : <WgerContainerRightSidebar
-            title={planQuery.data?.description}
-            optionsMenu={<PlanDetailDropdown plan={planQuery.data!} />}
+            title={plan.description}
+            optionsMenu={<PlanDetailDropdown plan={plan} />}
             mainContent={<>
                 <Stack spacing={2}>
-                    <Typography gutterBottom variant="h4">
-                        {t('nutrition.planned')}
-                    </Typography>
-                    {planQuery.data?.meals.map(meal =>
-                        <MealDetail meal={meal} planId={planQuery.data!.id} key={meal.id} />
-                    )}
-                    <MealDetail meal={planQuery.data!.pseudoMealOthers} planId={planQuery.data!.id} key={-1} />
+                    {/*<Typography gutterBottom variant="h4">*/}
+                    {/*    {t('nutrition.planned')}*/}
+                    {/*</Typography>*/}
+                    {plan.meals.map(meal => <MealDetail meal={meal} planId={plan.id} key={meal.id}
+                                                        onlyLogging={plan.onlyLogging} />)}
+                    <MealDetail meal={planQuery.data!.pseudoMealOthers} planId={plan.id} key={-1} onlyLogging={true} />
 
                     <Tooltip title={t('nutrition.addMeal')}>
                         <IconButton onClick={handleToggleExpandedForm}>
                             <Add />
                         </IconButton>
                     </Tooltip>
-
                     <Collapse in={expandedForm} timeout="auto" unmountOnExit>
                         <p><b>{t('nutrition.addMeal')}</b></p>
-                        <MealForm planId={planQuery.data!.id} closeFn={handleToggleExpandedForm} />
+                        <MealForm planId={plan.id} closeFn={handleToggleExpandedForm} />
                     </Collapse>
 
-                    <NutritionalValuesTable values={planQuery.data!.plannedNutritionalValues} />
-                    {planQuery.data!.plannedNutritionalValues.energy > 0 &&
-                        <MacrosPieChart data={planQuery.data!.plannedNutritionalValues} />}
+                    <NutritionalValuesTable values={plan.plannedNutritionalValues} />
+
+
+                    {plan.plannedNutritionalValues.energy > 0 &&
+                        <MacrosPieChart data={plan.plannedNutritionalValues} />
+                    }
                     <Typography gutterBottom variant="h4">
                         {t('nutrition.logged')}
                     </Typography>
                     <NutritionDiaryChart
-                        planned={planQuery.data!.plannedNutritionalValues}
-                        today={planQuery.data!.loggedNutritionalValuesToday}
-                        avg7Days={planQuery.data!.loggedNutritionalValues7DayAvg}
+                        onlyLogging={plan.onlyLogging}
+                        planned={plan.plannedNutritionalValues}
+                        today={plan.loggedNutritionalValuesToday}
+                        avg7Days={plan.loggedNutritionalValues7DayAvg}
                     />
+                    <NutritionalValuesTable values={plan.loggedNutritionalValuesToday} />
                     <DiaryOverview
-                        planId={planQuery.data!.id}
-                        logged={planQuery.data!.groupDiaryEntries}
-                        planned={planQuery.data!.plannedNutritionalValues}
+                        planId={plan.id}
+                        logged={plan.groupDiaryEntries}
+                        planned={plan.plannedNutritionalValues}
                     />
                 </Stack>
             </>}
-            fab={<AddNutritionDiaryEntryFab plan={planQuery.data!} />}
+            fab={<AddNutritionDiaryEntryFab plan={plan} />}
         />;
 };
