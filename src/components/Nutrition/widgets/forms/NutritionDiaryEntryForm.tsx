@@ -111,12 +111,13 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                                 inputFormat="yyyy-MM-dd HH:mm"
                                 label={t('date')}
                                 value={dateValue}
-                                renderInput={(params) => <TextField {...params} {...formik.getFieldProps('date')} />}
+                                renderInput={(params) =>
+                                    <TextField {...params} {...formik.getFieldProps('datetime')} />}
                                 disableFuture={true}
                                 onChange={(newValue) => {
-                                    if (newValue) {
-                                        formik.setFieldValue('date', newValue);
-                                    }
+                                    // @ts-ignore - new value is a Luxon DateTime!
+                                    formik.setFieldValue('datetime', newValue.toJSDate());
+
                                     setDateValue(newValue);
                                 }}
                                 shouldDisableDate={(date) => {
