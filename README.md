@@ -7,6 +7,14 @@ itself, but rather as a library that is used in wger.
 
 Copy `.env.TEMPLATE` to `.env.development` and edit it to your needs.
 
+You can use your own instance, but feel free to use the test server (the db
+is reset every day):
+
+* URL: `https://wger-master.rge.uber.space`
+* username: `user`
+* password: `flutteruser`
+* API key: `31e2ea0322c07b9df583a9b6d1e794f7139e78d4`
+
 Then, in the project directory, you can run:
 
 ### `yarn start`
