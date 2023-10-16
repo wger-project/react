@@ -46,15 +46,17 @@ export const PlanDetail = () => {
                         onlyLogging={plan.onlyLogging} />)}
                     <MealDetail meal={planQuery.data!.pseudoMealOthers} planId={plan.id} key={-1} onlyLogging={true} />
 
-                    <Tooltip title={t('nutrition.addMeal')}>
-                        <IconButton onClick={handleToggleExpandedForm}>
-                            <Add />
-                        </IconButton>
-                    </Tooltip>
-                    <Collapse in={expandedForm} timeout="auto" unmountOnExit>
-                        <p><b>{t('nutrition.addMeal')}</b></p>
-                        <MealForm planId={plan.id} closeFn={handleToggleExpandedForm} />
-                    </Collapse>
+                    {!plan.onlyLogging && <>
+                        <Tooltip title={t('nutrition.addMeal')}>
+                            <IconButton onClick={handleToggleExpandedForm}>
+                                <Add />
+                            </IconButton>
+                        </Tooltip>
+                        <Collapse in={expandedForm} timeout="auto" unmountOnExit>
+                            <p><b>{t('nutrition.addMeal')}</b></p>
+                            <MealForm planId={plan.id} closeFn={handleToggleExpandedForm} />
+                        </Collapse>
+                    </>}
 
                     <NutritionalValuesTable values={plan.plannedNutritionalValues} />
 
