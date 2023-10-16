@@ -44,7 +44,7 @@ export class NutritionalPlan {
     /*
      * Returns the nutritional values for the planned meals
      */
-    get plannedNutritionalValues(): NutritionalValues {
+    get plannedNutritionalValues() {
         if (this.hasAnyGoals) {
             return new NutritionalValues({
                 energy: this.goalEnergy!,
@@ -101,12 +101,12 @@ export class NutritionalPlan {
         }, new Map<string, GroupedDiaryEntries>());
     }
 
-    get percentages() {
-        return {
-            protein: this.plannedNutritionalValues.protein / this.loggedNutritionalValuesToday.protein * 100,
-            carbohydrates: this.plannedNutritionalValues.carbohydrates / this.loggedNutritionalValuesToday.carbohydrates * 100,
-            fat: this.plannedNutritionalValues.fat / this.loggedNutritionalValuesToday.fat * 100,
-        };
+    get percentageValuesLoggedToday() {
+        return new NutritionalValues({
+            protein: this.loggedNutritionalValuesToday.protein / this.plannedNutritionalValues.protein * 100,
+            carbohydrates: this.loggedNutritionalValuesToday.carbohydrates / this.plannedNutritionalValues.carbohydrates * 100,
+            fat: this.loggedNutritionalValuesToday.fat / this.plannedNutritionalValues.fat * 100,
+        });
     }
 
     /*

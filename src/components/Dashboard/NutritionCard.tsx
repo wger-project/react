@@ -136,6 +136,7 @@ export const NutritionCard = () => {
                             )}
                         </List>
                         <NutritionalValuesDashboardChart
+                            percentage={planQuery.data!.percentageValuesLoggedToday}
                             planned={planQuery.data!.plannedNutritionalValues}
                             logged={planQuery.data!.loggedNutritionalValuesToday}
                         />

@@ -10,7 +10,7 @@ export const PlanSidebar = (props: { plan: NutritionalPlan }) => {
 
     const planned = props.plan.plannedNutritionalValues;
     const loggedToday = props.plan.loggedNutritionalValuesToday;
-    const percentages = props.plan.percentages;
+    const percentages = props.plan.percentageValuesLoggedToday;
 
 
     return <>

@@ -8,16 +8,13 @@ import { numberLocale } from "utils/numbers";
 
 
 export const NutritionalValuesDashboardChart = (props: {
+    percentage: NutritionalValues,
     logged: NutritionalValues,
     planned: NutritionalValues,
 }) => {
 
     const energyPercentage = props.planned.energy > 0 ? props.logged.energy / props.planned.energy * 100 : 100;
     const energyDiff = props.planned.energy > 0 ? props.planned.energy - props.logged.energy : props.logged.energy;
-
-    const proteinPercentage = props.logged.protein / props.planned.protein * 100;
-    const carbohydratesPercentage = props.logged.carbohydrates / props.planned.carbohydrates * 100;
-    const fatPercentage = props.logged.fat / props.planned.fat * 100;
 
     const theme = useTheme();
     const [t, i18n] = useTranslation();
@@ -66,19 +63,19 @@ export const NutritionalValuesDashboardChart = (props: {
         <Stack width={'50%'} spacing={1}>
             <LinearPlannedLoggedChart
                 title={t('nutrition.protein')}
-                percentage={proteinPercentage}
+                percentage={props.percentage.protein}
                 logged={props.logged.protein}
                 planned={props.planned.protein}
             />
             <LinearPlannedLoggedChart
                 title={t('nutrition.carbohydrates')}
-                percentage={carbohydratesPercentage}
+                percentage={props.percentage.carbohydrates}
                 logged={props.logged.carbohydrates}
                 planned={props.planned.carbohydrates}
             />
             <LinearPlannedLoggedChart
                 title={t('nutrition.fat')}
-                percentage={fatPercentage}
+                percentage={props.percentage.fat}
                 logged={props.logged.fat}
                 planned={props.planned.fat}
             />
