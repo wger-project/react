@@ -1,6 +1,5 @@
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { TEST_DIARY_ENTRY_1 } from "tests/nutritionDiaryTestdata";
-import { TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
+import { TEST_MEAL_1, TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
 
 jest.useFakeTimers();
 
@@ -163,7 +162,7 @@ describe("Test the nutritional plan model", () => {
         expect(plan.hasAnyPlanned).toBe(true);
 
         plan.goalEnergy = null;
-        plan.diaryEntries = [TEST_DIARY_ENTRY_1,];
+        plan.meals = [TEST_MEAL_1];
         expect(plan.hasAnyPlanned).toBe(true);
     });
 });

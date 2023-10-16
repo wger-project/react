@@ -94,7 +94,7 @@ describe("Test the PlanForm component", () => {
         expect(mutate).toHaveBeenCalledWith({
             description: 'a new, cool plan',
             // eslint-disable-next-line camelcase
-            only_logging: false,
+            only_logging: true,
             // eslint-disable-next-line camelcase
             goal_carbohydrates: null,
             // eslint-disable-next-line camelcase
