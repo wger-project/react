@@ -22,17 +22,41 @@ export class NutritionalPlan {
         public id: number,
         public creationDate: Date,
         public description: string,
-        public onlyLogging: boolean
+        public onlyLogging: boolean = false,
+        public goalEnergy: number | null = null,
+        public goalProtein: number | null = null,
+        public goalCarbohydrates: number | null = null,
+        public goalFat: number | null = null,
     ) {
+    }
+
+    get hasAnyGoals() {
+        return this.goalEnergy !== null
+            || this.goalProtein !== null
+            || this.goalCarbohydrates !== null
+            || this.goalFat !== null;
+    }
+
+    get hasAnyPlanned() {
+        return this.hasAnyGoals || this.plannedNutritionalValues.energy > 0;
     }
 
     /*
      * Returns the nutritional values for the planned meals
      */
     get plannedNutritionalValues(): NutritionalValues {
+        if (this.hasAnyGoals) {
+            return new NutritionalValues({
+                energy: this.goalEnergy!,
+                carbohydrates: this.goalCarbohydrates!,
+                protein: this.goalProtein!,
+                fat: this.goalFat!
+            });
+        }
+
         const out = new NutritionalValues();
-        for (const item of this.meals) {
-            out.add(item.plannedNutritionalValues);
+        for (const item of this.diaryEntries) {
+            out.add(item.nutritionalValues);
         }
 
         return out;
@@ -94,6 +118,14 @@ export class NutritionalPlan {
         return out;
     }
 
+    get percentages() {
+        return {
+            protein: this.plannedNutritionalValues.protein / this.loggedNutritionalValuesToday.protein * 100,
+            carbohydrates: this.plannedNutritionalValues.carbohydrates / this.loggedNutritionalValuesToday.carbohydrates * 100,
+            fat: this.plannedNutritionalValues.fat / this.loggedNutritionalValuesToday.fat * 100,
+        };
+    }
+
     /*
      * Returns the nutritional values for the logged meals for a given date
      */
@@ -141,7 +173,11 @@ export class NutritionalPlanAdapter implements Adapter<NutritionalPlan> {
             item.id,
             new Date(item.creation_date),
             item.description,
-            item.only_logging
+            item.only_logging,
+            item.goal_energy,
+            item.goal_protein,
+            item.goal_carbohydrates,
+            item.goal_fat,
         );
     }
 

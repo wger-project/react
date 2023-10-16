@@ -6,13 +6,13 @@ import { generateChartColors } from "utils/colors";
 import { numberLocale } from "utils/numbers";
 
 type NutritionDiaryChartProps = {
-    onlyLogging: boolean,
+    showPlanned: boolean,
     planned: NutritionalValues;
     today: NutritionalValues;
     avg7Days: NutritionalValues;
 }
 
-export const NutritionDiaryChart = ({ onlyLogging, planned, today, avg7Days }: NutritionDiaryChartProps) => {
+export const NutritionDiaryChart = ({ showPlanned, planned, today, avg7Days }: NutritionDiaryChartProps) => {
     const [t, i18n] = useTranslation();
     const colorGenerator = generateChartColors(3);
 
@@ -69,7 +69,7 @@ export const NutritionDiaryChart = ({ onlyLogging, planned, today, avg7Days }: N
                 />
                 <Tooltip formatter={(value: number) => numberLocale(value, i18n.language)} />
                 <Legend />
-                {!onlyLogging &&
+                {showPlanned &&
                     <Bar
                         dataKey="planned"
                         unit={t('nutrition.gramShort')}

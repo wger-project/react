@@ -1,3 +1,5 @@
+import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
+import { TEST_DIARY_ENTRY_1 } from "tests/nutritionDiaryTestdata";
 import { TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
 
 jest.useFakeTimers();
@@ -143,5 +145,25 @@ describe("Test the nutritional plan model", () => {
         // Assert
         expect(meal.id).toBe(-1);
         expect(meal.diaryEntries.length).toBe(2);
+    });
+
+    test('the planned helper getters work correctly', async () => {
+
+        // Act
+        const plan = new NutritionalPlan(
+            1,
+            new Date(),
+            'test 1',
+        );
+
+        // Assert
+        expect(plan.hasAnyPlanned).toBe(false);
+
+        plan.goalEnergy = 2000;
+        expect(plan.hasAnyPlanned).toBe(true);
+
+        plan.goalEnergy = null;
+        plan.diaryEntries = [TEST_DIARY_ENTRY_1,];
+        expect(plan.hasAnyPlanned).toBe(true);
     });
 });

@@ -62,6 +62,16 @@ describe("Test the PlanForm component", () => {
         expect(mutate).toHaveBeenCalledWith({
             id: 101,
             description: "a better name",
+            // eslint-disable-next-line camelcase
+            goal_carbohydrates: null,
+            // eslint-disable-next-line camelcase
+            goal_energy: null,
+            // eslint-disable-next-line camelcase
+            goal_fat: null,
+            // eslint-disable-next-line camelcase
+            goal_protein: null,
+            // eslint-disable-next-line camelcase
+            only_logging: false,
         });
     });
 
@@ -84,7 +94,15 @@ describe("Test the PlanForm component", () => {
         expect(mutate).toHaveBeenCalledWith({
             description: 'a new, cool plan',
             // eslint-disable-next-line camelcase
-            only_logging: false
+            only_logging: false,
+            // eslint-disable-next-line camelcase
+            goal_carbohydrates: null,
+            // eslint-disable-next-line camelcase
+            goal_energy: null,
+            // eslint-disable-next-line camelcase
+            goal_fat: null,
+            // eslint-disable-next-line camelcase
+            goal_protein: null,
         });
     });
 });

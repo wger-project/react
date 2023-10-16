@@ -1,19 +1,20 @@
-import { LinearProgress, Stack, Typography, useTheme } from "@mui/material";
+import { Stack, useTheme } from "@mui/material";
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { LinearPlannedLoggedChart } from "components/Nutrition/widgets/charts/LinearPlannedLoggedChart";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
-import { numberGramLocale, numberLocale } from "utils/numbers";
+import { numberLocale } from "utils/numbers";
 
 
 export const NutritionalValuesDashboardChart = (props: {
     logged: NutritionalValues,
     planned: NutritionalValues,
-    onlyLogging: boolean
 }) => {
 
-    const energyPercentage = !props.onlyLogging ? props.logged.energy / props.planned.energy * 100 : 100;
-    const energyDiff = !props.onlyLogging ? props.planned.energy - props.logged.energy : props.logged.energy;
+    const energyPercentage = props.planned.energy > 0 ? props.logged.energy / props.planned.energy * 100 : 100;
+    const energyDiff = props.planned.energy > 0 ? props.planned.energy - props.logged.energy : props.logged.energy;
+
     const proteinPercentage = props.logged.protein / props.planned.protein * 100;
     const carbohydratesPercentage = props.logged.carbohydrates / props.planned.carbohydrates * 100;
     const fatPercentage = props.logged.fat / props.planned.fat * 100;
@@ -57,44 +58,30 @@ export const NutritionalValuesDashboardChart = (props: {
                         {t('nutrition.valueEnergyKcal', { value: numberLocale(energyDiff, i18n.language) })}
                     </text>
                     <text x={'50%'} y={'60%'} fontSize="1em" textAnchor="middle">
-                        {!props.onlyLogging && t(energyPercentage < 100 ? 'nutrition.valueRemaining' : 'nutrition.valueTooMany')}
+                        {props.planned.energy > 0 && t(energyPercentage < 100 ? 'nutrition.valueRemaining' : 'nutrition.valueTooMany')}
                     </text>
                 </g>
             </PieChart>
         </ResponsiveContainer>
-        <Stack width={'50%'}>
-            <span>
-                <LinearProgress
-                    variant="determinate"
-                    value={proteinPercentage < 100 ? proteinPercentage : 100}
-                />
-                <Typography variant={'caption'}>
-                    {t('nutrition.protein')} — {numberGramLocale(props.logged.protein, i18n.language)}
-                    {!props.onlyLogging && <>/ {numberGramLocale(props.planned.protein, i18n.language)}</>}
-                </Typography>
-            </span>
-
-            <span>
-                <LinearProgress
-                    variant="determinate"
-                    value={carbohydratesPercentage < 100 ? carbohydratesPercentage : 100}
-                />
-                <Typography variant={'caption'}>
-                    {t('nutrition.carbohydrates')} — {numberGramLocale(props.logged.carbohydrates, i18n.language)}
-                    {!props.onlyLogging && <>/ {numberGramLocale(props.planned.carbohydrates, i18n.language)}</>}
-                </Typography>
-            </span>
-
-            <span>
-                <LinearProgress
-                    variant="determinate"
-                    value={fatPercentage < 100 ? fatPercentage : 100}
-                />
-                <Typography variant={'caption'}>
-                    {t('nutrition.fat')} — {numberGramLocale(props.logged.fat, i18n.language)}
-                    {!props.onlyLogging && <>/ {numberGramLocale(props.planned.fat, i18n.language)}</>}
-                </Typography>
-            </span>
+        <Stack width={'50%'} spacing={1}>
+            <LinearPlannedLoggedChart
+                title={t('nutrition.protein')}
+                percentage={proteinPercentage}
+                logged={props.logged.protein}
+                planned={props.planned.protein}
+            />
+            <LinearPlannedLoggedChart
+                title={t('nutrition.carbohydrates')}
+                percentage={carbohydratesPercentage}
+                logged={props.logged.carbohydrates}
+                planned={props.planned.carbohydrates}
+            />
+            <LinearPlannedLoggedChart
+                title={t('nutrition.fat')}
+                percentage={fatPercentage}
+                logged={props.logged.fat}
+                planned={props.planned.fat}
+            />
         </Stack>
     </Stack>;
 };

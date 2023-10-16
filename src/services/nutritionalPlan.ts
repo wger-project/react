@@ -71,6 +71,10 @@ export const getNutritionalPlanFull = async (id: number, date?: Date): Promise<N
 export interface AddNutritionalPlanParams {
     description: string;
     only_logging: boolean;
+    goal_energy: number | string | null;
+    goal_protein: number | string | null;
+    goal_carbohydrates: number | string | null;
+    goal_fat: number | string | null;
 }
 
 export interface EditNutritionalPlanParams extends AddNutritionalPlanParams {

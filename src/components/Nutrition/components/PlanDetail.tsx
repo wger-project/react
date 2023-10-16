@@ -12,6 +12,7 @@ import { MealForm } from "components/Nutrition/widgets/forms/MealForm";
 import { MealDetail } from "components/Nutrition/widgets/MealDetail";
 import { NutritionalValuesTable } from "components/Nutrition/widgets/NutritionalValuesTable";
 import { PlanDetailDropdown } from "components/Nutrition/widgets/PlanDetailDropdown";
+import { PlanSidebar } from "components/Nutrition/widgets/PlanSidebar";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -38,8 +39,11 @@ export const PlanDetail = () => {
                     {/*<Typography gutterBottom variant="h4">*/}
                     {/*    {t('nutrition.planned')}*/}
                     {/*</Typography>*/}
-                    {plan.meals.map(meal => <MealDetail meal={meal} planId={plan.id} key={meal.id}
-                                                        onlyLogging={plan.onlyLogging} />)}
+                    {plan.meals.map(meal => <MealDetail
+                        meal={meal}
+                        planId={plan.id}
+                        key={meal.id}
+                        onlyLogging={plan.onlyLogging} />)}
                     <MealDetail meal={planQuery.data!.pseudoMealOthers} planId={plan.id} key={-1} onlyLogging={true} />
 
                     <Tooltip title={t('nutrition.addMeal')}>
@@ -55,19 +59,21 @@ export const PlanDetail = () => {
                     <NutritionalValuesTable values={plan.plannedNutritionalValues} />
 
 
-                    {plan.plannedNutritionalValues.energy > 0 &&
+                    {plan.hasAnyPlanned &&
                         <MacrosPieChart data={plan.plannedNutritionalValues} />
                     }
                     <Typography gutterBottom variant="h4">
                         {t('nutrition.logged')}
                     </Typography>
                     <NutritionDiaryChart
-                        onlyLogging={plan.onlyLogging}
+                        showPlanned={plan.hasAnyPlanned}
                         planned={plan.plannedNutritionalValues}
                         today={plan.loggedNutritionalValuesToday}
                         avg7Days={plan.loggedNutritionalValues7DayAvg}
                     />
-                    <NutritionalValuesTable values={plan.loggedNutritionalValuesToday} />
+                    <NutritionalValuesTable
+                        values={plan.loggedNutritionalValuesToday}
+                    />
                     <DiaryOverview
                         planId={plan.id}
                         logged={plan.groupDiaryEntries}
@@ -75,6 +81,7 @@ export const PlanDetail = () => {
                     />
                 </Stack>
             </>}
+            sideBar={<PlanSidebar plan={plan} />}
             fab={<AddNutritionDiaryEntryFab plan={plan} />}
         />;
 };

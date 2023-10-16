@@ -138,7 +138,6 @@ export const NutritionCard = () => {
                         <NutritionalValuesDashboardChart
                             planned={planQuery.data!.plannedNutritionalValues}
                             logged={planQuery.data!.loggedNutritionalValuesToday}
-                            onlyLogging={planQuery.data!.onlyLogging}
                         />
                     </CardContent>
                     <CardActions>
