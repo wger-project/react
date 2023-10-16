@@ -75,7 +75,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             initialValues={{
                 description: plan ? plan.description : t('nutrition.plan'),
                 // eslint-disable-next-line camelcase
-                only_logging: plan ? plan.onlyLogging : false,
+                only_logging: plan ? plan.onlyLogging : true,
                 // eslint-disable-next-line camelcase
                 goal_energy: plan ? plan.goalEnergy : null,
                 // eslint-disable-next-line camelcase
