@@ -44,7 +44,12 @@ export const PlanDetail = () => {
                         planId={plan.id}
                         key={meal.id}
                         onlyLogging={plan.onlyLogging} />)}
-                    <MealDetail meal={planQuery.data!.pseudoMealOthers} planId={plan.id} key={-1} onlyLogging={true} />
+                    <MealDetail
+                        meal={planQuery.data!.pseudoMealOthers(t('nutrition.pseudoMealTitle'))}
+                        planId={plan.id}
+                        key={-1}
+                        onlyLogging={true}
+                    />
 
                     {!plan.onlyLogging && <>
                         <Tooltip title={t('nutrition.addMeal')}>

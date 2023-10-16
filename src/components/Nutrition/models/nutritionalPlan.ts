@@ -101,29 +101,29 @@ export class NutritionalPlan {
         }, new Map<string, GroupedDiaryEntries>());
     }
 
-    /*
-     * Returns a synthetic meal object for the pseudo meal 'Others'
-     *
-     * This contains all logs which were not logged to any of the other meals
-     */
-    get pseudoMealOthers(): Meal {
-        const out = new Meal(
-            PSEUDO_MEAL_ID,
-            -1,
-            null,
-            'Others'
-        );
-        out.diaryEntries = this.diaryEntries.filter((entry) => entry.mealId === null);
-
-        return out;
-    }
-
     get percentages() {
         return {
             protein: this.plannedNutritionalValues.protein / this.loggedNutritionalValuesToday.protein * 100,
             carbohydrates: this.plannedNutritionalValues.carbohydrates / this.loggedNutritionalValuesToday.carbohydrates * 100,
             fat: this.plannedNutritionalValues.fat / this.loggedNutritionalValuesToday.fat * 100,
         };
+    }
+
+    /*
+     * Returns a synthetic meal object for the pseudo meal 'Others'
+     *
+     * This contains all logs which were not logged to any of the other meals
+     */
+    pseudoMealOthers(name: string): Meal {
+        const out = new Meal(
+            PSEUDO_MEAL_ID,
+            -1,
+            null,
+            name
+        );
+        out.diaryEntries = this.diaryEntries.filter((entry) => entry.mealId === null);
+
+        return out;
     }
 
     /*

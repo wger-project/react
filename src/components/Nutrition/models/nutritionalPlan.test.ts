@@ -139,10 +139,11 @@ describe("Test the nutritional plan model", () => {
     test('correctly generates the synthetic meal entry', async () => {
 
         // Act
-        const meal = TEST_NUTRITIONAL_PLAN_1.pseudoMealOthers;
+        const meal = TEST_NUTRITIONAL_PLAN_1.pseudoMealOthers('the name');
 
         // Assert
         expect(meal.id).toBe(-1);
+        expect(meal.name).toBe('the name');
         expect(meal.diaryEntries.length).toBe(2);
     });
 
