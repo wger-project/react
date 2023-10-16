@@ -16,7 +16,7 @@ export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
     const deletePlanQuery = useDeleteNutritionalPlanQuery(props.plan.id);
     const navigate = useNavigate();
 
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [openEditModal, setOpenEditModal] = React.useState(false);
     const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
@@ -44,6 +44,9 @@ export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
         navigate((makeLink(WgerLink.NUTRITION_OVERVIEW)));
     };
 
+    const navigateToPdfDownload = () => window.location.href = makeLink(WgerLink.NUTRITION_PLAN_PDF, i18n.language, { id: props.plan.id });
+    const navigateToCopyPlan = () => window.location.href = makeLink(WgerLink.NUTRITION_PLAN_COPY, i18n.language, { id: props.plan.id });
+
 
     const handleOpenEditModal = () => setOpenEditModal(true);
     const handleCloseEditModal = () => setOpenEditModal(false);
@@ -64,6 +67,8 @@ export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
             }}
         >
             <MenuItem onClick={handleEdit}>{t("edit")}</MenuItem>
+            <MenuItem onClick={navigateToPdfDownload}>{t("downloadAsPdf")}</MenuItem>
+            <MenuItem onClick={navigateToCopyPlan}>{t("nutrition.copyPlan")}</MenuItem>
             <MenuItem onClick={handleDelete}>{t("delete")}</MenuItem>
         </Menu>
 
