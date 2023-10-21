@@ -1,5 +1,5 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import { Delete, Edit } from "@mui/icons-material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
     Box,
     Button,
@@ -21,10 +21,13 @@ import {
     Typography
 } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { useRoutineDetailQuery, useRoutineLogQuery } from "components/WorkoutRoutines/queries";
-import { useTranslation } from "react-i18next";
-import { makeLink, WgerLink } from "utils/url";
+import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
+import { useRoutineDetailQuery, useRoutineLogQuery } from "components/WorkoutRoutines/queries";
+import { DateTime } from "luxon";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 import {
     CartesianGrid,
     Legend,
@@ -36,13 +39,10 @@ import {
     XAxis,
     YAxis
 } from "recharts";
-import { DateTime } from "luxon";
-import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
 import { NameType, ValueType, } from 'recharts/src/component/DefaultTooltipContent';
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { generateChartColors } from "utils/colors";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Delete, Edit } from "@mui/icons-material";
+import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
+import { makeLink, WgerLink } from "utils/url";
 
 
 const LogTableRow = (props: { log: WorkoutLog }) => {
@@ -204,7 +204,7 @@ export const RoutineLogs = () => {
                     {t("routines.logsHeader")}
                 </Typography>
                 {/*<Typography variant={"body2"}>*/}
-                {/*    This page shows the weight logs belonging to this workout only.*/}
+                {/*    This page shows the training logs belonging to this workout only.*/}
                 {/*</Typography>*/}
                 {/*<Typography variant={"body2"}>*/}
                 {/*    If on a single day there is more than one entry with the same number of repetitions, but different*/}

@@ -1,23 +1,23 @@
-import { Link } from 'react-router-dom';
-import { useTranslation } from "react-i18next";
 import { Button, Menu, MenuItem } from "@mui/material";
-import { makeLink, WgerLink } from "utils/url";
 import React from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from 'react-router-dom';
+import { makeLink, WgerLink } from "utils/url";
 
 export const TrainingSubMenu = () => {
 
     const { i18n } = useTranslation();
-    const [anchorElWorkout, setAnchorElWorkout] = React.useState<null | HTMLElement>(null);
+    const [anchorElRoutine, setAnchorElRoutine] = React.useState<null | HTMLElement>(null);
 
     return (
         <>
-            <Button color="inherit" onClick={(event) => setAnchorElWorkout(event.currentTarget)}>
+            <Button color="inherit" onClick={(event) => setAnchorElRoutine(event.currentTarget)}>
                 Routines
             </Button>
             <Menu
-                anchorEl={anchorElWorkout}
-                open={Boolean(anchorElWorkout)}
-                onClose={() => setAnchorElWorkout(null)}
+                anchorEl={anchorElRoutine}
+                open={Boolean(anchorElRoutine)}
+                onClose={() => setAnchorElRoutine(null)}
             >
                 <MenuItem component={Link} to={makeLink(WgerLink.ROUTINE_OVERVIEW, i18n.language)}>
                     Routine overview

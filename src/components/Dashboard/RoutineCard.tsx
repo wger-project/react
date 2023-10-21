@@ -2,13 +2,13 @@ import { Button, Card, CardActions, CardContent, CardHeader, Skeleton, } from '@
 import React from 'react';
 import { useTranslation } from "react-i18next";
 
-export const WorkoutCard = () => {
+export const RoutineCard = () => {
 
     const [t] = useTranslation();
 
     return (
         <Card>
-            <CardHeader title={t('workout')} />
+            <CardHeader title={t('routines.routine')} />
             <CardContent>
                 <Skeleton animation={false} />
                 <Skeleton variant="text" animation={false} />

@@ -142,7 +142,7 @@ export const getWorkoutRoutinesShallow = async (): Promise<WorkoutRoutine[]> => 
 };
 
 /*
- * Retrieves the weight logs for a routine
+ * Retrieves the training logs for a routine
  */
 export const getRoutineLogs = async (id: number, loadBases = false): Promise<WorkoutLog[]> => {
     const adapter = new WorkoutLogAdapter();
