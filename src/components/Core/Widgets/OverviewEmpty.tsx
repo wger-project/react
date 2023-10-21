@@ -1,7 +1,8 @@
-import React from "react";
 import { Box, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export const OverviewEmpty = () => {
+    const [t] = useTranslation();
 
     return <>
         <Box sx={{
@@ -13,10 +14,10 @@ export const OverviewEmpty = () => {
             justifyContent: "center",
         }}>
             <Typography variant="h6" mr={3}>
-                Nothing here yet...
+                {t('nothingHereYet')}
             </Typography>
             <Typography mr={3}>
-                Press the action button to begin
+                {t('nothingHereYetAction')}
             </Typography>
         </Box>
     </>;
