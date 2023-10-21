@@ -1,12 +1,14 @@
 import { Box, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-export const OverviewEmpty = () => {
+export const OverviewEmpty = (props: { height?: string }) => {
     const [t] = useTranslation();
+
+    const height = props.height ? props.height : "50vh";
 
     return <>
         <Box sx={{
-            height: "50vh",
+            height: height,
             display: "flex",
 
             alignItems: "center",

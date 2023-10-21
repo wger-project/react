@@ -31,7 +31,11 @@ export const getLastNutritionalPlanId = async (): Promise<number | null> => {
     return receivedPlan.results[0].id;
 };
 
-export const getNutritionalPlanFull = async (id: number, date?: Date): Promise<NutritionalPlan> => {
+export const getNutritionalPlanFull = async (id: number | null, date?: Date): Promise<NutritionalPlan | null> => {
+    if (id === null) {
+        return null;
+    }
+
     const { data: receivedPlan } = await axios.get<ApiNutritionalPlanType>(
         makeUrl(API_NUTRITIONAL_PLAN_PATH, { id: id }),
         { headers: makeHeader() },
