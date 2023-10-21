@@ -128,8 +128,11 @@ export const NutritionCard = () => {
             ? <LoadingPlaceholder />
             : <>
                 <Card>
-                    <CardHeader title={t('nutritionalPlan')} subheader={planQuery.data?.description} />
-                    <CardContent>
+                    <CardHeader
+                        title={t('nutritionalPlan')}
+                        subheader={planQuery.data?.description}
+                        sx={{ paddingBottom: 0 }} />
+                    <CardContent sx={{ paddingTop: 0 }}>
                         <List>
                             {planQuery.data!.meals.map(meal =>
                                 <MealListItem meal={meal} planId={planQuery.data!.id} key={meal.id} />
