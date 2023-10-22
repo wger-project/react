@@ -123,10 +123,10 @@
     "routines": {
         "rir": "Repeticiones",
         "addDay": "Añadir un día de entrenamiento",
-        "addWeightLog": "Añadir el registro del peso",
+        "addWeightLog": "Añadir un registro para el entrenamiento",
         "addLogToDay": "Añadir un registro a este día",
         "routine": "Rutina",
-        "logsHeader": "Registro del peso para el entrenamiento",
+        "logsHeader": "Registro de entrenamientos",
         "logsFilterNote": "Ten en cuenta que sólo se registran las entradas con una unidad de peso de kg o lb y las repeticiones, aquí se ignoran otras combinaciones como el tiempo o hasta los errores",
         "routines": "Rutinas"
     },
@@ -195,5 +195,7 @@
     "downloadAsPdf": "Descargar como un PDF",
     "total": "Total",
     "alsoSearchEnglish": "Buscar también los nombres en inglés",
-    "timeOfDay": "Hora del día"
+    "timeOfDay": "Hora del día",
+    "nothingHereYet": "Todavía no hay nada aquí...",
+    "nothingHereYetAction": "Pulse el botón de acción para empezar"
 }
