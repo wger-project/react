@@ -125,12 +125,12 @@
     "success": "Uspjeh!",
     "routines": {
         "addDay": "Dodaj dan treninga",
-        "addWeightLog": "Dodaj dnevnik težine",
+        "addWeightLog": "Dodaj dnevnik treninga",
         "addLogToDay": "Dodaj dnevnik za ovaj dan",
         "routine": "Rutina",
         "routines": "Rutine",
         "logsFilterNote": "Napomena: prikazuju se samo unosi s jedinicom težine kg ili lb i ponavljanja, druge kombinacije kao što su vrijeme ili do neuspjeha se ovdje zanemaruju",
-        "logsHeader": "Dnevnik težine za trening",
+        "logsHeader": "Dnevnik treninga",
         "rir": "PUR"
     },
     "preferences": "Postavke",
@@ -199,5 +199,7 @@
     "downloadAsPdf": "Preuzmi kao PDF",
     "total": "Ukupno",
     "alsoSearchEnglish": "Također traži imena na engleskom jeziku",
-    "timeOfDay": "Vrijeme dana"
+    "timeOfDay": "Vrijeme dana",
+    "nothingHereYet": "Ovdje još nema ničega …",
+    "nothingHereYetAction": "Počni pritiskom gumba radnje"
 }
