@@ -1,8 +1,8 @@
 import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 import common from "locales/en/translation.json";
+import { initReactI18next } from "react-i18next";
 
 export const resources = {
     en: {
@@ -42,7 +42,7 @@ i18n
         // (i.e.) production, the path is /static/react/locales/<lang>/<ns>.json
         backend: {
             loadPath:
-                process.env.NODE_ENV === "production"
+                import.meta.env.NODE_ENV === "production"
                     ? `/static/react/locales/{{lng}}/{{ns}}.json`
                     : `/locales/{{lng}}/{{ns}}.json`
         },

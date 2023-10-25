@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import RedoIcon from '@mui/icons-material/Redo';
 import {
     Button,
     Chip,
@@ -16,21 +18,21 @@ import {
     Stack,
     Typography
 } from '@mui/material';
+import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
 import { Language } from 'components/Exercises/models/language';
-import { Link, useNavigate } from 'react-router-dom';
-import styles from './head.module.css';
-import { getTranslationKey } from "utils/strings";
-import { useTranslation } from "react-i18next";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import RedoIcon from '@mui/icons-material/Redo';
-import AddIcon from '@mui/icons-material/Add';
-import { WgerPermissions } from "permissions";
-import { deleteExerciseTranslation } from "services";
-import { deleteExerciseBase } from "services/exerciseBase";
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
+import { WgerPermissions } from "permissions";
+import React, { useState } from 'react';
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from 'react-router-dom';
+import { deleteExerciseTranslation } from "services";
+import { deleteExerciseBase } from "services/exerciseBase";
+import { ExerciseSearchResponse } from "services/responseType";
+import { getTranslationKey } from "utils/strings";
+import styles from './head.module.css';
 
 export interface HeadProp {
     exercise: ExerciseBase
@@ -90,6 +92,10 @@ export const Head = ({
         navigate('../overview');
     };
 
+    const exerciseReplacement = (exercise: ExerciseSearchResponse) => {
+        console.log(exercise);
+    };
+
     const languagesList = languages.map(l => {
         return <MenuItem
             key={l.nameShort}
@@ -127,6 +133,7 @@ export const Head = ({
                                 <p>
                                     {t('cannotBeUndone')}
                                 </p>
+                                <NameAutocompleter callback={exerciseReplacement} />
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>

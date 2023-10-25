@@ -1,6 +1,6 @@
 export const ENGLISH_LANGUAGE_ID = 2;
 
-export const MIN_ACCOUNT_AGE = process.env.MIN_ACCOUNT_AGE_TO_TRUST || 21;
+export const MIN_ACCOUNT_AGE = import.meta.env.MIN_ACCOUNT_AGE_TO_TRUST || 21;
 
 export const REP_UNIT_REPETITIONS = 1;
 export const REP_UNIT_TILL_FAILURE = 2;
@@ -86,7 +86,7 @@ export const LIST_OF_COLORS3 = [
     "#d45089",
     "#ffa600",
 ];
-
+   
 
 export const PAGINATION_OPTIONS = {
     pageSizeOptions: [5, 10, 25, 50, 100],
@@ -94,7 +94,7 @@ export const PAGINATION_OPTIONS = {
 };
 
 
-export const TIMEZONE = process.env.TIME_ZONE || 'Europe/Berlin';
+export const TIMEZONE = import.meta.env.TIME_ZONE || 'Europe/Berlin';
 
 export const LANGUAGE_SHORT_ENGLISH = 'en';
 
