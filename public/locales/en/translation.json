@@ -23,6 +23,7 @@
   "value": "Value",
   "unit": "Unit",
   "alsoSearchEnglish": "Also search for names in English",
+  "copyToClipboard": "Copy to clipboard",
   "exercises": {
     "contributeExercise": "Contribute an exercise",
     "step1HeaderBasics": "Basics in English",

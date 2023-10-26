@@ -1,10 +1,10 @@
-import { CartesianGrid, DotProps, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import React from 'react';
-import { WeightEntry } from "components/BodyWeight/model";
-import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import { WgerModal } from "components/Core/Modals/WgerModal";
-import { useTranslation } from "react-i18next";
 import { Paper, useTheme } from "@mui/material";
+import { WeightForm } from "components/BodyWeight/Form/WeightForm";
+import { WeightEntry } from "components/BodyWeight/model";
+import { WgerModal } from "components/Core/Modals/WgerModal";
+import React from 'react';
+import { useTranslation } from "react-i18next";
+import { CartesianGrid, DotProps, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 export interface WeightChartProps {
     weights: WeightEntry[],
@@ -81,7 +81,7 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
                             stroke: 'black',
                             strokeWidth: 1,
                             r: 6,
-                            onClick: handleClick
+                            // onClick: (e, data) => handleClick(e, data)
                         }} />
                     <CartesianGrid
                         stroke="#ccc"
