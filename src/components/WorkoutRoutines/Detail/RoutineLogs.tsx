@@ -39,7 +39,7 @@ import {
     XAxis,
     YAxis
 } from "recharts";
-import { NameType, ValueType, } from 'recharts/src/component/DefaultTooltipContent';
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { generateChartColors } from "utils/colors";
 import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";

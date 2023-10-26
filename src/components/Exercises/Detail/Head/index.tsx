@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import { ContentCopy } from "@mui/icons-material";
+import AddIcon from '@mui/icons-material/Add';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import RedoIcon from '@mui/icons-material/Redo';
 import {
     Button,
     Chip,
@@ -9,28 +12,31 @@ import {
     DialogTitle,
     Divider,
     Grid,
+    IconButton,
     ListItemIcon,
     ListItemText,
     Menu,
     MenuItem,
     Stack,
+    TextField,
+    Tooltip,
     Typography
 } from '@mui/material';
+import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
 import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
 import { Language } from 'components/Exercises/models/language';
-import { Link, useNavigate } from 'react-router-dom';
-import styles from './head.module.css';
-import { getTranslationKey } from "utils/strings";
-import { useTranslation } from "react-i18next";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import RedoIcon from '@mui/icons-material/Redo';
-import AddIcon from '@mui/icons-material/Add';
-import { WgerPermissions } from "permissions";
-import { deleteExerciseTranslation } from "services";
-import { deleteExerciseBase } from "services/exerciseBase";
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
+import { WgerPermissions } from "permissions";
+import React, { useState } from 'react';
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from 'react-router-dom';
+import { deleteExerciseTranslation } from "services";
+import { deleteExerciseBase } from "services/exerciseBase";
+import { ExerciseSearchResponse } from "services/responseType";
+import { getTranslationKey } from "utils/strings";
+import styles from './head.module.css';
 
 export interface HeadProp {
     exercise: ExerciseBase
@@ -53,6 +59,7 @@ export const Head = ({
                      }: HeadProp) => {
     const [anchorMenuEl, setAnchorMenuEl] = useState<null | HTMLElement>(null);
     const [openDialog, setOpenDialog] = React.useState(false);
+    const [replacementUUID, setReplacementUUID] = React.useState('');
     const openLanguageMenu = Boolean(anchorMenuEl);
     const [t] = useTranslation();
     const navigate = useNavigate();
@@ -127,7 +134,38 @@ export const Head = ({
                                 <p>
                                     {t('cannotBeUndone')}
                                 </p>
+
+                                <p><b>Replacements</b></p>
+                                <p>
+                                    Optionally, you can also select an exercise that should replace this one
+                                    (because it was submitted twice, etc.).
+                                    This will replace the exercise from routines as well as training logs, instead
+                                    of just deleting it. These changes will also propagate to any instance that
+                                    syncs the exercises from this one.
+                                </p>
+                                <p>
+                                    Copy and paste the UUID into the field
+                                </p>
                             </DialogContentText>
+                            <NameAutocompleter
+                                callback={(exercise: ExerciseSearchResponse) => setReplacementUUID(exercise.data.base_uuid)} />
+                            {replacementUUID !== '' &&
+                                <>
+                                    <p>Selected replacement: {replacementUUID}
+                                        <Tooltip title={t('copyToClipboard')}>
+                                            <IconButton onClick={() => navigator.clipboard.writeText(replacementUUID)}>
+                                                <ContentCopy />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </p>
+                                </>
+                            }
+
+
+                            <TextField label="replacement UUID"
+                                       fullWidth={true}
+                                       variant="standard"
+                            />
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => setOpenDialog(false)}>{t('cancel')}</Button>
@@ -144,6 +182,13 @@ export const Head = ({
                                 autoFocus
                             >
                                 {t('exercises.deleteExerciseFull')}
+                            </Button>
+                            <Button
+                                onClick={() => handleDeleteBase()}
+                                variant="contained"
+                                autoFocus
+                            >
+                                Delete and replace
                             </Button>
                         </DialogActions>
                     </Dialog>

@@ -1,4 +1,5 @@
 export const ENGLISH_LANGUAGE_ID = 2;
+export const ENGLISH_LANGUAGE_CODE = 'en';
 
 export const MIN_ACCOUNT_AGE = process.env.MIN_ACCOUNT_AGE_TO_TRUST || 21;
 

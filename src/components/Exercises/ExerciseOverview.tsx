@@ -1,21 +1,21 @@
-import React from "react";
+import AddIcon from '@mui/icons-material/Add';
 import { Box, Button, Container, Grid, Pagination, Stack, Typography, } from "@mui/material";
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { CategoryFilter } from "components/Exercises/Filter/CategoryFilter";
+import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
 import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
-import { useTranslation } from "react-i18next";
-import { ExerciseGrid } from "components/Exercises/Overview/ExerciseGrid";
+import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
+import { Category } from "components/Exercises/models/category";
 import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
-import { Category } from "components/Exercises/models/category";
-import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
+import { ExerciseGrid } from "components/Exercises/Overview/ExerciseGrid";
+import { ExerciseGridSkeleton } from "components/Exercises/Overview/ExerciseGridLoadingSkeleton";
 import { useBasesQuery, useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
-import AddIcon from '@mui/icons-material/Add';
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { ExerciseSearchResponse } from "services/responseType";
-import { ExerciseGridSkeleton } from "components/Exercises/Overview/ExerciseGridLoadingSkeleton";
 import { makeLink, WgerLink } from "utils/url";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 
 const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
