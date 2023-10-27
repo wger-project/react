@@ -22,8 +22,7 @@ import { Language } from "components/Exercises/models/language";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { deleteExerciseTranslation, getExerciseBase } from "services";
-import { deleteExerciseBase } from "services/exerciseBase";
+import { deleteExerciseBase, deleteExerciseTranslation, getExerciseBase } from "services";
 import { ExerciseSearchResponse } from "services/responseType";
 import { SERVER_URL } from "utils/url";
 
@@ -101,6 +100,8 @@ export function ExerciseDeleteDialog(props: {
             />
 
             <TextField
+                data-testid="exercise-id-field"
+                id="foo"
                 label="Exercise ID"
                 onBlur={() => loadCurrentReplacement()}
                 onChange={async (event) => {
@@ -119,7 +120,7 @@ export function ExerciseDeleteDialog(props: {
                 variant="standard"
             />
             {replacementExercise === null && <>
-                <p><i>No exercise selected for replacement</i></p>
+                <p><i>{t('exercises.noReplacementSelected')}</i></p>
             </>}
 
             {replacementExercise !== null && <>
@@ -155,6 +156,7 @@ export function ExerciseDeleteDialog(props: {
         <DialogActions>
             <Button onClick={() => props.onClose()}>{t('cancel')}</Button>
             <Button
+                data-testid="button-delete-translation"
                 size={"small"}
                 onClick={handleDeleteTranslation}
                 variant="contained"
@@ -162,6 +164,7 @@ export function ExerciseDeleteDialog(props: {
                 {t('exercises.deleteTranslation')}
             </Button>
             <Button
+                data-testid="button-delete-all"
                 size={"small"}
                 onClick={() => handleDeleteBase()}
                 variant="contained"
@@ -169,6 +172,7 @@ export function ExerciseDeleteDialog(props: {
                 {t('exercises.deleteExerciseFull')}
             </Button>
             <Button
+                data-testid="button-delete-and-replace"
                 size={"small"}
                 disabled={replacementExercise === null}
                 onClick={() => handleDeleteBase(true)}
