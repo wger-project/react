@@ -55,6 +55,160 @@ export interface HeadProp {
     editMode: boolean
 }
 
+function ExerciseDeleteDialog(props: {
+    onClose: Function,
+    onChangeLanguage: Function,
+    currentExercise: ExerciseBase,
+    currentTranslation: ExerciseTranslation | undefined,
+    currentLanguage: Language | undefined,
+}) {
+    const [replacementId, setReplacementId] = React.useState<number | null>(null);
+    const [replacementExercise, setReplacementExercise] = React.useState<ExerciseBase | null>(null);
+
+    const [t] = useTranslation();
+    const navigate = useNavigate();
+
+    const resetReplacement = () => {
+        setReplacementExercise(null);
+        setReplacementId(null);
+    };
+
+    const handleDeleteTranslation = async () => {
+        await deleteExerciseTranslation(props.currentTranslation?.id!);
+        props.onClose();
+        props.onChangeLanguage();
+    };
+
+    const handleDeleteBase = async (handleReplacement: boolean = false) => {
+        if (handleReplacement) {
+            await deleteExerciseBase(props.currentExercise.id!, replacementExercise?.uuid!);
+        } else {
+            await deleteExerciseBase(props.currentExercise.id!);
+        }
+        props.onClose();
+        navigate('../overview');
+    };
+
+    const loadCurrentReplacement = async (exerciseId?: number) => {
+        const id = exerciseId !== undefined ? exerciseId : replacementId;
+
+        if (id !== null) {
+            try {
+                const exercise = await getExerciseBase(id);
+                setReplacementExercise(exercise);
+            } catch (e) {
+                setReplacementExercise(null);
+            }
+        }
+    };
+
+
+    return <>
+        <DialogTitle id="alert-dialog-title">
+            {t('delete')}
+        </DialogTitle>
+        <DialogContent>
+            <p>{t('exercises.deleteExerciseBody',
+                {
+                    name: props.currentTranslation?.name,
+                    language: props.currentLanguage?.nameLong
+                })
+            }</p>
+            <p>{t('cannotBeUndone')}</p>
+
+            <p><b>{t('exercises.replacements')}</b></p>
+            <p>{t('exercises.replacementsInfoText')}</p>
+            <p>{t('exercises.replacementsSearch')}</p>
+
+            <NameAutocompleter
+                callback={(exercise: ExerciseSearchResponse) => {
+                    if (exercise !== null) {
+                        setReplacementId(exercise.data.base_id);
+                        loadCurrentReplacement(exercise.data.base_id);
+                    }
+                }}
+            />
+
+            <TextField
+                label="Exercise ID"
+                onBlur={() => loadCurrentReplacement()}
+                onChange={async (event) => {
+                    setReplacementId(event.target.value !== '' ? parseInt(event.target.value) : null);
+                }}
+                value={replacementId ?? ""}
+                InputProps={{
+                    endAdornment:
+                        <InputAdornment position="start">
+                            <IconButton onClick={() => loadCurrentReplacement()}>
+                                <CachedIcon />
+                            </IconButton>
+                        </InputAdornment>
+                }}
+                fullWidth={true}
+                variant="standard"
+            />
+            {replacementExercise === null && <>
+                <p><i>No exercise selected for replacement</i></p>
+            </>}
+
+            {replacementExercise !== null && <>
+                <p>Selected exercise for replacement:
+                    <Tooltip title={t('copyToClipboard')}>
+                        <IconButton
+                            onClick={() => navigator.clipboard.writeText(replacementExercise!.id!.toString())}>
+                            <ContentCopy />
+                        </IconButton>
+                    </Tooltip>
+                </p>
+
+                <ListItem disablePadding>
+                    <ListItemAvatar>
+                        <Avatar>
+                            {replacementExercise.mainImage ?
+                                <Avatar
+                                    alt="" src={`${SERVER_URL}${replacementExercise.mainImage.url}`}
+                                    variant="rounded" />
+                                : <PhotoIcon />}
+                        </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                        primary={replacementExercise.getTranslation().name}
+                        secondary={`${replacementExercise.id} (${replacementExercise.uuid})`}
+                    />
+                    <IconButton onClick={resetReplacement}>
+                        <ClearIcon />
+                    </IconButton>
+                </ListItem>
+            </>}
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={() => props.onClose()}>{t('cancel')}</Button>
+            <Button
+                size={"small"}
+                onClick={handleDeleteTranslation}
+                variant="contained"
+            >
+                {t('exercises.deleteTranslation')}
+            </Button>
+            <Button
+                size={"small"}
+                onClick={() => handleDeleteBase()}
+                variant="contained"
+            >
+                {t('exercises.deleteExerciseFull')}
+            </Button>
+            <Button
+                size={"small"}
+                disabled={replacementExercise === null}
+                onClick={() => handleDeleteBase(true)}
+                variant="contained"
+            >
+                {t('exercises.deleteExerciseReplace')}
+            </Button>
+        </DialogActions>
+    </>;
+}
+
 export const Head = ({
                          exercise,
                          languages,
@@ -66,11 +220,8 @@ export const Head = ({
                      }: HeadProp) => {
     const [anchorMenuEl, setAnchorMenuEl] = useState<null | HTMLElement>(null);
     const [openDialog, setOpenDialog] = React.useState(false);
-    const [replacementId, setReplacementId] = React.useState<number | null>(null);
-    const [replacementExercise, setReplacementExercise] = React.useState<ExerciseBase | null>(null);
     const openLanguageMenu = Boolean(anchorMenuEl);
     const [t] = useTranslation();
-    const navigate = useNavigate();
 
     const deletePermissionQuery = usePermissionQuery(WgerPermissions.DELETE_EXERCISE);
     const editPermissionQuery = usePermissionQuery(WgerPermissions.EDIT_EXERCISE);
@@ -93,44 +244,6 @@ export const Head = ({
         handleMenuClose();
     };
 
-    const resetReplacement = () => {
-        setReplacementExercise(null);
-        setReplacementId(null);
-    };
-
-    const handleDeleteTranslation = async () => {
-        await deleteExerciseTranslation(currentTranslation?.id!);
-        setOpenDialog(false);
-        changeLanguage(languages[0]);
-    };
-
-    const handleDeleteBase = async (handleReplacement: boolean = false) => {
-        if (handleReplacement) {
-            await deleteExerciseBase(exercise.id!, replacementExercise?.uuid!);
-        } else {
-            await deleteExerciseBase(exercise.id!);
-        }
-        setOpenDialog(false);
-        navigate('../overview');
-    };
-
-    const loadCurrentReplacement = async (exerciseId?: number) => {
-        const id = exerciseId !== undefined ? exerciseId : replacementId;
-
-        if (id !== null) {
-            try {
-                const exercise = await getExerciseBase(id);
-                setReplacementExercise(exercise);
-                //setReplacementUUID(replacementExercise!.uuid!);
-            } catch (e) {
-                //if (e instanceof AxiosError) {
-                //console.log(e);
-                setReplacementExercise(null);
-                //}
-            }
-        }
-    };
-
     const languagesList = languages.map(l => {
         return <MenuItem
             key={l.nameShort}
@@ -151,110 +264,14 @@ export const Head = ({
                 <div className={styles.root}>
                     <Dialog
                         open={openDialog}
-                        onClose={() => setOpenDialog(false)}
-                    >
-                        <DialogTitle id="alert-dialog-title">
-                            {t('delete')}
-                        </DialogTitle>
-                        <DialogContent>
-                            <p>
-                                {t('exercises.deleteExerciseBody',
-                                    {
-                                        name: currentTranslation?.name,
-                                        language: language?.nameLong
-                                    })}
-                            </p>
-                            <p>{t('cannotBeUndone')}</p>
-
-                            <p><b>{t('exercises.replacements')}</b></p>
-                            <p>{t('exercises.replacementsInfoText')}</p>
-                            <p>{t('exercises.replacementsSearch')}</p>
-
-                            <NameAutocompleter
-                                callback={(exercise: ExerciseSearchResponse) => {
-                                    if (exercise !== null) {
-                                        setReplacementId(exercise.data.base_id);
-                                        loadCurrentReplacement(exercise.data.base_id);
-                                    }
-                                }} />
-
-                            <TextField
-                                label="Exercise ID"
-                                onBlur={() => loadCurrentReplacement()}
-                                onChange={async (event) => {
-                                    setReplacementId(event.target.value !== '' ? parseInt(event.target.value) : null);
-                                }}
-                                value={replacementId ?? ''}
-                                InputProps={{
-                                    endAdornment:
-                                        <InputAdornment position="start">
-                                            <IconButton onClick={() => loadCurrentReplacement()}>
-                                                <CachedIcon />
-                                            </IconButton>
-                                        </InputAdornment>
-                                }}
-                                fullWidth={true}
-                                variant="standard"
-                            />
-                            {replacementExercise === null && <>
-                                <p><i>No exercise selected for replacement</i></p>
-                            </>}
-
-                            {replacementExercise !== null && <>
-                                <p>Selected exercise for replacement:
-                                    <Tooltip title={t('copyToClipboard')}>
-                                        <IconButton
-                                            onClick={() => navigator.clipboard.writeText(replacementExercise!.id!.toString())}>
-                                            <ContentCopy />
-                                        </IconButton>
-                                    </Tooltip>
-                                </p>
-
-                                <ListItem disablePadding>
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            {replacementExercise.mainImage ?
-                                                <Avatar
-                                                    alt="" src={`${SERVER_URL}${replacementExercise.mainImage.url}`}
-                                                    variant="rounded" />
-                                                : <PhotoIcon />}
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary={replacementExercise.getTranslation().name}
-                                        secondary={`${replacementExercise.id} (${replacementExercise.uuid})`}
-                                    />
-                                    <IconButton onClick={resetReplacement}>
-                                        <ClearIcon />
-                                    </IconButton>
-                                </ListItem>
-                            </>}
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => setOpenDialog(false)}>{t('cancel')}</Button>
-                            <Button
-                                size={"small"}
-                                onClick={() => handleDeleteTranslation()}
-                                variant="contained"
-                            >
-                                {t('exercises.deleteTranslation')}
-                            </Button>
-                            <Button
-                                size={"small"}
-                                onClick={() => handleDeleteBase()}
-                                variant="contained"
-                            >
-                                {t('exercises.deleteExerciseFull')}
-                            </Button>
-                            <Button
-                                size={"small"}
-                                disabled={replacementExercise === null}
-                                onClick={() => handleDeleteBase(true)}
-                                variant="contained"
-                            >
-                                {t('exercises.deleteExerciseReplace')}
-                            </Button>
-                        </DialogActions>
+                        onClose={() => setOpenDialog(false)}>
+                        <ExerciseDeleteDialog
+                            onClose={() => setOpenDialog(false)}
+                            onChangeLanguage={() => changeLanguage(languages[0])}
+                            currentExercise={exercise}
+                            currentLanguage={language}
+                            currentTranslation={currentTranslation}
+                        />
                     </Dialog>
 
                     <div className={styles.detail_language}>
