@@ -126,8 +126,13 @@ export const editExerciseBase = async (id: number, data: editBaseProps): Promise
 /*
  * Delete an existing exercise base
  */
-export const deleteExerciseBase = async (id: number): Promise<number> => {
-    const url = makeUrl(EXERCISE_BASE_PATH, { id: id });
+export const deleteExerciseBase = async (id: number, replacementUUID?: string): Promise<number> => {
+    const params = replacementUUID === undefined
+        ? { id: id }
+        // eslint-disable-next-line camelcase
+        : { id: id, query: { replaced_by: replacementUUID } };
+
+    const url = makeUrl(EXERCISE_BASE_PATH, params);
     const response = await axios.delete(
         url,
         { headers: makeHeader() }

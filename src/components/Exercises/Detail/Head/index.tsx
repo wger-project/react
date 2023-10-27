@@ -1,18 +1,24 @@
 import { ContentCopy } from "@mui/icons-material";
 import AddIcon from '@mui/icons-material/Add';
+import CachedIcon from '@mui/icons-material/Cached';
+import ClearIcon from '@mui/icons-material/Clear';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PhotoIcon from "@mui/icons-material/Photo";
 import RedoIcon from '@mui/icons-material/Redo';
 import {
+    Avatar,
     Button,
     Chip,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
     Divider,
     Grid,
     IconButton,
+    InputAdornment,
+    ListItem,
+    ListItemAvatar,
     ListItemIcon,
     ListItemText,
     Menu,
@@ -32,10 +38,11 @@ import { WgerPermissions } from "permissions";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from 'react-router-dom';
-import { deleteExerciseTranslation } from "services";
+import { deleteExerciseTranslation, getExerciseBase } from "services";
 import { deleteExerciseBase } from "services/exerciseBase";
 import { ExerciseSearchResponse } from "services/responseType";
 import { getTranslationKey } from "utils/strings";
+import { SERVER_URL } from "utils/url";
 import styles from './head.module.css';
 
 export interface HeadProp {
@@ -59,7 +66,8 @@ export const Head = ({
                      }: HeadProp) => {
     const [anchorMenuEl, setAnchorMenuEl] = useState<null | HTMLElement>(null);
     const [openDialog, setOpenDialog] = React.useState(false);
-    const [replacementUUID, setReplacementUUID] = React.useState('');
+    const [replacementId, setReplacementId] = React.useState<number | null>(null);
+    const [replacementExercise, setReplacementExercise] = React.useState<ExerciseBase | null>(null);
     const openLanguageMenu = Boolean(anchorMenuEl);
     const [t] = useTranslation();
     const navigate = useNavigate();
@@ -85,16 +93,42 @@ export const Head = ({
         handleMenuClose();
     };
 
+    const resetReplacement = () => {
+        setReplacementExercise(null);
+        setReplacementId(null);
+    };
+
     const handleDeleteTranslation = async () => {
         await deleteExerciseTranslation(currentTranslation?.id!);
         setOpenDialog(false);
         changeLanguage(languages[0]);
     };
 
-    const handleDeleteBase = async () => {
-        await deleteExerciseBase(exercise.id!);
+    const handleDeleteBase = async (handleReplacement: boolean = false) => {
+        if (handleReplacement) {
+            await deleteExerciseBase(exercise.id!, replacementExercise?.uuid!);
+        } else {
+            await deleteExerciseBase(exercise.id!);
+        }
         setOpenDialog(false);
         navigate('../overview');
+    };
+
+    const loadCurrentReplacement = async (exerciseId?: number) => {
+        const id = exerciseId !== undefined ? exerciseId : replacementId;
+
+        if (id !== null) {
+            try {
+                const exercise = await getExerciseBase(id);
+                setReplacementExercise(exercise);
+                //setReplacementUUID(replacementExercise!.uuid!);
+            } catch (e) {
+                //if (e instanceof AxiosError) {
+                //console.log(e);
+                setReplacementExercise(null);
+                //}
+            }
+        }
     };
 
     const languagesList = languages.map(l => {
@@ -123,72 +157,102 @@ export const Head = ({
                             {t('delete')}
                         </DialogTitle>
                         <DialogContent>
-                            <DialogContentText>
-                                <p>
-                                    {t('exercises.deleteExerciseBody',
-                                        {
-                                            name: currentTranslation?.name,
-                                            language: language?.nameLong
-                                        })}
-                                </p>
-                                <p>
-                                    {t('cannotBeUndone')}
-                                </p>
+                            <p>
+                                {t('exercises.deleteExerciseBody',
+                                    {
+                                        name: currentTranslation?.name,
+                                        language: language?.nameLong
+                                    })}
+                            </p>
+                            <p>{t('cannotBeUndone')}</p>
 
-                                <p><b>Replacements</b></p>
-                                <p>
-                                    Optionally, you can also select an exercise that should replace this one
-                                    (because it was submitted twice, etc.).
-                                    This will replace the exercise from routines as well as training logs, instead
-                                    of just deleting it. These changes will also propagate to any instance that
-                                    syncs the exercises from this one.
-                                </p>
-                                <p>
-                                    Copy and paste the UUID into the field
-                                </p>
-                            </DialogContentText>
+                            <p><b>{t('exercises.replacements')}</b></p>
+                            <p>{t('exercises.replacementsInfoText')}</p>
+                            <p>{t('exercises.replacementsSearch')}</p>
+
                             <NameAutocompleter
-                                callback={(exercise: ExerciseSearchResponse) => setReplacementUUID(exercise.data.base_uuid)} />
-                            {replacementUUID !== '' &&
-                                <>
-                                    <p>Selected replacement: {replacementUUID}
-                                        <Tooltip title={t('copyToClipboard')}>
-                                            <IconButton onClick={() => navigator.clipboard.writeText(replacementUUID)}>
-                                                <ContentCopy />
+                                callback={(exercise: ExerciseSearchResponse) => {
+                                    if (exercise !== null) {
+                                        setReplacementId(exercise.data.base_id);
+                                        loadCurrentReplacement(exercise.data.base_id);
+                                    }
+                                }} />
+
+                            <TextField
+                                label="Exercise ID"
+                                onBlur={() => loadCurrentReplacement()}
+                                onChange={async (event) => {
+                                    setReplacementId(event.target.value !== '' ? parseInt(event.target.value) : null);
+                                }}
+                                value={replacementId ?? ''}
+                                InputProps={{
+                                    endAdornment:
+                                        <InputAdornment position="start">
+                                            <IconButton onClick={() => loadCurrentReplacement()}>
+                                                <CachedIcon />
                                             </IconButton>
-                                        </Tooltip>
-                                    </p>
-                                </>
-                            }
-
-
-                            <TextField label="replacement UUID"
-                                       fullWidth={true}
-                                       variant="standard"
+                                        </InputAdornment>
+                                }}
+                                fullWidth={true}
+                                variant="standard"
                             />
+                            {replacementExercise === null && <>
+                                <p><i>No exercise selected for replacement</i></p>
+                            </>}
+
+                            {replacementExercise !== null && <>
+                                <p>Selected exercise for replacement:
+                                    <Tooltip title={t('copyToClipboard')}>
+                                        <IconButton
+                                            onClick={() => navigator.clipboard.writeText(replacementExercise!.id!.toString())}>
+                                            <ContentCopy />
+                                        </IconButton>
+                                    </Tooltip>
+                                </p>
+
+                                <ListItem disablePadding>
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            {replacementExercise.mainImage ?
+                                                <Avatar
+                                                    alt="" src={`${SERVER_URL}${replacementExercise.mainImage.url}`}
+                                                    variant="rounded" />
+                                                : <PhotoIcon />}
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        primary={replacementExercise.getTranslation().name}
+                                        secondary={`${replacementExercise.id} (${replacementExercise.uuid})`}
+                                    />
+                                    <IconButton onClick={resetReplacement}>
+                                        <ClearIcon />
+                                    </IconButton>
+                                </ListItem>
+                            </>}
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => setOpenDialog(false)}>{t('cancel')}</Button>
                             <Button
+                                size={"small"}
                                 onClick={() => handleDeleteTranslation()}
                                 variant="contained"
-                                autoFocus
                             >
                                 {t('exercises.deleteTranslation')}
                             </Button>
                             <Button
+                                size={"small"}
                                 onClick={() => handleDeleteBase()}
                                 variant="contained"
-                                autoFocus
                             >
                                 {t('exercises.deleteExerciseFull')}
                             </Button>
                             <Button
-                                onClick={() => handleDeleteBase()}
+                                size={"small"}
+                                disabled={replacementExercise === null}
+                                onClick={() => handleDeleteBase(true)}
                                 variant="contained"
-                                autoFocus
                             >
-                                Delete and replace
+                                {t('exercises.deleteExerciseReplace')}
                             </Button>
                         </DialogActions>
                     </Dialog>
