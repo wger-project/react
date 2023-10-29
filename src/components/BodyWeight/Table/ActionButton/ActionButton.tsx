@@ -1,18 +1,21 @@
-import React from 'react';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import { Button, Menu, MenuItem } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { WgerModal } from "components/Core/Modals/WgerModal";
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
 import { WeightEntry } from "components/BodyWeight/model";
+import { useDeleteWeightEntryQuery } from "components/BodyWeight/queries";
+import { WgerModal } from "components/Core/Modals/WgerModal";
+import React from 'react';
+import { useTranslation } from "react-i18next";
 
 interface ActionButtonProps {
-    weight: WeightEntry
-    handleDeleteWeight: (weight: WeightEntry) => void
+    weight: WeightEntry;
 }
 
-export const ActionButton = ({ weight, handleDeleteWeight }: ActionButtonProps) => {
+export const ActionButton = ({ weight }: ActionButtonProps) => {
+    const deleteWeightEntryQuery = useDeleteWeightEntryQuery();
+
+
     const [t] = useTranslation();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [openModal, setOpenModal] = React.useState(false);
@@ -31,7 +34,7 @@ export const ActionButton = ({ weight, handleDeleteWeight }: ActionButtonProps) 
     };
 
     const handleDelete = () => {
-        handleDeleteWeight(weight);
+        deleteWeightEntryQuery.mutate(weight.id!);
         setAnchorEl(null);
     };
 

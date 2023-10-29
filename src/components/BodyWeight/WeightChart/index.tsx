@@ -68,7 +68,7 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
                     <WeightForm weightEntry={currentEntry} />
                 </WgerModal>
             }
-            <ResponsiveContainer width="90%" height={height}>
+            <ResponsiveContainer height={height}>
 
                 <LineChart data={weightData}>
                     <Line
@@ -91,7 +91,6 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
                         type={'number'}
                         domain={['dataMin', 'dataMax']}
                         tickFormatter={timeStr => new Date(timeStr).toLocaleDateString(i18n.language)}
-                        tickCount={10}
                     />
                     <YAxis domain={['auto', 'auto']} />
                     <Tooltip content={<CustomTooltip />} />

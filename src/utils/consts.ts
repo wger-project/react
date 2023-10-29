@@ -39,7 +39,9 @@ export enum QueryKey {
     NUTRITIONAL_PLANS = 'nutritional-plans',
     NUTRITIONAL_PLAN = 'nutritional-plan',
     NUTRITIONAL_PLAN_LAST = 'nutritional-plan-last',
-    INGREDIENT = 'ingredient'
+    INGREDIENT = 'ingredient',
+
+    BODY_WEIGHT = 'body-weight',
 }
 
 /*
