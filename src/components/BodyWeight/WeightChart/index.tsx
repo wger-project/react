@@ -1,10 +1,10 @@
-import { CartesianGrid, DotProps, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import React from 'react';
-import { WeightEntry } from "components/BodyWeight/model";
-import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import { WgerModal } from "components/Core/Modals/WgerModal";
-import { useTranslation } from "react-i18next";
 import { Paper, useTheme } from "@mui/material";
+import { WeightForm } from "components/BodyWeight/Form/WeightForm";
+import { WeightEntry } from "components/BodyWeight/model";
+import { WgerModal } from "components/Core/Modals/WgerModal";
+import React from 'react';
+import { useTranslation } from "react-i18next";
+import { CartesianGrid, DotProps, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 export interface WeightChartProps {
     weights: WeightEntry[],
@@ -68,7 +68,7 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
                     <WeightForm weightEntry={currentEntry} />
                 </WgerModal>
             }
-            <ResponsiveContainer width="90%" height={height}>
+            <ResponsiveContainer height={height}>
 
                 <LineChart data={weightData}>
                     <Line
@@ -91,7 +91,6 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
                         type={'number'}
                         domain={['dataMin', 'dataMax']}
                         tickFormatter={timeStr => new Date(timeStr).toLocaleDateString(i18n.language)}
-                        tickCount={10}
                     />
                     <YAxis domain={['auto', 'auto']} />
                     <Tooltip content={<CustomTooltip />} />
