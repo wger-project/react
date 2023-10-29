@@ -81,7 +81,7 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
                             stroke: 'black',
                             strokeWidth: 1,
                             r: 6,
-                            // onClick: (e, data) => handleClick(e, data)
+                            onClick: handleClick
                         }} />
                     <CartesianGrid
                         stroke="#ccc"
