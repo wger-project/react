@@ -10,7 +10,6 @@ export interface ExerciseSearchResponse {
     data: {
         id: number,
         base_id: number,
-        base_uuid: string,
         name: string,
         category: string,
         image: string | null,
