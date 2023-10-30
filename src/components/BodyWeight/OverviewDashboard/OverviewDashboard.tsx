@@ -10,10 +10,10 @@ export const OverviewDashboard = () => {
 
     return weightyQuery.isLoading
         ? <LoadingPlaceholder />
-        : <div>
+        : <>
             <WeightChart weights={weightyQuery.data!} height={200} />
             <Box sx={{ mt: 2, }}>
                 <WeightTableDashboard weights={weightyQuery.data!} />
             </Box>
-        </div>;
+        </>;
 };
