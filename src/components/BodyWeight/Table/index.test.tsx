@@ -1,7 +1,9 @@
-import React from 'react';
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { WeightTable } from './index';
 import { WeightEntry } from "components/BodyWeight/model";
+import { BrowserRouter } from "react-router-dom";
+import { testQueryClient } from "tests/queryClient";
+import { WeightTable } from './index';
 
 describe("Body weight test", () => {
     test('renders without crashing', async () => {
@@ -12,7 +14,14 @@ describe("Body weight test", () => {
         ];
 
         // since I used context api to provide state, also need it here
-        render(<WeightTable weights={weightsData}/>);
+        render(
+            <BrowserRouter>
+                <QueryClientProvider client={testQueryClient}>
+                    <WeightTable weights={weightsData} />
+                </QueryClientProvider>
+            </BrowserRouter>
+        );
+
 
         // Both weights are found in th document
         const weightRow = await screen.findByText('80');

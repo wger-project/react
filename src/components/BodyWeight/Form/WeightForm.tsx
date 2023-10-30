@@ -18,9 +18,9 @@ interface WeightFormProps {
 
 export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
-    const useWeightEntriesQuery = useBodyWeightQuery();
-    const useAddWeightQuery = useAddWeightEntryQuery();
-    const useEditWeightQuery = useEditWeightEntryQuery();
+    const weightEntriesQuery = useBodyWeightQuery();
+    const addWeightQuery = useAddWeightEntryQuery();
+    const editWeightQuery = useEditWeightEntryQuery();
 
     const [dateValue, setDateValue] = useState<Date | null>(weightEntry ? weightEntry.date : new Date());
     const [t, i18n] = useTranslation();
@@ -32,7 +32,6 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
             .max(300, 'Max weight is 300 kg')
             .required('Weight field is required'),
     });
-
 
     return (
         <Formik
@@ -49,7 +48,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                     weightEntry.date = new Date(values.date);
                     try {
                         const editedWeightEntry = await updateWeight(weightEntry);
-                        useEditWeightQuery.mutate(editedWeightEntry);
+                        editWeightQuery.mutate(editedWeightEntry);
                     } catch (error) {
 
                     }
@@ -59,13 +58,11 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                     weightEntry = new WeightEntry(new Date(values.date), values.weight);
                     try {
                         const newWeightEntry = await createWeight(weightEntry);
-                        useAddWeightQuery.mutate(newWeightEntry);
+                        addWeightQuery.mutate(newWeightEntry);
                     } catch (error) {
                     }
                 }
 
-                // if closeFn is defined, close the modal (this form does not have to
-                // be displayed in a modal)
                 if (closeFn) {
                     closeFn();
                 }
@@ -105,7 +102,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
                                     // if date is in list of weight entries, disable it
                                     if (date) {
-                                        return useWeightEntriesQuery.data!.some(entry => dateToYYYYMMDD(entry.date) === (date as unknown as DateTime).toISODate());
+                                        return weightEntriesQuery.data!.some(entry => dateToYYYYMMDD(entry.date) === (date as unknown as DateTime).toISODate());
                                     }
 
                                     // all other dates are allowed
