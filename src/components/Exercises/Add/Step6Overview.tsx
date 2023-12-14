@@ -22,13 +22,13 @@ import { useNavigate } from "react-router-dom";
 import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
 import { getTranslationKey } from "utils/strings";
 import ImageList from "@mui/material/ImageList";
-import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
 import { useExerciseStateValue } from "state";
 import { addNote } from "services/note";
 import { Note } from "components/Exercises/models/note";
 import { useProfileQuery } from "components/User/queries/profile";
 import { makeLink, WgerLink } from "utils/url";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 
 export const Step6Overview = ({ onBack }: StepProps) => {
     const [t, i18n] = useTranslation();

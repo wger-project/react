@@ -20,7 +20,7 @@ export class WeightAdapter implements Adapter<WeightEntry> {
         );
     }
 
-    toJson(item: WeightEntry): any {
+    toJson(item: WeightEntry) {
         return {
             id: item.id,
             date: dateToYYYYMMDD(item.date),

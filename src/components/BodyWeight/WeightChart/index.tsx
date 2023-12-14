@@ -1,10 +1,10 @@
-import { CartesianGrid, DotProps, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import React from 'react';
-import { WeightEntry } from "components/BodyWeight/model";
-import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import { WgerModal } from "components/Core/WgerModal/WgerModal";
-import { useTranslation } from "react-i18next";
 import { Paper, useTheme } from "@mui/material";
+import { WeightForm } from "components/BodyWeight/Form/WeightForm";
+import { WeightEntry } from "components/BodyWeight/model";
+import { WgerModal } from "components/Core/Modals/WgerModal";
+import React from 'react';
+import { useTranslation } from "react-i18next";
+import { CartesianGrid, DotProps, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 export interface WeightChartProps {
     weights: WeightEntry[],
@@ -16,15 +16,13 @@ export interface TooltipProps {
     payload?: any,
     label?: string,
 }
- 
+
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     const [t, i18n] = useTranslation();
 
     if (active && payload && payload.length) {
         return (
-            <Paper style={{
-                padding: 8
-            }}>
+            <Paper style={{ padding: 8 }}>
                 <p><strong>{new Date(label!).toLocaleDateString(i18n.language)}</strong></p>
                 <p>{t('weight')}: {payload[0].value}</p>
             </Paper>

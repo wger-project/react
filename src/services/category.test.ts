@@ -1,6 +1,6 @@
 import axios from "axios";
-import { getCategories } from "services";
 import { Category } from "components/Exercises/models/category";
+import { getCategories } from "services";
 
 jest.mock("axios");
 

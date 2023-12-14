@@ -18,7 +18,7 @@ export class CategoryAdapter implements Adapter<Category> {
         );
     }
 
-    toJson(item: Category): any {
+    toJson(item: Category) {
         return {
             id: item.id,
             name: item.name,

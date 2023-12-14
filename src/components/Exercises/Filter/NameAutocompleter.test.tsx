@@ -1,7 +1,8 @@
-import React from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
+import React from 'react';
 import { searchExerciseTranslations } from "services";
+import { searchResponse } from "tests/exercises/searchResponse";
 
 jest.mock("services");
 const mockCallback = jest.fn();
@@ -9,31 +10,9 @@ const mockCallback = jest.fn();
 describe("Test the NameAutocompleter component", () => {
 
     // Arrange
-    const response = [{
-        "value": "Crunches an Negativbank",
-        "data": {
-            "id": 1149,
-            "base_id": 927,
-            "name": "Crunches an Negativbank",
-            "category": "Bauch",
-            "image": null,
-            "image_thumbnail": null
-        }
-    }, {
-        "value": "Crunches am Seil",
-        "data": {
-            "id": 1213,
-            "base_id": 979,
-            "name": "Crunches am Seil",
-            "category": "Brust",
-            "image": null,
-            "image_thumbnail": null
-        }
-    }];
-
     beforeEach(() => {
         // @ts-ignore
-        searchExerciseTranslations.mockImplementation(() => Promise.resolve(response));
+        searchExerciseTranslations.mockImplementation(() => Promise.resolve(searchResponse));
     });
 
     test('renders correct results', async () => {
@@ -53,7 +32,7 @@ describe("Test the NameAutocompleter component", () => {
 
         expect(screen.getByLabelText("exercises.searchExerciseName")).toBeInTheDocument();
         expect(screen.getByText("noResults")).toBeInTheDocument();
-        expect(screen.queryByText("Crunches an Negati…")).not.toBeInTheDocument();
+        expect(screen.queryByText("Crunches an Negativbank")).not.toBeInTheDocument();
         expect(screen.queryByText("Bauch")).not.toBeInTheDocument();
         expect(screen.queryByText("Crunches am Seil")).not.toBeInTheDocument();
         expect(screen.queryByText("Brust")).not.toBeInTheDocument();
@@ -63,7 +42,7 @@ describe("Test the NameAutocompleter component", () => {
             await new Promise((r) => setTimeout(r, 250));
         });
         expect(searchExerciseTranslations).toBeCalled();
-        expect(screen.getByText("Crunches an Negati…")).toBeInTheDocument();
+        expect(screen.getByText("Crunches an Negativbank")).toBeInTheDocument();
         expect(screen.getByText("Bauch")).toBeInTheDocument();
         expect(screen.getByText("Crunches am Seil")).toBeInTheDocument();
         expect(screen.getByText("Brust")).toBeInTheDocument();
@@ -94,6 +73,6 @@ describe("Test the NameAutocompleter component", () => {
         });
 
         // Assert
-        expect(mockCallback).lastCalledWith(response[0]);
+        expect(mockCallback).lastCalledWith(searchResponse[0]);
     });
 });

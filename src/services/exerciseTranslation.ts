@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { ExerciseSearchResponse, ExerciseSearchType, ResponseType } from "./responseType";
-import { makeHeader, makeUrl } from "utils/url";
 import { ExerciseTranslation, ExerciseTranslationAdapter } from "components/Exercises/models/exerciseTranslation";
+import { ENGLISH_LANGUAGE_CODE, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
+import { makeHeader, makeUrl } from "utils/url";
+import { ExerciseSearchResponse, ExerciseSearchType, ResponseType } from "./responseType";
 
 export const EXERCISE_PATH = 'exercise';
 export const EXERCISE_TRANSLATION_PATH = 'exercise-translation';
@@ -25,8 +26,14 @@ export const getExerciseTranslations = async (id: number): Promise<ExerciseTrans
 /*
  * Fetch all exercise translations for a given exercise base
  */
-export const searchExerciseTranslations = async (name: string): Promise<ExerciseSearchResponse[]> => {
-    const url = makeUrl(EXERCISE_SEARCH_PATH, { query: { term: name } });
+export const searchExerciseTranslations = async (name: string, languageCode: string = ENGLISH_LANGUAGE_CODE, searchEnglish: boolean = true,): Promise<ExerciseSearchResponse[]> => {
+    const languages = [languageCode];
+    if (languageCode !== LANGUAGE_SHORT_ENGLISH && searchEnglish) {
+        languages.push(LANGUAGE_SHORT_ENGLISH);
+    }
+
+
+    const url = makeUrl(EXERCISE_SEARCH_PATH, { query: { term: name, language: languages.join(',') } });
 
     const { data } = await axios.get<ExerciseSearchType>(url);
     return data.suggestions;

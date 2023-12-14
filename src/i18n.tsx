@@ -7,6 +7,7 @@
 
 import { useTranslation } from "react-i18next";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DummyComponent = () => {
     const [t] = useTranslation();
     t("server.abs");
@@ -15,6 +16,7 @@ const DummyComponent = () => {
     t("server.barbell");
     t("server.bench");
     t("server.biceps");
+    t("server.body_weight");
     t("server.calves");
     t("server.cardio");
     t("server.chest");
@@ -25,11 +27,14 @@ const DummyComponent = () => {
     t("server.incline_bench");
     t("server.kettlebell");
     t("server.kilometers");
+    t("server.kilometers_per_hour");
     t("server.lats");
     t("server.legs");
-    t("server.lower_back");
+    t("server.max_reps");
     t("server.miles");
+    t("server.miles_per_hour");
     t("server.minutes");
+    t("server.plates");
     t("server.pull_up_bar");
     t("server.quads");
     t("server.repetitions");
@@ -39,6 +44,8 @@ const DummyComponent = () => {
     t("server.swiss_ball");
     t("server.triceps");
     t("server.until_failure");
+    t("server.kg");
+    t("server.lb");
     t("server.none__bodyweight_exercise_");
 
     return (<p></p>);

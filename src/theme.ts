@@ -1,7 +1,13 @@
-import createTheme, { ThemeOptions } from '@mui/material/styles/createTheme';
+import { ThemeOptions } from '@mui/material/styles/createTheme';
+import { createTheme } from '@mui/material/styles';
 
 const fontFamilyBold = [
     '"Open Sans Bold"',
+    'sans-serif'
+].join(',');
+
+const fontFamilyLight = [
+    '"Open Sans Light"',
     'sans-serif'
 ].join(',');
 
@@ -21,10 +27,7 @@ const themeOptions: ThemeOptions = {
         h6: {
             fontFamily: fontFamilyBold,
         },
-        fontFamily: [
-            '"Open Sans Light"',
-            'sans-serif'
-        ].join(','),
+        fontFamily: fontFamilyLight,
     },
     palette: {
         primary: {

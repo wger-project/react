@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { ApiEquipmentType } from 'types';
-import { ResponseType } from "./responseType";
-import { makeHeader, makeUrl } from "utils/url";
 import { Equipment, EquipmentAdapter } from "components/Exercises/models/equipment";
+import { ApiEquipmentType } from 'types';
+import { makeHeader, makeUrl } from "utils/url";
+import { ResponseType } from "./responseType";
 
 export const EQUIPMENT_PATH = 'equipment';
 

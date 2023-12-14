@@ -85,15 +85,17 @@
         "repetitions": "Wiederholungen",
         "seconds": "Sekunden",
         "shoulders": "Schultern",
-        "swiss_ball": "Swissball",
+        "swiss_ball": "Schweizer Ball",
         "sz_bar": "SZ Stange",
         "triceps": "Trizeps",
         "until_failure": "Bis zum Muskelversagen",
-        "cardio": "Kardio"
+        "cardio": "Kardio",
+        "lb": "lb",
+        "kg": "kg"
     },
     "submit": "Abschicken",
     "weight": "Gewicht",
-    "workout": "Trainingsplan",
+    "workout": "Training",
     "images": "Bilder",
     "description": "Beschreibung",
     "translation": "Übersetzung",
@@ -106,9 +108,16 @@
         "valueTooLong": "Der Wert ist zu groß",
         "fieldRequired": "Pflichtfeld"
     },
+    "routines": {
+        "rir": "RiR"
+    },
     "name": "Name",
     "cancel": "Abbrechen",
     "videos": "Videos",
     "cannotBeUndone": "Diese Aktion kann nicht rückgängig gemacht werden.",
-    "preferences": "Voreinstellungen"
+    "preferences": "Voreinstellungen",
+    "success": "Erfolg!",
+    "measurements": {
+        "deleteInfo": "Dies wird die Kategorie sowie alle seine Einträge löschen"
+    }
 }

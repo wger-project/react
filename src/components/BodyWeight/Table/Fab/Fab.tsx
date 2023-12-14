@@ -2,7 +2,7 @@ import React from 'react';
 import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import { WgerModal } from "components/Core/WgerModal/WgerModal";
+import { WgerModal } from "components/Core/Modals/WgerModal";
 import { useTranslation } from "react-i18next";
 
 
@@ -21,7 +21,7 @@ export const WeightEntryFab = () => {
                 onClick={handleOpenModal}
                 sx={{
                     position: 'fixed',
-                    bottom: (theme) => theme.spacing(2),
+                    bottom: '5rem',
                     right: (theme) => theme.spacing(2),
                     zIndex: 9,
                 }}>

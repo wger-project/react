@@ -1,6 +1,6 @@
-import { makeHeader, makeUrl } from "utils/url";
 import axios from "axios";
 import { Note, NoteAdapter } from "components/Exercises/models/note";
+import { makeHeader, makeUrl } from "utils/url";
 
 export const API_NOTE_PATH = 'exercisecomment';
 

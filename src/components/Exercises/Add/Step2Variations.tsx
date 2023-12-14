@@ -21,12 +21,12 @@ import { useTranslation } from "react-i18next";
 import { useBasesQuery } from "components/Exercises/queries";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { LoadingPlaceholder } from "components/Exercises/ExerciseOverview";
 import { useExerciseStateValue } from "state";
 import { setNewBaseVariationId, setVariationId } from "state/exerciseReducer";
 import SearchIcon from '@mui/icons-material/Search';
 import PhotoIcon from '@mui/icons-material/Photo';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 
 /*
  * Groups a list of objects by a property

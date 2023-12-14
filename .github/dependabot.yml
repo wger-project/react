@@ -8,10 +8,31 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
 
     # Allow up to 10 open pull requests
     open-pull-requests-limit: 10
+
+    # Group dependencies
+    groups:
+      mui:
+        patterns:
+          - "@mui*"
+          - ^@mui/.*
+          - ^mui$
+        update-types:
+          - "minor"
+          - "patch"
+
+      types:
+        patterns:
+          - "@types*"
+          - ^@types/.*
+          - ^types$
+        update-types:
+          - "minor"
+          - "patch"
+
 
 
   - package-ecosystem: "github-actions"

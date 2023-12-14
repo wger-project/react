@@ -17,7 +17,7 @@ export class AliasAdapter implements Adapter<Alias> {
         );
     }
 
-    toJson(item: Alias): any {
+    toJson(item: Alias) {
         return {
             id: item.id,
             name: item.alias,

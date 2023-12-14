@@ -1,12 +1,28 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
+import { Button, Menu, MenuItem } from "@mui/material";
+import { makeLink, WgerLink } from "utils/url";
+import React from "react";
 
 export const NutritionSubMenu = () => {
+
+    const { i18n } = useTranslation();
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
     return (
         <>
-            <li><Link to="/nutrition/overview">Nutritions Plan</Link></li>
-            <li><Link to="/nutrition/calculator/bmi">BMI Calculator</Link></li>
-            <li><Link to="/nutrition/calculator/calories">Daily calories calculator</Link></li>
-            <li><Link to="/nutrition/ingredient/overview">Ingredient overview</Link></li>
+            <Button color="inherit" onClick={(event) => setAnchorEl(event.currentTarget)}>
+                Nutrition
+            </Button>
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)}
+            >
+                <MenuItem component={Link} to={makeLink(WgerLink.NUTRITION_OVERVIEW, i18n.language)}>
+                    Overview
+                </MenuItem>
+            </Menu>
         </>
     );
 };

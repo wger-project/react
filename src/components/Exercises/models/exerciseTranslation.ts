@@ -67,7 +67,7 @@ export class ExerciseTranslationAdapter implements Adapter<ExerciseTranslation> 
      * Don't return all properties, since not all items can be updated (they would
      * be ignored by the server, but it's better to not send too much anyway)
      */
-    toJson(item: ExerciseTranslation): any {
+    toJson(item: ExerciseTranslation) {
 
         return {
             id: item.id,

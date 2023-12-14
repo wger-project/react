@@ -20,7 +20,7 @@ export class ExerciseVideoAdapter implements Adapter<ExerciseVideo> {
         );
     }
 
-    toJson(item: ExerciseVideo): any {
+    toJson(item: ExerciseVideo) {
         return {
             id: item.id,
             video: item.url,

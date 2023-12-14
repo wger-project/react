@@ -1,12 +1,13 @@
 import React from "react";
-import { Box, Card, CardActionArea, CardContent, CardMedia, Chip, Typography, } from "@mui/material";
+import { Card, CardActionArea, CardContent, CardMedia, Chip, Typography, } from "@mui/material";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { Language } from "components/Exercises/models/language";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { useTranslation } from "react-i18next";
 import { getTranslationKey } from "utils/strings";
-import PhotoIcon from '@mui/icons-material/Photo';
 import { makeLink, WgerLink } from "utils/url";
+import { ExerciseImagePlaceholder } from "components/Exercises/Detail/ExerciseImagePlaceholder";
+import Tooltip from "@mui/material/Tooltip";
 
 type OverviewCardProps = {
     exerciseBase: ExerciseBase;
@@ -35,17 +36,14 @@ export const OverviewCard = ({ exerciseBase, language }: OverviewCardProps) => {
                         sx={{ height: 200 }}
                         alt="" />
                     : <CardMedia>
-                        <Box sx={{ backgroundColor: "lightgray", height: 200 }}
-                             display="flex"
-                             alignItems="center"
-                             justifyContent="center">
-                            <PhotoIcon sx={{ fontSize: 80, color: "gray" }} />
-                        </Box>
+                        <ExerciseImagePlaceholder />
                     </CardMedia>}
                 <CardContent>
-                    <Typography gutterBottom variant="h6" component="div">
-                        {exercise.nameLong}
-                    </Typography>
+                    <Tooltip title={exercise.name} placement="top" arrow>
+                        <Typography gutterBottom variant="h6" component="div" noWrap>
+                            {exercise.name}
+                        </Typography>
+                    </Tooltip>
 
                     <Chip
                         label={t(getTranslationKey(exerciseBase.category.name))}

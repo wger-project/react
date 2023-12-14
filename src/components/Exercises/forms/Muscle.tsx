@@ -1,7 +1,7 @@
-import { useTranslation } from "react-i18next";
 import { Autocomplete, TextField } from "@mui/material";
-import React from "react";
 import { useMusclesQuery } from "components/Exercises/queries";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { editExerciseBase } from "services/exerciseBase";
 
 export function EditExerciseMuscle(props: {
@@ -24,14 +24,10 @@ export function EditExerciseMuscle(props: {
         ? <Autocomplete
             multiple
             options={musclesQuery.data!.map(m => m.id)}
-            getOptionDisabled={(option) =>
-                props.blocked.includes(option)
-            }
+            getOptionDisabled={(option) => props.blocked.includes(option)}
             getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName(t)}
             value={props.value}
-            onChange={(event, newValue) => {
-                handleOnChange(newValue);
-            }}
+            onChange={(event, newValue) => handleOnChange(newValue)}
             renderInput={params => (
                 <TextField
                     {...params}

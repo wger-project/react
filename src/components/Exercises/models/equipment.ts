@@ -17,7 +17,7 @@ export class EquipmentAdapter implements Adapter<Equipment> {
         );
     }
 
-    toJson(item: Equipment): any {
+    toJson(item: Equipment) {
         return {
             id: item.id,
             name: item.name,

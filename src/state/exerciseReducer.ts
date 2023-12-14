@@ -60,6 +60,10 @@ export const setImages = (images: ImageFormData[]): ExerciseAction => {
 
 export const exerciseReducer = (state: ExerciseState, action: ExerciseAction): ExerciseState => {
 
+    if (action === undefined) {
+        return state;
+    }
+
     switch (action.type) {
         case SetExerciseState.RESET:
             return exerciseInitialState;

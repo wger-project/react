@@ -7,7 +7,11 @@ export { getMuscles } from './muscles';
 export { getEquipment } from './equipment';
 export { getCategories } from './category';
 export {
-    getExerciseBases, getExerciseBase, getExerciseBasesForVariation, addExerciseBase
+    getExerciseBases,
+    getExerciseBase,
+    getExerciseBasesForVariation,
+    addExerciseBase,
+    deleteExerciseBase,
 } from './exerciseBase';
 export {
     addExerciseTranslation,
@@ -21,3 +25,21 @@ export { postExerciseImage } from './image';
 export { updateWeight, createWeight } from './weight';
 export { postAlias, deleteAlias } from './alias';
 export { postExerciseVideo, deleteExerciseVideo } from './video';
+
+export {
+    getWorkoutRoutinesShallow,
+    getWorkoutRoutine,
+    getWorkoutRoutines,
+} from './workoutRoutine';
+
+export {
+    getMeasurementCategories,
+    getMeasurementCategory,
+    deleteMeasurementEntry,
+    editMeasurementEntry,
+} from './measurements';
+
+export { searchIngredient, getIngredient } from './ingredient';
+
+export { addMealItem, editMealItem, deleteMealItem } from './mealItem';
+export { getMealsForPlan, addMeal, editMeal, deleteMeal } from './meal';

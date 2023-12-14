@@ -124,7 +124,7 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
      * Don't return all properties, since not all items can be updated (they would
      * be ignored by the server, but it's better to not send too much anyway)
      */
-    toJson(item: ExerciseBase): any {
+    toJson(item: ExerciseBase) {
         return {
             id: item.id,
             uuid: item.uuid,

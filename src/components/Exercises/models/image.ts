@@ -21,7 +21,7 @@ export class ExerciseImageAdapter implements Adapter<ExerciseImage> {
     }
 
     // TODO: when uploading an image we have to send the file
-    toJson(item: ExerciseImage): any {
+    toJson(item: ExerciseImage) {
         return {
             id: item.id,
             image: item.url,

@@ -18,5 +18,19 @@ export interface ExerciseSearchResponse {
 }
 
 export interface ExerciseSearchType {
-    suggestions: ExerciseSearchResponse[]
+    suggestions: ExerciseSearchResponse[];
+}
+
+export interface IngredientSearchResponse {
+    value: string,
+    data: {
+        id: number,
+        name: string,
+        image: string | null,
+        image_thumbnail: string | null,
+    }
+}
+
+export interface IngredientSearchType {
+    suggestions: IngredientSearchResponse[];
 }

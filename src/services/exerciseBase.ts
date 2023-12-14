@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { ResponseType } from "./responseType";
-import { makeHeader, makeUrl } from "utils/url";
 import { ExerciseBase, ExerciseBaseAdapter } from "components/Exercises/models/exerciseBase";
+import { makeHeader, makeUrl } from "utils/url";
+import { ResponseType } from "./responseType";
 
 export const EXERCISE_INFO_PATH = 'exercisebaseinfo';
 export const EXERCISE_BASE_PATH = 'exercise-base';
@@ -126,8 +126,13 @@ export const editExerciseBase = async (id: number, data: editBaseProps): Promise
 /*
  * Delete an existing exercise base
  */
-export const deleteExerciseBase = async (id: number): Promise<number> => {
-    const url = makeUrl(EXERCISE_BASE_PATH, { id: id });
+export const deleteExerciseBase = async (id: number, replacementUUID?: string): Promise<number> => {
+    const params = replacementUUID === undefined
+        ? { id: id }
+        // eslint-disable-next-line camelcase
+        : { id: id, query: { replaced_by: replacementUUID } };
+
+    const url = makeUrl(EXERCISE_BASE_PATH, params);
     const response = await axios.delete(
         url,
         { headers: makeHeader() }
