@@ -37,7 +37,8 @@
         "variations": "Variazioni",
         "identicalExercisePleaseDiscard": "Se noti un esercizio identico a quello che stai aggiungendo, elimina la bozza e modifica invece quell'esercizio.",
         "checkInformationBeforeSubmitting": "Per favore controlla che le informazioni inserite siano corrette prima di confermare l'esercizio",
-        "step1HeaderBasics": "Nozioni di base in inglese"
+        "step1HeaderBasics": "Nozioni di base in inglese",
+        "replacements": "Sostituzioni"
     },
     "noResults": "Nessun risultato",
     "noResultsDescription": "Nessun risultato trovato. Prova a ridurre i termini di ricerca.",
@@ -79,5 +80,11 @@
     "deleteConfirmation": "Sei sicuro di voler cancellare \"{{name}}\"?",
     "notes": "Note",
     "value": "Valore",
-    "unit": "Unità"
+    "unit": "Unità",
+    "close": "Chiuso",
+    "nothingHereYet": "Qui non c'é ancora nulla ...",
+    "alsoSearchEnglish": "Cerca anche nomi in inglese",
+    "timeOfDay": "Ora del giorno",
+    "copyToClipboard": "Copia negli appunti",
+    "nothingHereYetAction": "Premi il pulsante di azione per iniziare"
 }
