@@ -93,7 +93,7 @@
     "notes": "Note",
     "value": "Valore",
     "unit": "Unità",
-    "close": "Chiuso",
+    "close": "Chiudi",
     "nothingHereYet": "Qui non c'é ancora nulla ...",
     "alsoSearchEnglish": "Cerca anche nomi in inglese",
     "timeOfDay": "Ora del giorno",
@@ -150,11 +150,21 @@
         "sodium": "Sodio",
         "pseudoMealTitle": "Altri registri"
     },
-    "images": "immagini",
+    "images": "Immagini",
     "downloadAsPdf": "Scarica come PDF",
     "total": "Totale",
     "preferences": "Preferenze",
     "continue": "Continua",
     "translation": "Traduzione",
-    "overview": "Panoramica"
+    "overview": "Panoramica",
+    "language": "Lingua",
+    "forms": {
+        "valueTooLong": "Il valore è troppo lungo",
+        "fieldRequired": "Questo campo è richiesto",
+        "minLength": "Per favore inserisci più di {{chars}} caratteri",
+        "supportedImageFormats": "Sono supportati solo file JPEG, PNG e WEBP al di sotto dei 20Mb",
+        "valueTooShort": "Il valore è troppo corto",
+        "maxLength": "Per favore inserisci meno di {{chars}} caratteri"
+    },
+    "goBack": "Indietro"
 }
