@@ -1,11 +1,11 @@
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import { Note } from "components/Exercises/models/note";
 import { Alias } from "components/Exercises/models/alias";
 import { Category } from "components/Exercises/models/category";
 import { Equipment } from "components/Exercises/models/equipment";
-import { Muscle } from "components/Exercises/models/muscle";
-import { ExerciseImage } from "components/Exercises/models/image";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import { ExerciseImage } from "components/Exercises/models/image";
+import { Muscle } from "components/Exercises/models/muscle";
+import { Note } from "components/Exercises/models/note";
 import { ExerciseVideo } from "components/Exercises/models/video";
 
 const testExerciseTranslation1 = new ExerciseTranslation(
@@ -18,8 +18,8 @@ const testExerciseTranslation1 = new ExerciseTranslation(
         new Note(133, 174, 'do the exercise correctly'),
     ],
     [
-        new Alias(1, 'test 123'),
-        new Alias(2, 'another name'),
+        new Alias(1, '9a05bdba-e977-4fb1-8fca-2ff2c016c59d', 'test 123'),
+        new Alias(2, 'de49093a-a9e9-4fe0-b4f9-6ce7e98c2c40', 'another name'),
     ]
 );
 const testExerciseTranslation2 = new ExerciseTranslation(
@@ -144,11 +144,6 @@ export const responseApiExerciseBaseInfo = {
                 "license_author": null
             }
         ],
-        "comments": [
-            "This is a comment",
-            "This is another comment",
-            "This is a third comment"
-        ],
         "variations": 228,
         "exercises": [
             {
@@ -163,10 +158,12 @@ export const responseApiExerciseBaseInfo = {
                 "aliases": [
                     {
                         "id": 1,
+                        "uuid": "9a05bdba-e977-4fb1-8fca-2ff2c016c59d",
                         "alias": "test 123"
                     },
                     {
                         "id": 2,
+                        "uuid": "de49093a-a9e9-4fe0-b4f9-6ce7e98c2c40",
                         "alias": "another name"
                     }
                 ],

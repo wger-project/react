@@ -1,10 +1,10 @@
+import { Alias } from "components/Exercises/models/alias";
 import { Category } from "components/Exercises/models/category";
-import { Language } from "components/Exercises/models/language";
-import { Muscle } from "components/Exercises/models/muscle";
 import { Equipment } from "components/Exercises/models/equipment";
 import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import { Alias } from "components/Exercises/models/alias";
+import { Language } from "components/Exercises/models/language";
+import { Muscle } from "components/Exercises/models/muscle";
 
 export const testCategoryArms = new Category(1, 'Arms');
 export const testCategoryLegs = new Category(2, 'Legs');
@@ -69,8 +69,8 @@ export const testExerciseSquats = new ExerciseBase(
             1,
             [],
             [
-                new Alias(1, 'Königsübung'),
-                new Alias(2, 'Beinverdicker'),
+                new Alias(1, 'e30eab18-7adf-4361-ad63-192c76103cf0', 'Königsübung'),
+                new Alias(2, 'f4f616f8-224e-4aba-a4e1-11ec0b59af33', 'Beinverdicker'),
             ]
         )
     ]
