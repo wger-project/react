@@ -1,3 +1,6 @@
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {
     Box,
     Button,
@@ -9,23 +12,20 @@ import {
     Stack,
     Typography
 } from "@mui/material";
+import ImageList from '@mui/material/ImageList';
+import { LicenseAuthor } from "components/Common/forms/LicenseAuthor";
+import { LicenseAuthorUrl } from "components/Common/forms/LicenseAuthorUrl";
+import { LicenseDerivativeSourceUrl } from "components/Common/forms/LicenseDerivativeSourceUrl";
+import { LicenseObjectUrl } from "components/Common/forms/LicenseObjectUrl";
+import { LicenseTitle } from "components/Common/forms/LicenseTitle";
+import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
+import { ImageStyleToggle } from "components/Exercises/forms/ImageStyle";
+import { ImageFormData } from "components/Exercises/models/exerciseBase";
+import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import CollectionsIcon from '@mui/icons-material/Collections';
-import ImageList from '@mui/material/ImageList';
-import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { ImageFormData } from "components/Exercises/models/exerciseBase";
 import { useExerciseStateValue } from "state";
 import { setImages } from "state/exerciseReducer";
-import { Form, Formik } from "formik";
-import { LicenseAuthor } from "components/Common/forms/LicenseAuthor";
-import { LicenseTitle } from "components/Common/forms/LicenseTitle";
-import { LicenseObjectUrl } from "components/Common/forms/LicenseObjectUrl";
-import { LicenseAuthorUrl } from "components/Common/forms/LicenseAuthorUrl";
-import { ImageStyleToggle } from "components/Exercises/forms/ImageStyle";
-import { LicenseDerivativeSourceUrl } from "components/Common/forms/LicenseDerivativeSourceUrl";
 
 export const Step5Images = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
@@ -123,20 +123,18 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                                                 <LicenseDerivativeSourceUrl fieldName={'licenseDerivativeSourceUrl'} />
                                                 <ImageStyleToggle fieldName={'imageStyle'} />
                                             </Stack>
+                                            <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
+                                                <Button color="primary" variant="contained" type="submit"
+                                                        sx={{ mt: 2 }}>
+                                                    {t('add')}
+                                                </Button>
+                                            </Stack>
                                         </Form>
                                     );
                                 }}
                             </Formik>
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                            </Typography>
                         </Grid>
                     </Grid>
-
-
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                    </Typography>
                 </Box>
             </Modal>
 
