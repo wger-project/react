@@ -17,7 +17,7 @@ import {
     Tooltip
 } from "@mui/material";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -29,11 +29,11 @@ import { SERVER_URL } from "utils/url";
 export function ExerciseDeleteDialog(props: {
     onClose: Function,
     onChangeLanguage: Function,
-    currentExercise: ExerciseBase,
+    currentExercise: Exercise,
     currentLanguage: Language | undefined,
 }) {
     const [replacementId, setReplacementId] = React.useState<number | null>(null);
-    const [replacementExercise, setReplacementExercise] = React.useState<ExerciseBase | null>(null);
+    const [replacementExercise, setReplacementExercise] = React.useState<Exercise | null>(null);
 
     const [t] = useTranslation();
     const navigate = useNavigate();

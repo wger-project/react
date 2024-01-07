@@ -1,4 +1,4 @@
-import { ImageFormData } from "components/Exercises/models/exerciseBase";
+import { ImageFormData } from "components/Exercises/models/exercise";
 import React, { createContext, useContext, useReducer } from "react";
 import { exerciseReducer } from "state/exerciseReducer";
 import { SetExerciseState } from "state/stateTypes";

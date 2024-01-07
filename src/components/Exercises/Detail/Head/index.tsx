@@ -15,7 +15,7 @@ import {
     Typography
 } from '@mui/material';
 import { ExerciseDeleteDialog } from "components/Exercises/Detail/Head/ExerciseDeleteDialog";
-import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
+import { Exercise } from 'components/Exercises/models/exercise';
 import { Language } from 'components/Exercises/models/language';
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
@@ -27,7 +27,7 @@ import { getTranslationKey } from "utils/strings";
 import styles from './head.module.css';
 
 export interface HeadProp {
-    exercise: ExerciseBase
+    exercise: Exercise
     languages: Language[]
     changeLanguage: (lang: Language) => void,
     language: Language | undefined // language displayed in the head since it's not found in the translations

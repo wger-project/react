@@ -1,13 +1,13 @@
 /* eslint-disable camelcase */
 
-import { Adapter } from "utils/Adapter";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { Exercise } from "components/Exercises/models/exercise";
 import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
 import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
+import { Adapter } from "utils/Adapter";
 
 export class WorkoutSetting {
 
-    base: ExerciseBase | undefined;
+    base: Exercise | undefined;
 
     constructor(
         public id: number,

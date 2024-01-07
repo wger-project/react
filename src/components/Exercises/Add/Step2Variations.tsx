@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PhotoIcon from '@mui/icons-material/Photo';
+import SearchIcon from '@mui/icons-material/Search';
 import {
     Alert,
     AlertTitle,
@@ -17,16 +19,14 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import { useBasesQuery } from "components/Exercises/queries";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
+import { Exercise } from "components/Exercises/models/exercise";
+import { useBasesQuery } from "components/Exercises/queries";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useExerciseStateValue } from "state";
 import { setNewBaseVariationId, setVariationId } from "state/exerciseReducer";
-import SearchIcon from '@mui/icons-material/Search';
-import PhotoIcon from '@mui/icons-material/Photo';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 
 /*
  * Groups a list of objects by a property
@@ -47,7 +47,7 @@ function groupBy(list: any[], keyGetter: Function) {
 
 // New component that displays the exercise info in a ListItem
 const ExerciseInfoListItem = ({ bases }: {
-    bases: ExerciseBase[],
+    bases: Exercise[],
 }) => {
     const MAX_EXERCISE_IMAGES = 4;
     const MAX_EXERCISE_NAMES = 5;
@@ -141,15 +141,15 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
     const [searchTerm, setSearchTerms] = useState<string>('');
 
     // Group bases by variationId
-    let bases: ExerciseBase[] = [];
-    let groupedBases = new Map<number, ExerciseBase[]>();
+    let bases: Exercise[] = [];
+    let groupedBases = new Map<number, Exercise[]>();
     if (basesQuery.isSuccess) {
         bases = basesQuery.data;
         if (searchTerm !== '') {
             bases = bases.filter((base) => base.getTranslation().name.toLowerCase().includes(searchTerm.toLowerCase()));
         }
     }
-    groupedBases = groupBy(bases.filter(b => b.variationId !== null), (b: ExerciseBase) => b.variationId);
+    groupedBases = groupBy(bases.filter(b => b.variationId !== null), (b: Exercise) => b.variationId);
 
     return <>
         <Grid container>

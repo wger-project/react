@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ExerciseTranslation, ExerciseTranslationAdapter } from "components/Exercises/models/exerciseTranslation";
+import { Translation, TranslationAdapter } from "components/Exercises/models/translation";
 import { ENGLISH_LANGUAGE_CODE, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 import { ExerciseSearchResponse, ExerciseSearchType, ResponseType } from "./responseType";
@@ -12,13 +12,13 @@ export const EXERCISE_SEARCH_PATH = 'exercise/search';
 /*
  * Fetch all exercise translations for a given exercise base
  */
-export const getExerciseTranslations = async (id: number): Promise<ExerciseTranslation[]> => {
+export const getExerciseTranslations = async (id: number): Promise<Translation[]> => {
     // eslint-disable-next-line camelcase
     const url = makeUrl(EXERCISE_PATH, { query: { exercise_base: id } });
     const { data } = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
-    const adapter = new ExerciseTranslationAdapter();
+    const adapter = new TranslationAdapter();
     return data.results.map(e => adapter.fromJson(e));
 };
 
@@ -49,7 +49,7 @@ export const addExerciseTranslation = async (
     name: string,
     description: string,
     author: string
-): Promise<ExerciseTranslation> => {
+): Promise<Translation> => {
 
     const url = makeUrl(EXERCISE_TRANSLATION_PATH);
     const baseData = {
@@ -65,7 +65,7 @@ export const addExerciseTranslation = async (
         headers: makeHeader(),
     });
 
-    const adapter = new ExerciseTranslationAdapter();
+    const adapter = new TranslationAdapter();
     return adapter.fromJson(response.data);
 };
 
@@ -78,7 +78,7 @@ export const editExerciseTranslation = async (
     languageId: number,
     name: string,
     description: string,
-): Promise<ExerciseTranslation> => {
+): Promise<Translation> => {
     const url = makeUrl(EXERCISE_TRANSLATION_PATH, { id: id });
     const baseData = {
         // eslint-disable-next-line camelcase
@@ -93,7 +93,7 @@ export const editExerciseTranslation = async (
         { headers: makeHeader() }
     );
 
-    const adapter = new ExerciseTranslationAdapter();
+    const adapter = new TranslationAdapter();
     return adapter.fromJson(response.data);
 };
 

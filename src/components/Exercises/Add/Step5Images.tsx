@@ -1,12 +1,12 @@
-import { Box, Button, Grid, IconButton, ImageListItem, ImageListItemBar, Stack, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CollectionsIcon from '@mui/icons-material/Collections';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { Box, Button, Grid, IconButton, ImageListItem, ImageListItemBar, Stack, Typography } from "@mui/material";
 import ImageList from '@mui/material/ImageList';
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { ImageFormData } from "components/Exercises/models/exerciseBase";
+import { ImageFormData } from "components/Exercises/models/exercise";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useExerciseStateValue } from "state";
 import { setImages } from "state/exerciseReducer";
 

@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 
-import { Adapter } from "utils/Adapter";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { Exercise } from "components/Exercises/models/exercise";
 import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
 import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
+import { Adapter } from "utils/Adapter";
 
 export class WorkoutLog {
 
@@ -18,7 +18,7 @@ export class WorkoutLog {
         public rir: string | null,
         public repetitionUnitObj?: RepetitionUnit,
         public weightUnitObj?: WeightUnit,
-        public baseObj?: ExerciseBase,
+        public baseObj?: Exercise,
     ) {
         if (repetitionUnitObj) {
             this.repetitionUnitObj = repetitionUnitObj;

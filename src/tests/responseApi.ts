@@ -1,14 +1,14 @@
 import { Alias } from "components/Exercises/models/alias";
 import { Category } from "components/Exercises/models/category";
 import { Equipment } from "components/Exercises/models/equipment";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import { Exercise } from "components/Exercises/models/exercise";
 import { ExerciseImage } from "components/Exercises/models/image";
 import { Muscle } from "components/Exercises/models/muscle";
 import { Note } from "components/Exercises/models/note";
+import { Translation } from "components/Exercises/models/translation";
 import { ExerciseVideo } from "components/Exercises/models/video";
 
-const testExerciseTranslation1 = new ExerciseTranslation(
+const testExerciseTranslation1 = new Translation(
     111,
     '583281c7-2362-48e7-95d5-8fd6c455e0fb',
     'Squats',
@@ -22,7 +22,7 @@ const testExerciseTranslation1 = new ExerciseTranslation(
         new Alias(2, 'de49093a-a9e9-4fe0-b4f9-6ce7e98c2c40', 'another name'),
     ]
 );
-const testExerciseTranslation2 = new ExerciseTranslation(
+const testExerciseTranslation2 = new Translation(
     9,
     'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
     'Kniebeuge',
@@ -41,7 +41,7 @@ const image = new ExerciseImage(
     true
 );
 
-export const testApiExerciseBase1 = new ExerciseBase(
+export const testApiExercise1 = new Exercise(
     345,
     "c788d643-150a-4ac7-97ef-84643c6419bf",
     category,
