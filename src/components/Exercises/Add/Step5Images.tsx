@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -24,6 +22,8 @@ import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { ImageStyleToggle } from "components/Exercises/forms/ImageStyle";
 import { ImageFormData } from "components/Exercises/models/exercise";
 import { Form, Formik } from "formik";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useExerciseStateValue } from "state";
 import { setImages } from "state/exerciseReducer";
 
@@ -52,6 +52,11 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
 
         setPopupImage({ url: objectURL, file: uploadedFile });
         //setLocalImages(localImages?.concat({ url: objectURL, file: uploadedFile }));
+    };
+
+    const handleAddFullImage = () => {
+        setLocalImages(localImages?.concat({ url: popupImage?.url, file: popupImage?.file }));
+        handleCloseModal();
     };
 
     const handleDeleteImage = (imageURL: string) => {
@@ -125,6 +130,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                                             </Stack>
                                             <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
                                                 <Button color="primary" variant="contained" type="submit"
+                                                        onClick={handleAddFullImage}
                                                         sx={{ mt: 2 }}>
                                                     {t('add')}
                                                 </Button>
@@ -182,11 +188,8 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                             loading="lazy"
                         />
                         <ImageListItemBar
-
                             actionIcon={
                                 <IconButton
-                                    // title="abc"
-                                    // subtitle="def"
                                     onClick={() => handleDeleteImage(imageEntry.url)}
                                     sx={{ color: 'white' }}
                                 >
