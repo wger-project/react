@@ -50,12 +50,29 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
 
         setOpenModal(true);
 
-        setPopupImage({ url: objectURL, file: uploadedFile });
-        //setLocalImages(localImages?.concat({ url: objectURL, file: uploadedFile }));
+        setPopupImage({
+            url: objectURL,
+            file: uploadedFile,
+
+            author: "",
+            authorUrl: "",
+            title: "",
+            derivativeSourceUrl: "",
+            objectUrl: "",
+        });
     };
 
     const handleAddFullImage = () => {
-        setLocalImages(localImages?.concat({ url: popupImage?.url, file: popupImage?.file }));
+        setLocalImages(localImages?.concat({
+            url: popupImage?.url,
+            file: popupImage?.file,
+
+            author: "aaaa",
+            authorUrl: "",
+            title: "",
+            derivativeSourceUrl: "",
+            objectUrl: "",
+        }));
         handleCloseModal();
     };
 
@@ -121,10 +138,10 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                                     return (
                                         <Form>
                                             <Stack spacing={2}>
-                                                <LicenseAuthor fieldName={'licenseAuthor'} />
-                                                <LicenseAuthorUrl fieldName={'licenseAuthorUrl'} />
                                                 <LicenseTitle fieldName={'licenseTitle'} />
                                                 <LicenseObjectUrl fieldName={'licenseObjectUrl'} />
+                                                <LicenseAuthor fieldName={'licenseAuthor'} />
+                                                <LicenseAuthorUrl fieldName={'licenseAuthorUrl'} />
                                                 <LicenseDerivativeSourceUrl fieldName={'licenseDerivativeSourceUrl'} />
                                                 <ImageStyleToggle fieldName={'imageStyle'} />
                                             </Stack>
@@ -188,6 +205,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                             loading="lazy"
                         />
                         <ImageListItemBar
+                            title={imageEntry.author}
                             actionIcon={
                                 <IconButton
                                     onClick={() => handleDeleteImage(imageEntry.url)}
@@ -206,7 +224,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
             <Grid container>
                 <Grid item xs={12} display="flex" justifyContent={"end"}>
                     <Box sx={{ mb: 2 }}>
-                        <div>
+                        <>
                             <Button
                                 onClick={onBack}
                                 sx={{ mt: 1, mr: 1 }}
@@ -220,7 +238,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                             >
                                 {t('continue')}
                             </Button>
-                        </div>
+                        </>
                     </Box>
                 </Grid>
             </Grid>
