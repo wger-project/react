@@ -21,6 +21,8 @@ import { LicenseTitle } from "components/Common/forms/LicenseTitle";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { ImageStyleToggle } from "components/Exercises/forms/ImageStyle";
 import { ImageFormData } from "components/Exercises/models/exercise";
+import { ImageStyle } from "components/Exercises/models/image";
+import { useProfileQuery } from "components/User/queries/profile";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -29,6 +31,8 @@ import { setImages } from "state/exerciseReducer";
 
 export const Step5Images = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
+    const profileQuery = useProfileQuery();
+
     const [state, dispatch] = useExerciseStateValue();
     const [localImages, setLocalImages] = useState<ImageFormData[]>(state.images);
     const [popupImage, setPopupImage] = useState<ImageFormData | undefined>(undefined);
@@ -59,6 +63,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
             title: "",
             derivativeSourceUrl: "",
             objectUrl: "",
+            style: ImageStyle.PHOTO.toString()
         });
     };
 
@@ -68,7 +73,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
         author: string,
         authorUrl: string,
         derivativeSourceUrl: string,
-        imageType: string
+        imageStyle: number
     }) => {
         setLocalImages(localImages?.concat({
             url: popupImage?.url,
@@ -79,6 +84,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
             title: data.title,
             derivativeSourceUrl: data.derivativeSourceUrl,
             objectUrl: data.objectUrl,
+            style: data.imageStyle.toString()
         }));
         handleCloseModal();
     };
@@ -132,12 +138,13 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                                 initialValues={{
                                     title: '',
                                     objectUrl: '',
-                                    author: '',
+                                    author: profileQuery.isSuccess ? profileQuery.data!.username : '',
                                     authorUrl: '',
                                     derivativeSourceUrl: '',
-                                    imageType: ''
+                                    imageStyle: ImageStyle.PHOTO,
                                 }}
                                 onSubmit={values => {
+                                    console.log(values);
                                     handleAddFullImage(values);
                                 }}
                             >

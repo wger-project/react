@@ -1,5 +1,13 @@
 import { Adapter } from "utils/Adapter";
 
+export enum ImageStyle {
+    LINE_ART = 1,
+    THREE_D,
+    LOW_POLY,
+    PHOTO,
+    OTHER,
+}
+
 export class ExerciseImage {
 
     constructor(

@@ -146,5 +146,6 @@ export type ImageFormData = {
     title: string,
     objectUrl: string,
     derivativeSourceUrl: string;
+    style: string;
 };
 

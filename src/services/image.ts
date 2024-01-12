@@ -31,6 +31,7 @@ export const postExerciseImage = async (data: {
             license_author: data.imageData.author,
             license_author_url: data.imageData.authorUrl,
             license_derivative_source_url: data.imageData.derivativeSourceUrl,
+            style: data.imageData.style,
         },
         { headers: headers }
     );

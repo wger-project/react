@@ -6,6 +6,7 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { Stack, Typography } from "@mui/material";
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { ImageStyle } from "components/Exercises/models/image";
 import { useField } from "formik";
 import * as React from 'react';
 import { useTranslation } from "react-i18next";
@@ -13,14 +14,14 @@ import { useTranslation } from "react-i18next";
 export function ImageStyleToggle(props: { fieldName: string }) {
     const [t] = useTranslation();
 
-    const [style, setStyle] = React.useState<string | null>('photo');
+    const [style, setStyle] = React.useState<number | null>(ImageStyle.PHOTO);
 
     const [field, meta, helpers] = useField(props.fieldName);
 
 
     const handleAlignment = (
         event: React.MouseEvent<HTMLElement>,
-        newStyle: string | null,
+        newStyle: number | null,
     ) => {
         setStyle(newStyle);
         helpers.setValue(newStyle);
@@ -34,35 +35,35 @@ export function ImageStyleToggle(props: { fieldName: string }) {
             onChange={handleAlignment}
             aria-label="text alignment"
         >
-            <ToggleButton value="photo">
+            <ToggleButton value={ImageStyle.PHOTO}>
                 <Stack justifyContent="center" alignItems="center">
                     <PhotoCameraIcon />
                     <Typography variant="caption">{t('exercises.imageStylePhoto')}</Typography>
                 </Stack>
             </ToggleButton>
 
-            <ToggleButton value="3d">
+            <ToggleButton value={ImageStyle.THREE_D}>
                 <Stack justifyContent="center" alignItems="center">
                     <LandscapeIcon />
                     <Typography variant="caption">{t('exercises.imageStyle3D')}</Typography>
                 </Stack>
             </ToggleButton>
 
-            <ToggleButton value="line">
+            <ToggleButton value={ImageStyle.LINE_ART}>
                 <Stack justifyContent="center" alignItems="center">
                     <LandscapeOutlinedIcon />
                     <Typography variant="caption">{t('exercises.imageStyleLine')}</Typography>
                 </Stack>
             </ToggleButton>
 
-            <ToggleButton value="low-poly">
+            <ToggleButton value={ImageStyle.LOW_POLY}>
                 <Stack justifyContent="center" alignItems="center">
                     <LandscapeTwoToneIcon />
                     <Typography variant="caption">{t('exercises.imageStyleLowPoly')}</Typography>
                 </Stack>
             </ToggleButton>
 
-            <ToggleButton value="other">
+            <ToggleButton value={ImageStyle.OTHER}>
                 <Stack justifyContent="center" alignItems="center">
                     <MoreHorizIcon />
                     <Typography variant="caption">{t('exercises.imageStyleOther')}</Typography>
