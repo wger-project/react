@@ -79,7 +79,8 @@
     "imageStyle3D": "3D",
     "imageStyleLine": "Line",
     "imageStyleLowPoly": "Low-Poly",
-    "imageStyleOther": "Other"
+    "imageStyleOther": "Other",
+    "imageDetails": "Image details"
   },
   "nutrition": {
     "plans": "Nutritional plans",

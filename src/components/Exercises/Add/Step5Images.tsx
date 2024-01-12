@@ -62,16 +62,23 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
         });
     };
 
-    const handleAddFullImage = () => {
+    const handleAddFullImage = (data: {
+        title: string,
+        objectUrl: string,
+        author: string,
+        authorUrl: string,
+        derivativeSourceUrl: string,
+        imageType: string
+    }) => {
         setLocalImages(localImages?.concat({
             url: popupImage?.url,
             file: popupImage?.file,
 
-            author: "the author",
-            authorUrl: "",
-            title: "the title",
-            derivativeSourceUrl: "",
-            objectUrl: "",
+            author: data.author,
+            authorUrl: data.authorUrl,
+            title: data.title,
+            derivativeSourceUrl: data.derivativeSourceUrl,
+            objectUrl: data.objectUrl,
         }));
         handleCloseModal();
     };
@@ -108,7 +115,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
 
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Image details
+                        {t('exercises.imageDetails')}
                     </Typography>
 
                     <Grid container spacing={2}>
@@ -123,37 +130,33 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                         <Grid item xs={8}>
                             <Formik
                                 initialValues={{
-                                    nameEn: state.nameEn,
-                                    newAlternativeNameEn: state.alternativeNamesEn,
-                                    category: state.category !== null ? state.category : '',
-                                    muscles: state.muscles,
-                                    equipment: state.equipment,
-                                    musclesSecondary: state.musclesSecondary,
+                                    title: '',
+                                    objectUrl: '',
+                                    author: '',
+                                    authorUrl: '',
+                                    derivativeSourceUrl: '',
+                                    imageType: ''
                                 }}
                                 onSubmit={values => {
-
+                                    handleAddFullImage(values);
                                 }}
                             >
                                 {formik => {
-                                    return (
-                                        <Form>
-                                            <Stack spacing={2}>
-                                                <LicenseTitle fieldName={'licenseTitle'} />
-                                                <LicenseObjectUrl fieldName={'licenseObjectUrl'} />
-                                                <LicenseAuthor fieldName={'licenseAuthor'} />
-                                                <LicenseAuthorUrl fieldName={'licenseAuthorUrl'} />
-                                                <LicenseDerivativeSourceUrl fieldName={'licenseDerivativeSourceUrl'} />
-                                                <ImageStyleToggle fieldName={'imageStyle'} />
-                                            </Stack>
-                                            <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
-                                                <Button color="primary" variant="contained" type="submit"
-                                                        onClick={handleAddFullImage}
-                                                        sx={{ mt: 2 }}>
-                                                    {t('add')}
-                                                </Button>
-                                            </Stack>
-                                        </Form>
-                                    );
+                                    return (<Form>
+                                        <Stack spacing={2}>
+                                            <LicenseTitle fieldName={'title'} />
+                                            <LicenseObjectUrl fieldName={'objectUrl'} />
+                                            <LicenseAuthor fieldName={'author'} />
+                                            <LicenseAuthorUrl fieldName={'authorUrl'} />
+                                            <LicenseDerivativeSourceUrl fieldName={'derivativeSourceUrl'} />
+                                            <ImageStyleToggle fieldName={'imageStyle'} />
+                                        </Stack>
+                                        <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
+                                            <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
+                                                {t('add')}
+                                            </Button>
+                                        </Stack>
+                                    </Form>);
                                 }}
                             </Formik>
                         </Grid>
