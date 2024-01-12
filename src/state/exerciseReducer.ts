@@ -1,6 +1,6 @@
+import { ImageFormData } from "components/Exercises/models/exercise";
 import { exerciseInitialState, SetExerciseState } from 'state';
 import { ExerciseAction, ExerciseState } from "state/exerciseState";
-import { ImageFormData } from "components/Exercises/models/exerciseBase";
 
 
 export const reset = (): ExerciseAction => {

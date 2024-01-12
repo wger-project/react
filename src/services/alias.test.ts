@@ -14,6 +14,7 @@ describe("Exercise translation service API tests", () => {
         // Arrange
         const response = {
             "id": 200,
+            "uuid": "eb18288d-4ca3-4c54-8279-343b110d86e0",
             "exercise": 100,
             "alias": "Elbow dislocator",
 
@@ -29,7 +30,7 @@ describe("Exercise translation service API tests", () => {
 
         // Assert
         expect(axios.post).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(new Alias(200, "Elbow dislocator"));
+        expect(result).toEqual(new Alias(200, "eb18288d-4ca3-4c54-8279-343b110d86e0", "Elbow dislocator"));
     });
 
     test('DELETE an existing alias', async () => {

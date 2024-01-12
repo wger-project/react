@@ -1,10 +1,10 @@
+import { Alias } from "components/Exercises/models/alias";
 import { Category } from "components/Exercises/models/category";
+import { Equipment } from "components/Exercises/models/equipment";
+import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
 import { Muscle } from "components/Exercises/models/muscle";
-import { Equipment } from "components/Exercises/models/equipment";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import { Alias } from "components/Exercises/models/alias";
+import { Translation } from "components/Exercises/models/translation";
 
 export const testCategoryArms = new Category(1, 'Arms');
 export const testCategoryLegs = new Category(2, 'Legs');
@@ -46,7 +46,7 @@ export const testEquipment = [
     testEquipmentRocks,
 ];
 
-export const testExerciseSquats = new ExerciseBase(
+export const testExerciseSquats = new Exercise(
     345,
     "c788d643-150a-4ac7-97ef-84643c6419bf",
     testCategoryLegs,
@@ -56,27 +56,27 @@ export const testExerciseSquats = new ExerciseBase(
     [],
     null,
     [
-        new ExerciseTranslation(111,
+        new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Squats',
             'Do a squat',
             2
         ),
-        new ExerciseTranslation(9,
+        new Translation(9,
             'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
             'Kniebeuge',
             'Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur',
             1,
             [],
             [
-                new Alias(1, 'Königsübung'),
-                new Alias(2, 'Beinverdicker'),
+                new Alias(1, 'e30eab18-7adf-4361-ad63-192c76103cf0', 'Königsübung'),
+                new Alias(2, 'f4f616f8-224e-4aba-a4e1-11ec0b59af33', 'Beinverdicker'),
             ]
         )
     ]
 );
 
-export const testExerciseBenchPress = new ExerciseBase(
+export const testExerciseBenchPress = new Exercise(
     2,
     "abcdef-150a-4ac7-97ef-84643c6419bf",
     testCategoryLegs,
@@ -86,7 +86,7 @@ export const testExerciseBenchPress = new ExerciseBase(
     [],
     1,
     [
-        new ExerciseTranslation(111,
+        new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Benchpress',
             'Do a benchpress',
@@ -94,7 +94,7 @@ export const testExerciseBenchPress = new ExerciseBase(
         ),
     ]
 );
-export const testExerciseCurls = new ExerciseBase(
+export const testExerciseCurls = new Exercise(
     3,
     "abcdef-150a-4ac7-97ef-84643c6419bf",
     testCategoryArms,
@@ -104,7 +104,7 @@ export const testExerciseCurls = new ExerciseBase(
     [],
     1,
     [
-        new ExerciseTranslation(111,
+        new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Curls',
             'curls! yeah!',
@@ -112,7 +112,7 @@ export const testExerciseCurls = new ExerciseBase(
         ),
     ]
 );
-export const testExerciseCrunches = new ExerciseBase(
+export const testExerciseCrunches = new Exercise(
     4,
     "abcdef-150a-4ac7-97ef-84643c6419bf",
     testCategoryChest,
@@ -122,7 +122,7 @@ export const testExerciseCrunches = new ExerciseBase(
     [],
     null,
     [
-        new ExerciseTranslation(111,
+        new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Crunches',
             'Do some crunches',
@@ -130,7 +130,7 @@ export const testExerciseCrunches = new ExerciseBase(
         ),
     ]
 );
-export const testExerciseSkullCrusher = new ExerciseBase(
+export const testExerciseSkullCrusher = new Exercise(
     5,
     "abcdef-150a-4ac7-97ef-84643c6419bf",
     testCategoryArms,
@@ -140,7 +140,7 @@ export const testExerciseSkullCrusher = new ExerciseBase(
     [],
     2,
     [
-        new ExerciseTranslation(111,
+        new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Skull crusher',
             'get some sick triceps pump',

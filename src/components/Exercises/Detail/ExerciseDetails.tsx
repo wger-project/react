@@ -3,9 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
 import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailView";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
+import { Translation } from "components/Exercises/models/translation";
 import { useLanguageQuery } from "components/Exercises/queries";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,7 +20,7 @@ export const PaddingBox = () => {
 
 export const ExerciseDetails = () => {
     const [language, setLanguage] = useState<Language>();
-    const [currentTranslation, setCurrentTranslation] = useState<ExerciseTranslation>();
+    const [currentTranslation, setCurrentTranslation] = useState<Translation>();
     const [editMode, setEditMode] = useState<boolean>(false);
 
     const params = useParams<{ baseID: string }>();
@@ -35,7 +35,7 @@ export const ExerciseDetails = () => {
         () => getExerciseBase(exerciseBaseID),
         {
             enabled: languageQuery.isSuccess,
-            onSuccess: (exerciseBase: ExerciseBase) => {
+            onSuccess: (exerciseBase: Exercise) => {
                 const currentUserLanguage = getLanguageByShortName(
                     i18n.language,
                     languageQuery.data!

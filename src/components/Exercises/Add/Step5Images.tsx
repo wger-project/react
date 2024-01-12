@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -20,10 +22,8 @@ import { LicenseObjectUrl } from "components/Common/forms/LicenseObjectUrl";
 import { LicenseTitle } from "components/Common/forms/LicenseTitle";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { ImageStyleToggle } from "components/Exercises/forms/ImageStyle";
-import { ImageFormData } from "components/Exercises/models/exerciseBase";
+import { ImageFormData } from "components/Exercises/models/exercise";
 import { Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useExerciseStateValue } from "state";
 import { setImages } from "state/exerciseReducer";
 

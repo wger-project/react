@@ -1,10 +1,10 @@
-import { ExerciseTranslation, ExerciseTranslationAdapter } from "components/Exercises/models/exerciseTranslation";
+import { Translation, TranslationAdapter } from "components/Exercises/models/translation";
 
 
 describe("Exercise translation model tests", () => {
 
     // Arrange
-    const e1 = new ExerciseTranslation(
+    const e1 = new Translation(
         2,
         "uuid",
         "a very long name that should be truncated",
@@ -24,7 +24,7 @@ describe("Exercise translation model tests", () => {
     test('adapter - from json', () => {
 
         // Assert
-        const adapter = new ExerciseTranslationAdapter();
+        const adapter = new TranslationAdapter();
         expect(adapter.fromJson({
             id: 2,
             uuid: "uuid",
@@ -41,7 +41,7 @@ describe("Exercise translation model tests", () => {
     test('adapter - to json', () => {
 
         // Assert
-        const adapter = new ExerciseTranslationAdapter();
+        const adapter = new TranslationAdapter();
         expect(adapter.toJson(e1)).toStrictEqual({
             id: 2,
             uuid: "uuid",
@@ -53,7 +53,7 @@ describe("Exercise translation model tests", () => {
 
     test('slug apadpter', () => {
         // Arrange
-        const e1 = new ExerciseTranslation(
+        const e1 = new Translation(
             2,
             "uuid",
             "Grüß Göttles",

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { Exercise } from "components/Exercises/models/exercise";
 import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
 import { WorkoutLog, WorkoutLogAdapter } from "components/WorkoutRoutines/models/WorkoutLog";
 import { WorkoutRoutine, WorkoutRoutineAdapter } from "components/WorkoutRoutines/models/WorkoutRoutine";
@@ -155,7 +155,7 @@ export const getRoutineLogs = async (id: number, loadBases = false): Promise<Wor
     const repUnits = unitResponses[0];
     const weightUnits = unitResponses[1];
 
-    const exercises: Map<number, ExerciseBase> = new Map();
+    const exercises: Map<number, Exercise> = new Map();
 
     const out: WorkoutLog[] = [];
     for await  (const page of fetchPaginated(url)) {

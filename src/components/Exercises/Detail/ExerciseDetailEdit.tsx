@@ -1,35 +1,35 @@
-import { useTranslation } from "react-i18next";
+import CloseIcon from '@mui/icons-material/Close';
 import { Alert, Box, Button, Grid, IconButton, Typography } from "@mui/material";
-import React from "react";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
-import { Language } from "components/Exercises/models/language";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
-import * as yup from "yup";
+import { EditExerciseCategory } from "components/Exercises/forms/Category";
+import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
+import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
+import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
+import { ExerciseName } from "components/Exercises/forms/ExerciseName";
+import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCard";
+import { EditExerciseMuscle } from "components/Exercises/forms/Muscle";
+import { AddVideoCard, VideoEditCard } from "components/Exercises/forms/VideoCard";
 import {
     alternativeNameValidator,
     descriptionValidator,
     nameValidator
 } from "components/Exercises/forms/yupValidators";
-import { Form, Formik } from "formik";
-import { ExerciseName } from "components/Exercises/forms/ExerciseName";
-import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
-import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
-import { addExerciseTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import CloseIcon from '@mui/icons-material/Close';
-import { WgerPermissions } from "permissions";
-import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCard";
-import { AddVideoCard, VideoEditCard } from "components/Exercises/forms/VideoCard";
-import { EditExerciseCategory } from "components/Exercises/forms/Category";
-import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
-import { EditExerciseMuscle } from "components/Exercises/forms/Muscle";
-import { MuscleOverview } from "components/Muscles/MuscleOverview";
+import { Exercise } from "components/Exercises/models/exercise";
+import { Language } from "components/Exercises/models/language";
+import { Translation } from "components/Exercises/models/translation";
 import { useMusclesQuery } from "components/Exercises/queries";
+import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
+import { Form, Formik } from "formik";
+import { WgerPermissions } from "permissions";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { addExerciseTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
+import * as yup from "yup";
 
 export interface ViewProps {
-    exercise: ExerciseBase;
+    exercise: Exercise;
     language: Language;
 }
 
@@ -46,7 +46,7 @@ export const ExerciseDetailEdit = ({
     const isNewTranslation = language.id !== translationFromBase.language;
     const exerciseTranslation =
         isNewTranslation
-            ? new ExerciseTranslation(null, null, '', '', language.id)
+            ? new Translation(null, null, '', '', language.id)
             : translationFromBase;
     const exerciseEnglish = exercise.getTranslation();
 
