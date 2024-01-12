@@ -10,7 +10,7 @@ export const IMAGE_PATH = 'exerciseimage';
  * Post a new exercise image
  */
 export const postExerciseImage = async (data: {
-                                            exerciseBase: number,
+    exerciseId: number,
                                             image: File,
                                             imageData: ImageFormData
                                         }
@@ -23,7 +23,7 @@ export const postExerciseImage = async (data: {
         url,
         // eslint-disable-next-line camelcase
         {
-            exercise_base: data.exerciseBase,
+            exercise_base: data.exerciseId,
             image: data.image,
 
             license_title: data.imageData.title,

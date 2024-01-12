@@ -1,6 +1,6 @@
 import axios from "axios";
 import {
-    addExerciseBase,
+    addExercise,
     deleteExerciseBase,
     editExerciseBase,
     getExerciseBase,
@@ -59,7 +59,7 @@ describe("Exercise service API tests", () => {
         axios.post.mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
-        const result = await addExerciseBase(
+        const result = await addExercise(
             3,
             [1, 2],
             [3, 4],

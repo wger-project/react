@@ -67,9 +67,9 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
             url: popupImage?.url,
             file: popupImage?.file,
 
-            author: "aaaa",
+            author: "the author",
             authorUrl: "",
-            title: "",
+            title: "the title",
             derivativeSourceUrl: "",
             objectUrl: "",
         }));
@@ -205,7 +205,8 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                             loading="lazy"
                         />
                         <ImageListItemBar
-                            title={imageEntry.author}
+                            title={imageEntry.title}
+                            subtitle={imageEntry.author}
                             actionIcon={
                                 <IconButton
                                     onClick={() => handleDeleteImage(imageEntry.url)}

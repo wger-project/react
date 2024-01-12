@@ -22,7 +22,7 @@ import { useProfileQuery } from "components/User/queries/profile";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { addExerciseBase, addExerciseTranslation, postAlias, postExerciseImage } from "services";
+import { addExercise, addTranslation, postAlias, postExerciseImage } from "services";
 import { addNote } from "services/note";
 import { addVariation } from "services/variation";
 import { useExerciseStateValue } from "state";
@@ -59,7 +59,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         }
 
         // Create the base
-        const baseId = await addExerciseBase(
+        const exerciseId = await addExercise(
             state.category as number,
             state.equipment,
             state.muscles,
@@ -69,8 +69,8 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         );
 
         // Create the English translation
-        const exercise = await addExerciseTranslation(
-            baseId,
+        const translation = await addTranslation(
+            exerciseId,
             ENGLISH_LANGUAGE_ID,
             state.nameEn,
             state.descriptionEn,
@@ -79,29 +79,28 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
         // For each entry in alternative names, create a new alias
         for (const alias of state.alternativeNamesEn) {
-            await postAlias(exercise.id!, alias);
+            await postAlias(translation.id!, alias);
         }
 
         // Post the images
         for (const image of state.images) {
             await postExerciseImage({
-                    exerciseBase: baseId,
-                    image: image.file,
-                    imageData: image,
-                }
-            );
+                exerciseId: exerciseId,
+                image: image.file,
+                imageData: image,
+            });
         }
 
         // Post the notes
         for (const note of state.notesEn) {
-            await addNote(new Note(null, exercise.id!, note));
+            await addNote(new Note(null, translation.id!, note));
         }
 
 
         // Create the translation if needed
         if (state.languageId !== null) {
-            const exerciseI18n = await addExerciseTranslation(
-                baseId,
+            const exerciseI18n = await addTranslation(
+                exerciseId,
                 state.languageId,
                 state.nameI18n,
                 state.descriptionI18n,

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { addExerciseTranslation, deleteExerciseTranslation } from "services";
+import { addTranslation, deleteExerciseTranslation } from "services";
 import { editExerciseTranslation } from "services/exerciseTranslation";
 
 jest.mock("axios");
@@ -30,7 +30,7 @@ describe("Exercise translation service API tests", () => {
         axios.post.mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
-        const result = await addExerciseTranslation(
+        const result = await addTranslation(
             100,
             2,
             "Test exercise",

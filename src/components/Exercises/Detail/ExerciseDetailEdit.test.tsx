@@ -7,7 +7,7 @@ import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "componen
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
 import React from 'react';
-import { addExerciseTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
+import { addTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
 import {
     testCategories,
     testEquipment,
@@ -36,7 +36,7 @@ describe("Exercise translation edit tests", () => {
         useProfileQuery.mockImplementation(() => Promise.resolve(testProfileDataVerified));
 
         // @ts-ignore
-        addExerciseTranslation.mockImplementation(() => Promise.resolve(
+        addTranslation.mockImplementation(() => Promise.resolve(
             new Translation(
                 300,
                 '409f4b97-a56d-4852-85b2-834ba18b7ccc',
@@ -123,7 +123,7 @@ describe("Exercise translation edit tests", () => {
         // Assert
         //screen.debug();
         //screen.logTestingPlaygroundURL();
-        expect(addExerciseTranslation).not.toHaveBeenCalled();
+        expect(addTranslation).not.toHaveBeenCalled();
         expect(editExerciseTranslation).toHaveBeenCalledWith(
             9,
             345,

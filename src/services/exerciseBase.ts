@@ -70,7 +70,7 @@ export const getExerciseBasesForVariation = async (id: number | null | undefined
 /*
  * Create a new exercise base
  */
-export const addExerciseBase = async (
+export const addExercise = async (
     categoryId: number,
     equipmentIds: number[],
     muscleIds: number[],

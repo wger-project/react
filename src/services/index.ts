@@ -10,11 +10,11 @@ export {
     getExerciseBases,
     getExerciseBase,
     getExerciseBasesForVariation,
-    addExerciseBase,
+    addExercise,
     deleteExerciseBase,
 } from './exerciseBase';
 export {
-    addExerciseTranslation,
+    addTranslation,
     editExerciseTranslation,
     getExerciseTranslations,
     searchExerciseTranslations,
