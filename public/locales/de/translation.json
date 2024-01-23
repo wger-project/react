@@ -53,7 +53,11 @@
         "notEnoughRights": "Du kannst Übungen nur dann beisteuern, wenn dein Benutzerkonto älter als {{days}} Tage und deine E-Mail-Adresse verifiziert ist",
         "changeExerciseLanguage": "Ändere die Sprache dieser Übung",
         "identicalExercise": "Vermeide doppelte Übungen",
-        "cacheWarning": "Aufgrund von Caching kann es einige Zeit dauern, bis Änderungen in der ganzen Anwendung sichtbar sind."
+        "cacheWarning": "Aufgrund von Caching kann es einige Zeit dauern, bis Änderungen in der ganzen Anwendung sichtbar sind.",
+        "replacements": "Ersätzen",
+        "replacementsInfoText": "Optional können Sie auch eine Übung auswählen, die diese ersetzen soll (z. B. weil sie zweimal eingereicht wurde oder ähnliches). Dadurch wird die Übung in Routinen sowie Trainingsprotokollen ersetzt, anstatt sie einfach zu löschen. Diese Änderungen werden auch auf alle Instanzen übertragen, die die Übungen von dieser übernehmen.",
+        "replacementsSearch": "Suche nach Übungen oder kopiere eine Bekannte ID in das Feld und drücke den \"Laden\" Button.",
+        "noReplacementSelected": " Keine Übung zum ersätzen ausgewählt"
     },
     "noResults": "Keine Ergebnisse",
     "noResultsDescription": "Keine Ergebnisse für diese Suche gefunden, bitte reduziere die Anzahl der Filter.",
@@ -119,5 +123,16 @@
     "success": "Erfolg!",
     "measurements": {
         "deleteInfo": "Dies wird die Kategorie sowie alle seine Einträge löschen"
-    }
+    },
+    "timeOfDay": "Tageszeit",
+    "notes": "Notizen",
+    "value": "Wert",
+    "unit": "Einheit",
+    "alsoSearchEnglish": "Namen in English suchen",
+    "deleteConfirmation": "Möchten Sie sicher mit der Löschung von \"{{name}}\" fortfahren?",
+    "seeDetails": "Siehe Einzelheiten",
+    "actions": "Aktion",
+    "nothingHereYet": "Hier ist noch nichts...",
+    "nothingHereYetAction": "Drücke den Aktion's Button um zu beginnen",
+    "copyToClipboard": "In Zwischenablage kopieren"
 }
