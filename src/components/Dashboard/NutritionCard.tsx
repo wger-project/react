@@ -23,9 +23,10 @@ import {
 import Tooltip from "@mui/material/Tooltip";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerModal } from "components/Core/Modals/WgerModal";
-import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
+import { EmptyCard } from "components/Dashboard/EmptyCard";
 import { Meal } from "components/Nutrition/models/meal";
 import { MealItem } from "components/Nutrition/models/mealItem";
+import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 import { useFetchLastNutritionalPlanIdQuery, useFetchNutritionalPlanDateQuery } from "components/Nutrition/queries";
 import { useAddDiaryEntriesQuery } from "components/Nutrition/queries/diary";
 import { NutritionalValuesDashboardChart } from "components/Nutrition/widgets/charts/NutritionalValuesDashboardChart";
@@ -41,97 +42,78 @@ import { makeLink, WgerLink } from "utils/url";
 
 export const NutritionCard = () => {
 
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
     const lastPlanQuery = useFetchLastNutritionalPlanIdQuery();
     const planQuery = useFetchNutritionalPlanDateQuery(lastPlanQuery.data!, dateToYYYYMMDD(new Date()), lastPlanQuery.isSuccess);
-
-    const [openLogModal, setOpenLogModal] = React.useState(false);
-    const handleOpenLogModal = () => setOpenLogModal(true);
-    const handleCloseLogModal = () => setOpenLogModal(false);
-
-    const [openPlanModal, setOpenPlanModal] = React.useState(false);
-    const handleOpenPlanModal = () => setOpenPlanModal(true);
-    const handleClosePlanModal = () => setOpenPlanModal(false);
 
     return <>
         {planQuery.isLoading
             ? <LoadingPlaceholder />
             : <>
                 {lastPlanQuery.data !== null
-                    // Render the plan
-                    ? <>
-                        <Card>
-                            <CardHeader
-                                title={t('nutritionalPlan')}
-                                subheader={planQuery.data?.description}
-                            />
-                            <CardContent sx={{ height: '500px', overflow: 'auto' }}>
-                                <NutritionalValuesDashboardChart
-                                    percentage={planQuery.data!.percentageValuesLoggedToday}
-                                    planned={planQuery.data!.plannedNutritionalValues}
-                                    logged={planQuery.data!.loggedNutritionalValuesToday}
-                                />
-                                <List>
-                                    {planQuery.data?.meals.map(meal =>
-                                        <MealListItem meal={meal} planId={planQuery.data!.id} key={meal.id} />
-                                    )}
-                                </List>
-                            </CardContent>
-                            <CardActions sx={{
-                                justifyContent: "space-between",
-                                alignItems: "flex-start",
-                            }}>
-                                <Button size="small"
-                                        href={makeLink(WgerLink.NUTRITION_DETAIL, i18n.language, { id: planQuery.data!.id })}>
-                                    {t('seeDetails')}
-                                </Button>
-                                <Tooltip title={t('nutrition.logThisMealItem')}>
-                                    <IconButton onClick={handleOpenLogModal}>
-                                        <HistoryEduIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </CardActions>
-                        </Card>
-                        <WgerModal title={t('nutrition.addNutritionalDiary')}
-                                   isOpen={openLogModal}
-                                   closeFn={handleCloseLogModal}>
-                            <NutritionDiaryEntryForm
-                                closeFn={handleCloseLogModal}
-                                planId={planQuery.data!.id}
-                                meals={planQuery.data!.meals}
-                            />
-                        </WgerModal>
-                    </>
-
-                    // No plans available
-                    : <>
-                        <Card>
-                            <CardHeader
-                                title={t('nutritionalPlan')}
-                                sx={{ paddingBottom: 0 }} />
-
-                            <CardContent sx={{ paddingTop: 0 }}>
-                                <OverviewEmpty />
-                            </CardContent>
-
-                            <CardActions>
-                                <Button
-                                    size="small"
-                                    variant="contained"
-                                    onClick={handleOpenPlanModal}>
-                                    {t('add')}
-                                </Button>
-                            </CardActions>
-                        </Card>
-                        <WgerModal title={t('add')} isOpen={openPlanModal}
-                                   closeFn={handleClosePlanModal}>
-                            <PlanForm closeFn={handleClosePlanModal} />
-                        </WgerModal>
-                    </>}
+                    ? <NutritionCardContent plan={planQuery.data!} />
+                    : <EmptyCard
+                        title={t('nutritionalPlan')}
+                        modalContent={<PlanForm />}
+                        modalTitle={t('add')}
+                    />}
             </>
         }
     </>;
 };
+
+function NutritionCardContent(props: { plan: NutritionalPlan }) {
+    const [t, i18n] = useTranslation();
+
+    const [openLogModal, setOpenLogModal] = React.useState(false);
+    const handleOpenLogModal = () => setOpenLogModal(true);
+    const handleCloseLogModal = () => setOpenLogModal(false);
+
+
+    return <>
+        <Card>
+            <CardHeader
+                title={t('nutritionalPlan')}
+                subheader={props.plan.description}
+            />
+            <CardContent sx={{ height: "500px", overflow: "auto" }}>
+                <NutritionalValuesDashboardChart
+                    percentage={props.plan.percentageValuesLoggedToday}
+                    planned={props.plan.plannedNutritionalValues}
+                    logged={props.plan.loggedNutritionalValuesToday}
+                />
+                <List>
+                    {props.plan.meals.map(meal =>
+                        <MealListItem meal={meal} planId={props.plan.id} key={meal.id} />
+                    )}
+                </List>
+            </CardContent>
+            <CardActions sx={{
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+            }}>
+                <Button size="small"
+                        href={makeLink(WgerLink.NUTRITION_DETAIL, i18n.language, { id: props.plan.id })}>
+                    {t('seeDetails')}
+                </Button>
+                <Tooltip title={t('nutrition.logThisMealItem')}>
+                    <IconButton onClick={handleOpenLogModal}>
+                        <HistoryEduIcon />
+                    </IconButton>
+                </Tooltip>
+            </CardActions>
+        </Card>
+        <WgerModal title={t('nutrition.addNutritionalDiary')}
+                   isOpen={openLogModal}
+                   closeFn={handleCloseLogModal}>
+            <NutritionDiaryEntryForm
+                closeFn={handleCloseLogModal}
+                planId={props.plan.id}
+                meals={props.plan.meals}
+            />
+        </WgerModal>
+    </>;
+}
 
 const MealListItem = (props: { meal: Meal, planId: number }) => {
     const [t, i18n] = useTranslation();
