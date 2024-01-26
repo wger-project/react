@@ -1,3 +1,4 @@
+import AddIcon from "@mui/icons-material/Add";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
@@ -153,13 +154,19 @@ export const NutritionCard = () => {
                                     logged={planQuery.data!.loggedNutritionalValuesToday}
                                 />
                             </CardContent>
-                            <CardActions>
-                                <Button size="small"
-                                        onClick={handleOpenLogModal}>{t('nutrition.addNutritionalDiary')}</Button>
+                            <CardActions sx={{
+                                justifyContent: "space-between",
+                                alignItems: "flex-start",
+                            }}>
                                 <Button size="small"
                                         href={makeLink(WgerLink.NUTRITION_DETAIL, i18n.language, { id: planQuery.data!.id })}>
                                     {t('seeDetails')}
                                 </Button>
+                                <Tooltip title={t('nutrition.logThisMealItem')}>
+                                    <IconButton onClick={handleOpenLogModal}>
+                                        <AddIcon />
+                                    </IconButton>
+                                </Tooltip>
                             </CardActions>
                         </Card>
                         <WgerModal title={t('nutrition.addNutritionalDiary')}
