@@ -30,6 +30,8 @@ export {
     getWorkoutRoutinesShallow,
     getWorkoutRoutine,
     getWorkoutRoutines,
+    getActiveWorkoutRoutine,
+    getRoutineLogs,
 } from './workoutRoutine';
 
 export {

@@ -1,4 +1,3 @@
-import AddIcon from "@mui/icons-material/Add";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
@@ -39,87 +38,11 @@ import { dateTimeToLocaleHHMM, dateToYYYYMMDD } from "utils/date";
 import { numberGramLocale } from "utils/numbers";
 import { makeLink, WgerLink } from "utils/url";
 
-const MealListItem = (props: { meal: Meal, planId: number }) => {
-    const [t, i18n] = useTranslation();
-    const addDiaryEntriesQuery = useAddDiaryEntriesQuery(props.planId);
-
-    const [expandView, setExpandView] = useState(false);
-    const [openSnackbar, setOpenSnackbar] = React.useState(false);
-
-    const handleToggleExpand = () => setExpandView(!expandView);
-
-    const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpenSnackbar(false);
-    };
-
-    const handleAddDiaryEntry = (item: MealItem) => {
-        const diaryData = [{
-            plan: props.planId,
-            meal: props.meal.id,
-            mealItem: item.id,
-            ingredient: item.ingredientId,
-            // eslint-disable-next-line camelcase
-            weight_unit: item.weightUnitId,
-            datetime: (new Date()).toISOString(),
-            amount: item.amount
-        }];
-        addDiaryEntriesQuery.mutate(diaryData);
-        setOpenSnackbar(true);
-    };
-
-    const primaryHeader = props.meal.name ? props.meal.name : dateTimeToLocaleHHMM(props.meal.time, i18n.language);
-    const secondaryHeader = props.meal.name ? dateTimeToLocaleHHMM(props.meal.time, i18n.language) : null;
-
-    return <>
-        <ListItemButton onClick={handleToggleExpand}>
-            <ListItemIcon>
-                {expandView ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </ListItemIcon>
-            <ListItemText primary={primaryHeader} secondary={secondaryHeader} />
-
-        </ListItemButton>
-        <Collapse in={expandView} timeout="auto" unmountOnExit>
-            <List>
-                {props.meal.items.map((item) => <ListItem key={item.id} secondaryAction={
-                    <Tooltip title={t('nutrition.logThisMealItem')}>
-                        <IconButton edge="end" onClick={() => handleAddDiaryEntry(item)}>
-                            <HistoryEduIcon />
-                        </IconButton>
-                    </Tooltip>
-                }>
-                    <ListItemAvatar>
-                        <Avatar
-                            alt={item.ingredient?.name}
-                            src={item.ingredient?.image?.url}
-                            sx={{ width: 45, height: 45 }}
-                        >
-                            <PhotoIcon />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary={item.ingredient?.name}
-                        secondary={numberGramLocale(item.amount, i18n.language)}
-                    />
-                </ListItem>)}
-            </List>
-        </Collapse>
-        <Snackbar open={openSnackbar} autoHideDuration={SNACKBAR_AUTO_HIDE_DURATION} onClose={handleCloseSnackbar}>
-            <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-                {t('nutrition.diaryEntrySaved')}
-            </Alert>
-        </Snackbar>
-    </>;
-};
-
 
 export const NutritionCard = () => {
 
     const [t, i18n] = useTranslation();
     const lastPlanQuery = useFetchLastNutritionalPlanIdQuery();
-
     const planQuery = useFetchNutritionalPlanDateQuery(lastPlanQuery.data!, dateToYYYYMMDD(new Date()), lastPlanQuery.isSuccess);
 
     const [openLogModal, setOpenLogModal] = React.useState(false);
@@ -141,18 +64,18 @@ export const NutritionCard = () => {
                             <CardHeader
                                 title={t('nutritionalPlan')}
                                 subheader={planQuery.data?.description}
-                                sx={{ paddingBottom: 0 }} />
-                            <CardContent sx={{ paddingTop: 0 }}>
-                                <List>
-                                    {planQuery.data?.meals.map(meal =>
-                                        <MealListItem meal={meal} planId={planQuery.data!.id} key={meal.id} />
-                                    )}
-                                </List>
+                            />
+                            <CardContent sx={{ height: '500px', overflow: 'auto' }}>
                                 <NutritionalValuesDashboardChart
                                     percentage={planQuery.data!.percentageValuesLoggedToday}
                                     planned={planQuery.data!.plannedNutritionalValues}
                                     logged={planQuery.data!.loggedNutritionalValuesToday}
                                 />
+                                <List>
+                                    {planQuery.data?.meals.map(meal =>
+                                        <MealListItem meal={meal} planId={planQuery.data!.id} key={meal.id} />
+                                    )}
+                                </List>
                             </CardContent>
                             <CardActions sx={{
                                 justifyContent: "space-between",
@@ -164,7 +87,7 @@ export const NutritionCard = () => {
                                 </Button>
                                 <Tooltip title={t('nutrition.logThisMealItem')}>
                                     <IconButton onClick={handleOpenLogModal}>
-                                        <AddIcon />
+                                        <HistoryEduIcon />
                                     </IconButton>
                                 </Tooltip>
                             </CardActions>
@@ -207,5 +130,82 @@ export const NutritionCard = () => {
                     </>}
             </>
         }
+    </>;
+};
+
+const MealListItem = (props: { meal: Meal, planId: number }) => {
+    const [t, i18n] = useTranslation();
+    const addDiaryEntriesQuery = useAddDiaryEntriesQuery(props.planId);
+
+    const [expandView, setExpandView] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+    const handleToggleExpand = () => setExpandView(!expandView);
+
+    const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
+    };
+
+    const handleAddDiaryEntry = (item: MealItem) => {
+        const diaryData = [{
+            plan: props.planId,
+            meal: props.meal.id,
+            mealItem: item.id,
+            ingredient: item.ingredientId,
+            // eslint-disable-next-line camelcase
+            weight_unit: item.weightUnitId,
+            datetime: (new Date()).toISOString(),
+            amount: item.amount
+        }];
+        addDiaryEntriesQuery.mutate(diaryData);
+        setOpenSnackbar(true);
+    };
+
+    const primaryHeader = props.meal.name ? props.meal.name : dateTimeToLocaleHHMM(props.meal.time, i18n.language);
+    const secondaryHeader = props.meal.name ? dateTimeToLocaleHHMM(props.meal.time, i18n.language) : null;
+
+    return <>
+        <ListItemButton onClick={handleToggleExpand} selected={expandView}>
+            <ListItemIcon>
+                {expandView ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </ListItemIcon>
+            <ListItemText primary={primaryHeader} secondary={secondaryHeader} />
+
+        </ListItemButton>
+        <Collapse in={expandView} timeout="auto" unmountOnExit>
+            <List>
+                {props.meal.items.map((item) =>
+                    <ListItem key={item.id} secondaryAction={
+                        <Tooltip title={t('nutrition.logThisMealItem')}>
+                            <IconButton edge="end" onClick={() => handleAddDiaryEntry(item)}>
+                                <HistoryEduIcon />
+                            </IconButton>
+                        </Tooltip>
+                    }>
+                        <ListItemAvatar>
+                            <Avatar
+                                alt={item.ingredient?.name}
+                                src={item.ingredient?.image?.url}
+                                sx={{ width: 45, height: 45 }}
+                            >
+                                <PhotoIcon />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={item.ingredient?.name}
+                            secondary={numberGramLocale(item.amount, i18n.language)}
+                        />
+                    </ListItem>
+                )}
+            </List>
+        </Collapse>
+        <Snackbar open={openSnackbar} autoHideDuration={SNACKBAR_AUTO_HIDE_DURATION} onClose={handleCloseSnackbar}>
+            <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                {t('nutrition.diaryEntrySaved')}
+            </Alert>
+        </Snackbar>
     </>;
 };

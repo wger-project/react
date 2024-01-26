@@ -118,6 +118,28 @@ export const getWorkoutRoutines = async (): Promise<WorkoutRoutine[]> => {
     }
     return out;
 };
+
+/*
+ * Returns the current active routine
+ *
+ * Note that at the moment this is simply the newest one
+ */
+export const getActiveWorkoutRoutine = async (): Promise<null | WorkoutRoutine> => {
+// export const getActiveWorkoutRoutine = async (id: number): Promise<WorkoutRoutine> => {
+    const url = makeUrl(WORKOUT_API_PATH, { query: { 'limit': '1' } });
+
+    const response = await axios.get<ResponseType<WorkoutRoutine>>(
+        url,
+        { headers: makeHeader() }
+    );
+
+    if (response.data.count === 0) {
+        return null;
+    }
+
+    return await processWorkoutRoutine(response.data.results[0].id);
+};
+
 export const getWorkoutRoutine = async (id: number): Promise<WorkoutRoutine> => {
     return await processWorkoutRoutine(id);
 };

@@ -1,5 +1,5 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import { Add, Delete } from "@mui/icons-material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
     Box,
     Button,
@@ -17,16 +17,16 @@ import {
     Typography
 } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";
 import { Day } from "components/WorkoutRoutines/models/Day";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Add, Delete } from "@mui/icons-material";
 import { WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
 import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
-import { daysOfWeek } from "utils/date";
+import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import React from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { daysOfWeek } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
-import { ExerciseImagePlaceholder } from "components/Exercises/Detail/ExerciseImagePlaceholder";
 
 
 export const RoutineDetails = () => {
@@ -66,27 +66,33 @@ export const RoutineDetails = () => {
     </>;
 };
 
-function SettingDetails(props: { setting: WorkoutSetting, set: WorkoutSet }) {
+export function SettingDetails(props: {
+    setting: WorkoutSetting,
+    set: WorkoutSet,
+    imageHeight?: undefined | number,
+    iconHeight?: undefined | number,
+    rowHeight?: undefined | string,
+}) {
 
     const [t] = useTranslation();
+
+    const imageHeight = props.imageHeight || 60;
+    const rowHeight = props.rowHeight || '100px';
+    const iconHeight = props.iconHeight || 40;
 
     const useTranslate = (input: string) => t(input as any);
 
     // @ts-ignore
-    return <Grid container alignItems="center" sx={{ height: "100px" }}>
-        <Grid item xs={2} md={1}>
-            {props.setting.base?.mainImage !== undefined
-                ? <img
-                    src={props.setting.base?.mainImage.url}
-                    width="80%"
-                    alt={props.setting.base?.getTranslation().name}
-                />
-                : <ExerciseImagePlaceholder backgroundColor={"white"} iconColor={"lightgray"} height={100} />
-            }
+    return <Grid container alignItems="center" justifyContent={"center"} sx={{ height: rowHeight, p: 0 }}>
+        <Grid item xs={3} md={2}>
+            <ExerciseImageAvatar
+                image={props.setting.base?.mainImage}
+                iconSize={iconHeight}
+                avatarSize={imageHeight}
+            />
         </Grid>
 
-        {/* ml only needed because in the django app the css breaks a bit */}
-        <Grid item xs={10} sx={{ ml: 1 }}>
+        <Grid item xs={9}>
             <Stack spacing={0}>
                 <Typography variant={"subtitle1"}>
                     {props.setting.base?.getTranslation().name}

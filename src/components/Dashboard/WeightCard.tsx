@@ -15,32 +15,32 @@ export const WeightCard = () => {
     const handleCloseModal = () => setOpenModal(false);
     const [t, i18n] = useTranslation();
 
-    return (
-        <div>
-            <Card>
-                <CardHeader title={t('weight')} />
-                <CardContent>
-                    <p>{t('currentWeight')}</p>
-                    <OverviewDashboard />
-                </CardContent>
-                <CardActions sx={{
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
-                }}>
-                    <Button size="small"
-                            href={makeLink(WgerLink.WEIGHT_OVERVIEW, i18n.language)}>
-                        {t('seeDetails')}
-                    </Button>
-                    <Tooltip title={t('addEntry')}>
-                        <IconButton onClick={handleOpenModal}>
-                            <AddIcon />
-                        </IconButton>
-                    </Tooltip>
-                </CardActions>
-            </Card>
-            <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
-                <WeightForm closeFn={handleCloseModal} />
-            </WgerModal>
-        </div>
-    );
+    return (<>
+        <Card>
+            <CardHeader
+                title={t('weight')}
+                subheader={'.'}
+            />
+            <CardContent sx={{ height: '500px', overflow: 'auto' }}>
+                <OverviewDashboard />
+            </CardContent>
+            <CardActions sx={{
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+            }}>
+                <Button size="small"
+                        href={makeLink(WgerLink.WEIGHT_OVERVIEW, i18n.language)}>
+                    {t('seeDetails')}
+                </Button>
+                <Tooltip title={t('addEntry')}>
+                    <IconButton onClick={handleOpenModal}>
+                        <AddIcon />
+                    </IconButton>
+                </Tooltip>
+            </CardActions>
+        </Card>
+        <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
+            <WeightForm closeFn={handleCloseModal} />
+        </WgerModal>
+    </>);
 };

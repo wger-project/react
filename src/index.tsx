@@ -3,9 +3,10 @@ import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { NutritionCard } from "components/Dashboard/NutritionCard";
+import { RoutineCard } from "components/Dashboard/RoutineCard";
+import { WeightCard } from "components/Dashboard/WeightCard";
 import { IngredientSearch } from "components/Nutrition/components/IngredientSearch";
 import { WeightOverview } from "pages";
 import React, { Suspense } from 'react';
@@ -126,7 +127,7 @@ if (weightDashboard) {
         <Suspense fallback={<LoadingWidget />}>
             <ThemeProvider theme={theme}>
                 <QueryClientProvider client={queryClient}>
-                    <OverviewDashboard />
+                    <WeightCard />
                 </QueryClientProvider>
             </ThemeProvider>
         </Suspense>
@@ -141,6 +142,20 @@ if (nutritionDashboard) {
             <ThemeProvider theme={theme}>
                 <QueryClientProvider client={queryClient}>
                     <NutritionCard />
+                </QueryClientProvider>
+            </ThemeProvider>
+        </Suspense>
+    );
+}
+
+const routineDashboard = document.getElementById('react-routine-dashboard');
+if (routineDashboard) {
+    const root = createRoot(routineDashboard);
+    root.render(
+        <Suspense fallback={<LoadingWidget />}>
+            <ThemeProvider theme={theme}>
+                <QueryClientProvider client={queryClient}>
+                    <RoutineCard />
                 </QueryClientProvider>
             </ThemeProvider>
         </Suspense>
