@@ -10,7 +10,7 @@ export class WorkoutLog {
     constructor(
         public id: number,
         public date: Date,
-        public baseId: number,
+        public exerciseId: number,
         public repetitionUnit: number,
         public reps: number,
         public weight: number | null,
@@ -57,7 +57,7 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         any {
         return {
             id: item.id,
-            exercise_base: item.baseId,
+            exercise_base: item.exerciseId,
             repetition_unit: item.repetitionUnit,
             reps: item.reps,
             weight: item.weight,

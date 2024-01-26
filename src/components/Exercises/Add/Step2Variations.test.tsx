@@ -1,16 +1,16 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls } from "tests/exerciseTestdata";
-import { useBasesQuery } from "components/Exercises/queries";
-import { Step2Variations } from "components/Exercises/Add/Step2Variations";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { Step2Variations } from "components/Exercises/Add/Step2Variations";
+import { useExercisesQuery } from "components/Exercises/queries";
+import React from "react";
 import { ExerciseStateProvider } from "state";
+import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls } from "tests/exerciseTestdata";
 
 jest.mock('components/Exercises/queries');
 
 
-const mockedUseBasesQuery = useBasesQuery as jest.Mock;
+const mockedUseExercisesQuery = useExercisesQuery as jest.Mock;
 
 
 const mockOnContinue = jest.fn();
@@ -19,7 +19,7 @@ const queryClient = new QueryClient();
 describe("Test the add exercise step 2 component", () => {
 
     beforeEach(() => {
-        mockedUseBasesQuery.mockImplementation(() => ({
+        mockedUseExercisesQuery.mockImplementation(() => ({
             isLoading: false,
             isSuccess: true,
             data: [

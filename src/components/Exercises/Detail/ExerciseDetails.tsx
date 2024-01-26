@@ -10,8 +10,8 @@ import { useLanguageQuery } from "components/Exercises/queries";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName, } from "services";
-import { QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL, } from "utils/consts";
+import { getExercise, getExercisesForVariation, getLanguageByShortName, } from "services";
+import { QUERY_EXERCISE_DETAIL, QUERY_EXERCISE_VARIATIONS, } from "utils/consts";
 import { Head } from "./Head";
 
 export const PaddingBox = () => {
@@ -24,25 +24,26 @@ export const ExerciseDetails = () => {
     const [editMode, setEditMode] = useState<boolean>(false);
 
     const params = useParams<{ baseID: string }>();
-    const exerciseBaseID = params.baseID ? parseInt(params.baseID) : 0;
+    const exerciseId = params.baseID ? parseInt(params.baseID) : 0;
 
     const { i18n } = useTranslation();
     const navigate = useNavigate();
 
     const languageQuery = useLanguageQuery();
     const exerciseQuery = useQuery(
-        [QUERY_EXERCISE_DETAIL, exerciseBaseID],
-        () => getExerciseBase(exerciseBaseID),
+        [QUERY_EXERCISE_DETAIL, exerciseId],
+        () => getExercise(exerciseId),
         {
             enabled: languageQuery.isSuccess,
-            onSuccess: (exerciseBase: Exercise) => {
+            onSuccess: (exercise: Exercise) => {
                 const currentUserLanguage = getLanguageByShortName(
                     i18n.language,
                     languageQuery.data!
                 );
+
                 // get exercise translation from received exercise and set it
                 if (currentUserLanguage) {
-                    const translation = exerciseBase.getTranslation(currentUserLanguage);
+                    const translation = exercise.getTranslation(currentUserLanguage);
                     setCurrentTranslation(translation);
                 }
                 setLanguage(currentUserLanguage);
@@ -51,8 +52,8 @@ export const ExerciseDetails = () => {
     );
 
     const variationsQuery = useQuery(
-        [QUERY_EXERCISE_BASES_VARIATIONS, exerciseQuery.data?.variationId],
-        () => getExerciseBasesForVariation(exerciseQuery.data?.variationId),
+        [QUERY_EXERCISE_VARIATIONS, exerciseQuery.data?.variationId],
+        () => getExercisesForVariation(exerciseQuery.data?.variationId),
         { enabled: exerciseQuery.isSuccess }
     );
 
@@ -75,7 +76,7 @@ export const ExerciseDetails = () => {
     };
 
     const variations = variationsQuery.isSuccess
-        ? variationsQuery.data!.filter((b) => b.id !== exerciseBaseID)
+        ? variationsQuery.data!.filter((b) => b.id !== exerciseId)
         : [];
 
     let out;

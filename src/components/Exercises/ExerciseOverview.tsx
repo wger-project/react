@@ -10,7 +10,12 @@ import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
 import { ExerciseGrid } from "components/Exercises/Overview/ExerciseGrid";
 import { ExerciseGridSkeleton } from "components/Exercises/Overview/ExerciseGridLoadingSkeleton";
-import { useBasesQuery, useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
+import {
+    useCategoriesQuery,
+    useEquipmentQuery,
+    useExercisesQuery,
+    useMusclesQuery
+} from "components/Exercises/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
@@ -70,7 +75,7 @@ const NoResultsBanner = () => {
 };
 
 export const ExerciseOverview = () => {
-    const basesQuery = useBasesQuery();
+    const basesQuery = useExercisesQuery();
     const categoryQuery = useCategoriesQuery();
     const musclesQuery = useMusclesQuery();
     const equipmentQuery = useEquipmentQuery();
@@ -94,21 +99,21 @@ export const ExerciseOverview = () => {
     // Should be a multiple of three, since there are three columns in the grid
     const ITEMS_PER_PAGE = 21;
 
-    let filteredExerciseBases = basesQuery.data || [];
+    let filteredExercises = basesQuery.data || [];
 
     // Filter exercise bases by categories
     if (selectedCategories.length > 0) {
-        filteredExerciseBases = filteredExerciseBases!.filter(exerciseBase => {
+        filteredExercises = filteredExercises!.filter(exercise => {
             return selectedCategories.some(
-                category => exerciseBase.category.id === category.id
+                category => exercise.category.id === category.id
             );
         });
     }
 
     // Filter exercises that have one of the selected equipment
     if (selectedEquipment.length > 0) {
-        filteredExerciseBases = filteredExerciseBases!.filter(exerciseBase => {
-            return exerciseBase.equipment.some(equipment =>
+        filteredExercises = filteredExercises!.filter(exercise => {
+            return exercise.equipment.some(equipment =>
                 selectedEquipment.some(
                     selectedEquipment => selectedEquipment.id === equipment.id
                 )
@@ -118,22 +123,22 @@ export const ExerciseOverview = () => {
 
     // Filter exercises that have one of the selected muscles
     if (selectedMuscles.length > 0) {
-        filteredExerciseBases = filteredExerciseBases!.filter(exerciseBase => {
-            return exerciseBase.muscles.some(muscle =>
+        filteredExercises = filteredExercises!.filter(exercise => {
+            return exercise.muscles.some(muscle =>
                 selectedMuscles.some(selectedMuscle => selectedMuscle.id === muscle.id)
             );
         });
     }
 
     // Pagination calculations
-    const pageCount = Math.ceil(filteredExerciseBases!.length / ITEMS_PER_PAGE);
-    const paginatedExerciseBases = filteredExerciseBases!.slice(
+    const pageCount = Math.ceil(filteredExercises!.length / ITEMS_PER_PAGE);
+    const paginatedExercises = filteredExercises!.slice(
         (page - 1) * ITEMS_PER_PAGE,
         page * ITEMS_PER_PAGE
     );
 
-    const exerciseAdded = (exercise: ExerciseSearchResponse) => {
-        navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: exercise.data.base_id }));
+    const exerciseAdded = (exerciseResponse: ExerciseSearchResponse) => {
+        navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: exerciseResponse.data.base_id }));
     };
 
     return (
@@ -194,7 +199,7 @@ export const ExerciseOverview = () => {
                     {basesQuery.isLoading
                         ? <ExerciseGridSkeleton />
                         : <>
-                            <ExerciseGrid exerciseBases={paginatedExerciseBases} />
+                            <ExerciseGrid exercises={paginatedExercises} />
                             <Stack spacing={2} alignItems="center" sx={{ mt: 2 }}>
                                 <Pagination
                                     count={pageCount}

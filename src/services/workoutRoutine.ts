@@ -5,7 +5,7 @@ import { WorkoutLog, WorkoutLogAdapter } from "components/WorkoutRoutines/models
 import { WorkoutRoutine, WorkoutRoutineAdapter } from "components/WorkoutRoutines/models/WorkoutRoutine";
 import { SetAdapter, WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
 import { SettingAdapter } from "components/WorkoutRoutines/models/WorkoutSetting";
-import { getExerciseBase } from "services/exerciseBase";
+import { getExercise } from "services";
 import { getRepUnits, getWeightUnits } from "services/workoutUnits";
 import { API_MAX_PAGE_SIZE } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
@@ -84,8 +84,8 @@ export const processWorkoutRoutine = async (id: number): Promise<WorkoutRoutine>
                 const weightUnit = weightUnits.find(e => e.id === setting.weightUnit);
                 const repUnit = repUnits.find(e => e.id === setting.repetitionUnit);
 
-                const tmpSetting = set!.settings.find(e => e.baseId === setting.baseId);
-                setting.base = tmpSetting !== undefined ? tmpSetting.base : await getExerciseBase(setting.baseId);
+                const tmpSetting = set!.settings.find(e => e.exerciseId === setting.exerciseId);
+                setting.base = tmpSetting !== undefined ? tmpSetting.base : await getExercise(setting.exerciseId);
                 setting.weightUnitObj = weightUnit;
                 setting.repetitionUnitObj = repUnit;
 
@@ -187,10 +187,10 @@ export const getRoutineLogs = async (id: number, loadBases = false): Promise<Wor
 
             // Load the base object
             if (loadBases) {
-                if (exercises.get(log.baseId) === undefined) {
-                    exercises.set(log.baseId, await getExerciseBase(log.baseId));
+                if (exercises.get(log.exerciseId) === undefined) {
+                    exercises.set(log.exerciseId, await getExercise(log.exerciseId));
                 }
-                log.baseObj = exercises.get(log.baseId)!;
+                log.baseObj = exercises.get(log.exerciseId)!;
             }
 
             out.push(log);

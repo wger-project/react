@@ -27,7 +27,7 @@ describe("Test the exercise overview card component", () => {
     const category = new Category(10, "Abs");
     const equipment1 = new Equipment(10, "Kettlebell");
     const equipment2 = new Equipment(1, "Test 123");
-    const exerciseBase = new Exercise(
+    const exercise = new Exercise(
         345,
         "c788d643-150a-4ac7-97ef-84643c6419bf",
         category,
@@ -44,7 +44,7 @@ describe("Test the exercise overview card component", () => {
         // since  OverviewCard renders a Link, we need to wrap in a BrowserRouter
         render(
             <BrowserRouter>
-                <OverviewCard exerciseBase={exerciseBase} />
+                <OverviewCard exercise={exercise} />
             </BrowserRouter>
         );
 
@@ -63,7 +63,7 @@ describe("Test the exercise overview card component", () => {
         // since  OverviewCard renders a Link, we need to wrap in a BrowserRouter
         render(
             <BrowserRouter>
-                <OverviewCard exerciseBase={exerciseBase} language={language} />
+                <OverviewCard exercise={exercise} language={language} />
             </BrowserRouter>
         );
 
@@ -84,7 +84,7 @@ describe("Test the exercise overview card component", () => {
         // since  OverviewCard renders a Link, we need to wrap in a BrowserRouter
         render(
             <BrowserRouter>
-                <OverviewCard exerciseBase={exerciseBase} language={language} />
+                <OverviewCard exercise={exercise} language={language} />
             </BrowserRouter>
         );
 

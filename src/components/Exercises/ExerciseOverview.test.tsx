@@ -1,9 +1,9 @@
-import React from 'react';
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
-import { getCategories, getEquipment, getExerciseBases, getLanguages, getMuscles } from "services";
-import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
-import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { getCategories, getEquipment, getExercises, getLanguages, getMuscles } from "services";
 import {
     testCategories,
     testEquipment,
@@ -33,7 +33,7 @@ describe("Test the ExerciseOverview component", () => {
         // @ts-ignore
         getEquipment.mockImplementation(() => Promise.resolve(testEquipment));
         // @ts-ignore
-        getExerciseBases.mockImplementation(() => Promise.resolve([
+        getExercises.mockImplementation(() => Promise.resolve([
             testExerciseSquats,
             testExerciseBenchPress,
             testExerciseCurls,
@@ -61,7 +61,7 @@ describe("Test the ExerciseOverview component", () => {
         expect(getCategories).toHaveBeenCalledTimes(1);
         expect(getMuscles).toHaveBeenCalledTimes(1);
         expect(getEquipment).toHaveBeenCalledTimes(1);
-        expect(getExerciseBases).toHaveBeenCalledTimes(1);
+        expect(getExercises).toHaveBeenCalledTimes(1);
 
         expect(screen.getByText('Benchpress')).toBeInTheDocument();
         expect(screen.getByText('Squats')).toBeInTheDocument();

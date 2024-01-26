@@ -1,16 +1,16 @@
 import { render, screen } from "@testing-library/react";
-import React from "react";
-import { testEquipment } from "tests/exerciseTestdata";
-import { useEquipmentQuery } from "components/Exercises/queries";
 import userEvent from "@testing-library/user-event";
-import { editExerciseBase } from "services/exerciseBase";
 import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
+import { useEquipmentQuery } from "components/Exercises/queries";
 import { useProfileQuery } from "components/User/queries/profile";
+import React from "react";
+import { editExercise } from "services";
+import { testEquipment } from "tests/exerciseTestdata";
 import { testProfileDataVerified } from "tests/userTestdata";
 
 jest.mock("components/User/queries/profile");
 jest.mock("components/Exercises/queries");
-jest.mock("services/exerciseBase");
+jest.mock("services");
 
 describe("Test the edit widget to live edit the equipment", () => {
 
@@ -26,7 +26,7 @@ describe("Test the edit widget to live edit the equipment", () => {
         ));
 
         // @ts-ignore
-        editExerciseBase.mockImplementation(() => (100));
+        editExercise.mockImplementation(() => (100));
     });
 
 
@@ -38,7 +38,7 @@ describe("Test the edit widget to live edit the equipment", () => {
         // Act
         render(
             <EditExerciseEquipment
-                baseId={100}
+                exerciseId={100}
                 initial={[1, 2]}
             />
         );
@@ -58,7 +58,7 @@ describe("Test the edit widget to live edit the equipment", () => {
         await user.click(rocks);
 
         // eslint-disable-next-line camelcase
-        expect(editExerciseBase).toHaveBeenCalledWith(100, { equipment: [1, 2, 42], license_author: "admin" });
+        expect(editExercise).toHaveBeenCalledWith(100, { equipment: [1, 2, 42], license_author: "admin" });
     });
 
     test('Clicking on an existing equipment, removes it', async () => {
@@ -69,7 +69,7 @@ describe("Test the edit widget to live edit the equipment", () => {
         // Act
         render(
             <EditExerciseEquipment
-                baseId={100}
+                exerciseId={100}
                 initial={[1, 2]}
             />
         );
@@ -84,6 +84,6 @@ describe("Test the edit widget to live edit the equipment", () => {
         await user.click(rocks);
 
         // eslint-disable-next-line camelcase
-        expect(editExerciseBase).toHaveBeenCalledWith(100, { equipment: [1], license_author: "admin" });
+        expect(editExercise).toHaveBeenCalledWith(100, { equipment: [1], license_author: "admin" });
     });
 });

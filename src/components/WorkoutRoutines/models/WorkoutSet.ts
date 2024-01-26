@@ -33,7 +33,7 @@ export class WorkoutSet {
         const out: WorkoutSetting[] = [];
 
         for (const setting of this.settings) {
-            const foundSettings = out.filter(s => s.baseId === setting.baseId);
+            const foundSettings = out.filter(s => s.exerciseId === setting.exerciseId);
 
             if (foundSettings.length === 0) {
                 out.push(setting);
@@ -43,14 +43,14 @@ export class WorkoutSet {
         return out;
     }
 
-    filterSettingsByExercise(exerciseBase: Exercise): WorkoutSetting[] {
-        return this.settings.filter((element) => element.baseId === exerciseBase.id);
+    filterSettingsByExercise(exerciseId: Exercise): WorkoutSetting[] {
+        return this.settings.filter((element) => element.exerciseId === exerciseId.id);
     }
 
-    getSettingsTextRepresentation(exerciseBase: Exercise, translate?: (key: string) => string): string {
+    getSettingsTextRepresentation(exerciseId: Exercise, translate?: (key: string) => string): string {
         translate = translate || (str => str);
 
-        return settingsToText(this.sets, this.filterSettingsByExercise(exerciseBase), translate);
+        return settingsToText(this.sets, this.filterSettingsByExercise(exerciseId), translate);
     }
 }
 

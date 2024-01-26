@@ -44,7 +44,7 @@ export const searchExerciseTranslations = async (name: string, languageCode: str
  * Create a new exercise translation
  */
 export const addExerciseTranslation = async (
-    exerciseBaseId: number,
+    exerciseId: number,
     languageId: number,
     name: string,
     description: string,
@@ -54,7 +54,7 @@ export const addExerciseTranslation = async (
     const url = makeUrl(EXERCISE_TRANSLATION_PATH);
     const baseData = {
         // eslint-disable-next-line camelcase
-        exercise_base: exerciseBaseId,
+        exercise_base: exerciseId,
         language: languageId,
         name: name,
         description: description,
@@ -74,7 +74,7 @@ export const addExerciseTranslation = async (
  */
 export const editExerciseTranslation = async (
     id: number,
-    exerciseBaseId: number,
+    exerciseId: number,
     languageId: number,
     name: string,
     description: string,
@@ -82,7 +82,7 @@ export const editExerciseTranslation = async (
     const url = makeUrl(EXERCISE_TRANSLATION_PATH, { id: id });
     const baseData = {
         // eslint-disable-next-line camelcase
-        exercise_base: exerciseBaseId,
+        exercise_base: exerciseId,
         language: languageId,
         name: name,
         description: description,

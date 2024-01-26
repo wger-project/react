@@ -8,10 +8,10 @@ import { useTranslation } from "react-i18next";
 import { getLanguageByShortName } from "services";
 
 type ExerciseGridProps = {
-    exerciseBases: Exercise[];
+    exercises: Exercise[];
 };
 
-export const ExerciseGrid = ({ exerciseBases }: ExerciseGridProps) => {
+export const ExerciseGrid = ({ exercises }: ExerciseGridProps) => {
 
     const languageQuery = useLanguageQuery();
 
@@ -28,9 +28,9 @@ export const ExerciseGrid = ({ exerciseBases }: ExerciseGridProps) => {
 
     return (
         <Grid container spacing={1}>
-            {exerciseBases.map(b => (
+            {exercises.map(b => (
                 <Grid item xs={6} md={4} key={b.id} sx={{ display: "flex" }}>
-                    <OverviewCard exerciseBase={b} language={currentUserLanguage} />
+                    <OverviewCard exercise={b} language={currentUserLanguage} />
                 </Grid>
             ))}
         </Grid>

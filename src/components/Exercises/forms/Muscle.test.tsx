@@ -1,13 +1,13 @@
 import { render, screen } from "@testing-library/react";
-import React from "react";
-import { testMuscles } from "tests/exerciseTestdata";
-import { useMusclesQuery } from "components/Exercises/queries";
 import userEvent from "@testing-library/user-event";
-import { editExerciseBase } from "services/exerciseBase";
 import { EditExerciseMuscle } from "components/Exercises/forms/Muscle";
+import { useMusclesQuery } from "components/Exercises/queries";
+import React from "react";
+import { editExercise } from "services";
+import { testMuscles } from "tests/exerciseTestdata";
 
 jest.mock("components/Exercises/queries");
-jest.mock("services/exerciseBase");
+jest.mock("services/exercise");
 
 describe("Test the widget to live edit the muscles", () => {
 
@@ -16,7 +16,7 @@ describe("Test the widget to live edit the muscles", () => {
         useMusclesQuery.mockImplementation(() => ({ isSuccess: true, data: testMuscles }));
 
         // @ts-ignore
-        editExerciseBase.mockImplementation(() => (200));
+        editExercise.mockImplementation(() => (200));
     });
 
     test('Clicking on a muscle immediately fires the request', async () => {
@@ -27,7 +27,7 @@ describe("Test the widget to live edit the muscles", () => {
         // Act
         render(
             <EditExerciseMuscle
-                baseId={100}
+                exerciseId={100}
                 value={[1, 2]}
                 setValue={jest.fn()}
                 blocked={[]}
@@ -42,7 +42,7 @@ describe("Test the widget to live edit the muscles", () => {
         await user.click(screen.getByRole('combobox', { name: /exercises\.muscles/i }));
         const shoulders = await screen.findByText(/shoulders/i);
         await user.click(shoulders);
-        expect(editExerciseBase).toHaveBeenCalledWith(100, { "muscles": [1, 2, 3] });
+        expect(editExercise).toHaveBeenCalledWith(100, { "muscles": [1, 2, 3] });
     });
 
     test('Correctly sets secondary muscles', async () => {
@@ -53,7 +53,7 @@ describe("Test the widget to live edit the muscles", () => {
         // Act
         render(
             <EditExerciseMuscle
-                baseId={1234}
+                exerciseId={1234}
                 value={[1, 2]}
                 setValue={jest.fn()}
                 blocked={[]}
@@ -69,6 +69,6 @@ describe("Test the widget to live edit the muscles", () => {
         const shoulders = await screen.findByText(/shoulders/i);
         await user.click(shoulders);
         // eslint-disable-next-line camelcase
-        expect(editExerciseBase).toHaveBeenCalledWith(1234, { muscles_secondary: [1, 2, 3] });
+        expect(editExercise).toHaveBeenCalledWith(1234, { muscles_secondary: [1, 2, 3] });
     });
 });

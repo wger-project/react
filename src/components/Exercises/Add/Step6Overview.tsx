@@ -1,3 +1,4 @@
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import {
     Alert,
     AlertTitle,
@@ -12,23 +13,22 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
+import ImageList from "@mui/material/ImageList";
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
+import { Note } from "components/Exercises/models/note";
+import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
+import { useProfileQuery } from "components/User/queries/profile";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { addExerciseBase, addExerciseTranslation, postAlias, postExerciseImage } from "services";
-import { ENGLISH_LANGUAGE_ID } from "utils/consts";
-import { addVariation } from "services/variation";
 import { useNavigate } from "react-router-dom";
-import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
-import { getTranslationKey } from "utils/strings";
-import ImageList from "@mui/material/ImageList";
-import { useExerciseStateValue } from "state";
+import { addExercise, addExerciseTranslation, postAlias, postExerciseImage } from "services";
 import { addNote } from "services/note";
-import { Note } from "components/Exercises/models/note";
-import { useProfileQuery } from "components/User/queries/profile";
+import { addVariation } from "services/variation";
+import { useExerciseStateValue } from "state";
+import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { getTranslationKey } from "utils/strings";
 import { makeLink, WgerLink } from "utils/url";
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 
 export const Step6Overview = ({ onBack }: StepProps) => {
     const [t, i18n] = useTranslation();
@@ -58,8 +58,8 @@ export const Step6Overview = ({ onBack }: StepProps) => {
             variationId = state.variationId;
         }
 
-        // Create the base
-        const baseId = await addExerciseBase(
+        // Create the exercise
+        const exerciseId = await addExercise(
             state.category as number,
             state.equipment,
             state.muscles,
@@ -69,8 +69,8 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         );
 
         // Create the English translation
-        const exercise = await addExerciseTranslation(
-            baseId,
+        const translation = await addExerciseTranslation(
+            exerciseId,
             ENGLISH_LANGUAGE_ID,
             state.nameEn,
             state.descriptionEn,
@@ -79,24 +79,24 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
         // For each entry in alternative names, create a new alias
         for (const alias of state.alternativeNamesEn) {
-            await postAlias(exercise.id!, alias);
+            await postAlias(translation.id!, alias);
         }
 
         // Post the images
         for (const image of state.images) {
-            await postExerciseImage(baseId, profileQuery.data!.username, image.file);
+            await postExerciseImage(exerciseId, profileQuery.data!.username, image.file);
         }
 
         // Post the notes
         for (const note of state.notesEn) {
-            await addNote(new Note(null, exercise.id!, note));
+            await addNote(new Note(null, translation.id!, note));
         }
 
 
         // Create the translation if needed
         if (state.languageId !== null) {
             const exerciseI18n = await addExerciseTranslation(
-                baseId,
+                exerciseId,
                 state.languageId,
                 state.nameI18n,
                 state.descriptionI18n,
@@ -251,7 +251,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                                     disabled={submissionState !== 'initial'}
                                     onClick={submitExercise}
                                     sx={{ mt: 1, mr: 1 }}
-                                    color='info'
+                                    color="info"
                                 >
                                     {t('exercises.submitExercise')}
                                 </Button>
@@ -261,7 +261,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                                     variant="contained"
                                     onClick={navigateToOverview}
                                     sx={{ mt: 1, mr: 1 }}
-                                    color='success'
+                                    color="success"
                                 >
                                     {t('overview')}
                                     <NavigateNextIcon />

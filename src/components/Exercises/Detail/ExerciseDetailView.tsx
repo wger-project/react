@@ -178,7 +178,7 @@ export const ExerciseDetailView = ({
                     <Grid item xs={6} md={2} key={variation.id}>
                         <OverviewCard
                             key={variation.id}
-                            exerciseBase={variation}
+                            exercise={variation}
                             language={language}
                         />
                     </Grid>

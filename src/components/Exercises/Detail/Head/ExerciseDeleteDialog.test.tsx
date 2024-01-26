@@ -4,7 +4,7 @@ import { ExerciseDeleteDialog } from "components/Exercises/Detail/Head/ExerciseD
 import React from 'react';
 import { MemoryRouter, Routes } from "react-router";
 import { Route } from "react-router-dom";
-import { deleteExerciseBase, deleteExerciseTranslation, getExerciseBase, searchExerciseTranslations } from "services";
+import { deleteExercise, deleteExerciseTranslation, getExercise, searchExerciseTranslations } from "services";
 import { searchResponse } from "tests/exercises/searchResponse";
 import { testExerciseBenchPress, testExerciseSquats, testLanguageGerman } from "tests/exerciseTestdata";
 
@@ -21,7 +21,7 @@ describe("Test the ExerciseDeleteDialog component", () => {
         searchExerciseTranslations.mockImplementation(() => Promise.resolve(searchResponse));
 
         // @ts-ignore
-        getExerciseBase.mockImplementation(() => Promise.resolve(testExerciseBenchPress));
+        getExercise.mockImplementation(() => Promise.resolve(testExerciseBenchPress));
     });
 
     function renderWidget() {
@@ -52,7 +52,7 @@ describe("Test the ExerciseDeleteDialog component", () => {
         // Assert
         await user.click(screen.getByTestId('button-delete-translation'));
         expect(deleteExerciseTranslation).toHaveBeenCalledWith(9);
-        expect(deleteExerciseBase).not.toHaveBeenCalled();
+        expect(deleteExercise).not.toHaveBeenCalled();
     });
 
     test('correctly deletes the whole exercise', async () => {
@@ -64,7 +64,7 @@ describe("Test the ExerciseDeleteDialog component", () => {
 
         // Assert
         await user.click(screen.getByTestId('button-delete-all'));
-        expect(deleteExerciseBase).toHaveBeenCalledWith(345);
+        expect(deleteExercise).toHaveBeenCalledWith(345);
         expect(deleteExerciseTranslation).not.toHaveBeenCalled();
     });
 
@@ -91,17 +91,17 @@ describe("Test the ExerciseDeleteDialog component", () => {
             await new Promise((r) => setTimeout(r, 250));
         });
         await user.click(screen.getByTestId('autocompleter-result-1149'));
-        screen.logTestingPlaygroundURL();
-        expect(getExerciseBase).toHaveBeenCalledWith(998);
+        //screen.logTestingPlaygroundURL();
+        expect(getExercise).toHaveBeenCalledWith(998);
         expect(screen.queryByText("exercises.noReplacementSelected")).not.toBeInTheDocument();
         expect(screen.getByText("Benchpress")).toBeInTheDocument();
         expect(screen.getByText("2 (abcdef-150a-4ac7-97ef-84643c6419bf)")).toBeInTheDocument();
 
         await user.click(screen.getByTestId('button-delete-and-replace'));
-        expect(deleteExerciseBase).toHaveBeenCalledWith(345, "abcdef-150a-4ac7-97ef-84643c6419bf");
+        expect(deleteExercise).toHaveBeenCalledWith(345, "abcdef-150a-4ac7-97ef-84643c6419bf");
         expect(deleteExerciseTranslation).not.toHaveBeenCalled();
 
-        screen.logTestingPlaygroundURL();
+        //screen.logTestingPlaygroundURL();
     });
 
     test('correctly sets a replacement manually setting the ID', async () => {
@@ -117,13 +117,13 @@ describe("Test the ExerciseDeleteDialog component", () => {
         expect(screen.getByText("exercises.noReplacementSelected")).toBeInTheDocument();
         await user.click(screen.getByText("exercises.noReplacementSelected"));
 
-        expect(getExerciseBase).toHaveBeenCalledWith(111);
+        expect(getExercise).toHaveBeenCalledWith(111);
         expect(screen.queryByText("exercises.noReplacementSelected")).not.toBeInTheDocument();
         expect(screen.getByText("Benchpress")).toBeInTheDocument();
         expect(screen.getByText("2 (abcdef-150a-4ac7-97ef-84643c6419bf)")).toBeInTheDocument();
 
         await user.click(screen.getByTestId('button-delete-and-replace'));
-        expect(deleteExerciseBase).toHaveBeenCalledWith(345, "abcdef-150a-4ac7-97ef-84643c6419bf");
+        expect(deleteExercise).toHaveBeenCalledWith(345, "abcdef-150a-4ac7-97ef-84643c6419bf");
         expect(deleteExerciseTranslation).not.toHaveBeenCalled();
     });
 });

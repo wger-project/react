@@ -6,7 +6,7 @@ import {
     testLanguageEnglish,
     testLanguageGerman
 } from "tests/exerciseTestdata";
-import { responseApiExerciseBaseInfo, testApiExercise1 } from "tests/responseApi";
+import { responseApiExerciseInfo, testApiExercise1 } from "tests/responseApi";
 
 
 describe("Exercise base model tests", () => {
@@ -42,7 +42,7 @@ describe("Exercise base model tests", () => {
 
         // Act
         const adapter = new ExerciseAdapter();
-        const result = adapter.fromJson(responseApiExerciseBaseInfo.results[0]);
+        const result = adapter.fromJson(responseApiExerciseInfo.results[0]);
 
         // Assert
         expect(result).toEqual(testApiExercise1);

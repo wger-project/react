@@ -1,7 +1,7 @@
 import axios from "axios";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import { WorkoutRoutine } from "components/WorkoutRoutines/models/WorkoutRoutine";
-import { getExerciseBase, getWorkoutRoutinesShallow } from "services";
+import { getExercise, getWorkoutRoutinesShallow } from "services";
 import { getRoutineLogs } from "services/workoutRoutine";
 import { getRepUnits, getWeightUnits } from "services/workoutUnits";
 import { testExerciseSquats } from "tests/exerciseTestdata";
@@ -17,7 +17,7 @@ import {
 jest.mock("axios");
 jest.mock("services/workoutUnits");
 jest.mock("services/workoutUnits");
-jest.mock("services/exerciseBase");
+jest.mock("services/exercise");
 
 
 describe("workout routine service tests", () => {
@@ -105,7 +105,7 @@ describe("workout routine service tests", () => {
         // @ts-ignore
         getWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
 // @ts-ignore
-        getExerciseBase.mockImplementation(() => Promise.resolve(testExerciseSquats));
+        getExercise.mockImplementation(() => Promise.resolve(testExerciseSquats));
 
         // Act
         const result = await getRoutineLogs(1, true);

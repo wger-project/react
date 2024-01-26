@@ -249,7 +249,7 @@ export const ExerciseDetailEdit = ({
                 <Typography variant={'h6'}>{t('images')}</Typography>
                 <Grid container spacing={2} mt={2}>
                     <Grid item md={3} key={'add'}>
-                        <AddImageCard baseId={exercise.id!} />
+                        <AddImageCard exerciseId={exercise.id!} />
                     </Grid>
 
                     {exercise.images.map(img => (
@@ -268,7 +268,7 @@ export const ExerciseDetailEdit = ({
                 <Grid container spacing={2} mt={2}>
                     {deleteVideoPermissionQuery.data
                         && <Grid item md={3} key={'add'}>
-                            <AddVideoCard baseId={exercise.id!} />
+                            <AddVideoCard exerciseId={exercise.id!} />
                         </Grid>
                     }
 
@@ -287,20 +287,20 @@ export const ExerciseDetailEdit = ({
             && musclesQuery.isSuccess
             && <>
                 <PaddingBox />
-                <EditExerciseCategory baseId={exercise.id!} initial={exercise.category.id} />
-                <EditExerciseEquipment baseId={exercise.id!} initial={exercise.equipment.map(e => e.id)} />
+                <EditExerciseCategory exerciseId={exercise.id!} initial={exercise.category.id} />
+                <EditExerciseEquipment exerciseId={exercise.id!} initial={exercise.equipment.map(e => e.id)} />
 
                 <Grid container mt={1}>
                     <Grid item sm={7}>
                         <EditExerciseMuscle
-                            baseId={exercise.id!}
+                            exerciseId={exercise.id!}
                             value={mainMuscles}
                             setValue={setMainMuscles}
                             blocked={secondaryMuscles}
                             isMain
                         />
                         <EditExerciseMuscle
-                            baseId={exercise.id!}
+                            exerciseId={exercise.id!}
                             value={secondaryMuscles}
                             setValue={setSecondaryMuscles}
                             blocked={mainMuscles}

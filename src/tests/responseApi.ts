@@ -70,7 +70,7 @@ export const testApiExercise1 = new Exercise(
 );
 
 
-export const responseApiExerciseBaseInfo = {
+export const responseApiExerciseInfo = {
     "count": 418,
     "next": "http://localhost:8000/api/v2/exercisebaseinfo/?format=json&limit=20&offset=20",
     "previous": null,

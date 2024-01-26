@@ -22,7 +22,7 @@ import { Language } from "components/Exercises/models/language";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { deleteExerciseBase, deleteExerciseTranslation, getExerciseBase } from "services";
+import { deleteExercise, deleteExerciseTranslation, getExercise } from "services";
 import { ExerciseSearchResponse } from "services/responseType";
 import { SERVER_URL } from "utils/url";
 
@@ -51,9 +51,9 @@ export function ExerciseDeleteDialog(props: {
 
     const handleDeleteBase = async (handleReplacement: boolean = false) => {
         if (handleReplacement) {
-            await deleteExerciseBase(props.currentExercise.id!, replacementExercise?.uuid!);
+            await deleteExercise(props.currentExercise.id!, replacementExercise?.uuid!);
         } else {
-            await deleteExerciseBase(props.currentExercise.id!);
+            await deleteExercise(props.currentExercise.id!);
         }
         props.onClose();
         navigate('../overview');
@@ -64,7 +64,7 @@ export function ExerciseDeleteDialog(props: {
 
         if (id !== null) {
             try {
-                const exercise = await getExerciseBase(id);
+                const exercise = await getExercise(id);
                 setReplacementExercise(exercise);
             } catch (e) {
                 setReplacementExercise(null);
