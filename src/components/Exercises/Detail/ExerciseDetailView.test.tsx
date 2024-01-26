@@ -1,13 +1,13 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { testExerciseCrunches, testLanguageEnglish, testLanguageFrench } from "tests/exerciseTestdata";
-import { testProfileDataNotVerified, testProfileDataVerified } from "tests/userTestdata";
+import { render, screen } from '@testing-library/react';
 import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailView";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
+import React from 'react';
+import { testExerciseCrunches, testLanguageEnglish, testLanguageFrench } from "tests/exerciseTestdata";
+import { testProfileDataNotVerified, testProfileDataVerified } from "tests/userTestdata";
 
 jest.mock("components/User/queries/profile");
 jest.mock("components/User/queries/permission");
@@ -16,7 +16,7 @@ const queryClient = new QueryClient();
 
 describe("Contribute banner tests", () => {
 
-    const renderComponent = (exercise: ExerciseBase, language: Language) => render(
+    const renderComponent = (exercise: Exercise, language: Language) => render(
         <QueryClientProvider client={queryClient}>
             <ExerciseDetailView
                 exercise={exercise}

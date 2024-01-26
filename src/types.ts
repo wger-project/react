@@ -35,6 +35,18 @@ export interface ApiSettingRepUnitType {
     name: string,
 }
 
+export interface ApiCommentType {
+    id: number,
+    uuid: string,
+    comment: string,
+}
+
+export interface ApiAliasType {
+    id: number,
+    uuid: string,
+    alias: string,
+}
+
 export interface ApiMeasurementCategoryType {
     id: number,
     name: string,

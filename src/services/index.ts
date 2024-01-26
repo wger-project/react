@@ -11,6 +11,7 @@ export {
     getExerciseBase,
     getExerciseBasesForVariation,
     addExerciseBase,
+    deleteExerciseBase,
 } from './exerciseBase';
 export {
     addExerciseTranslation,

@@ -1,7 +1,7 @@
-import { useTranslation } from "react-i18next";
 import { Autocomplete, Chip, TextField } from "@mui/material";
-import React from "react";
 import { useField } from "formik";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 export function ExerciseAliases(props: { fieldName: string }) {
     const [t] = useTranslation();
@@ -25,7 +25,7 @@ export function ExerciseAliases(props: { fieldName: string }) {
         renderInput={params => (
             <TextField
                 {...params}
-                id="newAlternativeNameEn"
+                id="exerciseAliases"
                 variant="standard"
                 label={t("exercises.alternativeNames")}
                 error={meta.touched && Boolean(meta.error)}

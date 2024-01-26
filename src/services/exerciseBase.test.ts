@@ -7,7 +7,7 @@ import {
     getExerciseBases,
     processBaseData
 } from "services/exerciseBase";
-import { responseApiExerciseBaseInfo, testApiExerciseBase1 } from "tests/responseApi";
+import { responseApiExerciseBaseInfo, testApiExercise1 } from "tests/responseApi";
 
 jest.mock("axios");
 
@@ -24,7 +24,7 @@ describe("Exercise service API tests", () => {
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
-        expect(result).toEqual([testApiExerciseBase1]);
+        expect(result).toEqual([testApiExercise1]);
     });
 
     test('GET exercise base data for single entry', async () => {
@@ -38,7 +38,7 @@ describe("Exercise service API tests", () => {
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(testApiExerciseBase1);
+        expect(result).toEqual(testApiExercise1);
     });
 
     test('POST a new exercise base', async () => {
@@ -132,6 +132,6 @@ describe("Exercise base service parser tests", () => {
         const result = processBaseData(responseApiExerciseBaseInfo);
 
         // Assert
-        expect(result).toEqual([testApiExerciseBase1]);
+        expect(result).toEqual([testApiExercise1]);
     });
 });

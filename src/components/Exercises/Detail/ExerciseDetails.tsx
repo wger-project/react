@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import { Head } from "./Head";
-import { useNavigate, useParams } from "react-router-dom";
-import { getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName, } from "services";
-import { useTranslation } from "react-i18next";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import { Language } from "components/Exercises/models/language";
-import { useQuery } from "@tanstack/react-query";
-import { QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL, } from "utils/consts";
-import { useLanguageQuery } from "components/Exercises/queries";
 import { Box, Container } from "@mui/material";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
-import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailView";
+import { useQuery } from "@tanstack/react-query";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
+import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailView";
+import { Exercise } from "components/Exercises/models/exercise";
+import { Language } from "components/Exercises/models/language";
+import { Translation } from "components/Exercises/models/translation";
+import { useLanguageQuery } from "components/Exercises/queries";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import { getExerciseBase, getExerciseBasesForVariation, getLanguageByShortName, } from "services";
+import { QUERY_EXERCISE_BASES_VARIATIONS, QUERY_EXERCISE_DETAIL, } from "utils/consts";
+import { Head } from "./Head";
 
 export const PaddingBox = () => {
     return <Box sx={{ height: 40 }} />;
@@ -20,7 +20,7 @@ export const PaddingBox = () => {
 
 export const ExerciseDetails = () => {
     const [language, setLanguage] = useState<Language>();
-    const [currentTranslation, setCurrentTranslation] = useState<ExerciseTranslation>();
+    const [currentTranslation, setCurrentTranslation] = useState<Translation>();
     const [editMode, setEditMode] = useState<boolean>(false);
 
     const params = useParams<{ baseID: string }>();
@@ -35,7 +35,7 @@ export const ExerciseDetails = () => {
         () => getExerciseBase(exerciseBaseID),
         {
             enabled: languageQuery.isSuccess,
-            onSuccess: (exerciseBase: ExerciseBase) => {
+            onSuccess: (exerciseBase: Exercise) => {
                 const currentUserLanguage = getLanguageByShortName(
                     i18n.language,
                     languageQuery.data!
@@ -102,7 +102,6 @@ export const ExerciseDetails = () => {
                         languages={languageQuery.data}
                         changeLanguage={changeUserLanguage}
                         language={language}
-                        currentTranslation={currentTranslation}
                         setEditMode={setEditMode}
                         editMode={editMode} />
                 </Container>

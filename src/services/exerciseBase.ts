@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ExerciseBase, ExerciseBaseAdapter } from "components/Exercises/models/exerciseBase";
+import { Exercise, ExerciseAdapter } from "components/Exercises/models/exercise";
 import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
 
@@ -9,10 +9,10 @@ export const EXERCISE_BASE_PATH = 'exercise-base';
 /*
  * Process the response from the server and return the exercise bases
  */
-export function processBaseData(data: any): ExerciseBase[] {
-    const adapter = new ExerciseBaseAdapter();
+export function processBaseData(data: any): Exercise[] {
+    const adapter = new ExerciseAdapter();
 
-    const out: ExerciseBase[] = [];
+    const out: Exercise[] = [];
     for (const baseData of data.results) {
         try {
             out.push(adapter.fromJson(baseData));
@@ -27,7 +27,7 @@ export function processBaseData(data: any): ExerciseBase[] {
 /*
  * Fetch all exercise bases
  */
-export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
+export const getExerciseBases = async (): Promise<Exercise[]> => {
     const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 900 } });
     const response = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
@@ -40,8 +40,8 @@ export const getExerciseBases = async (): Promise<ExerciseBase[]> => {
 /*
  * Fetch exercise base with a particular ID
  */
-export const getExerciseBase = async (id: number): Promise<ExerciseBase> => {
-    const adapter = new ExerciseBaseAdapter();
+export const getExerciseBase = async (id: number): Promise<Exercise> => {
+    const adapter = new ExerciseAdapter();
     const url = makeUrl(EXERCISE_INFO_PATH, { id: id });
     const response = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
@@ -54,7 +54,7 @@ export const getExerciseBase = async (id: number): Promise<ExerciseBase> => {
 /*
  * Fetch exercise bases with a given variation ID
  */
-export const getExerciseBasesForVariation = async (id: number | null | undefined): Promise<ExerciseBase[]> => {
+export const getExerciseBasesForVariation = async (id: number | null | undefined): Promise<Exercise[]> => {
     if (!id) {
         return [];
     }
@@ -126,8 +126,13 @@ export const editExerciseBase = async (id: number, data: editBaseProps): Promise
 /*
  * Delete an existing exercise base
  */
-export const deleteExerciseBase = async (id: number): Promise<number> => {
-    const url = makeUrl(EXERCISE_BASE_PATH, { id: id });
+export const deleteExerciseBase = async (id: number, replacementUUID?: string): Promise<number> => {
+    const params = replacementUUID === undefined
+        ? { id: id }
+        // eslint-disable-next-line camelcase
+        : { id: id, query: { replaced_by: replacementUUID } };
+
+    const url = makeUrl(EXERCISE_BASE_PATH, params);
     const response = await axios.delete(
         url,
         { headers: makeHeader() }
