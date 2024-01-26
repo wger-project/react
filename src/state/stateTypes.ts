@@ -1,4 +1,4 @@
-export enum SetWeightState {
+export enum SetNotificationState {
     SET_NOTIFICATION
 }
 

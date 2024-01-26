@@ -1,23 +1,23 @@
-import { WeightState } from 'state';
+import { NotificationState } from 'state';
 import { Notification } from "types";
-import { SetWeightState } from "./stateTypes";
+import { SetNotificationState } from "./stateTypes";
 
 export type WeightAction = {
-    type: SetWeightState,
+    type: SetNotificationState,
     payload: Notification
 }
 
 
 export const setNotification = (notification: Notification): WeightAction => {
-    return { type: SetWeightState.SET_NOTIFICATION, payload: notification };
+    return { type: SetNotificationState.SET_NOTIFICATION, payload: notification };
 };
 
 
-export const weightReducer = (state: WeightState, action: WeightAction): WeightState => {
+export const notificationReducer = (state: NotificationState, action: WeightAction): NotificationState => {
 
     switch (action.type) {
 
-        case SetWeightState.SET_NOTIFICATION:
+        case SetNotificationState.SET_NOTIFICATION:
             return {
                 ...state,
                 notification: action.payload as Notification

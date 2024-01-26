@@ -1,8 +1,9 @@
-import React from 'react';
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { WeightChart } from "./index";
-import { WeightStateProvider } from 'state';
 import { WeightEntry } from "components/BodyWeight/model";
+import React from 'react';
+import { testQueryClient } from "tests/queryClient";
+import { WeightChart } from "./index";
 
 const { ResizeObserver } = window;
 
@@ -33,7 +34,11 @@ describe("Test BodyWeight component", () => {
         ];
 
         // Act
-        render(<WeightStateProvider><WeightChart weights={weightData} /></WeightStateProvider>);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <WeightChart weights={weightData} />
+            </QueryClientProvider>
+        );
 
         // Renders without crashing
     });
@@ -44,7 +49,11 @@ describe("Test BodyWeight component", () => {
         const weightData: WeightEntry[] = [];
 
         // Act
-        render(<WeightStateProvider><WeightChart weights={weightData} /></WeightStateProvider>);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <WeightChart weights={weightData} />
+            </QueryClientProvider>
+        );
 
         // Assert
         // No weights are found in the document

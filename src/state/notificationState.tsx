@@ -1,19 +1,16 @@
 import React, { createContext, useContext, useReducer } from "react";
-import { WeightAction, weightReducer } from "state/weightReducer";
-import { WeightEntry } from "components/BodyWeight/model";
+import { notificationReducer, WeightAction } from "state/notificationReducer";
 import { Notification } from "types";
 
-export type WeightState = {
-    weights: WeightEntry[],
+export type NotificationState = {
     notification: Notification
 };
 
-const initialState: WeightState = {
-    weights: [],
+const initialState: NotificationState = {
     notification: { notify: false, message: "", severity: undefined, title: "", type: undefined }
 };
 
-export const WeightStateContext = createContext<[WeightState, React.Dispatch<WeightAction>]>([
+export const WeightStateContext = createContext<[NotificationState, React.Dispatch<WeightAction>]>([
     initialState,
     () => initialState
 ]);
@@ -22,8 +19,8 @@ type StateProp = {
     children: React.ReactElement
 };
 
-export const WeightStateProvider: React.FC<StateProp> = ({ children }: StateProp) => {
-    const [state, dispatch] = useReducer(weightReducer, initialState);
+export const NotificationStateProvider: React.FC<StateProp> = ({ children }: StateProp) => {
+    const [state, dispatch] = useReducer(notificationReducer, initialState);
 
     return (
         <WeightStateContext.Provider value={[state, dispatch]}>
