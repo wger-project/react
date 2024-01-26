@@ -27,7 +27,7 @@ import { EmptyCard } from "components/Dashboard/EmptyCard";
 import { Meal } from "components/Nutrition/models/meal";
 import { MealItem } from "components/Nutrition/models/mealItem";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { useFetchLastNutritionalPlanIdQuery, useFetchNutritionalPlanDateQuery } from "components/Nutrition/queries";
+import { useFetchLastNutritionalPlanQuery } from "components/Nutrition/queries";
 import { useAddDiaryEntriesQuery } from "components/Nutrition/queries/diary";
 import { NutritionalValuesDashboardChart } from "components/Nutrition/widgets/charts/NutritionalValuesDashboardChart";
 import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
@@ -35,7 +35,7 @@ import { PlanForm } from "components/Nutrition/widgets/forms/PlanForm";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
-import { dateTimeToLocaleHHMM, dateToYYYYMMDD } from "utils/date";
+import { dateTimeToLocaleHHMM } from "utils/date";
 import { numberGramLocale } from "utils/numbers";
 import { makeLink, WgerLink } from "utils/url";
 
@@ -43,14 +43,13 @@ import { makeLink, WgerLink } from "utils/url";
 export const NutritionCard = () => {
 
     const [t] = useTranslation();
-    const lastPlanQuery = useFetchLastNutritionalPlanIdQuery();
-    const planQuery = useFetchNutritionalPlanDateQuery(lastPlanQuery.data!, dateToYYYYMMDD(new Date()), lastPlanQuery.isSuccess);
+    const planQuery = useFetchLastNutritionalPlanQuery();
 
     return <>
         {planQuery.isLoading
             ? <LoadingPlaceholder />
             : <>
-                {lastPlanQuery.data !== null
+                {planQuery.data !== null
                     ? <NutritionCardContent plan={planQuery.data!} />
                     : <EmptyCard
                         title={t('nutritionalPlan')}

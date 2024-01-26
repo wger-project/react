@@ -5,7 +5,7 @@ import {
     deleteNutritionalPlan,
     editNutritionalPlan,
     EditNutritionalPlanParams,
-    getLastNutritionalPlanId,
+    getLastNutritionalPlan,
     getNutritionalPlanFull,
     getNutritionalPlansSparse
 } from "services/nutritionalPlan";
@@ -16,10 +16,10 @@ export function useFetchNutritionalPlansQuery() {
 }
 
 
-export function useFetchLastNutritionalPlanIdQuery() {
+export function useFetchLastNutritionalPlanQuery() {
     return useQuery(
         [QueryKey.NUTRITIONAL_PLAN, 'last'],
-        () => getLastNutritionalPlanId()
+        () => getLastNutritionalPlan()
     );
 }
 

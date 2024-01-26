@@ -125,7 +125,6 @@ export const getWorkoutRoutines = async (): Promise<WorkoutRoutine[]> => {
  * Note that at the moment this is simply the newest one
  */
 export const getActiveWorkoutRoutine = async (): Promise<null | WorkoutRoutine> => {
-// export const getActiveWorkoutRoutine = async (id: number): Promise<WorkoutRoutine> => {
     const url = makeUrl(WORKOUT_API_PATH, { query: { 'limit': '1' } });
 
     const response = await axios.get<ResponseType<WorkoutRoutine>>(
