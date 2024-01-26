@@ -1,17 +1,19 @@
-import { Button, Card, CardActions, CardContent, CardHeader, } from '@mui/material';
-import React from 'react';
-import { Link } from "react-router-dom";
-import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
+import AddIcon from "@mui/icons-material/Add";
+import { Button, Card, CardActions, CardContent, CardHeader, IconButton, } from '@mui/material';
+import Tooltip from "@mui/material/Tooltip";
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
+import { OverviewDashboard } from "components/BodyWeight/OverviewDashboard/OverviewDashboard";
 import { WgerModal } from "components/Core/Modals/WgerModal";
+import React from 'react';
 import { useTranslation } from "react-i18next";
+import { makeLink, WgerLink } from "utils/url";
 
 export const WeightCard = () => {
 
     const [openModal, setOpenModal] = React.useState(false);
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
 
     return (
         <div>
@@ -21,9 +23,19 @@ export const WeightCard = () => {
                     <p>{t('currentWeight')}</p>
                     <OverviewDashboard />
                 </CardContent>
-                <CardActions>
-                    <Button size="small" onClick={handleOpenModal}>{t('addEntry')}</Button>
-                    <Button size="small"><Link to="weight/overview">Weight Overview</Link></Button>
+                <CardActions sx={{
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                }}>
+                    <Button size="small"
+                            href={makeLink(WgerLink.WEIGHT_OVERVIEW, i18n.language)}>
+                        {t('seeDetails')}
+                    </Button>
+                    <Tooltip title={t('addEntry')}>
+                        <IconButton onClick={handleOpenModal}>
+                            <AddIcon />
+                        </IconButton>
+                    </Tooltip>
                 </CardActions>
             </Card>
             <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
