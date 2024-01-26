@@ -1,5 +1,4 @@
 export {
-    useFetchLastNutritionalPlanIdQuery,
     useFetchNutritionalPlansQuery,
     useFetchNutritionalPlanDateQuery,
     useEditNutritionalPlanQuery,
