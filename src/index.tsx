@@ -12,7 +12,6 @@ import React, { Suspense } from 'react';
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router } from 'react-router-dom';
 import { WgerRoutes } from "routes";
-import { WeightStateProvider } from 'state';
 import { makeTheme, theme } from 'theme';
 
 import App from './App';
@@ -91,14 +90,12 @@ if (rootElement) {
         <React.StrictMode>
             <Suspense fallback={<LoadingWidget />}>
                 <Router>
-                    <WeightStateProvider>
-                        <ThemeProvider theme={theme}>
-                            <QueryClientProvider client={queryClient}>
-                                <App />
-                                <ReactQueryDevtools />
-                            </QueryClientProvider>
-                        </ThemeProvider>
-                    </WeightStateProvider>
+                    <ThemeProvider theme={theme}>
+                        <QueryClientProvider client={queryClient}>
+                            <App />
+                            <ReactQueryDevtools />
+                        </QueryClientProvider>
+                    </ThemeProvider>
                 </Router>
             </Suspense>
         </React.StrictMode>
@@ -113,11 +110,11 @@ if (weightOverview) {
     const root = createRoot(weightOverview);
     root.render(
         <Suspense fallback={<LoadingWidget />}>
-            <WeightStateProvider>
-                <ThemeProvider theme={theme}>
+            <ThemeProvider theme={theme}>
+                <QueryClientProvider client={queryClient}>
                     <WeightOverview />
-                </ThemeProvider>
-            </WeightStateProvider>
+                </QueryClientProvider>
+            </ThemeProvider>
         </Suspense>
     );
 }
@@ -127,11 +124,11 @@ if (weightDashboard) {
     const root = createRoot(weightDashboard);
     root.render(
         <Suspense fallback={<LoadingWidget />}>
-            <WeightStateProvider>
-                <ThemeProvider theme={theme}>
+            <ThemeProvider theme={theme}>
+                <QueryClientProvider client={queryClient}>
                     <OverviewDashboard />
-                </ThemeProvider>
-            </WeightStateProvider>
+                </QueryClientProvider>
+            </ThemeProvider>
         </Suspense>
     );
 }

@@ -1,10 +1,10 @@
 export {
-    weightReducer,
+    notificationReducer,
     setNotification
-} from 'state/weightReducer';
-export { WeightStateProvider, useWeightStateValue } from 'state/weightState';
-export type { WeightState } from 'state/weightState';
-export { SetWeightState, SetExerciseState } from 'state/stateTypes';
+} from 'state/notificationReducer';
+export { NotificationStateProvider, useWeightStateValue } from 'state/notificationState';
+export type { NotificationState } from 'state/notificationState';
+export { SetNotificationState, SetExerciseState } from 'state/stateTypes';
 
 
 export type { ExerciseState } from 'state/exerciseState';
