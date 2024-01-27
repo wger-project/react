@@ -55,7 +55,7 @@
         "identicalExercise": "Vermeide doppelte Übungen",
         "cacheWarning": "Aufgrund von Caching kann es einige Zeit dauern, bis Änderungen in der ganzen Anwendung sichtbar sind.",
         "replacements": "Ersätze",
-        "replacementsInfoText": "Optional können Sie auch eine Übung auswählen, die diese ersetzen soll (z. B. weil sie zweimal eingereicht wurde oder ähnliches). Dadurch wird die Übung in Routinen sowie Trainingsprotokollen ersetzt, anstatt sie einfach zu löschen. Diese Änderungen werden auch auf alle Instanzen übertragen, die die Übungen von dieser übernehmen.",
+        "replacementsInfoText": "Optional können Sie auch eine Übung auswählen, die diese ersetzen soll (z. B. weil sie zweimal eingereicht wurde oder ähnliches). Dadurch wird die Übung in Routinen sowie Trainingsprotokollen ersetzt, anstatt sie einfach zu löschen. Diese Änderungen werden auch auf alle Instanzen übertragen, die Übungen von dieser übernehmen.",
         "replacementsSearch": "Suche nach Übungen oder kopiere eine Bekannte ID in das Feld und drücke den \"Laden\" Button.",
         "noReplacementSelected": " Keine Übung zum ersätzen ausgewählt",
         "deleteExerciseReplace": "Löschen und ersetzen"
@@ -99,7 +99,8 @@
         "kg": "kg",
         "kilometers_per_hour": "Kilometer pro Stunde",
         "body_weight": "Körpergewicht",
-        "miles_per_hour": "Meilen pro Stunde"
+        "miles_per_hour": "Meilen pro Stunde",
+        "max_reps": "Max. Wdh."
     },
     "submit": "Abschicken",
     "weight": "Gewicht",
@@ -114,11 +115,19 @@
         "supportedImageFormats": "Es werden nur JPEG-, PNG- und WEBP-Dateien unter 20Mb unterstützt",
         "valueTooShort": "Der Wert ist zu gering",
         "valueTooLong": "Der Wert ist zu groß",
-        "fieldRequired": "Pflichtfeld"
+        "fieldRequired": "Pflichtfeld",
+        "maxLength": "Bitte gebe weniger als {{chars}} Zeichen ein",
+        "minLength": "Bitte gebe mehr als {{chars}} Zeichen ein",
+        "minValue": "Der Wert für dieses Feld muss höher sein als {{value}}",
+        "maxValue": "Der Wert für dieses Feld muss niedriger sein als {{value}}"
     },
     "routines": {
         "rir": "RiR",
-        "addDay": "Trainingstag hinzufügen"
+        "addDay": "Trainingstag hinzufügen",
+        "routine": "Routine",
+        "routines": "Routinen",
+        "addWeightLog": "Trainingslog hinzufügen",
+        "logsFilterNote": "Beachte, dass nur Einträge mit einer Gewichtseinheit (kg oder lb) und Wiederholungen gezeichnet werden, andere Kombinationen wie Zeit oder bis zum Ausfall werden hier ignoriert"
     },
     "name": "Name",
     "cancel": "Abbrechen",
@@ -128,7 +137,8 @@
     "success": "Erfolg!",
     "measurements": {
         "deleteInfo": "Dies wird die Kategorie sowie alle seine Einträge löschen",
-        "unitFormHelpText": "Die Einheit, in der die Kategorie gemessen wird, wie cm oder %"
+        "unitFormHelpText": "Die Einheit, in der die Kategorie gemessen wird, wie cm oder %",
+        "measurements": "Messungen"
     },
     "timeOfDay": "Tageszeit",
     "notes": "Notizen",
@@ -178,7 +188,16 @@
         "protein": "Eiweiß",
         "ofWhichSaturated": "davon gesättigt",
         "pseudoMealTitle": "Andere Protokolle",
-        "valueRemaining": "verbleibend"
+        "valueRemaining": "verbleibend",
+        "copyPlan": "Mache eine Kopie dieses Plans",
+        "macronutrient": "Makronährstoff",
+        "loggedToday": "Heute protokolliert",
+        "addMeal": "Mahlzeit hinzufügen",
+        "useGoalsHelpTextLong": "So kannst du allgemeine Ziele für Energie, Eiweiß, Kohlenhydrate oder Fett für den Plan festlegen. Beachte, dass diese Werte Vorrang haben, wenn du einen detaillierten Mahlzeitenplan erstellst.",
+        "addMealItem": "Zutat zu Mahlzeit hinzufügen",
+        "searchIngredientName": "Suche nach Zutatenname",
+        "saturatedFat": "Gesättigte Fette",
+        "valueTooMany": "zu viele"
     },
     "downloadAsPdf": "Als PDF runterladen",
     "total": "Summe"
