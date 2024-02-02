@@ -17,17 +17,16 @@ import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { Note } from "components/Exercises/models/note";
-import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
 import { useProfileQuery } from "components/User/queries/profile";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { addExercise, addExerciseTranslation, postAlias, postExerciseImage } from "services";
+import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
+import { getTranslationKey } from "utils/strings";
 import { addNote } from "services/note";
-import { addVariation } from "services/variation";
+import { addVariation } from "services/variation"
 import { useExerciseStateValue } from "state";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
-import { getTranslationKey } from "utils/strings";
 import { makeLink, WgerLink } from "utils/url";
 
 export const Step6Overview = ({ onBack }: StepProps) => {
@@ -84,7 +83,11 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
         // Post the images
         for (const image of state.images) {
-            await postExerciseImage(exerciseId, profileQuery.data!.username, image.file);
+            await postExerciseImage({
+                exerciseId: exerciseId,
+                image: image.file,
+                imageData: image,
+            });
         }
 
         // Post the notes
@@ -95,7 +98,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
         // Create the translation if needed
         if (state.languageId !== null) {
-            const exerciseI18n = await addExerciseTranslation(
+            const exerciseI18n = await addTranslation(
                 exerciseId,
                 state.languageId,
                 state.nameI18n,

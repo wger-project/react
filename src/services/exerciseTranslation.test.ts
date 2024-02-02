@@ -29,7 +29,7 @@ describe("Exercise translation service API tests", () => {
         axios.post.mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
-        const result = await addExerciseTranslation(
+        const result = await addTranslation(
             100,
             2,
             "Test exercise",

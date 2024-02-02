@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Container, Stack, Step, StepContent, StepLabel, Stepper, Typography, } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { Step1Basics } from "components/Exercises/Add/Step1Basics";
 import { Step2Variations } from "components/Exercises/Add/Step2Variations";
 import { Step3Description } from "components/Exercises/Add/Step3Description";
 import { Step4Translations } from "components/Exercises/Add/Step4Translations";
@@ -25,7 +24,7 @@ export const AddExerciseStepper = () => {
     const handleBack = () => {
         setActiveStep(prevActiveStep => prevActiveStep - 1);
     };
-    
+
     return (
         <exerciseState.ExerciseStateProvider>
             <Container maxWidth="md">
@@ -39,8 +38,9 @@ export const AddExerciseStepper = () => {
                         <Step key={1}>
                             <StepLabel>{t("exercises.step1HeaderBasics")}</StepLabel>
                             <StepContent>
-                                <Step1Basics
+                                <Step5Images
                                     onContinue={handleNext}
+                                    onBack={handleBack}
                                 />
                             </StepContent>
                         </Step>

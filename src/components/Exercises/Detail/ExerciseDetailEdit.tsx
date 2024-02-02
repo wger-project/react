@@ -25,7 +25,7 @@ import { Form, Formik } from "formik";
 import { WgerPermissions } from "permissions";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { addExerciseTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
+import { addTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
 import * as yup from "yup";
 
 export interface ViewProps {
@@ -82,7 +82,7 @@ export const ExerciseDetailEdit = ({
                         values.name,
                         values.description,
                     )
-                    : await addExerciseTranslation(
+                    : await addTranslation(
                         exercise.id!,
                         language.id,
                         values.name,

@@ -141,5 +141,11 @@ export class ExerciseAdapter implements Adapter<Exercise> {
 export type ImageFormData = {
     url: string;
     file: File;
+    author: string;
+    authorUrl: string;
+    title: string,
+    objectUrl: string,
+    derivativeSourceUrl: string;
+    style: string;
 };
 

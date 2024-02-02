@@ -16,7 +16,7 @@ export {
     processExerciseApiData,
 } from './exercise';
 export {
-    addExerciseTranslation,
+    addTranslation,
     editExerciseTranslation,
     getExerciseTranslations,
     searchExerciseTranslations,

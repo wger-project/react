@@ -43,7 +43,7 @@ export const searchExerciseTranslations = async (name: string, languageCode: str
 /*
  * Create a new exercise translation
  */
-export const addExerciseTranslation = async (
+export const addTranslation = async (
     exerciseId: number,
     languageId: number,
     name: string,
