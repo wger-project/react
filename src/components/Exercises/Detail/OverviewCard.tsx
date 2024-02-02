@@ -1,6 +1,6 @@
 import { Card, CardActionArea, CardContent, CardMedia, Chip, Typography, } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";
+import { ExerciseImagePlaceholder } from "components/Exercises/Detail/ExerciseImagePlaceholder";
 import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
 import React from "react";
@@ -36,7 +36,7 @@ export const OverviewCard = ({ exercise, language }: OverviewCardProps) => {
                         sx={{ height: 200 }}
                         alt="" />
                     : <CardMedia>
-                        <ExerciseImageAvatar image={exercise.mainImage!} />
+                        <ExerciseImagePlaceholder />
                     </CardMedia>}
                 <CardContent>
                     <Tooltip title={translation.name} placement="top" arrow>
