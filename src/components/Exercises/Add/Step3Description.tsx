@@ -1,16 +1,32 @@
-import React from "react";
-import { Box, Button, Grid, Stack } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import { Form, Formik } from "formik";
-import * as yup from "yup";
+import { Box, Button, Grid, Stack, TextField } from "@mui/material";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
+import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
+import { ExerciseNotes } from "components/Exercises/forms/ExerciseNotes";
+import { descriptionValidator, noteValidator } from "components/Exercises/forms/yupValidators";
+import { Form, Formik, useField } from "formik";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { useExerciseStateValue } from "state";
 import { setDescriptionEn, setNotesEn } from "state/exerciseReducer";
-import { descriptionValidator, noteValidator } from "components/Exercises/forms/yupValidators";
-import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
-import { ExerciseNotes } from "components/Exercises/forms/ExerciseNotes";
-import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
+import * as yup from "yup";
 
+
+export function ExerciseTempDescription(props: { fieldName: string }) {
+    const [t] = useTranslation();
+    const [field, meta] = useField(props.fieldName);
+
+    return <TextField
+        fullWidth
+        id={props.fieldName}
+        label={t("description")}
+        variant="standard"
+        error={meta.touched && Boolean(meta.error)}
+        helperText={meta.touched && meta.error}
+        multiline
+        rows={4}
+        {...field}
+    />;
+}
 
 export const Step3Description = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
@@ -36,7 +52,8 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
         >
             <Form>
                 <Stack>
-                    <ExerciseDescription fieldName={"description"} />
+                    <ExerciseTempDescription fieldName={'description'} />
+                    {/*<ExerciseDescription fieldName={"description"} /> */}
 
                     <PaddingBox />
                     <ExerciseNotes fieldName={'notes'} />

@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
     Box,
     Button,
@@ -12,13 +11,23 @@ import {
     Stack,
     Switch
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import { Form, Formik } from "formik";
-import * as yup from "yup";
-import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
+import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
+import { ExerciseTempDescription } from "components/Exercises/Add/Step3Description";
+import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
+import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
+import { ExerciseName } from "components/Exercises/forms/ExerciseName";
+import { ExerciseNotes } from "components/Exercises/forms/ExerciseNotes";
+import {
+    alternativeNameValidator,
+    descriptionValidator,
+    nameValidator,
+    noteValidator
+} from "components/Exercises/forms/yupValidators";
 import { useLanguageQuery } from "components/Exercises/queries";
-import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { Form, Formik } from "formik";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useExerciseStateValue } from "state";
 import {
     setAlternativeNamesI18n,
@@ -27,17 +36,8 @@ import {
     setNameI18n,
     setNotesI18n
 } from "state/exerciseReducer";
-import { ExerciseName } from "components/Exercises/forms/ExerciseName";
-import {
-    alternativeNameValidator,
-    descriptionValidator,
-    nameValidator,
-    noteValidator
-} from "components/Exercises/forms/yupValidators";
-import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
-import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
-import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
-import { ExerciseNotes } from "components/Exercises/forms/ExerciseNotes";
+import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import * as yup from "yup";
 
 export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
@@ -123,7 +123,8 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
 
                         <ExerciseAliases fieldName={'alternativeNames'} />
 
-                        <ExerciseDescription fieldName={'description'} />
+                        <ExerciseTempDescription fieldName={'description'} />
+                        {/*<ExerciseDescription fieldName={"description"} /> */}
 
                         <PaddingBox />
                         <ExerciseNotes fieldName={'notes'} />
