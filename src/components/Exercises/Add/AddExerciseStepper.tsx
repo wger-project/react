@@ -1,11 +1,12 @@
-import React from "react";
 import { Box, Container, Stack, Step, StepContent, StepLabel, Stepper, Typography, } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { Step1Basics } from "components/Exercises/Add/Step1Basics";
 import { Step2Variations } from "components/Exercises/Add/Step2Variations";
 import { Step3Description } from "components/Exercises/Add/Step3Description";
 import { Step4Translations } from "components/Exercises/Add/Step4Translations";
 import { Step5Images } from "components/Exercises/Add/Step5Images";
 import { Step6Overview } from "components/Exercises/Add/Step6Overview";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import * as exerciseState from "state";
 
 export type StepProps = {
@@ -38,7 +39,7 @@ export const AddExerciseStepper = () => {
                         <Step key={1}>
                             <StepLabel>{t("exercises.step1HeaderBasics")}</StepLabel>
                             <StepContent>
-                                <Step5Images
+                                <Step1Basics
                                     onContinue={handleNext}
                                     onBack={handleBack}
                                 />

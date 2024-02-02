@@ -12,11 +12,11 @@
   "days": "Days",
   "licenses": {
     "authors": "Author(s)",
-    "authorProfile": "Link to author profile, if available",
+    "authorProfile": "Link to author website or profile, if available",
     "derivativeSourceUrl": "Link to the original source, if this is a derivative work",
     "derivativeSourceUrlHelper": "Note that a derivative work is one which is not only based on a previous work, but which also contains sufficient new, creative content to entitle it to its own copyright.",
-    "originalObjectUrl": "Link to the original object, if available",
-    "originalTitle": "Original name of this object"
+    "originalObjectUrl": "Link to the source website, if available",
+    "originalTitle": "Title"
   },
   "loading": "Loading...",
   "nutritionalPlan": "Nutritional plan",

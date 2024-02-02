@@ -33,9 +33,20 @@ describe("Image service API tests", () => {
 
         // Act
         const result = await postExerciseImage(
-            101,
-            'Dr Merkel',
-            new File([], "test.jpg")
+            {
+                exerciseId: 101,
+                image: new File([], "test.jpg"),
+                imageData: {
+                    url: "http://example.com",
+                    file: new File([], "test.jpg"),
+                    author: "Dr No",
+                    authorUrl: "http://dr.no",
+                    title: "top title",
+                    objectUrl: "",
+                    derivativeSourceUrl: "",
+                    style: "3d",
+                }
+            }
         );
 
         // Assert

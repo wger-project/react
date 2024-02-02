@@ -1,7 +1,9 @@
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import InfoIcon from '@mui/icons-material/Info';
 import {
+    Alert,
     Box,
     Button,
     Grid,
@@ -157,11 +159,22 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                                             <LicenseAuthorUrl fieldName={'authorUrl'} />
                                             <LicenseDerivativeSourceUrl fieldName={'derivativeSourceUrl'} />
                                             <ImageStyleToggle fieldName={'imageStyle'} />
+                                            <Alert icon={<InfoIcon fontSize="inherit" />} severity="info">
+                                                By submitting this image, you agree to release it under the <a
+                                                href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank"
+                                                rel="noreferrer">CC
+                                                BY-SA 4.0</a> license. The image must be either your own work or the
+                                                author must have released in under
+                                                a license compatible with CC BY-SA 4.0.
+                                            </Alert>
                                         </Stack>
-                                        <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
+                                        <Stack direction="row" justifyContent="end"
+                                               sx={{ mt: 2 }}>
+
                                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                                                 {t('add')}
                                             </Button>
+
                                         </Stack>
                                     </Form>);
                                 }}
