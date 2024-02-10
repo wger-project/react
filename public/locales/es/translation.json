@@ -59,7 +59,8 @@
         "imageStyle3D": "3D",
         "imageStyleOther": "Otro",
         "imageStyleLine": "Línea",
-        "imageDetails": "Detalles de la imagen"
+        "imageDetails": "Detalles de la imagen",
+        "imageStyleLowPoly": "Bajo poligonaje (Low-Poly)"
     },
     "loading": "Cargando...",
     "images": "Imágenes",
