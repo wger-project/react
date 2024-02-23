@@ -22,15 +22,19 @@ export const postExerciseImage = async (
 
     const response = await axios.post(
         url,
-        // eslint-disable-next-line camelcase
         {
+            // eslint-disable-next-line camelcase
             exercise_base: data.exerciseId,
             image: data.image,
-
+            // eslint-disable-next-line camelcase
             license_title: data.imageData.title,
+            // eslint-disable-next-line camelcase
             license_object_url: data.imageData.objectUrl,
+            // eslint-disable-next-line camelcase
             license_author: data.imageData.author,
+            // eslint-disable-next-line camelcase
             license_author_url: data.imageData.authorUrl,
+            // eslint-disable-next-line camelcase
             license_derivative_source_url: data.imageData.derivativeSourceUrl,
             style: data.imageData.style,
         },
