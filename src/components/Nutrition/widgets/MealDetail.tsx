@@ -1,6 +1,4 @@
 import { Add } from "@mui/icons-material";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import PhotoIcon from "@mui/icons-material/Photo";
 import {
@@ -93,6 +91,8 @@ export const MealDetail = (props: { meal: Meal, planId: number, onlyLogging: boo
                     meal={props.meal}
                     planId={props.planId}
                     onlyLogging={props.onlyLogging}
+                    isExpanded={expandViewStats}
+                    handleExpanded={handleToggleExpandStats}
                 />}
             title={props.meal.name}
             subheader={props.meal.timeHHMMLocale}
@@ -137,10 +137,6 @@ export const MealDetail = (props: { meal: Meal, planId: number, onlyLogging: boo
 
         </CardContent>
         <CardActions>
-            <IconButton onClick={handleToggleExpandStats}>
-                {expandViewStats ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </IconButton>
-
             {!props.onlyLogging && <Tooltip title={t('nutrition.addMealItem')}>
                 <IconButton onClick={handleToggleExpandItemForm}>
                     <Add />
