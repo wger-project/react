@@ -204,5 +204,11 @@
     "alsoSearchEnglish": "Também procure por nomes em Inglês",
     "timeOfDay": "Hora do dia",
     "nothingHereYetAction": "Pressione o botão de ação para começar",
-    "copyToClipboard": "Copiar para a área de transferência"
+    "copyToClipboard": "Copiar para a área de transferência",
+    "licenses": {
+        "authorProfile": "Link para o perfil ou website do autor, caso exista",
+        "authors": "Autor(a)",
+        "derivativeSourceUrl": "Link para a fonte origial, caso for derivado",
+        "originalTitle": "Titulo"
+    }
 }
