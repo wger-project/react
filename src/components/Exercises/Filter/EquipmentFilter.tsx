@@ -1,18 +1,29 @@
-import React from 'react';
-import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Switch, Typography } from "@mui/material";
+import React, { useContext } from 'react';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Paper,
+    Switch,
+    Typography
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Equipment } from "components/Exercises/models/equipment";
 import { getTranslationKey } from "utils/strings";
+import { useEquipmentQuery } from '../queries';
+import { ExerciseFiltersContext } from './ExerciseFiltersContext';
+import { LoadingPlaceholder } from '../../Core/LoadingWidget/LoadingWidget';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+const EquipmentFilterList = () => {
 
-type EquipmentFilterProps = {
-    equipment: Equipment[];
-    selectedEquipment: Equipment[];
-    setSelectedEquipment: (equipment: Equipment[]) => void;
-}
-
-export const EquipmentFilter = ({ equipment, selectedEquipment, setSelectedEquipment }: EquipmentFilterProps) => {
-
+    const { data: equipment, isLoading } = useEquipmentQuery();
+    const { selectedEquipment, setSelectedEquipment } = useContext(ExerciseFiltersContext);
     const [t] = useTranslation();
 
     const handleToggle = (value: Equipment) => () => {
@@ -28,38 +39,65 @@ export const EquipmentFilter = ({ equipment, selectedEquipment, setSelectedEquip
         setSelectedEquipment(newChecked);
     };
 
+    if (isLoading) {
+        return <LoadingPlaceholder/>;
+    }
+
+    return (
+        <List sx={{ maxHeight: "500px", overflowY: "auto" }}>
+            {equipment!.map((equipment) => {
+                const labelId = `checkbox-list-label-${equipment.id}`;
+
+                return (
+                    <ListItem
+                        key={equipment.id}
+                        disablePadding
+                    >
+                        <ListItemButton role={undefined} onClick={handleToggle(equipment)} dense>
+                            <ListItemIcon>
+                                <Switch
+                                    key={`muscle-${equipment.id}`}
+                                    edge="start"
+                                    checked={selectedEquipment.indexOf(equipment) !== -1}
+                                    tabIndex={-1}
+                                    disableRipple
+                                    inputProps={{ 'aria-labelledby': labelId }}
+                                />
+                            </ListItemIcon>
+                            <ListItemText id={labelId} primary={t(getTranslationKey(equipment.name))}/>
+                        </ListItemButton>
+                    </ListItem>
+                );
+            })}
+        </List>
+    );
+};
+
+export const EquipmentFilterDropdown = () => {
+    const [t] = useTranslation();
+
+    return (
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                {t('exercises.equipment')}
+            </AccordionSummary>
+            <AccordionDetails>
+                <EquipmentFilterList/>
+            </AccordionDetails>
+        </Accordion>
+    );
+};
+
+export const EquipmentFilter = () => {
+    const [t] = useTranslation();
+
     return (
         <div data-testid={"equipment"}>
             <Paper sx={{ mt: 2 }}>
                 <Typography gutterBottom variant="h6" m={2}>
                     {t('exercises.equipment')}
                 </Typography>
-                <List sx={{ maxHeight: "500px", overflowY: "auto" }}>
-                    {equipment.map((equipment) => {
-                        const labelId = `checkbox-list-label-${equipment.id}`;
-
-                        return (
-                            <ListItem
-                                key={equipment.id}
-                                disablePadding
-                            >
-                                <ListItemButton role={undefined} onClick={handleToggle(equipment)} dense>
-                                    <ListItemIcon>
-                                        <Switch
-                                            key={`muscle-${equipment.id}`}
-                                            edge="start"
-                                            checked={selectedEquipment.indexOf(equipment) !== -1}
-                                            tabIndex={-1}
-                                            disableRipple
-                                            inputProps={{ 'aria-labelledby': labelId }}
-                                        />
-                                    </ListItemIcon>
-                                    <ListItemText id={labelId} primary={t(getTranslationKey(equipment.name))} />
-                                </ListItemButton>
-                            </ListItem>
-                        );
-                    })}
-                </List>
+                <EquipmentFilterList/>
             </Paper>
         </div>
     );
