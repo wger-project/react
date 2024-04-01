@@ -54,13 +54,18 @@ export const getMeasurementCategory = async (id: number): Promise<MeasurementCat
     );
 
     const category = new MeasurementCategoryAdapter().fromJson(receivedCategories);
-
-    const { data: receivedEntries } = await axios.get<ResponseType<ApiMeasurementEntryType>>(
-        makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: id.toString() } }),
-        { headers: makeHeader(), }
-    );
     const adapter = new MeasurementEntryAdapter();
-    category.entries = receivedEntries.results.map(l => adapter.fromJson(l));
+    const measurements: MeasurementEntry[] = [];
+    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: category.id } });
+
+    // Collect all pages of entries
+    for await (const page of fetchPaginated(url, makeHeader())) {
+        for (const entries of page) {
+            measurements.push(adapter.fromJson(entries));
+        }
+    }
+
+    category.entries = measurements;
 
     return category;
 };
