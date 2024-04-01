@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     IconButton,
     List,
     ListItem,
@@ -16,15 +19,15 @@ import { Muscle } from "components/Exercises/models/muscle";
 import { getTranslationKey } from "utils/strings";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { LightTooltip } from "components/Core/Tooltips/LightToolTip";
+import { useMusclesQuery } from '../queries';
+import { ExerciseFiltersContext } from './ExerciseFiltersContext';
+import { LoadingPlaceholder } from '../../Core/LoadingWidget/LoadingWidget';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-type MuscleFilterProps = {
-    muscles: Muscle[];
-    selectedMuscles: Muscle[];
-    setSelectedMuscles: (muscles: Muscle[]) => void;
-}
+const MuscleFilterList = () => {
 
-export const MuscleFilter = ({ muscles, selectedMuscles, setSelectedMuscles }: MuscleFilterProps) => {
-
+    const { data: muscles, isLoading } = useMusclesQuery();
+    const { selectedMuscles, setSelectedMuscles } = useContext(ExerciseFiltersContext);
     const [t] = useTranslation();
 
     const handleToggle = (value: Muscle) => () => {
@@ -40,59 +43,88 @@ export const MuscleFilter = ({ muscles, selectedMuscles, setSelectedMuscles }: M
         setSelectedMuscles(newChecked);
     };
 
+    if (isLoading) {
+        return <LoadingPlaceholder />;
+    }
+
+    return (
+        <List sx={{ maxHeight: "500px", overflowY: "auto" }}>
+            {muscles!.map((m) => {
+                const labelId = `checkbox-list-label-${m.id}`;
+
+                return (
+                    <ListItem
+                        key={m.id}
+                        disablePadding
+                        secondaryAction={
+                            <LightTooltip
+                                title={
+                                    <MuscleOverview
+                                        primaryMuscles={[m]}
+                                        secondaryMuscles={[]}
+                                        isFront={m.isFront}
+                                    />
+                                }
+                                placement="right"
+                                arrow>
+                                <IconButton edge="end" aria-label="comments">
+                                    <InfoOutlinedIcon />
+                                </IconButton>
+                            </LightTooltip>
+                        }
+                    >
+                        <ListItemButton role={undefined} onClick={handleToggle(m)} dense>
+                            <ListItemIcon>
+                                <Switch
+                                    key={`muscle-${m.id}`}
+                                    edge="start"
+                                    checked={selectedMuscles.indexOf(m) !== -1}
+                                    tabIndex={-1}
+                                    disableRipple
+                                    inputProps={{ 'aria-labelledby': labelId }}
+                                />
+                            </ListItemIcon>
+
+                            <ListItemText
+                                id={labelId}
+                                primary={m.name}
+                                secondary={m.nameEn !== '' ? t(getTranslationKey(m.nameEn)) : ''} />
+
+                        </ListItemButton>
+                    </ListItem>
+                );
+            })}
+        </List>
+    );
+};
+
+export const MuscleFilterDropdown = () => {
+
+    const [t] = useTranslation();
+
+    return (
+        <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                {t('exercises.muscles')}
+            </AccordionSummary>
+            <AccordionDetails>
+                <MuscleFilterList />
+            </AccordionDetails>
+        </Accordion>
+    );
+};
+
+export const MuscleFilter = () => {
+
+    const [t] = useTranslation();
+
     return (
         <div data-testid={"muscles"}>
             <Paper sx={{ mt: 2 }}>
                 <Typography gutterBottom variant="h6" m={2}>
                     {t('exercises.muscles')}
                 </Typography>
-                <List sx={{ maxHeight: "500px", overflowY: "auto" }}>
-                    {muscles.map((m) => {
-                        const labelId = `checkbox-list-label-${m.id}`;
-
-                        return (
-                            <ListItem
-                                key={m.id}
-                                disablePadding
-                                secondaryAction={
-                                    <LightTooltip
-                                        title={
-                                            <MuscleOverview
-                                                primaryMuscles={[m]}
-                                                secondaryMuscles={[]}
-                                                isFront={m.isFront}
-                                            />
-                                        }
-                                        placement="right"
-                                        arrow>
-                                        <IconButton edge="end" aria-label="comments">
-                                            <InfoOutlinedIcon />
-                                        </IconButton>
-                                    </LightTooltip>
-                                }
-                            >
-                                <ListItemButton role={undefined} onClick={handleToggle(m)} dense>
-                                    <ListItemIcon>
-                                        <Switch
-                                            key={`muscle-${m.id}`}
-                                            edge="start"
-                                            checked={selectedMuscles.indexOf(m) !== -1}
-                                            tabIndex={-1}
-                                            disableRipple
-                                            inputProps={{ 'aria-labelledby': labelId }}
-                                        />
-                                    </ListItemIcon>
-
-                                    <ListItemText
-                                        id={labelId}
-                                        primary={m.name}
-                                        secondary={m.nameEn !== '' ? t(getTranslationKey(m.nameEn)) : ''} />
-
-                                </ListItemButton>
-                            </ListItem>
-                        );
-                    })}
-                </List>
+                <MuscleFilterList />
             </Paper>
         </div>
     );
