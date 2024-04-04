@@ -31,7 +31,7 @@
         "changeExerciseLanguage": "Modifica la lingua dell'esercizio",
         "filterVariations": "Inserisci il nome dell'esercizio per filtrare le varianti",
         "translateExerciseNow": "Traduci l'esercizio adesso",
-        "compatibleImagesCC": "Le immagini devono essere compatibili con la licenza CC BY SA. In caso di dubbi, inserisci una foto che hai fatto personalmente",
+        "compatibleImagesCC": "Le immagini devono essere compatibili con la licenza CC BY SA. In caso di dubbi, inserisci una foto che hai fatto personalmente.",
         "submitExercise": "Invia esercizio",
         "whatVariationsExist": "Quali varianti di questo esercizio esistono, se ce ne sono ?",
         "variations": "Variazioni",
@@ -217,7 +217,7 @@
         "measurements": "Misure",
         "unitFormHelpText": "L'unità in cui la categoria verrà misurata, come cm o %"
     },
-    "success": "Successo!",
+    "success": "Completato!",
     "cannotBeUndone": "L'azione non può essere annullata.",
     "English": "Inglese",
     "videos": "Video"
