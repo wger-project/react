@@ -6,7 +6,7 @@ import { NutritionDiaryOverview } from "components/Nutrition/components/Nutritio
 import { PlanDetail } from "components/Nutrition/components/PlanDetail";
 import { PlansOverview } from "components/Nutrition/components/PlansOverview";
 import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
-import { RoutineLogs } from "components/WorkoutRoutines/Detail/RoutineLogs";
+import { WorkoutLogs } from "components/WorkoutRoutines/Detail/WorkoutLogs";
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
 import {
     About,
@@ -59,8 +59,8 @@ export const WgerRoutes = () => {
                     <Route path="view" element={<RoutineDetails />} />
                 </Route>
                 <Route path="log">
-                    <Route path=":routineId" element={<RoutineLogs />}>
-                        <Route path="view" element={<RoutineLogs />} />
+                    <Route path=":routineId" element={<WorkoutLogs />}>
+                        <Route path="view" element={<WorkoutLogs />} />
                     </Route>
                 </Route>
             </Route>

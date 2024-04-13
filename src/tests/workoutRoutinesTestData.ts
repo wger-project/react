@@ -1,7 +1,7 @@
-import { WorkoutRoutine } from "components/WorkoutRoutines/models/WorkoutRoutine";
-import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
-import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
 import { Day } from "components/WorkoutRoutines/models/Day";
+import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
+import { Routine } from "components/WorkoutRoutines/models/Routine";
+import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
 import { WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
 import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { testExerciseSquats } from "tests/exerciseTestdata";
@@ -37,26 +37,34 @@ const testSet1 = new WorkoutSet(10,
     [testSetting1]
 );
 
-const testDayLegs = new Day(5,
+const testDayLegs = new Day(
+    5,
     "Every day is leg day 🦵🏻",
-    [1, 2, 3],
-    [testSet1]
+    false,
+    false,
+    1,
 );
 
-export const testRoutine1 = new WorkoutRoutine(
+export const testRoutine1 = new Routine(
     1,
     'Test routine 1',
     'Full body routine',
+    1,
     new Date('2023-01-01'),
+    new Date('2023-01-01'),
+    new Date('2023-02-01'),
     [testDayLegs]
 );
 
 
-export const testRoutine2 = new WorkoutRoutine(
+export const testRoutine2 = new Routine(
     2,
     '',
     'The routine description',
-    new Date('2023-02-01')
+    1,
+    new Date('2023-02-01'),
+    new Date('2023-02-01'),
+    new Date('2023-03-01')
 );
 
 export const TEST_ROUTINES = [testRoutine1, testRoutine2];
@@ -70,14 +78,20 @@ export const responseApiWorkoutRoutine = {
         {
             "id": 1,
             "name": "My first routine!",
-            "creation_date": "2022-01-01",
-            "description": "Well rounded full body routine"
+            "description": "Well rounded full body routine",
+            "first_day": 3,
+            "created": "2022-01-01T12:34:30+01:00",
+            "start": "2024-03-01",
+            "end": "2024-04-30",
         },
         {
             "id": 2,
             "name": "Beach body",
-            "creation_date": "2023-01-01",
-            "description": "Train only arms and chest, no legs!!!"
+            "description": "Train only arms and chest, no legs!!!",
+            "created": "2023-01-01T17:22:22+02:00",
+            "first_day": 5,
+            "start": "2024-03-01",
+            "end": "2024-04-30",
         }
     ]
 };
@@ -114,25 +128,6 @@ export const responseApiSet = {
     ]
 };
 
-export const responseApiSetting = {
-    "count": 1,
-    "next": null,
-    "previous": null,
-    "results": [
-        {
-            "id": 1,
-            "set": 1,
-            "exercise_base": 427,
-            "repetition_unit": 1,
-            "reps": 11,
-            "weight": null,
-            "weight_unit": 1,
-            "rir": null,
-            "order": 1,
-            "comment": ""
-        }
-    ]
-};
 export const responseRoutineLogs = {
     "count": 2,
     "next": null,
@@ -141,6 +136,8 @@ export const responseRoutineLogs = {
         {
             "id": 2,
             "reps": 12,
+            "iteration": 1,
+            "set_config": 2,
             "weight": "10.00",
             "date": "2023-05-10",
             "rir": "",
@@ -152,6 +149,8 @@ export const responseRoutineLogs = {
         {
             "id": 1,
             "reps": 10,
+            "iteration": 1,
+            "set_config": 2,
             "weight": "20.00",
             "date": "2023-05-13",
             "rir": "",

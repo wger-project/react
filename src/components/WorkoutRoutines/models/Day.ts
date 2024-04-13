@@ -1,5 +1,5 @@
-import { Adapter } from "utils/Adapter";
 import { WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
+import { Adapter } from "utils/Adapter";
 
 export class Day {
 
@@ -8,7 +8,9 @@ export class Day {
     constructor(
         public id: number,
         public description: string,
-        public daysOfWeek: number[],
+        public isRest: boolean,
+        public needLogsToAdvance: boolean,
+        public nextDayId: number,
         sets?: WorkoutSet[]
     ) {
         if (sets) {
@@ -23,7 +25,9 @@ export class DayAdapter implements Adapter<Day> {
         return new Day(
             item.id,
             item.description,
-            item.day
+            item.is_rest,
+            item.need_logs_to_advance,
+            item.next_day,
         );
     }
 
@@ -31,7 +35,12 @@ export class DayAdapter implements Adapter<Day> {
         return {
             id: item.id,
             description: item.description,
-            day: item.daysOfWeek
+            // eslint-disable-next-line camelcase
+            is_rest: item.isRest,
+            // eslint-disable-next-line camelcase
+            need_logs_to_advance: item.needLogsToAdvance,
+            // eslint-disable-next-line camelcase
+            next_day: item.nextDayId
         };
     }
 }

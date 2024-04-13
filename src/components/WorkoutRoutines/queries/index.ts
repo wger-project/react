@@ -1,50 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import {
-    getActiveWorkoutRoutine,
-    getRoutineLogs,
-    getWorkoutRoutine,
-    getWorkoutRoutines,
-    getWorkoutRoutinesShallow
-} from "services";
-import {
-    QUERY_ROUTINE_DETAIL,
-    QUERY_ROUTINE_LOGS,
-    QUERY_ROUTINES,
-    QUERY_ROUTINES_ACTIVE,
-    QUERY_ROUTINES_SHALLOW,
-} from "utils/consts";
+export {
+    useRoutinesQuery, useRoutineDetailQuery, useActiveRoutineQuery, useRoutinesShallowQuery,
+} from './routines';
 
-
-export function useRoutinesQuery() {
-    return useQuery([QUERY_ROUTINES], getWorkoutRoutines);
-}
-
-export function useRoutineDetailQuery(id: number) {
-    return useQuery([QUERY_ROUTINE_DETAIL, id],
-        () => getWorkoutRoutine(id)
-    );
-}
-
-export function useRoutineLogQuery(id: number, loadBases = false) {
-    return useQuery([QUERY_ROUTINE_LOGS, id, loadBases],
-        () => getRoutineLogs(id, loadBases)
-    );
-}
-
-/*
- * Retrieves all workout routines
- *
- * Note: strictly only the routine data, no days or any other sub-objects
- */
-export function useRoutinesShallowQuery() {
-    return useQuery([QUERY_ROUTINES_SHALLOW], getWorkoutRoutinesShallow);
-}
-
-/*
- * Retrieves all workout routines
- *
- * Note: strictly only the routine data, no days or any other sub-objects
- */
-export function useActiveRoutineQuery() {
-    return useQuery([QUERY_ROUTINES_ACTIVE], getActiveWorkoutRoutine);
-}
+export { useRoutineLogQuery } from "./logs";

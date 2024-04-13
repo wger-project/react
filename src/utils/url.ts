@@ -19,28 +19,29 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
     const serverUrl = params.server || process.env.REACT_APP_API_SERVER;
     const paths = [serverUrl, 'api', 'v2', path];
 
-    // append objectmethod to the path
-    if (params.objectMethod) {
-        paths.push(params.objectMethod);
-    }
-
     // Detail view
     if (params.id) {
         paths.push(params.id.toString());
     }
+
+    // append object method to the path
+    if (params.objectMethod) {
+        paths.push(params.objectMethod);
+    }
+
     paths.push('');
 
     // Query parameters
     if (params.query) {
-        const querylist = [];
+        const queryList = [];
         for (const key in params.query) {
             if (params.query.hasOwnProperty(key)) {
                 // @ts-ignore
-                querylist.push(`${encodeURIComponent(key)}=${encodeURIComponent(params.query[key])}`);
+                queryList.push(`${encodeURIComponent(key)}=${encodeURIComponent(params.query[key])}`);
             }
         }
         paths.pop();
-        paths.push(`?${querylist.join('&')}`);
+        paths.push(`?${queryList.join('&')}`);
     }
 
     return paths.join('/');

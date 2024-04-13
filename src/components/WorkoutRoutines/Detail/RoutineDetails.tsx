@@ -25,7 +25,6 @@ import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { daysOfWeek } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
 
 
@@ -218,7 +217,6 @@ const DayDetails = (props: { day: Day }) => {
                     </IconButton>
                 }
                 title={props.day.description}
-                subheader={props.day.daysOfWeek.map((dayId) => (daysOfWeek[dayId - 1])).join(", ")}
             />
             <Menu
                 id="basic-menu"

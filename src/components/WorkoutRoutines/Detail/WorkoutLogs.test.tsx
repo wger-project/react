@@ -1,9 +1,9 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MemoryRouter, Route, Routes } from "react-router";
+import { render, screen } from '@testing-library/react';
+import { WorkoutLogs } from "components/WorkoutRoutines/Detail/WorkoutLogs";
 import { useRoutineDetailQuery, useRoutineLogQuery } from "components/WorkoutRoutines/queries";
-import { RoutineLogs } from "components/WorkoutRoutines/Detail/RoutineLogs";
+import React from 'react';
+import { MemoryRouter, Route, Routes } from "react-router";
 import { testWorkoutLogs } from "tests/workoutLogsRoutinesTestData";
 import { testRoutine1 } from "tests/workoutRoutinesTestData";
 
@@ -47,7 +47,7 @@ describe("Test the RoutineLogs component", () => {
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/log/101']}>
                     <Routes>
-                        <Route path="log/:routineId" element={<RoutineLogs />} />
+                        <Route path="log/:routineId" element={<WorkoutLogs />} />
                     </Routes>
                 </MemoryRouter>
             </QueryClientProvider>

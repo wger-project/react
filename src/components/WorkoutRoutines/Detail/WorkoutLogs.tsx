@@ -167,7 +167,7 @@ const ExerciseLog = (props: { exerciseId: Exercise, logEntries: WorkoutLog[] | u
     </>;
 };
 
-export const RoutineLogs = () => {
+export const WorkoutLogs = () => {
 
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;

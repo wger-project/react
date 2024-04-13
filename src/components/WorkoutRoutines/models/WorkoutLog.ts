@@ -10,7 +10,9 @@ export class WorkoutLog {
     constructor(
         public id: number,
         public date: Date,
+        public iteration: number,
         public exerciseId: number,
+        public setConfigId: number,
         public repetitionUnit: number,
         public reps: number,
         public weight: number | null,
@@ -18,7 +20,7 @@ export class WorkoutLog {
         public rir: string | null,
         public repetitionUnitObj?: RepetitionUnit,
         public weightUnitObj?: WeightUnit,
-        public baseObj?: Exercise,
+        public exerciseObj?: Exercise,
     ) {
         if (repetitionUnitObj) {
             this.repetitionUnitObj = repetitionUnitObj;
@@ -28,8 +30,8 @@ export class WorkoutLog {
             this.weightUnitObj = weightUnitObj;
         }
 
-        if (baseObj) {
-            this.baseObj = baseObj;
+        if (exerciseObj) {
+            this.exerciseObj = exerciseObj;
         }
     }
 
@@ -44,7 +46,9 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         return new WorkoutLog(
             item.id,
             new Date(item.date),
+            item.iteration,
             item.exercise_base,
+            item.set_config,
             item.repetition_unit,
             item.reps,
             item.weight === null ? null : Number.parseFloat(item.weight),
@@ -53,10 +57,11 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         );
     }
 
-    toJson(item: WorkoutLog):
-        any {
+    toJson(item: WorkoutLog) {
         return {
             id: item.id,
+            iteration: item.iteration,
+            set_config: item.setConfigId,
             exercise_base: item.exerciseId,
             repetition_unit: item.repetitionUnit,
             reps: item.reps,

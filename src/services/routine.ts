@@ -1,49 +1,47 @@
 import axios from 'axios';
-import { Exercise } from "components/Exercises/models/exercise";
 import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
-import { WorkoutLog, WorkoutLogAdapter } from "components/WorkoutRoutines/models/WorkoutLog";
-import { WorkoutRoutine, WorkoutRoutineAdapter } from "components/WorkoutRoutines/models/WorkoutRoutine";
+import { Routine, RoutineAdapter } from "components/WorkoutRoutines/models/Routine";
 import { SetAdapter, WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
 import { SettingAdapter } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { getExercise } from "services";
 import { getRepUnits, getWeightUnits } from "services/workoutUnits";
-import { API_MAX_PAGE_SIZE } from "utils/consts";
-import { fetchPaginated } from "utils/requests";
 import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
 
-export const WORKOUT_API_PATH = 'workout';
-export const WORKOUT_LOG_API_PATH = 'workoutlog';
-export const DAY_API_PATH = 'day';
+export const ROUTINE_API_PATH = 'routine';
+export const ROUTINE_API_DAY_SEQUENCE_PATH = 'day-sequence';
 export const SET_API_PATH = 'set';
 export const SETTING_API_PATH = 'setting';
 
 /*
- * Processes a workout routine with all sub-object
+ * Processes a routine with all sub-object
  */
-export const processRoutineShallow = (routineData: any): WorkoutRoutine => {
-    const routineAdapter = new WorkoutRoutineAdapter();
+export const processRoutineShallow = (routineData: any): Routine => {
+    const routineAdapter = new RoutineAdapter();
     return routineAdapter.fromJson(routineData);
 };
 
 /*
- * Processes a workout routine with all sub-objects
+ * Processes a routine with all sub-objects
  */
-export const processWorkoutRoutine = async (id: number): Promise<WorkoutRoutine> => {
-    const routineAdapter = new WorkoutRoutineAdapter();
+export const processRoutine = async (id: number): Promise<Routine> => {
+    const routineAdapter = new RoutineAdapter();
     const dayAdapter = new DayAdapter();
     const setAdapter = new SetAdapter();
     const settingAdapter = new SettingAdapter();
 
     const response = await axios.get(
-        makeUrl(WORKOUT_API_PATH, { id: id }),
+        makeUrl(ROUTINE_API_PATH, { id: id }),
         { headers: makeHeader() }
     );
     const routine = routineAdapter.fromJson(response.data);
 
     // Process the days
     const dayResponse = await axios.get<ResponseType<Day>>(
-        makeUrl(DAY_API_PATH, { query: { training: routine.id.toString() } }),
+        makeUrl(ROUTINE_API_PATH, {
+            id: routine.id,
+            objectMethod: ROUTINE_API_DAY_SEQUENCE_PATH
+        }),
         { headers: makeHeader() },
     );
 
@@ -101,20 +99,20 @@ export const processWorkoutRoutine = async (id: number): Promise<WorkoutRoutine>
 
 
 /*
- * Retrieves all workout routines
+ * Retrieves all routines
  *
  * Note: this returns all the data, including all sub-objects
  */
-export const getWorkoutRoutines = async (): Promise<WorkoutRoutine[]> => {
-    const url = makeUrl(WORKOUT_API_PATH);
-    const response = await axios.get<ResponseType<WorkoutRoutine>>(
+export const getRoutines = async (): Promise<Routine[]> => {
+    const url = makeUrl(ROUTINE_API_PATH);
+    const response = await axios.get<ResponseType<Routine>>(
         url,
         { headers: makeHeader() }
     );
 
-    const out: WorkoutRoutine[] = [];
+    const out: Routine[] = [];
     for (const routineData of response.data.results) {
-        out.push(await processWorkoutRoutine(routineData.id));
+        out.push(await processRoutine(routineData.id));
     }
     return out;
 };
@@ -124,10 +122,10 @@ export const getWorkoutRoutines = async (): Promise<WorkoutRoutine[]> => {
  *
  * Note that at the moment this is simply the newest one
  */
-export const getActiveWorkoutRoutine = async (): Promise<null | WorkoutRoutine> => {
-    const url = makeUrl(WORKOUT_API_PATH, { query: { 'limit': '1' } });
+export const getActiveRoutine = async (): Promise<null | Routine> => {
+    const url = makeUrl(ROUTINE_API_PATH, { query: { 'limit': '1' } });
 
-    const response = await axios.get<ResponseType<WorkoutRoutine>>(
+    const response = await axios.get<ResponseType<Routine>>(
         url,
         { headers: makeHeader() }
     );
@@ -136,66 +134,62 @@ export const getActiveWorkoutRoutine = async (): Promise<null | WorkoutRoutine> 
         return null;
     }
 
-    return await processWorkoutRoutine(response.data.results[0].id);
+    return await processRoutine(response.data.results[0].id);
 };
 
-export const getWorkoutRoutine = async (id: number): Promise<WorkoutRoutine> => {
-    return await processWorkoutRoutine(id);
+export const getRoutine = async (id: number): Promise<Routine> => {
+    return await processRoutine(id);
 };
 
 /*
- * Retrieves all workout routines
+ * Retrieves all routines
  *
  * Note: strictly only the routine data, no days or any other sub-objects
  */
-export const getWorkoutRoutinesShallow = async (): Promise<WorkoutRoutine[]> => {
-    const url = makeUrl(WORKOUT_API_PATH);
-    const response = await axios.get<ResponseType<WorkoutRoutine>>(
+export const getRoutinesShallow = async (): Promise<Routine[]> => {
+    const url = makeUrl(ROUTINE_API_PATH);
+    const response = await axios.get<ResponseType<Routine>>(
         url,
         { headers: makeHeader() }
     );
 
-    const out: WorkoutRoutine[] = [];
+    const out: Routine[] = [];
     for (const routineData of response.data.results) {
         out.push(await processRoutineShallow(routineData));
     }
     return out;
 };
 
-/*
- * Retrieves the training logs for a routine
- */
-export const getRoutineLogs = async (id: number, loadBases = false): Promise<WorkoutLog[]> => {
-    const adapter = new WorkoutLogAdapter();
-    const url = makeUrl(
-        WORKOUT_LOG_API_PATH,
-        { query: { workout: id.toString(), limit: API_MAX_PAGE_SIZE, ordering: '-date' } }
+export interface AddRoutineParams {
+    name: string;
+    description: string;
+    first_day: number | null;
+    start: string;
+    end: string;
+}
+
+export interface EditRoutineParams extends AddRoutineParams {
+    id: number,
+}
+
+export const addRoutine = async (data: AddRoutineParams): Promise<Routine> => {
+    const response = await axios.post(
+        makeUrl(ROUTINE_API_PATH,),
+        data,
+        { headers: makeHeader() }
     );
 
-    const unitResponses = await Promise.all([getRepUnits(), getWeightUnits()]);
-    const repUnits = unitResponses[0];
-    const weightUnits = unitResponses[1];
+    const adapter = new RoutineAdapter();
+    return adapter.fromJson(response.data);
+};
 
-    const exercises: Map<number, Exercise> = new Map();
+export const editRoutine = async (data: EditRoutineParams): Promise<Routine> => {
+    const response = await axios.patch(
+        makeUrl(ROUTINE_API_PATH, { id: data.id }),
+        data,
+        { headers: makeHeader() }
+    );
 
-    const out: WorkoutLog[] = [];
-    for await  (const page of fetchPaginated(url)) {
-        for (const logData of page) {
-            const log = adapter.fromJson(logData);
-            log.repetitionUnitObj = repUnits.find(e => e.id === log.repetitionUnit);
-            log.weightUnitObj = weightUnits.find(e => e.id === log.weightUnit);
-
-            // Load the base object
-            if (loadBases) {
-                if (exercises.get(log.exerciseId) === undefined) {
-                    exercises.set(log.exerciseId, await getExercise(log.exerciseId));
-                }
-                log.baseObj = exercises.get(log.exerciseId)!;
-            }
-
-            out.push(log);
-        }
-    }
-
-    return out;
+    const adapter = new RoutineAdapter();
+    return adapter.fromJson(response.data);
 };

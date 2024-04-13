@@ -22,12 +22,6 @@ export const QUERY_NOTES = 'notes';
 export const QUERY_PERMISSION = 'permission';
 export const QUERY_PROFILE = 'profile';
 
-export const QUERY_ROUTINES = 'routines';
-export const QUERY_ROUTINE_DETAIL = 'routine';
-export const QUERY_ROUTINES_SHALLOW = 'routines-shallow';
-export const QUERY_ROUTINES_ACTIVE = 'routines-active';
-export const QUERY_ROUTINE_LOGS = 'routines-logs';
-
 export const QUERY_MEASUREMENTS = 'measurements';
 export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
 
@@ -37,6 +31,12 @@ export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
  * These don't have any meaning, they just need to be globally unique
  */
 export enum QueryKey {
+    ROUTINE_OVERVIEW = 'routine-overview',
+    ROUTINE_DETAIL = 'routine-detail',
+    ROUTINE_LOGS = 'routine-logs',
+    ROUTINES_ACTIVE = 'routines-active',
+    ROUTINES_SHALLOW = 'routines-shallow',
+
     NUTRITIONAL_PLANS = 'nutritional-plans',
     NUTRITIONAL_PLAN = 'nutritional-plan',
     NUTRITIONAL_PLAN_LAST = 'nutritional-plan-last',

@@ -16,11 +16,10 @@ import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget"
 import { EmptyCard } from "components/Dashboard/EmptyCard";
 import { SettingDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
 import { Day } from "components/WorkoutRoutines/models/Day";
-import { WorkoutRoutine } from "components/WorkoutRoutines/models/WorkoutRoutine";
+import { Routine } from "components/WorkoutRoutines/models/Routine";
 import { useActiveRoutineQuery } from "components/WorkoutRoutines/queries";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { daysOfWeek } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
 
 
@@ -40,7 +39,7 @@ export const RoutineCard = () => {
     }</>);
 };
 
-const RoutineCardContent = (props: { routine: WorkoutRoutine }) => {
+const RoutineCardContent = (props: { routine: Routine }) => {
     const [t, i18n] = useTranslation();
 
     return <Card>
@@ -78,7 +77,6 @@ const DayListItem = (props: { day: Day }) => {
             </ListItemIcon>
             <ListItemText
                 primary={props.day.description}
-                secondary={props.day.daysOfWeek.map((dayId) => (daysOfWeek[dayId - 1])).join(", ")}
             />
         </ListItemButton>
 

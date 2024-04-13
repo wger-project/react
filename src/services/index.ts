@@ -29,12 +29,12 @@ export { postAlias, deleteAlias } from './alias';
 export { postExerciseVideo, deleteExerciseVideo } from './video';
 
 export {
-    getWorkoutRoutinesShallow,
-    getWorkoutRoutine,
-    getWorkoutRoutines,
-    getActiveWorkoutRoutine,
-    getRoutineLogs,
-} from './workoutRoutine';
+    getRoutinesShallow,
+    getRoutine,
+    getRoutines,
+    getActiveRoutine,
+
+} from './routine';
 
 export {
     getMeasurementCategories,
@@ -47,3 +47,4 @@ export { searchIngredient, getIngredient } from './ingredient';
 
 export { addMealItem, editMealItem, deleteMealItem } from './mealItem';
 export { getMealsForPlan, addMeal, editMeal, deleteMeal } from './meal';
+export { getRoutineLogs } from "./workoutLogs";

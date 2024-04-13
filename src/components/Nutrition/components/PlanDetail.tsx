@@ -65,7 +65,6 @@ export const PlanDetail = () => {
 
                     <NutritionalValuesTable values={plan.plannedNutritionalValues} />
 
-
                     {plan.hasAnyPlanned &&
                         <MacrosPieChart data={plan.plannedNutritionalValues} />
                     }
