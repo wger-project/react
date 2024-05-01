@@ -29,7 +29,7 @@
     "slug": "^8.2.3",
     "typescript": "5.1.6",
     "web-vitals": "^3.5.2",
-    "yup": "^1.3.2"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",
