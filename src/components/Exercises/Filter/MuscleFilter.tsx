@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {
     Accordion,
     AccordionDetails,
@@ -13,16 +14,15 @@ import {
     Switch,
     Typography
 } from "@mui/material";
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { useTranslation } from "react-i18next";
-import { Muscle } from "components/Exercises/models/muscle";
-import { getTranslationKey } from "utils/strings";
-import { MuscleOverview } from "components/Muscles/MuscleOverview";
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { LightTooltip } from "components/Core/Tooltips/LightToolTip";
+import { Muscle } from "components/Exercises/models/muscle";
+import { MuscleOverview } from "components/Muscles/MuscleOverview";
+import React, { useContext } from 'react';
+import { useTranslation } from "react-i18next";
+import { getTranslationKey } from "utils/strings";
 import { useMusclesQuery } from '../queries';
 import { ExerciseFiltersContext } from './ExerciseFiltersContext';
-import { LoadingPlaceholder } from '../../Core/LoadingWidget/LoadingWidget';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const MuscleFilterList = () => {
 
