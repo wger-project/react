@@ -216,5 +216,6 @@
     "cannotBeUndone": "Tato akce je nevratná.",
     "cancel": "Zrušit",
     "noResults": "Žádné výsledky",
-    "noResultsDescription": "Nenalezeny žádné výsledky pro tento dotaz, zvažte snížení počtu filtrů."
+    "noResultsDescription": "Nenalezeny žádné výsledky pro tento dotaz, zvažte snížení počtu filtrů.",
+    "filters": "Filtry"
 }
