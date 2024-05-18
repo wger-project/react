@@ -26,6 +26,7 @@ export class NutritionalPlan {
         public goalEnergy: number | null = null,
         public goalProtein: number | null = null,
         public goalCarbohydrates: number | null = null,
+        public goalFibers: number | null = null,
         public goalFat: number | null = null,
     ) {
     }
@@ -35,6 +36,10 @@ export class NutritionalPlan {
             || this.goalProtein !== null
             || this.goalCarbohydrates !== null
             || this.goalFat !== null;
+    }
+
+    get hasAnyAdvancedGoals() {
+        return this.goalFibers !== null;
     }
 
     get hasAnyPlanned() {
@@ -177,6 +182,7 @@ export class NutritionalPlanAdapter implements Adapter<NutritionalPlan> {
             item.goal_energy,
             item.goal_protein,
             item.goal_carbohydrates,
+            item.goal_fibers,
             item.goal_fat,
         );
     }

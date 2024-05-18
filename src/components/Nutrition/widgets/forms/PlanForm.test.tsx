@@ -65,6 +65,8 @@ describe("Test the PlanForm component", () => {
             // eslint-disable-next-line camelcase
             goal_carbohydrates: null,
             // eslint-disable-next-line camelcase
+            goal_fibers: null,
+            // eslint-disable-next-line camelcase
             goal_energy: null,
             // eslint-disable-next-line camelcase
             goal_fat: null,
