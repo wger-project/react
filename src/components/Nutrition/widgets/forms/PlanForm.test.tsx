@@ -105,6 +105,8 @@ describe("Test the PlanForm component", () => {
             goal_fat: null,
             // eslint-disable-next-line camelcase
             goal_protein: null,
+            // eslint-disable-next-line camelcase
+            goal_fibers: null,
         });
     });
 });

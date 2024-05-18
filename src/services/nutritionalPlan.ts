@@ -79,6 +79,7 @@ export interface AddNutritionalPlanParams {
     goal_energy: number | string | null;
     goal_protein: number | string | null;
     goal_carbohydrates: number | string | null;
+    goal_fibers: number | string | null;
     goal_fat: number | string | null;
 }
 

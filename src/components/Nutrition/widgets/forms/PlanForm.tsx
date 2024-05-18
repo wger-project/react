@@ -64,8 +64,14 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
         goal_carbohydrates: yup
             .number()
             .notRequired()
-            .positive()
+            .positive() // TODO: allow 0 but not negative
             .max(750, t('forms.maxValue', { value: '750' })),
+            // eslint-disable-next-line camelcase
+        goal_fibers: yup
+            .number()
+            .notRequired()
+            .positive()
+            .max(500, t('forms.maxValue', { value: '500' })),
         // eslint-disable-next-line camelcase
         goal_fat: yup
             .number()
