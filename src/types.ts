@@ -64,7 +64,7 @@ export interface ApiIngredientType {
     carbohydrates_sugar: string | null,
     fat: string,
     fat_saturated: string | null,
-    fibres: string | null,
+    fiber: string | null,
     sodium: string | null,
     license: {
         id: number,
@@ -111,7 +111,7 @@ export interface ApiNutritionalPlanType {
     only_logging: boolean,
     goal_energy: number | null,
     goal_protein: number | null,
-    goal_fibers: number | null,
+    goal_fiber: number | null,
     goal_carbohydrates: number | null,
     goal_fat: number | null,
 }

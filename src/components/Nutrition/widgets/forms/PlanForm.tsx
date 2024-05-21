@@ -67,7 +67,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             .positive() // TODO: allow 0 but not negative
             .max(750, t('forms.maxValue', { value: '750' })),
             // eslint-disable-next-line camelcase
-        goal_fibers: yup
+        goal_fiber: yup
             .number()
             .notRequired()
             .positive()
@@ -94,7 +94,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                 // eslint-disable-next-line camelcase
                 goal_carbohydrates: plan ? plan.goalCarbohydrates : null,
                 // eslint-disable-next-line camelcase
-                goal_fibers: plan ? plan.goalFibers : null,
+                goal_fiber: plan ? plan.goalFiber : null,
                 // eslint-disable-next-line camelcase
                 goal_fat: plan ? plan.goalFat : null,
             }}
@@ -108,7 +108,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                 // eslint-disable-next-line camelcase
                 values.goal_carbohydrates = values.goal_carbohydrates ? values.goal_carbohydrates : null;
                 // eslint-disable-next-line camelcase
-                values.goal_fibers = values.goal_fibers ? values.goal_fibers : null;
+                values.goal_fiber = values.goal_fiber ? values.goal_fiber : null;
                 // eslint-disable-next-line camelcase
                 values.goal_fat = values.goal_fat ? values.goal_fat : null;
 
@@ -239,11 +239,11 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                             <Grid container spacing={1}>
                                 <Grid xs={4}>
                                     <TextField
-                                        id="fibers"
-                                        label={t('nutrition.goalFibers')}
-                                        error={formik.touched.goal_fibers && Boolean(formik.errors.goal_fibers)}
-                                        helperText={formik.touched.goal_fibers && formik.errors.goal_fibers}
-                                        {...formik.getFieldProps('goal_fibers')}
+                                        id="fiber"
+                                        label={t('nutrition.goalFiber')}
+                                        error={formik.touched.goal_fiber && Boolean(formik.errors.goal_fiber)}
+                                        helperText={formik.touched.goal_fiber && formik.errors.goal_fiber}
+                                        {...formik.getFieldProps('goal_fiber')}
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">
                                             {t('nutrition.valueEnergyKcal', { value: 0 })}
