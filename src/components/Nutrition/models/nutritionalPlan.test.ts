@@ -25,7 +25,7 @@ describe("Test the nutritional plan model", () => {
         expect(values.carbohydratesSugar).toBeCloseTo(44.35, 2);
         expect(values.fat).toBeCloseTo(6.51, 2);
         expect(values.fatSaturated).toBeCloseTo(1.58, 2);
-        expect(values.fibres).toBeCloseTo(5.25, 2);
+        expect(values.fiber).toBeCloseTo(5.25, 2);
         expect(values.sodium).toBeCloseTo(0.064, 2);
     });
 
@@ -41,7 +41,7 @@ describe("Test the nutritional plan model", () => {
         expect(values.carbohydratesSugar).toBeCloseTo(9.424, 2);
         expect(values.fat).toBeCloseTo(0, 2);
         expect(values.fatSaturated).toBeCloseTo(0, 2);
-        expect(values.fibres).toBeCloseTo(0, 2);
+        expect(values.fiber).toBeCloseTo(0, 2);
         expect(values.sodium).toBeCloseTo(0.0048, 2);
     });
 
@@ -57,7 +57,7 @@ describe("Test the nutritional plan model", () => {
         expect(values.carbohydratesSugar).toBeCloseTo(7.73, 2);
         expect(values.fat).toBeCloseTo(1.77, 2);
         expect(values.fatSaturated).toBeCloseTo(0.89, 2);
-        expect(values.fibres).toBeCloseTo(2.19, 2);
+        expect(values.fiber).toBeCloseTo(2.19, 2);
         expect(values.sodium).toBeCloseTo(0.0085, 2);
     });
 
@@ -73,7 +73,7 @@ describe("Test the nutritional plan model", () => {
         expect(values.carbohydratesSugar).toBeCloseTo(111.76, 2);
         expect(values.fat).toBeCloseTo(165.239, 2);
         expect(values.fatSaturated).toBeCloseTo(90.36, 2);
-        expect(values.fibres).toBeCloseTo(214.36, 2);
+        expect(values.fiber).toBeCloseTo(214.36, 2);
         expect(values.sodium).toBeCloseTo(0.3296, 2);
     });
 
@@ -89,7 +89,7 @@ describe("Test the nutritional plan model", () => {
         expect(values.carbohydratesSugar).toBeCloseTo(7.733, 2);
         expect(values.fat).toBeCloseTo(1.7675, 2);
         expect(values.fatSaturated).toBeCloseTo(0.89, 2);
-        expect(values.fibres).toBeCloseTo(2.1875, 2);
+        expect(values.fiber).toBeCloseTo(2.1875, 2);
         expect(values.sodium).toBeCloseTo(0.0088, 2);
     });
 
@@ -105,7 +105,7 @@ describe("Test the nutritional plan model", () => {
         expect(values.carbohydratesSugar).toBeCloseTo(44.34999, 2);
         expect(values.fat).toBeCloseTo(6.51, 2);
         expect(values.fatSaturated).toBeCloseTo(1.58, 2);
-        expect(values.fibres).toBeCloseTo(5.25, 2);
+        expect(values.fiber).toBeCloseTo(5.25, 2);
         expect(values.sodium).toBeCloseTo(0.064, 2);
     });
 

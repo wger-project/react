@@ -21,7 +21,7 @@ describe("Ingrediente service tests", () => {
             "carbohydrates_sugar": "4.000",
             "fat": "18.000",
             "fat_saturated": "6.000",
-            "fibres": null,
+            "fiber": null,
             "sodium": "0.508",
             "license": 5,
             "license_title": "감자깡",
@@ -65,7 +65,7 @@ describe("Ingrediente service tests", () => {
         expect(result.carbohydratesSugar).toEqual(4);
         expect(result.fat).toEqual(18);
         expect(result.fatSaturated).toEqual(6);
-        expect(result.fibres).toEqual(null);
+        expect(result.fiber).toEqual(null);
         expect(result.sodium).toEqual(0.508);
         expect(result.image?.url).toEqual('http://localhost:8000/media/ingredients/59197/b260b245-efe9-4c92-9d8f-d2c4406221dd.jpg');
 

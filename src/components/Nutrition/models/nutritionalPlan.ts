@@ -26,7 +26,10 @@ export class NutritionalPlan {
         public goalEnergy: number | null = null,
         public goalProtein: number | null = null,
         public goalCarbohydrates: number | null = null,
+        public goalFiber: number | null = null,
+        public goalSodium: number | null = null,
         public goalFat: number | null = null,
+        public goalFatsSaturated: number | null = null,
     ) {
     }
 
@@ -35,6 +38,12 @@ export class NutritionalPlan {
             || this.goalProtein !== null
             || this.goalCarbohydrates !== null
             || this.goalFat !== null;
+    }
+
+    get hasAnyAdvancedGoals() {
+        return this.goalFiber !== null
+            || this.goalSodium !== null
+            || this.goalFatsSaturated !== null;
     }
 
     get hasAnyPlanned() {
@@ -154,7 +163,7 @@ export class NutritionalPlan {
         out.carbohydratesSugar = out.carbohydratesSugar / nrOfEntries;
         out.fat = out.fat / nrOfEntries;
         out.fatSaturated = out.fatSaturated / nrOfEntries;
-        out.fibres = out.fibres / nrOfEntries;
+        out.fiber = out.fiber / nrOfEntries;
         out.sodium = out.sodium / nrOfEntries;
         return out;
     }
@@ -177,6 +186,7 @@ export class NutritionalPlanAdapter implements Adapter<NutritionalPlan> {
             item.goal_energy,
             item.goal_protein,
             item.goal_carbohydrates,
+            item.goal_fiber,
             item.goal_fat,
         );
     }

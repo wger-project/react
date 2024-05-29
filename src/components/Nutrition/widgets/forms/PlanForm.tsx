@@ -1,9 +1,14 @@
+import { GolfCourse } from "@mui/icons-material";
 import {
     Button,
+    FormControl,
     FormControlLabel,
     FormGroup,
     FormHelperText,
     InputAdornment,
+    InputLabel,
+    MenuItem,
+    Select,
     Stack,
     Switch,
     TextField
@@ -59,8 +64,14 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
         goal_carbohydrates: yup
             .number()
             .notRequired()
-            .positive()
+            .positive() // TODO: allow 0 but not negative
             .max(750, t('forms.maxValue', { value: '750' })),
+            // eslint-disable-next-line camelcase
+        goal_fiber: yup
+            .number()
+            .notRequired()
+            .positive()
+            .max(500, t('forms.maxValue', { value: '500' })),
         // eslint-disable-next-line camelcase
         goal_fat: yup
             .number()
@@ -83,6 +94,8 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                 // eslint-disable-next-line camelcase
                 goal_carbohydrates: plan ? plan.goalCarbohydrates : null,
                 // eslint-disable-next-line camelcase
+                goal_fiber: plan ? plan.goalFiber : null,
+                // eslint-disable-next-line camelcase
                 goal_fat: plan ? plan.goalFat : null,
             }}
             validationSchema={validationSchema}
@@ -94,6 +107,8 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                 values.goal_protein = values.goal_protein ? values.goal_protein : null;
                 // eslint-disable-next-line camelcase
                 values.goal_carbohydrates = values.goal_carbohydrates ? values.goal_carbohydrates : null;
+                // eslint-disable-next-line camelcase
+                values.goal_fiber = values.goal_fiber ? values.goal_fiber : null;
                 // eslint-disable-next-line camelcase
                 values.goal_fat = values.goal_fat ? values.goal_fat : null;
 
@@ -131,19 +146,24 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         {...formik.getFieldProps('only_logging')}
                                     />}
                             />
-                            <FormControlLabel
-                                label={t('nutrition.useGoalsHelpText')}
-                                control={
-                                    <Switch
-                                        id="goalEnergy"
-                                        checked={useGoals}
-                                        onChange={() => setUseGoals(!useGoals)}
-                                    />}
-                            />
-                            <FormHelperText>{t('nutrition.useGoalsHelpTextLong')}</FormHelperText>
-
-
                         </FormGroup>
+                                    <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Goal Setting</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={10}
+                                        label="Goal setting"
+                                        onChange={() => {}}
+                                    >
+                                        <MenuItem value={10}>Based on my meals</MenuItem>
+                                        <MenuItem value={20}>Set basic macros</MenuItem>
+                                        <MenuItem value={30}>Set advanced macros</MenuItem>
+                                    </Select>
+                                    </FormControl>
+                           
+
+
 
                         {useGoals && <>
                             <TextField
@@ -216,8 +236,25 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                     />
                                 </Grid>
                             </Grid>
-
-
+                            <Grid container spacing={1}>
+                                <Grid xs={4}>
+                                    <TextField
+                                        id="fiber"
+                                        label={t('nutrition.goalFiber')}
+                                        error={formik.touched.goal_fiber && Boolean(formik.errors.goal_fiber)}
+                                        helperText={formik.touched.goal_fiber && formik.errors.goal_fiber}
+                                        {...formik.getFieldProps('goal_fiber')}
+                                        InputProps={{
+                                            startAdornment: <InputAdornment position="start">
+                                            {t('nutrition.valueEnergyKcal', { value: 0 })}
+                                            </InputAdornment>,
+                                            endAdornment: <InputAdornment position="end">
+                                                {t('nutrition.gramShort')}
+                                            </InputAdornment>
+                                        }}
+                                    />
+                                </Grid>
+                            </Grid>
                         </>}
 
                         <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
