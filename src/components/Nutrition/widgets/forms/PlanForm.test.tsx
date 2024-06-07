@@ -65,6 +65,8 @@ describe("Test the PlanForm component", () => {
             // eslint-disable-next-line camelcase
             goal_carbohydrates: null,
             // eslint-disable-next-line camelcase
+            goal_fiber: null,
+            // eslint-disable-next-line camelcase
             goal_energy: null,
             // eslint-disable-next-line camelcase
             goal_fat: null,
@@ -103,6 +105,8 @@ describe("Test the PlanForm component", () => {
             goal_fat: null,
             // eslint-disable-next-line camelcase
             goal_protein: null,
+            // eslint-disable-next-line camelcase
+            goal_fiber: null,
         });
     });
 });

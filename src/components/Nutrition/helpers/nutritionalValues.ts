@@ -8,7 +8,7 @@ type NutritionalValuesConstructor = {
     carbohydratesSugar?: number;
     fat?: number;
     fatSaturated?: number;
-    fibres?: number;
+    fiber?: number;
     sodium?: number;
     bodyWeight?: number;
 }
@@ -29,7 +29,7 @@ export class NutritionalValues {
     carbohydratesSugar: number = 0;
     fat: number = 0;
     fatSaturated: number = 0;
-    fibres: number = 0;
+    fiber: number = 0;
     sodium: number = 0;
 
     get energyKj(): number {
@@ -64,7 +64,7 @@ export class NutritionalValues {
         this.carbohydratesSugar = values?.carbohydratesSugar ?? 0;
         this.fat = values?.fat ?? 0;
         this.fatSaturated = values?.fatSaturated ?? 0;
-        this.fibres = values?.fibres ?? 0;
+        this.fiber = values?.fiber ?? 0;
         this.sodium = values?.sodium ?? 0;
         this.bodyWeight = values?.bodyWeight ?? 0;
     }
@@ -83,7 +83,7 @@ export class NutritionalValues {
         out.carbohydratesSugar = ingredient.carbohydratesSugar ? ingredient.carbohydratesSugar * weight / 100 : 0;
         out.fat = ingredient.fat * weight / 100;
         out.fatSaturated = ingredient.fatSaturated ? ingredient.fatSaturated * weight / 100 : 0;
-        out.fibres = ingredient.fibres ? ingredient.fibres * weight / 100 : 0;
+        out.fiber = ingredient.fiber ? ingredient.fiber * weight / 100 : 0;
         out.sodium = ingredient.sodium ? ingredient.sodium * weight / 100 : 0;
 
         return out;
@@ -97,14 +97,14 @@ export class NutritionalValues {
         this.carbohydratesSugar += other.carbohydratesSugar;
         this.fat += other.fat;
         this.fatSaturated += other.fatSaturated;
-        this.fibres += other.fibres;
+        this.fiber += other.fiber;
         this.sodium += other.sodium;
 
         return this;
     }
 
     toString(): string {
-        return `e: ${this.energy}, p: ${this.protein}, c: ${this.carbohydrates}, cS: ${this.carbohydratesSugar}, f: ${this.fat}, fS: ${this.fatSaturated}, fi: ${this.fibres}, s: ${this.sodium}`;
+        return `e: ${this.energy}, p: ${this.protein}, c: ${this.carbohydrates}, cS: ${this.carbohydratesSugar}, f: ${this.fat}, fS: ${this.fatSaturated}, fi: ${this.fiber}, s: ${this.sodium}`;
     }
 
     equals(other: NutritionalValues): boolean {
@@ -115,7 +115,7 @@ export class NutritionalValues {
             this.carbohydratesSugar === other.carbohydratesSugar &&
             this.fat === other.fat &&
             this.fatSaturated === other.fatSaturated &&
-            this.fibres === other.fibres &&
+            this.fiber === other.fiber &&
             this.sodium === other.sodium
         );
     }

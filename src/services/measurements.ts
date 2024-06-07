@@ -5,6 +5,7 @@ import { ApiMeasurementCategoryType, ApiMeasurementEntryType } from 'types';
 import { dateToYYYYMMDD } from "utils/date";
 import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
+import { fetchPaginated } from 'utils/requests';
 
 export const API_MEASUREMENTS_CATEGORY_PATH = 'measurement-category';
 export const API_MEASUREMENTS_ENTRY_PATH = 'measurement';
@@ -20,19 +21,23 @@ export const getMeasurementCategories = async (): Promise<MeasurementCategory[]>
     const categories = receivedCategories.results.map(l => adapter.fromJson(l));
 
     // Load entries for each category
-    const entryResponses = categories.map((category) => {
-        return axios.get<ResponseType<any>>(
-            makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: category.id } }),
-            { headers: makeHeader() },
-        );
+    const entryResponses = categories.map(async (category) => {
+        const out: MeasurementEntry[] = [];
+        const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: category.id } });
+
+        // Collect all pages of entries
+        for await (const page of fetchPaginated(url, makeHeader())) {
+            for (const entries of page) {
+                out.push(entryAdapter.fromJson(entries));
+            }
+        }
+        return out;
     });
     const settingsResponses = await Promise.all(entryResponses);
 
     // Save entries to each category
     let categoryId: number;
-    settingsResponses.forEach((response) => {
-        const entries = response.data.results.map(l => entryAdapter.fromJson(l));
-
+    settingsResponses.forEach((entries) => {
         if (entries.length > 0) {
             categoryId = entries[0].category;
             categories.findLast(c => c.id === categoryId)!.entries = entries;
@@ -49,13 +54,18 @@ export const getMeasurementCategory = async (id: number): Promise<MeasurementCat
     );
 
     const category = new MeasurementCategoryAdapter().fromJson(receivedCategories);
-
-    const { data: receivedEntries } = await axios.get<ResponseType<ApiMeasurementEntryType>>(
-        makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: id.toString() } }),
-        { headers: makeHeader(), }
-    );
     const adapter = new MeasurementEntryAdapter();
-    category.entries = receivedEntries.results.map(l => adapter.fromJson(l));
+    const measurements: MeasurementEntry[] = [];
+    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: category.id } });
+
+    // Collect all pages of entries
+    for await (const page of fetchPaginated(url, makeHeader())) {
+        for (const entries of page) {
+            measurements.push(adapter.fromJson(entries));
+        }
+    }
+
+    category.entries = measurements;
 
     return category;
 };
