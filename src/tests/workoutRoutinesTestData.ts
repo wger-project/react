@@ -39,10 +39,12 @@ const testSet1 = new WorkoutSet(10,
 
 const testDayLegs = new Day(
     5,
+    null,
     "Every day is leg day 🦵🏻",
+    '',
     false,
     false,
-    1,
+    false,
 );
 
 export const testRoutine1 = new Routine(
@@ -178,3 +180,135 @@ export const testRepUnit2 = new RepetitionUnit(
     2,
     'minutes',
 );
+
+export const responseRoutineDayDataToday = {
+    "iteration": 42,
+    "date": "2024-04-01",
+    "label": "first label",
+    "day": {
+        "id": 100,
+        "next_day": 101,
+        "name": "Push day",
+        "description": "",
+        "is_rest": false,
+        "last_day_in_week": false,
+        "need_logs_to_advance": false
+    },
+    "slots": [
+        {
+            "comment": "Push set 1",
+            "exercises": [
+                9,
+                12
+            ],
+            "sets": [
+                {
+                    "exercise": 9,
+                    "sets": 5,
+                    "weight": "100.00",
+                    "weight_unit": 1,
+                    "weight_rounding": "1.25",
+                    "reps": "10.00",
+                    "reps_unit": 1,
+                    "reps_rounding": "1.00",
+                    "rir": "2.00",
+                    "rest": "120.00"
+                },
+                {
+                    "exercise": 12,
+                    "sets": 3,
+                    "weight": "90.00",
+                    "weight_unit": 1,
+                    "weight_rounding": "1.25",
+                    "reps": "12.00",
+                    "reps_unit": 1,
+                    "reps_rounding": "1.00",
+                    "rir": "2.00",
+                    "rest": "120.00"
+                },
+                {
+                    "exercise": 9,
+                    "sets": 5,
+                    "weight": "100.00",
+                    "weight_unit": 1,
+                    "weight_rounding": "1.25",
+                    "reps": "10.00",
+                    "reps_unit": 1,
+                    "reps_rounding": "1.00",
+                    "rir": "2.00",
+                    "rest": "120.00"
+                },
+                {
+                    "exercise": 12,
+                    "sets": 3,
+                    "weight": "90.00",
+                    "weight_unit": 1,
+                    "weight_rounding": "1.25",
+                    "reps": "12.00",
+                    "reps_unit": 1,
+                    "reps_rounding": "1.00",
+                    "rir": "2.00",
+                    "rest": "120.00"
+                },
+                {
+                    "exercise": 9,
+                    "sets": 5,
+                    "weight": "100.00",
+                    "weight_unit": 1,
+                    "weight_rounding": "1.25",
+                    "reps": "10.00",
+                    "reps_unit": 1,
+                    "reps_rounding": "1.00",
+                    "rir": "2.00",
+                    "rest": "120.00"
+                },
+                {
+                    "exercise": 12,
+                    "sets": 3,
+                    "weight": "90.00",
+                    "weight_unit": 1,
+                    "weight_rounding": "1.25",
+                    "reps": "12.00",
+                    "reps_unit": 1,
+                    "reps_rounding": "1.00",
+                    "rir": "2.00",
+                    "rest": "120.00"
+                },
+                {
+                    "exercise": 9,
+                    "sets": 5,
+                    "weight": "100.00",
+                    "weight_unit": 1,
+                    "weight_rounding": "1.25",
+                    "reps": "10.00",
+                    "reps_unit": 1,
+                    "reps_rounding": "1.00",
+                    "rir": "2.00",
+                    "rest": "120.00"
+                },
+                {
+                    "exercise": 9,
+                    "sets": 5,
+                    "weight": "100.00",
+                    "weight_unit": 1,
+                    "weight_rounding": "1.25",
+                    "reps": "10.00",
+                    "reps_unit": 1,
+                    "reps_rounding": "1.00",
+                    "rir": "2.00",
+                    "rest": "120.00"
+                }
+            ]
+        },
+        {
+            "comment": "Push set 2",
+            "exercises": [],
+            "sets": []
+        },
+        {
+            "comment": "Push set 3",
+            "exercises": [],
+            "sets": []
+        }
+    ]
+};

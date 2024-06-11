@@ -1,11 +1,15 @@
 import axios from "axios";
+import { Day } from "components/WorkoutRoutines/models/Day";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
+import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import { getRoutinesShallow } from "services";
+import { getRoutineDayDataToday } from "services/routine";
 import { getRoutineLogs } from "services/workoutLogs";
 import { getRepUnits, getWeightUnits } from "services/workoutUnits";
 import {
     responseApiWorkoutRoutine,
+    responseRoutineDayDataToday,
     responseRoutineLogs,
     testRepUnit1,
     testRepUnit2,
@@ -101,6 +105,64 @@ describe("workout routine service tests", () => {
                 testWeightUnit1
             ),
         ]);
+    });
+
+    test('GET the routine day data for today', async () => {
+        // Arrange
+        // @ts-ignore
+        axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineDayDataToday }));
+
+        // Act
+        const result = await getRoutineDayDataToday(1);
+
+        // Assert
+        expect(axios.get).toHaveBeenCalledTimes(1);
+
+        expect(result.iteration).toStrictEqual(42);
+        expect(result.date).toStrictEqual(new Date('2024-04-01'));
+        expect(result.label).toStrictEqual('first label');
+        expect(result.day).toStrictEqual(
+            new Day(
+                100,
+                101,
+                'Push day',
+                '',
+                false,
+                false,
+                false
+            )
+        );
+        expect(result.slots[0].comment).toEqual('Push set 1');
+        expect(result.slots[0].exercises).toEqual([9, 12]);
+        expect(result.slots[0].setConfigs[0]).toEqual(
+            new SetConfigData(
+                9,
+                5,
+                100,
+                1,
+                1.25,
+                10,
+                1,
+                1,
+                2.00,
+                120,
+            )
+        );
+        expect(result.slots[0].setConfigs[1]).toEqual(
+            new SetConfigData(
+                12,
+                3,
+                90,
+                1,
+                1.25,
+                12,
+                1,
+                1,
+                2.00,
+                120,
+            )
+        );
+
     });
 
 });

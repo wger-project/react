@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
 import { Routine, RoutineAdapter } from "components/WorkoutRoutines/models/Routine";
+import { RoutineDayData, RoutineDayDataAdapter } from "components/WorkoutRoutines/models/RoutineDayData";
 import { SetAdapter, WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
 import { SettingAdapter } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { getExercise } from "services";
@@ -191,5 +192,15 @@ export const editRoutine = async (data: EditRoutineParams): Promise<Routine> => 
     );
 
     const adapter = new RoutineAdapter();
+    return adapter.fromJson(response.data);
+};
+
+export const getRoutineDayDataToday = async (routineId: number): Promise<RoutineDayData> => {
+    const response = await axios.get(
+        makeUrl(ROUTINE_API_PATH, { id: routineId, objectMethod: 'current-day' }),
+        { headers: makeHeader() }
+    );
+
+    const adapter = new RoutineDayDataAdapter();
     return adapter.fromJson(response.data);
 };
