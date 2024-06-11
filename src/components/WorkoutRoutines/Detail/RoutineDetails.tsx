@@ -239,7 +239,7 @@ const DayDetails = (props: { day: Day }) => {
             </Menu>
             <CardContent>
                 <Stack divider={<Divider flexItem />}>
-                    {props.day.sets.map((set, index) => (
+                    {props.day.slots.map((set, index) => (
                         <SetList
                             set={set}
                             index={index}

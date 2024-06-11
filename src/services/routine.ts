@@ -60,7 +60,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         );
         for (const setData of setResponse.data.results) {
             const set = setAdapter.fromJson(setData);
-            day.sets.push(set);
+            day.slots.push(set);
         }
 
         // Process the settings
@@ -74,7 +74,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
 
         for (const settingsData of settingsResponses) {
             for (const settingData of settingsData.data.results) {
-                const set = day.sets.find(e => e.id === settingData.set);
+                const set = day.slots.find(e => e.id === settingData.set);
                 const setting = settingAdapter.fromJson(settingData);
 
                 // TODO: use some global state or cache for this

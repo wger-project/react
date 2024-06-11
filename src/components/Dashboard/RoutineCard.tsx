@@ -81,7 +81,7 @@ const DayListItem = (props: { day: Day }) => {
         </ListItemButton>
 
         <Collapse in={expandView} timeout="auto" unmountOnExit>
-            {props.day.sets.map((set) => (<div key={set.id}>
+            {props.day.slots.map((set) => (<div key={set.id}>
                 {set.settingsFiltered.map((setting) =>
                     <SettingDetails
                         setting={setting}

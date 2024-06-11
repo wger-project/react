@@ -230,7 +230,7 @@ export const WorkoutLogs = () => {
                                     </Button>
                                 </Stack>
 
-                                {day.sets.map(workoutSet =>
+                            {day.slots.map(workoutSet =>
                                     workoutSet.exercises.map(base =>
                                         <ExerciseLog
                                             key={workoutSet.id + base.uuid!}

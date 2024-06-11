@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
 
-import { WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
+import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { Adapter } from "utils/Adapter";
 
 export class Day {
 
-    sets: WorkoutSet[] = [];
+    slots: Slot[] = [];
 
     constructor(
         public id: number,
@@ -15,35 +15,31 @@ export class Day {
         public isRest: boolean,
         public needLogsToAdvance: boolean,
         public lastDayInWeek: boolean,
-        sets?: WorkoutSet[]
+        slots?: Slot[]
     ) {
-        if (sets) {
-            this.sets = sets;
+        if (slots) {
+            this.slots = slots;
         }
     }
 }
 
 
 export class DayAdapter implements Adapter<Day> {
-    fromJson(item: any): Day {
-        return new Day(
-            item.id,
-            item.next_day,
-            item.name,
-            item.description,
-            item.is_rest,
-            item.need_logs_to_advance,
-            item.need_logs_to_advance,
-        );
-    }
+    fromJson = (item: any): Day => new Day(
+        item.id,
+        item.next_day,
+        item.name,
+        item.description,
+        item.is_rest,
+        item.need_logs_to_advance,
+        item.need_logs_to_advance,
+    );
 
-    toJson(item: Day) {
-        return {
-            next_day: item.nextDayId,
-            description: item.description,
-            is_rest: item.isRest,
-            need_logs_to_advance: item.needLogsToAdvance,
-            last_day_in_week: item.lastDayInWeek
-        };
-    }
+    toJson = (item: Day) => ({
+        next_day: item.nextDayId,
+        description: item.description,
+        is_rest: item.isRest,
+        need_logs_to_advance: item.needLogsToAdvance,
+        last_day_in_week: item.lastDayInWeek
+    });
 }
