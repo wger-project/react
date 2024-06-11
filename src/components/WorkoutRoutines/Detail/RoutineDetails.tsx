@@ -14,6 +14,7 @@ import {
     Menu,
     MenuItem,
     Stack,
+    Tooltip,
     Typography
 } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
@@ -251,9 +252,11 @@ const DayDetails = (props: { day: Day }) => {
                 </Stack>
             </CardContent>
             <CardActions>
-                <IconButton onClick={navigateAddSet}>
-                    <Add />
-                </IconButton>
+                <Tooltip title={t('routines.addSet')} placement="bottom">
+                    <IconButton onClick={navigateAddSet}>
+                        <Add />
+                    </IconButton>
+                </Tooltip>
             </CardActions>
         </Card>
     );
