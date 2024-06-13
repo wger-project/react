@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 
 import { Day } from "components/WorkoutRoutines/models/Day";
+import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { WorkoutSession } from "components/WorkoutRoutines/models/WorkoutSession";
 import { Adapter } from "utils/Adapter";
 import { dateToYYYYMMDD } from "utils/date";
@@ -9,12 +10,14 @@ export class Routine {
 
     days: Day[] = [];
     sessions: WorkoutSession[] = [];
+    todayDayData?: RoutineDayData;
+    dayData: RoutineDayData[] = [];
 
     constructor(
         public id: number,
         public name: string,
         public description: string,
-        public firstDay: number | null,
+        public firstDayId: number | null,
         public created: Date,
         public start: Date,
         public end: Date,
@@ -45,7 +48,7 @@ export class RoutineAdapter implements Adapter<Routine> {
             id: item.id,
             name: item.name,
             description: item.description,
-            first_day: item.firstDay,
+            first_day: item.firstDayId,
             start: dateToYYYYMMDD(item.start),
             end: dateToYYYYMMDD(item.end),
         };

@@ -133,10 +133,12 @@ describe("workout routine service tests", () => {
             )
         );
         expect(result.slots[0].comment).toEqual('Push set 1');
-        expect(result.slots[0].exercises).toEqual([9, 12]);
+        expect(result.slots[0].exerciseIds).toEqual([9, 12]);
         expect(result.slots[0].setConfigs[0]).toEqual(
             new SetConfigData(
                 9,
+                1000,
+                "dropset",
                 5,
                 100,
                 1,
@@ -151,6 +153,8 @@ describe("workout routine service tests", () => {
         expect(result.slots[0].setConfigs[1]).toEqual(
             new SetConfigData(
                 12,
+                1000,
+                "normal",
                 3,
                 90,
                 1,

@@ -204,6 +204,8 @@ export const responseRoutineDayDataToday = {
             "sets": [
                 {
                     "exercise": 9,
+                    "slot_config_id": 1000,
+                    "type": "dropset",
                     "sets": 5,
                     "weight": "100.00",
                     "weight_unit": 1,
@@ -212,10 +214,13 @@ export const responseRoutineDayDataToday = {
                     "reps_unit": 1,
                     "reps_rounding": "1.00",
                     "rir": "2.00",
-                    "rest": "120.00"
+                    "rest": "120.00",
+                    "text_repr": "5 Sets – 10 × 100 kg @ 2.00RiR"
                 },
                 {
                     "exercise": 12,
+                    "slot_config_id": 1001,
+                    "type": "normal",
                     "sets": 3,
                     "weight": "90.00",
                     "weight_unit": 1,
@@ -224,10 +229,13 @@ export const responseRoutineDayDataToday = {
                     "reps_unit": 1,
                     "reps_rounding": "1.00",
                     "rir": "2.00",
-                    "rest": "120.00"
+                    "rest": "120.00",
+                    "text_repr": "3 Sätze – 12 × 90 kg @ 2.00RiR"
                 },
                 {
                     "exercise": 9,
+                    "slot_config_id": 1000,
+                    "type": "dropset",
                     "sets": 5,
                     "weight": "100.00",
                     "weight_unit": 1,
@@ -236,10 +244,13 @@ export const responseRoutineDayDataToday = {
                     "reps_unit": 1,
                     "reps_rounding": "1.00",
                     "rir": "2.00",
-                    "rest": "120.00"
+                    "rest": "120.00",
+                    "text_repr": "5 Sets – 10 × 100 kg @ 2.00RiR"
                 },
                 {
                     "exercise": 12,
+                    "slot_config_id": 1001,
+                    "type": "normal",
                     "sets": 3,
                     "weight": "90.00",
                     "weight_unit": 1,
@@ -248,10 +259,13 @@ export const responseRoutineDayDataToday = {
                     "reps_unit": 1,
                     "reps_rounding": "1.00",
                     "rir": "2.00",
-                    "rest": "120.00"
+                    "rest": "120.00",
+                    "text_repr": "3 Sätze – 12 × 90 kg @ 2.00RiR"
                 },
                 {
                     "exercise": 9,
+                    "slot_config_id": 1000,
+                    "type": "dropset",
                     "sets": 5,
                     "weight": "100.00",
                     "weight_unit": 1,
@@ -260,10 +274,13 @@ export const responseRoutineDayDataToday = {
                     "reps_unit": 1,
                     "reps_rounding": "1.00",
                     "rir": "2.00",
-                    "rest": "120.00"
+                    "rest": "120.00",
+                    "text_repr": "5 Sets – 10 × 100 kg @ 2.00RiR"
                 },
                 {
                     "exercise": 12,
+                    "slot_config_id": 1001,
+                    "type": "normal",
                     "sets": 3,
                     "weight": "90.00",
                     "weight_unit": 1,
@@ -272,10 +289,13 @@ export const responseRoutineDayDataToday = {
                     "reps_unit": 1,
                     "reps_rounding": "1.00",
                     "rir": "2.00",
-                    "rest": "120.00"
+                    "rest": "120.00",
+                    "text_repr": "3 Sätze – 12 × 90 kg @ 2.00RiR"
                 },
                 {
                     "exercise": 9,
+                    "slot_config_id": 1000,
+                    "type": "dropset",
                     "sets": 5,
                     "weight": "100.00",
                     "weight_unit": 1,
@@ -284,10 +304,13 @@ export const responseRoutineDayDataToday = {
                     "reps_unit": 1,
                     "reps_rounding": "1.00",
                     "rir": "2.00",
-                    "rest": "120.00"
+                    "rest": "120.00",
+                    "text_repr": "5 Sets – 10 × 100 kg @ 2.00RiR"
                 },
                 {
                     "exercise": 9,
+                    "slot_config_id": 1000,
+                    "type": "dropset",
                     "sets": 5,
                     "weight": "100.00",
                     "weight_unit": 1,
@@ -296,7 +319,8 @@ export const responseRoutineDayDataToday = {
                     "reps_unit": 1,
                     "reps_rounding": "1.00",
                     "rir": "2.00",
-                    "rest": "120.00"
+                    "rest": "120.00",
+                    "text_repr": "5 Sets – 10 × 100 kg @ 2.00RiR"
                 }
             ]
         },

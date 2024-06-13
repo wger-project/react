@@ -1,13 +1,16 @@
 /* eslint-disable camelcase */
 
+import { Exercise } from "components/Exercises/models/exercise";
 import { SetConfigData, SetConfigDataAdapter } from "components/WorkoutRoutines/models/SetConfigData";
 import { Adapter } from "utils/Adapter";
 
 export class SlotData {
 
+    exercises: Exercise[] = [];
+
     constructor(
         public comment: number,
-        public exercises: number[],
+        public exerciseIds: number[],
         public setConfigs: SetConfigData[],
     ) {
     }

@@ -84,7 +84,7 @@ const DayListItem = (props: { day: Day }) => {
             {props.day.slots.map((set) => (<div key={set.id}>
                 {set.settingsFiltered.map((setting) =>
                     <SettingDetails
-                        setting={setting}
+                        setConfigData={setting}
                         set={set}
                         key={setting.id}
                         imageHeight={45}

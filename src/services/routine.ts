@@ -2,15 +2,17 @@ import axios from 'axios';
 import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
 import { Routine, RoutineAdapter } from "components/WorkoutRoutines/models/Routine";
 import { RoutineDayData, RoutineDayDataAdapter } from "components/WorkoutRoutines/models/RoutineDayData";
-import { SetAdapter, WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
+import { SetAdapter } from "components/WorkoutRoutines/models/WorkoutSet";
 import { SettingAdapter } from "components/WorkoutRoutines/models/WorkoutSetting";
-import { getExercise } from "services";
+import { getExercise } from "services/exercise";
 import { getRepUnits, getWeightUnits } from "services/workoutUnits";
 import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
 
 export const ROUTINE_API_PATH = 'routine';
 export const ROUTINE_API_DAY_SEQUENCE_PATH = 'day-sequence';
+export const ROUTINE_API_STRUCTURE_PATH = 'structure';
+export const ROUTINE_API_CURRENT_DAY = 'current-day';
 export const SET_API_PATH = 'set';
 export const SETTING_API_PATH = 'setting';
 
@@ -37,8 +39,34 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     );
     const routine = routineAdapter.fromJson(response.data);
 
+    const todayDayData = await getRoutineDayDataToday(id);
+    const exerciseMap: { [id: number]: any } = {};
+
+    // Collect and load all exercises for the workout
+    for (const slot of todayDayData.slots) {
+        for (const exerciseId of slot.exerciseIds) {
+            if (!(exerciseId in exerciseMap)) {
+                exerciseMap[exerciseId] = await getExercise(exerciseId);
+            }
+        }
+    }
+    for (const slot of todayDayData.slots) {
+        for (const setData of slot.setConfigs) {
+            setData.exercise = exerciseMap[setData.exerciseId];
+        }
+    }
+
+    for (const slot of todayDayData.slots) {
+        for (const exerciseId of slot.exerciseIds) {
+            slot.exercises?.push(exerciseMap[exerciseId]);
+        }
+    }
+
+
+    routine.todayDayData = todayDayData;
+
     // Process the days
-    const dayResponse = await axios.get<ResponseType<Day>>(
+    const daysResponse = await axios.get<ResponseType<Day>>(
         makeUrl(ROUTINE_API_PATH, {
             id: routine.id,
             objectMethod: ROUTINE_API_DAY_SEQUENCE_PATH
@@ -50,49 +78,49 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     const repUnits = unitResponses[0];
     const weightUnits = unitResponses[1];
 
-    for (const dayData of dayResponse.data.results) {
-        const day = dayAdapter.fromJson(dayData);
-
-        // Process the sets
-        const setResponse = await axios.get<ResponseType<WorkoutSet>>(
-            makeUrl(SET_API_PATH, { query: { exerciseday: day.id.toString() } }),
-            { headers: makeHeader() },
-        );
-        for (const setData of setResponse.data.results) {
-            const set = setAdapter.fromJson(setData);
-            day.slots.push(set);
-        }
-
-        // Process the settings
-        const settingPromises = setResponse.data.results.map((setData: any) => {
-            return axios.get<ResponseType<any>>(
-                makeUrl(SETTING_API_PATH, { query: { set: setData.id } }),
-                { headers: makeHeader() },
-            );
-        });
-        const settingsResponses = await Promise.all(settingPromises);
-
-        for (const settingsData of settingsResponses) {
-            for (const settingData of settingsData.data.results) {
-                const set = day.slots.find(e => e.id === settingData.set);
-                const setting = settingAdapter.fromJson(settingData);
-
-                // TODO: use some global state or cache for this
-                //       we will need to access individual exercises throughout the app
-                //       as well as the weight and repetition units
-                const weightUnit = weightUnits.find(e => e.id === setting.weightUnit);
-                const repUnit = repUnits.find(e => e.id === setting.repetitionUnit);
-
-                const tmpSetting = set!.settings.find(e => e.exerciseId === setting.exerciseId);
-                setting.base = tmpSetting !== undefined ? tmpSetting.base : await getExercise(setting.exerciseId);
-                setting.weightUnitObj = weightUnit;
-                setting.repetitionUnitObj = repUnit;
-
-                set!.settings.push(setting);
-            }
-        }
-        routine.days.push(day);
-    }
+    // for (const dayData of dayResponse.data.results) {
+    //     const day = dayAdapter.fromJson(dayData);
+    //
+    //     // Process the sets
+    //     const setResponse = await axios.get<ResponseType<WorkoutSet>>(
+    //         makeUrl(SET_API_PATH, { query: { exerciseday: day.id.toString() } }),
+    //         { headers: makeHeader() },
+    //     );
+    //     for (const setData of setResponse.data.results) {
+    //         const set = setAdapter.fromJson(setData);
+    //         day.slots.push(set);
+    //     }
+    //
+    //     // Process the settings
+    //     const settingPromises = setResponse.data.results.map((setData: any) => {
+    //         return axios.get<ResponseType<any>>(
+    //             makeUrl(SETTING_API_PATH, { query: { set: setData.id } }),
+    //             { headers: makeHeader() },
+    //         );
+    //     });
+    //     const settingsResponses = await Promise.all(settingPromises);
+    //
+    //     for (const settingsData of settingsResponses) {
+    //         for (const settingData of settingsData.data.results) {
+    //             const set = day.slots.find(e => e.id === settingData.set);
+    //             const setting = settingAdapter.fromJson(settingData);
+    //
+    //             // TODO: use some global state or cache for this
+    //             //       we will need to access individual exercises throughout the app
+    //             //       as well as the weight and repetition units
+    //             const weightUnit = weightUnits.find(e => e.id === setting.weightUnit);
+    //             const repUnit = repUnits.find(e => e.id === setting.repetitionUnit);
+    //
+    //             const tmpSetting = set!.settings.find(e => e.exerciseId === setting.exerciseId);
+    //             setting.base = tmpSetting !== undefined ? tmpSetting.base : await getExercise(setting.exerciseId);
+    //             setting.weightUnitObj = weightUnit;
+    //             setting.repetitionUnitObj = repUnit;
+    //
+    //             set!.settings.push(setting);
+    //         }
+    //     }
+    //     routine.days.push(day);
+    // }
 
     // console.log(routine);
     return routine;
@@ -197,7 +225,7 @@ export const editRoutine = async (data: EditRoutineParams): Promise<Routine> => 
 
 export const getRoutineDayDataToday = async (routineId: number): Promise<RoutineDayData> => {
     const response = await axios.get(
-        makeUrl(ROUTINE_API_PATH, { id: routineId, objectMethod: 'current-day' }),
+        makeUrl(ROUTINE_API_PATH, { id: routineId, objectMethod: ROUTINE_API_CURRENT_DAY }),
         { headers: makeHeader() }
     );
 
