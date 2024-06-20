@@ -10,19 +10,27 @@ export class SetConfigData {
     constructor(
         public exerciseId: number,
         public slotConfigId: number,
-        public type: "normal" | "dropset" | "myo",
+        public type: "normal" | "dropset" | "myo" | "partial" | "forced" | "tut" | "iso" | "jump",
         public nrOfSets: number,
-        public weight: number,
+        public weight: number | null,
+        public maxWeight: number | null,
         public weightUnitId: number,
         public weightRounding: number,
-        public reps: number,
+        public reps: number | null,
+        public maxReps: number | null,
         public repsUnitId: number,
         public repsRounding: number,
-        public rir: number,
-        public restTime: number,
+        public rir: number | null,
+        public rpe: number | null,
+        public restTime: number | null,
+        public maxRestTime: number | null,
         public textRepr: string,
         public comment: string,
     ) {
+    }
+
+    public get isSpecialType(): boolean {
+        return this.type !== 'normal';
     }
 }
 
@@ -33,14 +41,18 @@ export class SetConfigDataAdapter implements Adapter<SetConfigData> {
         item.slot_config_id,
         item.type,
         item.sets,
-        parseFloat(item.weight),
+        item.weight !== null ? parseFloat(item.weight) : null,
+        item.max_weight !== null ? parseFloat(item.max_weight) : null,
         item.weight_unit,
         parseFloat(item.weight_rounding),
-        parseFloat(item.reps),
+        item.reps !== null ? parseFloat(item.reps) : null,
+        item.max_reps !== null ? parseFloat(item.max_reps) : null,
         item.reps_unit,
         parseFloat(item.reps_rounding),
-        parseFloat(item.rir),
-        parseFloat(item.rest),
+        item.rir !== null ? parseFloat(item.rir) : null,
+        item.rpe !== null ? parseFloat(item.rpe) : null,
+        item.rest !== null ? parseFloat(item.rest) : null,
+        item.max_rest !== null ? parseFloat(item.max_rest) : null,
         item.text_repr,
         item.comment,
     );

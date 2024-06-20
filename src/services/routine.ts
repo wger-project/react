@@ -12,7 +12,7 @@ import { ResponseType } from "./responseType";
 export const ROUTINE_API_PATH = 'routine';
 export const ROUTINE_API_DAY_SEQUENCE_PATH = 'day-sequence';
 export const ROUTINE_API_STRUCTURE_PATH = 'structure';
-export const ROUTINE_API_CURRENT_DAY = 'current-day';
+export const ROUTINE_API_CURRENT_DAY = 'current-day-display-mode';
 export const SET_API_PATH = 'set';
 export const SETTING_API_PATH = 'setting';
 

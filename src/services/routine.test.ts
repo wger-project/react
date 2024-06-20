@@ -133,6 +133,7 @@ describe("workout routine service tests", () => {
             )
         );
         expect(result.slots[0].comment).toEqual('Push set 1');
+        expect(result.slots[0].isSuperset).toEqual(true);
         expect(result.slots[0].exerciseIds).toEqual([9, 12]);
         expect(result.slots[0].setConfigs[0]).toEqual(
             new SetConfigData(
@@ -141,29 +142,41 @@ describe("workout routine service tests", () => {
                 "dropset",
                 5,
                 100,
+                120,
                 1,
                 1.25,
                 10,
+                null,
                 1,
                 1,
                 2.00,
+                8.00,
                 120,
+                180,
+                "5 Sets, 10 × 100-120 kg @ 2 RiR",
+                "foo"
             )
         );
         expect(result.slots[0].setConfigs[1]).toEqual(
             new SetConfigData(
                 12,
-                1000,
+                1001,
                 "normal",
                 3,
                 90,
+                null,
                 1,
                 1.25,
                 12,
+                null,
                 1,
                 1,
                 2.00,
+                8.00,
                 120,
+                null,
+                "3 Sets, 12 × 90 kg @ 2 RiR",
+                "bar"
             )
         );
 

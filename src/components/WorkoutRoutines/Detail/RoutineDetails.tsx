@@ -4,6 +4,7 @@ import {
     Card,
     CardContent,
     CardHeader,
+    Chip,
     Container,
     Grid,
     IconButton,
@@ -69,6 +70,14 @@ export function SettingDetails(props: {
                 </Typography>
                 <Typography>
                     {props.setConfigData.textRepr}
+                    {props.setConfigData.isSpecialType &&
+                        <Chip
+                            label={props.setConfigData.type}
+                            color="primary"
+                            size="small"
+                            variant="outlined"
+                            sx={{ marginLeft: "0.5em" }} />
+                    }
                 </Typography>
                 <Typography variant={"caption"}>
                     {props.setConfigData.comment}
