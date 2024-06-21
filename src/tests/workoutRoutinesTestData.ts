@@ -181,79 +181,81 @@ export const testRepUnit2 = new RepetitionUnit(
     'minutes',
 );
 
-export const responseRoutineDayDataToday = {
-    "iteration": 42,
-    "date": "2024-04-01",
-    "label": "first label",
-    "day": {
-        "id": 100,
-        "next_day": 101,
-        "name": "Push day",
-        "description": "",
-        "is_rest": false,
-        "last_day_in_week": false,
-        "need_logs_to_advance": false
-    },
-    "slots": [
-        {
-            "comment": "Push set 1",
-            "is_superset": true,
-            "exercises": [
-                9,
-                12
-            ],
-            "sets": [
-                {
-                    "exercise": 9,
-                    "slot_config_id": 1000,
-                    "type": "dropset",
-                    "sets": 5,
-                    "weight": "100.00",
-                    "max_weight": "120.00",
-                    "weight_unit": 1,
-                    "weight_rounding": "1.25",
-                    "reps": "10.00",
-                    "max_reps": null,
-                    "reps_unit": 1,
-                    "reps_rounding": "1.00",
-                    "rir": "2.00",
-                    "rpe": "8.00",
-                    "rest": "120.00",
-                    "max_rest": "180.00",
-                    "text_repr": "5 Sets, 10 × 100-120 kg @ 2 RiR",
-                    "comment": "foo"
-                },
-                {
-                    "slot_config_id": 1001,
-                    "exercise": 12,
-                    "sets": 3,
-                    "weight": "90.00",
-                    "max_weight": null,
-                    "weight_unit": 1,
-                    "weight_rounding": "1.25",
-                    "reps": "12.00",
-                    "max_reps": null,
-                    "reps_unit": 1,
-                    "reps_rounding": "1.00",
-                    "rir": "2.00",
-                    "rpe": "8.00",
-                    "rest": "120.00",
-                    "max_rest": null,
-                    "type": "normal",
-                    "text_repr": "3 Sets, 12 × 90 kg @ 2 RiR",
-                    "comment": "bar"
-                }
-            ]
+export const responseRoutineIterationDataToday = [
+    {
+        "iteration": 42,
+        "date": "2024-04-01",
+        "label": "first label",
+        "day": {
+            "id": 100,
+            "next_day": 101,
+            "name": "Push day",
+            "description": "",
+            "is_rest": false,
+            "last_day_in_week": false,
+            "need_logs_to_advance": false
         },
-        {
-            "comment": "Push set 2",
-            "exercises": [],
-            "sets": []
-        },
-        {
-            "comment": "Push set 3",
-            "exercises": [],
-            "sets": []
-        }
-    ]
-};
+        "slots": [
+            {
+                "comment": "Push set 1",
+                "is_superset": true,
+                "exercises": [
+                    9,
+                    12
+                ],
+                "sets": [
+                    {
+                        "exercise": 9,
+                        "slot_config_id": 1000,
+                        "type": "dropset",
+                        "sets": 5,
+                        "weight": "100.00",
+                        "max_weight": "120.00",
+                        "weight_unit": 1,
+                        "weight_rounding": "1.25",
+                        "reps": "10.00",
+                        "max_reps": null,
+                        "reps_unit": 1,
+                        "reps_rounding": "1.00",
+                        "rir": "2.00",
+                        "rpe": "8.00",
+                        "rest": "120.00",
+                        "max_rest": "180.00",
+                        "text_repr": "5 Sets, 10 × 100-120 kg @ 2 RiR",
+                        "comment": "foo"
+                    },
+                    {
+                        "slot_config_id": 1001,
+                        "exercise": 12,
+                        "sets": 3,
+                        "weight": "90.00",
+                        "max_weight": null,
+                        "weight_unit": 1,
+                        "weight_rounding": "1.25",
+                        "reps": "12.00",
+                        "max_reps": null,
+                        "reps_unit": 1,
+                        "reps_rounding": "1.00",
+                        "rir": "2.00",
+                        "rpe": "8.00",
+                        "rest": "120.00",
+                        "max_rest": null,
+                        "type": "normal",
+                        "text_repr": "3 Sets, 12 × 90 kg @ 2 RiR",
+                        "comment": "bar"
+                    }
+                ]
+            },
+            {
+                "comment": "Push set 2",
+                "exercises": [],
+                "sets": []
+            },
+            {
+                "comment": "Push set 3",
+                "exercises": [],
+                "sets": []
+            }
+        ]
+    }
+];

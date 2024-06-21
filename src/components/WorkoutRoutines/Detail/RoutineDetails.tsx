@@ -44,7 +44,9 @@ export const RoutineDetails = () => {
                         {routineQuery.data?.description}
                     </Typography>
                     <Stack spacing={2} sx={{ mt: 2 }}>
-                        <DayDetails dayData={routineQuery.data?.todayDayData!} key={uuid4()} />
+                        {routineQuery.data!.todayDayData.map((day) =>
+                            <DayDetails dayData={day} key={uuid4()} />
+                        )}
                     </Stack>
                 </>
             }
@@ -150,7 +152,7 @@ const DayDetails = (props: { dayData: RoutineDayData }) => {
                         <MoreVertIcon />
                     </IconButton>
                 }
-                title={props.dayData.day.name}
+                title={props.dayData.day.isRest ? 'Rest day' : props.dayData.day.name}
                 subheader={props.dayData.day.description}
             />
             <Menu

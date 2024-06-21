@@ -12,7 +12,7 @@ import { ResponseType } from "./responseType";
 export const ROUTINE_API_PATH = 'routine';
 export const ROUTINE_API_DAY_SEQUENCE_PATH = 'day-sequence';
 export const ROUTINE_API_STRUCTURE_PATH = 'structure';
-export const ROUTINE_API_CURRENT_DAY = 'current-day-display-mode';
+export const ROUTINE_API_CURRENT_DAY = 'current-iteration-display-mode';
 export const SET_API_PATH = 'set';
 export const SETTING_API_PATH = 'setting';
 
@@ -43,22 +43,27 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     const exerciseMap: { [id: number]: any } = {};
 
     // Collect and load all exercises for the workout
-    for (const slot of todayDayData.slots) {
-        for (const exerciseId of slot.exerciseIds) {
-            if (!(exerciseId in exerciseMap)) {
-                exerciseMap[exerciseId] = await getExercise(exerciseId);
+    for (const day of todayDayData) {
+        for (const slot of day.slots) {
+            for (const exerciseId of slot.exerciseIds) {
+                if (!(exerciseId in exerciseMap)) {
+                    exerciseMap[exerciseId] = await getExercise(exerciseId);
+                }
             }
         }
     }
-    for (const slot of todayDayData.slots) {
-        for (const setData of slot.setConfigs) {
-            setData.exercise = exerciseMap[setData.exerciseId];
+    for (const day of todayDayData) {
+        for (const slot of day.slots) {
+            for (const setData of slot.setConfigs) {
+                setData.exercise = exerciseMap[setData.exerciseId];
+            }
         }
     }
-
-    for (const slot of todayDayData.slots) {
-        for (const exerciseId of slot.exerciseIds) {
-            slot.exercises?.push(exerciseMap[exerciseId]);
+    for (const day of todayDayData) {
+        for (const slot of day.slots) {
+            for (const exerciseId of slot.exerciseIds) {
+                slot.exercises?.push(exerciseMap[exerciseId]);
+            }
         }
     }
 
@@ -223,12 +228,12 @@ export const editRoutine = async (data: EditRoutineParams): Promise<Routine> => 
     return adapter.fromJson(response.data);
 };
 
-export const getRoutineDayDataToday = async (routineId: number): Promise<RoutineDayData> => {
+export const getRoutineDayDataToday = async (routineId: number): Promise<RoutineDayData[]> => {
     const response = await axios.get(
         makeUrl(ROUTINE_API_PATH, { id: routineId, objectMethod: ROUTINE_API_CURRENT_DAY }),
         { headers: makeHeader() }
     );
 
     const adapter = new RoutineDayDataAdapter();
-    return adapter.fromJson(response.data);
+    return response.data.map((data: any) => adapter.fromJson(data));
 };

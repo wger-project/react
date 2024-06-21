@@ -9,7 +9,7 @@ import { getRoutineLogs } from "services/workoutLogs";
 import { getRepUnits, getWeightUnits } from "services/workoutUnits";
 import {
     responseApiWorkoutRoutine,
-    responseRoutineDayDataToday,
+    responseRoutineIterationDataToday,
     responseRoutineLogs,
     testRepUnit1,
     testRepUnit2,
@@ -110,7 +110,7 @@ describe("workout routine service tests", () => {
     test('GET the routine day data for today', async () => {
         // Arrange
         // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineDayDataToday }));
+        axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineIterationDataToday }));
 
         // Act
         const result = await getRoutineDayDataToday(1);
@@ -118,10 +118,10 @@ describe("workout routine service tests", () => {
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
 
-        expect(result.iteration).toStrictEqual(42);
-        expect(result.date).toStrictEqual(new Date('2024-04-01'));
-        expect(result.label).toStrictEqual('first label');
-        expect(result.day).toStrictEqual(
+        expect(result[0].iteration).toStrictEqual(42);
+        expect(result[0].date).toStrictEqual(new Date('2024-04-01'));
+        expect(result[0].label).toStrictEqual('first label');
+        expect(result[0].day).toStrictEqual(
             new Day(
                 100,
                 101,
@@ -132,10 +132,10 @@ describe("workout routine service tests", () => {
                 false
             )
         );
-        expect(result.slots[0].comment).toEqual('Push set 1');
-        expect(result.slots[0].isSuperset).toEqual(true);
-        expect(result.slots[0].exerciseIds).toEqual([9, 12]);
-        expect(result.slots[0].setConfigs[0]).toEqual(
+        expect(result[0].slots[0].comment).toEqual('Push set 1');
+        expect(result[0].slots[0].isSuperset).toEqual(true);
+        expect(result[0].slots[0].exerciseIds).toEqual([9, 12]);
+        expect(result[0].slots[0].setConfigs[0]).toEqual(
             new SetConfigData(
                 9,
                 1000,
@@ -157,7 +157,7 @@ describe("workout routine service tests", () => {
                 "foo"
             )
         );
-        expect(result.slots[0].setConfigs[1]).toEqual(
+        expect(result[0].slots[0].setConfigs[1]).toEqual(
             new SetConfigData(
                 12,
                 1001,

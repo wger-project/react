@@ -10,7 +10,7 @@ export class Routine {
 
     days: Day[] = [];
     sessions: WorkoutSession[] = [];
-    todayDayData?: RoutineDayData;
+    todayDayData: RoutineDayData[] = [];
     dayData: RoutineDayData[] = [];
 
     constructor(
