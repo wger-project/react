@@ -13,10 +13,11 @@ import {
     ListItemText,
 } from '@mui/material';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { uuid4 } from "components/Core/Misc/uuid";
 import { EmptyCard } from "components/Dashboard/EmptyCard";
 import { SettingDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
-import { Day } from "components/WorkoutRoutines/models/Day";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
+import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { useActiveRoutineQuery } from "components/WorkoutRoutines/queries";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -50,7 +51,7 @@ const RoutineCardContent = (props: { routine: Routine }) => {
         {/* Note: not 500 like the other cards, but a bit more since we don't have an action icon... */}
         <CardContent sx={{ height: "510px", overflow: "auto" }}>
             <List>
-                {props.routine.days.map(day => <DayListItem day={day} key={day.id} />)}
+                {props.routine.todayDayData.map(day => <DayListItem day={day} key={uuid4()} />)}
             </List>
         </CardContent>
 
@@ -63,32 +64,30 @@ const RoutineCardContent = (props: { routine: Routine }) => {
     </Card>;
 };
 
-// <RoutineCardContent routine={routineQuery.data!} />
-
-const DayListItem = (props: { day: Day }) => {
+const DayListItem = (props: { day: RoutineDayData }) => {
     const [expandView, setExpandView] = useState(false);
+    const [t] = useTranslation();
 
     const handleToggleExpand = () => setExpandView(!expandView);
 
     return (<>
-        <ListItemButton onClick={handleToggleExpand} selected={expandView}>
+        <ListItemButton onClick={handleToggleExpand} selected={expandView} disabled={props.day.day.isRest}>
             <ListItemIcon>
                 {expandView ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </ListItemIcon>
             <ListItemText
-                primary={props.day.description}
+                primary={props.day.day.isRest ? t('routines.restDay') : props.day.day.name}
             />
         </ListItemButton>
 
         <Collapse in={expandView} timeout="auto" unmountOnExit>
-            {props.day.slots.map((set) => (<div key={set.id}>
-                {set.settingsFiltered.map((setting) =>
+            {props.day.slots.map((slotData) => (<div key={uuid4()}>
+                {slotData.setConfigs.map((setting) =>
                     <SettingDetails
                         setConfigData={setting}
-                        set={set}
-                        key={setting.id}
-                        imageHeight={45}
-                        iconHeight={25}
+                        key={uuid4()}
+                        // imageHeight={45}
+                        // iconHeight={25}
                         rowHeight={'70px'}
                     />
                 )}

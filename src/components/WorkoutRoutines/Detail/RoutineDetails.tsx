@@ -37,9 +37,6 @@ export const RoutineDetails = () => {
             {routineQuery.isLoading
                 ? <LoadingPlaceholder />
                 : <>
-                    {/*<Typography variant={"h3"}>*/}
-                    {/*    {routineQuery.data!.name !== '' ? routineQuery.data!.name : t('routines.routine')}*/}
-                    {/*</Typography>*/}
                     <Typography variant={"caption"}>
                         {routineQuery.data?.description}
                     </Typography>
