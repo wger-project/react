@@ -1,9 +1,9 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MemoryRouter, Route, Routes } from "react-router";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { render, screen } from '@testing-library/react';
 import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
+import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import React from 'react';
+import { MemoryRouter, Route, Routes } from "react-router";
 import { testRoutine1 } from "tests/workoutRoutinesTestData";
 
 jest.mock("components/WorkoutRoutines/queries");
@@ -13,6 +13,11 @@ const queryClient = new QueryClient();
 describe("Test the RoutineDetail component", () => {
 
     beforeEach(() => {
+        const crypto = require('crypto');
+        Object.defineProperty(globalThis, 'crypto', {
+            value: { getRandomValues: (arr: string | any[]) => crypto.randomBytes(arr.length) }
+        });
+
         // @ts-ignore
         useRoutineDetailQuery.mockImplementation(() => ({
             isSuccess: true,
@@ -33,9 +38,6 @@ describe("Test the RoutineDetail component", () => {
                 </MemoryRouter>
             </QueryClientProvider>
         );
-        //await act(async () => {
-        //    await new Promise((r) => setTimeout(r, 20));
-        //});
 
         // Assert
         expect(useRoutineDetailQuery).toHaveBeenCalledWith(101);

@@ -26,7 +26,9 @@ export class SetConfigData {
         public maxRestTime: number | null,
         public textRepr: string,
         public comment: string,
+        exercise?: Exercise,
     ) {
+        this.exercise = exercise;
     }
 
     public get isSpecialType(): boolean {

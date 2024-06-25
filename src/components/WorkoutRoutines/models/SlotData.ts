@@ -9,11 +9,15 @@ export class SlotData {
     exercises: Exercise[] = [];
 
     constructor(
-        public comment: number,
+        public comment: string,
         public isSuperset: boolean,
         public exerciseIds: number[],
         public setConfigs: SetConfigData[],
+        exercises?: Exercise[],
     ) {
+        if (exercises) {
+            this.exercises = exercises;
+        }
     }
 }
 

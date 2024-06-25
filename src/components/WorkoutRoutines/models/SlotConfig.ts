@@ -96,6 +96,6 @@ export class SlotConfigAdapter implements Adapter<SlotConfig> {
         weight_rounding: item.weightRounding,
         order: item.order,
         comment: item.comment,
-        is_dropset: item.isDropset
+        type: item.type
     });
 }

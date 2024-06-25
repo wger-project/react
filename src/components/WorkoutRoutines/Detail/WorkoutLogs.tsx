@@ -106,7 +106,7 @@ const LogTableRow = (props: { log: WorkoutLog }) => {
     </TableRow>;
 };
 
-const ExerciseLog = (props: { exerciseId: Exercise, logEntries: WorkoutLog[] | undefined }) => {
+const ExerciseLog = (props: { exercise: Exercise, logEntries: WorkoutLog[] | undefined }) => {
 
     let logEntries = props.logEntries ?? [];
 
@@ -126,7 +126,7 @@ const ExerciseLog = (props: { exerciseId: Exercise, logEntries: WorkoutLog[] | u
 
     return <>
         <Typography variant={"h6"} sx={{ mt: 4 }}>
-            {props.exerciseId.getTranslation().name}
+            {props.exercise.getTranslation().name}
         </Typography>
 
         <Grid container spacing={2}>
@@ -161,7 +161,7 @@ const ExerciseLog = (props: { exerciseId: Exercise, logEntries: WorkoutLog[] | u
 
             </Grid>
             <Grid item xs={12} md={7}>
-                <TimeSeriesChart data={logEntries} key={props.exerciseId.id} />
+                <TimeSeriesChart data={logEntries} key={props.exercise.id} />
             </Grid>
         </Grid>
     </>;
@@ -223,19 +223,19 @@ export const WorkoutLogs = () => {
                                     sx={{ mt: 4 }}
                                 >
                                     <Typography variant={"h4"}>
-                                        {day.description}
+                                        {day.name}
                                     </Typography>
                                     <Button variant="contained" onClick={() => navigateAddLogToDay(day.id)}>
                                         {t('routines.addLogToDay')}
                                     </Button>
                                 </Stack>
 
-                            {day.slots.map(workoutSet =>
-                                    workoutSet.exercises.map(base =>
+                            {day.slots.map(slot =>
+                                    slot.exercises.map(exercise =>
                                         <ExerciseLog
-                                            key={workoutSet.id + base.uuid!}
-                                            exerciseId={base}
-                                            logEntries={groupedWorkoutLogs.get(base.id!)!}
+                                            key={slot.id + exercise.uuid!}
+                                            exercise={exercise}
+                                            logEntries={groupedWorkoutLogs.get(exercise.id!)!}
                                         />)
                                 )}
                             </div>

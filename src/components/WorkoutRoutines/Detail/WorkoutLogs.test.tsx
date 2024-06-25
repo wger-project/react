@@ -52,15 +52,15 @@ describe("Test the RoutineLogs component", () => {
                 </MemoryRouter>
             </QueryClientProvider>
         );
-        //await act(async () => {
-        //    await new Promise((r) => setTimeout(r, 20));
-        //});
 
         // Assert
+        screen.logTestingPlaygroundURL();
         expect(useRoutineDetailQuery).toHaveBeenCalledWith(101);
         expect(useRoutineLogQuery).toHaveBeenCalledWith(101, false);
         expect(screen.getByText('Every day is leg day 🦵🏻')).toBeInTheDocument();
-        expect(screen.getByText('routines.addLogToDay')).toBeInTheDocument();
+        expect(screen.getByText('Pull day')).toBeInTheDocument();
+        expect(screen.getAllByText('routines.addLogToDay')).toHaveLength(3);
+        // expect(await screen.findByText('routines.addLogToDay')).toBeInTheDocument();
         expect(screen.getByText('Squats')).toBeInTheDocument();
     });
 });

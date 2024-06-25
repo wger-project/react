@@ -1,9 +1,10 @@
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
+import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
+import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
+import { SlotData } from "components/WorkoutRoutines/models/SlotData";
 import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
-import { WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
-import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { testExerciseSquats } from "tests/exerciseTestdata";
 
 export const testWeightUnitKg = new WeightUnit(1, "kg");
@@ -13,29 +14,6 @@ export const testWeightUnitPlates = new WeightUnit(3, "Plates");
 export const testRepUnitRepetitions = new RepetitionUnit(1, "Repetitions");
 export const testRepUnitUnitFailure = new RepetitionUnit(2, "Unit failure");
 export const testRepUnitUnitMinutes = new RepetitionUnit(3, "Minutes");
-
-const testSetting1 = new WorkoutSetting(
-    5,
-    new Date(2011, 1, 1),
-    1,
-    2,
-    8,
-    80,
-    1,
-    "1.5",
-    1,
-    "this is a comment",
-    testRepUnitRepetitions,
-    testWeightUnitKg
-);
-testSetting1.base = testExerciseSquats;
-
-const testSet1 = new WorkoutSet(10,
-    4,
-    1,
-    "range of motion!!",
-    [testSetting1]
-);
 
 const testDayLegs = new Day(
     5,
@@ -47,16 +25,77 @@ const testDayLegs = new Day(
     false,
 );
 
+const testDayPull = new Day(
+    6,
+    null,
+    'Pull day',
+    '',
+    false,
+    false,
+    false,
+);
+const testRestDay = new Day(
+    19,
+    null,
+    '',
+    '',
+    true,
+    false,
+    false,
+);
+
+export const testRoutineDataCurrentIteration1 = [
+    new RoutineDayData(
+        5,
+        new Date('2024-01-10'),
+        '',
+        testDayLegs,
+        [
+            new SlotData(
+                '',
+                false,
+                [1],
+                [
+                    new SetConfigData(
+                        1,
+                        1,
+                        'normal',
+                        4,
+                        20,
+                        null,
+                        1,
+                        1.25,
+                        5,
+                        6,
+                        1,
+                        1,
+                        2,
+                        8,
+                        120,
+                        null,
+                        "4 Sets, 5 x 20 @ 2Rir",
+                        '',
+                        testExerciseSquats
+                    )
+                ],
+                [testExerciseSquats]
+            )
+        ]
+    ),
+
+];
+
 export const testRoutine1 = new Routine(
     1,
     'Test routine 1',
     'Full body routine',
     1,
-    new Date('2023-01-01'),
-    new Date('2023-01-01'),
-    new Date('2023-02-01'),
-    [testDayLegs]
+    new Date('2024-01-01'),
+    new Date('2024-01-01'),
+    new Date('2024-02-01'),
+    [testDayLegs, testRestDay, testDayPull]
 );
+testRoutine1.dayDataCurrentIteration = testRoutineDataCurrentIteration1;
 
 
 export const testRoutine2 = new Routine(
@@ -64,9 +103,9 @@ export const testRoutine2 = new Routine(
     '',
     'The routine description',
     1,
-    new Date('2023-02-01'),
-    new Date('2023-02-01'),
-    new Date('2023-03-01')
+    new Date('2024-02-01'),
+    new Date('2024-02-01'),
+    new Date('2024-03-01')
 );
 
 export const TEST_ROUTINES = [testRoutine1, testRoutine2];
@@ -98,37 +137,6 @@ export const responseApiWorkoutRoutine = {
     ]
 };
 
-export const responseApiDay = {
-    "count": 1,
-    "next": null,
-    "previous": null,
-    "results": [
-        {
-            "id": 1,
-            "training": 1,
-            "description": "Tag 2",
-            "day": [
-                2,
-                3
-            ]
-        }
-    ]
-};
-
-export const responseApiSet = {
-    "count": 1,
-    "next": null,
-    "previous": null,
-    "results": [
-        {
-            "id": 1,
-            "exerciseday": 1,
-            "sets": 4,
-            "order": 1,
-            "comment": "start slowly"
-        }
-    ]
-};
 
 export const responseRoutineLogs = {
     "count": 2,
