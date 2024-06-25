@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 
-import { Slot } from "components/WorkoutRoutines/models/Slot";
+import { Slot, SlotAdapter } from "components/WorkoutRoutines/models/Slot";
 import { Adapter } from "utils/Adapter";
 
 export class Day {
@@ -33,6 +33,7 @@ export class DayAdapter implements Adapter<Day> {
         item.is_rest,
         item.need_logs_to_advance,
         item.need_logs_to_advance,
+        item.hasOwnProperty('slots') ? item.slots.map((slot: any) => new SlotAdapter().fromJson(slot)) : [],
     );
 
     toJson = (item: Day) => ({

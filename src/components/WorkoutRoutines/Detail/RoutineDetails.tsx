@@ -41,7 +41,7 @@ export const RoutineDetails = () => {
                         {routineQuery.data?.description}
                     </Typography>
                     <Stack spacing={2} sx={{ mt: 2 }}>
-                        {routineQuery.data!.todayDayData.map((day) =>
+                        {routineQuery.data!.dayDataCurrentIteration.map((day) =>
                             <DayDetails dayData={day} key={uuid4()} />
                         )}
                     </Stack>

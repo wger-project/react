@@ -4,7 +4,7 @@ import { Routine } from "components/WorkoutRoutines/models/Routine";
 import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import { getRoutinesShallow } from "services";
-import { getRoutineDayDataToday } from "services/routine";
+import { getRoutineDayDataCurrentIteration } from "services/routine";
 import { getRoutineLogs } from "services/workoutLogs";
 import { getRepUnits, getWeightUnits } from "services/workoutUnits";
 import {
@@ -113,7 +113,7 @@ describe("workout routine service tests", () => {
         axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineIterationDataToday }));
 
         // Act
-        const result = await getRoutineDayDataToday(1);
+        const result = await getRoutineDayDataCurrentIteration(1);
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);

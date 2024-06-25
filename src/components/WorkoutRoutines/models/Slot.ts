@@ -1,5 +1,5 @@
 import { Exercise } from "components/Exercises/models/exercise";
-import { SlotConfig } from "components/WorkoutRoutines/models/SlotConfig";
+import { SlotConfig, SlotConfigAdapter } from "components/WorkoutRoutines/models/SlotConfig";
 import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
 import { Adapter } from "utils/Adapter";
 
@@ -36,18 +36,6 @@ export class Slot {
 
         return out;
     }
-
-    filterSettingsByExercise(exerciseId: Exercise): WorkoutSetting[] {
-        return [];
-        // return this.settings.filter((element) => element.exerciseId === exerciseId.id);
-    }
-
-    getSettingsTextRepresentation(exerciseId: Exercise, translate?: (key: string) => string): string {
-        return '';
-        // translate = translate || (str => str);
-        //
-        // return settingsToText(this.sets, this.filterSettingsByExercise(exerciseId), translate);
-    }
 }
 
 
@@ -55,7 +43,8 @@ export class SlotAdapter implements Adapter<Slot> {
     fromJson = (item: any) => new Slot(
         item.id,
         item.order,
-        item.comment
+        item.comment,
+        item.hasOwnProperty('configs') ? item.configs.map((config: any) => new SlotConfigAdapter().fromJson(config)) : []
     );
 
     toJson(item: Slot) {
