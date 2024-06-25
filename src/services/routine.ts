@@ -64,13 +64,13 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         }
     }
     for (const dayData of dayDataCurrentIteration) {
-        for (const slot of dayData.slots) {
-            for (const setData of slot.setConfigs) {
+        for (const slotData of dayData.slots) {
+            for (const setData of slotData.setConfigs) {
                 setData.exercise = exerciseMap[setData.exerciseId];
             }
 
-            for (const exerciseId of slot.exerciseIds) {
-                slot.exercises?.push(exerciseMap[exerciseId]);
+            for (const exerciseId of slotData.exerciseIds) {
+                slotData.exercises?.push(exerciseMap[exerciseId]);
             }
         }
     }
