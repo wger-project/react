@@ -54,7 +54,6 @@ describe("Test the RoutineLogs component", () => {
         );
 
         // Assert
-        screen.logTestingPlaygroundURL();
         expect(useRoutineDetailQuery).toHaveBeenCalledWith(101);
         expect(useRoutineLogQuery).toHaveBeenCalledWith(101, false);
         expect(screen.getByText('Every day is leg day 🦵🏻')).toBeInTheDocument();
