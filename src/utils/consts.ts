@@ -54,7 +54,8 @@ export enum ApiPath {
     NUTRITIONAL_DIARY = 'nutritiondiary',
     INGREDIENT_PATH = 'ingredientinfo',
     INGREDIENT_SEARCH_PATH = 'ingredient/search',
-    INGREDIENT_WEIGHT_UNIT = 'ingredientweightunit'
+    INGREDIENT_WEIGHT_UNIT = 'ingredientweightunit',
+    ROUTINE = 'routine',
 }
 
 

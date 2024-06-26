@@ -2,14 +2,14 @@
 
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
-import { WorkoutSession } from "components/WorkoutRoutines/models/WorkoutSession";
+import { RoutineLogData } from "components/WorkoutRoutines/models/RoutineLogData";
 import { Adapter } from "utils/Adapter";
 import { dateToYYYYMMDD } from "utils/date";
 
 export class Routine {
 
     days: Day[] = [];
-    sessions: WorkoutSession[] = [];
+    logData: RoutineLogData[] = [];
     dayDataCurrentIteration: RoutineDayData[] = [];
     dayData: RoutineDayData[] = [];
 

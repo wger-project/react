@@ -2,17 +2,17 @@ import axios from 'axios';
 import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
 import { Routine, RoutineAdapter } from "components/WorkoutRoutines/models/Routine";
 import { RoutineDayData, RoutineDayDataAdapter } from "components/WorkoutRoutines/models/RoutineDayData";
+import { RoutineLogData, RoutineLogDataAdapter } from "components/WorkoutRoutines/models/RoutineLogData";
 import { getExercise } from "services/exercise";
 import { getRepUnits, getWeightUnits } from "services/workoutUnits";
+import { ApiPath } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
 
-export const ROUTINE_API_PATH = 'routine';
 export const ROUTINE_API_DAY_SEQUENCE_PATH = 'day-sequence';
 export const ROUTINE_API_STRUCTURE_PATH = 'structure';
+export const ROUTINE_API_LOGS_PATH = 'logs';
 export const ROUTINE_API_CURRENT_ITERATION_DISPLAY = 'current-iteration-display-mode';
-export const SET_API_PATH = 'set';
-export const SETTING_API_PATH = 'setting';
 
 /*
  * Processes a routine with all sub-object
@@ -27,12 +27,9 @@ export const processRoutineShallow = (routineData: any): Routine => {
  */
 export const processRoutine = async (id: number): Promise<Routine> => {
     const routineAdapter = new RoutineAdapter();
-    // const dayAdapter = new DayAdapter();
-    // const setAdapter = new SetAdapter();
-    // const settingAdapter = new SettingAdapter();
 
     const response = await axios.get(
-        makeUrl(ROUTINE_API_PATH, { id: id }),
+        makeUrl(ApiPath.ROUTINE, { id: id }),
         { headers: makeHeader() }
     );
     const routine = routineAdapter.fromJson(response.data);
@@ -42,14 +39,14 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         getWeightUnits(),
         getRoutineDayDataCurrentIteration(id),
         getRoutineStructure(id),
+        getRoutineLogData(id),
+
     ]);
     const repUnits = responses[0];
     const weightUnits = responses[1];
     const dayDataCurrentIteration = responses[2];
     const dayStructure = responses[3];
-
-    console.log(dayStructure);
-
+    const logData = responses[4];
 
     const exerciseMap: { [id: number]: any } = {};
 
@@ -75,10 +72,11 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         }
     }
     routine.dayDataCurrentIteration = dayDataCurrentIteration;
+    routine.logData = logData;
 
     // Process the days
     // const daysResponse = await axios.get<ResponseType<Day>>(
-    //     makeUrl(ROUTINE_API_PATH, {
+    //     makeUrl(ApiPath.ROUTINE, {
     //         id: routine.id,
     //         objectMethod: ROUTINE_API_DAY_SEQUENCE_PATH
     //     }),
@@ -140,7 +138,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
  * Note: this returns all the data, including all sub-objects
  */
 export const getRoutines = async (): Promise<Routine[]> => {
-    const url = makeUrl(ROUTINE_API_PATH);
+    const url = makeUrl(ApiPath.ROUTINE);
     const response = await axios.get<ResponseType<Routine>>(
         url,
         { headers: makeHeader() }
@@ -159,7 +157,7 @@ export const getRoutines = async (): Promise<Routine[]> => {
  * Note that at the moment this is simply the newest one
  */
 export const getActiveRoutine = async (): Promise<null | Routine> => {
-    const url = makeUrl(ROUTINE_API_PATH, { query: { 'limit': '1' } });
+    const url = makeUrl(ApiPath.ROUTINE, { query: { 'limit': '1' } });
 
     const response = await axios.get<ResponseType<Routine>>(
         url,
@@ -183,7 +181,7 @@ export const getRoutine = async (id: number): Promise<Routine> => {
  * Note: strictly only the routine data, no days or any other sub-objects
  */
 export const getRoutinesShallow = async (): Promise<Routine[]> => {
-    const url = makeUrl(ROUTINE_API_PATH);
+    const url = makeUrl(ApiPath.ROUTINE);
     const response = await axios.get<ResponseType<Routine>>(
         url,
         { headers: makeHeader() }
@@ -210,7 +208,7 @@ export interface EditRoutineParams extends AddRoutineParams {
 
 export const addRoutine = async (data: AddRoutineParams): Promise<Routine> => {
     const response = await axios.post(
-        makeUrl(ROUTINE_API_PATH,),
+        makeUrl(ApiPath.ROUTINE,),
         data,
         { headers: makeHeader() }
     );
@@ -221,7 +219,7 @@ export const addRoutine = async (data: AddRoutineParams): Promise<Routine> => {
 
 export const editRoutine = async (data: EditRoutineParams): Promise<Routine> => {
     const response = await axios.patch(
-        makeUrl(ROUTINE_API_PATH, { id: data.id }),
+        makeUrl(ApiPath.ROUTINE, { id: data.id }),
         data,
         { headers: makeHeader() }
     );
@@ -232,19 +230,30 @@ export const editRoutine = async (data: EditRoutineParams): Promise<Routine> => 
 
 export const getRoutineDayDataCurrentIteration = async (routineId: number): Promise<RoutineDayData[]> => {
     const response = await axios.get(
-        makeUrl(ROUTINE_API_PATH, { id: routineId, objectMethod: ROUTINE_API_CURRENT_ITERATION_DISPLAY }),
+        makeUrl(ApiPath.ROUTINE, { id: routineId, objectMethod: ROUTINE_API_CURRENT_ITERATION_DISPLAY }),
         { headers: makeHeader() }
     );
 
     const adapter = new RoutineDayDataAdapter();
     return response.data.map((data: any) => adapter.fromJson(data));
 };
+
 export const getRoutineStructure = async (routineId: number): Promise<Day[]> => {
     const response = await axios.get(
-        makeUrl(ROUTINE_API_PATH, { id: routineId, objectMethod: ROUTINE_API_STRUCTURE_PATH }),
+        makeUrl(ApiPath.ROUTINE, { id: routineId, objectMethod: ROUTINE_API_STRUCTURE_PATH }),
         { headers: makeHeader() }
     );
 
     const adapter = new DayAdapter();
     return response.data.days.map((data: any) => adapter.fromJson(data));
+};
+
+export const getRoutineLogData = async (routineId: number): Promise<RoutineLogData[]> => {
+    const response = await axios.get(
+        makeUrl(ApiPath.ROUTINE, { id: routineId, objectMethod: ROUTINE_API_LOGS_PATH }),
+        { headers: makeHeader() }
+    );
+
+    const adapter = new RoutineLogDataAdapter();
+    return response.data.map((data: any) => adapter.fromJson(data));
 };
