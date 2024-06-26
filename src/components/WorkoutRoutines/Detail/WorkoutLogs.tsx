@@ -216,7 +216,7 @@ export const WorkoutLogs = () => {
                 </Typography>
                 {logsQuery.isSuccess && routineQuery.isSuccess
                     ? <>
-                        {routineQuery.data!.dayData.map((dayData) => <div key={uuid4()}>
+                        {routineQuery.data!.dayDataCurrentIteration.map((dayData) => <div key={uuid4()}>
                                 <Stack
                                     direction={{ xs: 'column', sm: 'row' }}
                                     justifyContent="space-between"

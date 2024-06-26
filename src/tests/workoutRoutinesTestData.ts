@@ -2,10 +2,13 @@ import { Day } from "components/WorkoutRoutines/models/Day";
 import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
+import { RoutineLogData } from "components/WorkoutRoutines/models/RoutineLogData";
 import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
 import { SlotData } from "components/WorkoutRoutines/models/SlotData";
 import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
+import { WorkoutSession } from "components/WorkoutRoutines/models/WorkoutSession";
 import { testExerciseSquats } from "tests/exerciseTestdata";
+import { testWorkoutLogs } from "tests/workoutLogsRoutinesTestData";
 
 export const testWeightUnitKg = new WeightUnit(1, "kg");
 export const testWeightUnitLb = new WeightUnit(2, "lb");
@@ -85,6 +88,19 @@ export const testRoutineDataCurrentIteration1 = [
 
 ];
 
+export const testRoutineLogData = new RoutineLogData(
+    new WorkoutSession(
+        111,
+        2,
+        new Date('2024-07-01'),
+        'everything was great today!',
+        '1',
+        '12:30',
+        '17:11',
+    ),
+    testWorkoutLogs
+);
+
 export const testRoutine1 = new Routine(
     1,
     'Test routine 1',
@@ -96,7 +112,7 @@ export const testRoutine1 = new Routine(
     [testDayLegs, testRestDay, testDayPull]
 );
 testRoutine1.dayDataCurrentIteration = testRoutineDataCurrentIteration1;
-
+testRoutine1.logData = [testRoutineLogData];
 
 export const testRoutine2 = new Routine(
     2,

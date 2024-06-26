@@ -16,6 +16,10 @@ const queryClient = new QueryClient();
 describe("Test the RoutineLogs component", () => {
 
     beforeEach(() => {
+        const crypto = require('crypto');
+        Object.defineProperty(globalThis, 'crypto', {
+            value: { getRandomValues: (arr: string | any[]) => crypto.randomBytes(arr.length) }
+        });
 
         // @ts-ignore
         delete window.ResizeObserver;
@@ -57,9 +61,7 @@ describe("Test the RoutineLogs component", () => {
         expect(useRoutineDetailQuery).toHaveBeenCalledWith(101);
         expect(useRoutineLogQuery).toHaveBeenCalledWith(101, false);
         expect(screen.getByText('Every day is leg day 🦵🏻')).toBeInTheDocument();
-        expect(screen.getByText('Pull day')).toBeInTheDocument();
-        expect(screen.getAllByText('routines.addLogToDay')).toHaveLength(3);
-        // expect(await screen.findByText('routines.addLogToDay')).toBeInTheDocument();
+        expect(screen.getByText('routines.addLogToDay')).toBeInTheDocument();
         expect(screen.getByText('Squats')).toBeInTheDocument();
     });
 });

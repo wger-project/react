@@ -12,8 +12,8 @@ export class WorkoutSession {
         public date: Date,
         public notes: String,
         public impression: String,
-        public timeStart: Date,
-        public timeEnd: Date,
+        public timeStart: String,
+        public timeEnd: String,
         public dayObj?: Day,
     ) {
         if (dayObj) {
