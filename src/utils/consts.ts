@@ -56,6 +56,14 @@ export enum ApiPath {
     INGREDIENT_SEARCH_PATH = 'ingredient/search',
     INGREDIENT_WEIGHT_UNIT = 'ingredientweightunit',
     ROUTINE = 'routine',
+    WEIGHT_CONFIG = 'weight-config',
+    MAX_WEIGHT_CONFIG = 'max-weight-config',
+    REPS_CONFIG = 'reps-config',
+    MAX_REPS_CONFIG = 'max-reps-config',
+    RIR_CONFIG = 'rir-config',
+    NR_OF_SETS_CONFIG = 'sets-config',
+    REST_CONFIG = 'rest-config',
+    MAX_REST_CONFIG = 'max-rest-config',
 }
 
 

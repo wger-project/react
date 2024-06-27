@@ -71,8 +71,18 @@ export const processRoutine = async (id: number): Promise<Routine> => {
             }
         }
     }
+
+    for (const day of dayStructure) {
+        for (const slot of day.slots) {
+            for (const slotData of slot.configs) {
+                slotData.exercise = exerciseMap[slotData.exerciseId];
+            }
+        }
+    }
+
     routine.dayDataCurrentIteration = dayDataCurrentIteration;
     routine.logData = logData;
+    routine.days = dayStructure;
 
     // Process the days
     // const daysResponse = await axios.get<ResponseType<Day>>(
@@ -128,6 +138,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     //     routine.days.push(day);
     // }
 
+    // console.log(routine);
     return routine;
 };
 

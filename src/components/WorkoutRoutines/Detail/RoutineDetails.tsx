@@ -38,6 +38,7 @@ export const RoutineDetails = () => {
                 ? <LoadingPlaceholder />
                 : <>
                     <Typography variant={"caption"}>
+                        details -
                         {routineQuery.data?.description}
                     </Typography>
                     <Stack spacing={2} sx={{ mt: 2 }}>
@@ -149,7 +150,7 @@ const DayDetails = (props: { dayData: RoutineDayData }) => {
                         <MoreVertIcon />
                     </IconButton>
                 }
-                title={props.dayData.day.isRest ? 'Rest day' : props.dayData.day.name}
+                title={props.dayData.day.isRest ? t('routines.restDay') : props.dayData.day.name}
                 subheader={props.dayData.day.description}
             />
             <Menu
@@ -164,7 +165,7 @@ const DayDetails = (props: { dayData: RoutineDayData }) => {
                 </MenuItem>
 
             </Menu>
-            <CardContent>
+            {props.dayData.slots.length > 0 && <CardContent>
                 <Stack>
                     {props.dayData.slots.map((slotData, index) => (
                         <SetList
@@ -174,7 +175,7 @@ const DayDetails = (props: { dayData: RoutineDayData }) => {
                         />
                     ))}
                 </Stack>
-            </CardContent>
+            </CardContent>}
         </Card>
     );
 };
