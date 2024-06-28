@@ -6,8 +6,8 @@ import { descriptionValidator, noteValidator } from "components/Exercises/forms/
 import { Form, Formik, useField } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseStateValue } from "state";
-import { setDescriptionEn, setNotesEn } from "state/exerciseReducer";
+import { useExerciseSubmissionStateValue } from "state";
+import { setDescriptionEn, setNotesEn } from "state/exerciseSubmissionReducer";
 import * as yup from "yup";
 
 
@@ -30,7 +30,7 @@ export function ExerciseTempDescription(props: { fieldName: string }) {
 
 export const Step3Description = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
-    const [state, dispatch] = useExerciseStateValue();
+    const [state, dispatch] = useExerciseSubmissionStateValue();
 
     const validationSchema = yup.object({
         description: descriptionValidator(t),

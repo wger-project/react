@@ -4,10 +4,12 @@ export {
 } from 'state/notificationReducer';
 export { NotificationStateProvider, useWeightStateValue } from 'state/notificationState';
 export type { NotificationState } from 'state/notificationState';
-export { SetNotificationState, SetExerciseState } from 'state/stateTypes';
+export { SetNotificationState, SetExerciseSubmissionState } from 'state/stateTypes';
 
 
-export type { ExerciseState } from 'state/exerciseState';
-export { ExerciseStateProvider, useExerciseStateValue, exerciseInitialState } from 'state/exerciseState';
+export type { ExerciseSubmissionState } from 'state/exerciseSubmissionState';
+export {
+    ExerciseSubmissionStateProvider, useExerciseSubmissionStateValue, exerciseSubmissionInitialState
+} from 'state/exerciseSubmissionState';
 
 

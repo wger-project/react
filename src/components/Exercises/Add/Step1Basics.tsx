@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
 import { Autocomplete, Box, Button, Grid, MenuItem, Stack, TextField, } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import * as yup from "yup";
-import { Form, Formik } from "formik";
-import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery, } from "components/Exercises/queries";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
-import { getTranslationKey } from "utils/strings";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { MuscleOverview } from "components/Muscles/MuscleOverview";
-import { useExerciseStateValue } from "state";
-import * as exerciseReducer from "state/exerciseReducer";
-import { ExerciseName } from "components/Exercises/forms/ExerciseName";
-import { alternativeNameValidator, categoryValidator, nameValidator } from "components/Exercises/forms/yupValidators";
 import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
-import { ExerciseSelect } from "components/Exercises/forms/ExerciseSelect";
 import { ExerciseEquipmentSelect } from "components/Exercises/forms/ExerciseEquipmentSelect";
+import { ExerciseName } from "components/Exercises/forms/ExerciseName";
+import { ExerciseSelect } from "components/Exercises/forms/ExerciseSelect";
+import { alternativeNameValidator, categoryValidator, nameValidator } from "components/Exercises/forms/yupValidators";
+import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery, } from "components/Exercises/queries";
+import { MuscleOverview } from "components/Muscles/MuscleOverview";
+import { Form, Formik } from "formik";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useExerciseSubmissionStateValue } from "state";
+import * as exerciseReducer from "state/exerciseSubmissionReducer";
+import { getTranslationKey } from "utils/strings";
+import * as yup from "yup";
 
 export const Step1Basics = ({ onContinue }: StepProps) => {
     const [t] = useTranslation();
-    const [state, dispatch] = useExerciseStateValue();
+    const [state, dispatch] = useExerciseSubmissionStateValue();
     const [primaryMuscles, setPrimaryMuscles] = useState<number[]>(state.muscles);
     const [secondaryMuscles, setSecondaryMuscles] = useState<number[]>(state.musclesSecondary);
 

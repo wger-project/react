@@ -1,14 +1,14 @@
 import { ImageFormData } from "components/Exercises/models/exercise";
 import React, { createContext, useContext, useReducer } from "react";
-import { exerciseReducer } from "state/exerciseReducer";
-import { SetExerciseState } from "state/stateTypes";
+import { exerciseSubmissionReducer } from "state/exerciseSubmissionReducer";
+import { SetExerciseSubmissionState } from "state/stateTypes";
 
-export type ExerciseAction = {
-    type: SetExerciseState,
+export type ExerciseSubmissionAction = {
+    type: SetExerciseSubmissionState,
     payload?: number | number[] | string | string[] | null | ImageFormData[],
 }
 
-export type ExerciseState = {
+export type ExerciseSubmissionState = {
     nameEn: string;
     descriptionEn: string;
     alternativeNamesEn: string[];
@@ -30,7 +30,7 @@ export type ExerciseState = {
     images: ImageFormData[];
 }
 
-export const exerciseInitialState: ExerciseState = {
+export const exerciseSubmissionInitialState: ExerciseSubmissionState = {
     category: null,
     muscles: [],
     musclesSecondary: [],
@@ -53,23 +53,23 @@ export const exerciseInitialState: ExerciseState = {
 };
 
 
-export const ExerciseStateContext = createContext<[ExerciseState, React.Dispatch<ExerciseAction>]>([
-    exerciseInitialState,
-    () => exerciseInitialState
+export const ExerciseSubmissionStateContext = createContext<[ExerciseSubmissionState, React.Dispatch<ExerciseSubmissionAction>]>([
+    exerciseSubmissionInitialState,
+    () => exerciseSubmissionInitialState
 ]);
 
 type StateProp = {
     children: React.ReactElement
 };
 
-export const ExerciseStateProvider: React.FC<StateProp> = ({ children }: StateProp) => {
-    const [state, dispatch] = useReducer(exerciseReducer, exerciseInitialState);
+export const ExerciseSubmissionStateProvider: React.FC<StateProp> = ({ children }: StateProp) => {
+    const [state, dispatch] = useReducer(exerciseSubmissionReducer, exerciseSubmissionInitialState);
 
     return (
-        <ExerciseStateContext.Provider value={[state, dispatch]}>
+        <ExerciseSubmissionStateContext.Provider value={[state, dispatch]}>
             {children}
-        </ExerciseStateContext.Provider>
+        </ExerciseSubmissionStateContext.Provider>
     );
 };
 
-export const useExerciseStateValue = () => useContext(ExerciseStateContext);
+export const useExerciseSubmissionStateValue = () => useContext(ExerciseSubmissionStateContext);

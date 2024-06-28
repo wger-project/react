@@ -1,17 +1,17 @@
-import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Step4Translations } from "components/Exercises/Add/Step4Translations";
 import { useLanguageQuery } from "components/Exercises/queries";
+import React from "react";
 import { testLanguages } from "tests/exerciseTestdata";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import userEvent from "@testing-library/user-event";
 
 // It seems we run into a timeout when running the tests on github actions
 jest.setTimeout(30000);
 
 jest.mock("components/Exercises/queries");
-jest.mock("state/exerciseReducer", () => {
-    const originalModule = jest.requireActual("state/exerciseReducer");
+jest.mock("state/exerciseSubmissionReducer", () => {
+    const originalModule = jest.requireActual("state/exerciseSubmissionReducer");
     return {
         __esModule: true,
         ...originalModule,

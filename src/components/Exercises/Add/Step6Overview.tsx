@@ -25,14 +25,14 @@ import { useNavigate } from "react-router-dom";
 import { addExercise, addTranslation, postAlias, postExerciseImage } from "services";
 import { addNote } from "services/note";
 import { addVariation } from "services/variation";
-import { useExerciseStateValue } from "state";
+import { useExerciseSubmissionStateValue } from "state";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { getTranslationKey } from "utils/strings";
 import { makeLink, WgerLink } from "utils/url";
 
 export const Step6Overview = ({ onBack }: StepProps) => {
     const [t, i18n] = useTranslation();
-    const [state] = useExerciseStateValue();
+    const [state] = useExerciseSubmissionStateValue();
 
     const navigate = useNavigate();
     const categoryQuery = useCategoriesQuery();

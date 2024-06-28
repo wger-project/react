@@ -1,11 +1,10 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Step1Basics } from "components/Exercises/Add/Step1Basics";
-import { testCategories, testEquipment, testMuscles } from "tests/exerciseTestdata";
-import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
-import { ExerciseStateProvider } from "state";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { Step1Basics } from "components/Exercises/Add/Step1Basics";
+import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
+import React from "react";
+import { ExerciseSubmissionStateProvider } from "state";
 import {
     setAlternativeNamesEn,
     setCategory,
@@ -13,14 +12,15 @@ import {
     setNameEn,
     setPrimaryMuscles,
     setSecondaryMuscles
-} from "state/exerciseReducer";
+} from "state/exerciseSubmissionReducer";
+import { testCategories, testEquipment, testMuscles } from "tests/exerciseTestdata";
 
 // It seems we run into a timeout when running the tests on GitHub actions
 jest.setTimeout(15000);
 
 jest.mock("components/Exercises/queries");
-jest.mock("state/exerciseReducer", () => {
-    const originalModule = jest.requireActual("state/exerciseReducer");
+jest.mock("state/exerciseSubmissionReducer", () => {
+    const originalModule = jest.requireActual("state/exerciseSubmissionReducer");
     return {
         __esModule: true,
         ...originalModule,
@@ -66,11 +66,11 @@ describe("<Step1Basics />", () => {
         // Act
         const queryClient = new QueryClient();
         render(
-            <ExerciseStateProvider>
+            <ExerciseSubmissionStateProvider>
                 <QueryClientProvider client={queryClient}>
                     <Step1Basics onContinue={mockOnContinue} />
                 </QueryClientProvider>
-            </ExerciseStateProvider>
+            </ExerciseSubmissionStateProvider>
         );
 
         // Assert
@@ -89,11 +89,11 @@ describe("<Step1Basics />", () => {
         // Act
         const queryClient = new QueryClient();
         render(
-            <ExerciseStateProvider>
+            <ExerciseSubmissionStateProvider>
                 <QueryClientProvider client={queryClient}>
                     <Step1Basics onContinue={mockOnContinue} />
                 </QueryClientProvider>
-            </ExerciseStateProvider>
+            </ExerciseSubmissionStateProvider>
         );
 
         await user.type(screen.getByLabelText("name"), 'Biceps enlarger');

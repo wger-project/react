@@ -25,8 +25,8 @@ import { Exercise } from "components/Exercises/models/exercise";
 import { useExercisesQuery } from "components/Exercises/queries";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseStateValue } from "state";
-import { setNewBaseVariationId, setVariationId } from "state/exerciseReducer";
+import { useExerciseSubmissionStateValue } from "state";
+import { setNewBaseVariationId, setVariationId } from "state/exerciseSubmissionReducer";
 
 /*
  * Groups a list of objects by a property
@@ -52,7 +52,7 @@ const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
     const variationId = exercises[0].variationId;
     const exerciseId = exercises[0].id;
 
-    const [state, dispatch] = useExerciseStateValue();
+    const [state, dispatch] = useExerciseSubmissionStateValue();
     const [showMore, setShowMore] = useState<boolean>(false);
 
     const [stateVariationId, setStateVariationId] = useState<number | null>(state.variationId);
