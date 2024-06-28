@@ -49,12 +49,16 @@ export enum QueryKey {
  * List of API endpoints
  */
 export enum ApiPath {
+
+    // Nutrition
     MEAL = 'meal',
     MEAL_ITEM = 'mealitem',
     NUTRITIONAL_DIARY = 'nutritiondiary',
     INGREDIENT_PATH = 'ingredientinfo',
     INGREDIENT_SEARCH_PATH = 'ingredient/search',
     INGREDIENT_WEIGHT_UNIT = 'ingredientweightunit',
+
+    // Routines
     ROUTINE = 'routine',
     WEIGHT_CONFIG = 'weight-config',
     MAX_WEIGHT_CONFIG = 'max-weight-config',
@@ -64,6 +68,7 @@ export enum ApiPath {
     NR_OF_SETS_CONFIG = 'sets-config',
     REST_CONFIG = 'rest-config',
     MAX_REST_CONFIG = 'max-rest-config',
+    DAY = 'day'
 }
 
 

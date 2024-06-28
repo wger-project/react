@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Exercise } from "components/Exercises/models/exercise";
 import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
 import { Routine, RoutineAdapter } from "components/WorkoutRoutines/models/Routine";
 import { RoutineDayData, RoutineDayDataAdapter } from "components/WorkoutRoutines/models/RoutineDayData";
@@ -9,7 +10,6 @@ import { ApiPath } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
 
-export const ROUTINE_API_DAY_SEQUENCE_PATH = 'day-sequence';
 export const ROUTINE_API_STRUCTURE_PATH = 'structure';
 export const ROUTINE_API_LOGS_PATH = 'logs';
 export const ROUTINE_API_CURRENT_ITERATION_DISPLAY = 'current-iteration-display-mode';
@@ -25,6 +25,8 @@ export const processRoutineShallow = (routineData: any): Routine => {
 /*
  * Processes a routine with all sub-objects
  */
+let exerciseMap: { [id: number]: Exercise } = {};
+
 export const processRoutine = async (id: number): Promise<Routine> => {
     const routineAdapter = new RoutineAdapter();
 
@@ -47,8 +49,6 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     const dayDataCurrentIteration = responses[2];
     const dayStructure = responses[3];
     const logData = responses[4];
-
-    const exerciseMap: { [id: number]: any } = {};
 
     // Collect and load all exercises for the workout
     for (const day of dayDataCurrentIteration) {

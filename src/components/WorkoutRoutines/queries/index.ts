@@ -2,6 +2,17 @@ export {
     useRoutinesQuery, useRoutineDetailQuery, useActiveRoutineQuery, useRoutinesShallowQuery,
 } from './routines';
 
-export { useEditWeightConfigQuery } from './configs';
+export {
+    useEditWeightConfigQuery,
+    useEditMaxRepsConfigQuery,
+    useEditMaxRestConfigQuery,
+    useEditMaxWeightConfigQuery,
+    useEditNrOfSetsConfigQuery,
+    useEditRepsConfigQuery,
+    useEditRestConfigQuery,
+    useEditRiRConfigQuery
+} from './configs';
 
-export { useRoutineLogQuery } from "./logs";
+export { useEditDayQuery } from './days';
+
+export { useRoutineLogQuery, } from "./logs";

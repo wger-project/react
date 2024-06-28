@@ -18,17 +18,20 @@ import { uuid4 } from "components/Core/Misc/uuid";
 import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
 import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
 import { Day } from "components/WorkoutRoutines/models/Day";
-import { useEditWeightConfigQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import {
+    useEditDayQuery,
     useEditMaxRepsConfigQuery,
     useEditMaxRestConfigQuery,
     useEditMaxWeightConfigQuery,
     useEditNrOfSetsConfigQuery,
     useEditRepsConfigQuery,
     useEditRestConfigQuery,
-    useEditRiRConfigQuery
-} from "components/WorkoutRoutines/queries/configs";
+    useEditRiRConfigQuery,
+    useEditWeightConfigQuery,
+    useRoutineDetailQuery
+} from "components/WorkoutRoutines/queries";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 export const RoutineEdit = () => {
@@ -79,7 +82,7 @@ export const RoutineEdit = () => {
                         >
                             <Card>
                                 <CardActionArea sx={{ minHeight: 175 }} onClick={() => {
-                                    console.log('aaaa');
+                                    console.log('adding new day now...');
                                 }}
                                 >
                                     <CardContent>
@@ -96,8 +99,8 @@ export const RoutineEdit = () => {
 
 
                     <Stack spacing={2} sx={{ mt: 2 }}>
-                        <Typography variant={"h5"}>
-                            Result
+                        <Typography variant={"h4"}>
+                            Resulting routine
                         </Typography>
 
                         <Box padding={4}>
@@ -112,7 +115,12 @@ export const RoutineEdit = () => {
 
 const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: number) => void }) => {
     const theme = useTheme();
-    const sx = props.isSelected ? { backgroundColor: theme.palette.primary.light } : {};
+
+    const color = props.isSelected ? theme.palette.primary.light : props.day.isRest ? theme.palette.action.disabled : '';
+
+    const sx = { backgroundColor: color };
+    // const sx = props.isSelected ? { backgroundColor: theme.palette.primary.light } : {};
+    const [t] = useTranslation();
 
     return (
         <Card sx={sx}>
@@ -121,7 +129,7 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
             }}>
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                        {props.day.isRest ? 'REST DAY' : props.day.name}
+                        {props.day.isRest ? t('routines.restDay') : props.day.name}
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
                         {props.day.isRest && <HotelIcon />}
@@ -134,12 +142,29 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
 
 const DayDetails = (props: { day: Day }) => {
 
-    console.log(props.day);
+    const editDayQuery = useEditDayQuery(1);
+    const [t] = useTranslation();
+
     return (
         <>
             <Typography variant={"h5"} gutterBottom>
-                {props.day.isRest ? 'REST DAY' : props.day.name}
+                {props.day.isRest ? t('routines.restDay') : props.day.name}
             </Typography>
+
+            <TextField
+                label="Name"
+                variant="standard"
+                value={props.day.name}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    const data = {
+                        id: props.day.id,
+                        routine: 1,
+                        description: 'props.day.description',
+                        name: event.target.value
+                    };
+                    editDayQuery.mutate(data);
+                }}
+            />
 
             {props.day.slots.map((slot) =>
                 <>
