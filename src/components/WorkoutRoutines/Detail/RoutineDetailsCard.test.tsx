@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
+import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import React from 'react';
 import { MemoryRouter, Route, Routes } from "react-router";
@@ -33,7 +33,7 @@ describe("Test the RoutineDetail component", () => {
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/routine/101']}>
                     <Routes>
-                        <Route path="routine/:routineId" element={<RoutineDetails />} />
+                        <Route path="routine/:routineId" element={<RoutineDetailsCard />} />
                     </Routes>
                 </MemoryRouter>
             </QueryClientProvider>

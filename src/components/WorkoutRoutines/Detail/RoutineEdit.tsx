@@ -15,7 +15,7 @@ import {
 import Grid from '@mui/material/Grid';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { uuid4 } from "components/Core/Misc/uuid";
-import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
+import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
 import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import {
@@ -104,7 +104,7 @@ export const RoutineEdit = () => {
                         </Typography>
 
                         <Box padding={4}>
-                            <RoutineDetails />
+                            <RoutineDetailsCard />
                         </Box>
                     </Stack>
                 </>
@@ -128,7 +128,7 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
                 props.setSelected(props.day.id);
             }}>
                 <CardContent>
-                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                    <Typography>
                         {props.day.isRest ? t('routines.restDay') : props.day.name}
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">

@@ -13,6 +13,7 @@ import { ResponseType } from "./responseType";
 export const ROUTINE_API_STRUCTURE_PATH = 'structure';
 export const ROUTINE_API_LOGS_PATH = 'logs';
 export const ROUTINE_API_CURRENT_ITERATION_DISPLAY = 'current-iteration-display-mode';
+export const ROUTINE_API_ALL_ITERATION_DISPLAY = 'date-sequence-display';
 
 /*
  * Processes a routine with all sub-object
@@ -40,6 +41,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         getRepUnits(),
         getWeightUnits(),
         getRoutineDayDataCurrentIteration(id),
+        getRoutineDayDataAllIterations(id),
         getRoutineStructure(id),
         getRoutineLogData(id),
 
@@ -47,8 +49,9 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     const repUnits = responses[0];
     const weightUnits = responses[1];
     const dayDataCurrentIteration = responses[2];
-    const dayStructure = responses[3];
-    const logData = responses[4];
+    const dayDataAllIterations = responses[3];
+    const dayStructure = responses[4];
+    const logData = responses[5];
 
     // Collect and load all exercises for the workout
     for (const day of dayDataCurrentIteration) {
@@ -71,6 +74,17 @@ export const processRoutine = async (id: number): Promise<Routine> => {
             }
         }
     }
+    for (const dayData of dayDataAllIterations) {
+        for (const slotData of dayData.slots) {
+            for (const setData of slotData.setConfigs) {
+                setData.exercise = exerciseMap[setData.exerciseId];
+            }
+
+            for (const exerciseId of slotData.exerciseIds) {
+                slotData.exercises?.push(exerciseMap[exerciseId]);
+            }
+        }
+    }
 
     for (const day of dayStructure) {
         for (const slot of day.slots) {
@@ -81,6 +95,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     }
 
     routine.dayDataCurrentIteration = dayDataCurrentIteration;
+    routine.dayDataAllIterations = dayDataAllIterations;
     routine.logData = logData;
     routine.days = dayStructure;
 
@@ -242,6 +257,16 @@ export const editRoutine = async (data: EditRoutineParams): Promise<Routine> => 
 export const getRoutineDayDataCurrentIteration = async (routineId: number): Promise<RoutineDayData[]> => {
     const response = await axios.get(
         makeUrl(ApiPath.ROUTINE, { id: routineId, objectMethod: ROUTINE_API_CURRENT_ITERATION_DISPLAY }),
+        { headers: makeHeader() }
+    );
+
+    const adapter = new RoutineDayDataAdapter();
+    return response.data.map((data: any) => adapter.fromJson(data));
+};
+
+export const getRoutineDayDataAllIterations = async (routineId: number): Promise<RoutineDayData[]> => {
+    const response = await axios.get(
+        makeUrl(ApiPath.ROUTINE, { id: routineId, objectMethod: ROUTINE_API_ALL_ITERATION_DISPLAY }),
         { headers: makeHeader() }
     );
 

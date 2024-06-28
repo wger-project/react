@@ -1,7 +1,7 @@
-import React from 'react';
+import { Grid } from "@mui/material";
 import { Header, } from 'components';
 import { Notifications } from 'components/Core/Notifications';
-import { Grid } from "@mui/material";
+import React from 'react';
 import { WgerRoutes } from "routes";
 
 

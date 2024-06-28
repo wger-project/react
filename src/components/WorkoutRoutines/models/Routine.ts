@@ -11,6 +11,7 @@ export class Routine {
     days: Day[] = [];
     logData: RoutineLogData[] = [];
     dayDataCurrentIteration: RoutineDayData[] = [];
+    dayDataAllIterations: RoutineDayData[] = [];
     dayData: RoutineDayData[] = [];
 
     constructor(
@@ -26,6 +27,18 @@ export class Routine {
         if (days) {
             this.days = days;
         }
+    }
+
+    get groupedDayDataByIteration() {
+        const groupedDayData: { [key: number]: RoutineDayData[] } = {};
+        for (const dayData of this.dayDataAllIterations) {
+            if (!groupedDayData[dayData.iteration]) {
+                groupedDayData[dayData.iteration] = [];
+            }
+            groupedDayData[dayData.iteration].push(dayData);
+        }
+
+        return groupedDayData;
     }
 }
 

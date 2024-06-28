@@ -5,7 +5,8 @@ import { MeasurementCategoryOverview } from "components/Measurements/Screens/Mea
 import { NutritionDiaryOverview } from "components/Nutrition/components/NutritionDiaryOverview";
 import { PlanDetail } from "components/Nutrition/components/PlanDetail";
 import { PlansOverview } from "components/Nutrition/components/PlansOverview";
-import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
+import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
+import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import { RoutineEdit } from "components/WorkoutRoutines/Detail/RoutineEdit";
 import { WorkoutLogs } from "components/WorkoutRoutines/Detail/WorkoutLogs";
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
@@ -57,8 +58,9 @@ export const WgerRoutes = () => {
                 <Route index element={<RoutineOverview />} />
                 <Route path="overview" element={<RoutineOverview />} />
                 <Route path=":routineId">
-                    <Route path="view" element={<RoutineDetails />} />
+                    <Route path="view" element={<RoutineDetailsCard />} />
                     <Route path="edit" element={<RoutineEdit />} />
+                    <Route path="table" element={<RoutineDetailsTable />} />
                 </Route>
                 <Route path="log">
                     <Route path=":routineId" element={<WorkoutLogs />}>

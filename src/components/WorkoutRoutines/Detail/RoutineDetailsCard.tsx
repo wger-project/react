@@ -26,7 +26,7 @@ import { useParams } from "react-router-dom";
 import { makeLink, WgerLink } from "utils/url";
 
 
-export const RoutineDetails = () => {
+export const RoutineDetailsCard = () => {
 
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
