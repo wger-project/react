@@ -30,7 +30,7 @@ import {
     useEditWeightConfigQuery,
     useRoutineDetailQuery
 } from "components/WorkoutRoutines/queries";
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -174,14 +174,30 @@ const DayDetails = (props: { day: Day }) => {
                                 {slotConfig.exercise?.getTranslation().name}
                                 <small> - Set-ID {slot.id}</small>
                             </Typography>
-                            <ConfigDetails configs={slotConfig.weightConfigs} type="weight" />
-                            <ConfigDetails configs={slotConfig.maxWeightConfigs} type="max-weight" />
-                            <ConfigDetails configs={slotConfig.repsConfigs} type="reps" />
-                            <ConfigDetails configs={slotConfig.maxRepsConfigs} type="max-reps" />
-                            <ConfigDetails configs={slotConfig.nrOfSetsConfigs} type="sets" />
-                            <ConfigDetails configs={slotConfig.restTimeConfigs} type="rest" />
-                            <ConfigDetails configs={slotConfig.maxRestTimeConfigs} type="max-rest" />
-                            <ConfigDetails configs={slotConfig.rirConfigs} type="rir" />
+                            {slotConfig.weightConfigs.map((config) =>
+                                <ConfigDetails config={config} type="weight" />
+                            )}
+                            {slotConfig.maxWeightConfigs.map((config) =>
+                                <ConfigDetails config={config} type="max-weight" />
+                            )}
+                            {slotConfig.repsConfigs.map((config) =>
+                                <ConfigDetails config={config} type="reps" />
+                            )}
+                            {slotConfig.maxRepsConfigs.map((config) =>
+                                <ConfigDetails config={config} type="max-reps" />
+                            )}
+                            {slotConfig.nrOfSetsConfigs.map((config) =>
+                                <ConfigDetails config={config} type="sets" />
+                            )}
+                            {slotConfig.restTimeConfigs.map((config) =>
+                                <ConfigDetails config={config} type="rest" />
+                            )}
+                            {slotConfig.maxRestTimeConfigs.map((config) =>
+                                <ConfigDetails config={config} type="max-rest" />
+                            )}
+                            {slotConfig.rirConfigs.map((config) =>
+                                <ConfigDetails config={config} type="rir" />
+                            )}
                         </>
                     )}
                 </>
@@ -197,7 +213,7 @@ const DayDetails = (props: { day: Day }) => {
 
 
 const ConfigDetails = (props: {
-    configs: BaseConfig[],
+    config: BaseConfig,
     type: 'weight' | 'max-weight' | 'reps' | 'max-reps' | 'sets' | 'rest' | 'max-rest' | 'rir'
 }) => {
 
@@ -210,61 +226,74 @@ const ConfigDetails = (props: {
     const editRestQuery = useEditRestConfigQuery(1);
     const editMaxRestQuery = useEditMaxRestConfigQuery(1);
 
+    const [value, setValue] = useState(props.config.value);
+    const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+
+    const handleData = (value: string) => {
+
+        const data = {
+            id: props.config.id,
+            // eslint-disable-next-line camelcase
+            slot_config: props.config.slotConfigId,
+            value: parseFloat(value)
+        };
+
+        switch (props.type) {
+            case 'weight':
+                editWeightQuery.mutate(data);
+                break;
+
+            case "max-weight":
+                editMaxWeightQuery.mutate(data);
+                break;
+
+            case 'reps':
+                editRepsQuery.mutate(data);
+                break;
+
+            case "max-reps":
+                editMaxRepsQuery.mutate(data);
+                break;
+
+            case 'sets':
+                editNrOfSetsQuery.mutate(data);
+                break;
+
+            case 'rir':
+                editRiRQuery.mutate(data);
+                break;
+
+            case 'rest':
+                editRestQuery.mutate(data);
+                break;
+
+            case "max-rest":
+                editMaxRestQuery.mutate(data);
+                break;
+        }
+    };
+
+    const onChange = (text: string) => {
+        if (text !== '') {
+            setValue(parseFloat(text));
+        }
+
+        if (timer) {
+            clearTimeout(timer);
+        }
+        setTimer(setTimeout(() => handleData(text), 500));
+    };
+
     return (
         <>
 
-            {props.configs.map((config) =>
-                <TextField
-                    key={config.id}
-                    label={props.type}
-                    value={config.value}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-
-                        const data = {
-                            id: config.id,
-                            // eslint-disable-next-line camelcase
-                            slot_config: config.slotConfigId,
-                            value: parseFloat(event.target.value)
-                        };
-
-                        switch (props.type) {
-                            case 'weight':
-                                editWeightQuery.mutate(data);
-                                break;
-
-                            case "max-weight":
-                                editMaxWeightQuery.mutate(data);
-                                break;
-
-                            case 'reps':
-                                editRepsQuery.mutate(data);
-                                break;
-
-                            case "max-reps":
-                                editMaxRepsQuery.mutate(data);
-                                break;
-
-                            case 'sets':
-                                editNrOfSetsQuery.mutate(data);
-                                break;
-
-                            case 'rir':
-                                editRiRQuery.mutate(data);
-                                break;
-
-                            case 'rest':
-                                editRestQuery.mutate(data);
-                                break;
-
-                            case "max-rest":
-                                editMaxRestQuery.mutate(data);
-                                break;
-                        }
-                    }}
-                />
-            )}
-
+            <TextField
+                key={props.config.id}
+                label={props.type}
+                value={value}
+                onChange={e => onChange(e.target.value)}
+            />
         </>
     );
-
 };
+
