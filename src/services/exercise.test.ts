@@ -1,47 +1,40 @@
 import axios from "axios";
-import {
-    addExerciseBase,
-    deleteExerciseBase,
-    editExerciseBase,
-    getExerciseBase,
-    getExerciseBases,
-    processBaseData
-} from "services/exerciseBase";
-import { responseApiExerciseBaseInfo, testApiExerciseBase1 } from "tests/responseApi";
+import { addExercise, deleteExercise, editExercise, getExercise, getExercises, processExerciseApiData } from "services";
+import { responseApiExerciseInfo, testApiExercise1 } from "tests/responseApi";
 
 jest.mock("axios");
 
 describe("Exercise service API tests", () => {
 
-    test('GET exercise base data entries', async () => {
+    test('GET exercise data entries', async () => {
 
         // Arrange
         // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: responseApiExerciseBaseInfo }));
+        axios.get.mockImplementation(() => Promise.resolve({ data: responseApiExerciseInfo }));
 
         // Act
-        const result = await getExerciseBases();
+        const result = await getExercises();
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
-        expect(result).toEqual([testApiExerciseBase1]);
+        expect(result).toEqual([testApiExercise1]);
     });
 
-    test('GET exercise base data for single entry', async () => {
+    test('GET exercise data for single entry', async () => {
 
         // Arrange
         // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: responseApiExerciseBaseInfo.results[0] }));
+        axios.get.mockImplementation(() => Promise.resolve({ data: responseApiExerciseInfo.results[0] }));
 
         // Act
-        const result = await getExerciseBase(345);
+        const result = await getExercise(345);
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(testApiExerciseBase1);
+        expect(result).toEqual(testApiExercise1);
     });
 
-    test('POST a new exercise base', async () => {
+    test('POST a new exercise', async () => {
 
         // Arrange
         const response = {
@@ -59,7 +52,7 @@ describe("Exercise service API tests", () => {
         axios.post.mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
-        const result = await addExerciseBase(
+        const result = await addExercise(
             3,
             [1, 2],
             [3, 4],
@@ -73,7 +66,7 @@ describe("Exercise service API tests", () => {
         expect(result).toEqual(749);
     });
 
-    test('EDIT an existing exercise base', async () => {
+    test('EDIT an existing exercise', async () => {
 
         // Arrange
         const response = {
@@ -91,7 +84,7 @@ describe("Exercise service API tests", () => {
         axios.patch.mockImplementation(() => Promise.resolve({ data: response, status: 200 }));
 
         // Act
-        const result = await editExerciseBase(
+        const result = await editExercise(
             749,
             {
                 category: 3,
@@ -107,14 +100,14 @@ describe("Exercise service API tests", () => {
         expect(result).toEqual(200);
     });
 
-    test('DELETE exercise base', async () => {
+    test('DELETE exercise', async () => {
 
         // Arrange
         // @ts-ignore
         axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act
-        const result = await deleteExerciseBase(1);
+        const result = await deleteExercise(1);
 
         // Assert
         expect(axios.delete).toHaveBeenCalled();
@@ -124,14 +117,14 @@ describe("Exercise service API tests", () => {
 });
 
 
-describe("Exercise base service parser tests", () => {
+describe("Exercise service parser tests", () => {
 
-    test('processBaseData', () => {
+    test('process api data', () => {
 
         // Act
-        const result = processBaseData(responseApiExerciseBaseInfo);
+        const result = processExerciseApiData(responseApiExerciseInfo);
 
         // Assert
-        expect(result).toEqual([testApiExerciseBase1]);
+        expect(result).toEqual([testApiExercise1]);
     });
 });

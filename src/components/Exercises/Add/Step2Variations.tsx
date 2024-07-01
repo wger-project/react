@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PhotoIcon from '@mui/icons-material/Photo';
+import SearchIcon from '@mui/icons-material/Search';
 import {
     Alert,
     AlertTitle,
@@ -17,16 +19,14 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import { useBasesQuery } from "components/Exercises/queries";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
+import { Exercise } from "components/Exercises/models/exercise";
+import { useExercisesQuery } from "components/Exercises/queries";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useExerciseStateValue } from "state";
 import { setNewBaseVariationId, setVariationId } from "state/exerciseReducer";
-import SearchIcon from '@mui/icons-material/Search';
-import PhotoIcon from '@mui/icons-material/Photo';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 
 /*
  * Groups a list of objects by a property
@@ -46,27 +46,25 @@ function groupBy(list: any[], keyGetter: Function) {
 }
 
 // New component that displays the exercise info in a ListItem
-const ExerciseInfoListItem = ({ bases }: {
-    bases: ExerciseBase[],
-}) => {
+const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
     const MAX_EXERCISE_IMAGES = 4;
     const MAX_EXERCISE_NAMES = 5;
-    const basesVariationId = bases[0].variationId;
-    const baseId = bases[0].id;
+    const variationId = exercises[0].variationId;
+    const exerciseId = exercises[0].id;
 
     const [state, dispatch] = useExerciseStateValue();
     const [showMore, setShowMore] = useState<boolean>(false);
 
     const [stateVariationId, setStateVariationId] = useState<number | null>(state.variationId);
-    const [stateNewBaseVariationId, setStateNewBaseVariationId] = useState<number | null>(state.newVariationBaseId);
+    const [stateNewVariationId, setStateNewVariationId] = useState<number | null>(state.newVariationBaseId);
 
     useEffect(() => {
         dispatch(setVariationId(stateVariationId));
     }, [dispatch, stateVariationId]);
 
     useEffect(() => {
-        dispatch(setNewBaseVariationId(stateNewBaseVariationId));
-    }, [dispatch, stateNewBaseVariationId]);
+        dispatch(setNewBaseVariationId(stateNewVariationId));
+    }, [dispatch, stateNewVariationId]);
 
 
     const handleToggle = (variationId: number | null, newVariationId: number | null) => () => {
@@ -84,22 +82,22 @@ const ExerciseInfoListItem = ({ bases }: {
         }
 
         setStateVariationId(variationId);
-        setStateNewBaseVariationId(newVariationId);
+        setStateNewVariationId(newVariationId);
     };
 
     let isChecked;
-    if (basesVariationId === null) {
-        isChecked = state.newVariationBaseId === baseId;
+    if (variationId === null) {
+        isChecked = state.newVariationBaseId === exerciseId;
     } else {
-        isChecked = basesVariationId === state.variationId;
+        isChecked = variationId === state.variationId;
     }
 
     return <ListItem disableGutters>
-        <ListItemButton onClick={handleToggle(basesVariationId, baseId)}>
+        <ListItemButton onClick={handleToggle(variationId, exerciseId)}>
             <Grid container>
                 <Grid item xs={12} sm={3} display="flex" justifyContent={"start"} alignItems={"center"}>
                     <AvatarGroup max={MAX_EXERCISE_IMAGES} spacing={"small"}>
-                        {bases.map((base) =>
+                        {exercises.map((base) =>
                             base.mainImage
                                 ? <Avatar key={base.id} src={base.mainImage.url} />
                                 : <Avatar key={base.id} children={<PhotoIcon />} />
@@ -108,17 +106,17 @@ const ExerciseInfoListItem = ({ bases }: {
                 </Grid>
                 <Grid item xs={10} sm={7}>
                     { /* map the bases */}
-                    {bases.slice(0, showMore ? bases.length : MAX_EXERCISE_NAMES).map((base) =>
+                    {exercises.slice(0, showMore ? exercises.length : MAX_EXERCISE_NAMES).map((base) =>
                         <p style={{ margin: 0 }} key={base.id}>{base.getTranslation().name}</p>
                     )}
-                    {!showMore && bases.length > MAX_EXERCISE_NAMES
+                    {!showMore && exercises.length > MAX_EXERCISE_NAMES
                         ? <ExpandMoreIcon onMouseEnter={() => setShowMore(true)} />
                         : null
                     }
                 </Grid>
                 <Grid item xs={2} sm={2} display="flex" justifyContent={"end"}>
                     <Switch
-                        key={`variation-${basesVariationId}`}
+                        key={`variation-${variationId}`}
                         edge="start"
                         checked={isChecked}
                         tabIndex={-1}
@@ -136,20 +134,20 @@ const ExerciseInfoListItem = ({ bases }: {
 
 export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
-    const basesQuery = useBasesQuery();
+    const basesQuery = useExercisesQuery();
 
     const [searchTerm, setSearchTerms] = useState<string>('');
 
     // Group bases by variationId
-    let bases: ExerciseBase[] = [];
-    let groupedBases = new Map<number, ExerciseBase[]>();
+    let bases: Exercise[] = [];
+    let groupedBases = new Map<number, Exercise[]>();
     if (basesQuery.isSuccess) {
         bases = basesQuery.data;
         if (searchTerm !== '') {
             bases = bases.filter((base) => base.getTranslation().name.toLowerCase().includes(searchTerm.toLowerCase()));
         }
     }
-    groupedBases = groupBy(bases.filter(b => b.variationId !== null), (b: ExerciseBase) => b.variationId);
+    groupedBases = groupBy(bases.filter(b => b.variationId !== null), (b: Exercise) => b.variationId);
 
     return <>
         <Grid container>
@@ -178,13 +176,13 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
                 <List style={{ maxHeight: "400px", overflowY: "scroll" }}>
                     {bases.filter(b => b.variationId === null).map(base =>
                         <ExerciseInfoListItem
-                            bases={[base]}
+                            exercises={[base]}
                             key={'base-' + base.id}
                         />
                     )}
                     {[...groupedBases.keys()].map(variationId =>
                         <ExerciseInfoListItem
-                            bases={groupedBases.get(variationId)!}
+                            exercises={groupedBases.get(variationId)!}
                             key={'variation-' + variationId}
                         />
                     )}

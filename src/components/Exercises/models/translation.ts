@@ -1,11 +1,11 @@
+import { Alias, AliasAdapter } from "components/Exercises/models/alias";
+import { Note, NoteAdapter } from "components/Exercises/models/note";
+import slug from "slug";
 import { Adapter } from "utils/Adapter";
 import { truncateLongNames } from "utils/strings";
-import { Note, NoteAdapter } from "components/Exercises/models/note";
-import { Alias, AliasAdapter } from "components/Exercises/models/alias";
-import slug from "slug";
 
 
-export class ExerciseTranslation {
+export class Translation {
 
     notes: Note[] = [];
     aliases: Alias[] = [];
@@ -49,9 +49,9 @@ export class ExerciseTranslation {
 }
 
 
-export class ExerciseTranslationAdapter implements Adapter<ExerciseTranslation> {
-    fromJson(item: any): ExerciseTranslation {
-        return new ExerciseTranslation(
+export class TranslationAdapter implements Adapter<Translation> {
+    fromJson(item: any): Translation {
+        return new Translation(
             item.id,
             item.uuid,
             item.name,
@@ -67,7 +67,7 @@ export class ExerciseTranslationAdapter implements Adapter<ExerciseTranslation> 
      * Don't return all properties, since not all items can be updated (they would
      * be ignored by the server, but it's better to not send too much anyway)
      */
-    toJson(item: ExerciseTranslation) {
+    toJson(item: Translation) {
 
         return {
             id: item.id,

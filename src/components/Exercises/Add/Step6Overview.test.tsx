@@ -1,12 +1,12 @@
-import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { Step6Overview } from "components/Exercises/Add/Step6Overview";
-import { MemoryRouter, Route, Routes } from "react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
-import { testCategories, testEquipment, testLanguages, testMuscles } from "tests/exerciseTestdata";
-import { useExerciseStateValue } from "state";
 import { useProfileQuery } from "components/User/queries/profile";
+import React from "react";
+import { MemoryRouter, Route, Routes } from "react-router";
+import { useExerciseStateValue } from "state";
+import { testCategories, testEquipment, testLanguages, testMuscles } from "tests/exerciseTestdata";
 import { testProfileDataVerified } from "tests/userTestdata";
 
 
@@ -111,7 +111,7 @@ describe("Test the add exercise step 6 component", () => {
         );
 
         // Assert
-        // TODO: addExerciseBase, etc.
+        // TODO: addExercise, etc.
     });
 
 });

@@ -1,20 +1,22 @@
-import React from 'react';
+import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from '@testing-library/react';
-import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
 import { WeightEntry } from "components/BodyWeight/model";
+import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
+import React from 'react';
+import { testQueryClient } from "tests/queryClient";
 
 describe("Body weight test", () => {
-
-    const handleDeleteWeight = (weight: WeightEntry) => {
-        console.log(weight);
-    };
 
     test('renders without crashing', async () => {
 
         // Arrange
         //
         const entry = new WeightEntry(new Date('2021-12-10'), 80, 1);
-        render(<ActionButton handleDeleteWeight={handleDeleteWeight} weight={entry} />);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <ActionButton weight={entry} />
+            </QueryClientProvider>
+        );
 
         // Act
         //
@@ -41,7 +43,11 @@ describe("Body weight test", () => {
 
         // Act
         //
-        render(<ActionButton handleDeleteWeight={handleDeleteWeight} weight={entry} />);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <ActionButton weight={entry} />
+            </QueryClientProvider>
+        );
         const button = screen.getByRole('button');
         expect(button).toBeInTheDocument();
         fireEvent.click(button);

@@ -21,7 +21,7 @@ import {
     Typography
 } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { Exercise } from "components/Exercises/models/exercise";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import { useRoutineDetailQuery, useRoutineLogQuery } from "components/WorkoutRoutines/queries";
 import { DateTime } from "luxon";
@@ -39,7 +39,7 @@ import {
     XAxis,
     YAxis
 } from "recharts";
-import { NameType, ValueType, } from 'recharts/src/component/DefaultTooltipContent';
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { generateChartColors } from "utils/colors";
 import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
@@ -106,7 +106,7 @@ const LogTableRow = (props: { log: WorkoutLog }) => {
     </TableRow>;
 };
 
-const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog[] | undefined }) => {
+const ExerciseLog = (props: { exerciseId: Exercise, logEntries: WorkoutLog[] | undefined }) => {
 
     let logEntries = props.logEntries ?? [];
 
@@ -126,7 +126,7 @@ const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog
 
     return <>
         <Typography variant={"h6"} sx={{ mt: 4 }}>
-            {props.exerciseBase.getTranslation().name}
+            {props.exerciseId.getTranslation().name}
         </Typography>
 
         <Grid container spacing={2}>
@@ -161,7 +161,7 @@ const ExerciseLog = (props: { exerciseBase: ExerciseBase, logEntries: WorkoutLog
 
             </Grid>
             <Grid item xs={12} md={7}>
-                <TimeSeriesChart data={logEntries} key={props.exerciseBase.id} />
+                <TimeSeriesChart data={logEntries} key={props.exerciseId.id} />
             </Grid>
         </Grid>
     </>;
@@ -185,12 +185,12 @@ export const RoutineLogs = () => {
     let groupedWorkoutLogs: Map<number, WorkoutLog[]> = new Map();
     if (logsQuery.isSuccess) {
         groupedWorkoutLogs = logsQuery.data!.reduce(function (r, log) {
-            r.set(log.baseId, r.get(log.baseId) || []);
+            r.set(log.exerciseId, r.get(log.exerciseId) || []);
 
             // Only add logs with weight unit and repetition unit
             // This should be done server side over the API, but we can't filter everything yet
             if ([WEIGHT_UNIT_KG, WEIGHT_UNIT_LB].includes(log.weightUnit) && log.repetitionUnit === REP_UNIT_REPETITIONS) {
-                r.get(log.baseId)!.push(log);
+                r.get(log.exerciseId)!.push(log);
             }
 
             return r;
@@ -234,7 +234,7 @@ export const RoutineLogs = () => {
                                     workoutSet.exercises.map(base =>
                                         <ExerciseLog
                                             key={workoutSet.id + base.uuid!}
-                                            exerciseBase={base}
+                                            exerciseId={base}
                                             logEntries={groupedWorkoutLogs.get(base.id!)!}
                                         />)
                                 )}

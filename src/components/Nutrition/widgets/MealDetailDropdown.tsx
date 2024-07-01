@@ -1,4 +1,6 @@
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import InfoIcon from '@mui/icons-material/Info';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Alert, IconButton, Menu, MenuItem, Snackbar } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
@@ -13,7 +15,13 @@ import { useTranslation } from "react-i18next";
 import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
 
 
-export const MealDetailDropdown = (props: { meal: Meal, planId: number, onlyLogging: boolean }) => {
+export const MealDetailDropdown = (props: {
+    meal: Meal,
+    planId: number,
+    onlyLogging: boolean,
+    isExpanded: boolean,
+    handleExpanded: () => void,
+}) => {
 
     const addDiaryEntriesQuery = useAddDiaryEntriesQuery(props.planId);
     const deleteMealQuery = useDeleteMealQuery(props.planId);
@@ -86,6 +94,9 @@ export const MealDetailDropdown = (props: { meal: Meal, planId: number, onlyLogg
         </Tooltip>}
         <IconButton aria-label="settings" onClick={handleClick}>
             <MoreVertIcon />
+        </IconButton>
+        <IconButton aria-label="settings" onClick={props.handleExpanded}>
+            {props.isExpanded ? <InfoIcon /> : <InfoOutlinedIcon />}
         </IconButton>
         <Menu
             anchorEl={anchorEl}

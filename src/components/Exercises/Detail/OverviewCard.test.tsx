@@ -1,23 +1,23 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
+import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { Category } from "components/Exercises/models/category";
 import { Equipment } from "components/Exercises/models/equipment";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
-import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
+import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
+import { Translation } from "components/Exercises/models/translation";
+import React from "react";
 import { BrowserRouter } from "react-router-dom";
 
 describe("Test the exercise overview card component", () => {
     // Arrange
-    const exerciseTranslation1 = new ExerciseTranslation(
+    const exerciseTranslation1 = new Translation(
         111,
         "583281c7-2362-48e7-95d5-8fd6c455e0fb",
         "Squats",
         "Do a squat",
         2
     );
-    const exerciseTranslation2 = new ExerciseTranslation(
+    const exerciseTranslation2 = new Translation(
         9,
         "dae6f6ed-9408-4e62-a59a-1a33f4e8ab36",
         "Kniebeuge",
@@ -27,7 +27,7 @@ describe("Test the exercise overview card component", () => {
     const category = new Category(10, "Abs");
     const equipment1 = new Equipment(10, "Kettlebell");
     const equipment2 = new Equipment(1, "Test 123");
-    const exerciseBase = new ExerciseBase(
+    const exercise = new Exercise(
         345,
         "c788d643-150a-4ac7-97ef-84643c6419bf",
         category,
@@ -44,7 +44,7 @@ describe("Test the exercise overview card component", () => {
         // since  OverviewCard renders a Link, we need to wrap in a BrowserRouter
         render(
             <BrowserRouter>
-                <OverviewCard exerciseBase={exerciseBase} />
+                <OverviewCard exercise={exercise} />
             </BrowserRouter>
         );
 
@@ -63,7 +63,7 @@ describe("Test the exercise overview card component", () => {
         // since  OverviewCard renders a Link, we need to wrap in a BrowserRouter
         render(
             <BrowserRouter>
-                <OverviewCard exerciseBase={exerciseBase} language={language} />
+                <OverviewCard exercise={exercise} language={language} />
             </BrowserRouter>
         );
 
@@ -84,7 +84,7 @@ describe("Test the exercise overview card component", () => {
         // since  OverviewCard renders a Link, we need to wrap in a BrowserRouter
         render(
             <BrowserRouter>
-                <OverviewCard exerciseBase={exerciseBase} language={language} />
+                <OverviewCard exercise={exercise} language={language} />
             </BrowserRouter>
         );
 

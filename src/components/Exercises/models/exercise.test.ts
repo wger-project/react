@@ -1,12 +1,12 @@
+import { ExerciseAdapter } from "components/Exercises/models/exercise";
+import { Language } from "components/Exercises/models/language";
 import {
     testExerciseBenchPress,
     testExerciseSquats,
     testLanguageEnglish,
     testLanguageGerman
 } from "tests/exerciseTestdata";
-import { Language } from "components/Exercises/models/language";
-import { ExerciseBaseAdapter } from "components/Exercises/models/exerciseBase";
-import { responseApiExerciseBaseInfo, testApiExerciseBase1 } from "tests/responseApi";
+import { responseApiExerciseInfo, testApiExercise1 } from "tests/responseApi";
 
 
 describe("Exercise base model tests", () => {
@@ -41,17 +41,17 @@ describe("Exercise base model tests", () => {
     test('adapter - from json', () => {
 
         // Act
-        const adapter = new ExerciseBaseAdapter();
-        const result = adapter.fromJson(responseApiExerciseBaseInfo.results[0]);
+        const adapter = new ExerciseAdapter();
+        const result = adapter.fromJson(responseApiExerciseInfo.results[0]);
 
         // Assert
-        expect(result).toEqual(testApiExerciseBase1);
+        expect(result).toEqual(testApiExercise1);
     });
 
     test('adapter - to json', () => {
 
         // Assert
-        const adapter = new ExerciseBaseAdapter();
+        const adapter = new ExerciseAdapter();
         expect(adapter.toJson(testExerciseSquats)).toStrictEqual({
             id: 345,
             uuid: "c788d643-150a-4ac7-97ef-84643c6419bf",

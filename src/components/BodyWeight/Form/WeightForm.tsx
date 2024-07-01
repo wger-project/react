@@ -2,12 +2,12 @@ import { Button, Stack, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WeightEntry } from "components/BodyWeight/model";
+import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "components/BodyWeight/queries";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
-import React, { useCallback } from 'react';
+import { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { createWeight, updateWeight } from "services";
-import { setNotification, SetWeightState, useWeightStateValue } from "state";
 import { dateToYYYYMMDD } from "utils/date";
 import * as yup from 'yup';
 
@@ -18,45 +18,12 @@ interface WeightFormProps {
 
 export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
-    const [state, dispatch] = useWeightStateValue();
-    const [dateValue, setDateValue] = React.useState<Date | null>(weightEntry ? weightEntry.date : new Date());
+    const weightEntriesQuery = useBodyWeightQuery();
+    const addWeightQuery = useAddWeightEntryQuery();
+    const editWeightQuery = useEditWeightEntryQuery();
+
+    const [dateValue, setDateValue] = useState<Date | null>(weightEntry ? weightEntry.date : new Date());
     const [t, i18n] = useTranslation();
-
-    const updateWeightEntry = useCallback(async (entry: WeightEntry) => {
-        const action = { type: SetWeightState.UPDATE_WEIGHT, payload: entry };
-        dispatch(action);
-        dispatch(setNotification(
-            {
-                notify: true,
-                message: "Successful",
-                severity: "success",
-                title: "Success",
-                type: "other"
-            }
-        ));
-        // clear out the notifications after some times
-        setTimeout(() => {
-            dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "", type: undefined }));
-        }, 5000);
-    }, [dispatch]);
-
-    const createWeightEntry = useCallback(async (entry: WeightEntry) => {
-        const action = { type: SetWeightState.ADD_WEIGHT, payload: entry };
-        dispatch(action);
-        dispatch(setNotification(
-            {
-                notify: true,
-                message: "Successful",
-                severity: "success",
-                title: "Success",
-                type: "other"
-            }
-        ));
-        // clear out the notifications after some times
-        setTimeout(() => {
-            dispatch(setNotification({ notify: false, message: "", severity: undefined, title: "", type: undefined }));
-        }, 5000);
-    }, [dispatch]);
 
     const validationSchema = yup.object({
         weight: yup
@@ -65,7 +32,6 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
             .max(300, 'Max weight is 300 kg')
             .required('Weight field is required'),
     });
-
 
     return (
         <Formik
@@ -76,65 +42,27 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
             validationSchema={validationSchema}
             onSubmit={async (values) => {
 
+                // Edit existing weight entry
                 if (weightEntry) {
-                    // Edit existing weight entry
                     weightEntry.weight = values.weight;
                     weightEntry.date = new Date(values.date);
                     try {
                         const editedWeightEntry = await updateWeight(weightEntry);
-                        await updateWeightEntry(editedWeightEntry);
+                        editWeightQuery.mutate(editedWeightEntry);
                     } catch (error) {
-                        dispatch(setNotification(
-                            {
-                                notify: true,
-                                message: error as string,
-                                severity: "error",
-                                title: "Failed to save",
-                                type: "other"
-                            }
-                        ));
-                        setTimeout(() => {
-                            dispatch(setNotification({
-                                notify: false,
-                                message: "",
-                                severity: undefined,
-                                title: "",
-                                type: undefined
-                            }));
-                        }, 5000);
+
                     }
 
-                } else {
                     // Create new weight entry
+                } else {
                     weightEntry = new WeightEntry(new Date(values.date), values.weight);
                     try {
                         const newWeightEntry = await createWeight(weightEntry);
-                        await createWeightEntry(newWeightEntry);
+                        addWeightQuery.mutate(newWeightEntry);
                     } catch (error) {
-                        dispatch(setNotification(
-                            {
-                                notify: true,
-                                message: error as string,
-                                severity: "error",
-                                title: "Failed to save",
-                                type: "other"
-
-                            }
-                        ));
-                        setTimeout(() => {
-                            dispatch(setNotification({
-                                notify: false,
-                                message: "",
-                                severity: undefined,
-                                title: "",
-                                type: undefined
-                            }));
-                        }, 5000);
                     }
                 }
 
-                // if closeFn is defined, close the modal (this form does not have to
-                // be displayed in a modal)
                 if (closeFn) {
                     closeFn();
                 }
@@ -174,7 +102,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
                                     // if date is in list of weight entries, disable it
                                     if (date) {
-                                        return state.weights.some(entry => dateToYYYYMMDD(entry.date) === (date as unknown as DateTime).toISODate());
+                                        return weightEntriesQuery.data!.some(entry => dateToYYYYMMDD(entry.date) === (date as unknown as DateTime).toISODate());
                                     }
 
                                     // all other dates are allowed

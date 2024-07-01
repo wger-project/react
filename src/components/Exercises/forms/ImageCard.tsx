@@ -1,10 +1,10 @@
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Box, Button, Card, CardActions, CardMedia } from "@mui/material";
-import { deleteExerciseImage, postExerciseImage } from "services/image";
+import { ExerciseImage } from "components/Exercises/models/image";
+import { useProfileQuery } from "components/User/queries/profile";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { ExerciseImage } from "components/Exercises/models/image";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { useProfileQuery } from "components/User/queries/profile";
+import { deleteExerciseImage, postExerciseImage } from "services/image";
 
 type ImageCardProps = {
     image: ExerciseImage;
@@ -33,10 +33,10 @@ export const ImageEditCard = ({ image, canDelete }: ImageCardProps) => {
 };
 
 type AddImageCardProps = {
-    baseId: number;
+    exerciseId: number;
 };
 
-export const AddImageCard = ({ baseId }: AddImageCardProps) => {
+export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
 
     const [t] = useTranslation();
     const profileQuery = useProfileQuery();
@@ -47,7 +47,7 @@ export const AddImageCard = ({ baseId }: AddImageCardProps) => {
         }
         const [uploadedFile] = e.target.files;
         if (profileQuery.isSuccess) {
-            await postExerciseImage(baseId, profileQuery.data!.username, uploadedFile);
+            await postExerciseImage(exerciseId, profileQuery.data!.username, uploadedFile);
         }
     };
 

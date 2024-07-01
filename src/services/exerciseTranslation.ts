@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { ExerciseTranslation, ExerciseTranslationAdapter } from "components/Exercises/models/exerciseTranslation";
+import { Translation, TranslationAdapter } from "components/Exercises/models/translation";
+import { ENGLISH_LANGUAGE_CODE, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 import { ExerciseSearchResponse, ExerciseSearchType, ResponseType } from "./responseType";
 
@@ -11,13 +12,13 @@ export const EXERCISE_SEARCH_PATH = 'exercise/search';
 /*
  * Fetch all exercise translations for a given exercise base
  */
-export const getExerciseTranslations = async (id: number): Promise<ExerciseTranslation[]> => {
+export const getExerciseTranslations = async (id: number): Promise<Translation[]> => {
     // eslint-disable-next-line camelcase
     const url = makeUrl(EXERCISE_PATH, { query: { exercise_base: id } });
     const { data } = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
-    const adapter = new ExerciseTranslationAdapter();
+    const adapter = new TranslationAdapter();
     return data.results.map(e => adapter.fromJson(e));
 };
 
@@ -25,8 +26,14 @@ export const getExerciseTranslations = async (id: number): Promise<ExerciseTrans
 /*
  * Fetch all exercise translations for a given exercise base
  */
-export const searchExerciseTranslations = async (name: string): Promise<ExerciseSearchResponse[]> => {
-    const url = makeUrl(EXERCISE_SEARCH_PATH, { query: { term: name } });
+export const searchExerciseTranslations = async (name: string, languageCode: string = ENGLISH_LANGUAGE_CODE, searchEnglish: boolean = true,): Promise<ExerciseSearchResponse[]> => {
+    const languages = [languageCode];
+    if (languageCode !== LANGUAGE_SHORT_ENGLISH && searchEnglish) {
+        languages.push(LANGUAGE_SHORT_ENGLISH);
+    }
+
+
+    const url = makeUrl(EXERCISE_SEARCH_PATH, { query: { term: name, language: languages.join(',') } });
 
     const { data } = await axios.get<ExerciseSearchType>(url);
     return data.suggestions;
@@ -36,18 +43,18 @@ export const searchExerciseTranslations = async (name: string): Promise<Exercise
 /*
  * Create a new exercise translation
  */
-export const addExerciseTranslation = async (
-    exerciseBaseId: number,
+export const addTranslation = async (
+    exerciseId: number,
     languageId: number,
     name: string,
     description: string,
     author: string
-): Promise<ExerciseTranslation> => {
+): Promise<Translation> => {
 
     const url = makeUrl(EXERCISE_TRANSLATION_PATH);
     const baseData = {
         // eslint-disable-next-line camelcase
-        exercise_base: exerciseBaseId,
+        exercise_base: exerciseId,
         language: languageId,
         name: name,
         description: description,
@@ -58,7 +65,7 @@ export const addExerciseTranslation = async (
         headers: makeHeader(),
     });
 
-    const adapter = new ExerciseTranslationAdapter();
+    const adapter = new TranslationAdapter();
     return adapter.fromJson(response.data);
 };
 
@@ -67,15 +74,15 @@ export const addExerciseTranslation = async (
  */
 export const editExerciseTranslation = async (
     id: number,
-    exerciseBaseId: number,
+    exerciseId: number,
     languageId: number,
     name: string,
     description: string,
-): Promise<ExerciseTranslation> => {
+): Promise<Translation> => {
     const url = makeUrl(EXERCISE_TRANSLATION_PATH, { id: id });
     const baseData = {
         // eslint-disable-next-line camelcase
-        exercise_base: exerciseBaseId,
+        exercise_base: exerciseId,
         language: languageId,
         name: name,
         description: description,
@@ -86,7 +93,7 @@ export const editExerciseTranslation = async (
         { headers: makeHeader() }
     );
 
-    const adapter = new ExerciseTranslationAdapter();
+    const adapter = new TranslationAdapter();
     return adapter.fromJson(response.data);
 };
 

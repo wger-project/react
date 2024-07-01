@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import {
     Paper,
     Table,
@@ -10,18 +9,17 @@ import {
     TableRow,
     Theme
 } from '@mui/material';
-import { processWeight } from '../utils';
-import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
 import { makeStyles } from '@mui/styles';
-import { useTranslation } from "react-i18next";
 import { WeightEntry } from "components/BodyWeight/model";
-import { deleteWeight } from 'services';
-import { addWeightEntry, removeWeight, setNotification, useWeightStateValue } from 'state';
+import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
 import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
+import React, { useState } from 'react';
+import { useTranslation } from "react-i18next";
+import { processWeight } from '../utils';
 
 
 export interface WeightTableProps {
-    weights: WeightEntry[]
+    weights: WeightEntry[];
 }
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -39,12 +37,11 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
 
     const availableResultsPerPage = [10, 50, 100];
 
-    const [state, dispatch] = useWeightStateValue();
     const [t] = useTranslation();
     const classes = useStyles();
     const processedWeights = processWeight(weights);
-    const [rowsPerPage, setRowsPerPage] = React.useState(availableResultsPerPage[0]);
-    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(availableResultsPerPage[0]);
+    const [page, setPage] = useState(0);
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -53,94 +50,6 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
-    };
-
-    const [deleteTimeoutID, setDeleteTimeoutID] = useState<ReturnType<typeof setTimeout> | undefined>();
-    const [weightToDelete, setWeightToDelete] = useState<WeightEntry | undefined>();
-
-    useEffect(() => {
-        // if true, cancel the timeout that will request a DELETE
-        if (state.notification.undo && deleteTimeoutID) {
-            // cancel the timout that will notify and make request
-            clearTimeout(deleteTimeoutID);
-            // only dispatch if weightToDelete is defined
-
-            weightToDelete && dispatch(addWeightEntry(weightToDelete));
-            // notify the undone successfully
-            dispatch(setNotification(
-                {
-                    notify: true,
-                    message: "Undone",
-                    severity: "success",
-                    title: "Success",
-                    type: "other"
-                }
-            ));
-            // clear out the notifications after some times
-            setTimeout(() => {
-                dispatch(setNotification({
-                    notify: false,
-                    message: "",
-                    severity: undefined,
-                    title: "",
-                    type: undefined
-                }));
-            }, 5000);
-        }
-    }, [state.notification.undo, deleteTimeoutID, weightToDelete, dispatch]);
-
-    const handleDeleteWeight = async (weight: WeightEntry) => {
-        try {
-            dispatch(removeWeight(weight));
-            dispatch(setNotification(
-                {
-                    notify: true,
-                    message: "Successful",
-                    severity: "success",
-                    title: "Success",
-                    type: "delete"
-                }
-            ));
-            // clear out the notifications after some times
-            setTimeout(() => {
-                dispatch(setNotification({
-                    notify: false,
-                    message: "",
-                    severity: undefined,
-                    title: "",
-                    type: undefined
-                }));
-            }, 5000);
-
-            const timeout = setTimeout(async () => {
-                await deleteWeight(weight.id!);
-                console.log("deleted weight");
-
-            }, 5000);
-
-            setDeleteTimeoutID(timeout);
-            setWeightToDelete(weight);
-        } catch (error: unknown) {
-            dispatch(setNotification(
-                {
-                    notify: true,
-                    message: "Unsuccessful",
-                    severity: "error",
-                    title: "Error",
-                    type: "delete"
-                }
-            ));
-            // clear out the notifications after some times
-            setTimeout(() => {
-                dispatch(setNotification({
-                    notify: false,
-                    message: "",
-                    severity: undefined,
-                    title: "",
-                    type: undefined
-                }));
-            }, 5000);
-        }
     };
 
     return (
@@ -169,8 +78,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                                 <TableCell align="center">{+row.change.toFixed(2)}</TableCell>
                                 <TableCell align="center">{row.days}</TableCell>
                                 <TableCell align="center">
-                                    <ActionButton handleDeleteWeight={handleDeleteWeight}
-                                                  weight={row.entry} />
+                                    <ActionButton weight={row.entry} />
                                 </TableCell>
                             </TableRow>
                         ))}

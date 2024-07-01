@@ -1,15 +1,15 @@
-import { useTranslation } from "react-i18next";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
-import React from "react";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
+import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
+import { SideGallery, SideVideoGallery } from "components/Exercises/Detail/SideGallery";
+import { Exercise } from "components/Exercises/models/exercise";
+import { Language } from "components/Exercises/models/language";
+import { Muscle } from "components/Exercises/models/muscle";
 import { Note } from "components/Exercises/models/note";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
-import { Muscle } from "components/Exercises/models/muscle";
-import { SideGallery, SideVideoGallery } from "components/Exercises/Detail/SideGallery";
-import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
-import { Language } from "components/Exercises/models/language";
-import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { useCanContributeExercises } from "components/User/queries/contribute";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 
 const TranslateExerciseBanner = ({ setEditMode }: { setEditMode: (mode: boolean) => void }) => {
@@ -42,8 +42,8 @@ const TranslateExerciseBanner = ({ setEditMode }: { setEditMode: (mode: boolean)
 };
 
 export interface ViewProps {
-    exercise: ExerciseBase
-    variations: ExerciseBase[],
+    exercise: Exercise
+    variations: Exercise[],
     language: Language,
     setEditMode: (mode: boolean) => void
 }
@@ -174,11 +174,11 @@ export const ExerciseDetailView = ({
 
             {variations.length > 0 && <Typography variant={"h5"}>{t('exercises.variations')}</Typography>}
             <Grid container spacing={2}>
-                {variations.map((variation: ExerciseBase) =>
+                {variations.map((variation: Exercise) =>
                     <Grid item xs={6} md={2} key={variation.id}>
                         <OverviewCard
                             key={variation.id}
-                            exerciseBase={variation}
+                            exercise={variation}
                             language={language}
                         />
                     </Grid>

@@ -1,10 +1,10 @@
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Box, Button, Card, CardActions, CardMedia } from "@mui/material";
+import { ExerciseVideo } from "components/Exercises/models/video";
+import { useProfileQuery } from "components/User/queries/profile";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { ExerciseVideo } from "components/Exercises/models/video";
 import { deleteExerciseVideo, postExerciseVideo } from "services";
-import { useProfileQuery } from "components/User/queries/profile";
 
 type VideoCardProps = {
     video: ExerciseVideo;
@@ -37,10 +37,10 @@ export const VideoEditCard = ({ video, canDelete }: VideoCardProps) => {
 
 
 type AddVideoCardProps = {
-    baseId: number;
+    exerciseId: number;
 };
 
-export const AddVideoCard = ({ baseId }: AddVideoCardProps) => {
+export const AddVideoCard = ({ exerciseId }: AddVideoCardProps) => {
 
     const [t] = useTranslation();
     const profileQuery = useProfileQuery();
@@ -51,7 +51,7 @@ export const AddVideoCard = ({ baseId }: AddVideoCardProps) => {
         }
         const [uploadedFile] = e.target.files;
         if (profileQuery.isSuccess) {
-            await postExerciseVideo(baseId, profileQuery.data!.username, uploadedFile);
+            await postExerciseVideo(exerciseId, profileQuery.data!.username, uploadedFile);
         }
     };
 

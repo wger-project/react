@@ -1,18 +1,18 @@
 /* eslint-disable camelcase */
 
-import { Adapter } from "utils/Adapter";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { Exercise } from "components/Exercises/models/exercise";
 import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
 import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
+import { Adapter } from "utils/Adapter";
 
 export class WorkoutSetting {
 
-    base: ExerciseBase | undefined;
+    base: Exercise | undefined;
 
     constructor(
         public id: number,
         public date: Date,
-        public baseId: number,
+        public exerciseId: number,
         public repetitionUnit: number,
         public reps: number,
         public weight: number | null,
@@ -55,7 +55,7 @@ export class SettingAdapter implements Adapter<WorkoutSetting> {
         any {
         return {
             id: item.id,
-            exercise_base: item.baseId,
+            exercise_base: item.exerciseId,
             repetition_unit: item.repetitionUnit,
             reps: item.reps,
             weight: item.weight,

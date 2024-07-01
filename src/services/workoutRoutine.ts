@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { Exercise } from "components/Exercises/models/exercise";
 import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
 import { WorkoutLog, WorkoutLogAdapter } from "components/WorkoutRoutines/models/WorkoutLog";
 import { WorkoutRoutine, WorkoutRoutineAdapter } from "components/WorkoutRoutines/models/WorkoutRoutine";
 import { SetAdapter, WorkoutSet } from "components/WorkoutRoutines/models/WorkoutSet";
 import { SettingAdapter } from "components/WorkoutRoutines/models/WorkoutSetting";
-import { getExerciseBase } from "services/exerciseBase";
+import { getExercise } from "services";
 import { getRepUnits, getWeightUnits } from "services/workoutUnits";
 import { API_MAX_PAGE_SIZE } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
@@ -84,8 +84,8 @@ export const processWorkoutRoutine = async (id: number): Promise<WorkoutRoutine>
                 const weightUnit = weightUnits.find(e => e.id === setting.weightUnit);
                 const repUnit = repUnits.find(e => e.id === setting.repetitionUnit);
 
-                const tmpSetting = set!.settings.find(e => e.baseId === setting.baseId);
-                setting.base = tmpSetting !== undefined ? tmpSetting.base : await getExerciseBase(setting.baseId);
+                const tmpSetting = set!.settings.find(e => e.exerciseId === setting.exerciseId);
+                setting.base = tmpSetting !== undefined ? tmpSetting.base : await getExercise(setting.exerciseId);
                 setting.weightUnitObj = weightUnit;
                 setting.repetitionUnitObj = repUnit;
 
@@ -118,6 +118,27 @@ export const getWorkoutRoutines = async (): Promise<WorkoutRoutine[]> => {
     }
     return out;
 };
+
+/*
+ * Returns the current active routine
+ *
+ * Note that at the moment this is simply the newest one
+ */
+export const getActiveWorkoutRoutine = async (): Promise<null | WorkoutRoutine> => {
+    const url = makeUrl(WORKOUT_API_PATH, { query: { 'limit': '1' } });
+
+    const response = await axios.get<ResponseType<WorkoutRoutine>>(
+        url,
+        { headers: makeHeader() }
+    );
+
+    if (response.data.count === 0) {
+        return null;
+    }
+
+    return await processWorkoutRoutine(response.data.results[0].id);
+};
+
 export const getWorkoutRoutine = async (id: number): Promise<WorkoutRoutine> => {
     return await processWorkoutRoutine(id);
 };
@@ -155,7 +176,7 @@ export const getRoutineLogs = async (id: number, loadBases = false): Promise<Wor
     const repUnits = unitResponses[0];
     const weightUnits = unitResponses[1];
 
-    const exercises: Map<number, ExerciseBase> = new Map();
+    const exercises: Map<number, Exercise> = new Map();
 
     const out: WorkoutLog[] = [];
     for await  (const page of fetchPaginated(url)) {
@@ -166,10 +187,10 @@ export const getRoutineLogs = async (id: number, loadBases = false): Promise<Wor
 
             // Load the base object
             if (loadBases) {
-                if (exercises.get(log.baseId) === undefined) {
-                    exercises.set(log.baseId, await getExerciseBase(log.baseId));
+                if (exercises.get(log.exerciseId) === undefined) {
+                    exercises.set(log.exerciseId, await getExercise(log.exerciseId));
                 }
-                log.baseObj = exercises.get(log.baseId)!;
+                log.baseObj = exercises.get(log.exerciseId)!;
             }
 
             out.push(log);

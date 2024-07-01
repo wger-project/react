@@ -1,14 +1,14 @@
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import { Note } from "components/Exercises/models/note";
 import { Alias } from "components/Exercises/models/alias";
 import { Category } from "components/Exercises/models/category";
 import { Equipment } from "components/Exercises/models/equipment";
-import { Muscle } from "components/Exercises/models/muscle";
+import { Exercise } from "components/Exercises/models/exercise";
 import { ExerciseImage } from "components/Exercises/models/image";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
+import { Muscle } from "components/Exercises/models/muscle";
+import { Note } from "components/Exercises/models/note";
+import { Translation } from "components/Exercises/models/translation";
 import { ExerciseVideo } from "components/Exercises/models/video";
 
-const testExerciseTranslation1 = new ExerciseTranslation(
+const testExerciseTranslation1 = new Translation(
     111,
     '583281c7-2362-48e7-95d5-8fd6c455e0fb',
     'Squats',
@@ -18,11 +18,11 @@ const testExerciseTranslation1 = new ExerciseTranslation(
         new Note(133, 174, 'do the exercise correctly'),
     ],
     [
-        new Alias(1, 'test 123'),
-        new Alias(2, 'another name'),
+        new Alias(1, '9a05bdba-e977-4fb1-8fca-2ff2c016c59d', 'test 123'),
+        new Alias(2, 'de49093a-a9e9-4fe0-b4f9-6ce7e98c2c40', 'another name'),
     ]
 );
-const testExerciseTranslation2 = new ExerciseTranslation(
+const testExerciseTranslation2 = new Translation(
     9,
     'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
     'Kniebeuge',
@@ -41,7 +41,7 @@ const image = new ExerciseImage(
     true
 );
 
-export const testApiExerciseBase1 = new ExerciseBase(
+export const testApiExercise1 = new Exercise(
     345,
     "c788d643-150a-4ac7-97ef-84643c6419bf",
     category,
@@ -70,7 +70,7 @@ export const testApiExerciseBase1 = new ExerciseBase(
 );
 
 
-export const responseApiExerciseBaseInfo = {
+export const responseApiExerciseInfo = {
     "count": 418,
     "next": "http://localhost:8000/api/v2/exercisebaseinfo/?format=json&limit=20&offset=20",
     "previous": null,
@@ -144,11 +144,6 @@ export const responseApiExerciseBaseInfo = {
                 "license_author": null
             }
         ],
-        "comments": [
-            "This is a comment",
-            "This is another comment",
-            "This is a third comment"
-        ],
         "variations": 228,
         "exercises": [
             {
@@ -163,10 +158,12 @@ export const responseApiExerciseBaseInfo = {
                 "aliases": [
                     {
                         "id": 1,
+                        "uuid": "9a05bdba-e977-4fb1-8fca-2ff2c016c59d",
                         "alias": "test 123"
                     },
                     {
                         "id": 2,
+                        "uuid": "de49093a-a9e9-4fe0-b4f9-6ce7e98c2c40",
                         "alias": "another name"
                     }
                 ],

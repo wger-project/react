@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
 import PhotoIcon from "@mui/icons-material/Photo";
+import { Box } from "@mui/material";
 import React from "react";
 
 export const ExerciseImagePlaceholder = (props: {

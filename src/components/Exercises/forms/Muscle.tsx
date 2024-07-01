@@ -2,10 +2,10 @@ import { Autocomplete, TextField } from "@mui/material";
 import { useMusclesQuery } from "components/Exercises/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { editExerciseBase } from "services/exerciseBase";
+import { editExercise } from "services";
 
 export function EditExerciseMuscle(props: {
-    baseId: number,
+    exerciseId: number,
     value: number[],
     setValue: React.Dispatch<React.SetStateAction<number[]>>,
     blocked: number[],
@@ -17,7 +17,7 @@ export function EditExerciseMuscle(props: {
     const handleOnChange = async (newValue: number[]) => {
         props.setValue(newValue);
         // eslint-disable-next-line camelcase
-        await editExerciseBase(props.baseId, props.isMain ? { muscles: newValue } : { muscles_secondary: newValue });
+        await editExercise(props.exerciseId, props.isMain ? { muscles: newValue } : { muscles_secondary: newValue });
     };
 
     return musclesQuery.isSuccess

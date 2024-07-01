@@ -1,22 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
+import { getCategories, getEquipment, getExercise, getExercises, getLanguages, getMuscles } from "services";
 import {
     QUERY_CATEGORIES,
     QUERY_EQUIPMENT,
-    QUERY_EXERCISE_BASES,
     QUERY_EXERCISE_DETAIL,
+    QUERY_EXERCISES,
     QUERY_LANGUAGES,
     QUERY_MUSCLES
 } from "utils/consts";
-import { getCategories, getEquipment, getExerciseBase, getExerciseBases, getLanguages, getMuscles } from "services";
 
 
-export function useBasesQuery() {
-    return useQuery([QUERY_EXERCISE_BASES], getExerciseBases);
+export function useExercisesQuery() {
+    return useQuery([QUERY_EXERCISES], getExercises);
 }
 
-export function useBaseDetailQuery(baseId: number) {
-    return useQuery([QUERY_EXERCISE_DETAIL, baseId],
-        () => getExerciseBase(baseId)
+export function useExerciseDetailQuery(exerciseId: number) {
+    return useQuery([QUERY_EXERCISE_DETAIL, exerciseId],
+        () => getExercise(exerciseId)
     );
 }
 

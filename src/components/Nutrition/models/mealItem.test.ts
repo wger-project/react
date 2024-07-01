@@ -17,7 +17,7 @@ describe("Test the meal item model", () => {
         expect(values.carbohydratesSugar).toBeCloseTo(611.999, 2);
         expect(values.fat).toBeCloseTo(198, 2);
         expect(values.fatSaturated).toBeCloseTo(54, 2);
-        expect(values.fibres).toBeCloseTo(30, 2);
+        expect(values.fiber).toBeCloseTo(30, 2);
         expect(values.sodium).toBeCloseTo(2.4, 2);
     });
 });

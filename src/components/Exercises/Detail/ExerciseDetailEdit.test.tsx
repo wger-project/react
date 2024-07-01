@@ -1,5 +1,13 @@
-import React from 'react';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from '@testing-library/react';
+import userEvent from "@testing-library/user-event";
+import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
+import { Translation } from "components/Exercises/models/translation";
+import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
+import { usePermissionQuery } from "components/User/queries/permission";
+import { useProfileQuery } from "components/User/queries/profile";
+import React from 'react';
+import { addTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
 import {
     testCategories,
     testEquipment,
@@ -8,15 +16,7 @@ import {
     testLanguageGerman,
     testMuscles
 } from "tests/exerciseTestdata";
-import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
-import userEvent from "@testing-library/user-event";
-import { addExerciseTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
-import { usePermissionQuery } from "components/User/queries/permission";
 import { testProfileDataVerified } from "tests/userTestdata";
-import { useProfileQuery } from "components/User/queries/profile";
 
 // It seems we run into a timeout when running the tests on GitHub actions
 jest.setTimeout(15000);
@@ -36,8 +36,8 @@ describe("Exercise translation edit tests", () => {
         useProfileQuery.mockImplementation(() => Promise.resolve(testProfileDataVerified));
 
         // @ts-ignore
-        addExerciseTranslation.mockImplementation(() => Promise.resolve(
-            new ExerciseTranslation(
+        addTranslation.mockImplementation(() => Promise.resolve(
+            new Translation(
                 300,
                 '409f4b97-a56d-4852-85b2-834ba18b7ccc',
                 'Sanglier',
@@ -123,7 +123,7 @@ describe("Exercise translation edit tests", () => {
         // Assert
         //screen.debug();
         //screen.logTestingPlaygroundURL();
-        expect(addExerciseTranslation).not.toHaveBeenCalled();
+        expect(addTranslation).not.toHaveBeenCalled();
         expect(editExerciseTranslation).toHaveBeenCalledWith(
             9,
             345,

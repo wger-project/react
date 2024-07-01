@@ -1,35 +1,28 @@
-import React, { useCallback, useEffect } from 'react';
-import { getWeights } from 'services';
-import styles from './body_weight.module.css';
-import { setWeights, useWeightStateValue } from 'state';
-import { WeightChart } from "components/BodyWeight/WeightChart";
-import { Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
+import { useBodyWeightQuery } from "components/BodyWeight/queries";
 import { WeightTable } from "components/BodyWeight/Table";
+import { WeightChart } from "components/BodyWeight/WeightChart";
+import { AddBodyWeightEntryFab } from "components/BodyWeight/widgets/fab";
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
+import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
+import { useTranslation } from "react-i18next";
 
 export const BodyWeight = () => {
-    const [state, dispatch] = useWeightStateValue();
+    const [t] = useTranslation();
+    const weightyQuery = useBodyWeightQuery();
 
-    // Using useCallback so that I can use this fetchWeight method in
-    // useEffect and elsewhere.
-    const fetchWeights = useCallback(async () => {
-        try {
-            const receivedWeights = await getWeights();
-            dispatch(setWeights(receivedWeights));
-        } catch (error) {
-            console.log(error);
-        }
-    }, [dispatch]);
-
-    useEffect(() => {
-        fetchWeights();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchWeights]);
-
-    return (
-        <div className={styles.root}>
-            <WeightChart weights={state.weights} />
-            <Box sx={{ mt: 4 }} />
-            <WeightTable weights={state.weights} />
-        </div>
-    );
+    return weightyQuery.isLoading
+        ? <LoadingPlaceholder />
+        : <WgerContainerRightSidebar
+            title={t("weight")}
+            mainContent={<Stack spacing={2}>
+                {weightyQuery.data!.length === 0 && <OverviewEmpty />}
+                <WeightChart weights={weightyQuery.data!} />
+                <Box sx={{ mt: 4 }} />
+                <WeightTable weights={weightyQuery.data!} />
+            </Stack>
+            }
+            fab={<AddBodyWeightEntryFab />}
+        />;
 };

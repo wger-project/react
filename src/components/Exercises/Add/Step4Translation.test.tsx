@@ -1,10 +1,10 @@
-import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Step4Translations } from "components/Exercises/Add/Step4Translations";
 import { useLanguageQuery } from "components/Exercises/queries";
+import React from "react";
 import { testLanguages } from "tests/exerciseTestdata";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import userEvent from "@testing-library/user-event";
 
 // It seems we run into a timeout when running the tests on github actions
 jest.setTimeout(30000);
@@ -94,7 +94,7 @@ describe("Test the add exercise step 4 component", () => {
         const button = screen.getByRole('checkbox');
         await user.click(button);
 
-        await user.click(screen.getByRole('button', { name: /language/i }));
+        await user.click(screen.getByRole('combobox', { name: /language/i }));
         await user.click(screen.getByText(/deutsch/i));
 
         await user.type(screen.getByRole('textbox', { name: /name/i }), 'Arm Vernichter');

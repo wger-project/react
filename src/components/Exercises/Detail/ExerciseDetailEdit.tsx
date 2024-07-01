@@ -1,35 +1,35 @@
-import { useTranslation } from "react-i18next";
+import CloseIcon from '@mui/icons-material/Close';
 import { Alert, Box, Button, Grid, IconButton, Typography } from "@mui/material";
-import React from "react";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
-import { Language } from "components/Exercises/models/language";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
-import * as yup from "yup";
+import { EditExerciseCategory } from "components/Exercises/forms/Category";
+import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
+import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
+import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
+import { ExerciseName } from "components/Exercises/forms/ExerciseName";
+import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCard";
+import { EditExerciseMuscle } from "components/Exercises/forms/Muscle";
+import { AddVideoCard, VideoEditCard } from "components/Exercises/forms/VideoCard";
 import {
     alternativeNameValidator,
     descriptionValidator,
     nameValidator
 } from "components/Exercises/forms/yupValidators";
-import { Form, Formik } from "formik";
-import { ExerciseName } from "components/Exercises/forms/ExerciseName";
-import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
-import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
-import { addExerciseTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
-import { ExerciseTranslation } from "components/Exercises/models/exerciseTranslation";
-import CloseIcon from '@mui/icons-material/Close';
-import { WgerPermissions } from "permissions";
-import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCard";
-import { AddVideoCard, VideoEditCard } from "components/Exercises/forms/VideoCard";
-import { EditExerciseCategory } from "components/Exercises/forms/Category";
-import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
-import { EditExerciseMuscle } from "components/Exercises/forms/Muscle";
-import { MuscleOverview } from "components/Muscles/MuscleOverview";
+import { Exercise } from "components/Exercises/models/exercise";
+import { Language } from "components/Exercises/models/language";
+import { Translation } from "components/Exercises/models/translation";
 import { useMusclesQuery } from "components/Exercises/queries";
+import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
+import { Form, Formik } from "formik";
+import { WgerPermissions } from "permissions";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { addTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
+import * as yup from "yup";
 
 export interface ViewProps {
-    exercise: ExerciseBase;
+    exercise: Exercise;
     language: Language;
 }
 
@@ -46,7 +46,7 @@ export const ExerciseDetailEdit = ({
     const isNewTranslation = language.id !== translationFromBase.language;
     const exerciseTranslation =
         isNewTranslation
-            ? new ExerciseTranslation(null, null, '', '', language.id)
+            ? new Translation(null, null, '', '', language.id)
             : translationFromBase;
     const exerciseEnglish = exercise.getTranslation();
 
@@ -82,7 +82,7 @@ export const ExerciseDetailEdit = ({
                         values.name,
                         values.description,
                     )
-                    : await addExerciseTranslation(
+                    : await addTranslation(
                         exercise.id!,
                         language.id,
                         values.name,
@@ -249,7 +249,7 @@ export const ExerciseDetailEdit = ({
                 <Typography variant={'h6'}>{t('images')}</Typography>
                 <Grid container spacing={2} mt={2}>
                     <Grid item md={3} key={'add'}>
-                        <AddImageCard baseId={exercise.id!} />
+                        <AddImageCard exerciseId={exercise.id!} />
                     </Grid>
 
                     {exercise.images.map(img => (
@@ -268,7 +268,7 @@ export const ExerciseDetailEdit = ({
                 <Grid container spacing={2} mt={2}>
                     {deleteVideoPermissionQuery.data
                         && <Grid item md={3} key={'add'}>
-                            <AddVideoCard baseId={exercise.id!} />
+                            <AddVideoCard exerciseId={exercise.id!} />
                         </Grid>
                     }
 
@@ -287,20 +287,20 @@ export const ExerciseDetailEdit = ({
             && musclesQuery.isSuccess
             && <>
                 <PaddingBox />
-                <EditExerciseCategory baseId={exercise.id!} initial={exercise.category.id} />
-                <EditExerciseEquipment baseId={exercise.id!} initial={exercise.equipment.map(e => e.id)} />
+                <EditExerciseCategory exerciseId={exercise.id!} initial={exercise.category.id} />
+                <EditExerciseEquipment exerciseId={exercise.id!} initial={exercise.equipment.map(e => e.id)} />
 
                 <Grid container mt={1}>
                     <Grid item sm={7}>
                         <EditExerciseMuscle
-                            baseId={exercise.id!}
+                            exerciseId={exercise.id!}
                             value={mainMuscles}
                             setValue={setMainMuscles}
                             blocked={secondaryMuscles}
                             isMain
                         />
                         <EditExerciseMuscle
-                            baseId={exercise.id!}
+                            exerciseId={exercise.id!}
                             value={secondaryMuscles}
                             setValue={setSecondaryMuscles}
                             blocked={mainMuscles}

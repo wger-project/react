@@ -109,15 +109,15 @@ export const LoggedPlannedNutritionalValuesTable = (props: {
                     <TableCell></TableCell>
                 </TableRow>
                 <TableRow>
-                    <TableCell>{t('nutrition.fibres')}</TableCell>
+                    <TableCell>{t('nutrition.fiber')}</TableCell>
                     <TableCell align="right">
-                        {numberGramLocale(props.planned.fibres, i18n.language)}
+                        {numberGramLocale(props.planned.fiber, i18n.language)}
                     </TableCell>
                     <TableCell align="right">
-                        {numberGramLocale(props.logged.fibres, i18n.language)}
+                        {numberGramLocale(props.logged.fiber, i18n.language)}
                     </TableCell>
                     <TableCell align="right">
-                        {numberGramLocale(props.logged.fibres - props.planned.fibres, i18n.language)}
+                        {numberGramLocale(props.logged.fiber - props.planned.fiber, i18n.language)}
                     </TableCell>
                 </TableRow>
                 <TableRow>

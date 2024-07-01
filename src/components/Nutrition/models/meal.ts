@@ -41,14 +41,6 @@ export class Meal {
         return out;
     }
 
-    get loggedNutritionalValues(): NutritionalValues {
-        const out = new NutritionalValues();
-        for (const entry of this.diaryEntries) {
-            out.add(entry.nutritionalValues);
-        }
-        return out;
-    }
-
     get loggedNutritionalValuesToday(): NutritionalValues {
         const out = new NutritionalValues();
         for (const entry of this.diaryEntriesToday) {

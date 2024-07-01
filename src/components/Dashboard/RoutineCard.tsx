@@ -1,24 +1,100 @@
-import { Button, Card, CardActions, CardContent, CardHeader, Skeleton, } from '@mui/material';
-import React from 'react';
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    CardHeader,
+    Collapse,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+} from '@mui/material';
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { EmptyCard } from "components/Dashboard/EmptyCard";
+import { SettingDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
+import { Day } from "components/WorkoutRoutines/models/Day";
+import { WorkoutRoutine } from "components/WorkoutRoutines/models/WorkoutRoutine";
+import { useActiveRoutineQuery } from "components/WorkoutRoutines/queries";
+import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
+import { daysOfWeek } from "utils/date";
+import { makeLink, WgerLink } from "utils/url";
+
 
 export const RoutineCard = () => {
+    const [t, i18n] = useTranslation();
+    const routineQuery = useActiveRoutineQuery();
 
-    const [t] = useTranslation();
+    return (<>{routineQuery.isLoading
+        ? <LoadingPlaceholder />
+        : <>{routineQuery.data !== null
+            ? <RoutineCardContent routine={routineQuery.data!} />
+            : <EmptyCard
+                title={t('routines.routine')}
+                link={makeLink(WgerLink.ROUTINE_ADD, i18n.language)}
+            />}
+        </>
+    }</>);
+};
 
-    return (
-        <Card>
-            <CardHeader title={t('routines.routine')} />
-            <CardContent>
-                <Skeleton animation={false} />
-                <Skeleton variant="text" animation={false} />
-                <Skeleton variant="circular" width={40} height={40} animation={false} />
-                <Skeleton variant="rectangular" height={118} animation={false} />
-                <p>Content goes here</p>
-            </CardContent>
-            <CardActions>
-                <Button size="small">{t('addEntry')}</Button>
-            </CardActions>
-        </Card>
-    );
+const RoutineCardContent = (props: { routine: WorkoutRoutine }) => {
+    const [t, i18n] = useTranslation();
+
+    return <Card>
+        <CardHeader
+            title={t('routines.routine')}
+            subheader={props.routine.name ?? "."}
+        />
+        {/* Note: not 500 like the other cards, but a bit more since we don't have an action icon... */}
+        <CardContent sx={{ height: "510px", overflow: "auto" }}>
+            <List>
+                {props.routine.days.map(day => <DayListItem day={day} key={day.id} />)}
+            </List>
+        </CardContent>
+
+        <CardActions>
+            <Button size="small"
+                    href={makeLink(WgerLink.ROUTINE_DETAIL, i18n.language, { id: props.routine.id! })}>
+                {t('seeDetails')}
+            </Button>
+        </CardActions>
+    </Card>;
+};
+
+// <RoutineCardContent routine={routineQuery.data!} />
+
+const DayListItem = (props: { day: Day }) => {
+    const [expandView, setExpandView] = useState(false);
+
+    const handleToggleExpand = () => setExpandView(!expandView);
+
+    return (<>
+        <ListItemButton onClick={handleToggleExpand} selected={expandView}>
+            <ListItemIcon>
+                {expandView ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </ListItemIcon>
+            <ListItemText
+                primary={props.day.description}
+                secondary={props.day.daysOfWeek.map((dayId) => (daysOfWeek[dayId - 1])).join(", ")}
+            />
+        </ListItemButton>
+
+        <Collapse in={expandView} timeout="auto" unmountOnExit>
+            {props.day.sets.map((set) => (<div key={set.id}>
+                {set.settingsFiltered.map((setting) =>
+                    <SettingDetails
+                        setting={setting}
+                        set={set}
+                        key={setting.id}
+                        imageHeight={45}
+                        iconHeight={25}
+                        rowHeight={'70px'}
+                    />
+                )}
+            </div>))}
+        </Collapse>
+    </>);
 };

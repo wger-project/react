@@ -1,17 +1,17 @@
-import React from "react";
 import { Grid, } from "@mui/material";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
-import { useTranslation } from "react-i18next";
-import { getLanguageByShortName } from "services";
+import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
 import { useLanguageQuery } from "components/Exercises/queries";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { getLanguageByShortName } from "services";
 
 type ExerciseGridProps = {
-    exerciseBases: ExerciseBase[];
+    exercises: Exercise[];
 };
 
-export const ExerciseGrid = ({ exerciseBases }: ExerciseGridProps) => {
+export const ExerciseGrid = ({ exercises }: ExerciseGridProps) => {
 
     const languageQuery = useLanguageQuery();
 
@@ -28,9 +28,9 @@ export const ExerciseGrid = ({ exerciseBases }: ExerciseGridProps) => {
 
     return (
         <Grid container spacing={1}>
-            {exerciseBases.map(b => (
+            {exercises.map(b => (
                 <Grid item xs={6} md={4} key={b.id} sx={{ display: "flex" }}>
-                    <OverviewCard exerciseBase={b} language={currentUserLanguage} />
+                    <OverviewCard exercise={b} language={currentUserLanguage} />
                 </Grid>
             ))}
         </Grid>

@@ -78,7 +78,9 @@ export enum WgerLink {
     NUTRITION_DETAIL,
     NUTRITION_PLAN_PDF,
     NUTRITION_PLAN_COPY,
-    NUTRITION_DIARY
+    NUTRITION_DIARY,
+
+    INGREDIENT_DETAIL
 }
 
 type UrlParams = { id: number, slug?: string, date?: string };
@@ -161,6 +163,9 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/nutrition/${params!.id}/pdf`;
         case WgerLink.NUTRITION_PLAN_COPY:
             return `/${langShort}/nutrition/${params!.id}/copy`;
+
+        case WgerLink.INGREDIENT_DETAIL:
+            return `/${langShort}/nutrition/ingredient/${params!.id}/view`;
 
         // Dashboard
         case WgerLink.DASHBOARD:

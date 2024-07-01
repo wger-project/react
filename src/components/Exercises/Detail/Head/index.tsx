@@ -5,10 +5,6 @@ import {
     Button,
     Chip,
     Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     Divider,
     Grid,
     ListItemIcon,
@@ -18,28 +14,23 @@ import {
     Stack,
     Typography
 } from '@mui/material';
-import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { ExerciseBase } from 'components/Exercises/models/exerciseBase';
-import { ExerciseTranslation } from 'components/Exercises/models/exerciseTranslation';
+import { ExerciseDeleteDialog } from "components/Exercises/Detail/Head/ExerciseDeleteDialog";
+import { Exercise } from 'components/Exercises/models/exercise';
 import { Language } from 'components/Exercises/models/language';
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
 import { WgerPermissions } from "permissions";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from 'react-router-dom';
-import { deleteExerciseTranslation } from "services";
-import { deleteExerciseBase } from "services/exerciseBase";
-import { ExerciseSearchResponse } from "services/responseType";
+import { Link } from 'react-router-dom';
 import { getTranslationKey } from "utils/strings";
 import styles from './head.module.css';
 
 export interface HeadProp {
-    exercise: ExerciseBase
+    exercise: Exercise
     languages: Language[]
     changeLanguage: (lang: Language) => void,
     language: Language | undefined // language displayed in the head since it's not found in the translations
-    currentTranslation: ExerciseTranslation | undefined
     setEditMode: Function,
     editMode: boolean
 }
@@ -49,7 +40,6 @@ export const Head = ({
                          languages,
                          changeLanguage,
                          language,
-                         currentTranslation,
                          setEditMode,
                          editMode
                      }: HeadProp) => {
@@ -57,12 +47,12 @@ export const Head = ({
     const [openDialog, setOpenDialog] = React.useState(false);
     const openLanguageMenu = Boolean(anchorMenuEl);
     const [t] = useTranslation();
-    const navigate = useNavigate();
 
     const deletePermissionQuery = usePermissionQuery(WgerPermissions.DELETE_EXERCISE);
     const editPermissionQuery = usePermissionQuery(WgerPermissions.EDIT_EXERCISE);
     const profileQuery = useProfileQuery();
     const userIsAnonymous = profileQuery.isSuccess && profileQuery.data === null;
+
 
     let canUserContribute = false;
     if (profileQuery.isSuccess && editPermissionQuery.isSuccess) {
@@ -78,22 +68,6 @@ export const Head = ({
     const handleLanguageClick = (lang: Language) => {
         changeLanguage(lang);
         handleMenuClose();
-    };
-
-    const handleDeleteTranslation = async () => {
-        await deleteExerciseTranslation(currentTranslation?.id!);
-        setOpenDialog(false);
-        changeLanguage(languages[0]);
-    };
-
-    const handleDeleteBase = async () => {
-        await deleteExerciseBase(exercise.id!);
-        setOpenDialog(false);
-        navigate('../overview');
-    };
-
-    const exerciseReplacement = (exercise: ExerciseSearchResponse) => {
-        console.log(exercise);
     };
 
     const languagesList = languages.map(l => {
@@ -116,49 +90,19 @@ export const Head = ({
                 <div className={styles.root}>
                     <Dialog
                         open={openDialog}
-                        onClose={() => setOpenDialog(false)}
-                    >
-                        <DialogTitle id="alert-dialog-title">
-                            {t('delete')}
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                <p>
-                                    {t('exercises.deleteExerciseBody',
-                                        {
-                                            name: currentTranslation?.name,
-                                            language: language?.nameLong
-                                        })}
-                                </p>
-                                <p>
-                                    {t('cannotBeUndone')}
-                                </p>
-                                <NameAutocompleter callback={exerciseReplacement} />
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => setOpenDialog(false)}>{t('cancel')}</Button>
-                            <Button
-                                onClick={() => handleDeleteTranslation()}
-                                variant="contained"
-                                autoFocus
-                            >
-                                {t('exercises.deleteTranslation')}
-                            </Button>
-                            <Button
-                                onClick={() => handleDeleteBase()}
-                                variant="contained"
-                                autoFocus
-                            >
-                                {t('exercises.deleteExerciseFull')}
-                            </Button>
-                        </DialogActions>
+                        onClose={() => setOpenDialog(false)}>
+                        <ExerciseDeleteDialog
+                            onClose={() => setOpenDialog(false)}
+                            onChangeLanguage={() => changeLanguage(languages[0])}
+                            currentExercise={exercise}
+                            currentLanguage={language}
+                        />
                     </Dialog>
 
                     <div className={styles.detail_language}>
-
                         <div className={styles.detail}>
-                            <Link to="../overview">{t('exercises.exercises')}</Link>  &gt; {currentTranslation?.name}
+                            <Link
+                                to="../overview">{t('exercises.exercises')}</Link>  &gt; {exercise.getTranslation(language)?.name}
                         </div>
                         <div className={styles.languages}>
                             <div className={styles.language}>
@@ -190,14 +134,14 @@ export const Head = ({
                     </div>
                     <div className={styles.header}>
                         <Typography gutterBottom variant="h2" margin={0} sx={{ mt: 2 }}>
-                            {currentTranslation?.name}
+                            {exercise.getTranslation(language)?.name}
                         </Typography>
                         {!userIsAnonymous &&
                             <nav className={styles.toolbar}>
                                 {
                                     deletePermissionQuery.isSuccess
                                     && deletePermissionQuery.data
-                                    && language?.id === currentTranslation?.language
+                                    && language?.id === exercise.getTranslation(language)?.language
                                     && <Button onClick={() => setOpenDialog(true)}>
                                         {t('delete')}
                                     </Button>

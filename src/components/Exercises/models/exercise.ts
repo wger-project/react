@@ -1,15 +1,15 @@
-import { Adapter } from "utils/Adapter";
-import { ExerciseImage, ExerciseImageAdapter, } from "components/Exercises/models/image";
-import { Equipment, EquipmentAdapter, } from "components/Exercises/models/equipment";
-import { Muscle, MuscleAdapter } from "components/Exercises/models/muscle";
 import { Category, CategoryAdapter, } from "components/Exercises/models/category";
-import { ExerciseTranslation, ExerciseTranslationAdapter } from "components/Exercises/models/exerciseTranslation";
-import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { Equipment, EquipmentAdapter, } from "components/Exercises/models/equipment";
+import { ExerciseImage, ExerciseImageAdapter, } from "components/Exercises/models/image";
 import { Language } from "components/Exercises/models/language";
+import { Muscle, MuscleAdapter } from "components/Exercises/models/muscle";
+import { Translation, TranslationAdapter } from "components/Exercises/models/translation";
 import { ExerciseVideo, ExerciseVideoAdapter } from "components/Exercises/models/video";
+import { Adapter } from "utils/Adapter";
+import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 
-export class ExerciseBase {
-    translations: ExerciseTranslation[] = [];
+export class Exercise {
+    translations: Translation[] = [];
     videos: ExerciseVideo[] = [];
     authors: string[] = [];
 
@@ -22,7 +22,7 @@ export class ExerciseBase {
         public musclesSecondary: Muscle[],
         public images: ExerciseImage[],
         public variationId: number | null,
-        translations?: ExerciseTranslation[],
+        translations?: Translation[],
         videos?: ExerciseVideo[],
         authors?: string[]
         /*
@@ -49,7 +49,7 @@ export class ExerciseBase {
     // found. While this can't happen for the "regular" wger server, other local
     // instances might have deleted the english translation or added new exercises
     // without an english translation.
-    getTranslation(userLanguage?: Language): ExerciseTranslation {
+    getTranslation(userLanguage?: Language): Translation {
         const language = userLanguage != null ? userLanguage.id : ENGLISH_LANGUAGE_ID;
 
         let translation = this.translations.find(t => t.language === language);
@@ -83,19 +83,19 @@ export class ExerciseBase {
 }
 
 
-export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
+export class ExerciseAdapter implements Adapter<Exercise> {
     /*
      * needs the items from exercisebaseinfo
      */
-    fromJson(item: any): ExerciseBase {
+    fromJson(item: any): Exercise {
         const categoryAdapter = new CategoryAdapter();
         const equipmentAdapter = new EquipmentAdapter();
         const muscleAdapter = new MuscleAdapter();
         const imageAdapter = new ExerciseImageAdapter();
-        const translationAdapter = new ExerciseTranslationAdapter();
+        const translationAdapter = new TranslationAdapter();
         const videoAdapter = new ExerciseVideoAdapter();
 
-        const base = new ExerciseBase(
+        const base = new Exercise(
             item.id,
             item.uuid,
             categoryAdapter.fromJson(item.category),
@@ -124,7 +124,7 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
      * Don't return all properties, since not all items can be updated (they would
      * be ignored by the server, but it's better to not send too much anyway)
      */
-    toJson(item: ExerciseBase) {
+    toJson(item: Exercise) {
         return {
             id: item.id,
             uuid: item.uuid,
@@ -141,5 +141,11 @@ export class ExerciseBaseAdapter implements Adapter<ExerciseBase> {
 export type ImageFormData = {
     url: string;
     file: File;
+    author: string;
+    authorUrl: string;
+    title: string,
+    objectUrl: string,
+    derivativeSourceUrl: string;
+    style: string;
 };
 

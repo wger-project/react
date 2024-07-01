@@ -7,13 +7,16 @@ export { getMuscles } from './muscles';
 export { getEquipment } from './equipment';
 export { getCategories } from './category';
 export {
-    getExerciseBases,
-    getExerciseBase,
-    getExerciseBasesForVariation,
-    addExerciseBase,
-} from './exerciseBase';
+    editExercise,
+    getExercises,
+    getExercise,
+    getExercisesForVariation,
+    addExercise,
+    deleteExercise,
+    processExerciseApiData,
+} from './exercise';
 export {
-    addExerciseTranslation,
+    addTranslation,
     editExerciseTranslation,
     getExerciseTranslations,
     searchExerciseTranslations,
@@ -29,6 +32,8 @@ export {
     getWorkoutRoutinesShallow,
     getWorkoutRoutine,
     getWorkoutRoutines,
+    getActiveWorkoutRoutine,
+    getRoutineLogs,
 } from './workoutRoutine';
 
 export {

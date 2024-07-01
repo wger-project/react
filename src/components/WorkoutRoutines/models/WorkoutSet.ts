@@ -1,7 +1,7 @@
-import { Adapter } from "utils/Adapter";
+import { Exercise } from "components/Exercises/models/exercise";
 import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting";
-import { ExerciseBase } from "components/Exercises/models/exerciseBase";
 import { settingsToText } from "components/WorkoutRoutines/utils/repText";
+import { Adapter } from "utils/Adapter";
 
 export class WorkoutSet {
 
@@ -25,7 +25,7 @@ export class WorkoutSet {
     }
 
     // Return all unique exercise bases from settings
-    get exercises(): ExerciseBase[] {
+    get exercises(): Exercise[] {
         return this.settingsFiltered.map(element => element.base!);
     }
 
@@ -33,7 +33,7 @@ export class WorkoutSet {
         const out: WorkoutSetting[] = [];
 
         for (const setting of this.settings) {
-            const foundSettings = out.filter(s => s.baseId === setting.baseId);
+            const foundSettings = out.filter(s => s.exerciseId === setting.exerciseId);
 
             if (foundSettings.length === 0) {
                 out.push(setting);
@@ -43,14 +43,14 @@ export class WorkoutSet {
         return out;
     }
 
-    filterSettingsByExercise(exerciseBase: ExerciseBase): WorkoutSetting[] {
-        return this.settings.filter((element) => element.baseId === exerciseBase.id);
+    filterSettingsByExercise(exerciseId: Exercise): WorkoutSetting[] {
+        return this.settings.filter((element) => element.exerciseId === exerciseId.id);
     }
 
-    getSettingsTextRepresentation(exerciseBase: ExerciseBase, translate?: (key: string) => string): string {
+    getSettingsTextRepresentation(exerciseId: Exercise, translate?: (key: string) => string): string {
         translate = translate || (str => str);
 
-        return settingsToText(this.sets, this.filterSettingsByExercise(exerciseBase), translate);
+        return settingsToText(this.sets, this.filterSettingsByExercise(exerciseId), translate);
     }
 }
 

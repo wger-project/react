@@ -15,7 +15,7 @@ export class Ingredient {
         public carbohydratesSugar: number | null,
         public fat: number,
         public fatSaturated: number | null,
-        public fibres: number | null,
+        public fiber: number | null,
         public sodium: number | null,
         public image: IngredientImage | null = null,
     ) {
@@ -36,7 +36,7 @@ export class IngredientAdapter implements Adapter<Ingredient> {
             item.carbohydrates_sugar === null ? null : parseFloat(item.carbohydrates_sugar),
             parseFloat(item.fat),
             item.fat_saturated === null ? null : parseFloat(item.fat_saturated),
-            item.fibres === null ? null : parseFloat(item.fibres),
+            item.fiber === null ? null : parseFloat(item.fiber),
             item.sodium === null ? null : parseFloat(item.sodium),
             item.image === null ? null : new IngredientImageAdapter().fromJson(item.image),
         );
