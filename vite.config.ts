@@ -7,7 +7,19 @@ export default defineConfig(() => {
         build: {
             outDir: 'build',
         },
-        plugins: [react(), viteTsconfigPaths()],
+        server: {
+            open: true,
+            port: 3000,
+        },
+        plugins: [
+            react({
+                jsxImportSource: '@emotion/react',
+                babel: {
+                    plugins: ['@emotion/babel-plugin'],
+                },
+            }),
+            viteTsconfigPaths(),
+        ],
         test: {
             environment: 'jsdom',
             globals: true,

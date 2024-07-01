@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/babel-plugin": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.21",
@@ -12,6 +13,7 @@
     "@mui/x-data-grid": "^6.16.0",
     "@mui/x-date-pickers": "^5.0.20",
     "@tanstack/react-query": "^4.2.3",
+    "@vitejs/plugin-react": "^4.3.1",
     "axios": "^1.6.7",
     "formik": "^2.4.6",
     "history": "^5.3.0",
@@ -28,7 +30,7 @@
     "recharts": "^2.12.7",
     "slug": "^9.1.0",
     "typescript": "5.1.6",
-    "vite-tsconfig-paths": "^4.2.1",
+    "vite-tsconfig-paths": "^4.3.2",
     "web-vitals": "^4.2.1",
     "yup": "^1.4.0"
   },
@@ -50,8 +52,11 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "i18next-parser": "^8.8.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^22.1.0",
-    "vite": "^4.5.0",
+    "ts-jest": "^29.1.5",
+    "vite": "^5.3.2",
     "vitest": "^0.34.6"
   },
   "scripts": {
@@ -59,7 +64,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "postbuild": "./postbuild.sh",
-    "test": "LANG=de_de vitest",
+    "test": "LANG=de_de jest",
     "i18n": "i18next",
     "lint": "eslint ."
   },
@@ -103,8 +108,14 @@
   },
   "jest": {
     "moduleNameMapper": {
-      "^axios$": "axios/dist/axios.js"
+      "^axios$": "<rootDir>/node_modules/axios/dist/node/axios.cjs",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
     },
-    "preset": "vite-jest"
+    "preset": "ts-jest",
+    "testEnvironment": "jest-environment-jsdom",
+    "modulePaths": [
+      "<rootDir>/src"
+    ]
   }
 }
