@@ -48,7 +48,7 @@
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "i18next-parser": "^8.9.0",
+    "i18next-parser": "^9.0.0",
     "react-scripts": "^5.0.1"
   },
   "scripts": {
