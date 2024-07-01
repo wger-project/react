@@ -28,7 +28,7 @@
     "recharts": "^2.12.7",
     "slug": "^9.1.0",
     "typescript": "5.1.6",
-    "web-vitals": "^3.5.2",
+    "web-vitals": "^4.2.1",
     "yup": "^1.4.0"
   },
   "devDependencies": {
