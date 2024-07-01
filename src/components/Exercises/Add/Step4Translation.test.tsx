@@ -94,7 +94,7 @@ describe("Test the add exercise step 4 component", () => {
         const button = screen.getByRole('checkbox');
         await user.click(button);
 
-        await user.click(screen.getByRole('button', { name: /language/i }));
+        await user.click(screen.getByRole('combobox', { name: /language/i }));
         await user.click(screen.getByText(/deutsch/i));
 
         await user.type(screen.getByRole('textbox', { name: /name/i }), 'Arm Vernichter');
