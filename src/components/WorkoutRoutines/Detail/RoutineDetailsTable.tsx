@@ -55,7 +55,7 @@ const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
     const theme = useTheme();
 
     return <>
-        <TableContainer component={Paper} sx={{ minWidth: 510 }}>
+        <TableContainer component={Paper} sx={{ minWidth: 470 }}>
             <Table size="small">
                 <TableHead>
                     <TableRow>
@@ -94,29 +94,39 @@ const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
                                                 {/*ID: {setConfig.slotConfigId}*/}
                                             </TableCell>
                                             <TableCell padding={'none'} align={'center'}>
-                                                {setConfig.nrOfSets}
+                                                <Typography variant={'caption'}>
+                                                    {setConfig.nrOfSets}
+                                                </Typography>
                                             </TableCell>
                                             <TableCell padding={'none'} align={'center'}>
-                                                {setConfig.reps}
-                                                {setConfig.maxReps !== null &&
-                                                    <> - {setConfig.maxReps}</>
-                                                }
+                                                <Typography variant={'caption'}>
+                                                    {setConfig.reps}
+                                                    {setConfig.maxReps !== null &&
+                                                        <> - {setConfig.maxReps}</>
+                                                    }
+                                                </Typography>
                                             </TableCell>
                                             <TableCell padding={'none'} align={'center'}>
-                                                {setConfig.weight}
-                                                {setConfig.maxWeight !== null &&
-                                                    <> - {setConfig.maxWeight}</>
-                                                }
+                                                <Typography variant={'caption'}>
+                                                    {setConfig.weight}
+                                                    {setConfig.maxWeight !== null &&
+                                                        <> - {setConfig.maxWeight}</>
+                                                    }
+                                                </Typography>
                                             </TableCell>
                                             <TableCell padding={'none'} align={'center'}>
-                                                {setConfig.restTime}
-                                                {setConfig.maxRestTime !== null &&
-                                                    <> - {setConfig.maxRestTime}</>
-                                                }
+                                                <Typography variant={'caption'}>
+                                                    {setConfig.restTime}
+                                                    {setConfig.maxRestTime !== null &&
+                                                        <> - {setConfig.maxRestTime}</>
+                                                    }
+                                                </Typography>
                                             </TableCell>
 
                                             <TableCell padding={'normal'} align={'center'}>
-                                                {setConfig.rir}
+                                                <Typography variant={'caption'}>
+                                                    {setConfig.rir}
+                                                </Typography>
                                             </TableCell>
                                         </TableRow>
                                     )}
