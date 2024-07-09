@@ -145,7 +145,7 @@ export const responseApiExerciseInfo = {
             }
         ],
         "variations": 228,
-        "exercises": [
+        "translations": [
             {
                 "id": 111,
                 "uuid": "583281c7-2362-48e7-95d5-8fd6c455e0fb",

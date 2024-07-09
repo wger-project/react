@@ -15,7 +15,6 @@ export class RoutineDayData {
         public day: Day,
         slots?: SlotData[],
     ) {
-
         if (slots) {
             this.slots = slots;
         }

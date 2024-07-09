@@ -11,7 +11,7 @@ import {
     Typography,
     useTheme
 } from "@mui/material";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import React from "react";
@@ -28,25 +28,27 @@ export const RoutineDetailsTable = () => {
 
     //maxWidth={false}
     return <Container maxWidth={false} sx={{ overflowX: 'scroll' }}>
-        {routineQuery.isLoading
-            ? <LoadingPlaceholder />
-            : <>
-                <Typography variant={"caption"}>
-                    {routineQuery.data?.description}
-                </Typography>
-                <Stack spacing={2} sx={{ mt: 2 }}>
-                    <Stack direction={'row'}>
-                        {Object.keys(routineQuery.data!.groupedDayDataByIteration).map((iteration) =>
-                            <DayTable
-                                dayData={routineQuery.data!.groupedDayDataByIteration[parseInt(iteration)]}
-                                iteration={parseInt(iteration)}
-                                key={iteration}
-                            />
-                        )}
+        <RenderLoadingQuery
+            query={routineQuery}
+            child={routineQuery.isSuccess &&
+                <>
+                    <Typography variant={"caption"}>
+                        {routineQuery.data?.description}
+                    </Typography>
+                    <Stack spacing={2} sx={{ mt: 2 }}>
+                        <Stack direction={'row'}>
+                            {Object.keys(routineQuery.data!.groupedDayDataByIteration).map((iteration) =>
+                                <DayTable
+                                    dayData={routineQuery.data!.groupedDayDataByIteration[parseInt(iteration)]}
+                                    iteration={parseInt(iteration)}
+                                    key={iteration}
+                                />
+                            )}
+                        </Stack>
                     </Stack>
-                </Stack>
-            </>
-        }
+                </>
+            }
+        />
     </Container>;
 };
 

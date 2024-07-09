@@ -13,8 +13,8 @@ import {
     Stack,
     Typography
 } from "@mui/material";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { uuid4 } from "components/Core/Misc/uuid";
+import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
 import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
@@ -32,24 +32,21 @@ export const RoutineDetailsCard = () => {
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const routineQuery = useRoutineDetailQuery(routineId);
 
-    return <>
-        <Container maxWidth="lg">
-            {routineQuery.isLoading
-                ? <LoadingPlaceholder />
-                : <>
-                    <Typography variant={"caption"}>
-                        details -
-                        {routineQuery.data?.description}
-                    </Typography>
-                    <Stack spacing={2} sx={{ mt: 2 }}>
-                        {routineQuery.data!.dayDataCurrentIteration.map((day) =>
-                            <DayDetails dayData={day} key={uuid4()} />
-                        )}
-                    </Stack>
-                </>
-            }
-        </Container>
-    </>;
+    return <Container maxWidth="lg">
+        <RenderLoadingQuery
+            query={routineQuery}
+            child={routineQuery.isSuccess && <>
+                <Typography variant={"caption"}>
+                    {routineQuery.data?.description}
+                </Typography>
+                <Stack spacing={2} sx={{ mt: 2 }}>
+                    {routineQuery.data!.dayDataCurrentIteration.map((day) =>
+                        <DayDetails dayData={day} key={uuid4()} />
+                    )}
+                </Stack>
+            </>}
+        />
+    </Container>;
 };
 
 export function SettingDetails(props: {
