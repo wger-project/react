@@ -26,8 +26,7 @@ export const RoutineDetailsTable = () => {
     const routineQuery = useRoutineDetailQuery(routineId);
 
 
-    //maxWidth={false}
-    return <Container maxWidth={false} sx={{ overflowX: 'scroll' }}>
+    return <Container maxWidth={false} sx={{ overflowX: 'scroll', display: 'flex', }}>
         <RenderLoadingQuery
             query={routineQuery}
             child={routineQuery.isSuccess &&
@@ -35,16 +34,18 @@ export const RoutineDetailsTable = () => {
                     <Typography variant={"caption"}>
                         {routineQuery.data?.description}
                     </Typography>
-                    <Stack spacing={2} sx={{ mt: 2 }}>
-                        <Stack direction={'row'}>
-                            {Object.keys(routineQuery.data!.groupedDayDataByIteration).map((iteration) =>
-                                <DayTable
-                                    dayData={routineQuery.data!.groupedDayDataByIteration[parseInt(iteration)]}
-                                    iteration={parseInt(iteration)}
-                                    key={iteration}
-                                />
-                            )}
-                        </Stack>
+                    <Stack direction={'row'}>
+                        <DayTableExercises
+                            dayData={routineQuery.data!.groupedDayDataByIteration[1]}
+                            iteration={1}
+                        />
+                        {Object.keys(routineQuery.data!.groupedDayDataByIteration).map((iteration) =>
+                            <DayTable
+                                dayData={routineQuery.data!.groupedDayDataByIteration[parseInt(iteration)]}
+                                iteration={parseInt(iteration)}
+                                key={iteration}
+                            />
+                        )}
                     </Stack>
                 </>
             }
@@ -52,95 +53,128 @@ export const RoutineDetailsTable = () => {
     </Container>;
 };
 
+const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number }) => {
+    const [t] = useTranslation();
+    const theme = useTheme();
+
+    return <TableContainer component={Paper} sx={{ minWidth: 200, position: 'sticky', left: 0 }}>
+        <Table size="small">
+            <TableHead>
+                <TableRow>
+                    <TableCell>
+                        <Typography variant={'h5'}>
+                            &nbsp;
+                        </Typography>
+                    </TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell>&nbsp;</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {props.dayData.map((dayData, index) =>
+                    <>
+                        <TableRow>
+                            <TableCell
+                                sx={{ backgroundColor: theme.palette.action.hover }}
+                                // sx={{ backgroundColor: dayData.day.isRest ? theme.palette.action.hover : null }}
+                            >
+                                <b>{dayData.day.isRest ? t('routines.restDay') : dayData.day.name}</b>
+                            </TableCell>
+                        </TableRow>
+                        {dayData.slots.map((slotData) =>
+                            <>
+                                {slotData.setConfigs.map((setConfig) =>
+                                    <TableRow>
+                                        <TableCell
+                                            sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+                                            {setConfig.exercise?.getTranslation().name}
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </>
+                        )}
+                        <TableRow>
+                            <TableCell></TableCell>
+                        </TableRow>
+                    </>
+                )}
+            </TableBody>
+        </Table>
+    </TableContainer>;
+};
+
 const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
     const [t] = useTranslation();
     const theme = useTheme();
 
-    return <>
-        <TableContainer component={Paper} sx={{ minWidth: 470 }}>
-            <Table size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell colSpan={6}>
-                            <Typography variant={'h5'}>
-                                Week {props.iteration}
-                            </Typography>
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell></TableCell>
-                        <TableCell align="right">Sets</TableCell>
-                        <TableCell align="right">Reps</TableCell>
-                        <TableCell align="right">Weight</TableCell>
-                        <TableCell align="right">Rest</TableCell>
-                        <TableCell align="right">RiR</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {props.dayData.map((dayData, index) =>
-                        <>
-                            <TableRow>
-                                <TableCell
-                                    sx={{ backgroundColor: dayData.day.isRest ? theme.palette.action.hover : null }}
-                                    colSpan={6}
-                                >
-                                    <b>{dayData.day.isRest ? t('routines.restDay') : dayData.day.name}</b>
-                                </TableCell>
-                            </TableRow>
-                            {dayData.slots.map((slotData) =>
-                                <>
-                                    {slotData.setConfigs.map((setConfig) =>
-                                        <TableRow>
-                                            <TableCell padding={'normal'}>
-                                                {setConfig.exercise?.getTranslation().name}
-                                                {/*ID: {setConfig.slotConfigId}*/}
-                                            </TableCell>
-                                            <TableCell padding={'none'} align={'center'}>
-                                                <Typography variant={'caption'}>
-                                                    {setConfig.nrOfSets}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell padding={'none'} align={'center'}>
-                                                <Typography variant={'caption'}>
-                                                    {setConfig.reps}
-                                                    {setConfig.maxReps !== null &&
-                                                        <> - {setConfig.maxReps}</>
-                                                    }
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell padding={'none'} align={'center'}>
-                                                <Typography variant={'caption'}>
-                                                    {setConfig.weight}
-                                                    {setConfig.maxWeight !== null &&
-                                                        <> - {setConfig.maxWeight}</>
-                                                    }
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell padding={'none'} align={'center'}>
-                                                <Typography variant={'caption'}>
-                                                    {setConfig.restTime}
-                                                    {setConfig.maxRestTime !== null &&
-                                                        <> - {setConfig.maxRestTime}</>
-                                                    }
-                                                </Typography>
-                                            </TableCell>
-
-                                            <TableCell padding={'normal'} align={'center'}>
-                                                <Typography variant={'caption'}>
-                                                    {setConfig.rir}
-                                                </Typography>
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                </>
-                            )}
-                            <TableRow>
-                                <TableCell colSpan={6}></TableCell>
-                            </TableRow>
-                        </>
-                    )}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    </>;
+    return <TableContainer component={Paper} sx={{ minWidth: 380 }}>
+        <Table size="small">
+            <TableHead>
+                <TableRow>
+                    <TableCell colSpan={5}>
+                        <Typography variant={'h5'}>
+                            Week {props.iteration}
+                        </Typography>
+                    </TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell align={'center'}>Sets</TableCell>
+                    <TableCell align={'center'}>Reps</TableCell>
+                    <TableCell align={'center'}>Weight</TableCell>
+                    <TableCell align={'center'}>Rest</TableCell>
+                    <TableCell align={'center'}>RiR</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {props.dayData.map((dayData, index) =>
+                    <>
+                        <TableRow>
+                            <TableCell
+                                sx={{ backgroundColor: theme.palette.action.hover }}
+                                colSpan={5}
+                            >
+                                &nbsp;
+                            </TableCell>
+                        </TableRow>
+                        {dayData.slots.map((slotData) =>
+                            <>
+                                {slotData.setConfigs.map((setConfig) =>
+                                    <TableRow>
+                                        <TableCell align={'center'}>
+                                            {setConfig.nrOfSets === null ? '-/-' : setConfig.nrOfSets}
+                                        </TableCell>
+                                        <TableCell align={'center'}>
+                                            {setConfig.reps === null ? '-/-' : setConfig.reps}
+                                            {setConfig.maxReps !== null &&
+                                                <> - {setConfig.maxReps}</>
+                                            }
+                                        </TableCell>
+                                        <TableCell align={'center'}>
+                                            {setConfig.weight === null ? '-/-' : setConfig.weight}
+                                            {setConfig.maxWeight !== null &&
+                                                <> - {setConfig.maxWeight}</>
+                                            }
+                                        </TableCell>
+                                        <TableCell align={'center'}>
+                                            {setConfig.restTime === null ? '-/-' : setConfig.restTime}
+                                            {setConfig.maxRestTime !== null &&
+                                                <> - {setConfig.maxRestTime}</>
+                                            }
+                                        </TableCell>
+                                        <TableCell align={'center'}>
+                                            {setConfig.rir}
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </>
+                        )}
+                        <TableRow>
+                            <TableCell colSpan={6}></TableCell>
+                        </TableRow>
+                    </>
+                )}
+            </TableBody>
+        </Table>
+    </TableContainer>;
 };
