@@ -75,22 +75,24 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
                 {props.dayData.map((dayData, index) =>
                     <>
                         <TableRow>
-                            <TableCell
-                                sx={{ backgroundColor: theme.palette.action.hover }}
-                                // sx={{ backgroundColor: dayData.day.isRest ? theme.palette.action.hover : null }}
-                            >
+                            <TableCell sx={{ backgroundColor: theme.palette.action.hover }}>
                                 <b>{dayData.day.isRest ? t('routines.restDay') : dayData.day.name}</b>
                             </TableCell>
                         </TableRow>
                         {dayData.slots.map((slotData) =>
                             <>
-                                {slotData.setConfigs.map((setConfig) =>
-                                    <TableRow>
-                                        <TableCell
-                                            sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                                            {setConfig.exercise?.getTranslation().name}
-                                        </TableCell>
-                                    </TableRow>
+                                {slotData.setConfigs.map((setConfig, index) => {
+
+                                        // Only show the name of the exercise the first time it appears
+                                        const showExercise = index === 0 || setConfig.exerciseId !== slotData.setConfigs[index - 1]?.exerciseId;
+
+                                        return <TableRow>
+                                            <TableCell
+                                                sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+                                                {showExercise ? setConfig.exercise?.getTranslation().name : '.'}
+                                            </TableCell>
+                                        </TableRow>;
+                                    }
                                 )}
                             </>
                         )}

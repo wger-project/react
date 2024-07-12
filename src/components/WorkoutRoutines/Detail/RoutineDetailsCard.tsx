@@ -1,4 +1,3 @@
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
     Box,
     Card,
@@ -6,8 +5,8 @@ import {
     CardHeader,
     Chip,
     Container,
+    Divider,
     Grid,
-    IconButton,
     Menu,
     MenuItem,
     Stack,
@@ -49,10 +48,11 @@ export const RoutineDetailsCard = () => {
     </Container>;
 };
 
-export function SettingDetails(props: {
+export function SetConfigDataDetails(props: {
     setConfigData: SetConfigData,
     rowHeight?: undefined | string,
     marginBottom?: undefined | string,
+    showExercise: boolean,
 }) {
 
     // @ts-ignore
@@ -62,17 +62,16 @@ export function SettingDetails(props: {
                  sx={{ height: props.rowHeight, marginBottom: props.marginBottom }}>
         <Grid item xs={12}>
             <Stack spacing={0}>
-                <Typography variant={"subtitle1"}>
-                    {props.setConfigData.exercise?.getTranslation().name}
+                <Typography variant={"h6"}>
+                    {props.showExercise ? props.setConfigData.exercise?.getTranslation().name : ''}
                 </Typography>
                 <Typography>
                     {props.setConfigData.textRepr}
                     {props.setConfigData.isSpecialType &&
                         <Chip
                             label={props.setConfigData.type}
-                            color="primary"
+                            color="info"
                             size="small"
-                            variant="outlined"
                             sx={{ marginLeft: "0.5em" }} />
                     }
                 </Typography>
@@ -85,7 +84,7 @@ export function SettingDetails(props: {
 }
 
 
-function SetList(props: {
+function SlotDataList(props: {
     slotData: SlotData,
     index: number,
 }) {
@@ -108,18 +107,21 @@ function SetList(props: {
         </Grid>
 
         <Grid item xs={11}>
-            {props.slotData.setConfigs.map((setConfig) =>
-                <SettingDetails
-                    setConfigData={setConfig}
-                    marginBottom="1em"
-                    key={uuid4()}
-                />
+            {props.slotData.setConfigs.map((setConfig, index) => {
+                    // Only show the name of the exercise the first time it appears
+                    const showExercise = index === 0 || setConfig.exerciseId !== props.slotData.setConfigs[index - 1]?.exerciseId;
+                return <SetConfigDataDetails
+                        setConfigData={setConfig}
+                        marginBottom="1em"
+                        key={uuid4()}
+                        showExercise={showExercise}
+                    />;
+                }
             )}
         </Grid>
     </Grid>;
 }
 
-// Day component that accepts a Day as a prop
 const DayDetails = (props: { dayData: RoutineDayData }) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -142,13 +144,17 @@ const DayDetails = (props: { dayData: RoutineDayData }) => {
         <Card sx={{ minWidth: 275 }}>
             <CardHeader
                 sx={{ bgcolor: "lightgray" }}
-                action={
-                    <IconButton aria-label="settings" onClick={handleClick}>
-                        <MoreVertIcon />
-                    </IconButton>
+                action={props.dayData.day.isSpecialType
+                    ? <Chip
+                        label={props.dayData.day.type}
+                        color="info"
+                        size="small"
+                        sx={{ marginLeft: "0.5em" }} />
+                    : null
                 }
                 title={props.dayData.day.isRest ? t('routines.restDay') : props.dayData.day.name}
                 subheader={props.dayData.day.description}
+
             />
             <Menu
                 id="basic-menu"
@@ -160,19 +166,24 @@ const DayDetails = (props: { dayData: RoutineDayData }) => {
                 <MenuItem onClick={navigateAddLog}>
                     {t('routines.addWeightLog')}
                 </MenuItem>
-
             </Menu>
-            {props.dayData.slots.length > 0 && <CardContent>
-                <Stack>
-                    {props.dayData.slots.map((slotData, index) => (
-                        <SetList
-                            slotData={slotData}
-                            index={index}
-                            key={uuid4()}
-                        />
-                    ))}
-                </Stack>
-            </CardContent>}
+            <CardContent sx={{ padding: 0 }}>
+                {props.dayData.slots.length > 0 &&
+                    <Stack>
+                        {props.dayData.slots.map((slotData, index) => (
+                            <>
+                                <Box padding={1}>
+                                    <SlotDataList
+                                        slotData={slotData}
+                                        index={index}
+                                        key={uuid4()}
+                                    />
+                                </Box>
+                                <Divider />
+                            </>
+                        ))}
+                    </Stack>}
+            </CardContent>
         </Card>
     );
 };

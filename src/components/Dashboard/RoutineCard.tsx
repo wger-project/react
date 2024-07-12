@@ -15,7 +15,7 @@ import {
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { uuid4 } from "components/Core/Misc/uuid";
 import { EmptyCard } from "components/Dashboard/EmptyCard";
-import { SettingDetails } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
+import { SetConfigDataDetails } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { useActiveRoutineQuery } from "components/WorkoutRoutines/queries";
@@ -83,12 +83,11 @@ const DayListItem = (props: { dayData: RoutineDayData }) => {
         <Collapse in={expandView} timeout="auto" unmountOnExit>
             {props.dayData.slots.map((slotData) => (<div key={uuid4()}>
                 {slotData.setConfigs.map((setting) =>
-                    <SettingDetails
+                    <SetConfigDataDetails
                         setConfigData={setting}
                         key={uuid4()}
-                        // imageHeight={45}
-                        // iconHeight={25}
                         rowHeight={'70px'}
+                        showExercise={true}
                     />
                 )}
             </div>))}
