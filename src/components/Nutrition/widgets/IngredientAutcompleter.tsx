@@ -51,11 +51,10 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     const [t, i18n] = useTranslation();
 
     const fetchName = useMemo(
-        () =>
-            throttle(
-                (request: string) => searchIngredient(request, i18n.language, searchEnglish).then(res => setOptions(res)),
-                200,
-            ),
+        () => throttle(
+            (request: string) => searchIngredient(request, i18n.language, searchEnglish).then(res => setOptions(res)),
+            200,
+        ),
         [i18n.language, searchEnglish],
     );
 
@@ -88,6 +87,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
             noOptionsText={t('noResults')}
             isOptionEqualToValue={(option, value) => option.value === value.value}
             onChange={(event: any, newValue: IngredientSearchResponse | null) => {
+
                 setOptions(newValue ? [newValue, ...options] : options);
                 setValue(newValue);
                 callback(newValue);
