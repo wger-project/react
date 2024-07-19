@@ -1,7 +1,9 @@
+import { MIN_ACCOUNT_AGE_TO_TRUST, TIME_ZONE } from "config";
+
 export const ENGLISH_LANGUAGE_ID = 2;
 export const ENGLISH_LANGUAGE_CODE = 'en';
 
-export const MIN_ACCOUNT_AGE = import.meta.env.MIN_ACCOUNT_AGE_TO_TRUST || 21;
+export const MIN_ACCOUNT_AGE = MIN_ACCOUNT_AGE_TO_TRUST || 21;
 
 export const REP_UNIT_REPETITIONS = 1;
 export const REP_UNIT_TILL_FAILURE = 2;
@@ -90,7 +92,7 @@ export const LIST_OF_COLORS3 = [
     "#d45089",
     "#ffa600",
 ];
-   
+
 
 export const PAGINATION_OPTIONS = {
     pageSizeOptions: [5, 10, 25, 50, 100],
@@ -98,7 +100,7 @@ export const PAGINATION_OPTIONS = {
 };
 
 
-export const TIMEZONE = import.meta.env.TIME_ZONE || 'Europe/Berlin';
+export const TIMEZONE = TIME_ZONE || 'Europe/Berlin';
 
 export const LANGUAGE_SHORT_ENGLISH = 'en';
 

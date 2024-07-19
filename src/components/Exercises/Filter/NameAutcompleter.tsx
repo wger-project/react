@@ -12,6 +12,7 @@ import {
     Switch,
     TextField
 } from "@mui/material";
+import { SERVER_URL } from "config";
 import throttle from 'lodash/throttle';
 import * as React from "react";
 import { useState } from "react";
@@ -19,7 +20,6 @@ import { useTranslation } from "react-i18next";
 import { searchExerciseTranslations } from "services";
 import { ExerciseSearchResponse } from "services/responseType";
 import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
-import { SERVER_URL } from "utils/url";
 
 type NameAutocompleterProps = {
     callback: Function;

@@ -1,3 +1,4 @@
+import { IS_PROD } from "config";
 import i18n from "i18next";
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
@@ -42,7 +43,7 @@ i18n
         // (i.e.) production, the path is /static/react/locales/<lang>/<ns>.json
         backend: {
             loadPath:
-                import.meta.env.NODE_ENV === "production"
+                IS_PROD
                     ? `/static/react/locales/{{lng}}/{{ns}}.json`
                     : `/locales/{{lng}}/{{ns}}.json`
         },

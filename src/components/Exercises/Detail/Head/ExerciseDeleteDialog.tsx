@@ -19,12 +19,12 @@ import {
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
+import { SERVER_URL } from "config";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { deleteExercise, deleteExerciseTranslation, getExercise } from "services";
 import { ExerciseSearchResponse } from "services/responseType";
-import { SERVER_URL } from "utils/url";
 
 export function ExerciseDeleteDialog(props: {
     onClose: Function,
