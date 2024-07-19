@@ -117,3 +117,5 @@ export const TIMEZONE = process.env.TIME_ZONE || 'Europe/Berlin';
 export const LANGUAGE_SHORT_ENGLISH = 'en';
 
 export const SNACKBAR_AUTO_HIDE_DURATION = 3000;
+
+export const DEBOUNCE_ROUTINE_FORMS = 500;

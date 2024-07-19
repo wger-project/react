@@ -8,12 +8,13 @@ import { useTranslation } from "react-i18next";
 import { dateToYYYYMMDD } from "utils/date";
 import * as yup from 'yup';
 
-interface PlanFormProps {
+interface RoutineFormProps {
     routine?: Routine,
+    firstDayId: number,
     closeFn?: Function,
 }
 
-export const RoutineForm = ({ routine, closeFn }: PlanFormProps) => {
+export const RoutineForm = ({ routine, firstDayId, closeFn }: RoutineFormProps) => {
 
     const [t] = useTranslation();
     const addRoutineQuery = useAddRoutineQuery();
@@ -42,7 +43,7 @@ export const RoutineForm = ({ routine, closeFn }: PlanFormProps) => {
                 start: routine ? routine.start : dateToYYYYMMDD(new Date()),
                 end: routine ? routine.end : dateToYYYYMMDD(new Date()),
                 // eslint-disable-next-line camelcase
-                first_day: null,
+                first_day: firstDayId,
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {

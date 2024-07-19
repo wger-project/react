@@ -6,9 +6,9 @@ import {
     CardActionArea,
     CardContent,
     Container,
+    Divider,
     IconButton,
     Stack,
-    TextField,
     Typography,
     useTheme
 } from "@mui/material";
@@ -16,25 +16,39 @@ import Grid from '@mui/material/Grid';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { uuid4 } from "components/Core/Misc/uuid";
 import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
-import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
+import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import { Day } from "components/WorkoutRoutines/models/Day";
-import {
-    useEditDayQuery,
-    useEditMaxRepsConfigQuery,
-    useEditMaxRestConfigQuery,
-    useEditMaxWeightConfigQuery,
-    useEditNrOfSetsConfigQuery,
-    useEditRepsConfigQuery,
-    useEditRestConfigQuery,
-    useEditRiRConfigQuery,
-    useEditWeightConfigQuery,
-    useRoutineDetailQuery
-} from "components/WorkoutRoutines/queries";
-import React, { useState } from "react";
+import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { ConfigDetailsField } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
+import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
+import { RoutineForm } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
+import { SlotConfigForm } from "components/WorkoutRoutines/widgets/forms/SlotConfigForm";
+import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 export const RoutineEdit = () => {
+
+    /*
+    TODO:
+        * Add drag and drop for
+          - the days: https://github.com/hello-pangea/dnd
+          - the slots? does this make sense?
+          - the exercises within the slots?
+        * advanced / simple mode: the simple mode only shows weight and reps
+          while the advanced mode allows to edit all the other stuff
+        * RiRs in dropdown (0, 0.5, 1, 1.5, 2,...)
+        * rep and weight units in dropdown
+        * for dynamic config changes, +/-, replace toggle, needs_logs_to_appy toggle
+        * add / remove / edit slots
+        * add / remove / edit days
+        * add / remove / edit exercises
+        * add / remove / edit sets
+        * tests!
+        * ...
+
+     */
 
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
@@ -51,14 +65,13 @@ export const RoutineEdit = () => {
                         Edit {routineQuery.data?.name}
                     </Typography>
 
+                    <RoutineForm routine={routineQuery.data!} firstDayId={1000} />
+
                     <Grid
                         spacing={3}
                         container
                         direction="row"
-                        // justify="flex-start"
-                        // alignItems="flex-start"
                     >
-
                         {routineQuery.data!.days.map((day) =>
                             <Grid
                                 item
@@ -67,11 +80,12 @@ export const RoutineEdit = () => {
                                 md={3}
                                 key={routineQuery.data!.days.indexOf(day)}
                             >
-                                <DayCard day={day}
-                                         setSelected={setSelectedDay}
-                                         isSelected={selectedDay === day.id}
-                                         key={uuid4()} />
-
+                                <DayCard
+                                    day={day}
+                                    setSelected={setSelectedDay}
+                                    isSelected={selectedDay === day.id}
+                                    key={uuid4()}
+                                />
                             </Grid>
                         )}
                         <Grid
@@ -94,9 +108,11 @@ export const RoutineEdit = () => {
                     </Grid>
 
                     {selectedDay > 0 &&
-                        <DayDetails day={routineQuery.data!.days.find(day => day.id === selectedDay)!} />
+                        <DayDetails
+                            day={routineQuery.data!.days.find(day => day.id === selectedDay)!}
+                            routineId={routineId}
+                        />
                     }
-
 
                     <Stack spacing={2} sx={{ mt: 2 }}>
                         <Typography variant={"h4"}>
@@ -104,6 +120,7 @@ export const RoutineEdit = () => {
                         </Typography>
 
                         <Box padding={4}>
+                            <RoutineDetailsTable />
                             <RoutineDetailsCard />
                         </Box>
                     </Stack>
@@ -113,13 +130,11 @@ export const RoutineEdit = () => {
     </>;
 };
 
+
 const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: number) => void }) => {
     const theme = useTheme();
-
     const color = props.isSelected ? theme.palette.primary.light : props.day.isRest ? theme.palette.action.disabled : '';
-
     const sx = { backgroundColor: color };
-    // const sx = props.isSelected ? { backgroundColor: theme.palette.primary.light } : {};
     const [t] = useTranslation();
 
     return (
@@ -140,160 +155,63 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
     );
 };
 
-const DayDetails = (props: { day: Day }) => {
-
-    const editDayQuery = useEditDayQuery(1);
-    const [t] = useTranslation();
-
+const DayDetails = (props: { day: Day, routineId: number }) => {
     return (
         <>
-            <Typography variant={"h5"} gutterBottom>
-                {props.day.isRest ? t('routines.restDay') : props.day.name}
-            </Typography>
-
-            <TextField
-                label="Name"
-                variant="standard"
-                value={props.day.name}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    const data = {
-                        id: props.day.id,
-                        routine: 1,
-                        description: 'props.day.description',
-                        name: event.target.value
-                    };
-                    editDayQuery.mutate(data);
-                }}
-            />
+            <DayForm routineId={props.routineId} day={props.day} />
 
             {props.day.slots.map((slot) =>
                 <>
+                    <Typography variant={"h4"} gutterBottom>
+                        <b>Slot #{slot.id}</b>
+                    </Typography>
+
+                    <SlotForm routineId={props.routineId} slot={slot} />
+
                     {slot.configs.map((slotConfig) =>
                         <>
+                            <p>
+                                SlotConfigId {slotConfig.id}
+                            </p>
+
+                            <SlotConfigForm routineId={props.routineId} slotConfig={slotConfig} />
+
                             <Typography variant={"h6"} gutterBottom>
                                 {slotConfig.exercise?.getTranslation().name}
-                                <small> - Set-ID {slot.id}</small>
                             </Typography>
+
                             {slotConfig.weightConfigs.map((config) =>
-                                <ConfigDetails config={config} type="weight" />
+                                <ConfigDetailsField config={config} type="weight" routineId={props.routineId} />
                             )}
                             {slotConfig.maxWeightConfigs.map((config) =>
-                                <ConfigDetails config={config} type="max-weight" />
+                                <ConfigDetailsField config={config} type="max-weight" routineId={props.routineId} />
                             )}
                             {slotConfig.repsConfigs.map((config) =>
-                                <ConfigDetails config={config} type="reps" />
+                                <ConfigDetailsField config={config} type="reps" routineId={props.routineId} />
                             )}
                             {slotConfig.maxRepsConfigs.map((config) =>
-                                <ConfigDetails config={config} type="max-reps" />
+                                <ConfigDetailsField config={config} type="max-reps" routineId={props.routineId} />
                             )}
                             {slotConfig.nrOfSetsConfigs.map((config) =>
-                                <ConfigDetails config={config} type="sets" />
+                                <ConfigDetailsField config={config} type="sets" routineId={props.routineId} />
                             )}
                             {slotConfig.restTimeConfigs.map((config) =>
-                                <ConfigDetails config={config} type="rest" />
+                                <ConfigDetailsField config={config} type="rest" routineId={props.routineId} />
                             )}
                             {slotConfig.maxRestTimeConfigs.map((config) =>
-                                <ConfigDetails config={config} type="max-rest" />
+                                <ConfigDetailsField config={config} type="max-rest" routineId={props.routineId} />
                             )}
                             {slotConfig.rirConfigs.map((config) =>
-                                <ConfigDetails config={config} type="rir" />
+                                <ConfigDetailsField config={config} type="rir" routineId={props.routineId} />
                             )}
                         </>
                     )}
+                    <Divider sx={{ mt: 2, mb: 2 }} />
                 </>
             )}
             <IconButton>
                 <AddIcon />
             </IconButton>
-
-        </>
-    );
-
-};
-
-
-const ConfigDetails = (props: {
-    config: BaseConfig,
-    type: 'weight' | 'max-weight' | 'reps' | 'max-reps' | 'sets' | 'rest' | 'max-rest' | 'rir'
-}) => {
-
-    const editWeightQuery = useEditWeightConfigQuery(1);
-    const editMaxWeightQuery = useEditMaxWeightConfigQuery(1);
-    const editRepsQuery = useEditRepsConfigQuery(1);
-    const editMaxRepsQuery = useEditMaxRepsConfigQuery(1);
-    const editNrOfSetsQuery = useEditNrOfSetsConfigQuery(1);
-    const editRiRQuery = useEditRiRConfigQuery(1);
-    const editRestQuery = useEditRestConfigQuery(1);
-    const editMaxRestQuery = useEditMaxRestConfigQuery(1);
-
-    const [value, setValue] = useState(props.config.value);
-    const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-
-    const handleData = (value: string) => {
-
-        const data = {
-            id: props.config.id,
-            // eslint-disable-next-line camelcase
-            slot_config: props.config.slotConfigId,
-            value: parseFloat(value)
-        };
-
-        switch (props.type) {
-            case 'weight':
-                editWeightQuery.mutate(data);
-                break;
-
-            case "max-weight":
-                editMaxWeightQuery.mutate(data);
-                break;
-
-            case 'reps':
-                editRepsQuery.mutate(data);
-                break;
-
-            case "max-reps":
-                editMaxRepsQuery.mutate(data);
-                break;
-
-            case 'sets':
-                editNrOfSetsQuery.mutate(data);
-                break;
-
-            case 'rir':
-                editRiRQuery.mutate(data);
-                break;
-
-            case 'rest':
-                editRestQuery.mutate(data);
-                break;
-
-            case "max-rest":
-                editMaxRestQuery.mutate(data);
-                break;
-        }
-    };
-
-    const onChange = (text: string) => {
-        if (text !== '') {
-            setValue(parseFloat(text));
-        }
-
-        if (timer) {
-            clearTimeout(timer);
-        }
-        setTimer(setTimeout(() => handleData(text), 500));
-    };
-
-    return (
-        <>
-
-            <TextField
-                key={props.config.id}
-                label={props.type}
-                value={value}
-                onChange={e => onChange(e.target.value)}
-            />
         </>
     );
 };
-

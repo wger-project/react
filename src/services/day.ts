@@ -6,8 +6,8 @@ import { makeHeader, makeUrl } from "utils/url";
 
 export interface AddDayParams {
     routine: number;
-    name: string;
-    description: string;
+    name?: string;
+    description?: string;
 }
 
 export interface EditDayParams extends AddDayParams {

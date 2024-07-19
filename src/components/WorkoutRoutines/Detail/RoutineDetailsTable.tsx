@@ -31,9 +31,6 @@ export const RoutineDetailsTable = () => {
             query={routineQuery}
             child={routineQuery.isSuccess &&
                 <>
-                    <Typography variant={"caption"}>
-                        {routineQuery.data?.description}
-                    </Typography>
                     <Stack direction={'row'}>
                         <DayTableExercises
                             dayData={routineQuery.data!.groupedDayDataByIteration[1]}
