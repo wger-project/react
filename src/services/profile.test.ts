@@ -7,6 +7,10 @@ jest.mock("axios");
 
 describe("Profile API tests", () => {
 
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
+
 
     test('get the user profile (logged in)', async () => {
 

@@ -1,6 +1,6 @@
-import React from "react";
 import { Muscle } from "components/Exercises/models/muscle";
-import { PUBLIC_URL } from "utils/url";
+import { PUBLIC_URL } from "config";
+import React from "react";
 
 type OverviewCardProps = {
     primaryMuscles: Muscle[];

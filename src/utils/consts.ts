@@ -1,7 +1,9 @@
+import { MIN_ACCOUNT_AGE_TO_TRUST, TIME_ZONE } from "config";
+
 export const ENGLISH_LANGUAGE_ID = 2;
 export const ENGLISH_LANGUAGE_CODE = 'en';
 
-export const MIN_ACCOUNT_AGE = process.env.MIN_ACCOUNT_AGE_TO_TRUST || 21;
+export const MIN_ACCOUNT_AGE = MIN_ACCOUNT_AGE_TO_TRUST || 21;
 
 export const REP_UNIT_REPETITIONS = 1;
 export const REP_UNIT_TILL_FAILURE = 2;
@@ -98,7 +100,7 @@ export const PAGINATION_OPTIONS = {
 };
 
 
-export const TIMEZONE = process.env.TIME_ZONE || 'Europe/Berlin';
+export const TIMEZONE = TIME_ZONE || 'Europe/Berlin';
 
 export const LANGUAGE_SHORT_ENGLISH = 'en';
 

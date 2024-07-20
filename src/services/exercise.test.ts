@@ -6,6 +6,10 @@ jest.mock("axios");
 
 describe("Exercise service API tests", () => {
 
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
+
     test('GET exercise data entries', async () => {
 
         // Arrange

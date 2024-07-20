@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from "axios";
+import { IS_PROD, VITE_API_KEY, VITE_API_SERVER } from "config";
 import slug from "slug";
 
 interface makeUrlInterface {
@@ -16,7 +17,7 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
     params = params || {};
 
     // Base data
-    const serverUrl = params.server || process.env.REACT_APP_API_SERVER;
+    const serverUrl = params.server || VITE_API_SERVER;
     const paths = [serverUrl, 'api', 'v2', path];
 
     // append objectmethod to the path
@@ -202,7 +203,7 @@ function getCookie(name: string) {
  * do we need to add the CSRF token to the headers
  */
 export function makeHeader(token?: string) {
-    token = token || process.env.REACT_APP_API_KEY;
+    token = token || VITE_API_KEY;
     const DJANGO_CSRF_COOKIE = 'csrftoken';
 
     let out: AxiosRequestConfig['headers'] = {};
@@ -214,12 +215,10 @@ export function makeHeader(token?: string) {
 
     const csrfCookie = getCookie(DJANGO_CSRF_COOKIE);
     // eslint-disable-next-line eqeqeq
-    if (process.env.NODE_ENV === "production" && csrfCookie != undefined) {
+    if (IS_PROD && csrfCookie != undefined) {
         out['X-CSRFToken'] = csrfCookie;
     }
 
     return out;
 }
 
-export const PUBLIC_URL = process.env.NODE_ENV === "production" ? "/static/react" : process.env.PUBLIC_URL;
-export const SERVER_URL = process.env.NODE_ENV === "production" ? "" : process.env.REACT_APP_API_SERVER;

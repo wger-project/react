@@ -29,6 +29,8 @@ jest.mock("components/Exercises/queries");
 describe("Exercise translation edit tests", () => {
 
     beforeEach(() => {
+        jest.resetAllMocks();
+
         // @ts-ignore
         editExerciseTranslation.mockImplementation(() => Promise.resolve(testExerciseSquats.translations[1]));
 

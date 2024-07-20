@@ -17,6 +17,8 @@ describe("Test the ExerciseDeleteDialog component", () => {
 
     // Arrange
     beforeEach(() => {
+        jest.resetAllMocks();
+
         // @ts-ignore
         searchExerciseTranslations.mockImplementation(() => Promise.resolve(searchResponse));
 
