@@ -13,22 +13,28 @@ import {
     QUERY_ROUTINES_ACTIVE,
     QUERY_ROUTINES_SHALLOW,
 } from "utils/consts";
+import { number } from "yup";
 
 
 export function useRoutinesQuery() {
-    return useQuery([QUERY_ROUTINES], getWorkoutRoutines);
+    return useQuery({
+        queryKey: [QUERY_ROUTINES],
+        ...getWorkoutRoutines
+    });
 }
 
 export function useRoutineDetailQuery(id: number) {
-    return useQuery([QUERY_ROUTINE_DETAIL, id],
-        () => getWorkoutRoutine(id)
-    );
+    return useQuery({
+        queryKey: [QUERY_ROUTINE_DETAIL, id],
+        queryFn: () => getWorkoutRoutine(id)
+    });
 }
 
 export function useRoutineLogQuery(id: number, loadBases = false) {
-    return useQuery([QUERY_ROUTINE_LOGS, id, loadBases],
-        () => getRoutineLogs(id, loadBases)
-    );
+    return useQuery({
+        queryKey: [QUERY_ROUTINE_LOGS, id, loadBases],
+        queryFn: () => getRoutineLogs(id, loadBases)
+    });
 }
 
 /*
@@ -37,7 +43,10 @@ export function useRoutineLogQuery(id: number, loadBases = false) {
  * Note: strictly only the routine data, no days or any other sub-objects
  */
 export function useRoutinesShallowQuery() {
-    return useQuery([QUERY_ROUTINES_SHALLOW], getWorkoutRoutinesShallow);
+    return useQuery({
+        queryKey: [QUERY_ROUTINES_SHALLOW],
+        queryFn: () => getWorkoutRoutinesShallow(),
+    });
 }
 
 /*
@@ -46,5 +55,8 @@ export function useRoutinesShallowQuery() {
  * Note: strictly only the routine data, no days or any other sub-objects
  */
 export function useActiveRoutineQuery() {
-    return useQuery([QUERY_ROUTINES_ACTIVE], getActiveWorkoutRoutine);
+    return useQuery({
+        queryKey: [QUERY_ROUTINES_ACTIVE],
+        queryFn: getActiveWorkoutRoutine
+    });
 }
