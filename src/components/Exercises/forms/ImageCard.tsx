@@ -47,7 +47,21 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
         }
         const [uploadedFile] = e.target.files;
         if (profileQuery.isSuccess) {
-            await postExerciseImage(exerciseId, profileQuery.data!.username, uploadedFile);
+
+            await postExerciseImage({
+                exerciseId: exerciseId,
+                image: uploadedFile,
+                imageData: {
+                    url: '',
+                    file: uploadedFile,
+                    author: '',
+                    authorUrl: '',
+                    title: '',
+                    objectUrl: '',
+                    derivativeSourceUrl: '',
+                    style: ''
+                },
+            });
         }
     };
 

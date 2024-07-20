@@ -17,11 +17,15 @@ describe("Test the ExerciseDeleteDialog component", () => {
 
     // Arrange
     beforeEach(() => {
+        jest.resetAllMocks();
+        
         // @ts-ignore
         searchExerciseTranslations.mockImplementation(() => Promise.resolve(searchResponse));
 
         // @ts-ignore
         getExercise.mockImplementation(() => Promise.resolve(testExerciseBenchPress));
+
+
     });
 
     function renderWidget() {

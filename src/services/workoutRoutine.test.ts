@@ -22,6 +22,10 @@ jest.mock("services/exercise");
 
 describe("workout routine service tests", () => {
 
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
+
     test('GET the routine data - shallow', async () => {
 
         // Arrange
