@@ -14,13 +14,13 @@ const queryClient = new QueryClient();
 describe("Test the PlanDetail component", () => {
 
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useFetchNutritionalPlanQuery.mockImplementation(() => ({
             isSuccess: true,
             data: TEST_NUTRITIONAL_PLAN_1
         }));
 
-        // @ts-ignore
+        // @ts-expect-error this is ok and exists
         delete window.ResizeObserver;
         window.ResizeObserver = jest.fn().mockImplementation(() => ({
             observe: jest.fn(),

@@ -10,7 +10,7 @@ const queryClient = new QueryClient();
 describe("Test the NutritionDiaryOverview component", () => {
 
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useFetchNutritionalPlanDateQuery.mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,

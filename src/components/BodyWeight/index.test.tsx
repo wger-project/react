@@ -15,7 +15,7 @@ describe("Test BodyWeight component", () => {
 
     // See https://github.com/maslianok/react-resize-detector#testing-with-enzyme-and-jest
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         delete window.ResizeObserver;
         window.ResizeObserver = jest.fn().mockImplementation(() => ({
             observe: jest.fn(),
@@ -37,7 +37,7 @@ describe("Test BodyWeight component", () => {
             new WeightEntry(new Date('2021-12-20'), 90, 2),
         ];
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getWeights.mockImplementation(() => Promise.resolve(weightData));
 
         // Act

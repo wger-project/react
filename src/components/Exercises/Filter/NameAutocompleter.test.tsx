@@ -11,7 +11,7 @@ describe("Test the NameAutocompleter component", () => {
 
     // Arrange
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         searchExerciseTranslations.mockImplementation(() => Promise.resolve(searchResponse));
     });
 

@@ -82,7 +82,6 @@ export function SettingDetails(props: {
 
     const useTranslate = (input: string) => t(input as any);
 
-    // @ts-ignore
     return <Grid container alignItems="center" justifyContent={"center"} sx={{ height: rowHeight, p: 0 }}>
         <Grid item xs={3} md={2}>
             <ExerciseImageAvatar

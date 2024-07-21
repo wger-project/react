@@ -13,7 +13,7 @@ describe("Exercise service API tests", () => {
     test('GET exercise data entries', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ data: responseApiExerciseInfo }));
 
         // Act
@@ -27,7 +27,7 @@ describe("Exercise service API tests", () => {
     test('GET exercise data for single entry', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ data: responseApiExerciseInfo.results[0] }));
 
         // Act
@@ -52,7 +52,7 @@ describe("Exercise service API tests", () => {
             "equipment": [1, 2],
             "variations": null
         };
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.post.mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
@@ -84,7 +84,7 @@ describe("Exercise service API tests", () => {
             "equipment": [1, 2],
             "variations": null
         };
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.patch.mockImplementation(() => Promise.resolve({ data: response, status: 200 }));
 
         // Act
@@ -107,7 +107,7 @@ describe("Exercise service API tests", () => {
     test('DELETE exercise', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act

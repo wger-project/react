@@ -15,7 +15,7 @@ export const getNutritionalDiaryEntries = async (
 
     const query = { plan: planId, limit: API_MAX_PAGE_SIZE };
     if (date) {
-        // @ts-ignore
+        // @ts-expect-error needs to be in this format
         // eslint-disable-next-line camelcase
         query.datetime__date = dateToYYYYMMDD(date);
     }
@@ -24,7 +24,7 @@ export const getNutritionalDiaryEntries = async (
 
     for await (const page of fetchPaginated(url, makeHeader())) {
         for (const logData of page) {
-            let entry = adapter.fromJson(logData);
+            const entry = adapter.fromJson(logData);
 
             entry.weightUnit = await getWeightUnit(entry.weightUnitId);
             out.push(entry);

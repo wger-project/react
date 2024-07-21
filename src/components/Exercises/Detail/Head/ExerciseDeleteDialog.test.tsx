@@ -19,10 +19,10 @@ describe("Test the ExerciseDeleteDialog component", () => {
     beforeEach(() => {
         jest.resetAllMocks();
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         searchExerciseTranslations.mockImplementation(() => Promise.resolve(searchResponse));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getExercise.mockImplementation(() => Promise.resolve(testExerciseBenchPress));
     });
 

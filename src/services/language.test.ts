@@ -33,7 +33,7 @@ describe("Language service tests", () => {
         };
 
         // Act
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ data: muscleResponse }));
         const result = await getLanguages();
 

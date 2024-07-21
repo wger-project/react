@@ -45,13 +45,13 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         mutateEditMock = jest.fn();
         closeFnMock = jest.fn();
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useEditDiaryEntryQuery.mockImplementation(() => ({ mutate: mutateEditMock }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useAddDiaryEntryQuery.mockImplementation(() => ({ mutate: mutateAddMock }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         searchIngredient.mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
     });
 

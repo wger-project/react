@@ -25,7 +25,7 @@ describe("Exercise translation service API tests", () => {
                 "tester"
             ]
         };
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.post.mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
@@ -63,7 +63,7 @@ describe("Exercise translation service API tests", () => {
                 "tester"
             ]
         };
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.patch.mockImplementation(() => Promise.resolve({ status: 200, data: response }));
 
         // Act
@@ -83,7 +83,7 @@ describe("Exercise translation service API tests", () => {
     test('DELETE an exercise translation', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act

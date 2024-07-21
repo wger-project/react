@@ -11,7 +11,7 @@ describe("Test the IngredientAutocompleter component", () => {
     // Arrange
     const mockCallback = jest.fn();
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         searchIngredient.mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
     });
 

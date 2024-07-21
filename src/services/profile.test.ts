@@ -15,7 +15,7 @@ describe("Profile API tests", () => {
     test('get the user profile (logged in)', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ data: testProfileApiResponse }));
 
         // Act
@@ -29,7 +29,7 @@ describe("Profile API tests", () => {
     test('get the user profile (logged out)', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ status: 403 }));
 
         // Act

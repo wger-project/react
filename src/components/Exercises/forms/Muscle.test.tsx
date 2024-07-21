@@ -12,10 +12,10 @@ jest.mock("services/exercise");
 describe("Test the widget to live edit the muscles", () => {
 
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useMusclesQuery.mockImplementation(() => ({ isSuccess: true, data: testMuscles }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         editExercise.mockImplementation(() => (200));
     });
 

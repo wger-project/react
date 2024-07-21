@@ -29,13 +29,13 @@ describe("Contribute banner tests", () => {
 
     beforeEach(() => {
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useProfileQuery.mockImplementation(() => ({
             isSuccess: true,
             data: testProfileDataNotVerified
         }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         usePermissionQuery.mockImplementation(() => ({
             isSuccess: true,
             data: false
@@ -57,7 +57,7 @@ describe("Contribute banner tests", () => {
 
     test('Should show no banner to anonymous users', async () => {
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useProfileQuery.mockImplementation(() => ({
             isSuccess: true,
             data: null
@@ -72,7 +72,7 @@ describe("Contribute banner tests", () => {
 
     test('Should show the banner to admins', async () => {
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         usePermissionQuery.mockImplementation(() => ({
             isSuccess: true,
             data: true
@@ -87,7 +87,7 @@ describe("Contribute banner tests", () => {
 
     test('Should show the banner to verified users', () => {
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useProfileQuery.mockImplementation(() => ({
             isSuccess: true,
             data: testProfileDataVerified
