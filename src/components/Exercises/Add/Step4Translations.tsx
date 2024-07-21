@@ -13,9 +13,9 @@ import {
 } from "@mui/material";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { ExerciseTempDescription } from "components/Exercises/Add/Step3Description";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
+import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
 import { ExerciseName } from "components/Exercises/forms/ExerciseName";
 import { ExerciseNotes } from "components/Exercises/forms/ExerciseNotes";
 import {
@@ -123,8 +123,7 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
 
                         <ExerciseAliases fieldName={'alternativeNames'} />
 
-                        <ExerciseTempDescription fieldName={'description'} />
-                        {/*<ExerciseDescription fieldName={"description"} /> */}
+                        <ExerciseDescription fieldName={"description"} />
 
                         <PaddingBox />
                         <ExerciseNotes fieldName={'notes'} />

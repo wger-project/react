@@ -20,6 +20,10 @@ jest.mock("services/exercise");
 
 describe("workout logs service tests", () => {
 
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
+
     test('GET the routine logs', async () => {
 
         // Arrange

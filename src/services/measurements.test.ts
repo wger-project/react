@@ -6,6 +6,11 @@ import { getMeasurementCategories, getMeasurementCategory } from "services/measu
 jest.mock("axios");
 
 describe('measurement service tests', () => {
+
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
+
     test('GET measurement categories', async () => {
         const measurementResponse = {
             count: 2,

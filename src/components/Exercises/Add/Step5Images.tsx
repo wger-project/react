@@ -77,9 +77,9 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
         derivativeSourceUrl: string,
         imageStyle: number
     }) => {
-        setLocalImages(localImages?.concat({
-            url: popupImage?.url,
-            file: popupImage?.file,
+        setLocalImages(localImages.concat({
+            url: popupImage?.url!,
+            file: popupImage?.file!,
 
             author: data.author,
             authorUrl: data.authorUrl,
