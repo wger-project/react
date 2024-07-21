@@ -129,7 +129,8 @@ describe("workout routine service tests", () => {
                 '',
                 false,
                 false,
-                false
+                false,
+                'custom'
             )
         );
         expect(result[0].slots[0].comment).toEqual('Push set 1');

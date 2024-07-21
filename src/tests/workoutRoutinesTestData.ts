@@ -26,6 +26,7 @@ const testDayLegs = new Day(
     false,
     false,
     false,
+    'custom'
 );
 
 const testDayPull = new Day(
@@ -36,6 +37,7 @@ const testDayPull = new Day(
     false,
     false,
     false,
+    'custom'
 );
 const testRestDay = new Day(
     19,
@@ -45,6 +47,7 @@ const testRestDay = new Day(
     true,
     false,
     false,
+    'custom'
 );
 
 export const testRoutineDataCurrentIteration1 = [

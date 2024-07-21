@@ -10,7 +10,7 @@ import * as yup from 'yup';
 
 interface RoutineFormProps {
     routine?: Routine,
-    firstDayId: number,
+    firstDayId?: number,
     closeFn?: Function,
 }
 
