@@ -1,10 +1,10 @@
-import React from 'react';
-import { act, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { act, render, screen } from '@testing-library/react';
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
+import React from 'react';
+import { BrowserRouter } from "react-router-dom";
 import { getWorkoutRoutinesShallow } from "services";
 import { TEST_ROUTINES } from "tests/workoutRoutinesTestData";
-import { BrowserRouter } from "react-router-dom";
 
 jest.mock("services");
 
@@ -13,7 +13,7 @@ const queryClient = new QueryClient();
 describe("Test the RoutineOverview component", () => {
 
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getWorkoutRoutinesShallow.mockImplementation(() => Promise.resolve(TEST_ROUTINES));
     });
 

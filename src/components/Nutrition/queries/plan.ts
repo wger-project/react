@@ -10,7 +10,6 @@ import {
     getNutritionalPlansSparse
 } from "services/nutritionalPlan";
 import { QueryKey } from "utils/consts";
-import { number } from "yup";
 
 export function useFetchNutritionalPlansQuery() {
     return useQuery({

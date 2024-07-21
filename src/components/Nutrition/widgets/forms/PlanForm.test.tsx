@@ -17,12 +17,12 @@ describe("Test the PlanForm component", () => {
     beforeEach(() => {
         mutate = jest.fn();
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useEditNutritionalPlanQuery.mockImplementation(() => ({
             mutate: mutate
         }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useAddNutritionalPlanQuery.mockImplementation(() => ({
             mutate: mutate
         }));

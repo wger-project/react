@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "components/Measurements/queries";
-import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "tests/measurementsTestData";
+import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
+import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "components/Measurements/queries";
 import { CategoryForm } from "components/Measurements/widgets/CategoryForm";
+import React from 'react';
+import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "tests/measurementsTestData";
 
 jest.mock("services/weight");
 
@@ -18,11 +18,11 @@ describe("Test the CategoryForm component", () => {
     beforeEach(() => {
         mutate = jest.fn();
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useEditMeasurementCategoryQuery.mockImplementation(() => ({
             mutate: mutate
         }));
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useAddMeasurementCategoryQuery.mockImplementation(() => ({
             mutate: mutate
         }));

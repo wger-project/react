@@ -6,13 +6,11 @@ import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailVi
 import { Language } from "components/Exercises/models/language";
 import { Translation } from "components/Exercises/models/translation";
 import { useLanguageQuery } from "components/Exercises/queries";
-import { parseInt } from "lodash";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { getExercise, getExercisesForVariation, getLanguageByShortName, } from "services";
 import { QUERY_EXERCISE_DETAIL, QUERY_EXERCISE_VARIATIONS, } from "utils/consts";
-import { boolean } from "yup";
 import { Head } from "./Head";
 
 export const PaddingBox = () => {

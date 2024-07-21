@@ -12,14 +12,14 @@ describe("test the WeightCard component", () => {
 
     describe("Weights are available", () => {
         beforeEach(() => {
-            // @ts-ignore
+            // @ts-expect-error mock will exist when this is run
             useBodyWeightQuery.mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: testWeightEntries
             }));
 
-            // @ts-ignore
+            // @ts-expect-error this is ok and exists
             delete window.ResizeObserver;
             window.ResizeObserver = jest.fn().mockImplementation(() => ({
                 observe: jest.fn(),
@@ -54,7 +54,7 @@ describe("test the WeightCard component", () => {
     describe("No weight entries available", () => {
 
         beforeEach(() => {
-            // @ts-ignore
+            // @ts-expect-error mock will exist when this is run
             useBodyWeightQuery.mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,

@@ -16,7 +16,6 @@ import {
     editMeasurementParams
 } from "services/measurements";
 import { QUERY_MEASUREMENTS, QUERY_MEASUREMENTS_CATEGORIES, } from "utils/consts";
-import { number } from "yup";
 
 
 export function useMeasurementsCategoryQuery() {

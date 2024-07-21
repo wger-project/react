@@ -13,7 +13,6 @@ import {
     QUERY_ROUTINES_ACTIVE,
     QUERY_ROUTINES_SHALLOW,
 } from "utils/consts";
-import { number } from "yup";
 
 
 export function useRoutinesQuery() {

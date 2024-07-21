@@ -1,9 +1,9 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MemoryRouter, Route, Routes } from "react-router";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { render, screen } from '@testing-library/react';
 import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
+import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import React from 'react';
+import { MemoryRouter, Route, Routes } from "react-router";
 import { testRoutine1 } from "tests/workoutRoutinesTestData";
 
 jest.mock("components/WorkoutRoutines/queries");
@@ -13,7 +13,7 @@ const queryClient = new QueryClient();
 describe("Test the RoutineDetail component", () => {
 
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useRoutineDetailQuery.mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,

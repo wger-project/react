@@ -7,7 +7,6 @@ import {
     editNutritionalDiaryEntry
 } from "services/nutritionalDiary";
 import { QueryKey } from "utils/consts";
-import { number } from "yup";
 
 export const useAddDiaryEntryQuery = (planId: number) => {
     const queryClient = useQueryClient();

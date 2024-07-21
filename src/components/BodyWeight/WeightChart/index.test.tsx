@@ -9,7 +9,7 @@ const { ResizeObserver } = window;
 
 // See https://github.com/maslianok/react-resize-detector#testing-with-enzyme-and-jest
 beforeEach(() => {
-    // @ts-ignore
+    // @ts-expect-error this is ok and exists
     delete window.ResizeObserver;
     window.ResizeObserver = jest.fn().mockImplementation(() => ({
         observe: jest.fn(),

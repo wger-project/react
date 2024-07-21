@@ -18,14 +18,14 @@ describe("Test the MeasurementCategoryDetail component", () => {
 
     beforeEach(() => {
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useMeasurementsQuery.mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: TEST_MEASUREMENT_CATEGORY_1
         }));
 
-        // @ts-ignore
+        // @ts-expect-error this is ok and exists
         delete window.ResizeObserver;
         window.ResizeObserver = jest.fn().mockImplementation(() => ({
             observe: jest.fn(),

@@ -8,7 +8,6 @@ import {
     QUERY_LANGUAGES,
     QUERY_MUSCLES
 } from "utils/consts";
-import { number } from "yup";
 
 
 export function useExercisesQuery() {
