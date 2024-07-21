@@ -1,25 +1,26 @@
-import { useTranslation } from "react-i18next";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { Divider, List, ListItem, ListItemButton, ListItemText, Paper, Stack } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
-import { Divider, List, ListItem, ListItemButton, ListItemText, Paper, Stack } from "@mui/material";
 import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
-import React from "react";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { AddNutritionalPlanFab } from "components/Nutrition/widgets/Fab";
-import { makeLink, WgerLink } from "utils/url";
 import { useFetchNutritionalPlansQuery } from "components/Nutrition/queries";
+import { AddNutritionalPlanFab } from "components/Nutrition/widgets/Fab";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { makeLink, WgerLink } from "utils/url";
 
 export const PlansOverview = () => {
     const plansQuery = useFetchNutritionalPlansQuery();
     const [t] = useTranslation();
+
 
     return plansQuery.isLoading
         ? <LoadingPlaceholder />
         : <WgerContainerRightSidebar
             title={t("nutrition.plans")}
             mainContent={<Stack spacing={2}>
-                {plansQuery.data!.length === 0 && <OverviewEmpty />}
+                {plansQuery.data?.length === 0 && <OverviewEmpty />}
                 <PlanList plans={plansQuery.data!} />
             </Stack>
             }

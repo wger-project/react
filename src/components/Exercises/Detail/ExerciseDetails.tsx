@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
 import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailView";
-import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
 import { Translation } from "components/Exercises/models/translation";
 import { useLanguageQuery } from "components/Exercises/queries";
@@ -30,32 +29,32 @@ export const ExerciseDetails = () => {
     const navigate = useNavigate();
 
     const languageQuery = useLanguageQuery();
-    const exerciseQuery = useQuery(
-        [QUERY_EXERCISE_DETAIL, exerciseId],
-        () => getExercise(exerciseId),
-        {
-            enabled: languageQuery.isSuccess,
-            onSuccess: (exercise: Exercise) => {
-                const currentUserLanguage = getLanguageByShortName(
-                    i18n.language,
-                    languageQuery.data!
-                );
+    const exerciseQuery = useQuery({
+        queryKey: [QUERY_EXERCISE_DETAIL, exerciseId],
+        queryFn: () => getExercise(exerciseId),
+        enabled: languageQuery.isSuccess,
 
-                // get exercise translation from received exercise and set it
-                if (currentUserLanguage) {
-                    const translation = exercise.getTranslation(currentUserLanguage);
-                    setCurrentTranslation(translation);
-                }
-                setLanguage(currentUserLanguage);
-            },
-        }
-    );
 
-    const variationsQuery = useQuery(
-        [QUERY_EXERCISE_VARIATIONS, exerciseQuery.data?.variationId],
-        () => getExercisesForVariation(exerciseQuery.data?.variationId),
-        { enabled: exerciseQuery.isSuccess }
-    );
+        // onSuccess: (exercise: Exercise) => {
+        //     const currentUserLanguage = getLanguageByShortName(
+        //         i18n.language,
+        //         languageQuery.data!
+        //     );
+        //
+        //     // get exercise translation from received exercise and set it
+        //     if (currentUserLanguage) {
+        //         const translation = exercise.getTranslation(currentUserLanguage);
+        //         setCurrentTranslation(translation);
+        //     }
+        //     setLanguage(currentUserLanguage);
+        // }
+    });
+
+    const variationsQuery = useQuery({
+        queryKey: [QUERY_EXERCISE_VARIATIONS, exerciseQuery.data?.variationId],
+        queryFn: () => getExercisesForVariation(exerciseQuery.data?.variationId),
+        enabled: exerciseQuery.isSuccess
+    });
 
     if (
         exerciseQuery.isError ||

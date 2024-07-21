@@ -34,7 +34,7 @@ describe("Nutritional plan service tests", () => {
             ]
         };
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ data: planResponse }));
 
         const result = await getNutritionalPlansSparse();

@@ -28,7 +28,7 @@ describe("Image service API tests", () => {
             true
         );
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.post.mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
@@ -62,7 +62,7 @@ describe("Image service API tests", () => {
     test('DELETE an existing image', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act

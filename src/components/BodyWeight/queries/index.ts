@@ -5,7 +5,10 @@ import { QueryKey, } from "utils/consts";
 
 
 export function useBodyWeightQuery() {
-    return useQuery([QueryKey.BODY_WEIGHT], getWeights);
+    return useQuery({
+        queryKey: [QueryKey.BODY_WEIGHT],
+        queryFn: getWeights
+    });
 }
 
 export const useDeleteWeightEntryQuery = () => {
@@ -13,7 +16,9 @@ export const useDeleteWeightEntryQuery = () => {
 
     return useMutation({
         mutationFn: (id: number) => deleteWeight(id),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.BODY_WEIGHT])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.BODY_WEIGHT]
+        })
     });
 };
 
@@ -26,7 +31,9 @@ export const useAddWeightEntryQuery = () => {
         onError: (error: any) => {
             console.log(error);
         },
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.BODY_WEIGHT,])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.BODY_WEIGHT,]
+        })
     });
 };
 
@@ -36,7 +43,9 @@ export const useEditWeightEntryQuery = () => {
     return useMutation({
         mutationFn: (data: WeightEntry) => updateWeight(data),
         onSuccess: () => {
-            queryClient.invalidateQueries([QueryKey.BODY_WEIGHT,]);
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.BODY_WEIGHT,]
+            });
         }
     });
 };

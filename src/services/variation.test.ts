@@ -12,7 +12,7 @@ describe("Variation service API tests", () => {
         const response = {
             "id": 123
         };
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.post.mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act

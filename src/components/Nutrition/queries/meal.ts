@@ -8,7 +8,9 @@ export const useAddMealQuery = (planId: number) => {
     return useMutation({
         mutationFn: (data: AddMealParams) => addMeal(data),
         onSuccess: () => {
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, planId]);
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLAN, planId]
+            });
         }
     });
 };
@@ -18,7 +20,9 @@ export const useDeleteMealQuery = (planId: number) => {
     return useMutation({
         mutationFn: (id: number) => deleteMeal(id),
         onSuccess: () => {
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, planId]);
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLAN, planId]
+            });
         }
     });
 };
@@ -28,7 +32,9 @@ export const useEditMealQuery = (planId: number) => {
     return useMutation({
         mutationFn: (data: EditMealParams) => editMeal(data),
         onSuccess: () => {
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, planId]);
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLAN, planId]
+            });
         }
     });
 };

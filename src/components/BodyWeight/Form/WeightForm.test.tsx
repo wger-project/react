@@ -15,7 +15,7 @@ jest.mock("components/BodyWeight/queries");
 describe("Test WeightForm component", () => {
 
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useBodyWeightQuery.mockImplementation(() => ({ isSuccess: true, data: testWeightEntries }));
     });
 

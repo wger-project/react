@@ -115,7 +115,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                                     <TextField {...params} {...formik.getFieldProps('datetime')} />}
                                 disableFuture={true}
                                 onChange={(newValue) => {
-                                    // @ts-ignore - new value is a Luxon DateTime!
+                                    // @ts-expect-error - new value is a Luxon DateTime!
                                     formik.setFieldValue('datetime', newValue.toJSDate());
 
                                     setDateValue(newValue);
@@ -123,7 +123,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                                 shouldDisableDate={(date) => {
 
                                     // Allow the date of the current weight entry, since we are editing it
-                                    // @ts-ignore - date is a Luxon DateTime!
+                                    // @ts-expect-error - date is a Luxon DateTime!
                                     if (entry && dateToYYYYMMDD(entry.datetime) === dateToYYYYMMDD(date.toJSDate())) {
                                         return false;
                                     }

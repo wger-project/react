@@ -1,4 +1,8 @@
-import { MeasurementEntry } from "components/Measurements/models/Entry";
+import CancelIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import { Box } from "@mui/material";
 import {
     DataGrid,
     GridActionsCellItem,
@@ -13,15 +17,11 @@ import {
     GridValueFormatterParams
 } from "@mui/x-data-grid";
 import { MeasurementCategory } from "components/Measurements/models/Category";
-import { useTranslation } from "react-i18next";
+import { MeasurementEntry } from "components/Measurements/models/Entry";
 import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "components/Measurements/queries";
-import React from "react";
 import { DateTime } from "luxon";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Close";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { Box } from "@mui/material";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { PAGINATION_OPTIONS } from "utils/consts";
 
 const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp => {
@@ -104,7 +104,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
         setRowModesModel(newRowModesModel);
     };
 
-    // @ts-ignore
     const columns: GridColDef[] = [
         {
             field: 'value',
@@ -156,6 +155,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                                 color: 'primary.main',
                             }}
                             onClick={handleSaveClick(id)}
+                            key={`save-${id}`}
                         />,
                         <GridActionsCellItem
                             icon={<CancelIcon />}
@@ -163,6 +163,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                             className="textPrimary"
                             onClick={handleCancelClick(id)}
                             color="inherit"
+                            key={`cancel-${id}`}
                         />,
                     ];
                 }
@@ -174,12 +175,14 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                         className="textPrimary"
                         onClick={handleEditClick(id)}
                         color="inherit"
+                        key={`edit-${id}`}
                     />,
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
                         label="Delete"
                         onClick={handleDeleteClick(id)}
                         color="inherit"
+                        key={`delete-${id}`}
                     />,
                 ];
             },

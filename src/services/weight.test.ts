@@ -18,7 +18,7 @@ describe("weight service tests", () => {
             ]
         };
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ data: weightResponse }));
 
         const result = await getWeights();
@@ -33,7 +33,7 @@ describe("weight service tests", () => {
     test('DELETE weight entry', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act
@@ -51,7 +51,7 @@ describe("weight service tests", () => {
         const weightResponse = { id: 1, weight: 80, date: '2021-12-10' };
 
         // Act
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.patch.mockImplementation(() => Promise.resolve(weightResponse));
         const result = await updateWeight(weightEntry);
 
@@ -67,7 +67,7 @@ describe("weight service tests", () => {
         const weightResponse = { data: { id: 1, weight: 80, date: '2021-12-10' } };
 
         // Act
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.post.mockImplementation(() => Promise.resolve(weightResponse));
         const result = await createWeight(weightEntry);
 

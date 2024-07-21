@@ -32,7 +32,7 @@ describe("equipment service tests", () => {
 
 
         // Act
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ data: response }));
         const result = await getEquipment();
 

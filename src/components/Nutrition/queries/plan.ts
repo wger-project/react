@@ -12,22 +12,25 @@ import {
 import { QueryKey } from "utils/consts";
 
 export function useFetchNutritionalPlansQuery() {
-    return useQuery([QueryKey.NUTRITIONAL_PLANS], getNutritionalPlansSparse);
+    return useQuery({
+        queryKey: [QueryKey.NUTRITIONAL_PLANS],
+        queryFn: () => getNutritionalPlansSparse()
+    });
 }
 
 
 export function useFetchLastNutritionalPlanQuery() {
-    return useQuery(
-        [QueryKey.NUTRITIONAL_PLAN, 'last'],
-        () => getLastNutritionalPlan()
-    );
+    return useQuery({
+        queryKey: [QueryKey.NUTRITIONAL_PLAN, 'last'],
+        queryFn: () => getLastNutritionalPlan()
+    });
 }
 
 export function useFetchNutritionalPlanQuery(planId: number) {
-    return useQuery(
-        [QueryKey.NUTRITIONAL_PLAN, planId],
-        () => getNutritionalPlanFull(planId)
-    );
+    return useQuery({
+        queryKey: [QueryKey.NUTRITIONAL_PLAN, planId],
+        queryFn: () => getNutritionalPlanFull(planId)
+    });
 }
 
 /*
@@ -48,8 +51,12 @@ export const useAddNutritionalPlanQuery = () => {
     return useMutation({
         mutationFn: (data: AddNutritionalPlanParams) => addNutritionalPlan(data),
         onSuccess: () => {
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLANS,]);
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN,]);
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLANS,]
+            });
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLAN,]
+            });
         }
     });
 };
@@ -59,8 +66,12 @@ export const useDeleteNutritionalPlanQuery = (id: number) => {
     return useMutation({
         mutationFn: (id: number) => deleteNutritionalPlan(id),
         onSuccess: () => {
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLANS,]);
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, id]);
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLANS,]
+            });
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLAN, id]
+            });
         }
     });
 };
@@ -70,8 +81,12 @@ export const useEditNutritionalPlanQuery = (id: number) => {
     return useMutation({
         mutationFn: (data: EditNutritionalPlanParams) => editNutritionalPlan(data),
         onSuccess: () => {
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, id]);
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLANS,]);
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLAN, id]
+            });
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLANS,]
+            });
         }
     });
 };

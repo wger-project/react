@@ -19,10 +19,10 @@ describe('Test the MealForm component', () => {
         mutateEditMock = jest.fn();
         closeFnMock = jest.fn();
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useEditMealQuery.mockImplementation(() => ({ mutate: mutateEditMock }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useAddMealQuery.mockImplementation(() => ({ mutate: mutateAddMock }));
     });
 

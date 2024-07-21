@@ -12,7 +12,7 @@ describe("test the RoutineCard component", () => {
 
     describe("Routines are available", () => {
         beforeEach(() => {
-            // @ts-ignore
+            // @ts-expect-error mock will exist when this is run
             useActiveRoutineQuery.mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
@@ -39,7 +39,7 @@ describe("test the RoutineCard component", () => {
     describe("No routines available", () => {
 
         beforeEach(() => {
-            // @ts-ignore
+            // @ts-expect-error mock will exist when this is run
             useActiveRoutineQuery.mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
