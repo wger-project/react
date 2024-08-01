@@ -3533,10 +3533,10 @@ i18next-http-backend@^2.5.2:
   dependencies:
     cross-fetch "4.0.0"
 
-i18next-parser@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/i18next-parser/-/i18next-parser-9.0.0.tgz#7cd8d2cdc27a25e783670ce05ab2798d7e4da634"
-  integrity sha512-ZguWdu91Qthd001ilX8LdkYrlyYJM8pefnmgTXKTQwd8M2RJAlTCd2ww5uEyAUQe2jxzqSxfTh6XTOJbw5qP5A==
+i18next-parser@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/i18next-parser/-/i18next-parser-9.0.1.tgz#208917d1e6b524dcee81aaa6b71ef7572cbc1832"
+  integrity sha512-/Pr93/yEBdwsMKRsk4Zn63K368ALhzh8BRVrM6JNGOHy86ZKpiNJI6m8l1S/4T4Ofy1J4dlwkD7N98M70GP4aA==
   dependencies:
     "@babel/runtime" "^7.23.2"
     broccoli-plugin "^4.0.7"
@@ -3556,17 +3556,10 @@ i18next-parser@^9.0.0:
     vinyl "~3.0.0"
     vinyl-fs "^4.0.0"
 
-i18next@^23.12.2:
+i18next@^23.12.2, i18next@^23.5.1:
   version "23.12.2"
   resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.12.2.tgz#c5b44bb95e4d4a5908a51577fa06c63dc2f650a4"
   integrity sha512-XIeh5V+bi8SJSWGL3jqbTEBW5oD6rbP5L+E7dVQh1MNTxxYef0x15rhJVcRb7oiuq4jLtgy2SD8eFlf6P2cmqg==
-  dependencies:
-    "@babel/runtime" "^7.23.2"
-
-i18next@^23.5.1:
-  version "23.11.5"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.11.5.tgz#d71eb717a7e65498d87d0594f2664237f9e361ef"
-  integrity sha512-41pvpVbW9rhZPk5xjCX2TPJi2861LEig/YRhUkY+1FQ2IQPS0bKUDYnEqY8XPPbB48h1uIwLnP9iiEfuSl20CA==
   dependencies:
     "@babel/runtime" "^7.23.2"
 
@@ -6027,12 +6020,7 @@ typed-array-length@^1.0.6:
     is-typed-array "^1.1.13"
     possible-typed-array-names "^1.0.0"
 
-typescript@^5.0.4:
-  version "5.5.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.2.tgz#c26f023cb0054e657ce04f72583ea2d85f8d0507"
-  integrity sha512-NcRtPEOsPFFWjobJEtfihkLCZCXZt/os3zf8nTxjVH3RvTSxjrCamJpbExGvYOF+tFHc3pA65qpdwPbzjohhew==
-
-typescript@^5.5.3:
+typescript@^5.0.4, typescript@^5.5.3:
   version "5.5.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.3.tgz#e1b0a3c394190838a0b168e771b0ad56a0af0faa"
   integrity sha512-/hreyEujaB0w76zKo6717l3L0o/qEUtRgdvUBvlkhoWeOVMjMuHNHk0BRBzikzuGDqNmPQbg5ifMEqsHLiIUcQ==
