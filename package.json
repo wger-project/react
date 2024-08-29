@@ -59,7 +59,7 @@
     "jsdom": "^22.1.0",
     "ts-jest": "^29.2.5",
     "vite": "^5.3.5",
-    "vitest": "^0.34.6"
+    "vitest": "^2.0.5"
   },
   "scripts": {
     "start": "vite",
