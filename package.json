@@ -30,7 +30,7 @@
     "react-simple-wysiwyg": "^3.0.3",
     "recharts": "^2.12.7",
     "slug": "^9.1.0",
-    "typescript": "^5.5.3",
+    "typescript": "^5.5.4",
     "vite-tsconfig-paths": "^4.3.2",
     "web-vitals": "^4.2.1",
     "yup": "^1.4.0"
