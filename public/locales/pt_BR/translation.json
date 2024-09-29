@@ -145,6 +145,8 @@
     "timeOfDay": "Hora do dia",
     "licenses": {
         "authors": "Autor(es)",
-        "authorProfile": "Link para o website ou profile do autor, se disponível"
-    }
+        "authorProfile": "Link para o website ou profile do autor, se disponível",
+        "originalTitle": "Título"
+    },
+    "filters": "Filtros"
 }
