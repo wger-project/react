@@ -8,6 +8,7 @@ export interface AddDayParams {
     routine: number;
     name?: string;
     description?: string;
+    next_day_id?: number;
 }
 
 export interface EditDayParams extends AddDayParams {

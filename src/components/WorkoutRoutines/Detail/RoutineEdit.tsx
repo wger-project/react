@@ -1,9 +1,11 @@
+import { DragDropContext, Draggable, DraggableStyle, Droppable, DropResult } from "@hello-pangea/dnd";
 import AddIcon from '@mui/icons-material/Add';
 import HotelIcon from '@mui/icons-material/Hotel';
+import EditIcon from '@mui/icons-material/Edit';
 import {
-    Box,
+    Box, Button,
     Card,
-    CardActionArea,
+    CardActionArea, CardActions,
     CardContent,
     Container,
     Divider,
@@ -18,7 +20,7 @@ import { uuid4 } from "components/Core/Misc/uuid";
 import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
 import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import { Day } from "components/WorkoutRoutines/models/Day";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { useEditDayQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { ConfigDetailsField } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
 import { RoutineForm } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
@@ -53,8 +55,60 @@ export const RoutineEdit = () => {
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const routineQuery = useRoutineDetailQuery(routineId);
+    const dayQuery = useEditDayQuery(routineId);
 
     const [selectedDay, setSelectedDay] = React.useState(0);
+
+    const onDragEnd= (result: DropResult) => {
+
+        // Item was dropped outside the list
+        if (!result.destination) {
+            return;
+        }
+
+        const updatedDays = Array.from(routineQuery.data!.days);
+        const [movedDay] = updatedDays.splice(result.source.index, 1);
+        updatedDays.splice(result.destination.index, 0, movedDay);
+
+        // Update next_day_id for each day
+        updatedDays.forEach((day, index) => {
+            const nextDayIndex = (index + 1) % updatedDays.length; // Wrap around for the last day
+            day.nextDayId = updatedDays[nextDayIndex].id;
+        });
+
+        // console.log(result);
+        // console.log(updatedDays);
+        // updatedDays.forEach((day) => {
+        //     dayQuery.mutate({routine: routineId, id: day.id, next_day_id: day.nextDayId!})
+        // });
+    }
+
+
+    const grid = 8;
+
+    const getItemStyle = (isDragging: boolean, draggableStyle: DraggableStyle ) => ({
+            // some basic styles to make the items look a bit nicer
+
+            // userSelect: "none",
+            padding: grid,
+            margin: `0 0 ${grid}px 0`,
+
+            // change background colour if dragging
+            // background: isDragging ? "lightgreen" : null,
+            // background: isDragging ? "lightgreen" : "grey",
+
+            // styles we need to apply on draggables
+            ...draggableStyle
+    });
+
+    const getListStyle = (isDraggingOver : boolean) => ({
+
+        background: isDraggingOver ? "lightblue" : undefined,
+        // background: isDraggingOver ? "lightblue" : "lightgrey",
+        display: 'flex',
+        padding: grid,
+        overflow: 'auto',
+    });
 
     return <>
         <Container maxWidth="lg">
@@ -72,22 +126,43 @@ export const RoutineEdit = () => {
                         container
                         direction="row"
                     >
-                        {routineQuery.data!.days.map((day) =>
-                            <Grid
-                                item
-                                xs={12}
-                                sm={6}
-                                md={3}
-                                key={routineQuery.data!.days.indexOf(day)}
-                            >
-                                <DayCard
-                                    day={day}
-                                    setSelected={setSelectedDay}
-                                    isSelected={selectedDay === day.id}
-                                    key={uuid4()}
-                                />
-                            </Grid>
-                        )}
+                        <DragDropContext onDragEnd={onDragEnd}>
+                            <Droppable droppableId="droppable" direction="horizontal">
+                                {(provided, snapshot) => (
+                                    <div
+                                        {...provided.droppableProps}
+                                        ref={provided.innerRef}
+                                        style={getListStyle(snapshot.isDraggingOver)}
+                                    >
+                                        {routineQuery.data!.days.map((day, index) =>
+                                            <Draggable key={day.id} draggableId={day.id.toString()} index={index}>
+                                                {(provided, snapshot) => (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                        style={getItemStyle(
+                                                            snapshot.isDragging,
+                                                            provided.draggableProps.style ?? {}
+                                                        )}
+                                                    >
+                                                            <DayCard
+                                                                day={day}
+                                                                setSelected={setSelectedDay}
+                                                                isSelected={selectedDay === day.id}
+                                                                key={`card-${day.id}`}
+                                                            />
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        )}
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+
+
                         <Grid
                             item
                             xs={12}
@@ -134,15 +209,18 @@ export const RoutineEdit = () => {
 const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: number) => void }) => {
     const theme = useTheme();
     const color = props.isSelected ? theme.palette.primary.light : props.day.isRest ? theme.palette.action.disabled : '';
-    const sx = { backgroundColor: color };
+    const sx = { backgroundColor: color};
     const [t] = useTranslation();
 
     return (
         <Card sx={sx}>
-            <CardActionArea sx={{ minHeight: 175 }} onClick={() => {
-                props.setSelected(props.day.id);
-            }}>
+            {/*<CardActionArea sx={{ minHeight: 175 }} onClick={() => {*/}
+            {/*    props.setSelected(props.day.id);*/}
+            {/*}}>*/}
                 <CardContent>
+                    <Typography variant="h5" component="div">
+                        #1
+                    </Typography>
                     <Typography>
                         {props.day.isRest ? t('routines.restDay') : props.day.name}
                     </Typography>
@@ -150,7 +228,10 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
                         {props.day.isRest && <HotelIcon />}
                     </Typography>
                 </CardContent>
-            </CardActionArea>
+            <CardActions>
+                <Button size="small" startIcon={<EditIcon />} onClick={() => props.setSelected(props.day.id)}>edit</Button>
+            </CardActions>
+            {/*</CardActionArea>*/}
         </Card>
     );
 };
