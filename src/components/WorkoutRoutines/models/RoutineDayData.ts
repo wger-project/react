@@ -12,7 +12,7 @@ export class RoutineDayData {
         public iteration: number,
         public date: Date,
         public label: string,
-        public day: Day,
+        public day: Day | null,
         slots?: SlotData[],
     ) {
         if (slots) {
@@ -27,7 +27,7 @@ export class RoutineDayDataAdapter implements Adapter<RoutineDayData> {
         item.iteration,
         new Date(item.date),
         item.label,
-        new DayAdapter().fromJson(item.day),
+        item.day != null ? new DayAdapter().fromJson(item.day): null,
         item.slots.map((slot: any) => new SlotDataAdapter().fromJson(slot))
     );
 }

@@ -71,9 +71,9 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
             <TableBody>
                 {props.dayData.map((dayData, index) =>
                     <>
-                        <TableRow>
+                        <TableRow key={`tableRow-rest-${index}`}>
                             <TableCell sx={{ backgroundColor: theme.palette.action.hover }}>
-                                <b>{dayData.day.isRest ? t('routines.restDay') : dayData.day.name}</b>
+                                <b>{dayData.day === null || dayData.day.isRest  ? t('routines.restDay') : dayData.day.name}</b>
                             </TableCell>
                         </TableRow>
                         {dayData.slots.map((slotData) =>
@@ -83,7 +83,7 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
                                         // Only show the name of the exercise the first time it appears
                                         const showExercise = index === 0 || setConfig.exerciseId !== slotData.setConfigs[index - 1]?.exerciseId;
 
-                                        return <TableRow>
+                                        return <TableRow key={`tableRow-exercise-${index}`}>
                                             <TableCell
                                                 sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
                                                 {showExercise ? setConfig.exercise?.getTranslation().name : '.'}
@@ -93,7 +93,7 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
                                 )}
                             </>
                         )}
-                        <TableRow>
+                        <TableRow key={`tableRow-emtpy-${index}`}>
                             <TableCell></TableCell>
                         </TableRow>
                     </>

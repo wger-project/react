@@ -144,7 +144,7 @@ const DayDetails = (props: { dayData: RoutineDayData }) => {
         <Card sx={{ minWidth: 275 }}>
             <CardHeader
                 sx={{ bgcolor: "lightgray" }}
-                action={props.dayData.day.isSpecialType
+                action={props.dayData.day !== null && props.dayData.day.isSpecialType
                     ? <Chip
                         label={props.dayData.day.type}
                         color="info"
@@ -152,8 +152,8 @@ const DayDetails = (props: { dayData: RoutineDayData }) => {
                         sx={{ marginLeft: "0.5em" }} />
                     : null
                 }
-                title={props.dayData.day.isRest ? t('routines.restDay') : props.dayData.day.name}
-                subheader={props.dayData.day.description}
+                title={props.dayData.day === null || props.dayData.day.isRest ? t('routines.restDay') : props.dayData.day.name}
+                subheader={props.dayData.day?.description}
 
             />
             <Menu
