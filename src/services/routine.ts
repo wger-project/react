@@ -11,6 +11,7 @@ import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
 
 export const ROUTINE_API_STRUCTURE_PATH = 'structure';
+export const ROUTINE_API_DAY_SEQUENCE = 'day-sequence';
 export const ROUTINE_API_LOGS_PATH = 'logs';
 export const ROUTINE_API_CURRENT_ITERATION_DISPLAY = 'current-iteration-display-mode';
 export const ROUTINE_API_ALL_ITERATION_DISPLAY = 'date-sequence-display';
@@ -44,7 +45,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         getRoutineDayDataAllIterations(id),
         getRoutineStructure(id),
         getRoutineLogData(id),
-
+        getRoutineDaySequence(id),
     ]);
     const repUnits = responses[0];
     const weightUnits = responses[1];
@@ -52,6 +53,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     const dayDataAllIterations = responses[3];
     const dayStructure = responses[4];
     const logData = responses[5];
+    const daySequenceData = responses[6];
 
     // Collect and load all exercises for the workout
     for (const day of dayDataCurrentIteration) {
@@ -97,63 +99,10 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     routine.dayDataCurrentIteration = dayDataCurrentIteration;
     routine.dayDataAllIterations = dayDataAllIterations;
     routine.logData = logData;
-    routine.days = dayStructure;
 
-    // Process the days
-    // const daysResponse = await axios.get<ResponseType<Day>>(
-    //     makeUrl(ApiPath.ROUTINE, {
-    //         id: routine.id,
-    //         objectMethod: ROUTINE_API_DAY_SEQUENCE_PATH
-    //     }),
-    //     { headers: makeHeader() },
-    // );
+    // Sort the days according to the day sequence
+    routine.days = daySequenceData.map(dayId => dayStructure.find(day => day.id === dayId)!);
 
-
-    // for (const dayData of dayResponse.data.results) {
-    //     const day = dayAdapter.fromJson(dayData);
-    //
-    //     // Process the sets
-    //     const setResponse = await axios.get<ResponseType<WorkoutSet>>(
-    //         makeUrl(SET_API_PATH, { query: { exerciseday: day.id.toString() } }),
-    //         { headers: makeHeader() },
-    //     );
-    //     for (const setData of setResponse.data.results) {
-    //         const set = setAdapter.fromJson(setData);
-    //         day.slots.push(set);
-    //     }
-    //
-    //     // Process the settings
-    //     const settingPromises = setResponse.data.results.map((setData: any) => {
-    //         return axios.get<ResponseType<any>>(
-    //             makeUrl(SETTING_API_PATH, { query: { set: setData.id } }),
-    //             { headers: makeHeader() },
-    //         );
-    //     });
-    //     const settingsResponses = await Promise.all(settingPromises);
-    //
-    //     for (const settingsData of settingsResponses) {
-    //         for (const settingData of settingsData.data.results) {
-    //             const set = day.slots.find(e => e.id === settingData.set);
-    //             const setting = settingAdapter.fromJson(settingData);
-    //
-    //             // TODO: use some global state or cache for this
-    //             //       we will need to access individual exercises throughout the app
-    //             //       as well as the weight and repetition units
-    //             const weightUnit = weightUnits.find(e => e.id === setting.weightUnit);
-    //             const repUnit = repUnits.find(e => e.id === setting.repetitionUnit);
-    //
-    //             const tmpSetting = set!.settings.find(e => e.exerciseId === setting.exerciseId);
-    //             setting.base = tmpSetting !== undefined ? tmpSetting.base : await getExercise(setting.exerciseId);
-    //             setting.weightUnitObj = weightUnit;
-    //             setting.repetitionUnitObj = repUnit;
-    //
-    //             set!.settings.push(setting);
-    //         }
-    //     }
-    //     routine.days.push(day);
-    // }
-
-    // console.log(routine);
     return routine;
 };
 
@@ -228,7 +177,7 @@ export interface AddRoutineParams {
     end: string;
 }
 
-export interface EditRoutineParams extends AddRoutineParams {
+export interface EditRoutineParams extends Partial<AddRoutineParams> {
     id: number,
 }
 
@@ -292,4 +241,13 @@ export const getRoutineLogData = async (routineId: number): Promise<RoutineLogDa
 
     const adapter = new RoutineLogDataAdapter();
     return response.data.map((data: any) => adapter.fromJson(data));
+};
+export const getRoutineDaySequence = async (routineId: number): Promise<number[]> => {
+    const response = await axios.get(
+        makeUrl(ApiPath.ROUTINE, { id: routineId, objectMethod: ROUTINE_API_DAY_SEQUENCE }),
+        { headers: makeHeader() }
+    );
+
+    const adapter = new RoutineLogDataAdapter();
+    return response.data.map((data: any) => data['id']);
 };

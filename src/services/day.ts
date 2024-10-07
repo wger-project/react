@@ -6,12 +6,12 @@ import { makeHeader, makeUrl } from "utils/url";
 
 export interface AddDayParams {
     routine: number;
-    name?: string;
-    description?: string;
-    next_day_id?: number;
+    name: string;
+    description: string;
+    next_day?: number;
 }
 
-export interface EditDayParams extends AddDayParams {
+export interface EditDayParams extends Partial<AddDayParams> {
     id: number,
 }
 

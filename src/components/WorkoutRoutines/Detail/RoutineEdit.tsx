@@ -21,6 +21,7 @@ import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDet
 import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { useEditDayQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
 import { ConfigDetailsField } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
 import { RoutineForm } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
@@ -34,8 +35,8 @@ export const RoutineEdit = () => {
 
     /*
     TODO:
-        * Add drag and drop for
-          - the days: https://github.com/hello-pangea/dnd
+        * Add drag and drop (https://github.com/hello-pangea/dnd) for
+          - ✅ the days
           - the slots? does this make sense?
           - the exercises within the slots?
         * advanced / simple mode: the simple mode only shows weight and reps
@@ -49,12 +50,12 @@ export const RoutineEdit = () => {
         * add / remove / edit sets
         * tests!
         * ...
-
      */
 
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const routineQuery = useRoutineDetailQuery(routineId);
+    const editRoutineQuery = useEditRoutineQuery(routineId);
     const dayQuery = useEditDayQuery(routineId);
 
     const [selectedDay, setSelectedDay] = React.useState(0);
@@ -76,11 +77,12 @@ export const RoutineEdit = () => {
             day.nextDayId = updatedDays[nextDayIndex].id;
         });
 
-        // console.log(result);
-        // console.log(updatedDays);
-        // updatedDays.forEach((day) => {
-        //     dayQuery.mutate({routine: routineId, id: day.id, next_day_id: day.nextDayId!})
-        // });
+        // Save objects
+        routineQuery.data!.days = updatedDays;
+        updatedDays.forEach((day) => {
+            dayQuery.mutate({routine: routineId, id: day.id, next_day: day.nextDayId!})
+        });
+        editRoutineQuery.mutate({id: routineId, first_day: updatedDays.at(0)!.id});
     }
 
 
@@ -162,7 +164,6 @@ export const RoutineEdit = () => {
                             </Droppable>
                         </DragDropContext>
 
-
                         <Grid
                             item
                             xs={12}
@@ -183,10 +184,15 @@ export const RoutineEdit = () => {
                     </Grid>
 
                     {selectedDay > 0 &&
+                        <>
+                        <Typography variant={"h4"}>
+                            {routineQuery.data!.days.find(day => day.id === selectedDay)!.name}
+                        </Typography>
                         <DayDetails
                             day={routineQuery.data!.days.find(day => day.id === selectedDay)!}
                             routineId={routineId}
                         />
+                        </>
                     }
 
                     <Stack spacing={2} sx={{ mt: 2 }}>
@@ -214,14 +220,8 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
 
     return (
         <Card sx={sx}>
-            {/*<CardActionArea sx={{ minHeight: 175 }} onClick={() => {*/}
-            {/*    props.setSelected(props.day.id);*/}
-            {/*}}>*/}
                 <CardContent>
-                    <Typography variant="h5" component="div">
-                        #1
-                    </Typography>
-                    <Typography>
+                    <Typography variant="h6" >
                         {props.day.isRest ? t('routines.restDay') : props.day.name}
                     </Typography>
                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
@@ -231,7 +231,6 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
             <CardActions>
                 <Button size="small" startIcon={<EditIcon />} onClick={() => props.setSelected(props.day.id)}>edit</Button>
             </CardActions>
-            {/*</CardActionArea>*/}
         </Card>
     );
 };
@@ -243,7 +242,7 @@ const DayDetails = (props: { day: Day, routineId: number }) => {
 
             {props.day.slots.map((slot) =>
                 <>
-                    <Typography variant={"h4"} gutterBottom>
+                    <Typography variant={"h6"} gutterBottom>
                         <b>Slot #{slot.id}</b>
                     </Typography>
 
@@ -257,7 +256,7 @@ const DayDetails = (props: { day: Day, routineId: number }) => {
 
                             <SlotConfigForm routineId={props.routineId} slotConfig={slotConfig} />
 
-                            <Typography variant={"h6"} gutterBottom>
+                            <Typography variant={"h5"} gutterBottom>
                                 {slotConfig.exercise?.getTranslation().name}
                             </Typography>
 
