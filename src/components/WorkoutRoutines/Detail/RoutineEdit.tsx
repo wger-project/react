@@ -55,10 +55,58 @@ export const RoutineEdit = () => {
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const routineQuery = useRoutineDetailQuery(routineId);
-    const editRoutineQuery = useEditRoutineQuery(routineId);
-    const dayQuery = useEditDayQuery(routineId);
+    const [selectedDay, setSelectedDay] = React.useState<number|null>(null);
 
-    const [selectedDay, setSelectedDay] = React.useState(0);
+    return <>
+        <Container maxWidth="lg">
+            {routineQuery.isLoading
+                ? <LoadingPlaceholder />
+                : <>
+                    <Typography variant={"h4"}>
+                        Edit {routineQuery.data?.name}
+                    </Typography>
+
+                    <RoutineForm routine={routineQuery.data!} firstDayId={1000} />
+
+                    <DayDragAndDropGrid routineId={routineId} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+
+                    {selectedDay !== null &&
+                        <>
+                            <Typography variant={"h4"}>
+                                {routineQuery.data!.days.find(day => day.id === selectedDay)!.name}
+                            </Typography>
+                            <DayDetails
+                                day={routineQuery.data!.days.find(day => day.id === selectedDay)!}
+                                routineId={routineId}
+                            />
+                        </>
+                    }
+
+                    <Stack spacing={2} sx={{ mt: 2 }}>
+                        <Typography variant={"h4"}>
+                            Resulting routine
+                        </Typography>
+
+                        <Box padding={4}>
+                            <RoutineDetailsTable />
+                            <RoutineDetailsCard />
+                        </Box>
+                    </Stack>
+                </>
+            }
+        </Container>
+    </>;
+};
+
+const DayDragAndDropGrid = (props: {
+    routineId: number,
+    selectedDay: number | null,
+    setSelectedDay: (day: number | null) => void
+}) => {
+
+    const routineQuery = useRoutineDetailQuery(props.routineId);
+    const editRoutineQuery = useEditRoutineQuery(props.routineId);
+    const editDayQuery = useEditDayQuery(props.routineId);
 
     const onDragEnd= (result: DropResult) => {
 
@@ -80,27 +128,26 @@ export const RoutineEdit = () => {
         // Save objects
         routineQuery.data!.days = updatedDays;
         updatedDays.forEach((day) => {
-            dayQuery.mutate({routine: routineId, id: day.id, next_day: day.nextDayId!})
+            editDayQuery.mutate({routine: props.routineId, id: day.id, next_day: day.nextDayId!})
         });
-        editRoutineQuery.mutate({id: routineId, first_day: updatedDays.at(0)!.id});
+        editRoutineQuery.mutate({id: props.routineId, first_day: updatedDays.at(0)!.id});
     }
-
 
     const grid = 8;
 
     const getItemStyle = (isDragging: boolean, draggableStyle: DraggableStyle ) => ({
-            // some basic styles to make the items look a bit nicer
+        // some basic styles to make the items look a bit nicer
 
-            // userSelect: "none",
-            padding: grid,
-            margin: `0 0 ${grid}px 0`,
+        // userSelect: "none",
+        padding: grid,
+        margin: `0 0 ${grid}px 0`,
 
-            // change background colour if dragging
-            // background: isDragging ? "lightgreen" : null,
-            // background: isDragging ? "lightgreen" : "grey",
+        // change background colour if dragging
+        // background: isDragging ? "lightgreen" : null,
+        // background: isDragging ? "lightgreen" : "grey",
 
-            // styles we need to apply on draggables
-            ...draggableStyle
+        // styles we need to apply on draggables
+        ...draggableStyle
     });
 
     const getListStyle = (isDraggingOver : boolean) => ({
@@ -112,111 +159,75 @@ export const RoutineEdit = () => {
         overflow: 'auto',
     });
 
-    return <>
-        <Container maxWidth="lg">
-            {routineQuery.isLoading
-                ? <LoadingPlaceholder />
-                : <>
-                    <Typography variant={"h4"}>
-                        Edit {routineQuery.data?.name}
-                    </Typography>
 
-                    <RoutineForm routine={routineQuery.data!} firstDayId={1000} />
-
-                    <Grid
-                        spacing={3}
-                        container
-                        direction="row"
+    return <Grid
+        spacing={3}
+        container
+        direction="row"
+    >
+        <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="droppable" direction="horizontal">
+                {(provided, snapshot) => (
+                    <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        style={getListStyle(snapshot.isDraggingOver)}
                     >
-                        <DragDropContext onDragEnd={onDragEnd}>
-                            <Droppable droppableId="droppable" direction="horizontal">
+                        {routineQuery.data!.days.map((day, index) =>
+                            <Draggable key={day.id} draggableId={day.id.toString()} index={index}>
                                 {(provided, snapshot) => (
                                     <div
-                                        {...provided.droppableProps}
                                         ref={provided.innerRef}
-                                        style={getListStyle(snapshot.isDraggingOver)}
-                                    >
-                                        {routineQuery.data!.days.map((day, index) =>
-                                            <Draggable key={day.id} draggableId={day.id.toString()} index={index}>
-                                                {(provided, snapshot) => (
-                                                    <div
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        style={getItemStyle(
-                                                            snapshot.isDragging,
-                                                            provided.draggableProps.style ?? {}
-                                                        )}
-                                                    >
-                                                            <DayCard
-                                                                day={day}
-                                                                setSelected={setSelectedDay}
-                                                                isSelected={selectedDay === day.id}
-                                                                key={`card-${day.id}`}
-                                                            />
-                                                    </div>
-                                                )}
-                                            </Draggable>
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        style={getItemStyle(
+                                            snapshot.isDragging,
+                                            provided.draggableProps.style ?? {}
                                         )}
-                                        {provided.placeholder}
+                                    >
+                                        <DayCard
+                                            day={day}
+                                            setSelected={props.setSelectedDay}
+                                            isSelected={props.selectedDay === day.id}
+                                            key={`card-${day.id}`}
+                                        />
                                     </div>
                                 )}
-                            </Droppable>
-                        </DragDropContext>
+                            </Draggable>
+                        )}
+                        {provided.placeholder}
+                    </div>
+                )}
+            </Droppable>
+        </DragDropContext>
 
-                        <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            md={3}
-                        >
-                            <Card>
-                                <CardActionArea sx={{ minHeight: 175 }} onClick={() => {
-                                    console.log('adding new day now...');
-                                }}
-                                >
-                                    <CardContent>
-                                        <AddIcon />
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
-                        </Grid>
-                    </Grid>
-
-                    {selectedDay > 0 &&
-                        <>
-                        <Typography variant={"h4"}>
-                            {routineQuery.data!.days.find(day => day.id === selectedDay)!.name}
-                        </Typography>
-                        <DayDetails
-                            day={routineQuery.data!.days.find(day => day.id === selectedDay)!}
-                            routineId={routineId}
-                        />
-                        </>
-                    }
-
-                    <Stack spacing={2} sx={{ mt: 2 }}>
-                        <Typography variant={"h4"}>
-                            Resulting routine
-                        </Typography>
-
-                        <Box padding={4}>
-                            <RoutineDetailsTable />
-                            <RoutineDetailsCard />
-                        </Box>
-                    </Stack>
-                </>
-            }
-        </Container>
-    </>;
+        <Grid
+            item
+            xs={12}
+            sm={6}
+            md={3}
+        >
+            <Card>
+                <CardActionArea sx={{ minHeight: 175 }} onClick={() => console.log('adding new day')}>
+                    <CardContent>
+                        <AddIcon />
+                    </CardContent>
+                </CardActionArea>
+            </Card>
+        </Grid>
+    </Grid>;
 };
 
 
-const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: number) => void }) => {
+const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: number| null) => void }) => {
     const theme = useTheme();
     const color = props.isSelected ? theme.palette.primary.light : props.day.isRest ? theme.palette.action.disabled : '';
     const sx = { backgroundColor: color};
     const [t] = useTranslation();
+
+    const setSelected = () => {
+        props.isSelected ? props.setSelected(null) : props.setSelected(props.day.id);
+    };
 
     return (
         <Card sx={sx}>
@@ -229,7 +240,7 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
                     </Typography>
                 </CardContent>
             <CardActions>
-                <Button size="small" startIcon={<EditIcon />} onClick={() => props.setSelected(props.day.id)}>edit</Button>
+                <Button size="small" startIcon={<EditIcon />} onClick={setSelected}>edit</Button>
             </CardActions>
         </Card>
     );
