@@ -39,8 +39,8 @@ export const RoutineDetailsCard = () => {
                     {routineQuery.data?.description}
                 </Typography>
                 <Stack spacing={2} sx={{ mt: 2 }}>
-                    {routineQuery.data!.dayDataCurrentIteration.map((day) =>
-                        <DayDetails dayData={day} key={uuid4()} />
+                    {routineQuery.data!.dayDataCurrentIteration.map((dayData) =>
+                        <DayDetails dayData={dayData} key={`dayDetails-${dayData.day?.id}`} />
                     )}
                 </Stack>
             </>}
@@ -171,16 +171,15 @@ const DayDetails = (props: { dayData: RoutineDayData }) => {
                 {props.dayData.slots.length > 0 &&
                     <Stack>
                         {props.dayData.slots.map((slotData, index) => (
-                            <>
+                            <div key={`SlotDataList-${props.dayData.day?.id}-${index}`}>
                                 <Box padding={1}>
                                     <SlotDataList
                                         slotData={slotData}
                                         index={index}
-                                        key={uuid4()}
                                     />
                                 </Box>
                                 <Divider />
-                            </>
+                            </div>
                         ))}
                     </Stack>}
             </CardContent>

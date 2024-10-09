@@ -1,22 +1,26 @@
 import { DragDropContext, Draggable, DraggableStyle, Droppable, DropResult } from "@hello-pangea/dnd";
 import AddIcon from '@mui/icons-material/Add';
-import HotelIcon from '@mui/icons-material/Hotel';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import HotelIcon from '@mui/icons-material/Hotel';
 import {
-    Box, Button,
+    Box,
+    Button,
     Card,
-    CardActionArea, CardActions,
+    CardActionArea,
+    CardActions,
     CardContent,
     Container,
     Divider,
+    FormControlLabel,
     IconButton,
     Stack,
+    Switch,
     Typography,
     useTheme
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { uuid4 } from "components/Core/Misc/uuid";
 import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
 import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import { Day } from "components/WorkoutRoutines/models/Day";
@@ -55,7 +59,8 @@ export const RoutineEdit = () => {
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const routineQuery = useRoutineDetailQuery(routineId);
-    const [selectedDay, setSelectedDay] = React.useState<number|null>(null);
+    const [selectedDay, setSelectedDay] = React.useState<number | null>(null);
+    const [extendedMode, setExtendedMode] = React.useState(false);
 
     return <>
         <Container maxWidth="lg">
@@ -66,20 +71,20 @@ export const RoutineEdit = () => {
                         Edit {routineQuery.data?.name}
                     </Typography>
 
+                    <FormControlLabel
+                        control={<Switch checked={extendedMode} onChange={() => setExtendedMode(!extendedMode)} />}
+                        label="Extended mode" />
+
                     <RoutineForm routine={routineQuery.data!} firstDayId={1000} />
 
-                    <DayDragAndDropGrid routineId={routineId} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+                    <DayDragAndDropGrid routineId={routineId} selectedDay={selectedDay}
+                                        setSelectedDay={setSelectedDay} />
 
                     {selectedDay !== null &&
-                        <>
-                            <Typography variant={"h4"}>
-                                {routineQuery.data!.days.find(day => day.id === selectedDay)!.name}
-                            </Typography>
-                            <DayDetails
-                                day={routineQuery.data!.days.find(day => day.id === selectedDay)!}
-                                routineId={routineId}
-                            />
-                        </>
+                        <DayDetails
+                            day={routineQuery.data!.days.find(day => day.id === selectedDay)!}
+                            routineId={routineId}
+                        />
                     }
 
                     <Stack spacing={2} sx={{ mt: 2 }}>
@@ -108,7 +113,7 @@ const DayDragAndDropGrid = (props: {
     const editRoutineQuery = useEditRoutineQuery(props.routineId);
     const editDayQuery = useEditDayQuery(props.routineId);
 
-    const onDragEnd= (result: DropResult) => {
+    const onDragEnd = (result: DropResult) => {
 
         // Item was dropped outside the list
         if (!result.destination) {
@@ -128,14 +133,14 @@ const DayDragAndDropGrid = (props: {
         // Save objects
         routineQuery.data!.days = updatedDays;
         updatedDays.forEach((day) => {
-            editDayQuery.mutate({routine: props.routineId, id: day.id, next_day: day.nextDayId!})
+            editDayQuery.mutate({ routine: props.routineId, id: day.id, next_day: day.nextDayId! });
         });
-        editRoutineQuery.mutate({id: props.routineId, first_day: updatedDays.at(0)!.id});
-    }
+        editRoutineQuery.mutate({ id: props.routineId, first_day: updatedDays.at(0)!.id });
+    };
 
     const grid = 8;
 
-    const getItemStyle = (isDragging: boolean, draggableStyle: DraggableStyle ) => ({
+    const getItemStyle = (isDragging: boolean, draggableStyle: DraggableStyle) => ({
         // some basic styles to make the items look a bit nicer
 
         // userSelect: "none",
@@ -150,7 +155,7 @@ const DayDragAndDropGrid = (props: {
         ...draggableStyle
     });
 
-    const getListStyle = (isDraggingOver : boolean) => ({
+    const getListStyle = (isDraggingOver: boolean) => ({
 
         background: isDraggingOver ? "lightblue" : undefined,
         // background: isDraggingOver ? "lightblue" : "lightgrey",
@@ -219,10 +224,10 @@ const DayDragAndDropGrid = (props: {
 };
 
 
-const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: number| null) => void }) => {
+const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: number | null) => void }) => {
     const theme = useTheme();
     const color = props.isSelected ? theme.palette.primary.light : props.day.isRest ? theme.palette.action.disabled : '';
-    const sx = { backgroundColor: color};
+    const sx = { backgroundColor: color };
     const [t] = useTranslation();
 
     const setSelected = () => {
@@ -231,14 +236,14 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
 
     return (
         <Card sx={sx}>
-                <CardContent>
-                    <Typography variant="h6" >
-                        {props.day.isRest ? t('routines.restDay') : props.day.name}
-                    </Typography>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                        {props.day.isRest && <HotelIcon />}
-                    </Typography>
-                </CardContent>
+            <CardContent>
+                <Typography variant="h6">
+                    {props.day.isRest ? t('routines.restDay') : props.day.name}
+                </Typography>
+                <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    {props.day.isRest && <HotelIcon />}
+                </Typography>
+            </CardContent>
             <CardActions>
                 <Button size="small" startIcon={<EditIcon />} onClick={setSelected}>edit</Button>
             </CardActions>
@@ -249,12 +254,21 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
 const DayDetails = (props: { day: Day, routineId: number }) => {
     return (
         <>
+            <Typography variant={"h4"}>
+                {props.day.name}
+                <IconButton onClick={() => console.log(`deleting day ${props.day.id}`)}>
+                    <DeleteIcon />
+                </IconButton>
+            </Typography>
+            <Box height={30} />
+
+
             <DayForm routineId={props.routineId} day={props.day} />
 
-            {props.day.slots.map((slot) =>
-                <>
-                    <Typography variant={"h6"} gutterBottom>
-                        <b>Slot #{slot.id}</b>
+            {props.day.slots.map((slot, index) =>
+                <div key={`slot-${slot.id}-${index}`}>
+                    <Typography variant={"h5"} gutterBottom>
+                        <b>Set {index + 1} (Slot-ID {slot.id})</b>
                     </Typography>
 
                     <SlotForm routineId={props.routineId} slot={slot} />
@@ -265,11 +279,11 @@ const DayDetails = (props: { day: Day, routineId: number }) => {
                                 SlotConfigId {slotConfig.id}
                             </p>
 
-                            <SlotConfigForm routineId={props.routineId} slotConfig={slotConfig} />
-
-                            <Typography variant={"h5"} gutterBottom>
+                            <Typography variant={"h6"} gutterBottom>
                                 {slotConfig.exercise?.getTranslation().name}
                             </Typography>
+
+                            <SlotConfigForm routineId={props.routineId} slotConfig={slotConfig} />
 
                             {slotConfig.weightConfigs.map((config) =>
                                 <ConfigDetailsField config={config} type="weight" routineId={props.routineId} />
@@ -298,7 +312,7 @@ const DayDetails = (props: { day: Day, routineId: number }) => {
                         </>
                     )}
                     <Divider sx={{ mt: 2, mb: 2 }} />
-                </>
+                </div>
             )}
             <IconButton>
                 <AddIcon />

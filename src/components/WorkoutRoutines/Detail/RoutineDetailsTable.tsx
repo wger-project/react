@@ -70,13 +70,16 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
             </TableHead>
             <TableBody>
                 {props.dayData.map((dayData, index) =>
-                    <>
+                    <div key={`${props.iteration}-${index}`}>
                         <TableRow key={`tableRow-rest-${index}`}>
                             <TableCell sx={{ backgroundColor: theme.palette.action.hover }}>
                                 <b>{dayData.day === null || dayData.day.isRest  ? t('routines.restDay') : dayData.day.name}</b>
                             </TableCell>
                         </TableRow>
-                        {dayData.slots.map((slotData) =>
+
+
+                        {dayData.slots.map((slotData, slotIndex) =>
+                            // <div key={`${props.iteration}-${index}-${slotIndex}`}>
                             <>
                                 {slotData.setConfigs.map((setConfig, index) => {
 
@@ -85,6 +88,7 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
 
                                         return <TableRow key={`tableRow-exercise-${index}`}>
                                             <TableCell
+                                                key={`tableCell-exercise-${index}`}
                                                 sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
                                                 {showExercise ? setConfig.exercise?.getTranslation().name : '.'}
                                             </TableCell>
@@ -94,9 +98,9 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
                             </>
                         )}
                         <TableRow key={`tableRow-emtpy-${index}`}>
-                            <TableCell></TableCell>
+                            <TableCell key={`tableCell-emtpy-${index}`}></TableCell>
                         </TableRow>
-                    </>
+                    </div>
                 )}
             </TableBody>
         </Table>
