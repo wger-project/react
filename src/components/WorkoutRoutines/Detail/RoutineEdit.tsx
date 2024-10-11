@@ -77,8 +77,11 @@ export const RoutineEdit = () => {
 
                     <RoutineForm routine={routineQuery.data!} firstDayId={1000} />
 
-                    <DayDragAndDropGrid routineId={routineId} selectedDay={selectedDay}
-                                        setSelectedDay={setSelectedDay} />
+                    <DayDragAndDropGrid
+                        routineId={routineId}
+                        selectedDay={selectedDay}
+                        setSelectedDay={setSelectedDay}
+                    />
 
                     {selectedDay !== null &&
                         <DayDetails

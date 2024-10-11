@@ -1,3 +1,4 @@
+import { LoadingButton } from "@mui/lab";
 import {
     Button,
     Dialog,
@@ -56,7 +57,6 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
     };
 
     const onChange = (text: string, setValue: (value: string) => void) => {
-        // if (text !== '') {
         setValue(text);
 
         if (timer) {
@@ -72,6 +72,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                     fullWidth
                     label="Name"
                     variant="standard"
+                    disabled={isRest}
                     value={name}
                     onChange={e => onChange(e.target.value, setName)}
                 />
@@ -87,10 +88,18 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                     variant="standard"
                     fullWidth
                     value={description}
+                    disabled={isRest}
                     onChange={e => onChange(e.target.value, setDescription)}
                     multiline
                     rows={4}
                 />
+            </Grid>
+            <Grid item xs={12}>
+                {editDayQuery.isLoading &&
+                    <LoadingButton loading variant="text">
+                        &nbsp;
+                    </LoadingButton>
+                }
             </Grid>
         </Grid>
 

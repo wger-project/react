@@ -73,7 +73,7 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
                     <div key={`${props.iteration}-${index}`}>
                         <TableRow key={`tableRow-rest-${index}`}>
                             <TableCell sx={{ backgroundColor: theme.palette.action.hover }}>
-                                <b>{dayData.day === null || dayData.day.isRest  ? t('routines.restDay') : dayData.day.name}</b>
+                                <b>{dayData.day === null || dayData.day.isRest ? t('routines.restDay') : dayData.day.name}</b>
                             </TableCell>
                         </TableRow>
 
