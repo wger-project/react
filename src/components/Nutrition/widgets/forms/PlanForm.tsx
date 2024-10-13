@@ -1,10 +1,8 @@
-import { GolfCourse } from "@mui/icons-material";
 import {
     Button,
     FormControl,
     FormControlLabel,
     FormGroup,
-    FormHelperText,
     InputAdornment,
     InputLabel,
     MenuItem,
@@ -66,7 +64,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             .notRequired()
             .positive() // TODO: allow 0 but not negative
             .max(750, t('forms.maxValue', { value: '750' })),
-            // eslint-disable-next-line camelcase
+        // eslint-disable-next-line camelcase
         goal_fiber: yup
             .number()
             .notRequired()
@@ -147,22 +145,21 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                     />}
                             />
                         </FormGroup>
-                                    <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Goal Setting</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={10}
-                                        label="Goal setting"
-                                        onChange={() => {}}
-                                    >
-                                        <MenuItem value={10}>Based on my meals</MenuItem>
-                                        <MenuItem value={20}>Set basic macros</MenuItem>
-                                        <MenuItem value={30}>Set advanced macros</MenuItem>
-                                    </Select>
-                                    </FormControl>
-                           
-
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Goal Setting</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={10}
+                                label="Goal setting"
+                                onChange={() => {
+                                }}
+                            >
+                                <MenuItem value={10}>Based on my meals</MenuItem>
+                                <MenuItem value={20}>Set basic macros</MenuItem>
+                                <MenuItem value={30}>Set advanced macros</MenuItem>
+                            </Select>
+                        </FormControl>
 
 
                         {useGoals && <>
@@ -246,7 +243,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         {...formik.getFieldProps('goal_fiber')}
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">
-                                            {t('nutrition.valueEnergyKcal', { value: 0 })}
+                                                {t('nutrition.valueEnergyKcal', { value: 0 })}
                                             </InputAdornment>,
                                             endAdornment: <InputAdornment position="end">
                                                 {t('nutrition.gramShort')}

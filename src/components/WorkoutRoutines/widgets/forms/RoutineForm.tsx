@@ -29,9 +29,11 @@ export const RoutineForm = ({ routine, firstDayId, closeFn }: RoutineFormProps) 
             .string()
             .max(25, t('forms.maxLength', { chars: '1000' })),
         start: yup
-            .date(),
+            .date()
+            .required(),
         end: yup
-            .date(),
+            .date()
+            .required()
     });
 
 
@@ -45,6 +47,7 @@ export const RoutineForm = ({ routine, firstDayId, closeFn }: RoutineFormProps) 
                 // eslint-disable-next-line camelcase
                 first_day: firstDayId,
             }}
+
             validationSchema={validationSchema}
             onSubmit={async (values) => {
 
@@ -67,7 +70,6 @@ export const RoutineForm = ({ routine, firstDayId, closeFn }: RoutineFormProps) 
                         <WgerTextField fieldName="description" title={t('description')} />
                         <WgerTextField fieldName="start" title={'start'} />
                         <WgerTextField fieldName="end" title={'end'} />
-
 
                         <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
                             <Button color="primary"

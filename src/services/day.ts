@@ -9,6 +9,7 @@ export interface AddDayParams {
     name: string;
     description: string;
     next_day?: number;
+    is_rest: boolean;
 }
 
 export interface EditDayParams extends Partial<AddDayParams> {

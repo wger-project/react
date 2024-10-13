@@ -266,7 +266,7 @@ const DayDetails = (props: { day: Day, routineId: number }) => {
             <Box height={30} />
 
 
-            <DayForm routineId={props.routineId} day={props.day} />
+            <DayForm routineId={props.routineId} day={props.day} key={`day-form-${props.day.id}`} />
 
             {props.day.slots.map((slot, index) =>
                 <div key={`slot-${slot.id}-${index}`}>
