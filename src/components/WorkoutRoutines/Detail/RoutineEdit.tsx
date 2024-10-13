@@ -10,10 +10,13 @@ import {
     CardActionArea,
     CardActions,
     CardContent,
+    CardHeader,
     Container,
     Divider,
     FormControlLabel,
     IconButton,
+    Snackbar,
+    SnackbarCloseReason,
     Stack,
     Switch,
     Typography,
@@ -24,16 +27,19 @@ import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget"
 import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
 import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import { Day } from "components/WorkoutRoutines/models/Day";
+import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { useEditDayQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
+import { useDeleteSlotQuery } from "components/WorkoutRoutines/queries/slots";
 import { ConfigDetailsField } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
 import { RoutineForm } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
 import { SlotConfigForm } from "components/WorkoutRoutines/widgets/forms/SlotConfigForm";
 import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
 
 export const RoutineEdit = () => {
 
@@ -230,7 +236,7 @@ const DayDragAndDropGrid = (props: {
 const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: number | null) => void }) => {
     const theme = useTheme();
     const color = props.isSelected ? theme.palette.primary.light : props.day.isRest ? theme.palette.action.disabled : '';
-    const sx = { backgroundColor: color };
+    const sx = { backgroundColor: color, aspectRatio: '1 / 1', minHeight: 175 };
     const [t] = useTranslation();
 
     const setSelected = () => {
@@ -239,10 +245,8 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
 
     return (
         <Card sx={sx}>
+            <CardHeader title={props.day.isRest ? t('routines.restDay') : props.day.name} />
             <CardContent>
-                <Typography variant="h6">
-                    {props.day.isRest ? t('routines.restDay') : props.day.name}
-                </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     {props.day.isRest && <HotelIcon />}
                 </Typography>
@@ -255,6 +259,44 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
 };
 
 const DayDetails = (props: { day: Day, routineId: number }) => {
+
+    const deleteSlotQuery = useDeleteSlotQuery(props.routineId);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [slotToDelete, setSlotToDelete] = useState<Slot | null>(null);
+
+    const handleCloseSnackbar = (
+        event: React.SyntheticEvent | Event,
+        reason?: SnackbarCloseReason,
+    ) => {
+        if (slotToDelete !== null) {
+            if (reason === 'timeout') {
+                // Delete on the server
+                // deleteSlotQuery.mutate(slotToDelete.id);
+                setSlotToDelete(null);
+            } else if (reason !== 'clickaway') {
+                // Undo the deletion - re-add the slot using its sort value
+                props.day.slots = [...props.day.slots, slotToDelete].sort((a, b) => a.order - b.order);
+                setSlotToDelete(null);
+            }
+        }
+
+        setOpenSnackbar(false);
+    };
+
+    const handleDeleteSlot = (slotId: number) => {
+        const slotIndex = props.day.slots.findIndex(slot => slot.id === slotId);
+
+        if (slotIndex !== -1) {
+            const updatedSlots = [...props.day.slots];
+            const [deletedSlot] = updatedSlots.splice(slotIndex, 1);
+            props.day.slots = updatedSlots;
+
+            setSlotToDelete(deletedSlot);
+            setOpenSnackbar(true);
+        }
+    };
+
+
     return (
         <>
             <Typography variant={"h4"}>
@@ -271,7 +313,10 @@ const DayDetails = (props: { day: Day, routineId: number }) => {
             {props.day.slots.map((slot, index) =>
                 <div key={`slot-${slot.id}-${index}`}>
                     <Typography variant={"h5"} gutterBottom>
-                        <b>Set {index + 1} (Slot-ID {slot.id})</b>
+                        Set {index + 1} (Slot-ID {slot.id})
+                        <IconButton onClick={() => handleDeleteSlot(slot.id)}>
+                            <DeleteIcon />
+                        </IconButton>
                     </Typography>
 
                     <SlotForm routineId={props.routineId} slot={slot} />
@@ -317,9 +362,17 @@ const DayDetails = (props: { day: Day, routineId: number }) => {
                     <Divider sx={{ mt: 2, mb: 2 }} />
                 </div>
             )}
-            <IconButton>
-                <AddIcon />
-            </IconButton>
+
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={SNACKBAR_AUTO_HIDE_DURATION}
+                onClose={handleCloseSnackbar}
+                message="Set successfully deleted"
+                action={<Button color="info" size="small" onClick={handleCloseSnackbar}>Undo</Button>}
+            >
+            </Snackbar>
+
+            <Button variant="contained" color="primary" startIcon={<AddIcon />}>Add set</Button>
         </>
     );
 };
