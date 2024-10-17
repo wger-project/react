@@ -5,11 +5,9 @@ import { makeHeader, makeUrl } from "utils/url";
 
 
 export interface AddSlotParams {
+    day: number;
     order: number;
     comment: string;
-    description: string;
-    next_day?: number;
-    is_rest: boolean;
 }
 
 export interface EditSlotParams extends Partial<AddSlotParams> {

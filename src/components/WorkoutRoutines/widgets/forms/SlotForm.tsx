@@ -1,13 +1,41 @@
-import { TextField } from "@mui/material";
+import { CircularProgress, TextField } from "@mui/material";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
-import React from "react";
+import { useEditSlotQuery } from "components/WorkoutRoutines/queries/slots";
+import React, { useState } from "react";
+import { useDebounce } from "use-debounce";
 
 export const SlotForm = (props: { slot: Slot, routineId: number }) => {
+    const editSlotQuery = useEditSlotQuery(props.routineId);
+    const [slotComment, setSlotComment] = useState<string>(props.slot.comment);
+    const [debouncedSlotData] = useDebounce(slotComment, 500);
+    const [isEditing, setIsEditing] = useState(false);
 
-    return <>
-        <TextField
-            label="Comment"
-            variant="standard"
-        />
-    </>;
+    const handleChange = (value: string) => {
+        setIsEditing(true);
+        setSlotComment(value);
+    };
+
+    const handleBlur = () => {
+        if (isEditing) {
+            editSlotQuery.mutate({ id: props.slot.id, comment: debouncedSlotData });
+            setIsEditing(false);
+        }
+    };
+
+    return (
+        <>
+            <TextField
+                label="Comment"
+                variant="standard"
+                fullWidth
+                size={"small"}
+                value={slotComment}
+                onChange={(e) => handleChange(e.target.value)}
+                onBlur={handleBlur} // Call handleBlur when input loses focus
+                InputProps={{
+                    endAdornment: editSlotQuery.isLoading && <CircularProgress size={20} />,
+                }}
+            />
+        </>
+    );
 };
