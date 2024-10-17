@@ -1,14 +1,34 @@
 import { Box, Grid, Typography } from "@mui/material";
+import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
+import { SlotConfig } from "components/WorkoutRoutines/models/SlotConfig";
 import { ConfigDetailsField } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import { SlotConfigForm } from "components/WorkoutRoutines/widgets/forms/SlotConfigForm";
 import React from "react";
+
+const configTypes = ["weight", "max-weight", "reps", "max-reps", "sets", "rest", "max-rest", "rir"] as const;
+type ConfigType = typeof configTypes[number];
+
+const getConfigComponent = (type: ConfigType, configs: BaseConfig[], routineId: number, slotId: number) => {
+    return configs.length > 0
+        ?
+        <ConfigDetailsField
+            config={configs[0]}
+            type={type}
+            routineId={routineId} />
+
+        : <ConfigDetailsField
+            type={type}
+            routineId={routineId}
+            slotId={slotId} />
+        ;
+};
 
 export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: boolean }) => {
 
     return (
         <>
-            {props.slot.configs.map((slotConfig) => (
+            {props.slot.configs.map((slotConfig: SlotConfig) => (
                 <React.Fragment key={slotConfig.id}>
                     <p>
                         <small>SlotConfigId {slotConfig.id}</small>
@@ -25,25 +45,21 @@ export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: 
                         {props.simpleMode ? (
                             // Show only weight, reps, and sets in simple mode
                             <>
-                                {slotConfig.weightConfigs.map((config) => (
-                                    <Grid item xs={12} sm={4} key={`weight-${config.id}`}>
-                                        <ConfigDetailsField config={config} type="weight" routineId={props.routineId} />
-                                    </Grid>
-                                ))}
-                                {slotConfig.repsConfigs.map((config) => (
-                                    <Grid item xs={12} sm={4} key={`reps-${config.id}`}>
-                                        <ConfigDetailsField config={config} type="reps" routineId={props.routineId} />
-                                    </Grid>
-                                ))}
-                                {slotConfig.nrOfSetsConfigs.map((config) => (
-                                    <Grid item xs={12} sm={4} key={`sets-${config.id}`}>
-                                        <ConfigDetailsField config={config} type="sets" routineId={props.routineId} />
-                                    </Grid>
-                                ))}
+                                <Grid item xs={12} sm={4} key={`sets-config-${slotConfig.id}`}>
+                                    {getConfigComponent('sets', slotConfig.nrOfSetsConfigs, props.routineId, slotConfig.id)}
+                                </Grid>
+                                <Grid item xs={12} sm={4} key={`weight-config-${slotConfig.id}`}>
+                                    {getConfigComponent('weight', slotConfig.weightConfigs, props.routineId, slotConfig.id)}
+                                </Grid>
+                                <Grid item xs={12} sm={4} key={`reps-config-${slotConfig.id}`}>
+                                    {getConfigComponent('reps', slotConfig.repsConfigs, props.routineId, slotConfig.id)}
+                                </Grid>
+
                             </>
                         ) : (
                             // Show all config details in advanced mode, also in a grid
                             <>
+                                <h1>TODO!</h1>
                                 {slotConfig.weightConfigs.map((config) => (
                                     <Grid item xs={12} sm={4} key={`weight-${config.id}`}>
                                         <ConfigDetailsField config={config} type="weight" routineId={props.routineId} />

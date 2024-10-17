@@ -9,6 +9,14 @@ import {
     addRestConfig,
     addRirConfig,
     addWeightConfig,
+    deleteMaxRepsConfig,
+    deleteMaxRestConfig,
+    deleteMaxWeightConfig,
+    deleteNrOfSetsConfig,
+    deleteRepsConfig,
+    deleteRestConfig,
+    deleteRirConfig,
+    deleteWeightConfig,
     EditBaseConfigParams,
     editMaxRepsConfig,
     editMaxRestConfig,
@@ -22,6 +30,9 @@ import {
 import { QueryKey, } from "utils/consts";
 
 
+/*
+ * Weight config
+ */
 export const useEditWeightConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
@@ -30,7 +41,6 @@ export const useEditWeightConfigQuery = (routineId: number) => {
         onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
     });
 };
-
 export const useAddWeightConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
@@ -39,7 +49,19 @@ export const useAddWeightConfigQuery = (routineId: number) => {
         onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
     });
 };
+export const useDeleteWeightConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
 
+    return useMutation({
+        mutationFn: (id: number) => deleteWeightConfig(id),
+        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+    });
+};
+
+
+/*
+ * Max Weight config
+ */
 export const useEditMaxWeightConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
@@ -48,7 +70,6 @@ export const useEditMaxWeightConfigQuery = (routineId: number) => {
         onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
     });
 };
-
 export const useAddMaxWeightConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
@@ -57,7 +78,18 @@ export const useAddMaxWeightConfigQuery = (routineId: number) => {
         onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
     });
 };
+export const useDeleteMaxWeightConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
 
+    return useMutation({
+        mutationFn: (id: number) => deleteMaxWeightConfig(id),
+        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+    });
+};
+
+/*
+ * Reps config
+ */
 export const useEditRepsConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
@@ -74,7 +106,18 @@ export const useAddRepsConfigQuery = (routineId: number) => {
         onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
     });
 };
+export const useDeleteRepsConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
 
+    return useMutation({
+        mutationFn: (id: number) => deleteRepsConfig(id),
+        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+    });
+};
+
+/*
+ * Max Reps config
+ */
 export const useEditMaxRepsConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
@@ -91,7 +134,18 @@ export const useAddMaxRepsConfigQuery = (routineId: number) => {
         onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
     });
 };
+export const useDeleteMaxRepsConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
 
+    return useMutation({
+        mutationFn: (id: number) => deleteMaxRepsConfig(id),
+        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+    });
+};
+
+/*
+ * Nr of Sets config
+ */
 export const useEditNrOfSetsConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
@@ -108,7 +162,18 @@ export const useAddNrOfSetsConfigQuery = (routineId: number) => {
         onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
     });
 };
+export const useDeleteNrOfSetsConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
 
+    return useMutation({
+        mutationFn: (id: number) => deleteNrOfSetsConfig(id),
+        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+    });
+};
+
+/*
+ * RiR
+ */
 export const useEditRiRConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
@@ -125,7 +190,18 @@ export const useAddRiRConfigQuery = (routineId: number) => {
         onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
     });
 };
+export const useDeleteRiRConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
 
+    return useMutation({
+        mutationFn: (id: number) => deleteRirConfig(id),
+        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+    });
+};
+
+/*
+ * Rest time config
+ */
 export const useEditRestConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
@@ -142,7 +218,18 @@ export const useAddRestConfigQuery = (routineId: number) => {
         onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
     });
 };
+export const useDeleteRestConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
 
+    return useMutation({
+        mutationFn: (id: number) => deleteRestConfig(id),
+        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+    });
+};
+
+/*
+ * Max Rest time config
+ */
 export const useEditMaxRestConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
@@ -156,6 +243,14 @@ export const useAddMaxRestConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: AddBaseConfigParams) => addMaxRestConfig(data),
+        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+    });
+};
+export const useDeleteMaxRestConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: number) => deleteMaxRestConfig(id),
         onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
     });
 };

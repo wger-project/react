@@ -18,7 +18,15 @@ export {
     useEditNrOfSetsConfigQuery,
     useEditRepsConfigQuery,
     useEditRestConfigQuery,
-    useEditRiRConfigQuery
+    useEditRiRConfigQuery,
+    useDeleteWeightConfigQuery,
+    useDeleteMaxWeightConfigQuery,
+    useDeleteRepsConfigQuery,
+    useDeleteMaxRepsConfigQuery,
+    useDeleteNrOfSetsConfigQuery,
+    useDeleteRiRConfigQuery,
+    useDeleteRestConfigQuery,
+    useDeleteMaxRestConfigQuery
 } from './configs';
 
 export { useEditDayQuery } from './days';
