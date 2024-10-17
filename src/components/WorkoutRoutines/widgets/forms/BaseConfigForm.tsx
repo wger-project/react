@@ -127,8 +127,12 @@ export const ConfigDetailsField = (props: {
 
     return (<>
         <TextField
+            inputProps={{
+                "data-testid": `${props.type}-field`,
+            }}
             label={props.type}
             value={value}
+            fullWidth
             onChange={e => onChange(e.target.value)}
             InputProps={{
                 endAdornment: (editQueryHook.isLoading || addQueryHook.isLoading) && <CircularProgress size={20} />

@@ -43,66 +43,44 @@ export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: 
 
                     <Grid container spacing={2}>
                         {props.simpleMode ? (
-                            // Show only weight, reps, and sets in simple mode
                             <>
-                                <Grid item xs={12} sm={4} key={`sets-config-${slotConfig.id}`}>
+                                <Grid item xs={12} sm={3} key={`sets-config-${slotConfig.id}`}>
                                     {getConfigComponent('sets', slotConfig.nrOfSetsConfigs, props.routineId, slotConfig.id)}
                                 </Grid>
-                                <Grid item xs={12} sm={4} key={`weight-config-${slotConfig.id}`}>
+                                <Grid item xs={12} sm={3} key={`weight-config-${slotConfig.id}`}>
                                     {getConfigComponent('weight', slotConfig.weightConfigs, props.routineId, slotConfig.id)}
                                 </Grid>
-                                <Grid item xs={12} sm={4} key={`reps-config-${slotConfig.id}`}>
+                                <Grid item xs={12} sm={3} key={`reps-config-${slotConfig.id}`}>
                                     {getConfigComponent('reps', slotConfig.repsConfigs, props.routineId, slotConfig.id)}
                                 </Grid>
-
                             </>
                         ) : (
                             // Show all config details in advanced mode, also in a grid
                             <>
-                                <h1>TODO!</h1>
-                                {slotConfig.weightConfigs.map((config) => (
-                                    <Grid item xs={12} sm={4} key={`weight-${config.id}`}>
-                                        <ConfigDetailsField config={config} type="weight" routineId={props.routineId} />
-                                    </Grid>
-                                ))}
-                                {slotConfig.maxWeightConfigs.map((config) => (
-                                    <Grid item xs={12} sm={4} key={`max-weight-${config.id}`}>
-                                        <ConfigDetailsField config={config} type="max-weight"
-                                                            routineId={props.routineId} />
-                                    </Grid>
-                                ))}
-                                {slotConfig.repsConfigs.map((config) => (
-                                    <Grid item xs={12} sm={4} key={`reps-${config.id}`}>
-                                        <ConfigDetailsField config={config} type="reps" routineId={props.routineId} />
-                                    </Grid>
-                                ))}
-                                {slotConfig.maxRepsConfigs.map((config) => (
-                                    <Grid item xs={12} sm={4} key={`max-reps-${config.id}`}>
-                                        <ConfigDetailsField config={config} type="max-reps"
-                                                            routineId={props.routineId} />
-                                    </Grid>
-                                ))}
-                                {slotConfig.nrOfSetsConfigs.map((config) => (
-                                    <Grid item xs={12} sm={4} key={`sets-${config.id}`}>
-                                        <ConfigDetailsField config={config} type="sets" routineId={props.routineId} />
-                                    </Grid>
-                                ))}
-                                {slotConfig.restTimeConfigs.map((config) => (
-                                    <Grid item xs={12} sm={4} key={`rest-${config.id}`}>
-                                        <ConfigDetailsField config={config} type="rest" routineId={props.routineId} />
-                                    </Grid>
-                                ))}
-                                {slotConfig.maxRestTimeConfigs.map((config) => (
-                                    <Grid item xs={12} sm={4} key={`max-rest-${config.id}`}>
-                                        <ConfigDetailsField config={config} type="max-rest"
-                                                            routineId={props.routineId} />
-                                    </Grid>
-                                ))}
-                                {slotConfig.rirConfigs.map((config) => (
-                                    <Grid item xs={12} sm={4} key={`rir-${config.id}`}>
-                                        <ConfigDetailsField config={config} type="rir" routineId={props.routineId} />
-                                    </Grid>
-                                ))}
+                                <Grid item xs={12} sm={2} key={`sets-config-${slotConfig.id}`}>
+                                    {getConfigComponent('sets', slotConfig.nrOfSetsConfigs, props.routineId, slotConfig.id)}
+                                </Grid>
+                                <Grid item xs={12} sm={2} key={`weight-config-${slotConfig.id}`}>
+                                    {getConfigComponent('weight', slotConfig.weightConfigs, props.routineId, slotConfig.id)}
+                                </Grid>
+                                <Grid item xs={12} sm={1} key={`max-weight-config-${slotConfig.id}`}>
+                                    {getConfigComponent('max-weight', slotConfig.maxWeightConfigs, props.routineId, slotConfig.id)}
+                                </Grid>
+                                <Grid item xs={12} sm={2} key={`reps-config-${slotConfig.id}`}>
+                                    {getConfigComponent('reps', slotConfig.repsConfigs, props.routineId, slotConfig.id)}
+                                </Grid>
+                                <Grid item xs={12} sm={1} key={`max-reps-config-${slotConfig.id}`}>
+                                    {getConfigComponent('max-reps', slotConfig.maxRepsConfigs, props.routineId, slotConfig.id)}
+                                </Grid>
+                                <Grid item xs={12} sm={2} key={`rir-config-${slotConfig.id}`}>
+                                    {getConfigComponent('rir', slotConfig.rirConfigs, props.routineId, slotConfig.id)}
+                                </Grid>
+                                <Grid item xs={12} sm={1} key={`rest-config-${slotConfig.id}`}>
+                                    {getConfigComponent('rest', slotConfig.restTimeConfigs, props.routineId, slotConfig.id)}
+                                </Grid>
+                                <Grid item xs={12} sm={1} key={`max-rest-config-${slotConfig.id}`}>
+                                    {getConfigComponent('max-rest', slotConfig.maxRestTimeConfigs, props.routineId, slotConfig.id)}
+                                </Grid>
                             </>
                         )}
                     </Grid>
