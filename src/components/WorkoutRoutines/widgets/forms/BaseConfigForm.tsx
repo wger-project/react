@@ -1,6 +1,14 @@
 import { TextField } from "@mui/material";
 import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
 import {
+    useAddMaxRepsConfigQuery,
+    useAddMaxRestConfigQuery,
+    useAddMaxWeightConfigQuery,
+    useAddNrOfSetsConfigQuery,
+    useAddRepsConfigQuery,
+    useAddRestConfigQuery,
+    useAddRiRConfigQuery,
+    useAddWeightConfigQuery,
     useEditMaxRepsConfigQuery,
     useEditMaxRestConfigQuery,
     useEditMaxWeightConfigQuery,
@@ -13,21 +21,29 @@ import {
 import React, { useState } from "react";
 import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
 
+const QUERY_MAP: { [key: string]: any } = {
+    'weight': { edit: useEditWeightConfigQuery, add: useAddWeightConfigQuery },
+    'max-weight': { edit: useEditMaxWeightConfigQuery, add: useAddMaxWeightConfigQuery },
+    'reps': { edit: useEditRepsConfigQuery, add: useAddRepsConfigQuery },
+    'max-reps': { edit: useEditMaxRepsConfigQuery, add: useAddMaxRepsConfigQuery },
+    'sets': { edit: useEditNrOfSetsConfigQuery, add: useAddNrOfSetsConfigQuery },
+    'rest': { edit: useEditRestConfigQuery, add: useAddRestConfigQuery },
+    'max-rest': { edit: useEditMaxRestConfigQuery, add: useAddMaxRestConfigQuery },
+    'rir': { edit: useEditRiRConfigQuery, add: useAddRiRConfigQuery },
+};
+
 
 export const ConfigDetailsField = (props: {
     config: BaseConfig,
     routineId: number,
+    slotId: number,
     type: 'weight' | 'max-weight' | 'reps' | 'max-reps' | 'sets' | 'rest' | 'max-rest' | 'rir'
 }) => {
 
-    const editWeightQuery = useEditWeightConfigQuery(props.routineId);
-    const editMaxWeightQuery = useEditMaxWeightConfigQuery(props.routineId);
-    const editRepsQuery = useEditRepsConfigQuery(props.routineId);
-    const editMaxRepsQuery = useEditMaxRepsConfigQuery(props.routineId);
-    const editNrOfSetsQuery = useEditNrOfSetsConfigQuery(props.routineId);
-    const editRiRQuery = useEditRiRConfigQuery(props.routineId);
-    const editRestQuery = useEditRestConfigQuery(props.routineId);
-    const editMaxRestQuery = useEditMaxRestConfigQuery(props.routineId);
+    const { edit: editQuery, add: addQuery } = QUERY_MAP[props.type];
+    const editQueryHook = editQuery(props.routineId);
+    const addQueryHook = addQuery(props.routineId);
+
 
     const [value, setValue] = useState(props.config.value);
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
@@ -35,45 +51,18 @@ export const ConfigDetailsField = (props: {
     const handleData = (value: string) => {
 
         const data = {
-            id: props.config.id,
             // eslint-disable-next-line camelcase
-            slot_config: props.config.slotConfigId,
+            slot_config: props.slotId,
             value: parseFloat(value)
         };
 
-        switch (props.type) {
-            case 'weight':
-                editWeightQuery.mutate(data);
-                break;
-
-            case "max-weight":
-                editMaxWeightQuery.mutate(data);
-                break;
-
-            case 'reps':
-                editRepsQuery.mutate(data);
-                break;
-
-            case "max-reps":
-                editMaxRepsQuery.mutate(data);
-                break;
-
-            case 'sets':
-                editNrOfSetsQuery.mutate(data);
-                break;
-
-            case 'rir':
-                editRiRQuery.mutate(data);
-                break;
-
-            case 'rest':
-                editRestQuery.mutate(data);
-                break;
-
-            case "max-rest":
-                editMaxRestQuery.mutate(data);
-                break;
+        if (props.config) {
+            editQueryHook.mutate({ id: props.config.id, ...data });
+        } else {
+            addQueryHook.mutate({ slot: props.slotId, ...data });
         }
+
+
     };
 
     const onChange = (text: string) => {
@@ -87,14 +76,12 @@ export const ConfigDetailsField = (props: {
         setTimer(setTimeout(() => handleData(text), DEBOUNCE_ROUTINE_FORMS));
     };
 
-    return (
-        <>
-            <TextField
-                key={props.config.id}
-                label={props.type}
-                value={value}
-                onChange={e => onChange(e.target.value)}
-            />
-        </>
-    );
+    return (<>
+        <TextField
+            key={props.config.id}
+            label={props.type}
+            value={value}
+            onChange={e => onChange(e.target.value)}
+        />
+    </>);
 };

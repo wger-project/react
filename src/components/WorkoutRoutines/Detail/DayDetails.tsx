@@ -19,14 +19,13 @@ import {
     useTheme
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import { SlotDetails } from "components/WorkoutRoutines/Detail/SlotDetails";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { useEditDayQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
 import { useDeleteSlotQuery, useEditSlotQuery } from "components/WorkoutRoutines/queries/slots";
-import { ConfigDetailsField } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
-import { SlotConfigForm } from "components/WorkoutRoutines/widgets/forms/SlotConfigForm";
 import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -233,7 +232,7 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
             {props.day.slots.map((slot, index) =>
                 <div key={`slot-${slot.id}-${index}`}>
                     <Typography variant={"h5"} gutterBottom>
-                        Set {index + 1} (Slot-ID {slot.id})
+                        Set {index + 1} <small>(Slot-ID {slot.id})</small>
                         <IconButton onClick={() => handleDeleteSlot(slot.id)}>
                             <DeleteIcon />
                         </IconButton>
@@ -241,44 +240,8 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
 
                     <SlotForm routineId={props.routineId} slot={slot} key={`slot-form-${slot.id}`} />
 
-                    {slot.configs.map((slotConfig) =>
-                        <>
-                            <p>
-                                SlotConfigId {slotConfig.id}
-                            </p>
+                    <SlotDetails slot={slot} routineId={props.routineId} simpleMode={props.simpleMode} />
 
-                            <Typography variant={"h6"} gutterBottom>
-                                {slotConfig.exercise?.getTranslation().name}
-                            </Typography>
-
-                            <SlotConfigForm routineId={props.routineId} slotConfig={slotConfig} />
-
-                            {slotConfig.weightConfigs.map((config) =>
-                                <ConfigDetailsField config={config} type="weight" routineId={props.routineId} />
-                            )}
-                            {slotConfig.maxWeightConfigs.map((config) =>
-                                <ConfigDetailsField config={config} type="max-weight" routineId={props.routineId} />
-                            )}
-                            {slotConfig.repsConfigs.map((config) =>
-                                <ConfigDetailsField config={config} type="reps" routineId={props.routineId} />
-                            )}
-                            {slotConfig.maxRepsConfigs.map((config) =>
-                                <ConfigDetailsField config={config} type="max-reps" routineId={props.routineId} />
-                            )}
-                            {slotConfig.nrOfSetsConfigs.map((config) =>
-                                <ConfigDetailsField config={config} type="sets" routineId={props.routineId} />
-                            )}
-                            {slotConfig.restTimeConfigs.map((config) =>
-                                <ConfigDetailsField config={config} type="rest" routineId={props.routineId} />
-                            )}
-                            {slotConfig.maxRestTimeConfigs.map((config) =>
-                                <ConfigDetailsField config={config} type="max-rest" routineId={props.routineId} />
-                            )}
-                            {slotConfig.rirConfigs.map((config) =>
-                                <ConfigDetailsField config={config} type="rir" routineId={props.routineId} />
-                            )}
-                        </>
-                    )}
                     <Divider sx={{ mt: 2, mb: 2 }} />
                 </div>
             )}
@@ -296,3 +259,5 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
         </>
     );
 };
+
+

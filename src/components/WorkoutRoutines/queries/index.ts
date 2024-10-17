@@ -3,6 +3,14 @@ export {
 } from './routines';
 
 export {
+    useAddWeightConfigQuery,
+    useAddMaxWeightConfigQuery,
+    useAddRepsConfigQuery,
+    useAddMaxRepsConfigQuery,
+    useAddNrOfSetsConfigQuery,
+    useAddRiRConfigQuery,
+    useAddRestConfigQuery,
+    useAddMaxRestConfigQuery,
     useEditWeightConfigQuery,
     useEditMaxRepsConfigQuery,
     useEditMaxRestConfigQuery,
