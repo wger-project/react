@@ -242,6 +242,9 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
 
                     <SlotDetails slot={slot} routineId={props.routineId} simpleMode={props.simpleMode} />
 
+                    <Button variant={"outlined"} onClick={() => console.log("add superset")} size={"small"}>
+                        add superset
+                    </Button>
                     <Divider sx={{ mt: 2, mb: 2 }} />
                 </div>
             )}

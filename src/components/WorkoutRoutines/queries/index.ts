@@ -32,3 +32,8 @@ export {
 export { useEditDayQuery } from './days';
 
 export { useRoutineLogQuery, } from "./logs";
+
+export {
+    useDeleteSlotConfigQuery,
+    useEditSlotConfigQuery,
+} from "./slot_configs";

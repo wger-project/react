@@ -91,7 +91,7 @@ export function ExerciseDeleteDialog(props: {
             <p>{t('exercises.replacementsSearch')}</p>
 
             <NameAutocompleter
-                callback={(exercise: ExerciseSearchResponse) => {
+                callback={(exercise: ExerciseSearchResponse | null) => {
                     if (exercise !== null) {
                         setReplacementId(exercise.data.base_id);
                         loadCurrentReplacement(exercise.data.base_id);

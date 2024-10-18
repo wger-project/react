@@ -15,8 +15,8 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { ExerciseSearchResponse } from "services/responseType";
 import { makeLink, WgerLink } from "utils/url";
-import { FilterDrawer } from './Filter/FilterDrawer';
 import { ExerciseFiltersContext } from './Filter/ExerciseFiltersContext';
+import { FilterDrawer } from './Filter/FilterDrawer';
 
 const ContributeExerciseBanner = () => {
     const [t, i18n] = useTranslation();
@@ -74,7 +74,7 @@ export const ExerciseOverviewList = () => {
     const basesQuery = useExercisesQuery();
     const [t, i18n] = useTranslation();
     const navigate = useNavigate();
-    const { selectedCategories, selectedEquipment, selectedMuscles} = useContext(ExerciseFiltersContext);
+    const { selectedCategories, selectedEquipment, selectedMuscles } = useContext(ExerciseFiltersContext);
     const isMobile = useMediaQuery('(max-width:600px)');
 
     const [page, setPage] = React.useState(1);
@@ -132,7 +132,11 @@ export const ExerciseOverviewList = () => {
         page * ITEMS_PER_PAGE
     );
 
-    const exerciseAdded = (exerciseResponse: ExerciseSearchResponse) => {
+    const exerciseAdded = (exerciseResponse: ExerciseSearchResponse | null) => {
+        if (!exerciseResponse) {
+            return;
+        }
+
         navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: exerciseResponse.data.base_id }));
     };
 

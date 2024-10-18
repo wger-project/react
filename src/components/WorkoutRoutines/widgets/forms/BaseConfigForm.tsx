@@ -125,6 +125,8 @@ export const ConfigDetailsField = (props: {
         setTimer(setTimeout(() => handleData(text), DEBOUNCE_ROUTINE_FORMS));
     };
 
+    const isLoading = editQueryHook.isLoading || addQueryHook.isLoading || deleteQueryHook.isLoading;
+
     return (<>
         <TextField
             inputProps={{
@@ -133,9 +135,10 @@ export const ConfigDetailsField = (props: {
             label={props.type}
             value={value}
             fullWidth
+            disabled={isLoading}
             onChange={e => onChange(e.target.value)}
             InputProps={{
-                endAdornment: (editQueryHook.isLoading || addQueryHook.isLoading) && <CircularProgress size={20} />
+                endAdornment: isLoading && <CircularProgress size={20} />
             }}
         />
     </>);

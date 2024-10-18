@@ -22,7 +22,7 @@ import { ExerciseSearchResponse } from "services/responseType";
 import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 
 type NameAutocompleterProps = {
-    callback: Function;
+    callback: (exerciseResponse: ExerciseSearchResponse | null) => void;
 }
 
 export function NameAutocompleter({ callback }: NameAutocompleterProps) {

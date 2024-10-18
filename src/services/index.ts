@@ -48,3 +48,4 @@ export { searchIngredient, getIngredient } from './ingredient';
 export { addMealItem, editMealItem, deleteMealItem } from './mealItem';
 export { getMealsForPlan, addMeal, editMeal, deleteMeal } from './meal';
 export { getRoutineLogs } from "./workoutLogs";
+export { editSlotConfig, deleteSlotConfig } from './slot_config'
