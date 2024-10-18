@@ -1,13 +1,12 @@
 import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from '@mui/icons-material/EditOff';
-import { Box, Grid, IconButton, Typography } from "@mui/material";
+import { Grid, IconButton, Typography } from "@mui/material";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { SlotConfig } from "components/WorkoutRoutines/models/SlotConfig";
 import { useEditSlotConfigQuery } from "components/WorkoutRoutines/queries";
 import { ConfigDetailsField } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
-import { SlotConfigForm } from "components/WorkoutRoutines/widgets/forms/SlotConfigForm";
 import React, { useState } from "react";
 import { ExerciseSearchResponse } from "services/responseType";
 
@@ -58,30 +57,33 @@ export const SlotConfigDetails = (props: { slotConfig: SlotConfig, routineId: nu
         }
 
         editSlotQuery.mutate({ id: props.slotConfig.id, exercise: searchResponse.data.base_id });
+        setEditExercise(false);
     };
 
     return (
         <React.Fragment key={props.slotConfig.id}>
-            <p>
-                <small>SlotConfigId {props.slotConfig.id}</small>
-            </p>
-
-
-            <Typography variant={"h6"} gutterBottom>
-                {props.slotConfig.exercise?.getTranslation().name}
-
-                <IconButton size={"small"} onClick={toggleEditExercise}>
-                    {editExercise ? <EditOffIcon /> : <EditIcon />}
-                </IconButton>
-            </Typography>
-
-
-            {editExercise && <NameAutocompleter callback={handleExerciseChange} />}
-
-            <SlotConfigForm routineId={props.routineId} slotConfig={props.slotConfig} />
-            <Box height={40} />
 
             <Grid container spacing={2}>
+                <Grid item xs={12} sm={3}>
+                    <Typography variant={"h6"} gutterBottom>
+                        {props.slotConfig.exercise?.getTranslation().name}
+
+                        <IconButton size={"small"} onClick={toggleEditExercise}>
+                            {editExercise ? <EditOffIcon /> : <EditIcon />}
+                        </IconButton>
+                    </Typography>
+                </Grid>
+                {editExercise
+                    && <>
+                        <Grid item xs={9}>
+                            <NameAutocompleter callback={handleExerciseChange} />
+                        </Grid><Grid item xs={12} sm={3} />
+                    </>
+                }
+
+                {/*<SlotConfigForm routineId={props.routineId} slotConfig={props.slotConfig} />*/}
+
+
                 {props.simpleMode ? (
                     <>
                         <Grid item xs={12} sm={3} key={`sets-config-${props.slotConfig.id}`}>
@@ -103,22 +105,27 @@ export const SlotConfigDetails = (props: { slotConfig: SlotConfig, routineId: nu
                         <Grid item xs={12} sm={2} key={`weight-config-${props.slotConfig.id}`}>
                             {getConfigComponent('weight', props.slotConfig.weightConfigs, props.routineId, props.slotConfig.id)}
                         </Grid>
-                        <Grid item xs={12} sm={1} key={`max-weight-config-${props.slotConfig.id}`}>
+                        <Grid item xs={12} sm={2} key={`max-weight-config-${props.slotConfig.id}`}>
                             {getConfigComponent('max-weight', props.slotConfig.maxWeightConfigs, props.routineId, props.slotConfig.id)}
-                        </Grid>
-                        <Grid item xs={12} sm={2} key={`reps-config-${props.slotConfig.id}`}>
-                            {getConfigComponent('reps', props.slotConfig.repsConfigs, props.routineId, props.slotConfig.id)}
-                        </Grid>
-                        <Grid item xs={12} sm={1} key={`max-reps-config-${props.slotConfig.id}`}>
-                            {getConfigComponent('max-reps', props.slotConfig.maxRepsConfigs, props.routineId, props.slotConfig.id)}
                         </Grid>
                         <Grid item xs={12} sm={2} key={`rir-config-${props.slotConfig.id}`}>
                             {getConfigComponent('rir', props.slotConfig.rirConfigs, props.routineId, props.slotConfig.id)}
                         </Grid>
-                        <Grid item xs={12} sm={1} key={`rest-config-${props.slotConfig.id}`}>
+
+                        <Grid item xs={12} sm={3}>
+
+                        </Grid>
+                        <Grid item xs={12} sm={2} key={`reps-config-${props.slotConfig.id}`}>
+                            {getConfigComponent('reps', props.slotConfig.repsConfigs, props.routineId, props.slotConfig.id)}
+                        </Grid>
+                        <Grid item xs={12} sm={2} key={`max-reps-config-${props.slotConfig.id}`}>
+                            {getConfigComponent('max-reps', props.slotConfig.maxRepsConfigs, props.routineId, props.slotConfig.id)}
+                        </Grid>
+
+                        <Grid item xs={12} sm={2} key={`rest-config-${props.slotConfig.id}`}>
                             {getConfigComponent('rest', props.slotConfig.restTimeConfigs, props.routineId, props.slotConfig.id)}
                         </Grid>
-                        <Grid item xs={12} sm={1} key={`max-rest-config-${props.slotConfig.id}`}>
+                        <Grid item xs={12} sm={2} key={`max-rest-config-${props.slotConfig.id}`}>
                             {getConfigComponent('max-rest', props.slotConfig.maxRestTimeConfigs, props.routineId, props.slotConfig.id)}
                         </Grid>
                     </>

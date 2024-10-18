@@ -228,23 +228,32 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
 
 
             <DayForm routineId={props.routineId} day={props.day} key={`day-form-${props.day.id}`} />
+            <Box height={40} />
 
             {props.day.slots.map((slot, index) =>
                 <div key={`slot-${slot.id}-${index}`}>
-                    <Typography variant={"h5"} gutterBottom>
-                        Set {index + 1} <small>(Slot-ID {slot.id})</small>
-                        <IconButton onClick={() => handleDeleteSlot(slot.id)}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Typography>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={3}>
+                            <Typography variant={"h5"} gutterBottom>
+                                Set {index + 1}
+                                <IconButton onClick={() => handleDeleteSlot(slot.id)}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={9}>
+                            <SlotForm routineId={props.routineId} slot={slot} key={`slot-form-${slot.id}`} />
+                        </Grid>
+                    </Grid>
 
-                    <SlotForm routineId={props.routineId} slot={slot} key={`slot-form-${slot.id}`} />
-
+                    <Box height={10} />
                     <SlotDetails slot={slot} routineId={props.routineId} simpleMode={props.simpleMode} />
 
                     <Button variant={"outlined"} onClick={() => console.log("add superset")} size={"small"}>
                         add superset
                     </Button>
+
+                    <Box height={20} />
                     <Divider sx={{ mt: 2, mb: 2 }} />
                 </div>
             )}

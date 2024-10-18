@@ -30,6 +30,7 @@ export const SlotForm = (props: { slot: Slot, routineId: number }) => {
                 fullWidth
                 size={"small"}
                 value={slotComment}
+                disabled={editSlotQuery.isLoading}
                 onChange={(e) => handleChange(e.target.value)}
                 onBlur={handleBlur} // Call handleBlur when input loses focus
                 InputProps={{
