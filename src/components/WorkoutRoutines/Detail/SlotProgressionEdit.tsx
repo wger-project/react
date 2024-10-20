@@ -1,5 +1,6 @@
 import { Container, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { useLanguageQuery } from "components/Exercises/queries";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { SlotConfig } from "components/WorkoutRoutines/models/SlotConfig";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
@@ -11,7 +12,9 @@ import {
     DeleteConfigDetailsButton
 } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { getLanguageByShortName } from "services";
 
 export const ProgressionEdit = (props: {
     objectKey: string,
@@ -92,16 +95,27 @@ export const ProgressionEdit = (props: {
 
 export const SlotProgressionEdit = () => {
 
+    const { i18n } = useTranslation();
     const params = useParams<{ routineId: string, slotId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : -1;
     const slotId = params.slotId ? parseInt(params.slotId) : -1;
     const routineQuery = useRoutineDetailQuery(routineId);
+    const languageQuery = useLanguageQuery();
 
     if (routineQuery.isLoading) {
         return <LoadingPlaceholder />;
     }
 
     const routine = routineQuery.data!;
+
+    let language = undefined;
+    if (languageQuery.isSuccess) {
+        language = getLanguageByShortName(
+            i18n.language,
+            languageQuery.data!
+        );
+    }
+
 
     let slot: Slot | null = null;
     for (const day of routine.days) {
@@ -118,6 +132,7 @@ export const SlotProgressionEdit = () => {
 
     const iterations = Object.keys(routine.groupedDayDataByIteration).map(Number);
 
+
     return <>
         <Container maxWidth="lg"> {/*maxWidth={false}*/}
             <Typography variant={"h4"}>
@@ -127,7 +142,7 @@ export const SlotProgressionEdit = () => {
 
             {slot.configs.map((config) => <React.Fragment key={config.id}>
                     <Typography variant="h5" gutterBottom>
-                        {config.exercise?.getTranslation().name}
+                        {config.exercise?.getTranslation(language).name}
                     </Typography>
                     <Grid container spacing={2}>
                         <ProgressionEdit

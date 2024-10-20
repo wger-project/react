@@ -12,11 +12,13 @@ import {
     useTheme
 } from "@mui/material";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
+import { useLanguageQuery } from "components/Exercises/queries";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { getLanguageByShortName } from "services";
 
 
 export const RoutineDetailsTable = () => {
@@ -24,7 +26,6 @@ export const RoutineDetailsTable = () => {
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const routineQuery = useRoutineDetailQuery(routineId);
-
 
     return <Container maxWidth={false} sx={{ overflowX: 'scroll', display: 'flex', }}>
         <RenderLoadingQuery
@@ -51,8 +52,18 @@ export const RoutineDetailsTable = () => {
 };
 
 const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number }) => {
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
     const theme = useTheme();
+
+    const languageQuery = useLanguageQuery();
+
+    let language = undefined;
+    if (languageQuery.isSuccess) {
+        language = getLanguageByShortName(
+            i18n.language,
+            languageQuery.data!
+        );
+    }
 
     return <TableContainer component={Paper} sx={{ minWidth: 200, position: 'sticky', left: 0 }}>
         <Table size="small">
@@ -90,7 +101,7 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
                                             <TableCell
                                                 key={`tableCell-exercise-${index}`}
                                                 sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-                                                {showExercise ? setConfig.exercise?.getTranslation().name : '.'}
+                                                {showExercise ? setConfig.exercise?.getTranslation(language).name : '.'}
                                             </TableCell>
                                         </TableRow>;
                                     }

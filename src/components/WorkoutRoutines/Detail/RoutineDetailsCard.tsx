@@ -15,6 +15,7 @@ import {
 import { uuid4 } from "components/Core/Misc/uuid";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
 import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";
+import { useLanguageQuery } from "components/Exercises/queries";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
 import { SlotData } from "components/WorkoutRoutines/models/SlotData";
@@ -22,6 +23,7 @@ import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { getLanguageByShortName } from "services";
 import { makeLink, WgerLink } from "utils/url";
 
 
@@ -40,7 +42,7 @@ export const RoutineDetailsCard = () => {
                 </Typography>
                 <Stack spacing={2} sx={{ mt: 2 }}>
                     {routineQuery.data!.dayDataCurrentIteration.map((dayData) =>
-                        <DayDetails dayData={dayData} key={`dayDetails-${dayData.day?.id}`} />
+                        <DayDetailsCard dayData={dayData} key={`dayDetails-${dayData.day?.id}`} />
                     )}
                 </Stack>
             </>}
@@ -55,6 +57,17 @@ export function SetConfigDataDetails(props: {
     showExercise: boolean,
 }) {
 
+    const { i18n } = useTranslation();
+    const languageQuery = useLanguageQuery();
+
+    let language = undefined;
+    if (languageQuery.isSuccess) {
+        language = getLanguageByShortName(
+            i18n.language,
+            languageQuery.data!
+        );
+    }
+
     // @ts-ignore
     return <Grid container
                  alignItems="center"
@@ -63,7 +76,7 @@ export function SetConfigDataDetails(props: {
         <Grid item xs={12}>
             <Stack spacing={0}>
                 <Typography variant={"h6"}>
-                    {props.showExercise ? props.setConfigData.exercise?.getTranslation().name : ''}
+                    {props.showExercise ? props.setConfigData.exercise?.getTranslation(language).name : ''}
                 </Typography>
                 <Typography>
                     {props.setConfigData.textRepr}
@@ -122,7 +135,7 @@ function SlotDataList(props: {
     </Grid>;
 }
 
-const DayDetails = (props: { dayData: RoutineDayData }) => {
+const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
