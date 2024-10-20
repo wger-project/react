@@ -6,6 +6,7 @@ import HotelIcon from "@mui/icons-material/Hotel";
 import {
     Box,
     Button,
+    ButtonGroup,
     Card,
     CardActionArea,
     CardActions,
@@ -178,6 +179,7 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
 
 export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boolean }) => {
 
+    const [t, i18n] = useTranslation();
     const deleteSlotQuery = useDeleteSlotQuery(props.routineId);
     const editSlotQuery = useEditSlotQuery(props.routineId);
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -249,9 +251,14 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
                     <Box height={10} />
                     <SlotDetails slot={slot} routineId={props.routineId} simpleMode={props.simpleMode} />
 
-                    <Button variant={"outlined"} onClick={() => console.log("add superset")} size={"small"}>
-                        add superset
-                    </Button>
+                    <ButtonGroup variant="outlined">
+                        <Button onClick={() => console.log("add superset")} size={"small"}>
+                            add superset
+                        </Button>
+                        <Button onClick={() => console.log("editing progression")} size={"small"}>
+                            edit progression (#{slot.id})
+                        </Button>
+                    </ButtonGroup>
 
                     <Box height={20} />
                     <Divider sx={{ mt: 2, mb: 2 }} />

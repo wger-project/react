@@ -8,6 +8,7 @@ import { PlansOverview } from "components/Nutrition/components/PlansOverview";
 import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
 import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import { RoutineEdit } from "components/WorkoutRoutines/Detail/RoutineEdit";
+import { SlotProgressionEdit } from "components/WorkoutRoutines/Detail/SlotProgressionEdit";
 import { WorkoutLogs } from "components/WorkoutRoutines/Detail/WorkoutLogs";
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
 import {
@@ -59,7 +60,10 @@ export const WgerRoutes = () => {
                 <Route path="overview" element={<RoutineOverview />} />
                 <Route path=":routineId">
                     <Route path="view" element={<RoutineDetailsCard />} />
-                    <Route path="edit" element={<RoutineEdit />} />
+                    <Route path="edit">
+                        <Route index element={<RoutineEdit />} />
+                        <Route path="progression/:slotId" element={<SlotProgressionEdit />} />
+                    </Route>
                     <Route path="table" element={<RoutineDetailsTable />} />
                 </Route>
                 <Route path="log">

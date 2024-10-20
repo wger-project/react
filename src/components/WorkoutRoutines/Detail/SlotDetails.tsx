@@ -6,25 +6,25 @@ import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { SlotConfig } from "components/WorkoutRoutines/models/SlotConfig";
 import { useEditSlotConfigQuery } from "components/WorkoutRoutines/queries";
-import { ConfigDetailsField } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
+import { ConfigDetailsValueField } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import React, { useState } from "react";
 import { ExerciseSearchResponse } from "services/responseType";
 
 const configTypes = ["weight", "max-weight", "reps", "max-reps", "sets", "rest", "max-rest", "rir"] as const;
 type ConfigType = typeof configTypes[number];
 
-const getConfigComponent = (type: ConfigType, configs: BaseConfig[], routineId: number, slotId: number) => {
+const getConfigComponent = (type: ConfigType, configs: BaseConfig[], routineId: number, slotConfigId: number) => {
     return configs.length > 0
         ?
-        <ConfigDetailsField
+        <ConfigDetailsValueField
             config={configs[0]}
             type={type}
             routineId={routineId} />
 
-        : <ConfigDetailsField
+        : <ConfigDetailsValueField
             type={type}
             routineId={routineId}
-            slotId={slotId} />
+            slotConfigId={slotConfigId} />
         ;
 };
 

@@ -35,47 +35,47 @@ export const RoutineEdit = () => {
     const [selectedDay, setSelectedDay] = React.useState<number | null>(null);
     const [simpleMode, setSimpleMode] = React.useState(true);
 
+    if (routineQuery.isLoading) {
+        return <LoadingPlaceholder />;
+    }
+
+
     return <>
         <Container maxWidth="lg">
-            {routineQuery.isLoading
-                ? <LoadingPlaceholder />
-                : <>
-                    <Typography variant={"h4"}>
-                        Edit {routineQuery.data?.name}
-                    </Typography>
+            <Typography variant={"h4"}>
+                Edit {routineQuery.data?.name}
+            </Typography>
 
-                    <FormControlLabel
-                        control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
-                        label="Simple mode" />
+            <FormControlLabel
+                control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
+                label="Simple mode" />
 
-                    <RoutineForm routine={routineQuery.data!} firstDayId={1000} />
+            <RoutineForm routine={routineQuery.data!} firstDayId={1000} />
 
-                    <DayDragAndDropGrid
-                        routineId={routineId}
-                        selectedDay={selectedDay}
-                        setSelectedDay={setSelectedDay}
-                    />
+            <DayDragAndDropGrid
+                routineId={routineId}
+                selectedDay={selectedDay}
+                setSelectedDay={setSelectedDay}
+            />
 
-                    {selectedDay !== null &&
-                        <DayDetails
-                            day={routineQuery.data!.days.find(day => day.id === selectedDay)!}
-                            routineId={routineId}
-                            simpleMode={simpleMode}
-                        />
-                    }
-
-                    <Stack spacing={2} sx={{ mt: 2 }}>
-                        <Typography variant={"h4"}>
-                            Resulting routine
-                        </Typography>
-
-                        <Box padding={4}>
-                            <RoutineDetailsTable />
-                            <RoutineDetailsCard />
-                        </Box>
-                    </Stack>
-                </>
+            {selectedDay !== null &&
+                <DayDetails
+                    day={routineQuery.data!.days.find(day => day.id === selectedDay)!}
+                    routineId={routineId}
+                    simpleMode={simpleMode}
+                />
             }
+
+            <Stack spacing={2} sx={{ mt: 2 }}>
+                <Typography variant={"h4"}>
+                    Resulting routine
+                </Typography>
+
+                <Box padding={4}>
+                    <RoutineDetailsTable />
+                    <RoutineDetailsCard />
+                </Box>
+            </Stack>
         </Container>
     </>;
 };

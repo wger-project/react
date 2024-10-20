@@ -7,8 +7,7 @@ export interface AddBaseConfigParams {
     value: number;
     slot_config: number;
     iteration?: number;
-    operation?: string;
-    replace?: boolean;
+    operation?: "+" | "-" | "r";
     need_logs_to_apply?: boolean;
 }
 

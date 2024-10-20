@@ -54,6 +54,8 @@ export enum WgerLink {
 
     ROUTINE_OVERVIEW,
     ROUTINE_DETAIL,
+    ROUTINE_EDIT,
+    ROUTINE_EDIT_PROGRESSION,
     ROUTINE_ADD,
     ROUTINE_DELETE,
     ROUTINE_ADD_LOG,
@@ -85,7 +87,7 @@ export enum WgerLink {
     INGREDIENT_DETAIL
 }
 
-type UrlParams = { id: number, slug?: string, date?: string };
+type UrlParams = { id: number, id2?: number, slug?: string, date?: string };
 
 
 /*
@@ -107,6 +109,10 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/routine/overview`;
         case WgerLink.ROUTINE_DETAIL:
             return `/${langShort}/routine/${params!.id}/view`;
+        case WgerLink.ROUTINE_EDIT:
+            return `/${langShort}/routine/${params!.id}/edit`;
+        case WgerLink.ROUTINE_EDIT_PROGRESSION:
+            return `/${langShort}/routine/${params!.id}/edit/progression/${params!.id2}`;
         case WgerLink.ROUTINE_ADD:
             return `/${langShort}/routine/add`;
         case WgerLink.ROUTINE_ADD_DAY:

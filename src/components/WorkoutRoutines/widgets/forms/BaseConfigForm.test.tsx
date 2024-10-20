@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { BaseConfig } from 'components/WorkoutRoutines/models/BaseConfig';
 
-import { ConfigDetailsField } from 'components/WorkoutRoutines/widgets/forms/BaseConfigForm';
+import { ConfigDetailsValueField } from 'components/WorkoutRoutines/widgets/forms/BaseConfigForm';
 import React from 'react';
 import { testQueryClient } from "tests/queryClient";
 
@@ -67,12 +67,13 @@ describe('ConfigDetailsField Component', () => {
         describe(`for type ${type}`, () => {
             test('calls editQuery.mutate with correct data when entry exists', async () => {
 
-                const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', null, true, false);
+                const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', null, true);
                 const user = userEvent.setup();
 
                 render(
                     <QueryClientProvider client={testQueryClient}>
-                        <ConfigDetailsField config={mockConfig} routineId={routineId} slotId={slotId} type={type} />
+                        <ConfigDetailsValueField config={mockConfig} routineId={routineId} slotConfigId={slotId}
+                                                 type={type} />
                     </QueryClientProvider>
                 );
 
@@ -88,8 +89,7 @@ describe('ConfigDetailsField Component', () => {
                     slot_config: slotId,
                     value: 52,
                     iteration: 1,
-                    operation: null,
-                    replace: true,
+                    operation: 'r',
                     need_log_to_apply: false,
                 });
                 expect(deleteMutation).toHaveBeenCalledTimes(0);
@@ -100,7 +100,7 @@ describe('ConfigDetailsField Component', () => {
 
                 render(
                     <QueryClientProvider client={testQueryClient}>
-                        <ConfigDetailsField routineId={routineId} slotId={slotId} type={type} />
+                        <ConfigDetailsValueField routineId={routineId} slotConfigId={slotId} type={type} />
                     </QueryClientProvider>
                 );
 
@@ -124,10 +124,11 @@ describe('ConfigDetailsField Component', () => {
             test('calls deleteQuery.mutate when value is deleted', async () => {
                 const user = userEvent.setup();
 
-                const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', null, true, false);
+                const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', null, true);
                 render(
                     <QueryClientProvider client={testQueryClient}>
-                        <ConfigDetailsField config={mockConfig} routineId={routineId} slotId={slotId} type={type} />
+                        <ConfigDetailsValueField config={mockConfig} routineId={routineId} slotConfigId={slotId}
+                                                 type={type} />
                     </QueryClientProvider>
                 );
 

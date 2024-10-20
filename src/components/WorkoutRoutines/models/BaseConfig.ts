@@ -10,11 +10,14 @@ export class BaseConfig {
         public iteration: number,
         public trigger: "session" | "week" | null,
         public value: number,
-        public operation: "+" | "-" | null,
+        public operation: "+" | "-" | "r",
         public step: "abs" | "percent" | null,
-        public replace: boolean,
         public needLogToApply: boolean
     ) {
+    }
+
+    get replace() {
+        return this.operation === "r";
     }
 }
 
@@ -27,7 +30,6 @@ export class BaseConfigAdapter implements Adapter<BaseConfig> {
         parseFloat(item.value),
         item.operation,
         item.step,
-        item.replace,
         item.need_log_to_apply
     );
 
@@ -38,7 +40,6 @@ export class BaseConfigAdapter implements Adapter<BaseConfig> {
         value: item.value,
         operation: item.operation,
         step: item.step,
-        replace: item.replace,
         need_log_to_apply: item.needLogToApply
     });
 }
