@@ -81,7 +81,7 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
             </TableHead>
             <TableBody>
                 {props.dayData.map((dayData, index) =>
-                    <div key={`${props.iteration}-${index}`}>
+                    <React.Fragment key={`${props.iteration}-${index}`}>
                         <TableRow key={`tableRow-rest-${index}`}>
                             <TableCell sx={{ backgroundColor: theme.palette.action.hover }}>
                                 <b>{dayData.day === null || dayData.day.isRest ? t('routines.restDay') : dayData.day.name}</b>
@@ -91,11 +91,12 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
 
                         {dayData.slots.map((slotData, slotIndex) =>
                             // <div key={`${props.iteration}-${index}-${slotIndex}`}>
-                            <>
+                            <React.Fragment key={slotIndex}>
                                 {slotData.setConfigs.map((setConfig, index) => {
 
                                         // Only show the name of the exercise the first time it appears
                                         const showExercise = index === 0 || setConfig.exerciseId !== slotData.setConfigs[index - 1]?.exerciseId;
+                                    // const showExercise = true;
 
                                         return <TableRow key={`tableRow-exercise-${index}`}>
                                             <TableCell
@@ -106,12 +107,12 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
                                         </TableRow>;
                                     }
                                 )}
-                            </>
+                            </React.Fragment>
                         )}
                         <TableRow key={`tableRow-emtpy-${index}`}>
                             <TableCell key={`tableCell-emtpy-${index}`}></TableCell>
                         </TableRow>
-                    </div>
+                    </React.Fragment>
                 )}
             </TableBody>
         </Table>
@@ -142,7 +143,7 @@ const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
             </TableHead>
             <TableBody>
                 {props.dayData.map((dayData, index) =>
-                    <>
+                    <React.Fragment key={index}>
                         <TableRow>
                             <TableCell
                                 sx={{ backgroundColor: theme.palette.action.hover }}
@@ -151,10 +152,10 @@ const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
                                 &nbsp;
                             </TableCell>
                         </TableRow>
-                        {dayData.slots.map((slotData) =>
-                            <>
-                                {slotData.setConfigs.map((setConfig) =>
-                                    <TableRow>
+                        {dayData.slots.map((slotData, index) =>
+                            <React.Fragment key={index}>
+                                {slotData.setConfigs.map((setConfig, indexConfig) =>
+                                    <TableRow key={indexConfig}>
                                         <TableCell align={'center'}>
                                             {setConfig.nrOfSets === null ? '-/-' : setConfig.nrOfSets}
                                         </TableCell>
@@ -181,12 +182,12 @@ const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
                                         </TableCell>
                                     </TableRow>
                                 )}
-                            </>
+                            </React.Fragment>
                         )}
                         <TableRow>
                             <TableCell colSpan={6}></TableCell>
                         </TableRow>
-                    </>
+                    </React.Fragment>
                 )}
             </TableBody>
         </Table>

@@ -46,12 +46,12 @@ export const RoutineEdit = () => {
     return <>
         <Container maxWidth="lg">
             <Grid container>
-                <Grid xs={10}>
+                <Grid item xs={10}>
                     <Typography variant={"h4"}>
                         Edit {routineQuery.data?.name}
                     </Typography>
                 </Grid>
-                <Grid xs={2}>
+                <Grid item xs={2}>
                     <Button
                         component={Link}
                         variant={"outlined"}
@@ -61,12 +61,13 @@ export const RoutineEdit = () => {
                         back to routine
                     </Button>
                 </Grid>
+                <Grid item xs={12}>
+                    <FormControlLabel
+                        control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
+                        label="Simple mode" />
+                </Grid>
             </Grid>
 
-
-            <FormControlLabel
-                control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
-                label="Simple mode" />
 
             <RoutineForm routine={routineQuery.data!} firstDayId={1000} />
 

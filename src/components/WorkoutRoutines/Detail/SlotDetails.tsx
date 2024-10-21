@@ -2,12 +2,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from '@mui/icons-material/EditOff';
 import { Grid, IconButton, Typography } from "@mui/material";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
+import { useLanguageQuery } from "components/Exercises/queries";
 import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { SlotConfig } from "components/WorkoutRoutines/models/SlotConfig";
 import { useEditSlotConfigQuery } from "components/WorkoutRoutines/queries";
 import { ConfigDetailsValueField } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { getLanguageByShortName } from "services";
 import { ExerciseSearchResponse } from "services/responseType";
 
 const configTypes = ["weight", "max-weight", "reps", "max-reps", "sets", "rest", "max-rest", "rir"] as const;
@@ -45,10 +48,12 @@ export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: 
 };
 
 export const SlotConfigDetails = (props: { slotConfig: SlotConfig, routineId: number, simpleMode: boolean }) => {
+    const { i18n } = useTranslation();
 
     const [editExercise, setEditExercise] = useState(false);
-
     const toggleEditExercise = () => setEditExercise(!editExercise);
+
+    const languageQuery = useLanguageQuery();
     const editSlotQuery = useEditSlotConfigQuery(props.routineId);
 
     const handleExerciseChange = (searchResponse: ExerciseSearchResponse | null) => {
@@ -60,13 +65,21 @@ export const SlotConfigDetails = (props: { slotConfig: SlotConfig, routineId: nu
         setEditExercise(false);
     };
 
+    let language = undefined;
+    if (languageQuery.isSuccess) {
+        language = getLanguageByShortName(
+            i18n.language,
+            languageQuery.data!
+        );
+    }
+
     return (
         <React.Fragment key={props.slotConfig.id}>
 
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={3}>
                     <Typography variant={"h6"} gutterBottom>
-                        {props.slotConfig.exercise?.getTranslation().name}
+                        {props.slotConfig.exercise?.getTranslation(language).name}
 
                         <IconButton size={"small"} onClick={toggleEditExercise}>
                             {editExercise ? <EditOffIcon /> : <EditIcon />}

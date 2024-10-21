@@ -252,9 +252,13 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
                     <Box height={10} />
                     <SlotDetails slot={slot} routineId={props.routineId} simpleMode={props.simpleMode} />
 
+                    <Box height={20} />
                     <ButtonGroup variant="outlined">
                         <Button onClick={() => console.log("add superset")} size={"small"}>
-                            add superset
+                            (TODO) add set
+                        </Button>
+                        <Button onClick={() => console.log("add superset")} size={"small"}>
+                            (TODO) add superset
                         </Button>
                         <Button component={Link}
                                 size={"small"}
@@ -267,7 +271,6 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
                         </Button>
                     </ButtonGroup>
 
-                    <Box height={20} />
                     <Divider sx={{ mt: 2, mb: 2 }} />
                 </div>
             )}

@@ -1,4 +1,4 @@
-import { Button, Stack } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import { WgerTextField } from "components/Common/forms/WgerTextField";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
 import { useAddRoutineQuery, useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
@@ -65,22 +65,32 @@ export const RoutineForm = ({ routine, firstDayId, closeFn }: RoutineFormProps) 
         >
             {formik => (
                 <Form>
-                    <Stack spacing={2}>
-                        <WgerTextField fieldName="name" title={t('name')} />
-                        <WgerTextField fieldName="description" title={t('description')} />
-                        <WgerTextField fieldName="start" title={'start'} />
-                        <WgerTextField fieldName="end" title={'end'} />
-
-                        <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
-                            <Button color="primary"
-                                    variant="contained"
-                                    type="submit"
-                                    sx={{ mt: 2 }}>
+                    <Grid container>
+                        <Grid item xs={6}>
+                            <WgerTextField fieldName="name" title={t('name')} />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <WgerTextField fieldName="start" title={'start'} />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <WgerTextField fieldName="end" title={'end'} />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <WgerTextField fieldName="description" title={t('description')} />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Button
+                                color="primary"
+                                variant="contained"
+                                type="submit"
+                                sx={{ mt: 2 }}>
                                 {t('submit')}
                             </Button>
-                        </Stack>
-                    </Stack>
+                        </Grid>
+
+                    </Grid>
                 </Form>
+
             )}
         </Formik>
     );
