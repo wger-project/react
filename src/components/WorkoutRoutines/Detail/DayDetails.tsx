@@ -25,12 +25,14 @@ import { Day } from "components/WorkoutRoutines/models/Day";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { useEditDayQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
-import { useDeleteSlotQuery, useEditSlotQuery } from "components/WorkoutRoutines/queries/slots";
+import { useDeleteSlotQuery } from "components/WorkoutRoutines/queries/slots";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
 import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
+import { makeLink, WgerLink } from "utils/url";
 
 export const DayDragAndDropGrid = (props: {
     routineId: number,
@@ -181,7 +183,6 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
 
     const [t, i18n] = useTranslation();
     const deleteSlotQuery = useDeleteSlotQuery(props.routineId);
-    const editSlotQuery = useEditSlotQuery(props.routineId);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [slotToDelete, setSlotToDelete] = useState<Slot | null>(null);
 
@@ -192,7 +193,7 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
         if (slotToDelete !== null) {
             if (reason === 'timeout') {
                 // Delete on the server
-                // deleteSlotQuery.mutate(slotToDelete.id);
+                deleteSlotQuery.mutate(slotToDelete.id);
                 setSlotToDelete(null);
             } else if (reason !== 'clickaway') {
                 // Undo the deletion - re-add the slot using its sort value
@@ -255,8 +256,14 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
                         <Button onClick={() => console.log("add superset")} size={"small"}>
                             add superset
                         </Button>
-                        <Button onClick={() => console.log("editing progression")} size={"small"}>
-                            edit progression (#{slot.id})
+                        <Button component={Link}
+                                size={"small"}
+                                to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {
+                                    id: props.routineId,
+                                    id2: slot.id
+                                })}
+                        >
+                            edit progression
                         </Button>
                     </ButtonGroup>
 

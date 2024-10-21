@@ -1,4 +1,4 @@
-import { Box, Container, FormControlLabel, Stack, Switch, Typography } from "@mui/material";
+import { Box, Button, Container, FormControlLabel, Grid, Stack, Switch, Typography } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { DayDetails, DayDragAndDropGrid } from "components/WorkoutRoutines/Detail/DayDetails";
 import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
@@ -6,7 +6,9 @@ import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDe
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { RoutineForm } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Link, useParams } from "react-router-dom";
+import { makeLink, WgerLink } from "utils/url";
 
 export const RoutineEdit = () => {
 
@@ -28,6 +30,7 @@ export const RoutineEdit = () => {
         * tests!
         * ...
      */
+    const { i18n } = useTranslation();
 
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
@@ -42,9 +45,24 @@ export const RoutineEdit = () => {
 
     return <>
         <Container maxWidth="lg">
-            <Typography variant={"h4"}>
-                Edit {routineQuery.data?.name}
-            </Typography>
+            <Grid container>
+                <Grid xs={10}>
+                    <Typography variant={"h4"}>
+                        Edit {routineQuery.data?.name}
+                    </Typography>
+                </Grid>
+                <Grid xs={2}>
+                    <Button
+                        component={Link}
+                        variant={"outlined"}
+                        size={"small"}
+                        to={makeLink(WgerLink.ROUTINE_DETAIL, i18n.language, { id: routineId })}
+                    >
+                        back to routine
+                    </Button>
+                </Grid>
+            </Grid>
+
 
             <FormControlLabel
                 control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}

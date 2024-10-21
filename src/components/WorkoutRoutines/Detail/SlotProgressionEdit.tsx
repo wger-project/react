@@ -1,4 +1,15 @@
-import { Container, Grid, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Container,
+    Grid,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography
+} from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
@@ -9,15 +20,18 @@ import {
     ConfigDetailsNeedsLogsField,
     ConfigDetailsOperationField,
     ConfigDetailsValueField,
+    ConfigType,
     DeleteConfigDetailsButton
 } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getLanguageByShortName } from "services";
+import { makeLink, WgerLink } from "utils/url";
 
 export const ProgressionEdit = (props: {
     objectKey: string,
+    type: ConfigType,
     routineId: number,
     slotConfig: SlotConfig,
     iterations: number[]
@@ -26,7 +40,7 @@ export const ProgressionEdit = (props: {
         <React.Fragment>
             <Grid item md={12} lg={6}>
                 <Typography variant="h6" gutterBottom>
-                    {props.objectKey}
+                    {props.type}
                 </Typography>
                 <Table size="small">
                     <TableHead>
@@ -50,10 +64,10 @@ export const ProgressionEdit = (props: {
                                         ? <DeleteConfigDetailsButton
                                             configId={config.id}
                                             routineId={props.routineId}
-                                            type="weight"
+                                            type={props.type}
                                         />
                                         : <AddConfigDetailsButton
-                                            type="weight"
+                                            type={props.type}
                                             routineId={props.routineId}
                                             slotConfigId={props.slotConfig.id}
                                             iteration={iteration}
@@ -63,15 +77,15 @@ export const ProgressionEdit = (props: {
                                 <TableCell>
                                     {config && <ConfigDetailsValueField
                                         config={config}
-                                        type="weight"
+                                        type={props.type}
                                         routineId={props.routineId}
                                         slotConfigId={props.slotConfig.id}
                                     />}
                                 </TableCell>
                                 <TableCell>
-                                    {config && config && <ConfigDetailsOperationField
+                                    {config && <ConfigDetailsOperationField
                                         config={config}
-                                        type="weight"
+                                        type={props.type}
                                         routineId={props.routineId}
                                         slotConfigId={props.slotConfig.id}
                                     />}
@@ -79,7 +93,7 @@ export const ProgressionEdit = (props: {
                                 <TableCell>
                                     {config && <ConfigDetailsNeedsLogsField
                                         config={config}
-                                        type="weight"
+                                        type={props.type}
                                         routineId={props.routineId}
                                         slotConfigId={props.slotConfig.id}
                                     />}
@@ -135,11 +149,26 @@ export const SlotProgressionEdit = () => {
 
     return <>
         <Container maxWidth="lg"> {/*maxWidth={false}*/}
-            <Typography variant={"h4"}>
-                Edit progression for slot #{slotId}
-            </Typography>
+            <Grid container>
+                <Grid xs={10}>
+                    <Typography variant={"h4"}>
+                        Edit progression for slot #{slotId}
+                    </Typography>
+                </Grid>
+                <Grid xs={2}>
+                    <Button
+                        component={Link}
+                        variant={"outlined"}
+                        size={"small"}
+                        to={makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: routineId })}
+                    >
+                        back to routine edit
+                    </Button>
+                </Grid>
+            </Grid>
 
 
+            <Box height={30} />
             {slot.configs.map((config) => <React.Fragment key={config.id}>
                     <Typography variant="h5" gutterBottom>
                         {config.exercise?.getTranslation(language).name}
@@ -147,42 +176,49 @@ export const SlotProgressionEdit = () => {
                     <Grid container spacing={2}>
                         <ProgressionEdit
                             objectKey={'weightConfigs'}
+                            type="weight"
                             routineId={routineId}
                             slotConfig={config}
                             iterations={iterations}
                         />
                         <ProgressionEdit
                             objectKey={'maxWeightConfigs'}
+                            type="max-weight"
                             routineId={routineId}
                             slotConfig={config}
                             iterations={iterations}
                         />
                         <ProgressionEdit
                             objectKey={'repsConfigs'}
+                            type="reps"
                             routineId={routineId}
                             slotConfig={config}
                             iterations={iterations}
                         />
                         <ProgressionEdit
                             objectKey={'maxRepsConfigs'}
+                            type="max-reps"
                             routineId={routineId}
                             slotConfig={config}
                             iterations={iterations}
                         />
                         <ProgressionEdit
                             objectKey={'nrOfSetsConfigs'}
+                            type="sets"
                             routineId={routineId}
                             slotConfig={config}
                             iterations={iterations}
                         />
                         <ProgressionEdit
                             objectKey={'restTimeConfigs'}
+                            type="rest"
                             routineId={routineId}
                             slotConfig={config}
                             iterations={iterations}
                         />
                         <ProgressionEdit
                             objectKey={'maxRestTimeConfigs'}
+                            type="max-rest"
                             routineId={routineId}
                             slotConfig={config}
                             iterations={iterations}

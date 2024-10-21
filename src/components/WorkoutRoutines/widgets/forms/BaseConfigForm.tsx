@@ -75,7 +75,7 @@ const QUERY_MAP: { [key: string]: any } = {
 };
 
 
-type ConfigType = 'weight' | 'max-weight' | 'reps' | 'max-reps' | 'sets' | 'rest' | 'max-rest' | 'rir';
+export type ConfigType = 'weight' | 'max-weight' | 'reps' | 'max-reps' | 'sets' | 'rest' | 'max-rest' | 'rir';
 
 export const ConfigDetailsValueField = (props: {
     config?: BaseConfig,
@@ -210,11 +210,11 @@ export const ConfigDetailsOperationField = (props: {
     const options = [
         {
             value: '+',
-            label: '+',
+            label: 'Add',
         },
         {
             value: '-',
-            label: '-',
+            label: 'Substract',
         },
         {
             value: 'r',
