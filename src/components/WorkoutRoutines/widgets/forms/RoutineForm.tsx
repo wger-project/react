@@ -10,11 +10,10 @@ import * as yup from 'yup';
 
 interface RoutineFormProps {
     routine?: Routine,
-    firstDayId: number | null,
     closeFn?: Function,
 }
 
-export const RoutineForm = ({ routine, firstDayId, closeFn }: RoutineFormProps) => {
+export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
 
     const [t] = useTranslation();
     const addRoutineQuery = useAddRoutineQuery();
@@ -45,7 +44,6 @@ export const RoutineForm = ({ routine, firstDayId, closeFn }: RoutineFormProps) 
                 start: routine ? routine.start : dateToYYYYMMDD(new Date()),
                 end: routine ? routine.end : dateToYYYYMMDD(new Date()),
                 // eslint-disable-next-line camelcase
-                first_day: firstDayId,
             }}
 
             validationSchema={validationSchema}
@@ -90,7 +88,6 @@ export const RoutineForm = ({ routine, firstDayId, closeFn }: RoutineFormProps) 
 
                     </Grid>
                 </Form>
-
             )}
         </Formik>
     );

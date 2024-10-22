@@ -172,7 +172,6 @@ export const getRoutinesShallow = async (): Promise<Routine[]> => {
 export interface AddRoutineParams {
     name: string;
     description: string;
-    first_day: number | null;
     start: string;
     end: string;
 }

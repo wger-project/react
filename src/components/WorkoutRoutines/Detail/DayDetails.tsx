@@ -55,18 +55,12 @@ export const DayDragAndDropGrid = (props: {
         const [movedDay] = updatedDays.splice(result.source.index, 1);
         updatedDays.splice(result.destination.index, 0, movedDay);
 
-        // Update next_day_id for each day
-        updatedDays.forEach((day, index) => {
-            const nextDayIndex = (index + 1) % updatedDays.length; // Wrap around for the last day
-            day.nextDayId = updatedDays[nextDayIndex].id;
-        });
-
         // Save objects
         routineQuery.data!.days = updatedDays;
-        updatedDays.forEach((day) => {
-            editDayQuery.mutate({ routine: props.routineId, id: day.id, next_day: day.nextDayId! });
+        updatedDays.forEach((day, index) => {
+            editDayQuery.mutate({ routine: props.routineId, id: day.id, order: index });
         });
-        editRoutineQuery.mutate({ id: props.routineId, first_day: updatedDays.at(0)!.id });
+        editRoutineQuery.mutate({ id: props.routineId });
     };
 
     const grid = 8;

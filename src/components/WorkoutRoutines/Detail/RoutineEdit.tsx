@@ -68,8 +68,7 @@ export const RoutineEdit = () => {
                 </Grid>
             </Grid>
 
-
-            <RoutineForm routine={routineQuery.data!} firstDayId={1000} />
+            <RoutineForm routine={routineQuery.data!} />
 
             <DayDragAndDropGrid
                 routineId={routineId}

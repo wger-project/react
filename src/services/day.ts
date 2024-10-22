@@ -8,7 +8,7 @@ export interface AddDayParams {
     routine: number;
     name: string;
     description: string;
-    next_day?: number;
+    order?: number;
     is_rest: boolean;
 }
 

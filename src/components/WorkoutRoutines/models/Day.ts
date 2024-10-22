@@ -9,7 +9,7 @@ export class Day {
 
     constructor(
         public id: number,
-        public nextDayId: number | null,
+        public order: number,
         public name: string,
         public description: string,
         public isRest: boolean,
@@ -32,7 +32,7 @@ export class Day {
 export class DayAdapter implements Adapter<Day> {
     fromJson = (item: any): Day => new Day(
         item.id,
-        item.next_day,
+        item.order,
         item.name,
         item.description,
         item.is_rest,
@@ -43,7 +43,7 @@ export class DayAdapter implements Adapter<Day> {
     );
 
     toJson = (item: Day) => ({
-        next_day: item.nextDayId,
+        order: item.order,
         description: item.description,
         is_rest: item.isRest,
         need_logs_to_advance: item.needLogsToAdvance,
