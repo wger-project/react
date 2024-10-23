@@ -36,4 +36,9 @@ export { useRoutineLogQuery, } from "./logs";
 export {
     useDeleteSlotConfigQuery,
     useEditSlotConfigQuery,
+    useAddSlotConfigQuery,
 } from "./slot_configs";
+export {
+    useFetchRoutineWeighUnitsQuery,
+    useFetchRoutineRepUnitsQuery
+} from "./units";

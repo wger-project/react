@@ -5,7 +5,7 @@ import { Routine, RoutineAdapter } from "components/WorkoutRoutines/models/Routi
 import { RoutineDayData, RoutineDayDataAdapter } from "components/WorkoutRoutines/models/RoutineDayData";
 import { RoutineLogData, RoutineLogDataAdapter } from "components/WorkoutRoutines/models/RoutineLogData";
 import { getExercise } from "services/exercise";
-import { getRepUnits, getWeightUnits } from "services/workoutUnits";
+import { getRoutineRepUnits, getRoutineWeightUnits } from "services/workoutUnits";
 import { ApiPath } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
@@ -39,8 +39,8 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     const routine = routineAdapter.fromJson(response.data);
 
     const responses = await Promise.all([
-        getRepUnits(),
-        getWeightUnits(),
+        getRoutineRepUnits(),
+        getRoutineWeightUnits(),
         getRoutineDayDataCurrentIteration(id),
         getRoutineDayDataAllIterations(id),
         getRoutineStructure(id),

@@ -1,4 +1,5 @@
 import { DragDropContext, Draggable, DraggableStyle, Droppable, DropResult } from "@hello-pangea/dnd";
+import { SsidChart } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -12,10 +13,13 @@ import {
     CardActions,
     CardContent,
     CardHeader,
+    CircularProgress,
     Divider,
+    FormControlLabel,
     IconButton,
     Snackbar,
     SnackbarCloseReason,
+    Switch,
     Typography,
     useTheme
 } from "@mui/material";
@@ -23,7 +27,7 @@ import Grid from "@mui/material/Grid";
 import { SlotDetails } from "components/WorkoutRoutines/Detail/SlotDetails";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { useEditDayQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { useAddSlotConfigQuery, useEditDayQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
 import { useDeleteSlotQuery } from "components/WorkoutRoutines/queries/slots";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
@@ -31,6 +35,7 @@ import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { AddSlotConfigParams } from "services/slot_config";
 import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
 
@@ -173,12 +178,14 @@ const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: numb
     );
 };
 
-export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boolean }) => {
+export const DayDetails = (props: { day: Day, routineId: number }) => {
 
     const [t, i18n] = useTranslation();
     const deleteSlotQuery = useDeleteSlotQuery(props.routineId);
+    const addSlotConfigQuery = useAddSlotConfigQuery(props.routineId);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [slotToDelete, setSlotToDelete] = useState<Slot | null>(null);
+    const [simpleMode, setSimpleMode] = useState(true);
 
     const handleCloseSnackbar = (
         event: React.SyntheticEvent | Event,
@@ -212,6 +219,30 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
         }
     };
 
+    const handleAddSlotConfig = (slotId: number) => {
+        const slot = props.day.slots.find(s => s.id === slotId);
+        if (slot === undefined) {
+            console.log('Could not find slot');
+            return;
+        }
+
+        const exerciseId = slot?.configs[slot.configs.length - 1]?.exercise?.id;
+        if (exerciseId === undefined || exerciseId === null) {
+            console.log('Could not find suitable exercise for new set');
+            return;
+        }
+
+        const newSlotConfigData: AddSlotConfigParams = {
+            slot: slotId,
+            exercise: exerciseId,
+            type: 'normal',
+            order: slot.configs.length,
+            comment: ''
+        };
+
+        addSlotConfigQuery.mutate(newSlotConfigData);
+    };
+
 
     return (
         <>
@@ -226,43 +257,90 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
 
             <DayForm routineId={props.routineId} day={props.day} key={`day-form-${props.day.id}`} />
             <Box height={40} />
+            <FormControlLabel
+                control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
+                label="Simple mode" />
 
             {props.day.slots.map((slot, index) =>
                 <div key={`slot-${slot.id}-${index}`}>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={4}>
                             <Typography variant={"h5"} gutterBottom>
-                                Set {index + 1}
                                 <IconButton onClick={() => handleDeleteSlot(slot.id)}>
                                     <DeleteIcon />
                                 </IconButton>
+                                Set {index + 1}
                             </Typography>
                         </Grid>
-                        <Grid item xs={12} md={9}>
+                        {!simpleMode && <Grid item xs={12} md={8}>
                             <SlotForm routineId={props.routineId} slot={slot} key={`slot-form-${slot.id}`} />
+                        </Grid>}
+                        <Grid item xs={12}>
+                            <Box height={20} />
+                            <SlotDetails slot={slot} routineId={props.routineId} simpleMode={simpleMode} />
                         </Grid>
                     </Grid>
 
-                    <Box height={10} />
-                    <SlotDetails slot={slot} routineId={props.routineId} simpleMode={props.simpleMode} />
 
                     <Box height={20} />
                     <ButtonGroup variant="outlined">
-                        <Button onClick={() => console.log("add superset")} size={"small"}>
-                            (TODO) add set
+                        {/*<Tooltip title="add exercise">*/}
+                        {/*    <IconButton*/}
+                        {/*        onClick={() => handleAddSlotConfig(slot.id)}*/}
+                        {/*        size={"small"}*/}
+                        {/*        disabled={addSlotConfigQuery.isLoading}*/}
+                        {/*    >*/}
+                        {/*        {addSlotConfigQuery.isLoading ? <CircularProgress size={20} /> : <AddIcon />}*/}
+                        {/*    </IconButton>*/}
+                        {/*</Tooltip>*/}
+
+                        <Button
+                            onClick={() => handleAddSlotConfig(slot.id)}
+                            size={"small"}
+                            disabled={addSlotConfigQuery.isLoading}
+                            startIcon={addSlotConfigQuery.isLoading ? <CircularProgress size={20} /> : <AddIcon />}
+                        >
+                            add exercise
                         </Button>
-                        <Button onClick={() => console.log("add superset")} size={"small"}>
+
+                        <Button onClick={() => console.log("add superset")} size={"small"} startIcon={<AddIcon />}>
                             (TODO) add superset
                         </Button>
-                        <Button component={Link}
-                                size={"small"}
-                                to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {
-                                    id: props.routineId,
-                                    id2: slot.id
-                                })}
+
+                        <Button
+                            startIcon={<SsidChart />}
+                            component={Link}
+                            size={"small"}
+                            to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {
+                                id: props.routineId,
+                                id2: slot.id
+                            })}
                         >
                             edit progression
                         </Button>
+
+                        {/*<Tooltip title="edit progression">*/}
+                        {/*    <IconButton*/}
+                        {/*        component={Link}*/}
+                        {/*        size={"small"}*/}
+                        {/*        to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {*/}
+                        {/*            id: props.routineId,*/}
+                        {/*            id2: slot.id*/}
+                        {/*        })}*/}
+                        {/*    >*/}
+                        {/*        <AppRegistration />*/}
+                        {/*    </IconButton>*/}
+                        {/*</Tooltip>*/}
+                        {/*<Button*/}
+                        {/*    component={Link}*/}
+                        {/*    size={"small"}*/}
+                        {/*    to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {*/}
+                        {/*        id: props.routineId,*/}
+                        {/*        id2: slot.id*/}
+                        {/*    })}*/}
+                        {/*>*/}
+                        {/*    edit progression*/}
+                        {/*</Button>*/}
                     </ButtonGroup>
 
                     <Divider sx={{ mt: 2, mb: 2 }} />
@@ -278,7 +356,7 @@ export const DayDetails = (props: { day: Day, routineId: number, simpleMode: boo
             >
             </Snackbar>
 
-            <Button variant="contained" color="primary" startIcon={<AddIcon />}>Add set</Button>
+            <Button variant="contained" color="primary" startIcon={<AddIcon />}>todo - Add set</Button>
         </>
     );
 };

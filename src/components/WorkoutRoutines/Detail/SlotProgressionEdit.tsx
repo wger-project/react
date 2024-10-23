@@ -19,9 +19,9 @@ import {
     AddConfigDetailsButton,
     ConfigDetailsNeedsLogsField,
     ConfigDetailsOperationField,
-    ConfigDetailsValueField,
     ConfigType,
-    DeleteConfigDetailsButton
+    DeleteConfigDetailsButton,
+    SlotBaseConfigValueField
 } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -75,7 +75,7 @@ export const ProgressionEdit = (props: {
                                     }
                                 </TableCell>
                                 <TableCell>
-                                    {config && <ConfigDetailsValueField
+                                    {config && <SlotBaseConfigValueField
                                         config={config}
                                         type={props.type}
                                         routineId={props.routineId}
@@ -150,12 +150,12 @@ export const SlotProgressionEdit = () => {
     return <>
         <Container maxWidth="lg"> {/*maxWidth={false}*/}
             <Grid container>
-                <Grid xs={10}>
+                <Grid item xs={10}>
                     <Typography variant={"h4"}>
                         Edit progression for slot #{slotId}
                     </Typography>
                 </Grid>
-                <Grid xs={2}>
+                <Grid item xs={2}>
                     <Button
                         component={Link}
                         variant={"outlined"}

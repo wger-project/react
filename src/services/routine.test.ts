@@ -6,7 +6,7 @@ import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import { getRoutinesShallow } from "services";
 import { getRoutineDayDataCurrentIteration } from "services/routine";
 import { getRoutineLogs } from "services/workoutLogs";
-import { getRepUnits, getWeightUnits } from "services/workoutUnits";
+import { getRoutineRepUnits, getRoutineWeightUnits } from "services/workoutUnits";
 import {
     responseApiWorkoutRoutine,
     responseRoutineIterationDataToday,
@@ -65,9 +65,9 @@ describe("workout routine service tests", () => {
         // @ts-ignore
         axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
         // @ts-ignore
-        getRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
+        getRoutineRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
         // @ts-ignore
-        getWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
+        getRoutineWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
 
         // Act
         const result = await getRoutineLogs(1);

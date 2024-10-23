@@ -20,7 +20,7 @@ export const testRepUnitUnitMinutes = new RepetitionUnit(3, "Minutes");
 
 const testDayLegs = new Day(
     5,
-    null,
+    1,
     "Every day is leg day 🦵🏻",
     '',
     false,
@@ -31,7 +31,7 @@ const testDayLegs = new Day(
 
 const testDayPull = new Day(
     6,
-    null,
+    2,
     'Pull day',
     '',
     false,
@@ -41,7 +41,7 @@ const testDayPull = new Day(
 );
 const testRestDay = new Day(
     19,
-    null,
+    3,
     '',
     '',
     true,
@@ -139,7 +139,6 @@ export const responseApiWorkoutRoutine = {
             "id": 1,
             "name": "My first routine!",
             "description": "Well rounded full body routine",
-            "first_day": 3,
             "created": "2022-01-01T12:34:30+01:00",
             "start": "2024-03-01",
             "end": "2024-04-30",
@@ -149,7 +148,6 @@ export const responseApiWorkoutRoutine = {
             "name": "Beach body",
             "description": "Train only arms and chest, no legs!!!",
             "created": "2023-01-01T17:22:22+02:00",
-            "first_day": 5,
             "start": "2024-03-01",
             "end": "2024-04-30",
         }
@@ -215,7 +213,7 @@ export const responseRoutineIterationDataToday = [
         "label": "first label",
         "day": {
             "id": 100,
-            "next_day": 101,
+            "order": 1,
             "name": "Push day",
             "description": "",
             "is_rest": false,

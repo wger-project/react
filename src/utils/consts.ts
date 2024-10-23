@@ -45,6 +45,9 @@ export enum QueryKey {
     INGREDIENT = 'ingredient',
 
     BODY_WEIGHT = 'body-weight',
+
+    ROUTINE_WEIGHT_UNITS = 'weight-units',
+    ROUTINE_REP_UNITS = 'rep-units',
 }
 
 /*

@@ -9,6 +9,8 @@ import { RirConfig } from "components/WorkoutRoutines/models/RirConfig";
 import { WeightConfig } from "components/WorkoutRoutines/models/WeightConfig";
 import { Adapter } from "utils/Adapter";
 
+export type SlotConfigType = 'normal' | 'dropset' | 'myo' | 'partial' | 'forced' | 'tut' | 'iso' | 'jump';
+
 export class SlotConfig {
 
     weightConfigs: WeightConfig[] = [];
@@ -33,7 +35,7 @@ export class SlotConfig {
         public weightRounding: number,
         public order: number,
         public comment: string,
-        public type: 'normal' | 'dropset' | 'myo' | 'partial' | 'forced' | 'tut' | 'iso' | 'jump',
+        public type: SlotConfigType,
         configs?: {
             weightConfigs?: WeightConfig[],
             maxWeightConfigs?: WeightConfig[],

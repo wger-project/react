@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { BaseConfig } from 'components/WorkoutRoutines/models/BaseConfig';
 
-import { ConfigDetailsValueField } from 'components/WorkoutRoutines/widgets/forms/BaseConfigForm';
+import { SlotBaseConfigValueField } from 'components/WorkoutRoutines/widgets/forms/BaseConfigForm';
 import React from 'react';
 import { testQueryClient } from "tests/queryClient";
 
@@ -72,8 +72,8 @@ describe('ConfigDetailsField Component', () => {
 
                 render(
                     <QueryClientProvider client={testQueryClient}>
-                        <ConfigDetailsValueField config={mockConfig} routineId={routineId} slotConfigId={slotId}
-                                                 type={type} />
+                        <SlotBaseConfigValueField config={mockConfig} routineId={routineId} slotConfigId={slotId}
+                                                  type={type} />
                     </QueryClientProvider>
                 );
 
@@ -100,7 +100,7 @@ describe('ConfigDetailsField Component', () => {
 
                 render(
                     <QueryClientProvider client={testQueryClient}>
-                        <ConfigDetailsValueField routineId={routineId} slotConfigId={slotId} type={type} />
+                        <SlotBaseConfigValueField routineId={routineId} slotConfigId={slotId} type={type} />
                     </QueryClientProvider>
                 );
 
@@ -127,8 +127,8 @@ describe('ConfigDetailsField Component', () => {
                 const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', null, true);
                 render(
                     <QueryClientProvider client={testQueryClient}>
-                        <ConfigDetailsValueField config={mockConfig} routineId={routineId} slotConfigId={slotId}
-                                                 type={type} />
+                        <SlotBaseConfigValueField config={mockConfig} routineId={routineId} slotConfigId={slotId}
+                                                  type={type} />
                     </QueryClientProvider>
                 );
 

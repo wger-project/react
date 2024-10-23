@@ -1,7 +1,7 @@
 import { Exercise } from "components/Exercises/models/exercise";
 import { WorkoutLog, WorkoutLogAdapter } from "components/WorkoutRoutines/models/WorkoutLog";
 import { getExercise } from "services/exercise";
-import { getRepUnits, getWeightUnits } from "services/workoutUnits";
+import { getRoutineRepUnits, getRoutineWeightUnits } from "services/workoutUnits";
 import { API_MAX_PAGE_SIZE } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
 import { makeUrl } from "utils/url";
@@ -18,7 +18,7 @@ export const getRoutineLogs = async (id: number, loadExercises = false): Promise
         { query: { workout: id.toString(), limit: API_MAX_PAGE_SIZE, ordering: '-date' } }
     );
 
-    const unitResponses = await Promise.all([getRepUnits(), getWeightUnits()]);
+    const unitResponses = await Promise.all([getRoutineRepUnits(), getRoutineWeightUnits()]);
     const repUnits = unitResponses[0];
     const weightUnits = unitResponses[1];
 

@@ -2,7 +2,7 @@ import axios from "axios";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import { getExercise } from "services";
 import { getRoutineLogs } from "services/workoutLogs";
-import { getRepUnits, getWeightUnits } from "services/workoutUnits";
+import { getRoutineRepUnits, getRoutineWeightUnits } from "services/workoutUnits";
 import { testExerciseSquats } from "tests/exerciseTestdata";
 import {
     responseRoutineLogs,
@@ -30,9 +30,9 @@ describe("workout logs service tests", () => {
         // @ts-ignore
         axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
         // @ts-ignore
-        getRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
+        getRoutineRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
         // @ts-ignore
-        getWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
+        getRoutineWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
 
         // Act
         const result = await getRoutineLogs(1);
@@ -79,9 +79,9 @@ describe("workout logs service tests", () => {
         // @ts-ignore
         axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
         // @ts-ignore
-        getRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
+        getRoutineRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
         // @ts-ignore
-        getWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
+        getRoutineWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
 // @ts-ignore
         getExercise.mockImplementation(() => Promise.resolve(testExerciseSquats));
 

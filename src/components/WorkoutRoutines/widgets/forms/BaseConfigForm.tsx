@@ -77,7 +77,7 @@ const QUERY_MAP: { [key: string]: any } = {
 
 export type ConfigType = 'weight' | 'max-weight' | 'reps' | 'max-reps' | 'sets' | 'rest' | 'max-rest' | 'rir';
 
-export const ConfigDetailsValueField = (props: {
+export const SlotBaseConfigValueField = (props: {
     config?: BaseConfig,
     routineId: number,
     slotConfigId?: number,
@@ -214,7 +214,7 @@ export const ConfigDetailsOperationField = (props: {
         },
         {
             value: '-',
-            label: 'Substract',
+            label: 'Subtract',
         },
         {
             value: 'r',
@@ -229,8 +229,6 @@ export const ConfigDetailsOperationField = (props: {
         editQueryHook.mutate({ id: props.config.id, operation: newValue, });
     };
 
-
-    const isLoading = editQueryHook.isLoading;
     return (<>
         <TextField
             sx={{ width: 100 }}
@@ -238,11 +236,11 @@ export const ConfigDetailsOperationField = (props: {
             label="Operation"
             value={props.config?.operation}
             variant="standard"
-            disabled={isLoading}
+            disabled={editQueryHook.isLoading}
             onChange={e => handleData(e.target.value)}
         >
             {options.map((option) => (
-                <MenuItem key={option.value} value={option.value} selected={option.value === props.config?.operation}>
+                <MenuItem key={option.value} value={option.value} selected={option.value === props.config.operation}>
                     {option.label}
                 </MenuItem>
             ))}
@@ -277,4 +275,3 @@ export const ConfigDetailsNeedsLogsField = (props: {
         />
     </>);
 };
-

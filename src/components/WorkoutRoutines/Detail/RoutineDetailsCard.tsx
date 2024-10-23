@@ -78,7 +78,7 @@ export function SetConfigDataDetails(props: {
                 <Typography variant={"h6"}>
                     {props.showExercise ? props.setConfigData.exercise?.getTranslation(language).name : ''}
                 </Typography>
-                <Typography>
+                <div>
                     {props.setConfigData.textRepr}
                     {props.setConfigData.isSpecialType &&
                         <Chip
@@ -87,7 +87,7 @@ export function SetConfigDataDetails(props: {
                             size="small"
                             sx={{ marginLeft: "0.5em" }} />
                     }
-                </Typography>
+                </div>
                 <Typography variant={"caption"}>
                     {props.setConfigData.comment}
                 </Typography>

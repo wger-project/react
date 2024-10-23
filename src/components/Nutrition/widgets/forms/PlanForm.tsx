@@ -3,6 +3,7 @@ import {
     FormControl,
     FormControlLabel,
     FormGroup,
+    Grid,
     InputAdornment,
     InputLabel,
     MenuItem,
@@ -11,7 +12,6 @@ import {
     Switch,
     TextField
 } from "@mui/material";
-import Grid from '@mui/material/Unstable_Grid2';
 import { ENERGY_FACTOR } from "components/Nutrition/helpers/nutritionalValues";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
@@ -194,7 +194,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         }}
                                     />
                                 </Grid>
-                                <Grid xs={4}>
+                                <Grid item xs={4}>
                                     <TextField
                                         id="carbohydrates"
                                         label={t('nutrition.goalCarbohydrates')}
@@ -213,7 +213,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         }}
                                     />
                                 </Grid>
-                                <Grid xs={4}>
+                                <Grid item xs={4}>
                                     <TextField
                                         id="fat"
                                         label={t('nutrition.goalFat')}
@@ -234,7 +234,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={1}>
-                                <Grid xs={4}>
+                                <Grid item xs={4}>
                                     <TextField
                                         id="fiber"
                                         label={t('nutrition.goalFiber')}

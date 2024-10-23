@@ -3,6 +3,8 @@
 import { Exercise } from "components/Exercises/models/exercise";
 import { Adapter } from "utils/Adapter";
 
+export type SetType = "normal" | "dropset" | "myo" | "partial" | "forced" | "tut" | "iso" | "jump";
+
 export class SetConfigData {
 
     exercise?: Exercise;
@@ -10,7 +12,7 @@ export class SetConfigData {
     constructor(
         public exerciseId: number,
         public slotConfigId: number,
-        public type: "normal" | "dropset" | "myo" | "partial" | "forced" | "tut" | "iso" | "jump",
+        public type: SetType,
         public nrOfSets: number,
         public weight: number | null,
         public maxWeight: number | null,
