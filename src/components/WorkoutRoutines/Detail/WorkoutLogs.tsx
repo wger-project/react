@@ -21,7 +21,6 @@ import {
     Typography
 } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { uuid4 } from "components/Core/Misc/uuid";
 import { Exercise } from "components/Exercises/models/exercise";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import { useRoutineDetailQuery, useRoutineLogQuery } from "components/WorkoutRoutines/queries";
@@ -216,7 +215,7 @@ export const WorkoutLogs = () => {
                 </Typography>
                 {logsQuery.isSuccess && routineQuery.isSuccess
                     ? <>
-                        {routineQuery.data!.dayDataCurrentIteration.map((dayData) => <div key={uuid4()}>
+                        {routineQuery.data!.dayDataCurrentIteration.map((dayData, index) => <React.Fragment key={index}>
                                 <Stack
                                     direction={{ xs: 'column', sm: 'row' }}
                                     justifyContent="space-between"
@@ -224,22 +223,22 @@ export const WorkoutLogs = () => {
                                     sx={{ mt: 4 }}
                                 >
                                     <Typography variant={"h4"}>
-                                        {dayData.day.name}
+                                        {dayData.day?.name}
                                     </Typography>
-                                    <Button variant="contained" onClick={() => navigateAddLogToDay(dayData.day.id)}>
+                                    <Button variant="contained" onClick={() => navigateAddLogToDay(dayData.day?.id!)}>
                                         {t('routines.addLogToDay')}
                                     </Button>
                                 </Stack>
 
-                            {dayData.slots.map(slot =>
+                                {dayData.slots.map(slot =>
                                     slot.exercises.map(exercise =>
                                         <ExerciseLog
-                                            key={uuid4()}
+                                            key={exercise.id}
                                             exercise={exercise}
                                             logEntries={groupedWorkoutLogs.get(exercise.id!)!}
                                         />)
                                 )}
-                            </div>
+                            </React.Fragment>
                         )}
                     </>
                     : <LoadingPlaceholder />

@@ -12,7 +12,6 @@ import {
     Stack,
     Typography
 } from "@mui/material";
-import { uuid4 } from "components/Core/Misc/uuid";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
 import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";
 import { useLanguageQuery } from "components/Exercises/queries";
@@ -108,12 +107,12 @@ function SlotDataList(props: {
     >
         <Grid item xs={1}>
             <Stack divider={<Box height="10px" />}>
-                {props.slotData.exercises.map((exercise) =>
+                {props.slotData.exercises.map((exercise, index) =>
                     <ExerciseImageAvatar
                         image={exercise.mainImage}
                         iconSize={50}
                         avatarSize={55}
-                        key={uuid4()}
+                        key={index}
                     />
                 )}
             </Stack>
@@ -126,7 +125,7 @@ function SlotDataList(props: {
                 return <SetConfigDataDetails
                         setConfigData={setConfig}
                         marginBottom="1em"
-                        key={uuid4()}
+                        key={index}
                         showExercise={showExercise}
                     />;
                 }

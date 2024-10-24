@@ -13,7 +13,6 @@ import {
     ListItemText,
 } from '@mui/material';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { uuid4 } from "components/Core/Misc/uuid";
 import { EmptyCard } from "components/Dashboard/EmptyCard";
 import { SetConfigDataDetails } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
@@ -51,7 +50,7 @@ const RoutineCardContent = (props: { routine: Routine }) => {
         {/* Note: not 500 like the other cards, but a bit more since we don't have an action icon... */}
         <CardContent sx={{ height: "510px", overflow: "auto" }}>
             <List>
-                {props.routine.dayDataCurrentIteration.map(day => <DayListItem dayData={day} key={uuid4()} />)}
+                {props.routine.dayDataCurrentIteration.map((day, index) => <DayListItem dayData={day} key={index} />)}
             </List>
         </CardContent>
 
@@ -68,24 +67,25 @@ const DayListItem = (props: { dayData: RoutineDayData }) => {
     const [expandView, setExpandView] = useState(false);
     const [t] = useTranslation();
 
+
     const handleToggleExpand = () => setExpandView(!expandView);
 
     return (<>
-        <ListItemButton onClick={handleToggleExpand} selected={expandView} disabled={props.dayData.day.isRest}>
+        <ListItemButton onClick={handleToggleExpand} selected={expandView} disabled={props.dayData.day?.isRest}>
             <ListItemIcon>
                 {expandView ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </ListItemIcon>
             <ListItemText
-                primary={props.dayData.day.isRest ? t('routines.restDay') : props.dayData.day.name}
+                primary={props.dayData.day?.isRest ? t('routines.restDay') : props.dayData.day?.name}
             />
         </ListItemButton>
 
         <Collapse in={expandView} timeout="auto" unmountOnExit>
-            {props.dayData.slots.map((slotData) => (<div key={uuid4()}>
-                {slotData.setConfigs.map((setting) =>
+            {props.dayData.slots.map((slotData, index) => (<div key={index}>
+                {slotData.setConfigs.map((setting, index) =>
                     <SetConfigDataDetails
                         setConfigData={setting}
-                        key={uuid4()}
+                        key={index}
                         rowHeight={'70px'}
                         showExercise={true}
                     />
