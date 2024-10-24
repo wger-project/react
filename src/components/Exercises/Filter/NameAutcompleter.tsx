@@ -99,34 +99,31 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
                         }}
                     />
                 )}
-                renderOption={(props, option) => {
-                    return (
-                        <li {...props}
-                            key={`exercise${option.data.base_id}`}
-                            data-testid={`autocompleter-result-${option.data.base_id}`}
-                        >
-                            <ListItem disablePadding component="div">
-                                <ListItemIcon>
-                                    {option.data.image ?
-                                        <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />
-                                        : <PhotoIcon fontSize="large" />}
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={option.value}
-                                    primaryTypographyProps={{
-                                        style: {
-                                            whiteSpace: 'nowrap',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis'
-                                        }
-                                    }}
-                                    secondary={option.data.category}
-                                />
-                            </ListItem>
-
-                        </li>
-                    );
-                }}
+                renderOption={(props, option) =>
+                    <li {...props}
+                        key={`exercise-${option.data.base_id}-${option.data.id}`}
+                        data-testid={`autocompleter-result-${option.data.base_id}`}
+                    >
+                        <ListItem disablePadding component="div">
+                            <ListItemIcon>
+                                {option.data.image ?
+                                    <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />
+                                    : <PhotoIcon fontSize="large" />}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={option.value}
+                                primaryTypographyProps={{
+                                    style: {
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis'
+                                    }
+                                }}
+                                secondary={option.data.category}
+                            />
+                        </ListItem>
+                    </li>
+                }
             />
             {i18n.language !== LANGUAGE_SHORT_ENGLISH && <FormGroup>
                 <FormControlLabel

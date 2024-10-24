@@ -285,72 +285,61 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
         }
     };
 
-    const handleAddSlotConfig = (slotId: number, superset: boolean = false) => {
+    const handleAddSlotConfig = (slotId: number) => {
         const slot = props.day.slots.find(s => s.id === slotId);
         if (slot === undefined) {
             console.log('Could not find slot');
             return;
         }
 
-        const exerciseId = superset ? null : slot?.configs[slot.configs.length - 1]?.exercise?.id;
-        if (exerciseId === undefined || exerciseId === null) {
-            if (showAutocompleterForSlot === slotId) {
-                setShowAutocompleterForSlot(null);
-            } else {
-                setShowAutocompleterForSlot(slotId);
-            }
-            console.log('Could not find suitable exercise for new set');
-            return;
+        if (showAutocompleterForSlot === slotId) {
+            setShowAutocompleterForSlot(null);
+        } else {
+            setShowAutocompleterForSlot(slotId);
         }
-
-        addSlotConfigQuery.mutate({
-            slot: slotId,
-            exercise: exerciseId,
-            type: 'normal',
-            order: slot.configs.length,
-        });
-        setShowAutocompleterForSlot(null);
+        return;
     };
 
     const handleAddSlot = () => addSlotQuery.mutate({ day: props.day.id, order: props.day.slots.length + 1 });
 
 
-    return (
-        <>
-            <Typography variant={"h4"}>
-                {props.day.name}
-            </Typography>
-            <Box height={30} />
+    return (<>
+        <Typography variant={"h4"}>
+            {props.day.name}
+        </Typography>
+        <Box height={30} />
 
 
-            <DayForm routineId={props.routineId} day={props.day} key={`day-form-${props.day.id}`} />
-            <Box height={40} />
-            <FormControlLabel
-                control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
-                label="Simple mode" />
+        <DayForm routineId={props.routineId} day={props.day} key={`day-form-${props.day.id}`} />
+        <Box height={40} />
+        <FormControlLabel
+            control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
+            label="Simple mode" />
 
-            {props.day.slots.map((slot, index) =>
-                <div key={`slot-${slot.id}-${index}`}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={4}>
-                            <Typography variant={"h5"} gutterBottom>
-                                <IconButton onClick={() => handleDeleteSlot(slot.id)}>
-                                    <DeleteIcon />
-                                </IconButton>
-                                Set {index + 1}
-                            </Typography>
-                        </Grid>
-                        {!simpleMode && <Grid item xs={12} md={8}>
-                            <SlotForm routineId={props.routineId} slot={slot} key={`slot-form-${slot.id}`} />
-                        </Grid>}
-                        <Grid item xs={12}>
-                            <Box height={20} />
-                            <SlotEntryDetails slot={slot} routineId={props.routineId} simpleMode={simpleMode} />
-                        </Grid>
+        {props.day.slots.map((slot, index) =>
+            <div key={`slot-${slot.id}-${index}`}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={4}>
+                        <Typography variant={"h5"} gutterBottom>
+                            <IconButton onClick={() => handleDeleteSlot(slot.id)}>
+                                <DeleteIcon />
+                            </IconButton>
+                            Set {index + 1}
+                        </Typography>
                     </Grid>
+                    {!simpleMode && <Grid item xs={12} md={8}>
+                        <SlotForm routineId={props.routineId} slot={slot} key={`slot-form-${slot.id}`} />
+                    </Grid>}
+                    <Grid item xs={12}>
+                        {/*<Box height={20} />*/}
+                        <SlotEntryDetails slot={slot} routineId={props.routineId} simpleMode={simpleMode} />
+                    </Grid>
+                </Grid>
 
-                    {showAutocompleterForSlot === slot.id
-                        && <NameAutocompleter
+                {showAutocompleterForSlot === slot.id
+                    && <>
+                        <Box height={20} />
+                        <NameAutocompleter
                             callback={(exercise: ExerciseSearchResponse | null) => {
                                 if (exercise === null) {
                                     return;
@@ -363,82 +352,73 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                 });
                                 setShowAutocompleterForSlot(null);
                             }}
-                        />}
+                        />
+                        <Box height={20} />
+                    </>}
 
-                    <Box height={20} />
-                    <ButtonGroup variant="outlined">
 
+                <ButtonGroup variant="outlined">
+                    <Button
+                        onClick={() => handleAddSlotConfig(slot.id)}
+                        size={"small"}
+                        disabled={addSlotConfigQuery.isLoading}
+                        startIcon={addSlotConfigQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
+                    >
+                        {slot.configs.length > 0 ? "add superset" : "add exercise"}
+                    </Button>
+
+
+                    {slot.configs.length > 0 &&
                         <Button
-                            onClick={() => handleAddSlotConfig(slot.id)}
+                            startIcon={<SsidChart />}
+                            component={Link}
                             size={"small"}
-                            disabled={addSlotConfigQuery.isLoading}
-                            startIcon={addSlotConfigQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
+                            to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {
+                                id: props.routineId,
+                                id2: slot.id
+                            })}
                         >
-                            {slot.configs.length > 0 ? "add working set" : "add exercise"}
-                        </Button>
-                        {slot.configs.length > 0 &&
-                            <Button
-                                onClick={() => handleAddSlotConfig(slot.id, true)}
-                                size={"small"}
-                                disabled={addSlotConfigQuery.isLoading}
-                                startIcon={addSlotConfigQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
-                            >
-                                add superset
-                            </Button>
-                        }
-
-                        {slot.configs.length > 0 &&
-                            <Button
-                                startIcon={<SsidChart />}
-                                component={Link}
-                                size={"small"}
-                                to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {
-                                    id: props.routineId,
-                                    id2: slot.id
-                                })}
-                            >
-                                edit progression
-                            </Button>
-                        }
-                    </ButtonGroup>
-
-                    <Divider sx={{ mt: 2, mb: 2 }} />
-                </div>
-            )}
-
-            <Snackbar
-                open={openSnackbar}
-                autoHideDuration={SNACKBAR_AUTO_HIDE_DURATION}
-                onClose={handleCloseSnackbar}
-            >
-                <Alert
-                    severity="success"
-                    variant="filled"
-                    sx={{ width: '100%' }}
-                    action={
-                        <Button
-                            color={"warning"}
-                            variant={"contained"}
-                            size="small"
-                            onClick={handleCloseSnackbar}>
-                            Undo
+                            edit progression
                         </Button>
                     }
-                >
-                    Set successfully deleted
-                </Alert>
-            </Snackbar>
+                </ButtonGroup>
 
-            <Button
-                variant="contained"
-                color="primary"
-                startIcon={addSlotQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
-                onClick={handleAddSlot}
+                <Divider sx={{ my: 1 }} />
+            </div>
+        )}
+
+        <Snackbar
+            open={openSnackbar}
+            autoHideDuration={SNACKBAR_AUTO_HIDE_DURATION}
+            onClose={handleCloseSnackbar}
+        >
+            <Alert
+                severity="success"
+                variant="filled"
+                sx={{ width: '100%' }}
+                action={
+                    <Button
+                        color={"warning"}
+                        variant={"contained"}
+                        size="small"
+                        onClick={handleCloseSnackbar}>
+                        Undo
+                    </Button>
+                }
             >
-                Add set
-            </Button>
-        </>
-    );
+                Set successfully deleted
+            </Alert>
+        </Snackbar>
+
+        <Button
+            variant="contained"
+            color="primary"
+            startIcon={addSlotQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
+            onClick={handleAddSlot}
+        >
+            Add set
+        </Button>
+    </>);
 };
 
 

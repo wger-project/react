@@ -181,6 +181,7 @@ export const SlotConfigDetails = (props: { slotConfig: SlotConfig, routineId: nu
 
                     </React.Fragment>
                 }
+
             </Grid>
             <Box height={20} />
         </React.Fragment>
