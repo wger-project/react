@@ -1,7 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteSlot, editSlot, EditSlotParams } from "services/slot";
+import { addSlot, deleteSlot, editSlot } from "services";
+import { AddSlotParams, EditSlotParams } from "services/slot";
 import { QueryKey, } from "utils/consts";
 
+
+export const useAddSlotQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: AddSlotParams) => addSlot(data),
+        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+    });
+};
 
 export const useEditSlotQuery = (routineId: number) => {
     const queryClient = useQueryClient();

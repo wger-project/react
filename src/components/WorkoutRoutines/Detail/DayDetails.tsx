@@ -32,9 +32,14 @@ import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget
 import { SlotDetails } from "components/WorkoutRoutines/Detail/SlotDetails";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { useAddSlotConfigQuery, useEditDayQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import {
+    useAddSlotConfigQuery,
+    useAddSlotQuery,
+    useDeleteSlotQuery,
+    useEditDayQuery,
+    useRoutineDetailQuery
+} from "components/WorkoutRoutines/queries";
 import { useAddDayQuery, useDeleteDayQuery } from "components/WorkoutRoutines/queries/days";
-import { useDeleteSlotQuery } from "components/WorkoutRoutines/queries/slots";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
 import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
 import React, { useState } from "react";
@@ -238,6 +243,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
     const [t, i18n] = useTranslation();
     const deleteSlotQuery = useDeleteSlotQuery(props.routineId);
     const addSlotConfigQuery = useAddSlotConfigQuery(props.routineId);
+    const addSlotQuery = useAddSlotQuery(props.routineId);
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [slotToDelete, setSlotToDelete] = useState<Slot | null>(null);
@@ -295,6 +301,8 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
             order: slot.configs.length,
         });
     };
+
+    const handleAddSlot = () => addSlotQuery.mutate({ day: props.day.id, order: props.day.slots.length + 1 });
 
 
     return (
@@ -407,7 +415,14 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
             </Snackbar>
 
 
-            <Button variant="contained" color="primary" startIcon={<AddIcon />}>todo - Add set</Button>
+            <Button
+                variant="contained"
+                color="primary"
+                startIcon={addSlotQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
+                onClick={handleAddSlot}
+            >
+                Add set
+            </Button>
         </>
     );
 };

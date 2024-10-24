@@ -7,13 +7,25 @@ import { makeHeader, makeUrl } from "utils/url";
 export interface AddSlotParams {
     day: number;
     order: number;
-    comment: string;
+    comment?: string;
 }
 
 export interface EditSlotParams extends Partial<AddSlotParams> {
     id: number,
 }
 
+/*
+ * Creates a new Slot
+ */
+export const addSlot = async (data: AddSlotParams): Promise<Slot> => {
+    const response = await axios.post(
+        makeUrl(ApiPath.SLOT),
+        data,
+        { headers: makeHeader() }
+    );
+
+    return new SlotAdapter().fromJson(response.data);
+};
 /*
  * Update a Slot
  */

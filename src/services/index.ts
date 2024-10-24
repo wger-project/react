@@ -51,3 +51,4 @@ export { getRoutineLogs } from "./workoutLogs";
 export { editSlotConfig, deleteSlotConfig } from './slot_config'
 export { getRoutineRepUnits, getRoutineWeightUnits } from './workoutUnits'
 export { addDay, editDay, deleteDay } from './day'
+export { addSlot, deleteSlot, editSlot } from './slot'

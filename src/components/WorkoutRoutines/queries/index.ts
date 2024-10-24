@@ -42,3 +42,8 @@ export {
     useFetchRoutineWeighUnitsQuery,
     useFetchRoutineRepUnitsQuery
 } from "./units";
+export {
+    useAddSlotQuery,
+    useEditSlotQuery,
+    useDeleteSlotQuery,
+} from "./slots";
