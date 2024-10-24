@@ -37,7 +37,7 @@ const getConfigComponent = (type: ConfigType, configs: BaseConfig[], routineId: 
         ;
 };
 
-export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: boolean }) => {
+export const SlotEntryDetails = (props: { slot: Slot, routineId: number, simpleMode: boolean }) => {
 
     return (
         <>

@@ -102,8 +102,8 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
                 renderOption={(props, option) => {
                     return (
                         <li {...props}
-                            key={`exercise${option.data.id}`}
-                            data-testid={`autocompleter-result-${option.data.id}`}
+                            key={`exercise${option.data.base_id}`}
+                            data-testid={`autocompleter-result-${option.data.base_id}`}
                         >
                             <ListItem disablePadding component="div">
                                 <ListItemIcon>
