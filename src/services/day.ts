@@ -7,8 +7,8 @@ import { makeHeader, makeUrl } from "utils/url";
 export interface AddDayParams {
     routine: number;
     name: string;
-    description: string;
-    order?: number;
+    description?: string;
+    order: number;
     is_rest: boolean;
 }
 
@@ -28,6 +28,29 @@ export const editDay = async (data: EditDayParams): Promise<Day> => {
 
     const adapter = new DayAdapter();
     return adapter.fromJson(response.data);
+};
+
+/*
+ * Creates a new day
+ */
+export const addDay = async (data: AddDayParams): Promise<Day> => {
+    const response = await axios.post(
+        makeUrl(ApiPath.DAY),
+        data,
+        { headers: makeHeader() }
+    );
+
+    return new DayAdapter().fromJson(response.data);
+};
+
+/*
+ * Deletes an existing day
+ */
+export const deleteDay = async (id: number): Promise<void> => {
+    const response = await axios.delete(
+        makeUrl(ApiPath.DAY, { id: id }),
+        { headers: makeHeader() }
+    );
 };
 
 

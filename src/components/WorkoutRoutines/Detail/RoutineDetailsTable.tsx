@@ -1,4 +1,5 @@
 import {
+    Chip,
     Container,
     Paper,
     Stack,
@@ -90,19 +91,24 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
 
 
                         {dayData.slots.map((slotData, slotIndex) =>
-                            // <div key={`${props.iteration}-${index}-${slotIndex}`}>
                             <React.Fragment key={slotIndex}>
                                 {slotData.setConfigs.map((setConfig, index) => {
 
                                         // Only show the name of the exercise the first time it appears
                                         const showExercise = index === 0 || setConfig.exerciseId !== slotData.setConfigs[index - 1]?.exerciseId;
-                                    // const showExercise = true;
 
                                         return <TableRow key={`tableRow-exercise-${index}`}>
                                             <TableCell
                                                 key={`tableCell-exercise-${index}`}
                                                 sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
                                                 {showExercise ? setConfig.exercise?.getTranslation(language).name : '.'}
+                                                {showExercise && setConfig.isSpecialType
+                                                    && <Chip
+                                                        label={setConfig.type}
+                                                        color="info"
+                                                        size="small"
+                                                        sx={{ marginLeft: "0.5em" }} />
+                                                }
                                             </TableCell>
                                         </TableRow>;
                                     }

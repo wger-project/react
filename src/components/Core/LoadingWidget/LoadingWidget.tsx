@@ -10,12 +10,13 @@ export const LoadingWidget = () => {
     );
 };
 
-export const LoadingPlaceholder = () => {
-    return <Box
-        sx={{ height: 200, alignItems: "center", mt: 2 }}
-        component={Stack}
-        direction="column"
-        justifyContent="center">
-        <CircularProgress />
-    </Box>;
-};
+export const LoadingPlaceholder = () => <Box
+    sx={{ height: 200, alignItems: "center", mt: 2 }}
+    component={Stack}
+    direction="column"
+    justifyContent="center">
+    <CircularProgress />
+</Box>;
+
+
+export const LoadingProgressIcon = () => <CircularProgress size={20} />;

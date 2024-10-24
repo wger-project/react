@@ -9,7 +9,7 @@ export interface AddSlotConfigParams {
     exercise: number,
     type: SlotConfigType,
     order: number,
-    comment: string,
+    comment?: string,
     repetition_unit?: number,
     repetition_rounding?: number,
     weight_unit?: number,

@@ -1,6 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { CircularProgress, IconButton, MenuItem, Switch, TextField } from "@mui/material";
+import { IconButton, MenuItem, Switch, TextField } from "@mui/material";
+import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
 import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
 import {
     useAddMaxRepsConfigQuery,
@@ -144,7 +145,7 @@ export const SlotBaseConfigValueField = (props: {
             disabled={isLoading}
             onChange={e => onChange(e.target.value)}
             InputProps={{
-                endAdornment: isLoading && <CircularProgress size={20} />
+                endAdornment: isLoading && <LoadingProgressIcon />
             }}
         />
     </>);

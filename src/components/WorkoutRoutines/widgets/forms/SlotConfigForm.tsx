@@ -1,4 +1,5 @@
-import { CircularProgress, MenuItem, TextField } from "@mui/material";
+import { MenuItem, TextField } from "@mui/material";
+import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
 import { SlotConfig, SlotConfigType } from "components/WorkoutRoutines/models/SlotConfig";
 import {
     useEditSlotConfigQuery,
@@ -22,7 +23,7 @@ export const SlotConfigTypeField = (props: { slotConfig: SlotConfig, routineId: 
             label: 'Drop set',
         },
         {
-            value: 'myp',
+            value: 'myo',
             label: 'Myo',
         },
         {
@@ -76,7 +77,7 @@ export const SlotConfigRepetitionUnitField = (props: { slotConfig: SlotConfig, r
     const repUnitsQuery = useFetchRoutineRepUnitsQuery();
 
     if (repUnitsQuery.isLoading) {
-        return <CircularProgress size={20} />;
+        return <LoadingProgressIcon />;
     }
 
     const options = repUnitsQuery.data?.map((unit) => ({
@@ -115,7 +116,7 @@ export const SlotConfigWeightUnitField = (props: { slotConfig: SlotConfig, routi
     const weightUnitsQuery = useFetchRoutineWeighUnitsQuery();
 
     if (weightUnitsQuery.isLoading) {
-        return <CircularProgress size={20} />;
+        return <LoadingProgressIcon />;
     }
 
     const options = weightUnitsQuery.data?.map((unit) => ({

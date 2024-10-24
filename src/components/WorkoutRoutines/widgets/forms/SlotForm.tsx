@@ -1,4 +1,5 @@
-import { CircularProgress, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
+import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { useEditSlotQuery } from "components/WorkoutRoutines/queries/slots";
 import React, { useState } from "react";
@@ -34,7 +35,7 @@ export const SlotForm = (props: { slot: Slot, routineId: number }) => {
                 onChange={(e) => handleChange(e.target.value)}
                 onBlur={handleBlur} // Call handleBlur when input loses focus
                 InputProps={{
-                    endAdornment: editSlotQuery.isLoading && <CircularProgress size={20} />,
+                    endAdornment: editSlotQuery.isLoading && <LoadingProgressIcon />,
                 }}
             />
         </>

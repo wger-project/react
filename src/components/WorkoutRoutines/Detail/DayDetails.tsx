@@ -3,6 +3,7 @@ import { SsidChart } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import EditOffIcon from "@mui/icons-material/EditOff";
 import HotelIcon from "@mui/icons-material/Hotel";
 import {
     Box,
@@ -13,9 +14,13 @@ import {
     CardActions,
     CardContent,
     CardHeader,
-    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     Divider,
     FormControlLabel,
+    Grid,
     IconButton,
     Snackbar,
     SnackbarCloseReason,
@@ -23,19 +28,19 @@ import {
     Typography,
     useTheme
 } from "@mui/material";
-import Grid from "@mui/material/Grid";
+import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
 import { SlotDetails } from "components/WorkoutRoutines/Detail/SlotDetails";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { useAddSlotConfigQuery, useEditDayQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
-import { useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
+import { useAddDayQuery, useDeleteDayQuery } from "components/WorkoutRoutines/queries/days";
 import { useDeleteSlotQuery } from "components/WorkoutRoutines/queries/slots";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
 import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { AddSlotConfigParams } from "services/slot_config";
+import { AddDayParams } from "services/day";
 import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
 
@@ -46,8 +51,8 @@ export const DayDragAndDropGrid = (props: {
 }) => {
 
     const routineQuery = useRoutineDetailQuery(props.routineId);
-    const editRoutineQuery = useEditRoutineQuery(props.routineId);
     const editDayQuery = useEditDayQuery(props.routineId);
+    const addDayQuery = useAddDayQuery(props.routineId);
 
     const onDragEnd = (result: DropResult) => {
 
@@ -63,9 +68,8 @@ export const DayDragAndDropGrid = (props: {
         // Save objects
         routineQuery.data!.days = updatedDays;
         updatedDays.forEach((day, index) => {
-            editDayQuery.mutate({ routine: props.routineId, id: day.id, order: index });
+            editDayQuery.mutate({ id: day.id, order: index });
         });
-        editRoutineQuery.mutate({ id: props.routineId });
     };
 
     const grid = 8;
@@ -93,6 +97,16 @@ export const DayDragAndDropGrid = (props: {
         padding: grid,
         overflow: 'auto',
     });
+
+    const handleAddDay = () => {
+        const newDay: AddDayParams = {
+            routine: props.routineId,
+            name: 'new day',
+            order: routineQuery.data!.days.length + 1,
+            is_rest: false
+        };
+        addDayQuery.mutate(newDay);
+    };
 
 
     return <Grid
@@ -122,6 +136,7 @@ export const DayDragAndDropGrid = (props: {
                                     >
                                         <DayCard
                                             day={day}
+                                            routineId={props.routineId}
                                             setSelected={props.setSelectedDay}
                                             isSelected={props.selectedDay === day.id}
                                             key={`card-${day.id}`}
@@ -143,9 +158,10 @@ export const DayDragAndDropGrid = (props: {
             md={3}
         >
             <Card>
-                <CardActionArea sx={{ minHeight: 175 }} onClick={() => console.log('adding new day')}>
+                <CardActionArea sx={{ minHeight: 175 }} onClick={handleAddDay}>
                     <CardContent>
-                        <AddIcon />
+                        Add day<br />
+                        {addDayQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
                     </CardContent>
                 </CardActionArea>
             </Card>
@@ -153,28 +169,67 @@ export const DayDragAndDropGrid = (props: {
     </Grid>;
 };
 
-const DayCard = (props: { day: Day, isSelected: boolean, setSelected: (day: number | null) => void }) => {
+const DayCard = (props: {
+    day: Day,
+    routineId: number,
+    isSelected: boolean,
+    setSelected: (day: number | null) => void
+}) => {
     const theme = useTheme();
-    const color = props.isSelected ? theme.palette.primary.light : props.day.isRest ? theme.palette.action.disabled : '';
+    const color = props.isSelected ? theme.palette.info.light : props.day.isRest ? theme.palette.action.disabled : '';
     const sx = { backgroundColor: color, aspectRatio: '4 / 3', minHeight: 175, maxWidth: 200 };
     const [t] = useTranslation();
+
+    const deleteDayQuery = useDeleteDayQuery(props.routineId);
+
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
     const setSelected = () => {
         props.isSelected ? props.setSelected(null) : props.setSelected(props.day.id);
     };
 
-    return (
-        <Card sx={sx}>
-            <CardHeader title={props.day.isRest ? t('routines.restDay') : props.day.name} />
-            <CardContent>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {props.day.isRest && <HotelIcon />}
-                </Typography>
-            </CardContent>
-            <CardActions>
-                <Button size="small" startIcon={<EditIcon />} onClick={setSelected}>edit</Button>
-            </CardActions>
-        </Card>
+    const handleDeleteDay = () => setOpenDeleteDialog(true);
+
+    const handleConfirmDeleteDay = () => {
+        props.setSelected(null);
+        deleteDayQuery.mutate(props.day.id);
+        setOpenDeleteDialog(false);
+    };
+
+    const handleCancelDeleteDay = () => setOpenDeleteDialog(false);
+
+    return (<React.Fragment>
+            <Card sx={sx}>
+                <CardHeader title={props.day.isRest ? t('routines.restDay') : props.day.name} />
+                <CardContent>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                        {props.day.isRest && <HotelIcon />}
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <IconButton onClick={setSelected}>
+                        {props.isSelected ? <EditOffIcon /> : <EditIcon />}
+                    </IconButton>
+                    <IconButton onClick={handleDeleteDay}>
+                        {deleteDayQuery.isLoading ? <LoadingProgressIcon /> : <DeleteIcon />}
+                    </IconButton>
+                </CardActions>
+            </Card>
+
+            <Dialog open={openDeleteDialog} onClose={handleCancelDeleteDay}>
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    Are you sure you want to delete this day? This action cannot be
+                    undone.
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCancelDeleteDay}>Cancel</Button>
+                    <Button onClick={handleConfirmDeleteDay} color="error">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </React.Fragment>
     );
 };
 
@@ -183,6 +238,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
     const [t, i18n] = useTranslation();
     const deleteSlotQuery = useDeleteSlotQuery(props.routineId);
     const addSlotConfigQuery = useAddSlotConfigQuery(props.routineId);
+
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [slotToDelete, setSlotToDelete] = useState<Slot | null>(null);
     const [simpleMode, setSimpleMode] = useState(true);
@@ -232,15 +288,12 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
             return;
         }
 
-        const newSlotConfigData: AddSlotConfigParams = {
+        addSlotConfigQuery.mutate({
             slot: slotId,
             exercise: exerciseId,
             type: 'normal',
             order: slot.configs.length,
-            comment: ''
-        };
-
-        addSlotConfigQuery.mutate(newSlotConfigData);
+        });
     };
 
 
@@ -248,9 +301,6 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
         <>
             <Typography variant={"h4"}>
                 {props.day.name}
-                <IconButton onClick={() => console.log(`deleting day ${props.day.id}`)}>
-                    <DeleteIcon />
-                </IconButton>
             </Typography>
             <Box height={30} />
 
@@ -298,7 +348,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                             onClick={() => handleAddSlotConfig(slot.id)}
                             size={"small"}
                             disabled={addSlotConfigQuery.isLoading}
-                            startIcon={addSlotConfigQuery.isLoading ? <CircularProgress size={20} /> : <AddIcon />}
+                            startIcon={addSlotConfigQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
                         >
                             add exercise
                         </Button>
@@ -355,6 +405,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                 action={<Button color="info" size="small" onClick={handleCloseSnackbar}>Undo</Button>}
             >
             </Snackbar>
+
 
             <Button variant="contained" color="primary" startIcon={<AddIcon />}>todo - Add set</Button>
         </>
