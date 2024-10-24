@@ -19,7 +19,6 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    Divider,
     FormControlLabel,
     Grid,
     IconButton,
@@ -247,6 +246,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
     const deleteSlotQuery = useDeleteSlotQuery(props.routineId);
     const addSlotConfigQuery = useAddSlotConfigQuery(props.routineId);
     const addSlotQuery = useAddSlotQuery(props.routineId);
+    const theme = useTheme();
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [showAutocompleterForSlot, setShowAutocompleterForSlot] = useState<number | null>(null);
@@ -315,29 +315,29 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
         <FormControlLabel
             control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
             label="Simple mode" />
+        <Box height={20} />
 
-        {props.day.slots.map((slot, index) =>
-            <div key={`slot-${slot.id}-${index}`}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={4}>
-                        <Typography variant={"h5"} gutterBottom>
-                            <IconButton onClick={() => handleDeleteSlot(slot.id)}>
-                                <DeleteIcon />
-                            </IconButton>
-                            Set {index + 1}
-                        </Typography>
-                    </Grid>
-                    {!simpleMode && <Grid item xs={12} md={8}>
-                        <SlotForm routineId={props.routineId} slot={slot} key={`slot-form-${slot.id}`} />
-                    </Grid>}
-                    <Grid item xs={12}>
-                        {/*<Box height={20} />*/}
-                        <SlotEntryDetails slot={slot} routineId={props.routineId} simpleMode={simpleMode} />
-                    </Grid>
+        {props.day.slots.map((slot, index) => <React.Fragment key={`slot-${slot.id}-${index}`}>
+            <Grid container spacing={1}>
+                <Grid item xs={12} sx={{ backgroundColor: theme.palette.grey[100] }}>
+                    <Typography variant={"h5"} gutterBottom>
+                        <IconButton onClick={() => handleDeleteSlot(slot.id)}>
+                            <DeleteIcon />
+                        </IconButton>
+                        Set {index + 1}
+                    </Typography>
+                </Grid>
+                {!simpleMode && <Grid item xs={12} md={8}>
+                    <SlotForm routineId={props.routineId} slot={slot} key={`slot-form-${slot.id}`} />
+                </Grid>}
+                <Grid item xs={12}>
+                    {/*<Box height={20} />*/}
+                    <SlotEntryDetails slot={slot} routineId={props.routineId} simpleMode={simpleMode} />
                 </Grid>
 
+
                 {showAutocompleterForSlot === slot.id
-                    && <>
+                    && <Grid item xs={12}>
                         <Box height={20} />
                         <NameAutocompleter
                             callback={(exercise: ExerciseSearchResponse | null) => {
@@ -353,39 +353,40 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                 setShowAutocompleterForSlot(null);
                             }}
                         />
-                        <Box height={20} />
-                    </>}
+                        {/*<Box height={20} />*/}
+                    </Grid>}
 
-
-                <ButtonGroup variant="outlined">
-                    <Button
-                        onClick={() => handleAddSlotConfig(slot.id)}
-                        size={"small"}
-                        disabled={addSlotConfigQuery.isLoading}
-                        startIcon={addSlotConfigQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
-                    >
-                        {slot.configs.length > 0 ? "add superset" : "add exercise"}
-                    </Button>
-
-
-                    {slot.configs.length > 0 &&
+                <Grid item xs={12}>
+                    <ButtonGroup variant="outlined">
                         <Button
-                            startIcon={<SsidChart />}
-                            component={Link}
+                            onClick={() => handleAddSlotConfig(slot.id)}
                             size={"small"}
-                            to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {
-                                id: props.routineId,
-                                id2: slot.id
-                            })}
+                            disabled={addSlotConfigQuery.isLoading}
+                            startIcon={addSlotConfigQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
                         >
-                            edit progression
+                            {slot.configs.length > 0 ? "add superset" : "add exercise"}
                         </Button>
-                    }
-                </ButtonGroup>
 
-                <Divider sx={{ my: 1 }} />
-            </div>
-        )}
+                        {slot.configs.length > 0 &&
+                            <Button
+                                startIcon={<SsidChart />}
+                                component={Link}
+                                size={"small"}
+                                to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {
+                                    id: props.routineId,
+                                    id2: slot.id
+                                })}
+                            >
+                                edit progression
+                            </Button>
+                        }
+                    </ButtonGroup>
+                </Grid>
+
+            </Grid>
+            <Box height={40} />
+            {/*<Divider sx={{ my: 1 }} />*/}
+        </React.Fragment>)}
 
         <Snackbar
             open={openSnackbar}

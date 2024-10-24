@@ -39,22 +39,20 @@ const getConfigComponent = (type: ConfigType, configs: BaseConfig[], routineId: 
 
 export const SlotEntryDetails = (props: { slot: Slot, routineId: number, simpleMode: boolean }) => {
 
-    return (
-        <>
-            {props.slot.configs.length === 0 && (
-                <Alert severity="warning">This set has no exercises yet.</Alert>
-            )}
+    return (<>
+        {props.slot.configs.length === 0 && (
+            <Alert severity="warning">This set has no exercises yet.</Alert>
+        )}
 
-            {props.slot.configs.map((slotConfig: SlotConfig) => (
-                <SlotConfigDetails
-                    key={slotConfig.id}
-                    slotConfig={slotConfig}
-                    routineId={props.routineId}
-                    simpleMode={props.simpleMode}
-                />
-            ))}
-        </>
-    );
+        {props.slot.configs.map((slotConfig: SlotConfig) => (
+            <SlotConfigDetails
+                key={slotConfig.id}
+                slotConfig={slotConfig}
+                routineId={props.routineId}
+                simpleMode={props.simpleMode}
+            />
+        ))}
+    </>);
 };
 
 export const SlotConfigDetails = (props: { slotConfig: SlotConfig, routineId: number, simpleMode: boolean }) => {
@@ -86,7 +84,7 @@ export const SlotConfigDetails = (props: { slotConfig: SlotConfig, routineId: nu
 
     return (
         <React.Fragment>
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
                 <Grid item xs={1}>
                     {/*<IconButton size={"small"} onClick={toggleEditExercise} disabled={true}>*/}
                     {/*    <DragHandle />*/}
@@ -101,14 +99,14 @@ export const SlotConfigDetails = (props: { slotConfig: SlotConfig, routineId: nu
                     >
                         <DeleteIcon />
                     </IconButton>
-
-
                 </Grid>
+
                 <Grid item xs={11} sm={3}>
-                    <Typography variant={"h6"} gutterBottom>
+                    <Typography variant={"h6"}>
                         {props.slotConfig.exercise?.getTranslation(language).name}
                     </Typography>
                 </Grid>
+
                 {editExercise
                     && <React.Fragment>
                         <Grid item xs={8}>
@@ -181,9 +179,8 @@ export const SlotConfigDetails = (props: { slotConfig: SlotConfig, routineId: nu
 
                     </React.Fragment>
                 }
-
             </Grid>
-            <Box height={20} />
+            <Box height={10} />
         </React.Fragment>
     );
 };
