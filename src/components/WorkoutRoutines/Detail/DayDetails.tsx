@@ -20,7 +20,6 @@ import {
     DialogContent,
     DialogTitle,
     FormControlLabel,
-    Grid,
     IconButton,
     Snackbar,
     SnackbarCloseReason,
@@ -28,6 +27,7 @@ import {
     Typography,
     useTheme
 } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { SlotEntryDetails } from "components/WorkoutRoutines/Detail/SlotDetails";
@@ -116,64 +116,66 @@ export const DayDragAndDropGrid = (props: {
     };
 
 
-    return <Grid
-        spacing={3}
-        container
-        direction="row"
-    >
-        <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="droppable" direction="horizontal">
-                {(provided, snapshot) => (
-                    <div
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        style={getListStyle(snapshot.isDraggingOver)}
-                    >
-                        {routineQuery.data!.days.map((day, index) =>
-                            <Draggable key={day.id} draggableId={day.id.toString()} index={index}>
-                                {(provided, snapshot) => (
-                                    <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                        style={getItemStyle(
-                                            snapshot.isDragging,
-                                            provided.draggableProps.style ?? {}
-                                        )}
-                                    >
-                                        <DayCard
-                                            day={day}
-                                            routineId={props.routineId}
-                                            setSelected={props.setSelectedDay}
-                                            isSelected={props.selectedDay === day.id}
-                                            key={`card-${day.id}`}
-                                        />
-                                    </div>
-                                )}
-                            </Draggable>
-                        )}
-                        {provided.placeholder}
-                    </div>
-                )}
-            </Droppable>
-        </DragDropContext>
-
+    return (
         <Grid
-            item
-            xs={12}
-            sm={6}
-            md={3}
+            spacing={3}
+            container
+            direction="row"
         >
-            <Card>
-                <CardActionArea sx={{ minHeight: 175 }} onClick={handleAddDay}>
-                    <CardContent>
-                        Add day<br />
-                        {addDayQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
-                    </CardContent>
-                </CardActionArea>
-            </Card>
+            <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId="droppable" direction="horizontal">
+                    {(provided, snapshot) => (
+                        <div
+                            {...provided.droppableProps}
+                            ref={provided.innerRef}
+                            style={getListStyle(snapshot.isDraggingOver)}
+                        >
+                            {routineQuery.data!.days.map((day, index) =>
+                                <Draggable key={day.id} draggableId={day.id.toString()} index={index}>
+                                    {(provided, snapshot) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            style={getItemStyle(
+                                                snapshot.isDragging,
+                                                provided.draggableProps.style ?? {}
+                                            )}
+                                        >
+                                            <DayCard
+                                                day={day}
+                                                routineId={props.routineId}
+                                                setSelected={props.setSelectedDay}
+                                                isSelected={props.selectedDay === day.id}
+                                                key={`card-${day.id}`}
+                                            />
+                                        </div>
+                                    )}
+                                </Draggable>
+                            )}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
+            </DragDropContext>
+
+            <Grid
+                size={{
+                    xs: 12,
+                    sm: 6,
+                    md: 3
+                }}>
+                <Card>
+                    <CardActionArea sx={{ minHeight: 175 }} onClick={handleAddDay}>
+                        <CardContent>
+                            Add day<br />
+                            {addDayQuery.isPending ? <LoadingProgressIcon /> : <AddIcon />}
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            </Grid>
         </Grid>
-    </Grid>;
+    );
 };
 
 const DayCard = (props: {
@@ -218,7 +220,7 @@ const DayCard = (props: {
                         {props.isSelected ? <EditOffIcon /> : <EditIcon />}
                     </IconButton>
                     <IconButton onClick={handleDeleteDay}>
-                        {deleteDayQuery.isLoading ? <LoadingProgressIcon /> : <DeleteIcon />}
+                        {deleteDayQuery.isPending ? <LoadingProgressIcon /> : <DeleteIcon />}
                     </IconButton>
                 </CardActions>
             </Card>
@@ -308,18 +310,15 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
             {props.day.name}
         </Typography>
         <Box height={30} />
-
-
         <DayForm routineId={props.routineId} day={props.day} key={`day-form-${props.day.id}`} />
         <Box height={40} />
         <FormControlLabel
             control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
             label="Simple mode" />
         <Box height={20} />
-
         {props.day.slots.map((slot, index) => <React.Fragment key={`slot-${slot.id}-${index}`}>
             <Grid container spacing={1}>
-                <Grid item xs={12} sx={{ backgroundColor: theme.palette.grey[100] }}>
+                <Grid sx={{ backgroundColor: theme.palette.grey[100] }} size={12}>
                     <Typography variant={"h5"} gutterBottom>
                         <IconButton onClick={() => handleDeleteSlot(slot.id)}>
                             <DeleteIcon />
@@ -327,18 +326,18 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                         Set {index + 1}
                     </Typography>
                 </Grid>
-                {!simpleMode && <Grid item xs={12}>
+                {!simpleMode && <Grid size={12}>
                     <SlotForm routineId={props.routineId} slot={slot} key={`slot-form-${slot.id}`} />
                     <Box height={10} />
                 </Grid>}
-                <Grid item xs={12}>
+                <Grid size={12}>
                     {/*<Box height={20} />*/}
                     <SlotEntryDetails slot={slot} routineId={props.routineId} simpleMode={simpleMode} />
                 </Grid>
 
 
                 {showAutocompleterForSlot === slot.id
-                    && <Grid item xs={12}>
+                    && <Grid size={12}>
                         <Box height={20} />
                         <NameAutocompleter
                             callback={(exercise: ExerciseSearchResponse | null) => {
@@ -357,13 +356,13 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                         {/*<Box height={20} />*/}
                     </Grid>}
 
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <ButtonGroup variant="outlined">
                         <Button
                             onClick={() => handleAddSlotConfig(slot.id)}
                             size={"small"}
-                            disabled={addSlotConfigQuery.isLoading}
-                            startIcon={addSlotConfigQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
+                            disabled={addSlotConfigQuery.isPending}
+                            startIcon={addSlotConfigQuery.isPending ? <LoadingProgressIcon /> : <AddIcon />}
                         >
                             {slot.configs.length > 0 ? "add superset" : "add exercise"}
                         </Button>
@@ -388,7 +387,6 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
             <Box height={40} />
             {/*<Divider sx={{ my: 1 }} />*/}
         </React.Fragment>)}
-
         <Snackbar
             open={openSnackbar}
             autoHideDuration={SNACKBAR_AUTO_HIDE_DURATION}
@@ -411,11 +409,10 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                 Set successfully deleted
             </Alert>
         </Snackbar>
-
         <Button
             variant="contained"
             color="primary"
-            startIcon={addSlotQuery.isLoading ? <LoadingProgressIcon /> : <AddIcon />}
+            startIcon={addSlotQuery.isPending ? <LoadingProgressIcon /> : <AddIcon />}
             onClick={handleAddSlot}
         >
             Add set

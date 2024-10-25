@@ -6,12 +6,12 @@ import {
     Chip,
     Container,
     Divider,
-    Grid,
     Menu,
     MenuItem,
     Stack,
     Typography
 } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
 import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";
 import { useLanguageQuery } from "components/Exercises/queries";
@@ -69,31 +69,33 @@ export function SetConfigDataDetails(props: {
     }
 
     // @ts-ignore
-    return <Grid container
-                 alignItems="center"
-                 justifyContent={"center"}
-                 sx={{ height: props.rowHeight, marginBottom: props.marginBottom }}>
-        <Grid item xs={12}>
-            <Stack spacing={0}>
-                <Typography variant={"h6"}>
-                    {props.showExercise ? props.setConfigData.exercise?.getTranslation(language).name : ''}
-                </Typography>
-                <div>
-                    {props.setConfigData.textRepr}
-                    {props.setConfigData.isSpecialType &&
-                        <Chip
-                            label={props.setConfigData.type}
-                            color="info"
-                            size="small"
-                            sx={{ marginLeft: "0.5em" }} />
-                    }
-                </div>
-                <Typography variant={"caption"}>
-                    {props.setConfigData.comment}
-                </Typography>
-            </Stack>
+    return (
+        <Grid container
+              alignItems="center"
+              justifyContent={"center"}
+              sx={{ height: props.rowHeight, marginBottom: props.marginBottom }}>
+            <Grid size={12}>
+                <Stack spacing={0}>
+                    <Typography variant={"h6"}>
+                        {props.showExercise ? props.setConfigData.exercise?.getTranslation(language).name : ''}
+                    </Typography>
+                    <div>
+                        {props.setConfigData.textRepr}
+                        {props.setConfigData.isSpecialType &&
+                            <Chip
+                                label={props.setConfigData.type}
+                                color="info"
+                                size="small"
+                                sx={{ marginLeft: "0.5em" }} />
+                        }
+                    </div>
+                    <Typography variant={"caption"}>
+                        {props.setConfigData.comment}
+                    </Typography>
+                </Stack>
+            </Grid>
         </Grid>
-    </Grid>;
+    );
 }
 
 
@@ -101,38 +103,40 @@ function SlotDataList(props: {
     slotData: SlotData,
     index: number,
 }) {
-    return <Grid
-        container
-        justifyContent="space-between"
-        alignItems="flex-start"
-    >
-        <Grid item xs={1}>
-            <Stack divider={<Box height="10px" />}>
-                {props.slotData.exercises.map((exercise, index) =>
-                    <ExerciseImageAvatar
-                        image={exercise.mainImage}
-                        iconSize={50}
-                        avatarSize={55}
-                        key={index}
-                    />
-                )}
-            </Stack>
-        </Grid>
+    return (
+        <Grid
+            container
+            justifyContent="space-between"
+            alignItems="flex-start"
+        >
+            <Grid size={1}>
+                <Stack divider={<Box height="10px" />}>
+                    {props.slotData.exercises.map((exercise, index) =>
+                        <ExerciseImageAvatar
+                            image={exercise.mainImage}
+                            iconSize={50}
+                            avatarSize={55}
+                            key={index}
+                        />
+                    )}
+                </Stack>
+            </Grid>
 
-        <Grid item xs={11}>
-            {props.slotData.setConfigs.map((setConfig, index) => {
-                    // Only show the name of the exercise the first time it appears
-                    const showExercise = index === 0 || setConfig.exerciseId !== props.slotData.setConfigs[index - 1]?.exerciseId;
-                return <SetConfigDataDetails
-                        setConfigData={setConfig}
-                        marginBottom="1em"
-                        key={index}
-                        showExercise={showExercise}
-                    />;
-                }
-            )}
+            <Grid size={11}>
+                {props.slotData.setConfigs.map((setConfig, index) => {
+                        // Only show the name of the exercise the first time it appears
+                        const showExercise = index === 0 || setConfig.exerciseId !== props.slotData.setConfigs[index - 1]?.exerciseId;
+                        return <SetConfigDataDetails
+                            setConfigData={setConfig}
+                            marginBottom="1em"
+                            key={index}
+                            showExercise={showExercise}
+                        />;
+                    }
+                )}
+            </Grid>
         </Grid>
-    </Grid>;
+    );
 }
 
 export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {

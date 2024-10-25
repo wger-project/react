@@ -1,4 +1,5 @@
-import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { DayDetails, DayDragAndDropGrid } from "components/WorkoutRoutines/Detail/DayDetails";
 import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
@@ -45,12 +46,12 @@ export const RoutineEdit = () => {
     return <>
         <Container maxWidth="lg">
             <Grid container>
-                <Grid item xs={10}>
+                <Grid size={10}>
                     <Typography variant={"h4"}>
                         Edit {routineQuery.data?.name}
                     </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid size={2}>
                     <Button
                         component={Link}
                         variant={"outlined"}
@@ -62,11 +63,11 @@ export const RoutineEdit = () => {
                 </Grid>
 
 
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <RoutineForm routine={routineQuery.data!} />
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid size={12}>
                     <Box height={20} />
                     <DayDragAndDropGrid
                         routineId={routineId}
@@ -74,7 +75,7 @@ export const RoutineEdit = () => {
                         setSelectedDay={setSelectedDay}
                     />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid size={12}>
                     {selectedDay !== null &&
                         <DayDetails
                             day={routineQuery.data!.days.find(day => day.id === selectedDay)!}

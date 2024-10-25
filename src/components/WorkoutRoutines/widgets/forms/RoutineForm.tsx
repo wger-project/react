@@ -1,4 +1,5 @@
-import { Button, Grid } from "@mui/material";
+import { Button } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { WgerTextField } from "components/Common/forms/WgerTextField";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
 import { useAddRoutineQuery, useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
@@ -37,7 +38,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
 
 
     return (
-        <Formik
+        (<Formik
             initialValues={{
                 name: routine ? routine.name : '',
                 description: routine ? routine.description : '',
@@ -64,19 +65,19 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
             {formik => (
                 <Form>
                     <Grid container>
-                        <Grid item xs={6}>
+                        <Grid size={6}>
                             <WgerTextField fieldName="name" title={t('name')} />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <WgerTextField fieldName="start" title={'start'} />
                         </Grid>
-                        <Grid item xs={3}>
+                        <Grid size={3}>
                             <WgerTextField fieldName="end" title={'end'} />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <WgerTextField fieldName="description" title={t('description')} />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Button
                                 color="primary"
                                 variant="contained"
@@ -89,6 +90,6 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                     </Grid>
                 </Form>
             )}
-        </Formik>
+        </Formik>)
     );
 };

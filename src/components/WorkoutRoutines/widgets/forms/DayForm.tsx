@@ -6,10 +6,10 @@ import {
     DialogContent,
     DialogTitle,
     FormControlLabel,
-    Grid,
     Switch,
     TextField
 } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { useEditDayQuery } from "components/WorkoutRoutines/queries";
 import { Form, Formik } from "formik";
@@ -62,7 +62,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
             {(formik) => (
                 <Form>
                     <Grid container spacing={2}>
-                        <Grid item xs={10}>
+                        <Grid size={10}>
                             <TextField
                                 fullWidth
                                 label="Name"
@@ -73,12 +73,12 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                                 helperText={formik.touched.name && formik.errors.name}
                             />
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid size={2}>
                             <FormControlLabel
                                 control={<Switch checked={isRest} onChange={handleRestChange} />}
                                 label="rest day" />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                                 label="Description"
                                 variant="standard"
@@ -91,7 +91,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                                 rows={4}
                             />
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             {editDayQuery.isPending
                                 ? <LoadingButton loading variant="contained" color="primary">
                                     Save

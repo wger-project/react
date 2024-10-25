@@ -1,15 +1,5 @@
-import {
-    Box,
-    Button,
-    Container,
-    Grid,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Typography
-} from "@mui/material";
+import { Box, Button, Container, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
@@ -37,8 +27,12 @@ export const ProgressionEdit = (props: {
     iterations: number[]
 }) => {
     return (
-        <React.Fragment>
-            <Grid item md={12} lg={6}>
+        (<React.Fragment>
+            <Grid
+                size={{
+                    md: 12,
+                    lg: 6
+                }}>
                 <Typography variant="h6" gutterBottom>
                     {props.type}
                 </Typography>
@@ -103,7 +97,7 @@ export const ProgressionEdit = (props: {
                     </TableBody>
                 </Table>
             </Grid>
-        </React.Fragment>
+        </React.Fragment>)
     );
 };
 
@@ -150,12 +144,12 @@ export const SlotProgressionEdit = () => {
     return <>
         <Container maxWidth="lg"> {/*maxWidth={false}*/}
             <Grid container>
-                <Grid item xs={10}>
+                <Grid size={10}>
                     <Typography variant={"h4"}>
                         Edit progression for slot #{slotId}
                     </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid size={2}>
                     <Button
                         component={Link}
                         variant={"outlined"}
