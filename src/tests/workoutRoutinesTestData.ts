@@ -108,7 +108,6 @@ export const testRoutine1 = new Routine(
     1,
     'Test routine 1',
     'Full body routine',
-    1,
     new Date('2024-01-01'),
     new Date('2024-01-01'),
     new Date('2024-02-01'),
@@ -121,7 +120,6 @@ export const testRoutine2 = new Routine(
     2,
     '',
     'The routine description',
-    1,
     new Date('2024-02-01'),
     new Date('2024-02-01'),
     new Date('2024-03-01')

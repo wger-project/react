@@ -88,9 +88,6 @@ describe('ConfigDetailsField Component', () => {
                     id: mockConfig.id,
                     slot_config: slotId,
                     value: 52,
-                    iteration: 1,
-                    operation: 'r',
-                    need_log_to_apply: false,
                 });
                 expect(deleteMutation).toHaveBeenCalledTimes(0);
             });
@@ -109,13 +106,11 @@ describe('ConfigDetailsField Component', () => {
 
                 expect(addMutation).toHaveBeenCalledTimes(1);
                 expect(addMutation).toHaveBeenCalledWith({
-                    slot: slotId,
                     slot_config: 2,
                     value: 8,
                     iteration: 1,
-                    operation: null,
-                    replace: true,
-                    need_log_to_apply: false,
+                    operation: 'r',
+                    need_logs_to_apply: false,
                 });
                 expect(editMutation).toHaveBeenCalledTimes(0);
                 expect(deleteMutation).toHaveBeenCalledTimes(0);

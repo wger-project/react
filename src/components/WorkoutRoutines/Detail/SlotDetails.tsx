@@ -98,7 +98,7 @@ export const SlotConfigDetails = (props: { slotConfig: SlotConfig, routineId: nu
                     <IconButton
                         size={"small"}
                         onClick={() => deleteSlotQuery.mutate(props.slotConfig.id)}
-                        disabled={deleteSlotQuery.isLoading}
+                        disabled={deleteSlotQuery.isPending}
                     >
                         <DeleteIcon />
                     </IconButton>

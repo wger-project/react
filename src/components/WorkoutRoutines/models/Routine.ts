@@ -18,7 +18,6 @@ export class Routine {
         public id: number,
         public name: string,
         public description: string,
-        public firstDayId: number | null,
         public created: Date,
         public start: Date,
         public end: Date,
@@ -49,7 +48,6 @@ export class RoutineAdapter implements Adapter<Routine> {
             item.id,
             item.name,
             item.description,
-            item.first_day,
             new Date(item.created),
             new Date(item.start),
             new Date(item.end),
@@ -61,7 +59,6 @@ export class RoutineAdapter implements Adapter<Routine> {
             id: item.id,
             name: item.name,
             description: item.description,
-            first_day: item.firstDayId,
             start: dateToYYYYMMDD(item.start),
             end: dateToYYYYMMDD(item.end),
         };

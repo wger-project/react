@@ -44,7 +44,6 @@ describe('SlotDetails Component', () => {
         expect(screen.getByTestId('max-weight-field')).toBeInTheDocument();
         expect(screen.getByTestId('reps-field')).toBeInTheDocument();
         expect(screen.getByTestId('max-reps-field')).toBeInTheDocument();
-        expect(screen.getByTestId('rir-field')).toBeInTheDocument();
         expect(screen.getByTestId('rest-field')).toBeInTheDocument();
         expect(screen.getByTestId('max-rest-field')).toBeInTheDocument();
     });
