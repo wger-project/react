@@ -10,7 +10,7 @@ describe("Permission API tests", () => {
     test('Check an exising permission', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ data: { "result": true } }));
 
         // Act
@@ -23,7 +23,7 @@ describe("Permission API tests", () => {
 
     test('Check permission logged out user', async () => {
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ status: 400 }));
 
         // Act

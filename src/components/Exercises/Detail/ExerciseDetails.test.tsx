@@ -26,10 +26,10 @@ const queryClient = new QueryClient();
 describe("Render tests", () => {
 
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getExercise.mockImplementation(() => Promise.resolve(testExerciseSquats));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getExercisesForVariation.mockImplementation(() => Promise.resolve(
             [
                 testExerciseCurls,
@@ -37,25 +37,25 @@ describe("Render tests", () => {
             ]
         ));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getLanguageByShortName.mockImplementation(() => Promise.resolve(testLanguageEnglish));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getLanguages.mockImplementation(() => Promise.resolve(languages));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useProfileQuery.mockImplementation(() => Promise.resolve({
             isSuccess: true,
             data: testProfileDataVerified
         }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         usePermissionQuery.mockImplementation(() => ({
             isSuccess: true,
             data: true
         }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useLanguageQuery.mockImplementation(() => ({
             isLoading: false,
             isSuccess: true,

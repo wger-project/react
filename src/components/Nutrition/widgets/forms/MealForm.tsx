@@ -7,7 +7,7 @@ import { Form, Formik } from "formik";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { dateTimeToHHMM } from "utils/date";
-import * as yup from 'yup';
+import * as yup from "yup";
 
 interface MealFormProps {
     planId: number,
@@ -43,7 +43,7 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
 
                 // The result from the datepicker is a Luxon DateTime object, not a JS DateTime...
                 if (!(values.time instanceof Date)) {
-                    // @ts-ignore
+                    // @ts-expect-error is a Luxon object
                     values.time = values.time.toJSDate();
                 }
                 const data = { ...values, time: dateTimeToHHMM(values.time) };

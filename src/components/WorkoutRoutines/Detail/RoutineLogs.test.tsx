@@ -1,9 +1,9 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MemoryRouter, Route, Routes } from "react-router";
-import { useRoutineDetailQuery, useRoutineLogQuery } from "components/WorkoutRoutines/queries";
+import { render, screen } from '@testing-library/react';
 import { RoutineLogs } from "components/WorkoutRoutines/Detail/RoutineLogs";
+import { useRoutineDetailQuery, useRoutineLogQuery } from "components/WorkoutRoutines/queries";
+import React from 'react';
+import { MemoryRouter, Route, Routes } from "react-router";
 import { testWorkoutLogs } from "tests/workoutLogsRoutinesTestData";
 import { testRoutine1 } from "tests/workoutRoutinesTestData";
 
@@ -17,7 +17,7 @@ describe("Test the RoutineLogs component", () => {
 
     beforeEach(() => {
 
-        // @ts-ignore
+        // @ts-expect-error this is ok and exists
         delete window.ResizeObserver;
         window.ResizeObserver = jest.fn().mockImplementation(() => ({
             observe: jest.fn(),
@@ -25,14 +25,14 @@ describe("Test the RoutineLogs component", () => {
             disconnect: jest.fn()
         }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useRoutineLogQuery.mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: testWorkoutLogs
         }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useRoutineDetailQuery.mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,

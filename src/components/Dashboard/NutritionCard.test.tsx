@@ -15,7 +15,7 @@ describe("test the NutritionCard component", () => {
     describe("Plans available", () => {
 
         beforeEach(() => {
-            // @ts-ignore
+            // @ts-expect-error mock will exist when this is run
             useFetchLastNutritionalPlanQuery.mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
@@ -25,7 +25,7 @@ describe("test the NutritionCard component", () => {
 
             jest.setSystemTime(new Date('2023-09-01'));
 
-            // @ts-ignore
+            // @ts-expect-error mock will exist when this is run
             delete window.ResizeObserver;
             window.ResizeObserver = jest.fn().mockImplementation(() => ({
                 observe: jest.fn(),
@@ -61,7 +61,7 @@ describe("test the NutritionCard component", () => {
     describe("No plans available", () => {
 
         beforeEach(() => {
-            // @ts-ignore
+            // @ts-expect-error mock will exist when this is run
             useFetchLastNutritionalPlanQuery.mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,

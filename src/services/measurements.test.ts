@@ -40,7 +40,7 @@ describe('measurement service tests', () => {
             ]
         };
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation((url: string) => {
             if (url.includes("measurement-category")) {
                 return Promise.resolve({ data: measurementResponse });
@@ -81,7 +81,7 @@ describe('measurement service tests', () => {
             ]
         };
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation((url: string) => {
             if (url.includes("measurement-category/1")) {
                 return Promise.resolve({ data: measurementResponse });

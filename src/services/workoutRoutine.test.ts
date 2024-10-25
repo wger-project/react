@@ -29,7 +29,7 @@ describe("workout routine service tests", () => {
     test('GET the routine data - shallow', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ data: responseApiWorkoutRoutine }));
 
         // Act
@@ -57,11 +57,11 @@ describe("workout routine service tests", () => {
     test('GET the routine logs', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
 
         // Act
@@ -102,13 +102,13 @@ describe("workout routine service tests", () => {
     test('GET the routine logs and the exercise bases', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
-// @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getExercise.mockImplementation(() => Promise.resolve(testExerciseSquats));
 
         // Act

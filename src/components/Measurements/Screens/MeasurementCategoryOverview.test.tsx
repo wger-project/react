@@ -1,10 +1,10 @@
-import React from 'react';
-import { act, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
-import { MeasurementCategoryOverview } from "components/Measurements/Screens/MeasurementCategoryOverview";
-import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "tests/measurementsTestData";
+import { act, render, screen } from '@testing-library/react';
 import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
+import { MeasurementCategoryOverview } from "components/Measurements/Screens/MeasurementCategoryOverview";
+import React from 'react';
+import { BrowserRouter } from "react-router-dom";
+import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "tests/measurementsTestData";
 
 jest.mock("components/Measurements/queries");
 
@@ -15,14 +15,14 @@ describe("Test the MeasurementCategoryOverview component", () => {
     const { ResizeObserver } = window;
 
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useMeasurementsCategoryQuery.mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: [TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2]
         }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         delete window.ResizeObserver;
         window.ResizeObserver = jest.fn().mockImplementation(() => ({
             observe: jest.fn(),

@@ -22,14 +22,13 @@ import reportWebVitals from './reportWebVitals';
 
 
 const queryClient = new QueryClient({
-    // -> https://tanstack.com/query/v4/docs/react/reference/QueryClient
+    // -> https://tanstack.com/query/v5/docs/reference/QueryClient
     // time in milliseconds, so 1000 * 30 = 30s
 
     defaultOptions: {
         queries: {
             retry: 3,
             staleTime: 1000 * 60 * 5,
-            cacheTime: 1000 * 60 * 5,
             refetchOnMount: true,
             refetchOnWindowFocus: true,
             refetchOnReconnect: "always"
@@ -53,7 +52,7 @@ const renderComponentShadowDom = (divId: string) => {
     if (djangoReactStyle) {
         const djangoStyleElement = document.createElement('link');
         djangoStyleElement.setAttribute('rel', 'stylesheet');
-        // @ts-ignore
+        // @ts-expect-error - property does exist on this element
         djangoStyleElement.setAttribute('href', djangoReactStyle.href);
         shadow.appendChild(djangoReactStyle);
     }

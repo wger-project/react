@@ -31,13 +31,13 @@ describe("Exercise translation edit tests", () => {
     beforeEach(() => {
         jest.resetAllMocks();
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         editExerciseTranslation.mockImplementation(() => Promise.resolve(testExerciseSquats.translations[1]));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useProfileQuery.mockImplementation(() => Promise.resolve(testProfileDataVerified));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         addTranslation.mockImplementation(() => Promise.resolve(
             new Translation(
                 300,
@@ -48,9 +48,9 @@ describe("Exercise translation edit tests", () => {
             )
         ));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         deleteAlias.mockImplementation(() => Promise.resolve({ status: 204 }));
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         postAlias.mockImplementation(() => Promise.resolve(
             {
                 status: 204,
@@ -61,16 +61,16 @@ describe("Exercise translation edit tests", () => {
             }
         ));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         usePermissionQuery.mockImplementation(() => Promise.resolve({ isSuccess: true, data: true }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useCategoriesQuery.mockImplementation(() => Promise.resolve({ isSuccess: true, data: testCategories }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useEquipmentQuery.mockImplementation(() => Promise.resolve({ isSuccess: true, data: testEquipment }));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useMusclesQuery.mockImplementation(() => Promise.resolve({ isSuccess: true, data: testMuscles }));
     });
 

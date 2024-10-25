@@ -96,21 +96,21 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                                     disableFuture={true}
                                     onChange={(newValue) => {
                                         if (newValue) {
-                                            // @ts-ignore - new value is a Luxon DateTime!
+                                            // @ts-expect-error - new value is a Luxon DateTime!
                                             formik.setFieldValue('date', newValue.toJSDate());
                                         }
                                         setDateValue(newValue);
                                     }}
                                     shouldDisableDate={(date) => {
                                         // Allow the date of the current weight entry, since we are editing it
-                                        // @ts-ignore - date is a Luxon DateTime!
+                                        // @ts-expect-error - date is a Luxon DateTime!
                                         if (entry && dateToYYYYMMDD(entry.date) === dateToYYYYMMDD(date.toJSDate())) {
                                             return false;
                                         }
 
                                         // if date is in list of existing entries, disable it
                                         if (date) {
-                                            // @ts-ignore - date is a Luxon DateTime!
+                                            // @ts-expect-error - date is a Luxon DateTime!
                                             return categoryQuery.data!.entries.some(entry => dateToYYYYMMDD(entry.date) === dateToYYYYMMDD(date.toJSDate()));
                                         }
 

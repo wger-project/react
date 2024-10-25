@@ -17,17 +17,17 @@ describe("Test the edit widget to live edit the category", () => {
     test('Clicking on a category immediately fires the request', async () => {
 
         // Arrange
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useCategoriesQuery.mockImplementation(() => (
             { isSuccess: true, data: testCategories }
         ));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         useProfileQuery.mockImplementation(() => (
             { isSuccess: true, data: testProfileDataVerified }
         ));
 
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         editExercise.mockImplementation(() => (100));
         const user = userEvent.setup();
 

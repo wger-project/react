@@ -36,7 +36,7 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
         const querylist = [];
         for (const key in params.query) {
             if (params.query.hasOwnProperty(key)) {
-                // @ts-ignore
+                // @ts-expect-error - element will be string
                 querylist.push(`${encodeURIComponent(key)}=${encodeURIComponent(params.query[key])}`);
             }
         }
@@ -206,7 +206,7 @@ export function makeHeader(token?: string) {
     token = token || VITE_API_KEY;
     const DJANGO_CSRF_COOKIE = 'csrftoken';
 
-    let out: AxiosRequestConfig['headers'] = {};
+    const out: AxiosRequestConfig['headers'] = {};
     out['Content-Type'] = 'application/json';
 
     if (token) {

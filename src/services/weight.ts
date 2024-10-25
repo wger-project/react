@@ -22,7 +22,7 @@ export const getWeights = async (): Promise<WeightEntry[]> => {
  * Delete a weight entry
  */
 export const deleteWeight = async (id: number): Promise<number> => {
-    const response = await axios.delete<Number>(makeUrl(WEIGHT_PATH, { id: id }), {
+    const response = await axios.delete<number>(makeUrl(WEIGHT_PATH, { id: id }), {
         headers: makeHeader(),
     });
 

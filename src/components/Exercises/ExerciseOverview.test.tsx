@@ -24,15 +24,15 @@ describe("Test the ExerciseOverview component", () => {
 
 
     beforeEach(() => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getLanguages.mockImplementation(() => Promise.resolve(testLanguages));
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getCategories.mockImplementation(() => Promise.resolve(testCategories));
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getMuscles.mockImplementation(() => Promise.resolve(testMuscles));
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getEquipment.mockImplementation(() => Promise.resolve(testEquipment));
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         getExercises.mockImplementation(() => Promise.resolve([
             testExerciseSquats,
             testExerciseBenchPress,

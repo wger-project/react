@@ -22,9 +22,9 @@ describe("test the pagination utilities", () => {
 
 
     test('should fetch and yield results from all pages', async () => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockResolvedValueOnce(mockResponse1);
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockResolvedValueOnce(mockResponse2);
 
         const generator = fetchPaginated('/api/endpoint');
@@ -49,7 +49,7 @@ describe("test the pagination utilities", () => {
     });
 
     test('should use custom headers when provided', async () => {
-        // @ts-ignore
+        // @ts-expect-error mock will exist when this is run
         axios.get.mockResolvedValue(mockResponse1);
 
         const headers: AxiosRequestConfig['headers'] = {
