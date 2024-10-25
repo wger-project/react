@@ -31,7 +31,7 @@
     "recharts": "^2.12.7",
     "slug": "^9.1.0",
     "typescript": "^5.5.4",
-    "vite-tsconfig-paths": "^4.3.2",
+    "vite-tsconfig-paths": "^5.0.1",
     "web-vitals": "^4.2.2",
     "yup": "^1.4.0"
   },
