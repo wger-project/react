@@ -8,34 +8,54 @@ import {
     QUERY_LANGUAGES,
     QUERY_MUSCLES
 } from "utils/consts";
+import { number } from "yup";
 
 
 export function useExercisesQuery() {
-    return useQuery([QUERY_EXERCISES], getExercises);
+    return useQuery({
+        queryKey: [QUERY_EXERCISES],
+        queryFn: getExercises
+    });
 }
 
 export function useExerciseDetailQuery(exerciseId: number) {
-    return useQuery([QUERY_EXERCISE_DETAIL, exerciseId],
-        () => getExercise(exerciseId)
-    );
+    return useQuery({
+        queryKey: [QUERY_EXERCISE_DETAIL, exerciseId],
+        queryFn: () => getExercise(exerciseId)
+    });
 }
 
 export function useCategoriesQuery() {
-    return useQuery([QUERY_CATEGORIES], getCategories);
+    return useQuery({
+        queryKey: [QUERY_CATEGORIES],
+        queryFn: getCategories
+    });
 }
 
 export function useMusclesQuery() {
-    return useQuery([QUERY_MUSCLES], getMuscles);
+    return useQuery({
+        queryKey: [QUERY_MUSCLES],
+        queryFn: getMuscles
+    });
 }
 
 export function useEquipmentQuery() {
-    return useQuery([QUERY_EQUIPMENT], getEquipment);
+    return useQuery({
+        queryKey: [QUERY_EQUIPMENT],
+        queryFn: getEquipment
+    });
 }
 
 export function useLanguageQuery() {
-    return useQuery([QUERY_LANGUAGES], getLanguages);
+    return useQuery({
+        queryKey: [QUERY_LANGUAGES],
+        queryFn: getLanguages
+    });
 }
 
 export function useNotesQuery(translationId: number) {
-    return useQuery([QUERY_LANGUAGES, translationId], getLanguages);
+    return useQuery({
+        queryKey: [QUERY_LANGUAGES, translationId],
+        queryFn: getLanguages
+    });
 }
