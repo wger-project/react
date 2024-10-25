@@ -195,7 +195,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         }}
                                     />
                                 </Grid>
-                                <Grid item size={4}>
+                                <Grid size={4}>
                                     <TextField
                                         id="carbohydrates"
                                         label={t('nutrition.goalCarbohydrates')}
@@ -214,7 +214,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         }}
                                     />
                                 </Grid>
-                                <Grid item size={4}>
+                                <Grid size={4}>
                                     <TextField
                                         id="fat"
                                         label={t('nutrition.goalFat')}
@@ -235,7 +235,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={1}>
-                                <Grid item size={4}>
+                                <Grid size={4}>
                                     <TextField
                                         id="fiber"
                                         label={t('nutrition.goalFiber')}
