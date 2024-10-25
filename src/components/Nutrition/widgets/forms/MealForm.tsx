@@ -7,7 +7,8 @@ import { Form, Formik } from "formik";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { dateTimeToHHMM } from "utils/date";
-import * as yup from 'yup';
+import { number } from "yup";
+import * as yup from "yup";
 
 interface MealFormProps {
     planId: number,
@@ -89,7 +90,7 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
                                     {t('close')}
                                 </Button>}
                             <Button
-                                disabled={addMealQuery.isLoading || editMealQuery.isLoading}
+                                disabled={addMealQuery.isPending || editMealQuery.isPending}
                                 color="primary"
                                 variant="contained"
                                 type="submit"
