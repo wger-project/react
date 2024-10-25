@@ -5,6 +5,13 @@ export const ENGLISH_LANGUAGE_CODE = 'en';
 
 export const MIN_ACCOUNT_AGE = MIN_ACCOUNT_AGE_TO_TRUST || 21;
 
+// Duration in weeks
+export const MIN_WORKOUT_DURATION = 2;
+
+// Duration in weeks
+export const DEFAULT_WORKOUT_DURATION = 12;
+
+
 export const REP_UNIT_REPETITIONS = 1;
 export const REP_UNIT_TILL_FAILURE = 2;
 

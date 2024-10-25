@@ -92,6 +92,7 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                                     label={t('date')}
                                     value={dateValue}
                                     disableFuture={true}
+
                                     onChange={(newValue) => {
                                         if (newValue) {
                                             formik.setFieldValue('date', newValue.toJSDate());
