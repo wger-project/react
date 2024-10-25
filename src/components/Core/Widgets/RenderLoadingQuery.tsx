@@ -25,8 +25,4 @@ export const RenderLoadingQuery = (props: { query: UseQueryResult, child: JSX.El
     if (props.query.isSuccess) {
         return props.child;
     }
-
 };
-
-
-//

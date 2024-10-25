@@ -49,6 +49,7 @@ export const RoutineDetailsCard = () => {
     </Container>;
 };
 
+
 export function SetConfigDataDetails(props: {
     setConfigData: SetConfigData,
     rowHeight?: undefined | string,
@@ -134,7 +135,7 @@ function SlotDataList(props: {
     </Grid>;
 }
 
-const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
+export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

@@ -5,7 +5,7 @@ import { MeasurementCategoryOverview } from "components/Measurements/Screens/Mea
 import { NutritionDiaryOverview } from "components/Nutrition/components/NutritionDiaryOverview";
 import { PlanDetail } from "components/Nutrition/components/PlanDetail";
 import { PlansOverview } from "components/Nutrition/components/PlansOverview";
-import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
+import { RoutineDetail } from "components/WorkoutRoutines/Detail/RoutineDetail";
 import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import { RoutineEdit } from "components/WorkoutRoutines/Detail/RoutineEdit";
 import { SlotProgressionEdit } from "components/WorkoutRoutines/Detail/SlotProgressionEdit";
@@ -59,7 +59,7 @@ export const WgerRoutes = () => {
                 <Route index element={<RoutineOverview />} />
                 <Route path="overview" element={<RoutineOverview />} />
                 <Route path=":routineId">
-                    <Route path="view" element={<RoutineDetailsCard />} />
+                    <Route path="view" element={<RoutineDetail />} />
                     <Route path="edit">
                         <Route index element={<RoutineEdit />} />
                         <Route path="progression/:slotId" element={<SlotProgressionEdit />} />
