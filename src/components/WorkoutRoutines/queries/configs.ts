@@ -38,7 +38,10 @@ export const useEditWeightConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: EditBaseConfigParams) => editWeightConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+                queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+            }
+        )
     });
 };
 export const useAddWeightConfigQuery = (routineId: number) => {
@@ -46,7 +49,9 @@ export const useAddWeightConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: AddBaseConfigParams) => addWeightConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useDeleteWeightConfigQuery = (routineId: number) => {
@@ -54,7 +59,9 @@ export const useDeleteWeightConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (id: number) => deleteWeightConfig(id),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 
@@ -67,7 +74,9 @@ export const useEditMaxWeightConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: EditBaseConfigParams) => editMaxWeightConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useAddMaxWeightConfigQuery = (routineId: number) => {
@@ -75,7 +84,9 @@ export const useAddMaxWeightConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: AddBaseConfigParams) => addMaxWeightConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useDeleteMaxWeightConfigQuery = (routineId: number) => {
@@ -83,7 +94,9 @@ export const useDeleteMaxWeightConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (id: number) => deleteMaxWeightConfig(id),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 
@@ -95,7 +108,9 @@ export const useEditRepsConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: EditBaseConfigParams) => editRepsConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useAddRepsConfigQuery = (routineId: number) => {
@@ -103,7 +118,9 @@ export const useAddRepsConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: AddBaseConfigParams) => addRepsConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useDeleteRepsConfigQuery = (routineId: number) => {
@@ -111,7 +128,9 @@ export const useDeleteRepsConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (id: number) => deleteRepsConfig(id),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 
@@ -123,7 +142,9 @@ export const useEditMaxRepsConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: EditBaseConfigParams) => editMaxRepsConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useAddMaxRepsConfigQuery = (routineId: number) => {
@@ -131,7 +152,9 @@ export const useAddMaxRepsConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: AddBaseConfigParams) => addMaxRepsConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useDeleteMaxRepsConfigQuery = (routineId: number) => {
@@ -139,7 +162,9 @@ export const useDeleteMaxRepsConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (id: number) => deleteMaxRepsConfig(id),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 
@@ -151,7 +176,9 @@ export const useEditNrOfSetsConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: EditBaseConfigParams) => editNrOfSetsConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useAddNrOfSetsConfigQuery = (routineId: number) => {
@@ -159,7 +186,9 @@ export const useAddNrOfSetsConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: AddBaseConfigParams) => addNrOfSetsConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useDeleteNrOfSetsConfigQuery = (routineId: number) => {
@@ -167,7 +196,9 @@ export const useDeleteNrOfSetsConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (id: number) => deleteNrOfSetsConfig(id),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 
@@ -179,7 +210,9 @@ export const useEditRiRConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: EditBaseConfigParams) => editRirConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useAddRiRConfigQuery = (routineId: number) => {
@@ -187,7 +220,9 @@ export const useAddRiRConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: AddBaseConfigParams) => addRirConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useDeleteRiRConfigQuery = (routineId: number) => {
@@ -195,7 +230,9 @@ export const useDeleteRiRConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (id: number) => deleteRirConfig(id),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 
@@ -207,7 +244,9 @@ export const useEditRestConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: EditBaseConfigParams) => editRestConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useAddRestConfigQuery = (routineId: number) => {
@@ -215,7 +254,9 @@ export const useAddRestConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: AddBaseConfigParams) => addRestConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useDeleteRestConfigQuery = (routineId: number) => {
@@ -223,7 +264,9 @@ export const useDeleteRestConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (id: number) => deleteRestConfig(id),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 
@@ -235,7 +278,9 @@ export const useEditMaxRestConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: EditBaseConfigParams) => editMaxRestConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useAddMaxRestConfigQuery = (routineId: number) => {
@@ -243,7 +288,9 @@ export const useAddMaxRestConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: AddBaseConfigParams) => addMaxRestConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 export const useDeleteMaxRestConfigQuery = (routineId: number) => {
@@ -251,7 +298,9 @@ export const useDeleteMaxRestConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (id: number) => deleteMaxRestConfig(id),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
     });
 };
 
