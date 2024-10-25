@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { WeightEntry } from "components/BodyWeight/model";
 import { createWeight, deleteWeight, getWeights, updateWeight, } from "services";
 import { QueryKey, } from "utils/consts";
-import { number } from "yup";
 
 
 export function useBodyWeightQuery() {

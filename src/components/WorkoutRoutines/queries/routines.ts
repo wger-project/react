@@ -5,13 +5,17 @@ import { QueryKey, } from "utils/consts";
 
 
 export function useRoutinesQuery() {
-    return useQuery([QueryKey.ROUTINE_OVERVIEW], getRoutines);
+    return useQuery({
+        queryKey: [QueryKey.ROUTINE_OVERVIEW],
+        queryFn: getRoutines
+    });
 }
 
 export function useRoutineDetailQuery(id: number) {
-    return useQuery([QueryKey.ROUTINE_DETAIL, id],
-        () => getRoutine(id)
-    );
+    return useQuery({
+        queryKey: [QueryKey.ROUTINE_DETAIL, id],
+        queryFn: () => getRoutine(id)
+    });
 }
 
 /*
@@ -20,7 +24,10 @@ export function useRoutineDetailQuery(id: number) {
  * Note: strictly only the routine data, no days or any other sub-objects
  */
 export function useRoutinesShallowQuery() {
-    return useQuery([QueryKey.ROUTINES_SHALLOW], getRoutinesShallow);
+    return useQuery({
+        queryKey: [QueryKey.ROUTINES_SHALLOW],
+        queryFn: getRoutinesShallow
+    });
 }
 
 /*
@@ -29,7 +36,10 @@ export function useRoutinesShallowQuery() {
  * Note: strictly only the routine data, no days or any other sub-objects
  */
 export function useActiveRoutineQuery() {
-    return useQuery([QueryKey.ROUTINES_ACTIVE], getActiveRoutine);
+    return useQuery({
+        queryKey: [QueryKey.ROUTINES_ACTIVE],
+        queryFn: getActiveRoutine
+    });
 }
 
 
@@ -38,7 +48,9 @@ export const useAddRoutineQuery = () => {
 
     return useMutation({
         mutationFn: (data: AddRoutineParams) => addRoutine(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_OVERVIEW,])
+        onSuccess: () => queryClient.invalidateQueries(
+            { queryKey: [QueryKey.ROUTINE_OVERVIEW,] }
+        )
     });
 };
 
@@ -49,8 +61,8 @@ export const useEditRoutineQuery = (id: number) => {
     return useMutation({
         mutationFn: (data: EditRoutineParams) => editRoutine(data),
         onSuccess: () => {
-            queryClient.invalidateQueries([QueryKey.ROUTINE_OVERVIEW,]);
-            queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, id]);
+            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW,] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, id] });
         }
     });
 };

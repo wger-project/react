@@ -9,7 +9,7 @@ export const useEditSlotConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: EditSlotConfigParams) => editSlotConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, routineId] })
     });
 };
 
@@ -18,7 +18,7 @@ export const useAddSlotConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: AddSlotConfigParams) => addSlotConfig(data),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, routineId] })
     });
 };
 
@@ -27,6 +27,6 @@ export const useDeleteSlotConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (slotId: number) => deleteSlotConfig(slotId),
-        onSuccess: () => queryClient.invalidateQueries([QueryKey.ROUTINE_DETAIL, routineId])
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, routineId] })
     });
 };
