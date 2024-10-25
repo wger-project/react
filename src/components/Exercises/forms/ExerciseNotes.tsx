@@ -1,9 +1,10 @@
-import { useTranslation } from "react-i18next";
-import { Grid, IconButton, InputAdornment, TextField } from "@mui/material";
-import React, { useState } from "react";
-import { useField } from "formik";
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton, InputAdornment, TextField } from "@mui/material";
+import Grid from '@mui/material/Grid2';
+import { useField } from "formik";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function ExerciseNotes(props: { fieldName: string }) {
     const [t] = useTranslation();
@@ -25,7 +26,7 @@ export function ExerciseNotes(props: { fieldName: string }) {
     };
 
     return <>
-        <Grid item xs={12}>
+        <Grid size={12}>
             <TextField
                 fullWidth
                 label={t('exercises.newNote')}

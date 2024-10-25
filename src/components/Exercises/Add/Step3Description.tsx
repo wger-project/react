@@ -1,4 +1,5 @@
-import { Box, Button, Grid, Stack } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
@@ -22,7 +23,7 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
     });
 
     return (
-        <Formik
+        (<Formik
             initialValues={{
                 description: state.descriptionEn,
                 notes: state.notesEn,
@@ -39,11 +40,11 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
                     <ExerciseDescription fieldName={"description"} />
 
                     <PaddingBox />
-                    
+
                     <ExerciseNotes fieldName={'notes'} />
 
                     <Grid container>
-                        <Grid item xs={12} display="flex" justifyContent={"end"}>
+                        <Grid display="flex" justifyContent={"end"} size={12}>
                             <Box sx={{ mb: 2 }}>
                                 <div>
                                     <Button
@@ -65,6 +66,6 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
                     </Grid>
                 </Stack>
             </Form>
-        </Formik>
+        </Formik>)
     );
 };

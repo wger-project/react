@@ -1,4 +1,8 @@
-import { MeasurementEntry } from "components/Measurements/models/Entry";
+import CancelIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import { Box } from "@mui/material";
 import {
     DataGrid,
     GridActionsCellItem,
@@ -10,18 +14,13 @@ import {
     GridRowModes,
     GridRowModesModel,
     GridRowsProp,
-    GridValueFormatterParams
 } from "@mui/x-data-grid";
 import { MeasurementCategory } from "components/Measurements/models/Category";
-import { useTranslation } from "react-i18next";
+import { MeasurementEntry } from "components/Measurements/models/Entry";
 import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "components/Measurements/queries";
-import React from "react";
 import { DateTime } from "luxon";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Close";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { Box } from "@mui/material";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { PAGINATION_OPTIONS } from "utils/consts";
 
 const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp => {
@@ -111,11 +110,11 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             headerName: t('value'),
             width: 80,
             editable: true,
-            valueFormatter: (params: GridValueFormatterParams<number>) => {
-                if (params.value == null) {
+            valueFormatter: (value?: number) => {
+                if (value == null) {
                     return '';
                 }
-                return params.value + props.category.unit;
+                return value + props.category.unit;
             },
         },
         {
@@ -124,11 +123,11 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             type: 'date',
             width: 120,
             editable: true,
-            valueFormatter: (params: GridValueFormatterParams<Date>) => {
-                if (params.value == null) {
+            valueFormatter: (value?: Date) => {
+                if (value == null) {
                     return '';
                 }
-                return DateTime.fromJSDate(params.value).toLocaleString(DateTime.DATE_MED);
+                return DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_MED);
             },
         },
         {

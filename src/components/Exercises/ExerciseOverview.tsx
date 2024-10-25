@@ -1,5 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, Container, Grid, Pagination, Stack, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Container, Pagination, Stack, Typography, useMediaQuery } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { CategoryFilter, CategoryFilterDropdown } from "components/Exercises/Filter/CategoryFilter";
 import { EquipmentFilter, EquipmentFilterDropdown } from "components/Exercises/Filter/EquipmentFilter";
 import { MuscleFilter, MuscleFilterDropdown } from "components/Exercises/Filter/MuscleFilter";
@@ -141,16 +142,24 @@ export const ExerciseOverviewList = () => {
     };
 
     return (
-        <Container maxWidth="lg">
+        (<Container maxWidth="lg">
             <Grid container spacing={2} mt={2}>
-                <Grid item xs={10} sm={6}>
+                <Grid
+                    size={{
+                        xs: 10,
+                        sm: 6
+                    }}>
                     <Typography gutterBottom variant="h3" component="div">
                         {t("exercises.exercises")}
                     </Typography>
                 </Grid>
                 {isMobile ? (
                     <>
-                        <Grid item xs={2} sm={6}>
+                        <Grid
+                            size={{
+                                xs: 2,
+                                sm: 6
+                            }}>
                             <Button
                                 variant="contained"
                                 onClick={() => navigate(makeLink(WgerLink.EXERCISE_CONTRIBUTE, i18n.language))}
@@ -158,10 +167,21 @@ export const ExerciseOverviewList = () => {
                                 <AddIcon />
                             </Button>
                         </Grid>
-                        <Grid item sm={6} flexGrow={1}>
+                        <Grid
+                            flexGrow={1}
+                            size={{
+                                sm: 6
+                            }}>
                             <NameAutocompleter callback={exerciseAdded} />
                         </Grid>
-                        <Grid item xs={2} sm={6} display="flex" justifyContent="center" alignItems="center">
+                        <Grid
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            size={{
+                                xs: 2,
+                                sm: 6
+                            }}>
                             <FilterDrawer>
                                 <CategoryFilterDropdown />
                                 <EquipmentFilterDropdown />
@@ -171,10 +191,18 @@ export const ExerciseOverviewList = () => {
                     </>
                 ) : (
                     <>
-                        <Grid item xs={12} sm={3}>
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 3
+                            }}>
                             <NameAutocompleter callback={exerciseAdded} />
                         </Grid>
-                        <Grid item xs={12} sm={3}>
+                        <Grid
+                            size={{
+                                xs: 12,
+                                sm: 3
+                            }}>
                             <Button
                                 variant="contained"
                                 startIcon={<AddIcon />}
@@ -187,24 +215,40 @@ export const ExerciseOverviewList = () => {
                 )}
 
                 {!isMobile && (
-                    <Grid item xs={12} sm={3}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            sm: 3
+                        }}>
                         <Grid container spacing={1}>
-                            <Grid item xs={6} sm={12}>
+                            <Grid
+                                size={{
+                                    xs: 6,
+                                    sm: 12
+                                }}>
                                 <CategoryFilter />
                             </Grid>
 
-                            <Grid item xs={6} sm={12}>
+                            <Grid
+                                size={{
+                                    xs: 6,
+                                    sm: 12
+                                }}>
                                 <EquipmentFilter />
                             </Grid>
 
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <MuscleFilter />
                             </Grid>
                         </Grid>
                     </Grid>
                 )}
 
-                <Grid item xs={12} sm={9}>
+                <Grid
+                    size={{
+                        xs: 12,
+                        sm: 9
+                    }}>
                     {basesQuery.isLoading
                         ? <ExerciseGridSkeleton />
                         : <>
@@ -223,7 +267,7 @@ export const ExerciseOverviewList = () => {
                     <ContributeExerciseBanner />
                 </Grid>
             </Grid>
-        </Container>
+        </Container>)
     );
 };
 

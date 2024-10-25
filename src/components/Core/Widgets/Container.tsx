@@ -1,5 +1,6 @@
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import { Container, Grid, Stack, Typography } from "@mui/material";
+import { Container, Stack, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import React from "react";
 
 type WgerTemplateContainerProps = {
@@ -12,27 +13,37 @@ type WgerTemplateContainerProps = {
 
 export const WgerContainerRightSidebar = (props: WgerTemplateContainerProps) => {
 
-    return <Container maxWidth="lg">
+    return (
+        <Container maxWidth="lg">
 
-        <Grid container spacing={2}>
-            <Grid item xs={8} sx={{ mb: 2 }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography gutterBottom variant="h3">
-                        {props.title}
-                    </Typography>
-                    {props.optionsMenu}
-                </Stack>
+            <Grid container spacing={2}>
+                <Grid sx={{ mb: 2 }} size={8}>
+                    <Stack direction="row" justifyContent="space-between" alignItems="center">
+                        <Typography gutterBottom variant="h3">
+                            {props.title}
+                        </Typography>
+                        {props.optionsMenu}
+                    </Stack>
+                </Grid>
+
+                <Grid
+                    size={{
+                        xs: 12,
+                        sm: 8
+                    }}>
+                    {props.mainContent}
+                </Grid>
+                <Grid
+                    size={{
+                        xs: 12,
+                        sm: 4
+                    }}>
+                    {props.sideBar}
+                </Grid>
             </Grid>
 
-            <Grid item xs={12} sm={8}>
-                {props.mainContent}
-            </Grid>
-            <Grid item xs={12} sm={4}>
-                {props.sideBar}
-            </Grid>
-        </Grid>
+            {props.fab}
 
-        {props.fab}
-
-    </Container>;
+        </Container>
+    );
 };
