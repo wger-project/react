@@ -327,8 +327,9 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                         Set {index + 1}
                     </Typography>
                 </Grid>
-                {!simpleMode && <Grid item xs={12} md={8}>
+                {!simpleMode && <Grid item xs={12}>
                     <SlotForm routineId={props.routineId} slot={slot} key={`slot-form-${slot.id}`} />
+                    <Box height={10} />
                 </Grid>}
                 <Grid item xs={12}>
                     {/*<Box height={20} />*/}

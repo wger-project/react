@@ -71,6 +71,7 @@ export const SlotConfigTypeField = (props: { slotConfig: SlotConfig, routineId: 
     </>;
 };
 
+
 export const SlotConfigRepetitionUnitField = (props: { slotConfig: SlotConfig, routineId: number }) => {
 
     const editSlotConfigQuery = useEditSlotConfigQuery(props.routineId);

@@ -90,7 +90,6 @@ export const SlotBaseConfigValueField = (props: {
     const addQueryHook = addQuery(props.routineId);
     const deleteQueryHook = deleteQuery(props.routineId);
 
-
     const [value, setValue] = useState(props.config?.value || '');
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
@@ -108,11 +107,9 @@ export const SlotBaseConfigValueField = (props: {
             editQueryHook.mutate({ id: props.config.id, ...data });
         } else {
             addQueryHook.mutate({
-                slot: props.slotConfigId!,
                 iteration: 1,
-                replace: true,
-                operation: null,
-                need_log_to_apply: false,
+                operation: 'r',
+                need_logs_to_apply: false,
                 ...data
             });
         }
@@ -275,4 +272,67 @@ export const ConfigDetailsNeedsLogsField = (props: {
 
         />
     </>);
+};
+
+
+export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotConfigId?: number, routineId: number }) => {
+
+    const editRiRQuery = useEditRiRConfigQuery(props.routineId);
+    const deleteRiRQuery = useDeleteRiRConfigQuery(props.routineId);
+    const addRiRQuery = useAddRiRConfigQuery(props.routineId);
+
+    const options = [
+        {
+            value: '',
+            label: '-/-',
+        },
+        ...[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4].map(value => ({ value: value.toString(), label: value.toString() })),
+        {
+            value: '4.5',
+            label: '4+'
+        }
+    ] as const;
+
+    const handleData = (value: string) => {
+
+        const data = {
+            value: parseFloat(value),
+        };
+
+        if (value === '') {
+            props.config && deleteRiRQuery.mutate(props.config.id);
+        } else if (props.config !== undefined) {
+            editRiRQuery.mutate({ id: props.config.id, ...data });
+        } else {
+            addRiRQuery.mutate({
+                // eslint-disable-next-line camelcase
+                slot_config: props.slotConfigId!,
+                iteration: 1,
+                operation: 'r',
+                need_logs_to_apply: false,
+                ...data
+            });
+        }
+    };
+
+    return <>
+        <TextField
+            fullWidth
+            select
+            label="RiR"
+            variant="standard"
+            defaultValue=""
+            disabled={editRiRQuery.isLoading}
+            onChange={e => handleData(e.target.value)}
+        >
+            {options.map((option) => (
+                <MenuItem
+                    key={option.value} value={option.value}
+                    selected={parseFloat(option.value) === props.config?.value}
+                >
+                    {option.label}
+                </MenuItem>
+            ))}
+        </TextField>
+    </>;
 };

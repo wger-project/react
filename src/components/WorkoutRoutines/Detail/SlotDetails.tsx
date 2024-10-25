@@ -8,7 +8,10 @@ import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { SlotConfig } from "components/WorkoutRoutines/models/SlotConfig";
 import { useDeleteSlotConfigQuery, useEditSlotConfigQuery } from "components/WorkoutRoutines/queries";
-import { SlotBaseConfigValueField } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
+import {
+    ConfigDetailsRiRField,
+    SlotBaseConfigValueField
+} from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import {
     SlotConfigRepetitionUnitField,
     SlotConfigTypeField,
@@ -122,6 +125,7 @@ export const SlotConfigDetails = (props: { slotConfig: SlotConfig, routineId: nu
                 {props.simpleMode
                     ? <React.Fragment>
                         <Grid item xs={12} sm={2} key={`sets-config-${props.slotConfig.id}`}>
+
                             {getConfigComponent('sets', props.slotConfig.nrOfSetsConfigs, props.routineId, props.slotConfig.id)}
                         </Grid>
                         <Grid item xs={12} sm={3} key={`weight-config-${props.slotConfig.id}`}>
@@ -149,7 +153,11 @@ export const SlotConfigDetails = (props: { slotConfig: SlotConfig, routineId: nu
                             {getConfigComponent('max-rest', props.slotConfig.maxRestTimeConfigs, props.routineId, props.slotConfig.id)}
                         </Grid>
                         <Grid item xs={12} sm={2} key={`rir-config-${props.slotConfig.id}`}>
-                            {getConfigComponent('rir', props.slotConfig.rirConfigs, props.routineId, props.slotConfig.id)}
+                            <ConfigDetailsRiRField
+                                routineId={props.routineId}
+                                config={props.slotConfig.rirConfigs.length > 0 ? props.slotConfig.rirConfigs[0] : undefined}
+                                slotConfigId={props.slotConfig.id}
+                            />
                         </Grid>
 
 
