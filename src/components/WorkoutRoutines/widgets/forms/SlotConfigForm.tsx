@@ -59,7 +59,7 @@ export const SlotConfigTypeField = (props: { slotConfig: SlotConfig, routineId: 
             label="Type"
             variant="standard"
             defaultValue="normal"
-            disabled={editQuery.isLoading}
+            disabled={editQuery.isPending}
             onChange={e => handleOnChange(e.target.value)}
         >
             {options.map((option) => (
@@ -98,7 +98,7 @@ export const SlotConfigRepetitionUnitField = (props: { slotConfig: SlotConfig, r
             label="Unit"
             variant="standard"
             defaultValue={REP_UNIT_REPETITIONS}
-            disabled={editSlotConfigQuery.isLoading}
+            disabled={editSlotConfigQuery.isPending}
             onChange={e => handleOnChange(e.target.value)}
         >
             {options!.map((option) => (
@@ -137,7 +137,7 @@ export const SlotConfigWeightUnitField = (props: { slotConfig: SlotConfig, routi
             label="Unit"
             variant="standard"
             defaultValue={WEIGHT_UNIT_KG}
-            disabled={editSlotConfigQuery.isLoading}
+            disabled={editSlotConfigQuery.isPending}
             onChange={e => handleOnChange(e.target.value)}
         >
             {options!.map((option) => (

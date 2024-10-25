@@ -92,7 +92,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            {editDayQuery.isLoading
+                            {editDayQuery.isPending
                                 ? <LoadingButton loading variant="contained" color="primary">
                                     Save
                                 </LoadingButton>

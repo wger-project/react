@@ -128,7 +128,7 @@ export const SlotBaseConfigValueField = (props: {
         setTimer(setTimeout(() => handleData(text), DEBOUNCE_ROUTINE_FORMS));
     };
 
-    const isLoading = editQueryHook.isLoading || addQueryHook.isLoading || deleteQueryHook.isLoading;
+    const isPending = editQueryHook.isPending || addQueryHook.isPending || deleteQueryHook.isPending;
 
     return (<>
         <TextField
@@ -139,10 +139,10 @@ export const SlotBaseConfigValueField = (props: {
             value={value}
             fullWidth
             variant="standard"
-            disabled={isLoading}
+            disabled={isPending}
             onChange={e => onChange(e.target.value)}
             InputProps={{
-                endAdornment: isLoading && <LoadingProgressIcon />
+                endAdornment: isPending && <LoadingProgressIcon />
             }}
         />
     </>);
@@ -171,7 +171,7 @@ export const AddConfigDetailsButton = (props: {
     };
 
     return (<>
-        <IconButton size="small" onClick={handleData} disabled={addQueryHook.isLoading}>
+        <IconButton size="small" onClick={handleData} disabled={addQueryHook.isPending}>
             <AddIcon />
         </IconButton>
     </>);
@@ -191,7 +191,7 @@ export const DeleteConfigDetailsButton = (props: {
     };
 
     return (
-        <IconButton size="small" onClick={handleData} disabled={deleteQueryHook.isLoading}>
+        <IconButton size="small" onClick={handleData} disabled={deleteQueryHook.isPending}>
             <DeleteIcon />
         </IconButton>
     );
@@ -234,7 +234,7 @@ export const ConfigDetailsOperationField = (props: {
             label="Operation"
             value={props.config?.operation}
             variant="standard"
-            disabled={editQueryHook.isLoading}
+            disabled={editQueryHook.isPending}
             onChange={e => handleData(e.target.value)}
         >
             {options.map((option) => (
@@ -263,12 +263,12 @@ export const ConfigDetailsNeedsLogsField = (props: {
         editQueryHook.mutate({ id: props.config.id, need_log_to_apply: newValue, });
     };
 
-    const isLoading = editQueryHook.isLoading;
+    const isPending = editQueryHook.isPending;
     return (<>
         <Switch
             checked={value}
             onChange={e => handleData(e.target.checked)}
-            disabled={isLoading}
+            disabled={isPending}
 
         />
     </>);
@@ -322,7 +322,7 @@ export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotConfigId
             label="RiR"
             variant="standard"
             defaultValue=""
-            disabled={editRiRQuery.isLoading}
+            disabled={editRiRQuery.isPending}
             onChange={e => handleData(e.target.value)}
         >
             {options.map((option) => (
