@@ -6,7 +6,6 @@ import {
     Chip,
     Dialog,
     Divider,
-    Grid,
     ListItemIcon,
     ListItemText,
     Menu,
@@ -14,6 +13,7 @@ import {
     Stack,
     Typography
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { ExerciseDeleteDialog } from "components/Exercises/Detail/Head/ExerciseDeleteDialog";
 import { Exercise } from 'components/Exercises/models/exercise';
 import { Language } from 'components/Exercises/models/language';
@@ -85,8 +85,8 @@ export const Head = ({
     });
 
     return (
-        <Grid container>
-            <Grid item xs={12}>
+        (<Grid container>
+            <Grid size={12}>
                 <div className={styles.root}>
                     <Dialog
                         open={openDialog}
@@ -165,6 +165,6 @@ export const Head = ({
                     </Stack>
                 </div>
             </Grid>
-        </Grid>
+        </Grid>)
     );
 };

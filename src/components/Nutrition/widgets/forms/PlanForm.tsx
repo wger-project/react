@@ -1,10 +1,8 @@
-import { GolfCourse } from "@mui/icons-material";
 import {
     Button,
     FormControl,
     FormControlLabel,
     FormGroup,
-    FormHelperText,
     InputAdornment,
     InputLabel,
     MenuItem,
@@ -13,7 +11,8 @@ import {
     Switch,
     TextField
 } from "@mui/material";
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
+
 import { ENERGY_FACTOR } from "components/Nutrition/helpers/nutritionalValues";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
@@ -66,7 +65,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             .notRequired()
             .positive() // TODO: allow 0 but not negative
             .max(750, t('forms.maxValue', { value: '750' })),
-            // eslint-disable-next-line camelcase
+        // eslint-disable-next-line camelcase
         goal_fiber: yup
             .number()
             .notRequired()
@@ -82,7 +81,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
 
 
     return (
-        <Formik
+        (<Formik
             initialValues={{
                 description: plan ? plan.description : t('nutrition.plan'),
                 // eslint-disable-next-line camelcase
@@ -147,22 +146,21 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                     />}
                             />
                         </FormGroup>
-                                    <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Goal Setting</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={10}
-                                        label="Goal setting"
-                                        onChange={() => {}}
-                                    >
-                                        <MenuItem value={10}>Based on my meals</MenuItem>
-                                        <MenuItem value={20}>Set basic macros</MenuItem>
-                                        <MenuItem value={30}>Set advanced macros</MenuItem>
-                                    </Select>
-                                    </FormControl>
-                           
-
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Goal Setting</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={10}
+                                label="Goal setting"
+                                onChange={() => {
+                                }}
+                            >
+                                <MenuItem value={10}>Based on my meals</MenuItem>
+                                <MenuItem value={20}>Set basic macros</MenuItem>
+                                <MenuItem value={30}>Set advanced macros</MenuItem>
+                            </Select>
+                        </FormControl>
 
 
                         {useGoals && <>
@@ -178,7 +176,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 }}
                             />
                             <Grid container spacing={1}>
-                                <Grid xs={4}>
+                                <Grid size={4}>
                                     <TextField
                                         id="protein"
                                         label={t('nutrition.goalProtein')}
@@ -197,7 +195,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         }}
                                     />
                                 </Grid>
-                                <Grid xs={4}>
+                                <Grid size={4}>
                                     <TextField
                                         id="carbohydrates"
                                         label={t('nutrition.goalCarbohydrates')}
@@ -216,7 +214,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         }}
                                     />
                                 </Grid>
-                                <Grid xs={4}>
+                                <Grid size={4}>
                                     <TextField
                                         id="fat"
                                         label={t('nutrition.goalFat')}
@@ -237,7 +235,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={1}>
-                                <Grid xs={4}>
+                                <Grid size={4}>
                                     <TextField
                                         id="fiber"
                                         label={t('nutrition.goalFiber')}
@@ -246,7 +244,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         {...formik.getFieldProps('goal_fiber')}
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">
-                                            {t('nutrition.valueEnergyKcal', { value: 0 })}
+                                                {t('nutrition.valueEnergyKcal', { value: 0 })}
                                             </InputAdornment>,
                                             endAdornment: <InputAdornment position="end">
                                                 {t('nutrition.gramShort')}
@@ -268,6 +266,6 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                     </Stack>
                 </Form>
             )}
-        </Formik>
+        </Formik>)
     );
 };

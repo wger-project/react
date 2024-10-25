@@ -1,5 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Box, Button, Grid, IconButton, Typography } from "@mui/material";
+import { Alert, Box, Button, IconButton, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { EditExerciseCategory } from "components/Exercises/forms/Category";
 import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
@@ -116,7 +117,7 @@ export const ExerciseDetailEdit = ({
             <Form>
                 <Grid container>
                     {alertIsVisible &&
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Alert
                                 severity="success"
                                 action={
@@ -137,19 +138,19 @@ export const ExerciseDetailEdit = ({
                             <PaddingBox />
                         </Grid>}
 
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <Typography variant={'h5'}>{t('English')}</Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <Typography variant={'h5'}>
                             {language.nameLong} ({language.nameShort})
                         </Typography>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <PaddingBox />
                         <Typography variant={'h6'}>{t('name')}</Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         {exerciseEnglish.name}
                         <ul>
                             {exerciseEnglish.aliases.map((alias) => (
@@ -157,24 +158,32 @@ export const ExerciseDetailEdit = ({
                             ))}
                         </ul>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <Box mb={2}>
                             <ExerciseName fieldName={'name'} />
                         </Box>
                         <ExerciseAliases fieldName={'alternativeNames'} />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <PaddingBox />
                     </Grid>
 
 
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Typography variant={'h6'}>{t('exercises.description')}</Typography>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6
+                        }}>
                         <div dangerouslySetInnerHTML={{ __html: exerciseEnglish.description! }} />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid
+                        size={{
+                            xs: 12,
+                            md: 6
+                        }}>
                         <ExerciseDescription fieldName={"description"} />
                     </Grid>
 
@@ -225,7 +234,7 @@ export const ExerciseDetailEdit = ({
                 */}
 
 
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <PaddingBox />
                         <Button
                             variant="contained"
@@ -248,12 +257,20 @@ export const ExerciseDetailEdit = ({
                 <PaddingBox />
                 <Typography variant={'h6'}>{t('images')}</Typography>
                 <Grid container spacing={2} mt={2}>
-                    <Grid item md={3} key={'add'}>
+                    <Grid
+                        key={'add'}
+                        size={{
+                            md: 3
+                        }}>
                         <AddImageCard exerciseId={exercise.id!} />
                     </Grid>
 
                     {exercise.images.map(img => (
-                        <Grid item md={3} key={img.id}>
+                        <Grid
+                            key={img.id}
+                            size={{
+                                md: 3
+                            }}>
                             <ImageEditCard image={img} canDelete={deleteImagePermissionQuery.data} />
                         </Grid>
                     ))}
@@ -267,13 +284,21 @@ export const ExerciseDetailEdit = ({
                 <Typography variant={'h6'}>{t('videos')}</Typography>
                 <Grid container spacing={2} mt={2}>
                     {deleteVideoPermissionQuery.data
-                        && <Grid item md={3} key={'add'}>
+                        && <Grid
+                            key={'add'}
+                            size={{
+                                md: 3
+                            }}>
                             <AddVideoCard exerciseId={exercise.id!} />
                         </Grid>
                     }
 
                     {exercise.videos.map(video => (
-                        <Grid item md={3} key={video.id}>
+                        <Grid
+                            key={video.id}
+                            size={{
+                                md: 3
+                            }}>
                             <VideoEditCard video={video} canDelete={deleteVideoPermissionQuery.data} />
                         </Grid>
                     ))}
@@ -291,7 +316,10 @@ export const ExerciseDetailEdit = ({
                 <EditExerciseEquipment exerciseId={exercise.id!} initial={exercise.equipment.map(e => e.id)} />
 
                 <Grid container mt={1}>
-                    <Grid item sm={7}>
+                    <Grid
+                        size={{
+                            sm: 7
+                        }}>
                         <EditExerciseMuscle
                             exerciseId={exercise.id!}
                             value={mainMuscles}
@@ -307,16 +335,19 @@ export const ExerciseDetailEdit = ({
                             isMain={false}
                         />
                     </Grid>
-                    <Grid item sm={5}>
+                    <Grid
+                        size={{
+                            sm: 5
+                        }}>
                         <Grid container>
-                            <Grid item xs={6} display="flex" justifyContent={"center"}>
+                            <Grid display="flex" justifyContent={"center"} size={6}>
                                 <MuscleOverview
                                     primaryMuscles={mainMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                     secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                     isFront={true}
                                 />
                             </Grid>
-                            <Grid item xs={6} display="flex" justifyContent={"center"}>
+                            <Grid display="flex" justifyContent={"center"} size={6}>
                                 <MuscleOverview
                                     primaryMuscles={mainMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                     secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}

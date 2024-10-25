@@ -6,7 +6,6 @@ import {
     Card,
     CardContent,
     Container,
-    Grid,
     IconButton,
     Menu,
     MenuItem,
@@ -20,6 +19,7 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { Exercise } from "components/Exercises/models/exercise";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
@@ -130,7 +130,11 @@ const ExerciseLog = (props: { exerciseId: Exercise, logEntries: WorkoutLog[] | u
         </Typography>
 
         <Grid container spacing={2}>
-            <Grid item xs={12} md={5}>
+            <Grid
+                size={{
+                    xs: 12,
+                    md: 5
+                }}>
                 <TableContainer>
                     <Table aria-label="simple table" size="small">
                         <TableHead>
@@ -160,7 +164,11 @@ const ExerciseLog = (props: { exerciseId: Exercise, logEntries: WorkoutLog[] | u
                 </TableContainer>
 
             </Grid>
-            <Grid item xs={12} md={7}>
+            <Grid
+                size={{
+                    xs: 12,
+                    md: 7
+                }}>
                 <TimeSeriesChart data={logEntries} key={props.exerciseId.id} />
             </Grid>
         </Grid>

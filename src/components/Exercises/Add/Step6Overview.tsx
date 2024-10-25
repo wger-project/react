@@ -4,7 +4,6 @@ import {
     AlertTitle,
     Box,
     Button,
-    Grid,
     ImageListItem,
     Table,
     TableBody,
@@ -13,6 +12,7 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
@@ -238,7 +238,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
             }
 
             <Grid container>
-                <Grid item xs={12} display="flex" justifyContent={"end"}>
+                <Grid display="flex" justifyContent={"end"} size={12}>
                     <Box sx={{ mb: 2 }}>
                         <div>
                             {submissionState !== 'done' &&

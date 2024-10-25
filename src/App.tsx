@@ -1,24 +1,24 @@
-import React from 'react';
+import Grid from '@mui/material/Grid2';
 import { Header, } from 'components';
 import { Notifications } from 'components/Core/Notifications';
-import { Grid } from "@mui/material";
+import React from 'react';
 import { WgerRoutes } from "routes";
 
 
 function App() {
 
     return (
-        <Grid container>
-            <Grid item xs={12}>
+        (<Grid container>
+            <Grid size={12}>
                 <Header />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <Notifications />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <WgerRoutes />
             </Grid>
-        </Grid>
+        </Grid>)
     );
 }
 

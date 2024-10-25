@@ -1,7 +1,8 @@
-import React from 'react';
-import { Card, CardMedia, Grid } from '@mui/material';
+import { Card, CardMedia } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { ExerciseImage } from "components/Exercises/models/image";
 import { ExerciseVideo } from "components/Exercises/models/video";
+import React from 'react';
 
 type SideGalleryProps = {
     mainImage: ExerciseImage | undefined;
@@ -11,8 +12,8 @@ type SideGalleryProps = {
 export const SideGallery = ({ mainImage, sideImages }: SideGalleryProps) => {
 
     return (
-        <Grid container spacing={1}>
-            {mainImage && <Grid item xs={12}>
+        (<Grid container spacing={1}>
+            {mainImage && <Grid size={12}>
                 <Card>
                     <CardMedia
                         component="img"
@@ -21,9 +22,8 @@ export const SideGallery = ({ mainImage, sideImages }: SideGalleryProps) => {
                     />
                 </Card>
             </Grid>}
-
             {sideImages.map(img => (
-                <Grid item xs={6} key={img.id}>
+                <Grid key={img.id} size={6}>
                     <Card>
                         <CardMedia
                             component="img"
@@ -34,7 +34,7 @@ export const SideGallery = ({ mainImage, sideImages }: SideGalleryProps) => {
                     </Card>
                 </Grid>
             ))}
-        </Grid>
+        </Grid>)
     );
 };
 
@@ -45,9 +45,9 @@ type VideoGalleryProps = {
 export const SideVideoGallery = ({ videos }: VideoGalleryProps) => {
 
     return (
-        <Grid container spacing={1}>
+        (<Grid container spacing={1}>
             {videos.map(video => (
-                <Grid item xs={6} key={video.id}>
+                <Grid key={video.id} size={6}>
                     <Card>
                         <CardMedia
                             component={'video'}
@@ -60,6 +60,6 @@ export const SideVideoGallery = ({ videos }: VideoGalleryProps) => {
                     </Card>
                 </Grid>
             ))}
-        </Grid>
+        </Grid>)
     );
 };

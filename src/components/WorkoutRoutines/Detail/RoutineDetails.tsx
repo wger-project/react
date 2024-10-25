@@ -9,13 +9,13 @@ import {
     CardHeader,
     Container,
     Divider,
-    Grid,
     IconButton,
     Menu,
     MenuItem,
     Stack,
     Typography
 } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";
 import { Day } from "components/WorkoutRoutines/models/Day";
@@ -83,29 +83,35 @@ export function SettingDetails(props: {
     const useTranslate = (input: string) => t(input as any);
 
     // @ts-ignore
-    return <Grid container alignItems="center" justifyContent={"center"} sx={{ height: rowHeight, p: 0 }}>
-        <Grid item xs={3} md={2}>
-            <ExerciseImageAvatar
-                image={props.setting.base?.mainImage}
-                iconSize={iconHeight}
-                avatarSize={imageHeight}
-            />
-        </Grid>
+    return (
+        <Grid container alignItems="center" justifyContent={"center"} sx={{ height: rowHeight, p: 0 }}>
+            <Grid
+                size={{
+                    xs: 3,
+                    md: 2
+                }}>
+                <ExerciseImageAvatar
+                    image={props.setting.base?.mainImage}
+                    iconSize={iconHeight}
+                    avatarSize={imageHeight}
+                />
+            </Grid>
 
-        <Grid item xs={9}>
-            <Stack spacing={0}>
-                <Typography variant={"subtitle1"}>
-                    {props.setting.base?.getTranslation().name}
-                </Typography>
-                <Typography>
-                    {props.set.getSettingsTextRepresentation(props.setting.base!, useTranslate)}
-                </Typography>
-                <Typography variant={"caption"}>
-                    {props.set.comment}
-                </Typography>
-            </Stack>
+            <Grid size={9}>
+                <Stack spacing={0}>
+                    <Typography variant={"subtitle1"}>
+                        {props.setting.base?.getTranslation().name}
+                    </Typography>
+                    <Typography>
+                        {props.set.getSettingsTextRepresentation(props.setting.base!, useTranslate)}
+                    </Typography>
+                    <Typography variant={"caption"}>
+                        {props.set.comment}
+                    </Typography>
+                </Stack>
+            </Grid>
         </Grid>
-    </Grid>;
+    );
 }
 
 
@@ -135,41 +141,43 @@ function SetList(props: {
     );
 
 
-    return <Grid
-        container
-        spacing={2}
-        justifyContent="space-between"
-        alignItems="flex-start"
-    >
-        <Grid item xs={11}>
-            {props.set.settingsFiltered.map((setting) =>
-                <SettingDetails
-                    setting={setting}
-                    set={props.set}
-                    key={setting.id}
-                />
-            )}
+    return (
+        <Grid
+            container
+            spacing={2}
+            justifyContent="space-between"
+            alignItems="flex-start"
+        >
+            <Grid size={11}>
+                {props.set.settingsFiltered.map((setting) =>
+                    <SettingDetails
+                        setting={setting}
+                        set={props.set}
+                        key={setting.id}
+                    />
+                )}
+            </Grid>
+            <Grid textAlign={"right"} size={1}>
+                <IconButton aria-label="settings" onClick={handleClick}>
+                    <MoreVertIcon fontSize="small" />
+                </IconButton>
+                <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{ 'aria-labelledby': 'basic-button' }}
+                >
+                    <MenuItem onClick={navigateEditSet}>
+                        {t('edit')}
+                    </MenuItem>
+                    <MenuItem onClick={navigateDeleteSet}>
+                        {t('delete')}
+                    </MenuItem>
+                </Menu>
+            </Grid>
         </Grid>
-        <Grid item xs={1} textAlign={"right"}>
-            <IconButton aria-label="settings" onClick={handleClick}>
-                <MoreVertIcon fontSize="small" />
-            </IconButton>
-            <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{ 'aria-labelledby': 'basic-button' }}
-            >
-                <MenuItem onClick={navigateEditSet}>
-                    {t('edit')}
-                </MenuItem>
-                <MenuItem onClick={navigateDeleteSet}>
-                    {t('delete')}
-                </MenuItem>
-            </Menu>
-        </Grid>
-    </Grid>;
+    );
 }
 
 // Day component that accepts a Day as a prop

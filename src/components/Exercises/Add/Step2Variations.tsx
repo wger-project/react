@@ -9,7 +9,6 @@ import {
     Box,
     Button,
     Divider,
-    Grid,
     InputAdornment,
     List,
     ListItem,
@@ -19,6 +18,7 @@ import {
     TextField,
     Typography
 } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { Exercise } from "components/Exercises/models/exercise";
@@ -92,43 +92,62 @@ const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
         isChecked = variationId === state.variationId;
     }
 
-    return <ListItem disableGutters>
-        <ListItemButton onClick={handleToggle(variationId, exerciseId)}>
-            <Grid container>
-                <Grid item xs={12} sm={3} display="flex" justifyContent={"start"} alignItems={"center"}>
-                    <AvatarGroup max={MAX_EXERCISE_IMAGES} spacing={"small"}>
-                        {exercises.map((base) =>
-                            base.mainImage
-                                ? <Avatar key={base.id} src={base.mainImage.url} />
-                                : <Avatar key={base.id} children={<PhotoIcon />} />
+    return (
+        <ListItem disableGutters>
+            <ListItemButton onClick={handleToggle(variationId, exerciseId)}>
+                <Grid container>
+                    <Grid
+                        display="flex"
+                        justifyContent={"start"}
+                        alignItems={"center"}
+                        size={{
+                            xs: 12,
+                            sm: 3
+                        }}>
+                        <AvatarGroup max={MAX_EXERCISE_IMAGES} spacing={"small"}>
+                            {exercises.map((base) =>
+                                base.mainImage
+                                    ? <Avatar key={base.id} src={base.mainImage.url} />
+                                    : <Avatar key={base.id} children={<PhotoIcon />} />
+                            )}
+                        </AvatarGroup>
+                    </Grid>
+                    <Grid
+                        size={{
+                            xs: 10,
+                            sm: 7
+                        }}>
+                        { /* map the bases */}
+                        {exercises.slice(0, showMore ? exercises.length : MAX_EXERCISE_NAMES).map((base) =>
+                            <p style={{ margin: 0 }} key={base.id}>{base.getTranslation().name}</p>
                         )}
-                    </AvatarGroup>
+                        {!showMore && exercises.length > MAX_EXERCISE_NAMES
+                            ? <ExpandMoreIcon onMouseEnter={() => setShowMore(true)} />
+                            : null
+                        }
+                    </Grid>
+                    <Grid
+                        display="flex"
+                        justifyContent={"end"}
+                        size={{
+                            xs: 2,
+                            sm: 2
+                        }}>
+                        <Switch
+                            key={`variation-${variationId}`}
+                            edge="start"
+                            checked={isChecked}
+                            tabIndex={-1}
+                            disableRipple
+                        />
+                    </Grid>
+                    <Grid size={12}>
+                        <Divider sx={{ pt: 1 }} />
+                    </Grid>
                 </Grid>
-                <Grid item xs={10} sm={7}>
-                    { /* map the bases */}
-                    {exercises.slice(0, showMore ? exercises.length : MAX_EXERCISE_NAMES).map((base) =>
-                        <p style={{ margin: 0 }} key={base.id}>{base.getTranslation().name}</p>
-                    )}
-                    {!showMore && exercises.length > MAX_EXERCISE_NAMES
-                        ? <ExpandMoreIcon onMouseEnter={() => setShowMore(true)} />
-                        : null
-                    }
-                </Grid>
-                <Grid item xs={2} sm={2} display="flex" justifyContent={"end"}>
-                    <Switch
-                        key={`variation-${variationId}`}
-                        edge="start"
-                        checked={isChecked}
-                        tabIndex={-1}
-                        disableRipple
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Divider sx={{ pt: 1 }} />
-                </Grid>
-            </Grid>
-        </ListItemButton>
-    </ListItem>;
+            </ListItemButton>
+        </ListItem>
+    );
 };
 
 
@@ -151,10 +170,20 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
 
     return <>
         <Grid container>
-            <Grid item xs={12} sm={6}>
+            <Grid
+                size={{
+                    xs: 12,
+                    sm: 6
+                }}>
                 <Typography>{t('exercises.whatVariationsExist')}</Typography>
             </Grid>
-            <Grid item xs={12} sm={6} display="flex" justifyContent={"end"}>
+            <Grid
+                display="flex"
+                justifyContent={"end"}
+                size={{
+                    xs: 12,
+                    sm: 6
+                }}>
                 <TextField label={t('exercises.filterVariations')}
                            variant="standard"
                            onChange={(event) => setSearchTerms(event.target.value)}
@@ -196,7 +225,7 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
         </Alert>
 
         <Grid container>
-            <Grid item xs={12} display="flex" justifyContent={"end"}>
+            <Grid display="flex" justifyContent={"end"} size={12}>
                 <Box sx={{ mb: 2 }}>
                     <div>
                         <Button
