@@ -6,6 +6,7 @@ import { Meal } from "components/Nutrition/models/meal";
 import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
+import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { IngredientSearchResponse } from "services/responseType";
@@ -28,7 +29,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
     const [t, i18n] = useTranslation();
     const addDiaryQuery = useAddDiaryEntryQuery(planId);
     const editDiaryQuery = useEditDiaryEntryQuery(planId);
-    const [dateValue, setDateValue] = useState<Date | null>(entry ? entry.datetime : new Date());
+    const [dateValue, setDateValue] = useState<DateTime | null>(entry ? DateTime.fromJSDate(entry.datetime) : DateTime.now());
     const [selectedMeal, setSelectedMeal] = useState<number | null>(meal);
     const validationSchema = yup.object({
         amount: yup
@@ -46,7 +47,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
 
 
     return (
-        <Formik
+        (<Formik
             initialValues={{
                 datetime: new Date(),
                 amount: 0,
@@ -54,7 +55,6 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-
                 const data = {
                     ...values,
                     plan: planId,
@@ -108,15 +108,12 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
 
                             <DateTimePicker
-                                inputFormat="yyyy-MM-dd HH:mm"
+                                format="yyyy-MM-dd HH:mm"
                                 label={t('date')}
                                 value={dateValue}
-                                renderInput={(params) =>
-                                    <TextField {...params} {...formik.getFieldProps('datetime')} />}
                                 disableFuture={true}
                                 onChange={(newValue) => {
-                                    // @ts-ignore - new value is a Luxon DateTime!
-                                    formik.setFieldValue('datetime', newValue.toJSDate());
+                                    formik.setFieldValue('datetime', newValue?.toJSDate());
 
                                     setDateValue(newValue);
                                 }}
@@ -145,6 +142,6 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                     </Stack>
                 </Form>
             )}
-        </Formik>
+        </Formik>)
     );
 };

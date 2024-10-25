@@ -2,9 +2,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
 import { WeightEntry } from "components/BodyWeight/model";
-import { useBodyWeightQuery } from "components/BodyWeight/queries";
+import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "components/BodyWeight/queries";
 import React from 'react';
-import { createWeight, updateWeight } from "services";
 import { testQueryClient } from "tests/queryClient";
 import { testWeightEntries } from "tests/weight/testData";
 
@@ -65,7 +64,7 @@ describe("Test WeightForm component", () => {
         expect(submitButton).toBeInTheDocument();
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(updateWeight).toHaveBeenCalledTimes(1);
+            expect(useEditWeightEntryQuery).toHaveBeenCalled();
         });
     });
 
@@ -91,7 +90,7 @@ describe("Test WeightForm component", () => {
         expect(submitButton).toBeInTheDocument();
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(createWeight).toHaveBeenCalledTimes(1);
+            expect(useAddWeightEntryQuery).toHaveBeenCalled();
         });
     });
 
