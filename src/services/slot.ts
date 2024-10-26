@@ -14,6 +14,11 @@ export interface EditSlotParams extends Partial<AddSlotParams> {
     id: number,
 }
 
+export interface EditSlotOrderParam {
+    id: number,
+    order: number
+}
+
 /*
  * Creates a new Slot
  */
@@ -37,6 +42,17 @@ export const editSlot = async (data: EditSlotParams): Promise<Slot> => {
     );
 
     return new SlotAdapter().fromJson(response.data);
+};
+
+export const editSlotOrder = async (data: EditSlotOrderParam[]): Promise<void> => {
+
+    for (const value of data) {
+        await axios.patch(
+            makeUrl(ApiPath.SLOT, { id: value.id }),
+            { order: value.order },
+            { headers: makeHeader() }
+        );
+    }
 };
 
 /*

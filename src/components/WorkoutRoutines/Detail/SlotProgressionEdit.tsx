@@ -28,11 +28,7 @@ export const ProgressionEdit = (props: {
 }) => {
     return (
         (<React.Fragment>
-            <Grid
-                size={{
-                    md: 12,
-                    lg: 6
-                }}>
+            <Grid size={{ md: 12, lg: 6 }}>
                 <Typography variant="h6" gutterBottom>
                     {props.type}
                 </Typography>

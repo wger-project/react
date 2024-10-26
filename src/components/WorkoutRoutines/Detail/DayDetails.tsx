@@ -1,5 +1,5 @@
 import { DragDropContext, Draggable, DraggableStyle, Droppable, DropResult } from "@hello-pangea/dnd";
-import { SsidChart } from "@mui/icons-material";
+import { DragHandle, SsidChart } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -38,6 +38,7 @@ import {
     useAddSlotQuery,
     useDeleteSlotQuery,
     useEditDayQuery,
+    useEditSlotOrderQuery,
     useRoutineDetailQuery
 } from "components/WorkoutRoutines/queries";
 import { useAddDayQuery, useDeleteDayQuery } from "components/WorkoutRoutines/queries/days";
@@ -123,7 +124,7 @@ export const DayDragAndDropGrid = (props: {
             direction="row"
         >
             <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="droppable" direction="horizontal">
+                <Droppable droppableId="dayDroppable" direction="horizontal">
                     {(provided, snapshot) => (
                         <div
                             {...provided.droppableProps}
@@ -243,11 +244,13 @@ const DayCard = (props: {
 };
 
 export const DayDetails = (props: { day: Day, routineId: number }) => {
+    // TODO: refactor this component and split it up!
 
     const [t, i18n] = useTranslation();
     const deleteSlotQuery = useDeleteSlotQuery(props.routineId);
     const addSlotConfigQuery = useAddSlotConfigQuery(props.routineId);
     const addSlotQuery = useAddSlotQuery(props.routineId);
+    const editSlotOrderQuery = useEditSlotOrderQuery(props.routineId);
     const theme = useTheme();
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -304,6 +307,39 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
 
     const handleAddSlot = () => addSlotQuery.mutate({ day: props.day.id, order: props.day.slots.length + 1 });
 
+    /*
+     * Drag'n'drop
+     */
+    const grid = 8;
+    const onDragEnd = (result: DropResult) => {
+
+        // Item was dropped outside the list
+        if (!result.destination) {
+            return;
+        }
+
+        const updatedSlots = Array.from(props.day.slots);
+        const [movedSlot] = updatedSlots.splice(result.source.index, 1);
+        updatedSlots.splice(result.destination.index, 0, movedSlot);
+
+        editSlotOrderQuery.mutate(updatedSlots.map((slot, index) => ({ id: slot.id, order: index + 1 })));
+        props.day.slots = updatedSlots;
+    };
+
+    const getListStyle = (isDraggingOver: boolean) => ({
+        background: isDraggingOver ? "lightblue" : undefined,
+    });
+    const getItemStyle = (isDragging: boolean, draggableStyle: DraggableStyle) => ({
+        // userSelect: "none",
+        border: isDragging ? `2px solid ${theme.palette.grey[900]}` : `1px solid ${theme.palette.grey[300]}`,
+        backgroundColor: "white",
+        // padding: grid,
+        // margin: `0 0 ${grid}px 0`,
+        marginBottom: grid,
+
+        ...draggableStyle
+    });
+
 
     return (<>
         <Typography variant={"h4"}>
@@ -316,77 +352,133 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
             control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
             label="Simple mode" />
         <Box height={20} />
-        {props.day.slots.map((slot, index) => <React.Fragment key={`slot-${slot.id}-${index}`}>
-            <Grid container spacing={1}>
-                <Grid sx={{ backgroundColor: theme.palette.grey[100] }} size={12}>
-                    <Typography variant={"h5"} gutterBottom>
-                        <IconButton onClick={() => handleDeleteSlot(slot.id)}>
-                            <DeleteIcon />
-                        </IconButton>
-                        Set {index + 1}
-                    </Typography>
-                </Grid>
-                {!simpleMode && <Grid size={12}>
-                    <SlotForm routineId={props.routineId} slot={slot} key={`slot-form-${slot.id}`} />
-                    <Box height={10} />
-                </Grid>}
-                <Grid size={12}>
-                    {/*<Box height={20} />*/}
-                    <SlotEntryDetails slot={slot} routineId={props.routineId} simpleMode={simpleMode} />
-                </Grid>
+        <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="setDroppable" direction="vertical">
+                {(provided, snapshot) => (
+                    <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        style={getListStyle(snapshot.isDraggingOver)}
+                    >
+                        {props.day.slots.map((slot, index) => <React.Fragment key={`slot-${slot.id}-${index}`}>
+                            <Draggable key={slot.id} draggableId={slot.id.toString()} index={index}>
+                                {(provided, snapshot) => (
+                                    <Grid container spacing={1}
+                                          ref={provided.innerRef}
+                                          {...provided.draggableProps}
+
+                                          style={getItemStyle(
+                                              snapshot.isDragging,
+                                              provided.draggableProps.style ?? {}
+                                          )}
+                                    >
+                                        <Grid sx={{ backgroundColor: theme.palette.grey[100] }} size={12}>
+                                            <Grid container justifyContent="space-between" alignItems="center">
+                                                <Grid>
+                                                    <Typography variant={"h5"}>
+                                                        {props.day.slots.length > 1 &&
+                                                            <IconButton
+                                                                onClick={() => handleDeleteSlot(slot.id)} {...provided.dragHandleProps}>
+                                                                <DragHandle />
+                                                            </IconButton>}
+
+                                                        <IconButton onClick={() => handleDeleteSlot(slot.id)}>
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                        Set {index + 1}
+                                                    </Typography>
+                                                </Grid>
+
+                                                <Grid>
+                                                    {slot.configs.length > 0 && <ButtonGroup variant="outlined">
+                                                        <Button
+                                                            onClick={() => handleAddSlotConfig(slot.id)}
+                                                            size={"small"}
+                                                            disabled={addSlotConfigQuery.isPending}
+                                                            startIcon={addSlotConfigQuery.isPending ?
+                                                                <LoadingProgressIcon /> :
+                                                                <AddIcon />}
+                                                        >
+                                                            add superset
+                                                        </Button>
+
+                                                        {slot.configs.length > 0 &&
+                                                            <Button
+                                                                startIcon={<SsidChart />}
+                                                                component={Link}
+                                                                size={"small"}
+                                                                to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {
+                                                                    id: props.routineId,
+                                                                    id2: slot.id
+                                                                })}
+                                                            >
+                                                                edit progression
+                                                            </Button>
+                                                        }
+                                                    </ButtonGroup>}
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                        {!simpleMode && <Grid size={12}>
+                                            <SlotForm routineId={props.routineId} slot={slot}
+                                                      key={`slot-form-${slot.id}`} />
+                                            <Box height={10} />
+                                        </Grid>}
+                                        <Grid size={12}>
+                                            {/*<Box height={20} />*/}
+                                            <SlotEntryDetails
+                                                slot={slot}
+                                                routineId={props.routineId}
+                                                simpleMode={simpleMode}
+                                            />
+                                        </Grid>
+
+                                        {showAutocompleterForSlot === slot.id
+                                            && <Grid size={12}>
+                                                <Box height={20} />
+                                                <NameAutocompleter
+                                                    callback={(exercise: ExerciseSearchResponse | null) => {
+                                                        if (exercise === null) {
+                                                            return;
+                                                        }
+                                                        addSlotConfigQuery.mutate({
+                                                            slot: slot.id,
+                                                            exercise: exercise.data.base_id,
+                                                            type: 'normal',
+                                                            order: slot.configs.length + 1,
+                                                        });
+                                                        setShowAutocompleterForSlot(null);
+                                                    }}
+                                                />
+                                                {/*<Box height={20} />*/}
+                                            </Grid>}
+
+                                        <Grid size={12}>
+                                            {slot.configs.length === 0 && <ButtonGroup><Button
+                                                onClick={() => handleAddSlotConfig(slot.id)}
+                                                size={"small"}
+                                                disabled={addSlotConfigQuery.isPending}
+                                                startIcon={addSlotConfigQuery.isPending ? <LoadingProgressIcon /> :
+                                                    <AddIcon />}
+                                            >
+                                                add exercise
+                                            </Button></ButtonGroup>}
+                                        </Grid>
+                                    </Grid>
+                                )}
+                            </Draggable>
+                            <Box height={0}>
+                                {provided.placeholder}
+                            </Box>
 
 
-                {showAutocompleterForSlot === slot.id
-                    && <Grid size={12}>
-                        <Box height={20} />
-                        <NameAutocompleter
-                            callback={(exercise: ExerciseSearchResponse | null) => {
-                                if (exercise === null) {
-                                    return;
-                                }
-                                addSlotConfigQuery.mutate({
-                                    slot: slot.id,
-                                    exercise: exercise.data.base_id,
-                                    type: 'normal',
-                                    order: slot.configs.length + 1,
-                                });
-                                setShowAutocompleterForSlot(null);
-                            }}
-                        />
-                        {/*<Box height={20} />*/}
-                    </Grid>}
-
-                <Grid size={12}>
-                    <ButtonGroup variant="outlined">
-                        <Button
-                            onClick={() => handleAddSlotConfig(slot.id)}
-                            size={"small"}
-                            disabled={addSlotConfigQuery.isPending}
-                            startIcon={addSlotConfigQuery.isPending ? <LoadingProgressIcon /> : <AddIcon />}
-                        >
-                            {slot.configs.length > 0 ? "add superset" : "add exercise"}
-                        </Button>
-
-                        {slot.configs.length > 0 &&
-                            <Button
-                                startIcon={<SsidChart />}
-                                component={Link}
-                                size={"small"}
-                                to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {
-                                    id: props.routineId,
-                                    id2: slot.id
-                                })}
-                            >
-                                edit progression
-                            </Button>
-                        }
-                    </ButtonGroup>
-                </Grid>
-
-            </Grid>
-            <Box height={40} />
-            {/*<Divider sx={{ my: 1 }} />*/}
-        </React.Fragment>)}
+                            {/*<Box height={20} />*/}
+                            {/*<Divider sx={{ my: 1 }} />*/}
+                        </React.Fragment>)}
+                    </div>
+                )}
+            </Droppable>
+        </DragDropContext>
         <Snackbar
             open={openSnackbar}
             autoHideDuration={SNACKBAR_AUTO_HIDE_DURATION}

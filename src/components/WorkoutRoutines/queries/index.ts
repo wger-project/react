@@ -46,4 +46,5 @@ export {
     useAddSlotQuery,
     useEditSlotQuery,
     useDeleteSlotQuery,
+    useEditSlotOrderQuery
 } from "./slots";
