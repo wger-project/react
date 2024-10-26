@@ -25,6 +25,11 @@ jest.mock("services/exercise");
 
 describe("workout routine service tests", () => {
 
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+
     test('GET the routine data - shallow', async () => {
 
         // Arrange
@@ -33,6 +38,9 @@ describe("workout routine service tests", () => {
 
         // Act
         const result = await getRoutinesShallow();
+
+        // @ts-ignore
+        // console.log(axios.get.mock.calls)
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
@@ -122,7 +130,7 @@ describe("workout routine service tests", () => {
         expect(result[0].day).toStrictEqual(
             new Day(
                 100,
-                101,
+                5,
                 'Push day',
                 '',
                 false,

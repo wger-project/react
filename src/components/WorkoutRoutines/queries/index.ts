@@ -26,7 +26,7 @@ export {
     useDeleteNrOfSetsConfigQuery,
     useDeleteRiRConfigQuery,
     useDeleteRestConfigQuery,
-    useDeleteMaxRestConfigQuery
+    useDeleteMaxRestConfigQuery,
 } from './configs';
 
 export { useEditDayQuery, useAddDayQuery, useEditDayOrderQuery, useDeleteDayQuery, } from './days';

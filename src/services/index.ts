@@ -52,3 +52,29 @@ export { editSlotConfig, deleteSlotConfig } from './slot_config'
 export { getRoutineRepUnits, getRoutineWeightUnits } from './workoutUnits'
 export { addDay, editDay, deleteDay, editDayOrder } from './day'
 export { addSlot, deleteSlot, editSlot, editSlotOrder } from './slot'
+export {
+    addRepsConfig,
+    editRepsConfig,
+    deleteRepsConfig,
+    addMaxRepsConfig,
+    editMaxRepsConfig,
+    deleteMaxRepsConfig,
+    addMaxWeightConfig,
+    editMaxWeightConfig,
+    deleteMaxWeightConfig,
+    addWeightConfig,
+    editWeightConfig,
+    deleteWeightConfig,
+    addNrOfSetsConfig,
+    editNrOfSetsConfig,
+    deleteNrOfSetsConfig,
+    addRirConfig,
+    editRirConfig,
+    deleteRirConfig,
+    addRestConfig,
+    editRestConfig,
+    deleteRestConfig,
+    editMaxRestConfig,
+    addMaxRestConfig,
+    deleteMaxRestConfig,
+} from './config'

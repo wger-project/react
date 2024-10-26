@@ -92,7 +92,7 @@ describe("Test the ExerciseDeleteDialog component", () => {
         await act(async () => {
             await new Promise((r) => setTimeout(r, 250));
         });
-        await user.click(screen.getByTestId('autocompleter-result-1149'));
+        await user.click(screen.getByTestId('autocompleter-result-998'));
         //screen.logTestingPlaygroundURL();
         expect(getExercise).toHaveBeenCalledWith(998);
         expect(screen.queryByText("exercises.noReplacementSelected")).not.toBeInTheDocument();

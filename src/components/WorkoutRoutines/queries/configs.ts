@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-    AddBaseConfigParams,
     addMaxRepsConfig,
     addMaxRestConfig,
     addMaxWeightConfig,
@@ -17,7 +16,6 @@ import {
     deleteRestConfig,
     deleteRirConfig,
     deleteWeightConfig,
-    EditBaseConfigParams,
     editMaxRepsConfig,
     editMaxRestConfig,
     editMaxWeightConfig,
@@ -26,7 +24,8 @@ import {
     editRestConfig,
     editRirConfig,
     editWeightConfig
-} from "services/config";
+} from "services";
+import { AddBaseConfigParams, EditBaseConfigParams } from "services/base_config";
 import { QueryKey, } from "utils/consts";
 
 

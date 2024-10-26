@@ -211,8 +211,9 @@ export const responseRoutineIterationDataToday = [
         "label": "first label",
         "day": {
             "id": 100,
-            "order": 1,
+            "order": 5,
             "name": "Push day",
+            "type": "custom",
             "description": "",
             "is_rest": false,
             "last_day_in_week": false,

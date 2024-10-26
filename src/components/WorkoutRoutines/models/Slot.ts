@@ -1,6 +1,14 @@
 import { SlotConfig, SlotConfigAdapter } from "components/WorkoutRoutines/models/SlotConfig";
 import { Adapter } from "utils/Adapter";
 
+export type SlotApiData = {
+    id: number,
+    day: number,
+    order: number,
+    comment: string
+    configs?: any[]
+}
+
 export class Slot {
 
     configs: SlotConfig[] = [];
@@ -20,12 +28,12 @@ export class Slot {
 
 
 export class SlotAdapter implements Adapter<Slot> {
-    fromJson = (item: any) => new Slot(
+    fromJson = (item: SlotApiData) => new Slot(
         item.id,
         item.day,
         item.order,
         item.comment,
-        item.hasOwnProperty('configs') ? item.configs.map((config: any) => new SlotConfigAdapter().fromJson(config)) : []
+        item.hasOwnProperty('configs') ? item.configs!.map((config: any) => new SlotConfigAdapter().fromJson(config)) : []
     );
 
     toJson(item: Slot) {
