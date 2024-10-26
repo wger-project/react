@@ -50,5 +50,5 @@ export { getMealsForPlan, addMeal, editMeal, deleteMeal } from './meal';
 export { getRoutineLogs } from "./workoutLogs";
 export { editSlotConfig, deleteSlotConfig } from './slot_config'
 export { getRoutineRepUnits, getRoutineWeightUnits } from './workoutUnits'
-export { addDay, editDay, deleteDay } from './day'
+export { addDay, editDay, deleteDay, editDayOrder } from './day'
 export { addSlot, deleteSlot, editSlot, editSlotOrder } from './slot'

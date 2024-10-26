@@ -34,14 +34,15 @@ import { SlotEntryDetails } from "components/WorkoutRoutines/Detail/SlotDetails"
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import {
+    useAddDayQuery,
     useAddSlotConfigQuery,
     useAddSlotQuery,
+    useDeleteDayQuery,
     useDeleteSlotQuery,
-    useEditDayQuery,
+    useEditDayOrderQuery,
     useEditSlotOrderQuery,
     useRoutineDetailQuery
 } from "components/WorkoutRoutines/queries";
-import { useAddDayQuery, useDeleteDayQuery } from "components/WorkoutRoutines/queries/days";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
 import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
 import React, { useState } from "react";
@@ -59,7 +60,7 @@ export const DayDragAndDropGrid = (props: {
 }) => {
 
     const routineQuery = useRoutineDetailQuery(props.routineId);
-    const editDayQuery = useEditDayQuery(props.routineId);
+    const editDayOrderQuery = useEditDayOrderQuery(props.routineId);
     const addDayQuery = useAddDayQuery(props.routineId);
 
     const onDragEnd = (result: DropResult) => {
@@ -73,11 +74,8 @@ export const DayDragAndDropGrid = (props: {
         const [movedDay] = updatedDays.splice(result.source.index, 1);
         updatedDays.splice(result.destination.index, 0, movedDay);
 
-        // Save objects
         routineQuery.data!.days = updatedDays;
-        updatedDays.forEach((day, index) => {
-            editDayQuery.mutate({ id: day.id, order: index });
-        });
+        editDayOrderQuery.mutate(updatedDays.map((day, index) => ({ id: day.id, order: index + 1 })));
     };
 
     const grid = 8;

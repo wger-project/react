@@ -29,7 +29,7 @@ export {
     useDeleteMaxRestConfigQuery
 } from './configs';
 
-export { useEditDayQuery } from './days';
+export { useEditDayQuery, useAddDayQuery, useEditDayOrderQuery, useDeleteDayQuery, } from './days';
 
 export { useRoutineLogQuery, } from "./logs";
 
@@ -46,5 +46,5 @@ export {
     useAddSlotQuery,
     useEditSlotQuery,
     useDeleteSlotQuery,
-    useEditSlotOrderQuery
+    useEditSlotOrderQuery,
 } from "./slots";

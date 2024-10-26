@@ -16,6 +16,11 @@ export interface EditDayParams extends Partial<AddDayParams> {
     id: number,
 }
 
+export interface EditDayOrderParam {
+    id: number,
+    order: number
+}
+
 /*
  * Update a day
  */
@@ -28,6 +33,17 @@ export const editDay = async (data: EditDayParams): Promise<Day> => {
 
     const adapter = new DayAdapter();
     return adapter.fromJson(response.data);
+};
+
+export const editDayOrder = async (data: EditDayOrderParam[]): Promise<void> => {
+
+    for (const value of data) {
+        await axios.patch(
+            makeUrl(ApiPath.DAY, { id: value.id }),
+            { order: value.order },
+            { headers: makeHeader() }
+        );
+    }
 };
 
 /*
