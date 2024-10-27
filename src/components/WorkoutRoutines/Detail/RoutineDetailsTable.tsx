@@ -135,16 +135,16 @@ const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
                 <TableRow>
                     <TableCell colSpan={5}>
                         <Typography variant={'h5'}>
-                            Week {props.iteration}
+                            {t('routines.workoutNr', { number: props.iteration })}
                         </Typography>
                     </TableCell>
                 </TableRow>
                 <TableRow>
-                    <TableCell align={'center'}>Sets</TableCell>
-                    <TableCell align={'center'}>Reps</TableCell>
-                    <TableCell align={'center'}>Weight</TableCell>
-                    <TableCell align={'center'}>Rest</TableCell>
-                    <TableCell align={'center'}>RiR</TableCell>
+                    <TableCell align={'center'}>{t('routines.sets')}</TableCell>
+                    <TableCell align={'center'}>{t('routines.reps')}</TableCell>
+                    <TableCell align={'center'}>{t('weight')}</TableCell>
+                    <TableCell align={'center'}>{t('routines.restTime')}</TableCell>
+                    <TableCell align={'center'}>{t('routines.rir')}</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>

@@ -30,15 +30,19 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
     const [startValue, setStartValue] = useState<DateTime | null>(routine ? DateTime.fromJSDate(routine.start) : DateTime.now());
     const [endValue, setEndValue] = useState<DateTime | null>(routine ? DateTime.fromJSDate(routine.end) : DateTime.now().plus({ weeks: DEFAULT_WORKOUT_DURATION }));
 
+    const nameMinLength = 3;
+    const nameMaxLength = 25;
+    const descriptionMaxLength = 1000;
+
     const validationSchema = yup.object({
         name: yup
             .string()
             .required()
-            .max(25, t('forms.maxLength', { chars: '25' }))
-            .min(3, t('forms.minLength', { chars: '3' })),
+            .max(nameMaxLength, t('forms.maxLength', { chars: nameMaxLength }))
+            .min(nameMinLength, t('forms.minLength', { chars: nameMinLength })),
         description: yup
             .string()
-            .max(1000, t('forms.maxLength', { chars: '1000' })),
+            .max(descriptionMaxLength, t('forms.maxLength', { chars: descriptionMaxLength })),
         start: yup
             .date()
             .required(),
@@ -47,11 +51,11 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
             .required()
             .min(
                 yup.ref('start'),
-                "end date must be after start date"
+                t('forms.endBeforeStart')
             )
             .test(
                 'hasMinimumDuration',
-                "the workout needs to be at least 2 weeks long",
+                t('routines.minLengthRoutine'),
                 function (value) {
                     const startDate = this.parent.start;
                     if (startDate && value) {
@@ -108,7 +112,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
-                                    label={'start'}
+                                    label={t('start')}
                                     value={startValue}
                                     onChange={(newValue) => {
                                         if (newValue) {
@@ -131,7 +135,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
-                                    label={'end'}
+                                    label={t('end')}
                                     value={endValue}
                                     onChange={(newValue) => {
                                         if (newValue) {

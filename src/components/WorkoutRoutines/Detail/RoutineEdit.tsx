@@ -13,25 +13,7 @@ import { makeLink, WgerLink } from "utils/url";
 
 export const RoutineEdit = () => {
 
-    /*
-    TODO:
-        * Add drag and drop (https://github.com/hello-pangea/dnd) for
-          - ✅ the days
-          - the slots? does this make sense?
-          - the exercises within the slots?
-        * ✅ advanced / simple mode: the simple mode only shows weight and reps
-          while the advanced mode allows to edit all the other stuff
-        * RiRs in dropdown (0, 0.5, 1, 1.5, 2,...)
-        * rep and weight units in dropdown
-        * ✅ for dynamic config changes, +/-, replace toggle, needs_logs_to_appy toggle
-        * add / ✅ remove / edit slots
-        * add / ✅ remove / edit days
-        * add / ✅ remove / edit sets
-        * ✅ edit exercises
-        * tests!
-        * ...
-     */
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
@@ -48,7 +30,7 @@ export const RoutineEdit = () => {
             <Grid container>
                 <Grid size={10}>
                     <Typography variant={"h4"}>
-                        Edit {routineQuery.data?.name}
+                        {t('editName', { name: routineQuery.data?.name })}
                     </Typography>
                 </Grid>
                 <Grid size={2}>
@@ -58,7 +40,7 @@ export const RoutineEdit = () => {
                         size={"small"}
                         to={makeLink(WgerLink.ROUTINE_DETAIL, i18n.language, { id: routineId })}
                     >
-                        back to routine
+                        {t('routines.backToRoutine')}
                     </Button>
                 </Grid>
 
@@ -89,7 +71,7 @@ export const RoutineEdit = () => {
 
             <Stack spacing={2} sx={{ mt: 2 }}>
                 <Typography variant={"h4"}>
-                    Resulting routine
+                    {t('routines.resultingRoutine')}
                 </Typography>
 
                 <Box padding={4}>

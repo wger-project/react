@@ -59,6 +59,8 @@ export const DayDragAndDropGrid = (props: {
     setSelectedDay: (day: number | null) => void
 }) => {
 
+    const { t } = useTranslation();
+
     const routineQuery = useRoutineDetailQuery(props.routineId);
     const editDayOrderQuery = useEditDayOrderQuery(props.routineId);
     const addDayQuery = useAddDayQuery(props.routineId);
@@ -107,7 +109,7 @@ export const DayDragAndDropGrid = (props: {
     const handleAddDay = () => {
         const newDay: AddDayParams = {
             routine: props.routineId,
-            name: 'new day',
+            name: t('routines.newDay'),
             order: routineQuery.data!.days.length + 1,
             is_rest: false
         };
@@ -167,7 +169,7 @@ export const DayDragAndDropGrid = (props: {
                 <Card>
                     <CardActionArea sx={{ minHeight: 175 }} onClick={handleAddDay}>
                         <CardContent>
-                            Add day<br />
+                            {t('routines.addDay')}<br />
                             {addDayQuery.isPending ? <LoadingProgressIcon /> : <AddIcon />}
                         </CardContent>
                     </CardActionArea>
@@ -291,7 +293,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
     const handleAddSlotConfig = (slotId: number) => {
         const slot = props.day.slots.find(s => s.id === slotId);
         if (slot === undefined) {
-            console.log('Could not find slot');
+            console.info(`Could not find slot with id ${slotId} to add config`);
             return;
         }
 
@@ -348,7 +350,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
         <Box height={40} />
         <FormControlLabel
             control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
-            label="Simple mode" />
+            label={t('routines.simpleMode')} />
         <Box height={20} />
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="setDroppable" direction="vertical">
@@ -397,7 +399,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                                                 <LoadingProgressIcon /> :
                                                                 <AddIcon />}
                                                         >
-                                                            add superset
+                                                            {t('routines.addSuperset')}
                                                         </Button>
 
                                                         {slot.configs.length > 0 &&
@@ -410,7 +412,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                                                     id2: slot.id
                                                                 })}
                                                             >
-                                                                edit progression
+                                                                {t('routines.editProgression')}
                                                             </Button>
                                                         }
                                                     </ButtonGroup>}
@@ -418,8 +420,10 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                             </Grid>
                                         </Grid>
                                         {!simpleMode && <Grid size={12}>
-                                            <SlotForm routineId={props.routineId} slot={slot}
-                                                      key={`slot-form-${slot.id}`} />
+                                            <SlotForm
+                                                routineId={props.routineId}
+                                                slot={slot}
+                                                key={`slot-form-${slot.id}`} />
                                             <Box height={10} />
                                         </Grid>}
                                         <Grid size={12}>
@@ -459,7 +463,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                                 startIcon={addSlotConfigQuery.isPending ? <LoadingProgressIcon /> :
                                                     <AddIcon />}
                                             >
-                                                add exercise
+                                                {t('routines.addExercise')}
                                             </Button></ButtonGroup>}
                                         </Grid>
                                     </Grid>
@@ -492,10 +496,11 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                         variant={"contained"}
                         size="small"
                         onClick={handleCloseSnackbar}>
-                        Undo
+                        {t('undo')}
                     </Button>
                 }
             >
+
                 Set successfully deleted
             </Alert>
         </Snackbar>
@@ -505,7 +510,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
             startIcon={addSlotQuery.isPending ? <LoadingProgressIcon /> : <AddIcon />}
             onClick={handleAddSlot}
         >
-            Add set
+            {t('routines.addSet')}
         </Button>
     </>);
 };

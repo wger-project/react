@@ -6,9 +6,12 @@ import { Day } from "components/WorkoutRoutines/models/Day";
 import { useEditDayQuery } from "components/WorkoutRoutines/queries";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import * as Yup from 'yup';
 
 export const DayForm = (props: { day: Day, routineId: number }) => {
+    const [t, i18n] = useTranslation();
+
     const editDayQuery = useEditDayQuery(props.routineId);
 
     const [openDialog, setOpenDialog] = useState(false);
@@ -22,13 +25,17 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
         setOpenDialog(false);
     };
 
+    const nameMinLength = 3;
+    const nameMaxLength = 20;
+    const descriptionMaxLength = 1000;
+
     const validationSchema = Yup.object().shape({
         name: Yup.string()
-            .min(3, 'Name must be at least 3 characters')
-            .max(20, 'Name must be at most 20 characters')
+            .max(nameMaxLength, t('forms.maxLength', { chars: nameMaxLength }))
+            .min(nameMinLength, t('forms.minLength', { chars: nameMinLength }))
             .required('Name is required'),
         description: Yup.string()
-            .max(1000, 'Description must be at most 1000 characters'),
+            .max(descriptionMaxLength, t('forms.maxLength', { chars: descriptionMaxLength })),
         isRest: Yup.boolean()
     });
 
