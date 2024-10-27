@@ -45,7 +45,6 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         getRoutineDayDataAllIterations(id),
         getRoutineStructure(id),
         getRoutineLogData(id),
-        getRoutineDaySequence(id),
     ]);
     const repUnits = responses[0];
     const weightUnits = responses[1];
@@ -53,7 +52,6 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     const dayDataAllIterations = responses[3];
     const dayStructure = responses[4];
     const logData = responses[5];
-    const daySequenceData = responses[6];
 
     // Collect and load all exercises for the workout
     for (const day of dayDataCurrentIteration) {
@@ -99,9 +97,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     routine.dayDataCurrentIteration = dayDataCurrentIteration;
     routine.dayDataAllIterations = dayDataAllIterations;
     routine.logData = logData;
-
-    // Sort the days according to the day sequence
-    routine.days = daySequenceData.map(dayId => dayStructure.find(day => day.id === dayId)!);
+    routine.days = dayStructure;
 
     return routine;
 };
@@ -240,13 +236,4 @@ export const getRoutineLogData = async (routineId: number): Promise<RoutineLogDa
 
     const adapter = new RoutineLogDataAdapter();
     return response.data.map((data: any) => adapter.fromJson(data));
-};
-export const getRoutineDaySequence = async (routineId: number): Promise<number[]> => {
-    const response = await axios.get(
-        makeUrl(ApiPath.ROUTINE, { id: routineId, objectMethod: ROUTINE_API_DAY_SEQUENCE }),
-        { headers: makeHeader() }
-    );
-
-    const adapter = new RoutineLogDataAdapter();
-    return response.data.map((data: any) => data['id']);
 };
