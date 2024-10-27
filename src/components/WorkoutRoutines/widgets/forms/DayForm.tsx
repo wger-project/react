@@ -61,7 +61,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
             {(formik) => (
                 <Form>
                     <Grid container spacing={2}>
-                        <Grid size={10}>
+                        <Grid size={{ xs: 12, sm: 10 }}>
                             <WgerTextField
                                 fieldName="name"
                                 title="Name"
@@ -69,7 +69,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                             />
 
                         </Grid>
-                        <Grid size={2}>
+                        <Grid size={{ xs: 12, sm: 2 }}>
                             <FormControlLabel
                                 control={<Switch checked={isRest} onChange={handleRestChange} />}
                                 label="rest day" />

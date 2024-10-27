@@ -105,10 +105,10 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
             {formik => (
                 <Form>
                     <Grid container spacing={2}>
-                        <Grid size={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <WgerTextField fieldName="name" title={t('name')} />
                         </Grid>
-                        <Grid size={3}>
+                        <Grid size={{ xs: 6, sm: 3 }}>
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
@@ -131,7 +131,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                                 />
                             </LocalizationProvider>
                         </Grid>
-                        <Grid size={3}>
+                        <Grid size={{ xs: 6, sm: 3 }}>
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
