@@ -1,15 +1,7 @@
 import { LoadingButton } from "@mui/lab";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    FormControlLabel,
-    Switch,
-    TextField
-} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Switch } from "@mui/material";
 import Grid from '@mui/material/Grid2';
+import { WgerTextField } from "components/Common/forms/WgerTextField";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { useEditDayQuery } from "components/WorkoutRoutines/queries";
 import { Form, Formik } from "formik";
@@ -36,7 +28,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
             .max(20, 'Name must be at most 20 characters')
             .required('Name is required'),
         description: Yup.string()
-            .max(255, 'Description must be at most 255 characters'),
+            .max(1000, 'Description must be at most 1000 characters'),
         isRest: Yup.boolean()
     });
 
@@ -63,15 +55,12 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                 <Form>
                     <Grid container spacing={2}>
                         <Grid size={10}>
-                            <TextField
-                                fullWidth
-                                label="Name"
-                                variant="standard"
-                                disabled={isRest}
-                                {...formik.getFieldProps('name')}
-                                error={formik.touched.name && Boolean(formik.errors.name)}
-                                helperText={formik.touched.name && formik.errors.name}
+                            <WgerTextField
+                                fieldName="name"
+                                title="Name"
+                                fieldProps={{ disabled: isRest }}
                             />
+
                         </Grid>
                         <Grid size={2}>
                             <FormControlLabel
@@ -79,17 +68,12 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                                 label="rest day" />
                         </Grid>
                         <Grid size={12}>
-                            <TextField
-                                label="Description"
-                                variant="standard"
-                                fullWidth
-                                {...formik.getFieldProps('description')}
-                                disabled={isRest}
-                                error={formik.touched.description && Boolean(formik.errors.description)}
-                                helperText={formik.touched.description && formik.errors.description}
-                                multiline
-                                rows={4}
+                            <WgerTextField
+                                fieldName="description"
+                                title="Description"
+                                fieldProps={{ multiline: true, rows: 4, disabled: isRest }}
                             />
+
                         </Grid>
                         <Grid size={12}>
                             {editDayQuery.isPending

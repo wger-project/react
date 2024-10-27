@@ -30,7 +30,6 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
     const [startValue, setStartValue] = useState<DateTime | null>(routine ? DateTime.fromJSDate(routine.start) : DateTime.now());
     const [endValue, setEndValue] = useState<DateTime | null>(routine ? DateTime.fromJSDate(routine.end) : DateTime.now().plus({ weeks: DEFAULT_WORKOUT_DURATION }));
 
-
     const validationSchema = yup.object({
         name: yup
             .string()
@@ -39,7 +38,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
             .min(3, t('forms.minLength', { chars: '3' })),
         description: yup
             .string()
-            .max(25, t('forms.maxLength', { chars: '1000' })),
+            .max(1000, t('forms.maxLength', { chars: '1000' })),
         start: yup
             .date()
             .required(),
@@ -78,9 +77,6 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
 
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-
-                console.log(values);
-
                 if (routine) {
                     editRoutineQuery.mutate({
                         ...values,
@@ -155,10 +151,15 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                             </LocalizationProvider>
                         </Grid>
                         <Grid size={12}>
-                            <WgerTextField fieldName="description" title={t('description')} />
+                            <WgerTextField
+                                fieldName="description"
+                                title={t('description')}
+                                fieldProps={{ multiline: true, rows: 4 }}
+                            />
                         </Grid>
                         <Grid size={12}>
                             <Button
+                                disabled={formik.isSubmitting}
                                 color="primary"
                                 variant="contained"
                                 type="submit"
