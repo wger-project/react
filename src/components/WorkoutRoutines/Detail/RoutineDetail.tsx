@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
 import { RoutineDetailDropdown } from "components/WorkoutRoutines/Detail/RoutineDetailDropdown";
@@ -17,10 +17,16 @@ export const RoutineDetail = () => {
         query={routineQuery}
         child={routineQuery.isSuccess
             && <WgerContainerRightSidebar
-                title={routineQuery.data?.description}
+                title={routineQuery.data?.name}
                 optionsMenu={<RoutineDetailDropdown routine={routineQuery.data!} />}
                 mainContent={
                     <Stack spacing={2} sx={{ mt: 2 }}>
+                        {routineQuery.data?.description !== ''
+                            && <Typography variant={"caption"} sx={{ whiteSpace: 'pre-line' }}>
+                                {routineQuery.data?.description}
+                            </Typography>
+                        }
+
                         {routineQuery.data!.dayDataCurrentIteration.map((dayData) =>
                             <DayDetailsCard dayData={dayData} key={`dayDetails-${dayData.day?.id}`} />
                         )}

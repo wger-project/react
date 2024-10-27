@@ -36,9 +36,11 @@ export const RoutineDetailsCard = () => {
         <RenderLoadingQuery
             query={routineQuery}
             child={routineQuery.isSuccess && <>
-                <Typography variant={"caption"}>
-                    {routineQuery.data?.description}
-                </Typography>
+                {routineQuery.data?.description !== ''
+                    && <Typography variant={"caption"} sx={{ whiteSpace: 'pre-line' }}>
+                        {routineQuery.data?.description}
+                    </Typography>
+                }
                 <Stack spacing={2} sx={{ mt: 2 }}>
                     {routineQuery.data!.dayDataCurrentIteration.map((dayData) =>
                         <DayDetailsCard dayData={dayData} key={`dayDetails-${dayData.day?.id}`} />
@@ -114,8 +116,8 @@ function SlotDataList(props: {
                     {props.slotData.exercises.map((exercise, index) =>
                         <ExerciseImageAvatar
                             image={exercise.mainImage}
-                            iconSize={50}
-                            avatarSize={55}
+                            iconSize={40}
+                            avatarSize={50}
                             key={index}
                         />
                     )}
