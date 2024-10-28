@@ -35,7 +35,7 @@ export const RoutineDetailsTable = () => {
                 <>
                     <Stack direction={'row'}>
                         <DayTableExercises
-                            dayData={routineQuery.data!.groupedDayDataByIteration[1]}
+                            dayData={routineQuery.data!.groupedDayDataByIteration[1] !== undefined ? routineQuery.data!.groupedDayDataByIteration[1] : []}
                             iteration={1}
                         />
                         {Object.keys(routineQuery.data!.groupedDayDataByIteration).map((iteration) =>
