@@ -27,8 +27,8 @@ export const RoutineDetail = () => {
                             </Typography>
                         }
 
-                        {routineQuery.data!.dayDataCurrentIteration.map((dayData) =>
-                            <DayDetailsCard dayData={dayData} key={`dayDetails-${dayData.day?.id}`} />
+                        {routineQuery.data!.dayDataCurrentIteration.map((dayData, index) =>
+                            <DayDetailsCard dayData={dayData} key={`dayDetails-${index}`} />
                         )}
                     </Stack>
                 }

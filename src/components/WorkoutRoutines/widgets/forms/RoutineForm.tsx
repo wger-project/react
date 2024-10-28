@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, FormControlLabel, Switch } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
@@ -55,7 +55,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
             )
             .test(
                 'hasMinimumDuration',
-                t('routines.minLengthRoutine'),
+                t('routines.minLengthRoutine', { number: MIN_WORKOUT_DURATION }),
                 function (value) {
                     const startDate = this.parent.start;
                     if (startDate && value) {
@@ -67,6 +67,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                     return true;
                 }
             ),
+        fitInWeek: yup.boolean()
     });
 
 
@@ -77,6 +78,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                 description: routine ? routine.description : '',
                 start: startValue,
                 end: endValue,
+                fitInWeek: routine ? routine.fitInWeek : false
             }}
 
             validationSchema={validationSchema}
@@ -84,6 +86,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                 if (routine) {
                     editRoutineQuery.mutate({
                         ...values,
+                        fit_in_week: values.fitInWeek,
                         start: values.start?.toISODate()!,
                         end: values.end?.toISODate()!,
                         id: routine.id
@@ -91,6 +94,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                 } else {
                     addRoutineQuery.mutate({
                         ...values,
+                        fit_in_week: values.fitInWeek,
                         start: values.start?.toISODate()!,
                         end: values.end?.toISODate()!,
                     });
@@ -160,6 +164,11 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                                 title={t('description')}
                                 fieldProps={{ multiline: true, rows: 4 }}
                             />
+                        </Grid>
+                        <Grid size={12}>
+                            <FormControlLabel
+                                control={<Switch {...formik.getFieldProps('fitInWeek')} />}
+                                label="Fit days in week." />
                         </Grid>
                         <Grid size={12}>
                             <Button

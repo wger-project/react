@@ -169,6 +169,7 @@ export interface AddRoutineParams {
     description: string;
     start: string;
     end: string;
+    fit_in_week: boolean;
 }
 
 export interface EditRoutineParams extends Partial<AddRoutineParams> {

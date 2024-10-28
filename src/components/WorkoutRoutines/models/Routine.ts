@@ -21,6 +21,7 @@ export class Routine {
         public created: Date,
         public start: Date,
         public end: Date,
+        public fitInWeek: boolean,
         days?: Day[],
     ) {
         if (days) {
@@ -51,6 +52,7 @@ export class RoutineAdapter implements Adapter<Routine> {
             new Date(item.created),
             new Date(item.start),
             new Date(item.end),
+            item.fit_in_week,
         );
     }
 
@@ -61,6 +63,7 @@ export class RoutineAdapter implements Adapter<Routine> {
             description: item.description,
             start: dateToYYYYMMDD(item.start),
             end: dateToYYYYMMDD(item.end),
+            fit_in_week: item.fitInWeek,
         };
     }
 }
