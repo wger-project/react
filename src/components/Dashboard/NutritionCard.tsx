@@ -45,20 +45,17 @@ export const NutritionCard = () => {
     const [t] = useTranslation();
     const planQuery = useFetchLastNutritionalPlanQuery();
 
-    return <>
-        {planQuery.isLoading
-            ? <LoadingPlaceholder />
-            : <>
-                {planQuery.data !== null
-                    ? <NutritionCardContent plan={planQuery.data!} />
-                    : <EmptyCard
-                        title={t('nutritionalPlan')}
-                        modalContent={<PlanForm />}
-                        modalTitle={t('add')}
-                    />}
-            </>
-        }
-    </>;
+    if (planQuery.isLoading) {
+        return <LoadingPlaceholder />;
+    }
+
+    return planQuery.data !== null
+        ? <NutritionCardContent plan={planQuery.data!} />
+        : <EmptyCard
+            title={t('nutritionalPlan')}
+            modalContent={<PlanForm />}
+            modalTitle={t('add')}
+        />;
 };
 
 function NutritionCardContent(props: { plan: NutritionalPlan }) {

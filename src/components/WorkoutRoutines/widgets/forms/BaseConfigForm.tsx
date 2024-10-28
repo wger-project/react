@@ -109,7 +109,8 @@ export const SlotBaseConfigValueField = (props: {
             addQueryHook.mutate({
                 iteration: 1,
                 operation: 'r',
-                need_logs_to_apply: false,
+                step: 'abs',
+                need_log_to_apply: false,
                 ...data
             });
         }
@@ -166,7 +167,7 @@ export const AddConfigDetailsButton = (props: {
             iteration: props.iteration,
             value: 0,
             operation: 'r',
-            need_logs_to_apply: false
+            need_log_to_apply: false
         });
     };
 
@@ -309,7 +310,7 @@ export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotConfigId
                 slot_config: props.slotConfigId!,
                 iteration: 1,
                 operation: 'r',
-                need_logs_to_apply: false,
+                need_log_to_apply: false,
                 ...data
             });
         }

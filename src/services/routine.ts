@@ -11,9 +11,8 @@ import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
 
 export const ROUTINE_API_STRUCTURE_PATH = 'structure';
-export const ROUTINE_API_DAY_SEQUENCE = 'day-sequence';
 export const ROUTINE_API_LOGS_PATH = 'logs';
-export const ROUTINE_API_CURRENT_ITERATION_DISPLAY = 'current-iteration-display-mode';
+export const ROUTINE_API_CURRENT_ITERATION_DISPLAY = 'current-iteration-display';
 export const ROUTINE_API_ALL_ITERATION_DISPLAY = 'date-sequence-display';
 
 /*
@@ -183,8 +182,7 @@ export const addRoutine = async (data: AddRoutineParams): Promise<Routine> => {
         { headers: makeHeader() }
     );
 
-    const adapter = new RoutineAdapter();
-    return adapter.fromJson(response.data);
+    return new RoutineAdapter().fromJson(response.data);
 };
 
 export const editRoutine = async (data: EditRoutineParams): Promise<Routine> => {
@@ -194,8 +192,7 @@ export const editRoutine = async (data: EditRoutineParams): Promise<Routine> => 
         { headers: makeHeader() }
     );
 
-    const adapter = new RoutineAdapter();
-    return adapter.fromJson(response.data);
+    return new RoutineAdapter().fromJson(response.data);
 };
 
 export const getRoutineDayDataCurrentIteration = async (routineId: number): Promise<RoutineDayData[]> => {

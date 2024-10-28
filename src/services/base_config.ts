@@ -7,7 +7,8 @@ export interface AddBaseConfigParams {
     slot_config: number;
     iteration?: number;
     operation?: "+" | "-" | "r";
-    need_logs_to_apply?: boolean;
+    step?: "abs" | "percent";
+    need_log_to_apply?: boolean;
 }
 
 export interface EditBaseConfigParams extends Partial<AddBaseConfigParams> {

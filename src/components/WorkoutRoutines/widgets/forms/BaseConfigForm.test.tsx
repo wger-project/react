@@ -110,7 +110,7 @@ describe('ConfigDetailsField Component', () => {
                     value: 8,
                     iteration: 1,
                     operation: 'r',
-                    need_logs_to_apply: false,
+                    need_log_to_apply: false,
                 });
                 expect(editMutation).toHaveBeenCalledTimes(0);
                 expect(deleteMutation).toHaveBeenCalledTimes(0);

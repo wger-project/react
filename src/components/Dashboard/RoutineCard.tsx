@@ -27,16 +27,16 @@ export const RoutineCard = () => {
     const [t, i18n] = useTranslation();
     const routineQuery = useActiveRoutineQuery();
 
-    return (<>{routineQuery.isLoading
-        ? <LoadingPlaceholder />
-        : <>{routineQuery.data !== null
-            ? <RoutineCardContent routine={routineQuery.data!} />
-            : <EmptyCard
-                title={t('routines.routine')}
-                link={makeLink(WgerLink.ROUTINE_ADD, i18n.language)}
-            />}
-        </>
-    }</>);
+    if (routineQuery.isLoading) {
+        return <LoadingPlaceholder />;
+    }
+
+    return routineQuery.data !== null
+        ? <RoutineCardContent routine={routineQuery.data!} />
+        : <EmptyCard
+            title={t('routines.routine')}
+            link={makeLink(WgerLink.ROUTINE_ADD, i18n.language)}
+        />;
 };
 
 const RoutineCardContent = (props: { routine: Routine }) => {
