@@ -1,20 +1,20 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { SlotEntryDetails } from 'components/WorkoutRoutines/Detail/SlotDetails';
+import { SlotDetails } from 'components/WorkoutRoutines/Detail/SlotDetails';
 import { Slot } from 'components/WorkoutRoutines/models/Slot';
-import { SlotConfig } from "components/WorkoutRoutines/models/SlotConfig";
+import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
 import React from 'react';
 import { testQueryClient } from "tests/queryClient";
 
 describe('SlotDetails Component', () => {
 
-    const slotConfig = new SlotConfig(1, 2, 3, 4, 5, 6, 7, 8, 'test', 'normal',);
-    const testSlot = new Slot(1, 2, 3, '', [slotConfig]);
+    const slotEntry = new SlotEntry(1, 2, 3, 4, 5, 6, 7, 8, 'test', 'normal',);
+    const testSlot = new Slot(1, 2, 3, '', [slotEntry]);
 
     test('renders only sets, weight, and reps fields in simpleMode', () => {
         render(
             <QueryClientProvider client={testQueryClient}>
-                <SlotEntryDetails slot={testSlot} routineId={1} simpleMode={true} />
+                <SlotDetails slot={testSlot} routineId={1} simpleMode={true} />
             </QueryClientProvider>
         );
 
@@ -34,7 +34,7 @@ describe('SlotDetails Component', () => {
     test('renders all config fields when not in simpleMode', () => {
         render(
             <QueryClientProvider client={testQueryClient}>
-                <SlotEntryDetails slot={testSlot} routineId={1} simpleMode={false} />
+                <SlotDetails slot={testSlot} routineId={1} simpleMode={false} />
             </QueryClientProvider>
         );
 

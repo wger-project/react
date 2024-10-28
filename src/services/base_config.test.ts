@@ -9,7 +9,7 @@ describe('editBaseConfig', () => {
     const mockBaseConfigData = {
         id: 1,
         value: 100,
-        slot_config: 1,
+        slot_entry: 1,
     };
 
     const mockEditBaseConfigParams: EditBaseConfigParams = {

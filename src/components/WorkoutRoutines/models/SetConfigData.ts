@@ -11,7 +11,7 @@ export class SetConfigData {
 
     constructor(
         public exerciseId: number,
-        public slotConfigId: number,
+        public slotEntryId: number,
         public type: SetType,
         public nrOfSets: number,
         public weight: number | null,
@@ -42,7 +42,7 @@ export class SetConfigData {
 export class SetConfigDataAdapter implements Adapter<SetConfigData> {
     fromJson = (item: any) => new SetConfigData(
         item.exercise,
-        item.slot_config_id,
+        item.slot_entry_id,
         item.type,
         item.sets,
         item.weight !== null ? parseFloat(item.weight) : null,

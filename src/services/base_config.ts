@@ -4,7 +4,7 @@ import { makeHeader, makeUrl } from "utils/url";
 
 export interface AddBaseConfigParams {
     value: number;
-    slot_config: number;
+    slot_entry: number;
     iteration?: number;
     operation?: "+" | "-" | "r";
     step?: "abs" | "percent";

@@ -81,7 +81,7 @@ export type ConfigType = 'weight' | 'max-weight' | 'reps' | 'max-reps' | 'sets' 
 export const SlotBaseConfigValueField = (props: {
     config?: BaseConfig,
     routineId: number,
-    slotConfigId?: number,
+    slotEntryId?: number,
     type: ConfigType
 }) => {
 
@@ -97,7 +97,7 @@ export const SlotBaseConfigValueField = (props: {
 
         const data = {
             // eslint-disable-next-line camelcase
-            slot_config: props.slotConfigId,
+            slot_entry: props.slotEntryId,
             value: parseFloat(value),
         };
 
@@ -150,10 +150,10 @@ export const SlotBaseConfigValueField = (props: {
 };
 
 
-export const AddConfigDetailsButton = (props: {
+export const AddEntryDetailsButton = (props: {
     iteration: number,
     routineId: number,
-    slotConfigId: number,
+    slotEntryId: number,
     type: ConfigType
 }) => {
 
@@ -163,7 +163,7 @@ export const AddConfigDetailsButton = (props: {
 
     const handleData = () => {
         addQueryHook.mutate({
-            slot_config: props.slotConfigId!,
+            slot_entry: props.slotEntryId!,
             iteration: props.iteration,
             value: 0,
             operation: 'r',
@@ -178,7 +178,7 @@ export const AddConfigDetailsButton = (props: {
     </>);
 };
 
-export const DeleteConfigDetailsButton = (props: {
+export const DeleteEntryDetailsButton = (props: {
     configId: number,
     routineId: number,
     type: ConfigType
@@ -199,10 +199,10 @@ export const DeleteConfigDetailsButton = (props: {
 };
 
 
-export const ConfigDetailsOperationField = (props: {
+export const EntryDetailsOperationField = (props: {
     config: BaseConfig,
     routineId: number,
-    slotConfigId: number,
+    slotEntryId: number,
     type: ConfigType
 }) => {
 
@@ -250,7 +250,7 @@ export const ConfigDetailsOperationField = (props: {
 export const ConfigDetailsNeedsLogsField = (props: {
     config: BaseConfig,
     routineId: number,
-    slotConfigId: number,
+    slotEntryId: number,
     type: ConfigType
 }) => {
 
@@ -270,13 +270,12 @@ export const ConfigDetailsNeedsLogsField = (props: {
             checked={value}
             onChange={e => handleData(e.target.checked)}
             disabled={isPending}
-
         />
     </>);
 };
 
 
-export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotConfigId?: number, routineId: number }) => {
+export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotEntryId?: number, routineId: number }) => {
 
     const editRiRQuery = useEditRiRConfigQuery(props.routineId);
     const deleteRiRQuery = useDeleteRiRConfigQuery(props.routineId);
@@ -307,7 +306,7 @@ export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotConfigId
         } else {
             addRiRQuery.mutate({
                 // eslint-disable-next-line camelcase
-                slot_config: props.slotConfigId!,
+                slot_entry: props.slotEntryId!,
                 iteration: 1,
                 operation: 'r',
                 need_log_to_apply: false,

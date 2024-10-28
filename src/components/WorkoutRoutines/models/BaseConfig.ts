@@ -6,7 +6,7 @@ export class BaseConfig {
 
     constructor(
         public id: number,
-        public slotConfigId: number,
+        public slotEntryId: number,
         public iteration: number,
         public trigger: "session" | "week" | null,
         public value: number,
@@ -24,7 +24,7 @@ export class BaseConfig {
 export class BaseConfigAdapter implements Adapter<BaseConfig> {
     fromJson = (item: any) => new BaseConfig(
         item.id,
-        item.slot_config,
+        item.slot_entry,
         item.iteration,
         item.trigger,
         parseFloat(item.value),
@@ -34,7 +34,7 @@ export class BaseConfigAdapter implements Adapter<BaseConfig> {
     );
 
     toJson = (item: BaseConfig) => ({
-        slot_config: item.slotConfigId,
+        slot_entry: item.slotEntryId,
         iteration: item.iteration,
         trigger: item.trigger,
         value: item.value,

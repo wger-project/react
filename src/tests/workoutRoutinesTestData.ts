@@ -25,7 +25,6 @@ const testDayLegs = new Day(
     '',
     false,
     false,
-    false,
     'custom'
 );
 
@@ -36,7 +35,6 @@ const testDayPull = new Day(
     '',
     false,
     false,
-    false,
     'custom'
 );
 const testRestDay = new Day(
@@ -45,7 +43,6 @@ const testRestDay = new Day(
     '',
     '',
     true,
-    false,
     false,
     'custom'
 );
@@ -111,6 +108,7 @@ export const testRoutine1 = new Routine(
     new Date('2024-01-01'),
     new Date('2024-01-01'),
     new Date('2024-02-01'),
+    false,
     [testDayLegs, testRestDay, testDayPull]
 );
 testRoutine1.dayDataCurrentIteration = testRoutineDataCurrentIteration1;
@@ -122,7 +120,8 @@ export const testRoutine2 = new Routine(
     'The routine description',
     new Date('2024-02-01'),
     new Date('2024-02-01'),
-    new Date('2024-03-01')
+    new Date('2024-03-01'),
+    false
 );
 
 export const TEST_ROUTINES = [testRoutine1, testRoutine2];
@@ -140,6 +139,7 @@ export const responseApiWorkoutRoutine = {
             "created": "2022-01-01T12:34:30+01:00",
             "start": "2024-03-01",
             "end": "2024-04-30",
+            "fit_in_week": false
         },
         {
             "id": 2,
@@ -148,6 +148,7 @@ export const responseApiWorkoutRoutine = {
             "created": "2023-01-01T17:22:22+02:00",
             "start": "2024-03-01",
             "end": "2024-04-30",
+            "fit_in_week": false
         }
     ]
 };
@@ -230,7 +231,7 @@ export const responseRoutineIterationDataToday = [
                 "sets": [
                     {
                         "exercise": 9,
-                        "slot_config_id": 1000,
+                        "slot_entry_id": 1000,
                         "type": "dropset",
                         "sets": 5,
                         "weight": "100.00",
@@ -249,7 +250,7 @@ export const responseRoutineIterationDataToday = [
                         "comment": "foo"
                     },
                     {
-                        "slot_config_id": 1001,
+                        "slot_entry_id": 1001,
                         "exercise": 12,
                         "sets": 3,
                         "weight": "90.00",

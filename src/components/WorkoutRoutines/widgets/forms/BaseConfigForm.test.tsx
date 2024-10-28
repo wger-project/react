@@ -49,9 +49,9 @@ const deleteMutation = jest.fn();
 
 const DEBOUNCE_WAIT = 10;
 
-describe('ConfigDetailsField Component', () => {
+describe('EntryDetailsField Component', () => {
     const routineId = 1;
-    const slotId = 2;
+    const slotEntryId = 2;
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -72,7 +72,7 @@ describe('ConfigDetailsField Component', () => {
 
                 render(
                     <QueryClientProvider client={testQueryClient}>
-                        <SlotBaseConfigValueField config={mockConfig} routineId={routineId} slotConfigId={slotId}
+                        <SlotBaseConfigValueField config={mockConfig} routineId={routineId} slotEntryId={slotEntryId}
                                                   type={type} />
                     </QueryClientProvider>
                 );
@@ -86,7 +86,7 @@ describe('ConfigDetailsField Component', () => {
                 expect(editMutation).toHaveBeenCalledTimes(1);
                 expect(editMutation).toHaveBeenCalledWith({
                     id: mockConfig.id,
-                    slot_config: slotId,
+                    slot_entry: slotEntryId,
                     value: 52,
                 });
                 expect(deleteMutation).toHaveBeenCalledTimes(0);
@@ -97,7 +97,7 @@ describe('ConfigDetailsField Component', () => {
 
                 render(
                     <QueryClientProvider client={testQueryClient}>
-                        <SlotBaseConfigValueField routineId={routineId} slotConfigId={slotId} type={type} />
+                        <SlotBaseConfigValueField routineId={routineId} slotEntryId={slotEntryId} type={type} />
                     </QueryClientProvider>
                 );
 
@@ -106,10 +106,11 @@ describe('ConfigDetailsField Component', () => {
 
                 expect(addMutation).toHaveBeenCalledTimes(1);
                 expect(addMutation).toHaveBeenCalledWith({
-                    slot_config: 2,
+                    slot_entry: 2,
                     value: 8,
                     iteration: 1,
                     operation: 'r',
+                    step: 'abs',
                     need_log_to_apply: false,
                 });
                 expect(editMutation).toHaveBeenCalledTimes(0);
@@ -122,7 +123,7 @@ describe('ConfigDetailsField Component', () => {
                 const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', null, true);
                 render(
                     <QueryClientProvider client={testQueryClient}>
-                        <SlotBaseConfigValueField config={mockConfig} routineId={routineId} slotConfigId={slotId}
+                        <SlotBaseConfigValueField config={mockConfig} routineId={routineId} slotEntryId={slotEntryId}
                                                   type={type} />
                     </QueryClientProvider>
                 );

@@ -3,14 +3,14 @@ import Grid from '@mui/material/Grid2';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { SlotConfig } from "components/WorkoutRoutines/models/SlotConfig";
+import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import {
-    AddConfigDetailsButton,
+    AddEntryDetailsButton,
     ConfigDetailsNeedsLogsField,
-    ConfigDetailsOperationField,
     ConfigType,
-    DeleteConfigDetailsButton,
+    DeleteEntryDetailsButton,
+    EntryDetailsOperationField,
     SlotBaseConfigValueField
 } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import React from "react";
@@ -23,7 +23,7 @@ export const ProgressionEdit = (props: {
     objectKey: string,
     type: ConfigType,
     routineId: number,
-    slotConfig: SlotConfig,
+    slotEntry: SlotEntry,
     iterations: number[]
 }) => {
     return (
@@ -45,21 +45,21 @@ export const ProgressionEdit = (props: {
                     <TableBody>
                         {props.iterations.map((iteration) => {
                             // @ts-ignore
-                            const config = props.slotConfig[props.objectKey].find((c) => c.iteration === iteration);
+                            const config = props.slotEntry[props.objectKey].find((c) => c.iteration === iteration);
 
                             return <TableRow key={iteration}>
                                 <TableCell>workout #{iteration}</TableCell>
                                 <TableCell>
                                     {config
-                                        ? <DeleteConfigDetailsButton
+                                        ? <DeleteEntryDetailsButton
                                             configId={config.id}
                                             routineId={props.routineId}
                                             type={props.type}
                                         />
-                                        : <AddConfigDetailsButton
+                                        : <AddEntryDetailsButton
                                             type={props.type}
                                             routineId={props.routineId}
-                                            slotConfigId={props.slotConfig.id}
+                                            slotEntryId={props.slotEntry.id}
                                             iteration={iteration}
                                         />
                                     }
@@ -69,15 +69,15 @@ export const ProgressionEdit = (props: {
                                         config={config}
                                         type={props.type}
                                         routineId={props.routineId}
-                                        slotConfigId={props.slotConfig.id}
+                                        slotEntryId={props.slotEntry.id}
                                     />}
                                 </TableCell>
                                 <TableCell>
-                                    {config && <ConfigDetailsOperationField
+                                    {config && <EntryDetailsOperationField
                                         config={config}
                                         type={props.type}
                                         routineId={props.routineId}
-                                        slotConfigId={props.slotConfig.id}
+                                        slotEntryId={props.slotEntry.id}
                                     />}
                                 </TableCell>
                                 <TableCell>
@@ -85,7 +85,7 @@ export const ProgressionEdit = (props: {
                                         config={config}
                                         type={props.type}
                                         routineId={props.routineId}
-                                        slotConfigId={props.slotConfig.id}
+                                        slotEntryId={props.slotEntry.id}
                                     />}
                                 </TableCell>
                             </TableRow>;
@@ -168,49 +168,49 @@ export const SlotProgressionEdit = () => {
                             objectKey={'weightConfigs'}
                             type="weight"
                             routineId={routineId}
-                            slotConfig={config}
+                            slotEntry={config}
                             iterations={iterations}
                         />
                         <ProgressionEdit
                             objectKey={'maxWeightConfigs'}
                             type="max-weight"
                             routineId={routineId}
-                            slotConfig={config}
+                            slotEntry={config}
                             iterations={iterations}
                         />
                         <ProgressionEdit
                             objectKey={'repsConfigs'}
                             type="reps"
                             routineId={routineId}
-                            slotConfig={config}
+                            slotEntry={config}
                             iterations={iterations}
                         />
                         <ProgressionEdit
                             objectKey={'maxRepsConfigs'}
                             type="max-reps"
                             routineId={routineId}
-                            slotConfig={config}
+                            slotEntry={config}
                             iterations={iterations}
                         />
                         <ProgressionEdit
                             objectKey={'nrOfSetsConfigs'}
                             type="sets"
                             routineId={routineId}
-                            slotConfig={config}
+                            slotEntry={config}
                             iterations={iterations}
                         />
                         <ProgressionEdit
                             objectKey={'restTimeConfigs'}
                             type="rest"
                             routineId={routineId}
-                            slotConfig={config}
+                            slotEntry={config}
                             iterations={iterations}
                         />
                         <ProgressionEdit
                             objectKey={'maxRestTimeConfigs'}
                             type="max-rest"
                             routineId={routineId}
-                            slotConfig={config}
+                            slotEntry={config}
                             iterations={iterations}
                         />
                     </Grid>

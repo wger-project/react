@@ -34,10 +34,10 @@ export { useEditDayQuery, useAddDayQuery, useEditDayOrderQuery, useDeleteDayQuer
 export { useRoutineLogQuery, } from "./logs";
 
 export {
-    useDeleteSlotConfigQuery,
-    useEditSlotConfigQuery,
-    useAddSlotConfigQuery,
-} from "./slot_configs";
+    useDeleteSlotEntryQuery,
+    useEditSlotEntryQuery,
+    useAddSlotEntryQuery,
+} from "./slot_entries";
 export {
     useFetchRoutineWeighUnitsQuery,
     useFetchRoutineRepUnitsQuery

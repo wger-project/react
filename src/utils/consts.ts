@@ -82,7 +82,7 @@ export enum ApiPath {
     MAX_REST_CONFIG = 'max-rest-config',
     DAY = 'day',
     SLOT = 'slot',
-    SLOT_CONFIG = 'slot-config'
+    SLOT_ENTRY = 'slot-entry'
 }
 
 

@@ -1,32 +1,32 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteSlotConfig, editSlotConfig } from "services";
-import { addSlotConfig, AddSlotConfigParams, EditSlotConfigParams } from "services/slot_config";
+import { deleteSlotEntry, editSlotEntry } from "services";
+import { addSlotEntry, AddSlotEntryParams, EditSlotEntryParams } from "services/slot_entry";
 import { QueryKey, } from "utils/consts";
 
 
-export const useEditSlotConfigQuery = (routineId: number) => {
+export const useEditSlotEntryQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: EditSlotConfigParams) => editSlotConfig(data),
+        mutationFn: (data: EditSlotEntryParams) => editSlotEntry(data),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, routineId] })
     });
 };
 
-export const useAddSlotConfigQuery = (routineId: number) => {
+export const useAddSlotEntryQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: AddSlotConfigParams) => addSlotConfig(data),
+        mutationFn: (data: AddSlotEntryParams) => addSlotEntry(data),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, routineId] })
     });
 };
 
-export const useDeleteSlotConfigQuery = (routineId: number) => {
+export const useDeleteSlotEntryQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (slotId: number) => deleteSlotConfig(slotId),
+        mutationFn: (slotId: number) => deleteSlotEntry(slotId),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, routineId] })
     });
 };

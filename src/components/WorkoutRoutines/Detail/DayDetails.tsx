@@ -30,12 +30,12 @@ import {
 import Grid from '@mui/material/Grid2';
 import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { SlotEntryDetails } from "components/WorkoutRoutines/Detail/SlotDetails";
+import { SlotDetails } from "components/WorkoutRoutines/Detail/SlotDetails";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import {
     useAddDayQuery,
-    useAddSlotConfigQuery,
+    useAddSlotEntryQuery,
     useAddSlotQuery,
     useDeleteDayQuery,
     useDeleteSlotQuery,
@@ -248,7 +248,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
 
     const [t, i18n] = useTranslation();
     const deleteSlotQuery = useDeleteSlotQuery(props.routineId);
-    const addSlotConfigQuery = useAddSlotConfigQuery(props.routineId);
+    const addSlotEntryQuery = useAddSlotEntryQuery(props.routineId);
     const addSlotQuery = useAddSlotQuery(props.routineId);
     const editSlotOrderQuery = useEditSlotOrderQuery(props.routineId);
     const theme = useTheme();
@@ -290,7 +290,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
         }
     };
 
-    const handleAddSlotConfig = (slotId: number) => {
+    const handleAddSlotEntry = (slotId: number) => {
         const slot = props.day.slots.find(s => s.id === slotId);
         if (slot === undefined) {
             console.info(`Could not find slot with id ${slotId} to add config`);
@@ -392,10 +392,10 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                                 <Grid>
                                                     {slot.configs.length > 0 && <ButtonGroup variant="outlined">
                                                         <Button
-                                                            onClick={() => handleAddSlotConfig(slot.id)}
+                                                            onClick={() => handleAddSlotEntry(slot.id)}
                                                             size={"small"}
-                                                            disabled={addSlotConfigQuery.isPending}
-                                                            startIcon={addSlotConfigQuery.isPending ?
+                                                            disabled={addSlotEntryQuery.isPending}
+                                                            startIcon={addSlotEntryQuery.isPending ?
                                                                 <LoadingProgressIcon /> :
                                                                 <AddIcon />}
                                                         >
@@ -428,7 +428,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                         </Grid>}
                                         <Grid size={12}>
                                             {/*<Box height={20} />*/}
-                                            <SlotEntryDetails
+                                            <SlotDetails
                                                 slot={slot}
                                                 routineId={props.routineId}
                                                 simpleMode={simpleMode}
@@ -443,7 +443,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                                         if (exercise === null) {
                                                             return;
                                                         }
-                                                        addSlotConfigQuery.mutate({
+                                                        addSlotEntryQuery.mutate({
                                                             slot: slot.id,
                                                             exercise: exercise.data.base_id,
                                                             type: 'normal',
@@ -457,10 +457,10 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
 
                                         <Grid size={12}>
                                             {slot.configs.length === 0 && <ButtonGroup><Button
-                                                onClick={() => handleAddSlotConfig(slot.id)}
+                                                onClick={() => handleAddSlotEntry(slot.id)}
                                                 size={"small"}
-                                                disabled={addSlotConfigQuery.isPending}
-                                                startIcon={addSlotConfigQuery.isPending ? <LoadingProgressIcon /> :
+                                                disabled={addSlotEntryQuery.isPending}
+                                                startIcon={addSlotEntryQuery.isPending ? <LoadingProgressIcon /> :
                                                     <AddIcon />}
                                             >
                                                 {t('routines.addExercise')}

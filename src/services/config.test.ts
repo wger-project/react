@@ -46,7 +46,7 @@ jest.mock("services/base_config", () => {
 
 describe('Config Service - Edit Functions', () => {
     const mockEditData: EditBaseConfigParams = { id: 1, value: 10 };
-    const mockAddData: AddBaseConfigParams = { value: 10, slot_config: 1 };
+    const mockAddData: AddBaseConfigParams = { value: 10, slot_entry: 1 };
 
 
     beforeEach(() => {

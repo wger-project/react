@@ -9,9 +9,9 @@ import { RirConfig } from "components/WorkoutRoutines/models/RirConfig";
 import { WeightConfig } from "components/WorkoutRoutines/models/WeightConfig";
 import { Adapter } from "utils/Adapter";
 
-export type SlotConfigType = 'normal' | 'dropset' | 'myo' | 'partial' | 'forced' | 'tut' | 'iso' | 'jump';
+export type SlotEntryType = 'normal' | 'dropset' | 'myo' | 'partial' | 'forced' | 'tut' | 'iso' | 'jump';
 
-export class SlotConfig {
+export class SlotEntry {
 
     weightConfigs: WeightConfig[] = [];
     maxWeightConfigs: WeightConfig[] = [];
@@ -35,7 +35,7 @@ export class SlotConfig {
         public weightRounding: number,
         public order: number,
         public comment: string,
-        public type: SlotConfigType,
+        public type: SlotEntryType,
         configs?: {
             weightConfigs?: WeightConfig[],
             maxWeightConfigs?: WeightConfig[],
@@ -61,7 +61,7 @@ export class SlotConfig {
 }
 
 
-export class SlotConfigAdapter implements Adapter<SlotConfig> {
+export class SlotEntryAdapter implements Adapter<SlotEntry> {
     fromJson = (item: any) => {
         let configs = {
             weightConfigs: [],
@@ -98,7 +98,7 @@ export class SlotConfigAdapter implements Adapter<SlotConfig> {
             configs.rirConfigs = item.rir_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
 
-        return new SlotConfig(
+        return new SlotEntry(
             item.id,
             item.slot,
             item.exercise,
@@ -113,7 +113,7 @@ export class SlotConfigAdapter implements Adapter<SlotConfig> {
         );
     };
 
-    toJson = (item: SlotConfig) => ({
+    toJson = (item: SlotEntry) => ({
         slot: item.slotId,
         exercise: item.exerciseId,
         repetition_unit: item.repetitionUnitId,

@@ -12,7 +12,7 @@ export class WorkoutLog {
         public date: Date,
         public iteration: number,
         public exerciseId: number,
-        public slotConfigId: number,
+        public slotEntryId: number,
         public repetitionUnitId: number,
         public reps: number,
         public weight: number | null,
@@ -61,7 +61,7 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         return {
             id: item.id,
             iteration: item.iteration,
-            set_config: item.slotConfigId,
+            set_config: item.slotEntryId,
             exercise_base: item.exerciseId,
             repetition_unit: item.repetitionUnitId,
             reps: item.reps,
