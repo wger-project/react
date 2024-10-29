@@ -10,7 +10,8 @@ describe("Slot service tests", () => {
     const slotData = {
         day: 1,
         order: 1,
-        comment: 'test'
+        comment: 'test',
+        config: null
     };
 
     beforeEach(() => {
@@ -28,7 +29,7 @@ describe("Slot service tests", () => {
             slotData,
             { headers: makeHeader() }
         );
-        expect(result).toStrictEqual(new Slot(123, 1, 1, 'test'));
+        expect(result).toStrictEqual(new Slot(123, 1, 1, 'test', null));
     });
 
     test('Update a Slot', async () => {
@@ -42,7 +43,7 @@ describe("Slot service tests", () => {
             { id: 123, comment: 'foo' },
             { headers: makeHeader() }
         );
-        expect(result).toStrictEqual(new Slot(123, 1, 1, 'foo'));
+        expect(result).toStrictEqual(new Slot(123, 1, 1, 'foo', null));
     });
 
     test('Updates the order of Slots', async () => {

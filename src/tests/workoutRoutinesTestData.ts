@@ -25,7 +25,8 @@ const testDayLegs = new Day(
     '',
     false,
     false,
-    'custom'
+    'custom',
+    null
 );
 
 const testDayPull = new Day(
@@ -35,7 +36,8 @@ const testDayPull = new Day(
     '',
     false,
     false,
-    'custom'
+    'custom',
+    null
 );
 const testRestDay = new Day(
     19,
@@ -44,7 +46,8 @@ const testRestDay = new Day(
     '',
     true,
     false,
-    'custom'
+    'custom',
+    null
 );
 
 export const testRoutineDataCurrentIteration1 = [
@@ -218,7 +221,8 @@ export const responseRoutineIterationDataToday = [
             "description": "",
             "is_rest": false,
             "last_day_in_week": false,
-            "need_logs_to_advance": false
+            "need_logs_to_advance": false,
+            "config": null
         },
         "slots": [
             {

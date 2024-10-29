@@ -36,6 +36,7 @@ export class SlotEntry {
         public order: number,
         public comment: string,
         public type: SlotEntryType,
+        public config: any | null,
         configs?: {
             weightConfigs?: WeightConfig[],
             maxWeightConfigs?: WeightConfig[],
@@ -109,6 +110,7 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
             item.order,
             item.comment,
             item.type,
+            item.config,
             configs
         );
     };
@@ -122,6 +124,7 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
         weight_rounding: item.weightRounding,
         order: item.order,
         comment: item.comment,
-        type: item.type
+        type: item.type,
+        config: item.config,
     });
 }

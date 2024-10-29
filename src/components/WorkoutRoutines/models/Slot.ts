@@ -6,6 +6,7 @@ export type SlotApiData = {
     day: number,
     order: number,
     comment: string
+    config: any
     entries?: any[]
 }
 
@@ -18,6 +19,7 @@ export class Slot {
         public dayId: number,
         public order: number,
         public comment: string,
+        public config: any | null,
         entries?: SlotEntry[],
     ) {
         if (entries) {
@@ -33,6 +35,7 @@ export class SlotAdapter implements Adapter<Slot> {
         item.day,
         item.order,
         item.comment,
+        item.config,
         item.hasOwnProperty('entries') ? item.entries!.map((entry: any) => new SlotEntryAdapter().fromJson(entry)) : []
     );
 
@@ -41,7 +44,8 @@ export class SlotAdapter implements Adapter<Slot> {
             id: item.id,
             day: item.dayId,
             order: item.order,
-            comment: item.order
+            comment: item.order,
+            config: item.config
         };
     }
 }

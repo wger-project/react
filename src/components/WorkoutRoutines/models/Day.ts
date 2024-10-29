@@ -15,6 +15,7 @@ export class Day {
         public isRest: boolean,
         public needLogsToAdvance: boolean,
         public type: 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap',
+        public config: any | null,
         slots?: Slot[]
     ) {
         if (slots) {
@@ -37,6 +38,7 @@ export class DayAdapter implements Adapter<Day> {
         item.is_rest,
         item.need_logs_to_advance,
         item.type,
+        item.config,
         item.hasOwnProperty('slots') ? item.slots.map((slot: any) => new SlotAdapter().fromJson(slot)) : [],
     );
 
@@ -46,5 +48,6 @@ export class DayAdapter implements Adapter<Day> {
         is_rest: item.isRest,
         need_logs_to_advance: item.needLogsToAdvance,
         type: item.type,
+        config: item.config,
     });
 }
