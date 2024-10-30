@@ -12,7 +12,6 @@ export class Routine {
     logData: RoutineLogData[] = [];
     dayDataCurrentIteration: RoutineDayData[] = [];
     dayDataAllIterations: RoutineDayData[] = [];
-    dayData: RoutineDayData[] = [];
 
     constructor(
         public id: number,

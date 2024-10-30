@@ -1,26 +1,21 @@
 /* eslint-disable camelcase */
 
 import { Exercise } from "components/Exercises/models/exercise";
-import { BaseConfigAdapter } from "components/WorkoutRoutines/models/BaseConfig";
-import { NrOfSetsConfig } from "components/WorkoutRoutines/models/NrOfSetsConfig";
-import { RepsConfig } from "components/WorkoutRoutines/models/RepsConfig";
-import { RestConfig } from "components/WorkoutRoutines/models/RestConfig";
-import { RirConfig } from "components/WorkoutRoutines/models/RirConfig";
-import { WeightConfig } from "components/WorkoutRoutines/models/WeightConfig";
+import { BaseConfig, BaseConfigAdapter } from "components/WorkoutRoutines/models/BaseConfig";
 import { Adapter } from "utils/Adapter";
 
 export type SlotEntryType = 'normal' | 'dropset' | 'myo' | 'partial' | 'forced' | 'tut' | 'iso' | 'jump';
 
 export class SlotEntry {
 
-    weightConfigs: WeightConfig[] = [];
-    maxWeightConfigs: WeightConfig[] = [];
-    repsConfigs: RepsConfig[] = [];
-    maxRepsConfigs: RepsConfig[] = [];
-    restTimeConfigs: RestConfig[] = [];
-    maxRestTimeConfigs: RestConfig[] = [];
-    nrOfSetsConfigs: NrOfSetsConfig[] = [];
-    rirConfigs: RirConfig[] = [];
+    weightConfigs: BaseConfig[] = [];
+    maxWeightConfigs: BaseConfig[] = [];
+    repsConfigs: BaseConfig[] = [];
+    maxRepsConfigs: BaseConfig[] = [];
+    restTimeConfigs: BaseConfig[] = [];
+    maxRestTimeConfigs: BaseConfig[] = [];
+    nrOfSetsConfigs: BaseConfig[] = [];
+    rirConfigs: BaseConfig[] = [];
 
     exercise?: Exercise;
 
@@ -38,14 +33,14 @@ export class SlotEntry {
         public type: SlotEntryType,
         public config: any | null,
         configs?: {
-            weightConfigs?: WeightConfig[],
-            maxWeightConfigs?: WeightConfig[],
-            repsConfigs?: RepsConfig[],
-            maxRepsConfigs?: RepsConfig[],
-            restTimeConfigs?: RestConfig[],
-            maxRestTimeConfigs?: RestConfig[],
-            nrOfSetsConfigs?: NrOfSetsConfig[],
-            rirConfigs?: RirConfig[]
+            weightConfigs?: BaseConfig[],
+            maxWeightConfigs?: BaseConfig[],
+            repsConfigs?: BaseConfig[],
+            maxRepsConfigs?: BaseConfig[],
+            restTimeConfigs?: BaseConfig[],
+            maxRestTimeConfigs?: BaseConfig[],
+            nrOfSetsConfigs?: BaseConfig[],
+            rirConfigs?: BaseConfig[]
         }
     ) {
         if (configs !== undefined) {
