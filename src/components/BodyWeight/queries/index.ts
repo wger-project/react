@@ -5,10 +5,10 @@ import { QueryKey, } from "utils/consts";
 import { number } from "yup";
 
 
-export function useBodyWeightQuery() {
+export function useBodyWeightQuery(filter: string | '') {
     return useQuery({
-        queryKey: [QueryKey.BODY_WEIGHT],
-        queryFn: getWeights
+        queryKey: [QueryKey.BODY_WEIGHT, filter],
+        queryFn: () => getWeights(filter),  
     });
 }
 

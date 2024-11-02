@@ -7,10 +7,10 @@ import { ResponseType } from "./responseType";
 export const WEIGHT_PATH = 'weightentry';
 
 /*
- * Fetch all weight entries
+ * Fetch weight entries based on filter value
  */
-export const getWeights = async (): Promise<WeightEntry[]> => {
-    const url = makeUrl(WEIGHT_PATH, { query: { ordering: '-date', limit: 900 } });
+export const getWeights = async (filter: string | ''): Promise<WeightEntry[]> => {
+    const url = makeUrl(WEIGHT_PATH, { query: { ordering: '-date', limit: 900, filter } });
     const { data: receivedWeights } = await axios.get<ResponseType<ApiBodyWeightType>>(url, {
         headers: makeHeader(),
     });
