@@ -3,13 +3,27 @@
 import { Button, ButtonGroup } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 
-export const FilterButtons = ({ currentFilter, onFilterChange }) => {
-    const theme = useTheme(); // Get the theme
+export type FilterType = 'all' | 'lastYear' | 'lastHalfYear' | 'lastMonth' | 'lastWeek' | '';
+
+export interface FilterButtonsProps {
+    currentFilter: FilterType;
+    onFilterChange: (newFilter: FilterType) => void;
+}
+
+export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsProps) => {
+    const theme = useTheme();
+
+    // Won't call onFilterChange if the filter stays the same 
+    const handleFilterChange = (newFilter: FilterType) => {
+        if (currentFilter !== newFilter) {
+            onFilterChange(newFilter);
+        }
+    };
 
     return (
         <ButtonGroup variant="outlined" sx={{ mb: 2 }}>
             <Button
-                onClick={() => onFilterChange('all')}
+                onClick={() => handleFilterChange('all')}
                 color={currentFilter === 'all' ? 'primary' : 'inherit'}
                 variant={currentFilter === 'all' ? 'contained' : 'outlined'}
                 sx={{ fontFamily: theme.typography.fontFamily }} 
@@ -17,7 +31,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }) => {
                 All
             </Button>
             <Button
-                onClick={() => onFilterChange('lastYear')}
+                onClick={() => handleFilterChange('lastYear')}
                 color={currentFilter === 'lastYear' ? 'primary' : 'inherit'}
                 variant={currentFilter === 'lastYear' ? 'contained' : 'outlined'}
                 sx={{ fontFamily: theme.typography.fontFamily }} 
@@ -25,7 +39,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }) => {
                 Last Year
             </Button>
             <Button
-                onClick={() => onFilterChange('lastHalfYear')}
+                onClick={() => handleFilterChange('lastHalfYear')}
                 color={currentFilter === 'lastHalfYear' ? 'primary' : 'inherit'}
                 variant={currentFilter === 'lastHalfYear' ? 'contained' : 'outlined'}
                 sx={{ fontFamily: theme.typography.fontFamily }} 
@@ -33,7 +47,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }) => {
                 Last 6 Months
             </Button>
             <Button
-                onClick={() => onFilterChange('lastMonth')}
+                onClick={() => handleFilterChange('lastMonth')}
                 color={currentFilter === 'lastMonth' ? 'primary' : 'inherit'}
                 variant={currentFilter === 'lastMonth' ? 'contained' : 'outlined'}
                 sx={{ fontFamily: theme.typography.fontFamily }} 
@@ -41,7 +55,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }) => {
                 Last Month
             </Button>
             <Button
-                onClick={() => onFilterChange('lastWeek')}
+                onClick={() => handleFilterChange('lastWeek')}
                 color={currentFilter === 'lastWeek' ? 'primary' : 'inherit'}
                 variant={currentFilter === 'lastWeek' ? 'contained' : 'outlined'}
                 sx={{ fontFamily: theme.typography.fontFamily }} 

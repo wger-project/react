@@ -9,12 +9,13 @@ import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
 import { useTranslation } from "react-i18next";
 import { FilterButtons } from "components/BodyWeight/widgets/FilterButtons";
 import { useState } from "react";
+import type { FilterType } from "./widgets/FilterButtons";
 
 export const BodyWeight = () => {
     const [t] = useTranslation();
-    const [filter, setFilter] = useState('lastYear'); 
+    const [filter, setFilter] = useState<FilterType>('lastYear'); 
     const weightyQuery = useBodyWeightQuery(filter);
-    const handleFilterChange = (newFilter) => {
+    const handleFilterChange = (newFilter: FilterType) => {
         setFilter(newFilter);
     };
 

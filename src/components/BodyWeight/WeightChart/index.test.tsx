@@ -28,7 +28,7 @@ describe("Test BodyWeight component", () => {
     test('renders without crashing', async () => {
 
         // Arrange
-        const weightData = [
+        const weightData = [        
             new WeightEntry(new Date('2021-12-10'), 80, 1),
             new WeightEntry(new Date('2021-12-20'), 90, 2),
         ];
