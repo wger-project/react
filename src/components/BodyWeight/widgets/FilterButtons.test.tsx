@@ -20,7 +20,7 @@ describe('FilterButtons Component', () => {
     });
 
     test('renders all filter buttons', () => {
-        renderComponent('all');
+        renderComponent('');
         const buttonLabels = ['All', 'Last Year', 'Last 6 Months', 'Last Month', 'Last Week'];
         buttonLabels.forEach(label => {
             expect(screen.getByText(label)).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe('FilterButtons Component', () => {
     });
 
     test('calls onFilterChange with correct value when a button is clicked', () => {
-        renderComponent('all');
+        renderComponent('');
         const lastYearButton = screen.getByText('Last Year');
 
         fireEvent.click(lastYearButton);
@@ -50,7 +50,7 @@ describe('FilterButtons Component', () => {
     });
 
     test('displays correct default style for inactive filter buttons', () => {
-        renderComponent('all');
+        renderComponent('');
         const inactiveButton = screen.getByText('Last Year');
         expect(inactiveButton).toHaveClass('MuiButton-outlined');
     });

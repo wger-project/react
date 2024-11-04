@@ -92,7 +92,7 @@ describe("Test BodyWeight component", () => {
         // Expect getWeights to be called with 'lastMonth'
         expect(getWeights).toHaveBeenCalledWith('lastMonth');
     
-        // Check that entry for last year is no longer in the document
+        // Check that entries for last year are no longer in the document
         expect(screen.queryByText("80")).not.toBeInTheDocument();
         expect(screen.queryByText("90")).not.toBeInTheDocument();
     });

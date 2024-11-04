@@ -3,7 +3,7 @@
 import { Button, ButtonGroup } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 
-export type FilterType = 'all' | 'lastYear' | 'lastHalfYear' | 'lastMonth' | 'lastWeek' | '';
+export type FilterType = 'lastYear' | 'lastHalfYear' | 'lastMonth' | 'lastWeek' | '';
 
 export interface FilterButtonsProps {
     currentFilter: FilterType;
@@ -23,9 +23,9 @@ export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsPr
     return (
         <ButtonGroup variant="outlined" sx={{ mb: 2 }}>
             <Button
-                onClick={() => handleFilterChange('all')}
-                color={currentFilter === 'all' ? 'primary' : 'inherit'}
-                variant={currentFilter === 'all' ? 'contained' : 'outlined'}
+                onClick={() => handleFilterChange('')}
+                color={currentFilter === '' ? 'primary' : 'inherit'}
+                variant={currentFilter === '' ? 'contained' : 'outlined'}
                 sx={{ fontFamily: theme.typography.fontFamily }} 
             >
                 All
