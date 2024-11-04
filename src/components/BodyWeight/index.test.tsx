@@ -9,7 +9,6 @@ import { FilterType } from "./widgets/FilterButtons";
 
 const { ResizeObserver } = window;
 
-jest.mock('axios')
 jest.mock("services");
 console.log = jest.fn();
 
