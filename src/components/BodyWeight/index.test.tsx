@@ -85,7 +85,7 @@ describe("Test BodyWeight component", () => {
         expect(await screen.findByText("90")).toBeInTheDocument();
     
         // Change filter to 'lastMonth'
-        const filterButton = screen.getByRole('button', { name: /Last Month/i });
+        const filterButton = screen.getByRole('button', { name: /lastMonth/i });
         fireEvent.click(filterButton);
     
         // Expect getWeights to be called with 'lastMonth'

@@ -21,7 +21,7 @@ describe('FilterButtons Component', () => {
 
     test('renders all filter buttons', () => {
         renderComponent('');
-        const buttonLabels = ['All', 'Last Year', 'Last 6 Months', 'Last Month', 'Last Week'];
+        const buttonLabels = ['all', 'lastYear', 'lastHalfYear', 'lastMonth', 'lastWeek'];
         buttonLabels.forEach(label => {
             expect(screen.getByText(label)).toBeInTheDocument();
         });
@@ -29,13 +29,13 @@ describe('FilterButtons Component', () => {
 
     test('applies primary color and contained variant to the active filter button', () => {
         renderComponent('lastMonth');
-        const activeButton = screen.getByText('Last Month');
+        const activeButton = screen.getByText('lastMonth');
         expect(activeButton).toHaveClass('MuiButton-containedPrimary');
     });
 
     test('calls onFilterChange with correct value when a button is clicked', () => {
         renderComponent('');
-        const lastYearButton = screen.getByText('Last Year');
+        const lastYearButton = screen.getByText('lastYear');
 
         fireEvent.click(lastYearButton);
         expect(onFilterChange).toHaveBeenCalledWith('lastYear');
@@ -43,7 +43,7 @@ describe('FilterButtons Component', () => {
 
     test('does not trigger onFilterChange when clicking the currently active filter button', () => {
         renderComponent('lastYear');
-        const lastYearButton = screen.getByText('Last Year');
+        const lastYearButton = screen.getByText('lastYear');
 
         fireEvent.click(lastYearButton);
         expect(onFilterChange).not.toHaveBeenCalled();
@@ -51,7 +51,7 @@ describe('FilterButtons Component', () => {
 
     test('displays correct default style for inactive filter buttons', () => {
         renderComponent('');
-        const inactiveButton = screen.getByText('Last Year');
+        const inactiveButton = screen.getByText('lastYear');
         expect(inactiveButton).toHaveClass('MuiButton-outlined');
     });
 });

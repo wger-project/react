@@ -1,7 +1,6 @@
-// components/BodyWeight/widgets/FilterButtons.tsx
-
 import { Button, ButtonGroup } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
+import { useTranslation } from "react-i18next";
 
 export type FilterType = 'lastYear' | 'lastHalfYear' | 'lastMonth' | 'lastWeek' | '';
 
@@ -11,6 +10,9 @@ export interface FilterButtonsProps {
 }
 
 export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsProps) => {
+
+    const [t] = useTranslation();
+
     const theme = useTheme();
 
     // Won't call onFilterChange if the filter stays the same 
@@ -28,7 +30,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsPr
                 variant={currentFilter === '' ? 'contained' : 'outlined'}
                 sx={{ fontFamily: theme.typography.fontFamily }} 
             >
-                All
+                {t('all')}
             </Button>
             <Button
                 onClick={() => handleFilterChange('lastYear')}
@@ -36,7 +38,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsPr
                 variant={currentFilter === 'lastYear' ? 'contained' : 'outlined'}
                 sx={{ fontFamily: theme.typography.fontFamily }} 
             >
-                Last Year
+                {t('lastYear')}
             </Button>
             <Button
                 onClick={() => handleFilterChange('lastHalfYear')}
@@ -44,7 +46,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsPr
                 variant={currentFilter === 'lastHalfYear' ? 'contained' : 'outlined'}
                 sx={{ fontFamily: theme.typography.fontFamily }} 
             >
-                Last 6 Months
+                {t('lastHalfYear')}
             </Button>
             <Button
                 onClick={() => handleFilterChange('lastMonth')}
@@ -52,7 +54,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsPr
                 variant={currentFilter === 'lastMonth' ? 'contained' : 'outlined'}
                 sx={{ fontFamily: theme.typography.fontFamily }} 
             >
-                Last Month
+                {t('lastMonth')}
             </Button>
             <Button
                 onClick={() => handleFilterChange('lastWeek')}
@@ -60,7 +62,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsPr
                 variant={currentFilter === 'lastWeek' ? 'contained' : 'outlined'}
                 sx={{ fontFamily: theme.typography.fontFamily }} 
             >
-                Last Week
+                {t('lastWeek')}
             </Button>
         </ButtonGroup>
     );
