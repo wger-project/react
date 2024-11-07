@@ -3782,10 +3782,10 @@ i18next-parser@^9.0.2:
     vinyl "~3.0.0"
     vinyl-fs "^4.0.0"
 
-i18next@^23.12.2, i18next@^23.5.1:
-  version "23.12.2"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.12.2.tgz#c5b44bb95e4d4a5908a51577fa06c63dc2f650a4"
-  integrity sha512-XIeh5V+bi8SJSWGL3jqbTEBW5oD6rbP5L+E7dVQh1MNTxxYef0x15rhJVcRb7oiuq4jLtgy2SD8eFlf6P2cmqg==
+i18next@^23.16.4, i18next@^23.5.1:
+  version "23.16.4"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.16.4.tgz#79c07544f6d6fa803fe8427108d547542c1d6cf4"
+  integrity sha512-9NIYBVy9cs4wIqzurf7nLXPyf3R78xYbxExVqHLK9od3038rjpyOEzW+XB130kZ1N4PZ9inTtJ471CRJ4Ituyg==
   dependencies:
     "@babel/runtime" "^7.23.2"
 
