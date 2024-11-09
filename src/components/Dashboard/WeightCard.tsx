@@ -16,7 +16,7 @@ import { makeLink, WgerLink } from "utils/url";
 export const WeightCard = () => {
 
     const [t] = useTranslation();
-    const weightyQuery = useBodyWeightQuery();
+    const weightyQuery = useBodyWeightQuery('lastYear');
 
     if (weightyQuery.isLoading) {
         return <LoadingPlaceholder />;

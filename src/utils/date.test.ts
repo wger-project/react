@@ -1,3 +1,4 @@
+import { calculatePastDate } from "utils/date"; 
 import { dateToYYYYMMDD } from "utils/date";
 
 describe("test date utility", () => {
@@ -18,4 +19,34 @@ describe("test date utility", () => {
     });
 
 
+});
+
+
+
+
+describe('calculatePastDate', () => {
+
+    it('should return undefined for empty string filter', () => {
+        expect(calculatePastDate('', new Date('2023-08-14'))).toBeUndefined();
+    });
+
+    it('should return the correct date for lastWeek filter', () => {
+        const result = calculatePastDate('lastWeek', new Date('2023-02-14')); 
+        expect(result).toStrictEqual('2023-02-07');
+    });
+
+    it('should return the correct date for lastMonth filter', () => {
+        const result = calculatePastDate('lastMonth', new Date('2023-02-14')); 
+        expect(result).toStrictEqual('2023-01-14');
+    });
+
+    it('should return the correct date for lastHalfYear filter', () => {
+        const result = calculatePastDate('lastHalfYear', new Date('2023-08-14')); 
+        expect(result).toStrictEqual('2023-02-14');
+    });
+
+    it('should return the correct date for lastYear filter', () => {
+        const result = calculatePastDate('lastYear', new Date('2023-02-14'));
+        expect(result).toStrictEqual('2022-02-14');
+    });
 });

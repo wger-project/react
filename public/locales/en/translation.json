@@ -11,6 +11,11 @@
   "close": "Close",
   "difference": "Difference",
   "days": "Days",
+  "all": "All",
+  "lastYear": "Last Year",
+  "lastHalfYear": "Last 6 Months",
+  "lastMonth": "Last Month",
+  "lastWeek": "Last Week",
   "start": "Start",
   "end": "End",
   "licenses": {
