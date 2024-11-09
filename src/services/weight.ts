@@ -4,6 +4,7 @@ import { ApiBodyWeightType } from 'types';
 import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
 import { FilterType } from '../components/BodyWeight/widgets/FilterButtons';
+import { calculatePastDate } from '../utils/date';
 
 export const WEIGHT_PATH = 'weightentry';
 
@@ -11,7 +12,10 @@ export const WEIGHT_PATH = 'weightentry';
  * Fetch weight entries based on filter value
  */
 export const getWeights = async (filter: FilterType = ''): Promise<WeightEntry[]> => {
-    const url = makeUrl(WEIGHT_PATH, { query: { ordering: '-date', limit: 900, filter } });
+
+    const date__gte = calculatePastDate(filter);
+    
+    const url = makeUrl(WEIGHT_PATH, { query: { ordering: '-date', limit: 900, ...(date__gte && { date__gte }) } });
     const { data: receivedWeights } = await axios.get<ResponseType<ApiBodyWeightType>>(url, {
         headers: makeHeader(),
     });

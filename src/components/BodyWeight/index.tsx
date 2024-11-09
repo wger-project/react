@@ -7,9 +7,9 @@ import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget"
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
 import { useTranslation } from "react-i18next";
-import { FilterButtons } from "components/BodyWeight/widgets/FilterButtons";
+import { FilterButtons, FilterType } from "components/BodyWeight/widgets/FilterButtons";
 import { useState } from "react";
-import type { FilterType } from "./widgets/FilterButtons";
+
 
 export const BodyWeight = () => {
     const [t] = useTranslation();
