@@ -1,5 +1,4 @@
 import {
-    Paper,
     Table,
     TableBody,
     TableCell,
@@ -54,7 +53,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
 
     return (
         <div className={classes.table}>
-            <TableContainer component={Paper}>
+            <TableContainer>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>

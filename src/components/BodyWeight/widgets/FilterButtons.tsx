@@ -28,7 +28,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsPr
                 onClick={() => handleFilterChange('')}
                 color={currentFilter === '' ? 'primary' : 'inherit'}
                 variant={currentFilter === '' ? 'contained' : 'outlined'}
-                sx={{ fontFamily: theme.typography.fontFamily }} 
+                sx={{ fontFamily: theme.typography.fontFamily }}
             >
                 {t('all')}
             </Button>
@@ -36,7 +36,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsPr
                 onClick={() => handleFilterChange('lastYear')}
                 color={currentFilter === 'lastYear' ? 'primary' : 'inherit'}
                 variant={currentFilter === 'lastYear' ? 'contained' : 'outlined'}
-                sx={{ fontFamily: theme.typography.fontFamily }} 
+                sx={{ fontFamily: theme.typography.fontFamily }}
             >
                 {t('lastYear')}
             </Button>
@@ -44,7 +44,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsPr
                 onClick={() => handleFilterChange('lastHalfYear')}
                 color={currentFilter === 'lastHalfYear' ? 'primary' : 'inherit'}
                 variant={currentFilter === 'lastHalfYear' ? 'contained' : 'outlined'}
-                sx={{ fontFamily: theme.typography.fontFamily }} 
+                sx={{ fontFamily: theme.typography.fontFamily }}
             >
                 {t('lastHalfYear')}
             </Button>
@@ -52,7 +52,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsPr
                 onClick={() => handleFilterChange('lastMonth')}
                 color={currentFilter === 'lastMonth' ? 'primary' : 'inherit'}
                 variant={currentFilter === 'lastMonth' ? 'contained' : 'outlined'}
-                sx={{ fontFamily: theme.typography.fontFamily }} 
+                sx={{ fontFamily: theme.typography.fontFamily }}
             >
                 {t('lastMonth')}
             </Button>
@@ -60,7 +60,7 @@ export const FilterButtons = ({ currentFilter, onFilterChange }: FilterButtonsPr
                 onClick={() => handleFilterChange('lastWeek')}
                 color={currentFilter === 'lastWeek' ? 'primary' : 'inherit'}
                 variant={currentFilter === 'lastWeek' ? 'contained' : 'outlined'}
-                sx={{ fontFamily: theme.typography.fontFamily }} 
+                sx={{ fontFamily: theme.typography.fontFamily }}
             >
                 {t('lastWeek')}
             </Button>
