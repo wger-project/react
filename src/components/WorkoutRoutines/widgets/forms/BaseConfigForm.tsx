@@ -322,14 +322,12 @@ export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotEntryId?
             label="RiR"
             variant="standard"
             defaultValue=""
+            value={props.config?.value}
             disabled={editRiRQuery.isPending}
             onChange={e => handleData(e.target.value)}
         >
-            {options.map((option) => (
-                <MenuItem
-                    key={option.value} value={option.value}
-                    selected={parseFloat(option.value) === props.config?.value}
-                >
+            {options!.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
                     {option.label}
                 </MenuItem>
             ))}

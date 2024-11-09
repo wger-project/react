@@ -1,5 +1,6 @@
 import { MenuItem, TextField } from "@mui/material";
 import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
+import { useProfileQuery } from "components/User/queries/profile";
 import { SlotEntry, SlotEntryType } from "components/WorkoutRoutines/models/SlotEntry";
 import {
     useEditSlotEntryQuery,
@@ -7,7 +8,6 @@ import {
     useFetchRoutineWeighUnitsQuery
 } from "components/WorkoutRoutines/queries";
 import React from "react";
-import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG } from "utils/consts";
 
 export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: number }) => {
 
@@ -58,12 +58,12 @@ export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: num
             select
             label="Type"
             variant="standard"
-            defaultValue="normal"
+            value={props.slotEntry.type}
             disabled={editQuery.isPending}
             onChange={e => handleOnChange(e.target.value)}
         >
-            {options.map((option) => (
-                <MenuItem key={option.value} value={option.value} selected={option.value === props.slotEntry.type}>
+            {options!.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
                     {option.label}
                 </MenuItem>
             ))}
@@ -97,13 +97,12 @@ export const SlotEntryRepetitionUnitField = (props: { slotEntry: SlotEntry, rout
             select
             label="Unit"
             variant="standard"
-            defaultValue={REP_UNIT_REPETITIONS}
+            value={props.slotEntry.repetitionUnitId}
             disabled={editSlotEntryQuery.isPending}
             onChange={e => handleOnChange(e.target.value)}
         >
             {options!.map((option) => (
-                <MenuItem key={option.value} value={option.value}
-                          selected={option.value === props.slotEntry.repetitionUnitId}>
+                <MenuItem key={option.value} value={option.value}>
                     {option.label}
                 </MenuItem>
             ))}
@@ -115,8 +114,10 @@ export const SlotEntryWeightUnitField = (props: { slotEntry: SlotEntry, routineI
 
     const editSlotEntryQuery = useEditSlotEntryQuery(props.routineId);
     const weightUnitsQuery = useFetchRoutineWeighUnitsQuery();
+    const userProfileQuery = useProfileQuery();
 
-    if (weightUnitsQuery.isLoading) {
+
+    if (weightUnitsQuery.isLoading || userProfileQuery.isLoading) {
         return <LoadingProgressIcon />;
     }
 
@@ -136,13 +137,12 @@ export const SlotEntryWeightUnitField = (props: { slotEntry: SlotEntry, routineI
             select
             label="Unit"
             variant="standard"
-            defaultValue={WEIGHT_UNIT_KG}
+            value={props.slotEntry.weightUnitId}
             disabled={editSlotEntryQuery.isPending}
             onChange={e => handleOnChange(e.target.value)}
         >
             {options!.map((option) => (
-                <MenuItem key={option.value} value={option.value}
-                          selected={option.value === props.slotEntry.repetitionUnitId}>
+                <MenuItem key={option.value} value={option.value}>
                     {option.label}
                 </MenuItem>
             ))}

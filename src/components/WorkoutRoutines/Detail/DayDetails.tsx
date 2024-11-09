@@ -30,6 +30,7 @@ import {
 import Grid from '@mui/material/Grid2';
 import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
+import { useProfileQuery } from "components/User/queries/profile";
 import { SlotDetails } from "components/WorkoutRoutines/Detail/SlotDetails";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
@@ -50,7 +51,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { AddDayParams } from "services/day";
 import { ExerciseSearchResponse } from "services/responseType";
-import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
+import { SNACKBAR_AUTO_HIDE_DURATION, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
 
 export const DayDragAndDropGrid = (props: {
@@ -251,6 +252,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
     const addSlotEntryQuery = useAddSlotEntryQuery(props.routineId);
     const addSlotQuery = useAddSlotQuery(props.routineId);
     const editSlotOrderQuery = useEditSlotOrderQuery(props.routineId);
+    const userProfileQuery = useProfileQuery();
     const theme = useTheme();
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -329,6 +331,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
     const getListStyle = (isDraggingOver: boolean) => ({
         background: isDraggingOver ? "lightblue" : undefined,
     });
+
     const getItemStyle = (isDragging: boolean, draggableStyle: DraggableStyle) => ({
         // userSelect: "none",
         border: isDragging ? `2px solid ${theme.palette.grey[900]}` : `1px solid ${theme.palette.grey[300]}`,
@@ -448,6 +451,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                                             exercise: exercise.data.base_id,
                                                             type: 'normal',
                                                             order: slot.configs.length + 1,
+                                                            weight_unit: userProfileQuery.data!.useMetric ? WEIGHT_UNIT_KG : WEIGHT_UNIT_LB,
                                                         });
                                                         setShowAutocompleterForSlot(null);
                                                     }}
