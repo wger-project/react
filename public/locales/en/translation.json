@@ -223,5 +223,30 @@
     "kg": "kg",
     "lb": "lb",
     "none__bodyweight_exercise_": "none (bodyweight exercise)"
-  }
+  },
+  "calendar": "Calendar",
+  "months": {
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
+  },
+  "calendarDays": {
+    "monday": "Mon",
+    "tuesday": "Tue",
+    "wednesday": "Wed",
+    "thursday": "Thu",
+    "friday": "Fri",
+    "saturday": "Sat",
+    "sunday": "Sun"
+  },
+  "entries": "Entries"
 }
