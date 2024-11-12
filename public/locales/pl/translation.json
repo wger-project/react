@@ -223,5 +223,30 @@
     "seeDetails": "Zobacz szczegóły",
     "actions": "Akcje",
     "downloadAsPdf": "Pobierz PDF",
-    "total": "Całkowite"
+    "total": "Całkowite",
+    "calendar": "Kalendarz",
+    "months": {
+        "january": "Styczeń",
+        "february": "Luty",
+        "march": "Marzec",
+        "april": "Kwiecień",
+        "may": "Maj",
+        "june": "Czerwiec",
+        "july": "Lipiec",
+        "august": "Sierpień",
+        "september": "Wrzesień",
+        "october": "Październik",
+        "november": "Listopad",
+        "december": "Grudzień"
+    },
+    "calendarDays": {
+        "monday": "Pon",
+        "tuesday": "Wt",
+        "wednesday": "Śr",
+        "thursday": "Czw",
+        "friday": "Pt",
+        "saturday": "Sob",
+        "sunday": "Nie"
+    },
+    "entries": "Wpisy"
 }

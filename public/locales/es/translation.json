@@ -224,5 +224,30 @@
     "lastHalfYear": "Últimos 6 meses",
     "lastMonth": "Mes pasado",
     "all": "Todo",
-    "lastWeek": "Mes semana"
+    "lastWeek": "Mes semana",
+    "calendar": "Calendario",
+    "months": {
+        "january": "Enero",
+        "february": "Febrero",
+        "march": "Marzo",
+        "april": "Abril",
+        "may": "Mayo",
+        "june": "Junio",
+        "july": "Julio",
+        "august": "Agosto",
+        "september": "Septiembre",
+        "october": "Octubre",
+        "november": "Noviembre",
+        "december": "Diciembre"
+    },
+    "calendarDays": {
+        "monday": "Lun",
+        "tuesday": "Mar",
+        "wednesday": "Mié",
+        "thursday": "Jue",
+        "friday": "Vie",
+        "saturday": "Sáb",
+        "sunday": "Dom"
+    },
+    "entries": "Entradas"
 }

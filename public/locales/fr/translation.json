@@ -225,5 +225,30 @@
         "unitFormHelpText": "L'unité dans laquelle la catégorie sera mesurée, telle que cm ou %",
         "deleteInfo": "Ceci supprimera la catégorie ainsi que toutes ses entrées"
     },
-    "downloadAsPdf": "Télécharger en PDF"
+    "downloadAsPdf": "Télécharger en PDF",
+    "calendar": "Calendrier",
+    "months": {
+        "january": "Janvier",
+        "february": "Février",
+        "march": "Mars",
+        "april": "Avril",
+        "may": "Mai",
+        "june": "Juin",
+        "july": "Juillet",
+        "august": "Août",
+        "september": "Septembre",
+        "october": "Octobre",
+        "november": "Novembre",
+        "december": "Décembre"
+    },
+    "calendarDays": {
+        "monday": "Lun",
+        "tuesday": "Mar",
+        "wednesday": "Mer",
+        "thursday": "Jeu",
+        "friday": "Ven",
+        "saturday": "Sam",
+        "sunday": "Dim"
+    },
+    "entries": "Entrées"
 }

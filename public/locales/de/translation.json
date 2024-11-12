@@ -222,5 +222,30 @@
         "authorProfile": "Link zur Website oder zum Profil des Autors, falls verfügbar",
         "derivativeSourceUrlHelper": "Beachte, dass ein abgeleitetes Werk nicht nur auf einem vorherigen Werk basiert, sondern auch genügend neue, kreative Inhalte enthält, um ein eigenes Urheberrecht zu beanspruchen."
     },
-    "filters": "Filter"
+    "filters": "Filter",
+    "calendar": "Kalender",
+    "months": {
+        "january": "Januar",
+        "february": "Februar",
+        "march": "März",
+        "april": "April",
+        "may": "Mai",
+        "june": "Juni",
+        "july": "Juli",
+        "august": "August",
+        "september": "September",
+        "october": "Oktober",
+        "november": "November",
+        "december": "Dezember"
+    },
+    "calendarDays": {
+        "monday": "Mo",
+        "tuesday": "Di",
+        "wednesday": "Mi",
+        "thursday": "Do",
+        "friday": "Fr",
+        "saturday": "Sa",
+        "sunday": "So"
+    },
+    "entries": "Einträge"
 }
