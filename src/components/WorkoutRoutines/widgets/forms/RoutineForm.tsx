@@ -181,7 +181,9 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                         </Grid>
                         <Grid size={12}>
                             <FormControlLabel
-                                control={<Switch {...formik.getFieldProps('fitInWeek')} />}
+                                control={
+                                    <Switch checked={formik.values.fitInWeek} {...formik.getFieldProps('fitInWeek')} />
+                                }
                                 label="Fit days in week." />
                         </Grid>
                         <Grid size={12}>
