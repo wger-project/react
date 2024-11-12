@@ -7,6 +7,7 @@ export const MIN_ACCOUNT_AGE = MIN_ACCOUNT_AGE_TO_TRUST || 21;
 
 // Duration in weeks
 export const MIN_WORKOUT_DURATION = 2;
+export const MAX_WORKOUT_DURATION = 16;
 
 // Duration in weeks
 export const DEFAULT_WORKOUT_DURATION = 12;
@@ -17,6 +18,8 @@ export const REP_UNIT_TILL_FAILURE = 2;
 
 export const WEIGHT_UNIT_KG = 1;
 export const WEIGHT_UNIT_LB = 2;
+
+export const OPERATION_REPLACE = 'r';
 
 
 export const QUERY_EXERCISES = 'exercises';

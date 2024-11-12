@@ -30,7 +30,7 @@ import {
     useEditWeightConfigQuery
 } from "components/WorkoutRoutines/queries";
 import React, { useState } from "react";
-import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
+import { DEBOUNCE_ROUTINE_FORMS, OPERATION_REPLACE } from "utils/consts";
 
 const QUERY_MAP: { [key: string]: any } = {
     'weight': {
@@ -108,7 +108,7 @@ export const SlotBaseConfigValueField = (props: {
         } else {
             addQueryHook.mutate({
                 iteration: 1,
-                operation: 'r',
+                operation: OPERATION_REPLACE,
                 step: 'abs',
                 need_log_to_apply: false,
                 ...data
@@ -166,7 +166,7 @@ export const AddEntryDetailsButton = (props: {
             slot_entry: props.slotEntryId!,
             iteration: props.iteration,
             value: 0,
-            operation: 'r',
+            operation: OPERATION_REPLACE,
             need_log_to_apply: false
         });
     };
@@ -216,7 +216,7 @@ export const EntryDetailsOperationField = (props: {
             label: 'Subtract',
         },
         {
-            value: 'r',
+            value: OPERATION_REPLACE,
             label: 'Replace',
         },
     ];
@@ -264,14 +264,11 @@ export const ConfigDetailsNeedsLogsField = (props: {
         editQueryHook.mutate({ id: props.config.id, need_log_to_apply: newValue, });
     };
 
-    const isPending = editQueryHook.isPending;
-    return (<>
-        <Switch
-            checked={value}
-            onChange={e => handleData(e.target.checked)}
-            disabled={isPending}
-        />
-    </>);
+    return <Switch
+        checked={value}
+        onChange={e => handleData(e.target.checked)}
+        disabled={editQueryHook.isPending}
+    />;
 };
 
 
@@ -308,7 +305,7 @@ export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotEntryId?
                 // eslint-disable-next-line camelcase
                 slot_entry: props.slotEntryId!,
                 iteration: 1,
-                operation: 'r',
+                operation: OPERATION_REPLACE,
                 need_log_to_apply: false,
                 ...data
             });

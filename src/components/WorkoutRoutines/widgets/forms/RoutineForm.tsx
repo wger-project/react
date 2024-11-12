@@ -9,7 +9,7 @@ import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { DEFAULT_WORKOUT_DURATION, MIN_WORKOUT_DURATION } from "utils/consts";
+import { DEFAULT_WORKOUT_DURATION, MAX_WORKOUT_DURATION, MIN_WORKOUT_DURATION } from "utils/consts";
 import * as yup from 'yup';
 
 interface RoutineFormProps {
@@ -63,6 +63,20 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                         const endDateTime = DateTime.fromJSDate(value);
 
                         return endDateTime.diff(startDateTime, 'weeks').weeks >= MIN_WORKOUT_DURATION;
+                    }
+                    return true;
+                }
+            )
+            .test(
+                'hasMaximumDuration',
+                t('routines.maxLengthRoutine', { number: MAX_WORKOUT_DURATION }),
+                function (value) {
+                    const startDate = this.parent.start;
+                    if (startDate && value) {
+                        const startDateTime = DateTime.fromJSDate(startDate);
+                        const endDateTime = DateTime.fromJSDate(value);
+
+                        return endDateTime.diff(startDateTime, 'weeks').weeks <= MAX_WORKOUT_DURATION;
                     }
                     return true;
                 }

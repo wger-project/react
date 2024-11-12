@@ -6,6 +6,7 @@ import { BaseConfig } from 'components/WorkoutRoutines/models/BaseConfig';
 import { SlotBaseConfigValueField } from 'components/WorkoutRoutines/widgets/forms/BaseConfigForm';
 import React from 'react';
 import { testQueryClient } from "tests/queryClient";
+import { OPERATION_REPLACE } from "utils/consts";
 
 
 jest.mock('utils/consts', () => {
@@ -109,7 +110,7 @@ describe('EntryDetailsField Component', () => {
                     slot_entry: 2,
                     value: 8,
                     iteration: 1,
-                    operation: 'r',
+                    operation: OPERATION_REPLACE,
                     step: 'abs',
                     need_log_to_apply: false,
                 });
