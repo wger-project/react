@@ -22,14 +22,13 @@ import reportWebVitals from './reportWebVitals';
 
 
 const queryClient = new QueryClient({
-    // -> https://tanstack.com/query/v4/docs/react/reference/QueryClient
+    // -> https://tanstack.com/query/latest/docs/reference/QueryClient
     // time in milliseconds, so 1000 * 30 = 30s
 
     defaultOptions: {
         queries: {
             retry: 3,
             staleTime: 1000 * 60 * 5,
-            cacheTime: 1000 * 60 * 5,
             refetchOnMount: true,
             refetchOnWindowFocus: true,
             refetchOnReconnect: "always"
