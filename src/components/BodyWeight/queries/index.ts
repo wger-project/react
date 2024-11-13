@@ -2,14 +2,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { WeightEntry } from "components/BodyWeight/model";
 import { createWeight, deleteWeight, getWeights, updateWeight, } from "services";
 import { QueryKey, } from "utils/consts";
-import { number } from "yup";
 import { FilterType } from "../widgets/FilterButtons";
 
 
 export function useBodyWeightQuery(filter: FilterType = '') {
     return useQuery({
         queryKey: [QueryKey.BODY_WEIGHT, filter],
-        queryFn: () => getWeights(filter),  
+        queryFn: () => getWeights(filter),
     });
 }
 
