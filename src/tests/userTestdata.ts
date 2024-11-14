@@ -5,7 +5,9 @@ export const testProfileDataVerified = new Profile(
     'root@example.com',
     true,
     new Date("2022-04-27 17:52:38.867000+00:00"),
-    true
+    true,
+    true,
+    180,
 );
 
 export const testProfileDataNotVerified = new Profile(
@@ -13,7 +15,9 @@ export const testProfileDataNotVerified = new Profile(
     'hi@example.com',
     false,
     new Date(2022, 3, 27, 19, 52, 38, 867),
-    false
+    false,
+    true,
+    180,
 );
 
 export const testProfileApiResponse = {
@@ -24,5 +28,7 @@ export const testProfileApiResponse = {
     // eslint-disable-next-line camelcase
     date_joined: "2022-04-27 17:52:38.867000+00:00",
     // eslint-disable-next-line camelcase
-    is_trustworthy: true
+    is_trustworthy: true,
+    weight_unit: 'kg',
+    height: 180,
 };

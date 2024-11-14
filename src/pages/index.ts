@@ -1,7 +1,6 @@
 export { About } from './About';
 export { AddExercise } from './AddExercise';
 export { AddWeight } from './AddWeight';
-export { BmiCalculator } from './BmiCalculator';
 export { Calendar } from './Calendar';
 export { CaloriesCalculator } from './CaloriesCalculator';
 export { Equipments } from './Equipments';
