@@ -1,7 +1,7 @@
 import { Profile } from "components/User/models/profile";
-import { useProfileQuery } from "components/User/queries/profile";
-import { usePermissionQuery } from "components/User/queries/permission";
 import { useCanContributeExercises } from "components/User/queries/contribute";
+import { usePermissionQuery } from "components/User/queries/permission";
+import { useProfileQuery } from "components/User/queries/profile";
 
 jest.mock("components/User/queries/profile");
 jest.mock("components/User/queries/permission");
@@ -23,7 +23,10 @@ describe("Test the exercise contribution query", () => {
             'admin@google.com',
             false,
             new Date(),
-            false);
+            false,
+            true,
+            180,
+        );
     });
 
 

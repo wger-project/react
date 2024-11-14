@@ -3,6 +3,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WeightEntry } from "components/BodyWeight/model";
 import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "components/BodyWeight/queries";
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import { useState } from 'react';
@@ -31,6 +32,10 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
             .max(300, 'Max weight is 300 kg')
             .required('Weight field is required'),
     });
+
+    if (weightEntriesQuery.isLoading) {
+        return <LoadingPlaceholder />;
+    }
 
     return (
         (<Formik

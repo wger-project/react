@@ -22,7 +22,7 @@ import reportWebVitals from './reportWebVitals';
 
 
 const queryClient = new QueryClient({
-    // -> https://tanstack.com/query/v4/docs/react/reference/QueryClient
+    // -> https://tanstack.com/query/latest/docs/reference/QueryClient
     // time in milliseconds, so 1000 * 30 = 30s
 
     defaultOptions: {

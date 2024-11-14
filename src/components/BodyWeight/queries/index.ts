@@ -5,7 +5,7 @@ import { QueryKey, } from "utils/consts";
 import { FilterType } from "../widgets/FilterButtons";
 
 
-export function useBodyWeightQuery(filter: FilterType = '') {
+export function useBodyWeightQuery(filter: FilterType = 'lastWeek') {
     return useQuery({
         queryKey: [QueryKey.BODY_WEIGHT, filter],
         queryFn: () => getWeights(filter),

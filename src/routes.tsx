@@ -2,6 +2,7 @@ import { Dashboard } from "components/Dashboard/Dashboard";
 import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
 import { MeasurementCategoryDetail } from "components/Measurements/Screens/MeasurementCategoryDetail";
 import { MeasurementCategoryOverview } from "components/Measurements/Screens/MeasurementCategoryOverview";
+import { BmiCalculator } from "components/Nutrition/components/BmiCalculator";
 import { NutritionDiaryOverview } from "components/Nutrition/components/NutritionDiaryOverview";
 import { PlanDetail } from "components/Nutrition/components/PlanDetail";
 import { PlansOverview } from "components/Nutrition/components/PlansOverview";
@@ -16,7 +17,6 @@ import {
     AddExercise,
     AddWeight,
     ApiPage,
-    BmiCalculator,
     Calendar,
     CaloriesCalculator,
     Equipments,
