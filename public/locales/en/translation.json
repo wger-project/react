@@ -248,5 +248,6 @@
     "saturday": "Sat",
     "sunday": "Sun"
   },
-  "entries": "Entries"
+  "entries": "Entries",
+  "no_entries_for_day": "No entries for this day"
 }

@@ -9,6 +9,8 @@ interface WeightLogProps {
 
 const Entries: React.FC<WeightLogProps> = ({ selectedDay }) => {
     const [t] = useTranslation();
+    const noEntriesMessage = t("no_entries_for_day");
+
     return (
         <Card
             sx={{
@@ -51,14 +53,14 @@ const Entries: React.FC<WeightLogProps> = ({ selectedDay }) => {
                     <span className={`${selectedDay.weightEntry ? 'text-xl font-semibold' : 'text-gray-500'}`}>
                         {selectedDay.weightEntry
                             ? `${selectedDay.weightEntry.weight.toFixed(1)} kg`
-                            : "No weight entry for this day"
+                            : noEntriesMessage
                         }
                     </span>
                 </div>
                 <div className="flex flex-col gap-1">
                     <span className="font-bold">{t("measurements.measurements")}: </span>
                     {selectedDay.measurements.length === 0 ? (
-                        <span className="text-gray-500 mt-1">No measurements for this day</span>
+                        <span className="text-gray-500 mt-1">{noEntriesMessage}</span>
                     ) : (
                         <div className="flex flex-col gap-0.5">
                             {selectedDay.measurements.map((measurement) => (

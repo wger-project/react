@@ -248,5 +248,6 @@
         "saturday": "Sob",
         "sunday": "Nie"
     },
-    "entries": "Wpisy"
+    "entries": "Wpisy",
+    "no_entries_for_day": "Brak wpisów na ten dzień"
 }

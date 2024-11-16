@@ -249,5 +249,6 @@
         "saturday": "Sáb",
         "sunday": "Dom"
     },
-    "entries": "Entradas"
+    "entries": "Entradas",
+    "no_entries_for_day": "No hay entradas para este día"
 }

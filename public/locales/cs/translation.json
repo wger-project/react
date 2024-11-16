@@ -243,5 +243,6 @@
         "saturday": "So",
         "sunday": "Ne"
     },
-    "entries": "Záznamy"
+    "entries": "Záznamy",
+    "no_entries_for_day": "Žádné záznamy pro tento den"
 }
