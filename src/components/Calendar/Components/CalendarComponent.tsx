@@ -5,7 +5,7 @@ import CalendarDayGrid from './CalendarDayGrid';
 import Entries from './Entries';
 import {WeightEntry} from "../../BodyWeight/model";
 import {useBodyWeightQuery} from "../../BodyWeight/queries";
-import CalendarIcon from 'assets/images/calendar.svg';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import {isSameDay} from "../../../utils/date";
 import {CalendarMeasurement} from "../Helpers/CalendarMeasurement";
 import {useMeasurementsCategoryQuery} from "../../Measurements/queries";
@@ -157,15 +157,11 @@ const CalendarComponent = () => {
                                 alignItems: 'center',
                                 marginBottom: '16px'
                             }}>
-                                <img
-                                    src={CalendarIcon}
-                                    alt="Calendar Icon"
-                                    style={{
-                                        width: isMobile ? '28px' : '32px',
-                                        height: isMobile ? '28px' : '32px',
-                                        marginRight: '12px'
-                                    }}
-                                />
+                                <CalendarMonthIcon style={{
+                                    width: isMobile ? '28px' : '32px',
+                                    height: isMobile ? '28px' : '32px',
+                                    marginRight: '12px'
+                                }}/>
                                 <span style={{
                                     fontSize: isMobile ? '1.5rem' : '1.8rem',
                                     fontWeight: 'bold'
