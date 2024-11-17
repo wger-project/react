@@ -234,15 +234,6 @@
         "november": "Listopad",
         "december": "Prosinec"
     },
-    "calendarDays": {
-        "monday": "Po",
-        "tuesday": "Út",
-        "wednesday": "St",
-        "thursday": "Čt",
-        "friday": "Pá",
-        "saturday": "So",
-        "sunday": "Ne"
-    },
     "entries": "Záznamy",
     "no_entries_for_day": "Žádné záznamy pro tento den"
 }

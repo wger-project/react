@@ -13,9 +13,10 @@ interface CalendarDayGridProps {
 }
 
 const CalendarDayGrid: React.FC<CalendarDayGridProps> = ({days, currentMonth, currentDate, selectedDay, onDayClick}) => {
-    const [t] = useTranslation();
-    const weekDays = [t("calendarDays.monday"), t("calendarDays.tuesday"), t("calendarDays.wednesday"),
-        t("calendarDays.thursday"), t("calendarDays.friday"), t("calendarDays.saturday"), t("calendarDays.sunday")];
+    const { i18n } = useTranslation();
+    const weekDays = Array.from({ length: 7 }, (_, i) =>
+        new Date(1970, 0, i + 4).toLocaleString(i18n.language, { weekday: 'short' })
+    );
 
     return (
         <Grid container spacing={1} rowSpacing={2}>

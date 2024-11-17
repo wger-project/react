@@ -241,15 +241,6 @@
         "november": "Novembre",
         "december": "Décembre"
     },
-    "calendarDays": {
-        "monday": "Lun",
-        "tuesday": "Mar",
-        "wednesday": "Mer",
-        "thursday": "Jeu",
-        "friday": "Ven",
-        "saturday": "Sam",
-        "sunday": "Dim"
-    },
     "entries": "Entrées",
     "no_entries_for_day": "Aucune entrée pour ce jour"
 }

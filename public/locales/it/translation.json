@@ -236,15 +236,6 @@
         "november": "Novembre",
         "december": "Dicembre"
     },
-    "calendarDays": {
-        "monday": "Lun",
-        "tuesday": "Mar",
-        "wednesday": "Mer",
-        "thursday": "Gio",
-        "friday": "Ven",
-        "saturday": "Sab",
-        "sunday": "Dom"
-    },
     "entries": "Voci",
     "no_entries_for_day": "Nessuna voce per questo giorno"
 }

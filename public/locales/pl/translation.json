@@ -239,15 +239,6 @@
         "november": "Listopad",
         "december": "Grudzień"
     },
-    "calendarDays": {
-        "monday": "Pon",
-        "tuesday": "Wt",
-        "wednesday": "Śr",
-        "thursday": "Czw",
-        "friday": "Pt",
-        "saturday": "Sob",
-        "sunday": "Nie"
-    },
     "entries": "Wpisy",
     "no_entries_for_day": "Brak wpisów na ten dzień"
 }
