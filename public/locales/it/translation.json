@@ -222,20 +222,6 @@
     "English": "Inglese",
     "videos": "Video",
     "calendar": "Calendario",
-    "months": {
-        "january": "Gennaio",
-        "february": "Febbraio",
-        "march": "Marzo",
-        "april": "Aprile",
-        "may": "Maggio",
-        "june": "Giugno",
-        "july": "Luglio",
-        "august": "Agosto",
-        "september": "Settembre",
-        "october": "Ottobre",
-        "november": "Novembre",
-        "december": "Dicembre"
-    },
     "entries": "Voci",
     "no_entries_for_day": "Nessuna voce per questo giorno"
 }

@@ -226,20 +226,6 @@
     "all": "Todo",
     "lastWeek": "Mes semana",
     "calendar": "Calendario",
-    "months": {
-        "january": "Enero",
-        "february": "Febrero",
-        "march": "Marzo",
-        "april": "Abril",
-        "may": "Mayo",
-        "june": "Junio",
-        "july": "Julio",
-        "august": "Agosto",
-        "september": "Septiembre",
-        "october": "Octubre",
-        "november": "Noviembre",
-        "december": "Diciembre"
-    },
     "entries": "Entradas",
     "no_entries_for_day": "No hay entradas para este día"
 }

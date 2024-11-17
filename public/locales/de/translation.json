@@ -224,20 +224,6 @@
     },
     "filters": "Filter",
     "calendar": "Kalender",
-    "months": {
-        "january": "Januar",
-        "february": "Februar",
-        "march": "März",
-        "april": "April",
-        "may": "Mai",
-        "june": "Juni",
-        "july": "Juli",
-        "august": "August",
-        "september": "September",
-        "october": "Oktober",
-        "november": "November",
-        "december": "Dezember"
-    },
     "entries": "Einträge",
     "no_entries_for_day": "Keine Einträge für diesen Tag"
 }

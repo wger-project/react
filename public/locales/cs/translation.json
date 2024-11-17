@@ -220,20 +220,6 @@
     "noResultsDescription": "Nenalezeny žádné výsledky pro tento dotaz, zvažte snížení počtu filtrů.",
     "filters": "Filtry",
     "calendar": "Kalendář",
-    "months": {
-        "january": "Leden",
-        "february": "Únor",
-        "march": "Březen",
-        "april": "Duben",
-        "may": "Květen",
-        "june": "Červen",
-        "july": "Červenec",
-        "august": "Srpen",
-        "september": "Září",
-        "october": "Říjen",
-        "november": "Listopad",
-        "december": "Prosinec"
-    },
     "entries": "Záznamy",
     "no_entries_for_day": "Žádné záznamy pro tento den"
 }

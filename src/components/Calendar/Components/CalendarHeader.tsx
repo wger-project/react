@@ -10,9 +10,10 @@ interface CalendarHeaderProps {
 }
 
 const CalendarHeader: React.FC<CalendarHeaderProps> = ({currentMonth, currentYear, onPrevMonth, onNextMonth,}) => {
-    const [t] = useTranslation();
-    const months = [t("months.january"), t("months.february"), t("months.march"), t("months.april"), t("months.may"), t("months.june"),
-        t("months.july"), t("months.august"), t("months.september"), t("months.october"), t("months.november"), t("months.december")];
+    const { i18n } = useTranslation();
+    const months = Array.from({ length: 12 }, (_, index) =>
+        new Date(2024, index, 1).toLocaleString(i18n.language, { month: "long" })
+    );
 
     return (
         <div style={{

@@ -225,20 +225,6 @@
     "downloadAsPdf": "Pobierz PDF",
     "total": "Całkowite",
     "calendar": "Kalendarz",
-    "months": {
-        "january": "Styczeń",
-        "february": "Luty",
-        "march": "Marzec",
-        "april": "Kwiecień",
-        "may": "Maj",
-        "june": "Czerwiec",
-        "july": "Lipiec",
-        "august": "Sierpień",
-        "september": "Wrzesień",
-        "october": "Październik",
-        "november": "Listopad",
-        "december": "Grudzień"
-    },
     "entries": "Wpisy",
     "no_entries_for_day": "Brak wpisów na ten dzień"
 }
