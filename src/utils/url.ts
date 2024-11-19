@@ -128,6 +128,8 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/routine/set/${params!.id}/edit`;
         case WgerLink.ROUTINE_DELETE_SET:
             return `/${langShort}/routine/set/${params!.id}/delete`;
+        case WgerLink.CALENDAR:
+            return `/${langShort}/routine/calendar`;
 
         // Exercises
         case WgerLink.EXERCISE_CONTRIBUTE:
@@ -169,10 +171,6 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
 
         case WgerLink.INGREDIENT_DETAIL:
             return `/${langShort}/nutrition/ingredient/${params!.id}/view`;
-
-        // Workout
-        case WgerLink.CALENDAR:
-            return `/${langShort}/workout/calendar/user`;
 
         // Dashboard
         case WgerLink.DASHBOARD:

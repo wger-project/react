@@ -28,6 +28,9 @@ export const TrainingSubMenu = () => {
                 <MenuItem component={Link} to={makeLink(WgerLink.EXERCISE_CONTRIBUTE, i18n.language)}>
                     Contribute exercise
                 </MenuItem>
+                <MenuItem component={Link} to={makeLink(WgerLink.CALENDAR, i18n.language)}>
+                    Calendar
+                </MenuItem>
             </Menu>
         </>
     );

@@ -42,9 +42,6 @@ export const WgerRoutes = () => {
             <Route path="workout">
                 <Route path="overview" element={<Workout />} />
                 <Route path="schedule" element={<WorkoutSchedule />} />
-                <Route path="calendar">
-                    <Route path="user" element={<Calendar />} />
-                </Route>
                 <Route path="gallery" element={<Gallery />} />
 
                 <Route path="template">
@@ -55,6 +52,7 @@ export const WgerRoutes = () => {
             <Route path="routine">
                 <Route index element={<RoutineOverview />} />
                 <Route path="overview" element={<RoutineOverview />} />
+                <Route path="calendar" element={<Calendar />} />
                 <Route path=":routineId" element={<RoutineDetails />}>
                     <Route path="view" element={<RoutineDetails />} />
                 </Route>
