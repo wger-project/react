@@ -15,7 +15,6 @@ export const WgerContainerRightSidebar = (props: WgerTemplateContainerProps) => 
 
     return (
         <Container maxWidth="lg">
-
             <Grid container spacing={2}>
                 <Grid sx={{ mb: 2 }} size={8}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -26,24 +25,14 @@ export const WgerContainerRightSidebar = (props: WgerTemplateContainerProps) => 
                     </Stack>
                 </Grid>
 
-                <Grid
-                    size={{
-                        xs: 12,
-                        sm: 8
-                    }}>
+                <Grid size={{ xs: 12, sm: 8 }}>
                     {props.mainContent}
                 </Grid>
-                <Grid
-                    size={{
-                        xs: 12,
-                        sm: 4
-                    }}>
+                <Grid size={{ xs: 12, sm: 4 }}>
                     {props.sideBar}
                 </Grid>
             </Grid>
-
             {props.fab}
-
         </Container>
     );
 };

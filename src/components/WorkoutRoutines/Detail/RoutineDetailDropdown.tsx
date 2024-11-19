@@ -22,6 +22,10 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
         navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: props.routine.id }));
     };
 
+    const handleTable = () => {
+        navigate(makeLink(WgerLink.ROUTINE_DETAIL_TABLE, i18n.language, { id: props.routine.id }));
+    };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -41,6 +45,7 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
                 }}
             >
                 <MenuItem onClick={handleEdit}>{t("edit")}</MenuItem>
+                <MenuItem onClick={handleTable}>Table view</MenuItem>
                 {/*<MenuItem onClick={handleDelete}>{t("delete")}</MenuItem>*/}
             </Menu>
         </div>

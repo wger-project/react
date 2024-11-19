@@ -13,6 +13,7 @@ export const RoutineDetail = () => {
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const routineQuery = useRoutineDetailQuery(routineId);
 
+
     return <RenderLoadingQuery
         query={routineQuery}
         child={routineQuery.isSuccess
