@@ -81,7 +81,9 @@ export enum WgerLink {
     NUTRITION_PLAN_COPY,
     NUTRITION_DIARY,
 
-    INGREDIENT_DETAIL
+    INGREDIENT_DETAIL,
+
+    CALENDAR
 }
 
 type UrlParams = { id: number, slug?: string, date?: string };
@@ -126,6 +128,8 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/routine/set/${params!.id}/edit`;
         case WgerLink.ROUTINE_DELETE_SET:
             return `/${langShort}/routine/set/${params!.id}/delete`;
+        case WgerLink.CALENDAR:
+            return `/${langShort}/routine/calendar`;
 
         // Exercises
         case WgerLink.EXERCISE_CONTRIBUTE:
