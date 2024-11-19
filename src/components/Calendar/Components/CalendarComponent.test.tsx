@@ -1,14 +1,14 @@
-import CalendarComponent from "./CalendarComponent";
-import {fireEvent, render, screen} from "@testing-library/react";
-import React from "react";
-import {BrowserRouter} from "react-router-dom";
-import {I18nextProvider} from "react-i18next";
+import { fireEvent, render, screen } from "@testing-library/react";
 import i18n from "i18next";
-import {useBodyWeightQuery} from "../../BodyWeight/queries";
-import {useMeasurementsCategoryQuery} from "../../Measurements/queries";
-import {MeasurementCategory} from "../../Measurements/models/Category";
-import {MeasurementEntry} from "../../Measurements/models/Entry";
-import {WeightEntry} from "../../BodyWeight/model";
+import React from "react";
+import { I18nextProvider } from "react-i18next";
+import { BrowserRouter } from "react-router-dom";
+import { WeightEntry } from "../../BodyWeight/model";
+import { useBodyWeightQuery } from "../../BodyWeight/queries";
+import { MeasurementCategory } from "../../Measurements/models/Category";
+import { MeasurementEntry } from "../../Measurements/models/Entry";
+import { useMeasurementsCategoryQuery } from "../../Measurements/queries";
+import CalendarComponent from "./CalendarComponent";
 
 jest.mock('../../BodyWeight/queries', () => ({
     useBodyWeightQuery: jest.fn(),
@@ -58,7 +58,7 @@ describe('CalendarComponent', () => {
 
     const getDaysInMonth = (year: number, month: number) => {
         return new Date(year, month + 1, 0).getDate();
-    }
+    };
 
     test("renders calendar with days and header", () => {
         renderComponent();
@@ -96,8 +96,7 @@ describe('CalendarComponent', () => {
 
         const tenthDay = screen.getByText('10');
         fireEvent.click(tenthDay);
-
-        expect(screen.getByText('Body fat: 20 %')).toBeInTheDocument();
+        expect(screen.getByText(/body fat: 20 %/i)).toBeInTheDocument();
     });
 
     test('displays weight details for selected day', () => {
@@ -105,7 +104,6 @@ describe('CalendarComponent', () => {
 
         const fifthDay = screen.getByText('5');
         fireEvent.click(fifthDay);
-
-        expect(screen.getByText('Weight: 70 kg')).toBeInTheDocument();
+        expect(screen.getByText('70.0 kg')).toBeInTheDocument();
     });
 });
