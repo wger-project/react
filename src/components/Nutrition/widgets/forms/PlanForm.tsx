@@ -1,12 +1,9 @@
 import {
     Button,
-    FormControl,
     FormControlLabel,
     FormGroup,
+    FormHelperText,
     InputAdornment,
-    InputLabel,
-    MenuItem,
-    Select,
     Stack,
     Switch,
     TextField
@@ -146,21 +143,32 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                     />}
                             />
                         </FormGroup>
-                        <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Goal Setting</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={10}
-                                label="Goal setting"
-                                onChange={() => {
-                                }}
-                            >
-                                <MenuItem value={10}>Based on my meals</MenuItem>
-                                <MenuItem value={20}>Set basic macros</MenuItem>
-                                <MenuItem value={30}>Set advanced macros</MenuItem>
-                            </Select>
-                        </FormControl>
+                        {/*TODO:  implement the options like in the mobile app */}
+                        {/*<FormControl fullWidth>*/}
+                        {/*    <InputLabel id="demo-simple-select-label">Goal Setting</InputLabel>*/}
+                        {/*    <Select*/}
+                        {/*        labelId="demo-simple-select-label"*/}
+                        {/*        id="demo-simple-select"*/}
+                        {/*        value={10}*/}
+                        {/*        label="Goal setting"*/}
+                        {/*        onChange={() => {*/}
+                        {/*        }}*/}
+                        {/*    >*/}
+                        {/*        <MenuItem value={10}>Based on my meals</MenuItem>*/}
+                        {/*        <MenuItem value={20}>Set basic macros</MenuItem>*/}
+                        {/*        <MenuItem value={30}>Set advanced macros</MenuItem>*/}
+                        {/*    </Select>*/}
+                        {/*</FormControl>*/}
+                        <FormControlLabel
+                            label={t('nutrition.useGoalsHelpText')}
+                            control={
+                                <Switch
+                                    id="goalEnergy"
+                                    checked={useGoals}
+                                    onChange={() => setUseGoals(!useGoals)}
+                                />}
+                        />
+                        <FormHelperText>{t('nutrition.useGoalsHelpTextLong')}</FormHelperText>
 
 
                         {useGoals && <>
