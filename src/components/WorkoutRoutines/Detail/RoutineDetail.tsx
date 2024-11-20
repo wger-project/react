@@ -23,12 +23,12 @@ export const RoutineDetail = () => {
                 mainContent={
                     <Stack spacing={2} sx={{ mt: 2 }}>
                         {routineQuery.data?.description !== ''
-                            && <Typography variant={"caption"} sx={{ whiteSpace: 'pre-line' }}>
+                            && <Typography variant={"body2"} sx={{ whiteSpace: 'pre-line' }}>
                                 {routineQuery.data?.description}
                             </Typography>
                         }
 
-                        {routineQuery.data!.dayDataCurrentIteration.map((dayData, index) =>
+                        {routineQuery.data!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null).map((dayData, index) =>
                             <DayDetailsCard dayData={dayData} key={`dayDetails-${index}`} />
                         )}
                     </Stack>

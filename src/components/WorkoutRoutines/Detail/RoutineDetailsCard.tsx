@@ -37,12 +37,12 @@ export const RoutineDetailsCard = () => {
             query={routineQuery}
             child={routineQuery.isSuccess && <>
                 {routineQuery.data?.description !== ''
-                    && <Typography variant={"caption"} sx={{ whiteSpace: 'pre-line' }}>
+                    && <Typography variant={"body2"} sx={{ whiteSpace: 'pre-line' }}>
                         {routineQuery.data?.description}
                     </Typography>
                 }
                 <Stack spacing={2} sx={{ mt: 2 }}>
-                    {routineQuery.data!.dayDataCurrentIteration.map((dayData, index) =>
+                    {routineQuery.data!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null).map((dayData, index) =>
                         <DayDetailsCard dayData={dayData} key={`dayDetails-${index}`} />
                     )}
                 </Stack>
@@ -190,7 +190,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
                 {props.dayData.slots.length > 0 &&
                     <Stack>
                         {props.dayData.slots.map((slotData, index) => (
-                            <div key={`SlotDataList-${props.dayData.day?.id}-${index}`}>
+                            <div key={`SlotDataList-${props.dayData.day!.id}-${index}`}>
                                 <Box padding={1}>
                                     <SlotDataList
                                         slotData={slotData}

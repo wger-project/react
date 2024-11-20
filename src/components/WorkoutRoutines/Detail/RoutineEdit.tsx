@@ -75,8 +75,10 @@ export const RoutineEdit = () => {
                 </Typography>
 
                 <Box padding={4}>
-                    <RoutineDetailsTable />
                     <RoutineDetailsCard />
+
+                    <Box height={20} />
+                    <RoutineDetailsTable />
                 </Box>
             </Stack>
         </Container>

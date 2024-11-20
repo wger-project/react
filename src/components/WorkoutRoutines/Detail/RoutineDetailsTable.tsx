@@ -81,7 +81,7 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
                 </TableRow>
             </TableHead>
             <TableBody>
-                {props.dayData.map((dayData, index) =>
+                {props.dayData.filter((dayData) => dayData.day !== null).map((dayData, index) =>
                     <React.Fragment key={`${props.iteration}-${index}`}>
                         <TableRow key={`tableRow-rest-${index}`}>
                             <TableCell sx={{ backgroundColor: theme.palette.action.hover }}>
@@ -107,7 +107,7 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
                                                         label={setConfig.type}
                                                         color="info"
                                                         size="small"
-                                                        sx={{ marginLeft: "0.5em" }} />
+                                                        sx={{ marginLeft: "0.5em", height: 18 }} />
                                                 }
                                             </TableCell>
                                         </TableRow>;
@@ -148,7 +148,7 @@ const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {props.dayData.map((dayData, index) =>
+                {props.dayData.filter((dayData) => dayData.day !== null).map((dayData, index) =>
                     <React.Fragment key={index}>
                         <TableRow>
                             <TableCell
