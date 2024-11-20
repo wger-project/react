@@ -1,9 +1,9 @@
 import { Stack, Typography } from "@mui/material";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
-import { RoutineDetailDropdown } from "components/WorkoutRoutines/Detail/RoutineDetailDropdown";
-import { DayDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { RoutineDetailDropdown } from "components/WorkoutRoutines/widgets/RoutineDetailDropdown";
+import { DayDetailsCard } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
 import React from "react";
 import { useParams } from "react-router-dom";
 
@@ -12,7 +12,6 @@ export const RoutineDetail = () => {
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const routineQuery = useRoutineDetailQuery(routineId);
-
 
     return <RenderLoadingQuery
         query={routineQuery}

@@ -1,8 +1,8 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { SlotDetails } from 'components/WorkoutRoutines/Detail/SlotDetails';
 import { Slot } from 'components/WorkoutRoutines/models/Slot';
 import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
+import { SlotDetails } from 'components/WorkoutRoutines/widgets/SlotDetails';
 import React from 'react';
 import { testQueryClient } from "tests/queryClient";
 

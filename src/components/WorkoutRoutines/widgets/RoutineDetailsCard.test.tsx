@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { RoutineDetailsCard } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
 import React from 'react';
 import { MemoryRouter, Route, Routes } from "react-router";
 import { testRoutine1 } from "tests/workoutRoutinesTestData";

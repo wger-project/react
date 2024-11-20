@@ -14,10 +14,10 @@ import {
 } from '@mui/material';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { EmptyCard } from "components/Dashboard/EmptyCard";
-import { SetConfigDataDetails } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { useActiveRoutineQuery } from "components/WorkoutRoutines/queries";
+import { SetConfigDataDetails } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { makeLink, WgerLink } from "utils/url";

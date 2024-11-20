@@ -31,7 +31,6 @@ import Grid from '@mui/material/Grid2';
 import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { useProfileQuery } from "components/User/queries/profile";
-import { SlotDetails } from "components/WorkoutRoutines/Detail/SlotDetails";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import {
@@ -46,6 +45,7 @@ import {
 } from "components/WorkoutRoutines/queries";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
 import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
+import { SlotDetails } from "components/WorkoutRoutines/widgets/SlotDetails";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -505,7 +505,6 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                     </Button>
                 }
             >
-
                 Set successfully deleted
             </Alert>
         </Snackbar>

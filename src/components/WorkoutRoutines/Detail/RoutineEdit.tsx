@@ -1,11 +1,11 @@
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { DayDetails, DayDragAndDropGrid } from "components/WorkoutRoutines/Detail/DayDetails";
-import { RoutineDetailsCard } from "components/WorkoutRoutines/Detail/RoutineDetailsCard";
 import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { DayDetails, DayDragAndDropGrid } from "components/WorkoutRoutines/widgets/DayDetails";
 import { RoutineForm } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
+import { RoutineDetailsCard } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";

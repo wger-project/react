@@ -131,10 +131,7 @@ const ExerciseLog = (props: { exercise: Exercise, logEntries: WorkoutLog[] | und
 
         <Grid container spacing={2}>
             <Grid
-                size={{
-                    xs: 12,
-                    md: 5
-                }}>
+                size={{ xs: 12, md: 5 }}>
                 <TableContainer>
                     <Table aria-label="simple table" size="small">
                         <TableHead>
@@ -164,11 +161,7 @@ const ExerciseLog = (props: { exercise: Exercise, logEntries: WorkoutLog[] | und
                 </TableContainer>
 
             </Grid>
-            <Grid
-                size={{
-                    xs: 12,
-                    md: 7
-                }}>
+            <Grid size={{ xs: 12, md: 7 }}>
                 <TimeSeriesChart data={logEntries} key={props.exercise.id} />
             </Grid>
         </Grid>
