@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 
 import { Day } from "components/WorkoutRoutines/models/Day";
+import { RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { RoutineLogData } from "components/WorkoutRoutines/models/RoutineLogData";
 import { Adapter } from "utils/Adapter";
@@ -12,6 +13,7 @@ export class Routine {
     logData: RoutineLogData[] = [];
     dayDataCurrentIteration: RoutineDayData[] = [];
     dayDataAllIterations: RoutineDayData[] = [];
+    stats: RoutineStatsData = new RoutineStatsData();
 
     constructor(
         public id: number,

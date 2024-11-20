@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Exercise } from "components/Exercises/models/exercise";
 import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
+import { RoutineStatsData, RoutineStatsDataAdapter } from "components/WorkoutRoutines/models/LogStats";
 import { Routine, RoutineAdapter } from "components/WorkoutRoutines/models/Routine";
 import { RoutineDayData, RoutineDayDataAdapter } from "components/WorkoutRoutines/models/RoutineDayData";
 import { RoutineLogData, RoutineLogDataAdapter } from "components/WorkoutRoutines/models/RoutineLogData";
@@ -12,6 +13,7 @@ import { ResponseType } from "./responseType";
 
 export const ROUTINE_API_STRUCTURE_PATH = 'structure';
 export const ROUTINE_API_LOGS_PATH = 'logs';
+export const ROUTINE_API_STATS_PATH = 'stats';
 export const ROUTINE_API_CURRENT_ITERATION_DISPLAY = 'current-iteration-display';
 export const ROUTINE_API_ALL_ITERATION_DISPLAY = 'date-sequence-display';
 
@@ -44,6 +46,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         getRoutineDayDataAllIterations(id),
         getRoutineStructure(id),
         getRoutineLogData(id),
+        getRoutineStatisticsData(id),
     ]);
     const repUnits = responses[0];
     const weightUnits = responses[1];
@@ -51,6 +54,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     const dayDataAllIterations = responses[3];
     const dayStructure = responses[4];
     const logData = responses[5];
+    const statsData = responses[6];
 
     // Collect and load all exercises for the workout
     for (const day of dayDataCurrentIteration) {
@@ -97,6 +101,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     routine.dayDataAllIterations = dayDataAllIterations;
     routine.logData = logData;
     routine.days = dayStructure;
+    routine.stats = statsData
 
     return routine;
 };
@@ -243,4 +248,13 @@ export const getRoutineLogData = async (routineId: number): Promise<RoutineLogDa
 
     const adapter = new RoutineLogDataAdapter();
     return response.data.map((data: any) => adapter.fromJson(data));
+};
+
+export const getRoutineStatisticsData = async (routineId: number): Promise<RoutineStatsData> => {
+    const response = await axios.get(
+        makeUrl(ApiPath.ROUTINE, { id: routineId, objectMethod: ROUTINE_API_STATS_PATH }),
+        { headers: makeHeader() }
+    );
+
+    return new RoutineStatsDataAdapter().fromJson(response.data);
 };
