@@ -144,9 +144,6 @@ function SlotDataList(props: {
 export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -156,24 +153,23 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
     const navigateAddLog = () => window.location.href = makeLink(
         WgerLink.ROUTINE_ADD_LOG,
         i18n.language,
-        { id: 1 }
+        { id: props.dayData.day!.id }
     );
 
     return (
         <Card sx={{ minWidth: 275 }}>
             <CardHeader
                 sx={{ bgcolor: "lightgray" }}
-                action={props.dayData.day !== null && props.dayData.day.isSpecialType
+                action={props.dayData.day!.isSpecialType
                     ? <Chip
-                        label={props.dayData.day.type}
+                        label={props.dayData.day!.type}
                         color="info"
                         size="small"
                         sx={{ marginLeft: "0.5em" }} />
                     : null
                 }
-                title={props.dayData.day === null || props.dayData.day.isRest ? t('routines.restDay') : props.dayData.day.name}
+                title={props.dayData.day!.isRest ? t('routines.restDay') : props.dayData.day!.name}
                 subheader={props.dayData.day?.description}
-
             />
             <Menu
                 id="basic-menu"
@@ -186,7 +182,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
                     {t('routines.addWeightLog')}
                 </MenuItem>
             </Menu>
-            <CardContent sx={{ padding: 0 }}>
+            <CardContent sx={{ padding: 0, marginBottom: 0 }}>
                 {props.dayData.slots.length > 0 &&
                     <Stack>
                         {props.dayData.slots.map((slotData, index) => (

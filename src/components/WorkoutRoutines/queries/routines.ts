@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getActiveRoutine, getRoutine, getRoutines, getRoutinesShallow } from "services";
-import { addRoutine, AddRoutineParams, editRoutine, EditRoutineParams } from "services/routine";
+import { addRoutine, AddRoutineParams, deleteRoutine, editRoutine, EditRoutineParams } from "services/routine";
 import { QueryKey, } from "utils/consts";
 
 
@@ -49,8 +49,8 @@ export const useAddRoutineQuery = () => {
     return useMutation({
         mutationFn: (data: AddRoutineParams) => addRoutine(data),
         onSuccess: () => queryClient.invalidateQueries(
-            { queryKey: [QueryKey.ROUTINE_OVERVIEW,] }
-        )
+            { queryKey: [QueryKey.ROUTINE_OVERVIEW] }
+        ),
     });
 };
 
@@ -61,7 +61,19 @@ export const useEditRoutineQuery = (id: number) => {
     return useMutation({
         mutationFn: (data: EditRoutineParams) => editRoutine(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW,] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, id] });
+        }
+    });
+};
+
+export const useDeleteRoutineQuery = (id: number) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: () => deleteRoutine(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, id] });
         }
     });

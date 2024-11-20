@@ -9,7 +9,9 @@ import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { DEFAULT_WORKOUT_DURATION, MAX_WORKOUT_DURATION, MIN_WORKOUT_DURATION } from "utils/consts";
+import { makeLink, WgerLink } from "utils/url";
 import * as yup from 'yup';
 
 interface RoutineFormProps {
@@ -22,6 +24,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
     const [t, i18n] = useTranslation();
     const addRoutineQuery = useAddRoutineQuery();
     const editRoutineQuery = useEditRoutineQuery(routine?.id!);
+    const navigate = useNavigate();
 
     /*
      * Note: Controlling the state of the dates manually, otherwise some undebuggable errors
@@ -106,17 +109,19 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                         id: routine.id
                     });
                 } else {
-                    addRoutineQuery.mutate({
+                    const result = await addRoutineQuery.mutateAsync({
                         ...values,
                         fit_in_week: values.fitInWeek,
                         start: values.start?.toISODate()!,
                         end: values.end?.toISODate()!,
                     });
-                }
 
-                // if closeFn is defined, close the modal (this form does not have to be displayed in one)
-                if (closeFn) {
-                    closeFn();
+                    navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id }));
+
+
+                    if (closeFn) {
+                        closeFn();
+                    }
                 }
             }}
         >

@@ -1,5 +1,5 @@
 export {
-    useRoutinesQuery, useRoutineDetailQuery, useActiveRoutineQuery, useRoutinesShallowQuery,
+    useRoutinesQuery, useRoutineDetailQuery, useActiveRoutineQuery, useRoutinesShallowQuery, useDeleteRoutineQuery,
 } from './routines';
 
 export {
