@@ -112,7 +112,8 @@ export const DayDragAndDropGrid = (props: {
             routine: props.routineId,
             name: t('routines.newDay'),
             order: routineQuery.data!.days.length + 1,
-            is_rest: false
+            is_rest: false,
+            needs_logs_to_advance: false,
         };
         addDayQuery.mutate(newDay);
     };

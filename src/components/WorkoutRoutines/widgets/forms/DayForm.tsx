@@ -25,6 +25,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
         setOpenDialog(false);
     };
 
+
     const nameMinLength = 3;
     const nameMaxLength = 20;
     const descriptionMaxLength = 1000;
@@ -36,27 +37,39 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
             .required('Name is required'),
         description: Yup.string()
             .max(descriptionMaxLength, t('forms.maxLength', { chars: descriptionMaxLength })),
-        isRest: Yup.boolean()
+        isRest: Yup.boolean(),
+        needsLogsToAdvance: Yup.boolean()
     });
 
-    const handleSubmit = (values: Partial<{ name: string, description: string, isRest: boolean }>) =>
+    const handleSubmit = (values: Partial<{
+        name: string,
+        description: string,
+        isRest: boolean,
+        needsLogsToAdvance: boolean
+    }>) =>
         editDayQuery.mutate({
             id: props.day.id,
             routine: props.routineId,
             ...(values.name !== undefined && { name: values.name }),
             ...(values.description !== undefined && { description: values.description }),
             ...(values.isRest !== undefined && { is_rest: values.isRest }),
+            ...(values.needsLogsToAdvance !== undefined && { needs_logs_to_advance: values.needsLogsToAdvance }),
         });
 
     return <>
         <Formik
-            initialValues={{ name: props.day.name, description: props.day.description, isRest: props.day.isRest }}
+            initialValues={{
+                name: props.day.name,
+                description: props.day.description,
+                isRest: props.day.isRest,
+                needsLogsToAdvance: props.day.needLogsToAdvance
+            }}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
                 handleSubmit(values);
                 setSubmitting(false);
             }}
-            initialTouched={{ name: true, description: true, isRest: true }}
+            initialTouched={{ name: true, description: true, isRest: true, needsLogsToAdvance: true }}
         >
             {(formik) => (
                 <Form>
@@ -80,7 +93,15 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                                 title="Description"
                                 fieldProps={{ multiline: true, rows: 4, disabled: isRest }}
                             />
-
+                        </Grid>
+                        <Grid size={12}>
+                            <FormControlLabel
+                                disabled={isRest}
+                                control={<Switch
+                                    checked={formik.values.needsLogsToAdvance}
+                                    {...formik.getFieldProps('needsLogsToAdvance')}
+                                />}
+                                label="Needs logs to advance" />
                         </Grid>
                         <Grid size={12}>
                             {editDayQuery.isPending
@@ -105,11 +126,11 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                             Are you sure you want to change this day to a {isRest ? 'non-rest' : 'rest'} day?
                         </DialogContent>
                         <DialogContent>
-                            A rest day has no exercises associated with it. Any entries will be deleted, etc. etc.
+                            Please consider that all sets are removed from rest days when the form is saved
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleDialogClose}>Cancel</Button>
-                            <Button onClick={handleConfirmRestChange}>Confirm</Button>
+                            <Button onClick={handleConfirmRestChange}>Save</Button>
                         </DialogActions>
                     </Dialog>
                 </Form>
