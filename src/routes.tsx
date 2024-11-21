@@ -6,6 +6,7 @@ import { BmiCalculator } from "components/Nutrition/components/BmiCalculator";
 import { NutritionDiaryOverview } from "components/Nutrition/components/NutritionDiaryOverview";
 import { PlanDetail } from "components/Nutrition/components/PlanDetail";
 import { PlansOverview } from "components/Nutrition/components/PlansOverview";
+import { RoutineAdd } from "components/WorkoutRoutines/Detail/RoutineAdd";
 import { RoutineDetail } from "components/WorkoutRoutines/Detail/RoutineDetail";
 import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import { RoutineEdit } from "components/WorkoutRoutines/Detail/RoutineEdit";
@@ -56,6 +57,7 @@ export const WgerRoutes = () => {
                 <Route index element={<RoutineOverview />} />
                 <Route path="overview" element={<RoutineOverview />} />
                 <Route path="calendar" element={<Calendar />} />
+                <Route path="add" element={<RoutineAdd />} />
                 <Route path=":routineId">
                     <Route path="view" element={<RoutineDetail />} />
                     <Route path="edit">
