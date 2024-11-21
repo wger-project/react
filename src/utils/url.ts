@@ -58,16 +58,10 @@ export enum WgerLink {
     ROUTINE_DETAIL_TABLE,
     ROUTINE_EDIT_PROGRESSION,
     ROUTINE_ADD,
-    ROUTINE_DELETE,
+    ROUTINE_COPY,
     ROUTINE_ADD_LOG,
     ROUTINE_EDIT_LOG,
     ROUTINE_DELETE_LOG,
-    ROUTINE_EDIT_DAY,
-    ROUTINE_ADD_DAY,
-    ROUTINE_DELETE_DAY,
-    ROUTINE_ADD_SET,
-    ROUTINE_EDIT_SET,
-    ROUTINE_DELETE_SET,
 
     EXERCISE_DETAIL,
     EXERCISE_OVERVIEW,
@@ -120,24 +114,14 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/routine/${params!.id}/edit/progression/${params!.id2}`;
         case WgerLink.ROUTINE_ADD:
             return `/${langShort}/routine/add`;
-        case WgerLink.ROUTINE_ADD_DAY:
-            return `/${langShort}/routine/day/${params!.id}/add`;
+        case WgerLink.ROUTINE_COPY:
+            return `/${langShort}/routine/${params!.id}/copy`;
         case WgerLink.ROUTINE_ADD_LOG:
             return `/${langShort}/routine/day/${params!.id}/log/add`;
         case WgerLink.ROUTINE_EDIT_LOG:
             return `/${langShort}/routine/log/${params!.id}/edit`;
         case WgerLink.ROUTINE_DELETE_LOG:
             return `/${langShort}/routine/log/${params!.id}/delete`;
-        case WgerLink.ROUTINE_EDIT_DAY:
-            return `/${langShort}/routine/day/${params!.id}/edit`;
-        case WgerLink.ROUTINE_DELETE_DAY:
-            return `/${langShort}/routine/day/${params!.id}/delete`;
-        case WgerLink.ROUTINE_ADD_SET:
-            return `/${langShort}/routine/set/${params!.id}/add`;
-        case WgerLink.ROUTINE_EDIT_SET:
-            return `/${langShort}/routine/set/${params!.id}/edit`;
-        case WgerLink.ROUTINE_DELETE_SET:
-            return `/${langShort}/routine/set/${params!.id}/delete`;
         case WgerLink.CALENDAR:
             return `/${langShort}/routine/calendar`;
 

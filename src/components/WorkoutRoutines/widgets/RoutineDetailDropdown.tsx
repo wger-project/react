@@ -40,6 +40,10 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
         navigate(makeLink(WgerLink.ROUTINE_DETAIL_TABLE, i18n.language, { id: props.routine.id }));
     };
 
+    const handleDuplicateRoutine = () => {
+        navigate(makeLink(WgerLink.ROUTINE_COPY, i18n.language, { id: props.routine.id }));
+    };
+
     const handleDelete = () => {
         setDeleteConfirmationOpen(true);  // Open the confirmation dialog
         handleClose(); // Close the dropdown menu
@@ -74,6 +78,7 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
             >
                 <MenuItem onClick={handleEdit}>{t("edit")}</MenuItem>
                 <MenuItem onClick={handleTable}>Table view</MenuItem>
+                <MenuItem onClick={handleDuplicateRoutine}>{t("routines.duplicate")}</MenuItem>
                 <Divider />
                 <MenuItem onClick={handleDelete}>{t("delete")}</MenuItem>
             </Menu>

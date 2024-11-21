@@ -209,7 +209,8 @@
     "routine": "Routine",
     "routines": "Routines",
     "rir": "RiR",
-    "restDay": "Rest day"
+    "restDay": "Rest day",
+    "duplicate": "Duplicate routine"
   },
   "measurements": {
     "measurements": "Measurements",
