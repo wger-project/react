@@ -1,8 +1,8 @@
-import Grid from '@mui/material/Grid2';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Divider, List, ListItem, ListItemButton, ListItemText, Paper, } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
+import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
 import { AddRoutineFab } from "components/WorkoutRoutines/Overview/Fab";
 import { useRoutinesShallowQuery } from "components/WorkoutRoutines/queries";
@@ -31,16 +31,22 @@ export const RoutineOverview = () => {
     const routineQuery = useRoutinesShallowQuery();
     const [t] = useTranslation();
 
+    if (routineQuery.isLoading) {
+        return <LoadingPlaceholder />;
+    }
+
+
     return <WgerContainerRightSidebar
         title={t("routines.routines")}
-        mainContent={routineQuery.isLoading
-            ? <LoadingPlaceholder />
-            : <Paper>
-                <List sx={{ py: 0 }} key={'abc'}>
-                    {routineQuery.data!.map(r => <RoutineList routine={r} key={r.id} />)}
-                </List>
-            </Paper>
-        }
+        mainContent={<>
+            {routineQuery.data!.length === 0
+                ? <OverviewEmpty />
+                : <Paper>
+                    <List sx={{ py: 0 }} key={'abc'}>
+                        {routineQuery.data!.map(r => <RoutineList routine={r} key={r.id} />)}
+                    </List>
+                </Paper>}
+        </>}
         fab={<AddRoutineFab />}
     />;
 };
