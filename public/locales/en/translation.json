@@ -210,7 +210,9 @@
     "routines": "Routines",
     "rir": "RiR",
     "restDay": "Rest day",
-    "duplicate": "Duplicate routine"
+    "duplicate": "Duplicate routine",
+    "downloadPdfTable": "Download PDF (table)",
+    "downloadPdfLogs": "Download PDF (logs)"
   },
   "measurements": {
     "measurements": "Measurements",

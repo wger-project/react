@@ -58,6 +58,8 @@ export enum WgerLink {
     ROUTINE_DETAIL_TABLE,
     ROUTINE_EDIT_PROGRESSION,
     ROUTINE_ADD,
+    ROUTINE_PDF_TABLE,
+    ROUTINE_PDF_LOGS,
     ROUTINE_COPY,
     ROUTINE_ADD_LOG,
     ROUTINE_EDIT_LOG,
@@ -116,6 +118,10 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/routine/add`;
         case WgerLink.ROUTINE_COPY:
             return `/${langShort}/routine/${params!.id}/copy`;
+        case WgerLink.ROUTINE_PDF_TABLE:
+            return `/${langShort}/routine/${params!.id}/pdf/table`;
+        case WgerLink.ROUTINE_PDF_LOGS:
+            return `/${langShort}/routine/${params!.id}/pdf/log`;
         case WgerLink.ROUTINE_ADD_LOG:
             return `/${langShort}/routine/day/${params!.id}/log/add`;
         case WgerLink.ROUTINE_EDIT_LOG:
