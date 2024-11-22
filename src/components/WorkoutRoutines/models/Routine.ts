@@ -7,6 +7,15 @@ import { RoutineLogData } from "components/WorkoutRoutines/models/RoutineLogData
 import { Adapter } from "utils/Adapter";
 import { dateToYYYYMMDD } from "utils/date";
 
+export const NAME_MIN_LENGTH = 3;
+export const NAME_MAX_LENGTH = 25;
+export const DESCRIPTION_MAX_LENGTH = 1000;
+
+// Duration in weeks
+export const MIN_WORKOUT_DURATION = 2;
+export const MAX_WORKOUT_DURATION = 16;
+export const DEFAULT_WORKOUT_DURATION = 12;
+
 export class Routine {
 
     days: Day[] = [];

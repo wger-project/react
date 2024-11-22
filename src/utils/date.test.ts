@@ -1,5 +1,4 @@
-import { calculatePastDate } from "utils/date"; 
-import { dateToYYYYMMDD } from "utils/date";
+import { calculatePastDate, dateTimeToHHMM, dateToYYYYMMDD, HHMMToDateTime } from "utils/date";
 
 describe("test date utility", () => {
 
@@ -17,11 +16,21 @@ describe("test date utility", () => {
         const result = dateToYYYYMMDD(new Date('January 17, 2022 03:24:00'));
         expect(result).toStrictEqual('2022-01-17');
     });
-
-
 });
 
+describe("test time utility", () => {
 
+    test('convert time 1', () => {
+        const result = dateTimeToHHMM(new Date(2022, 0, 1, 23, 10, 22));
+        expect(result).toStrictEqual('23:10');
+    });
+
+    test('convert time 2', () => {
+        const result = HHMMToDateTime('20:40');
+        expect(result).toStrictEqual('23:10');
+    });
+
+});
 
 
 describe('calculatePastDate', () => {
@@ -31,17 +40,17 @@ describe('calculatePastDate', () => {
     });
 
     it('should return the correct date for lastWeek filter', () => {
-        const result = calculatePastDate('lastWeek', new Date('2023-02-14')); 
+        const result = calculatePastDate('lastWeek', new Date('2023-02-14'));
         expect(result).toStrictEqual('2023-02-07');
     });
 
     it('should return the correct date for lastMonth filter', () => {
-        const result = calculatePastDate('lastMonth', new Date('2023-02-14')); 
+        const result = calculatePastDate('lastMonth', new Date('2023-02-14'));
         expect(result).toStrictEqual('2023-01-14');
     });
 
     it('should return the correct date for lastHalfYear filter', () => {
-        const result = calculatePastDate('lastHalfYear', new Date('2023-08-14')); 
+        const result = calculatePastDate('lastHalfYear', new Date('2023-08-14'));
         expect(result).toStrictEqual('2023-02-14');
     });
 

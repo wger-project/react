@@ -10,6 +10,7 @@ import { RoutineAdd } from "components/WorkoutRoutines/Detail/RoutineAdd";
 import { RoutineDetail } from "components/WorkoutRoutines/Detail/RoutineDetail";
 import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import { RoutineEdit } from "components/WorkoutRoutines/Detail/RoutineEdit";
+import { SessionAdd } from "components/WorkoutRoutines/Detail/SessionAdd";
 import { SlotProgressionEdit } from "components/WorkoutRoutines/Detail/SlotProgressionEdit";
 import { WorkoutLogs } from "components/WorkoutRoutines/Detail/WorkoutLogs";
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
@@ -58,6 +59,7 @@ export const WgerRoutes = () => {
                 <Route path="overview" element={<RoutineOverview />} />
                 <Route path="calendar" element={<Calendar />} />
                 <Route path="add" element={<RoutineAdd />} />
+                <Route path="add-session" element={<SessionAdd />} />
                 <Route path=":routineId">
                     <Route path="view" element={<RoutineDetail />} />
                     <Route path="edit">

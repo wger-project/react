@@ -1,6 +1,8 @@
 import { Stack, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
+import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { RoutineDetailDropdown } from "components/WorkoutRoutines/widgets/RoutineDetailDropdown";
 import { DayDetailsCard } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
@@ -30,6 +32,24 @@ export const RoutineDetail = () => {
                         {routineQuery.data!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null).map((dayData, index) =>
                             <DayDetailsCard dayData={dayData} key={`dayDetails-${index}`} />
                         )}
+                    </Stack>
+                }
+                sideBar={
+                    <Stack>
+                        <p>TODO</p>
+                        <ul>
+                            <li>Logs</li>
+                            <li>Statistics</li>
+                            <li>Muscle overview</li>
+                        </ul>
+                        <Grid container>
+                            <Grid size={6}>
+                                <MuscleOverview primaryMuscles={[]} secondaryMuscles={[]} isFront={true} />
+                            </Grid>
+                            <Grid size={6}>
+                                <MuscleOverview primaryMuscles={[]} secondaryMuscles={[]} isFront={false} />
+                            </Grid>
+                        </Grid>
                     </Stack>
                 }
             />}

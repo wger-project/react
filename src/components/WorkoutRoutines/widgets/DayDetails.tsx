@@ -439,7 +439,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                             />
                                         </Grid>
 
-                                        {showAutocompleterForSlot === slot.id
+                                        {showAutocompleterForSlot === slot.id /*|| slot.configs.length === 0*/
                                             && <Grid size={12}>
                                                 <Box height={20} />
                                                 <NameAutocompleter

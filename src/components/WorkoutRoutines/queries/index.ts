@@ -48,3 +48,5 @@ export {
     useDeleteSlotQuery,
     useEditSlotOrderQuery,
 } from "./slots";
+
+export { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery } from "./sessions";

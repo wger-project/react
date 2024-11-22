@@ -126,7 +126,7 @@ const ExerciseLog = (props: { exercise: Exercise, logEntries: WorkoutLog[] | und
 
     return <>
         <Typography variant={"h6"} sx={{ mt: 4 }}>
-            {props.exercise.getTranslation().name}
+            {props.exercise.getTranslation().name} (ID: {props.exercise.id})
         </Typography>
 
         <Grid container spacing={2}>
@@ -210,7 +210,8 @@ export const WorkoutLogs = () => {
                 </Typography>
                 {logsQuery.isSuccess && routineQuery.isSuccess
                     ? <>
-                        {routineQuery.data!.dayDataCurrentIteration.map((dayData, index) => <React.Fragment key={index}>
+                        {routineQuery.data!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null && !dayData.day.isRest).map((dayData, index) =>
+                            <React.Fragment key={index}>
                                 <Stack
                                     direction={{ xs: 'column', sm: 'row' }}
                                     justifyContent="space-between"
@@ -218,11 +219,12 @@ export const WorkoutLogs = () => {
                                     sx={{ mt: 4 }}
                                 >
                                     <Typography variant={"h4"}>
-                                        {dayData.day?.name}
+                                        {dayData.day!.name} (ID: {dayData.day!.id})
                                     </Typography>
                                     <Button
+                                        disabled={true}
                                         component={Link}
-                                        to={makeLink(WgerLink.ROUTINE_ADD_LOG, i18n.language, { id: dayData.day?.id! })}
+                                        to={makeLink(WgerLink.ROUTINE_ADD_LOG, i18n.language, { id: dayData.day!.id! })}
                                         variant="contained"
                                     >
                                         {t('routines.addLogToDay')}

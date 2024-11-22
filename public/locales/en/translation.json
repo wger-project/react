@@ -213,7 +213,11 @@
     "restDay": "Rest day",
     "duplicate": "Duplicate routine",
     "downloadPdfTable": "Download PDF (table)",
-    "downloadPdfLogs": "Download PDF (logs)"
+    "downloadPdfLogs": "Download PDF (logs)",
+    "impression": "General impression",
+    "impressionGood": "Good",
+    "impressionNeutral": "Neutral",
+    "impressionBad": "Bad"
   },
   "measurements": {
     "measurements": "Measurements",

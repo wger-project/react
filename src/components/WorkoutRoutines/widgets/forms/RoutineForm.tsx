@@ -3,14 +3,21 @@ import Grid from '@mui/material/Grid2';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WgerTextField } from "components/Common/forms/WgerTextField";
-import { Routine } from "components/WorkoutRoutines/models/Routine";
+import {
+    DEFAULT_WORKOUT_DURATION,
+    DESCRIPTION_MAX_LENGTH,
+    MAX_WORKOUT_DURATION,
+    MIN_WORKOUT_DURATION,
+    NAME_MAX_LENGTH,
+    NAME_MIN_LENGTH,
+    Routine
+} from "components/WorkoutRoutines/models/Routine";
 import { useAddRoutineQuery, useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { DEFAULT_WORKOUT_DURATION, MAX_WORKOUT_DURATION, MIN_WORKOUT_DURATION } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
 import * as yup from 'yup';
 
@@ -33,19 +40,15 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
     const [startValue, setStartValue] = useState<DateTime | null>(routine ? DateTime.fromJSDate(routine.start) : DateTime.now());
     const [endValue, setEndValue] = useState<DateTime | null>(routine ? DateTime.fromJSDate(routine.end) : DateTime.now().plus({ weeks: DEFAULT_WORKOUT_DURATION }));
 
-    const nameMinLength = 3;
-    const nameMaxLength = 25;
-    const descriptionMaxLength = 1000;
-
     const validationSchema = yup.object({
         name: yup
             .string()
             .required()
-            .max(nameMaxLength, t('forms.maxLength', { chars: nameMaxLength }))
-            .min(nameMinLength, t('forms.minLength', { chars: nameMinLength })),
+            .max(NAME_MAX_LENGTH, t('forms.maxLength', { chars: NAME_MIN_LENGTH }))
+            .min(NAME_MIN_LENGTH, t('forms.minLength', { chars: NAME_MIN_LENGTH })),
         description: yup
             .string()
-            .max(descriptionMaxLength, t('forms.maxLength', { chars: descriptionMaxLength })),
+            .max(DESCRIPTION_MAX_LENGTH, t('forms.maxLength', { chars: DESCRIPTION_MAX_LENGTH })),
         start: yup
             .date()
             .required(),

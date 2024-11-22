@@ -69,6 +69,8 @@ export const SlotEntryDetails = (props: { slotEntry: SlotEntry, routineId: numbe
     const editSlotEntryQuery = useEditSlotEntryQuery(props.routineId);
     const deleteSlotEntryQuery = useDeleteSlotEntryQuery(props.routineId);
 
+    const isPending = editSlotEntryQuery.isPending || deleteSlotEntryQuery.isPending;
+
     const handleExerciseChange = (searchResponse: ExerciseSearchResponse | null) => {
         if (searchResponse === null) {
             return;
@@ -93,13 +95,13 @@ export const SlotEntryDetails = (props: { slotEntry: SlotEntry, routineId: numbe
                     {/*<IconButton size={"small"} onClick={toggleEditExercise} disabled={true}>*/}
                     {/*    <DragHandle />*/}
                     {/*</IconButton>*/}
-                    <IconButton size={"small"} onClick={toggleEditExercise}>
+                    <IconButton size={"small"} onClick={toggleEditExercise} disabled={isPending}>
                         {editExercise ? <EditOffIcon /> : <EditIcon />}
                     </IconButton>
                     <IconButton
                         size={"small"}
                         onClick={() => deleteSlotEntryQuery.mutate(props.slotEntry.id)}
-                        disabled={deleteSlotEntryQuery.isPending}
+                        disabled={isPending}
                     >
                         <DeleteIcon />
                     </IconButton>
