@@ -27,7 +27,7 @@ import { useRoutineDetailQuery, useRoutineLogQuery } from "components/WorkoutRou
 import { DateTime } from "luxon";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
     CartesianGrid,
     Legend,
@@ -176,13 +176,7 @@ export const WorkoutLogs = () => {
     const logsQuery = useRoutineLogQuery(routineId, false);
     const routineQuery = useRoutineDetailQuery(routineId);
 
-    const navigateAddLogToDay = (id: number) => window.location.href = makeLink(
-        WgerLink.ROUTINE_ADD_LOG,
-        i18n.language,
-        { id: id }
-    );
-
-    // Group by base
+    // Group by exercise
     let groupedWorkoutLogs: Map<number, WorkoutLog[]> = new Map();
     if (logsQuery.isSuccess) {
         groupedWorkoutLogs = logsQuery.data!.reduce(function (r, log) {
@@ -226,7 +220,11 @@ export const WorkoutLogs = () => {
                                     <Typography variant={"h4"}>
                                         {dayData.day?.name}
                                     </Typography>
-                                    <Button variant="contained" onClick={() => navigateAddLogToDay(dayData.day?.id!)}>
+                                    <Button
+                                        component={Link}
+                                        to={makeLink(WgerLink.ROUTINE_ADD_LOG, i18n.language, { id: dayData.day?.id! })}
+                                        variant="contained"
+                                    >
                                         {t('routines.addLogToDay')}
                                     </Button>
                                 </Stack>

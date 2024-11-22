@@ -202,6 +202,7 @@
     "editProgression": "Edit progression",
     "newDay": "New day",
     "addWeightLog": "Add training log",
+    "logsOverview": "Logs overview",
     "simpleMode": "Simple mode",
     "logsHeader": "Training log for workout",
     "logsFilterNote": "Note that only entries with a weight unit of kg or lb and repetitions are charted, other combinations such as time or until failure are ignored here",

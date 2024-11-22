@@ -76,6 +76,11 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
                     Table view
                 </MenuItem>
                 <MenuItem
+                    component={Link}
+                    to={makeLink(WgerLink.ROUTINE_LOGS_OVERVIEW, i18n.language, { id: props.routine.id })}>
+                    {t("routines.logsOverview")}
+                </MenuItem>
+                <MenuItem
                     component="a"
                     href={makeLink(WgerLink.ROUTINE_COPY, i18n.language, { id: props.routine.id })}
                 >
