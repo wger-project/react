@@ -86,22 +86,24 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
                         {...params}
                         label={t('exercises.searchExerciseName')}
                         fullWidth
-                        InputProps={{
-                            ...params.InputProps,
-                            startAdornment: (
-                                <>
-                                    <InputAdornment position="start">
-                                        <SearchIcon />
-                                    </InputAdornment>
-                                    {params.InputProps.startAdornment}
-                                </>
-                            )
+                        slotProps={{
+                            input: {
+                                ...params.InputProps,
+                                startAdornment: (
+                                    <>
+                                        <InputAdornment position="start">
+                                            <SearchIcon />
+                                        </InputAdornment>
+                                        {params.InputProps.startAdornment}
+                                    </>
+                                )
+                            }
                         }}
                     />
                 )}
-                renderOption={(props, option) =>
+                renderOption={(props, option, state) =>
                     <li {...props}
-                        key={`exercise-${option.data.base_id}-${option.data.id}`}
+                        key={`exercise-${state.index}-${option.data.id}`}
                         data-testid={`autocompleter-result-${option.data.base_id}`}
                     >
                         <ListItem disablePadding component="div">
