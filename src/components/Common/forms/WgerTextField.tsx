@@ -3,7 +3,13 @@ import { TextFieldProps } from "@mui/material/TextField/TextField";
 import { useField } from "formik";
 import React from "react";
 
-export function WgerTextField(props: { fieldName: string, title: string, fieldProps?: TextFieldProps }) {
+interface WgerTextFieldProps {
+    fieldName: string,
+    title: string,
+    fieldProps?: TextFieldProps,
+}
+
+export function WgerTextField(props: WgerTextFieldProps) {
     const [field, meta] = useField(props.fieldName);
 
     return <TextField

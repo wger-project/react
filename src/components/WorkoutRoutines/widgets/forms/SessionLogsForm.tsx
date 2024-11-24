@@ -27,7 +27,7 @@ interface SessionLogsFormProps {
 
 export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsFormProps) => {
 
-    const [t, i18n] = useTranslation();
+    const { t, i18n } = useTranslation();
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const routineQuery = useRoutineDetailQuery(routineId);
     const addLogsQuery = useAddRoutineLogsQuery(routineId);
@@ -57,8 +57,8 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
         logs: yup.array().of(
             yup.object().shape({
                 rir: yup.number().nullable(),
-                reps: yup.number().nullable(),
-                weight: yup.number().nullable()
+                reps: yup.number().typeError(t('forms.enterNumber')).nullable(),
+                weight: yup.number().typeError(t('forms.enterNumber')).nullable()
             })
         ),
     });
@@ -166,7 +166,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                                     })}
                                                 >
                                                     <AddIcon />
-                                                    add additional log
+                                                    {t('routines.addAdditionalLog')}
                                                 </Button>
                                                 <Button
                                                     type="button"
@@ -180,19 +180,18 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                                     }}
                                                 >
                                                     <SwapHoriz />
-                                                    swap exercise
+                                                    {t('exercises.swapExercise')}
                                                 </Button>
                                                 <Button
                                                     type="button"
                                                     size="small"
-                                                    onClick={async () => {
-                                                        await formik.setValues({
-                                                            ...formik.values,
-                                                            logs: formik.values.logs.filter(l => l.exercise!.id !== formik.values.logs[index].exercise!.id)
-                                                        });
-                                                    }}
+                                                    onClick={async () => await formik.setValues({
+                                                        ...formik.values,
+                                                        logs: formik.values.logs.filter(l => l.exercise!.id !== formik.values.logs[index].exercise!.id)
+                                                    })}
                                                 >
-                                                    <DeleteIcon /> delete exercise
+                                                    <DeleteIcon />
+                                                    {t('delete')}
                                                 </Button>
 
                                             </Grid>

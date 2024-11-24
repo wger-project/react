@@ -16,7 +16,6 @@ import { Form, Formik, FormikProps } from "formik";
 import { DateTime } from "luxon";
 import React, { useEffect } from 'react';
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { dateTimeToHHMM, dateToYYYYMMDD } from "utils/date";
 import * as yup from 'yup';
 
@@ -35,7 +34,7 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
     const [t, i18n] = useTranslation();
     const [session, setSession] = React.useState<WorkoutSession | undefined>(initialSession);
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const addSessionQuery = useAddSessionQuery();
     const editSessionQuery = useEditSessionQuery(session?.id!);
     const findSessionQuery = useFindSessionQuery({
@@ -57,7 +56,11 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
             .nullable(),
         end: yup
             .date()
-            .nullable(),
+            .nullable()
+            .min(
+                yup.ref('start'),
+                t('forms.endBeforeStart')
+            ),
         fitInWeek: yup.boolean()
     });
 

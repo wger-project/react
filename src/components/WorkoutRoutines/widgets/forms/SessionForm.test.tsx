@@ -40,7 +40,12 @@ describe('SessionForm', () => {
 
         // Act
         render(<BrowserRouter>
-                <SessionForm dayId={dayId} routineId={routineId} />
+            <SessionForm
+                dayId={dayId}
+                routineId={routineId}
+                selectedDate={DateTime.now()}
+                setSelectedDate={() => {
+                }} />
             </BrowserRouter>
         );
 
@@ -88,7 +93,12 @@ describe('SessionForm', () => {
 
         // Act
         render(<BrowserRouter>
-            <SessionForm dayId={dayId} routineId={routineId} />
+            <SessionForm
+                dayId={dayId}
+                routineId={routineId}
+                selectedDate={DateTime.now()}
+                setSelectedDate={() => {
+                }} />
         </BrowserRouter>);
 
         // Assert
@@ -112,7 +122,12 @@ describe('SessionForm', () => {
         });
 
         render(<BrowserRouter>
-                <SessionForm dayId={dayId} routineId={routineId} />
+            <SessionForm
+                dayId={dayId}
+                routineId={routineId}
+                selectedDate={DateTime.now()}
+                setSelectedDate={() => {
+                }} />
             </BrowserRouter>
         );
 

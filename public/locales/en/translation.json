@@ -91,7 +91,8 @@
     "imageStyleLine": "Line",
     "imageStyleLowPoly": "Low-Poly",
     "imageStyleOther": "Other",
-    "imageDetails": "Image details"
+    "imageDetails": "Image details",
+    "swapExercise": "Swap exercise"
   },
   "nutrition": {
     "plans": "Nutritional plans",
@@ -165,6 +166,7 @@
   "language": "Language",
   "forms": {
     "supportedImageFormats": "Only JPEG, PNG and WEBP files below 20Mb are supported",
+    "enterNumber": "Please enter a valid number",
     "valueTooShort": "The value is too short",
     "valueTooLong": "The value is too long",
     "fieldRequired": "This field is required",
@@ -218,7 +220,8 @@
     "impressionGood": "Good",
     "impressionNeutral": "Neutral",
     "impressionBad": "Bad",
-    "impressionHelpText": "This form records your workout results (reps, weight, etc.) for each exercise. Changes you make here, like removing or swapping exercises, only affect the specific logs you save and and won't change your overall routine."
+    "impressionHelpText": "This form records your workout results (reps, weight, etc.) for each exercise. Changes you make here, like removing or swapping exercises, only affect the specific logs you save and and won't change your overall routine.",
+    "addAdditionalLog": "Add additional log"
   },
   "measurements": {
     "measurements": "Measurements",
