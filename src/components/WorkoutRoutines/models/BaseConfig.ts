@@ -2,6 +2,20 @@
 
 import { Adapter } from "utils/Adapter";
 
+export const RIR_VALUES = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4] as const;
+
+export const RIR_VALUES_SELECT = [
+    {
+        value: '',
+        label: '-/-',
+    },
+    ...RIR_VALUES.map(value => ({ value: value.toString(), label: value.toString() })),
+    {
+        value: '4.5',
+        label: '4+'
+    }
+] as const;
+
 export class BaseConfig {
 
     constructor(

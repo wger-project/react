@@ -17,20 +17,23 @@ import throttle from 'lodash/throttle';
 import * as React from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { searchExerciseTranslations } from "services";
+import { getExercise, searchExerciseTranslations } from "services";
 import { ExerciseSearchResponse } from "services/responseType";
 import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 
 type NameAutocompleterProps = {
     callback: (exerciseResponse: ExerciseSearchResponse | null) => void;
+    loadExercise?: boolean
 }
 
-export function NameAutocompleter({ callback }: NameAutocompleterProps) {
+export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterProps) {
     const [value, setValue] = React.useState<ExerciseSearchResponse | null>(null);
     const [inputValue, setInputValue] = React.useState('');
     const [searchEnglish, setSearchEnglish] = useState<boolean>(true);
     const [options, setOptions] = React.useState<readonly ExerciseSearchResponse[]>([]);
     const [t, i18n] = useTranslation();
+
+    loadExercise = loadExercise === undefined ? false : loadExercise;
 
 
     const fetchName = React.useMemo(
@@ -73,9 +76,12 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
                 value={value}
                 noOptionsText={t('noResults')}
                 isOptionEqualToValue={(option, value) => option.value === value.value}
-                onChange={(event: any, newValue: ExerciseSearchResponse | null) => {
+                onChange={async (event: any, newValue: ExerciseSearchResponse | null) => {
                     setOptions(newValue ? [newValue, ...options] : options);
                     setValue(newValue);
+                    if (loadExercise && newValue !== null) {
+                        newValue.exercise = await getExercise(newValue.data.base_id);
+                    }
                     callback(newValue);
                 }}
                 onInputChange={(event, newInputValue) => {

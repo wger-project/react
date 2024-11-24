@@ -14,7 +14,7 @@ import {
 import { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery } from "components/WorkoutRoutines/queries";
 import { Form, Formik, FormikProps } from "formik";
 import { DateTime } from "luxon";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { dateTimeToHHMM, dateToYYYYMMDD } from "utils/date";
@@ -23,13 +23,14 @@ import * as yup from 'yup';
 interface SessionFormProps {
     initialSession?: WorkoutSession;
     dayId: number,
-    routineId: number
+    routineId: number,
+    selectedDate: DateTime,
+    setSelectedDate: React.Dispatch<React.SetStateAction<DateTime>>
 }
 
-export const SessionForm = ({ initialSession, dayId, routineId }: SessionFormProps) => {
+export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, setSelectedDate }: SessionFormProps) => {
 
     let formik: FormikProps<any> | null;
-    const [selectedDate, setSelectedDate] = useState<DateTime>(DateTime.now());
 
     const [t, i18n] = useTranslation();
     const [session, setSession] = React.useState<WorkoutSession | undefined>(initialSession);
@@ -235,7 +236,7 @@ export const SessionForm = ({ initialSession, dayId, routineId }: SessionFormPro
 
                             </ButtonGroup>
                         </Grid>
-                        <Grid size={12}>
+                        <Grid size={12} display={"flex"} justifyContent={"end"}>
                             <Button
                                 disabled={isLoading}
                                 color="primary"
@@ -245,7 +246,6 @@ export const SessionForm = ({ initialSession, dayId, routineId }: SessionFormPro
                                 {t('submit')}
                             </Button>
                         </Grid>
-
                     </Grid>
                 </Form>
             )}

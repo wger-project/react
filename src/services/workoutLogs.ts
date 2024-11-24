@@ -1,12 +1,27 @@
+import axios from "axios";
 import { Exercise } from "components/Exercises/models/exercise";
 import { WorkoutLog, WorkoutLogAdapter } from "components/WorkoutRoutines/models/WorkoutLog";
 import { getExercise } from "services/exercise";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "services/workoutUnits";
-import { API_MAX_PAGE_SIZE } from "utils/consts";
+import { API_MAX_PAGE_SIZE, ApiPath } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
-import { makeUrl } from "utils/url";
+import { makeHeader, makeUrl } from "utils/url";
 
-export const WORKOUT_LOG_API_PATH = 'workoutlog';
+
+export const addLogs = async (entries: any[]): Promise<WorkoutLog[]> => {
+    const adapter = new WorkoutLogAdapter();
+    const out = [] as WorkoutLog[];
+    for (const entry of entries) {
+        const response = await axios.post(
+            makeUrl(ApiPath.WORKOUT_LOG_API_PATH,),
+            { ...entry },
+            { headers: makeHeader() }
+        );
+        out.push(adapter.fromJson(response.data));
+    }
+
+    return out;
+};
 
 /*
  * Retrieves the training logs for a routine
@@ -14,7 +29,7 @@ export const WORKOUT_LOG_API_PATH = 'workoutlog';
 export const getRoutineLogs = async (id: number, loadExercises = false): Promise<WorkoutLog[]> => {
     const adapter = new WorkoutLogAdapter();
     const url = makeUrl(
-        WORKOUT_LOG_API_PATH,
+        ApiPath.WORKOUT_LOG_API_PATH,
         { query: { workout: id.toString(), limit: API_MAX_PAGE_SIZE, ordering: '-date' } }
     );
 

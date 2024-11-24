@@ -81,6 +81,8 @@ export enum ApiPath {
     SLOT = 'slot',
     SLOT_ENTRY = 'slot-entry',
     SESSION = 'workoutsession',
+
+    WORKOUT_LOG_API_PATH = 'workoutlog',
 }
 
 

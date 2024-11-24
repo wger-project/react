@@ -2,7 +2,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton, MenuItem, Switch, TextField } from "@mui/material";
 import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
-import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
+import { BaseConfig, RIR_VALUES_SELECT } from "components/WorkoutRoutines/models/BaseConfig";
 import {
     useAddMaxRepsConfigQuery,
     useAddMaxRestConfigQuery,
@@ -278,18 +278,6 @@ export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotEntryId?
     const deleteRiRQuery = useDeleteRiRConfigQuery(props.routineId);
     const addRiRQuery = useAddRiRConfigQuery(props.routineId);
 
-    const options = [
-        {
-            value: '',
-            label: '-/-',
-        },
-        ...[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4].map(value => ({ value: value.toString(), label: value.toString() })),
-        {
-            value: '4.5',
-            label: '4+'
-        }
-    ] as const;
-
     const handleData = (value: string) => {
 
         const data = {
@@ -312,22 +300,20 @@ export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotEntryId?
         }
     };
 
-    return <>
-        <TextField
-            fullWidth
-            select
-            label="RiR"
-            variant="standard"
-            defaultValue=""
-            value={props.config?.value}
-            disabled={editRiRQuery.isPending}
-            onChange={e => handleData(e.target.value)}
-        >
-            {options!.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                </MenuItem>
-            ))}
-        </TextField>
-    </>;
+    return <TextField
+        fullWidth
+        select
+        label="RiR"
+        variant="standard"
+        defaultValue=""
+        value={props.config?.value}
+        disabled={editRiRQuery.isPending}
+        onChange={e => handleData(e.target.value)}
+    >
+        {RIR_VALUES_SELECT.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+                {option.label}
+            </MenuItem>
+        ))}
+    </TextField>;
 };

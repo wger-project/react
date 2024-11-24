@@ -95,11 +95,12 @@ export const testRoutineLogData = new RoutineLogData(
     new WorkoutSession(
         111,
         2,
+        1,
         new Date('2024-07-01'),
         'everything was great today!',
         '1',
-        '12:30',
-        '17:11',
+        new Date('2024-12-01 12:30'),
+        new Date('2024-12-01 17:30'),
     ),
     testWorkoutLogs
 );

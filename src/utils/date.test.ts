@@ -1,4 +1,4 @@
-import { calculatePastDate, dateTimeToHHMM, dateToYYYYMMDD, HHMMToDateTime } from "utils/date";
+import { calculatePastDate, dateTimeToHHMM, dateToYYYYMMDD } from "utils/date";
 
 describe("test date utility", () => {
 
@@ -22,11 +22,6 @@ describe("test time utility", () => {
 
     test('convert time 1', () => {
         const result = dateTimeToHHMM(new Date(2022, 0, 1, 23, 10, 22));
-        expect(result).toStrictEqual('23:10');
-    });
-
-    test('convert time 2', () => {
-        const result = HHMMToDateTime('20:40');
         expect(result).toStrictEqual('23:10');
     });
 

@@ -47,7 +47,7 @@ export { searchIngredient, getIngredient } from './ingredient';
 
 export { addMealItem, editMealItem, deleteMealItem } from './mealItem';
 export { getMealsForPlan, addMeal, editMeal, deleteMeal } from './meal';
-export { getRoutineLogs } from "./workoutLogs";
+export { getRoutineLogs, addLogs } from "./workoutLogs";
 export { editSlotEntry, deleteSlotEntry } from './slot_entry'
 export { getRoutineRepUnits, getRoutineWeightUnits } from './workoutUnits'
 export { addDay, editDay, deleteDay, editDayOrder } from './day'
