@@ -64,7 +64,7 @@ export const WorkoutLogs = () => {
                             sx={{ mt: 4 }}
                         >
                             <Typography variant={"h4"}>
-                                {dayData.day!.name} (ID: {dayData.day!.id})
+                                {dayData.day!.name}
                             </Typography>
                             <Button
                                 disabled={true}

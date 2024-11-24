@@ -117,7 +117,7 @@ export const ExerciseLog = (props: { exercise: Exercise, logEntries: WorkoutLog[
 
     return <>
         <Typography variant={"h6"} sx={{ mt: 4 }}>
-            {props.exercise.getTranslation().name} (ID: {props.exercise.id})
+            {props.exercise.getTranslation().name}
         </Typography>
 
         <Grid container spacing={2}>
