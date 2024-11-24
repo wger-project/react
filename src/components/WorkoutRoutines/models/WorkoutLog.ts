@@ -7,6 +7,8 @@ import { Adapter } from "utils/Adapter";
 
 export interface LogEntry {
     exercise: Exercise | null;
+    repsUnit: RepetitionUnit | null;
+    weightUnit: WeightUnit | null;
     rir: number | string;
     reps: number | string;
     weight: number | string;

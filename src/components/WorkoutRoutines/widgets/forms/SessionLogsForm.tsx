@@ -1,7 +1,7 @@
 import { SwapHoriz } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { Alert, Button, IconButton, MenuItem, Snackbar, TextField, Typography } from "@mui/material";
+import { Alert, Button, IconButton, InputAdornment, MenuItem, Snackbar, TextField, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { WgerTextField } from "components/Common/forms/WgerTextField";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
@@ -16,7 +16,7 @@ import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { getLanguageByShortName } from "services";
 import { ExerciseSearchResponse } from "services/responseType";
-import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
+import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
 import * as yup from "yup";
 
 interface SessionLogsFormProps {
@@ -70,7 +70,8 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                 reps: l.reps,
                 weight: l.weight,
                 exercise: l.exercise?.id,
-                day: dayId, routine: routineId,
+                day: dayId,
+                routine: routineId,
             }
         ));
         await addLogsQuery.mutateAsync(data);
@@ -89,6 +90,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                 if (exerciseIdToSwap === log.exercise!.id) {
                     // Empty the rest of the values, this is a new exercise not in the routine
                     return {
+                        ...log,
                         weight: '',
                         reps: '',
                         rir: '',
@@ -113,8 +115,11 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
         for (const slot of dayData.slots) {
             for (const config of slot.setConfigs) {
                 for (let i = 0; i < config.nrOfSets; i++) {
+
                     initialValues.logs.push({
                         exercise: config.exercise!,
+                        repsUnit: config.repsUnit!,
+                        weightUnit: config.weightUnit!,
 
                         rir: config.rir !== null ? config.rir : '',
                         reps: config.reps !== null ? config.reps : '',
@@ -138,7 +143,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                         {({ insert, remove, push }) => (<>
 
                                 {formik.values.logs.map((log, index) => (
-                                    <Grid container key={index} spacing={0} sx={{ mt: 2 }}>
+                                    <Grid container key={index} spacing={1} sx={{ mt: 2 }}>
 
                                         {/* Only show the exercise name the first time it appears */}
                                         {(index === 0 || (index > 0 && formik.values.logs[index - 1].exercise!.id != formik.values.logs[index].exercise!.id)) && <>
@@ -196,24 +201,52 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
 
                                             </Grid>
                                         </>}
-                                        <Grid size={3}>
+                                        <Grid size={4}>
                                             <WgerTextField
                                                 fieldName={`logs.${index}.reps`}
-                                                title={'reps'}
+                                                title={t('routines.reps')}
+                                                fieldProps={{
+                                                    slotProps: {
+                                                        input: {
+                                                            endAdornment:
+                                                                <InputAdornment position="end">
+                                                                    {/* Only show reps that are not "repetitions" */}
+                                                                    {formik.values.logs[index].repsUnit?.id !== REP_UNIT_REPETITIONS
+                                                                        ? <Typography variant={'caption'}>
+                                                                            {formik.values.logs[index].repsUnit?.name}
+                                                                        </Typography>
+                                                                        : null}
+                                                                </InputAdornment>
+
+                                                        }
+                                                    }
+                                                }}
                                             />
                                         </Grid>
-                                        <Grid size={3}>
+                                        <Grid size={4}>
                                             <WgerTextField
                                                 fieldName={`logs.${index}.weight`}
-                                                title={'weight'}
+                                                title={t('weight')}
+                                                fieldProps={{
+                                                    slotProps: {
+                                                        input: {
+                                                            endAdornment:
+                                                                <InputAdornment position="end">
+                                                                    <Typography variant={'caption'}>
+                                                                        {formik.values.logs[index].weightUnit?.name}
+                                                                    </Typography>
+                                                                </InputAdornment>
+                                                        }
+                                                    }
+                                                }}
                                             />
                                         </Grid>
 
-                                        <Grid size={5}>
+                                        <Grid size={3}>
                                             <TextField
                                                 fullWidth
                                                 select
-                                                label="RiR"
+                                                label={t('routines.rir')}
                                                 variant="standard"
                                                 {...formik.getFieldProps(`logs.${index}.rir`)}
                                             >

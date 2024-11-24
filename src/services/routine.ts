@@ -48,7 +48,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         getRoutineLogData(id),
         getRoutineStatisticsData(id),
     ]);
-    const repUnits = responses[0];
+    const repsUnits = responses[0];
     const weightUnits = responses[1];
     const dayDataCurrentIteration = responses[2];
     const dayDataAllIterations = responses[3];
@@ -70,6 +70,8 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         for (const slotData of dayData.slots) {
             for (const setData of slotData.setConfigs) {
                 setData.exercise = exerciseMap[setData.exerciseId];
+                setData.repsUnit = repsUnits.find(r => r.id === setData.repsUnitId) ?? null;
+                setData.weightUnit = weightUnits.find(w => w.id === setData.weightUnitId) ?? null;
             }
 
             for (const exerciseId of slotData.exerciseIds) {
@@ -81,6 +83,8 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         for (const slotData of dayData.slots) {
             for (const setData of slotData.setConfigs) {
                 setData.exercise = exerciseMap[setData.exerciseId];
+                setData.repsUnit = repsUnits.find(r => r.id === setData.repsUnitId) ?? null;
+                setData.weightUnit = weightUnits.find(w => w.id === setData.weightUnitId) ?? null;
             }
 
             for (const exerciseId of slotData.exerciseIds) {
@@ -91,8 +95,10 @@ export const processRoutine = async (id: number): Promise<Routine> => {
 
     for (const day of dayStructure) {
         for (const slot of day.slots) {
-            for (const slotData of slot.configs) {
-                slotData.exercise = exerciseMap[slotData.exerciseId];
+            for (const slotEntry of slot.configs) {
+                slotEntry.exercise = exerciseMap[slotEntry.exerciseId];
+                slotEntry.repetitionUnit = repsUnits.find(r => r.id === slotEntry.repetitionUnitId) ?? null;
+                slotEntry.weightUnit = weightUnits.find(w => w.id === slotEntry.weightUnitId) ?? null;
             }
         }
     }
