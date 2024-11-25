@@ -8,7 +8,22 @@ import { testQueryClient } from "tests/queryClient";
 
 describe('SlotDetails Component', () => {
 
-    const slotEntry = new SlotEntry(1, 2, 3, 4, 5, 6, 7, 8, 'test', 'normal', null);
+    const slotEntry = new SlotEntry(
+            {
+                id: 1,
+                slotId: 1,
+                exerciseId: 1,
+                repetitionUnitId: 1,
+                repetitionRounding: 1,
+                weightUnitId: 1,
+                weightRounding: 1,
+                order: 1,
+                comment: 'test',
+                type: 'normal',
+                config: null
+            }
+        )
+    ;
     const testSlot = new Slot(1, 2, 3, '', null, [slotEntry]);
 
     test('renders only sets, weight, and reps fields in simpleMode', () => {

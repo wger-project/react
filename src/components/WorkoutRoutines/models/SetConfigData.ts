@@ -40,14 +40,19 @@ export class SetConfigData {
         type: SetType,
         nrOfSets: number,
         maxNrOfSets?: number | null,
+        
         weight?: number | null,
         maxWeight?: number | null,
         weightUnitId: number,
+        weightUnit?: WeightUnit,
         weightRounding: number | null,
+
         reps?: number | null,
         maxReps?: number | null,
         repsUnitId: number,
+        repsUnit?: RepetitionUnit,
         repsRounding: number | null,
+
         rir?: number | null,
         rpe?: number | null,
         restTime?: number | null,
@@ -61,14 +66,19 @@ export class SetConfigData {
         this.type = data.type;
         this.nrOfSets = data.nrOfSets;
         this.maxNrOfSets = data.maxNrOfSets ?? null;
+
         this.weight = data.weight ?? null;
         this.maxWeight = data.maxWeight ?? null;
         this.weightUnitId = data.weightUnitId;
+        this.weightUnit = data.weightUnit ?? null;
         this.weightRounding = data.weightRounding;
+
         this.reps = data.reps ?? null;
         this.maxReps = data.maxReps ?? null;
         this.repsUnitId = data.repsUnitId;
+        this.repsUnit = data.repsUnit ?? null;
         this.repsRounding = data.repsRounding;
+
         this.rir = data.rir ?? null;
         this.rpe = data.rpe ?? null;
         this.restTime = data.restTime ?? null;
@@ -89,7 +99,7 @@ export class SetConfigDataAdapter implements Adapter<SetConfigData> {
         slotEntryId: item.slot_entry_id,
         type: item.type,
         nrOfSets: item.sets,
-        maxNrOfSets: item.max_sets !== null ? parseFloat(item.max_sets) : null,
+        maxNrOfSets: item.max_sets !== null ? parseInt(item.max_sets) : null,
         weight: item.weight !== null ? parseFloat(item.weight) : null,
         maxWeight: item.max_weight !== null ? parseFloat(item.max_weight) : null,
         weightUnitId: item.weight_unit,
@@ -100,8 +110,8 @@ export class SetConfigDataAdapter implements Adapter<SetConfigData> {
         repsRounding: item.reps_rounding !== null ? parseFloat(item.reps_rounding) : null,
         rir: item.rir !== null ? parseFloat(item.rir) : null,
         rpe: item.rpe !== null ? parseFloat(item.rpe) : null,
-        restTime: item.rest !== null ? parseFloat(item.rest) : null,
-        maxRestTime: item.max_rest !== null ? parseFloat(item.max_rest) : null,
+        restTime: item.rest !== null ? parseInt(item.rest) : null,
+        maxRestTime: item.max_rest !== null ? parseInt(item.max_rest) : null,
         textRepr: item.text_repr,
         comment: item.comment,
     });

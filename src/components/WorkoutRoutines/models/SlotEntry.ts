@@ -10,6 +10,19 @@ export type SlotEntryType = 'normal' | 'dropset' | 'myo' | 'partial' | 'forced' 
 
 export class SlotEntry {
 
+    id: number;
+    slotId: number;
+    exerciseId: number;
+    repetitionUnitId: number;
+    repetitionRounding: number;
+    weightUnitId: number;
+    weightRounding: number;
+    order: number;
+    comment: string;
+    type: SlotEntryType;
+    config: any | null;
+
+
     weightConfigs: BaseConfig[] = [];
     maxWeightConfigs: BaseConfig[] = [];
     repsConfigs: BaseConfig[] = [];
@@ -26,39 +39,53 @@ export class SlotEntry {
 
 
     constructor(
-        public id: number,
-        public slotId: number,
-        public exerciseId: number,
-        public repetitionUnitId: number,
-        public repetitionRounding: number,
-        public weightUnitId: number,
-        public weightRounding: number,
-        public order: number,
-        public comment: string,
-        public type: SlotEntryType,
-        public config: any | null,
-        configs?: {
-            weightConfigs?: BaseConfig[],
-            maxWeightConfigs?: BaseConfig[],
-            repsConfigs?: BaseConfig[],
-            maxRepsConfigs?: BaseConfig[],
-            restTimeConfigs?: BaseConfig[],
-            maxRestTimeConfigs?: BaseConfig[],
-            nrOfSetsConfigs?: BaseConfig[],
-            maxNrOfSetsConfigs?: BaseConfig[],
-            rirConfigs?: BaseConfig[]
+        data: {
+            id: number,
+            slotId: number,
+            exerciseId: number,
+            repetitionUnitId: number,
+            repetitionRounding: number,
+            weightUnitId: number,
+            weightRounding: number,
+            order: number,
+            comment: string,
+            type: SlotEntryType,
+            config: any | null,
+            configs?: {
+                weightConfigs?: BaseConfig[],
+                maxWeightConfigs?: BaseConfig[],
+                repsConfigs?: BaseConfig[],
+                maxRepsConfigs?: BaseConfig[],
+                restTimeConfigs?: BaseConfig[],
+                maxRestTimeConfigs?: BaseConfig[],
+                nrOfSetsConfigs?: BaseConfig[],
+                maxNrOfSetsConfigs?: BaseConfig[],
+                rirConfigs?: BaseConfig[]
+            }
         }
     ) {
-        if (configs !== undefined) {
-            this.weightConfigs = configs.weightConfigs ?? [];
-            this.maxWeightConfigs = configs.maxWeightConfigs ?? [];
-            this.repsConfigs = configs.repsConfigs ?? [];
-            this.maxRepsConfigs = configs.maxRepsConfigs ?? [];
-            this.restTimeConfigs = configs.restTimeConfigs ?? [];
-            this.maxRestTimeConfigs = configs.maxRestTimeConfigs ?? [];
-            this.nrOfSetsConfigs = configs.nrOfSetsConfigs ?? [];
-            this.maxNrOfSetsConfigs = configs.maxNrOfSetsConfigs ?? [];
-            this.rirConfigs = configs.rirConfigs ?? [];
+        this.id = data.id;
+        this.slotId = data.slotId;
+        this.exerciseId = data.exerciseId;
+        this.repetitionUnitId = data.repetitionUnitId;
+        this.repetitionRounding = data.repetitionRounding;
+        this.weightUnitId = data.weightUnitId;
+        this.weightRounding = data.weightRounding;
+        this.order = data.order;
+        this.comment = data.comment;
+        this.type = data.type;
+        this.config = data.config;
+
+        if (data.configs !== undefined) {
+            this.weightConfigs = data.configs.weightConfigs ?? [];
+            this.maxWeightConfigs = data.configs.maxWeightConfigs ?? [];
+            this.repsConfigs = data.configs.repsConfigs ?? [];
+            this.maxRepsConfigs = data.configs.maxRepsConfigs ?? [];
+            this.restTimeConfigs = data.configs.restTimeConfigs ?? [];
+            this.maxRestTimeConfigs = data.configs.maxRestTimeConfigs ?? [];
+            this.nrOfSetsConfigs = data.configs.nrOfSetsConfigs ?? [];
+            this.maxNrOfSetsConfigs = data.configs.maxNrOfSetsConfigs ?? [];
+            this.rirConfigs = data.configs.rirConfigs ?? [];
         }
     }
 }
@@ -105,20 +132,20 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
             configs.rirConfigs = item.rir_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
 
-        return new SlotEntry(
-            item.id,
-            item.slot,
-            item.exercise,
-            item.repetition_unit,
-            item.repetition_rounding,
-            item.weight_unit,
-            item.weight_rounding,
-            item.order,
-            item.comment,
-            item.type,
-            item.config,
-            configs
-        );
+        return new SlotEntry({
+            id: item.id,
+            slotId: item.slot,
+            exerciseId: item.exercise,
+            repetitionUnitId: item.repetition_unit,
+            repetitionRounding: item.repetition_rounding,
+            weightUnitId: item.weight_unit,
+            weightRounding: item.weight_rounding,
+            order: item.order,
+            comment: item.comment,
+            type: item.type,
+            config: item.config,
+            configs: configs
+        });
     };
 
     toJson = (item: SlotEntry) => ({
