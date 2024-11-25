@@ -147,49 +147,51 @@ describe("workout routine service tests", () => {
         expect(result[0].slots[0].isSuperset).toEqual(true);
         expect(result[0].slots[0].exerciseIds).toEqual([9, 12]);
         expect(result[0].slots[0].setConfigs[0]).toEqual(
-            new SetConfigData(
-                9,
-                1000,
-                "dropset",
-                5,
-                null,
-                100,
-                120,
-                1,
-                1.25,
-                10,
-                null,
-                1,
-                1,
-                2.00,
-                8.00,
-                120,
-                180,
-                "5 Sets, 10 × 100-120 kg @ 2 RiR",
-                "foo"
+            new SetConfigData({
+                    exerciseId: 9,
+                    slotEntryId: 1000,
+                    type: "dropset",
+                    nrOfSets: 5,
+                    maxNrOfSets: null,
+                    weight: 100,
+                    maxWeight: 120,
+                    weightUnitId: 1,
+                    weightRounding: 1.25,
+                    reps: 10,
+                    maxReps: null,
+                    repsUnitId: 1,
+                    repsRounding: 1,
+                    rir: 2,
+                    rpe: 8,
+                    restTime: 120,
+                    maxRestTime: 180,
+                    textRepr: "5 Sets, 10 × 100-120 kg @ 2 RiR",
+                    comment: "foo"
+                },
             )
         );
         expect(result[0].slots[0].setConfigs[1]).toEqual(
-            new SetConfigData(
-                12,
-                1001,
-                "normal",
-                3,
-                null,
-                90,
-                null,
-                1,
-                1.25,
-                12,
-                null,
-                1,
-                1,
-                2.00,
-                8.00,
-                120,
-                null,
-                "3 Sets, 12 × 90 kg @ 2 RiR",
-                "bar"
+            new SetConfigData({
+                    exerciseId: 12,
+                    slotEntryId: 1001,
+                    type: "normal",
+                    nrOfSets: 3,
+                    maxNrOfSets: null,
+                    weight: 90,
+                    maxWeight: null,
+                    weightUnitId: 1,
+                    weightRounding: 1.25,
+                    reps: 12,
+                    maxReps: null,
+                    repsUnitId: 1,
+                    repsRounding: 1,
+                    rir: 2,
+                    rpe: 8,
+                    restTime: 120,
+                    maxRestTime: null,
+                    textRepr: "3 Sets, 12 × 90 kg @ 2 RiR",
+                    comment: "bar"
+                },
             )
         );
 
