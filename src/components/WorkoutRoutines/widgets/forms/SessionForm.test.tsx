@@ -56,10 +56,15 @@ describe('SessionForm', () => {
         await user.type(datePicker, newDate.toFormat('yyyy-MM-dd'));
         await user.tab();
 
-        expect(mockUseFindSessionQuery).toHaveBeenCalledWith({
-            routineId: routineId,
-            date: newDate.toFormat('yyyy-MM-dd')
-        });
+        expect(mockUseFindSessionQuery).toHaveBeenCalledWith(
+            1,
+            {
+                routine: routineId,
+                date: newDate.toFormat('yyyy-MM-dd'),
+                day: 2
+
+            }
+        );
     });
 
     test('updates the form values when a session is found', async () => {

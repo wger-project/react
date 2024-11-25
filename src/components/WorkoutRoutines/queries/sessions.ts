@@ -4,9 +4,9 @@ import { addSession, editSession, searchSession } from "services";
 import { QueryKey, } from "utils/consts";
 
 
-export const useFindSessionQuery = (data: { routineId: number, date: string }) => useQuery({
-    queryFn: () => searchSession(data),
-    queryKey: [QueryKey.ROUTINES_ACTIVE, data.routineId, data.date],
+export const useFindSessionQuery = (routineId: number, queryParams: Record<string, any>) => useQuery({
+    queryFn: () => searchSession(queryParams),
+    queryKey: [QueryKey.SESSION_SEARCH, routineId, JSON.stringify(queryParams)],
 });
 
 export const useAddSessionQuery = () => {

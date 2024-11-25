@@ -38,6 +38,7 @@ export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
 export enum QueryKey {
     ROUTINE_OVERVIEW = 'routine-overview',
     ROUTINE_DETAIL = 'routine-detail',
+    SESSION_SEARCH = 'session-search',
     ROUTINE_LOGS = 'routine-logs',
     ROUTINE_STATS = 'routine-stats',
     ROUTINES_ACTIVE = 'routines-active',

@@ -9,9 +9,9 @@ import { ApiPath } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 
 
-export const searchSession = async (data: { routineId: number, date: string }): Promise<WorkoutSession | null> => {
+export const searchSession = async (queryParams: Record<string, any>): Promise<WorkoutSession | null> => {
     const response = await axios.get(
-        makeUrl(ApiPath.SESSION, { query: { routine: data.routineId, date: data.date } }),
+        makeUrl(ApiPath.SESSION, { query: queryParams }),
         { headers: makeHeader() }
     );
 

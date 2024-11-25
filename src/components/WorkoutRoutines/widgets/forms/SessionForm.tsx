@@ -37,10 +37,14 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
     // const navigate = useNavigate();
     const addSessionQuery = useAddSessionQuery();
     const editSessionQuery = useEditSessionQuery(session?.id!);
-    const findSessionQuery = useFindSessionQuery({
+    const findSessionQuery = useFindSessionQuery(
         routineId,
-        date: dateToYYYYMMDD(selectedDate.toJSDate()),
-    });
+        {
+            routine: routineId,
+            date: dateToYYYYMMDD(selectedDate.toJSDate()),
+            day: dayId
+        }
+    );
 
     const isLoading = addSessionQuery.isPending || editSessionQuery.isPending || findSessionQuery.isLoading;
 
