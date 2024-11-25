@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+    addMaxNrOfSetsConfig,
     addMaxRepsConfig,
     addMaxRestConfig,
     addMaxWeightConfig,
@@ -8,6 +9,7 @@ import {
     addRestConfig,
     addRirConfig,
     addWeightConfig,
+    deleteMaxNrOfSetsConfig,
     deleteMaxRepsConfig,
     deleteMaxRestConfig,
     deleteMaxWeightConfig,
@@ -16,6 +18,7 @@ import {
     deleteRestConfig,
     deleteRirConfig,
     deleteWeightConfig,
+    editMaxNrOfSetsConfig,
     editMaxRepsConfig,
     editMaxRestConfig,
     editMaxWeightConfig,
@@ -195,6 +198,40 @@ export const useDeleteNrOfSetsConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (id: number) => deleteNrOfSetsConfig(id),
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
+    });
+};
+
+/*
+ * Max Nr of Sets config
+ */
+export const useEditMaxNrOfSetsConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: EditBaseConfigParams) => editMaxNrOfSetsConfig(data),
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
+    });
+};
+export const useAddMaxNrOfSetsConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: AddBaseConfigParams) => addMaxNrOfSetsConfig(data),
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
+    });
+};
+export const useDeleteMaxNrOfSetsConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: number) => deleteMaxNrOfSetsConfig(id),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
         })

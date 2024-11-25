@@ -17,6 +17,7 @@ export class SlotEntry {
     restTimeConfigs: BaseConfig[] = [];
     maxRestTimeConfigs: BaseConfig[] = [];
     nrOfSetsConfigs: BaseConfig[] = [];
+    maxNrOfSetsConfigs: BaseConfig[] = [];
     rirConfigs: BaseConfig[] = [];
 
     exercise?: Exercise;
@@ -44,6 +45,7 @@ export class SlotEntry {
             restTimeConfigs?: BaseConfig[],
             maxRestTimeConfigs?: BaseConfig[],
             nrOfSetsConfigs?: BaseConfig[],
+            maxNrOfSetsConfigs?: BaseConfig[],
             rirConfigs?: BaseConfig[]
         }
     ) {
@@ -55,6 +57,7 @@ export class SlotEntry {
             this.restTimeConfigs = configs.restTimeConfigs ?? [];
             this.maxRestTimeConfigs = configs.maxRestTimeConfigs ?? [];
             this.nrOfSetsConfigs = configs.nrOfSetsConfigs ?? [];
+            this.maxNrOfSetsConfigs = configs.maxNrOfSetsConfigs ?? [];
             this.rirConfigs = configs.rirConfigs ?? [];
         }
     }
@@ -71,6 +74,7 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
             restTimeConfigs: [],
             maxRestTimeConfigs: [],
             nrOfSetsConfigs: [],
+            maxNrOfSetsConfigs: [],
             rirConfigs: []
         };
         if (item.hasOwnProperty('weight_configs')) {
@@ -87,6 +91,9 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
         }
         if (item.hasOwnProperty('set_nr_configs')) {
             configs.nrOfSetsConfigs = item.set_nr_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+        }
+        if (item.hasOwnProperty('max_set_nr_configs')) {
+            configs.maxNrOfSetsConfigs = item.max_set_nr_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
         if (item.hasOwnProperty('rest_configs')) {
             configs.restTimeConfigs = item.rest_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));

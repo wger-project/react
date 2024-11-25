@@ -77,6 +77,9 @@ export {
     editMaxRestConfig,
     addMaxRestConfig,
     deleteMaxRestConfig,
+    addMaxNrOfSetsConfig,
+    editMaxNrOfSetsConfig,
+    deleteMaxNrOfSetsConfig,
 } from './config'
 
 export { addSession, editSession, searchSession } from './session';

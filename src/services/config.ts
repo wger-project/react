@@ -28,6 +28,10 @@ export const editNrOfSetsConfig = async (data: EditBaseConfigParams) => await ed
 export const addNrOfSetsConfig = async (data: AddBaseConfigParams) => await addBaseConfig(data, ApiPath.NR_OF_SETS_CONFIG);
 export const deleteNrOfSetsConfig = async (id: number) => await deleteBaseConfig(id, ApiPath.NR_OF_SETS_CONFIG);
 
+export const editMaxNrOfSetsConfig = async (data: EditBaseConfigParams) => await editBaseConfig(data, ApiPath.MAX_NR_OF_SETS_CONFIG);
+export const addMaxNrOfSetsConfig = async (data: AddBaseConfigParams) => await addBaseConfig(data, ApiPath.MAX_NR_OF_SETS_CONFIG);
+export const deleteMaxNrOfSetsConfig = async (id: number) => await deleteBaseConfig(id, ApiPath.MAX_NR_OF_SETS_CONFIG);
+
 export const editRirConfig = async (data: EditBaseConfigParams) => await editBaseConfig(data, ApiPath.RIR_CONFIG);
 export const addRirConfig = async (data: AddBaseConfigParams) => await addBaseConfig(data, ApiPath.RIR_CONFIG);
 export const deleteRirConfig = async (id: number) => await deleteBaseConfig(id, ApiPath.RIR_CONFIG);

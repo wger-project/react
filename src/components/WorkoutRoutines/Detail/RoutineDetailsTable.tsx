@@ -164,6 +164,9 @@ const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
                                     <TableRow key={indexConfig}>
                                         <TableCell align={'center'}>
                                             {setConfig.nrOfSets === null ? '-/-' : setConfig.nrOfSets}
+                                            {setConfig.maxNrOfSets !== null &&
+                                                <> - {setConfig.maxNrOfSets}</>
+                                            }
                                         </TableCell>
                                         <TableCell align={'center'}>
                                             {setConfig.reps === null ? '-/-' : setConfig.reps}

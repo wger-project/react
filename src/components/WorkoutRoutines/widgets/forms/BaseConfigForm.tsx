@@ -29,6 +29,10 @@ import {
     useEditRiRConfigQuery,
     useEditWeightConfigQuery
 } from "components/WorkoutRoutines/queries";
+import {
+    useAddMaxNrOfSetsConfigQuery,
+    useEditMaxNrOfSetsConfigQuery
+} from "components/WorkoutRoutines/queries/configs";
 import React, { useState } from "react";
 import { DEBOUNCE_ROUTINE_FORMS, OPERATION_REPLACE } from "utils/consts";
 
@@ -58,6 +62,11 @@ const QUERY_MAP: { [key: string]: any } = {
         add: useAddNrOfSetsConfigQuery,
         delete: useDeleteNrOfSetsConfigQuery
     },
+    'max-sets': {
+        edit: useEditMaxNrOfSetsConfigQuery,
+        add: useAddMaxNrOfSetsConfigQuery,
+        delete: useAddMaxRepsConfigQuery
+    },
     'rest': {
         edit: useEditRestConfigQuery,
         add: useAddRestConfigQuery,
@@ -76,7 +85,16 @@ const QUERY_MAP: { [key: string]: any } = {
 };
 
 
-export type ConfigType = 'weight' | 'max-weight' | 'reps' | 'max-reps' | 'sets' | 'rest' | 'max-rest' | 'rir';
+export type ConfigType =
+    'weight'
+    | 'max-weight'
+    | 'reps'
+    | 'max-reps'
+    | 'sets'
+    | 'max-sets'
+    | 'rest'
+    | 'max-rest'
+    | 'rir';
 
 export const SlotBaseConfigValueField = (props: {
     config?: BaseConfig,
