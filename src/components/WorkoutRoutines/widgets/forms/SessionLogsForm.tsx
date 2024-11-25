@@ -64,16 +64,18 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
     });
 
     const handleSubmit = async (values: { logs: LogEntry[] }) => {
-        const data = values.logs.map(l => ({
-                date: selectedDate.toISO(),
-                rir: l.rir,
-                reps: l.reps,
-                weight: l.weight,
-                exercise: l.exercise?.id,
-                day: dayId,
-                routine: routineId,
-            }
-        ));
+        const data = values.logs
+            .filter(l => l.rir !== '' && l.reps !== '' && l.weight !== '')
+            .map(l => ({
+                    date: selectedDate.toISO(),
+                    rir: l.rir,
+                    reps: l.reps,
+                    weight: l.weight,
+                    exercise: l.exercise?.id,
+                    day: dayId,
+                    routine: routineId,
+                }
+            ));
         await addLogsQuery.mutateAsync(data);
         setSnackbarOpen(true);
     };
@@ -81,37 +83,37 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
     const handleCallback = async (exerciseResponse: ExerciseSearchResponse | null, formik: FormikProps<{
         logs: LogEntry[]
     }>) => {
-        {
-            if (exerciseResponse === null) {
-                return;
-            }
 
-            const updatedLogs = formik.values.logs.map((log) => {
-                if (exerciseIdToSwap === log.exercise!.id) {
-                    // Empty the rest of the values, this is a new exercise not in the routine
-                    return {
-                        ...log,
-                        weight: '',
-                        reps: '',
-                        rir: '',
-                        exercise: exerciseResponse.exercise!,
-                    };
-                }
-                return log;
-            });
-
-            await formik.setValues({
-                ...formik.values,
-                logs: updatedLogs
-            });
-
-            setExerciseIdToSwap(null);
+        if (exerciseResponse === null) {
+            return;
         }
+
+        const updatedLogs = formik.values.logs.map((log) => {
+            if (exerciseIdToSwap === log.exercise!.id) {
+                // Empty the rest of the values, this is a new exercise not in the routine
+                return {
+                    ...log,
+                    weight: '',
+                    reps: '',
+                    rir: '',
+                    exercise: exerciseResponse.exercise!,
+                };
+            }
+            return log;
+        });
+
+        await formik.setValues({
+            ...formik.values,
+            logs: updatedLogs
+        });
+
+        setExerciseIdToSwap(null);
+
     };
 
     // Compute initial values
     const initialValues = { logs: [] as LogEntry[] };
-    for (const dayData of routine.dayDataCurrentIteration) {
+    for (const dayData of routine.dayDataCurrentIteration.filter(dayData => dayData.day!.id === dayId)) {
         for (const slot of dayData.slots) {
             for (const config of slot.setConfigs) {
                 for (let i = 0; i < config.nrOfSets; i++) {

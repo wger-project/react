@@ -220,7 +220,7 @@
     "impressionGood": "Good",
     "impressionNeutral": "Neutral",
     "impressionBad": "Bad",
-    "impressionHelpText": "This form records your workout results (reps, weight, etc.) for each exercise. Changes you make here, like removing or swapping exercises, only affect the specific logs you save and and won't change your overall routine.",
+    "impressionHelpText": "This form records your workout results (reps, weight, etc.) for each exercise. Changes you make here, like removing or swapping exercises, only affect the specific logs you save and and won't change your overall routine. Only rows with values for either weight or repetitions are saved.",
     "addAdditionalLog": "Add additional log"
   },
   "measurements": {
