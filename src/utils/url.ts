@@ -126,7 +126,7 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
         case WgerLink.ROUTINE_LOGS_OVERVIEW:
             return `/${langShort}/routine/log/${params!.id}/view`;
         case WgerLink.ROUTINE_ADD_LOG:
-            return `/${langShort}/routine/day/${params!.id}/log/add`;
+            return `/${langShort}/routine/${params!.id}/day/${params!.id2}/add-logs`;
         case WgerLink.ROUTINE_EDIT_LOG:
             return `/${langShort}/routine/log/${params!.id}/edit`;
         case WgerLink.ROUTINE_DELETE_LOG:

@@ -61,7 +61,10 @@ export const WgerRoutes = () => {
                 <Route path="add" element={<RoutineAdd />} />
 
                 <Route path=":routineId">
-                    <Route path="add-session/:dayId" element={<SessionAdd />} />
+                    <Route path="day/:dayId">
+                        <Route path="add-logs" element={<SessionAdd />} />
+                    </Route>
+
                     <Route path="view" element={<RoutineDetail />} />
                     <Route path="edit">
                         <Route index element={<RoutineEdit />} />

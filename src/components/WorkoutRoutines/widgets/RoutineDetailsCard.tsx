@@ -1,3 +1,4 @@
+import { Addchart } from "@mui/icons-material";
 import {
     Box,
     Card,
@@ -6,12 +7,14 @@ import {
     Chip,
     Container,
     Divider,
+    IconButton,
     Menu,
     MenuItem,
     Stack,
     Typography
 } from "@mui/material";
 import Grid from '@mui/material/Grid2';
+import Tooltip from "@mui/material/Tooltip";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
 import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";
 import { useLanguageQuery } from "components/Exercises/queries";
@@ -70,7 +73,6 @@ export function SetConfigDataDetails(props: {
         );
     }
 
-    // @ts-ignore
     return (
         <Grid container
               alignItems="center"
@@ -160,14 +162,18 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
         <Card sx={{ minWidth: 275 }}>
             <CardHeader
                 sx={{ bgcolor: "lightgray" }}
-                action={props.dayData.day!.isSpecialType
-                    ? <Chip
-                        label={props.dayData.day!.type}
-                        color="info"
-                        size="small"
-                        sx={{ marginLeft: "0.5em" }} />
-                    : null
-                }
+
+                action={props.dayData.day!.isRest
+                    ? null
+                    : <Tooltip title={t('routines.addWeightLog')}>
+                        <IconButton
+                            href={makeLink(WgerLink.ROUTINE_ADD_LOG, i18n.language, {
+                                id: 8,
+                                id2: props.dayData.day!.id
+                            })}>
+                            <Addchart />
+                        </IconButton>
+                    </Tooltip>}
                 title={props.dayData.day!.isRest ? t('routines.restDay') : props.dayData.day!.name}
                 subheader={props.dayData.day?.description}
             />
