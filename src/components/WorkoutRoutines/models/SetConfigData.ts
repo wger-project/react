@@ -21,11 +21,11 @@ export class SetConfigData {
     public weight: number | null;
     public maxWeight: number | null;
     public weightUnitId: number;
-    public weightRounding: number;
+    public weightRounding: number | null = null;
     public reps: number | null;
     public maxReps: number | null;
     public repsUnitId: number;
-    public repsRounding: number;
+    public repsRounding: number | null = null;
     public rir: number | null;
     public rpe: number | null;
     public restTime: number | null;
@@ -43,11 +43,11 @@ export class SetConfigData {
         weight?: number | null,
         maxWeight?: number | null,
         weightUnitId: number,
-        weightRounding: number,
+        weightRounding: number | null,
         reps?: number | null,
         maxReps?: number | null,
         repsUnitId: number,
-        repsRounding: number,
+        repsRounding: number | null,
         rir?: number | null,
         rpe?: number | null,
         restTime?: number | null,
@@ -93,11 +93,11 @@ export class SetConfigDataAdapter implements Adapter<SetConfigData> {
         weight: item.weight !== null ? parseFloat(item.weight) : null,
         maxWeight: item.max_weight !== null ? parseFloat(item.max_weight) : null,
         weightUnitId: item.weight_unit,
-        weightRounding: parseFloat(item.weight_rounding),
+        weightRounding: item.weight_rounding !== null ? parseFloat(item.weight_rounding) : null,
         reps: item.reps !== null ? parseFloat(item.reps) : null,
         maxReps: item.max_reps !== null ? parseFloat(item.max_reps) : null,
         repsUnitId: item.reps_unit,
-        repsRounding: parseFloat(item.reps_rounding),
+        repsRounding: item.reps_rounding !== null ? parseFloat(item.reps_rounding) : null,
         rir: item.rir !== null ? parseFloat(item.rir) : null,
         rpe: item.rpe !== null ? parseFloat(item.rpe) : null,
         restTime: item.rest !== null ? parseFloat(item.rest) : null,
