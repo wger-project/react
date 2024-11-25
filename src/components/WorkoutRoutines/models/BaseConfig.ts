@@ -26,7 +26,8 @@ export class BaseConfig {
         public value: number,
         public operation: "+" | "-" | "r",
         public step: "abs" | "percent" | null,
-        public needLogToApply: boolean
+        public needLogToApply: boolean,
+        public repeat: boolean
     ) {
     }
 
@@ -44,7 +45,8 @@ export class BaseConfigAdapter implements Adapter<BaseConfig> {
         parseFloat(item.value),
         item.operation,
         item.step,
-        item.need_log_to_apply
+        item.need_log_to_apply,
+        item.repeat
     );
 
     toJson = (item: BaseConfig) => ({
@@ -54,6 +56,7 @@ export class BaseConfigAdapter implements Adapter<BaseConfig> {
         value: item.value,
         operation: item.operation,
         step: item.step,
-        need_log_to_apply: item.needLogToApply
+        need_log_to_apply: item.needLogToApply,
+        repeat: item.repeat
     });
 }

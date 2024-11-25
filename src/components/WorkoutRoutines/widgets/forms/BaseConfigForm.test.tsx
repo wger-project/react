@@ -68,7 +68,7 @@ describe('EntryDetailsField Component', () => {
         describe(`for type ${type}`, () => {
             test('calls editQuery.mutate with correct data when entry exists', async () => {
 
-                const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', null, true);
+                const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', null, true, false);
                 const user = userEvent.setup();
 
                 render(
@@ -121,7 +121,7 @@ describe('EntryDetailsField Component', () => {
             test('calls deleteQuery.mutate when value is deleted', async () => {
                 const user = userEvent.setup();
 
-                const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', null, true);
+                const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', null, true, false);
                 render(
                     <QueryClientProvider client={testQueryClient}>
                         <SlotBaseConfigValueField config={mockConfig} routineId={routineId} slotEntryId={slotEntryId}
