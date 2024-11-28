@@ -167,6 +167,7 @@
   "forms": {
     "supportedImageFormats": "Only JPEG, PNG and WEBP files below 20Mb are supported",
     "enterNumber": "Please enter a valid number",
+    "enterInteger": "Please enter a whole number",
     "valueTooShort": "The value is too short",
     "valueTooLong": "The value is too long",
     "fieldRequired": "This field is required",
@@ -174,6 +175,7 @@
     "minLength": "Please enter more than {{chars}} characters",
     "minValue": "The value for this field has to be higher than {{value}}",
     "maxValue": "The value for this field has to be less than {{value}}",
+    "maxLessThanMin": "The max value has to be bigger than the minimum",
     "endBeforeStart": "The end value cannot be before the start"
   },
   "name": "Name",
@@ -221,7 +223,13 @@
     "impressionNeutral": "Neutral",
     "impressionBad": "Bad",
     "impressionHelpText": "This form records your workout results (reps, weight, etc.) for each exercise. Changes you make here, like removing or swapping exercises, only affect the specific logs you save and and won't change your overall routine. Only rows with values for either weight or repetitions are saved.",
-    "addAdditionalLog": "Add additional log"
+    "addAdditionalLog": "Add additional log",
+    "operation": "Operation",
+    "step": "Step",
+    "requirements": "Requirements",
+    "requirementsHelpText": "Select the workout results (from previous logs) that must be met for this rule to take effect",
+    "repeat": "Repeat entry",
+    "repeatHelpText": "Check the check box if you want this rule to continue to apply to subsequent workouts until you define a new one"
   },
   "measurements": {
     "measurements": "Measurements",

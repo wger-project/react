@@ -36,9 +36,8 @@ export const RoutineDetail = () => {
                 }
                 sideBar={
                     <Stack>
-                        <p>TODO</p>
+                        <h3>TODO</h3>
                         <ul>
-                            <li>Logs</li>
                             <li>Statistics</li>
                             <li>Muscle overview</li>
                         </ul>

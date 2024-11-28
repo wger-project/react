@@ -8,7 +8,7 @@ import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget"
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { RIR_VALUES_SELECT } from "components/WorkoutRoutines/models/BaseConfig";
-import { LogEntry } from "components/WorkoutRoutines/models/WorkoutLog";
+import { LogEntryForm } from "components/WorkoutRoutines/models/WorkoutLog";
 import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { FieldArray, Form, Formik, FormikProps } from "formik";
 import { DateTime } from "luxon";
@@ -63,7 +63,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
         ),
     });
 
-    const handleSubmit = async (values: { logs: LogEntry[] }) => {
+    const handleSubmit = async (values: { logs: LogEntryForm[] }) => {
         const data = values.logs
             .filter(l => l.rir !== '' && l.reps !== '' && l.weight !== '')
             .map(l => ({
@@ -81,7 +81,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
     };
 
     const handleCallback = async (exerciseResponse: ExerciseSearchResponse | null, formik: FormikProps<{
-        logs: LogEntry[]
+        logs: LogEntryForm[]
     }>) => {
 
         if (exerciseResponse === null) {
@@ -112,7 +112,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
     };
 
     // Compute initial values
-    const initialValues = { logs: [] as LogEntry[] };
+    const initialValues = { logs: [] as LogEntryForm[] };
     for (const dayData of routine.dayDataCurrentIteration.filter(dayData => dayData.day!.id === dayId)) {
         for (const slot of dayData.slots) {
             for (const config of slot.setConfigs) {

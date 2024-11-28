@@ -1,12 +1,11 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { BaseConfig } from 'components/WorkoutRoutines/models/BaseConfig';
+import { BaseConfig, OPERATION_REPLACE } from 'components/WorkoutRoutines/models/BaseConfig';
 
 import { SlotBaseConfigValueField } from 'components/WorkoutRoutines/widgets/forms/BaseConfigForm';
 import React from 'react';
 import { testQueryClient } from "tests/queryClient";
-import { OPERATION_REPLACE } from "utils/consts";
 
 
 jest.mock('utils/consts', () => {
@@ -68,7 +67,7 @@ describe('EntryDetailsField Component', () => {
         describe(`for type ${type}`, () => {
             test('calls editQuery.mutate with correct data when entry exists', async () => {
 
-                const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', null, true, false);
+                const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', 'abs', true, false);
                 const user = userEvent.setup();
 
                 render(
@@ -121,7 +120,7 @@ describe('EntryDetailsField Component', () => {
             test('calls deleteQuery.mutate when value is deleted', async () => {
                 const user = userEvent.setup();
 
-                const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', null, true, false);
+                const mockConfig = new BaseConfig(123, 10, 1, null, 5, '+', 'abs', true, false);
                 render(
                     <QueryClientProvider client={testQueryClient}>
                         <SlotBaseConfigValueField config={mockConfig} routineId={routineId} slotEntryId={slotEntryId}

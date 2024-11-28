@@ -39,13 +39,14 @@ describe('SessionForm', () => {
         });
 
         // Act
-        render(<BrowserRouter>
-            <SessionForm
-                dayId={dayId}
-                routineId={routineId}
-                selectedDate={DateTime.now()}
-                setSelectedDate={() => {
-                }} />
+        render(
+            <BrowserRouter>
+                <SessionForm
+                    dayId={dayId}
+                    routineId={routineId}
+                    selectedDate={DateTime.now()}
+                    setSelectedDate={() => {
+                    }} />
             </BrowserRouter>
         );
 
@@ -97,14 +98,16 @@ describe('SessionForm', () => {
         });
 
         // Act
-        render(<BrowserRouter>
-            <SessionForm
-                dayId={dayId}
-                routineId={routineId}
-                selectedDate={DateTime.now()}
-                setSelectedDate={() => {
-                }} />
-        </BrowserRouter>);
+        render(
+            <BrowserRouter>
+                <SessionForm
+                    dayId={dayId}
+                    routineId={routineId}
+                    selectedDate={DateTime.now()}
+                    setSelectedDate={() => {
+                    }} />
+            </BrowserRouter>
+        );
 
         // Assert
         await waitFor(() => {
@@ -126,13 +129,14 @@ describe('SessionForm', () => {
             isSuccess: true,
         });
 
-        render(<BrowserRouter>
-            <SessionForm
-                dayId={dayId}
-                routineId={routineId}
-                selectedDate={DateTime.now()}
-                setSelectedDate={() => {
-                }} />
+        render(
+            <BrowserRouter>
+                <SessionForm
+                    dayId={dayId}
+                    routineId={routineId}
+                    selectedDate={DateTime.now()}
+                    setSelectedDate={() => {
+                    }} />
             </BrowserRouter>
         );
 

@@ -12,8 +12,6 @@ export const REP_UNIT_TILL_FAILURE = 2;
 export const WEIGHT_UNIT_KG = 1;
 export const WEIGHT_UNIT_LB = 2;
 
-export const OPERATION_REPLACE = 'r';
-
 
 export const QUERY_EXERCISES = 'exercises';
 export const QUERY_EXERCISE_VARIATIONS = 'variations';

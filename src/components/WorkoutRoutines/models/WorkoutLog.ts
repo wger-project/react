@@ -5,7 +5,7 @@ import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit
 import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
 import { Adapter } from "utils/Adapter";
 
-export interface LogEntry {
+export interface LogEntryForm {
     exercise: Exercise | null;
     repsUnit: RepetitionUnit | null;
     weightUnit: WeightUnit | null;

@@ -7,13 +7,15 @@ interface WgerTextFieldProps {
     fieldName: string,
     title: string,
     fieldProps?: TextFieldProps,
+    fullwidth?: boolean,
 }
 
 export function WgerTextField(props: WgerTextFieldProps) {
     const [field, meta] = useField(props.fieldName);
+    const fullwidth = props.fullwidth ?? true;
 
     return <TextField
-        fullWidth
+        fullWidth={fullwidth}
         id={props.fieldName}
         label={props.title}
         variant="standard"

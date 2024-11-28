@@ -1,101 +1,17 @@
-import { Box, Button, Container, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
+import { Language } from "components/Exercises/models/language";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
-import {
-    AddEntryDetailsButton,
-    ConfigDetailsNeedsLogsField,
-    ConfigType,
-    DeleteEntryDetailsButton,
-    EntryDetailsOperationField,
-    SlotBaseConfigValueField
-} from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
+import { ProgressionForm } from "components/WorkoutRoutines/widgets/forms/ProgressionForm";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import { getLanguageByShortName } from "services";
 import { makeLink, WgerLink } from "utils/url";
-
-export const ProgressionEdit = (props: {
-    objectKey: string,
-    type: ConfigType,
-    routineId: number,
-    slotEntry: SlotEntry,
-    iterations: number[]
-}) => {
-    return (
-        (<React.Fragment>
-            <Grid size={{ md: 12, lg: 6 }}>
-                <Typography variant="h6" gutterBottom>
-                    {props.type}
-                </Typography>
-                <Table size="small">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
-                            <TableCell>Value</TableCell>
-                            <TableCell>Operation</TableCell>
-                            <TableCell>Require logs</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {props.iterations.map((iteration) => {
-                            // @ts-ignore
-                            const config = props.slotEntry[props.objectKey].find((c) => c.iteration === iteration);
-
-                            return <TableRow key={iteration}>
-                                <TableCell>workout #{iteration}</TableCell>
-                                <TableCell>
-                                    {config
-                                        ? <DeleteEntryDetailsButton
-                                            configId={config.id}
-                                            routineId={props.routineId}
-                                            type={props.type}
-                                        />
-                                        : <AddEntryDetailsButton
-                                            type={props.type}
-                                            routineId={props.routineId}
-                                            slotEntryId={props.slotEntry.id}
-                                            iteration={iteration}
-                                        />
-                                    }
-                                </TableCell>
-                                <TableCell>
-                                    {config && <SlotBaseConfigValueField
-                                        config={config}
-                                        type={props.type}
-                                        routineId={props.routineId}
-                                        slotEntryId={props.slotEntry.id}
-                                    />}
-                                </TableCell>
-                                <TableCell>
-                                    {config && <EntryDetailsOperationField
-                                        config={config}
-                                        type={props.type}
-                                        routineId={props.routineId}
-                                        slotEntryId={props.slotEntry.id}
-                                    />}
-                                </TableCell>
-                                <TableCell>
-                                    {config && <ConfigDetailsNeedsLogsField
-                                        config={config}
-                                        type={props.type}
-                                        routineId={props.routineId}
-                                        slotEntryId={props.slotEntry.id}
-                                    />}
-                                </TableCell>
-                            </TableRow>;
-                        })}
-                    </TableBody>
-                </Table>
-            </Grid>
-        </React.Fragment>)
-    );
-};
 
 export const SlotProgressionEdit = () => {
 
@@ -112,7 +28,7 @@ export const SlotProgressionEdit = () => {
 
     const routine = routineQuery.data!;
 
-    let language = undefined;
+    let language: Language | undefined = undefined;
     if (languageQuery.isSuccess) {
         language = getLanguageByShortName(
             i18n.language,
@@ -136,91 +52,61 @@ export const SlotProgressionEdit = () => {
 
     const iterations = Object.keys(routine.groupedDayDataByIteration).map(Number);
 
-
     return <>
-        <Container maxWidth="lg"> {/*maxWidth={false}*/}
-            <Grid container>
-                <Grid size={10}>
-                    <Typography variant={"h4"}>
-                        Edit progression for slot #{slotId}
-                    </Typography>
-                </Grid>
-                <Grid size={2}>
-                    <Button
-                        component={Link}
-                        variant={"outlined"}
-                        size={"small"}
-                        to={makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: routineId })}
-                    >
-                        back to routine edit
-                    </Button>
-                </Grid>
-            </Grid>
-
-
-            <Box height={30} />
-            {slot.configs.map((config) => <React.Fragment key={config.id}>
+        <WgerContainerFullWidth
+            title={`Edit progression`}
+            optionsMenu={<Button
+                component={Link}
+                variant={"outlined"}
+                size={"small"}
+                to={makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: routineId })}
+            >
+                back to routine edit
+            </Button>}
+        >
+            {slot.configs.map((config) =>
+                <React.Fragment key={config.id}>
                     <Typography variant="h5" gutterBottom>
                         {config.exercise?.getTranslation(language).name}
                     </Typography>
-                    <Grid container spacing={2}>
-                        <ProgressionEdit
-                            objectKey={'weightConfigs'}
+                    <Grid container>
+                        <ProgressionForm
                             type="weight"
+                            configs={config.weightConfigs}
+                            configsMax={config.maxWeightConfigs}
+                            slotEntryId={config.id}
                             routineId={routineId}
-                            slotEntry={config}
                             iterations={iterations}
                         />
-                        <ProgressionEdit
-                            objectKey={'maxWeightConfigs'}
-                            type="max-weight"
-                            routineId={routineId}
-                            slotEntry={config}
-                            iterations={iterations}
-                        />
-                        <ProgressionEdit
-                            objectKey={'repsConfigs'}
+                        <ProgressionForm
                             type="reps"
+                            configs={config.repsConfigs}
+                            configsMax={config.maxRepsConfigs}
+                            slotEntryId={config.id}
                             routineId={routineId}
-                            slotEntry={config}
                             iterations={iterations}
                         />
-                        <ProgressionEdit
-                            objectKey={'maxRepsConfigs'}
-                            type="max-reps"
-                            routineId={routineId}
-                            slotEntry={config}
-                            iterations={iterations}
-                        />
-                        <ProgressionEdit
-                            objectKey={'nrOfSetsConfigs'}
+                        <ProgressionForm
                             type="sets"
+                            configs={config.nrOfSetsConfigs}
+                            configsMax={config.maxNrOfSetsConfigs}
+                            slotEntryId={config.id}
                             routineId={routineId}
-                            slotEntry={config}
                             iterations={iterations}
+                            forceInteger={true}
                         />
-                        <ProgressionEdit
-                            objectKey={'restTimeConfigs'}
+                        <ProgressionForm
                             type="rest"
+                            configs={config.restTimeConfigs}
+                            configsMax={config.maxRestTimeConfigs}
+                            slotEntryId={config.id}
                             routineId={routineId}
-                            slotEntry={config}
-                            iterations={iterations}
-                        />
-                        <ProgressionEdit
-                            objectKey={'maxRestTimeConfigs'}
-                            type="max-rest"
-                            routineId={routineId}
-                            slotEntry={config}
                             iterations={iterations}
                         />
                     </Grid>
                 </React.Fragment>
             )}
-
-
-        </Container>
-
-
+        </WgerContainerFullWidth>
     </>;
 };
 

@@ -1,8 +1,27 @@
+import { ArrowDropDown, CheckBoxOutlineBlank } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import DeleteIcon from "@mui/icons-material/Delete";
-import { IconButton, MenuItem, Switch, TextField } from "@mui/material";
+import {
+    Button,
+    Divider,
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Switch,
+    TextField
+} from "@mui/material";
 import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
-import { BaseConfig, RIR_VALUES_SELECT } from "components/WorkoutRoutines/models/BaseConfig";
+import {
+    BaseConfig,
+    OPERATION_REPLACE,
+    REQUIREMENTS_VALUES,
+    RequirementsType,
+    RIR_VALUES_SELECT
+} from "components/WorkoutRoutines/models/BaseConfig";
 import {
     useAddMaxRepsConfigQuery,
     useAddMaxRestConfigQuery,
@@ -33,10 +52,12 @@ import {
     useAddMaxNrOfSetsConfigQuery,
     useEditMaxNrOfSetsConfigQuery
 } from "components/WorkoutRoutines/queries/configs";
+import { useFormikContext } from "formik";
 import React, { useState } from "react";
-import { DEBOUNCE_ROUTINE_FORMS, OPERATION_REPLACE } from "utils/consts";
+import { useTranslation } from "react-i18next";
+import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
 
-const QUERY_MAP: { [key: string]: any } = {
+export const QUERY_MAP: { [key: string]: any } = {
     'weight': {
         edit: useEditWeightConfigQuery,
         add: useAddWeightConfigQuery,
@@ -100,7 +121,7 @@ export const SlotBaseConfigValueField = (props: {
     config?: BaseConfig,
     routineId: number,
     slotEntryId?: number,
-    type: ConfigType
+    type: ConfigType,
 }) => {
 
     const { edit: editQuery, add: addQuery, delete: deleteQuery } = QUERY_MAP[props.type];
@@ -199,9 +220,10 @@ export const AddEntryDetailsButton = (props: {
 export const DeleteEntryDetailsButton = (props: {
     configId: number,
     routineId: number,
-    type: ConfigType
+    type: ConfigType,
+    disable?: boolean
 }) => {
-
+    const disable = props.disable ?? false;
     const { delete: deleteQuery } = QUERY_MAP[props.type];
     const deleteQueryHook = deleteQuery(props.routineId);
 
@@ -210,7 +232,7 @@ export const DeleteEntryDetailsButton = (props: {
     };
 
     return (
-        <IconButton size="small" onClick={handleData} disabled={deleteQueryHook.isPending}>
+        <IconButton size="small" onClick={handleData} disabled={disable || deleteQueryHook.isPending}>
             <DeleteIcon />
         </IconButton>
     );
@@ -221,9 +243,11 @@ export const EntryDetailsOperationField = (props: {
     config: BaseConfig,
     routineId: number,
     slotEntryId: number,
-    type: ConfigType
+    type: ConfigType,
+    disable?: boolean
 }) => {
 
+    const disable = props.disable ?? false;
     const options = [
         {
             value: '+',
@@ -253,7 +277,7 @@ export const EntryDetailsOperationField = (props: {
             label="Operation"
             value={props.config?.operation}
             variant="standard"
-            disabled={editQueryHook.isPending}
+            disabled={disable || editQueryHook.isPending}
             onChange={e => handleData(e.target.value)}
         >
             {options.map((option) => (
@@ -265,12 +289,69 @@ export const EntryDetailsOperationField = (props: {
     </>);
 };
 
-export const ConfigDetailsNeedsLogsField = (props: {
+export const EntryDetailsStepField = (props: {
     config: BaseConfig,
     routineId: number,
     slotEntryId: number,
-    type: ConfigType
+    type: ConfigType,
+    disable?: boolean
 }) => {
+
+    const disable = props.disable ?? false;
+
+    const options = [
+        {
+            value: 'abs',
+            label: 'absolute',
+        },
+        {
+            value: 'percent',
+            label: 'percent',
+        },
+    ];
+
+    if (props.config.iteration === 1) {
+        options.push({
+            value: 'na',
+            label: 'n/a',
+        });
+    }
+
+    const { edit: editQuery } = QUERY_MAP[props.type];
+    const editQueryHook = editQuery(props.routineId);
+
+    const handleData = (newValue: string) => {
+        editQueryHook.mutate({ id: props.config.id, step: newValue, });
+    };
+
+    return (<>
+        <TextField
+            sx={{ width: 100 }}
+            select
+            // label="Operation"
+            value={props.config?.step}
+            variant="standard"
+            disabled={disable || editQueryHook.isPending}
+            onChange={e => handleData(e.target.value)}
+        >
+            {options.map((option) => (
+                <MenuItem key={option.value} value={option.value} selected={option.value === props.config.step}>
+                    {option.label}
+                </MenuItem>
+            ))}
+        </TextField>
+    </>);
+};
+
+export const ConfigDetailsNeedLogsToApplyField = (props: {
+    config: BaseConfig,
+    routineId: number,
+    slotEntryId: number,
+    type: ConfigType,
+    disable?: boolean
+}) => {
+
+    const disable = props.disable ?? false;
 
     const { edit: editQuery } = QUERY_MAP[props.type];
     const editQueryHook = editQuery(props.routineId);
@@ -285,8 +366,71 @@ export const ConfigDetailsNeedsLogsField = (props: {
     return <Switch
         checked={value}
         onChange={e => handleData(e.target.checked)}
-        disabled={editQueryHook.isPending}
+        disabled={disable || editQueryHook.isPending}
     />;
+};
+
+
+export const ConfigDetailsRequirementsField = (props: {
+    fieldName: string,
+    values: RequirementsType[],
+    disabled?: boolean
+}) => {
+
+    const { setFieldValue } = useFormikContext();
+    const { t } = useTranslation();
+    const disable = props.disabled ?? false;
+
+    const [selectedElements, setSelectedElements] = useState<RequirementsType[]>(props.values);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const handleSelection = (value: RequirementsType) => {
+        // if the value is not in selectedElements, add it
+        if (!selectedElements.includes(value)) {
+            setSelectedElements([...selectedElements, value]);
+        } else {
+            setSelectedElements(selectedElements.filter((e) => e !== value));
+        }
+    };
+
+    const handleSubmit = async () => {
+        await setFieldValue(props.fieldName, selectedElements);
+        setAnchorEl(null);
+    };
+
+
+    return <>
+        <IconButton
+            disabled={disable}
+            onClick={(event) => setAnchorEl(event.currentTarget)}
+        >
+            {Boolean(anchorEl) ? <ArrowDropUpIcon /> : <ArrowDropDown />}
+        </IconButton>
+        <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
+        >
+            {...REQUIREMENTS_VALUES.map((e, index) => <MenuItem
+                onClick={() => handleSelection(e as unknown as RequirementsType)}>
+                <ListItemIcon>
+                    {selectedElements.includes(e as unknown as RequirementsType)
+                        ? <CheckBoxIcon fontSize="small" />
+                        : <CheckBoxOutlineBlank fontSize="small" />
+                    }
+                </ListItemIcon>
+                <ListItemText>
+                    {e}
+                </ListItemText>
+            </MenuItem>)}
+            <Divider />
+            <MenuItem>
+
+                <Button color="primary" variant="contained" type="submit" size="small" onClick={handleSubmit}>
+                    {t('save')}
+                </Button>
+            </MenuItem>
+        </Menu></>;
 };
 
 
