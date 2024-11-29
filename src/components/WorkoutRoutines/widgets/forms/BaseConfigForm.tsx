@@ -25,6 +25,7 @@ import {
 import {
     useAddMaxRepsConfigQuery,
     useAddMaxRestConfigQuery,
+    useAddMaxRiRConfigQuery,
     useAddMaxWeightConfigQuery,
     useAddNrOfSetsConfigQuery,
     useAddRepsConfigQuery,
@@ -33,6 +34,7 @@ import {
     useAddWeightConfigQuery,
     useDeleteMaxRepsConfigQuery,
     useDeleteMaxRestConfigQuery,
+    useDeleteMaxRiRConfigQuery,
     useDeleteMaxWeightConfigQuery,
     useDeleteNrOfSetsConfigQuery,
     useDeleteRepsConfigQuery,
@@ -41,6 +43,7 @@ import {
     useDeleteWeightConfigQuery,
     useEditMaxRepsConfigQuery,
     useEditMaxRestConfigQuery,
+    useEditMaxRiRConfigQuery,
     useEditMaxWeightConfigQuery,
     useEditNrOfSetsConfigQuery,
     useEditRepsConfigQuery,
@@ -103,6 +106,11 @@ export const QUERY_MAP: { [key: string]: any } = {
         add: useAddRiRConfigQuery,
         delete: useDeleteRiRConfigQuery
     },
+    'max-rir': {
+        edit: useEditMaxRiRConfigQuery,
+        add: useAddMaxRiRConfigQuery,
+        delete: useDeleteMaxRiRConfigQuery
+    },
 };
 
 
@@ -115,7 +123,8 @@ export type ConfigType =
     | 'max-sets'
     | 'rest'
     | 'max-rest'
-    | 'rir';
+    | 'rir'
+    | 'max-rir';
 
 export const SlotBaseConfigValueField = (props: {
     config?: BaseConfig,
@@ -172,6 +181,9 @@ export const SlotBaseConfigValueField = (props: {
 
     return (<>
         <TextField
+            slotProps={{
+                input: { endAdornment: isPending && <LoadingProgressIcon /> }
+            }}
             inputProps={{
                 "data-testid": `${props.type}-field`,
             }}
@@ -181,9 +193,6 @@ export const SlotBaseConfigValueField = (props: {
             variant="standard"
             disabled={isPending}
             onChange={e => onChange(e.target.value)}
-            InputProps={{
-                endAdornment: isPending && <LoadingProgressIcon />
-            }}
         />
     </>);
 };

@@ -51,10 +51,9 @@ export const ProgressionForm = (props: {
     const { t } = useTranslation();
     const [linkMinMax, setLinkMinMax] = useState<boolean>(true);
     const [iterationsToDelete, setIterationsToDelete] = useState<number[]>([]);
+    const processEntries = useProcessConfigsQuery(props.routineId);
 
     const forceInteger = props.forceInteger ?? false;
-
-    const processEntries = useProcessConfigsQuery(props.routineId);
 
     let apiPath: ApiPath;
     let apiPathMax: ApiPath;
@@ -80,8 +79,12 @@ export const ProgressionForm = (props: {
             apiPathMax = ApiPath.MAX_REST_CONFIG;
             title = t('routines.restTime');
             break;
+        case "rir":
+            apiPath = ApiPath.RIR_CONFIG;
+            apiPathMax = ApiPath.MAX_RIR_CONFIG;
+            title = t('routines.rir');
+            break;
     }
-
 
     const validationSchema = yup.object({
         entries: yup.array().of(
@@ -160,8 +163,8 @@ export const ProgressionForm = (props: {
                 id: config.id,
                 idMax: configMax === undefined ? null : configMax.id,
                 iteration: iteration,
-                value: config.value,
-                valueMax: configMax === undefined ? '' : configMax.value,
+                value: parseFloat(String(config.value)),
+                valueMax: configMax === undefined ? '' : parseFloat(String(configMax.value)),
                 operation: config.operation,
                 operationMax: configMax === undefined ? OPERATION_REPLACE : config.operation,
                 step: config.step,
@@ -240,7 +243,7 @@ export const ProgressionForm = (props: {
     };
 
     return <>
-        <Stack>
+        <Stack sx={{ width: '100%' }}>
             <Typography variant={"h6"}>{title}</Typography>
             <Formik
                 enableReinitialize
@@ -253,7 +256,7 @@ export const ProgressionForm = (props: {
             >
                 {formik => (
                     <Form>
-                        <TableContainer sx={{ width: '100%' }}>
+                        <TableContainer>
                             <Table size="small">
                                 <TableHead>
                                     <TableRow>
@@ -384,10 +387,7 @@ export const ProgressionForm = (props: {
                                                                     values={log.requirements}
                                                                     fieldName={`entries.${index}.requirements`} />}
                                                             {log.requirements.length >= 0 && log.requirements.map((requirement, index) => (
-                                                                <Typography
-                                                                    key={index}
-                                                                    variant={'caption'}
-                                                                >
+                                                                <Typography key={index} variant={'caption'}>
                                                                     {requirement} &nbsp;
                                                                 </Typography>
                                                             ))}

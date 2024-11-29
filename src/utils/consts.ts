@@ -73,6 +73,7 @@ export enum ApiPath {
     REPS_CONFIG = 'reps-config',
     MAX_REPS_CONFIG = 'max-reps-config',
     RIR_CONFIG = 'rir-config',
+    MAX_RIR_CONFIG = 'max-rir-config',
     NR_OF_SETS_CONFIG = 'sets-config',
     MAX_NR_OF_SETS_CONFIG = 'max-sets-config',
     REST_CONFIG = 'rest-config',

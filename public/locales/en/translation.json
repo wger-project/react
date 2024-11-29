@@ -204,6 +204,7 @@
     "addSet": "Add set",
     "addExercise": "Add exercise",
     "editProgression": "Edit progression",
+    "exerciseHasProgression": "This exercise has progression rules and can't be edited here. To do so, click the button.",
     "newDay": "New day",
     "addWeightLog": "Add training log",
     "logsOverview": "Logs overview",

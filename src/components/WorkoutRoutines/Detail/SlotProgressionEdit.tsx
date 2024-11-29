@@ -103,6 +103,14 @@ export const SlotProgressionEdit = () => {
                             routineId={routineId}
                             iterations={iterations}
                         />
+                        <ProgressionForm
+                            type="rir"
+                            configs={config.rirConfigs}
+                            configsMax={config.maxRirConfigs}
+                            slotEntryId={config.id}
+                            routineId={routineId}
+                            iterations={iterations}
+                        />
                     </Grid>
                 </React.Fragment>
             )}

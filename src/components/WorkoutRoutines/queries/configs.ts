@@ -3,6 +3,7 @@ import {
     addMaxNrOfSetsConfig,
     addMaxRepsConfig,
     addMaxRestConfig,
+    addMaxRirConfig,
     addMaxWeightConfig,
     addNrOfSetsConfig,
     addRepsConfig,
@@ -12,6 +13,7 @@ import {
     deleteMaxNrOfSetsConfig,
     deleteMaxRepsConfig,
     deleteMaxRestConfig,
+    deleteMaxRirConfig,
     deleteMaxWeightConfig,
     deleteNrOfSetsConfig,
     deleteRepsConfig,
@@ -21,6 +23,7 @@ import {
     editMaxNrOfSetsConfig,
     editMaxRepsConfig,
     editMaxRestConfig,
+    editMaxRirConfig,
     editMaxWeightConfig,
     editNrOfSetsConfig,
     editRepsConfig,
@@ -284,6 +287,36 @@ export const useDeleteRiRConfigQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (id: number) => deleteRirConfig(id),
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
+    });
+};
+export const useEditMaxRiRConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: EditBaseConfigParams) => editMaxRirConfig(data),
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
+    });
+};
+export const useAddMaxRiRConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: AddBaseConfigParams) => addMaxRirConfig(data),
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
+        })
+    });
+};
+export const useDeleteMaxRiRConfigQuery = (routineId: number) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: number) => deleteMaxRirConfig(id),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
         })

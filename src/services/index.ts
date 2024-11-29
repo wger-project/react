@@ -80,6 +80,9 @@ export {
     addMaxNrOfSetsConfig,
     editMaxNrOfSetsConfig,
     deleteMaxNrOfSetsConfig,
+    addMaxRirConfig,
+    editMaxRirConfig,
+    deleteMaxRirConfig,
 } from './config'
 
 export { addSession, editSession, searchSession } from './session';

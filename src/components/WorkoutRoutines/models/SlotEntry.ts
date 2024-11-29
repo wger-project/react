@@ -32,6 +32,7 @@ export class SlotEntry {
     nrOfSetsConfigs: BaseConfig[] = [];
     maxNrOfSetsConfigs: BaseConfig[] = [];
     rirConfigs: BaseConfig[] = [];
+    maxRirConfigs: BaseConfig[] = [];
 
     exercise?: Exercise;
     repetitionUnit: RepetitionUnit | null = null;
@@ -60,7 +61,8 @@ export class SlotEntry {
                 maxRestTimeConfigs?: BaseConfig[],
                 nrOfSetsConfigs?: BaseConfig[],
                 maxNrOfSetsConfigs?: BaseConfig[],
-                rirConfigs?: BaseConfig[]
+                rirConfigs?: BaseConfig[],
+                maxRirConfigs?: BaseConfig[],
             }
         }
     ) {
@@ -86,7 +88,21 @@ export class SlotEntry {
             this.nrOfSetsConfigs = data.configs.nrOfSetsConfigs ?? [];
             this.maxNrOfSetsConfigs = data.configs.maxNrOfSetsConfigs ?? [];
             this.rirConfigs = data.configs.rirConfigs ?? [];
+            this.maxRirConfigs = data.configs.maxRirConfigs ?? [];
         }
+    }
+
+    get hasProgressionRules(): boolean {
+        return this.weightConfigs.length > 1
+            || this.maxWeightConfigs.length > 1
+            || this.repsConfigs.length > 1
+            || this.maxRepsConfigs.length > 1
+            || this.restTimeConfigs.length > 1
+            || this.maxRestTimeConfigs.length > 1
+            || this.nrOfSetsConfigs.length > 1
+            || this.maxNrOfSetsConfigs.length > 1
+            || this.rirConfigs.length > 1
+            || this.maxRirConfigs.length > 1;
     }
 }
 
@@ -102,7 +118,8 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
             maxRestTimeConfigs: [],
             nrOfSetsConfigs: [],
             maxNrOfSetsConfigs: [],
-            rirConfigs: []
+            rirConfigs: [],
+            maxRirConfigs: [],
         };
         if (item.hasOwnProperty('weight_configs')) {
             configs.weightConfigs = item.weight_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
@@ -130,6 +147,9 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
         }
         if (item.hasOwnProperty('rir_configs')) {
             configs.rirConfigs = item.rir_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+        }
+        if (item.hasOwnProperty('max_rir_configs')) {
+            configs.maxRirConfigs = item.max_rir_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
 
         return new SlotEntry({
