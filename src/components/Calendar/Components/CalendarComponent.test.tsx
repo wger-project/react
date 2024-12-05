@@ -1,9 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { WeightEntry } from "components/BodyWeight/model";
 import i18n from "i18next";
 import React from "react";
 import { I18nextProvider } from "react-i18next";
 import { BrowserRouter } from "react-router-dom";
-import { WeightEntry } from "../../BodyWeight/model";
+import { dateToYYYYMMDD } from "utils/date";
 import { useBodyWeightQuery } from "../../BodyWeight/queries";
 import { MeasurementCategory } from "../../Measurements/models/Category";
 import { MeasurementEntry } from "../../Measurements/models/Entry";
@@ -18,15 +20,25 @@ jest.mock('../../Measurements/queries', () => ({
     useMeasurementsCategoryQuery: jest.fn(),
 }));
 
+// TODO: using jest.useFakeTimers() and jest.setSystemTime(new Date('2024-12-01'));
+//       seems to break the test and they never complete. As a workaround the dates
+//       for the entries are set to the 1st and 2nd of the month, but that means
+//       that this test won't work on the 1st of every month since days in the future
+//       are not clickable.
+
+
 describe('CalendarComponent', () => {
     const today = new Date();
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth();
 
+    const user = userEvent.setup();
+
     beforeEach(() => {
+
         (useBodyWeightQuery as jest.Mock).mockReturnValue({
             data: [
-                new WeightEntry(new Date(currentYear, currentMonth, 5), 70),
+                new WeightEntry(new Date(currentYear, currentMonth, 2, 12, 0), 70),
             ],
         });
 
@@ -36,7 +48,7 @@ describe('CalendarComponent', () => {
                     1,
                     "Body Fat",
                     "%",
-                    [new MeasurementEntry(1, 1, new Date(currentYear, currentMonth, 10), 20, "Normal")]
+                    [new MeasurementEntry(1, 1, new Date(currentYear, currentMonth, 1, 12, 0), 20, "Normal")]
                 ),
             ],
         });
@@ -91,19 +103,28 @@ describe('CalendarComponent', () => {
         expect(screen.getByText(`${currentMonthName} ${currentYear}`)).toBeInTheDocument();
     });
 
-    test('displays measurement details for selected day', () => {
+    test('displays measurement details for selected day', async () => {
+        // Arrange
         renderComponent();
 
-        const tenthDay = screen.getByText('10');
-        fireEvent.click(tenthDay);
+        // Act
+        const day = screen.getByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 1))}`);
+        await user.click(day);
+
+        // Assert
         expect(screen.getByText(/body fat: 20 %/i)).toBeInTheDocument();
     });
 
-    test('displays weight details for selected day', () => {
+    test('displays weight details for selected day', async () => {
+        // Arrange
         renderComponent();
 
-        const fifthDay = screen.getByText('5');
-        fireEvent.click(fifthDay);
+        // Act
+        const day = screen.getByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 2))}`);
+        await user.click(day);
+        screen.logTestingPlaygroundURL();
+
+        // Assert
         expect(screen.getByText('70.0 kg')).toBeInTheDocument();
     });
 });

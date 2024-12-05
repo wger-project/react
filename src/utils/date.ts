@@ -103,7 +103,7 @@ export function calculatePastDate(filter: FilterType, currentDate: Date = new Da
     if (applyFilter) {
         applyFilter();
     } else {
-        return undefined;  
+        return undefined;
     }
 
     return dateToYYYYMMDD(currentDate);

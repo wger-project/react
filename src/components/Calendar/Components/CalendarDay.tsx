@@ -1,7 +1,7 @@
+import { useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
-import {useMediaQuery, useTheme} from '@mui/material';
-import {DayProps} from "./CalendarComponent";
-import {isSameDay} from "../../../utils/date";
+import { dateToYYYYMMDD, isSameDay } from "../../../utils/date";
+import { DayProps } from "./CalendarComponent";
 
 interface CalendarDayProps {
     day: DayProps;
@@ -11,7 +11,7 @@ interface CalendarDayProps {
     onClick: (day: DayProps) => void;
 }
 
-const CalendarDay: React.FC<CalendarDayProps> = ({day, currentMonth, currentDate, selectedDay, onClick}) => {
+const CalendarDay: React.FC<CalendarDayProps> = ({ day, currentMonth, currentDate, selectedDay, onClick }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const isTablet = useMediaQuery(theme.breakpoints.down('md'));
@@ -25,11 +25,9 @@ const CalendarDay: React.FC<CalendarDayProps> = ({day, currentMonth, currentDate
     const isWeekend = day.date.getDay() === 6 || day.date.getDay() === 0;
 
     const getDayColor = (): string => {
-        return isSelected ? 'white'
-            : isToday ? 'white'
-            : !isClickable ? 'gray'
-            : isWeekend ? '#E53945'
-            : 'black';
+        if (isSelected || isToday) return 'white';
+        if (!isClickable) return 'gray';
+        return isWeekend ? '#E53945' : 'black';
     };
 
     const getDaySize = () => {
@@ -47,7 +45,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({day, currentMonth, currentDate
     const hasDayEntry = () => {
         return day.measurements.length > 0 ||
             day.weightEntry !== undefined;
-    }
+    };
 
     const handleClick = () => {
         if (isClickable) {
@@ -82,6 +80,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({day, currentMonth, currentDate
                     cursor: isClickable ? 'pointer' : 'default',
                     opacity: day.date.getMonth() !== currentMonth ? 0.25 : 1,
                 }}
+                data-testid={`day-${dateToYYYYMMDD(day.date)}`}
                 onClick={handleClick}
             >
                 {day.date.getDate()}
