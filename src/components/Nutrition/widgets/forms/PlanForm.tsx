@@ -96,7 +96,6 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-
                 // eslint-disable-next-line camelcase
                 values.goal_energy = values.goal_energy ? values.goal_energy : null;
                 // eslint-disable-next-line camelcase
@@ -107,6 +106,14 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                 values.goal_fiber = values.goal_fiber ? values.goal_fiber : null;
                 // eslint-disable-next-line camelcase
                 values.goal_fat = values.goal_fat ? values.goal_fat : null;
+
+                if (!useGoals) {
+                    values.goal_energy = null;
+                    values.goal_protein = null;
+                    values.goal_carbohydrates = null;
+                    values.goal_fiber = null;
+                    values.goal_fat = null;
+                }
 
                 if (plan) {
                     editPlanQuery.mutate({ ...values, id: plan.id });
@@ -159,15 +166,18 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                         {/*        <MenuItem value={30}>Set advanced macros</MenuItem>*/}
                         {/*    </Select>*/}
                         {/*</FormControl>*/}
-                        <FormControlLabel
-                            label={t('nutrition.useGoalsHelpText')}
-                            control={
-                                <Switch
-                                    id="goalEnergy"
-                                    checked={useGoals}
-                                    onChange={() => setUseGoals(!useGoals)}
-                                />}
-                        />
+                        <FormGroup>
+                            <FormControlLabel
+                                label={t('nutrition.useGoalsHelpText')}
+                                control={
+                                    <Switch
+                                        id="goalEnergy"
+                                        checked={useGoals}
+                                        onChange={() => setUseGoals(!useGoals)}
+                                        
+                                    />}
+                            />
+                       </FormGroup>
                         <FormHelperText>{t('nutrition.useGoalsHelpTextLong')}</FormHelperText>
 
 
