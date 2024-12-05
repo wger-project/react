@@ -1,11 +1,13 @@
-import { testExerciseSquats } from "tests/exerciseTestdata";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
+import { testExerciseSquats } from "tests/exerciseTestdata";
 import { testRepUnitRepetitions, testWeightUnitKg } from "tests/workoutRoutinesTestData";
 
 const testWorkoutLog1 = new WorkoutLog(
     5,
     new Date(2023, 1, 1),
     345,
+    1,
+    123,
     1,
     8,
     80,
@@ -21,6 +23,8 @@ const testWorkoutLog2 = new WorkoutLog(
     new Date(2023, 1, 2),
     345,
     1,
+    123,
+    1,
     8,
     82.5,
     1,
@@ -35,6 +39,8 @@ const testWorkoutLog3 = new WorkoutLog(
     new Date(2023, 1, 3),
     345,
     1,
+    123,
+    1,
     8,
     85,
     1,
@@ -48,6 +54,8 @@ const testWorkoutLog4 = new WorkoutLog(
     8,
     new Date(2023, 1, 10),
     345,
+    1,
+    123,
     1,
     8,
     10,

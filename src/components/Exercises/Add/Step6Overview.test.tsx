@@ -5,7 +5,7 @@ import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuer
 import { useProfileQuery } from "components/User/queries/profile";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { useExerciseStateValue } from "state";
+import { useExerciseSubmissionStateValue } from "state";
 import { testCategories, testEquipment, testLanguages, testMuscles } from "tests/exerciseTestdata";
 import { testProfileDataVerified } from "tests/userTestdata";
 
@@ -19,7 +19,7 @@ const mockedUseCategoriesQuery = useCategoriesQuery as jest.Mock;
 const mockedMuscleQuery = useMusclesQuery as jest.Mock;
 const mockedUseEquipmentQuery = useEquipmentQuery as jest.Mock;
 const mockedLanguageQuery = useLanguageQuery as jest.Mock;
-const mockedUseExerciseStateValue = useExerciseStateValue as jest.Mock;
+const mockedUseExerciseStateValue = useExerciseSubmissionStateValue as jest.Mock;
 const mockedUseProfileQuery = useProfileQuery as jest.Mock;
 
 const queryClient = new QueryClient();

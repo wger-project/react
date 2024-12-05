@@ -7,16 +7,16 @@ import React from 'react';
 export const Dashboard = () => {
 
     return (
-        (<Grid container spacing={2}>
-            <Grid size={4}>
+        <Grid container spacing={2}>
+            <Grid size={{ xs: 12, sm: 4 }}>
                 <RoutineCard />
             </Grid>
-            <Grid size={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
                 <NutritionCard />
             </Grid>
-            <Grid size={4}>
+            <Grid size={{ xs: 12, sm: 4 }}>
                 <WeightCard />
             </Grid>
-        </Grid>)
+        </Grid>
     );
 };

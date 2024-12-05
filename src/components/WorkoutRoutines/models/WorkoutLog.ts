@@ -5,20 +5,32 @@ import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit
 import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
 import { Adapter } from "utils/Adapter";
 
+export interface LogEntryForm {
+    exercise: Exercise | null;
+    repsUnit: RepetitionUnit | null;
+    weightUnit: WeightUnit | null;
+    rir: number | string;
+    reps: number | string;
+    weight: number | string;
+}
+
+
 export class WorkoutLog {
 
     constructor(
         public id: number,
         public date: Date,
+        public iteration: number,
         public exerciseId: number,
-        public repetitionUnit: number,
+        public slotEntryId: number,
+        public repetitionUnitId: number,
         public reps: number,
         public weight: number | null,
-        public weightUnit: number,
+        public weightUnitId: number,
         public rir: string | null,
         public repetitionUnitObj?: RepetitionUnit,
         public weightUnitObj?: WeightUnit,
-        public baseObj?: Exercise,
+        public exerciseObj?: Exercise,
     ) {
         if (repetitionUnitObj) {
             this.repetitionUnitObj = repetitionUnitObj;
@@ -28,8 +40,8 @@ export class WorkoutLog {
             this.weightUnitObj = weightUnitObj;
         }
 
-        if (baseObj) {
-            this.baseObj = baseObj;
+        if (exerciseObj) {
+            this.exerciseObj = exerciseObj;
         }
     }
 
@@ -44,7 +56,9 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         return new WorkoutLog(
             item.id,
             new Date(item.date),
+            item.iteration,
             item.exercise_base,
+            item.set_config,
             item.repetition_unit,
             item.reps,
             item.weight === null ? null : Number.parseFloat(item.weight),
@@ -53,15 +67,16 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         );
     }
 
-    toJson(item: WorkoutLog):
-        any {
+    toJson(item: WorkoutLog) {
         return {
             id: item.id,
+            iteration: item.iteration,
+            set_config: item.slotEntryId,
             exercise_base: item.exerciseId,
-            repetition_unit: item.repetitionUnit,
+            repetition_unit: item.repetitionUnitId,
             reps: item.reps,
             weight: item.weight,
-            weight_unit: item.weightUnit,
+            weight_unit: item.weightUnitId,
             rir: item.rir,
         };
     }
