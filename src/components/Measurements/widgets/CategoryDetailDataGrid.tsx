@@ -19,7 +19,7 @@ import { MeasurementCategory } from "components/Measurements/models/Category";
 import { MeasurementEntry } from "components/Measurements/models/Entry";
 import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "components/Measurements/queries";
 import { DateTime } from "luxon";
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PAGINATION_OPTIONS } from "utils/consts";
 
@@ -34,14 +34,16 @@ const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp => {
         };
     });
 };
+
+
 export const CategoryDetailDataGrid = (props: { category: MeasurementCategory }) => {
 
     const [t] = useTranslation();
     const data: GridRowsProp = convertEntriesToObj(props.category.entries);
     const updateEntryQuery = useEditMeasurementEntryQuery();
     const deleteEntryQuery = useDeleteMeasurementsQuery();
-    const [rows, setRows] = React.useState(data);
-    const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+    const [rows, setRows] = useState(data);
+    const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
@@ -205,9 +207,9 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             onRowEditStop={handleRowEditStop}
             processRowUpdate={processRowUpdate}
             onProcessRowUpdateError={onProcessRowUpdateError}
-            slotProps={{
-                toolbar: { setRows, setRowModesModel },
-            }}
+            // slotProps={{
+            //     toolbar: { setRows, setRowModesModel },
+            //}}
         />
     </Box>;
 };
