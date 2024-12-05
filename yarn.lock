@@ -5369,10 +5369,10 @@ react-router@6.27.0:
   dependencies:
     "@remix-run/router" "1.20.0"
 
-react-simple-wysiwyg@^3.1.1:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/react-simple-wysiwyg/-/react-simple-wysiwyg-3.1.3.tgz#05a18df035ea750246a9fff2f462eac7812aaf53"
-  integrity sha512-CusZCnqcIvJff1/phSLodO+zpx9L/P2kvhjEah6/jh8z2Ap9WcirN/oytvdHvNgIpXy3XX/gm1syrSJJ9PRa7Q==
+react-simple-wysiwyg@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/react-simple-wysiwyg/-/react-simple-wysiwyg-3.2.0.tgz#319bc90687659543050269566496f142500daaa1"
+  integrity sha512-Iaqoe3GxnDKtx5otvM1TnYh7GrP+VxysI6QuqKwnbhkqSmo2MPm0xbZYsmNRmO7w4S5AyVlqprRu1MEImqj2sw==
 
 react-smooth@^4.0.0:
   version "4.0.1"
