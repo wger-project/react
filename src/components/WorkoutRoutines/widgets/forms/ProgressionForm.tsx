@@ -27,7 +27,6 @@ import {
     OPERATION_REPLACE,
     OPERATION_VALUES_SELECT,
     REQUIREMENTS_VALUES,
-    RequirementsType,
     STEP_VALUES_SELECT
 } from "components/WorkoutRoutines/models/BaseConfig";
 import { useProcessConfigsQuery } from "components/WorkoutRoutines/queries/configs";
@@ -163,14 +162,14 @@ export const ProgressionForm = (props: {
                 id: config.id,
                 idMax: configMax === undefined ? null : configMax.id,
                 iteration: iteration,
-                value: parseFloat(String(config.value)),
-                valueMax: configMax === undefined ? '' : parseFloat(String(configMax.value)),
+                value: String(config.value),
+                valueMax: configMax === undefined ? '' : String(configMax.value),
                 operation: config.operation,
                 operationMax: configMax === undefined ? OPERATION_REPLACE : config.operation,
                 step: config.step,
                 stepMax: configMax === undefined ? "abs" : configMax.step,
-                requirements: ['weight', 'reps'] as unknown as RequirementsType[],
-                requirementsMax: [],
+                requirements: config.requirements?.rules ?? [],
+                requirementsMax: configMax === undefined ? [] : configMax.requirements?.rules ?? [],
                 repeat: config.repeat,
                 repeatMax: configMax === undefined ? false : config.repeat,
             });
@@ -191,6 +190,7 @@ export const ProgressionForm = (props: {
             step: data.step,
             repeat: data.repeat,
             need_log_to_apply: false,
+            requirements: { rules: data.requirements ?? [] }
         }));
         const addList: AddBaseConfigParams[] = data.filter(data => data.id === null && data.value !== '').map(data => ({
             slot_entry: props.slotEntryId,
@@ -200,6 +200,7 @@ export const ProgressionForm = (props: {
             step: data.step,
             repeat: data.repeat,
             need_log_to_apply: false,
+            requirements: { rules: data.requirements ?? [] }
         }));
         // Items to delete, also includes all where the value is empty
         const deleteList = props.configs.filter(c => iterationsToDelete.includes(c.iteration)).map(c => c.id);
@@ -219,6 +220,7 @@ export const ProgressionForm = (props: {
             step: data.step,
             repeat: data.repeat,
             need_log_to_apply: false,
+            requirements: { rules: data.requirements ?? [] }
         }));
         const addListMax: AddBaseConfigParams[] = data.filter(data => data.idMax === null && data.valueMax !== '').map(data => ({
             iteration: data.iteration,
@@ -228,6 +230,7 @@ export const ProgressionForm = (props: {
             step: data.stepMax,
             repeat: data.repeat,
             need_log_to_apply: false,
+            requirements: { rules: data.requirements ?? [] }
         }));
         // Items to delete, also includes all where the value is empty
         const deleteListMax = props.configsMax.filter(c => iterationsToDelete.includes(c.iteration)).map(c => c.id);
@@ -256,6 +259,7 @@ export const ProgressionForm = (props: {
             >
                 {formik => (
                     <Form>
+
                         <TableContainer>
                             <Table size="small">
                                 <TableHead>

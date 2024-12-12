@@ -122,7 +122,6 @@ describe('CalendarComponent', () => {
         // Act
         const day = screen.getByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 2))}`);
         await user.click(day);
-        screen.logTestingPlaygroundURL();
 
         // Assert
         expect(screen.getByText('70.0 kg')).toBeInTheDocument();

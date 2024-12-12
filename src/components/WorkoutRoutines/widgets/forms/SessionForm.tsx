@@ -118,7 +118,7 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
 
                 if (session !== undefined) {
                     // @ts-ignore String vs string
-                    editSessionQuery.mutateAsync({
+                    await editSessionQuery.mutateAsync({
                         ...data,
                         id: session.id
                     });

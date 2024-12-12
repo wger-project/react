@@ -21,7 +21,7 @@ export interface BaseConfigEntryForm {
 
 export const OPERATION_REPLACE = 'r';
 
-export const REQUIREMENTS_VALUES = ["weight", "reps", "rir", "sets", "rest"] as const
+export const REQUIREMENTS_VALUES = ["weight", "reps", "rir", "rest"] as const
 
 export type OperationType = "+" | "-" | "r";
 export type StepType = "abs" | "percent";
@@ -47,19 +47,45 @@ export const RIR_VALUES_SELECT = [
     { value: '4.5', label: '4+' }
 ] as const;
 
-export class BaseConfig {
+export interface RuleRequirements {
+    rules: RequirementsType[];
+}
 
-    constructor(
-        public id: number,
-        public slotEntryId: number,
-        public iteration: number,
-        public trigger: "session" | "week" | null,
-        public value: number,
-        public operation: OperationType,
-        public step: StepType,
-        public needLogToApply: boolean,
-        public repeat: boolean
-    ) {
+export class BaseConfig {
+    id: number;
+    slotEntryId: number;
+    iteration: number;
+    trigger: "session" | "week" | null;
+    value: number;
+    operation: OperationType;
+    step: StepType;
+    needLogToApply: boolean;
+    repeat: boolean;
+    requirements: RuleRequirements | null;
+
+
+    constructor(data: {
+        id: number;
+        slotEntryId: number;
+        iteration: number;
+        trigger: "session" | "week" | null;
+        value: number;
+        operation: OperationType;
+        step: StepType;
+        needLogToApply: boolean;
+        repeat: boolean;
+        requirements: RuleRequirements | null;
+    }) {
+        this.id = data.id;
+        this.slotEntryId = data.slotEntryId;
+        this.iteration = data.iteration;
+        this.trigger = data.trigger;
+        this.value = data.value;
+        this.operation = data.operation;
+        this.step = data.step;
+        this.needLogToApply = data.needLogToApply;
+        this.repeat = data.repeat;
+        this.requirements = data.requirements;
     }
 
     get replace() {
@@ -68,17 +94,18 @@ export class BaseConfig {
 }
 
 export class BaseConfigAdapter implements Adapter<BaseConfig> {
-    fromJson = (item: any) => new BaseConfig(
-        item.id,
-        item.slot_entry,
-        item.iteration,
-        item.trigger,
-        parseFloat(item.value),
-        item.operation,
-        item.step,
-        item.need_log_to_apply,
-        item.repeat
-    );
+    fromJson = (item: any) => new BaseConfig({
+        id: item.id,
+        slotEntryId: item.slot_entry,
+        iteration: item.iteration,
+        trigger: item.trigger,
+        value: parseFloat(item.value),
+        operation: item.operation,
+        step: item.step,
+        needLogToApply: item.need_log_to_apply,
+        repeat: item.repeat,
+        requirements: item.requirements
+    });
 
     toJson = (item: BaseConfig) => ({
         slot_entry: item.slotEntryId,
@@ -88,6 +115,7 @@ export class BaseConfigAdapter implements Adapter<BaseConfig> {
         operation: item.operation,
         step: item.step,
         need_log_to_apply: item.needLogToApply,
-        repeat: item.repeat
+        repeat: item.repeat,
+        requirements: item.requirements,
     });
 }

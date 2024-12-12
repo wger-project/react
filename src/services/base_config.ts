@@ -1,5 +1,11 @@
 import axios from 'axios';
-import { BaseConfig, BaseConfigAdapter, OperationType, StepType } from "components/WorkoutRoutines/models/BaseConfig";
+import {
+    BaseConfig,
+    BaseConfigAdapter,
+    OperationType,
+    RuleRequirements,
+    StepType
+} from "components/WorkoutRoutines/models/BaseConfig";
 import { ApiPath } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 
@@ -10,6 +16,7 @@ export interface AddBaseConfigParams {
     operation?: OperationType;
     step?: StepType;
     need_log_to_apply?: boolean;
+    requirements?: RuleRequirements;
 }
 
 export interface EditBaseConfigParams extends Partial<AddBaseConfigParams> {
@@ -17,6 +24,9 @@ export interface EditBaseConfigParams extends Partial<AddBaseConfigParams> {
 }
 
 export const processBaseConfigs = async (toAdd: AddBaseConfigParams[], toEdit: EditBaseConfigParams[], toDelete: number[], apiPath: ApiPath): Promise<void> => {
+
+    // TODO: handle errors
+
 
     for (const entry of toAdd) {
         await addBaseConfig(entry, apiPath);

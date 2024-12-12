@@ -111,7 +111,7 @@ describe('SessionForm', () => {
 
         // Assert
         await waitFor(() => {
-            screen.logTestingPlaygroundURL();
+            // screen.logTestingPlaygroundURL();
             expect((screen.getByRole('textbox', { name: /notes/i }) as HTMLTextAreaElement).value).toBe('Test notes');
 
             // The date and time pickers are localized

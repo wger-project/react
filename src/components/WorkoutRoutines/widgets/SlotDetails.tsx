@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 import { getLanguageByShortName } from "services";
 import { ExerciseSearchResponse } from "services/responseType";
 
-const configTypes = ["weight", "max-weight", "reps", "max-reps", "sets", "rest", "max-rest", "rir"] as const;
+const configTypes = ["weight", "max-weight", "reps", "max-reps", "max-sets", "sets", "rest", "max-rest", "rir"] as const;
 type ConfigType = typeof configTypes[number];
 
 const getConfigComponent = (type: ConfigType, configs: BaseConfig[], routineId: number, slotEntryId: number) => {
@@ -60,7 +60,7 @@ export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: 
 };
 
 export const SlotEntryDetails = (props: { slotEntry: SlotEntry, routineId: number, simpleMode: boolean }) => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const [editExercise, setEditExercise] = useState(false);
     const toggleEditExercise = () => setEditExercise(!editExercise);
@@ -88,10 +88,81 @@ export const SlotEntryDetails = (props: { slotEntry: SlotEntry, routineId: numbe
         );
     }
 
+    const getForm = () => (props.simpleMode
+            ? <React.Fragment>
+                <Grid
+                    key={`sets-config-${props.slotEntry.id}`}
+                    size={{ xs: 12, sm: 2, }}>
+                    {getConfigComponent('sets', props.slotEntry.nrOfSetsConfigs, props.routineId, props.slotEntry.id)}
+                </Grid>
+                <Grid
+                    key={`weight-config-${props.slotEntry.id}`}
+                    size={{ xs: 12, sm: 3 }}>
+                    {getConfigComponent('weight', props.slotEntry.weightConfigs, props.routineId, props.slotEntry.id)}
+                </Grid>
+                <Grid
+                    key={`reps-config-${props.slotEntry.id}`}
+                    size={{ xs: 12, sm: 3 }}>
+                    {getConfigComponent('reps', props.slotEntry.repsConfigs, props.routineId, props.slotEntry.id)}
+                </Grid>
+            </React.Fragment>
+
+            // Show all config details in advanced mode, also in a grid
+            : <React.Fragment>
+
+                <Grid size={{ xs: 6, sm: 1 }}>
+                    {getConfigComponent('sets', props.slotEntry.nrOfSetsConfigs, props.routineId, props.slotEntry.id)}
+                </Grid>
+                <Grid size={{ xs: 6, sm: 1 }}>
+                    {getConfigComponent('max-sets', props.slotEntry.maxNrOfSetsConfigs, props.routineId, props.slotEntry.id)}
+                </Grid>
+                <Grid size={{ xs: 6, sm: 2 }}>
+                    <SlotEntryTypeField routineId={props.routineId} slotEntry={props.slotEntry} />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 2 }}>
+                    <ConfigDetailsRiRField
+                        routineId={props.routineId}
+                        config={props.slotEntry.rirConfigs.length > 0 ? props.slotEntry.rirConfigs[0] : undefined}
+                        slotEntryId={props.slotEntry.id}
+                    />
+                </Grid>
+
+                <Grid size={{ xs: 6, sm: 1 }}>
+                    {getConfigComponent('rest', props.slotEntry.restTimeConfigs, props.routineId, props.slotEntry.id)}
+                </Grid>
+                <Grid size={{ xs: 6, sm: 1 }}>
+                    {getConfigComponent('max-rest', props.slotEntry.maxRestTimeConfigs, props.routineId, props.slotEntry.id)}
+                </Grid>
+
+
+                <Grid size={{ xs: 6, sm: 2 }} offset={{ sm: 4 }}>
+                    {getConfigComponent('weight', props.slotEntry.weightConfigs, props.routineId, props.slotEntry.id)}
+                </Grid>
+                <Grid size={{ xs: 6, sm: 2 }}>
+                    {getConfigComponent('max-weight', props.slotEntry.maxWeightConfigs, props.routineId, props.slotEntry.id)}
+                </Grid>
+                <Grid size={{ xs: 12, sm: 4 }}>
+                    <SlotEntryWeightUnitField slotEntry={props.slotEntry} routineId={props.routineId} />
+                </Grid>
+
+
+                <Grid size={{ xs: 6, sm: 2 }} offset={{ sm: 4 }}>
+                    {getConfigComponent('reps', props.slotEntry.repsConfigs, props.routineId, props.slotEntry.id)}
+                </Grid>
+                <Grid size={{ xs: 6, sm: 2 }}>
+                    {getConfigComponent('max-reps', props.slotEntry.maxRepsConfigs, props.routineId, props.slotEntry.id)}
+                </Grid>
+                <Grid size={{ xs: 12, sm: 4 }}>
+                    <SlotEntryRepetitionUnitField slotEntry={props.slotEntry} routineId={props.routineId} />
+                </Grid>
+
+            </React.Fragment>
+    );
+
     return (
         (<React.Fragment>
             <Grid container spacing={1}>
-                <Grid size={{ xs: 3, sm: 1 }}>
+                <Grid size={{ xs: 3, sm: 1 }} alignContent={"center"}>
                     {/*<IconButton size={"small"} onClick={toggleEditExercise} disabled={true}>*/}
                     {/*    <DragHandle />*/}
                     {/*</IconButton>*/}
@@ -107,7 +178,7 @@ export const SlotEntryDetails = (props: { slotEntry: SlotEntry, routineId: numbe
                     </IconButton>
                 </Grid>
 
-                <Grid size={{ xs: 9, sm: 3 }}>
+                <Grid size={{ xs: 9, sm: 3 }} alignContent={"center"}>
                     <Typography variant={"h6"}>
                         {props.slotEntry.exercise?.getTranslation(language).name}
                     </Typography>
@@ -122,102 +193,15 @@ export const SlotEntryDetails = (props: { slotEntry: SlotEntry, routineId: numbe
                     </React.Fragment>
                 }
 
-                {/*<SlotConfigForm routineId={props.routineId} slotConfig={props.slotConfig} />*/}
+                {props.slotEntry.hasProgressionRules
+                    ? <Grid size={8}>
+                        <Alert severity="info" variant="standard" sx={{ mt: 2 }}>
+                            {t('routines.exerciseHasProgression')}
+                        </Alert>
+                    </Grid>
+                    : getForm()}
 
 
-                {props.simpleMode
-                    ? <React.Fragment>
-                        <Grid
-                            key={`sets-config-${props.slotEntry.id}`}
-                            size={{ xs: 12, sm: 2, }}>
-                            {getConfigComponent('sets', props.slotEntry.nrOfSetsConfigs, props.routineId, props.slotEntry.id)}
-                        </Grid>
-                        <Grid
-                            key={`weight-config-${props.slotEntry.id}`}
-                            size={{ xs: 12, sm: 3 }}>
-                            {getConfigComponent('weight', props.slotEntry.weightConfigs, props.routineId, props.slotEntry.id)}
-                        </Grid>
-                        <Grid
-                            key={`reps-config-${props.slotEntry.id}`}
-                            size={{ xs: 12, sm: 3 }}>
-                            {getConfigComponent('reps', props.slotEntry.repsConfigs, props.routineId, props.slotEntry.id)}
-                        </Grid>
-                    </React.Fragment>
-
-                    // Show all config details in advanced mode, also in a grid
-                    : <React.Fragment>
-                        <Grid
-                            key={`slot-config-type-${props.slotEntry.id}`}
-                            size={{ xs: 6, sm: 2 }}
-                        >
-                            <SlotEntryTypeField routineId={props.routineId} slotEntry={props.slotEntry} />
-                        </Grid>
-
-                        <Grid
-                            key={`sets-config-${props.slotEntry.id}`}
-                            size={{ xs: 6, sm: 2 }}>
-                            {getConfigComponent('sets', props.slotEntry.nrOfSetsConfigs, props.routineId, props.slotEntry.id)}
-                        </Grid>
-
-                        <Grid
-                            key={`rest-config-${props.slotEntry.id}`}
-                            size={{ xs: 6, sm: 1 }}>
-                            {getConfigComponent('rest', props.slotEntry.restTimeConfigs, props.routineId, props.slotEntry.id)}
-                        </Grid>
-                        <Grid
-                            key={`max-rest-config-${props.slotEntry.id}`}
-                            size={{ xs: 6, sm: 1 }}>
-                            {getConfigComponent('max-rest', props.slotEntry.maxRestTimeConfigs, props.routineId, props.slotEntry.id)}
-                        </Grid>
-                        <Grid
-                            key={`rir-config-${props.slotEntry.id}`}
-                            size={{ xs: 12, sm: 2 }}>
-                            <ConfigDetailsRiRField
-                                routineId={props.routineId}
-                                config={props.slotEntry.rirConfigs.length > 0 ? props.slotEntry.rirConfigs[0] : undefined}
-                                slotEntryId={props.slotEntry.id}
-                            />
-                        </Grid>
-
-
-                        <Grid size={{ xs: 12, sm: 4 }} />
-
-
-                        <Grid
-                            key={`slot-config-rep-unit-${props.slotEntry.id}`}
-                            size={{ xs: 12, sm: 2 }}>
-                            <SlotEntryRepetitionUnitField slotEntry={props.slotEntry} routineId={props.routineId} />
-                        </Grid>
-                        <Grid
-                            key={`reps-config-${props.slotEntry.id}`}
-                            size={{ xs: 6, sm: 1 }}>
-                            {getConfigComponent('reps', props.slotEntry.repsConfigs, props.routineId, props.slotEntry.id)}
-                        </Grid>
-                        <Grid
-                            key={`max-reps-config-${props.slotEntry.id}`}
-                            size={{ xs: 6, sm: 1 }}>
-                            {getConfigComponent('max-reps', props.slotEntry.maxRepsConfigs, props.routineId, props.slotEntry.id)}
-                        </Grid>
-
-                        <Grid
-                            key={`slot-config-weight-unit-${props.slotEntry.id}`}
-                            size={{ xs: 12, sm: 2 }}>
-                            <SlotEntryWeightUnitField slotEntry={props.slotEntry} routineId={props.routineId} />
-                        </Grid>
-                        <Grid
-                            key={`weight-config-${props.slotEntry.id}`}
-                            size={{ xs: 6, sm: 1 }}>
-                            {getConfigComponent('weight', props.slotEntry.weightConfigs, props.routineId, props.slotEntry.id)}
-                        </Grid>
-                        <Grid
-                            key={`max-weight-config-${props.slotEntry.id}`}
-                            size={{ xs: 6, sm: 1 }}>
-                            {getConfigComponent('max-weight', props.slotEntry.maxWeightConfigs, props.routineId, props.slotEntry.id)}
-                        </Grid>
-
-
-                    </React.Fragment>
-                }
             </Grid>
             <Box height={10} />
         </React.Fragment>)
