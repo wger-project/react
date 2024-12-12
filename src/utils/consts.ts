@@ -1,7 +1,9 @@
+import { Language } from "components/Exercises/models/language";
 import { MIN_ACCOUNT_AGE_TO_TRUST, TIME_ZONE } from "config";
 
 export const ENGLISH_LANGUAGE_ID = 2;
 export const ENGLISH_LANGUAGE_CODE = 'en';
+export const ENGLISH_LANGUAGE_OBJ = new Language(ENGLISH_LANGUAGE_ID, ENGLISH_LANGUAGE_CODE, 'English');
 
 export const MIN_ACCOUNT_AGE = MIN_ACCOUNT_AGE_TO_TRUST || 21;
 
