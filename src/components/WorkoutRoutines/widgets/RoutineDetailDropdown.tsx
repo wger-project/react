@@ -98,6 +98,12 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
                     download={`Routine-${props.routine.id}-logs.pdf`}>
                     {t("routines.downloadPdfLogs")}
                 </MenuItem>
+                <MenuItem
+                    component="a"
+                    href={makeLink(WgerLink.ROUTINE_ICAL, i18n.language, { id: props.routine.id })}
+                    download={`Routine-${props.routine.id}-calendar.ics`}>
+                    {t("routines.downloadIcal")}
+                </MenuItem>
                 <Divider />
                 <MenuItem onClick={handleDelete}>{t("delete")}</MenuItem>
             </Menu>
