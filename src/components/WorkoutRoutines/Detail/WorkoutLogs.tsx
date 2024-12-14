@@ -67,9 +67,11 @@ export const WorkoutLogs = () => {
                                 {dayData.day!.name}
                             </Typography>
                             <Button
-                                disabled={true}
                                 component={Link}
-                                to={makeLink(WgerLink.ROUTINE_ADD_LOG, i18n.language, { id: dayData.day!.id! })}
+                                to={makeLink(WgerLink.ROUTINE_ADD_LOG, i18n.language, {
+                                    id: routineId,
+                                    id2: dayData.day!.id!
+                                })}
                                 variant="contained"
                             >
                                 {t('routines.addLogToDay')}
