@@ -98,7 +98,7 @@ const LogTableRow = (props: { log: WorkoutLog }) => {
     </TableRow>;
 };
 export const ExerciseLog = (props: { exercise: Exercise, logEntries: WorkoutLog[] | undefined }) => {
-
+    const { t } = useTranslation();
     let logEntries = props.logEntries ?? [];
 
     const availableResultsPerPage = [5, 10, 20];
@@ -121,16 +121,15 @@ export const ExerciseLog = (props: { exercise: Exercise, logEntries: WorkoutLog[
         </Typography>
 
         <Grid container spacing={2}>
-            <Grid
-                size={{ xs: 12, md: 5 }}>
+            <Grid size={{ xs: 12, md: 5 }}>
                 <TableContainer>
                     <Table aria-label="simple table" size="small">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Date</TableCell>
-                                <TableCell>Reps</TableCell>
-                                <TableCell>Weight</TableCell>
-                                <TableCell>RiR</TableCell>
+                                <TableCell>{t('date')}</TableCell>
+                                <TableCell>{t('routines.reps')}</TableCell>
+                                <TableCell>{t('weight')}</TableCell>
+                                <TableCell>{t('routines.rir')}</TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
                         </TableHead>

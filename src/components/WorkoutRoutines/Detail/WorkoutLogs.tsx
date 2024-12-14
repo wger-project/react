@@ -35,9 +35,6 @@ export const WorkoutLogs = () => {
         }, groupedWorkoutLogs);
     }
 
-    // console.log(groupedWorkoutLogs);
-
-
     if (logsQuery.isLoading || routineQuery.isLoading) {
         return <LoadingPlaceholder />;
     }
@@ -72,10 +69,11 @@ export const WorkoutLogs = () => {
                             </Typography>
                             <Button
                                 component={Link}
-                                to={makeLink(WgerLink.ROUTINE_ADD_LOG, i18n.language, {
-                                    id: routineId,
-                                    id2: dayData.day!.id!
-                                })}
+                                to={makeLink(
+                                    WgerLink.ROUTINE_ADD_LOG,
+                                    i18n.language,
+                                    { id: routineId, id2: dayData.day!.id! }
+                                )}
                                 variant="contained"
                             >
                                 {t('routines.addLogToDay')}
