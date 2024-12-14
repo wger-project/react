@@ -15,7 +15,14 @@ export const WorkoutLogs = () => {
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const [t, i18n] = useTranslation();
-    const logsQuery = useRoutineLogQuery(routineId, false);
+    const logsQuery = useRoutineLogQuery(
+        routineId,
+        false,
+        {
+            "weight_unit__in": [WEIGHT_UNIT_KG, WEIGHT_UNIT_LB].join(','),
+            "repetition_unit": REP_UNIT_REPETITIONS
+        },
+    );
     const routineQuery = useRoutineDetailQuery(routineId);
 
     // Group by exercise
@@ -23,16 +30,13 @@ export const WorkoutLogs = () => {
     if (logsQuery.isSuccess) {
         groupedWorkoutLogs = logsQuery.data!.reduce(function (r, log) {
             r.set(log.exerciseId, r.get(log.exerciseId) || []);
-
-            // Only add logs with weight unit and repetition unit
-            // This should be done server side over the API, but we can't filter everything yet
-            if ([WEIGHT_UNIT_KG, WEIGHT_UNIT_LB].includes(log.weightUnitId) && log.repetitionUnitId === REP_UNIT_REPETITIONS) {
-                r.get(log.exerciseId)!.push(log);
-            }
-
+            r.get(log.exerciseId)!.push(log);
             return r;
-        }, new Map());
+        }, groupedWorkoutLogs);
     }
+
+    // console.log(groupedWorkoutLogs);
+
 
     if (logsQuery.isLoading || routineQuery.isLoading) {
         return <LoadingPlaceholder />;

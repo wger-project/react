@@ -19,7 +19,6 @@ import {
 
 jest.mock("axios");
 jest.mock("services/workoutUnits");
-jest.mock("services/workoutUnits");
 jest.mock("services/exercise");
 
 
@@ -85,35 +84,35 @@ describe("workout routine service tests", () => {
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
         expect(result).toStrictEqual([
-            new WorkoutLog(
-                2,
-                new Date("2023-05-10"),
-                1,
-                100,
-                2,
-                1,
-                12,
-                10.00,
-                1,
-                "",
-                testRepUnit1,
-                testWeightUnit1
-            ),
+            new WorkoutLog({
+                id: 2,
+                date: new Date("2023-05-10"),
+                iteration: 1,
+                exerciseId: 100,
+                slotEntryId: 2,
+                repetitionUnitId: 1,
+                reps: 12,
+                weight: 10.00,
+                weightUnitId: 1,
+                rir: "",
+                repetitionUnitObj: testRepUnit1,
+                weightUnitObj: testWeightUnit1,
+            }),
 
-            new WorkoutLog(
-                1,
-                new Date("2023-05-13"),
-                1,
-                100,
-                2,
-                1,
-                10,
-                20,
-                1,
-                "",
-                testRepUnit1,
-                testWeightUnit1
-            ),
+            new WorkoutLog({
+                id: 1,
+                date: new Date("2023-05-13"),
+                iteration: 1,
+                exerciseId: 100,
+                slotEntryId: 2,
+                repetitionUnitId: 1,
+                reps: 10,
+                weight: 20,
+                weightUnitId: 1,
+                rir: "",
+                repetitionUnitObj: testRepUnit1,
+                weightUnitObj: testWeightUnit1,
+            }),
         ]);
     });
 

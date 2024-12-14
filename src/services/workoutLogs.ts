@@ -26,11 +26,14 @@ export const addLogs = async (entries: any[]): Promise<WorkoutLog[]> => {
 /*
  * Retrieves the training logs for a routine
  */
-export const getRoutineLogs = async (id: number, loadExercises = false): Promise<WorkoutLog[]> => {
+export const getRoutineLogs = async (id: number, options?
+: { loadExercises?: boolean, filtersetQuery?: object }): Promise<WorkoutLog[]> => {
+    const { loadExercises = false, filtersetQuery = {} } = options || {};
+
     const adapter = new WorkoutLogAdapter();
     const url = makeUrl(
         ApiPath.WORKOUT_LOG_API_PATH,
-        { query: { workout: id.toString(), limit: API_MAX_PAGE_SIZE, ordering: '-date' } }
+        { query: { workout: id.toString(), limit: API_MAX_PAGE_SIZE, ordering: '-date', ...filtersetQuery } }
     );
 
     const unitResponses = await Promise.all([getRoutineRepUnits(), getRoutineWeightUnits()]);
