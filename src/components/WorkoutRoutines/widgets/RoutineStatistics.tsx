@@ -39,6 +39,13 @@ interface DropdownProps {
     onChange: (event: SelectChangeEvent) => void;
 }
 
+interface FullStatsData {
+    headers: string[],
+    data: { key: string | number, values: (number | undefined)[] }[],
+    totals: { [p: string]: number }
+}
+
+
 export const StatsOptionDropdown: React.FC<DropdownProps> = ({ label, options, value, onChange }) => {
 
     return (
@@ -95,7 +102,7 @@ export const getFullStatsData = (
     language: Language,
     languageCode: string,
     t: (a: string) => string,
-) => {
+): FullStatsData => {
     const columnTotals: { [header: string]: number } = {};
 
     const statsData = stats[selectedValueType];
@@ -153,7 +160,6 @@ export const getFullStatsData = (
     function calculateLoopSum(data: (number | undefined)[], logData: LogData) {
         const values = allHeaders.map(header => data[calculateStatsData(selectedValueGroupBy, logData).headers.indexOf(header)]);
 
-        console.log(values);
         values.forEach((value, index) => {
             if (value === undefined) {
                 return;
@@ -214,3 +220,35 @@ export const getFullStatsData = (
 
     return { headers: allHeaders, data: dataToDisplay, totals: columnTotals };
 };
+
+interface StatsChartData {
+    name: string,
+    data: { category: string, value: number | undefined }[];
+}
+
+/*
+ * Converts the data from getFullStatsData to a format that can be directly
+ * used by the recharts library
+ */
+export function formatStatsData(fullStatsData: FullStatsData): StatsChartData[] {
+    const formattedData: StatsChartData[] = [];
+
+    fullStatsData.headers.forEach((header) => {
+        formattedData.push({ name: header, data: [] });
+    });
+
+    fullStatsData.data.forEach((row) => {
+        row.values.forEach((value, index) => {
+            const header = fullStatsData.headers[index];
+
+            if (header) {
+                formattedData.find(item => item.name === header)?.data.push({
+                    category: row.key.toString(),
+                    value: value
+                });
+            }
+        });
+    });
+
+    return formattedData;
+}

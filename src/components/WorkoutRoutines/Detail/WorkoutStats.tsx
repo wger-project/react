@@ -11,12 +11,14 @@ import {
     useTheme
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+
 import { SelectChangeEvent } from '@mui/material/Select';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { useExercisesQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import {
     DropdownOption,
+    formatStatsData,
     getFullStatsData,
     StatGroupBy,
     StatsOptionDropdown,
@@ -26,7 +28,9 @@ import {
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { getLanguageByShortName } from "services";
+import { generateChartColors } from "utils/colors";
 
 
 export const WorkoutStats = () => {
@@ -94,20 +98,21 @@ export const WorkoutStats = () => {
         setSelectedValueGroupBy(event.target.value as StatGroupBy);
     };
 
+    const statsData = getFullStatsData(
+        routine.stats,
+        selectedValueType,
+        selectedValueSubType,
+        selectedValueGroupBy,
+        exercisesQuery.data!,
+        musclesQuery.data!,
+        language,
+        i18n.language,
+        t as (a: string) => string,
+    );
+
+    const chartData = formatStatsData(statsData);
+
     const renderStatistics = () => {
-
-        const { headers, data, totals } = getFullStatsData(
-            routine.stats,
-            selectedValueType,
-            selectedValueSubType,
-            selectedValueGroupBy,
-
-            exercisesQuery.data!,
-            musclesQuery.data!,
-            language,
-            i18n.language,
-            t as (a: string) => string,
-        );
 
 
         return (
@@ -116,14 +121,14 @@ export const WorkoutStats = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell></TableCell>
-                            {headers.map(header => <TableCell
+                            {statsData.headers.map(header => <TableCell
                                 key={header}
                                 sx={{ textAlign: 'right', }}
                             >{header}</TableCell>)}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map((row) => (
+                        {statsData.data.map((row) => (
                             <TableRow key={row.key}>
                                 <TableCell>{row.key}</TableCell>
                                 {row.values.map((value, index) => (
@@ -137,14 +142,14 @@ export const WorkoutStats = () => {
 
                                 backgroundColor: theme.palette.grey.A200
                             }}>{t("total")}</TableCell>
-                            {headers.map(header => (
+                            {statsData.headers.map(header => (
                                 <TableCell key={header}
                                            sx={{
                                                fontWeight: 'bold',
                                                backgroundColor: theme.palette.grey.A200,
                                                textAlign: 'right',
                                            }}>
-                                    {totals[header.toString()]}
+                                    {statsData.totals[header.toString()]}
                                 </TableCell>
                             ))}
                         </TableRow>}
@@ -154,6 +159,8 @@ export const WorkoutStats = () => {
         );
 
     };
+
+    const colorGenerator = generateChartColors(chartData.length);
 
     return (<>
         <Container maxWidth="lg">
@@ -186,6 +193,31 @@ export const WorkoutStats = () => {
                         value={selectedValueGroupBy}
                         onChange={handleChangeGroupBy}
                     />
+                </Grid>
+
+                <Grid size={12}>
+                    <Box width="100%" height={400}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <LineChart width={500} height={300}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="category" type="category" allowDuplicatedCategory={false} />
+                                <YAxis dataKey="value" />
+                                <Tooltip />
+                                <Legend
+                                    layout={"vertical"}
+                                    verticalAlign="middle"
+                                    align="right"
+                                    wrapperStyle={{ paddingLeft: "20px" }}
+
+                                />
+                                {chartData.map((s) => (
+                                    <Line dataKey="value" data={s.data} name={s.name} key={s.name}
+                                          stroke={colorGenerator.next()!.value!} />
+                                ))}
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </Box>
+
                 </Grid>
 
                 <Grid size={12}>

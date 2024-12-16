@@ -3,6 +3,7 @@ import { Language } from "components/Exercises/models/language";
 import { Muscle } from "components/Exercises/models/muscle";
 import { GroupedLogData, LogData, RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
 import {
+    formatStatsData,
     getFullStatsData,
     getHumanReadableHeaders,
     StatGroupBy,
@@ -226,6 +227,7 @@ describe('Tests for the getFullStatsData function', () => {
             'en',
             mockT,
         );
+        console.log(JSON.stringify(result, null, 4));
         expect(result.headers).toEqual(['server.finger_muscle', 'server.shoulders']);
 
         expect(result.data).toEqual([
@@ -233,6 +235,145 @@ describe('Tests for the getFullStatsData function', () => {
             { key: "3/3/2024", values: [18, 12] }
         ]);
         expect(result.totals).toEqual({ "server.finger_muscle": 33, "server.shoulders": 22 });
+    });
+});
+
+
+describe('formatStatsData', () => {
+
+    it('should format data correctly for exercises', () => {
+        const mockFullStatsData = {
+            headers: ['Push Ups', 'Pull Ups'],
+            data: [
+                { key: '2024-01-01', values: [10, 5] },
+                { key: '2024-01-03', values: [15, 8] },
+            ],
+            totals: { 'Push Ups': 25, 'Pull Ups': 13 }
+        };
+
+        const result = formatStatsData(mockFullStatsData);
+
+        expect(result).toEqual([{
+            "data": [
+                { category: "2024-01-01", value: 10 },
+                { category: "2024-01-03", value: 15 }
+            ],
+            "name": "Push Ups"
+        },
+            {
+                "data": [
+                    { category: "2024-01-01", value: 5 },
+                    { category: "2024-01-03", value: 8 }
+                ],
+                "name": "Pull Ups"
+            }
+        ]);
+    });
+
+
+    it('should format data correctly for iteration', () => {
+        const mockFullStatsData = {
+            headers: ['Benchpress', 'Crunches'],
+            data: [
+                { key: 'iteration 1', values: [10, 12] },
+                { key: 'iteration 2', values: [5, 7] },
+                { key: 'iteration 3', values: [15, 2] },
+
+            ],
+            totals: { 'Benchpress': 30, 'Crunches': 21 }
+        };
+
+        const result = formatStatsData(mockFullStatsData);
+
+        expect(result).toEqual([{
+            "name": "Benchpress",
+            "data": [
+                { category: "iteration 1", value: 10 },
+                { category: "iteration 2", value: 5 },
+                { category: "iteration 3", value: 15 }
+            ],
+        },
+            {
+                "name": "Crunches",
+                "data": [
+                    { category: "iteration 1", value: 12 },
+                    { category: "iteration 2", value: 7 },
+                    { category: "iteration 3", value: 2 }
+                ],
+            }]);
+    });
+
+
+    it('should format data correctly for weekly', () => {
+
+        const mockFullStatsData = {
+            headers: ['server.finger_muscle', 'server.shoulders'],
+            data: [
+                { key: 'week 1', values: [5, 10] },
+                { key: 'week 2', values: [8, 12] }
+            ],
+            totals: {
+                'server.finger_muscle': 13,
+                'server.shoulders': 22
+            }
+        };
+
+        const result = formatStatsData(mockFullStatsData);
+
+        expect(result).toEqual([{
+            "data": [
+                { category: "week 1", value: 5 },
+                { category: "week 2", value: 8 }
+            ],
+            "name": "server.finger_muscle"
+        },
+            {
+                "data": [
+                    { category: "week 1", value: 10 },
+                    { category: "week 2", value: 12 }
+                ],
+                "name": "server.shoulders"
+            }
+        ]);
+
+    });
+
+    it('should handle missing data gracefully', () => {
+        const mockFullStatsData = {
+            headers: ['Exercise A', 'Exercise B'],
+            data: [
+                { key: 'Day 1', values: [10, undefined] },  // Missing value for Exercise B
+                { key: 'Day 2', values: [undefined, 5] }, // Missing value for Exercise A
+            ],
+            totals: { 'Exercise A': 10, 'Exercise B': 5 }
+        };
+
+        const result = formatStatsData(mockFullStatsData);
+        expect(result).toEqual([{
+            "data": [
+                { category: "Day 1", value: 10 },
+                { category: "Day 2" }],
+            "name": "Exercise A"
+        },
+            {
+                "data": [
+                    { category: "Day 1" },
+                    { category: "Day 2", value: 5 }
+                ],
+                "name": "Exercise B"
+            }
+        ]);
+    });
+
+
+    it('should handle empty headers and data', () => {
+        const mockFullStatsData = {
+            headers: [],
+            data: [],
+            totals: {}
+        };
+        const result = formatStatsData(mockFullStatsData);
+        expect(result).toEqual([]);
     });
 
 });
