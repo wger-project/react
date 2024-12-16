@@ -18,6 +18,11 @@ export function makeServerKey(name: string): string {
 }
 
 // Returns the key used for the translation of the given exercise data
-export function getTranslationKey(name: string): any {
+export function getTranslationKey(name: string | undefined): any {
+    if (name === undefined) {
+        console.warn("called getTranslationKey with undefined name");
+        return '';
+    }
+
     return `server.${makeServerKey(name)}`;
 }
