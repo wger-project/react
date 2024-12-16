@@ -13,6 +13,7 @@ import { RoutineEdit } from "components/WorkoutRoutines/Detail/RoutineEdit";
 import { SessionAdd } from "components/WorkoutRoutines/Detail/SessionAdd";
 import { SlotProgressionEdit } from "components/WorkoutRoutines/Detail/SlotProgressionEdit";
 import { WorkoutLogs } from "components/WorkoutRoutines/Detail/WorkoutLogs";
+import { WorkoutStats } from "components/WorkoutRoutines/Detail/WorkoutStats";
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
 import {
     About,
@@ -71,12 +72,16 @@ export const WgerRoutes = () => {
                         <Route path="progression/:slotId" element={<SlotProgressionEdit />} />
                     </Route>
                     <Route path="table" element={<RoutineDetailsTable />} />
+
+                    <Route path="stats" element={<WorkoutStats />} />
+
                 </Route>
                 <Route path="log">
                     <Route path=":routineId" element={<WorkoutLogs />}>
                         <Route path="view" element={<WorkoutLogs />} />
                     </Route>
                 </Route>
+
             </Route>
             <Route path="measurement">
                 <Route index element={<MeasurementCategoryOverview />} />

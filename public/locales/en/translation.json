@@ -210,6 +210,7 @@
     "logsOverview": "Logs overview",
     "simpleMode": "Simple mode",
     "logsHeader": "Training log for workout",
+    "statsHeader": "Statistics",
     "logsFilterNote": "Note that only entries with a weight unit of kg or lb and repetitions are charted, other combinations such as time or until failure are ignored here",
     "addLogToDay": "Add log to this day",
     "routine": "Routine",
