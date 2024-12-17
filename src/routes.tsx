@@ -65,21 +65,15 @@ export const WgerRoutes = () => {
                     <Route path="day/:dayId">
                         <Route path="add-logs" element={<SessionAdd />} />
                     </Route>
-
-                    <Route path="view" element={<RoutineDetail />} />
                     <Route path="edit">
                         <Route index element={<RoutineEdit />} />
                         <Route path="progression/:slotId" element={<SlotProgressionEdit />} />
                     </Route>
+
+                    <Route path="view" element={<RoutineDetail />} />
                     <Route path="table" element={<RoutineDetailsTable />} />
-
-                    <Route path="stats" element={<WorkoutStats />} />
-
-                </Route>
-                <Route path="log">
-                    <Route path=":routineId" element={<WorkoutLogs />}>
-                        <Route path="view" element={<WorkoutLogs />} />
-                    </Route>
+                    <Route path="logs" element={<WorkoutLogs />} />
+                    <Route path="statistics" element={<WorkoutStats />} />
                 </Route>
 
             </Route>
