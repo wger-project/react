@@ -1,5 +1,6 @@
-import { Button, Container, Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import { useRoutineDetailQuery, useRoutineLogQuery } from "components/WorkoutRoutines/queries";
 import { ExerciseLog } from "components/WorkoutRoutines/widgets/LogWidgets";
@@ -40,59 +41,48 @@ export const WorkoutLogs = () => {
     }
 
     return (
-        <>
-            <Container maxWidth="lg">
-                <Typography variant={"h4"}>
-                    {t("routines.logsHeader")}
-                </Typography>
-                {/*<Typography variant={"body2"}>*/}
-                {/*    This page shows the training logs belonging to this workout only.*/}
-                {/*</Typography>*/}
-                {/*<Typography variant={"body2"}>*/}
-                {/*    If on a single day there is more than one entry with the same number of repetitions, but different*/}
-                {/*    weights, only the entry with the higher weight is shown in the diagram.*/}
-                {/*</Typography>*/}
-                <Typography variant={"body1"}>
-                    {t('routines.logsFilterNote')}
-                </Typography>
+        <WgerContainerFullWidth title={t("routines.logsHeader")}>
 
-                {routineQuery.data!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null && !dayData.day.isRest).map((dayData, index) =>
-                    <React.Fragment key={index}>
-                        <Stack
-                            direction={{ xs: 'column', sm: 'row' }}
-                            justifyContent="space-between"
-                            alignItems="center"
-                            sx={{ mt: 4 }}
+            <Typography variant={"body1"}>
+                {t('routines.logsFilterNote')}
+            </Typography>
+
+            {routineQuery.data!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null && !dayData.day.isRest).map((dayData, index) =>
+                <React.Fragment key={index}>
+                    <Stack
+                        direction={{ xs: 'column', sm: 'row' }}
+                        justifyContent="space-between"
+                        alignItems="center"
+                        sx={{ mt: 4 }}
+                    >
+                        <Typography variant={"h4"}>
+                            {dayData.day!.name}
+                        </Typography>
+                        <Button
+                            component={Link}
+                            to={makeLink(
+                                WgerLink.ROUTINE_ADD_LOG,
+                                i18n.language,
+                                { id: routineId, id2: dayData.day!.id! }
+                            )}
+                            variant="contained"
                         >
-                            <Typography variant={"h4"}>
-                                {dayData.day!.name}
-                            </Typography>
-                            <Button
-                                component={Link}
-                                to={makeLink(
-                                    WgerLink.ROUTINE_ADD_LOG,
-                                    i18n.language,
-                                    { id: routineId, id2: dayData.day!.id! }
-                                )}
-                                variant="contained"
-                            >
-                                {t('routines.addLogToDay')}
-                            </Button>
-                        </Stack>
+                            {t('routines.addLogToDay')}
+                        </Button>
+                    </Stack>
 
-                        {dayData.slots.map(slot =>
-                            slot.exercises.map(exercise =>
-                                <ExerciseLog
-                                    key={exercise.id}
-                                    exercise={exercise}
-                                    logEntries={groupedWorkoutLogs.get(exercise.id!)!}
-                                />)
-                        )}
-                    </React.Fragment>
-                )}
+                    {dayData.slots.map(slot =>
+                        slot.exercises.map(exercise =>
+                            <ExerciseLog
+                                key={exercise.id}
+                                exercise={exercise}
+                                logEntries={groupedWorkoutLogs.get(exercise.id!)!}
+                            />)
+                    )}
+                </React.Fragment>
+            )}
 
-            </Container>
-        </>
+        </WgerContainerFullWidth>
     );
 };
 

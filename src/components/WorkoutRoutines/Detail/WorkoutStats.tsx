@@ -1,19 +1,9 @@
-import {
-    Box,
-    Container,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Typography,
-    useTheme
-} from "@mui/material";
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
 import { SelectChangeEvent } from '@mui/material/Select';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
 import { useExercisesQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import {
@@ -162,13 +152,8 @@ export const WorkoutStats = () => {
 
     const colorGenerator = generateChartColors(chartData.length);
 
-    return (<>
-        <Container maxWidth="lg">
-            <Typography variant={"h4"}>
-                {t("routines.statsHeader")} - {routine.name}
-            </Typography>
-            <Box height={10} />
-
+    return (
+        <WgerContainerFullWidth title={`${t("routines.statsHeader")} - ${routine.name}`}>
             <Grid container spacing={1}>
                 <Grid size={2} offset={3}>
                     <StatsOptionDropdown
@@ -208,7 +193,6 @@ export const WorkoutStats = () => {
                                     verticalAlign="middle"
                                     align="right"
                                     wrapperStyle={{ paddingLeft: "20px" }}
-
                                 />
                                 {chartData.map((s) => (
                                     <Line dataKey="value" data={s.data} name={s.name} key={s.name}
@@ -217,15 +201,15 @@ export const WorkoutStats = () => {
                             </LineChart>
                         </ResponsiveContainer>
                     </Box>
-
                 </Grid>
 
                 <Grid size={12}>
+                    <Box height={20} />
                     {renderStatistics()}
                 </Grid>
             </Grid>
-        </Container>
-    </>);
+        </WgerContainerFullWidth>
+    );
 };
 
 
