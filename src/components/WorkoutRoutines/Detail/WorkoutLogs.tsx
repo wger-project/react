@@ -47,8 +47,9 @@ export const WorkoutLogs = () => {
             backToUrl={makeLink(WgerLink.ROUTINE_DETAIL, i18n.language, { id: routineId })}
             optionsMenu={
                 <MuiTooltip title={t('routines.statsOverview')}>
-                    <IconButton component="a"
-                                href={makeLink(WgerLink.ROUTINE_STATS_OVERVIEW, i18n.language, { id: routineId })}>
+                    <IconButton
+                        component="a"
+                        href={makeLink(WgerLink.ROUTINE_STATS_OVERVIEW, i18n.language, { id: routineId })}>
                         <BarChartIcon />
                     </IconButton>
                 </MuiTooltip>

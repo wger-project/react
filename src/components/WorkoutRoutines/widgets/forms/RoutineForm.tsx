@@ -1,5 +1,7 @@
-import { Button, FormControlLabel, Switch } from "@mui/material";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import { Button, FormControlLabel, IconButton, Switch } from "@mui/material";
 import Grid from '@mui/material/Grid2';
+import Tooltip from "@mui/material/Tooltip";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WgerTextField } from "components/Common/forms/WgerTextField";
@@ -192,7 +194,12 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                                 control={
                                     <Switch checked={formik.values.fitInWeek} {...formik.getFieldProps('fitInWeek')} />
                                 }
-                                label="Fit days in week." />
+                                label={t('routines.fitDaysInWeek')} />
+                            <Tooltip title={t('routines.fitDaysInWeekHelpText')}>
+                                <IconButton size="small">
+                                    <HelpOutlineIcon fontSize="inherit" />
+                                </IconButton>
+                            </Tooltip>
                         </Grid>
                         <Grid size={12}>
                             <Button

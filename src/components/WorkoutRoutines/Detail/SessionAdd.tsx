@@ -6,10 +6,11 @@ import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { makeLink, WgerLink } from "utils/url";
 
 export const SessionAdd = () => {
     const params = useParams<{ routineId: string, dayId: string }>();
-    const [t] = useTranslation();
+    const { t, i18n } = useTranslation();
     const [selectedDate, setSelectedDate] = useState<DateTime>(DateTime.now());
 
     const routineId = parseInt(params.routineId!);
@@ -17,6 +18,7 @@ export const SessionAdd = () => {
 
     return <WgerContainerRightSidebar
         title={t('routines.addWeightLog')}
+        backToUrl={makeLink(WgerLink.ROUTINE_DETAIL, i18n.language, { id: routineId })}
         mainContent={
             <Stack>
                 <SessionForm

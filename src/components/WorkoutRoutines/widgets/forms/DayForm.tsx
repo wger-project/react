@@ -1,5 +1,16 @@
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { LoadingButton } from "@mui/lab";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Switch } from "@mui/material";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControlLabel,
+    IconButton,
+    Switch,
+    Tooltip
+} from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { WgerTextField } from "components/Common/forms/WgerTextField";
 import { Day } from "components/WorkoutRoutines/models/Day";
@@ -74,7 +85,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
             {(formik) => (
                 <Form>
                     <Grid container spacing={2}>
-                        <Grid size={{ xs: 12, sm: 10 }}>
+                        <Grid size={{ xs: 12, sm: 7 }}>
                             <WgerTextField
                                 fieldName="name"
                                 title="Name"
@@ -82,10 +93,25 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                             />
 
                         </Grid>
-                        <Grid size={{ xs: 12, sm: 2 }}>
+                        <Grid size={{ xs: 6, sm: 2 }}>
                             <FormControlLabel
                                 control={<Switch checked={isRest} onChange={handleRestChange} />}
                                 label="rest day" />
+                        </Grid>
+                        <Grid size={{ xs: 6, sm: 3 }}>
+                            <FormControlLabel
+                                disabled={isRest}
+                                control={<Switch
+                                    checked={formik.values.needsLogsToAdvance}
+                                    {...formik.getFieldProps('needsLogsToAdvance')}
+                                />}
+                                label={t('routines.needsLogsToAdvance')} />
+                            <Tooltip title={t('routines.needsLogsToAdvanceHelpText')}>
+                                <IconButton onClick={() => {
+                                }}>
+                                    <HelpOutlineIcon fontSize="small" />
+                                </IconButton>
+                            </Tooltip>
                         </Grid>
                         <Grid size={12}>
                             <WgerTextField
@@ -94,15 +120,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                                 fieldProps={{ multiline: true, rows: 4, disabled: isRest }}
                             />
                         </Grid>
-                        <Grid size={12}>
-                            <FormControlLabel
-                                disabled={isRest}
-                                control={<Switch
-                                    checked={formik.values.needsLogsToAdvance}
-                                    {...formik.getFieldProps('needsLogsToAdvance')}
-                                />}
-                                label="Needs logs to advance" />
-                        </Grid>
+
                         <Grid size={12}>
                             {editDayQuery.isPending
                                 ? <LoadingButton loading variant="contained" color="primary">

@@ -1,4 +1,4 @@
-import SettingsIcon from '@mui/icons-material/Settings';
+import MenuIcon from '@mui/icons-material/Menu';
 import {
     Button,
     Dialog,
@@ -55,7 +55,7 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
     return (
         <div>
             <Button onClick={handleClick}>
-                <SettingsIcon />
+                <MenuIcon />
             </Button>
             <Menu
                 anchorEl={anchorEl}

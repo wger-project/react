@@ -11,7 +11,8 @@ import {
     Menu,
     MenuItem,
     Stack,
-    Typography
+    Typography,
+    useTheme
 } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import Tooltip from "@mui/material/Tooltip";
@@ -144,6 +145,8 @@ function SlotDataList(props: {
 }
 
 export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
+    const theme = useTheme();
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClose = () => {
@@ -161,8 +164,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
     return (
         <Card sx={{ minWidth: 275 }}>
             <CardHeader
-                sx={{ bgcolor: "lightgray" }}
-
+                sx={{ bgcolor: theme.palette.grey.A200 }}
                 action={props.dayData.day!.isRest
                     ? null
                     : <Tooltip title={t('routines.addWeightLog')}>
@@ -188,22 +190,21 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
                     {t('routines.addWeightLog')}
                 </MenuItem>
             </Menu>
-            <CardContent sx={{ padding: 0, marginBottom: 0 }}>
-                {props.dayData.slots.length > 0 &&
-                    <Stack>
-                        {props.dayData.slots.map((slotData, index) => (
-                            <div key={`SlotDataList-${props.dayData.day!.id}-${index}`}>
-                                <Box padding={1}>
-                                    <SlotDataList
-                                        slotData={slotData}
-                                        index={index}
-                                    />
-                                </Box>
-                                <Divider />
-                            </div>
-                        ))}
-                    </Stack>}
-            </CardContent>
+            {props.dayData.slots.length > 0 && <CardContent sx={{ padding: 0, marginBottom: 0 }}>
+                <Stack>
+                    {props.dayData.slots.map((slotData, index) => (
+                        <div key={index}>
+                            <Box padding={1}>
+                                <SlotDataList
+                                    slotData={slotData}
+                                    index={index}
+                                />
+                            </Box>
+                            <Divider />
+                        </div>
+                    ))}
+                </Stack>
+            </CardContent>}
         </Card>
     );
 };

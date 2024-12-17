@@ -10,19 +10,33 @@ type WgerTemplateContainerRightSidebarProps = {
     mainContent: ReactJSXElement | null;
     sideBar?: ReactJSXElement;
     optionsMenu?: ReactJSXElement;
+    backToTitle?: string;
+    backToUrl?: string;
     fab?: ReactJSXElement;
 };
 
 export const WgerContainerRightSidebar = (props: WgerTemplateContainerRightSidebarProps) => {
+    const { t } = useTranslation();
+
+    const backTo = <Button
+        size="small"
+        component="a"
+        href={props.backToUrl}>
+        <ChevronLeftIcon fontSize="inherit" />
+        {props.backToTitle ?? t('goBack')}
+    </Button>;
 
     return (
         <Container maxWidth="lg">
             <Grid container spacing={2}>
                 <Grid sx={{ mb: 2 }} size={8}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Typography gutterBottom variant="h3">
-                            {props.title}
-                        </Typography>
+                        <Stack alignItems="start">
+                            <Typography variant="h3">
+                                {props.title}
+                            </Typography>
+                            {props.backToUrl && backTo}
+                        </Stack>
                         {props.optionsMenu}
                     </Stack>
                 </Grid>
