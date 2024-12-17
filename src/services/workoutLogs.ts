@@ -46,8 +46,8 @@ export const getRoutineLogs = async (id: number, options?
     for await (const page of fetchPaginated(url)) {
         for (const logData of page) {
             const log = adapter.fromJson(logData);
-            log.repetitionUnitObj = repUnits.find(e => e.id === log.repetitionUnitId);
-            log.weightUnitObj = weightUnits.find(e => e.id === log.weightUnitId);
+            log.repetitionUnitObj = repUnits.find(e => e.id === log.repetitionUnitId) ?? null;
+            log.weightUnitObj = weightUnits.find(e => e.id === log.weightUnitId) ?? null;
 
             // Load the base object
             if (loadExercises) {

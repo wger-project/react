@@ -45,13 +45,19 @@ describe("workout logs service tests", () => {
                 iteration: 1,
                 exerciseId: 100,
                 slotEntryId: 2,
+
+                repetitionUnitObj: testRepUnit1,
                 repetitionUnitId: 1,
                 reps: 12,
-                weight: 10.00,
-                weightUnitId: 1,
-                rir: "",
-                repetitionUnitObj: testRepUnit1,
+                repsTarget: 12,
+
                 weightUnitObj: testWeightUnit1,
+                weightUnitId: 1,
+                weight: 10.00,
+                weightTarget: null,
+
+                rir: null,
+                rirTarget: null,
             }),
 
             new WorkoutLog({
@@ -60,13 +66,19 @@ describe("workout logs service tests", () => {
                 iteration: 1,
                 exerciseId: 100,
                 slotEntryId: 2,
+
+                repetitionUnitObj: testRepUnit1,
                 repetitionUnitId: 1,
                 reps: 10,
-                weight: 20,
-                weightUnitId: 1,
-                rir: "",
-                repetitionUnitObj: testRepUnit1,
+                repsTarget: null,
+
                 weightUnitObj: testWeightUnit1,
+                weightUnitId: 1,
+                weight: 20,
+                weightTarget: 20,
+
+                rir: "1.5",
+                rirTarget: "1",
             }),
         ]);
     });
@@ -81,7 +93,7 @@ describe("workout logs service tests", () => {
         getRoutineRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
         // @ts-ignore
         getRoutineWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
-// @ts-ignore
+        // @ts-ignore
         getExercise.mockImplementation(() => Promise.resolve(testExerciseSquats));
 
         // Act
@@ -94,32 +106,44 @@ describe("workout logs service tests", () => {
                 id: 2,
                 date: new Date("2023-05-10"),
                 iteration: 1,
+                exerciseObj: testExerciseSquats,
                 exerciseId: 100,
                 slotEntryId: 2,
+
+                repetitionUnitObj: testRepUnit1,
                 repetitionUnitId: 1,
                 reps: 12,
-                weight: 10.00,
-                weightUnitId: 1,
-                rir: "",
-                repetitionUnitObj: testRepUnit1,
+                repsTarget: 12,
+
                 weightUnitObj: testWeightUnit1,
-                exerciseObj: testExerciseSquats,
+                weightUnitId: 1,
+                weight: 10.00,
+                weightTarget: null,
+
+                rir: null,
+                rirTarget: null,
             }),
 
             new WorkoutLog({
                 id: 1,
                 date: new Date("2023-05-13"),
                 iteration: 1,
-                exerciseId: 100,
                 slotEntryId: 2,
+                exerciseObj: testExerciseSquats,
+                exerciseId: 100,
+
+                repetitionUnitObj: testRepUnit1,
                 repetitionUnitId: 1,
                 reps: 10,
-                weight: 20,
-                weightUnitId: 1,
-                rir: "",
-                repetitionUnitObj: testRepUnit1,
+                repsTarget: null,
+
                 weightUnitObj: testWeightUnit1,
-                exerciseObj: testExerciseSquats,
+                weightUnitId: 1,
+                weight: 20,
+                weightTarget: 20,
+
+                rir: "1.5",
+                rirTarget: "1",
             }),
         ]);
     });

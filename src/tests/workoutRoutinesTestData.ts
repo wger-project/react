@@ -167,29 +167,41 @@ export const responseRoutineLogs = {
     "results": [
         {
             "id": 2,
-            "reps": 12,
             "iteration": 1,
-            "set_config": 2,
-            "weight": "10.00",
             "date": "2023-05-10",
-            "rir": "",
-            "exercise_base": 100,
-            "workout": 1,
+            "exercise": 100,
+            "routine": 1,
+            "slot_entry": 2,
+
             "repetition_unit": 1,
-            "weight_unit": 1
+            "reps": 12,
+            "reps_target": 12,
+
+            "weight_unit": 1,
+            "weight": "10.00",
+            "weight_target": null,
+
+            "rir": null,
+            "rir_target": null
         },
         {
             "id": 1,
-            "reps": 10,
             "iteration": 1,
-            "set_config": 2,
-            "weight": "20.00",
             "date": "2023-05-13",
-            "rir": "",
-            "exercise_base": 100,
-            "workout": 1,
+            "exercise": 100,
+            "routine": 1,
+            "slot_entry": 2,
+
             "repetition_unit": 1,
-            "weight_unit": 1
+            "reps": 10,
+            "reps_target": null,
+
+            "weight_unit": 1,
+            "weight": "20.00",
+            "weight_target": "20.00",
+
+            "rir": "1.5",
+            "rir_target": "1"
         }
     ]
 };

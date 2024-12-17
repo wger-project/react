@@ -95,7 +95,7 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
             date: item.date, // Pass the date string directly
             iteration: item.iteration,
             exerciseId: item.exercise,
-            slotEntryId: item.set_config,
+            slotEntryId: item.slot_entry,
 
             repetitionUnitId: item.repetition_unit,
             reps: item.reps,
@@ -114,7 +114,7 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         return {
             id: item.id,
             iteration: item.iteration,
-            set_config: item.slotEntryId,
+            slot_entry: item.slotEntryId,
             exercise_base: item.exerciseId,
 
             repetition_unit: item.repetitionUnitId,

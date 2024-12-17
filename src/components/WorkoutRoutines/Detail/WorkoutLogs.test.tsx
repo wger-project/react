@@ -59,7 +59,7 @@ describe("Test the RoutineLogs component", () => {
 
         // Assert
         expect(useRoutineDetailQuery).toHaveBeenCalledWith(101);
-        expect(useRoutineLogQuery).toHaveBeenCalledWith(101, false);
+        expect(useRoutineLogQuery).toHaveBeenCalledWith(101, false, { "repetition_unit": 1, "weight_unit__in": "1,2" });
         expect(screen.getByText('Every day is leg day 🦵🏻')).toBeInTheDocument();
         expect(screen.getByText('routines.addLogToDay')).toBeInTheDocument();
         expect(screen.getByText('Squats')).toBeInTheDocument();
