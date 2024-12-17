@@ -392,11 +392,10 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                             <Grid container justifyContent="space-between" alignItems="center">
                                                 <Grid>
                                                     <Typography variant={"h5"}>
-                                                        {props.day.slots.length > 1 &&
-                                                            <IconButton
-                                                                onClick={() => handleDeleteSlot(slot.id)} {...provided.dragHandleProps}>
-                                                                <DragHandle />
-                                                            </IconButton>}
+                                                        <IconButton
+                                                            onClick={() => handleDeleteSlot(slot.id)} {...provided.dragHandleProps}>
+                                                            <DragHandle />
+                                                        </IconButton>
 
                                                         <IconButton onClick={() => handleDeleteSlot(slot.id)}>
                                                             <DeleteIcon />

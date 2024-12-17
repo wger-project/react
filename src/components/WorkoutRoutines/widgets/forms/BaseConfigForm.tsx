@@ -158,7 +158,7 @@ export const SlotBaseConfigValueField = (props: {
                 iteration: 1,
                 operation: OPERATION_REPLACE,
                 step: 'abs',
-                need_log_to_apply: false,
+                requirements: null,
                 ...data
             });
         }
@@ -179,7 +179,7 @@ export const SlotBaseConfigValueField = (props: {
 
     const isPending = editQueryHook.isPending || addQueryHook.isPending || deleteQueryHook.isPending;
 
-    return (<>
+    return (
         <TextField
             slotProps={{
                 input: { endAdornment: isPending && <LoadingProgressIcon /> }
@@ -194,7 +194,7 @@ export const SlotBaseConfigValueField = (props: {
             disabled={isPending}
             onChange={e => onChange(e.target.value)}
         />
-    </>);
+    );
 };
 
 
