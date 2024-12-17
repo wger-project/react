@@ -227,9 +227,7 @@ describe('Tests for the getFullStatsData function', () => {
             'en',
             mockT,
         );
-        console.log(JSON.stringify(result, null, 4));
         expect(result.headers).toEqual(['server.finger_muscle', 'server.shoulders']);
-
         expect(result.data).toEqual([
             { key: "3/1/2024", values: [15, 10] },
             { key: "3/3/2024", values: [18, 12] }

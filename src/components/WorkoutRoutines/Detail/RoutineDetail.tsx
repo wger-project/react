@@ -38,7 +38,6 @@ export const RoutineDetail = () => {
                     <Stack>
                         <h3>TODO</h3>
                         <ul>
-                            <li>Statistics</li>
                             <li>Muscle overview</li>
                         </ul>
                         <Grid container>
