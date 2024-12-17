@@ -1,6 +1,17 @@
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, useTheme } from "@mui/material";
+import BarChartIcon from '@mui/icons-material/BarChart';
+import {
+    Box,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Tooltip as MuiTooltip,
+    useTheme
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
-
 import { SelectChangeEvent } from '@mui/material/Select';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
@@ -21,6 +32,7 @@ import { useParams } from "react-router-dom";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { getLanguageByShortName } from "services";
 import { generateChartColors } from "utils/colors";
+import { makeLink, WgerLink } from "utils/url";
 
 
 export const WorkoutStats = () => {
@@ -153,7 +165,18 @@ export const WorkoutStats = () => {
     const colorGenerator = generateChartColors(chartData.length);
 
     return (
-        <WgerContainerFullWidth title={`${t("routines.statsHeader")} - ${routine.name}`}>
+        <WgerContainerFullWidth
+            title={`${t("routines.statsOverview")} - ${routine.name}`}
+            backToUrl={makeLink(WgerLink.ROUTINE_DETAIL, i18n.language, { id: routineId })}
+            optionsMenu={
+                <MuiTooltip title={t('routines.logsOverview')}>
+                    <IconButton component="a"
+                                href={makeLink(WgerLink.ROUTINE_LOGS_OVERVIEW, i18n.language, { id: routineId })}>
+                        <BarChartIcon />
+                    </IconButton>
+                </MuiTooltip>
+            }
+        >
             <Grid container spacing={1}>
                 <Grid size={2} offset={3}>
                     <StatsOptionDropdown

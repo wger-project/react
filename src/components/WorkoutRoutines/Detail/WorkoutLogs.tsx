@@ -1,4 +1,5 @@
-import { Button, Stack, Typography } from "@mui/material";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import { Button, IconButton, Stack, Tooltip as MuiTooltip, Typography } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
@@ -41,7 +42,18 @@ export const WorkoutLogs = () => {
     }
 
     return (
-        <WgerContainerFullWidth title={t("routines.logsHeader")}>
+        <WgerContainerFullWidth
+            title={t("routines.logsHeader")}
+            backToUrl={makeLink(WgerLink.ROUTINE_DETAIL, i18n.language, { id: routineId })}
+            optionsMenu={
+                <MuiTooltip title={t('routines.statsOverview')}>
+                    <IconButton component="a"
+                                href={makeLink(WgerLink.ROUTINE_STATS_OVERVIEW, i18n.language, { id: routineId })}>
+                        <BarChartIcon />
+                    </IconButton>
+                </MuiTooltip>
+            }
+        >
 
             <Typography variant={"body1"}>
                 {t('routines.logsFilterNote')}

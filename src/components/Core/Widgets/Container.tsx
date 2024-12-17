@@ -1,7 +1,9 @@
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
-import { Container, Stack, Typography } from "@mui/material";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { Button, Container, Stack, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import React, { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 type WgerTemplateContainerRightSidebarProps = {
     title?: string;
@@ -40,19 +42,35 @@ export const WgerContainerRightSidebar = (props: WgerTemplateContainerRightSideb
 type WgerTemplateContainerFullWidthProps = {
     title?: string;
     children: ReactNode;
+    backToTitle?: string;
+    backToUrl?: string;
     optionsMenu?: ReactJSXElement;
 };
 
 export const WgerContainerFullWidth = (props: WgerTemplateContainerFullWidthProps) => {
+    const { t } = useTranslation();
+
+    const backTo = <Button
+        size="small"
+        component="a"
+        href={props.backToUrl}>
+        <ChevronLeftIcon fontSize="inherit" />
+        {props.backToTitle ?? t('goBack')}
+    </Button>;
 
     return (
         <Container maxWidth="lg">
             <Grid container spacing={2}>
                 <Grid sx={{ mb: 2 }} size={12}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Typography gutterBottom variant="h3">
-                            {props.title}
-                        </Typography>
+
+                        <Stack alignItems="start">
+                            <Typography variant="h3">
+                                {props.title}
+                            </Typography>
+                            {props.backToUrl && backTo}
+                        </Stack>
+
                         {props.optionsMenu}
                     </Stack>
                 </Grid>

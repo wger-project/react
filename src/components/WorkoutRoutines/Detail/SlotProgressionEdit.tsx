@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
@@ -9,7 +9,7 @@ import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { ProgressionForm } from "components/WorkoutRoutines/widgets/forms/ProgressionForm";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getLanguageByShortName } from "services";
 import { makeLink, WgerLink } from "utils/url";
 
@@ -55,14 +55,7 @@ export const SlotProgressionEdit = () => {
     return <>
         <WgerContainerFullWidth
             title={`Edit progression`}
-            optionsMenu={<Button
-                component={Link}
-                variant={"outlined"}
-                size={"small"}
-                to={makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: routineId })}
-            >
-                back to routine edit
-            </Button>}
+            backToUrl={makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: routineId })}
         >
             {slot.configs.map((config) =>
                 <React.Fragment key={config.id}>
