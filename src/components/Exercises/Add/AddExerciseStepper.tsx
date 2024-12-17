@@ -27,7 +27,7 @@ export const AddExerciseStepper = () => {
     };
 
     return (
-        <exerciseState.ExerciseStateProvider>
+        <exerciseState.ExerciseSubmissionStateProvider>
             <Container maxWidth="md">
                 <Stack direction={"row"}>
                     <Typography gutterBottom variant="h3" component="div">
@@ -92,6 +92,6 @@ export const AddExerciseStepper = () => {
                     </Stepper>
                 </Box>
             </Container>
-        </exerciseState.ExerciseStateProvider>
+        </exerciseState.ExerciseSubmissionStateProvider>
     );
 };

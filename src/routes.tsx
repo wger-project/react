@@ -6,8 +6,14 @@ import { BmiCalculator } from "components/Nutrition/components/BmiCalculator";
 import { NutritionDiaryOverview } from "components/Nutrition/components/NutritionDiaryOverview";
 import { PlanDetail } from "components/Nutrition/components/PlanDetail";
 import { PlansOverview } from "components/Nutrition/components/PlansOverview";
-import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
-import { RoutineLogs } from "components/WorkoutRoutines/Detail/RoutineLogs";
+import { RoutineAdd } from "components/WorkoutRoutines/Detail/RoutineAdd";
+import { RoutineDetail } from "components/WorkoutRoutines/Detail/RoutineDetail";
+import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
+import { RoutineEdit } from "components/WorkoutRoutines/Detail/RoutineEdit";
+import { SessionAdd } from "components/WorkoutRoutines/Detail/SessionAdd";
+import { SlotProgressionEdit } from "components/WorkoutRoutines/Detail/SlotProgressionEdit";
+import { WorkoutLogs } from "components/WorkoutRoutines/Detail/WorkoutLogs";
+import { WorkoutStats } from "components/WorkoutRoutines/Detail/WorkoutStats";
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
 import {
     About,
@@ -53,14 +59,23 @@ export const WgerRoutes = () => {
                 <Route index element={<RoutineOverview />} />
                 <Route path="overview" element={<RoutineOverview />} />
                 <Route path="calendar" element={<Calendar />} />
-                <Route path=":routineId" element={<RoutineDetails />}>
-                    <Route path="view" element={<RoutineDetails />} />
-                </Route>
-                <Route path="log">
-                    <Route path=":routineId" element={<RoutineLogs />}>
-                        <Route path="view" element={<RoutineLogs />} />
+                <Route path="add" element={<RoutineAdd />} />
+
+                <Route path=":routineId">
+                    <Route path="day/:dayId">
+                        <Route path="add-logs" element={<SessionAdd />} />
                     </Route>
+                    <Route path="edit">
+                        <Route index element={<RoutineEdit />} />
+                        <Route path="progression/:slotId" element={<SlotProgressionEdit />} />
+                    </Route>
+
+                    <Route path="view" element={<RoutineDetail />} />
+                    <Route path="table" element={<RoutineDetailsTable />} />
+                    <Route path="logs" element={<WorkoutLogs />} />
+                    <Route path="statistics" element={<WorkoutStats />} />
                 </Route>
+
             </Route>
             <Route path="measurement">
                 <Route index element={<MeasurementCategoryOverview />} />

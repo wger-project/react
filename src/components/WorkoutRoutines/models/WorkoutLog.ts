@@ -5,32 +5,81 @@ import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit
 import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
 import { Adapter } from "utils/Adapter";
 
+export interface LogEntryForm {
+    exercise: Exercise | null;
+    repsUnit: RepetitionUnit | null;
+    weightUnit: WeightUnit | null;
+    rir: number | string;
+    reps: number | string;
+    weight: number | string;
+}
+
+
 export class WorkoutLog {
+    public id: number;
+    public date: Date;
+    public iteration: number | null;
+    public exerciseId: number;
+    public slotEntryId: number | null;
 
-    constructor(
-        public id: number,
-        public date: Date,
-        public exerciseId: number,
-        public repetitionUnit: number,
-        public reps: number,
-        public weight: number | null,
-        public weightUnit: number,
-        public rir: string | null,
-        public repetitionUnitObj?: RepetitionUnit,
-        public weightUnitObj?: WeightUnit,
-        public baseObj?: Exercise,
-    ) {
-        if (repetitionUnitObj) {
-            this.repetitionUnitObj = repetitionUnitObj;
-        }
+    public repetitionUnitObj: RepetitionUnit | null;
+    public repetitionUnitId: number;
+    public reps: number | null;
+    public repsTarget: number | null;
 
-        if (weightUnitObj) {
-            this.weightUnitObj = weightUnitObj;
-        }
+    public weightUnitObj: WeightUnit | null;
+    public weightUnitId: number;
+    public weight: number | null;
+    public weightTarget: number | null;
 
-        if (baseObj) {
-            this.baseObj = baseObj;
-        }
+    public rir: string | null;
+    public rirTarget: string | null;
+
+
+    public exerciseObj?: Exercise;
+
+    constructor(data: {
+        id: number;
+        date: Date | string;
+        iteration: number | null;
+        slotEntryId: number | null;
+
+        exerciseObj?: Exercise;
+        exerciseId: number;
+
+        repetitionUnitObj?: RepetitionUnit;
+        repetitionUnitId: number;
+        reps: number | null;
+        repsTarget?: number | null;
+
+        weightUnitObj?: WeightUnit;
+        weightUnitId: number;
+        weight: number | null;
+        weightTarget?: number | null;
+
+        rir: string | null;
+        rirTarget?: string | null;
+    }) {
+        this.id = data.id;
+        this.date = typeof data.date === 'string' ? new Date(data.date) : data.date;
+        this.iteration = data.iteration;
+        this.slotEntryId = data.slotEntryId;
+
+        this.exerciseObj = data.exerciseObj;
+        this.exerciseId = data.exerciseId;
+
+        this.repetitionUnitObj = data.repetitionUnitObj || null;
+        this.repetitionUnitId = data.repetitionUnitId;
+        this.reps = data.reps;
+        this.repsTarget = data.repsTarget || null;
+
+        this.weightUnitObj = data.weightUnitObj || null;
+        this.weightUnitId = data.weightUnitId;
+        this.weight = data.weight;
+        this.weightTarget = data.weightTarget || null;
+
+        this.rir = data.rir;
+        this.rirTarget = data.rirTarget || null;
     }
 
     get rirString(): string {
@@ -41,28 +90,43 @@ export class WorkoutLog {
 
 export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
     fromJson(item: any) {
-        return new WorkoutLog(
-            item.id,
-            new Date(item.date),
-            item.exercise_base,
-            item.repetition_unit,
-            item.reps,
-            item.weight === null ? null : Number.parseFloat(item.weight),
-            item.weight_unit,
-            item.rir,
-        );
+        return new WorkoutLog({
+            id: item.id,
+            date: item.date, // Pass the date string directly
+            iteration: item.iteration,
+            exerciseId: item.exercise,
+            slotEntryId: item.slot_entry,
+
+            repetitionUnitId: item.repetition_unit,
+            reps: item.reps,
+            repsTarget: item.reps_target,
+
+            weightUnitId: item.weight_unit,
+            weight: item.weight === null ? null : Number.parseFloat(item.weight),
+            weightTarget: item.weight_target === null ? null : Number.parseFloat(item.weight_target),
+
+            rir: item.rir,
+            rirTarget: item.rir_target,
+        });
     }
 
-    toJson(item: WorkoutLog):
-        any {
+    toJson(item: WorkoutLog) {
         return {
             id: item.id,
+            iteration: item.iteration,
+            slot_entry: item.slotEntryId,
             exercise_base: item.exerciseId,
-            repetition_unit: item.repetitionUnit,
+
+            repetition_unit: item.repetitionUnitId,
             reps: item.reps,
+            reps_target: item.repsTarget,
+
+            weight_unit: item.weightUnitId,
             weight: item.weight,
-            weight_unit: item.weightUnit,
+            weight_target: item.weightTarget,
+
             rir: item.rir,
+            rir_target: item.rirTarget,
         };
     }
 }

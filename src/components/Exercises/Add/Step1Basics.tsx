@@ -1,5 +1,5 @@
-import { Autocomplete, Box, Button, MenuItem, Stack, TextField, } from "@mui/material";
 import Grid from '@mui/material/Grid2';
+import { Autocomplete, Box, Button, MenuItem, Stack, TextField, } from "@mui/material";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
@@ -12,14 +12,14 @@ import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseStateValue } from "state";
-import * as exerciseReducer from "state/exerciseReducer";
+import { useExerciseSubmissionStateValue } from "state";
+import * as exerciseReducer from "state/exerciseSubmissionReducer";
 import { getTranslationKey } from "utils/strings";
 import * as yup from "yup";
 
 export const Step1Basics = ({ onContinue }: StepProps) => {
     const [t] = useTranslation();
-    const [state, dispatch] = useExerciseStateValue();
+    const [state, dispatch] = useExerciseSubmissionStateValue();
     const [primaryMuscles, setPrimaryMuscles] = useState<number[]>(state.muscles);
     const [secondaryMuscles, setSecondaryMuscles] = useState<number[]>(state.musclesSecondary);
 

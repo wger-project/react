@@ -95,7 +95,7 @@ export class ExerciseAdapter implements Adapter<Exercise> {
         const translationAdapter = new TranslationAdapter();
         const videoAdapter = new ExerciseVideoAdapter();
 
-        const base = new Exercise(
+        const exercise = new Exercise(
             item.id,
             item.uuid,
             categoryAdapter.fromJson(item.category),
@@ -104,20 +104,20 @@ export class ExerciseAdapter implements Adapter<Exercise> {
             item.muscles_secondary.map((m: any) => (muscleAdapter.fromJson(m))),
             item.images.map((i: any) => (imageAdapter.fromJson(i))),
             item.variations,
-            item.exercises.map((t: any) => translationAdapter.fromJson(t)),
+            item.translations.map((t: any) => translationAdapter.fromJson(t)),
             item.videos.map((t: any) => videoAdapter.fromJson(t)),
             item.author_history
         );
 
-        if (!base.translations.some(t => t.language === ENGLISH_LANGUAGE_ID)) {
-            console.info(`No english translation found for exercise base ${base.uuid}!`);
+        if (!exercise.translations.some(t => t.language === ENGLISH_LANGUAGE_ID)) {
+            console.info(`No english translation found for exercise base ${exercise.uuid}!`);
         }
 
-        if (base.translations.length === 0) {
-            throw new Error(`No translations found for exercise base ${base.uuid}!`);
+        if (exercise.translations.length === 0) {
+            throw new Error(`No translations found for exercise base ${exercise.uuid}!`);
         }
 
-        return base;
+        return exercise;
     }
 
     /**
