@@ -6,13 +6,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from "@mui/icons-material/EditOff";
 import {
     Alert,
+    AlertTitle,
     Box,
     Button,
     ButtonGroup,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
     FormControlLabel,
     IconButton,
     Paper,
@@ -25,6 +22,7 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
+import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { useProfileQuery } from "components/User/queries/profile";
 import { Day } from "components/WorkoutRoutines/models/Day";
@@ -99,7 +97,7 @@ export const DayDragAndDropGrid = (props: {
         background: isDraggingOver ? "lightblue" : undefined,
         // background: isDraggingOver ? "lightblue" : "lightgrey",
         display: 'flex',
-        padding: grid,
+        // padding: grid,
         overflow: 'auto',
     });
 
@@ -116,7 +114,7 @@ export const DayDragAndDropGrid = (props: {
 
 
     return (
-        <Grid container direction="row">
+        <Grid container direction="row" spacing={1}>
             <Grid size={12}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="dayDroppable" direction="horizontal">
@@ -166,7 +164,14 @@ export const DayDragAndDropGrid = (props: {
                 </DragDropContext>
             </Grid>
 
-            <Grid size={12} sx={{ textAlign: 'center' }}>
+            {routineQuery.data!.days.length === 0 && <Grid size={12}>
+                <Alert severity="info">
+                    <AlertTitle>{t('routines.routineHasNoDays')}</AlertTitle>
+                    {t('nothingHereYetAction')}
+                </Alert>
+            </Grid>}
+
+            <Grid size={12}>
                 <Button
                     onClick={handleAddDay}
                     variant="contained"
@@ -214,9 +219,9 @@ const DayCard = (props: {
     return (<React.Fragment>
             <Paper>
                 <Box sx={{ ...sx, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', p: 2 }}>
-                    <Typography variant={"h5"}>{props.day.isRest ? t('routines.restDay') : props.day.name}</Typography>
+                    <Typography variant={"h5"}>{props.day.getDisplayName()}</Typography>
 
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
                         <IconButton onClick={setSelected}>
                             {props.isSelected ? <EditOffIcon /> : <EditIcon />}
                         </IconButton>
@@ -227,32 +232,15 @@ const DayCard = (props: {
                 </Box>
             </Paper>
 
-            {/*<Card sx={sx}>*/}
-            {/*    <CardHeader title={props.day.isRest ? t('routines.restDay') : props.day.name} />*/}
+            <DeleteConfirmationModal
+                title={t('deleteConfirmation', { name: props.day.getDisplayName() })}
+                message={t('routines.deleteDayConfirmation')}
+                isOpen={openDeleteDialog}
+                closeFn={handleCancelDeleteDay}
+                deleteFn={handleConfirmDeleteDay}
+            />
 
-            {/*    <CardActions>*/}
-            {/*        <IconButton onClick={setSelected}>*/}
-            {/*            {props.isSelected ? <EditOffIcon /> : <EditIcon />}*/}
-            {/*        </IconButton>*/}
-            {/*        <IconButton onClick={handleDeleteDay}>*/}
-            {/*            {deleteDayQuery.isPending ? <LoadingProgressIcon /> : <DeleteIcon />}*/}
-            {/*        </IconButton>*/}
-            {/*    </CardActions>*/}
-            {/*</Card>*/}
 
-            <Dialog open={openDeleteDialog} onClose={handleCancelDeleteDay}>
-                <DialogTitle>Confirm Delete</DialogTitle>
-                <DialogContent>
-                    Are you sure you want to delete this day? This action cannot be
-                    undone.
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCancelDeleteDay}>Cancel</Button>
-                    <Button onClick={handleConfirmDeleteDay} color="error">
-                        Delete
-                    </Button>
-                </DialogActions>
-            </Dialog>
         </React.Fragment>
     );
 };
@@ -359,12 +347,12 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
 
     return (<>
         <Typography variant={"h4"}>
-            {props.day.isRest ? t('routines.restDay') : props.day.name}
+            {props.day.getDisplayName()}
         </Typography>
         <Box height={30} />
         <DayForm routineId={props.routineId} day={props.day} key={`day-form-${props.day.id}`} />
         <Box height={40} />
-        {!props.day.isRest && <FormControlLabel
+        {(!props.day.isRest && props.day.slots.length > 0) && <FormControlLabel
             control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
             label={t('routines.simpleMode')} />}
         <Box height={20} />
@@ -441,7 +429,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                                 key={`slot-form-${slot.id}`} />
                                             <Box height={10} />
                                         </Grid>}
-                                        <Grid size={12}>
+                                        <Grid size={12} paddingLeft={1} paddingRight={1}>
                                             {/*<Box height={20} />*/}
                                             <SlotDetails
                                                 slot={slot}
@@ -450,8 +438,8 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                             />
                                         </Grid>
 
-                                        {showAutocompleterForSlot === slot.id /*|| slot.configs.length === 0*/
-                                            && <Grid size={12}>
+                                        {(showAutocompleterForSlot === slot.id || slot.configs.length === 0)
+                                            && <Grid size={12} paddingLeft={1} paddingRight={1}>
                                                 <Box height={20} />
                                                 <NameAutocompleter
                                                     callback={(exercise: ExerciseSearchResponse | null) => {
@@ -468,20 +456,19 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                                         setShowAutocompleterForSlot(null);
                                                     }}
                                                 />
-                                                {/*<Box height={20} />*/}
                                             </Grid>}
 
-                                        <Grid size={12}>
-                                            {slot.configs.length === 0 && <ButtonGroup><Button
-                                                onClick={() => handleAddSlotEntry(slot.id)}
-                                                size={"small"}
-                                                disabled={addSlotEntryQuery.isPending}
-                                                startIcon={addSlotEntryQuery.isPending ? <LoadingProgressIcon /> :
-                                                    <AddIcon />}
-                                            >
-                                                {t('routines.addExercise')}
-                                            </Button></ButtonGroup>}
-                                        </Grid>
+                                        {/*<Grid size={12} paddingLeft={1} paddingBottom={1}>*/}
+                                        {/*    {slot.configs.length === 0 && <ButtonGroup><Button*/}
+                                        {/*        onClick={() => handleAddSlotEntry(slot.id)}*/}
+                                        {/*        size={"small"}*/}
+                                        {/*        disabled={addSlotEntryQuery.isPending}*/}
+                                        {/*        startIcon={addSlotEntryQuery.isPending ? <LoadingProgressIcon /> :*/}
+                                        {/*            <AddIcon />}*/}
+                                        {/*    >*/}
+                                        {/*        {t('routines.addExercise')}*/}
+                                        {/*    </Button></ButtonGroup>}*/}
+                                        {/*</Grid>*/}
                                     </Grid>
                                 )}
                             </Draggable>

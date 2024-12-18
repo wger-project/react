@@ -176,7 +176,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
                             <Addchart />
                         </IconButton>
                     </Tooltip>}
-                title={props.dayData.day!.isRest ? t('routines.restDay') : props.dayData.day!.name}
+                title={props.dayData.day!.getDisplayName()}
                 subheader={props.dayData.day?.description}
             />
             <Menu

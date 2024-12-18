@@ -85,7 +85,7 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
                     <React.Fragment key={`${props.iteration}-${index}`}>
                         <TableRow key={`tableRow-rest-${index}`}>
                             <TableCell sx={{ backgroundColor: theme.palette.action.hover }}>
-                                <b>{dayData.day === null || dayData.day.isRest ? t('routines.restDay') : dayData.day.name}</b>
+                                <b>{dayData.day === null || dayData.day.getDisplayName()}</b>
                             </TableCell>
                         </TableRow>
 

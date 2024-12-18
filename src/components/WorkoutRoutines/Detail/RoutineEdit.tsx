@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
@@ -55,18 +55,20 @@ export const RoutineEdit = () => {
         </Grid>
 
 
-        <Stack spacing={2} sx={{ mt: 2 }}>
+        {routineQuery.data!.days.length > 0 && <Stack spacing={2} sx={{ mt: 2 }}>
+            <Box height={40} />
             <Typography variant={"h4"}>
                 {t('routines.resultingRoutine')}
             </Typography>
+            <Divider />
 
-            <Box padding={4}>
+            <Box>
                 <RoutineDetailsCard />
 
                 <Box height={20} />
                 <RoutineDetailsTable />
             </Box>
-        </Stack>
+        </Stack>}
     </WgerContainerFullWidth>;
 };
 

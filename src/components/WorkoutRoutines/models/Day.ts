@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 
 import { Slot, SlotAdapter } from "components/WorkoutRoutines/models/Slot";
+import i18n from 'i18next';
 import { Adapter } from "utils/Adapter";
 
 export class Day {
@@ -26,6 +27,11 @@ export class Day {
     public get isSpecialType(): boolean {
         return this.type !== 'custom';
     }
+
+    public getDisplayName(): string {
+        return this.isRest ? i18n.t('routines.restDay') : this.name;
+    }
+
 }
 
 

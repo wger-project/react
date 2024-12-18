@@ -64,6 +64,15 @@ export const SlotProgressionEdit = () => {
                     </Typography>
                     <Grid container>
                         <ProgressionForm
+                            type="sets"
+                            configs={config.nrOfSetsConfigs}
+                            configsMax={config.maxNrOfSetsConfigs}
+                            slotEntryId={config.id}
+                            routineId={routineId}
+                            iterations={iterations}
+                            forceInteger={true}
+                        />
+                        <ProgressionForm
                             type="weight"
                             configs={config.weightConfigs}
                             configsMax={config.maxWeightConfigs}
@@ -80,26 +89,17 @@ export const SlotProgressionEdit = () => {
                             iterations={iterations}
                         />
                         <ProgressionForm
-                            type="sets"
-                            configs={config.nrOfSetsConfigs}
-                            configsMax={config.maxNrOfSetsConfigs}
+                            type="rir"
+                            configs={config.rirConfigs}
+                            configsMax={config.maxRirConfigs}
                             slotEntryId={config.id}
                             routineId={routineId}
                             iterations={iterations}
-                            forceInteger={true}
                         />
                         <ProgressionForm
                             type="rest"
                             configs={config.restTimeConfigs}
                             configsMax={config.maxRestTimeConfigs}
-                            slotEntryId={config.id}
-                            routineId={routineId}
-                            iterations={iterations}
-                        />
-                        <ProgressionForm
-                            type="rir"
-                            configs={config.rirConfigs}
-                            configsMax={config.maxRirConfigs}
                             slotEntryId={config.id}
                             routineId={routineId}
                             iterations={iterations}

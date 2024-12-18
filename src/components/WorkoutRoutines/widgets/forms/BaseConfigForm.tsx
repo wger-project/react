@@ -198,6 +198,121 @@ export const SlotBaseConfigValueField = (props: {
 };
 
 
+export const ConfigDetailsRequirementsField = (props: {
+    fieldName: string,
+    values: RequirementsType[],
+    disabled?: boolean
+}) => {
+
+    const { setFieldValue } = useFormikContext();
+    const { t } = useTranslation();
+    const disable = props.disabled ?? false;
+
+    const [selectedElements, setSelectedElements] = useState<RequirementsType[]>(props.values);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const handleSelection = (value: RequirementsType) => {
+        // if the value is not in selectedElements, add it
+        if (!selectedElements.includes(value)) {
+            setSelectedElements([...selectedElements, value]);
+        } else {
+            setSelectedElements(selectedElements.filter((e) => e !== value));
+        }
+    };
+
+    const handleSubmit = async () => {
+        await setFieldValue(props.fieldName, selectedElements);
+        setAnchorEl(null);
+    };
+
+
+    return <>
+        <IconButton
+            disabled={disable}
+            onClick={(event) => setAnchorEl(event.currentTarget)}
+        >
+            {Boolean(anchorEl) ? <ArrowDropUpIcon /> : <ArrowDropDown />}
+        </IconButton>
+        <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
+        >
+            {...REQUIREMENTS_VALUES.map((e, index) => <MenuItem
+                onClick={() => handleSelection(e as unknown as RequirementsType)}>
+                <ListItemIcon>
+                    {selectedElements.includes(e as unknown as RequirementsType)
+                        ? <CheckBoxIcon fontSize="small" />
+                        : <CheckBoxOutlineBlank fontSize="small" />
+                    }
+                </ListItemIcon>
+                <ListItemText>
+                    {e}
+                </ListItemText>
+            </MenuItem>)}
+            <Divider />
+            <MenuItem>
+
+                <Button color="primary" variant="contained" type="submit" size="small" onClick={handleSubmit}>
+                    {t('save')}
+                </Button>
+            </MenuItem>
+        </Menu></>;
+};
+
+
+export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotEntryId?: number, routineId: number }) => {
+
+    const editRiRQuery = useEditRiRConfigQuery(props.routineId);
+    const deleteRiRQuery = useDeleteRiRConfigQuery(props.routineId);
+    const addRiRQuery = useAddRiRConfigQuery(props.routineId);
+
+    const handleData = (value: string) => {
+
+        const data = {
+            value: parseFloat(value),
+        };
+
+        if (value === '') {
+            props.config && deleteRiRQuery.mutate(props.config.id);
+        } else if (props.config !== undefined) {
+            editRiRQuery.mutate({ id: props.config.id, ...data });
+        } else {
+            addRiRQuery.mutate({
+                // eslint-disable-next-line camelcase
+                slot_entry: props.slotEntryId!,
+                iteration: 1,
+                operation: OPERATION_REPLACE,
+                need_log_to_apply: false,
+                ...data
+            });
+        }
+    };
+
+    return <TextField
+        fullWidth
+        select
+        label="RiR"
+        variant="standard"
+        defaultValue=""
+        value={props.config?.value}
+        disabled={editRiRQuery.isPending}
+        onChange={e => handleData(e.target.value)}
+    >
+        {RIR_VALUES_SELECT.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+                {option.label}
+            </MenuItem>
+        ))}
+    </TextField>;
+};
+
+
+/*
+ *  ---> These components are not needed anymore but are kept here in case we need
+ *       to edit these fields individually in the future
+ */
+
 export const AddEntryDetailsButton = (props: {
     iteration: number,
     routineId: number,
@@ -377,114 +492,4 @@ export const ConfigDetailsNeedLogsToApplyField = (props: {
         onChange={e => handleData(e.target.checked)}
         disabled={disable || editQueryHook.isPending}
     />;
-};
-
-
-export const ConfigDetailsRequirementsField = (props: {
-    fieldName: string,
-    values: RequirementsType[],
-    disabled?: boolean
-}) => {
-
-    const { setFieldValue } = useFormikContext();
-    const { t } = useTranslation();
-    const disable = props.disabled ?? false;
-
-    const [selectedElements, setSelectedElements] = useState<RequirementsType[]>(props.values);
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-    const handleSelection = (value: RequirementsType) => {
-        // if the value is not in selectedElements, add it
-        if (!selectedElements.includes(value)) {
-            setSelectedElements([...selectedElements, value]);
-        } else {
-            setSelectedElements(selectedElements.filter((e) => e !== value));
-        }
-    };
-
-    const handleSubmit = async () => {
-        await setFieldValue(props.fieldName, selectedElements);
-        setAnchorEl(null);
-    };
-
-
-    return <>
-        <IconButton
-            disabled={disable}
-            onClick={(event) => setAnchorEl(event.currentTarget)}
-        >
-            {Boolean(anchorEl) ? <ArrowDropUpIcon /> : <ArrowDropDown />}
-        </IconButton>
-        <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={() => setAnchorEl(null)}
-        >
-            {...REQUIREMENTS_VALUES.map((e, index) => <MenuItem
-                onClick={() => handleSelection(e as unknown as RequirementsType)}>
-                <ListItemIcon>
-                    {selectedElements.includes(e as unknown as RequirementsType)
-                        ? <CheckBoxIcon fontSize="small" />
-                        : <CheckBoxOutlineBlank fontSize="small" />
-                    }
-                </ListItemIcon>
-                <ListItemText>
-                    {e}
-                </ListItemText>
-            </MenuItem>)}
-            <Divider />
-            <MenuItem>
-
-                <Button color="primary" variant="contained" type="submit" size="small" onClick={handleSubmit}>
-                    {t('save')}
-                </Button>
-            </MenuItem>
-        </Menu></>;
-};
-
-
-export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotEntryId?: number, routineId: number }) => {
-
-    const editRiRQuery = useEditRiRConfigQuery(props.routineId);
-    const deleteRiRQuery = useDeleteRiRConfigQuery(props.routineId);
-    const addRiRQuery = useAddRiRConfigQuery(props.routineId);
-
-    const handleData = (value: string) => {
-
-        const data = {
-            value: parseFloat(value),
-        };
-
-        if (value === '') {
-            props.config && deleteRiRQuery.mutate(props.config.id);
-        } else if (props.config !== undefined) {
-            editRiRQuery.mutate({ id: props.config.id, ...data });
-        } else {
-            addRiRQuery.mutate({
-                // eslint-disable-next-line camelcase
-                slot_entry: props.slotEntryId!,
-                iteration: 1,
-                operation: OPERATION_REPLACE,
-                need_log_to_apply: false,
-                ...data
-            });
-        }
-    };
-
-    return <TextField
-        fullWidth
-        select
-        label="RiR"
-        variant="standard"
-        defaultValue=""
-        value={props.config?.value}
-        disabled={editRiRQuery.isPending}
-        onChange={e => handleData(e.target.value)}
-    >
-        {RIR_VALUES_SELECT.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-                {option.label}
-            </MenuItem>
-        ))}
-    </TextField>;
 };

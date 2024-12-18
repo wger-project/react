@@ -76,7 +76,7 @@ const DayListItem = (props: { dayData: RoutineDayData }) => {
                 {expandView ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </ListItemIcon>
             <ListItemText
-                primary={props.dayData.day?.isRest ? t('routines.restDay') : props.dayData.day?.name}
+                primary={props.dayData.day?.getDisplayName()}
             />
         </ListItemButton>
 

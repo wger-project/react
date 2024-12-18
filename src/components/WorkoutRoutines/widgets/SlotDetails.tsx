@@ -1,7 +1,7 @@
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from '@mui/icons-material/EditOff';
-import { Alert, Box, IconButton, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, IconButton, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { useLanguageQuery } from "components/Exercises/queries";
@@ -42,10 +42,14 @@ const getConfigComponent = (type: ConfigType, configs: BaseConfig[], routineId: 
 };
 
 export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: boolean }) => {
+    const { t } = useTranslation();
 
     return (<>
         {props.slot.configs.length === 0 && (
-            <Alert severity="warning">This set has no exercises yet.</Alert>
+            <Alert severity="warning">
+                <AlertTitle>{t('routines.setHasNoExercises')}</AlertTitle>
+                {t('nothingHereYetAction')}
+            </Alert>
         )}
 
         {props.slot.configs.map((slotEntry: SlotEntry) => (
@@ -59,8 +63,14 @@ export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: 
     </>);
 };
 
-export const SlotEntryDetails = (props: { slotEntry: SlotEntry, routineId: number, simpleMode: boolean }) => {
+export const SlotEntryDetails = (props: {
+    slotEntry: SlotEntry,
+    routineId: number,
+    simpleMode: boolean,
+}) => {
     const { t, i18n } = useTranslation();
+
+    console.log(props);
 
     const [editExercise, setEditExercise] = useState(false);
     const toggleEditExercise = () => setEditExercise(!editExercise);
@@ -199,9 +209,8 @@ export const SlotEntryDetails = (props: { slotEntry: SlotEntry, routineId: numbe
                             {t('routines.exerciseHasProgression')}
                         </Alert>
                     </Grid>
-                    : getForm()}
-
-
+                    : getForm()
+                }
             </Grid>
             <Box height={10} />
         </React.Fragment>)
