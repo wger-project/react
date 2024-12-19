@@ -1,8 +1,11 @@
-import { ArrowDropDown, CheckBoxOutlineBlank } from "@mui/icons-material";
+import { CheckBoxOutlineBlank } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import DeleteIcon from "@mui/icons-material/Delete";
+
+
+import SettingsIcon from '@mui/icons-material/Settings';
 import {
     Button,
     Divider,
@@ -231,7 +234,7 @@ export const ConfigDetailsRequirementsField = (props: {
             disabled={disable}
             onClick={(event) => setAnchorEl(event.currentTarget)}
         >
-            {Boolean(anchorEl) ? <ArrowDropUpIcon /> : <ArrowDropDown />}
+            {Boolean(anchorEl) ? <ArrowDropUpIcon fontSize="small" /> : <SettingsIcon fontSize="small" />}
         </IconButton>
         <Menu
             anchorEl={anchorEl}

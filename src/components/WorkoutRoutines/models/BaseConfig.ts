@@ -3,6 +3,10 @@
 import { Adapter } from "utils/Adapter";
 
 export interface BaseConfigEntryForm {
+    // This value is only used to change the conditional validation.
+    // This is kinda ugly but seems to be the cleanest way to do it
+    forceInteger: boolean;
+
     edited: boolean;
     iteration: number;
     id: number | null;
@@ -20,6 +24,8 @@ export interface BaseConfigEntryForm {
 }
 
 export const OPERATION_REPLACE = 'r';
+export const OPERATION_ADD = '+';
+export const OPERATION_SUBSTRACT = '-';
 
 export const REQUIREMENTS_VALUES = ["weight", "reps", "rir", "rest"] as const
 
@@ -34,8 +40,8 @@ export const STEP_VALUES_SELECT = [
 ];
 
 export const OPERATION_VALUES_SELECT = [
-    { value: '+', label: 'Add' },
-    { value: '-', label: 'Subtract' },
+    { value: OPERATION_ADD, label: 'Add' },
+    { value: OPERATION_SUBSTRACT, label: 'Subtract' },
     { value: OPERATION_REPLACE, label: 'Replace' },
 ];
 

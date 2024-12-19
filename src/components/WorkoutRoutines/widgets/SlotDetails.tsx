@@ -70,8 +70,6 @@ export const SlotEntryDetails = (props: {
 }) => {
     const { t, i18n } = useTranslation();
 
-    console.log(props);
-
     const [editExercise, setEditExercise] = useState(false);
     const toggleEditExercise = () => setEditExercise(!editExercise);
 

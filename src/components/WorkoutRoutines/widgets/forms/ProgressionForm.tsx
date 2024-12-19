@@ -1,23 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import LinkIcon from '@mui/icons-material/Link';
-import LinkOffIcon from '@mui/icons-material/LinkOff';
-import {
-    Button,
-    IconButton,
-    MenuItem,
-    Stack,
-    Switch,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TextField,
-    Typography
-} from "@mui/material";
+import { Box, Button, Divider, IconButton, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Tooltip from "@mui/material/Tooltip";
 import { WgerTextField } from "components/Common/forms/WgerTextField";
@@ -91,31 +75,23 @@ export const ProgressionForm = (props: {
                 edited: yup.boolean(),
                 iteration: yup.number().required(),
 
-                // Value is only required when the entry is actually being edited
                 // Conditionally apply integer validation e.g. for sets
-                value: yup.number().when('edited', {
-                    is: true,
-                    then: schema => forceInteger
-                        ? schema.integer(t('forms.enterInteger')).typeError(t('forms.enterNumber')).required(t("forms.fieldRequired"))
-                        : schema.typeError(t('forms.enterNumber')).required(t("forms.fieldRequired")),
-                    otherwise: schema => forceInteger
-                        ? schema.integer(t('forms.enterNumber')).nullable().notRequired()
-                        : schema.typeError(t('forms.enterNumber')).nullable().notRequired(),
-                }),
+                value: yup.number()
+                    .when('forceInteger', {
+                        is: true,
+                        then: schema => schema.integer(t('forms.enterInteger')).typeError(t('forms.enterNumber')),
+                        otherwise: schema => schema.typeError(t('forms.enterNumber')).nullable().notRequired(),
+                    }),
 
                 // only check that the max number is higher when replacing. In other cases allow the max
                 // weight to e.g. increase less than the min weight
-                // Conditionally apply integer validation e.g. for sets
                 valueMax: yup.number().typeError(t('forms.enterNumber')).nullable()
-                    .when('edited', {
+                    .when('forceInteger', {
                         is: true,
-                        then: schema => forceInteger
-                            ? schema.integer(t('forms.enterInteger')).typeError(t('forms.enterNumber')).required(t("forms.fieldRequired"))
-                            : schema.typeError(t('forms.enterNumber')).required(t("forms.fieldRequired")),
-                        otherwise: schema => forceInteger
-                            ? schema.integer(t('forms.enterNumber')).nullable().notRequired()
-                            : schema.typeError(t('forms.enterNumber')).nullable().notRequired(),
+                        then: schema => schema.integer(t('forms.enterInteger')).typeError(t('forms.enterNumber')),
+                        otherwise: schema => schema.typeError(t('forms.enterNumber')).nullable().notRequired(),
                     })
+                    // Conditionally apply integer validation e.g. for sets
                     .when('operation', {
                         is: OPERATION_REPLACE,
                         then: schema => schema.min(yup.ref('value'), t('forms.maxLessThanMin')),
@@ -128,10 +104,66 @@ export const ProgressionForm = (props: {
                 repeat: yup.boolean(),
                 repeatMax: yup.boolean()
             })
-        ),
+        )
+            .test(
+                'inter-entry-validation',
+                'Your error message here',
+                function (entries, context,) { // Use 'function' to access 'this'
+                    const { createError } = this;
+
+                    const data = entries as unknown as BaseConfigEntryForm[];
+                    // console.table(data);
+
+                    for (let i = 0; i < data.length; i++) {
+                        const entry = data[i];
+
+                        // If there is an entry down the line
+                        // if (entry.iteration === 1 && data.length > 1 && !entry.value && entry.edited) {
+                        //     return createError({
+                        //         path: `entries[${i}].value`,
+                        //         message: 'Value is required at workout nr 1 when other entries exist'
+                        //     });
+                        // }
+
+                        if (entry.iteration > 1 && entry.operation !== OPERATION_REPLACE) {
+                            let hasValuePreviousReplace = false;
+                            let hasMaxValuePreviousReplace = false;
+
+                            for (let j = 0; j < i; j++) {
+                                if (data[j].operation === OPERATION_REPLACE && data[j].value !== '' && data[j].edited) {
+                                    hasValuePreviousReplace = true;
+                                }
+
+                                if (data[j].operation === OPERATION_REPLACE && data[j].valueMax !== '' && data[j].edited) {
+                                    hasMaxValuePreviousReplace = true;
+                                }
+                            }
+
+                            if (!hasValuePreviousReplace) {
+                                return createError({
+                                    path: `entries[${i}].value`,
+                                    message: t('routines.progressionNeedsReplace')
+                                });
+                            }
+                            if (!hasMaxValuePreviousReplace) {
+                                return createError({
+                                    path: `entries[${i}].valueMax`,
+                                    message: t('routines.progressionNeedsReplace')
+                                });
+                            }
+                        }
+                    }
+
+                    // All entries valid
+                    return true;
+                }
+            )
+        ,
     });
 
     const getEmptyConfig = (iter: number, edited: boolean): BaseConfigEntryForm => ({
+        forceInteger: forceInteger,
+
         edited: edited,
         iteration: iter,
 
@@ -158,6 +190,8 @@ export const ProgressionForm = (props: {
             initialValues.entries.push(getEmptyConfig(iteration, false));
         } else {
             initialValues.entries.push({
+                forceInteger: forceInteger,
+
                 edited: true,
                 id: config.id,
                 idMax: configMax === undefined ? null : configMax.id,
@@ -259,88 +293,100 @@ export const ProgressionForm = (props: {
             >
                 {formik => (
                     <Form>
-
-                        <TableContainer>
-                            <Table size="small">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell>
-                                            Value
-                                            <IconButton onClick={() => setLinkMinMax(!linkMinMax)}>
-                                                {linkMinMax ? <LinkIcon /> : <LinkOffIcon />}
+                        <Grid container spacing={1}>
+                            <Grid size={4} offset={2} textAlign={"center"}>
+                                {t('value')}
+                                {/*<IconButton onClick={() => setLinkMinMax(!linkMinMax)}>*/}
+                                {/*    {linkMinMax ? <LinkIcon /> : <LinkOffIcon />}*/}
+                                {/*</IconButton>*/}
+                            </Grid>
+                            <Grid size={6}>
+                                <Grid container spacing={1}>
+                                    <Grid size={3}>
+                                        {t('routines.operation')}
+                                    </Grid>
+                                    <Grid size={3}>
+                                        {t('routines.step')}
+                                    </Grid>
+                                    <Grid size={3} textAlign={'center'}>
+                                        {t('routines.requirements')}
+                                        <br />
+                                        <Tooltip title={t('routines.requirementsHelpText')}>
+                                            <IconButton onClick={() => {
+                                            }}>
+                                                <HelpOutlineIcon fontSize="small" />
                                             </IconButton>
-                                        </TableCell>
-                                        <TableCell>{t('routines.operation')}</TableCell>
-                                        <TableCell>{t('routines.step')}</TableCell>
-                                        <TableCell>
-                                            {t('routines.requirements')}
-                                            <Tooltip title={t('routines.requirementsHelpText')}>
-                                                <IconButton onClick={() => {
-                                                }}>
-                                                    <HelpOutlineIcon fontSize="small" />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </TableCell>
-                                        <TableCell>
-                                            {t('routines.repeat')}
-                                            <Tooltip title={t('routines.repeatHelpText')}>
-                                                <IconButton onClick={() => {
-                                                }}>
-                                                    <HelpOutlineIcon fontSize="small" />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
+                                        </Tooltip>
+                                    </Grid>
+                                    <Grid size={3} textAlign={'center'}>
+                                        {t('routines.repeat')}
+                                        <br />
+                                        <Tooltip title={t('routines.repeatHelpText')}>
+                                            <IconButton onClick={() => {
+                                            }}>
+                                                <HelpOutlineIcon fontSize="small" />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid size={12}>
+                                <Divider />
+                            </Grid>
 
-                                    <FieldArray name={"entries"} validateOnChange={true}>
-                                        {({ insert, remove }) => (<>
 
-                                                {formik.values.entries.map((log, index) => (
-                                                    <TableRow key={index}>
-                                                        <TableCell>{t('routines.workoutNr', { number: log.iteration })}</TableCell>
-                                                        <TableCell>
-                                                            {log.edited
-                                                                ? <IconButton
-                                                                    disabled={log.iteration === 1 && props.configs.length > 1}
-                                                                    size="small"
-                                                                    onClick={() => {
-                                                                        if (log.id !== null) {
-                                                                            setIterationsToDelete([...iterationsToDelete, log.iteration]);
-                                                                        }
-                                                                        remove(index);
-                                                                        insert(index, getEmptyConfig(log.iteration, false));
-                                                                    }}>
-                                                                    <DeleteIcon />
-                                                                </IconButton>
-                                                                : <IconButton size="small" onClick={() => {
-                                                                    remove(index);
-                                                                    insert(index, getEmptyConfig(log.iteration, true));
-                                                                }}>
-                                                                    <AddIcon />
-                                                                </IconButton>
-                                                            }
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {log.edited && <>
-                                                                <WgerTextField
-                                                                    fieldName={`entries.${index}.value`}
-                                                                    title={"min"}
-                                                                    fullwidth={false}
-                                                                />
-                                                                &nbsp;
-                                                                <WgerTextField
-                                                                    fieldName={`entries.${index}.valueMax`}
-                                                                    title={"max"}
-                                                                    fullwidth={false}
-                                                                />
-                                                            </>}
+                            <FieldArray name={"entries"} validateOnChange={true}>
+                                {({ insert, remove }) => (<>
 
-                                                        </TableCell>
-                                                        <TableCell>
+                                        {formik.values.entries.map((log, index) => (
+                                            <React.Fragment key={index}>
+                                                <Grid size={2} display={'flex'} justifyContent={'space-around'}
+                                                      alignItems={'center'}>
+                                                    {t('routines.workoutNr', { number: log.iteration })}
+                                                    {log.edited
+                                                        ? <IconButton
+                                                            // Allow deleting the first element if it's not the only one
+                                                            disabled={log.iteration === 1 && formik.values.entries.filter(e => e.edited && e.iteration !== 1).length > 0}
+                                                            size="small"
+                                                            onClick={() => {
+                                                                if (log.id !== null) {
+                                                                    setIterationsToDelete([...iterationsToDelete, log.iteration]);
+                                                                }
+                                                                remove(index);
+                                                                insert(index, getEmptyConfig(log.iteration, false));
+                                                            }}>
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                        : <IconButton size="small" onClick={() => {
+                                                            remove(index);
+                                                            insert(index, getEmptyConfig(log.iteration, true));
+                                                        }}>
+                                                            <AddIcon />
+                                                        </IconButton>
+                                                    }
+                                                </Grid>
+
+
+                                                <Grid size={2}>
+                                                    {log.edited &&
+                                                        <WgerTextField
+                                                            fieldName={`entries.${index}.value`}
+                                                            title={t('min')}
+                                                            fullwidth={true}
+                                                        />}
+                                                </Grid>
+                                                <Grid size={2}>
+                                                    {log.edited && <WgerTextField
+                                                        fieldName={`entries.${index}.valueMax`}
+                                                        title={t('max')}
+                                                        fullwidth={true}
+                                                    />
+                                                    }
+
+                                                </Grid>
+                                                <Grid size={6}>
+                                                    <Grid container spacing={1}>
+                                                        <Grid size={3}>
                                                             {log.edited && <TextField
                                                                 disabled={log.iteration === 1}
                                                                 fullWidth
@@ -362,8 +408,9 @@ export const ProgressionForm = (props: {
                                                                     </MenuItem>
                                                                 ))}
                                                             </TextField>}
-                                                        </TableCell>
-                                                        <TableCell>
+
+                                                        </Grid>
+                                                        <Grid size={3}>
                                                             {log.edited && <TextField
                                                                 disabled={log.iteration === 1 || log.operation === OPERATION_REPLACE}
                                                                 fullWidth
@@ -383,36 +430,34 @@ export const ProgressionForm = (props: {
                                                                         n/a
                                                                     </MenuItem>}
                                                             </TextField>}
-                                                        </TableCell>
-                                                        <TableCell>
+                                                        </Grid>
+                                                        <Grid size={3} textAlign={'center'}>
                                                             {log.edited &&
                                                                 <ConfigDetailsRequirementsField
                                                                     disabled={log.iteration === 1 || log.operation === OPERATION_REPLACE}
                                                                     values={log.requirements}
                                                                     fieldName={`entries.${index}.requirements`} />}
+                                                            {log.requirements.length >= 0 && <br />}
                                                             {log.requirements.length >= 0 && log.requirements.map((requirement, index) => (
                                                                 <Typography key={index} variant={'caption'}>
                                                                     {requirement} &nbsp;
                                                                 </Typography>
                                                             ))}
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <Switch
+                                                        </Grid>
+                                                        <Grid size={3} textAlign={'center'}>
+                                                            {log.edited && <Switch
                                                                 checked={formik.values.entries[index].repeat}
                                                                 {...formik.getFieldProps(`entries.${index}.repeat`)}
                                                                 disabled={log.iteration === 1 || log.operation === OPERATION_REPLACE}
-                                                            />
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
-                                            </>
-                                        )}
-                                    </FieldArray>
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-
-                        <Grid container spacing={2}>
+                                                            />}
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
+                                            </React.Fragment>
+                                        ))}
+                                    </>
+                                )}
+                            </FieldArray>
                             <Grid size={12} display={"flex"} justifyContent={"end"}>
                                 <Button
                                     color="primary"
@@ -420,8 +465,11 @@ export const ProgressionForm = (props: {
                                     variant="contained"
                                     type="submit"
                                     sx={{ mt: 2 }}>
-                                    {t('submit')}
+                                    {t('save')}
                                 </Button>
+                            </Grid>
+                            <Grid size={12}>
+                                <Box height={20}></Box>
                             </Grid>
                         </Grid>
                     </Form>

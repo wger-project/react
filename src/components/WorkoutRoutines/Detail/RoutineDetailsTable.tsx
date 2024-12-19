@@ -83,9 +83,9 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
             <TableBody>
                 {props.dayData.filter((dayData) => dayData.day !== null).map((dayData, index) =>
                     <React.Fragment key={`${props.iteration}-${index}`}>
-                        <TableRow key={`tableRow-rest-${index}`}>
+                        <TableRow>
                             <TableCell sx={{ backgroundColor: theme.palette.action.hover }}>
-                                <b>{dayData.day === null || dayData.day.getDisplayName()}</b>
+                                <b>{dayData.day !== null && dayData.day.getDisplayName()}</b>
                             </TableCell>
                         </TableRow>
 
@@ -99,7 +99,6 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
 
                                         return <TableRow key={`tableRow-exercise-${index}`}>
                                             <TableCell
-                                                key={`tableCell-exercise-${index}`}
                                                 sx={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
                                                 {showExercise ? setConfig.exercise?.getTranslation(language).name : '.'}
                                                 {showExercise && setConfig.isSpecialType
@@ -115,8 +114,8 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
                                 )}
                             </React.Fragment>
                         )}
-                        <TableRow key={`tableRow-emtpy-${index}`}>
-                            <TableCell key={`tableCell-emtpy-${index}`}></TableCell>
+                        <TableRow>
+                            <TableCell></TableCell>
                         </TableRow>
                     </React.Fragment>
                 )}
@@ -134,9 +133,12 @@ const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
             <TableHead>
                 <TableRow>
                     <TableCell colSpan={5}>
-                        <Typography variant={'h5'}>
-                            {t('routines.workoutNr', { number: props.iteration })}
-                        </Typography>
+                        <Stack direction="row" justifyContent="space-between" alignItems="end">
+                            <Typography variant={'h6'}>
+                                {t('routines.workoutNr', { number: props.iteration })}
+                            </Typography>
+                            {props.dayData[0].date.toLocaleDateString()}
+                        </Stack>
                     </TableCell>
                 </TableRow>
                 <TableRow>
