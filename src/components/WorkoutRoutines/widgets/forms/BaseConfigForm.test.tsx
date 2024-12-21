@@ -122,7 +122,7 @@ describe('EntryDetailsField Component', () => {
                     iteration: 1,
                     operation: OPERATION_REPLACE,
                     step: 'abs',
-                    need_log_to_apply: false,
+                    requirements: null,
                 });
                 expect(editMutation).toHaveBeenCalledTimes(0);
                 expect(deleteMutation).toHaveBeenCalledTimes(0);

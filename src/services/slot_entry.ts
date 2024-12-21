@@ -11,9 +11,9 @@ export interface AddSlotEntryParams {
     order: number,
     comment?: string,
     repetition_unit?: number,
-    repetition_rounding?: number,
+    repetition_rounding?: number | null,
     weight_unit?: number,
-    weight_rounding?: number,
+    weight_rounding?: number | null,
 }
 
 export interface EditSlotEntryParams extends Partial<AddSlotEntryParams> {

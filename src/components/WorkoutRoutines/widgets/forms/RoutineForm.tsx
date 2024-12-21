@@ -1,10 +1,11 @@
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { Button, FormControlLabel, IconButton, Switch } from "@mui/material";
+import { Button, FormControlLabel, IconButton, Menu, MenuItem, Stack, Switch } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import Tooltip from "@mui/material/Tooltip";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WgerTextField } from "components/Common/forms/WgerTextField";
+import { useProfileQuery } from "components/User/queries/profile";
 import {
     DEFAULT_WORKOUT_DURATION,
     DESCRIPTION_MAX_LENGTH,
@@ -15,6 +16,7 @@ import {
     Routine
 } from "components/WorkoutRoutines/models/Routine";
 import { useAddRoutineQuery, useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
+import { SlotEntryRoundingField } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
@@ -100,7 +102,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                 description: routine ? routine.description : '',
                 start: startValue,
                 end: endValue,
-                fitInWeek: routine ? routine.fitInWeek : false
+                fitInWeek: routine ? routine.fitInWeek : true
             }}
 
             validationSchema={validationSchema}
@@ -208,13 +210,75 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                                 variant="contained"
                                 type="submit"
                                 sx={{ mt: 2 }}>
-                                {t('submit')}
+                                {t('save')}
                             </Button>
                         </Grid>
-
                     </Grid>
                 </Form>
             )}
         </Formik>)
+    );
+};
+
+
+export const DefaultRoundingMenu = (props: { routineId: number }) => {
+    const userProfileQuery = useProfileQuery();
+    const { t } = useTranslation();
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    return (
+        <Stack direction={"row"}>
+            <Button
+                variant="text"
+                id="basic-button"
+                aria-controls={open ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={handleClick}
+            >
+                {t('routines.defaultRounding')}
+            </Button>
+            <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                }}
+            >
+
+                <MenuItem>
+                    <SlotEntryRoundingField
+                        routineId={props.routineId}
+                        rounding="weight"
+                        editProfile={true}
+                        initialValue={userProfileQuery.data!.weightRounding}
+                    />
+                </MenuItem>
+                <MenuItem>
+                    <SlotEntryRoundingField
+                        routineId={props.routineId}
+                        rounding="reps"
+                        editProfile={true}
+                        initialValue={userProfileQuery.data!.repsRounding}
+                    />
+                </MenuItem>
+            </Menu>
+            <Tooltip title={t('routines.roundingHelp')}>
+                <IconButton onClick={() => {
+                }}>
+                    <HelpOutlineIcon fontSize="small" />
+                </IconButton>
+            </Tooltip>
+        </Stack>
     );
 };

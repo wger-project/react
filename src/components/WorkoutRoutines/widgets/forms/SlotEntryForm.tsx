@@ -1,13 +1,15 @@
 import { MenuItem, TextField } from "@mui/material";
 import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
-import { useProfileQuery } from "components/User/queries/profile";
+import { useEditProfileQuery, useProfileQuery } from "components/User/queries/profile";
 import { SlotEntry, SlotEntryType } from "components/WorkoutRoutines/models/SlotEntry";
 import {
     useEditSlotEntryQuery,
     useFetchRoutineRepUnitsQuery,
     useFetchRoutineWeighUnitsQuery
 } from "components/WorkoutRoutines/queries";
-import React from "react";
+import React, { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
 
 export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: number }) => {
 
@@ -148,4 +150,66 @@ export const SlotEntryWeightUnitField = (props: { slotEntry: SlotEntry, routineI
             ))}
         </TextField>
     </>;
+};
+
+
+function debounce(func: (...args: any[]) => void, wait: number) {
+    let timeout: NodeJS.Timeout;
+    return (...args: any[]) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+    };
+}
+
+type BaseSlotEntryRoundingFieldProps = {
+    initialValue: number | null;
+    rounding: 'weight' | 'reps';
+    routineId: number;
+};
+
+type SlotEntryRoundingFieldProps =
+    | (BaseSlotEntryRoundingFieldProps & { editProfile: true })
+    | (BaseSlotEntryRoundingFieldProps & { editProfile: false; entryId: number });
+
+export const SlotEntryRoundingField = (props: SlotEntryRoundingFieldProps) => {
+    const { t } = useTranslation();
+    const editSlotEntryQuery = useEditSlotEntryQuery(props.routineId);
+    const editProfileQuery = useEditProfileQuery();
+
+    const [value, setValue] = useState<string | number | null>(props.initialValue === null ? '' : props.initialValue);
+
+    const debouncedSave = useCallback(
+        debounce((newValue: string) => {
+            let parsedValue: number | null = parseFloat(newValue);
+            if (Number.isNaN(parsedValue)) {
+                parsedValue = null;
+            }
+
+            const data = props.rounding === 'weight' ? { weight_rounding: parsedValue } : { reps_rounding: parsedValue };
+            if (props.editProfile) {
+                editProfileQuery.mutate(data);
+            } else {
+                editSlotEntryQuery.mutate({ id: props.entryId, ...data });
+            }
+        }, DEBOUNCE_ROUTINE_FORMS),
+        []
+    );
+
+    const handleOnChange = (newValue: string) => {
+        setValue(newValue);
+        debouncedSave(newValue);
+    };
+
+    const type = props.rounding === 'weight' ? t('weight') : t('routines.reps');
+
+    return (
+        <TextField
+            fullWidth
+            label={props.rounding === 'weight' ? t('weight') : t('routines.reps')}
+            variant="standard"
+            value={value}
+            disabled={editSlotEntryQuery.isPending || editProfileQuery.isPending}
+            onChange={e => handleOnChange(e.target.value)}
+        />
+    );
 };

@@ -25,7 +25,6 @@ export const QUERY_MUSCLES = 'muscles';
 export const QUERY_NOTES = 'notes';
 
 export const QUERY_PERMISSION = 'permission';
-export const QUERY_PROFILE = 'profile';
 
 export const QUERY_MEASUREMENTS = 'measurements';
 export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
@@ -53,6 +52,8 @@ export enum QueryKey {
 
     ROUTINE_WEIGHT_UNITS = 'weight-units',
     ROUTINE_REP_UNITS = 'rep-units',
+
+    QUERY_PROFILE = 'profile',
 }
 
 /*
@@ -86,6 +87,9 @@ export enum ApiPath {
     SESSION = 'workoutsession',
 
     WORKOUT_LOG_API_PATH = 'workoutlog',
+
+    // Profile
+    API_PROFILE_PATH = 'userprofile',
 }
 
 

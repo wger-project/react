@@ -132,7 +132,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                                     type="submit"
                                     disabled={isRest}
                                 >
-                                    Save
+                                    {t('save')}
                                 </Button>
                             }
                         </Grid>

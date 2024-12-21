@@ -7,6 +7,7 @@ import { useLanguageQuery } from "components/Exercises/queries";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { ProgressionForm } from "components/WorkoutRoutines/widgets/forms/ProgressionForm";
+import { SlotEntryRoundingField } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -15,7 +16,7 @@ import { makeLink, WgerLink } from "utils/url";
 
 export const SlotProgressionEdit = () => {
 
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const params = useParams<{ routineId: string, slotId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : -1;
     const slotId = params.slotId ? parseInt(params.slotId) : -1;
@@ -57,50 +58,75 @@ export const SlotProgressionEdit = () => {
             title={`Edit progression`}
             backToUrl={makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: routineId })}
         >
-            {slot.configs.map((config) =>
-                <React.Fragment key={config.id}>
+            {slot.configs.map((slotEntry) =>
+                <React.Fragment key={slotEntry.id}>
                     <Typography variant="h5" gutterBottom>
-                        {config.exercise?.getTranslation(language).name}
+                        {slotEntry.exercise?.getTranslation(language).name}
                     </Typography>
-                    <Grid container>
+                    <Grid container spacing={1}>
+                        <Grid size={2} display="flex" alignItems="end">
+                            <Typography variant={"body2"}>
+                                {t('routines.rounding')}
+                            </Typography>
+                        </Grid>
+
+                        <Grid size={5}>
+                            <SlotEntryRoundingField
+                                routineId={routineId}
+                                entryId={slotEntry.id}
+                                initialValue={slotEntry.weightRounding}
+                                rounding="weight"
+                                editProfile={false}
+                            />
+                        </Grid>
+                        <Grid size={5}>
+                            <SlotEntryRoundingField
+                                routineId={routineId}
+                                entryId={slotEntry.id}
+                                initialValue={slotEntry.repetitionRounding}
+                                rounding="reps"
+                                editProfile={false}
+                            />
+                        </Grid>
+
                         <ProgressionForm
                             type="sets"
-                            configs={config.nrOfSetsConfigs}
-                            configsMax={config.maxNrOfSetsConfigs}
-                            slotEntryId={config.id}
+                            configs={slotEntry.nrOfSetsConfigs}
+                            configsMax={slotEntry.maxNrOfSetsConfigs}
+                            slotEntryId={slotEntry.id}
                             routineId={routineId}
                             iterations={iterations}
                             forceInteger={true}
                         />
                         <ProgressionForm
                             type="weight"
-                            configs={config.weightConfigs}
-                            configsMax={config.maxWeightConfigs}
-                            slotEntryId={config.id}
+                            configs={slotEntry.weightConfigs}
+                            configsMax={slotEntry.maxWeightConfigs}
+                            slotEntryId={slotEntry.id}
                             routineId={routineId}
                             iterations={iterations}
                         />
                         <ProgressionForm
                             type="reps"
-                            configs={config.repsConfigs}
-                            configsMax={config.maxRepsConfigs}
-                            slotEntryId={config.id}
+                            configs={slotEntry.repsConfigs}
+                            configsMax={slotEntry.maxRepsConfigs}
+                            slotEntryId={slotEntry.id}
                             routineId={routineId}
                             iterations={iterations}
                         />
                         <ProgressionForm
                             type="rir"
-                            configs={config.rirConfigs}
-                            configsMax={config.maxRirConfigs}
-                            slotEntryId={config.id}
+                            configs={slotEntry.rirConfigs}
+                            configsMax={slotEntry.maxRirConfigs}
+                            slotEntryId={slotEntry.id}
                             routineId={routineId}
                             iterations={iterations}
                         />
                         <ProgressionForm
                             type="rest"
-                            configs={config.restTimeConfigs}
-                            configsMax={config.maxRestTimeConfigs}
-                            slotEntryId={config.id}
+                            configs={slotEntry.restTimeConfigs}
+                            configsMax={slotEntry.maxRestTimeConfigs}
+                            slotEntryId={slotEntry.id}
                             routineId={routineId}
                             iterations={iterations}
                         />

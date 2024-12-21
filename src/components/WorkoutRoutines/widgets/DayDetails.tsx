@@ -38,6 +38,7 @@ import {
     useRoutineDetailQuery
 } from "components/WorkoutRoutines/queries";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
+import { DefaultRoundingMenu } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
 import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
 import { SlotDetails } from "components/WorkoutRoutines/widgets/SlotDetails";
 import React, { useState } from "react";
@@ -349,12 +350,18 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
         <Typography variant={"h4"}>
             {props.day.getDisplayName()}
         </Typography>
+
         <Box height={30} />
         <DayForm routineId={props.routineId} day={props.day} key={`day-form-${props.day.id}`} />
+
         <Box height={40} />
-        {(!props.day.isRest && props.day.slots.length > 0) && <FormControlLabel
-            control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
-            label={t('routines.simpleMode')} />}
+        <Stack direction={'row'} display={'flex'} justifyContent={'space-between'}>
+            {(!props.day.isRest && props.day.slots.length > 0) && <FormControlLabel
+                control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
+                label={t('routines.simpleMode')} />}
+            <DefaultRoundingMenu routineId={props.routineId} />
+        </Stack>
+
         <Box height={20} />
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="setDroppable" direction="vertical">
