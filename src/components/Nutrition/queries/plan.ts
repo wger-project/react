@@ -61,6 +61,7 @@ export const useAddNutritionalPlanQuery = () => {
         }
     });
 };
+
 export const useDeleteNutritionalPlanQuery = (id: number) => {
     const queryClient = useQueryClient();
 

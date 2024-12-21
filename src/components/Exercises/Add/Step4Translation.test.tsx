@@ -10,8 +10,8 @@ import { testLanguages } from "tests/exerciseTestdata";
 jest.setTimeout(30000);
 
 jest.mock("components/Exercises/queries");
-jest.mock("state/exerciseReducer", () => {
-    const originalModule = jest.requireActual("state/exerciseReducer");
+jest.mock("state/exerciseSubmissionReducer", () => {
+    const originalModule = jest.requireActual("state/exerciseSubmissionReducer");
     return {
         __esModule: true,
         ...originalModule,
