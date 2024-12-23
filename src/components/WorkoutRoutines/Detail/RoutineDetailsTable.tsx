@@ -133,11 +133,10 @@ const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
             <TableHead>
                 <TableRow>
                     <TableCell colSpan={5}>
-                        <Stack direction="row" justifyContent="space-between" alignItems="end">
+                        <Stack direction="row">
                             <Typography variant={'h6'}>
                                 {t('routines.workoutNr', { number: props.iteration })}
                             </Typography>
-                            {props.dayData[0].date.toLocaleDateString()}
                         </Stack>
                     </TableCell>
                 </TableRow>
