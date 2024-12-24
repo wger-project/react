@@ -32,6 +32,8 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
     const routineQuery = useRoutineDetailQuery(routineId);
     const addLogsQuery = useAddRoutineLogsQuery(routineId);
     const languageQuery = useLanguageQuery();
+    const handleSnackbarClose = () => setSnackbarOpen(false);
+    const [exerciseIdToSwap, setExerciseIdToSwap] = useState<number | null>(null);
 
     let language = undefined;
     if (languageQuery.isSuccess) {
@@ -41,17 +43,13 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
         );
     }
 
-    const handleSnackbarClose = () => {  // For MUI Snackbar
-        setSnackbarOpen(false);
-    };
-
-    const [exerciseIdToSwap, setExerciseIdToSwap] = useState<number | null>(null);
-
     if (routineQuery.isLoading) {
         return <LoadingPlaceholder />;
     }
 
     const routine = routineQuery.data!;
+    const iterationDayData = routine?.getDayData(dayId, selectedDate.toJSDate()) ?? [];
+    const hasNoIterationData = iterationDayData.length === 0;
 
     const validationSchema = yup.object({
         logs: yup.array().of(
@@ -64,18 +62,30 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
     });
 
     const handleSubmit = async (values: { logs: LogEntryForm[] }) => {
+        const iteration = hasNoIterationData ? null : iterationDayData[0].iteration;
         const data = values.logs
-            .filter(l => l.rir !== '' && l.reps !== '' && l.weight !== '')
+            .filter(l => l.rir !== '' || l.reps !== '' || l.weight !== '')
             .map(l => ({
                     date: selectedDate.toISO(),
-                    rir: l.rir,
-                    reps: l.reps,
-                    weight: l.weight,
+                    iteration: iteration,
                     exercise: l.exercise?.id,
                     day: dayId,
                     routine: routineId,
+                    slot_entry: l.slotEntry,
+
+                    rir: l.rir !== '' ? l.rir : null,
+                    rir_target: l.rirTarget !== '' ? l.rirTarget : null,
+
+                    repetition_unit: l.repsUnit?.id,
+                    reps: l.reps !== '' ? l.reps : null,
+                    reps_target: l.repsTarget !== '' ? l.repsTarget : null,
+
+                    weight_unit: l.weightUnit?.id,
+                    weight: l.weight !== '' ? l.weight : null,
+                    weight_target: l.weightTarget !== '' ? l.weightTarget : null,
                 }
             ));
+
         await addLogsQuery.mutateAsync(data);
         setSnackbarOpen(true);
     };
@@ -94,8 +104,11 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                 return {
                     ...log,
                     weight: '',
+                    weightTarget: '',
                     reps: '',
+                    repsTarget: '',
                     rir: '',
+                    rirTarget: '',
                     exercise: exerciseResponse.exercise!,
                 };
             }
@@ -108,12 +121,16 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
         });
 
         setExerciseIdToSwap(null);
-
     };
 
     // Compute initial values
-    const initialValues = { logs: [] as LogEntryForm[] };
-    for (const dayData of routine.dayDataCurrentIteration.filter(dayData => dayData.day!.id === dayId)) {
+    const initialValues = {
+        logs: [] as LogEntryForm[]
+    };
+
+    const dayDataList = hasNoIterationData ? routine.dayDataCurrentIteration.filter(dayData => dayData.day!.id === dayId) : iterationDayData;
+
+    for (const dayData of dayDataList) {
         for (const slot of dayData.slots) {
             for (const config of slot.setConfigs) {
                 for (let i = 0; i < config.nrOfSets; i++) {
@@ -122,10 +139,14 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                         exercise: config.exercise!,
                         repsUnit: config.repsUnit!,
                         weightUnit: config.weightUnit!,
+                        slotEntry: config.slotEntryId,
 
-                        rir: config.rir !== null ? config.rir : '',
-                        reps: config.reps !== null ? config.reps : '',
-                        weight: config.weight !== null ? config.weight : ''
+                        rir: !hasNoIterationData && config.rir !== null ? config.rir : '',
+                        rirTarget: !hasNoIterationData && config.rir !== null ? config.rir : '',
+                        reps: !hasNoIterationData && config.reps !== null ? config.reps : '',
+                        repsTarget: !hasNoIterationData && config.reps !== null ? config.reps : '',
+                        weight: !hasNoIterationData && config.weight !== null ? config.weight : '',
+                        weightTarget: !hasNoIterationData && config.weight !== null ? config.weight : ''
                     });
                 }
             }
@@ -133,6 +154,11 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
     }
 
     return (<>
+        {hasNoIterationData &&
+            <Alert severity={'info'} sx={{ marginTop: 2 }}>{t('routines.weightLogNotPlanned')}</Alert>
+        }
+
+
         <Formik
             enableReinitialize
             initialValues={initialValues}

@@ -4,24 +4,51 @@ import { Slot, SlotAdapter } from "components/WorkoutRoutines/models/Slot";
 import i18n from 'i18next';
 import { Adapter } from "utils/Adapter";
 
+interface DayParams {
+    id: number;
+    order: number;
+    name: string;
+    description: string;
+    isRest: boolean;
+    needLogsToAdvance: boolean;
+    type: 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap';
+    config: any | null;
+    slots?: Slot[];
+}
+
 export class Day {
+
+    id: number;
+    order: number;
+    name: string;
+    description: string;
+    isRest: boolean;
+    needLogsToAdvance: boolean;
+    type: 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap';
+    config: any | null;
 
     slots: Slot[] = [];
 
-    constructor(
-        public id: number,
-        public order: number,
-        public name: string,
-        public description: string,
-        public isRest: boolean,
-        public needLogsToAdvance: boolean,
-        public type: 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap',
-        public config: any | null,
-        slots?: Slot[]
-    ) {
-        if (slots) {
-            this.slots = slots;
-        }
+    constructor({
+                    id,
+                    order,
+                    name,
+                    description,
+                    isRest,
+                    needLogsToAdvance,
+                    type,
+                    config,
+                    slots = []
+                }: DayParams) {
+        this.id = id;
+        this.order = order;
+        this.name = name;
+        this.description = description;
+        this.isRest = isRest;
+        this.needLogsToAdvance = needLogsToAdvance;
+        this.type = type;
+        this.config = config;
+        this.slots = slots;
     }
 
     public get isSpecialType(): boolean {
@@ -36,17 +63,17 @@ export class Day {
 
 
 export class DayAdapter implements Adapter<Day> {
-    fromJson = (item: any): Day => new Day(
-        item.id,
-        item.order,
-        item.name,
-        item.description,
-        item.is_rest,
-        item.need_logs_to_advance,
-        item.type,
-        item.config,
-        item.hasOwnProperty('slots') ? item.slots.map((slot: any) => new SlotAdapter().fromJson(slot)) : [],
-    );
+    fromJson = (item: any): Day => new Day({
+        id: item.id,
+        order: item.order,
+        name: item.name,
+        description: item.description,
+        isRest: item.is_rest,
+        needLogsToAdvance: item.need_logs_to_advance,
+        type: item.type,
+        config: item.config,
+        slots: item.hasOwnProperty('slots') ? item.slots.map((slot: any) => new SlotAdapter().fromJson(slot)) : [],
+    });
 
     toJson = (item: Day) => ({
         order: item.order,

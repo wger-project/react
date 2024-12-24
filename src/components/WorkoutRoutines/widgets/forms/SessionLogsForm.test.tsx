@@ -18,7 +18,6 @@ describe('SessionLogsForm', () => {
     const mockRoutineDetailQuery = jest.mocked(useRoutineDetailQuery);
     const mockMutateAsync = jest.fn();
 
-
     beforeEach(() => {
         jest.clearAllMocks();
         mockRoutineDetailQuery.mockReturnValue({
@@ -45,19 +44,31 @@ describe('SessionLogsForm', () => {
         />);
 
         expect(screen.getByText('Squats')).toBeInTheDocument();
-
     });
 
     test('submits with correct parameters', async () => {
         // Arrange
         const user = userEvent.setup();
+        const originalData = {
+            routine: 1,
+            day: 5,
+            exercise: 345,
+            reps: 5,
+            rir: 2,
+            weight: 20,
 
+        };
+        const updatedData = {
+            ...originalData,
+            reps: "17",
+            weight: "42",
+        };
 
         // Act
         render(<SessionLogsForm
             dayId={5}
             routineId={1}
-            selectedDate={DateTime.fromISO('2024-03-15T12:00:00.000Z')}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00.000Z')}
         />);
 
         const weightElements = screen.getAllByRole('textbox').filter(input => (input as HTMLInputElement).value === '20');
@@ -69,28 +80,12 @@ describe('SessionLogsForm', () => {
         await user.click(repsElements[0]);
         await user.clear(repsElements[0]);
         await user.type(repsElements[0], "17");
-
         await user.click(screen.getByRole('button', { name: /submit/i }));
+
 
         // Assert
         expect(mockMutateAsync.mock.calls[0][0].length).toEqual(4);
-        expect(mockMutateAsync.mock.calls[0][0][0]).toMatchObject({
-            day: 5,
-            exercise: 345,
-            reps: "17",
-            rir: 2,
-            weight: "42",
-            routine: 1,
-
-        });
-        const originalData = {
-            day: 5,
-            exercise: 345,
-            reps: 5,
-            rir: 2,
-            weight: 20,
-            routine: 1,
-        };
+        expect(mockMutateAsync.mock.calls[0][0][0]).toMatchObject(updatedData);
         expect(mockMutateAsync.mock.calls[0][0][1]).toMatchObject(originalData);
         expect(mockMutateAsync.mock.calls[0][0][2]).toMatchObject(originalData);
         expect(mockMutateAsync.mock.calls[0][0][3]).toMatchObject(originalData);
@@ -104,7 +99,7 @@ describe('SessionLogsForm', () => {
         render(<SessionLogsForm
             dayId={5}
             routineId={1}
-            selectedDate={DateTime.now()}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00.000Z')}
         />);
         await user.click(screen.getByTestId('AddIcon'));
         await user.click(screen.getByRole('button', { name: /submit/i }));

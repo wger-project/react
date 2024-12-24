@@ -18,42 +18,43 @@ export const testRepUnitRepetitions = new RepetitionUnit(1, "Repetitions");
 export const testRepUnitUnitFailure = new RepetitionUnit(2, "Unit failure");
 export const testRepUnitUnitMinutes = new RepetitionUnit(3, "Minutes");
 
-const testDayLegs = new Day(
-    5,
-    1,
-    "Every day is leg day 🦵🏻",
-    '',
-    false,
-    false,
-    'custom',
-    null
-);
+const testDayLegs = new Day({
+    id: 5,
+    order: 1,
+    name: "Every day is leg day 🦵🏻",
+    description: '',
+    isRest: false,
+    needLogsToAdvance: false,
+    type: 'custom',
+    config: null
+});
 
-const testDayPull = new Day(
-    6,
-    2,
-    'Pull day',
-    '',
-    false,
-    false,
-    'custom',
-    null
-);
-const testRestDay = new Day(
-    19,
-    3,
-    '',
-    '',
-    true,
-    false,
-    'custom',
-    null
-);
+const testDayPull = new Day({
+    id: 6,
+    order: 2,
+    name: 'Pull day',
+    description: '',
+    isRest: false,
+    needLogsToAdvance: false,
+    type: 'custom',
+    config: null
+});
+
+const testRestDay = new Day({
+    id: 19,
+    order: 3,
+    name: '',
+    description: '',
+    isRest: true,
+    needLogsToAdvance: false,
+    type: 'custom',
+    config: null
+});
 
 export const testRoutineDataCurrentIteration1 = [
     new RoutineDayData(
         5,
-        new Date('2024-01-10'),
+        new Date('2024-05-05'),
         '',
         testDayLegs,
         [
@@ -112,11 +113,12 @@ export const testRoutine1 = new Routine(
     'Test routine 1',
     'Full body routine',
     new Date('2024-01-01'),
-    new Date('2024-01-01'),
-    new Date('2024-02-01'),
+    new Date('2024-05-01'),
+    new Date('2024-06-01'),
     false,
     [testDayLegs, testRestDay, testDayPull]
 );
+testRoutine1.dayDataAllIterations = testRoutineDataCurrentIteration1;
 testRoutine1.dayDataCurrentIteration = testRoutineDataCurrentIteration1;
 testRoutine1.logData = [testRoutineLogData];
 

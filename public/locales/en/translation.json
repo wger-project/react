@@ -221,6 +221,7 @@
     "roundingHelp": "Set the default rounding for weight and repetitions (this is specially useful when using the percentage increase step in the progression). This will apply to all new sets but can be changed individually in the progression form. Leave empty to disable rounding.",
     "newDay": "New day",
     "addWeightLog": "Add training log",
+    "weightLogNotPlanned": "Saving logs to a date for which no workouts were planned.",
     "logsOverview": "Logs overview",
     "statsOverview": "Statistics",
     "simpleMode": "Simple mode",

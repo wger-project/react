@@ -134,16 +134,16 @@ describe("workout routine service tests", () => {
         expect(result[0].date).toStrictEqual(new Date('2024-04-01'));
         expect(result[0].label).toStrictEqual('first label');
         expect(result[0].day).toStrictEqual(
-            new Day(
-                100,
-                5,
-                'Push day',
-                '',
-                false,
-                false,
-                'custom',
-                null
-            )
+            new Day({
+                id: 100,
+                order: 5,
+                name: 'Push day',
+                description: '',
+                isRest: false,
+                needLogsToAdvance: false,
+                type: 'custom',
+                config: null
+            })
         );
         expect(result[0].slots[0].comment).toEqual('Push set 1');
         expect(result[0].slots[0].isSuperset).toEqual(true);
@@ -196,7 +196,5 @@ describe("workout routine service tests", () => {
                 },
             )
         );
-
     });
-
 });

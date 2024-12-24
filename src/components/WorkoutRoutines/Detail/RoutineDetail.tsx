@@ -15,21 +15,27 @@ export const RoutineDetail = () => {
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const routineQuery = useRoutineDetailQuery(routineId);
 
+    const routine = routineQuery.data;
+
     return <RenderLoadingQuery
         query={routineQuery}
         child={routineQuery.isSuccess
             && <WgerContainerRightSidebar
-                title={routineQuery.data?.name}
+                title={routine!.name}
                 optionsMenu={<RoutineDetailDropdown routine={routineQuery.data!} />}
                 mainContent={
-                    <Stack spacing={2} sx={{ mt: 2 }}>
-                        {routineQuery.data?.description !== ''
+                    <Stack spacing={2}>
+                        <Typography variant={"subtitle1"}>
+                            {routine!.start.toLocaleDateString()} - {routine!.end.toLocaleDateString()}
+                        </Typography>
+
+                        {routine!.description !== ''
                             && <Typography variant={"body2"} sx={{ whiteSpace: 'pre-line' }}>
-                                {routineQuery.data?.description}
+                                {routine?.description}
                             </Typography>
                         }
 
-                        {routineQuery.data!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null).map((dayData, index) =>
+                        {routine!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null).map((dayData, index) =>
                             <DayDetailsCard dayData={dayData} key={`dayDetails-${index}`} />
                         )}
                     </Stack>

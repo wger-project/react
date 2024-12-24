@@ -50,6 +50,16 @@ export class Routine {
 
         return groupedDayData;
     }
+
+    // Returns the DayData for the given dayId and, optionally, iteration
+    getDayData(dayId: number, date: Date) {
+        return this.dayDataAllIterations.filter(dayData => dayData.day?.id === dayId
+            && dayData.date.getDate() === date.getDate()
+            && dayData.date.getMonth() === date.getMonth()
+            && dayData.date.getFullYear() === date.getFullYear(),
+        );
+    }
+
 }
 
 

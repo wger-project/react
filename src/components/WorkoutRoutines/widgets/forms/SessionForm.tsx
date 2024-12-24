@@ -94,7 +94,7 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
 
 
     return (
-        (<Formik
+        <Formik
             enableReinitialize
             initialValues={{
                 notes: session !== undefined ? session.notes : '',
@@ -256,6 +256,6 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
                     </Grid>
                 </Form>
             )}
-        </Formik>)
+        </Formik>
     );
 };

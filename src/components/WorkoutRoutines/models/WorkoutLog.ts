@@ -9,9 +9,13 @@ export interface LogEntryForm {
     exercise: Exercise | null;
     repsUnit: RepetitionUnit | null;
     weightUnit: WeightUnit | null;
+    slotEntry: number | null;
     rir: number | string;
+    rirTarget: number | string | null;
     reps: number | string;
+    repsTarget: number | string | null;
     weight: number | string;
+    weightTarget: number | string | null;
 }
 
 
