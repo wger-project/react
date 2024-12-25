@@ -43,7 +43,6 @@ describe('Tests for the getHumanReadableHeaders helper', () => {
             mockExerciseList,
             mockLanguage,
             mockMuscleList,
-            mockT,
             StatGroupBy.Exercises,
             mockLogData,
         );
@@ -60,7 +59,6 @@ describe('Tests for the getHumanReadableHeaders helper', () => {
             mockExerciseList,
             mockLanguage,
             mockMuscleList,
-            mockT,
             StatGroupBy.Muscles,
             mockLogData
         );
@@ -76,7 +74,6 @@ describe('Tests for the getHumanReadableHeaders helper', () => {
             mockExerciseList,
             mockLanguage,
             mockMuscleList,
-            mockT,
             StatGroupBy.Total,
             mockLogData
         );
@@ -96,7 +93,6 @@ describe('Tests for the getHumanReadableHeaders helper', () => {
             mockExerciseList,
             mockLanguage,
             mockMuscleList,
-            mockT,
             'unknown' as unknown as StatGroupBy, // Forcing an unknown value
             mockLogData
         );
@@ -116,7 +112,6 @@ describe('Tests for the getHumanReadableHeaders helper', () => {
             mockExerciseList,
             mockLanguage,
             mockMuscleList,
-            mockT,
             StatGroupBy.Exercises,
             mockLogData
         );
@@ -127,7 +122,6 @@ describe('Tests for the getHumanReadableHeaders helper', () => {
             mockExerciseList,
             mockLanguage,
             mockMuscleList,
-            mockT,
             StatGroupBy.Muscles,
             mockLogData
         );

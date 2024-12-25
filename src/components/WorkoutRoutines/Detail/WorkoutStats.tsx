@@ -72,20 +72,21 @@ export const WorkoutStats = () => {
 
 
     const dropdownOptionsType: DropdownOption[] = [
-        { value: StatType.Volume, label: 'Volume' },
-        { value: StatType.Sets, label: 'Sets' },
+        { value: StatType.Volume, label: t('routines.volume') },
+        { value: StatType.Sets, label: t('routines.sets') },
+        { value: StatType.Intensity, label: t('routines.sets') },
     ];
 
     const dropdownOptionsSubType: DropdownOption[] = [
-        { value: StatSubType.Mesocycle, label: 'Current routine' },
-        { value: StatSubType.Weekly, label: 'Weekly' },
-        { value: StatSubType.Iteration, label: 'Iteration' },
-        { value: StatSubType.Daily, label: 'Daily' },
+        { value: StatSubType.Mesocycle, label: t('routines.currentRoutine') },
+        { value: StatSubType.Weekly, label: t('routines.weekly') },
+        { value: StatSubType.Iteration, label: t('routines.iteration') },
+        { value: StatSubType.Daily, label: t('routines.daily') },
     ];
     const dropdownOptionsGroupBy: DropdownOption[] = [
-        { value: StatGroupBy.Exercises, label: 'Exercises' },
-        { value: StatGroupBy.Muscles, label: 'Muscles' },
-        { value: StatGroupBy.Total, label: 'Total' },
+        { value: StatGroupBy.Exercises, label: t('exercises.exercises') },
+        { value: StatGroupBy.Muscles, label: t('exercises.muscles') },
+        { value: StatGroupBy.Total, label: t('total') },
     ];
 
     const handleChangeType = (event: SelectChangeEvent) => {
@@ -109,7 +110,6 @@ export const WorkoutStats = () => {
         musclesQuery.data!,
         language,
         i18n.language,
-        t as (a: string) => string,
     );
 
     const chartData = formatStatsData(statsData);
@@ -134,14 +134,14 @@ export const WorkoutStats = () => {
                             <TableRow key={row.key}>
                                 <TableCell>{row.key}</TableCell>
                                 {row.values.map((value, index) => (
-                                    <TableCell key={index} sx={{ textAlign: 'right', }}>{value || ""}</TableCell>
+                                    <TableCell key={index}
+                                               sx={{ textAlign: 'right', }}>{value?.toFixed(selectedValueType === StatType.Intensity ? 2 : 0) || ""}</TableCell>
                                 ))}
                             </TableRow>
                         ))}
                         {selectedValueSubType !== StatSubType.Mesocycle && <TableRow>
                             <TableCell sx={{
                                 fontWeight: 'bold',
-
                                 backgroundColor: theme.palette.grey.A200
                             }}>{t("total")}</TableCell>
                             {statsData.headers.map(header => (
@@ -151,7 +151,7 @@ export const WorkoutStats = () => {
                                                backgroundColor: theme.palette.grey.A200,
                                                textAlign: 'right',
                                            }}>
-                                    {statsData.totals[header.toString()]}
+                                    {statsData.totals[header.toString()].toFixed(selectedValueType === StatType.Intensity ? 2 : 0)}
                                 </TableCell>
                             ))}
                         </TableRow>}

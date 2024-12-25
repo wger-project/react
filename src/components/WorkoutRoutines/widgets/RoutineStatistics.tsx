@@ -5,13 +5,14 @@ import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
 import { Muscle } from "components/Exercises/models/muscle";
 import { LogData, RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
+import i18n from 'i18next';
 import React from "react";
 import { getTranslationKey } from "utils/strings";
-
 
 export const enum StatType {
     Volume = "volume",
     Sets = "sets",
+    Intensity = "intensity",
 }
 
 export const enum StatSubType {
@@ -68,8 +69,7 @@ export const StatsOptionDropdown: React.FC<DropdownProps> = ({ label, options, v
     );
 };
 
-export function getHumanReadableHeaders(exerciseList: Exercise[], language: Language, muscleList: Muscle[], t: (a: string) => string, groupBy: StatGroupBy, logData: LogData,) {
-
+export function getHumanReadableHeaders(exerciseList: Exercise[], language: Language, muscleList: Muscle[], groupBy: StatGroupBy, logData: LogData,) {
     switch (groupBy) {
         case StatGroupBy.Exercises: {
             const exercises = Object.keys(logData.exercises).map(e => exerciseList.find(ex => ex.id === parseInt(e))?.getTranslation(language)?.name!);
@@ -78,14 +78,14 @@ export function getHumanReadableHeaders(exerciseList: Exercise[], language: Lang
             return { headers: exercises, data: exercisesIds.map(ex => logData.exercises[ex]) };
         }
         case StatGroupBy.Muscles: {
-            const muscles = Object.keys(logData.muscle).map(e => t(getTranslationKey(muscleList.find(m => m.id === parseInt(e))?.nameEn!)));
+            const muscles = Object.keys(logData.muscle).map(e => i18n.t(getTranslationKey(muscleList.find(m => m.id === parseInt(e))?.nameEn!)));
             // const muscles = Object.keys(logData.muscle).map(e =>  `muscle ${e}`);
             const musclesIds = Object.keys(logData.muscle).map(Number);
             return { headers: muscles, data: musclesIds.map(ms => logData.muscle[ms]) };
 
         }
         case StatGroupBy.Total:
-            return { headers: [t('total')], data: [logData.total] };
+            return { headers: [i18n.t('total')], data: [logData.total] };
 
         default:
             return { headers: [], data: [] };
@@ -101,7 +101,6 @@ export const getFullStatsData = (
     muscleList: Muscle[],
     language: Language,
     languageCode: string,
-    t: (a: string) => string,
 ): FullStatsData => {
     const columnTotals: { [header: string]: number } = {};
 
@@ -113,7 +112,6 @@ export const getFullStatsData = (
         exerciseList,
         language,
         muscleList,
-        t as (a: string) => string,
         groupBy,
         logData
     );
@@ -175,7 +173,7 @@ export const getFullStatsData = (
             const { data } = calculateStatsData(selectedValueGroupBy, statsData.mesocycle);
 
             dataToDisplay = [{
-                key: t("total"),
+                key: i18n.t("total"),
                 values: allHeaders.map(header => data[allHeaders.indexOf(header)])
             }];
             break;

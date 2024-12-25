@@ -195,6 +195,12 @@
   "routines": {
     "sets": "Sets",
     "reps": "Reps",
+    "volume": "Volume",
+    "intensity": "Intensity",
+    "currentRoutine": "Current routine",
+    "iteration": "Iteration",
+    "weekly": "Weekly",
+    "daily": "Daily",
     "restTime": "Rest time",
     "workoutNr": "Workout Nr. {{number}}",
     "backToRoutine": "Back to routine",
