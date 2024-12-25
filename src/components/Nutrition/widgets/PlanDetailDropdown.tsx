@@ -1,4 +1,4 @@
-import SettingsIcon from '@mui/icons-material/Settings';
+import MenuIcon from '@mui/icons-material/Menu';
 import { Button, Menu, MenuItem } from "@mui/material";
 import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
 import { WgerModal } from "components/Core/Modals/WgerModal";
@@ -56,7 +56,7 @@ export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
 
     return <>
         <Button onClick={handleClick}>
-            <SettingsIcon />
+            <MenuIcon />
         </Button>
         <Menu
             anchorEl={anchorEl}

@@ -20,28 +20,29 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
     const serverUrl = params.server || VITE_API_SERVER;
     const paths = [serverUrl, 'api', 'v2', path];
 
-    // append objectmethod to the path
-    if (params.objectMethod) {
-        paths.push(params.objectMethod);
-    }
-
     // Detail view
     if (params.id) {
         paths.push(params.id.toString());
     }
+
+    // append object method to the path
+    if (params.objectMethod) {
+        paths.push(params.objectMethod);
+    }
+
     paths.push('');
 
     // Query parameters
     if (params.query) {
-        const querylist = [];
+        const queryList = [];
         for (const key in params.query) {
             if (params.query.hasOwnProperty(key)) {
                 // @ts-ignore
-                querylist.push(`${encodeURIComponent(key)}=${encodeURIComponent(params.query[key])}`);
+                queryList.push(`${encodeURIComponent(key)}=${encodeURIComponent(params.query[key])}`);
             }
         }
         paths.pop();
-        paths.push(`?${querylist.join('&')}`);
+        paths.push(`?${queryList.join('&')}`);
     }
 
     return paths.join('/');
@@ -53,17 +54,19 @@ export enum WgerLink {
 
     ROUTINE_OVERVIEW,
     ROUTINE_DETAIL,
+    ROUTINE_EDIT,
+    ROUTINE_DETAIL_TABLE,
+    ROUTINE_EDIT_PROGRESSION,
     ROUTINE_ADD,
-    ROUTINE_DELETE,
+    ROUTINE_LOGS_OVERVIEW,
+    ROUTINE_STATS_OVERVIEW,
+    ROUTINE_PDF_TABLE,
+    ROUTINE_PDF_LOGS,
+    ROUTINE_ICAL,
+    ROUTINE_COPY,
     ROUTINE_ADD_LOG,
     ROUTINE_EDIT_LOG,
     ROUTINE_DELETE_LOG,
-    ROUTINE_EDIT_DAY,
-    ROUTINE_ADD_DAY,
-    ROUTINE_DELETE_DAY,
-    ROUTINE_ADD_SET,
-    ROUTINE_EDIT_SET,
-    ROUTINE_DELETE_SET,
 
     EXERCISE_DETAIL,
     EXERCISE_OVERVIEW,
@@ -86,7 +89,7 @@ export enum WgerLink {
     CALENDAR
 }
 
-type UrlParams = { id: number, slug?: string, date?: string };
+type UrlParams = { id: number, id2?: number, slug?: string, date?: string };
 
 
 /*
@@ -108,26 +111,32 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/routine/overview`;
         case WgerLink.ROUTINE_DETAIL:
             return `/${langShort}/routine/${params!.id}/view`;
+        case WgerLink.ROUTINE_DETAIL_TABLE:
+            return `/${langShort}/routine/${params!.id}/table`;
+        case WgerLink.ROUTINE_EDIT:
+            return `/${langShort}/routine/${params!.id}/edit`;
+        case WgerLink.ROUTINE_EDIT_PROGRESSION:
+            return `/${langShort}/routine/${params!.id}/edit/progression/${params!.id2}`;
         case WgerLink.ROUTINE_ADD:
             return `/${langShort}/routine/add`;
-        case WgerLink.ROUTINE_ADD_DAY:
-            return `/${langShort}/routine/day/${params!.id}/add`;
+        case WgerLink.ROUTINE_COPY:
+            return `/${langShort}/routine/${params!.id}/copy`;
+        case WgerLink.ROUTINE_PDF_TABLE:
+            return `/${langShort}/routine/${params!.id}/pdf/table`;
+        case WgerLink.ROUTINE_PDF_LOGS:
+            return `/${langShort}/routine/${params!.id}/pdf/log`;
+        case WgerLink.ROUTINE_ICAL:
+            return `/${langShort}/routine/${params!.id}/ical`;
+        case WgerLink.ROUTINE_LOGS_OVERVIEW:
+            return `/${langShort}/routine/${params!.id}/logs`;
+        case WgerLink.ROUTINE_STATS_OVERVIEW:
+            return `/${langShort}/routine/${params!.id}/statistics`;
         case WgerLink.ROUTINE_ADD_LOG:
-            return `/${langShort}/routine/day/${params!.id}/log/add`;
+            return `/${langShort}/routine/${params!.id}/day/${params!.id2}/add-logs`;
         case WgerLink.ROUTINE_EDIT_LOG:
             return `/${langShort}/routine/log/${params!.id}/edit`;
         case WgerLink.ROUTINE_DELETE_LOG:
             return `/${langShort}/routine/log/${params!.id}/delete`;
-        case WgerLink.ROUTINE_EDIT_DAY:
-            return `/${langShort}/routine/day/${params!.id}/edit`;
-        case WgerLink.ROUTINE_DELETE_DAY:
-            return `/${langShort}/routine/day/${params!.id}/delete`;
-        case WgerLink.ROUTINE_ADD_SET:
-            return `/${langShort}/routine/set/${params!.id}/add`;
-        case WgerLink.ROUTINE_EDIT_SET:
-            return `/${langShort}/routine/set/${params!.id}/edit`;
-        case WgerLink.ROUTINE_DELETE_SET:
-            return `/${langShort}/routine/set/${params!.id}/delete`;
         case WgerLink.CALENDAR:
             return `/${langShort}/routine/calendar`;
 
