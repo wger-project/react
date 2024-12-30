@@ -74,7 +74,7 @@ export const WorkoutStats = () => {
     const dropdownOptionsType: DropdownOption[] = [
         { value: StatType.Volume, label: t('routines.volume') },
         { value: StatType.Sets, label: t('routines.sets') },
-        { value: StatType.Intensity, label: t('routines.sets') },
+        { value: StatType.Intensity, label: t('routines.intensity') },
     ];
 
     const dropdownOptionsSubType: DropdownOption[] = [
