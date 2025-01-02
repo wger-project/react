@@ -47,6 +47,15 @@ export enum QueryKey {
     INGREDIENT = 'ingredient',
 
     BODY_WEIGHT = 'body-weight',
+
+    EXERCISES = 'exercises',
+    EXERCISE_VARIATIONS = 'variations',
+    EXERCISE_DETAIL = 'detail',
+    LANGUAGES = 'languages',
+    CATEGORIES = 'categories',
+    EQUIPMENT = 'equipment',
+    MUSCLES = 'muscles',
+    QUERY_NOTES = 'notes',
 }
 
 /*

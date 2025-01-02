@@ -103,7 +103,7 @@ export const addExercise = async (
 /*
  * Update an existing exercise base
  */
-type editExerciseProps = {
+type EditExerciseProps = {
     category?: number,
     equipment?: number[],
     muscles?: number[],
@@ -111,7 +111,7 @@ type editExerciseProps = {
     variation_id?: number | null,
     license_author?: string | null
 }
-export const editExercise = async (id: number, data: editExerciseProps): Promise<number> => {
+export const editExercise = async (id: number, data: EditExerciseProps): Promise<number> => {
 
     const url = makeUrl(EXERCISE_PATH, { id: id });
     const response = await axios.patch(

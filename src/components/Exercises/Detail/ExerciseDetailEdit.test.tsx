@@ -1,13 +1,19 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
-import { Translation } from "components/Exercises/models/translation";
-import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
+import {
+    useAddTranslationQuery,
+    useCategoriesQuery,
+    useEditTranslationQuery,
+    useEquipmentQuery,
+    useExerciseQuery,
+    useMusclesQuery
+} from "components/Exercises/queries";
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
 import React from 'react';
-import { addTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
+import { deleteAlias, editTranslation, postAlias } from "services";
 import {
     testCategories,
     testEquipment,
@@ -16,6 +22,7 @@ import {
     testLanguageGerman,
     testMuscles
 } from "tests/exerciseTestdata";
+import { testQueryClient } from "tests/queryClient";
 import { testProfileDataVerified } from "tests/userTestdata";
 
 // It seems we run into a timeout when running the tests on GitHub actions
@@ -28,28 +35,54 @@ jest.mock("components/Exercises/queries");
 
 describe("Exercise translation edit tests", () => {
 
+    let editTranslationMutateMock: jest.Mock = jest.fn();
+    let addTranslationMutateMock: jest.Mock = jest.fn();
+
     beforeEach(() => {
         jest.resetAllMocks();
 
+        editTranslationMutateMock.mockResolvedValue(testExerciseSquats.translations[0]);
+        addTranslationMutateMock.mockResolvedValue(testExerciseSquats.translations[1]);
+
         // @ts-ignore
-        editExerciseTranslation.mockImplementation(() => Promise.resolve(testExerciseSquats.translations[1]));
+        useExerciseQuery.mockImplementation(() => ({
+            isSuccess: true,
+            isLoading: false,
+            data: testExerciseSquats
+        }));
+
+        // @ts-ignore
+        useAddTranslationQuery.mockImplementation(() => ({
+            isPending: false,
+            mutateAsync: addTranslationMutateMock
+        }));
+
+        // @ts-ignore
+        useEditTranslationQuery.mockImplementation(() => ({
+            isPending: false,
+            mutateAsync: editTranslationMutateMock
+        }));
+
+        // @ts-ignore
+        editTranslation.mockImplementation(() => Promise.resolve(testExerciseSquats.translations[1]));
 
         // @ts-ignore
         useProfileQuery.mockImplementation(() => Promise.resolve(testProfileDataVerified));
 
         // @ts-ignore
-        addTranslation.mockImplementation(() => Promise.resolve(
-            new Translation(
-                300,
-                '409f4b97-a56d-4852-85b2-834ba18b7ccc',
-                'Sanglier',
-                "Le sanglier d'Europe, est une espèce de mammifères de la famille des Suidés",
-                3,
-            )
-        ));
+        // addTranslation.mockImplementation(() => Promise.resolve(
+        //     new Translation(
+        //         300,
+        //         '409f4b97-a56d-4852-85b2-834ba18b7ccc',
+        //         'Sanglier',
+        //         "Le sanglier d'Europe, est une espèce de mammifères de la famille des Suidés",
+        //         3,
+        //     )
+        // ));
 
         // @ts-ignore
         deleteAlias.mockImplementation(() => Promise.resolve({ status: 204 }));
+
         // @ts-ignore
         postAlias.mockImplementation(() => Promise.resolve(
             {
@@ -75,14 +108,11 @@ describe("Exercise translation edit tests", () => {
     });
 
     test('correctly renders the form', () => {
-        // Arrange
-        const queryClient = new QueryClient();
-
         // Act
         render(
-            <QueryClientProvider client={queryClient}>
+            <QueryClientProvider client={testQueryClient}>
                 <ExerciseDetailEdit
-                    exercise={testExerciseSquats}
+                    exerciseId={345}
                     language={testLanguageGerman}
                 />
             </QueryClientProvider>
@@ -104,13 +134,12 @@ describe("Exercise translation edit tests", () => {
     test('correctly updates the exercise', async () => {
         // Arrange
         const user = userEvent.setup();
-        const queryClient = new QueryClient();
 
         // Act
         render(
-            <QueryClientProvider client={queryClient}>
+            <QueryClientProvider client={testQueryClient}>
                 <ExerciseDetailEdit
-                    exercise={testExerciseSquats}
+                    exerciseId={345}
                     language={testLanguageGerman}
                 />
             </QueryClientProvider>
@@ -125,26 +154,26 @@ describe("Exercise translation edit tests", () => {
         // Assert
         //screen.debug();
         //screen.logTestingPlaygroundURL();
-        expect(addTranslation).not.toHaveBeenCalled();
-        expect(editExerciseTranslation).toHaveBeenCalledWith(
-            9,
-            345,
-            1,
-            'Mangalitza',
-            'Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur'
-        );
+        expect(addTranslationMutateMock).not.toHaveBeenCalled();
+        expect(editTranslationMutateMock).toHaveBeenCalledWith({
+            exerciseId: 345,
+            id: 9,
+            languageId: 1,
+            author: "",
+            description: "Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur",
+            name: "Mangalitza"
+        });
     });
 
     test('correctly updates the aliases', async () => {
         // Arrange
         const user = userEvent.setup();
-        const queryClient = new QueryClient();
 
         // Act
         render(
-            <QueryClientProvider client={queryClient}>
+            <QueryClientProvider client={testQueryClient}>
                 <ExerciseDetailEdit
-                    exercise={testExerciseSquats}
+                    exerciseId={345}
                     language={testLanguageGerman}
                 />
             </QueryClientProvider>
@@ -165,20 +194,19 @@ describe("Exercise translation edit tests", () => {
 
         // Assert
         expect(deleteAlias).toHaveBeenCalledWith(2);
-        expect(postAlias).toHaveBeenCalledWith(9, 'another name');
+        expect(postAlias).toHaveBeenCalledWith(111, 'another name');
     });
 
 
     test('creates a new translation if the language is not available', async () => {
         // Arrange
         const user = userEvent.setup();
-        const queryClient = new QueryClient();
 
         // Act
         const { container } = render(
-            <QueryClientProvider client={queryClient}>
+            <QueryClientProvider client={testQueryClient}>
                 <ExerciseDetailEdit
-                    exercise={testExerciseSquats}
+                    exerciseId={345}
                     language={testLanguageFrench}
                 />
             </QueryClientProvider>
@@ -219,7 +247,7 @@ describe("Exercise translation edit tests", () => {
         );
         */
 
-        expect(editExerciseTranslation).not.toHaveBeenCalled();
+        expect(editTranslation).not.toHaveBeenCalled();
         /*
         expect(addExerciseTranslation).toHaveBeenCalledWith(345,
             3,

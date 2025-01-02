@@ -1,18 +1,21 @@
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Box, Button, Card, CardActions, CardMedia } from "@mui/material";
 import { ExerciseImage } from "components/Exercises/models/image";
+import { useAddExerciseImageQuery, useDeleteExerciseImageQuery } from "components/Exercises/queries";
 import { useProfileQuery } from "components/User/queries/profile";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { deleteExerciseImage, postExerciseImage } from "services/image";
 
 type ImageCardProps = {
+    exerciseId: number;
     image: ExerciseImage;
     canDelete: boolean
 };
 
-export const ImageEditCard = ({ image, canDelete }: ImageCardProps) => {
+export const ImageEditCard = ({ exerciseId, image, canDelete }: ImageCardProps) => {
     const [t] = useTranslation();
+    const deleteImageQuery = useDeleteExerciseImageQuery(exerciseId);
+
     return <Card>
         <CardMedia
             component="img"
@@ -24,7 +27,7 @@ export const ImageEditCard = ({ image, canDelete }: ImageCardProps) => {
             {canDelete &&
                 <Button
                     color="primary"
-                    onClick={() => deleteExerciseImage(image.id)}
+                    onClick={() => deleteImageQuery.mutate(image.id)}
                 >
                     {t('delete')}
                 </Button>}
@@ -40,6 +43,7 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
 
     const [t] = useTranslation();
     const profileQuery = useProfileQuery();
+    const addImageQuery = useAddExerciseImageQuery(exerciseId);
 
     const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files?.length) {
@@ -48,7 +52,7 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
         const [uploadedFile] = e.target.files;
         if (profileQuery.isSuccess) {
 
-            await postExerciseImage({
+            await addImageQuery.mutate({
                 exerciseId: exerciseId,
                 image: uploadedFile,
                 imageData: {
