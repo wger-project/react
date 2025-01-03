@@ -9,13 +9,13 @@ export const IMAGE_PATH = 'exerciseimage';
 /*
  * Post a new exercise image
  */
-export const postExerciseImage = async (
-    data: {
-        exerciseId: number,
-        image: File,
-        imageData: ImageFormData
-    },
-): Promise<ExerciseImage> => {
+export type PostExerciseImageParams = {
+    exerciseId: number;
+    image: File;
+    imageData: ImageFormData;
+};
+
+export const postExerciseImage = async (data: PostExerciseImageParams): Promise<ExerciseImage> => {
     const url = makeUrl(IMAGE_PATH);
     const headers = makeHeader();
     headers['Content-Type'] = 'multipart/form-data';

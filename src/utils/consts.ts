@@ -54,6 +54,15 @@ export enum QueryKey {
     ROUTINE_REP_UNITS = 'rep-units',
 
     QUERY_PROFILE = 'profile',
+
+    EXERCISES = 'exercises',
+    EXERCISE_VARIATIONS = 'variations',
+    EXERCISE_DETAIL = 'detail',
+    LANGUAGES = 'languages',
+    CATEGORIES = 'categories',
+    EQUIPMENT = 'equipment',
+    MUSCLES = 'muscles',
+    QUERY_NOTES = 'notes',
 }
 
 /*

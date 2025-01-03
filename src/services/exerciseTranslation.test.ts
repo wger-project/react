@@ -1,5 +1,5 @@
 import axios from "axios";
-import { addTranslation, deleteExerciseTranslation, editExerciseTranslation } from "services";
+import { addTranslation, deleteExerciseTranslation, editTranslation } from "services";
 
 jest.mock("axios");
 
@@ -29,13 +29,13 @@ describe("Exercise translation service API tests", () => {
         axios.post.mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
-        const result = await addTranslation(
-            100,
-            2,
-            "Test exercise",
-            "Test description",
-            "Asimov"
-        );
+        const result = await addTranslation({
+            exerciseId: 100,
+            languageId: 2,
+            name: "Test exercise",
+            description: "Test description",
+            author: "Asimov"
+        });
 
         // Assert
         expect(axios.post).toHaveBeenCalledTimes(1);
@@ -67,13 +67,14 @@ describe("Exercise translation service API tests", () => {
         axios.patch.mockImplementation(() => Promise.resolve({ status: 200, data: response }));
 
         // Act
-        const result = await editExerciseTranslation(
-            886,
-            100,
-            2,
-            "A new, cooler name!!!",
-            "A new, cooler description!!!",
-        );
+        const result = await editTranslation({
+            id: 886,
+            exerciseId: 100,
+            languageId: 2,
+            name: "A new, cooler name!!!",
+            description: "A new, cooler description!!!",
+            author: "Asimov"
+        });
 
         // Assert
         expect(axios.patch).toHaveBeenCalledTimes(1);

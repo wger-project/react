@@ -14,7 +14,7 @@ import { ENGLISH_LANGUAGE_OBJ, QUERY_EXERCISE_DETAIL, QUERY_EXERCISE_VARIATIONS,
 import { Head } from "./Head";
 
 export const PaddingBox = () => {
-    return <Box sx={{ height: 40 }} />;
+    return <Box sx={{ height: 20 }} />;
 };
 
 export const ExerciseDetails = () => {
@@ -76,7 +76,7 @@ export const ExerciseDetails = () => {
     if (exerciseQuery.isSuccess && languageQuery.isSuccess) {
         out = editMode
             ? <ExerciseDetailEdit
-                exercise={exerciseQuery.data}
+                exerciseId={exerciseQuery.data.id!}
                 language={language!} />
             : <ExerciseDetailView
                 exercise={exerciseQuery.data}

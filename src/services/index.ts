@@ -17,7 +17,7 @@ export {
 } from './exercise';
 export {
     addTranslation,
-    editExerciseTranslation,
+    editTranslation,
     getExerciseTranslations,
     searchExerciseTranslations,
     deleteExerciseTranslation

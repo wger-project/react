@@ -69,13 +69,13 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         );
 
         // Create the English translation
-        const translation = await addTranslation(
-            exerciseId,
-            ENGLISH_LANGUAGE_ID,
-            state.nameEn,
-            state.descriptionEn,
-            profileQuery.data!.username
-        );
+        const translation = await addTranslation({
+            exerciseId: exerciseId,
+            languageId: ENGLISH_LANGUAGE_ID,
+            name: state.nameEn,
+            description: state.descriptionEn,
+            author: profileQuery.data!.username
+        });
 
         // For each entry in alternative names, create a new alias
         for (const alias of state.alternativeNamesEn) {
@@ -99,13 +99,13 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
         // Create the translation if needed
         if (state.languageId !== null) {
-            const exerciseI18n = await addTranslation(
-                exerciseId,
-                state.languageId,
-                state.nameI18n,
-                state.descriptionI18n,
-                profileQuery.data!.username
-            );
+            const exerciseI18n = await addTranslation({
+                exerciseId: exerciseId,
+                languageId: state.languageId,
+                name: state.nameI18n,
+                description: state.descriptionI18n,
+                author: profileQuery.data!.username
+            });
 
             for (const alias of state.alternativeNamesI18n) {
                 await postAlias(exerciseI18n.id!, alias);
