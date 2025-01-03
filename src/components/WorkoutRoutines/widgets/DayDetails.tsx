@@ -49,6 +49,7 @@ import { ExerciseSearchResponse } from "services/responseType";
 import { SNACKBAR_AUTO_HIDE_DURATION, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
 
+
 export const DayDragAndDropGrid = (props: {
     routineId: number,
     selectedDay: number | null,
@@ -395,7 +396,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                                         <IconButton onClick={() => handleDeleteSlot(slot.id)}>
                                                             <DeleteIcon />
                                                         </IconButton>
-                                                        Set {index + 1}
+                                                        {slot.configs.length > 1 ? t('routines.supersetNr', { number: index + 1 }) : t('routines.exerciseNr', { number: index + 1 })}
                                                     </Typography>
                                                 </Grid>
 
@@ -519,7 +520,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
             startIcon={addSlotQuery.isPending ? <LoadingProgressIcon /> : <AddIcon />}
             onClick={handleAddSlot}
         >
-            {t('routines.addSet')}
+            {t('routines.addExercise')}
         </Button>}
     </>);
 };

@@ -23,6 +23,19 @@ import { useTranslation } from "react-i18next";
 import { getLanguageByShortName } from "services";
 import { ExerciseSearchResponse } from "services/responseType";
 
+/*
+ * Converts a number to an alphabetic string, useful for counting
+ */
+function toAlphabetic(num: number) {
+    let result = "";
+    while (num > 0) {
+        num--; // Adjust for 0-based index
+        result = String.fromCharCode(97 + (num % 26)) + result;
+        num = Math.floor(num / 26);
+    }
+    return result;
+}
+
 const configTypes = ["weight", "max-weight", "reps", "max-reps", "max-sets", "sets", "rest", "max-rest", "rir"] as const;
 type ConfigType = typeof configTypes[number];
 
@@ -52,12 +65,14 @@ export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: 
             </Alert>
         )}
 
-        {props.slot.configs.map((slotEntry: SlotEntry) => (
+        {props.slot.configs.map((slotEntry: SlotEntry, index) => (
             <SlotEntryDetails
                 key={slotEntry.id}
                 slotEntry={slotEntry}
                 routineId={props.routineId}
                 simpleMode={props.simpleMode}
+                index={index}
+                total={props.slot.configs.length}
             />
         ))}
     </>);
@@ -67,6 +82,8 @@ export const SlotEntryDetails = (props: {
     slotEntry: SlotEntry,
     routineId: number,
     simpleMode: boolean,
+    index: number,
+    total: number
 }) => {
     const { t, i18n } = useTranslation();
 
@@ -167,6 +184,8 @@ export const SlotEntryDetails = (props: {
             </React.Fragment>
     );
 
+    const counter = props.total > 1 ? toAlphabetic(props.index + 1) + ') ' : '';
+
     return (
         (<React.Fragment>
             <Grid container spacing={1}>
@@ -188,7 +207,7 @@ export const SlotEntryDetails = (props: {
 
                 <Grid size={{ xs: 9, sm: 3 }} alignContent={"center"}>
                     <Typography variant={"h6"}>
-                        {props.slotEntry.exercise?.getTranslation(language).name}
+                        {counter} {props.slotEntry.exercise?.getTranslation(language).name}
                     </Typography>
                 </Grid>
 
