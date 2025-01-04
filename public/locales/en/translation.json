@@ -242,6 +242,8 @@
     "routines": "Routines",
     "rir": "RiR",
     "restDay": "Rest day",
+    "confirmRestDay": "Confirm rest day change",
+    "confirmRestDayHelpText": "Please note that all sets and exercises will be removed when you mark a day as a rest day.",
     "duplicate": "Duplicate routine",
     "downloadPdfTable": "Download PDF (table)",
     "downloadPdfLogs": "Download PDF (logs)",

@@ -28,7 +28,14 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
     const [openDialog, setOpenDialog] = useState(false);
     const [isRest, setIsRest] = useState(props.day.isRest);
 
-    const handleRestChange = () => setOpenDialog(true);
+    const handleRestChange = () => {
+        if (!isRest) {
+            setOpenDialog(true);
+        } else {
+            setIsRest(false);
+            handleSubmit({ isRest: false });
+        }
+    };
     const handleDialogClose = () => setOpenDialog(false);
     const handleConfirmRestChange = () => {
         handleSubmit({ isRest: !isRest });
@@ -139,16 +146,13 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                     </Grid>
 
                     <Dialog open={openDialog} onClose={handleDialogClose}>
-                        <DialogTitle>Confirm Rest Day Change</DialogTitle>
+                        <DialogTitle>{t('routines.confirmRestDay')}</DialogTitle>
                         <DialogContent>
-                            Are you sure you want to change this day to a {isRest ? 'non-rest' : 'rest'} day?
-                        </DialogContent>
-                        <DialogContent>
-                            Please consider that all sets are removed from rest days when the form is saved
+                            {t('routines.confirmRestDayHelpText')}
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={handleDialogClose}>Cancel</Button>
-                            <Button onClick={handleConfirmRestChange}>Save</Button>
+                            <Button onClick={handleDialogClose}>{t('cancel')}</Button>
+                            <Button onClick={handleConfirmRestChange}>{t('continue')}</Button>
                         </DialogActions>
                     </Dialog>
                 </Form>
