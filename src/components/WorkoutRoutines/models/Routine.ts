@@ -18,7 +18,30 @@ export const MIN_WORKOUT_DURATION = 1;
 export const MAX_WORKOUT_DURATION = 16;
 export const DEFAULT_WORKOUT_DURATION = 12;
 
+
+type RoutineConstructorParams = {
+    id: number;
+    name: string;
+    description: string;
+    created: Date;
+    start: Date;
+    end: Date;
+    fitInWeek: boolean;
+    isTemplate?: boolean;
+    isPublic?: boolean;
+    days?: Day[];
+};
+
 export class Routine {
+    id: number;
+    name: string;
+    description: string;
+    created: Date;
+    start: Date;
+    end: Date;
+    fitInWeek: boolean;
+    isTemplate: boolean;
+    isPublic: boolean;
 
     days: Day[] = [];
     logData: RoutineLogData[] = [];
@@ -26,19 +49,18 @@ export class Routine {
     dayDataAllIterations: RoutineDayData[] = [];
     stats: RoutineStatsData = new RoutineStatsData();
 
-    constructor(
-        public id: number,
-        public name: string,
-        public description: string,
-        public created: Date,
-        public start: Date,
-        public end: Date,
-        public fitInWeek: boolean,
-        days?: Day[],
-    ) {
-        if (days) {
-            this.days = days;
-        }
+    constructor(data: RoutineConstructorParams) {
+        this.id = data.id;
+        this.name = data.name;
+        this.description = data.description;
+        this.created = data.created;
+        this.start = data.start;
+        this.end = data.end;
+        this.fitInWeek = data.fitInWeek;
+        this.isTemplate = data.isTemplate ?? false;
+        this.isPublic = data.isPublic ?? false;
+
+        this.days = data.days ?? [];
     }
 
     get groupedDayDataByIteration() {
@@ -98,15 +120,18 @@ export class Routine {
 
 export class RoutineAdapter implements Adapter<Routine> {
     fromJson(item: any) {
-        return new Routine(
-            item.id,
-            item.name,
-            item.description,
-            new Date(item.created),
-            new Date(item.start),
-            new Date(item.end),
-            item.fit_in_week,
-        );
+        return new Routine({
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            created: new Date(item.created),
+            start: new Date(item.start),
+            end: new Date(item.end),
+            fitInWeek: item.fit_in_week,
+            isTemplate: item.is_template,
+            isPublic: item.is_public,
+            days: item.days ? item.days.map((day: any) => new Day(day)) : []
+        });
     }
 
     toJson(item: Routine) {
@@ -120,3 +145,5 @@ export class RoutineAdapter implements Adapter<Routine> {
         };
     }
 }
+
+export const routineAdapter = new RoutineAdapter();

@@ -44,24 +44,24 @@ describe("workout routine service tests", () => {
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
         expect(result).toStrictEqual([
-            new Routine(
-                1,
-                'My first routine!',
-                'Well rounded full body routine',
-                new Date("2022-01-01T12:34:30+01:00"),
-                new Date("2024-03-01T00:00:00.000Z"),
-                new Date("2024-04-30T00:00:00.000Z"),
-                false,
-            ),
-            new Routine(
-                2,
-                'Beach body',
-                'Train only arms and chest, no legs!!!',
-                new Date("2023-01-01T17:22:22+02:00"),
-                new Date("2024-03-01T00:00:00.000Z"),
-                new Date("2024-04-30T00:00:00.000Z"),
-                false,
-            ),
+            new Routine({
+                id: 1,
+                name: 'My first routine!',
+                description: 'Well rounded full body routine',
+                created: new Date("2022-01-01T12:34:30+01:00"),
+                start: new Date("2024-03-01T00:00:00.000Z"),
+                end: new Date("2024-04-30T00:00:00.000Z"),
+                fitInWeek: false,
+            }),
+            new Routine({
+                id: 2,
+                name: 'Beach body',
+                description: 'Train only arms and chest, no legs!!!',
+                created: new Date("2023-01-01T17:22:22+02:00"),
+                start: new Date("2024-03-01T00:00:00.000Z"),
+                end: new Date("2024-04-30T00:00:00.000Z"),
+                fitInWeek: false,
+            }),
         ]);
         expect(result[0].days.length).toEqual(0);
         expect(result[1].days.length).toEqual(0);

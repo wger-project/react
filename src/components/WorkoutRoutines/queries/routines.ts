@@ -1,6 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getActiveRoutine, getRoutine, getRoutines, getRoutinesShallow } from "services";
-import { addRoutine, AddRoutineParams, deleteRoutine, editRoutine, EditRoutineParams } from "services/routine";
+import {
+    addRoutine,
+    deleteRoutine,
+    editRoutine,
+    getActiveRoutine,
+    getPrivateTemplatesShallow,
+    getPublicTemplatesShallow,
+    getRoutine,
+    getRoutines,
+    getRoutinesShallow
+} from "services";
+import { AddRoutineParams, EditRoutineParams } from "services/routine";
 import { QueryKey, } from "utils/consts";
 
 
@@ -27,6 +37,20 @@ export function useRoutinesShallowQuery() {
     return useQuery({
         queryKey: [QueryKey.ROUTINES_SHALLOW],
         queryFn: getRoutinesShallow
+    });
+}
+
+export function usePrivateRoutinesShallowQuery() {
+    return useQuery({
+        queryKey: [QueryKey.PRIVATE_TEMPLATES],
+        queryFn: getPrivateTemplatesShallow
+    });
+}
+
+export function usePublicRoutinesShallowQuery() {
+    return useQuery({
+        queryKey: [QueryKey.PUBLIC_TEMPLATES],
+        queryFn: getPublicTemplatesShallow
     });
 }
 

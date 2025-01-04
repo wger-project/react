@@ -68,6 +68,10 @@ export enum WgerLink {
     ROUTINE_EDIT_LOG,
     ROUTINE_DELETE_LOG,
 
+    TEMPLATE_DETAIL,
+    PRIVATE_TEMPLATE_OVERVIEW,
+    PUBLIC_TEMPLATE_OVERVIEW,
+
     EXERCISE_DETAIL,
     EXERCISE_OVERVIEW,
     EXERCISE_CONTRIBUTE,
@@ -139,6 +143,13 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/routine/log/${params!.id}/delete`;
         case WgerLink.CALENDAR:
             return `/${langShort}/routine/calendar`;
+        // Templates
+        case WgerLink.TEMPLATE_DETAIL:
+            return `/${langShort}/routine/templates/${params!.id}/view`;
+        case WgerLink.PRIVATE_TEMPLATE_OVERVIEW:
+            return `/${langShort}/routine/templates/overview/private`;
+        case WgerLink.PUBLIC_TEMPLATE_OVERVIEW:
+            return `/${langShort}/routine/templates/overview/public`;
 
         // Exercises
         case WgerLink.EXERCISE_CONTRIBUTE:

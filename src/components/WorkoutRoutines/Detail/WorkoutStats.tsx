@@ -45,7 +45,7 @@ export const WorkoutStats = () => {
     const [selectedValueSubType, setSelectedValueSubType] = useState<StatSubType>(StatSubType.Daily);
     const [selectedValueGroupBy, setSelectedValueGroupBy] = useState<StatGroupBy>(StatGroupBy.Exercises);
 
-    const routineId = parseInt(params.routineId!);
+    const routineId = parseInt(params.routineId ?? '');
     if (Number.isNaN(routineId)) {
         return <p>Please pass an integer as the routine id.</p>;
     }

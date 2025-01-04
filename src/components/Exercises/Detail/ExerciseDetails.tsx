@@ -5,7 +5,6 @@ import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEd
 import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailView";
 import { Language } from "components/Exercises/models/language";
 import { useLanguageQuery } from "components/Exercises/queries";
-import { parseInt } from "lodash";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";

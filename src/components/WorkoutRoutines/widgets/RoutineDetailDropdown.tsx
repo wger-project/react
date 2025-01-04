@@ -12,11 +12,18 @@ import {
 } from "@mui/material";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
 import { useDeleteRoutineQuery } from "components/WorkoutRoutines/queries";
+import { RoutineTemplateForm } from "components/WorkoutRoutines/widgets/forms/RoutineTemplateForm";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { makeLink, WgerLink } from "utils/url";
 
+
+export enum DialogToOpen {
+    NONE,
+    DELETE_CONFIRMATION,
+    EDIT_TEMPLATE
+}
 
 export const RoutineDetailDropdown = (props: { routine: Routine }) => {
 
@@ -25,7 +32,7 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
 
     const [t, i18n] = useTranslation();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+    const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState<DialogToOpen>(DialogToOpen.NONE);
 
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -34,8 +41,13 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
 
 
     const handleDelete = () => {
-        setDeleteConfirmationOpen(true);  // Open the confirmation dialog
+        setDeleteConfirmationOpen(DialogToOpen.DELETE_CONFIRMATION);
         handleClose(); // Close the dropdown menu
+    };
+
+    const handleTemplate = () => {
+        setDeleteConfirmationOpen(DialogToOpen.EDIT_TEMPLATE);
+        handleClose();
     };
 
     const handleConfirmDelete = async () => {
@@ -43,8 +55,8 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
         navigate(makeLink(WgerLink.ROUTINE_OVERVIEW, i18n.language));
     };
 
-    const handleCancelDelete = () => {
-        setDeleteConfirmationOpen(false);
+    const handleCloseDialogs = () => {
+        setDeleteConfirmationOpen(DialogToOpen.NONE);
     };
 
     const handleClose = () => {
@@ -65,11 +77,11 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                <MenuItem
+                {!props.routine.isTemplate && <MenuItem
                     component={Link}
                     to={makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: props.routine.id })}>
                     {t("edit")}
-                </MenuItem>
+                </MenuItem>}
                 <MenuItem
                     component={Link}
                     to={makeLink(WgerLink.ROUTINE_DETAIL_TABLE, i18n.language, { id: props.routine.id })}>
@@ -90,6 +102,9 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
                     href={makeLink(WgerLink.ROUTINE_COPY, i18n.language, { id: props.routine.id })}
                 >
                     {t("routines.duplicate")}
+                </MenuItem>
+                <MenuItem onClick={handleTemplate}>
+                    {t("routines.markAsTemplate")}
                 </MenuItem>
                 <MenuItem
                     component="a"
@@ -114,10 +129,8 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
             </Menu>
 
             <Dialog
-                open={deleteConfirmationOpen}
-                onClose={handleCancelDelete}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
+                open={deleteConfirmationOpen === DialogToOpen.DELETE_CONFIRMATION}
+                onClose={handleCloseDialogs}
             >
                 <DialogTitle id="alert-dialog-title">
                     {t('delete')}
@@ -128,11 +141,30 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCancelDelete}>
+                    <Button onClick={handleCloseDialogs}>
                         {t("cancel")}
                     </Button>
                     <Button onClick={handleConfirmDelete} color="error" autoFocus>
                         {t("delete")}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={deleteConfirmationOpen === DialogToOpen.EDIT_TEMPLATE}
+                onClose={handleCloseDialogs}
+            >
+                <DialogTitle>
+                    {t("routines.markAsTemplate")}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        <RoutineTemplateForm routine={props.routine} />
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialogs}>
+                        {t("close")}
                     </Button>
                 </DialogActions>
             </Dialog>

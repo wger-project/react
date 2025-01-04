@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Exercise } from "components/Exercises/models/exercise";
 import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
 import { RoutineStatsData, RoutineStatsDataAdapter } from "components/WorkoutRoutines/models/LogStats";
-import { Routine, RoutineAdapter } from "components/WorkoutRoutines/models/Routine";
+import { Routine, routineAdapter } from "components/WorkoutRoutines/models/Routine";
 import { RoutineDayData, RoutineDayDataAdapter } from "components/WorkoutRoutines/models/RoutineDayData";
 import { RoutineLogData, RoutineLogDataAdapter } from "components/WorkoutRoutines/models/RoutineLogData";
 import { getExercise } from "services/exercise";
@@ -17,13 +17,6 @@ export const ROUTINE_API_STATS_PATH = 'stats';
 export const ROUTINE_API_CURRENT_ITERATION_DISPLAY = 'current-iteration-display';
 export const ROUTINE_API_ALL_ITERATION_DISPLAY = 'date-sequence-display';
 
-/*
- * Processes a routine with all sub-object
- */
-export const processRoutineShallow = (routineData: any): Routine => {
-    const routineAdapter = new RoutineAdapter();
-    return routineAdapter.fromJson(routineData);
-};
 
 /*
  * Processes a routine with all sub-objects
@@ -31,7 +24,6 @@ export const processRoutineShallow = (routineData: any): Routine => {
 let exerciseMap: { [id: number]: Exercise } = {};
 
 export const processRoutine = async (id: number): Promise<Routine> => {
-    const routineAdapter = new RoutineAdapter();
 
     const response = await axios.get(
         makeUrl(ApiPath.ROUTINE, { id: id }),
@@ -162,18 +154,35 @@ export const getRoutine = async (id: number): Promise<Routine> => {
  * Note: strictly only the routine data, no days or any other sub-objects
  */
 export const getRoutinesShallow = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.ROUTINE);
+    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false } });
     const response = await axios.get<ResponseType<Routine>>(
         url,
         { headers: makeHeader() }
     );
 
-    const out: Routine[] = [];
-    for (const routineData of response.data.results) {
-        out.push(await processRoutineShallow(routineData));
-    }
-    return out;
+    return response.data.results.map(routineData => routineAdapter.fromJson(routineData));
 };
+
+export const getPrivateTemplatesShallow = async (): Promise<Routine[]> => {
+    const url = makeUrl(ApiPath.PRIVATE_TEMPLATE_API_PATH);
+    const response = await axios.get<ResponseType<Routine>>(
+        url,
+        { headers: makeHeader() }
+    );
+
+    return response.data.results.map(routineData => routineAdapter.fromJson(routineData));
+};
+
+export const getPublicTemplatesShallow = async (): Promise<Routine[]> => {
+    const url = makeUrl(ApiPath.PUBLIC_TEMPLATE_API_PATH);
+    const response = await axios.get<ResponseType<Routine>>(
+        url,
+        { headers: makeHeader() }
+    );
+
+    return response.data.results.map(routineData => routineAdapter.fromJson(routineData));
+};
+
 
 export interface AddRoutineParams {
     name: string;
@@ -181,6 +190,8 @@ export interface AddRoutineParams {
     start: string;
     end: string;
     fit_in_week: boolean;
+    is_template?: boolean;
+    is_public?: boolean;
 }
 
 export interface EditRoutineParams extends Partial<AddRoutineParams> {
@@ -194,7 +205,7 @@ export const addRoutine = async (data: AddRoutineParams): Promise<Routine> => {
         { headers: makeHeader() }
     );
 
-    return new RoutineAdapter().fromJson(response.data);
+    return routineAdapter.fromJson(response.data);
 };
 
 export const editRoutine = async (data: EditRoutineParams): Promise<Routine> => {
@@ -204,7 +215,7 @@ export const editRoutine = async (data: EditRoutineParams): Promise<Routine> => 
         { headers: makeHeader() }
     );
 
-    return new RoutineAdapter().fromJson(response.data);
+    return routineAdapter.fromJson(response.data);
 };
 
 export const deleteRoutine = async (id: number): Promise<number> => {

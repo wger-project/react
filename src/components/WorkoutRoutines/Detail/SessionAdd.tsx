@@ -13,12 +13,12 @@ export const SessionAdd = () => {
     const { t, i18n } = useTranslation();
     const [selectedDate, setSelectedDate] = useState<DateTime>(DateTime.now());
 
-    const routineId = parseInt(params.routineId!);
+    const routineId = parseInt(params.routineId ?? '');
     if (Number.isNaN(routineId)) {
         return <p>Please pass an integer as the routine id.</p>;
     }
 
-    const dayId = parseInt(params.dayId!);
+    const dayId = parseInt(params.dayId ?? '');
     if (Number.isNaN(dayId)) {
         return <p>Please pass an integer as the day id.</p>;
     }

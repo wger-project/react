@@ -1,29 +1,26 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { act, render, screen } from '@testing-library/react';
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
 import React from 'react';
 import { BrowserRouter } from "react-router-dom";
 import { getRoutinesShallow } from "services";
+import { testQueryClient } from "tests/queryClient";
 import { TEST_ROUTINES } from "tests/workoutRoutinesTestData";
 
 jest.mock("services");
 
-const queryClient = new QueryClient();
-
-describe("Test the RoutineOverview component", () => {
+describe("Smoke tests the RoutineOverview component", () => {
 
     beforeEach(() => {
-        // @ts-ignore
-        getRoutinesShallow.mockImplementation(() => Promise.resolve(TEST_ROUTINES));
+        (getRoutinesShallow as jest.Mock).mockResolvedValue(TEST_ROUTINES);
     });
-
 
     test('renders all routines', async () => {
 
         // Act
         render(
             <BrowserRouter>
-                <QueryClientProvider client={queryClient}>
+                <QueryClientProvider client={testQueryClient}>
                     <RoutineOverview />
                 </QueryClientProvider>
             </BrowserRouter>

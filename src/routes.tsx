@@ -12,8 +12,11 @@ import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDe
 import { RoutineEdit } from "components/WorkoutRoutines/Detail/RoutineEdit";
 import { SessionAdd } from "components/WorkoutRoutines/Detail/SessionAdd";
 import { SlotProgressionEdit } from "components/WorkoutRoutines/Detail/SlotProgressionEdit";
+import { TemplateDetail } from "components/WorkoutRoutines/Detail/TemplateDetail";
 import { WorkoutLogs } from "components/WorkoutRoutines/Detail/WorkoutLogs";
 import { WorkoutStats } from "components/WorkoutRoutines/Detail/WorkoutStats";
+import { PrivateTemplateOverview } from "components/WorkoutRoutines/Overview/PrivateTemplateOverview";
+import { PublicTemplateOverview } from "components/WorkoutRoutines/Overview/PublicTemplateOverview";
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
 import {
     About,
@@ -27,11 +30,8 @@ import {
     Ingredients,
     Login,
     Preferences,
-    PublicTemplate,
-    TemplatePage,
     WeightOverview,
     Workout,
-    WorkoutSchedule
 } from "pages";
 import { ExerciseDetailPage } from "pages/ExerciseDetails";
 import React from "react";
@@ -41,20 +41,16 @@ import { Route, Routes } from "react-router-dom";
  * Routes for the application
  *
  * Don't change the routes of the elements which are also used in the django application
+ * See also src/utils/url.ts
  */
 export const WgerRoutes = () => {
     return <Routes>
         <Route path="/:lang">
             <Route path="workout">
                 <Route path="overview" element={<Workout />} />
-                <Route path="schedule" element={<WorkoutSchedule />} />
                 <Route path="gallery" element={<Gallery />} />
-
-                <Route path="template">
-                    <Route path="overview" element={<TemplatePage />} />
-                    <Route path="public" element={<PublicTemplate />} />
-                </Route>
             </Route>
+
             <Route path="routine">
                 <Route index element={<RoutineOverview />} />
                 <Route path="overview" element={<RoutineOverview />} />
@@ -74,6 +70,16 @@ export const WgerRoutes = () => {
                     <Route path="table" element={<RoutineDetailsTable />} />
                     <Route path="logs" element={<WorkoutLogs />} />
                     <Route path="statistics" element={<WorkoutStats />} />
+                </Route>
+
+                <Route path="templates">
+                    <Route path=":routineId">
+                        <Route path="view" element={<TemplateDetail />} />
+                    </Route>
+                    <Route path="overview">
+                        <Route path="private" element={<PrivateTemplateOverview />} />
+                        <Route path="public" element={<PublicTemplateOverview />} />
+                    </Route>
                 </Route>
 
             </Route>

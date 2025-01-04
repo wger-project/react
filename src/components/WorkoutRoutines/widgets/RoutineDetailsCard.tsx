@@ -144,7 +144,9 @@ function SlotDataList(props: {
     );
 }
 
-export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
+export const DayDetailsCard = (props: { dayData: RoutineDayData, readOnly?: boolean }) => {
+    const readOnly = props.readOnly ?? false;
+
     const theme = useTheme();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -165,7 +167,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData }) => {
         <Card sx={{ minWidth: 275 }}>
             <CardHeader
                 sx={{ bgcolor: theme.palette.grey.A200 }}
-                action={props.dayData.day!.isRest
+                action={props.dayData.day!.isRest || readOnly
                     ? null
                     : <Tooltip title={t('routines.addWeightLog')}>
                         <IconButton

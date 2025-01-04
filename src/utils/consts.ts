@@ -42,6 +42,8 @@ export enum QueryKey {
     ROUTINE_STATS = 'routine-stats',
     ROUTINES_ACTIVE = 'routines-active',
     ROUTINES_SHALLOW = 'routines-shallow',
+    PRIVATE_TEMPLATES = 'private-templates',
+    PUBLIC_TEMPLATES = 'public-templates',
 
     NUTRITIONAL_PLANS = 'nutritional-plans',
     NUTRITIONAL_PLAN = 'nutritional-plan',
@@ -96,6 +98,8 @@ export enum ApiPath {
     SESSION = 'workoutsession',
 
     WORKOUT_LOG_API_PATH = 'workoutlog',
+    PRIVATE_TEMPLATE_API_PATH = 'templates',
+    PUBLIC_TEMPLATE_API_PATH = 'public-templates',
 
     // Profile
     API_PROFILE_PATH = 'userprofile',

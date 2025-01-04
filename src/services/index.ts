@@ -30,10 +30,14 @@ export { postExerciseVideo, deleteExerciseVideo } from './video';
 
 export {
     getRoutinesShallow,
+    getPrivateTemplatesShallow,
+    getPublicTemplatesShallow,
     getRoutine,
     getRoutines,
     getActiveRoutine,
-
+    addRoutine,
+    deleteRoutine,
+    editRoutine,
 } from './routine';
 
 export {

@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 
 type WgerTemplateContainerRightSidebarProps = {
     title?: string;
+    subTitle?: string;
     mainContent: ReactJSXElement | null;
     sideBar?: ReactJSXElement;
     optionsMenu?: ReactJSXElement;
@@ -35,6 +36,9 @@ export const WgerContainerRightSidebar = (props: WgerTemplateContainerRightSideb
                             <Typography variant="h3">
                                 {props.title}
                             </Typography>
+                            {props.subTitle && <Typography variant="h6">
+                                {props.subTitle}
+                            </Typography>}
                             {props.backToUrl && backTo}
                         </Stack>
                         {props.optionsMenu}

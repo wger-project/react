@@ -158,29 +158,57 @@ export const testRoutineLogData = new RoutineLogData(
     testWorkoutLogs
 );
 
-export const testRoutine1 = new Routine(
-    1,
-    'Test routine 1',
-    'Full body routine',
-    new Date('2024-01-01'),
-    new Date('2024-05-01'),
-    new Date('2024-06-01'),
-    false,
-    [testDayLegs, testRestDay, testDayPull]
-);
+export const testRoutine1 = new Routine({
+    id: 1,
+    name: 'Test routine 1',
+    description: 'Full body routine',
+    created: new Date('2024-01-01'),
+    start: new Date('2024-05-01'),
+    end: new Date('2024-06-01'),
+    fitInWeek: false,
+    isTemplate: false,
+    isPublic: false,
+    days: [testDayLegs, testRestDay, testDayPull]
+});
 testRoutine1.dayDataAllIterations = testRoutineDataCurrentIteration1;
 testRoutine1.dayDataCurrentIteration = testRoutineDataCurrentIteration1;
 testRoutine1.logData = [testRoutineLogData];
 
-export const testRoutine2 = new Routine(
-    2,
-    '',
-    'The routine description',
-    new Date('2024-02-01'),
-    new Date('2024-02-01'),
-    new Date('2024-03-01'),
-    false
-);
+export const testRoutine2 = new Routine({
+    id: 2,
+    name: '',
+    description: 'The routine description',
+    created: new Date('2024-02-01'),
+    start: new Date('2024-02-01'),
+    end: new Date('2024-03-01'),
+    fitInWeek: false,
+    isTemplate: false,
+    isPublic: false,
+});
+
+export const testPublicTemplate1 = new Routine({
+    id: 3,
+    name: 'public template 1',
+    description: 'lorem ipsum',
+    created: new Date('2025-01-01'),
+    start: new Date('2025-01-10'),
+    end: new Date('2025-02-01'),
+    fitInWeek: false,
+    isTemplate: true,
+    isPublic: true,
+});
+
+export const testPrivateTemplate1 = new Routine({
+    id: 4,
+    name: 'private template 1',
+    description: 'lorem ipsum',
+    created: new Date('2025-01-01'),
+    start: new Date('2025-01-10'),
+    end: new Date('2025-02-01'),
+    fitInWeek: false,
+    isTemplate: true,
+    isPublic: false,
+})
 
 export const TEST_ROUTINES = [testRoutine1, testRoutine2];
 
@@ -197,7 +225,9 @@ export const responseApiWorkoutRoutine = {
             "created": "2022-01-01T12:34:30+01:00",
             "start": "2024-03-01",
             "end": "2024-04-30",
-            "fit_in_week": false
+            "fit_in_week": false,
+            "is_template": false,
+            "is_public": false
         },
         {
             "id": 2,
@@ -206,7 +236,9 @@ export const responseApiWorkoutRoutine = {
             "created": "2023-01-01T17:22:22+02:00",
             "start": "2024-03-01",
             "end": "2024-04-30",
-            "fit_in_week": false
+            "fit_in_week": false,
+            "is_template": false,
+            "is_public": false
         }
     ]
 };

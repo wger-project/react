@@ -1,5 +1,11 @@
 export {
-    useRoutinesQuery, useRoutineDetailQuery, useActiveRoutineQuery, useRoutinesShallowQuery, useDeleteRoutineQuery,
+    useRoutinesQuery,
+    useRoutineDetailQuery,
+    useActiveRoutineQuery,
+    useRoutinesShallowQuery,
+    useDeleteRoutineQuery,
+    usePublicRoutinesShallowQuery,
+    usePrivateRoutinesShallowQuery
 } from './routines';
 
 export {

@@ -10,9 +10,11 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { makeLink, WgerLink } from "utils/url";
 
-const RoutineList = (props: { routine: Routine }) => {
+export const RoutineList = (props: { routine: Routine, linkDestination?: WgerLink }) => {
     const [t, i18n] = useTranslation();
-    const detailUrl = makeLink(WgerLink.ROUTINE_DETAIL, i18n.language, { id: props.routine.id });
+
+    const destination = props.linkDestination ?? WgerLink.ROUTINE_DETAIL;
+    const detailUrl = makeLink(destination, i18n.language, { id: props.routine.id });
 
     return <>
         <ListItem sx={{ p: 0 }}>
@@ -27,6 +29,7 @@ const RoutineList = (props: { routine: Routine }) => {
         <Divider component="li" />
     </>;
 };
+
 export const RoutineOverview = () => {
     const routineQuery = useRoutinesShallowQuery();
     const [t] = useTranslation();
