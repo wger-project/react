@@ -185,6 +185,8 @@
   "save": "Save",
   "min": "Min",
   "max": "Max",
+  "durationWeeks": "{{number}} weeks",
+  "durationWeeksDays": "{{nrWeeks}} weeks, {{nrDays}} days",
   "videos": "Videos",
   "undo": "Undo",
   "successfullyDeleted": "Successfully deleted",
@@ -254,7 +256,7 @@
     "step": "Step",
     "requirements": "Requirements",
     "requirementsHelpText": "Select the workout results (from previous logs) that must be met for this rule to take effect",
-    "repeat": "Repeat entry",
+    "repeat": "Repeat rule",
     "repeatHelpText": "Check the check box if you want this rule to continue to apply to subsequent workouts until you define a new one"
   },
   "measurements": {

@@ -19,7 +19,7 @@ const RoutineList = (props: { routine: Routine }) => {
             <ListItemButton component="a" href={detailUrl}>
                 <ListItemText
                     primary={props.routine.name !== '' ? props.routine.name : t('routines.routine')}
-                    secondary={`${props.routine.start.toLocaleDateString()} - ${props.routine.end.toLocaleDateString()}`}
+                    secondary={`${props.routine.durationText} (${props.routine.start.toLocaleDateString()} - ${props.routine.end.toLocaleDateString()})`}
                 />
                 <ChevronRightIcon />
             </ListItemButton>

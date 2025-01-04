@@ -41,8 +41,12 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
      * Note: Controlling the state of the dates manually, otherwise some undebuggable errors
      *       about missing properties occur deep within formik.
      */
-    const [startValue, setStartValue] = useState<DateTime | null>(routine ? DateTime.fromJSDate(routine.start) : DateTime.now());
-    const [endValue, setEndValue] = useState<DateTime | null>(routine ? DateTime.fromJSDate(routine.end) : DateTime.now().plus({ weeks: DEFAULT_WORKOUT_DURATION }));
+    const [startDate, setStartDate] = useState<DateTime>(routine ? DateTime.fromJSDate(routine.start) : DateTime.now());
+    const [endDate, setEndDate] = useState<DateTime>(routine ? DateTime.fromJSDate(routine.end) : DateTime.now().plus({ weeks: DEFAULT_WORKOUT_DURATION }));
+
+    const duration = endDate.diff(startDate, ['weeks', 'days']);
+    const durationWeeks = Math.floor(duration.weeks);
+    const durationDays = Math.floor(duration.days);
 
     const validationSchema = yup.object({
         name: yup
@@ -100,8 +104,8 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
             initialValues={{
                 name: routine ? routine.name : '',
                 description: routine ? routine.description : '',
-                start: startValue,
-                end: endValue,
+                start: startDate,
+                end: endDate,
                 fitInWeek: routine ? routine.fitInWeek : true
             }}
 
@@ -135,7 +139,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
             {formik => (
                 <Form>
                     <Grid container spacing={2}>
-                        <Grid size={{ xs: 12, sm: 6 }}>
+                        <Grid size={{ xs: 12, sm: 5 }}>
                             <WgerTextField fieldName="name" title={t('name')} />
                         </Grid>
                         <Grid size={{ xs: 6, sm: 3 }}>
@@ -143,19 +147,19 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                                 <DatePicker
                                     defaultValue={DateTime.now()}
                                     label={t('start')}
-                                    value={startValue}
+                                    value={startDate}
                                     onChange={(newValue) => {
                                         if (newValue) {
                                             formik.setFieldValue('start', newValue);
+                                            setStartDate(newValue);
                                         }
-                                        setStartValue(newValue);
                                     }}
                                     slotProps={{
                                         textField: {
                                             variant: "standard",
                                             fullWidth: true,
                                             error: formik.touched.start && Boolean(formik.errors.start),
-                                            helperText: formik.touched.start && formik.errors.start
+                                            helperText: formik.touched.start && formik.errors.start ? String(formik.errors.start) : ''
                                         }
                                     }}
                                 />
@@ -166,23 +170,37 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                                 <DatePicker
                                     defaultValue={DateTime.now()}
                                     label={t('end')}
-                                    value={endValue}
+                                    value={endDate}
                                     onChange={(newValue) => {
                                         if (newValue) {
                                             formik.setFieldValue('end', newValue);
+                                            setEndDate(newValue);
                                         }
-                                        setEndValue(newValue);
                                     }}
                                     slotProps={{
                                         textField: {
                                             variant: "standard",
                                             fullWidth: true,
                                             error: formik.touched.end && Boolean(formik.errors.end),
-                                            helperText: formik.touched.end && formik.errors.end
+                                            helperText: formik.touched.end && formik.errors.end ? String(formik.errors.end) : ''
                                         }
                                     }}
                                 />
                             </LocalizationProvider>
+                        </Grid>
+                        <Grid
+                            size={{ xs: 12, sm: 1 }}
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center"
+                            }}
+                        >
+                            {durationDays === 0 ? t('durationWeeks', { number: durationWeeks }) : t('durationWeeksDays', {
+                                nrWeeks: durationWeeks,
+                                nrDays: durationDays
+                            })}
                         </Grid>
                         <Grid size={12}>
                             <WgerTextField

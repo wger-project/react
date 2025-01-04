@@ -7,15 +7,19 @@ import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { RoutineDetailDropdown } from "components/WorkoutRoutines/widgets/RoutineDetailDropdown";
 import { DayDetailsCard } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 export const RoutineDetail = () => {
-
+    const { t } = useTranslation();
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const routineQuery = useRoutineDetailQuery(routineId);
 
     const routine = routineQuery.data;
+
+    const durationDays = routine?.duration.days;
+    const durationWeeks = routine?.duration.weeks;
 
     return <RenderLoadingQuery
         query={routineQuery}
@@ -26,8 +30,9 @@ export const RoutineDetail = () => {
                 mainContent={
                     <Stack spacing={2}>
                         <Typography variant={"subtitle1"}>
-                            {routine!.start.toLocaleDateString()} - {routine!.end.toLocaleDateString()}
+                            {routine!.start.toLocaleDateString()} - {routine!.end.toLocaleDateString()} ({routine!.durationText})
                         </Typography>
+
 
                         {routine!.description !== ''
                             && <Typography variant={"body2"} sx={{ whiteSpace: 'pre-line' }}>
