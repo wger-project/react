@@ -44,6 +44,7 @@ export class SlotEntry {
             id: number,
             slotId: number,
             exerciseId: number,
+            exercise?: Exercise,
             repetitionUnitId: number,
             repetitionRounding: number,
             weightUnitId: number,
@@ -69,6 +70,7 @@ export class SlotEntry {
         this.id = data.id;
         this.slotId = data.slotId;
         this.exerciseId = data.exerciseId;
+        this.exercise = data.exercise;
         this.repetitionUnitId = data.repetitionUnitId;
         this.repetitionRounding = data.repetitionRounding;
         this.weightUnitId = data.weightUnitId;

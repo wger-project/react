@@ -71,6 +71,16 @@ export class Routine {
         })
     }
 
+    get mainMuscles() {
+        const muscles = this.days.flatMap(day => day.slots.flatMap(slot => slot.configs.flatMap(config => config.exercise?.muscles || [])));
+        return Array.from(new Set(muscles));
+    }
+
+    get secondaryMuscles() {
+        const muscles = this.days.flatMap(day => day.slots.flatMap(slot => slot.configs.flatMap(config => config.exercise?.musclesSecondary || [])));
+        return Array.from(new Set(muscles));
+    }
+
     // Returns the DayData for the given dayId and, optionally, iteration
     getDayData(dayId: number, date: Date) {
         return this.dayDataAllIterations.filter(dayData => dayData.day?.id === dayId
@@ -79,7 +89,6 @@ export class Routine {
             && dayData.date.getFullYear() === date.getFullYear(),
         );
     }
-
 }
 
 

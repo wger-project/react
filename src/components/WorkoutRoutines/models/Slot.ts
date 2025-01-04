@@ -10,34 +10,52 @@ export type SlotApiData = {
     entries?: any[]
 }
 
+type SlotConstructorParams = {
+    id: number;
+    dayId: number;
+    order: number;
+    comment: string;
+    config: object | null;
+    entries?: SlotEntry[];
+};
+
 export class Slot {
+
+    id: number;
+    dayId: number;
+    order: number;
+    comment: string;
+    config: object | null;
 
     configs: SlotEntry[] = [];
 
-    constructor(
-        public id: number,
-        public dayId: number,
-        public order: number,
-        public comment: string,
-        public config: any | null,
-        entries?: SlotEntry[],
-    ) {
-        if (entries) {
-            this.configs = entries;
-        }
+    constructor({
+                    id,
+                    dayId,
+                    order,
+                    comment,
+                    config,
+                    entries = []
+                }: SlotConstructorParams) {
+        this.id = id;
+        this.dayId = dayId;
+        this.order = order;
+        this.comment = comment;
+        this.config = config;
+        this.configs = entries;
     }
 }
 
 
 export class SlotAdapter implements Adapter<Slot> {
-    fromJson = (item: SlotApiData) => new Slot(
-        item.id,
-        item.day,
-        item.order,
-        item.comment,
-        item.config,
-        item.hasOwnProperty('entries') ? item.entries!.map((entry: any) => new SlotEntryAdapter().fromJson(entry)) : []
-    );
+    fromJson = (item: SlotApiData) => new Slot({
+        id: item.id,
+        dayId: item.day,
+        order: item.order,
+        comment: item.comment,
+        config: item.config,
+        entries: item.hasOwnProperty('entries') ? item.entries!.map((entry: any) => new SlotEntryAdapter().fromJson(entry)) : []
+    });
 
     toJson(item: Slot) {
         return {

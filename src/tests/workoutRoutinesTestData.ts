@@ -4,10 +4,12 @@ import { Routine } from "components/WorkoutRoutines/models/Routine";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { RoutineLogData } from "components/WorkoutRoutines/models/RoutineLogData";
 import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
+import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { SlotData } from "components/WorkoutRoutines/models/SlotData";
+import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
 import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
 import { WorkoutSession } from "components/WorkoutRoutines/models/WorkoutSession";
-import { testExerciseSquats } from "tests/exerciseTestdata";
+import { testExerciseBenchPress, testExerciseSquats } from "tests/exerciseTestdata";
 import { testWorkoutLogs } from "tests/workoutLogsRoutinesTestData";
 
 export const testWeightUnitKg = new WeightUnit(1, "kg");
@@ -26,7 +28,55 @@ const testDayLegs = new Day({
     isRest: false,
     needLogsToAdvance: false,
     type: 'custom',
-    config: null
+    config: null,
+    slots: [
+        new Slot({
+            id: 1,
+            dayId: 5,
+            order: 1,
+            comment: '',
+            config: null,
+            entries: [
+                new SlotEntry({
+                    id: 1,
+                    slotId: 1,
+                    exerciseId: 345,
+                    exercise: testExerciseSquats,
+                    repetitionUnitId: 1,
+                    repetitionRounding: 1,
+                    weightUnitId: 1,
+                    weightRounding: 1,
+                    order: 1,
+                    comment: 'test',
+                    type: 'normal',
+                    config: null
+                })
+            ]
+        }),
+        new Slot({
+            id: 2,
+            dayId: 5,
+            order: 1,
+            comment: '',
+            config: null,
+            entries: [
+                new SlotEntry({
+                    id: 1,
+                    slotId: 1,
+                    exerciseId: 2,
+                    exercise: testExerciseBenchPress,
+                    repetitionUnitId: 1,
+                    repetitionRounding: 1,
+                    weightUnitId: 1,
+                    weightRounding: 1,
+                    order: 1,
+                    comment: 'test',
+                    type: 'normal',
+                    config: null
+                })
+            ]
+        }),
+    ]
 });
 
 const testDayPull = new Day({

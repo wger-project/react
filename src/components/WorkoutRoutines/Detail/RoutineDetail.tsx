@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
@@ -33,7 +33,6 @@ export const RoutineDetail = () => {
                             {routine!.start.toLocaleDateString()} - {routine!.end.toLocaleDateString()} ({routine!.durationText})
                         </Typography>
 
-
                         {routine!.description !== ''
                             && <Typography variant={"body2"} sx={{ whiteSpace: 'pre-line' }}>
                                 {routine?.description}
@@ -47,16 +46,21 @@ export const RoutineDetail = () => {
                 }
                 sideBar={
                     <Stack>
-                        <h3>TODO</h3>
-                        <ul>
-                            <li>Muscle overview</li>
-                        </ul>
+                        <Box height={40} />
                         <Grid container>
                             <Grid size={6}>
-                                <MuscleOverview primaryMuscles={[]} secondaryMuscles={[]} isFront={true} />
+                                <MuscleOverview
+                                    primaryMuscles={routine!.mainMuscles.filter(m => m.isFront)}
+                                    secondaryMuscles={routine!.secondaryMuscles.filter(m => m.isFront)}
+                                    isFront={true}
+                                />
                             </Grid>
                             <Grid size={6}>
-                                <MuscleOverview primaryMuscles={[]} secondaryMuscles={[]} isFront={false} />
+                                <MuscleOverview
+                                    primaryMuscles={routine!.mainMuscles.filter(m => !m.isFront)}
+                                    secondaryMuscles={routine!.secondaryMuscles.filter(m => !m.isFront)}
+                                    isFront={false}
+                                />
                             </Grid>
                         </Grid>
                     </Stack>

@@ -24,7 +24,14 @@ describe('SlotDetails Component', () => {
             }
         )
     ;
-    const testSlot = new Slot(1, 2, 3, '', null, [slotEntry]);
+    const testSlot = new Slot({
+        id: 1,
+        dayId: 2,
+        order: 3,
+        comment: '',
+        config: null,
+        entries: [slotEntry]
+    });
 
     test('renders only sets, weight, and reps fields in simpleMode', () => {
         render(

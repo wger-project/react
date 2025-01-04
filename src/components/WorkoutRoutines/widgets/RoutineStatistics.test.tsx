@@ -28,7 +28,6 @@ const mockExerciseList: Exercise[] = [
 
 const mockLanguage: Language = testLanguageEnglish;
 const mockMuscleList: Muscle[] = testMuscles;
-const mockT = (a: string) => a;
 
 describe('Tests for the getHumanReadableHeaders helper', () => {
 
@@ -152,7 +151,6 @@ describe('Tests for the getFullStatsData function', () => {
             mockMuscleList,
             mockLanguage,
             'en',
-            mockT,
         );
 
         expect(result.headers).toEqual(['server.finger_muscle', 'server.shoulders']);
@@ -185,7 +183,6 @@ describe('Tests for the getFullStatsData function', () => {
             mockMuscleList,
             mockLanguage,
             'en',
-            mockT,
         );
         expect(result.headers).toEqual(["Benchpress", "Crunches"]);
         expect(result.data).toEqual([
@@ -219,7 +216,6 @@ describe('Tests for the getFullStatsData function', () => {
             mockMuscleList,
             mockLanguage,
             'en',
-            mockT,
         );
         expect(result.headers).toEqual(['server.finger_muscle', 'server.shoulders']);
         expect(result.data).toEqual([
