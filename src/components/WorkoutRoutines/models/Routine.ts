@@ -73,12 +73,16 @@ export class Routine {
 
     get mainMuscles() {
         const muscles = this.days.flatMap(day => day.slots.flatMap(slot => slot.configs.flatMap(config => config.exercise?.muscles || [])));
-        return Array.from(new Set(muscles));
+        return muscles.filter((muscle, index, self) =>
+            index === self.findIndex((m) => m.id === muscle.id)
+        );
     }
 
     get secondaryMuscles() {
         const muscles = this.days.flatMap(day => day.slots.flatMap(slot => slot.configs.flatMap(config => config.exercise?.musclesSecondary || [])));
-        return Array.from(new Set(muscles));
+        return muscles.filter((muscle, index, self) =>
+            index === self.findIndex((m) => m.id === muscle.id)
+        );
     }
 
     // Returns the DayData for the given dayId and, optionally, iteration
