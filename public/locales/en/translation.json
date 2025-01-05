@@ -182,6 +182,7 @@
   "noResultsDescription": "No results found for this query, consider reducing the number of filters.",
   "routines": {
     "addDay": "Add training day",
+    "addSet": "Add workout set",
     "addWeightLog": "Add training log",
     "logsHeader": "Training log for workout",
     "logsFilterNote": "Note that only entries with a weight unit of kg or lb and repetitions are charted, other combinations such as time or until failure are ignored here",
