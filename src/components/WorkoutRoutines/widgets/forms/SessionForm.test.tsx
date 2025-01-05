@@ -72,7 +72,10 @@ describe('SessionForm', () => {
 
         // Arrange
         const date = DateTime.now();
-        const formattedDate = date.toLocaleString(DateTime.DATE_SHORT, { locale: 'en-us' });
+        const formattedDate = new Date().toLocaleDateString(
+            'en-us',
+            { year: 'numeric', month: '2-digit', day: '2-digit' }
+        );
 
         const timeStart = DateTime.now().set({ hour: 10, minute: 30 });
         const timeStartFormatted = timeStart.toLocaleString(DateTime.TIME_SIMPLE, { locale: 'en-us' });
