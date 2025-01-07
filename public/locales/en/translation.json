@@ -205,6 +205,7 @@
     "daily": "Daily",
     "restTime": "Rest time",
     "workoutNr": "Workout Nr. {{number}}",
+    "weekNr": "Week {{number}}",
     "backToRoutine": "Back to routine",
     "minLengthRoutine": "The routine needs to be at least {{number}} weeks long",
     "maxLengthRoutine": "The routine can be at most {{number}} weeks long",

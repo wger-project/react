@@ -97,6 +97,7 @@ export const SlotProgressionEdit = () => {
                             routineId={routineId}
                             iterations={iterations}
                             forceInteger={true}
+                            cycleLength={routine.cycleLength}
                         />
                         <ProgressionForm
                             type="weight"
@@ -105,6 +106,7 @@ export const SlotProgressionEdit = () => {
                             slotEntryId={slotEntry.id}
                             routineId={routineId}
                             iterations={iterations}
+                            cycleLength={routine.cycleLength}
                         />
                         <ProgressionForm
                             type="reps"
@@ -113,6 +115,7 @@ export const SlotProgressionEdit = () => {
                             slotEntryId={slotEntry.id}
                             routineId={routineId}
                             iterations={iterations}
+                            cycleLength={routine.cycleLength}
                         />
                         <ProgressionForm
                             type="rir"
@@ -121,6 +124,7 @@ export const SlotProgressionEdit = () => {
                             slotEntryId={slotEntry.id}
                             routineId={routineId}
                             iterations={iterations}
+                            cycleLength={routine.cycleLength}
                         />
                         <ProgressionForm
                             type="rest"
@@ -129,6 +133,7 @@ export const SlotProgressionEdit = () => {
                             slotEntryId={slotEntry.id}
                             routineId={routineId}
                             iterations={iterations}
+                            cycleLength={routine.cycleLength}
                         />
                     </Grid>
                 </React.Fragment>

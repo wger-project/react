@@ -30,6 +30,7 @@ export const ProgressionForm = (props: {
     routineId: number,
     iterations: number[],
     forceInteger?: boolean;
+    cycleLength: number;
 }) => {
     const { t } = useTranslation();
     const [linkMinMax, setLinkMinMax] = useState<boolean>(true);
@@ -342,7 +343,7 @@ export const ProgressionForm = (props: {
                                             <React.Fragment key={index}>
                                                 <Grid size={2} display={'flex'} justifyContent={'space-around'}
                                                       alignItems={'center'}>
-                                                    {t('routines.workoutNr', { number: log.iteration })}
+                                                    {props.cycleLength === 7 ? t('routines.weekNr', { number: log.iteration }) : t('routines.workoutNr', { number: log.iteration })}
                                                     {log.edited
                                                         ? <IconButton
                                                             // Allow deleting the first element if it's not the only one

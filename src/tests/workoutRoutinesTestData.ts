@@ -168,11 +168,11 @@ export const testRoutine1 = new Routine({
     fitInWeek: false,
     isTemplate: false,
     isPublic: false,
-    days: [testDayLegs, testRestDay, testDayPull]
+    days: [testDayLegs, testRestDay, testDayPull],
+    dayDataAllIterations: testRoutineDataCurrentIteration1,
+    dayDataCurrentIteration: testRoutineDataCurrentIteration1,
+    logData: [testRoutineLogData],
 });
-testRoutine1.dayDataAllIterations = testRoutineDataCurrentIteration1;
-testRoutine1.dayDataCurrentIteration = testRoutineDataCurrentIteration1;
-testRoutine1.logData = [testRoutineLogData];
 
 export const testRoutine2 = new Routine({
     id: 2,

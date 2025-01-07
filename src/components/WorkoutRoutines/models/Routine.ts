@@ -13,7 +13,7 @@ export const NAME_MIN_LENGTH = 3;
 export const NAME_MAX_LENGTH = 25;
 export const DESCRIPTION_MAX_LENGTH = 1000;
 
-// Duration in weeks
+// Durations in weeks
 export const MIN_WORKOUT_DURATION = 1;
 export const MAX_WORKOUT_DURATION = 16;
 export const DEFAULT_WORKOUT_DURATION = 12;
@@ -30,6 +30,10 @@ type RoutineConstructorParams = {
     isTemplate?: boolean;
     isPublic?: boolean;
     days?: Day[];
+    logData?: RoutineLogData[];
+    dayDataCurrentIteration?: RoutineDayData[];
+    dayDataAllIterations?: RoutineDayData[];
+    stats?: RoutineStatsData;
 };
 
 export class Routine {
@@ -61,6 +65,10 @@ export class Routine {
         this.isPublic = data.isPublic ?? false;
 
         this.days = data.days ?? [];
+        this.logData = data.logData ?? [];
+        this.dayDataCurrentIteration = data.dayDataCurrentIteration ?? [];
+        this.dayDataAllIterations = data.dayDataAllIterations ?? [];
+        this.stats = data.stats ?? new RoutineStatsData();
     }
 
     get groupedDayDataByIteration() {
@@ -90,7 +98,7 @@ export class Routine {
         return durationDays === 0 ? i18n.t('durationWeeks', { number: durationWeeks }) : i18n.t('durationWeeksDays', {
             nrWeeks: durationWeeks,
             nrDays: durationDays
-        })
+        });
     }
 
     get mainMuscles() {
@@ -107,7 +115,16 @@ export class Routine {
         );
     }
 
-    // Returns the DayData for the given dayId and, optionally, iteration
+    /*
+     * Returns the length of the cycle in days
+     */
+    get cycleLength() {
+        return this.dayDataCurrentIteration.length;
+    }
+
+    /*
+     * Returns the DayData for the given dayId and, optionally, iteration
+     */
     getDayData(dayId: number, date: Date) {
         return this.dayDataAllIterations.filter(dayData => dayData.day?.id === dayId
             && dayData.date.getDate() === date.getDate()

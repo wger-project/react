@@ -15,9 +15,7 @@ export class SlotData {
         public setConfigs: SetConfigData[],
         exercises?: Exercise[],
     ) {
-        if (exercises) {
-            this.exercises = exercises;
-        }
+        this.exercises = exercises ?? [];
     }
 }
 

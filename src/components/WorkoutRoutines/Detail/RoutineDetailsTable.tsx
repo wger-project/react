@@ -42,6 +42,7 @@ export const RoutineDetailsTable = () => {
                             <DayTable
                                 dayData={routineQuery.data!.groupedDayDataByIteration[parseInt(iteration)]}
                                 iteration={parseInt(iteration)}
+                                cycleLength={routineQuery.data!.cycleLength}
                                 key={iteration}
                             />
                         )}
@@ -124,7 +125,7 @@ const DayTableExercises = (props: { dayData: RoutineDayData[], iteration: number
     </TableContainer>;
 };
 
-const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
+const DayTable = (props: { dayData: RoutineDayData[], iteration: number, cycleLength: number }) => {
     const [t] = useTranslation();
     const theme = useTheme();
 
@@ -135,7 +136,7 @@ const DayTable = (props: { dayData: RoutineDayData[], iteration: number }) => {
                     <TableCell colSpan={5}>
                         <Stack direction="row">
                             <Typography variant={'h6'}>
-                                {t('routines.workoutNr', { number: props.iteration })}
+                                {props.cycleLength === 7 ? t('routines.weekNr', { number: props.iteration }) : t('routines.workoutNr', { number: props.iteration })}
                             </Typography>
                         </Stack>
                     </TableCell>
