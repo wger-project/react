@@ -27,6 +27,7 @@ export class SetConfigData {
     public repsUnitId: number;
     public repsRounding: number | null = null;
     public rir: number | null;
+    public maxRir: number | null;
     public rpe: number | null;
     public restTime: number | null;
     public maxRestTime: number | null;
@@ -40,7 +41,7 @@ export class SetConfigData {
         type: SetType,
         nrOfSets: number,
         maxNrOfSets?: number | null,
-        
+
         weight?: number | null,
         maxWeight?: number | null,
         weightUnitId: number,
@@ -54,6 +55,7 @@ export class SetConfigData {
         repsRounding: number | null,
 
         rir?: number | null,
+        maxRir?: number | null,
         rpe?: number | null,
         restTime?: number | null,
         maxRestTime?: number | null,
@@ -80,6 +82,7 @@ export class SetConfigData {
         this.repsRounding = data.repsRounding;
 
         this.rir = data.rir ?? null;
+        this.maxRir = data.maxRir ?? null;
         this.rpe = data.rpe ?? null;
         this.restTime = data.restTime ?? null;
         this.maxRestTime = data.maxRestTime ?? null;
@@ -109,6 +112,7 @@ export class SetConfigDataAdapter implements Adapter<SetConfigData> {
         repsUnitId: item.reps_unit,
         repsRounding: item.reps_rounding !== null ? parseFloat(item.reps_rounding) : null,
         rir: item.rir !== null ? parseFloat(item.rir) : null,
+        maxRir: item.max_rir !== null ? parseFloat(item.max_rir) : null,
         rpe: item.rpe !== null ? parseFloat(item.rpe) : null,
         restTime: item.rest !== null ? parseInt(item.rest) : null,
         maxRestTime: item.max_rest !== null ? parseInt(item.max_rest) : null,
