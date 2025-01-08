@@ -164,6 +164,7 @@ describe("workout routine service tests", () => {
                     repsUnitId: 1,
                     repsRounding: 1,
                     rir: 2,
+                maxRir: null,
                     rpe: 8,
                     restTime: 120,
                     maxRestTime: 180,
