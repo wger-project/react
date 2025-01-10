@@ -37,7 +37,7 @@ export const RoutineDetail = () => {
                         }
 
                         {routine!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null).map((dayData, index) =>
-                            <DayDetailsCard dayData={dayData} key={`dayDetails-${index}`} />
+                            <DayDetailsCard routineId={routineId} dayData={dayData} key={`dayDetails-${index}`} />
                         )}
                     </Stack>
                 }

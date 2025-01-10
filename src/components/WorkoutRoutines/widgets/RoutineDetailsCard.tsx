@@ -47,7 +47,7 @@ export const RoutineDetailsCard = () => {
                 }
                 <Stack spacing={2} sx={{ mt: 2 }}>
                     {routineQuery.data!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null).map((dayData, index) =>
-                        <DayDetailsCard dayData={dayData} key={`dayDetails-${index}`} />
+                        <DayDetailsCard routineId={routineId} dayData={dayData} key={`dayDetails-${index}`} />
                     )}
                 </Stack>
             </>}
@@ -144,7 +144,7 @@ function SlotDataList(props: {
     );
 }
 
-export const DayDetailsCard = (props: { dayData: RoutineDayData, readOnly?: boolean }) => {
+export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: number, readOnly?: boolean }) => {
     const readOnly = props.readOnly ?? false;
 
     const theme = useTheme();
@@ -172,7 +172,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, readOnly?: bool
                     : <Tooltip title={t('routines.addWeightLog')}>
                         <IconButton
                             href={makeLink(WgerLink.ROUTINE_ADD_LOG, i18n.language, {
-                                id: 8,
+                                id: props.routineId,
                                 id2: props.dayData.day!.id
                             })}>
                             <Addchart />

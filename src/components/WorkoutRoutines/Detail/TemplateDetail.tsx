@@ -47,7 +47,8 @@ export const TemplateDetail = () => {
                         >{t('routines.copyAndUseTemplate')}</Button>
 
                         {routine!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null).map((dayData, index) =>
-                            <DayDetailsCard dayData={dayData} key={`dayDetails-${index}`} readOnly={true} />
+                            <DayDetailsCard dayData={dayData} routineId={routineId} readOnly={true}
+                                            key={`dayDetails-${index}`} />
                         )}
                     </Stack>
                 }
