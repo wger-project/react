@@ -103,7 +103,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                         <Grid size={{ xs: 6, sm: 2 }}>
                             <FormControlLabel
                                 control={<Switch checked={isRest} onChange={handleRestChange} />}
-                                label="rest day" />
+                                label={t('routines.restDay')} />
                         </Grid>
                         <Grid size={{ xs: 6, sm: 3 }}>
                             <FormControlLabel
