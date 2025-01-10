@@ -103,15 +103,16 @@ export const DayDragAndDropGrid = (props: {
         overflow: 'auto',
     });
 
-    const handleAddDay = () => {
-        const newDay: AddDayParams = {
+    const handleAddDay = async () => {
+        const newDayData: AddDayParams = {
             routine: props.routineId,
             name: t('routines.newDay'),
             order: routineQuery.data!.days.length + 1,
             is_rest: false,
             needs_logs_to_advance: false,
         };
-        addDayQuery.mutate(newDay);
+        const newDay = await addDayQuery.mutateAsync(newDayData);
+        props.setSelectedDay(newDay.id);
     };
 
 
