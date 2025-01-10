@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SlotEntry, SlotEntryAdapter, SlotEntryType } from "components/WorkoutRoutines/models/SlotEntry";
+import { SlotEntry, slotEntryAdapter, SlotEntryType } from "components/WorkoutRoutines/models/SlotEntry";
 import { ApiPath } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 
@@ -30,7 +30,7 @@ export const editSlotEntry = async (data: EditSlotEntryParams): Promise<SlotEntr
         { headers: makeHeader() }
     );
 
-    return new SlotEntryAdapter().fromJson(response.data);
+    return slotEntryAdapter.fromJson(response.data);
 };
 
 /*
@@ -53,7 +53,7 @@ export const addSlotEntry = async (data: AddSlotEntryParams): Promise<SlotEntry>
         { headers: makeHeader() }
     );
 
-    return new SlotEntryAdapter().fromJson(response.data);
+    return slotEntryAdapter.fromJson(response.data);
 };
 
 

@@ -1,3 +1,4 @@
+import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
@@ -49,7 +50,57 @@ const testDayLegs = new Day({
                     order: 1,
                     comment: 'test',
                     type: 'normal',
-                    config: null
+                    config: null,
+                    configs: {
+                        nrOfSetsConfigs: [
+                            new BaseConfig({
+                                id: 1,
+                                slotEntryId: 1,
+                                iteration: 1,
+                                value: 5,
+                            }),
+                        ],
+                        weightConfigs: [
+                            new BaseConfig({
+                                id: 2,
+                                slotEntryId: 1,
+                                iteration: 1,
+                                value: 80,
+                            }),
+                        ],
+                        repsConfigs: [
+                            new BaseConfig({
+                                id: 5,
+                                slotEntryId: 1,
+                                iteration: 1,
+                                value: 6,
+                            }),
+                        ],
+                        maxRepsConfigs: [
+                            new BaseConfig({
+                                id: 51,
+                                slotEntryId: 1,
+                                iteration: 1,
+                                value: 8,
+                            }),
+                        ],
+                        restTimeConfigs: [
+                            new BaseConfig({
+                                id: 9,
+                                slotEntryId: 1,
+                                iteration: 1,
+                                value: 120,
+                            }),
+                        ],
+                        maxRestTimeConfigs: [
+                            new BaseConfig({
+                                id: 101,
+                                slotEntryId: 1,
+                                iteration: 1,
+                                value: 150,
+                            }),
+                        ]
+                    }
                 })
             ]
         }),

@@ -183,3 +183,5 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
         config: item.config,
     });
 }
+
+export const slotEntryAdapter = new SlotEntryAdapter();

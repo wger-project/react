@@ -1,4 +1,4 @@
-import { SlotEntry, SlotEntryAdapter } from "components/WorkoutRoutines/models/SlotEntry";
+import { SlotEntry, slotEntryAdapter } from "components/WorkoutRoutines/models/SlotEntry";
 import { Adapter } from "utils/Adapter";
 
 export type SlotApiData = {
@@ -54,7 +54,7 @@ export class SlotAdapter implements Adapter<Slot> {
         order: item.order,
         comment: item.comment,
         config: item.config,
-        entries: item.hasOwnProperty('entries') ? item.entries!.map((entry: any) => new SlotEntryAdapter().fromJson(entry)) : []
+        entries: item.hasOwnProperty('entries') ? item.entries!.map((entry: any) => slotEntryAdapter.fromJson(entry)) : []
     });
 
     toJson(item: Slot) {
