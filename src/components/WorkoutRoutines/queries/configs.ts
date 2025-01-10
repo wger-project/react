@@ -29,9 +29,10 @@ import {
     editRepsConfig,
     editRestConfig,
     editRirConfig,
-    editWeightConfig
+    editWeightConfig,
+    processBaseConfigs
 } from "services";
-import { AddBaseConfigParams, EditBaseConfigParams, processBaseConfigs } from "services/base_config";
+import { AddBaseConfigParams, EditBaseConfigParams } from "services/base_config";
 import { ApiPath, QueryKey, } from "utils/consts";
 
 

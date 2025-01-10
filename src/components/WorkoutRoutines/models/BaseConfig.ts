@@ -61,7 +61,6 @@ export class BaseConfig {
     id: number;
     slotEntryId: number;
     iteration: number;
-    trigger: "session" | "week" | null;
     value: number;
     operation: OperationType;
     step: StepType;
@@ -74,24 +73,22 @@ export class BaseConfig {
         id: number;
         slotEntryId: number;
         iteration: number;
-        trigger: "session" | "week" | null;
         value: number;
-        operation: OperationType;
-        step: StepType;
-        needLogToApply: boolean;
-        repeat: boolean;
-        requirements: RuleRequirements | null;
+        operation?: OperationType;
+        step?: StepType;
+        needLogToApply?: boolean;
+        repeat?: boolean;
+        requirements?: RuleRequirements | null;
     }) {
         this.id = data.id;
         this.slotEntryId = data.slotEntryId;
         this.iteration = data.iteration;
-        this.trigger = data.trigger;
         this.value = data.value;
-        this.operation = data.operation;
-        this.step = data.step;
-        this.needLogToApply = data.needLogToApply;
-        this.repeat = data.repeat;
-        this.requirements = data.requirements;
+        this.operation = data.operation ?? 'r';
+        this.step = data.step ?? 'abs';
+        this.needLogToApply = data.needLogToApply ?? false;
+        this.repeat = data.repeat ?? false;
+        this.requirements = data.requirements ?? null;
     }
 
     get replace() {
@@ -104,7 +101,6 @@ export class BaseConfigAdapter implements Adapter<BaseConfig> {
         id: item.id,
         slotEntryId: item.slot_entry,
         iteration: item.iteration,
-        trigger: item.trigger,
         value: parseFloat(item.value),
         operation: item.operation,
         step: item.step,
@@ -116,7 +112,6 @@ export class BaseConfigAdapter implements Adapter<BaseConfig> {
     toJson = (item: BaseConfig) => ({
         slot_entry: item.slotEntryId,
         iteration: item.iteration,
-        trigger: item.trigger,
         value: item.value,
         operation: item.operation,
         step: item.step,

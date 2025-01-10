@@ -92,3 +92,5 @@ export {
 export { addSession, editSession, searchSession } from './session';
 
 export { getProfile, editProfile } from './profile';
+
+export { processBaseConfigs } from './base_config';
