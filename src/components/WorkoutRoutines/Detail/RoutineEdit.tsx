@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid2';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
 import { useProfileQuery } from "components/User/queries/profile";
-import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
+import { RoutineTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { DayDetails, DayDragAndDropGrid } from "components/WorkoutRoutines/widgets/DayDetails";
 import { RoutineForm } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
@@ -67,7 +67,7 @@ export const RoutineEdit = () => {
             <Box>
                 <RoutineDetailsCard />
                 <Box height={20} />
-                <RoutineDetailsTable />
+                <RoutineTable routine={routineQuery.data!} />
             </Box>
         </Stack>}
     </WgerContainerFullWidth>;
