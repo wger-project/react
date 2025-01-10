@@ -55,7 +55,7 @@ export const SlotProgressionEdit = () => {
 
     return <>
         <WgerContainerFullWidth
-            title={`Edit progression`}
+            title={t('routines.editProgression')}
             backToUrl={makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: routineId })}
         >
             {slot.configs.map((slotEntry) =>

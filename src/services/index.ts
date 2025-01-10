@@ -90,3 +90,5 @@ export {
 } from './config'
 
 export { addSession, editSession, searchSession } from './session';
+
+export { getProfile, editProfile } from './profile';

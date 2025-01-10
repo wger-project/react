@@ -149,3 +149,11 @@ export const testExerciseSkullCrusher = new Exercise(
     ]
 );
 
+export const testExercises = [
+    testExerciseSquats,
+    testExerciseBenchPress,
+    testExerciseCurls,
+    testExerciseCrunches,
+    testExerciseSkullCrusher
+];
+

@@ -44,6 +44,11 @@ describe("Test the RoutineLogs component", () => {
         }));
     });
 
+    afterEach(() => {
+        window.ResizeObserver = ResizeObserver;
+        jest.restoreAllMocks();
+    });
+
     test('renders the log page for a routine', async () => {
 
         // Act
