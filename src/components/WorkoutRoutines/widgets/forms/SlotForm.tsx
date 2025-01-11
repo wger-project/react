@@ -3,12 +3,12 @@ import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget
 import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { useEditSlotQuery } from "components/WorkoutRoutines/queries";
 import React, { useState } from "react";
-import { useDebounce } from "use-debounce";
+import { useTranslation } from "react-i18next";
 
 export const SlotForm = (props: { slot: Slot, routineId: number }) => {
+    const { t } = useTranslation();
     const editSlotQuery = useEditSlotQuery(props.routineId);
     const [slotComment, setSlotComment] = useState<string>(props.slot.comment);
-    const [debouncedSlotData] = useDebounce(slotComment, 500);
     const [isEditing, setIsEditing] = useState(false);
 
     const handleChange = (value: string) => {
@@ -18,7 +18,7 @@ export const SlotForm = (props: { slot: Slot, routineId: number }) => {
 
     const handleBlur = () => {
         if (isEditing) {
-            editSlotQuery.mutate({ id: props.slot.id, comment: debouncedSlotData });
+            editSlotQuery.mutate({ id: props.slot.id, comment: slotComment });
             setIsEditing(false);
         }
     };
@@ -26,14 +26,14 @@ export const SlotForm = (props: { slot: Slot, routineId: number }) => {
     return (
         <>
             <TextField
-                label="Comment"
+                label={t('comment')}
                 variant="standard"
                 fullWidth
                 size={"small"}
                 value={slotComment}
                 disabled={editSlotQuery.isPending}
                 onChange={(e) => handleChange(e.target.value)}
-                onBlur={handleBlur} // Call handleBlur when input loses focus
+                onBlur={handleBlur}
                 InputProps={{
                     endAdornment: editSlotQuery.isPending && <LoadingProgressIcon />,
                 }}

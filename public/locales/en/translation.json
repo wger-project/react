@@ -20,6 +20,7 @@
   "lastWeek": "Last Week",
   "start": "Start",
   "end": "End",
+  "comment": "Comment",
   "licenses": {
     "authors": "Author(s)",
     "authorProfile": "Link to author website or profile, if available",
