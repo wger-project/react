@@ -12,41 +12,41 @@ import { useTranslation } from "react-i18next";
 import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
 
 export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: number }) => {
-
+    const { t } = useTranslation();
     const editQuery = useEditSlotEntryQuery(props.routineId);
 
     const options = [
         {
             value: 'normal',
-            label: 'Normal set',
+            label: t('routines.set.normalSet'),
         },
         {
             value: 'dropset',
-            label: 'Drop set',
+            label: t('routines.set.dropSet'),
         },
         {
             value: 'myo',
-            label: 'Myo',
+            label: t('routines.set.myo'),
         },
         {
             value: 'partial',
-            label: 'Partial',
+            label: t('routines.set.partial'),
         },
         {
             value: 'forced',
-            label: 'Forced',
+            label: t('routines.set.forced'),
         },
         {
             value: 'tut',
-            label: 'TUT',
+            label: t('routines.set.tut'),
         },
         {
             value: 'iso',
-            label: 'ISO',
+            label: t('routines.set.iso'),
         },
         {
             value: 'jump',
-            label: 'Jump'
+            label: t('routines.set.jump'),
         }
     ] as const;
 
@@ -58,7 +58,7 @@ export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: num
         <TextField
             fullWidth
             select
-            label="Type"
+            label={t('routines.set.type')}
             variant="standard"
             value={props.slotEntry.type}
             disabled={editQuery.isPending}
@@ -75,7 +75,7 @@ export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: num
 
 
 export const SlotEntryRepetitionUnitField = (props: { slotEntry: SlotEntry, routineId: number }) => {
-
+    const { t } = useTranslation();
     const editSlotEntryQuery = useEditSlotEntryQuery(props.routineId);
     const repUnitsQuery = useFetchRoutineRepUnitsQuery();
 
@@ -97,7 +97,7 @@ export const SlotEntryRepetitionUnitField = (props: { slotEntry: SlotEntry, rout
         <TextField
             fullWidth
             select
-            label="Unit"
+            label={t('unit')}
             variant="standard"
             value={props.slotEntry.repetitionUnitId}
             disabled={editSlotEntryQuery.isPending}
@@ -113,7 +113,7 @@ export const SlotEntryRepetitionUnitField = (props: { slotEntry: SlotEntry, rout
 };
 
 export const SlotEntryWeightUnitField = (props: { slotEntry: SlotEntry, routineId: number }) => {
-
+    const { t } = useTranslation();
     const editSlotEntryQuery = useEditSlotEntryQuery(props.routineId);
     const weightUnitsQuery = useFetchRoutineWeighUnitsQuery();
     const userProfileQuery = useProfileQuery();
@@ -137,7 +137,7 @@ export const SlotEntryWeightUnitField = (props: { slotEntry: SlotEntry, routineI
         <TextField
             fullWidth
             select
-            label="Unit"
+            label={t('unit')}
             variant="standard"
             value={props.slotEntry.weightUnitId}
             disabled={editSlotEntryQuery.isPending}
@@ -199,8 +199,6 @@ export const SlotEntryRoundingField = (props: SlotEntryRoundingFieldProps) => {
         setValue(newValue);
         debouncedSave(newValue);
     };
-
-    const type = props.rounding === 'weight' ? t('weight') : t('routines.reps');
 
     return (
         <TextField

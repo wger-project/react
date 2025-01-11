@@ -31,7 +31,16 @@ describe('SessionForm', () => {
     test('calls useFindSessionQuery with the correct parameters when the date changes', async () => {
         // Arrange
         const user = userEvent.setup();
-        const mockSession = new WorkoutSession(0, 0, 0, new Date(), '', "1", null, null);
+        const mockSession = new WorkoutSession({
+            id: 0,
+            dayId: 0,
+            routineId: 0,
+            date: new Date(),
+            notes: '',
+            impression: "1",
+            timeStart: null,
+            timeEnd: null
+        });
         mockUseFindSessionQuery.mockReturnValue({
             data: mockSession,
             isLoading: false,
@@ -83,16 +92,16 @@ describe('SessionForm', () => {
         const timeEnd = DateTime.now().set({ hour: 11, minute: 0 });
         const timeEndFormatted = timeEnd.toLocaleString(DateTime.TIME_SIMPLE, { locale: 'en-us' });
 
-        const mockSession = new WorkoutSession(
-            1,
-            dayId,
-            routineId,
-            date.toJSDate(),
-            'Test notes',
-            '3',
-            timeStart.toJSDate(),
-            timeEnd.toJSDate()
-        );
+        const mockSession = new WorkoutSession({
+            id: 1,
+            dayId: dayId,
+            routineId: routineId,
+            date: date.toJSDate(),
+            notes: 'Test notes',
+            impression: '3',
+            timeStart: timeStart.toJSDate(),
+            timeEnd: timeEnd.toJSDate()
+        });
 
         mockUseFindSessionQuery.mockReturnValue({
             data: mockSession,

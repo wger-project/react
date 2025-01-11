@@ -1,4 +1,5 @@
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
+import { WorkoutSession } from "components/WorkoutRoutines/models/WorkoutSession";
 import { testExerciseSquats } from "tests/exerciseTestdata";
 import { testRepUnitRepetitions, testWeightUnitKg } from "tests/workoutRoutinesTestData";
 
@@ -72,3 +73,14 @@ export const testWorkoutLogs = [
     testWorkoutLog3,
     testWorkoutLog4
 ];
+
+export const testWorkoutSession = new WorkoutSession({
+    id: 1,
+    dayId: 2,
+    routineId: 3,
+    date: new Date(2025, 1, 10),
+    notes: 'everything is awesome',
+    impression: "1",
+    timeStart: new Date(2025, 1, 10, 10, 30),
+    timeEnd: new Date(2025, 1, 10, 12, 0),
+});

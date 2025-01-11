@@ -17,11 +17,15 @@ export const testWeightUnitKg = new WeightUnit(1, "kg");
 export const testWeightUnitLb = new WeightUnit(2, "lb");
 export const testWeightUnitPlates = new WeightUnit(3, "Plates");
 
+export const testWeightUnits = [testWeightUnitKg, testWeightUnitLb, testWeightUnitPlates];
+
 export const testRepUnitRepetitions = new RepetitionUnit(1, "Repetitions");
 export const testRepUnitUnitFailure = new RepetitionUnit(2, "Unit failure");
 export const testRepUnitUnitMinutes = new RepetitionUnit(3, "Minutes");
 
-const testDayLegs = new Day({
+export const testRepetitionUnits = [testRepUnitRepetitions, testRepUnitUnitFailure, testRepUnitUnitMinutes];
+
+export const testDayLegs = new Day({
     id: 5,
     order: 1,
     name: "Every day is leg day 🦵🏻",
@@ -196,16 +200,16 @@ export const testRoutineDataCurrentIteration1 = [
 ];
 
 export const testRoutineLogData = new RoutineLogData(
-    new WorkoutSession(
-        111,
-        2,
-        1,
-        new Date('2024-07-01'),
-        'everything was great today!',
-        '1',
-        new Date('2024-12-01 12:30'),
-        new Date('2024-12-01 17:30'),
-    ),
+    new WorkoutSession({
+        id: 111,
+        dayId: 2,
+        routineId: 1,
+        date: new Date('2024-07-01'),
+        notes: 'everything was great today!',
+        impression: '1',
+        timeStart: new Date('2024-12-01 12:30'),
+        timeEnd: new Date('2024-12-01 17:30'),
+    }),
     testWorkoutLogs
 );
 

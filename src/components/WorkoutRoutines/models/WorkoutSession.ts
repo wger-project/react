@@ -23,39 +23,62 @@ export interface EditSessionParams extends Partial<AddSessionParams> {
     id: number,
 }
 
+interface WorkoutSessionParams {
+    id: number;
+    dayId: number;
+    routineId: number;
+    date: Date;
+    notes: string | null;
+    impression: string;
+    timeStart: Date | null;
+    timeEnd: Date | null;
+    dayObj?: Day;
+    logs?: WorkoutLog[];
+}
+
 export class WorkoutSession {
 
+    id: number;
+    dayId: number;
+    routineId: number;
+    date: Date;
+    notes: string | null;
+    impression: string;
+    timeStart: Date | null;
+    timeEnd: Date | null;
+    dayObj?: Day;
     logs: WorkoutLog[] = [];
 
-    constructor(
-        public id: number,
-        public dayId: number,
-        public routineId: number,
-        public date: Date,
-        public notes: String | null,
-        public impression: String,
-        public timeStart: Date | null,
-        public timeEnd: Date | null,
-        public dayObj?: Day,
-    ) {
-        if (dayObj) {
-            this.dayObj = dayObj;
+    constructor(params: WorkoutSessionParams) {
+        this.id = params.id;
+        this.dayId = params.dayId;
+        this.routineId = params.routineId;
+        this.date = params.date;
+        this.notes = params.notes;
+        this.impression = params.impression;
+        this.timeStart = params.timeStart;
+        this.timeEnd = params.timeEnd;
+        if (params.dayObj) {
+            this.dayObj = params.dayObj;
         }
+        this.logs = params.logs ?? [];
     }
 }
 
 
 export class WorkoutSessionAdapter implements Adapter<WorkoutSession> {
-    fromJson = (item: any) => new WorkoutSession(
-        item.id,
-        item.day!,
-        item.routine!,
-        new Date(item.date!),
-        item.notes !== undefined ? item.notes : null,
-        item.impression!,
-        item.time_start !== undefined ? HHMMToDateTime(item.time_start) : null,
-        item.time_end !== undefined ? HHMMToDateTime(item.time_end) : null,
-    );
+    fromJson = (item: any) => new WorkoutSession({
+        id: item.id,
+        dayId: item.day!,
+        routineId: item.routine!,
+        date: new Date(item.date!),
+        notes: item.notes !== undefined ? item.notes : null,
+        impression: item.impression!,
+        timeStart: item.time_start !== undefined ? HHMMToDateTime(item.time_start) : null,
+        timeEnd: item.time_end !== undefined ? HHMMToDateTime(item.time_end) : null,
+        dayObj: item.dayObj,
+        logs: item.logs
+    });
 
 
     toJson = (item: WorkoutSession) => ({
