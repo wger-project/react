@@ -21,7 +21,7 @@ import {
     useTheme
 } from "@mui/material";
 import Grid from '@mui/material/Grid2';
-import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
+import { LoadingPlaceholder, LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
 import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { useProfileQuery } from "components/User/queries/profile";
@@ -114,6 +114,10 @@ export const DayDragAndDropGrid = (props: {
         const newDay = await addDayQuery.mutateAsync(newDayData);
         props.setSelectedDay(newDay.id);
     };
+
+    if (routineQuery.isLoading) {
+        return <LoadingPlaceholder />;
+    }
 
 
     return (

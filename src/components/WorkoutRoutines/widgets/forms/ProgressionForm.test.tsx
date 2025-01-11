@@ -83,8 +83,6 @@ describe('Tests for the ProgressionForm', () => {
         expect(screen.getByText('routines.repeat')).toBeInTheDocument();
         expect(screen.queryAllByText('routines.weekNr')).toHaveLength(2);
 
-        screen.logTestingPlaygroundURL();
-
         const minFields = screen.getAllByLabelText('min');
         expect(minFields[0]).toHaveValue('5');
         expect(minFields[1]).toHaveValue('1');
@@ -183,5 +181,5 @@ describe('Tests for the ProgressionForm', () => {
             "max-weight-config"
         );
     });
-    
+
 });

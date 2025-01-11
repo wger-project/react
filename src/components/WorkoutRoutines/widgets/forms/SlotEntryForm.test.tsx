@@ -3,13 +3,15 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import {
     SlotEntryRepetitionUnitField,
+    SlotEntryRoundingField,
     SlotEntryTypeField,
     SlotEntryWeightUnitField
 } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
-import { editSlotEntry, getProfile, getRoutineRepUnits, getRoutineWeightUnits } from "services";
+import { editProfile, editSlotEntry, getProfile, getRoutineRepUnits, getRoutineWeightUnits } from "services";
 import { testQueryClient } from "tests/queryClient";
 import { testProfileDataVerified } from "tests/userTestdata";
 import { testDayLegs, testRepetitionUnits, testWeightUnits } from "tests/workoutRoutinesTestData";
+import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
 
 
 jest.mock("services");
@@ -115,5 +117,100 @@ describe('SlotEntryWeightUnitField', () => {
         const platesOption = screen.getByRole('option', { name: 'Plates' });
         await user.click(platesOption);
         expect(mockEditSlotEntry).toHaveBeenCalledWith({ "id": 1, "weight_unit": 3 });
+    });
+});
+
+describe('SlotEntryRoundingField', () => {
+
+    const mockEditProfile = editProfile as jest.Mock;
+
+    beforeEach(() => {
+        jest.resetAllMocks();
+        user = userEvent.setup();
+
+        (getProfile as jest.Mock).mockResolvedValue(testProfileDataVerified);
+    });
+
+    test('correctly updates the weight rounding for the slot entry', async () => {
+        // Arrange
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <SlotEntryRoundingField
+                    editProfile={false}
+                    entryId={101}
+                    initialValue={42}
+                    rounding={'weight'}
+                    routineId={1}
+                />
+            </QueryClientProvider>
+        );
+
+        // Act
+        const inputElement = screen.getByRole('textbox', { name: 'weight' });
+        await user.click(inputElement);
+        await user.clear(inputElement);
+        await user.type(inputElement, '33');
+        await user.tab();
+
+        // Assert
+        await waitFor(() => {
+            expect(mockEditSlotEntry).toHaveBeenCalledWith({ "id": 101, "weight_rounding": 33 });
+            expect(mockEditProfile).not.toHaveBeenCalled();
+        }, { timeout: DEBOUNCE_ROUTINE_FORMS + 100 });
+    });
+
+    test('correctly updates the weight rounding for the slot entry and the user profile', async () => {
+        // Arrange
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <SlotEntryRoundingField
+                    editProfile={true}
+                    initialValue={42}
+                    rounding={'weight'}
+                    routineId={1}
+                />
+            </QueryClientProvider>
+        );
+
+        // Act
+        const inputElement = screen.getByRole('textbox', { name: 'weight' });
+        await user.click(inputElement);
+        await user.clear(inputElement);
+        await user.type(inputElement, '34');
+        await user.tab();
+
+        // Assert
+        await waitFor(() => {
+            expect(mockEditProfile).toHaveBeenCalledWith({ "weight_rounding": 34 });
+            expect(mockEditSlotEntry).not.toHaveBeenCalled();
+        }, { timeout: DEBOUNCE_ROUTINE_FORMS + 100 });
+    });
+
+    test('correctly updates the reps rounding for the slot entry', async () => {
+        // Arrange
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <SlotEntryRoundingField
+                    editProfile={false}
+                    entryId={101}
+                    initialValue={42}
+                    rounding={'reps'}
+                    routineId={1}
+                />
+            </QueryClientProvider>
+        );
+
+        // Act
+        const inputElement = screen.getByRole('textbox', { name: 'routines.reps' });
+        await user.click(inputElement);
+        await user.clear(inputElement);
+        await user.type(inputElement, '33');
+        await user.tab();
+
+        // Assert
+        await waitFor(() => {
+            expect(mockEditSlotEntry).toHaveBeenCalledWith({ "id": 101, "reps_rounding": 33 });
+            expect(mockEditProfile).not.toHaveBeenCalled();
+        }, { timeout: DEBOUNCE_ROUTINE_FORMS + 100 });
     });
 });

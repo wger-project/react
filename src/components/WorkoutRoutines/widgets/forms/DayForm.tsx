@@ -21,8 +21,7 @@ import { useTranslation } from "react-i18next";
 import * as Yup from 'yup';
 
 export const DayForm = (props: { day: Day, routineId: number }) => {
-    const [t, i18n] = useTranslation();
-
+    const { t } = useTranslation();
     const editDayQuery = useEditDayQuery(props.routineId);
 
     const [openDialog, setOpenDialog] = useState(false);
