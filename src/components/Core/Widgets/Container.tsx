@@ -1,6 +1,6 @@
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { Button, Container, Stack, Typography } from "@mui/material";
+import { Breakpoint, Button, Container, Stack, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import React, { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,16 +16,20 @@ type WgerTemplateContainerRightSidebarProps = {
     fab?: ReactJSXElement;
 };
 
-export const WgerContainerRightSidebar = (props: WgerTemplateContainerRightSidebarProps) => {
+function BackButton(props: { href: string | undefined, backToTitle: string | undefined }) {
     const { t } = useTranslation();
 
-    const backTo = <Button
+    return <Button
         size="small"
         component="a"
-        href={props.backToUrl}>
+        href={props.href}>
         <ChevronLeftIcon fontSize="inherit" />
         {props.backToTitle ?? t('goBack')}
     </Button>;
+}
+
+export const WgerContainerRightSidebar = (props: WgerTemplateContainerRightSidebarProps) => {
+    const backTo = <BackButton href={props.backToUrl} backToTitle={props.backToTitle} />;
 
     return (
         <Container maxWidth="lg">
@@ -63,21 +67,14 @@ type WgerTemplateContainerFullWidthProps = {
     backToTitle?: string;
     backToUrl?: string;
     optionsMenu?: ReactJSXElement;
+    maxWidth?: false | Breakpoint | undefined
 };
 
 export const WgerContainerFullWidth = (props: WgerTemplateContainerFullWidthProps) => {
-    const { t } = useTranslation();
-
-    const backTo = <Button
-        size="small"
-        component="a"
-        href={props.backToUrl}>
-        <ChevronLeftIcon fontSize="inherit" />
-        {props.backToTitle ?? t('goBack')}
-    </Button>;
+    const backTo = <BackButton href={props.backToUrl} backToTitle={props.backToTitle} />;
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth={props.maxWidth}>
             <Grid container spacing={2}>
                 <Grid sx={{ mb: 2 }} size={12}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">

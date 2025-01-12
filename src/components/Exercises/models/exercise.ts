@@ -48,22 +48,6 @@ export class Exercise {
     // Note that we still check for the case that no english translation can be
     // found. While this can't happen for the "regular" wger server, other local
     // instances might have deleted the english translation or added new exercises
-    // without an english translation.
-    getTranslation(userLanguage?: Language): Translation {
-        const language = userLanguage != null ? userLanguage.id : ENGLISH_LANGUAGE_ID;
-
-        let translation = this.translations.find(t => t.language === language);
-        if (!translation) {
-            translation = this.translations.find(t => t.language === ENGLISH_LANGUAGE_ID);
-        }
-
-        if (!translation) {
-            //console.warn(`No translation found for exercise base ${this.uuid} (${this.id}) for language ${language}`);
-            return this.translations[0];
-        }
-        return translation!;
-    }
-
 
     /**
      * Returns a list with the available languages for this exercise
@@ -78,6 +62,22 @@ export class Exercise {
 
     get sideImages(): ExerciseImage[] {
         return this.images.filter(i => !i.isMain);
+    }
+
+    // without an english translation.
+    getTranslation(userLanguage?: Language): Translation {
+        const languageId = userLanguage != null ? userLanguage.id : ENGLISH_LANGUAGE_ID;
+
+        let translation = this.translations.find(t => t.language === languageId);
+        if (!translation) {
+            translation = this.translations.find(t => t.language === ENGLISH_LANGUAGE_ID);
+        }
+
+        if (!translation) {
+            //console.warn(`No translation found for exercise base ${this.uuid} (${this.id}) for language ${language}`);
+            return this.translations[0];
+        }
+        return translation!;
     }
 
 }

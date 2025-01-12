@@ -233,6 +233,7 @@
     "addWeightLog": "Add training log",
     "weightLogNotPlanned": "Saving logs to a date for which no workouts were planned.",
     "logsOverview": "Logs overview",
+    "alsoShowLogs": "Also show logs",
     "statsOverview": "Statistics",
     "simpleMode": "Simple mode",
     "logsHeader": "Training log for workout",

@@ -18,6 +18,7 @@ import Grid from '@mui/material/Grid2';
 import Tooltip from "@mui/material/Tooltip";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
 import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";
+import { Language } from "components/Exercises/models/language";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
@@ -66,7 +67,7 @@ export function SetConfigDataDetails(props: {
     const { i18n } = useTranslation();
     const languageQuery = useLanguageQuery();
 
-    let language = undefined;
+    let language: Language | undefined = undefined;
     if (languageQuery.isSuccess) {
         language = getLanguageByShortName(
             i18n.language,

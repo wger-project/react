@@ -4,6 +4,7 @@ import { Day } from "components/WorkoutRoutines/models/Day";
 import { RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { RoutineLogData } from "components/WorkoutRoutines/models/RoutineLogData";
+import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import i18n from 'i18next';
 import { DateTime } from "luxon";
 import { Adapter } from "utils/Adapter";
@@ -79,8 +80,26 @@ export class Routine {
             }
             groupedDayData[dayData.iteration].push(dayData);
         }
-
         return groupedDayData;
+    }
+
+    get groupedLogsByIteration() {
+        const groupedLogs: { [key: number]: WorkoutLog[] } = {};
+        for (const logData of this.logData) {
+            for (const log of logData.logs) {
+                if (log.iteration === null) {
+                    continue;
+                }
+
+                if (!groupedLogs[log.iteration]) {
+                    groupedLogs[log.iteration] = [];
+                }
+                groupedLogs[log.iteration].push(log);
+            }
+
+
+        }
+        return groupedLogs;
     }
 
     get duration() {
@@ -121,6 +140,24 @@ export class Routine {
     get cycleLength() {
         return this.dayDataCurrentIteration.length;
     }
+
+    /*
+     * Returns the SetConfigData for the given dayId, iteration and slotId
+     */
+    getSetConfigData(dayId: number, iteration: number, slotId: number) {
+        const dayData = this.dayDataAllIterations.find(dayData =>
+            dayData.day?.id === dayId && dayData.iteration === iteration
+        );
+
+        if (!dayData) {
+            return null;
+        }
+
+        const slotData = dayData.slots.find(slotData => slotData.setConfigs.some(setConfig => setConfig.slotEntryId === slotId));
+
+        return slotData !== undefined && slotData.setConfigs.length > 0 ? slotData.setConfigs[0] : null;
+    }
+
 
     /*
      * Returns the DayData for the given dayId and, optionally, iteration
