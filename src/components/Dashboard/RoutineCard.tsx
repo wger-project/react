@@ -14,13 +14,12 @@ import {
 } from '@mui/material';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { EmptyCard } from "components/Dashboard/EmptyCard";
-import { SettingDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { WorkoutRoutine } from "components/WorkoutRoutines/models/WorkoutRoutine";
+import { Routine } from "components/WorkoutRoutines/models/Routine";
+import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { useActiveRoutineQuery } from "components/WorkoutRoutines/queries";
+import { SetConfigDataDetails } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { daysOfWeek } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
 
 
@@ -28,19 +27,19 @@ export const RoutineCard = () => {
     const [t, i18n] = useTranslation();
     const routineQuery = useActiveRoutineQuery();
 
-    return (<>{routineQuery.isLoading
-        ? <LoadingPlaceholder />
-        : <>{routineQuery.data !== null
-            ? <RoutineCardContent routine={routineQuery.data!} />
-            : <EmptyCard
-                title={t('routines.routine')}
-                link={makeLink(WgerLink.ROUTINE_ADD, i18n.language)}
-            />}
-        </>
-    }</>);
+    if (routineQuery.isLoading) {
+        return <LoadingPlaceholder />;
+    }
+
+    return routineQuery.data !== null
+        ? <RoutineCardContent routine={routineQuery.data!} />
+        : <EmptyCard
+            title={t('routines.routine')}
+            link={makeLink(WgerLink.ROUTINE_ADD, i18n.language)}
+        />;
 };
 
-const RoutineCardContent = (props: { routine: WorkoutRoutine }) => {
+const RoutineCardContent = (props: { routine: Routine }) => {
     const [t, i18n] = useTranslation();
 
     return <Card>
@@ -51,7 +50,7 @@ const RoutineCardContent = (props: { routine: WorkoutRoutine }) => {
         {/* Note: not 500 like the other cards, but a bit more since we don't have an action icon... */}
         <CardContent sx={{ height: "510px", overflow: "auto" }}>
             <List>
-                {props.routine.days.map(day => <DayListItem day={day} key={day.id} />)}
+                {props.routine.dayDataCurrentIteration.map((day, index) => <DayListItem dayData={day} key={index} />)}
             </List>
         </CardContent>
 
@@ -64,34 +63,31 @@ const RoutineCardContent = (props: { routine: WorkoutRoutine }) => {
     </Card>;
 };
 
-// <RoutineCardContent routine={routineQuery.data!} />
-
-const DayListItem = (props: { day: Day }) => {
+const DayListItem = (props: { dayData: RoutineDayData }) => {
     const [expandView, setExpandView] = useState(false);
+    const [t] = useTranslation();
+
 
     const handleToggleExpand = () => setExpandView(!expandView);
 
     return (<>
-        <ListItemButton onClick={handleToggleExpand} selected={expandView}>
+        <ListItemButton onClick={handleToggleExpand} selected={expandView} disabled={props.dayData.day?.isRest}>
             <ListItemIcon>
                 {expandView ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </ListItemIcon>
             <ListItemText
-                primary={props.day.description}
-                secondary={props.day.daysOfWeek.map((dayId) => (daysOfWeek[dayId - 1])).join(", ")}
+                primary={props.dayData.day?.getDisplayName()}
             />
         </ListItemButton>
 
         <Collapse in={expandView} timeout="auto" unmountOnExit>
-            {props.day.sets.map((set) => (<div key={set.id}>
-                {set.settingsFiltered.map((setting) =>
-                    <SettingDetails
-                        setting={setting}
-                        set={set}
-                        key={setting.id}
-                        imageHeight={45}
-                        iconHeight={25}
+            {props.dayData.slots.map((slotData, index) => (<div key={index}>
+                {slotData.setConfigs.map((setting, index) =>
+                    <SetConfigDataDetails
+                        setConfigData={setting}
+                        key={index}
                         rowHeight={'70px'}
+                        showExercise={true}
                     />
                 )}
             </div>))}
