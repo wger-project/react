@@ -64,7 +64,6 @@ export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: 
                 {t('nothingHereYetAction')}
             </Alert>
         )}
-
         {props.slot.configs.map((slotEntry: SlotEntry, index) => (
             <SlotEntryDetails
                 key={slotEntry.id}

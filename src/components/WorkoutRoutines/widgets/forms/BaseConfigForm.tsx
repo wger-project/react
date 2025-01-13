@@ -135,21 +135,25 @@ export const SlotBaseConfigValueField = (props: {
     slotEntryId?: number,
     type: ConfigType,
 }) => {
-
+    const { t } = useTranslation();
     const { edit: editQuery, add: addQuery, delete: deleteQuery } = QUERY_MAP[props.type];
     const editQueryHook = editQuery(props.routineId);
     const addQueryHook = addQuery(props.routineId);
     const deleteQueryHook = deleteQuery(props.routineId);
 
     const [value, setValue] = useState(props.config?.value || '');
+    const [error, setError] = useState<string | null>(null);
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+
+    const isInt = ['sets', 'max-sets', 'rir', 'max-rir', 'rest', 'max-rest'].includes(props.type);
+    const parseFunction = isInt ? parseInt : parseFloat;
 
     const handleData = (value: string) => {
 
         const data = {
             // eslint-disable-next-line camelcase
             slot_entry: props.slotEntryId,
-            value: parseFloat(value),
+            value: parseFunction(value),
         };
 
         if (value === '') {
@@ -168,11 +172,15 @@ export const SlotBaseConfigValueField = (props: {
     };
 
     const onChange = (text: string) => {
-        if (text !== '') {
-            setValue(parseFloat(text));
+        setValue(text);
+
+        if (text !== '' && Number.isNaN(parseFunction(text))) {
+            setError(t(isInt ? 'forms.enterInteger' : 'forms.enterNumber'));
+            return;
         } else {
-            setValue('');
+            setError(null);
         }
+
 
         if (timer) {
             clearTimeout(timer);
@@ -196,6 +204,8 @@ export const SlotBaseConfigValueField = (props: {
             variant="standard"
             disabled={isPending}
             onChange={e => onChange(e.target.value)}
+            error={!!error || editQueryHook.isError || addQueryHook.isError || deleteQueryHook.isError}
+            helperText={error || editQueryHook.error?.message || addQueryHook.error?.message || deleteQueryHook.error?.message}
         />
     );
 };

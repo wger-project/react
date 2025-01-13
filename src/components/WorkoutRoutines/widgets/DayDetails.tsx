@@ -470,18 +470,6 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                                     }}
                                                 />
                                             </Grid>}
-
-                                        {/*<Grid size={12} paddingLeft={1} paddingBottom={1}>*/}
-                                        {/*    {slot.configs.length === 0 && <ButtonGroup><Button*/}
-                                        {/*        onClick={() => handleAddSlotEntry(slot.id)}*/}
-                                        {/*        size={"small"}*/}
-                                        {/*        disabled={addSlotEntryQuery.isPending}*/}
-                                        {/*        startIcon={addSlotEntryQuery.isPending ? <LoadingProgressIcon /> :*/}
-                                        {/*            <AddIcon />}*/}
-                                        {/*    >*/}
-                                        {/*        {t('routines.addExercise')}*/}
-                                        {/*    </Button></ButtonGroup>}*/}
-                                        {/*</Grid>*/}
                                     </Grid>
                                 )}
                             </Draggable>
