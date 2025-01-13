@@ -73,6 +73,32 @@ const useStyles = makeStyles({
     }
 });
 
+export function compareValue(value: number | null | undefined, from: number | null | undefined, to: number | null | undefined): 'lower' | 'higher' | 'match' | null {
+    if (value === null || value === undefined) {
+        return null;
+    }
+
+    if (from !== null && from !== undefined && to !== null && to !== undefined) {
+        if (value < from) {
+            return 'lower';
+        } else if (value > to) {
+            return 'higher';
+        } else {
+            return 'match';
+        }
+    } else if (from !== null && from !== undefined) {
+        if (value < from) {
+            return 'lower';
+        } else if (value > from) {
+            return 'higher';
+        } else {
+            return 'match';
+        }
+    }
+
+    return null;
+}
+
 export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) => {
     const { t, i18n } = useTranslation();
     const theme = useTheme();
@@ -153,7 +179,7 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
 
                 return <React.Fragment key={iteration}>
                     <TableCell align={'center'} sx={sx}>
-                        {formatContent(setConfig, setConfig?.weight, setConfig?.maxWeight)}
+                        {formatContent(setConfig, setConfig?.nrOfSets, setConfig?.maxNrOfSets)}
                     </TableCell>
                     <TableCell align={'center'} sx={sx}>
                         {formatContent(setConfig, setConfig?.reps, setConfig?.maxReps)}
@@ -172,18 +198,25 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
         </TableRow>;
     }
 
-    function getComparisonIcon(plannedValue: number | null | undefined, loggedValue: number | null) {
-        if (plannedValue === null || plannedValue === undefined || loggedValue === null) {
+    function getComparisonIcon(loggedValue: number | null, plannedValue: number | null | undefined, maxPlannedValue: number | null | undefined, higherIsBetter?: boolean) {
+        const comparison = compareValue(loggedValue, plannedValue, maxPlannedValue);
+        const fontSize = 17;
+
+        // Switch the comparison color since e.g. for RiR lower is better
+        higherIsBetter = higherIsBetter ?? true;
+
+        if (comparison === null) {
             return null;
         }
 
-        if (plannedValue > loggedValue) {
-            return <SouthEastIcon fontSize={"small"} color={"error"} />;
+
+        if (comparison === 'lower') {
+            return <SouthEastIcon sx={{ fontSize: fontSize }} color={higherIsBetter ? "error" : "success"} />;
         }
-        if (plannedValue < loggedValue) {
-            return <NorthEastIcon fontSize={"small"} color={"success"} />;
+        if (comparison === 'higher') {
+            return <NorthEastIcon sx={{ fontSize: fontSize }} color={higherIsBetter ? "success" : "error"} />;
         }
-        return <FlagCircleIcon fontSize={"small"} color={"success"} />;
+        return <FlagCircleIcon sx={{ fontSize: fontSize }} color={"success"} />;
 
     }
 
@@ -194,7 +227,9 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
             </TableCell>
             {iterations.map((iteration) => {
                 const setConfig = props.routine.getSetConfigData(day.id, iteration, slot.id);
-                const logs = groupedLogs[iteration].filter((log) => log.slotEntryId === slotEntry.id);
+                const iterationLogs = groupedLogs[iteration] ?? [];
+
+                const logs = iterationLogs.filter((log) => log.slotEntryId === slotEntry.id);
 
                 return <React.Fragment key={iteration}>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
@@ -203,8 +238,8 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
                         {logs.map((log, index) =>
                             <Stack key={index}>
                                 <span>
-                                    {log.reps}
-                                    {getComparisonIcon(setConfig?.reps, log.reps)}
+                                    {log.reps ?? '-/-'}
+                                    {getComparisonIcon(log.reps, setConfig?.reps, setConfig?.maxReps)}
                                 </span>
                             </Stack>
                         )}
@@ -213,19 +248,28 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
                         {logs.map((log, index) =>
                             <Stack key={index}>
                                 <span>
-                                    {log.weight}
-                                    {getComparisonIcon(setConfig?.weight, log.weight)}
+                                    {log.weight ?? '-/-'}
+                                    {getComparisonIcon(log.weight, setConfig?.weight, setConfig?.maxWeight)}
                                 </span>
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
+                        {logs.map((log, index) =>
+                            <Stack key={index}>
+                                <span>
+                                    {log.restTime ?? '-/-'}
+                                    {getComparisonIcon(log.restTime, setConfig?.restTime, setConfig?.maxRestTime)}
+                                </span>
+                            </Stack>
+                        )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log, index) =>
                             <Stack key={index}>
                                 <span>
-                                    {log.rir ?? '.'}
+                                    {log.rir ?? '-/-'}
+                                    {getComparisonIcon(log.rir, setConfig?.rir, setConfig?.maxRir, false)}
                                 </span>
                             </Stack>
                         )}
