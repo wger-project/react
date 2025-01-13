@@ -77,8 +77,8 @@ describe("workout logs service tests", () => {
                 weight: 20,
                 weightTarget: 20,
 
-                rir: "1.5",
-                rirTarget: "1",
+                rir: 1.5,
+                rirTarget: 1,
             }),
         ]);
     });
@@ -142,8 +142,8 @@ describe("workout logs service tests", () => {
                 weight: 20,
                 weightTarget: 20,
 
-                rir: "1.5",
-                rirTarget: "1",
+                rir: 1.5,
+                rirTarget: 1,
             }),
         ]);
     });

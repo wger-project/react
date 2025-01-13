@@ -87,7 +87,7 @@ export class WorkoutLog {
     }
 
     get rirString(): string {
-        return this.rir === null || this.rir === "" ? "-/-" : this.rir;
+        return this.rir === null ? "-/-" : this.rir.toString();
     }
 }
 

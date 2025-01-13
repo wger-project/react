@@ -13,7 +13,7 @@ const testWorkoutLog1 = new WorkoutLog({
     reps: 8,
     weight: 80,
     weightUnitId: 1,
-    rir: "1.5",
+    rir: 1.5,
     repetitionUnitObj: testRepUnitRepetitions,
     weightUnitObj: testWeightUnitKg,
     exerciseObj: testExerciseSquats
@@ -29,7 +29,7 @@ const testWorkoutLog2 = new WorkoutLog({
     reps: 8,
     weight: 82.5,
     weightUnitId: 1,
-    rir: "1.5",
+    rir: 1.5,
     repetitionUnitObj: testRepUnitRepetitions,
     weightUnitObj: testWeightUnitKg,
     exerciseObj: testExerciseSquats
@@ -45,7 +45,7 @@ const testWorkoutLog3 = new WorkoutLog({
     reps: 8,
     weight: 85,
     weightUnitId: 1,
-    rir: "1.5",
+    rir: 1.5,
     repetitionUnitObj: testRepUnitRepetitions,
     weightUnitObj: testWeightUnitKg,
     exerciseObj: testExerciseSquats
@@ -61,7 +61,7 @@ const testWorkoutLog4 = new WorkoutLog({
     reps: 8,
     weight: 10,
     weightUnitId: 1,
-    rir: "1.5",
+    rir: 1.5,
     repetitionUnitObj: testRepUnitRepetitions,
     weightUnitObj: testWeightUnitKg,
     exerciseObj: testExerciseSquats
