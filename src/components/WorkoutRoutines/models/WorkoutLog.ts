@@ -36,8 +36,11 @@ export class WorkoutLog {
     public weight: number | null;
     public weightTarget: number | null;
 
-    public rir: string | null;
-    public rirTarget: string | null;
+    public rir: number | null;
+    public rirTarget: number | null;
+
+    public restTime: number | null;
+    public restTimeTarget: number | null;
 
 
     public exerciseObj?: Exercise;
@@ -61,8 +64,11 @@ export class WorkoutLog {
         weight: number | null;
         weightTarget?: number | null;
 
-        rir: string | null;
-        rirTarget?: string | null;
+        rir: number | null;
+        rirTarget?: number | null;
+
+        restTime?: number | null;
+        restTimeTarget?: number | null
     }) {
         this.id = data.id;
         this.date = typeof data.date === 'string' ? new Date(data.date) : data.date;
@@ -84,6 +90,9 @@ export class WorkoutLog {
 
         this.rir = data.rir;
         this.rirTarget = data.rirTarget || null;
+
+        this.restTime = data.restTime || null;
+        this.restTimeTarget = data.restTimeTarget || null;
     }
 
     get rirString(): string {
@@ -93,8 +102,8 @@ export class WorkoutLog {
 
 
 export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
-    fromJson(item: any) {
-        return new WorkoutLog({
+    fromJson = (item: any) =>
+        new WorkoutLog({
             id: item.id,
             date: item.date, // Pass the date string directly
             iteration: item.iteration,
@@ -109,28 +118,31 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
             weight: item.weight === null ? null : Number.parseFloat(item.weight),
             weightTarget: item.weight_target === null ? null : Number.parseFloat(item.weight_target),
 
-            rir: item.rir,
-            rirTarget: item.rir_target,
+            rir: item.rir === null ? null : Number.parseFloat(item.rir),
+            rirTarget: item.rir_target === null ? null : Number.parseFloat(item.rir_target),
+
+            restTime: item.rest,
+            restTimeTarget: item.rest_target
         });
-    }
 
-    toJson(item: WorkoutLog) {
-        return {
-            id: item.id,
-            iteration: item.iteration,
-            slot_entry: item.slotEntryId,
-            exercise_base: item.exerciseId,
+    toJson = (item: WorkoutLog) => ({
+        id: item.id,
+        iteration: item.iteration,
+        slot_entry: item.slotEntryId,
+        exercise_base: item.exerciseId,
 
-            repetition_unit: item.repetitionUnitId,
-            reps: item.reps,
-            reps_target: item.repsTarget,
+        repetition_unit: item.repetitionUnitId,
+        reps: item.reps,
+        reps_target: item.repsTarget,
 
-            weight_unit: item.weightUnitId,
-            weight: item.weight,
-            weight_target: item.weightTarget,
+        weight_unit: item.weightUnitId,
+        weight: item.weight,
+        weight_target: item.weightTarget,
 
-            rir: item.rir,
-            rir_target: item.rirTarget,
-        };
-    }
+        rir: item.rir,
+        rir_target: item.rirTarget,
+
+        rest: item.restTime,
+        rest_target: item.restTimeTarget
+    });
 }
