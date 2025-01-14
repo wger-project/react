@@ -76,9 +76,9 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                     rir: l.rir !== '' ? l.rir : null,
                     rir_target: l.rirTarget !== '' ? l.rirTarget : null,
 
-                    repetition_unit: l.repsUnit?.id,
-                    reps: l.reps !== '' ? l.reps : null,
-                    reps_target: l.repsTarget !== '' ? l.repsTarget : null,
+                    repetitions_unit: l.repsUnit?.id,
+                    repetitions: l.reps !== '' ? l.reps : null,
+                    repetitions_target: l.repsTarget !== '' ? l.repsTarget : null,
 
                     weight_unit: l.weightUnit?.id,
                     weight: l.weight !== '' ? l.weight : null,

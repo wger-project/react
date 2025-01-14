@@ -53,14 +53,14 @@ describe('SessionLogsForm', () => {
             routine: 1,
             day: 5,
             exercise: 345,
-            reps: 5,
+            repetitions: 5,
             rir: 2,
             weight: 20,
 
         };
         const updatedData = {
             ...originalData,
-            reps: "17",
+            repetitions: "17",
             weight: "42",
         };
 

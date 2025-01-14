@@ -9,14 +9,14 @@ const testWorkoutLog1 = new WorkoutLog({
     iteration: 345,
     exerciseId: 1,
     slotEntryId: 123,
-    repetitionUnitId: 1,
-    reps: 8,
+    repetitionsUnitId: 1,
+    repetitions: 8,
     weight: 80,
     weightUnitId: 1,
     rir: 1.5,
-    repetitionUnitObj: testRepUnitRepetitions,
-    weightUnitObj: testWeightUnitKg,
-    exerciseObj: testExerciseSquats
+    repetitionsUnit: testRepUnitRepetitions,
+    weightUnit: testWeightUnitKg,
+    exercise: testExerciseSquats
 });
 
 const testWorkoutLog2 = new WorkoutLog({
@@ -25,14 +25,14 @@ const testWorkoutLog2 = new WorkoutLog({
     iteration: 345,
     exerciseId: 1,
     slotEntryId: 123,
-    repetitionUnitId: 1,
-    reps: 8,
+    repetitionsUnitId: 1,
+    repetitions: 8,
     weight: 82.5,
     weightUnitId: 1,
     rir: 1.5,
-    repetitionUnitObj: testRepUnitRepetitions,
-    weightUnitObj: testWeightUnitKg,
-    exerciseObj: testExerciseSquats
+    repetitionsUnit: testRepUnitRepetitions,
+    weightUnit: testWeightUnitKg,
+    exercise: testExerciseSquats
 });
 
 const testWorkoutLog3 = new WorkoutLog({
@@ -41,14 +41,14 @@ const testWorkoutLog3 = new WorkoutLog({
     iteration: 345,
     exerciseId: 1,
     slotEntryId: 123,
-    repetitionUnitId: 1,
-    reps: 8,
+    repetitionsUnitId: 1,
+    repetitions: 8,
     weight: 85,
     weightUnitId: 1,
     rir: 1.5,
-    repetitionUnitObj: testRepUnitRepetitions,
-    weightUnitObj: testWeightUnitKg,
-    exerciseObj: testExerciseSquats
+    repetitionsUnit: testRepUnitRepetitions,
+    weightUnit: testWeightUnitKg,
+    exercise: testExerciseSquats
 });
 
 const testWorkoutLog4 = new WorkoutLog({
@@ -57,14 +57,14 @@ const testWorkoutLog4 = new WorkoutLog({
     iteration: 345,
     exerciseId: 1,
     slotEntryId: 123,
-    repetitionUnitId: 1,
-    reps: 8,
+    repetitionsUnitId: 1,
+    repetitions: 8,
     weight: 10,
     weightUnitId: 1,
     rir: 1.5,
-    repetitionUnitObj: testRepUnitRepetitions,
-    weightUnitObj: testWeightUnitKg,
-    exerciseObj: testExerciseSquats
+    repetitionsUnit: testRepUnitRepetitions,
+    weightUnit: testWeightUnitKg,
+    exercise: testExerciseSquats
 });
 
 export const testWorkoutLogs = [

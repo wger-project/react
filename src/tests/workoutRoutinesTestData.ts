@@ -312,9 +312,9 @@ export const responseRoutineLogs = {
             "routine": 1,
             "slot_entry": 2,
 
-            "repetition_unit": 1,
-            "reps": 12,
-            "reps_target": 12,
+            "repetitions_unit": 1,
+            "repetitions": 12,
+            "repetitions_target": 12,
 
             "weight_unit": 1,
             "weight": "10.00",
@@ -331,9 +331,9 @@ export const responseRoutineLogs = {
             "routine": 1,
             "slot_entry": 2,
 
-            "repetition_unit": 1,
-            "reps": 10,
-            "reps_target": null,
+            "repetitions_unit": 1,
+            "repetitions": 10,
+            "repetitions_target": null,
 
             "weight_unit": 1,
             "weight": "20.00",

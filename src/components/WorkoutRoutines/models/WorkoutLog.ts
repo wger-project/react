@@ -51,15 +51,15 @@ export class WorkoutLog {
         iteration: number | null;
         slotEntryId: number | null;
 
-        exerciseObj?: Exercise;
+        exercise?: Exercise;
         exerciseId: number;
 
-        repetitionUnitObj?: RepetitionUnit;
-        repetitionUnitId: number;
-        reps: number | null;
-        repsTarget?: number | null;
+        repetitionsUnit?: RepetitionUnit;
+        repetitionsUnitId: number;
+        repetitions: number | null;
+        repetitionsTarget?: number | null;
 
-        weightUnitObj?: WeightUnit;
+        weightUnit?: WeightUnit;
         weightUnitId: number;
         weight: number | null;
         weightTarget?: number | null;
@@ -75,15 +75,15 @@ export class WorkoutLog {
         this.iteration = data.iteration;
         this.slotEntryId = data.slotEntryId;
 
-        this.exerciseObj = data.exerciseObj;
+        this.exerciseObj = data.exercise;
         this.exerciseId = data.exerciseId;
 
-        this.repetitionUnitObj = data.repetitionUnitObj || null;
-        this.repetitionUnitId = data.repetitionUnitId;
-        this.reps = data.reps;
-        this.repsTarget = data.repsTarget || null;
+        this.repetitionUnitObj = data.repetitionsUnit || null;
+        this.repetitionUnitId = data.repetitionsUnitId;
+        this.reps = data.repetitions;
+        this.repsTarget = data.repetitionsTarget || null;
 
-        this.weightUnitObj = data.weightUnitObj || null;
+        this.weightUnitObj = data.weightUnit || null;
         this.weightUnitId = data.weightUnitId;
         this.weight = data.weight;
         this.weightTarget = data.weightTarget || null;
@@ -110,9 +110,9 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
             exerciseId: item.exercise,
             slotEntryId: item.slot_entry,
 
-            repetitionUnitId: item.repetition_unit,
-            reps: item.reps,
-            repsTarget: item.reps_target,
+            repetitionsUnitId: item.repetitions_unit,
+            repetitions: item.repetitions,
+            repetitionsTarget: item.repetitions_target,
 
             weightUnitId: item.weight_unit,
             weight: item.weight === null ? null : Number.parseFloat(item.weight),
@@ -131,9 +131,9 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         slot_entry: item.slotEntryId,
         exercise_base: item.exerciseId,
 
-        repetition_unit: item.repetitionUnitId,
-        reps: item.reps,
-        reps_target: item.repsTarget,
+        repetitions_unit: item.repetitionUnitId,
+        repetitions: item.reps,
+        repetitions_target: item.repsTarget,
 
         weight_unit: item.weightUnitId,
         weight: item.weight,
