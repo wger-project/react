@@ -111,8 +111,8 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
             slotEntryId: item.slot_entry,
 
             repetitionsUnitId: item.repetitions_unit,
-            repetitions: item.repetitions,
-            repetitionsTarget: item.repetitions_target,
+            repetitions: item.repetitions === null ? null : Number.parseFloat(item.repetitions),
+            repetitionsTarget: item.repetitions_target === null ? null : Number.parseFloat(item.repetitions_target),
 
             weightUnitId: item.weight_unit,
             weight: item.weight === null ? null : Number.parseFloat(item.weight),
