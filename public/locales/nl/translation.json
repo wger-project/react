@@ -1,1 +1,26 @@
-{}
+{
+    "days": "Dagen",
+    "edit": "Bewerk",
+    "close": "Sluit",
+    "submit": "Verzend",
+    "height": "Lengte",
+    "lastYear": "Vorig jaar",
+    "cm": "cm",
+    "date": "Datum",
+    "weight": "Lichaams gewicht",
+    "timeOfDay": "Tijd vandaag",
+    "licenses": {
+        "authorProfile": "Link naar de auteur website of profiel, indien beschikbaar",
+        "originalTitle": "Titel",
+        "authors": "Auteur"
+    },
+    "nutritionalPlan": "Voeding Plan",
+    "delete": "Verwijder",
+    "lastWeek": "Vorige week",
+    "deleteConfirmation": "Weet je zeker dat je wil verwijderen \"{{name}}\"?",
+    "add": "Voeg toe",
+    "difference": "Verschil",
+    "all": "Alles",
+    "lastHalfYear": "Laatste 6 maanden",
+    "lastMonth": "Afgelopen maand"
+}
