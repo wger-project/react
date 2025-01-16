@@ -7,12 +7,15 @@
     "lastYear": "Vorig jaar",
     "cm": "cm",
     "date": "Datum",
-    "weight": "Lichaams gewicht",
+    "weight": "Lichaam gewicht",
     "timeOfDay": "Tijd vandaag",
     "licenses": {
         "authorProfile": "Link naar de auteur website of profiel, indien beschikbaar",
         "originalTitle": "Titel",
-        "authors": "Auteur"
+        "authors": "Auteur",
+        "derivativeSourceUrl": "Link naar de originele bron, als die gebruikt is",
+        "derivativeSourceUrlHelper": "Wees ervan bewust dat \"afgeleid werk\" werk is, dat niet alleen gebaseerd is op een eerder werk, maar dat ook voldoende nieuwe, creatieve inhoud bevat om recht te geven op eigen auteursrecht.",
+        "originalObjectUrl": "Link naar de bron website, indien mogelijk"
     },
     "nutritionalPlan": "Voeding Plan",
     "delete": "Verwijder",
@@ -22,5 +25,31 @@
     "difference": "Verschil",
     "all": "Alles",
     "lastHalfYear": "Laatste 6 maanden",
-    "lastMonth": "Afgelopen maand"
+    "lastMonth": "Afgelopen maand",
+    "value": "Waarde",
+    "loading": "Aan het laden ...",
+    "currentWeight": "Huidig gewicht",
+    "workout": "Workout",
+    "seeDetails": "Zie details",
+    "actions": "Actie",
+    "addEntry": "Item toevoegen",
+    "notes": "Notities",
+    "unit": "Eenheid",
+    "copyToClipboard": "Kopieer naar geheugen",
+    "exercises": {
+        "replacementsSearch": "Zoek naar een oefening of kopieer en plak een bekende ID in het veld en klik op de knop “laden”.",
+        "noReplacementSelected": " Geen oefening geselecteerd voor vervanging",
+        "contributeExercise": "Voeg een oefening toe",
+        "step1HeaderBasics": "Basis in Engels",
+        "variations": "Variaties",
+        "notEnoughRightsHeader": "Je kunt geen oefeningen toevoegen",
+        "muscles": "Spieren",
+        "notEnoughRights": "Je kunt alleen oefeningen bijdragen als je account ouder is dan {{days}} dagen en je, je e-mail hebt geverifieerd.",
+        "replacements": "Alternatieven",
+        "replacementsInfoText": "Optioneel kun je ook een oefening selecteren die deze oefening moet vervangen (b.v. omdat deze twee keer is ingestuurd, of iets dergelijks). Dit zal de oefening vervangen in routines en trainingslogs, in plaats van deze gewoon te verwijderen. Deze wijzigingen worden ook doorgevoerd in elke instantie die de oefeningen van deze instantie synchroniseert."
+    },
+    "filters": "Filters",
+    "nothingHereYet": "Nog niets ingevuld...",
+    "nothingHereYetAction": "Druk op de actie knop om te beginnen",
+    "alsoSearchEnglish": "Zoek ook voor de namen in Engelse taal"
 }
