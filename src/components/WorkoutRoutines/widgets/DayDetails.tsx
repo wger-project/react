@@ -1,7 +1,8 @@
 import { DragDropContext, Draggable, DraggableStyle, Droppable, DropResult } from "@hello-pangea/dnd";
-import { DragHandle, SsidChart } from "@mui/icons-material";
+import { SsidChart } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from "@mui/icons-material/EditOff";
 import {
@@ -228,13 +229,17 @@ const DayCard = (props: {
                 <Box sx={{ ...sx, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', p: 2 }}>
                     <Typography variant={"h5"}>{props.day.getDisplayName()}</Typography>
 
-                    <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
+                    <Stack direction="row" spacing={1} display="flex" flexWrap="nowrap"
+                           justifyContent="space-between" alignItems="center">
+
                         <IconButton onClick={setSelected}>
                             {props.isSelected ? <EditOffIcon /> : <EditIcon />}
                         </IconButton>
+
                         <IconButton onClick={handleDeleteDay}>
                             {deleteDayQuery.isPending ? <LoadingProgressIcon /> : <DeleteIcon />}
                         </IconButton>
+                        <DragIndicatorIcon />
                     </Stack>
                 </Box>
             </Paper>
@@ -342,7 +347,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
 
     const getItemStyle = (isDragging: boolean, draggableStyle: DraggableStyle) => ({
         // userSelect: "none",
-        border: isDragging ? `2px solid ${theme.palette.grey[900]}` : `1px solid ${theme.palette.grey[300]}`,
+        border: isDragging ? `1px solid ${theme.palette.grey[900]}` : `1px solid ${theme.palette.grey[300]}`,
         backgroundColor: "white",
         // padding: grid,
         // margin: `0 0 ${grid}px 0`,
@@ -395,7 +400,7 @@ export const DayDetails = (props: { day: Day, routineId: number }) => {
                                                     <Typography variant={"h5"}>
                                                         <IconButton
                                                             onClick={() => handleDeleteSlot(slot.id)} {...provided.dragHandleProps}>
-                                                            <DragHandle />
+                                                            <DragIndicatorIcon />
                                                         </IconButton>
 
                                                         <IconButton onClick={() => handleDeleteSlot(slot.id)}>
