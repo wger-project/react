@@ -1,22 +1,10 @@
 import { CheckBoxOutlineBlank } from "@mui/icons-material";
-import AddIcon from "@mui/icons-material/Add";
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import DeleteIcon from "@mui/icons-material/Delete";
 
 
 import SettingsIcon from '@mui/icons-material/Settings';
-import {
-    Button,
-    Divider,
-    IconButton,
-    ListItemIcon,
-    ListItemText,
-    Menu,
-    MenuItem,
-    Switch,
-    TextField
-} from "@mui/material";
+import { Button, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, TextField } from "@mui/material";
 import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
 import {
     BaseConfig,
@@ -326,6 +314,7 @@ export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotEntryId?
  *       to edit these fields individually in the future
  */
 
+/*
 export const AddEntryDetailsButton = (props: {
     iteration: number,
     routineId: number,
@@ -506,3 +495,4 @@ export const ConfigDetailsNeedLogsToApplyField = (props: {
         disabled={disable || editQueryHook.isPending}
     />;
 };
+*/
