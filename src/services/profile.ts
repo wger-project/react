@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { Profile, ProfileAdapter } from "components/User/models/profile";
+import { EditProfileParams, Profile, ProfileAdapter } from "components/User/models/profile";
+import { ApiPath } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 
 export const API_PROFILE_PATH = 'userprofile';
@@ -25,5 +26,15 @@ export const getProfile = async (): Promise<Profile | null> => {
     }
 };
 
+/*
+ * Edits the user's profile
+ */
+export const editProfile = async (data: Partial<EditProfileParams>): Promise<Profile> => {
+    const response = await axios.post(
+        makeUrl(ApiPath.API_PROFILE_PATH),
+        data,
+        { headers: makeHeader() }
+    );
 
-
+    return new ProfileAdapter().fromJson(response.data);
+};
