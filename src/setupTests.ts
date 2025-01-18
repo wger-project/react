@@ -5,6 +5,7 @@
 import '@testing-library/jest-dom';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { TextDecoder, TextEncoder } from 'util';
 
 // Mock the translations
 i18n.use(initReactI18next).init({
@@ -32,3 +33,6 @@ jest.mock('./config', () => {
         VITE_API_KEY: '122333444455555666666'
     };
 })
+
+global.TextEncoder = TextEncoder as any;
+global.TextDecoder = TextDecoder as any;
