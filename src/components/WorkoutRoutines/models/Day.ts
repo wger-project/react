@@ -61,6 +61,8 @@ export class Day {
 
 }
 
+export const getDayName = (day: Day | null): string => day === null || day.isRest ? i18n.t('routines.restDay') : day.getDisplayName();
+
 
 export class DayAdapter implements Adapter<Day> {
     fromJson = (item: any): Day => new Day({

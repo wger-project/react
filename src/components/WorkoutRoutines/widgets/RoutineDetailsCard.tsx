@@ -20,6 +20,7 @@ import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
 import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";
 import { Language } from "components/Exercises/models/language";
 import { useLanguageQuery } from "components/Exercises/queries";
+import { getDayName } from "components/WorkoutRoutines/models/Day";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
 import { SlotData } from "components/WorkoutRoutines/models/SlotData";
@@ -146,7 +147,7 @@ function SlotDataList(props: {
 }
 
 export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: number, readOnly?: boolean }) => {
-    const readOnly = props.readOnly ?? false;
+    const readOnly = (props.readOnly ?? false) || props.dayData.day === null || props.dayData.day.isRest;
 
     const theme = useTheme();
 
@@ -168,7 +169,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
         <Card sx={{ minWidth: 275 }}>
             <CardHeader
                 sx={{ bgcolor: theme.palette.grey.A200 }}
-                action={props.dayData.day!.isRest || readOnly
+                action={props.dayData.day === null || props.dayData.day.isRest || readOnly
                     ? null
                     : <Tooltip title={t('routines.addWeightLog')}>
                         <IconButton
@@ -179,7 +180,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
                             <Addchart />
                         </IconButton>
                     </Tooltip>}
-                title={props.dayData.day!.getDisplayName()}
+                title={getDayName(props.dayData.day)}
                 subheader={props.dayData.day?.description}
             />
             <Menu

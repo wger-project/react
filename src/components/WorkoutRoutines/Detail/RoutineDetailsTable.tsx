@@ -305,7 +305,6 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
                         </React.Fragment>;
                     })}
                 </React.Fragment>;
-
             })}
         </>;
     }
