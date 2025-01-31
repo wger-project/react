@@ -30,7 +30,7 @@ describe("Test the ExerciseDeleteDialog component", () => {
         render(
             <MemoryRouter initialEntries={['/overview/exercises/9']}>
                 <Routes>
-                    <Route path="overview/exercises/:baseID" element={
+                    <Route path="overview/exercises/:exerciseId" element={
                         <ExerciseDeleteDialog
                             onClose={onCloseMock}
                             onChangeLanguage={onChangeLanguageMock}

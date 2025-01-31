@@ -125,7 +125,7 @@ export const exerciseSubmissionReducer = (state: ExerciseSubmissionState, action
         case SetExerciseSubmissionState.SET_NEW_VARIATION_BASE_ID:
             return {
                 ...state,
-                newVariationBaseId: action.payload as number
+                newVariationExerciseId: action.payload as number
             };
 
         case SetExerciseSubmissionState.SET_LANGUAGE:

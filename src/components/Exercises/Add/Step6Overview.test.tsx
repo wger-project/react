@@ -51,7 +51,7 @@ describe("Test the add exercise step 6 component", () => {
                 muscles: [2],
                 musclesSecondary: [],
                 variationId: null,
-                newVariationBaseId: null,
+                newVariationExerciseId: null,
                 languageId: 3,
                 equipment: [2],
 
@@ -77,7 +77,7 @@ describe("Test the add exercise step 6 component", () => {
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/exercises/9']}>
                     <Routes>
-                        <Route path="exercises/:baseID"
+                        <Route path="exercises/:exerciseId"
                                element={<Step6Overview onContinue={mockOnContinue} />} />
                     </Routes>
                 </MemoryRouter>
@@ -103,7 +103,7 @@ describe("Test the add exercise step 6 component", () => {
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/exercises/9']}>
                     <Routes>
-                        <Route path="exercises/:baseID"
+                        <Route path="exercises/:exerciseId"
                                element={<Step6Overview onContinue={mockOnContinue} />} />
                     </Routes>
                 </MemoryRouter>

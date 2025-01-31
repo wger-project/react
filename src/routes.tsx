@@ -92,8 +92,8 @@ export const WgerRoutes = () => {
             <Route path="exercise">
                 <Route index element={<ExerciseOverview />} />
                 <Route path="overview" element={<ExerciseOverview />} />
-                <Route path=":baseID" element={<ExerciseDetailPage />}>
-                    <Route path="view-base" element={<ExerciseDetailPage />}>
+                <Route path=":exerciseID" element={<ExerciseDetailPage />}>
+                    <Route path="view" element={<ExerciseDetailPage />}>
                         <Route path=":slug" element={<ExerciseDetailPage />} />
                     </Route>
                 </Route>

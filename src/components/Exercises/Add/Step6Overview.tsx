@@ -50,9 +50,9 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         setSubmissionState('loading');
 
         // Create a new variation object if needed
-        // TODO: PATCH the other exercise base (newVariationBaseId) with the new variation id
+        // TODO: PATCH the other exercise base (newVariationExerciseId) with the new variation id
         let variationId;
-        if (state.newVariationBaseId !== null) {
+        if (state.newVariationExerciseId !== null) {
             variationId = await addVariation();
         } else {
             variationId = state.variationId;
@@ -167,7 +167,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.variations')}</TableCell>
-                            <TableCell>{state.variationId} / {state.newVariationBaseId}</TableCell>
+                            <TableCell>{state.variationId} / {state.newVariationExerciseId}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>

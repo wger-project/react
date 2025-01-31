@@ -129,7 +129,7 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         id: item.id,
         iteration: item.iteration,
         slot_entry: item.slotEntryId,
-        exercise_base: item.exerciseId,
+        exercise: item.exerciseId,
 
         repetitions_unit: item.repetitionUnitId,
         repetitions: item.reps,

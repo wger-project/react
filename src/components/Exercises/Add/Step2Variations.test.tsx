@@ -85,7 +85,7 @@ describe("Test the add exercise step 2 component", () => {
         // Assert
     });
 
-    test("Correctly sets the newVariationBaseId ID", async () => {
+    test("Correctly sets the newVariationExerciseId ID", async () => {
         // Arrange
         const user = userEvent.setup();
 
@@ -100,7 +100,7 @@ describe("Test the add exercise step 2 component", () => {
 
         // Assert
     });
-    test("Correctly unsets the newVariationBaseId ID", async () => {
+    test("Correctly unsets the newVariationExerciseId ID", async () => {
         // Arrange
         const user = userEvent.setup();
 

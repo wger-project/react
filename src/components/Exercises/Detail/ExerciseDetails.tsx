@@ -20,8 +20,8 @@ export const ExerciseDetails = () => {
     const [language, setLanguage] = useState<Language>(ENGLISH_LANGUAGE_OBJ);
     const [editMode, setEditMode] = useState<boolean>(false);
 
-    const params = useParams<{ baseID: string }>();
-    const exerciseId = params.baseID ? parseInt(params.baseID) : 0;
+    const params = useParams<{ exerciseId: string }>();
+    const exerciseId = params.exerciseId ? parseInt(params.exerciseId) : 0;
 
     const { i18n } = useTranslation();
     const navigate = useNavigate();

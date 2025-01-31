@@ -56,7 +56,7 @@ const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
     const [showMore, setShowMore] = useState<boolean>(false);
 
     const [stateVariationId, setStateVariationId] = useState<number | null>(state.variationId);
-    const [stateNewVariationId, setStateNewVariationId] = useState<number | null>(state.newVariationBaseId);
+    const [stateNewVariationId, setStateNewVariationId] = useState<number | null>(state.newVariationExerciseId);
 
     useEffect(() => {
         dispatch(setVariationId(stateVariationId));
@@ -76,7 +76,7 @@ const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
             }
         } else {
             variationId = null;
-            if (newVariationId === state.newVariationBaseId) {
+            if (newVariationId === state.newVariationExerciseId) {
                 newVariationId = null;
             }
         }
@@ -87,7 +87,7 @@ const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
 
     let isChecked;
     if (variationId === null) {
-        isChecked = state.newVariationBaseId === exerciseId;
+        isChecked = state.newVariationExerciseId === exerciseId;
     } else {
         isChecked = variationId === state.variationId;
     }

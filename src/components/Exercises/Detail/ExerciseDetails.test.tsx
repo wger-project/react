@@ -70,7 +70,7 @@ describe("Render tests", () => {
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/exercises/9']}>
                     <Routes>
-                        <Route path="exercises/:baseID" element={<ExerciseDetails />} />
+                        <Route path="exercises/:exerciseId" element={<ExerciseDetails />} />
                     </Routes>
                 </MemoryRouter>
             </QueryClientProvider>
@@ -97,6 +97,5 @@ describe("Render tests", () => {
         // TODO: commented out because for some reason this fails on githubs CI, but not locally
         // expect(screen.queryByText('exercises.variations')).not.toBeInTheDocument();
         // expect(screen.getByText("VIEW")).toBeInTheDocument();
-
     });
 });

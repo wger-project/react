@@ -120,7 +120,7 @@ export const responseApiExerciseInfo = {
         "images": [{
             "id": 7,
             "uuid": "2fe5f04b-5c9d-448c-a973-3fad6ddd4f74",
-            "exercise_base": 9,
+            "exercise": 9,
             "image": "http://localhost:8000/media/exercise-images/9/2fe5f04b-5c9d-448c-a973-3fad6ddd4f74.jpg",
             "is_main": true,
             "status": "2",
@@ -130,8 +130,8 @@ export const responseApiExerciseInfo = {
             {
                 "id": 1,
                 "uuid": "b1c934fa-c4f8-4d84-8cb4-7802be0d284c",
-                "exercise_base": 418,
-                "exercise_base_uuid": "6260e3aa-e46b-4b4b-8ada-58bfd0922d3a",
+                "exercise": 418,
+                "exercise_uuid": "6260e3aa-e46b-4b4b-8ada-58bfd0922d3a",
                 "video": "http://localhost:8000/media/exercise-video/258/b1c934fa-c4f8-4d84-8cb4-7802be0d284c.mp4",
                 "is_main": false,
                 "size": 0,
