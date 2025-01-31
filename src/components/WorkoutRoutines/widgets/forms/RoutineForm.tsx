@@ -52,7 +52,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
         name: yup
             .string()
             .required()
-            .max(NAME_MAX_LENGTH, t('forms.maxLength', { chars: NAME_MIN_LENGTH }))
+            .max(NAME_MAX_LENGTH, t('forms.maxLength', { chars: NAME_MAX_LENGTH }))
             .min(NAME_MIN_LENGTH, t('forms.minLength', { chars: NAME_MIN_LENGTH })),
         description: yup
             .string()
