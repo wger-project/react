@@ -85,7 +85,7 @@ export class Exercise {
 
 export class ExerciseAdapter implements Adapter<Exercise> {
     /*
-     * needs the items from exercisebaseinfo
+     * needs the items from exerciseinfo
      */
     fromJson(item: any): Exercise {
         const categoryAdapter = new CategoryAdapter();

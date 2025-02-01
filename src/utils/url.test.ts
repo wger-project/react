@@ -111,12 +111,12 @@ describe("test the clickable url utility", () => {
 
     test('link to exercise detail page - with slug', () => {
         const result = makeLink(WgerLink.EXERCISE_DETAIL, 'de', { id: 123, slug: 'foobar' });
-        expect(result).toEqual('/de/exercise/123/view-base/foobar');
+        expect(result).toEqual('/de/exercise/123/view/foobar');
     });
 
     test('link to exercise detail page - no slug', () => {
         const result = makeLink(WgerLink.EXERCISE_DETAIL, 'de', { id: 123 });
-        expect(result).toEqual('/de/exercise/123/view-base');
+        expect(result).toEqual('/de/exercise/123/view');
     });
 
     test('link to weight overview page', () => {

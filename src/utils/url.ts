@@ -157,9 +157,9 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
 
         case WgerLink.EXERCISE_DETAIL:
             if (params!.slug) {
-                return `/${langShort}/exercise/${params!.id}/view-base/${slug(params!.slug)}`;
+                return `/${langShort}/exercise/${params!.id}/view/${slug(params!.slug)}`;
             } else {
-                return `/${langShort}/exercise/${params!.id}/view-base`;
+                return `/${langShort}/exercise/${params!.id}/view`;
             }
 
         case WgerLink.EXERCISE_OVERVIEW:
