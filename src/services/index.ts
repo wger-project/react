@@ -57,12 +57,12 @@ export { getRoutineRepUnits, getRoutineWeightUnits } from './workoutUnits'
 export { addDay, editDay, deleteDay, editDayOrder } from './day'
 export { addSlot, deleteSlot, editSlot, editSlotOrder } from './slot'
 export {
-    addRepsConfig,
-    editRepsConfig,
-    deleteRepsConfig,
-    addMaxRepsConfig,
-    editMaxRepsConfig,
-    deleteMaxRepsConfig,
+    addRepetitionsConfig,
+    editRepetitionsConfig,
+    deleteRepetitionsConfig,
+    addMaxRepetitionsConfig,
+    editMaxRepetitionsConfig,
+    deleteMaxRepetitionsConfig,
     addMaxWeightConfig,
     editMaxWeightConfig,
     deleteMaxWeightConfig,

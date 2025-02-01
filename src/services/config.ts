@@ -16,13 +16,13 @@ export const editMaxWeightConfig = async (data: EditBaseConfigParams) => await e
 export const addMaxWeightConfig = async (data: AddBaseConfigParams) => await addBaseConfig(data, ApiPath.MAX_WEIGHT_CONFIG);
 export const deleteMaxWeightConfig = async (id: number) => await deleteBaseConfig(id, ApiPath.MAX_WEIGHT_CONFIG);
 
-export const editRepsConfig = async (data: EditBaseConfigParams) => await editBaseConfig(data, ApiPath.REPS_CONFIG);
-export const addRepsConfig = async (data: AddBaseConfigParams) => await addBaseConfig(data, ApiPath.REPS_CONFIG);
-export const deleteRepsConfig = async (id: number) => await deleteBaseConfig(id, ApiPath.REPS_CONFIG);
+export const editRepetitionsConfig = async (data: EditBaseConfigParams) => await editBaseConfig(data, ApiPath.REPETITIONS_CONFIG);
+export const addRepetitionsConfig = async (data: AddBaseConfigParams) => await addBaseConfig(data, ApiPath.REPETITIONS_CONFIG);
+export const deleteRepetitionsConfig = async (id: number) => await deleteBaseConfig(id, ApiPath.REPETITIONS_CONFIG);
 
-export const editMaxRepsConfig = async (data: EditBaseConfigParams) => await editBaseConfig(data, ApiPath.MAX_REPS_CONFIG);
-export const addMaxRepsConfig = async (data: AddBaseConfigParams) => await addBaseConfig(data, ApiPath.MAX_REPS_CONFIG);
-export const deleteMaxRepsConfig = async (id: number) => await deleteBaseConfig(id, ApiPath.MAX_REPS_CONFIG);
+export const editMaxRepetitionsConfig = async (data: EditBaseConfigParams) => await editBaseConfig(data, ApiPath.MAX_REPS_CONFIG);
+export const addMaxRepetitionsConfig = async (data: AddBaseConfigParams) => await addBaseConfig(data, ApiPath.MAX_REPS_CONFIG);
+export const deleteMaxRepetitionsConfig = async (id: number) => await deleteBaseConfig(id, ApiPath.MAX_REPS_CONFIG);
 
 export const editNrOfSetsConfig = async (data: EditBaseConfigParams) => await editBaseConfig(data, ApiPath.NR_OF_SETS_CONFIG);
 export const addNrOfSetsConfig = async (data: AddBaseConfigParams) => await addBaseConfig(data, ApiPath.NR_OF_SETS_CONFIG);

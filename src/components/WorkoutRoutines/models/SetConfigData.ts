@@ -11,7 +11,7 @@ export class SetConfigData {
 
     exercise?: Exercise;
     weightUnit: WeightUnit | null = null;
-    repsUnit: RepetitionUnit | null = null;
+    repetitionsUnit: RepetitionUnit | null = null;
 
     public exerciseId: number;
     public slotEntryId: number;
@@ -22,10 +22,10 @@ export class SetConfigData {
     public maxWeight: number | null;
     public weightUnitId: number;
     public weightRounding: number | null = null;
-    public reps: number | null;
-    public maxReps: number | null;
-    public repsUnitId: number;
-    public repsRounding: number | null = null;
+    public repetitions: number | null;
+    public maxRepetitions: number | null;
+    public repetitionsUnitId: number;
+    public repetitionsRounding: number | null = null;
     public rir: number | null;
     public maxRir: number | null;
     public rpe: number | null;
@@ -48,11 +48,11 @@ export class SetConfigData {
         weightUnit?: WeightUnit,
         weightRounding: number | null,
 
-        reps?: number | null,
-        maxReps?: number | null,
-        repsUnitId: number,
-        repsUnit?: RepetitionUnit,
-        repsRounding: number | null,
+        repetitions?: number | null,
+        maxRepetitions?: number | null,
+        repetitionsUnitId: number,
+        repetitionsUnit?: RepetitionUnit,
+        repetitionsRounding: number | null,
 
         rir?: number | null,
         maxRir?: number | null,
@@ -75,11 +75,11 @@ export class SetConfigData {
         this.weightUnit = data.weightUnit ?? null;
         this.weightRounding = data.weightRounding;
 
-        this.reps = data.reps ?? null;
-        this.maxReps = data.maxReps ?? null;
-        this.repsUnitId = data.repsUnitId;
-        this.repsUnit = data.repsUnit ?? null;
-        this.repsRounding = data.repsRounding;
+        this.repetitions = data.repetitions ?? null;
+        this.maxRepetitions = data.maxRepetitions ?? null;
+        this.repetitionsUnitId = data.repetitionsUnitId;
+        this.repetitionsUnit = data.repetitionsUnit ?? null;
+        this.repetitionsRounding = data.repetitionsRounding;
 
         this.rir = data.rir ?? null;
         this.maxRir = data.maxRir ?? null;
@@ -107,10 +107,10 @@ export class SetConfigDataAdapter implements Adapter<SetConfigData> {
         maxWeight: item.max_weight !== null ? parseFloat(item.max_weight) : null,
         weightUnitId: item.weight_unit,
         weightRounding: item.weight_rounding !== null ? parseFloat(item.weight_rounding) : null,
-        reps: item.reps !== null ? parseFloat(item.reps) : null,
-        maxReps: item.max_reps !== null ? parseFloat(item.max_reps) : null,
-        repsUnitId: item.reps_unit,
-        repsRounding: item.reps_rounding !== null ? parseFloat(item.reps_rounding) : null,
+        repetitions: item.rerepetitionsps !== null ? parseFloat(item.repetitions) : null,
+        maxRepetitions: item.max_repetitions !== null ? parseFloat(item.max_repetitions) : null,
+        repetitionsUnitId: item.repetitions_unit,
+        repetitionsRounding: item.repetitions_rounding !== null ? parseFloat(item.repetitions_rounding) : null,
         rir: item.rir !== null ? parseFloat(item.rir) : null,
         maxRir: item.max_rir !== null ? parseFloat(item.max_rir) : null,
         rpe: item.rpe !== null ? parseFloat(item.rpe) : null,

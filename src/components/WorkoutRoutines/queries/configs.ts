@@ -1,32 +1,32 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     addMaxNrOfSetsConfig,
-    addMaxRepsConfig,
+    addMaxRepetitionsConfig,
     addMaxRestConfig,
     addMaxRirConfig,
     addMaxWeightConfig,
     addNrOfSetsConfig,
-    addRepsConfig,
+    addRepetitionsConfig,
     addRestConfig,
     addRirConfig,
     addWeightConfig,
     deleteMaxNrOfSetsConfig,
-    deleteMaxRepsConfig,
+    deleteMaxRepetitionsConfig,
     deleteMaxRestConfig,
     deleteMaxRirConfig,
     deleteMaxWeightConfig,
     deleteNrOfSetsConfig,
-    deleteRepsConfig,
+    deleteRepetitionsConfig,
     deleteRestConfig,
     deleteRirConfig,
     deleteWeightConfig,
     editMaxNrOfSetsConfig,
-    editMaxRepsConfig,
+    editMaxRepetitionsConfig,
     editMaxRestConfig,
     editMaxRirConfig,
     editMaxWeightConfig,
     editNrOfSetsConfig,
-    editRepsConfig,
+    editRepetitionsConfig,
     editRestConfig,
     editRirConfig,
     editWeightConfig,
@@ -131,7 +131,7 @@ export const useEditRepsConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: EditBaseConfigParams) => editRepsConfig(data),
+        mutationFn: (data: EditBaseConfigParams) => editRepetitionsConfig(data),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
         })
@@ -141,7 +141,7 @@ export const useAddRepsConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: AddBaseConfigParams) => addRepsConfig(data),
+        mutationFn: (data: AddBaseConfigParams) => addRepetitionsConfig(data),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
         })
@@ -151,7 +151,7 @@ export const useDeleteRepsConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (id: number) => deleteRepsConfig(id),
+        mutationFn: (id: number) => deleteRepetitionsConfig(id),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
         })
@@ -165,7 +165,7 @@ export const useEditMaxRepsConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: EditBaseConfigParams) => editMaxRepsConfig(data),
+        mutationFn: (data: EditBaseConfigParams) => editMaxRepetitionsConfig(data),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
         })
@@ -175,7 +175,7 @@ export const useAddMaxRepsConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: AddBaseConfigParams) => addMaxRepsConfig(data),
+        mutationFn: (data: AddBaseConfigParams) => addMaxRepetitionsConfig(data),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
         })
@@ -185,7 +185,7 @@ export const useDeleteMaxRepsConfigQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (id: number) => deleteMaxRepsConfig(id),
+        mutationFn: (id: number) => deleteMaxRepetitionsConfig(id),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
         })

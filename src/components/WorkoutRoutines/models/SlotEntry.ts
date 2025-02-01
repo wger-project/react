@@ -25,8 +25,8 @@ export class SlotEntry {
 
     weightConfigs: BaseConfig[] = [];
     maxWeightConfigs: BaseConfig[] = [];
-    repsConfigs: BaseConfig[] = [];
-    maxRepsConfigs: BaseConfig[] = [];
+    repetitionsConfigs: BaseConfig[] = [];
+    maxRepetitionsConfigs: BaseConfig[] = [];
     restTimeConfigs: BaseConfig[] = [];
     maxRestTimeConfigs: BaseConfig[] = [];
     nrOfSetsConfigs: BaseConfig[] = [];
@@ -56,8 +56,8 @@ export class SlotEntry {
             configs?: {
                 weightConfigs?: BaseConfig[],
                 maxWeightConfigs?: BaseConfig[],
-                repsConfigs?: BaseConfig[],
-                maxRepsConfigs?: BaseConfig[],
+                repetitionsConfigs?: BaseConfig[],
+                maxRepetitionsConfigs?: BaseConfig[],
                 restTimeConfigs?: BaseConfig[],
                 maxRestTimeConfigs?: BaseConfig[],
                 nrOfSetsConfigs?: BaseConfig[],
@@ -83,8 +83,8 @@ export class SlotEntry {
         if (data.configs !== undefined) {
             this.weightConfigs = data.configs.weightConfigs ?? [];
             this.maxWeightConfigs = data.configs.maxWeightConfigs ?? [];
-            this.repsConfigs = data.configs.repsConfigs ?? [];
-            this.maxRepsConfigs = data.configs.maxRepsConfigs ?? [];
+            this.repetitionsConfigs = data.configs.repetitionsConfigs ?? [];
+            this.maxRepetitionsConfigs = data.configs.maxRepetitionsConfigs ?? [];
             this.restTimeConfigs = data.configs.restTimeConfigs ?? [];
             this.maxRestTimeConfigs = data.configs.maxRestTimeConfigs ?? [];
             this.nrOfSetsConfigs = data.configs.nrOfSetsConfigs ?? [];
@@ -97,8 +97,8 @@ export class SlotEntry {
     get hasProgressionRules(): boolean {
         return this.weightConfigs.length > 1
             || this.maxWeightConfigs.length > 1
-            || this.repsConfigs.length > 1
-            || this.maxRepsConfigs.length > 1
+            || this.repetitionsConfigs.length > 1
+            || this.maxRepetitionsConfigs.length > 1
             || this.restTimeConfigs.length > 1
             || this.maxRestTimeConfigs.length > 1
             || this.nrOfSetsConfigs.length > 1
@@ -114,8 +114,8 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
         let configs = {
             weightConfigs: [],
             maxWeightConfigs: [],
-            repsConfigs: [],
-            maxRepsConfigs: [],
+            repetitionsConfigs: [],
+            maxRepetitionsConfigs: [],
             restTimeConfigs: [],
             maxRestTimeConfigs: [],
             nrOfSetsConfigs: [],
@@ -129,11 +129,11 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
         if (item.hasOwnProperty('max_weight_configs')) {
             configs.maxWeightConfigs = item.max_weight_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
-        if (item.hasOwnProperty('reps_configs')) {
-            configs.repsConfigs = item.reps_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+        if (item.hasOwnProperty('repetitions_configs')) {
+            configs.repetitionsConfigs = item.repetitions_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
-        if (item.hasOwnProperty('max_reps_configs')) {
-            configs.maxRepsConfigs = item.max_reps_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+        if (item.hasOwnProperty('max_repetitions_configs')) {
+            configs.maxRepetitionsConfigs = item.max_repetitions_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
         if (item.hasOwnProperty('set_nr_configs')) {
             configs.nrOfSetsConfigs = item.set_nr_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));

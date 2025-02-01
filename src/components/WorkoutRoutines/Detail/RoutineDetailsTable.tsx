@@ -182,7 +182,7 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
                         {formatContent(setConfig, setConfig?.nrOfSets, setConfig?.maxNrOfSets)}
                     </TableCell>
                     <TableCell align={'center'} sx={sx}>
-                        {formatContent(setConfig, setConfig?.reps, setConfig?.maxReps)}
+                        {formatContent(setConfig, setConfig?.repetitions, setConfig?.maxRepetitions)}
                     </TableCell>
                     <TableCell align={'center'} sx={sx}>
                         {formatContent(setConfig, setConfig?.weight, setConfig?.maxWeight)}
@@ -238,8 +238,8 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
                         {logs.map((log, index) =>
                             <Stack key={index}>
                                 <span>
-                                    {log.reps ?? '-/-'}
-                                    {getComparisonIcon(log.reps, setConfig?.reps, setConfig?.maxReps)}
+                                    {log.repetitions ?? '-/-'}
+                                    {getComparisonIcon(log.repetitions, setConfig?.repetitions, setConfig?.maxRepetitions)}
                                 </span>
                             </Stack>
                         )}

@@ -64,7 +64,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
     const handleSubmit = async (values: { logs: LogEntryForm[] }) => {
         const iteration = hasNoIterationData ? null : iterationDayData[0].iteration;
         const data = values.logs
-            .filter(l => l.rir !== '' || l.reps !== '' || l.weight !== '')
+            .filter(l => l.rir !== '' || l.repetitions !== '' || l.weight !== '')
             .map(l => ({
                     date: selectedDate.toISO(),
                     iteration: iteration,
@@ -76,9 +76,9 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                     rir: l.rir !== '' ? l.rir : null,
                     rir_target: l.rirTarget !== '' ? l.rirTarget : null,
 
-                    repetitions_unit: l.repsUnit?.id,
-                    repetitions: l.reps !== '' ? l.reps : null,
-                    repetitions_target: l.repsTarget !== '' ? l.repsTarget : null,
+                    repetitions_unit: l.repetitionsUnit?.id,
+                    repetitions: l.repetitions !== '' ? l.repetitions : null,
+                    repetitions_target: l.repetitionsTarget !== '' ? l.repetitionsTarget : null,
 
                     weight_unit: l.weightUnit?.id,
                     weight: l.weight !== '' ? l.weight : null,
@@ -137,14 +137,14 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
 
                     initialValues.logs.push({
                         exercise: config.exercise!,
-                        repsUnit: config.repsUnit!,
+                        repetitionsUnit: config.repetitionsUnit!,
                         weightUnit: config.weightUnit!,
                         slotEntry: config.slotEntryId,
 
                         rir: !hasNoIterationData && config.rir !== null ? config.rir : '',
                         rirTarget: !hasNoIterationData && config.rir !== null ? config.rir : '',
-                        reps: !hasNoIterationData && config.reps !== null ? config.reps : '',
-                        repsTarget: !hasNoIterationData && config.reps !== null ? config.reps : '',
+                        repetitions: !hasNoIterationData && config.repetitions !== null ? config.repetitions : '',
+                        repetitionsTarget: !hasNoIterationData && config.repetitions !== null ? config.repetitions : '',
                         weight: !hasNoIterationData && config.weight !== null ? config.weight : '',
                         weightTarget: !hasNoIterationData && config.weight !== null ? config.weight : ''
                     });
@@ -194,7 +194,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                                     size="small"
                                                     onClick={() => insert(index, {
                                                         exercise: formik.values.logs[index].exercise,
-                                                        reps: formik.values.logs[index].reps,
+                                                        reps: formik.values.logs[index].repetitions,
                                                         weight: formik.values.logs[index].weight
                                                     })}
                                                 >
@@ -239,9 +239,9 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                                             endAdornment:
                                                                 <InputAdornment position="end">
                                                                     {/* Only show reps that are not "repetitions" */}
-                                                                    {formik.values.logs[index].repsUnit?.id !== REP_UNIT_REPETITIONS
+                                                                    {formik.values.logs[index].repetitionsUnit?.id !== REP_UNIT_REPETITIONS
                                                                         ? <Typography variant={'caption'}>
-                                                                            {formik.values.logs[index].repsUnit?.name}
+                                                                            {formik.values.logs[index].repetitionsUnit?.name}
                                                                         </Typography>
                                                                         : null}
                                                                 </InputAdornment>

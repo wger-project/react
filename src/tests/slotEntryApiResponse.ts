@@ -9,7 +9,7 @@ export const testSlotEntryApiResponse = {
     "config": null,
     "repetition_unit": 1,
     "repetition_rounding": "1.00",
-    "reps_configs": [
+    "repetitions_configs": [
         {
             "id": 142,
             "slot_entry": 143,
@@ -22,7 +22,7 @@ export const testSlotEntryApiResponse = {
             "requirements": null
         }
     ],
-    "max_reps_configs": [
+    "max_repetitions_configs": [
         {
             "id": 142,
             "slot_entry": 143,

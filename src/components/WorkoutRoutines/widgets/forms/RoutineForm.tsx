@@ -287,7 +287,7 @@ export const DefaultRoundingMenu = (props: { routineId: number }) => {
                         routineId={props.routineId}
                         rounding="reps"
                         editProfile={true}
-                        initialValue={userProfileQuery.data!.repsRounding}
+                        initialValue={userProfileQuery.data!.repetitionsRounding}
                     />
                 </MenuItem>
             </Menu>

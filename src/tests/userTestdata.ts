@@ -9,7 +9,7 @@ export const testProfileDataVerified = new Profile({
     useMetric: true,
     height: 180,
     weightRounding: null,
-    repsRounding: null,
+    repetitionsRounding: null,
 });
 
 export const testProfileDataNotVerified = new Profile({
@@ -21,7 +21,7 @@ export const testProfileDataNotVerified = new Profile({
     useMetric: true,
     height: 180,
     weightRounding: null,
-    repsRounding: null,
+    repetitionsRounding: null,
 });
 
 export const testProfileApiResponse = {
@@ -36,5 +36,5 @@ export const testProfileApiResponse = {
     weight_unit: 'kg',
     height: 180,
     weight_rounding: null,
-    reps_rounding: null,
+    repetitions_rounding: null,
 };

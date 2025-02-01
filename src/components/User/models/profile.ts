@@ -5,7 +5,7 @@ export interface EditProfileParams {
     height: number,
     weight_unit: 'kg' | 'lb',
     weight_rounding: number | null,
-    reps_rounding: number | null,
+    repetitions_rounding: number | null,
 }
 
 export class Profile {
@@ -17,7 +17,7 @@ export class Profile {
     public useMetric: boolean;
     public height: number;
     public weightRounding: number | null;
-    public repsRounding: number | null;
+    public repetitionsRounding: number | null;
 
     constructor(data: {
         username: string,
@@ -28,7 +28,7 @@ export class Profile {
         useMetric: boolean,
         height: number,
         weightRounding: number | null,
-        repsRounding: number | null,
+        repetitionsRounding: number | null,
     }) {
         this.username = data.username;
         this.email = data.email;
@@ -38,7 +38,7 @@ export class Profile {
         this.useMetric = data.useMetric;
         this.height = data.height;
         this.weightRounding = data.weightRounding;
-        this.repsRounding = data.repsRounding;
+        this.repetitionsRounding = data.repetitionsRounding;
     }
 }
 
@@ -52,7 +52,7 @@ export class ProfileAdapter implements Adapter<Profile> {
         useMetric: item.weight_unit === 'kg',
         height: item.height,
         weightRounding: item.weight_rounding !== null ? parseFloat(item.weight_rounding) : null,
-        repsRounding: item.reps_rounding !== null ? parseFloat(item.reps_rounding) : null,
+        repetitionsRounding: item.repetitions_rounding !== null ? parseFloat(item.repetitions_rounding) : null,
     });
 
 
@@ -61,6 +61,6 @@ export class ProfileAdapter implements Adapter<Profile> {
         height: item.height,
         weight_unit: item.useMetric ? 'kg' : 'lb',
         weight_rounding: item.weightRounding,
-        reps_rounding: item.repsRounding,
+        repetitions_rounding: item.repetitionsRounding,
     });
 }

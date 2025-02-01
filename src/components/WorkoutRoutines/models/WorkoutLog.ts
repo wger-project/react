@@ -7,13 +7,13 @@ import { Adapter } from "utils/Adapter";
 
 export interface LogEntryForm {
     exercise: Exercise | null;
-    repsUnit: RepetitionUnit | null;
+    repetitionsUnit: RepetitionUnit | null;
     weightUnit: WeightUnit | null;
     slotEntry: number | null;
     rir: number | string;
     rirTarget: number | string | null;
-    reps: number | string;
-    repsTarget: number | string | null;
+    repetitions: number | string;
+    repetitionsTarget: number | string | null;
     weight: number | string;
     weightTarget: number | string | null;
 }
@@ -28,8 +28,8 @@ export class WorkoutLog {
 
     public repetitionUnitObj: RepetitionUnit | null;
     public repetitionUnitId: number;
-    public reps: number | null;
-    public repsTarget: number | null;
+    public repetitions: number | null;
+    public repetitionsTarget: number | null;
 
     public weightUnitObj: WeightUnit | null;
     public weightUnitId: number;
@@ -80,8 +80,8 @@ export class WorkoutLog {
 
         this.repetitionUnitObj = data.repetitionsUnit || null;
         this.repetitionUnitId = data.repetitionsUnitId;
-        this.reps = data.repetitions;
-        this.repsTarget = data.repetitionsTarget || null;
+        this.repetitions = data.repetitions;
+        this.repetitionsTarget = data.repetitionsTarget || null;
 
         this.weightUnitObj = data.weightUnit || null;
         this.weightUnitId = data.weightUnitId;
@@ -132,8 +132,8 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         exercise: item.exerciseId,
 
         repetitions_unit: item.repetitionUnitId,
-        repetitions: item.reps,
-        repetitions_target: item.repsTarget,
+        repetitions: item.repetitions,
+        repetitions_target: item.repetitionsTarget,
 
         weight_unit: item.weightUnitId,
         weight: item.weight,

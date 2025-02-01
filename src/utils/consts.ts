@@ -84,7 +84,7 @@ export enum ApiPath {
     ROUTINE = 'routine',
     WEIGHT_CONFIG = 'weight-config',
     MAX_WEIGHT_CONFIG = 'max-weight-config',
-    REPS_CONFIG = 'reps-config',
+    REPETITIONS_CONFIG = 'reps-config',
     MAX_REPS_CONFIG = 'max-reps-config',
     RIR_CONFIG = 'rir-config',
     MAX_RIR_CONFIG = 'max-rir-config',

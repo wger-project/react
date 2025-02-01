@@ -27,7 +27,7 @@ describe("Test the exercise contribution query", () => {
             useMetric: true,
             height: 180,
             weightRounding: null,
-            repsRounding: null,
+            repetitionsRounding: null,
         });
     });
 

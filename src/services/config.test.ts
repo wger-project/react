@@ -1,25 +1,25 @@
 import {
-    addMaxRepsConfig,
+    addMaxRepetitionsConfig,
     addMaxRestConfig,
     addMaxWeightConfig,
     addNrOfSetsConfig,
-    addRepsConfig,
+    addRepetitionsConfig,
     addRestConfig,
     addRirConfig,
     addWeightConfig,
-    deleteMaxRepsConfig,
+    deleteMaxRepetitionsConfig,
     deleteMaxRestConfig,
     deleteMaxWeightConfig,
     deleteNrOfSetsConfig,
-    deleteRepsConfig,
+    deleteRepetitionsConfig,
     deleteRestConfig,
     deleteRirConfig,
     deleteWeightConfig,
-    editMaxRepsConfig,
+    editMaxRepetitionsConfig,
     editMaxRestConfig,
     editMaxWeightConfig,
     editNrOfSetsConfig,
-    editRepsConfig,
+    editRepetitionsConfig,
     editRestConfig,
     editRirConfig,
     editWeightConfig
@@ -97,39 +97,39 @@ describe('Config Service - Edit Functions', () => {
     });
 
     it('should call editBaseConfig with correct params for editRepsConfig', async () => {
-        await editRepsConfig(mockEditData);
+        await editRepetitionsConfig(mockEditData);
         expect(editBaseConfig).toHaveBeenCalledTimes(1);
-        expect(editBaseConfig).toHaveBeenCalledWith(mockEditData, ApiPath.REPS_CONFIG);
+        expect(editBaseConfig).toHaveBeenCalledWith(mockEditData, ApiPath.REPETITIONS_CONFIG);
     });
 
     it('should call addBaseConfig with correct params for addRepsConfig', async () => {
-        await addRepsConfig(mockAddData);
+        await addRepetitionsConfig(mockAddData);
         expect(addBaseConfig).toHaveBeenCalledTimes(1);
-        expect(addBaseConfig).toHaveBeenCalledWith(mockAddData, ApiPath.REPS_CONFIG);
+        expect(addBaseConfig).toHaveBeenCalledWith(mockAddData, ApiPath.REPETITIONS_CONFIG);
     });
 
     it('should call deleteBaseConfig with correct params for deleteRepsConfig', async () => {
         const id = 1;
-        await deleteRepsConfig(id);
+        await deleteRepetitionsConfig(id);
         expect(deleteBaseConfig).toHaveBeenCalledTimes(1);
-        expect(deleteBaseConfig).toHaveBeenCalledWith(id, ApiPath.REPS_CONFIG);
+        expect(deleteBaseConfig).toHaveBeenCalledWith(id, ApiPath.REPETITIONS_CONFIG);
     });
 
     it('should call editBaseConfig with correct params for editMaxRepsConfig', async () => {
-        await editMaxRepsConfig(mockEditData);
+        await editMaxRepetitionsConfig(mockEditData);
         expect(editBaseConfig).toHaveBeenCalledTimes(1);
         expect(editBaseConfig).toHaveBeenCalledWith(mockEditData, ApiPath.MAX_REPS_CONFIG);
     });
 
     it('should call addBaseConfig with correct params for addMaxRepsConfig', async () => {
-        await addMaxRepsConfig(mockAddData);
+        await addMaxRepetitionsConfig(mockAddData);
         expect(addBaseConfig).toHaveBeenCalledTimes(1);
         expect(addBaseConfig).toHaveBeenCalledWith(mockAddData, ApiPath.MAX_REPS_CONFIG);
     });
 
     it('should call deleteBaseConfig with correct params for deleteMaxRepsConfig', async () => {
         const id = 1;
-        await deleteMaxRepsConfig(id);
+        await deleteMaxRepetitionsConfig(id);
         expect(deleteBaseConfig).toHaveBeenCalledTimes(1);
         expect(deleteBaseConfig).toHaveBeenCalledWith(id, ApiPath.MAX_REPS_CONFIG);
     });

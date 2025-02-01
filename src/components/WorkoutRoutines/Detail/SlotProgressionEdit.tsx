@@ -110,8 +110,8 @@ export const SlotProgressionEdit = () => {
                         />
                         <ProgressionForm
                             type="reps"
-                            configs={slotEntry.repsConfigs}
-                            configsMax={slotEntry.maxRepsConfigs}
+                            configs={slotEntry.repetitionsConfigs}
+                            configsMax={slotEntry.maxRepetitionsConfigs}
                             slotEntryId={slotEntry.id}
                             routineId={routineId}
                             iterations={iterations}

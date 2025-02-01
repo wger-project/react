@@ -65,7 +65,7 @@ const LogTableRow = (props: { log: WorkoutLog }) => {
             {DateTime.fromJSDate(props.log.date).toLocaleString(DateTime.DATE_MED)}
         </TableCell>
         <TableCell>
-            {props.log.reps}
+            {props.log.repetitions}
         </TableCell>
         <TableCell>
             {props.log.weight}{props.log.weightUnitObj?.name}
@@ -208,8 +208,8 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
     // make much sense
     let result: Map<number, WorkoutLog[]>;
     result = props.data.reduce(function (r, a) {
-        r.set(a.reps, r.get(a.reps) || []);
-        r.get(a.reps)!.push(a);
+        r.set(a.repetitions, r.get(a.repetitions) || []);
+        r.get(a.repetitions)!.push(a);
         return r;
     }, new Map());
 

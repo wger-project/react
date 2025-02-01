@@ -127,7 +127,7 @@ export const SlotEntryDetails = (props: {
                 <Grid
                     key={`reps-config-${props.slotEntry.id}`}
                     size={{ xs: 12, sm: 3 }}>
-                    {getConfigComponent('reps', props.slotEntry.repsConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('reps', props.slotEntry.repetitionsConfigs, props.routineId, props.slotEntry.id)}
                 </Grid>
             </React.Fragment>
 
@@ -171,10 +171,10 @@ export const SlotEntryDetails = (props: {
 
 
                 <Grid size={{ xs: 6, sm: 2 }} offset={{ sm: 4 }}>
-                    {getConfigComponent('reps', props.slotEntry.repsConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('reps', props.slotEntry.repetitionsConfigs, props.routineId, props.slotEntry.id)}
                 </Grid>
                 <Grid size={{ xs: 6, sm: 2 }}>
-                    {getConfigComponent('max-reps', props.slotEntry.maxRepsConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('max-reps', props.slotEntry.maxRepetitionsConfigs, props.routineId, props.slotEntry.id)}
                 </Grid>
                 <Grid size={{ xs: 12, sm: 4 }}>
                     <SlotEntryRepetitionUnitField slotEntry={props.slotEntry} routineId={props.routineId} />

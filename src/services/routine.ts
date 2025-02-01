@@ -62,7 +62,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         for (const slotData of dayData.slots) {
             for (const setData of slotData.setConfigs) {
                 setData.exercise = exerciseMap[setData.exerciseId];
-                setData.repsUnit = repsUnits.find(r => r.id === setData.repsUnitId) ?? null;
+                setData.repetitionsUnit = repsUnits.find(r => r.id === setData.repetitionsUnitId) ?? null;
                 setData.weightUnit = weightUnits.find(w => w.id === setData.weightUnitId) ?? null;
             }
 
@@ -75,7 +75,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         for (const slotData of dayData.slots) {
             for (const setData of slotData.setConfigs) {
                 setData.exercise = exerciseMap[setData.exerciseId];
-                setData.repsUnit = repsUnits.find(r => r.id === setData.repsUnitId) ?? null;
+                setData.repetitionsUnit = repsUnits.find(r => r.id === setData.repetitionsUnitId) ?? null;
                 setData.weightUnit = weightUnits.find(w => w.id === setData.weightUnitId) ?? null;
             }
 
