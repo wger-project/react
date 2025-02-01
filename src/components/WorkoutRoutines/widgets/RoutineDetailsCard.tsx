@@ -35,7 +35,11 @@ import { makeLink, WgerLink } from "utils/url";
 export const RoutineDetailsCard = () => {
 
     const params = useParams<{ routineId: string }>();
-    const routineId = params.routineId ? parseInt(params.routineId) : 0;
+    const routineId = parseInt(params.routineId ?? '');
+    if (Number.isNaN(routineId)) {
+        return <p>Please pass an integer as the routine id.</p>;
+    }
+
     const routineQuery = useRoutineDetailQuery(routineId);
 
     return <Container maxWidth="lg">

@@ -13,7 +13,11 @@ import { useParams } from "react-router-dom";
 export const RoutineDetail = () => {
     const { t } = useTranslation();
     const params = useParams<{ routineId: string }>();
-    const routineId = params.routineId ? parseInt(params.routineId) : 0;
+    const routineId = parseInt(params.routineId ?? '');
+    if (Number.isNaN(routineId)) {
+        return <p>Please pass an integer as the routine id.</p>;
+    }
+
     const routineQuery = useRoutineDetailQuery(routineId);
 
     const routine = routineQuery.data;

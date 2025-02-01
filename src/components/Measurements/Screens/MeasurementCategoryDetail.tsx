@@ -11,7 +11,11 @@ import { useParams } from "react-router-dom";
 
 export const MeasurementCategoryDetail = () => {
     const params = useParams<{ categoryId: string }>();
-    const categoryId = parseInt(params.categoryId!);
+    const categoryId = parseInt(params.categoryId ?? '');
+    if (Number.isNaN(categoryId)) {
+        return <p>Please pass an integer as the category id.</p>;
+    }
+
     const categoryQuery = useMeasurementsQuery(categoryId);
 
     if (categoryQuery.isLoading) {
