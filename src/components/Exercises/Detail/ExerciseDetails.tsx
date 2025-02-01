@@ -21,7 +21,11 @@ export const ExerciseDetails = () => {
     const [editMode, setEditMode] = useState<boolean>(false);
 
     const params = useParams<{ exerciseId: string }>();
-    const exerciseId = params.exerciseId ? parseInt(params.exerciseId) : 0;
+    const exerciseId = parseInt(params.exerciseId ?? '');
+    if (Number.isNaN(exerciseId)) {
+        return <p>Please pass an integer as the exercise id.</p>;
+    }
+
 
     const { i18n } = useTranslation();
     const navigate = useNavigate();
