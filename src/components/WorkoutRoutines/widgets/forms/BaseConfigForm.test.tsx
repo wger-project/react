@@ -74,7 +74,6 @@ describe('EntryDetailsField Component', () => {
                     value: 5,
                     operation: '+',
                     step: 'abs',
-                    needLogToApply: true,
                     repeat: false,
                     requirements: null,
                 });
@@ -137,7 +136,6 @@ describe('EntryDetailsField Component', () => {
                     value: 5,
                     operation: '+',
                     step: 'abs',
-                    needLogToApply: true,
                     repeat: false,
                     requirements: null,
                 });

@@ -224,7 +224,6 @@ export const ProgressionForm = (props: {
             operation: data.operation,
             step: data.step,
             repeat: data.repeat,
-            need_log_to_apply: false,
             requirements: { rules: data.requirements ?? [] }
         }));
         const addList: AddBaseConfigParams[] = data.filter(data => data.id === null && data.value !== '').map(data => ({
@@ -234,7 +233,6 @@ export const ProgressionForm = (props: {
             operation: data.operation,
             step: data.step,
             repeat: data.repeat,
-            need_log_to_apply: false,
             requirements: { rules: data.requirements ?? [] }
         }));
         // Items to delete, also includes all where the value is empty
@@ -254,7 +252,6 @@ export const ProgressionForm = (props: {
             operation: data.operation,
             step: data.step,
             repeat: data.repeat,
-            need_log_to_apply: false,
             requirements: { rules: data.requirements ?? [] }
         }));
         const addListMax: AddBaseConfigParams[] = data.filter(data => data.idMax === null && data.valueMax !== '').map(data => ({
@@ -264,7 +261,6 @@ export const ProgressionForm = (props: {
             operation: data.operation,
             step: data.stepMax,
             repeat: data.repeat,
-            need_log_to_apply: false,
             requirements: { rules: data.requirements ?? [] }
         }));
         // Items to delete, also includes all where the value is empty

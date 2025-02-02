@@ -128,7 +128,6 @@ describe('Tests for the ProgressionForm', () => {
                 {
                     "id": 123,
                     "iteration": 1,
-                    "need_log_to_apply": false,
                     "operation": "r",
                     "repeat": false,
                     "requirements": { "rules": [] },
@@ -139,7 +138,6 @@ describe('Tests for the ProgressionForm', () => {
                 {
                     "id": 456,
                     "iteration": 2,
-                    "need_log_to_apply": false,
                     "operation": "+",
                     "repeat": true,
                     "requirements": { "rules": [] },
@@ -157,7 +155,6 @@ describe('Tests for the ProgressionForm', () => {
                 {
                     "id": 124,
                     "iteration": 1,
-                    "need_log_to_apply": false,
                     "operation": "r",
                     "repeat": false,
                     "requirements": { "rules": [] },
@@ -168,7 +165,6 @@ describe('Tests for the ProgressionForm', () => {
                 {
                     "id": 457,
                     "iteration": 2,
-                    "need_log_to_apply": false,
                     "operation": "+",
                     "repeat": true,
                     "requirements": { "rules": [] },

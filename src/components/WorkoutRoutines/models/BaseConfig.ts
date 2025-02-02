@@ -64,7 +64,6 @@ export class BaseConfig {
     value: number;
     operation: OperationType;
     step: StepType;
-    needLogToApply: boolean;
     repeat: boolean;
     requirements: RuleRequirements | null;
 
@@ -76,7 +75,6 @@ export class BaseConfig {
         value: number;
         operation?: OperationType;
         step?: StepType;
-        needLogToApply?: boolean;
         repeat?: boolean;
         requirements?: RuleRequirements | null;
     }) {
@@ -86,7 +84,6 @@ export class BaseConfig {
         this.value = data.value;
         this.operation = data.operation ?? 'r';
         this.step = data.step ?? 'abs';
-        this.needLogToApply = data.needLogToApply ?? false;
         this.repeat = data.repeat ?? false;
         this.requirements = data.requirements ?? null;
     }
@@ -104,7 +101,6 @@ export class BaseConfigAdapter implements Adapter<BaseConfig> {
         value: parseFloat(item.value),
         operation: item.operation,
         step: item.step,
-        needLogToApply: item.need_log_to_apply,
         repeat: item.repeat,
         requirements: item.requirements
     });
@@ -115,7 +111,6 @@ export class BaseConfigAdapter implements Adapter<BaseConfig> {
         value: item.value,
         operation: item.operation,
         step: item.step,
-        need_log_to_apply: item.needLogToApply,
         repeat: item.repeat,
         requirements: item.requirements,
     });

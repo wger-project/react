@@ -284,7 +284,6 @@ export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotEntryId?
                 slot_entry: props.slotEntryId!,
                 iteration: 1,
                 operation: OPERATION_REPLACE,
-                need_log_to_apply: false,
                 ...data
             });
         }
@@ -332,7 +331,6 @@ export const AddEntryDetailsButton = (props: {
             iteration: props.iteration,
             value: 0,
             operation: OPERATION_REPLACE,
-            need_log_to_apply: false
         });
     };
 
@@ -469,30 +467,4 @@ export const EntryDetailsStepField = (props: {
     </>);
 };
 
-export const ConfigDetailsNeedLogsToApplyField = (props: {
-    config: BaseConfig,
-    routineId: number,
-    slotEntryId: number,
-    type: ConfigType,
-    disable?: boolean
-}) => {
-
-    const disable = props.disable ?? false;
-
-    const { edit: editQuery } = QUERY_MAP[props.type];
-    const editQueryHook = editQuery(props.routineId);
-
-    const [value, setValue] = useState<boolean>(props.config?.needLogToApply);
-
-    const handleData = (newValue: boolean) => {
-        setValue(newValue);
-        editQueryHook.mutate({ id: props.config.id, need_log_to_apply: newValue, });
-    };
-
-    return <Switch
-        checked={value}
-        onChange={e => handleData(e.target.checked)}
-        disabled={disable || editQueryHook.isPending}
-    />;
-};
 */
