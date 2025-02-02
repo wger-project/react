@@ -1,1 +1,19 @@
-{}
+{
+    "weight": "Vikt",
+    "timeOfDay": "Tid på dygnet",
+    "height": "Längd",
+    "date": "Datum",
+    "cm": "cm",
+    "edit": "Ändra",
+    "delete": "Ta bort",
+    "deleteConfirmation": "Är du säker på att du vill ta bort \"{{name}}\"?",
+    "add": "Lägg till",
+    "difference": "Skillnad",
+    "days": "Dagar",
+    "all": "Alla",
+    "lastYear": "Förra året",
+    "lastHalfYear": "Senaste 6 månaderna",
+    "lastMonth": "Förra månaden",
+    "lastWeek": "Förra veckan",
+    "close": "Stäng"
+}
