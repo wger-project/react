@@ -55,7 +55,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
         logs: yup.array().of(
             yup.object().shape({
                 rir: yup.number().nullable(),
-                reps: yup.number().typeError(t('forms.enterNumber')).nullable(),
+                repetitions: yup.number().typeError(t('forms.enterNumber')).nullable(),
                 weight: yup.number().typeError(t('forms.enterNumber')).nullable()
             })
         ),
@@ -105,8 +105,8 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                     ...log,
                     weight: '',
                     weightTarget: '',
-                    reps: '',
-                    repsTarget: '',
+                    repetitions: '',
+                    repetitionsTarget: '',
                     rir: '',
                     rirTarget: '',
                     exercise: exerciseResponse.exercise!,
@@ -194,7 +194,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                                     size="small"
                                                     onClick={() => insert(index, {
                                                         exercise: formik.values.logs[index].exercise,
-                                                        reps: formik.values.logs[index].repetitions,
+                                                        repetitions: formik.values.logs[index].repetitions,
                                                         weight: formik.values.logs[index].weight
                                                     })}
                                                 >
@@ -231,8 +231,8 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                         </>}
                                         <Grid size={4}>
                                             <WgerTextField
-                                                fieldName={`logs.${index}.reps`}
-                                                title={t('routines.reps')}
+                                                fieldName={`logs.${index}.repetitions`}
+                                                title={t('server.repetitions')}
                                                 fieldProps={{
                                                     slotProps: {
                                                         input: {
