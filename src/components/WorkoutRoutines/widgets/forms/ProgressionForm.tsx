@@ -51,7 +51,7 @@ export const ProgressionForm = (props: {
         case "reps":
             apiPath = ApiPath.REPETITIONS_CONFIG;
             apiPathMax = ApiPath.MAX_REPS_CONFIG;
-            title = t('routines.reps');
+            title = t('server.repetitions');
             break;
         case "sets":
             apiPath = ApiPath.NR_OF_SETS_CONFIG;
