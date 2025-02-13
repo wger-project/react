@@ -15,5 +15,35 @@
     "lastHalfYear": "Senaste 6 månaderna",
     "lastMonth": "Förra månaden",
     "lastWeek": "Förra veckan",
-    "close": "Stäng"
+    "close": "Stäng",
+    "submit": "Skicka",
+    "licenses": {
+        "derivativeSourceUrl": "Länk till original, om detta är ett härlett verk",
+        "originalObjectUrl": "Länk till källa, om sådan finns",
+        "originalTitle": "Rubrik"
+    },
+    "workout": "Träningspass",
+    "loading": "Laddar...",
+    "nutritionalPlan": "Kostplan",
+    "addEntry": "Registrera",
+    "currentWeight": "Nuvarande vikt",
+    "seeDetails": "Visa detaljer",
+    "actions": "Åtgärder",
+    "nothingHereYet": "Här var det tomt...",
+    "nothingHereYetAction": "Tryck på knappen för att fortsätta",
+    "notes": "Anteckningar",
+    "value": "Värde",
+    "unit": "Enhet",
+    "alsoSearchEnglish": "Sök även efter namn på engelska",
+    "copyToClipboard": "Kopiera till urklipp",
+    "filters": "Filter",
+    "exercises": {
+        "replacements": "Ersättningar",
+        "noReplacementSelected": " Ingen övning vald",
+        "contributeExercise": "Lägg till en övning",
+        "step1HeaderBasics": "Grunder på engelska",
+        "variations": "Variationer",
+        "notEnoughRightsHeader": "Du kan inte lägga till övningar",
+        "replacementsSearch": "Sök efter en övning eller klistra in ett ID i fältet och klicka på knappen \"hämta\"."
+    }
 }
