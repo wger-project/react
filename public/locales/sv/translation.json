@@ -20,7 +20,9 @@
     "licenses": {
         "derivativeSourceUrl": "Länk till original, om detta är ett härlett verk",
         "originalObjectUrl": "Länk till källa, om sådan finns",
-        "originalTitle": "Rubrik"
+        "originalTitle": "Rubrik",
+        "authors": "Författare",
+        "authorProfile": "Länk till författares websida eller profil, om tillgänglig"
     },
     "workout": "Träningspass",
     "loading": "Laddar...",
