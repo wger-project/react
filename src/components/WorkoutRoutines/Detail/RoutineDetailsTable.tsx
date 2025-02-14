@@ -168,7 +168,7 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
                 borderBottomWidth: showLogs ? 0 : null
             }}>{slotEntry.exercise?.getTranslation(language).name}</TableCell>
             {iterations.map((iteration) => {
-                const setConfig = props.routine.getSetConfigData(day.id, iteration, slot.id);
+                const setConfig = props.routine.getSetConfigData(day.id, iteration, slotEntry.id);
 
                 function formatContent(setConfig: SetConfigData | null, value: number | undefined | null, maxValue: number | undefined | null) {
                     return <>

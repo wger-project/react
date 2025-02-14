@@ -144,7 +144,7 @@ export class Routine {
     /*
      * Returns the SetConfigData for the given dayId, iteration and slotId
      */
-    getSetConfigData(dayId: number, iteration: number, slotId: number) {
+    getSetConfigData(dayId: number, iteration: number, slotEntryId: number) {
         const dayData = this.dayDataAllIterations.find(dayData =>
             dayData.day?.id === dayId && dayData.iteration === iteration
         );
@@ -153,7 +153,7 @@ export class Routine {
             return null;
         }
 
-        const slotData = dayData.slots.find(slotData => slotData.setConfigs.some(setConfig => setConfig.slotEntryId === slotId));
+        const slotData = dayData.slots.find(slotData => slotData.setConfigs.some(setConfig => setConfig.slotEntryId === slotEntryId));
 
         return slotData !== undefined && slotData.setConfigs.length > 0 ? slotData.setConfigs[0] : null;
     }
