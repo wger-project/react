@@ -32,7 +32,6 @@ type RoutineConstructorParams = {
     isPublic?: boolean;
     days?: Day[];
     logData?: RoutineLogData[];
-    dayDataCurrentIteration?: RoutineDayData[];
     dayDataAllIterations?: RoutineDayData[];
     stats?: RoutineStatsData;
 };
@@ -50,7 +49,6 @@ export class Routine {
 
     days: Day[] = [];
     logData: RoutineLogData[] = [];
-    dayDataCurrentIteration: RoutineDayData[] = [];
     dayDataAllIterations: RoutineDayData[] = [];
     stats: RoutineStatsData = new RoutineStatsData();
 
@@ -67,9 +65,14 @@ export class Routine {
 
         this.days = data.days ?? [];
         this.logData = data.logData ?? [];
-        this.dayDataCurrentIteration = data.dayDataCurrentIteration ?? [];
         this.dayDataAllIterations = data.dayDataAllIterations ?? [];
         this.stats = data.stats ?? new RoutineStatsData();
+    }
+
+    get dayDataCurrentIteration() {
+        const iteration = this.getIteration() ?? 1;
+
+        return this.dayDataAllIterations.filter(dayData => dayData.iteration === iteration);
     }
 
     get groupedDayDataByIteration() {
@@ -139,6 +142,17 @@ export class Routine {
      */
     get cycleLength() {
         return this.dayDataCurrentIteration.length;
+    }
+
+    getIteration(date?: Date | undefined) {
+        const dateToCheck = date ?? new Date();
+
+        const currentDayData = this.dayDataAllIterations.find(dayData =>
+            dayData.date.getDate() === dateToCheck.getDate() &&
+            dayData.date.getMonth() === dateToCheck.getMonth() &&
+            dayData.date.getFullYear() === dateToCheck.getFullYear()
+        );
+        return currentDayData ? currentDayData.iteration : null;
     }
 
     /*

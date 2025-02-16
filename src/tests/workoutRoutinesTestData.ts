@@ -156,9 +156,9 @@ const testRestDay = new Day({
     config: null
 });
 
-export const testRoutineDataCurrentIteration1 = [
+export const testRoutineDayData1 = [
     new RoutineDayData(
-        5,
+        1,
         new Date('2024-05-05'),
         '',
         testDayLegs,
@@ -224,8 +224,7 @@ export const testRoutine1 = new Routine({
     isTemplate: false,
     isPublic: false,
     days: [testDayLegs, testRestDay, testDayPull],
-    dayDataAllIterations: testRoutineDataCurrentIteration1,
-    dayDataCurrentIteration: testRoutineDataCurrentIteration1,
+    dayDataAllIterations: testRoutineDayData1,
     logData: [testRoutineLogData],
 });
 
@@ -362,7 +361,7 @@ export const testRepUnit2 = new RepetitionUnit(
     'minutes',
 );
 
-export const responseRoutineIterationDataToday = [
+export const responseRoutineDayData = [
     {
         "iteration": 42,
         "date": "2024-04-01",

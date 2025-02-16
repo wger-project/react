@@ -5,7 +5,7 @@ import {
     testMuscleDeltoid,
     testMuscleRectusAbdominis
 } from "tests/exerciseTestdata";
-import { testRoutine1 } from "tests/workoutRoutinesTestData";
+import { testRoutine1, testRoutineDayData1 } from "tests/workoutRoutinesTestData";
 
 describe('Routine model tests', () => {
 
@@ -73,5 +73,18 @@ describe('Routine model tests', () => {
 
         // Assert
         expect(muscles).toEqual([]);
+    });
+
+    test('correctly calculates the iteration for a date', () => {
+
+        // Assert
+        expect(routine.getIteration(new Date('2024-01-01'))).toEqual(null);
+        expect(routine.getIteration(new Date('2024-05-05'))).toEqual(1);
+    });
+
+    test('correctly returns the DayData for an iteration', () => {
+
+        // Assert
+        expect(routine.dayDataCurrentIteration).toEqual(testRoutineDayData1);
     });
 });

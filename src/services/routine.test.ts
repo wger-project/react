@@ -4,12 +4,12 @@ import { Routine } from "components/WorkoutRoutines/models/Routine";
 import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import { getRoutinesShallow } from "services";
-import { getRoutineDayDataCurrentIteration } from "services/routine";
+import { getRoutineDayDataAllIterations } from "services/routine";
 import { getRoutineLogs } from "services/workoutLogs";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "services/workoutUnits";
 import {
     responseApiWorkoutRoutine,
-    responseRoutineIterationDataToday,
+    responseRoutineDayData,
     responseRoutineLogs,
     testRepUnit1,
     testRepUnit2,
@@ -20,7 +20,6 @@ import {
 jest.mock("axios");
 jest.mock("services/workoutUnits");
 jest.mock("services/exercise");
-
 
 describe("workout routine service tests", () => {
 
@@ -119,13 +118,13 @@ describe("workout routine service tests", () => {
         ]);
     });
 
-    test('GET the routine day data for today', async () => {
+    test('GET the routine day data', async () => {
         // Arrange
         // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineIterationDataToday }));
+        axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineDayData }));
 
         // Act
-        const result = await getRoutineDayDataCurrentIteration(1);
+        const result = await getRoutineDayDataAllIterations(1);
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
