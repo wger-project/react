@@ -187,6 +187,7 @@ export class NutritionalPlanAdapter implements Adapter<NutritionalPlan> {
             item.goal_protein,
             item.goal_carbohydrates,
             item.goal_fiber,
+            null, // sodium
             item.goal_fat,
         );
     }
