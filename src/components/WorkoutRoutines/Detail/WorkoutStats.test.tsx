@@ -1,9 +1,10 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
 import { WorkoutStats } from "components/WorkoutRoutines/Detail/WorkoutStats";
+import { RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { getExercises, getLanguages, getMuscles, getRoutine } from "services";
+import { getExercises, getLanguages, getMuscles, getRoutine, getRoutineStatisticsData } from "services";
 import { testExercises, testLanguages, testMuscles } from "tests/exerciseTestdata";
 import { testQueryClient } from "tests/queryClient";
 import { testRoutine1 } from "tests/workoutRoutinesTestData";
@@ -15,6 +16,7 @@ const { ResizeObserver } = window;
 describe("Smoke tests the WorkoutStats component", () => {
 
     beforeEach(() => {
+        (getRoutineStatisticsData as jest.Mock).mockResolvedValue(new RoutineStatsData());
         (getRoutine as jest.Mock).mockResolvedValue(testRoutine1);
         (getLanguages as jest.Mock).mockResolvedValue(testLanguages);
         (getMuscles as jest.Mock).mockResolvedValue(testMuscles);
@@ -49,6 +51,7 @@ describe("Smoke tests the WorkoutStats component", () => {
 
         // Assert
         await waitFor(() => {
+            expect(getRoutineStatisticsData).toHaveBeenCalledTimes(1);
             expect(getRoutine).toHaveBeenCalledTimes(1);
             expect(getLanguages).toHaveBeenCalledTimes(1);
             expect(getMuscles).toHaveBeenCalledTimes(1);

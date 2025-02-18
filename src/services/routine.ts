@@ -35,15 +35,11 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         getRoutineWeightUnits(),
         getRoutineDayDataAllIterations(id),
         getRoutineStructure(id),
-        getRoutineLogData(id),
-        getRoutineStatisticsData(id),
     ]);
     const repsUnits = responses[0];
     const weightUnits = responses[1];
     const dayDataAllIterations = responses[2];
     const dayStructure = responses[3];
-    const logData = responses[4];
-    const statsData = responses[5];
 
     // Collect and load all exercises for the workout
     for (const dayData of dayDataAllIterations) {
@@ -74,10 +70,8 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         }
     }
 
-    routine.dayDataAllIterations = dayDataAllIterations;
-    routine.logData = logData;
+    routine.dayData = dayDataAllIterations;
     routine.days = dayStructure;
-    routine.stats = statsData
 
     return routine;
 };

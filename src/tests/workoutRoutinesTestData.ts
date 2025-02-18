@@ -224,7 +224,7 @@ export const testRoutine1 = new Routine({
     isTemplate: false,
     isPublic: false,
     days: [testDayLegs, testRestDay, testDayPull],
-    dayDataAllIterations: testRoutineDayData1,
+    dayData: testRoutineDayData1,
     logData: [testRoutineLogData],
 });
 

@@ -38,6 +38,8 @@ export {
     addRoutine,
     deleteRoutine,
     editRoutine,
+    getRoutineStatisticsData,
+    getRoutineLogData
 } from './routine';
 
 export {

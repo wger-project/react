@@ -17,6 +17,7 @@ import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget"
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
 import { useExercisesQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { useRoutineStatsQuery } from "components/WorkoutRoutines/queries/routines";
 import {
     DropdownOption,
     formatStatsData,
@@ -51,6 +52,7 @@ export const WorkoutStats = () => {
     }
 
     const routineQuery = useRoutineDetailQuery(routineId);
+    const routineStatsQuery = useRoutineStatsQuery(routineId);
     const musclesQuery = useMusclesQuery();
 
     // TODO: find a better solution than to load all exercises just to pick up a few...
@@ -58,7 +60,7 @@ export const WorkoutStats = () => {
     const languageQuery = useLanguageQuery();
 
 
-    if (routineQuery.isLoading || musclesQuery.isLoading || exercisesQuery.isLoading || languageQuery.isLoading) {
+    if (routineStatsQuery.isLoading || routineQuery.isLoading || musclesQuery.isLoading || exercisesQuery.isLoading || languageQuery.isLoading) {
         return <LoadingPlaceholder />;
     }
 
@@ -102,7 +104,7 @@ export const WorkoutStats = () => {
     };
 
     const statsData = getFullStatsData(
-        routine.stats,
+        routineStatsQuery.data!,
         selectedValueType,
         selectedValueSubType,
         selectedValueGroupBy,

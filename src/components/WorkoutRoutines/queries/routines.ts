@@ -8,7 +8,8 @@ import {
     getPublicTemplatesShallow,
     getRoutine,
     getRoutines,
-    getRoutinesShallow
+    getRoutinesShallow,
+    getRoutineStatisticsData
 } from "services";
 import { AddRoutineParams, EditRoutineParams } from "services/routine";
 import { QueryKey, } from "utils/consts";
@@ -25,6 +26,13 @@ export function useRoutineDetailQuery(id: number) {
     return useQuery({
         queryKey: [QueryKey.ROUTINE_DETAIL, id],
         queryFn: () => getRoutine(id)
+    });
+}
+
+export function useRoutineStatsQuery(id: number) {
+    return useQuery({
+        queryKey: [QueryKey.ROUTINE_STATS, id],
+        queryFn: () => getRoutineStatisticsData(id)
     });
 }
 

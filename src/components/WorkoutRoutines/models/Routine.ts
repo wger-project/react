@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 
 import { Day } from "components/WorkoutRoutines/models/Day";
-import { RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { RoutineLogData } from "components/WorkoutRoutines/models/RoutineLogData";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
@@ -32,8 +31,7 @@ type RoutineConstructorParams = {
     isPublic?: boolean;
     days?: Day[];
     logData?: RoutineLogData[];
-    dayDataAllIterations?: RoutineDayData[];
-    stats?: RoutineStatsData;
+    dayData?: RoutineDayData[];
 };
 
 export class Routine {
@@ -49,8 +47,7 @@ export class Routine {
 
     days: Day[] = [];
     logData: RoutineLogData[] = [];
-    dayDataAllIterations: RoutineDayData[] = [];
-    stats: RoutineStatsData = new RoutineStatsData();
+    dayData: RoutineDayData[] = [];
 
     constructor(data: RoutineConstructorParams) {
         this.id = data.id;
@@ -65,19 +62,18 @@ export class Routine {
 
         this.days = data.days ?? [];
         this.logData = data.logData ?? [];
-        this.dayDataAllIterations = data.dayDataAllIterations ?? [];
-        this.stats = data.stats ?? new RoutineStatsData();
+        this.dayData = data.dayData ?? [];
     }
 
     get dayDataCurrentIteration() {
         const iteration = this.getIteration() ?? 1;
 
-        return this.dayDataAllIterations.filter(dayData => dayData.iteration === iteration);
+        return this.dayData.filter(dayData => dayData.iteration === iteration);
     }
 
     get groupedDayDataByIteration() {
         const groupedDayData: { [key: number]: RoutineDayData[] } = {};
-        for (const dayData of this.dayDataAllIterations) {
+        for (const dayData of this.dayData) {
             if (!groupedDayData[dayData.iteration]) {
                 groupedDayData[dayData.iteration] = [];
             }
@@ -147,7 +143,7 @@ export class Routine {
     getIteration(date?: Date | undefined) {
         const dateToCheck = date ?? new Date();
 
-        const currentDayData = this.dayDataAllIterations.find(dayData =>
+        const currentDayData = this.dayData.find(dayData =>
             dayData.date.getDate() === dateToCheck.getDate() &&
             dayData.date.getMonth() === dateToCheck.getMonth() &&
             dayData.date.getFullYear() === dateToCheck.getFullYear()
@@ -159,7 +155,7 @@ export class Routine {
      * Returns the SetConfigData for the given dayId, iteration and slotId
      */
     getSetConfigData(dayId: number, iteration: number, slotEntryId: number) {
-        const dayData = this.dayDataAllIterations.find(dayData =>
+        const dayData = this.dayData.find(dayData =>
             dayData.day?.id === dayId && dayData.iteration === iteration
         );
 
@@ -177,7 +173,7 @@ export class Routine {
      * Returns the DayData for the given dayId and, optionally, iteration
      */
     getDayData(dayId: number, date: Date) {
-        return this.dayDataAllIterations.filter(dayData => dayData.day?.id === dayId
+        return this.dayData.filter(dayData => dayData.day?.id === dayId
             && dayData.date.getDate() === date.getDate()
             && dayData.date.getMonth() === date.getMonth()
             && dayData.date.getFullYear() === date.getFullYear(),

@@ -14,8 +14,9 @@ export function useAddRoutineLogsQuery(routineId: number) {
 
     return useMutation({
         mutationFn: (entries: any[]) => addLogs(entries),
-        onSuccess: () => queryClient.invalidateQueries({
-            queryKey: [QueryKey.ROUTINE_LOGS, routineId]
-        })
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_LOGS, routineId] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_STATS, routineId] });
+        }
     });
 }
