@@ -22,7 +22,8 @@
         "originalObjectUrl": "Länk till källa, om sådan finns",
         "originalTitle": "Rubrik",
         "authors": "Författare",
-        "authorProfile": "Länk till författares websida eller profil, om tillgänglig"
+        "authorProfile": "Länk till författares websida eller profil, om tillgänglig",
+        "derivativeSourceUrlHelper": "Observera att ett verk som inte bara är baserat på ett tidigare verk, utan som också innehåller tillräckligt med nytt, kreativt innehåll kan ge det rätt till sin egen upphovsrätt."
     },
     "workout": "Träningspass",
     "loading": "Laddar...",
@@ -46,6 +47,22 @@
         "step1HeaderBasics": "Grunder på engelska",
         "variations": "Variationer",
         "notEnoughRightsHeader": "Du kan inte lägga till övningar",
-        "replacementsSearch": "Sök efter en övning eller klistra in ett ID i fältet och klicka på knappen \"hämta\"."
-    }
+        "replacementsSearch": "Sök efter en övning eller klistra in ett ID i fältet och klicka på knappen \"hämta\".",
+        "notEnoughRights": "Du kan bara bidra med övningar om ditt konto är äldre än {{days}} dagar och att du har verifierat din e-post",
+        "muscles": "Muskler",
+        "whatVariationsExist": "Vilka andra varianter finns det?",
+        "identicalExercise": "Undvik upprepade övningar",
+        "translateExerciseNow": "Översätt denna övning nu",
+        "compatibleImagesCC": "Bilderna måste vara kompatibla med CC BY SA-licensen. Om du är osäker kan du bara ladda upp foton som du har tagit själv.",
+        "alternativeNames": "Alternativa namn",
+        "notes": "Noteringar",
+        "equipment": "Utrustning",
+        "checkInformationBeforeSubmitting": "Kontrollera att de uppgifter du angett är korrekta innan du skickar in övningen",
+        "identicalExercisePleaseDiscard": "Om du upptäcker en övning som är identiskt med den du försöker lägga till, vänligen använd den befintliga istället.",
+        "replacementsInfoText": "Alternativt kan du också välja en övning som ska ersätta den här (t.ex. för att den har lämnats in två gånger eller liknande). Detta kommer att ersätta träningen i rutiner samt träningsloggar, istället för att bara radera den. Dessa ändringar kommer också att spridas till alla instanser som synkroniserar övningarna från den här."
+    },
+    "description": "Beskrivning",
+    "translation": "Översättning",
+    "images": "Bilder",
+    "overview": "Överblick"
 }
