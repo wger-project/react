@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography, useTheme } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
@@ -16,15 +16,25 @@ import { makeLink, WgerLink } from "utils/url";
 export const RoutineEdit = () => {
 
     const { t, i18n } = useTranslation();
+    const theme = useTheme();
 
     const profileQuery = useProfileQuery();
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const routineQuery = useRoutineDetailQuery(routineId);
-    const [selectedDay, setSelectedDay] = useState<number | null>(null);
+    const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
 
     if (routineQuery.isLoading || profileQuery.isLoading) {
         return <LoadingPlaceholder />;
+    }
+
+    if (routineQuery.isError) {
+        return <p>Error: {routineQuery.error.message}</p>;
+    }
+
+    if (selectedDayIndex === null && routineQuery.data!.days.length > 0) {
+        setSelectedDayIndex(0);
+        // setSelectedDay(routineQuery.data!.days[0].id);
     }
 
 
@@ -32,7 +42,7 @@ export const RoutineEdit = () => {
         title={t('editName', { name: routineQuery.data?.name })}
         backToUrl={makeLink(WgerLink.ROUTINE_DETAIL, i18n.language, { id: routineId })}
     >
-        <Grid container spacing={1}>
+        <Grid container>
             <Grid size={12}>
                 <RoutineForm routine={routineQuery.data!} />
             </Grid>
@@ -42,16 +52,19 @@ export const RoutineEdit = () => {
                 <Box height={20} />
                 <DayDragAndDropGrid
                     routineId={routineId}
-                    selectedDay={selectedDay}
-                    setSelectedDay={setSelectedDay}
+                    selectedDayIndex={selectedDayIndex}
+                    setSelectedDayIndex={setSelectedDayIndex}
                 />
             </Grid>
-            {selectedDay !== null && <>
-                <Grid size={12}>
-                    <DayDetails
-                        day={routineQuery.data!.days.find(day => day.id === selectedDay)!}
-                        routineId={routineId}
-                    />
+            {selectedDayIndex !== null && <>
+                <Grid size={12} sx={{ backgroundColor: theme.palette.grey[100], padding: 1 }}>
+                    <Box>
+                        <DayDetails
+                            day={routineQuery.data!.days[selectedDayIndex]}
+                            routineId={routineId}
+                            setSelectedDayIndex={setSelectedDayIndex}
+                        />
+                    </Box>
                 </Grid>
             </>}
         </Grid>

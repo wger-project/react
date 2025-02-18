@@ -27,7 +27,7 @@ describe("Test the DayDragAndDropGrid component", () => {
         // Act
         render(
             <QueryClientProvider client={testQueryClient}>
-                <DayDragAndDropGrid routineId={222} selectedDay={null} setSelectedDay={mockSetSelectedDay} />
+                <DayDragAndDropGrid routineId={222} selectedDayIndex={0} setSelectedDayIndex={mockSetSelectedDay} />
             </QueryClientProvider>
         );
         await waitFor(() => {
@@ -35,7 +35,7 @@ describe("Test the DayDragAndDropGrid component", () => {
         });
 
         // Assert
-        screen.logTestingPlaygroundURL();
+
         expect(screen.getByText('Every day is leg day 🦵🏻')).toBeInTheDocument();
         expect(screen.getByText('routines.restDay')).toBeInTheDocument();
         expect(screen.getByText('Pull day')).toBeInTheDocument();
@@ -47,7 +47,7 @@ describe("Test the DayDragAndDropGrid component", () => {
         // Act
         render(
             <QueryClientProvider client={testQueryClient}>
-                <DayDragAndDropGrid routineId={222} selectedDay={null} setSelectedDay={mockSetSelectedDay} />
+                <DayDragAndDropGrid routineId={222} selectedDayIndex={0} setSelectedDayIndex={mockSetSelectedDay} />
             </QueryClientProvider>
         );
         await waitFor(() => {
@@ -63,6 +63,6 @@ describe("Test the DayDragAndDropGrid component", () => {
             "order": 4,
             "routine": 222,
         });
-        expect(mockSetSelectedDay).toHaveBeenCalledWith(5);
+        expect(mockSetSelectedDay).toHaveBeenCalledWith(3);
     });
 });

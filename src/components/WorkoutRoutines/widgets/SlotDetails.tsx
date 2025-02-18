@@ -1,7 +1,7 @@
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from '@mui/icons-material/EditOff';
-import { Alert, AlertTitle, Box, IconButton, Typography } from "@mui/material";
+import { Alert, AlertTitle, IconButton, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { useLanguageQuery } from "components/Exercises/queries";
@@ -187,7 +187,7 @@ export const SlotEntryDetails = (props: {
 
     return (
         (<React.Fragment>
-            <Grid container spacing={1}>
+            <Grid container paddingTop={1} spacing={1}>
                 <Grid size={{ xs: 3, sm: 1 }} alignContent={"center"}>
                     {/*<IconButton size={"small"} onClick={toggleEditExercise} disabled={true}>*/}
                     {/*    <DragHandle />*/}
@@ -205,7 +205,7 @@ export const SlotEntryDetails = (props: {
                 </Grid>
 
                 <Grid size={{ xs: 9, sm: 3 }} alignContent={"center"}>
-                    <Typography variant={"h6"}>
+                    <Typography variant={"body1"}>
                         {counter} {props.slotEntry.exercise?.getTranslation(language).name}
                     </Typography>
                 </Grid>
@@ -228,7 +228,6 @@ export const SlotEntryDetails = (props: {
                     : getForm()
                 }
             </Grid>
-            <Box height={10} />
         </React.Fragment>)
     );
 };

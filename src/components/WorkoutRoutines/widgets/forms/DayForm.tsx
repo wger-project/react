@@ -1,3 +1,4 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -13,17 +14,25 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { WgerTextField } from "components/Common/forms/WgerTextField";
+import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
 import { Day } from "components/WorkoutRoutines/models/Day";
-import { useEditDayQuery } from "components/WorkoutRoutines/queries";
+import { useDeleteDayQuery, useEditDayQuery } from "components/WorkoutRoutines/queries";
+import { DefaultRoundingMenu } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from 'yup';
 
-export const DayForm = (props: { day: Day, routineId: number }) => {
+export const DayForm = (props: {
+    day: Day,
+    routineId: number,
+    setSelectedDayIndex: (day: number | null) => void
+}) => {
     const { t } = useTranslation();
     const editDayQuery = useEditDayQuery(props.routineId);
+    const deleteDayQuery = useDeleteDayQuery(props.routineId);
 
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
     const [isRest, setIsRest] = useState(props.day.isRest);
 
@@ -41,6 +50,16 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
         setIsRest(!isRest);
         setOpenDialog(false);
     };
+
+    const handleDeleteDay = () => setOpenDeleteDialog(true);
+
+    const handleConfirmDeleteDay = () => {
+        props.setSelectedDayIndex(null);
+        deleteDayQuery.mutate(props.day.id);
+        setOpenDeleteDialog(false);
+    };
+
+    const handleCancelDeleteDay = () => setOpenDeleteDialog(false);
 
 
     const nameMinLength = 3;
@@ -69,7 +88,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
             routine: props.routineId,
             ...(values.name !== undefined && { name: values.name }),
             ...(values.description !== undefined && { description: values.description }),
-            ...(values.isRest !== undefined && { is_rest: values.isRest }),
+            ...(values.isRest !== undefined && { is_rest: isRest }),
             ...(values.needsLogsToAdvance !== undefined && { needs_logs_to_advance: values.needsLogsToAdvance }),
         });
 
@@ -91,7 +110,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
             {(formik) => (
                 <Form>
                     <Grid container spacing={2}>
-                        <Grid size={{ xs: 12, sm: 7 }}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <WgerTextField
                                 fieldName="name"
                                 title="Name"
@@ -104,7 +123,7 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                                 control={<Switch checked={isRest} onChange={handleRestChange} />}
                                 label={t('routines.restDay')} />
                         </Grid>
-                        <Grid size={{ xs: 6, sm: 3 }}>
+                        <Grid size={{ xs: 6, sm: 4 }}>
                             <FormControlLabel
                                 disabled={isRest}
                                 control={<Switch
@@ -127,10 +146,10 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                             />
                         </Grid>
 
-                        <Grid size={12}>
+                        <Grid size={8}>
                             {editDayQuery.isPending
                                 ? <LoadingButton loading variant="contained" color="primary">
-                                    Save
+                                    {t('save')}
                                 </LoadingButton>
                                 : <Button
                                     variant="contained"
@@ -141,6 +160,20 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                                     {t('save')}
                                 </Button>
                             }
+
+                            &nbsp;
+
+                            <Button
+                                variant="outlined"
+                                startIcon={<DeleteIcon />}
+                                onClick={handleDeleteDay}
+                                disabled={editDayQuery.isPending}
+                            >
+                                {t('delete')}
+                            </Button>
+                        </Grid>
+                        <Grid size={4} sx={{ display: "flex", justifyContent: "flex-end" }}>
+                            <DefaultRoundingMenu routineId={props.routineId} />
                         </Grid>
                     </Grid>
 
@@ -154,6 +187,14 @@ export const DayForm = (props: { day: Day, routineId: number }) => {
                             <Button onClick={handleConfirmRestChange}>{t('continue')}</Button>
                         </DialogActions>
                     </Dialog>
+
+                    <DeleteConfirmationModal
+                        title={t('deleteConfirmation', { name: props.day.getDisplayName() })}
+                        message={t('routines.deleteDayConfirmation')}
+                        isOpen={openDeleteDialog}
+                        closeFn={handleCancelDeleteDay}
+                        deleteFn={handleConfirmDeleteDay}
+                    />
                 </Form>
             )}
         </Formik>

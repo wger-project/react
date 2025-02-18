@@ -38,15 +38,14 @@ describe("Smoke tests the RoutineDetailsTable component", () => {
             expect(getLanguages).toHaveBeenCalledTimes(1);
         });
         expect(screen.getByText('editName')).toBeInTheDocument();
-        screen.logTestingPlaygroundURL();
         expect(screen.queryAllByText('Every day is leg day 🦵🏻')).toHaveLength(3);
         expect(screen.getByText('durationWeeksDays')).toBeInTheDocument();
-        expect(screen.queryAllByText('routines.restDay')).toHaveLength(2);
+        expect(screen.queryAllByText('routines.restDay')).toHaveLength(3);
         expect(screen.queryAllByText('Pull day')).toHaveLength(2);
         expect(screen.queryAllByText('Full body routine')).toHaveLength(2);
         expect(screen.getByText('routines.addDay')).toBeInTheDocument();
         expect(screen.getByText('routines.resultingRoutine')).toBeInTheDocument();
-        expect(screen.queryAllByText('Squats')).toHaveLength(2);
+        expect(screen.queryAllByText('Squats')).toHaveLength(3);
         expect(screen.getByText('4 Sets, 5 x 20 @ 2Rir')).toBeInTheDocument();
     });
 });
