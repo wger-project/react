@@ -64,5 +64,35 @@
     "description": "Beskrivning",
     "translation": "Översättning",
     "images": "Bilder",
-    "overview": "Överblick"
+    "overview": "Överblick",
+    "preferences": "Inställningar",
+    "continue": "Fortsätt",
+    "goBack": "Tillbaka",
+    "language": "Språk",
+    "forms": {
+        "supportedImageFormats": "Endast JPEG, PNG och WEBP med en storlek under 20MB stöds",
+        "valueTooShort": "Värdet är för kort",
+        "valueTooLong": "Värdet är för långt",
+        "fieldRequired": "Detta fält är obligatoriskt",
+        "maxLength": "Ange färre än {{chars}} tecken",
+        "minLength": "Ange fler än {{chars}} tecken",
+        "minValue": "Värdet för detta fält måste överstiga {{value}}",
+        "maxValue": "Värdet för detta fält måste vara mindre än {{value}}"
+    },
+    "name": "Namn",
+    "category": "Kategori",
+    "success": "Lyckat!",
+    "English": "Engelska",
+    "save": "Spara",
+    "videos": "Videos",
+    "cannotBeUndone": "Denna åtgärd kan inte ångras.",
+    "cancel": "Avbryt",
+    "noResults": "Inga resultat",
+    "noResultsDescription": "Inga resultat hittades för den här frågan, överväg att minska antalet filter.",
+    "routines": {
+        "addDay": "Lägg till träningsdag",
+        "addWeightLog": "Lägg till tränings logg",
+        "logsHeader": "Logg för träningspass",
+        "logsFilterNote": "Observera att endast poster med en viktenhet på kg eller lb och repetitioner kartläggs, andra kombinationer som tid eller tills fel ignoreras här"
+    }
 }
