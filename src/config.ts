@@ -10,5 +10,3 @@ export const MIN_ACCOUNT_AGE_TO_TRUST = import.meta.env.MIN_ACCOUNT_AGE_TO_TRUST
 
 export const VITE_API_SERVER = import.meta.env.VITE_API_SERVER;
 export const VITE_API_KEY = import.meta.env.VITE_API_KEY;
-
-console.log(import.meta.env);
