@@ -5,7 +5,7 @@ import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuer
 import { useProfileQuery } from "components/User/queries/profile";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { useExerciseStateValue } from "state";
+import { useExerciseSubmissionStateValue } from "state";
 import { testCategories, testEquipment, testLanguages, testMuscles } from "tests/exerciseTestdata";
 import { testProfileDataVerified } from "tests/userTestdata";
 
@@ -19,7 +19,7 @@ const mockedUseCategoriesQuery = useCategoriesQuery as jest.Mock;
 const mockedMuscleQuery = useMusclesQuery as jest.Mock;
 const mockedUseEquipmentQuery = useEquipmentQuery as jest.Mock;
 const mockedLanguageQuery = useLanguageQuery as jest.Mock;
-const mockedUseExerciseStateValue = useExerciseStateValue as jest.Mock;
+const mockedUseExerciseStateValue = useExerciseSubmissionStateValue as jest.Mock;
 const mockedUseProfileQuery = useProfileQuery as jest.Mock;
 
 const queryClient = new QueryClient();
@@ -51,7 +51,7 @@ describe("Test the add exercise step 6 component", () => {
                 muscles: [2],
                 musclesSecondary: [],
                 variationId: null,
-                newVariationBaseId: null,
+                newVariationExerciseId: null,
                 languageId: 3,
                 equipment: [2],
 
@@ -77,7 +77,7 @@ describe("Test the add exercise step 6 component", () => {
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/exercises/9']}>
                     <Routes>
-                        <Route path="exercises/:baseID"
+                        <Route path="exercises/:exerciseId"
                                element={<Step6Overview onContinue={mockOnContinue} />} />
                     </Routes>
                 </MemoryRouter>
@@ -103,7 +103,7 @@ describe("Test the add exercise step 6 component", () => {
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter initialEntries={['/exercises/9']}>
                     <Routes>
-                        <Route path="exercises/:baseID"
+                        <Route path="exercises/:exerciseId"
                                element={<Step6Overview onContinue={mockOnContinue} />} />
                     </Routes>
                 </MemoryRouter>

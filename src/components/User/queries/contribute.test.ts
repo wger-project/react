@@ -18,15 +18,17 @@ describe("Test the exercise contribution query", () => {
             data: false
         }));
 
-        testProfile = new Profile(
-            'testerMcTest',
-            'admin@google.com',
-            false,
-            new Date(),
-            false,
-            true,
-            180,
-        );
+        testProfile = new Profile({
+            username: 'testerMcTest',
+            email: 'admin@google.com',
+            emailVerified: false,
+            dateJoined: new Date(),
+            isTrustworthy: false,
+            useMetric: true,
+            height: 180,
+            weightRounding: null,
+            repetitionsRounding: null,
+        });
     });
 
 

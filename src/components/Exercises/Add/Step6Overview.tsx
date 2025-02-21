@@ -25,14 +25,14 @@ import { useNavigate } from "react-router-dom";
 import { addExercise, addTranslation, postAlias, postExerciseImage } from "services";
 import { addNote } from "services/note";
 import { addVariation } from "services/variation";
-import { useExerciseStateValue } from "state";
+import { useExerciseSubmissionStateValue } from "state";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { getTranslationKey } from "utils/strings";
 import { makeLink, WgerLink } from "utils/url";
 
 export const Step6Overview = ({ onBack }: StepProps) => {
     const [t, i18n] = useTranslation();
-    const [state] = useExerciseStateValue();
+    const [state] = useExerciseSubmissionStateValue();
 
     const navigate = useNavigate();
     const categoryQuery = useCategoriesQuery();
@@ -50,9 +50,9 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         setSubmissionState('loading');
 
         // Create a new variation object if needed
-        // TODO: PATCH the other exercise base (newVariationBaseId) with the new variation id
+        // TODO: PATCH the other exercise base (newVariationExerciseId) with the new variation id
         let variationId;
-        if (state.newVariationBaseId !== null) {
+        if (state.newVariationExerciseId !== null) {
             variationId = await addVariation();
         } else {
             variationId = state.variationId;
@@ -167,7 +167,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.variations')}</TableCell>
-                            <TableCell>{state.variationId} / {state.newVariationBaseId}</TableCell>
+                            <TableCell>{state.variationId} / {state.newVariationExerciseId}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
