@@ -185,7 +185,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
                         </IconButton>
                     </Tooltip>}
                 title={getDayName(props.dayData.day)}
-                subheader={props.dayData.day?.description}
+                subheader={<Typography sx={{ whiteSpace: 'pre-line' }}>{props.dayData.day?.description}</Typography>}
             />
             <Menu
                 id="basic-menu"
