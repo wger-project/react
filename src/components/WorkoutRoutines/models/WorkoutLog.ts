@@ -27,12 +27,12 @@ export class WorkoutLog {
     public slotEntryId: number | null;
 
     public repetitionUnitObj: RepetitionUnit | null;
-    public repetitionUnitId: number;
+    public repetitionUnitId: number | null;
     public repetitions: number | null;
     public repetitionsTarget: number | null;
 
     public weightUnitObj: WeightUnit | null;
-    public weightUnitId: number;
+    public weightUnitId: number | null;
     public weight: number | null;
     public weightTarget: number | null;
 
@@ -55,12 +55,12 @@ export class WorkoutLog {
         exerciseId: number;
 
         repetitionsUnit?: RepetitionUnit;
-        repetitionsUnitId: number;
+        repetitionsUnitId?: number | null;
         repetitions: number | null;
         repetitionsTarget?: number | null;
 
         weightUnit?: WeightUnit;
-        weightUnitId: number;
+        weightUnitId?: number | null;
         weight: number | null;
         weightTarget?: number | null;
 
@@ -79,12 +79,12 @@ export class WorkoutLog {
         this.exerciseId = data.exerciseId;
 
         this.repetitionUnitObj = data.repetitionsUnit || null;
-        this.repetitionUnitId = data.repetitionsUnitId;
+        this.repetitionUnitId = data.repetitionsUnitId || null;
         this.repetitions = data.repetitions;
         this.repetitionsTarget = data.repetitionsTarget || null;
 
         this.weightUnitObj = data.weightUnit || null;
-        this.weightUnitId = data.weightUnitId;
+        this.weightUnitId = data.weightUnitId || null;
         this.weight = data.weight;
         this.weightTarget = data.weightTarget || null;
 

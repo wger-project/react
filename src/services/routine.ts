@@ -50,8 +50,13 @@ export const processRoutine = async (id: number): Promise<Routine> => {
                 }
 
                 setData.exercise = exerciseMap[setData.exerciseId];
-                setData.repetitionsUnit = repsUnits.find(r => r.id === setData.repetitionsUnitId) ?? null;
-                setData.weightUnit = weightUnits.find(w => w.id === setData.weightUnitId) ?? null;
+                if (setData.repetitionsUnitId !== null) {
+                    setData.repetitionsUnit = repsUnits.find(r => r.id === setData.repetitionsUnitId) ?? null;
+                }
+
+                if (setData.weightUnitId !== null) {
+                    setData.weightUnit = weightUnits.find(w => w.id === setData.weightUnitId) ?? null;
+                }
             }
 
             for (const exerciseId of slotData.exerciseIds) {
@@ -64,8 +69,14 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         for (const slot of day.slots) {
             for (const slotEntry of slot.configs) {
                 slotEntry.exercise = exerciseMap[slotEntry.exerciseId];
-                slotEntry.repetitionUnit = repsUnits.find(r => r.id === slotEntry.repetitionUnitId) ?? null;
-                slotEntry.weightUnit = weightUnits.find(w => w.id === slotEntry.weightUnitId) ?? null;
+
+                if (slotEntry.repetitionUnitId !== null) {
+                    slotEntry.repetitionUnit = repsUnits.find(r => r.id === slotEntry.repetitionUnitId) ?? null;
+                }
+
+                if (slotEntry.weightUnitId !== null) {
+                    slotEntry.weightUnit = weightUnits.find(w => w.id === slotEntry.weightUnitId) ?? null;
+                }
             }
         }
     }

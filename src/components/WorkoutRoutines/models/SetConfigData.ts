@@ -20,11 +20,11 @@ export class SetConfigData {
     public maxNrOfSets: number | null;
     public weight: number | null;
     public maxWeight: number | null;
-    public weightUnitId: number;
+    public weightUnitId: number | null = null;
     public weightRounding: number | null = null;
     public repetitions: number | null;
     public maxRepetitions: number | null;
-    public repetitionsUnitId: number;
+    public repetitionsUnitId: number | null = null;
     public repetitionsRounding: number | null = null;
     public rir: number | null;
     public maxRir: number | null;
@@ -44,13 +44,13 @@ export class SetConfigData {
 
         weight?: number | null,
         maxWeight?: number | null,
-        weightUnitId: number,
+        weightUnitId: number | null,
         weightUnit?: WeightUnit,
         weightRounding: number | null,
 
         repetitions?: number | null,
         maxRepetitions?: number | null,
-        repetitionsUnitId: number,
+        repetitionsUnitId: number | null,
         repetitionsUnit?: RepetitionUnit,
         repetitionsRounding: number | null,
 
