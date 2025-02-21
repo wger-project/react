@@ -96,7 +96,7 @@ export const DayDragAndDropGrid = (props: {
     const handleAddDay = async () => {
         const newDayData: AddDayParams = {
             routine: props.routineId,
-            name: t('routines.newDay'),
+            name: `${t('routines.newDay')} ${routineQuery.data!.days.length + 1}`,
             order: routineQuery.data!.days.length + 1,
             is_rest: false,
             needs_logs_to_advance: false,
