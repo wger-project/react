@@ -143,8 +143,11 @@ export class Routine {
             return null;
         }
 
-        const slotData = dayData.slots.find(slotData => slotData.setConfigs.some(setConfig => setConfig.slotEntryId === slotEntryId));
-        return slotData !== undefined && slotData.setConfigs.length > 0 ? slotData.setConfigs[0] : null;
+        const slotData = dayData.slots.find(slotData =>
+            slotData.setConfigs.some(setConfig => setConfig.slotEntryId === slotEntryId)
+        );
+
+        return slotData?.setConfigs.find(setConfig => setConfig.slotEntryId === slotEntryId) || null;
     }
 
 
