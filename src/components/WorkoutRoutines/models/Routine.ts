@@ -65,6 +65,10 @@ export class Routine {
         this.dayData = data.dayData ?? [];
     }
 
+    get exercises() {
+        return this.days.flatMap(day => day.slots.flatMap(slot => slot.configs.flatMap(config => config.exercise!)));
+    }
+
     get dayDataCurrentIteration() {
         const iteration = this.getIteration() ?? 1;
 
@@ -95,8 +99,6 @@ export class Routine {
                 }
                 groupedLogs[log.iteration].push(log);
             }
-
-
         }
         return groupedLogs;
     }

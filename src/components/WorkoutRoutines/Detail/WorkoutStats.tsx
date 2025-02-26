@@ -15,7 +15,7 @@ import Grid from "@mui/material/Grid2";
 import { SelectChangeEvent } from '@mui/material/Select';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
-import { useExercisesQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
+import { useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { useRoutineStatsQuery } from "components/WorkoutRoutines/queries/routines";
 import {
@@ -55,12 +55,10 @@ export const WorkoutStats = () => {
     const routineStatsQuery = useRoutineStatsQuery(routineId);
     const musclesQuery = useMusclesQuery();
 
-    // TODO: find a better solution than to load all exercises just to pick up a few...
-    const exercisesQuery = useExercisesQuery();
     const languageQuery = useLanguageQuery();
 
 
-    if (routineStatsQuery.isLoading || routineQuery.isLoading || musclesQuery.isLoading || exercisesQuery.isLoading || languageQuery.isLoading) {
+    if (routineStatsQuery.isLoading || routineQuery.isLoading || musclesQuery.isLoading || languageQuery.isLoading) {
         return <LoadingPlaceholder />;
     }
 
@@ -108,7 +106,7 @@ export const WorkoutStats = () => {
         selectedValueType,
         selectedValueSubType,
         selectedValueGroupBy,
-        exercisesQuery.data!,
+        routine.exercises,
         musclesQuery.data!,
         language,
         i18n.language,

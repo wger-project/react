@@ -35,20 +35,33 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         getRoutineWeightUnits(),
         getRoutineDayDataAllIterations(id),
         getRoutineStructure(id),
+
     ]);
     const repsUnits = responses[0];
     const weightUnits = responses[1];
     const dayDataAllIterations = responses[2];
     const dayStructure = responses[3];
 
+
+    // Collect all unique exercise IDs and load the data in bulk
+    const exerciseIds = new Set<number>();
+    for (const dayData of dayDataAllIterations.filter(d => d.day !== null && d.iteration === 1)) {
+        for (const slotData of dayData.slots) {
+            for (const setData of slotData.setConfigs) {
+                exerciseIds.add(setData.exerciseId);
+            }
+        }
+    }
+    const exercisePromises = Array.from(exerciseIds).map(id => getExercise(id));
+    const exercises = await Promise.all(exercisePromises);
+    exercises.forEach(exercise => {
+        exerciseMap[exercise.id!] = exercise;
+    });
+
     // Collect and load all exercises for the workout
     for (const dayData of dayDataAllIterations) {
         for (const slotData of dayData.slots) {
             for (const setData of slotData.setConfigs) {
-                if (!(setData.exerciseId in exerciseMap)) {
-                    exerciseMap[setData.exerciseId] = await getExercise(setData.exerciseId);
-                }
-
                 setData.exercise = exerciseMap[setData.exerciseId];
                 if (setData.repetitionsUnitId !== null) {
                     setData.repetitionsUnit = repsUnits.find(r => r.id === setData.repetitionsUnitId) ?? null;
@@ -83,6 +96,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
 
     routine.dayData = dayDataAllIterations;
     routine.days = dayStructure;
+
 
     return routine;
 };

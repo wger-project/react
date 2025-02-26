@@ -4,8 +4,8 @@ import { WorkoutStats } from "components/WorkoutRoutines/Detail/WorkoutStats";
 import { RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { getExercises, getLanguages, getMuscles, getRoutine, getRoutineStatisticsData } from "services";
-import { testExercises, testLanguages, testMuscles } from "tests/exerciseTestdata";
+import { getLanguages, getMuscles, getRoutine, getRoutineStatisticsData } from "services";
+import { testLanguages, testMuscles } from "tests/exerciseTestdata";
 import { testQueryClient } from "tests/queryClient";
 import { testRoutine1 } from "tests/workoutRoutinesTestData";
 
@@ -20,7 +20,6 @@ describe("Smoke tests the WorkoutStats component", () => {
         (getRoutine as jest.Mock).mockResolvedValue(testRoutine1);
         (getLanguages as jest.Mock).mockResolvedValue(testLanguages);
         (getMuscles as jest.Mock).mockResolvedValue(testMuscles);
-        (getExercises as jest.Mock).mockResolvedValue(testExercises);
 
         // @ts-ignore
         delete window.ResizeObserver;
@@ -55,7 +54,6 @@ describe("Smoke tests the WorkoutStats component", () => {
             expect(getRoutine).toHaveBeenCalledTimes(1);
             expect(getLanguages).toHaveBeenCalledTimes(1);
             expect(getMuscles).toHaveBeenCalledTimes(1);
-            expect(getExercises).toHaveBeenCalledTimes(1);
         });
         expect(screen.getByText('routines.statsOverview - Test routine 1')).toBeInTheDocument();
         expect(screen.getByText('routines.volume')).toBeInTheDocument();
