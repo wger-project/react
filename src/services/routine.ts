@@ -80,7 +80,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
 
     for (const day of dayStructure) {
         for (const slot of day.slots) {
-            for (const slotEntry of slot.configs) {
+            for (const slotEntry of slot.entries) {
                 slotEntry.exercise = exerciseMap[slotEntry.exerciseId];
 
                 if (slotEntry.repetitionUnitId !== null) {

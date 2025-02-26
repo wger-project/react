@@ -30,7 +30,7 @@ describe('SlotEntryTypeField', () => {
         render(
             <QueryClientProvider client={testQueryClient}>
                 <SlotEntryTypeField
-                    slotEntry={testDayLegs.slots[0].configs[0]}
+                    slotEntry={testDayLegs.slots[0].entries[0]}
                     routineId={1}
                 />
             </QueryClientProvider>
@@ -66,7 +66,7 @@ describe('SlotEntryRepetitionUnitField', () => {
         render(
             <QueryClientProvider client={testQueryClient}>
                 <SlotEntryRepetitionUnitField
-                    slotEntry={testDayLegs.slots[0].configs[0]}
+                    slotEntry={testDayLegs.slots[0].entries[0]}
                     routineId={1}
                 />
             </QueryClientProvider>
@@ -99,7 +99,7 @@ describe('SlotEntryWeightUnitField', () => {
         render(
             <QueryClientProvider client={testQueryClient}>
                 <SlotEntryWeightUnitField
-                    slotEntry={testDayLegs.slots[0].configs[0]}
+                    slotEntry={testDayLegs.slots[0].entries[0]}
                     routineId={1}
                 />
             </QueryClientProvider>

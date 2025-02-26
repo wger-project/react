@@ -27,7 +27,7 @@ export class Slot {
     comment: string;
     config: object | null;
 
-    configs: SlotEntry[] = [];
+    entries: SlotEntry[] = [];
 
     constructor({
                     id,
@@ -42,7 +42,7 @@ export class Slot {
         this.order = order;
         this.comment = comment;
         this.config = config;
-        this.configs = entries;
+        this.entries = entries;
     }
 }
 

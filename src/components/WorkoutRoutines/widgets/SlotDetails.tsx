@@ -58,20 +58,20 @@ export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: 
     const { t } = useTranslation();
 
     return (<>
-        {props.slot.configs.length === 0 && (
+        {props.slot.entries.length === 0 && (
             <Alert severity="warning">
                 <AlertTitle>{t('routines.setHasNoExercises')}</AlertTitle>
                 {t('nothingHereYetAction')}
             </Alert>
         )}
-        {props.slot.configs.map((slotEntry: SlotEntry, index) => (
+        {props.slot.entries.map((slotEntry: SlotEntry, index) => (
             <SlotEntryDetails
                 key={slotEntry.id}
                 slotEntry={slotEntry}
                 routineId={props.routineId}
                 simpleMode={props.simpleMode}
                 index={index}
-                total={props.slot.configs.length}
+                total={props.slot.entries.length}
             />
         ))}
     </>);

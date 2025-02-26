@@ -58,7 +58,7 @@ export const SlotProgressionEdit = () => {
             title={t('routines.editProgression')}
             backToUrl={makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: routineId })}
         >
-            {slot.configs.map((slotEntry) =>
+            {slot.entries.map((slotEntry) =>
                 <React.Fragment key={slotEntry.id}>
                     <Typography variant="h5" gutterBottom>
                         {slotEntry.exercise?.getTranslation(language).name}

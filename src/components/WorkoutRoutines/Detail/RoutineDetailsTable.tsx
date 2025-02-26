@@ -330,7 +330,7 @@ export const RoutineTable = (props: {
 
                     {day.slots.map((slot, slotIndex) => {
                         return <React.Fragment key={slotIndex}>
-                            {slot.configs.map((slotEntry, configIndex) => {
+                            {slot.entries.map((slotEntry, configIndex) => {
                                 return <React.Fragment key={configIndex}>
                                     {getTableRowPlanned(slotEntry, day)}
                                     {showLogs && getTableRowLogged(slotEntry, day)}

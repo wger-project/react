@@ -329,12 +329,12 @@ export const DayDetails = (props: {
                                                         <IconButton onClick={() => handleDeleteSlot(slot.id)}>
                                                             <DeleteIcon />
                                                         </IconButton>
-                                                        {slot.configs.length > 1 ? t('routines.supersetNr', { number: index + 1 }) : t('routines.exerciseNr', { number: index + 1 })}
+                                                        {slot.entries.length > 1 ? t('routines.supersetNr', { number: index + 1 }) : t('routines.exerciseNr', { number: index + 1 })}
                                                     </Typography>
                                                 </Grid>
 
                                                 <Grid>
-                                                    {slot.configs.length > 0 && <ButtonGroup variant="outlined">
+                                                    {slot.entries.length > 0 && <ButtonGroup variant="outlined">
                                                         <Button
                                                             onClick={() => handleAddSlotEntry(slot.id)}
                                                             size={"small"}
@@ -346,7 +346,7 @@ export const DayDetails = (props: {
                                                             {t('routines.addSuperset')}
                                                         </Button>
 
-                                                        {slot.configs.length > 0 &&
+                                                        {slot.entries.length > 0 &&
                                                             <Button
                                                                 startIcon={<SsidChart />}
                                                                 component={Link}
@@ -378,7 +378,7 @@ export const DayDetails = (props: {
                                             />
                                         </Grid>
 
-                                        {(showAutocompleterForSlot === slot.id || slot.configs.length === 0)
+                                        {(showAutocompleterForSlot === slot.id || slot.entries.length === 0)
                                             && <Grid size={12}>
                                                 <Box height={20} />
                                                 <NameAutocompleter
@@ -390,7 +390,7 @@ export const DayDetails = (props: {
                                                             slot: slot.id,
                                                             exercise: exercise.data.base_id,
                                                             type: 'normal',
-                                                            order: slot.configs.length + 1,
+                                                            order: slot.entries.length + 1,
                                                             weight_unit: userProfileQuery.data!.useMetric ? WEIGHT_UNIT_KG : WEIGHT_UNIT_LB,
                                                         });
                                                         setShowAutocompleterForSlot(null);

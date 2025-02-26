@@ -134,8 +134,11 @@ export const WorkoutStats = () => {
                             <TableRow key={row.key}>
                                 <TableCell>{row.key}</TableCell>
                                 {row.values.map((value, index) => (
-                                    <TableCell key={index}
-                                               sx={{ textAlign: 'right', }}>{value?.toFixed(selectedValueType === StatType.Intensity ? 2 : 0) || ""}</TableCell>
+                                    <TableCell
+                                        key={index}
+                                        sx={{ textAlign: 'right', }}
+                                    >{value?.toFixed(selectedValueType === StatType.Intensity ? 2 : 0) || ""}
+                                    </TableCell>
                                 ))}
                             </TableRow>
                         ))}
@@ -151,7 +154,7 @@ export const WorkoutStats = () => {
                                                backgroundColor: theme.palette.grey.A200,
                                                textAlign: 'right',
                                            }}>
-                                    {statsData.totals[header.toString()].toFixed(selectedValueType === StatType.Intensity ? 2 : 0)}
+                                    {statsData.totals[header.toString()]?.toFixed(selectedValueType === StatType.Intensity ? 2 : 0)}
                                 </TableCell>
                             ))}
                         </TableRow>}

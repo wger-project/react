@@ -61,7 +61,7 @@ export class Routine {
     }
 
     get exercises() {
-        return this.days.flatMap(day => day.slots.flatMap(slot => slot.configs.flatMap(config => config.exercise!)));
+        return this.days.flatMap(day => day.slots.flatMap(slot => slot.entries.flatMap(config => config.exercise!)));
     }
 
     get dayDataCurrentIteration() {
@@ -100,14 +100,14 @@ export class Routine {
     }
 
     get mainMuscles() {
-        const muscles = this.days.flatMap(day => day.slots.flatMap(slot => slot.configs.flatMap(config => config.exercise?.muscles || [])));
+        const muscles = this.days.flatMap(day => day.slots.flatMap(slot => slot.entries.flatMap(config => config.exercise?.muscles || [])));
         return muscles.filter((muscle, index, self) =>
             index === self.findIndex((m) => m.id === muscle.id)
         );
     }
 
     get secondaryMuscles() {
-        const muscles = this.days.flatMap(day => day.slots.flatMap(slot => slot.configs.flatMap(config => config.exercise?.musclesSecondary || [])));
+        const muscles = this.days.flatMap(day => day.slots.flatMap(slot => slot.entries.flatMap(config => config.exercise?.musclesSecondary || [])));
         return muscles.filter((muscle, index, self) =>
             index === self.findIndex((m) => m.id === muscle.id)
         );
