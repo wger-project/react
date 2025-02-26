@@ -107,7 +107,7 @@ export class SetConfigDataAdapter implements Adapter<SetConfigData> {
         maxWeight: item.max_weight !== null ? parseFloat(item.max_weight) : null,
         weightUnitId: item.weight_unit,
         weightRounding: item.weight_rounding !== null ? parseFloat(item.weight_rounding) : null,
-        repetitions: item.rerepetitionsps !== null ? parseFloat(item.repetitions) : null,
+        repetitions: item.repetitions !== null ? parseFloat(item.repetitions) : null,
         maxRepetitions: item.max_repetitions !== null ? parseFloat(item.max_repetitions) : null,
         repetitionsUnitId: item.repetitions_unit,
         repetitionsRounding: item.repetitions_rounding !== null ? parseFloat(item.repetitions_rounding) : null,
