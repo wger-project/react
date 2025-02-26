@@ -3,12 +3,12 @@ import { Button, IconButton, Stack, Tooltip as MuiTooltip, Typography } from "@m
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
-import { useRoutineDetailQuery, useRoutineLogQuery } from "components/WorkoutRoutines/queries";
+import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { useRoutineLogData } from "components/WorkoutRoutines/queries/routines";
 import { ExerciseLog } from "components/WorkoutRoutines/widgets/LogWidgets";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
-import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
 
 
@@ -17,29 +17,24 @@ export const WorkoutLogs = () => {
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const [t, i18n] = useTranslation();
-    const logsQuery = useRoutineLogQuery(
-        routineId,
-        false,
-        {
-            "weight_unit__in": [WEIGHT_UNIT_KG, WEIGHT_UNIT_LB].join(','),
-            "repetition_unit": REP_UNIT_REPETITIONS
-        },
-    );
+    const routineLogDataQuery = useRoutineLogData(routineId);
     const routineQuery = useRoutineDetailQuery(routineId);
+
+    if (routineLogDataQuery.isLoading || routineQuery.isLoading) {
+        return <LoadingPlaceholder />;
+    }
 
     // Group by exercise
     let groupedWorkoutLogs: Map<number, WorkoutLog[]> = new Map();
-    if (logsQuery.isSuccess) {
-        groupedWorkoutLogs = logsQuery.data!.reduce(function (r, log) {
-            r.set(log.exerciseId, r.get(log.exerciseId) || []);
-            r.get(log.exerciseId)!.push(log);
-            return r;
-        }, groupedWorkoutLogs);
-    }
+    groupedWorkoutLogs = routineLogDataQuery.data!.reduce((r, routineLogData) => {
+        routineLogData.logs.forEach(log => {
+            const exerciseId = log.exerciseId;
+            r.set(exerciseId, r.get(exerciseId) || []);
+            r.get(exerciseId)!.push(log);
+        });
+        return r;
+    }, groupedWorkoutLogs);
 
-    if (logsQuery.isLoading || routineQuery.isLoading) {
-        return <LoadingPlaceholder />;
-    }
 
     return (
         <WgerContainerFullWidth

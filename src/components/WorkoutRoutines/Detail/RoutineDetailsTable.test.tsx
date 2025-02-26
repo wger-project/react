@@ -3,10 +3,10 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { compareValue, RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { getLanguages, getRoutine } from "services";
+import { getLanguages, getRoutine, getRoutineLogData } from "services";
 import { testLanguages } from "tests/exerciseTestdata";
 import { testQueryClient } from "tests/queryClient";
-import { testRoutine1 } from "tests/workoutRoutinesTestData";
+import { testRoutine1, testRoutineLogData } from "tests/workoutRoutinesTestData";
 
 jest.mock("services");
 
@@ -15,6 +15,7 @@ describe("Smoke tests the RoutineDetailsTable component", () => {
     beforeEach(() => {
         (getRoutine as jest.Mock).mockResolvedValue(testRoutine1);
         (getLanguages as jest.Mock).mockResolvedValue(testLanguages);
+        (getRoutineLogData as jest.Mock).mockResolvedValue(testRoutineLogData);
     });
 
     test('renders the routine table', async () => {
@@ -34,6 +35,7 @@ describe("Smoke tests the RoutineDetailsTable component", () => {
         await waitFor(() => {
             expect(getRoutine).toHaveBeenCalledTimes(1);
             expect(getLanguages).toHaveBeenCalledTimes(1);
+            expect(getRoutineLogData).toHaveBeenCalledTimes(1);
         });
         expect(screen.getByText('Test routine 1')).toBeInTheDocument();
         expect(screen.getByText('routines.sets')).toBeInTheDocument();

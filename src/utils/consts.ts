@@ -39,6 +39,7 @@ export enum QueryKey {
     ROUTINE_DETAIL = 'routine-detail',
     SESSION_SEARCH = 'session-search',
     ROUTINE_LOGS = 'routine-logs',
+    ROUTINE_LOG_DATA = 'routine-log-data',
     ROUTINE_STATS = 'routine-stats',
     ROUTINES_ACTIVE = 'routines-active',
     ROUTINES_SHALLOW = 'routines-shallow',

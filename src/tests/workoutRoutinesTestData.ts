@@ -199,19 +199,21 @@ export const testRoutineDayData1 = [
 
 ];
 
-export const testRoutineLogData = new RoutineLogData(
-    new WorkoutSession({
-        id: 111,
-        dayId: 2,
-        routineId: 1,
-        date: new Date('2024-07-01'),
-        notes: 'everything was great today!',
-        impression: '1',
-        timeStart: new Date('2024-12-01 12:30'),
-        timeEnd: new Date('2024-12-01 17:30'),
-    }),
-    testWorkoutLogs
-);
+export const testRoutineLogData = [
+    new RoutineLogData(
+        new WorkoutSession({
+            id: 111,
+            dayId: 2,
+            routineId: 1,
+            date: new Date('2024-07-01'),
+            notes: 'everything was great today!',
+            impression: '1',
+            timeStart: new Date('2024-12-01 12:30'),
+            timeEnd: new Date('2024-12-01 17:30'),
+        }),
+        testWorkoutLogs
+    )
+];
 
 export const testRoutine1 = new Routine({
     id: 1,
@@ -225,7 +227,6 @@ export const testRoutine1 = new Routine({
     isPublic: false,
     days: [testDayLegs, testRestDay, testDayPull],
     dayData: testRoutineDayData1,
-    logData: [testRoutineLogData],
 });
 
 export const testRoutine2 = new Routine({

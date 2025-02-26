@@ -2,8 +2,6 @@
 
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
-import { RoutineLogData } from "components/WorkoutRoutines/models/RoutineLogData";
-import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import i18n from 'i18next';
 import { DateTime } from "luxon";
 import { Adapter } from "utils/Adapter";
@@ -30,7 +28,6 @@ type RoutineConstructorParams = {
     isTemplate?: boolean;
     isPublic?: boolean;
     days?: Day[];
-    logData?: RoutineLogData[];
     dayData?: RoutineDayData[];
 };
 
@@ -46,7 +43,6 @@ export class Routine {
     isPublic: boolean;
 
     days: Day[] = [];
-    logData: RoutineLogData[] = [];
     dayData: RoutineDayData[] = [];
 
     constructor(data: RoutineConstructorParams) {
@@ -61,7 +57,6 @@ export class Routine {
         this.isPublic = data.isPublic ?? false;
 
         this.days = data.days ?? [];
-        this.logData = data.logData ?? [];
         this.dayData = data.dayData ?? [];
     }
 
@@ -84,23 +79,6 @@ export class Routine {
             groupedDayData[dayData.iteration].push(dayData);
         }
         return groupedDayData;
-    }
-
-    get groupedLogsByIteration() {
-        const groupedLogs: { [key: number]: WorkoutLog[] } = {};
-        for (const logData of this.logData) {
-            for (const log of logData.logs) {
-                if (log.iteration === null) {
-                    continue;
-                }
-
-                if (!groupedLogs[log.iteration]) {
-                    groupedLogs[log.iteration] = [];
-                }
-                groupedLogs[log.iteration].push(log);
-            }
-        }
-        return groupedLogs;
     }
 
     get duration() {
@@ -166,7 +144,6 @@ export class Routine {
         }
 
         const slotData = dayData.slots.find(slotData => slotData.setConfigs.some(setConfig => setConfig.slotEntryId === slotEntryId));
-
         return slotData !== undefined && slotData.setConfigs.length > 0 ? slotData.setConfigs[0] : null;
     }
 

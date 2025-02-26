@@ -7,6 +7,7 @@ import {
     getPrivateTemplatesShallow,
     getPublicTemplatesShallow,
     getRoutine,
+    getRoutineLogData,
     getRoutines,
     getRoutinesShallow,
     getRoutineStatisticsData
@@ -33,6 +34,13 @@ export function useRoutineStatsQuery(id: number) {
     return useQuery({
         queryKey: [QueryKey.ROUTINE_STATS, id],
         queryFn: () => getRoutineStatisticsData(id)
+    });
+}
+
+export function useRoutineLogData(id: number) {
+    return useQuery({
+        queryKey: [QueryKey.ROUTINE_LOG_DATA, id],
+        queryFn: () => getRoutineLogData(id)
     });
 }
 

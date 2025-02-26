@@ -22,10 +22,12 @@ import { Language } from "components/Exercises/models/language";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
+import { RoutineLogData } from "components/WorkoutRoutines/models/RoutineLogData";
 import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
+import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { useRoutineLogData } from "components/WorkoutRoutines/queries/routines";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -38,6 +40,7 @@ export const RoutineDetailsTable = () => {
     const params = useParams<{ routineId: string }>();
     const routineId = params.routineId ? parseInt(params.routineId) : 0;
     const routineQuery = useRoutineDetailQuery(routineId);
+    const routineLogDataQuery = useRoutineLogData(routineId);
     const [showLogs, setShowLogs] = React.useState(false);
 
     return <RenderLoadingQuery
@@ -53,7 +56,11 @@ export const RoutineDetailsTable = () => {
                         control={<Switch checked={showLogs}
                                          onChange={(event, checked) => setShowLogs(checked)} />}
                         label={t('routines.alsoShowLogs')} />
-                    <RoutineTable routine={routineQuery.data!} showLogs={showLogs} />
+                    <RoutineTable
+                        routine={routineQuery.data!}
+                        showLogs={showLogs}
+                        logData={routineLogDataQuery.data!}
+                    />
                 </Stack>
             </WgerContainerFullWidth>
         } />;
@@ -66,6 +73,12 @@ const useStyles = makeStyles({
         left: 0,
         // background: 'white',
         zIndex: 1,
+    },
+    stickyHeader: {
+        position: 'sticky',
+        top: 0,
+        zIndex: 2,
+        background: 'white',
     },
 
     whiteBg: {
@@ -99,12 +112,17 @@ export function compareValue(value: number | null | undefined, from: number | nu
     return null;
 }
 
-export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) => {
+export const RoutineTable = (props: {
+    routine: Routine,
+    showLogs?: boolean,
+    logData?: RoutineLogData[]
+}) => {
     const { t, i18n } = useTranslation();
     const theme = useTheme();
     const classes = useStyles();
     const languageQuery = useLanguageQuery();
     const showLogs = props.showLogs ?? false;
+    const routineLogData = props.logData ?? [];
 
     let language: Language | undefined = undefined;
     if (languageQuery.isSuccess) {
@@ -114,7 +132,20 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
         );
     }
 
-    const groupedLogs = props.routine.groupedLogsByIteration;
+    const groupedLogs: { [key: number]: WorkoutLog[] } = {};
+    for (const logData of routineLogData) {
+        for (const log of logData.logs) {
+            if (log.iteration === null) {
+                continue;
+            }
+
+            if (!groupedLogs[log.iteration]) {
+                groupedLogs[log.iteration] = [];
+            }
+            groupedLogs[log.iteration].push(log);
+        }
+    }
+
     const iterations = Object.keys(props.routine.groupedDayDataByIteration).map((iteration) => parseInt(iteration));
 
     function getTableRowHeader() {
@@ -144,7 +175,6 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
                     ? <TableCell className={classes.stickyColumn}></TableCell>
                     : null;
 
-
                 return <React.Fragment key={`header-iteration-${iteration}`}>
                     {placeholder}
                     <TableCell colSpan={5}>
@@ -157,9 +187,15 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
         </TableRow>;
     }
 
-    function getTableRowPlanned(slotEntry: SlotEntry, day: Day, slot: Slot) {
+    function getTableRowPlanned(slotEntry: SlotEntry, day: Day) {
+        const sx = { borderBottomWidth: showLogs ? 0 : null, minWidth: 40 };
 
-        const sx = { borderBottomWidth: showLogs ? 0 : null };
+        function formatContent(setConfig: SetConfigData | null, value: number | undefined | null, maxValue: number | undefined | null) {
+            return <>
+                {setConfig === null || value === null ? '-/-' : value}
+                {setConfig !== null && maxValue !== null && <> - {maxValue}</>}
+            </>;
+        }
 
         return <TableRow>
             <TableCell className={classes.stickyColumn} sx={{
@@ -169,13 +205,6 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
             }}>{slotEntry.exercise?.getTranslation(language).name}</TableCell>
             {iterations.map((iteration) => {
                 const setConfig = props.routine.getSetConfigData(day.id, iteration, slotEntry.id);
-
-                function formatContent(setConfig: SetConfigData | null, value: number | undefined | null, maxValue: number | undefined | null) {
-                    return <>
-                        {setConfig === null || value === null ? '-/-' : value}
-                        {setConfig !== null && maxValue !== null && <> - {maxValue}</>}
-                    </>;
-                }
 
                 return <React.Fragment key={iteration}>
                     <TableCell align={'center'} sx={sx}>
@@ -199,7 +228,12 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
     }
 
     function getComparisonIcon(loggedValue: number | null, plannedValue: number | null | undefined, maxPlannedValue: number | null | undefined, higherIsBetter?: boolean) {
+
         const comparison = compareValue(loggedValue, plannedValue, maxPlannedValue);
+        if (loggedValue === 105) {
+            console.log(loggedValue, plannedValue, maxPlannedValue, higherIsBetter, comparison);
+        }
+
         const fontSize = 17;
 
         // Switch the comparison color since e.g. for RiR lower is better
@@ -220,13 +254,13 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
 
     }
 
-    function getTableRowLogged(slotEntry: SlotEntry, day: Day, slot: Slot) {
+    function getTableRowLogged(slotEntry: SlotEntry, day: Day) {
         return <TableRow>
             <TableCell sx={{ verticalAlign: "top", backgroundColor: "white" }} className={classes.stickyColumn}>
                 <small>{t('nutrition.logged')}</small>
             </TableCell>
             {iterations.map((iteration) => {
-                const setConfig = props.routine.getSetConfigData(day.id, iteration, slot.id);
+                const setConfig = props.routine.getSetConfigData(day.id, iteration, slotEntry.id);
                 const iterationLogs = groupedLogs[iteration] ?? [];
 
                 const logs = iterationLogs.filter((log) => log.slotEntryId === slotEntry.id);
@@ -298,8 +332,8 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
                         return <React.Fragment key={slotIndex}>
                             {slot.configs.map((slotEntry, configIndex) => {
                                 return <React.Fragment key={configIndex}>
-                                    {getTableRowPlanned(slotEntry, day, slot)}
-                                    {showLogs && getTableRowLogged(slotEntry, day, slot)}
+                                    {getTableRowPlanned(slotEntry, day)}
+                                    {showLogs && getTableRowLogged(slotEntry, day)}
                                 </React.Fragment>;
                             })}
                         </React.Fragment>;
@@ -313,7 +347,7 @@ export const RoutineTable = (props: { routine: Routine, showLogs?: boolean }) =>
     return <Container maxWidth={false} sx={{ overflowX: 'scroll', display: 'flex', height: "80vh" }}>
         <TableContainer>
             <Table size="small">
-                <TableHead>
+                <TableHead className={classes.stickyHeader}>
                     {getTableRowWeekTitle()}
                     {getTableRowHeader()}
                 </TableHead>

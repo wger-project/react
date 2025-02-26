@@ -33,7 +33,7 @@ export const getRoutineLogs = async (id: number, options?
     const adapter = new WorkoutLogAdapter();
     const url = makeUrl(
         ApiPath.WORKOUT_LOG_API_PATH,
-        { query: { workout: id.toString(), limit: API_MAX_PAGE_SIZE, ordering: '-date', ...filtersetQuery } }
+        { query: { routine: id.toString(), limit: API_MAX_PAGE_SIZE, ordering: '-date', ...filtersetQuery } }
     );
 
     const unitResponses = await Promise.all([getRoutineRepUnits(), getRoutineWeightUnits()]);
