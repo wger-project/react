@@ -26,8 +26,7 @@ import { RoutineLogData } from "components/WorkoutRoutines/models/RoutineLogData
 import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
 import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
-import { useRoutineLogData } from "components/WorkoutRoutines/queries/routines";
+import { useRoutineDetailQuery, useRoutineLogData } from "components/WorkoutRoutines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";

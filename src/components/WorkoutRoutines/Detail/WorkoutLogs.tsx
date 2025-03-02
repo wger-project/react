@@ -3,8 +3,7 @@ import { Button, IconButton, Stack, Tooltip as MuiTooltip, Typography } from "@m
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
-import { useRoutineLogData } from "components/WorkoutRoutines/queries/routines";
+import { useRoutineDetailQuery, useRoutineLogData } from "components/WorkoutRoutines/queries";
 import { ExerciseLog } from "components/WorkoutRoutines/widgets/LogWidgets";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -26,6 +25,8 @@ export const WorkoutLogs = () => {
 
     // Group by exercise
     let groupedWorkoutLogs: Map<number, WorkoutLog[]> = new Map();
+    console.log(routineLogDataQuery.data);
+
     groupedWorkoutLogs = routineLogDataQuery.data!.reduce((r, routineLogData) => {
         routineLogData.logs.forEach(log => {
             const exerciseId = log.exerciseId;

@@ -1,11 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import { WorkoutLogs } from "components/WorkoutRoutines/Detail/WorkoutLogs";
-import { useRoutineDetailQuery, useRoutineLogQuery } from "components/WorkoutRoutines/queries";
+import { useRoutineDetailQuery, useRoutineLogData } from "components/WorkoutRoutines/queries";
 import React from 'react';
 import { MemoryRouter, Route, Routes } from "react-router";
-import { testWorkoutLogs } from "tests/workoutLogsRoutinesTestData";
-import { testRoutine1 } from "tests/workoutRoutinesTestData";
+import { testRoutine1, testRoutineLogData } from "tests/workoutRoutinesTestData";
 
 jest.mock("components/WorkoutRoutines/queries");
 
@@ -16,11 +15,6 @@ const queryClient = new QueryClient();
 describe("Test the RoutineLogs component", () => {
 
     beforeEach(() => {
-        const crypto = require('crypto');
-        Object.defineProperty(globalThis, 'crypto', {
-            value: { getRandomValues: (arr: string | any[]) => crypto.randomBytes(arr.length) }
-        });
-
         // @ts-ignore
         delete window.ResizeObserver;
         window.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -29,15 +23,13 @@ describe("Test the RoutineLogs component", () => {
             disconnect: jest.fn()
         }));
 
-        // @ts-ignore
-        useRoutineLogQuery.mockImplementation(() => ({
+        (useRoutineLogData as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
-            data: testWorkoutLogs
+            data: testRoutineLogData
         }));
 
-        // @ts-ignore
-        useRoutineDetailQuery.mockImplementation(() => ({
+        (useRoutineDetailQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: testRoutine1
@@ -64,7 +56,7 @@ describe("Test the RoutineLogs component", () => {
 
         // Assert
         expect(useRoutineDetailQuery).toHaveBeenCalledWith(101);
-        expect(useRoutineLogQuery).toHaveBeenCalledWith(101, false, { "repetition_unit": 1, "weight_unit__in": "1,2" });
+        expect(useRoutineLogData).toHaveBeenCalledWith(101);
         expect(screen.getByText('Every day is leg day 🦵🏻')).toBeInTheDocument();
         expect(screen.getByText('routines.addLogToDay')).toBeInTheDocument();
         expect(screen.getByText('Squats')).toBeInTheDocument();

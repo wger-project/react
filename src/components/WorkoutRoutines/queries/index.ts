@@ -5,7 +5,8 @@ export {
     useRoutinesShallowQuery,
     useDeleteRoutineQuery,
     usePublicRoutinesShallowQuery,
-    usePrivateRoutinesShallowQuery
+    usePrivateRoutinesShallowQuery,
+    useRoutineLogData
 } from './routines';
 
 export {
