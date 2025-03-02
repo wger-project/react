@@ -7,17 +7,6 @@ export function dateToYYYYMMDD(date: Date): string {
     return date.toISOString().split('T')[0];
 }
 
-// Map the numbers 1 - 7 to the days of the week
-export const daysOfWeek = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-];
-
 export function isSameDay(date1: Date, date2: Date): boolean {
     return (
         date1.getFullYear() === date2.getFullYear() &&
@@ -67,14 +56,16 @@ export function dateTimeToHHMM(date: Date | null) {
  * have to consider that there could be annoying AMs and PMs in the string
  */
 export function HHMMToDateTime(time: string | null) {
+
     if (time == null) {
         return null;
     }
 
-    const [hour, minute] = time.split(':');
+    const [hour, minute] = time.split(':', 2);
     const dateTime = new Date();
     dateTime.setHours(parseInt(hour));
     dateTime.setMinutes(parseInt(minute));
+
     return dateTime;
 }
 

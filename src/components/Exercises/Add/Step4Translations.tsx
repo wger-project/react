@@ -28,21 +28,21 @@ import { useLanguageQuery } from "components/Exercises/queries";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseStateValue } from "state";
+import { useExerciseSubmissionStateValue } from "state";
 import {
     setAlternativeNamesI18n,
     setDescriptionI18n,
     setLanguageId,
     setNameI18n,
     setNotesI18n
-} from "state/exerciseReducer";
+} from "state/exerciseSubmissionReducer";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import * as yup from "yup";
 
 export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
     const languageQuery = useLanguageQuery();
-    const [state, dispatch] = useExerciseStateValue();
+    const [state, dispatch] = useExerciseSubmissionStateValue();
 
     const [translateExercise, setTranslateExercise] = useState<boolean>(state.languageId !== null);
 
