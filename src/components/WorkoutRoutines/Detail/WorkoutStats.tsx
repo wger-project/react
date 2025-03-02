@@ -154,7 +154,7 @@ export const WorkoutStats = () => {
                                                backgroundColor: theme.palette.grey.A200,
                                                textAlign: 'right',
                                            }}>
-                                    {statsData.totals[header.toString()]?.toFixed(selectedValueType === StatType.Intensity ? 2 : 0)}
+                                    {statsData.totals[header?.toString()]?.toFixed(selectedValueType === StatType.Intensity ? 2 : 0)}
                                 </TableCell>
                             ))}
                         </TableRow>}
