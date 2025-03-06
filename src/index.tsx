@@ -8,7 +8,6 @@ import { NutritionCard } from "components/Dashboard/NutritionCard";
 import { RoutineCard } from "components/Dashboard/RoutineCard";
 import { WeightCard } from "components/Dashboard/WeightCard";
 import { IngredientSearch } from "components/Nutrition/components/IngredientSearch";
-import { WeightOverview } from "pages";
 import React, { Suspense } from 'react';
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -102,23 +101,28 @@ if (rootElement) {
     );
 }
 
-/*
- * Components used in the wger django app, don't change the IDs here
- */
-const weightOverview = document.getElementById("react-weight-overview");
-if (weightOverview) {
-    const root = createRoot(weightOverview);
+
+const rootNoShadowDom = document.getElementById("react-page-no-shadow-dom");
+if (rootNoShadowDom) {
+    const root = createRoot(rootNoShadowDom);
     root.render(
         <Suspense fallback={<LoadingWidget />}>
-            <ThemeProvider theme={theme}>
-                <QueryClientProvider client={queryClient}>
-                    <WeightOverview />
-                </QueryClientProvider>
-            </ThemeProvider>
+            <Router>
+                <ThemeProvider theme={theme}>
+                    <QueryClientProvider client={queryClient}>
+                        <WgerRoutes />
+                    </QueryClientProvider>
+                </ThemeProvider>
+            </Router>
         </Suspense>
     );
 }
 
+renderComponentShadowDom('react-page');
+
+/*
+ * Components used in the wger django app, don't change the IDs here
+ */
 const weightDashboard = document.getElementById("react-weight-dashboard");
 if (weightDashboard) {
     const root = createRoot(weightDashboard);
@@ -161,28 +165,6 @@ if (routineDashboard) {
     );
 }
 
-renderComponentShadowDom("react-exercise-overview");
-renderComponentShadowDom("react-exercise-contribute");
-
-
-const exerciseDetail = document.getElementById("react-exercise-detail");
-if (exerciseDetail) {
-    const root = createRoot(exerciseDetail);
-    root.render(
-        <Suspense fallback={<LoadingWidget />}>
-            <Router>
-                <ThemeProvider theme={theme}>
-                    <QueryClientProvider client={queryClient}>
-                        <WgerRoutes />
-                    </QueryClientProvider>
-                </ThemeProvider>
-            </Router>
-        </Suspense>
-    );
-}
-
-
-renderComponentShadowDom('react-page');
 
 const ingredientSearchBox = document.getElementById("react-ingredient-search");
 if (ingredientSearchBox) {
