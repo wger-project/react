@@ -9,7 +9,7 @@ export const API_SETTING_REP_UNIT_PATH = 'setting-repetitionunit';
 export const API_SETTING_WEIGHT_UNIT_PATH = 'setting-weightunit';
 
 
-export const getRepUnits = async (): Promise<RepetitionUnit[]> => {
+export const getRoutineRepUnits = async (): Promise<RepetitionUnit[]> => {
     const url = makeUrl(API_SETTING_REP_UNIT_PATH);
     const { data: receivedUnits } = await axios.get<ResponseType<ApiSettingRepUnitType>>(url, {
         headers: makeHeader(),
@@ -18,7 +18,7 @@ export const getRepUnits = async (): Promise<RepetitionUnit[]> => {
     return receivedUnits.results.map(l => adapter.fromJson(l));
 };
 
-export const getWeightUnits = async (): Promise<WeightUnit[]> => {
+export const getRoutineWeightUnits = async (): Promise<WeightUnit[]> => {
     const url = makeUrl(API_SETTING_WEIGHT_UNIT_PATH);
     const { data: receivedUnits } = await axios.get<ResponseType<ApiSettingWeightUnitType>>(url, {
         headers: makeHeader(),

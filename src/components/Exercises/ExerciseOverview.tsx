@@ -133,7 +133,11 @@ export const ExerciseOverviewList = () => {
         page * ITEMS_PER_PAGE
     );
 
-    const exerciseAdded = (exerciseResponse: ExerciseSearchResponse) => {
+    const exerciseAdded = (exerciseResponse: ExerciseSearchResponse | null) => {
+        if (!exerciseResponse) {
+            return;
+        }
+
         navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: exerciseResponse.data.base_id }));
     };
 

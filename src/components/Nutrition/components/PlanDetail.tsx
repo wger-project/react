@@ -21,7 +21,11 @@ import { useParams } from "react-router-dom";
 export const PlanDetail = () => {
     const [t] = useTranslation();
     const params = useParams<{ planId: string }>();
-    const planId = parseInt(params.planId!);
+    const planId = parseInt(params.planId ?? '');
+    if (Number.isNaN(planId)) {
+        return <p>Please pass an integer as the nutritional plan id.</p>;
+    }
+
     const planQuery = useFetchNutritionalPlanQuery(planId);
     const [expandedForm, setExpandedForm] = useState(false);
     const handleToggleExpandedForm = () => setExpandedForm(!expandedForm);
@@ -65,7 +69,6 @@ export const PlanDetail = () => {
                 </>}
 
                 <NutritionalValuesTable values={plan.plannedNutritionalValues} />
-
 
                 {plan.hasAnyPlanned &&
                     <MacrosPieChart data={plan.plannedNutritionalValues} />

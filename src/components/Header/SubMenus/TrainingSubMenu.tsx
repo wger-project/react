@@ -22,6 +22,12 @@ export const TrainingSubMenu = () => {
                 <MenuItem component={Link} to={makeLink(WgerLink.ROUTINE_OVERVIEW, i18n.language)}>
                     Routine overview
                 </MenuItem>
+                <MenuItem component={Link} to={makeLink(WgerLink.PRIVATE_TEMPLATE_OVERVIEW, i18n.language)}>
+                    Private template overview
+                </MenuItem>
+                <MenuItem component={Link} to={makeLink(WgerLink.PUBLIC_TEMPLATE_OVERVIEW, i18n.language)}>
+                    Public template overview
+                </MenuItem>
                 <MenuItem component={Link} to={makeLink(WgerLink.EXERCISE_OVERVIEW, i18n.language)}>
                     Exercise overview
                 </MenuItem>
