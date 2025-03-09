@@ -33,7 +33,7 @@
     "typescript": "^5.6.3",
     "vite-tsconfig-paths": "^5.1.4",
     "web-vitals": "^4.2.2",
-    "yup": "^1.4.0"
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^5.51.11",
