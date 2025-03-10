@@ -1,4 +1,5 @@
 import { Add, Delete } from "@mui/icons-material";
+import { ArrowBack } from "@mui/icons-material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
     Box,
@@ -24,7 +25,7 @@ import { WorkoutSetting } from "components/WorkoutRoutines/models/WorkoutSetting
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { daysOfWeek } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
 
@@ -36,11 +37,21 @@ export const RoutineDetails = () => {
     const [t, i18n] = useTranslation();
     const routineQuery = useRoutineDetailQuery(routineId);
 
+    const navigate = useNavigate();
+    const handleBack = () => { //Go back to previous page
+	navigate(-1);
+    };
     // TODO: remove this when we add the logic in react
     const navigateAddDay = () => window.location.href = makeLink(WgerLink.ROUTINE_ADD_DAY, i18n.language, { id: routineId });
 
     return <>
         <Container maxWidth="lg">
+	    <Button
+                startIcon={<ArrowBack />} //add back arrow icon
+                onClick={handleBack}      //handle back button click
+            >
+                {t('back')}                {/* Display back text */}
+            </Button>
             {routineQuery.isLoading
                 ? <LoadingPlaceholder />
                 : <>
