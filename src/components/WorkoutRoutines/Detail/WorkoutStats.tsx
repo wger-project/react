@@ -213,7 +213,8 @@ export const WorkoutStats = () => {
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="category" type="category" allowDuplicatedCategory={false} />
                                 <YAxis dataKey="value" />
-                                <Tooltip />
+                                <Tooltip
+                                    formatter={(value: number) => Number.isInteger(value) ? value.toFixed(0) : value.toFixed(2)} />
                                 <Legend
                                     layout={"vertical"}
                                     verticalAlign="middle"
