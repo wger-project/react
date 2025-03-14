@@ -8,8 +8,6 @@ import {
     Container,
     Divider,
     IconButton,
-    Menu,
-    MenuItem,
     Stack,
     Typography,
     useTheme
@@ -154,20 +152,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
     const readOnly = (props.readOnly ?? false) || props.dayData.day === null || props.dayData.day.isRest;
 
     const theme = useTheme();
-
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
     const [t, i18n] = useTranslation();
-
-    const navigateAddLog = () => window.location.href = makeLink(
-        WgerLink.ROUTINE_ADD_LOG,
-        i18n.language,
-        { id: props.dayData.day!.id }
-    );
 
     return (
         <Card sx={{ minWidth: 275 }}>
@@ -187,17 +172,6 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
                 title={getDayName(props.dayData.day)}
                 subheader={<Typography sx={{ whiteSpace: 'pre-line' }}>{props.dayData.day?.description}</Typography>}
             />
-            <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{ 'aria-labelledby': 'basic-button' }}
-            >
-                <MenuItem onClick={navigateAddLog}>
-                    {t('routines.addWeightLog')}
-                </MenuItem>
-            </Menu>
             {props.dayData.slots.length > 0 && <CardContent sx={{ padding: 0, marginBottom: 0 }}>
                 <Stack>
                     {props.dayData.slots.map((slotData, index) => (
