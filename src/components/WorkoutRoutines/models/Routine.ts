@@ -5,7 +5,7 @@ import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData
 import i18n from 'i18next';
 import { DateTime } from "luxon";
 import { Adapter } from "utils/Adapter";
-import { dateToYYYYMMDD } from "utils/date";
+import { dateToYYYYMMDD, isSameDay } from "utils/date";
 
 export const NAME_MIN_LENGTH = 3;
 export const NAME_MAX_LENGTH = 25;
@@ -123,11 +123,7 @@ export class Routine {
     getIteration(date?: Date | undefined) {
         const dateToCheck = date ?? new Date();
 
-        const currentDayData = this.dayData.find(dayData =>
-            dayData.date.getDate() === dateToCheck.getDate() &&
-            dayData.date.getMonth() === dateToCheck.getMonth() &&
-            dayData.date.getFullYear() === dateToCheck.getFullYear()
-        );
+        const currentDayData = this.dayData.find(dayData => isSameDay(dayData.date, dateToCheck));
         return currentDayData ? currentDayData.iteration : null;
     }
 

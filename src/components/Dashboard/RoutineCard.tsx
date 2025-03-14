@@ -1,5 +1,6 @@
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import TodayIcon from "@mui/icons-material/Today";
 import {
     Button,
     Card,
@@ -21,6 +22,7 @@ import { useActiveRoutineQuery } from "components/WorkoutRoutines/queries";
 import { SetConfigDataDetails } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
+import { isSameDay } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
 
 
@@ -82,7 +84,12 @@ const DayListItem = (props: { dayData: RoutineDayData }) => {
             </ListItemIcon>
             <ListItemText
                 primary={getDayName(props.dayData.day)}
+                slotProps={{ secondary: { noWrap: true, style: { overflow: 'hidden', textOverflow: 'ellipsis' } } }}
+                secondary={props.dayData.day?.description}
             />
+            <ListItemIcon>
+                {isSameDay(props.dayData.date, new Date()) ? <TodayIcon /> : undefined}
+            </ListItemIcon>
         </ListItemButton>
 
         <Collapse in={expandView} timeout="auto" unmountOnExit>

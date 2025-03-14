@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Card, CardContent, CardHeader, useMediaQuery, useTheme} from '@mui/material';
-import CalendarHeader from './CalendarHeader';
-import CalendarDayGrid from './CalendarDayGrid';
-import Entries from './Entries';
-import {WeightEntry} from "../../BodyWeight/model";
-import {useBodyWeightQuery} from "../../BodyWeight/queries";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import {isSameDay} from "../../../utils/date";
-import {CalendarMeasurement} from "../Helpers/CalendarMeasurement";
-import {useMeasurementsCategoryQuery} from "../../Measurements/queries";
-import {useTranslation} from "react-i18next";
+import { Box, Card, CardContent, CardHeader, useMediaQuery, useTheme } from '@mui/material';
+import { WeightEntry } from "components/BodyWeight/model";
+import { useBodyWeightQuery } from "components/BodyWeight/queries";
+import CalendarDayGrid from "components/Calendar/Components/CalendarDayGrid";
+import CalendarHeader from "components/Calendar/Components/CalendarHeader";
+import { CalendarMeasurement } from "components/Calendar/Helpers/CalendarMeasurement";
+import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from "react-i18next";
+import { isSameDay } from "utils/date";
+import Entries from './Entries';
 
 export interface DayProps {
     date: Date,
@@ -149,7 +149,7 @@ const CalendarComponent = () => {
                 flexDirection: 'column'
             }}>
                 <CardHeader
-                    sx={{'& .MuiCardHeader-content': {width: '100%'}}}
+                    sx={{ '& .MuiCardHeader-content': { width: '100%' } }}
                     title={
                         <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                             <div style={{
@@ -161,7 +161,7 @@ const CalendarComponent = () => {
                                     width: isMobile ? '28px' : '32px',
                                     height: isMobile ? '28px' : '32px',
                                     marginRight: '12px'
-                                }}/>
+                                }} />
                                 <span style={{
                                     fontSize: isMobile ? '1.5rem' : '1.8rem',
                                     fontWeight: 'bold'
@@ -194,7 +194,7 @@ const CalendarComponent = () => {
                     />
                 </CardContent>
             </Card>
-            <Entries selectedDay={selectedDay}/>
+            <Entries selectedDay={selectedDay} />
         </Box>
     );
 };

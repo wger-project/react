@@ -1,4 +1,5 @@
 import { Addchart } from "@mui/icons-material";
+import TodayIcon from '@mui/icons-material/Today';
 import {
     Box,
     Card,
@@ -27,6 +28,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { getLanguageByShortName } from "services";
+import { isSameDay } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
 
 
@@ -170,6 +172,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
                         </IconButton>
                     </Tooltip>}
                 title={getDayName(props.dayData.day)}
+                avatar={isSameDay(props.dayData.date, new Date()) ? <TodayIcon /> : undefined}
                 subheader={<Typography sx={{ whiteSpace: 'pre-line' }}>{props.dayData.day?.description}</Typography>}
             />
             {props.dayData.slots.length > 0 && <CardContent sx={{ padding: 0, marginBottom: 0 }}>
