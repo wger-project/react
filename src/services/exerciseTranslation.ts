@@ -14,7 +14,7 @@ export const EXERCISE_SEARCH_PATH = 'exercise/search';
  */
 export const getExerciseTranslations = async (id: number): Promise<Translation[]> => {
     // eslint-disable-next-line camelcase
-    const url = makeUrl(EXERCISE_PATH, { query: { exercise_base: id } });
+    const url = makeUrl(EXERCISE_PATH, { query: { exercise: id } });
     const { data } = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
@@ -57,7 +57,7 @@ export const addTranslation = async (params: AddTranslationParams): Promise<Tran
     const url = makeUrl(EXERCISE_TRANSLATION_PATH);
     const baseData = {
         // eslint-disable-next-line camelcase
-        exercise_base: exerciseId,
+        exercise: exerciseId,
         language: languageId,
         name: name,
         description: description,
@@ -84,8 +84,7 @@ export const editTranslation = async (data: EditTranslationParams): Promise<Tran
 
     const url = makeUrl(EXERCISE_TRANSLATION_PATH, { id: id });
     const baseData = {
-        // eslint-disable-next-line camelcase
-        exercise_base: exerciseId,
+        exercise: exerciseId,
         language: languageId,
         name: name,
         description: description,
