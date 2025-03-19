@@ -53,8 +53,8 @@ const RoutineCardContent = (props: { routine: Routine }) => {
         {/* Note: not 500 like the other cards, but a bit more since we don't have an action icon... */}
         <CardContent sx={{ height: "510px", overflow: "auto" }}>
             <List>
-                {props.routine.dayDataCurrentIteration.map((day, index) =>
-                    <DayListItem dayData={day} key={index} />)}
+                {props.routine.dayDataCurrentIteration.filter(dayData => dayData.day !== null).map((dayData, index) =>
+                    <DayListItem dayData={dayData} key={index} />)}
             </List>
         </CardContent>
 
