@@ -32,7 +32,6 @@
     "recharts": "^2.13.3",
     "slug": "^9.1.0",
     "typescript": "^5.8.2",
-    "use-debounce": "^10.0.4",
     "vite-tsconfig-paths": "^5.1.4",
     "web-vitals": "^4.2.2",
     "yup": "^1.6.1"
