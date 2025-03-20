@@ -1,15 +1,14 @@
-import { MeasurementCategory } from "components/Measurements/models/Category";
-import { useTranslation } from "react-i18next";
-import React from "react";
+import MenuIcon from '@mui/icons-material/Menu';
 import { Button, Menu, MenuItem } from "@mui/material";
-import SettingsIcon from '@mui/icons-material/Settings';
-import { WgerModal } from "components/Core/Modals/WgerModal";
-import { CategoryForm } from "components/Measurements/widgets/CategoryForm";
 import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
+import { WgerModal } from "components/Core/Modals/WgerModal";
+import { MeasurementCategory } from "components/Measurements/models/Category";
 import { useDeleteMeasurementCategoryQuery } from "components/Measurements/queries";
+import { CategoryForm } from "components/Measurements/widgets/CategoryForm";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { makeLink, WgerLink } from "utils/url";
-
 
 export const CategoryDetailDropdown = (props: { category: MeasurementCategory }) => {
 
@@ -54,7 +53,7 @@ export const CategoryDetailDropdown = (props: { category: MeasurementCategory })
     return (
         <div>
             <Button onClick={handleClick}>
-                <SettingsIcon />
+                <MenuIcon />
             </Button>
             <Menu
                 anchorEl={anchorEl}

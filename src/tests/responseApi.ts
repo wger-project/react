@@ -72,7 +72,7 @@ export const testApiExercise1 = new Exercise(
 
 export const responseApiExerciseInfo = {
     "count": 418,
-    "next": "http://localhost:8000/api/v2/exercisebaseinfo/?format=json&limit=20&offset=20",
+    "next": "http://localhost:8000/api/v2/exerciseinfo/?format=json&limit=20&offset=20",
     "previous": null,
     "results": [{
         "id": 345,
@@ -120,7 +120,7 @@ export const responseApiExerciseInfo = {
         "images": [{
             "id": 7,
             "uuid": "2fe5f04b-5c9d-448c-a973-3fad6ddd4f74",
-            "exercise_base": 9,
+            "exercise": 9,
             "image": "http://localhost:8000/media/exercise-images/9/2fe5f04b-5c9d-448c-a973-3fad6ddd4f74.jpg",
             "is_main": true,
             "status": "2",
@@ -130,8 +130,8 @@ export const responseApiExerciseInfo = {
             {
                 "id": 1,
                 "uuid": "b1c934fa-c4f8-4d84-8cb4-7802be0d284c",
-                "exercise_base": 418,
-                "exercise_base_uuid": "6260e3aa-e46b-4b4b-8ada-58bfd0922d3a",
+                "exercise": 418,
+                "exercise_uuid": "6260e3aa-e46b-4b4b-8ada-58bfd0922d3a",
                 "video": "http://localhost:8000/media/exercise-video/258/b1c934fa-c4f8-4d84-8cb4-7802be0d284c.mp4",
                 "is_main": false,
                 "size": 0,
@@ -145,7 +145,7 @@ export const responseApiExerciseInfo = {
             }
         ],
         "variations": 228,
-        "exercises": [
+        "translations": [
             {
                 "id": 111,
                 "uuid": "583281c7-2362-48e7-95d5-8fd6c455e0fb",

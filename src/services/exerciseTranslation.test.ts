@@ -13,7 +13,7 @@ describe("Exercise translation service API tests", () => {
         const response = {
             "id": 886,
             "uuid": "c788d643-150a-4ac7-97ef-84643c6419bf",
-            "exercise_base": 100,
+            "exercise": 100,
             "aliases": [],
             "name": "Test exercise",
             "description": "Test description",
@@ -51,7 +51,7 @@ describe("Exercise translation service API tests", () => {
         const response = {
             "id": 886,
             "uuid": "c788d643-150a-4ac7-97ef-84643c6419bf",
-            "exercise_base": 100,
+            "exercise": 100,
             "aliases": [],
             "name": "A new, cooler name!!!",
             "description": "A new, cooler description!!!",

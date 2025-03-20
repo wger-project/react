@@ -14,4 +14,3 @@ export { ApiPage } from './ApiPage';
 export { TemplatePage } from './TemplatePage';
 export { WeightOverview } from './WeightOverview';
 export { Workout } from './Workout';
-export { WorkoutSchedule } from './WorkoutSchedule';

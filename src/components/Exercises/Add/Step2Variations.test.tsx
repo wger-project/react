@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { Step2Variations } from "components/Exercises/Add/Step2Variations";
 import { useExercisesQuery } from "components/Exercises/queries";
 import React from "react";
-import { ExerciseStateProvider } from "state";
+import { ExerciseSubmissionStateProvider } from "state";
 import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls } from "tests/exerciseTestdata";
 
 jest.mock('components/Exercises/queries');
@@ -55,11 +55,11 @@ describe("Test the add exercise step 2 component", () => {
     test("Correctly sets the variation ID", async () => {
         // Act
         render(
-            <ExerciseStateProvider>
+            <ExerciseSubmissionStateProvider>
                 <QueryClientProvider client={queryClient}>
                     <Step2Variations onContinue={mockOnContinue} />
                 </QueryClientProvider>
-            </ExerciseStateProvider>
+            </ExerciseSubmissionStateProvider>
         );
         const benchPress = screen.getByText("Benchpress");
         await userEvent.click(benchPress);
@@ -85,7 +85,7 @@ describe("Test the add exercise step 2 component", () => {
         // Assert
     });
 
-    test("Correctly sets the newVariationBaseId ID", async () => {
+    test("Correctly sets the newVariationExerciseId ID", async () => {
         // Arrange
         const user = userEvent.setup();
 
@@ -100,7 +100,7 @@ describe("Test the add exercise step 2 component", () => {
 
         // Assert
     });
-    test("Correctly unsets the newVariationBaseId ID", async () => {
+    test("Correctly unsets the newVariationExerciseId ID", async () => {
         // Arrange
         const user = userEvent.setup();
 

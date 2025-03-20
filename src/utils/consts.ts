@@ -7,6 +7,7 @@ export const ENGLISH_LANGUAGE_OBJ = new Language(ENGLISH_LANGUAGE_ID, ENGLISH_LA
 
 export const MIN_ACCOUNT_AGE = MIN_ACCOUNT_AGE_TO_TRUST || 21;
 
+
 export const REP_UNIT_REPETITIONS = 1;
 export const REP_UNIT_TILL_FAILURE = 2;
 
@@ -24,13 +25,6 @@ export const QUERY_MUSCLES = 'muscles';
 export const QUERY_NOTES = 'notes';
 
 export const QUERY_PERMISSION = 'permission';
-export const QUERY_PROFILE = 'profile';
-
-export const QUERY_ROUTINES = 'routines';
-export const QUERY_ROUTINE_DETAIL = 'routine';
-export const QUERY_ROUTINES_SHALLOW = 'routines-shallow';
-export const QUERY_ROUTINES_ACTIVE = 'routines-active';
-export const QUERY_ROUTINE_LOGS = 'routines-logs';
 
 export const QUERY_MEASUREMENTS = 'measurements';
 export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
@@ -41,12 +35,28 @@ export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
  * These don't have any meaning, they just need to be globally unique
  */
 export enum QueryKey {
+    ROUTINE_OVERVIEW = 'routine-overview',
+    ROUTINE_DETAIL = 'routine-detail',
+    SESSION_SEARCH = 'session-search',
+    ROUTINE_LOGS = 'routine-logs',
+    ROUTINE_LOG_DATA = 'routine-log-data',
+    ROUTINE_STATS = 'routine-stats',
+    ROUTINES_ACTIVE = 'routines-active',
+    ROUTINES_SHALLOW = 'routines-shallow',
+    PRIVATE_TEMPLATES = 'private-templates',
+    PUBLIC_TEMPLATES = 'public-templates',
+
     NUTRITIONAL_PLANS = 'nutritional-plans',
     NUTRITIONAL_PLAN = 'nutritional-plan',
     NUTRITIONAL_PLAN_LAST = 'nutritional-plan-last',
     INGREDIENT = 'ingredient',
 
     BODY_WEIGHT = 'body-weight',
+
+    ROUTINE_WEIGHT_UNITS = 'weight-units',
+    ROUTINE_REP_UNITS = 'rep-units',
+
+    QUERY_PROFILE = 'profile',
 
     EXERCISES = 'exercises',
     EXERCISE_VARIATIONS = 'variations',
@@ -62,12 +72,38 @@ export enum QueryKey {
  * List of API endpoints
  */
 export enum ApiPath {
+
+    // Nutrition
     MEAL = 'meal',
     MEAL_ITEM = 'mealitem',
     NUTRITIONAL_DIARY = 'nutritiondiary',
     INGREDIENT_PATH = 'ingredientinfo',
     INGREDIENT_SEARCH_PATH = 'ingredient/search',
-    INGREDIENT_WEIGHT_UNIT = 'ingredientweightunit'
+    INGREDIENT_WEIGHT_UNIT = 'ingredientweightunit',
+
+    // Routines
+    ROUTINE = 'routine',
+    WEIGHT_CONFIG = 'weight-config',
+    MAX_WEIGHT_CONFIG = 'max-weight-config',
+    REPETITIONS_CONFIG = 'repetitions-config',
+    MAX_REPS_CONFIG = 'max-repetitions-config',
+    RIR_CONFIG = 'rir-config',
+    MAX_RIR_CONFIG = 'max-rir-config',
+    NR_OF_SETS_CONFIG = 'sets-config',
+    MAX_NR_OF_SETS_CONFIG = 'max-sets-config',
+    REST_CONFIG = 'rest-config',
+    MAX_REST_CONFIG = 'max-rest-config',
+    DAY = 'day',
+    SLOT = 'slot',
+    SLOT_ENTRY = 'slot-entry',
+    SESSION = 'workoutsession',
+
+    WORKOUT_LOG_API_PATH = 'workoutlog',
+    PRIVATE_TEMPLATE_API_PATH = 'templates',
+    PUBLIC_TEMPLATE_API_PATH = 'public-templates',
+
+    // Profile
+    API_PROFILE_PATH = 'userprofile',
 }
 
 
@@ -116,3 +152,5 @@ export const TIMEZONE = TIME_ZONE || 'Europe/Berlin';
 export const LANGUAGE_SHORT_ENGLISH = 'en';
 
 export const SNACKBAR_AUTO_HIDE_DURATION = 3000;
+
+export const DEBOUNCE_ROUTINE_FORMS = 500;

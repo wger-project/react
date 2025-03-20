@@ -28,14 +28,14 @@ import { useProfileQuery } from "components/User/queries/profile";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseStateValue } from "state";
-import { setImages } from "state/exerciseReducer";
+import { useExerciseSubmissionStateValue } from "state";
+import { setImages } from "state/exerciseSubmissionReducer";
 
 export const Step5Images = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
     const profileQuery = useProfileQuery();
 
-    const [state, dispatch] = useExerciseStateValue();
+    const [state, dispatch] = useExerciseSubmissionStateValue();
     const [localImages, setLocalImages] = useState<ImageFormData[]>(state.images);
     const [popupImage, setPopupImage] = useState<ImageFormData | undefined>(undefined);
 

@@ -1,3 +1,5 @@
+import { Exercise } from "components/Exercises/models/exercise";
+
 export interface ResponseType<T> {
     count: number,
     next: number | null,
@@ -14,7 +16,8 @@ export interface ExerciseSearchResponse {
         category: string,
         image: string | null,
         image_thumbnail: string | null,
-    }
+    },
+    exercise?: Exercise
 }
 
 export interface ExerciseSearchType {

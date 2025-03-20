@@ -3,8 +3,8 @@ import { Exercise, ExerciseAdapter } from "components/Exercises/models/exercise"
 import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
 
-export const EXERCISE_INFO_PATH = 'exercisebaseinfo';
-export const EXERCISE_PATH = 'exercise-base';
+export const EXERCISE_INFO_PATH = 'exerciseinfo';
+export const EXERCISE_PATH = 'exercise';
 
 /*
  * Process the response from the server and return the exercise bases

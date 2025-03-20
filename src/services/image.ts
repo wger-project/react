@@ -23,8 +23,7 @@ export const postExerciseImage = async (data: PostExerciseImageParams): Promise<
     const response = await axios.post(
         url,
         {
-            // eslint-disable-next-line camelcase
-            exercise_base: data.exerciseId,
+            exercise: data.exerciseId,
             image: data.image,
             // eslint-disable-next-line camelcase
             license_title: data.imageData.title,

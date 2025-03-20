@@ -5,7 +5,6 @@ import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEd
 import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailView";
 import { Language } from "components/Exercises/models/language";
 import { useLanguageQuery } from "components/Exercises/queries";
-import { parseInt } from "lodash";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -21,8 +20,12 @@ export const ExerciseDetails = () => {
     const [language, setLanguage] = useState<Language>(ENGLISH_LANGUAGE_OBJ);
     const [editMode, setEditMode] = useState<boolean>(false);
 
-    const params = useParams<{ baseID: string }>();
-    const exerciseId = params.baseID ? parseInt(params.baseID) : 0;
+    const params = useParams<{ exerciseId: string }>();
+    const exerciseId = parseInt(params.exerciseId ?? '');
+    if (Number.isNaN(exerciseId)) {
+        return <p>Please pass an integer as the exercise id.</p>;
+    }
+
 
     const { i18n } = useTranslation();
     const navigate = useNavigate();
