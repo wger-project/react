@@ -6,7 +6,19 @@ components that are then used in wger.
 
 # Getting Started
 
-Basically:
+Our goal is to build an awesome and flexible fitness and nutrition manager,
+along with a comprehensive list of exercises and ingredients, all released
+under a free license.
+
+For this, we’d love your help! Whether it’s code, translations, exercises or
+reporting issues and ideas, check out our
+[contribution guide](https://wger.readthedocs.io/en/latest/contributing.html)
+to get started.
+
+A huge thank you to everyone who has contributed so far! ❤️ See the full list
+in [AUTHORS.md](AUTHORS.md).
+
+**TLDR**
 
 ```bash
 cp .env.TEMPLATE .env.development
@@ -15,9 +27,13 @@ yarn install
 yarn start 
 ```
 
-For more details please consult the online development documentation:
+This is a regular react application, so there's no magic. You will need a backend
+for this, so feel free to use the test server for this (the db is reset daily):
 
-<https://wger.readthedocs.io/en/latest/development/frontend.html>
+* URL: `https://wger-master.rge.uber.space`
+* key: `31e2ea0322c07b9df583a9b6d1e794f7139e78d4`
+* username: `user`
+* password: `flutteruser`
 
 ## Translation
 
