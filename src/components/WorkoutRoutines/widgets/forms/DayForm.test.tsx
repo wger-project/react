@@ -77,7 +77,7 @@ describe('Tests for the DayForm', () => {
             "name": 'New name',
             "description": 'New description',
             "is_rest": false,
-            "needs_logs_to_advance": false
+            "need_logs_to_advance": false
         });
     });
 });

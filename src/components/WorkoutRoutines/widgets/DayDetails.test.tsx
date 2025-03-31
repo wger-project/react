@@ -58,7 +58,7 @@ describe("Test the DayDragAndDropGrid component", () => {
         expect(mockAddDay).toHaveBeenCalledWith({
             "is_rest": false,
             "name": "routines.newDay 4",
-            "needs_logs_to_advance": false,
+            "need_logs_to_advance": false,
             "order": 4,
             "routine": 222,
         });

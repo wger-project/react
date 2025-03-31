@@ -99,7 +99,7 @@ export const DayDragAndDropGrid = (props: {
             name: `${t('routines.newDay')} ${routineQuery.data!.days.length + 1}`,
             order: routineQuery.data!.days.length + 1,
             is_rest: false,
-            needs_logs_to_advance: false,
+            need_logs_to_advance: false,
         };
         const newDay = await addDayQuery.mutateAsync(newDayData);
         props.setSelectedDayIndex(routineQuery.data!.days.length);

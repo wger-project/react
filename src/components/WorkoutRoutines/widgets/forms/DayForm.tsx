@@ -89,7 +89,7 @@ export const DayForm = (props: {
             ...(values.name !== undefined && { name: values.name }),
             ...(values.description !== undefined && { description: values.description }),
             ...(values.isRest !== undefined && { is_rest: isRest }),
-            ...(values.needsLogsToAdvance !== undefined && { needs_logs_to_advance: values.needsLogsToAdvance }),
+            ...(values.needsLogsToAdvance !== undefined && { need_logs_to_advance: values.needsLogsToAdvance }),
         });
 
     return <>

@@ -89,7 +89,7 @@ describe('addDay', () => {
         description: 'A test day',
         order: 1,
         is_rest: false,
-        needs_logs_to_advance: false,
+        need_logs_to_advance: false,
     };
 
     const mockAddDayParams: AddDayParams = {
@@ -98,7 +98,7 @@ describe('addDay', () => {
         description: 'A test day',
         order: 1,
         is_rest: false,
-        needs_logs_to_advance: false,
+        need_logs_to_advance: false,
     };
 
     beforeEach(() => {

@@ -10,7 +10,7 @@ export interface AddDayParams {
     description?: string;
     order: number;
     is_rest: boolean;
-    needs_logs_to_advance: boolean;
+    need_logs_to_advance: boolean;
 }
 
 export interface EditDayParams extends Partial<AddDayParams> {
