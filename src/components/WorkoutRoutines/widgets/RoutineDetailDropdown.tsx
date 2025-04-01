@@ -63,6 +63,21 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
         setAnchorEl(null);
     };
 
+    /*
+     *  Note: this is a workaround. Instead of just using the navigate function we need to
+     *        force a reload of the page, otherwise the drag-and-drop doesn't work properly
+     *        when loaded from within the django application. This has probably to do with
+     *        the way we add the components there. If we find a solution for that one day,
+     *        this can be removed.
+     *
+     *        See also: https://github.com/wger-project/wger/issues/1943
+     */
+    const navigateEdit = () => window.location.href = makeLink(
+        WgerLink.ROUTINE_EDIT,
+        i18n.language,
+        { id: props.routine.id }
+    );
+
 
     return (
         <div>
@@ -78,8 +93,7 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
                 }}
             >
                 {!props.routine.isTemplate && <MenuItem
-                    component={Link}
-                    to={makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: props.routine.id })}>
+                    onClick={navigateEdit}>
                     {t("edit")}
                 </MenuItem>}
                 <MenuItem
