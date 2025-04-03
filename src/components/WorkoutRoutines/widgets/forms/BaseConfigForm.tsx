@@ -50,6 +50,7 @@ import { useFormikContext } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
+import { errorsToString } from "utils/forms";
 
 export const QUERY_MAP: { [key: string]: any } = {
     'weight': {
@@ -130,11 +131,45 @@ export const SlotBaseConfigValueField = (props: {
     const deleteQueryHook = deleteQuery(props.routineId);
 
     const [value, setValue] = useState(props.config?.value || '');
-    const [error, setError] = useState<string | null>(null);
+    const [manualValidationError, setManualValidationError] = useState<string | null>(null);
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
-    const isInt = ['sets', 'max-sets', 'rir', 'max-rir', 'rest', 'max-rest'].includes(props.type);
+    const isInt = ['sets', 'max-sets', 'rest', 'max-rest'].includes(props.type);
     const parseFunction = isInt ? parseInt : parseFloat;
+
+    let title = '';
+    switch (props.type) {
+        case "weight":
+            title = t('weight');
+            break;
+        case "max-weight":
+            title = 'max ' + t('weight');
+            break;
+        case "reps":
+            title = t('server.repetitions');
+            break;
+        case "max-reps":
+            title = t('server.max_reps');
+            break;
+        case "sets":
+            title = t('routines.sets');
+            break;
+        case "max-sets":
+            title = 'max ' + t('routines.sets');
+            break;
+        case "rest":
+            title = t('routines.restTime');
+            break;
+        case "max-rest":
+            title = 'max ' + t('routines.restTime');
+            break;
+        case "rir":
+            title = t('routines.rir');
+            break;
+        case "max-rir":
+            title = 'max ' + t('routines.rir');
+            break;
+    }
 
     const handleData = (value: string) => {
 
@@ -163,12 +198,11 @@ export const SlotBaseConfigValueField = (props: {
         setValue(text);
 
         if (text !== '' && Number.isNaN(parseFunction(text))) {
-            setError(t(isInt ? 'forms.enterInteger' : 'forms.enterNumber'));
+            setManualValidationError(t(isInt ? 'forms.enterInteger' : 'forms.enterNumber'));
             return;
         } else {
-            setError(null);
+            setManualValidationError(null);
         }
-
 
         if (timer) {
             clearTimeout(timer);
@@ -177,6 +211,8 @@ export const SlotBaseConfigValueField = (props: {
     };
 
     const isPending = editQueryHook.isPending || addQueryHook.isPending || deleteQueryHook.isPending;
+    const isError = editQueryHook.isError || addQueryHook.isError || deleteQueryHook.isError;
+    const errorMessage = errorsToString(editQueryHook.error?.response?.data) || errorsToString(addQueryHook.error?.response?.data) || errorsToString(deleteQueryHook.error?.response?.data);
 
     return (
         <TextField
@@ -186,14 +222,14 @@ export const SlotBaseConfigValueField = (props: {
             inputProps={{
                 "data-testid": `${props.type}-field`,
             }}
-            label={props.type}
+            label={title}
             value={value}
             fullWidth
             variant="standard"
             disabled={isPending}
             onChange={e => onChange(e.target.value)}
-            error={!!error || editQueryHook.isError || addQueryHook.isError || deleteQueryHook.isError}
-            helperText={error || editQueryHook.error?.message || addQueryHook.error?.message || deleteQueryHook.error?.message}
+            error={!!manualValidationError || isError}
+            helperText={manualValidationError || errorMessage}
         />
     );
 };

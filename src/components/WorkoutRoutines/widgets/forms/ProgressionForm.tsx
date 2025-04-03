@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { Box, Button, Divider, IconButton, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Divider, IconButton, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Tooltip from "@mui/material/Tooltip";
 import { WgerTextField } from "components/Common/forms/WgerTextField";
@@ -20,6 +20,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AddBaseConfigParams, EditBaseConfigParams } from "services/base_config";
 import { ApiPath } from "utils/consts";
+import { errorsToString } from "utils/forms";
 import * as yup from "yup";
 
 export const ProgressionForm = (props: {
@@ -35,7 +36,7 @@ export const ProgressionForm = (props: {
     const { t } = useTranslation();
     const [linkMinMax, setLinkMinMax] = useState<boolean>(true);
     const [iterationsToDelete, setIterationsToDelete] = useState<number[]>([]);
-    const processEntries = useProcessConfigsQuery(props.routineId);
+    const processEntriesQuery = useProcessConfigsQuery(props.routineId);
 
     const forceInteger = props.forceInteger ?? false;
 
@@ -113,7 +114,6 @@ export const ProgressionForm = (props: {
                     const { createError } = this;
 
                     const data = entries as unknown as BaseConfigEntryForm[];
-                    // console.table(data);
 
                     for (let i = 0; i < data.length; i++) {
                         const entry = data[i];
@@ -272,9 +272,22 @@ export const ProgressionForm = (props: {
         });
 
         // Save to server
-        processEntries.mutate({ toAdd: addList, toDelete: deleteList, toEdit: editList, apiPath: apiPath });
-        processEntries.mutate({ toAdd: addListMax, toDelete: deleteListMax, toEdit: editListMax, apiPath: apiPathMax });
+        processEntriesQuery.mutate({
+            values: {
+                toAdd: addList,
+                toDelete: deleteList,
+                toEdit: editList,
+                apiPath: apiPath
+            },
+            maxValues: {
+                toAdd: addListMax,
+                toDelete: deleteListMax,
+                toEdit: editListMax,
+                apiPath: apiPathMax
+            }
+        });
     };
+
 
     return <>
         <Stack sx={{ width: '100%' }}>
@@ -455,6 +468,13 @@ export const ProgressionForm = (props: {
                                     </>
                                 )}
                             </FieldArray>
+                            {processEntriesQuery.isError && <Grid size={12}>
+                                <Alert severity="error">
+                                    {/* TODO: how to properly type this */}
+                                    {errorsToString((processEntriesQuery.error as any).response?.data)}
+                                </Alert>
+                            </Grid>}
+
                             <Grid size={12} display={"flex"} justifyContent={"end"}>
                                 <Button
                                     color="primary"

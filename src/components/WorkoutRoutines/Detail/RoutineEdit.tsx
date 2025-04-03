@@ -34,7 +34,6 @@ export const RoutineEdit = () => {
 
     if (selectedDayIndex === null && routineQuery.data!.days.length > 0) {
         setSelectedDayIndex(0);
-        // setSelectedDay(routineQuery.data!.days[0].id);
     }
 
 

@@ -119,63 +119,58 @@ describe('Tests for the ProgressionForm', () => {
         await user.type(valueField, '7');
         await user.click(saveButton);
 
-        // Once for weight, once for max-weight
-        expect(mockProcessBaseConfigs).toHaveBeenCalledTimes(2);
-
+        expect(mockProcessBaseConfigs).toHaveBeenCalledTimes(1);
         expect(mockProcessBaseConfigs).toHaveBeenNthCalledWith(1,
-            [],
-            [
-                {
-                    "id": 123,
-                    "iteration": 1,
-                    "operation": "r",
-                    "repeat": false,
-                    "requirements": { "rules": [] },
-                    "slot_entry": 10,
-                    "step": "abs",
-                    "value": "5"
+            {
+                "maxValues": {
+                    "apiPath": "max-weight-config",
+                    "toAdd": [],
+                    "toDelete": [],
+                    "toEdit": [{
+                        "id": 124,
+                        "iteration": 1,
+                        "operation": "r",
+                        "repeat": false,
+                        "requirements": { "rules": [] },
+                        "slot_entry": 10,
+                        "step": "abs",
+                        "value": "7"
+                    }, {
+                        "id": 457,
+                        "iteration": 2,
+                        "operation": "+",
+                        "repeat": true,
+                        "requirements": { "rules": [] },
+                        "slot_entry": 10,
+                        "step": "abs",
+                        "value": "2"
+                    }]
                 },
-                {
-                    "id": 456,
-                    "iteration": 2,
-                    "operation": "+",
-                    "repeat": true,
-                    "requirements": { "rules": [] },
-                    "slot_entry": 10,
-                    "step": "abs",
-                    "value": "1"
+                "values": {
+                    "apiPath": "weight-config",
+                    "toAdd": [],
+                    "toDelete": [],
+                    "toEdit": [{
+                        "id": 123,
+                        "iteration": 1,
+                        "operation": "r",
+                        "repeat": false,
+                        "requirements": { "rules": [] },
+                        "slot_entry": 10,
+                        "step": "abs",
+                        "value": "5"
+                    }, {
+                        "id": 456,
+                        "iteration": 2,
+                        "operation": "+",
+                        "repeat": true,
+                        "requirements": { "rules": [] },
+                        "slot_entry": 10,
+                        "step": "abs",
+                        "value": "1"
+                    }]
                 }
-            ],
-            [],
-            "weight-config"
-        );
-        expect(mockProcessBaseConfigs).toHaveBeenNthCalledWith(2,
-            [],
-            [
-                {
-                    "id": 124,
-                    "iteration": 1,
-                    "operation": "r",
-                    "repeat": false,
-                    "requirements": { "rules": [] },
-                    "slot_entry": 10,
-                    "step": "abs",
-                    "value": "7"
-                },
-                {
-                    "id": 457,
-                    "iteration": 2,
-                    "operation": "+",
-                    "repeat": true,
-                    "requirements": { "rules": [] },
-                    "slot_entry": 10,
-                    "step": "abs",
-                    "value": "2"
-                }
-            ],
-            [],
-            "max-weight-config"
+            }
         );
     });
-
 });

@@ -32,8 +32,8 @@ import {
     editWeightConfig,
     processBaseConfigs
 } from "services";
-import { AddBaseConfigParams, EditBaseConfigParams } from "services/base_config";
-import { ApiPath, QueryKey, } from "utils/consts";
+import { AddBaseConfigParams, EditBaseConfigParams, ProcessBaseConfigsParams } from "services/base_config";
+import { QueryKey, } from "utils/consts";
 
 
 export const useProcessConfigsQuery = (routineId: number) => {
@@ -41,11 +41,9 @@ export const useProcessConfigsQuery = (routineId: number) => {
 
     return useMutation({
         mutationFn: (data: {
-            toAdd: AddBaseConfigParams[],
-            toEdit: EditBaseConfigParams[],
-            toDelete: number[],
-            apiPath: ApiPath,
-        }) => processBaseConfigs(data.toAdd, data.toEdit, data.toDelete, data.apiPath),
+            values?: ProcessBaseConfigsParams,
+            maxValues?: ProcessBaseConfigsParams
+        }) => processBaseConfigs(data),
         onSuccess: () => queryClient.invalidateQueries({
                 queryKey: [QueryKey.ROUTINE_DETAIL, routineId]
             }

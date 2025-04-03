@@ -22,21 +22,39 @@ export interface EditBaseConfigParams extends Partial<AddBaseConfigParams> {
     id: number,
 }
 
-export const processBaseConfigs = async (toAdd: AddBaseConfigParams[], toEdit: EditBaseConfigParams[], toDelete: number[], apiPath: ApiPath): Promise<void> => {
+export interface ProcessBaseConfigsParams {
+    toAdd: AddBaseConfigParams[],
+    toEdit: EditBaseConfigParams[],
+    toDelete: number[],
+    apiPath: ApiPath
+}
 
-    // TODO: handle errors
 
+export const processBaseConfigs = async ({ values, maxValues }: {
+    values?: ProcessBaseConfigsParams,
+    maxValues?: ProcessBaseConfigsParams
+}): Promise<void> => {
+    const processEntries = async (entries: ProcessBaseConfigsParams) => {
+        const { toAdd, toEdit, toDelete, apiPath } = entries;
 
-    for (const entry of toAdd) {
-        await addBaseConfig(entry, apiPath);
+        for (const entry of toAdd) {
+            await addBaseConfig(entry, apiPath);
+        }
+
+        for (const entry of toEdit) {
+            await editBaseConfig(entry, apiPath);
+        }
+
+        for (const entry of toDelete) {
+            await deleteBaseConfig(entry, apiPath);
+        }
+    };
+
+    if (values !== undefined) {
+        await processEntries(values);
     }
-
-    for (const entry of toEdit) {
-        await editBaseConfig(entry, apiPath);
-    }
-
-    for (const entry of toDelete) {
-        await deleteBaseConfig(entry, apiPath);
+    if (maxValues !== undefined) {
+        await processEntries(maxValues);
     }
 };
 
