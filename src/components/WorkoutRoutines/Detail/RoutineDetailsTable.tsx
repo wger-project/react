@@ -15,7 +15,7 @@ import {
     Typography,
     useTheme
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { styled } from '@mui/material/styles';
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
 import { Language } from "components/Exercises/models/language";
@@ -32,6 +32,34 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { getLanguageByShortName } from "services";
 import { makeLink, WgerLink } from "utils/url";
+
+
+const PREFIX = 'RoutineDetailsTable';
+
+const classes = {
+    stickyColumn: `${PREFIX}-stickyColumn`,
+    stickyHeader: `${PREFIX}-stickyHeader`,
+    whiteBg: `${PREFIX}-whiteBg`
+};
+
+const StyledContainer = styled(Container)({
+    [`& .${classes.stickyColumn}`]: {
+        position: 'sticky',
+        left: 0,
+        // background: 'white',
+        zIndex: 1,
+    },
+    [`& .${classes.stickyHeader}`]: {
+        position: 'sticky',
+        top: 0,
+        zIndex: 2,
+        background: 'white',
+    },
+
+    [`& .${classes.whiteBg}`]: {
+        backgroundColor: 'white',
+    }
+});
 
 
 export const RoutineDetailsTable = () => {
@@ -66,25 +94,6 @@ export const RoutineDetailsTable = () => {
 };
 
 
-const useStyles = makeStyles({
-    stickyColumn: {
-        position: 'sticky',
-        left: 0,
-        // background: 'white',
-        zIndex: 1,
-    },
-    stickyHeader: {
-        position: 'sticky',
-        top: 0,
-        zIndex: 2,
-        background: 'white',
-    },
-
-    whiteBg: {
-        backgroundColor: 'white',
-    }
-});
-
 export function compareValue(value: number | null | undefined, from: number | null | undefined, to: number | null | undefined): 'lower' | 'higher' | 'match' | null {
     if (value === null || value === undefined) {
         return null;
@@ -118,7 +127,7 @@ export const RoutineTable = (props: {
 }) => {
     const { t, i18n } = useTranslation();
     const theme = useTheme();
-    const classes = useStyles();
+
     const languageQuery = useLanguageQuery();
     const showLogs = props.showLogs ?? false;
     const routineLogData = props.logData ?? [];
@@ -343,18 +352,20 @@ export const RoutineTable = (props: {
     }
 
 
-    return <Container maxWidth={false} sx={{ overflowX: 'scroll', display: 'flex', height: "80vh" }}>
-        <TableContainer>
-            <Table size="small">
-                <TableHead className={classes.stickyHeader}>
-                    {getTableRowWeekTitle()}
-                    {getTableRowHeader()}
-                </TableHead>
-                <TableBody>
-                    {getTableContent()}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    </Container>;
+    return (
+        <StyledContainer maxWidth={false} sx={{ overflowX: 'scroll', display: 'flex', height: "80vh" }}>
+            <TableContainer>
+                <Table size="small">
+                    <TableHead className={classes.stickyHeader}>
+                        {getTableRowWeekTitle()}
+                        {getTableRowHeader()}
+                    </TableHead>
+                    <TableBody>
+                        {getTableContent()}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </StyledContainer>
+    );
 };
 

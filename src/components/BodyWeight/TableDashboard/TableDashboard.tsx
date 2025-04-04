@@ -1,17 +1,23 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Theme } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { WeightEntry } from "components/BodyWeight/model";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 
 
-export interface WeightTableProps {
-    weights: WeightEntry[];
-}
+const PREFIX = 'WeightTableDashboard';
 
-const useStyles = makeStyles((theme: Theme) => {
+const classes = {
+    table: `${PREFIX}-table`
+};
+
+const Root = styled('div')((
+    {
+        theme: Theme
+    }
+) => {
     return {
-        table: {
+        [`&.${classes.table}`]: {
             "& .MuiPaper-root": {
                 border: "1px solid #bababa",
 
@@ -20,15 +26,20 @@ const useStyles = makeStyles((theme: Theme) => {
     };
 });
 
+
+export interface WeightTableProps {
+    weights: WeightEntry[];
+}
+
 export const WeightTableDashboard = ({ weights }: WeightTableProps) => {
     const [t] = useTranslation();
-    const classes = useStyles();
+
     const WEIGHT_ENTRIES_TO_SHOW = 5;
 
     const filteredWeight = weights.slice(0, WEIGHT_ENTRIES_TO_SHOW);
 
     return (
-        <div className={classes.table}>
+        <Root className={classes.table}>
             <TableContainer>
                 <Table size={"small"}>
                     <TableHead>
@@ -49,6 +60,6 @@ export const WeightTableDashboard = ({ weights }: WeightTableProps) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </div>
+        </Root>
     );
 };

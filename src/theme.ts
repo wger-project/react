@@ -1,5 +1,5 @@
-import { ThemeOptions } from '@mui/material/styles/createTheme';
 import { createTheme } from '@mui/material/styles';
+import { ThemeOptions } from '@mui/material/styles/createTheme';
 
 const fontFamilyBold = [
     '"Open Sans Bold"',

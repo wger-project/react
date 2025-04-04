@@ -1,14 +1,5 @@
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TablePagination,
-    TableRow,
-    Theme
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { WeightEntry } from "components/BodyWeight/model";
 import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
 import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
@@ -17,13 +8,19 @@ import { useTranslation } from "react-i18next";
 import { processWeight } from '../utils';
 
 
-export interface WeightTableProps {
-    weights: WeightEntry[];
-}
+const PREFIX = 'WeightTable';
 
-const useStyles = makeStyles((theme: Theme) => {
+const classes = {
+    table: `${PREFIX}-table`
+};
+
+const Root = styled('div')((
+    {
+        theme: Theme
+    }
+) => {
     return {
-        table: {
+        [`&.${classes.table}`]: {
             "& .MuiPaper-root": {
                 border: "1px solid #bababa",
 
@@ -32,12 +29,17 @@ const useStyles = makeStyles((theme: Theme) => {
     };
 });
 
+
+export interface WeightTableProps {
+    weights: WeightEntry[];
+}
+
 export const WeightTable = ({ weights }: WeightTableProps) => {
 
     const availableResultsPerPage = [10, 50, 100];
 
     const [t] = useTranslation();
-    const classes = useStyles();
+
     const processedWeights = processWeight(weights);
     const [rowsPerPage, setRowsPerPage] = useState(availableResultsPerPage[0]);
     const [page, setPage] = useState(0);
@@ -52,7 +54,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
     };
 
     return (
-        <div className={classes.table}>
+        <Root className={classes.table}>
             <TableContainer>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
@@ -93,8 +95,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </TableContainer>
-
             <WeightEntryFab />
-        </div>
+        </Root>
     );
 };
