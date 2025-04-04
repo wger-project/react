@@ -1,5 +1,5 @@
 import { Box, Button, Stack } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";

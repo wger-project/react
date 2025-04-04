@@ -2,7 +2,7 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from '@mui/icons-material/EditOff';
 import { Alert, AlertTitle, IconButton, Typography } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";

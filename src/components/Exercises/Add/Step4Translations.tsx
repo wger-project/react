@@ -10,7 +10,7 @@ import {
     Stack,
     Switch
 } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";

@@ -13,7 +13,7 @@ import {
     Typography,
     useTheme
 } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Tooltip from "@mui/material/Tooltip";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
 import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";

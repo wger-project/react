@@ -2,7 +2,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { Alert, Box, Button, Divider, IconButton, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
 import { WgerTextField } from "components/Common/forms/WgerTextField";
 import {

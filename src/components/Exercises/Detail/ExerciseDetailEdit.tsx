@@ -1,6 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Alert, Box, Button, IconButton, Typography } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { EditExerciseCategory } from "components/Exercises/forms/Category";
@@ -297,7 +297,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                 <Typography variant={'h6'}>{t('exercises.muscles')}</Typography>
                 <Grid container spacing={1} mt={2}>
 
-                <Grid size={{ xs: 12, md: 6 }}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <EditExerciseMuscle
                             exerciseId={exercise.id!}
                             value={mainMuscles}

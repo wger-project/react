@@ -11,7 +11,7 @@ import {
     Tooltip as MuiTooltip,
     useTheme
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { SelectChangeEvent } from '@mui/material/Select';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";

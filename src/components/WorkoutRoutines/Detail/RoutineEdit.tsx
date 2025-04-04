@@ -1,5 +1,5 @@
 import { Box, Divider, Stack, Typography, useTheme } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
 import { useProfileQuery } from "components/User/queries/profile";

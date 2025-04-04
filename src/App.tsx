@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { Header, } from 'components';
 import { Notifications } from 'components/Core/Notifications';
 import React from 'react';

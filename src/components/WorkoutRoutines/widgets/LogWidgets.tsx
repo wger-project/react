@@ -16,7 +16,7 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { Exercise } from "components/Exercises/models/exercise";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
 import { DateTime } from "luxon";

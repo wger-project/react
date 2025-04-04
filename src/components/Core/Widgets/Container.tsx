@@ -1,7 +1,7 @@
 import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { Breakpoint, Button, Container, Stack, Typography } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import React, { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 

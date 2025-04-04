@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";

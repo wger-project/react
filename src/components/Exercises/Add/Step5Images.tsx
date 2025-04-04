@@ -13,7 +13,7 @@ import {
     Stack,
     Typography
 } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import ImageList from '@mui/material/ImageList';
 import { LicenseAuthor } from "components/Common/forms/LicenseAuthor";
 import { LicenseAuthorUrl } from "components/Common/forms/LicenseAuthorUrl";

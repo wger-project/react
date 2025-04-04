@@ -1,6 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
 import { Box, Button, Container, Pagination, Stack, Typography, useMediaQuery } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { CategoryFilter, CategoryFilterDropdown } from "components/Exercises/Filter/CategoryFilter";
 import { EquipmentFilter, EquipmentFilterDropdown } from "components/Exercises/Filter/EquipmentFilter";
 import { MuscleFilter, MuscleFilterDropdown } from "components/Exercises/Filter/MuscleFilter";

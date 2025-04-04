@@ -1,5 +1,5 @@
 import { Box, Button, Divider, Typography } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { SideGallery, SideVideoGallery } from "components/Exercises/Detail/SideGallery";

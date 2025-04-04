@@ -1,7 +1,7 @@
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, InputAdornment, TextField } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useField } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";

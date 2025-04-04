@@ -8,7 +8,7 @@ import {
     Switch,
     TextField
 } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 
 import { ENERGY_FACTOR } from "components/Nutrition/helpers/nutritionalValues";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
@@ -174,10 +174,10 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         id="goalEnergy"
                                         checked={useGoals}
                                         onChange={() => setUseGoals(!useGoals)}
-                                        
+
                                     />}
                             />
-                       </FormGroup>
+                        </FormGroup>
                         <FormHelperText>{t('nutrition.useGoalsHelpTextLong')}</FormHelperText>
 
 

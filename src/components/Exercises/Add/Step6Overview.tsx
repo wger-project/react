@@ -12,7 +12,7 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";

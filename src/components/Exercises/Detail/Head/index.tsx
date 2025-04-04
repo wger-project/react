@@ -13,7 +13,7 @@ import {
     Stack,
     Typography
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { ExerciseDeleteDialog } from "components/Exercises/Detail/Head/ExerciseDeleteDialog";
 import { Exercise } from 'components/Exercises/models/exercise';
 import { Language } from 'components/Exercises/models/language';

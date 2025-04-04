@@ -12,7 +12,7 @@ import {
     Switch,
     Tooltip
 } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { WgerTextField } from "components/Common/forms/WgerTextField";
 import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
 import { Day } from "components/WorkoutRoutines/models/Day";

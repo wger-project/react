@@ -1,5 +1,5 @@
 import { Box, Stack, TextField, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { useBodyWeightQuery } from "components/BodyWeight/queries";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";

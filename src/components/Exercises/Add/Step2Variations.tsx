@@ -18,7 +18,7 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { Exercise } from "components/Exercises/models/exercise";

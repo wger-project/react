@@ -1,5 +1,5 @@
 import { Box, Chip, Stack, Typography } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
