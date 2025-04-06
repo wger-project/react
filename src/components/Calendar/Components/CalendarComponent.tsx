@@ -5,7 +5,12 @@ import { useBodyWeightQuery } from "components/BodyWeight/queries";
 import CalendarDayGrid from "components/Calendar/Components/CalendarDayGrid";
 import CalendarHeader from "components/Calendar/Components/CalendarHeader";
 import { CalendarMeasurement } from "components/Calendar/Helpers/CalendarMeasurement";
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
+import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
+import { useNutritionDiaryQuery } from "components/Nutrition/queries";
+import { WorkoutSession } from "components/WorkoutRoutines/models/WorkoutSession";
+import { useSessionsQuery } from "components/WorkoutRoutines/queries/sessions";
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { isSameDay } from "utils/date";
@@ -14,23 +19,26 @@ import Entries from './Entries';
 export interface DayProps {
     date: Date,
     weightEntry: WeightEntry | undefined,
-    measurements: CalendarMeasurement[]
+    measurements: CalendarMeasurement[],
+    nutritionLogs: DiaryEntry[],
+    workoutSession: WorkoutSession | undefined,
 }
 
-function getMeasurements(): CalendarMeasurement[] {
-    const categoryQuery = useMeasurementsCategoryQuery();
-    const categories = categoryQuery.data;
-
-    return categories?.flatMap(category =>
-        category.entries.map(entry => new CalendarMeasurement(category.name, category.unit, entry.value, entry.date))
-    ) ?? [];
-}
 
 const CalendarComponent = () => {
     const [t] = useTranslation();
     const weightsQuery = useBodyWeightQuery();
-    const weights: WeightEntry[] | undefined = weightsQuery.data;
-    const measurements: CalendarMeasurement[] = getMeasurements();
+    const sessionQuery = useSessionsQuery();
+    const categoryQuery = useMeasurementsCategoryQuery();
+    const nutritionDiaryQuery = useNutritionDiaryQuery();
+
+    const isLoading = weightsQuery.isLoading || sessionQuery.isLoading || categoryQuery.isLoading || nutritionDiaryQuery.isLoading;
+    const isSuccess = weightsQuery.isSuccess && sessionQuery.isSuccess && categoryQuery.isSuccess && nutritionDiaryQuery.isSuccess;
+
+    const categories = categoryQuery.data;
+    const measurements = categories?.flatMap(category =>
+        category.entries.map(entry => new CalendarMeasurement(category.name, category.unit, entry.value, entry.date))
+    ) ?? [];
 
     const getDaysInMonth = (year: number, month: number): DayProps[] => {
         const date = new Date(year, month, 1);
@@ -44,15 +52,19 @@ const CalendarComponent = () => {
             days.push({
                 date: new Date(year, month, -dayOfWeek + i + 1),
                 weightEntry: undefined,
-                measurements: []
+                measurements: [],
+                nutritionLogs: [],
+                workoutSession: undefined
             });
         }
 
         while (date.getMonth() === month) {
             days.push({
                 date: new Date(date),
-                weightEntry: weights?.find(w => isSameDay(w.date, date)),
-                measurements: measurements.filter(m => isSameDay(m.date, date)),
+                weightEntry: weightsQuery.data?.find(w => isSameDay(w.date, date)),
+                measurements: measurements.filter(m => isSameDay(m.date, date)) || [],
+                workoutSession: sessionQuery.data?.find(m => isSameDay(m.date, date)) || undefined,
+                nutritionLogs: nutritionDiaryQuery.data?.filter(m => isSameDay(m.datetime, date)) || [],
             });
             date.setDate(date.getDate() + 1);
         }
@@ -65,7 +77,9 @@ const CalendarComponent = () => {
             days.push({
                 date: new Date(year, month + 1, i),
                 weightEntry: undefined,
-                measurements: []
+                workoutSession: undefined,
+                measurements: [],
+                nutritionLogs: []
             });
         }
 
@@ -76,10 +90,13 @@ const CalendarComponent = () => {
     const defaultDay: DayProps = {
         date: currentDate,
         weightEntry: undefined,
-        measurements: []
+        workoutSession: undefined,
+        measurements: [],
+        nutritionLogs: []
     };
     const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
     const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
+
     const days = getDaysInMonth(currentYear, currentMonth);
     const [selectedDay, setSelectedDay] = useState<DayProps>(days.find(day => isSameDay(day.date, currentDate)) || defaultDay);
 
@@ -120,31 +137,14 @@ const CalendarComponent = () => {
             display: 'flex',
             gap: 2,
             flexDirection: { xs: 'column', md: 'row' },
-            height: {
-                xs: 'auto',
-                md: 'calc(100vh - 130px)'
-            },
+            height: { xs: 'auto', md: 'calc(100vh - 130px)' },
             width: '100%',
         }}>
             <Card sx={{
-                width: {
-                    xs: 'auto',
-                    md: '65%'
-                },
-                height: {
-                    xs: 'auto%',
-                    md: '100%'
-                },
-                m: {
-                    xs: 0,
-                    sm: 1,
-                    md: 2
-                },
-                p: {
-                    xs: 1,
-                    sm: 1.5,
-                    md: 2
-                },
+                width: { xs: 'auto', md: '65%' },
+                height: { xs: 'auto%', md: '100%' },
+                m: { xs: 0, sm: 1, md: 2 },
+                p: { xs: 1, sm: 1.5, md: 2 },
                 display: 'flex',
                 flexDirection: 'column'
             }}>
@@ -175,9 +175,7 @@ const CalendarComponent = () => {
                 <CardContent sx={{
                     overflow: 'auto',
                     flex: 1,
-                    '&:last-child': {
-                        paddingBottom: 2
-                    }
+                    '&:last-child': { paddingBottom: 2 }
                 }}>
                     <CalendarHeader
                         currentMonth={currentMonth}
@@ -194,7 +192,19 @@ const CalendarComponent = () => {
                     />
                 </CardContent>
             </Card>
-            <Entries selectedDay={selectedDay} />
+            {isLoading &&
+                <Card
+                    sx={{
+                        width: { xs: 'auto', md: '65%' },
+                        height: { xs: '60%', md: '100%' },
+                        m: { xs: 0, sm: 1, md: 2 },
+                        p: { xs: 1, sm: 1.5, md: 2 }
+                    }}
+                >
+                    <LoadingPlaceholder />
+                </Card>}
+
+            {isSuccess && <Entries selectedDay={selectedDay} />}
         </Box>
     );
 };

@@ -44,7 +44,8 @@ const CalendarDay: React.FC<CalendarDayProps> = ({ day, currentMonth, currentDat
 
     const hasDayEntry = () => {
         return day.measurements.length > 0 ||
-            day.weightEntry !== undefined;
+            day.weightEntry !== undefined ||
+            day.workoutSession !== undefined;
     };
 
     const handleClick = () => {

@@ -45,6 +45,7 @@ describe("workout logs service tests", () => {
                 iteration: 1,
                 exerciseId: 100,
                 slotEntryId: 2,
+                routineId: 1,
 
                 repetitionsUnit: testRepUnit1,
                 repetitionsUnitId: 1,
@@ -66,6 +67,7 @@ describe("workout logs service tests", () => {
                 iteration: 1,
                 exerciseId: 100,
                 slotEntryId: 2,
+                routineId: 1,
 
                 repetitionsUnit: testRepUnit1,
                 repetitionsUnitId: 1,
@@ -109,6 +111,8 @@ describe("workout logs service tests", () => {
                 exercise: testExerciseSquats,
                 exerciseId: 100,
                 slotEntryId: 2,
+                routineId: 1,
+                sessionId: null,
 
                 repetitionsUnit: testRepUnit1,
                 repetitionsUnitId: 1,
@@ -131,6 +135,8 @@ describe("workout logs service tests", () => {
                 slotEntryId: 2,
                 exercise: testExerciseSquats,
                 exerciseId: 100,
+                routineId: 1,
+                sessionId: null,
 
                 repetitionsUnit: testRepUnit1,
                 repetitionsUnitId: 1,

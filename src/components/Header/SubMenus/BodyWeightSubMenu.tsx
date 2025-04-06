@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom';
 import { Button, Menu, MenuItem } from "@mui/material";
-import { makeLink, WgerLink } from "utils/url";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from 'react-router-dom';
+import { makeLink, WgerLink } from "utils/url";
 
 export const BodyWeightSubMenu = () => {
     const { i18n } = useTranslation();
@@ -20,9 +20,6 @@ export const BodyWeightSubMenu = () => {
             >
                 <MenuItem component={Link} to={makeLink(WgerLink.WEIGHT_OVERVIEW, i18n.language)}>
                     Weight overview
-                </MenuItem>
-                <MenuItem component={Link} to={makeLink(WgerLink.WEIGHT_ADD, i18n.language)}>
-                    Add weight entry
                 </MenuItem>
             </Menu>
         </>

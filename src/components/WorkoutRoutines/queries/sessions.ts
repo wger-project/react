@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AddSessionParams, EditSessionParams } from "components/WorkoutRoutines/models/WorkoutSession";
 import { addSession, editSession, searchSession } from "services";
+import { getSessions } from "services/session";
 import { QueryKey, } from "utils/consts";
 
 
@@ -17,6 +18,11 @@ export const useAddSessionQuery = () => {
         onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW] }),
     });
 };
+
+export const useSessionsQuery = () => useQuery({
+    queryFn: () => getSessions(),
+    queryKey: [QueryKey.SESSIONS_FULL],
+});
 
 
 export const useEditSessionQuery = (id: number) => {
