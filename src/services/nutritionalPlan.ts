@@ -49,7 +49,7 @@ export const getNutritionalPlanFull = async (id: number | null, date?: Date): Pr
     const plan = adapter.fromJson(receivedPlan);
     const responses = await Promise.all([
         getMealsForPlan(id),
-        getNutritionalDiaryEntries(id, date)
+        getNutritionalDiaryEntries({ planId: id, date: date })
     ]);
 
     plan.meals = responses[0];

@@ -7,18 +7,23 @@ import { fetchPaginated } from "utils/requests";
 import { makeHeader, makeUrl } from "utils/url";
 
 
-export const getNutritionalDiaryEntries = async (
-    planId: number,
+export const getNutritionalDiaryEntries = async (data: {
+    planId?: number,
     date?: Date
-): Promise<DiaryEntry[]> => {
+}): Promise<DiaryEntry[]> => {
     const adapter = new DiaryEntryAdapter();
 
-    const query = { plan: planId, limit: API_MAX_PAGE_SIZE };
-    if (date) {
-        // @ts-ignore
+    const query: { limit: string; datetime__date?: string; plan?: number } = { limit: API_MAX_PAGE_SIZE };
+    if (data.date) {
         // eslint-disable-next-line camelcase
-        query.datetime__date = dateToYYYYMMDD(date);
+        query.datetime__date = dateToYYYYMMDD(data.date);
     }
+
+    if (data.planId) {
+        query.plan = data.planId;
+    }
+
+
     const url = makeUrl(ApiPath.NUTRITIONAL_DIARY, { query: query });
     const out: DiaryEntry[] = [];
 

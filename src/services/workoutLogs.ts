@@ -13,7 +13,7 @@ export const addLogs = async (entries: any[]): Promise<WorkoutLog[]> => {
     const out = [] as WorkoutLog[];
     for (const entry of entries) {
         const response = await axios.post(
-            makeUrl(ApiPath.WORKOUT_LOG_API_PATH,),
+            makeUrl(ApiPath.WORKOUT_LOG,),
             { ...entry },
             { headers: makeHeader() }
         );
@@ -32,7 +32,7 @@ export const getRoutineLogs = async (id: number, options?
 
     const adapter = new WorkoutLogAdapter();
     const url = makeUrl(
-        ApiPath.WORKOUT_LOG_API_PATH,
+        ApiPath.WORKOUT_LOG,
         { query: { routine: id.toString(), limit: API_MAX_PAGE_SIZE, ordering: '-date', ...filtersetQuery } }
     );
 

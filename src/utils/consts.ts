@@ -38,6 +38,7 @@ export enum QueryKey {
     ROUTINE_OVERVIEW = 'routine-overview',
     ROUTINE_DETAIL = 'routine-detail',
     SESSION_SEARCH = 'session-search',
+    SESSIONS_FULL = 'sessions-full',
     ROUTINE_LOGS = 'routine-logs',
     ROUTINE_LOG_DATA = 'routine-log-data',
     ROUTINE_STATS = 'routine-stats',
@@ -48,6 +49,7 @@ export enum QueryKey {
 
     NUTRITIONAL_PLANS = 'nutritional-plans',
     NUTRITIONAL_PLAN = 'nutritional-plan',
+    NUTRITIONAL_PLAN_DIARY = 'nutritional-plan-diary',
     NUTRITIONAL_PLAN_LAST = 'nutritional-plan-last',
     INGREDIENT = 'ingredient',
 
@@ -98,9 +100,9 @@ export enum ApiPath {
     SLOT_ENTRY = 'slot-entry',
     SESSION = 'workoutsession',
 
-    WORKOUT_LOG_API_PATH = 'workoutlog',
-    PRIVATE_TEMPLATE_API_PATH = 'templates',
-    PUBLIC_TEMPLATE_API_PATH = 'public-templates',
+    WORKOUT_LOG = 'workoutlog',
+    PRIVATE_TEMPLATE = 'templates',
+    PUBLIC_TEMPLATE = 'public-templates',
 
     // Profile
     API_PROFILE_PATH = 'userprofile',
