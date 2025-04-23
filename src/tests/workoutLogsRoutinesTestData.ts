@@ -5,6 +5,7 @@ import { testRepUnitRepetitions, testWeightUnitKg } from "tests/workoutRoutinesT
 
 const testWorkoutLog1 = new WorkoutLog({
     id: 5,
+    routineId: 1,
     date: new Date(2023, 1, 1),
     iteration: 345,
     exerciseId: 1,
@@ -21,6 +22,7 @@ const testWorkoutLog1 = new WorkoutLog({
 
 const testWorkoutLog2 = new WorkoutLog({
     id: 6,
+    routineId: 1,
     date: new Date(2023, 1, 2),
     iteration: 345,
     exerciseId: 1,
@@ -37,6 +39,7 @@ const testWorkoutLog2 = new WorkoutLog({
 
 const testWorkoutLog3 = new WorkoutLog({
     id: 7,
+    routineId: 1,
     date: new Date(2023, 1, 3),
     iteration: 345,
     exerciseId: 1,
@@ -53,6 +56,7 @@ const testWorkoutLog3 = new WorkoutLog({
 
 const testWorkoutLog4 = new WorkoutLog({
     id: 8,
+    routineId: 1,
     date: new Date(2023, 1, 10),
     iteration: 345,
     exerciseId: 1,

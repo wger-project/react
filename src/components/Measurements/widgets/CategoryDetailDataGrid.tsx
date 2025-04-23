@@ -98,7 +98,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
     const onProcessRowUpdateError = (error: any) => {
         console.log(error);
         //setRows(rows.map((row) => (row.id === newRow.id ? newRow : row)));
-
     };
 
     const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
@@ -207,9 +206,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             onRowEditStop={handleRowEditStop}
             processRowUpdate={processRowUpdate}
             onProcessRowUpdateError={onProcessRowUpdateError}
-            // slotProps={{
-            //     toolbar: { setRows, setRowModesModel },
-            //}}
         />
     </Box>;
 };
