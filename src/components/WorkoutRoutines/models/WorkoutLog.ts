@@ -25,6 +25,7 @@ export class WorkoutLog {
     public iteration: number | null;
     public exerciseId: number;
     public slotEntryId: number | null;
+    public routineId: number;
 
     public repetitionUnitObj: RepetitionUnit | null;
     public repetitionUnitId: number | null;
@@ -50,6 +51,7 @@ export class WorkoutLog {
         date: Date | string;
         iteration: number | null;
         slotEntryId: number | null;
+        routineId: number;
 
         exercise?: Exercise;
         exerciseId: number;
@@ -74,6 +76,7 @@ export class WorkoutLog {
         this.date = typeof data.date === 'string' ? new Date(data.date) : data.date;
         this.iteration = data.iteration;
         this.slotEntryId = data.slotEntryId;
+        this.routineId = data.routineId;
 
         this.exerciseObj = data.exercise;
         this.exerciseId = data.exerciseId;
@@ -109,6 +112,7 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
             iteration: item.iteration,
             exerciseId: item.exercise,
             slotEntryId: item.slot_entry,
+            routineId: item.routine,
 
             repetitionsUnitId: item.repetitions_unit,
             repetitions: item.repetitions === null ? null : Number.parseFloat(item.repetitions),
@@ -128,8 +132,10 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
     toJson = (item: WorkoutLog) => ({
         id: item.id,
         iteration: item.iteration,
+        date: item.date.toISOString(),
         slot_entry: item.slotEntryId,
         exercise: item.exerciseId,
+        routine: item.routineId,
 
         repetitions_unit: item.repetitionUnitId,
         repetitions: item.repetitions,

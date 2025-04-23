@@ -7,6 +7,24 @@ import { API_MAX_PAGE_SIZE, ApiPath } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
 import { makeHeader, makeUrl } from "utils/url";
 
+export const deleteLog = async (id: number): Promise<number> => {
+    const response = await axios.delete<Number>(makeUrl(ApiPath.WORKOUT_LOG_API_PATH, { id: id }), {
+        headers: makeHeader(),
+    });
+
+    return response.status;
+};
+
+
+export const editLog = async (entry: WorkoutLog): Promise<WorkoutLog> => {
+    const adapter = new WorkoutLogAdapter();
+    const response = await axios.patch(
+        makeUrl(ApiPath.WORKOUT_LOG_API_PATH, { id: entry.id }),
+        adapter.toJson(entry),
+        { headers: makeHeader() }
+    );
+    return adapter.fromJson(response.data);
+};
 
 export const addLogs = async (entries: any[]): Promise<WorkoutLog[]> => {
     const adapter = new WorkoutLogAdapter();

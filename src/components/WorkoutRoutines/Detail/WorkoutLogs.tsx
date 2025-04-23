@@ -25,7 +25,6 @@ export const WorkoutLogs = () => {
 
     // Group by exercise
     let groupedWorkoutLogs: Map<number, WorkoutLog[]> = new Map();
-    console.log(routineLogDataQuery.data);
 
     groupedWorkoutLogs = routineLogDataQuery.data!.reduce((r, routineLogData) => {
         routineLogData.logs.forEach(log => {
@@ -84,6 +83,7 @@ export const WorkoutLogs = () => {
                         slot.exercises.map(exercise =>
                             <ExerciseLog
                                 key={exercise.id}
+                                routineId={routineId}
                                 exercise={exercise}
                                 logEntries={groupedWorkoutLogs.get(exercise.id!)!}
                             />)
