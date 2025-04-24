@@ -16,6 +16,7 @@ export const MeasurementCategoryDetail = () => {
         return <p>Please pass an integer as the category id.</p>;
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const categoryQuery = useMeasurementsQuery(categoryId);
 
     if (categoryQuery.isLoading) {

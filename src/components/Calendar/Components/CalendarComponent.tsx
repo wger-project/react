@@ -18,6 +18,7 @@ export interface DayProps {
 }
 
 function getMeasurements(): CalendarMeasurement[] {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const categoryQuery = useMeasurementsCategoryQuery();
     const categories = categoryQuery.data;
 

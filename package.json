@@ -74,7 +74,8 @@
     "postbuild": "./postbuild.sh",
     "test": "LANG=de_de jest",
     "i18n": "i18next",
-    "lint": "eslint ."
+    "lint": "eslint src",
+    "lint:quiet": "eslint --quiet src"
   },
   "browserslist": {
     "production": [

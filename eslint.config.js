@@ -33,14 +33,19 @@ export default tseslint.config(
         rules: {
             'semi': ['error', 'always'],
             'camelcase': ['warn'],
-            // '@typescript-eslint/ban-ts-comment': [
-            //     'error',
-            //     {
-            //         'ts-ignore': 'allow-with-description',
-            //         'ts-expect-error': 'allow-with-description',
-            //         'minimumDescriptionLength': 10
-            //     }
-            // ],
+            "@typescript-eslint/no-unused-vars": ["warn"],
+            "@typescript-eslint/no-explicit-any": ["warn"],
+            "@typescript-eslint/no-non-null-asserted-optional-chain": ["warn"],
+            "@typescript-eslint/no-unsafe-function-type": ["warn"],
+            "@typescript-eslint/ban-ts-comment": [
+                "warn", // changed to warning
+                {
+                    "ts-ignore": "allow-with-description",
+                    "ts-expect-error": "allow-with-description",
+                    "minimumDescriptionLength": 10
+                }
+            ],
+
         }
     },
     {

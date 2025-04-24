@@ -54,7 +54,7 @@ export class SlotAdapter implements Adapter<Slot> {
         order: item.order,
         comment: item.comment,
         config: item.config,
-        entries: item.hasOwnProperty('entries') ? item.entries!.map((entry: any) => slotEntryAdapter.fromJson(entry)) : []
+        entries: Object.hasOwn(item, 'entries') ? item.entries!.map((entry: any) => slotEntryAdapter.fromJson(entry)) : []
     });
 
     toJson(item: Slot) {

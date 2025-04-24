@@ -179,8 +179,8 @@ export const SlotBaseConfigValueField = (props: {
             value: parseFunction(value),
         };
 
-        if (value === '') {
-            props.config && deleteQueryHook.mutate(props.config.id);
+        if (value === '' && props.config) {
+            deleteQueryHook.mutate(props.config.id);
         } else if (props.config) {
             editQueryHook.mutate({ id: props.config.id, ...data });
         } else {
@@ -310,8 +310,8 @@ export const ConfigDetailsRiRField = (props: { config?: BaseConfig, slotEntryId?
             value: parseFloat(value),
         };
 
-        if (value === '') {
-            props.config && deleteRiRQuery.mutate(props.config.id);
+        if (value === '' && props.config) {
+            deleteRiRQuery.mutate(props.config.id);
         } else if (props.config !== undefined) {
             editRiRQuery.mutate({ id: props.config.id, ...data });
         } else {

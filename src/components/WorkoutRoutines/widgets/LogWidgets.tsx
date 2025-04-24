@@ -280,8 +280,7 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
     //
     // We draw series based on the same reps, as otherwise the chart wouldn't
     // make much sense
-    let result: Map<number, WorkoutLog[]>;
-    result = props.data.reduce(function (r, a) {
+    const result: Map<number, WorkoutLog[]> = props.data.reduce(function (r, a) {
         r.set(a.repetitions, r.get(a.repetitions) || []);
         r.get(a.repetitions)!.push(a);
         return r;

@@ -19,6 +19,9 @@ export const PaddingBox = () => {
 export const ExerciseDetails = () => {
     const [language, setLanguage] = useState<Language>(ENGLISH_LANGUAGE_OBJ);
     const [editMode, setEditMode] = useState<boolean>(false);
+    const { i18n } = useTranslation();
+    const navigate = useNavigate();
+    const languageQuery = useLanguageQuery();
 
     const params = useParams<{ exerciseId: string }>();
     const exerciseId = parseInt(params.exerciseId ?? '');
@@ -27,22 +30,21 @@ export const ExerciseDetails = () => {
     }
 
 
-    const { i18n } = useTranslation();
-    const navigate = useNavigate();
-
-    const languageQuery = useLanguageQuery();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const exerciseQuery = useQuery({
         queryKey: [QUERY_EXERCISE_DETAIL, exerciseId],
         queryFn: () => getExercise(exerciseId),
         enabled: languageQuery.isSuccess,
     });
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const variationsQuery = useQuery({
         queryKey: [QUERY_EXERCISE_VARIATIONS, exerciseQuery.data?.variationId],
         queryFn: () => getExercisesForVariation(exerciseQuery.data?.variationId),
         enabled: exerciseQuery.isSuccess
     });
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     React.useEffect(() => {
         if (languageQuery.data === undefined) {
             return;

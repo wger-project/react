@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addMeal, AddMealParams, deleteMeal, editMeal, EditMealParams } from "services/meal";
 import { QueryKey } from "utils/consts";
-import { number } from "yup";
 
 export const useAddMealQuery = (planId: number) => {
     const queryClient = useQueryClient();

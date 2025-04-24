@@ -68,7 +68,6 @@ describe("Test the NameAutocompleter component", () => {
         // Select first result
         fireEvent.keyDown(autocomplete, { key: 'ArrowDown' });
         await waitFor(() => {
-            // eslint-disable-next-line testing-library/no-wait-for-side-effects
             fireEvent.keyDown(autocomplete, { key: 'Enter' });
         });
 

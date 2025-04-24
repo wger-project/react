@@ -36,7 +36,7 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
     if (params.query) {
         const queryList = [];
         for (const key in params.query) {
-            if (params.query.hasOwnProperty(key)) {
+            if (Object.hasOwn(params.query, key)) {
                 // @ts-ignore
                 queryList.push(`${encodeURIComponent(key)}=${encodeURIComponent(params.query[key])}`);
             }

@@ -6,7 +6,7 @@ export const ExerciseGridSkeleton = () => {
 
     return (
         (<Grid container spacing={1}>
-            {Array.apply(null, Array(21)).map((skeletonBase, idx) => (
+            {[...Array(21)].map((skeletonBase, idx) => (
                 <Grid key={idx} sx={{ display: "flex" }} size={4}>
                     <Card>
                         <CardMedia>

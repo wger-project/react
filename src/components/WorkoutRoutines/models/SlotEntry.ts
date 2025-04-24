@@ -123,34 +123,34 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
             rirConfigs: [],
             maxRirConfigs: [],
         };
-        if (item.hasOwnProperty('weight_configs')) {
+        if (Object.hasOwn(item, 'weight_configs')) {
             configs.weightConfigs = item.weight_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
-        if (item.hasOwnProperty('max_weight_configs')) {
+        if (Object.hasOwn(item, 'max_weight_configs')) {
             configs.maxWeightConfigs = item.max_weight_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
-        if (item.hasOwnProperty('repetitions_configs')) {
+        if (Object.hasOwn(item, 'repetitions_configs')) {
             configs.repetitionsConfigs = item.repetitions_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
-        if (item.hasOwnProperty('max_repetitions_configs')) {
+        if (Object.hasOwn(item, 'max_repetitions_configs')) {
             configs.maxRepetitionsConfigs = item.max_repetitions_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
-        if (item.hasOwnProperty('set_nr_configs')) {
+        if (Object.hasOwn(item, 'set_nr_configs')) {
             configs.nrOfSetsConfigs = item.set_nr_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
-        if (item.hasOwnProperty('max_set_nr_configs')) {
+        if (Object.hasOwn(item, 'max_set_nr_configs')) {
             configs.maxNrOfSetsConfigs = item.max_set_nr_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
-        if (item.hasOwnProperty('rest_configs')) {
+        if (Object.hasOwn(item, 'rest_configs')) {
             configs.restTimeConfigs = item.rest_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
-        if (item.hasOwnProperty('max_rest_configs')) {
+        if (Object.hasOwn(item, 'max_rest_configs')) {
             configs.maxRestTimeConfigs = item.max_rest_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
-        if (item.hasOwnProperty('rir_configs')) {
+        if (Object.hasOwn(item, 'rir_configs')) {
             configs.rirConfigs = item.rir_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
-        if (item.hasOwnProperty('max_rir_configs')) {
+        if (Object.hasOwn(item, 'max_rir_configs')) {
             configs.maxRirConfigs = item.max_rir_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
         }
 

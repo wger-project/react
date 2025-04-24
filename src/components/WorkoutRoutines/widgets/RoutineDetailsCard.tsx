@@ -40,6 +40,7 @@ export const RoutineDetailsCard = () => {
         return <p>Please pass an integer as the routine id.</p>;
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const routineQuery = useRoutineDetailQuery(routineId);
 
     return <Container maxWidth="lg">

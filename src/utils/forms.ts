@@ -9,7 +9,7 @@ export function collectValidationErrors(errors: ValidationErrorResponse | undefi
     }
 
     for (const field in errors) {
-        if (errors.hasOwnProperty(field)) {
+        if (Object.hasOwn(errors, field)) {
             allErrors.push(...errors[field]);
         }
     }

@@ -12,11 +12,6 @@ describe("test the RoutineCard component", () => {
 
     describe("Routines are available", () => {
         beforeEach(() => {
-            const crypto = require('crypto');
-            Object.defineProperty(globalThis, 'crypto', {
-                value: { getRandomValues: (arr: string | any[]) => crypto.randomBytes(arr.length) }
-            });
-
             // @ts-ignore
             useActiveRoutineQuery.mockImplementation(() => ({
                 isSuccess: true,
