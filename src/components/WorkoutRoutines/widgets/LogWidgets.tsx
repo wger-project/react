@@ -16,6 +16,7 @@ import {
     GridRowModesModel,
     GridRowsProp
 } from "@mui/x-data-grid";
+import { FormQueryErrors } from "components/Core/Widgets/FormError";
 import { Exercise } from "components/Exercises/models/exercise";
 import { RIR_VALUES_SELECT_LIST } from "components/WorkoutRoutines/models/BaseConfig";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
@@ -196,7 +197,6 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
         },
     ];
 
-
     const initialState = {
         pagination: {
             paginationModel: {
@@ -212,6 +212,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
 
         <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 6 }}>
+                <FormQueryErrors mutationQuery={editLogQuery} />
 
                 <DataGrid
                     initialState={initialState}
