@@ -268,7 +268,7 @@ export const ConfigDetailsRequirementsField = (props: {
             disabled={disable}
             onClick={(event) => setAnchorEl(event.currentTarget)}
         >
-            {Boolean(anchorEl) ? <ArrowDropUpIcon fontSize="small" /> : <SettingsIcon fontSize="small" />}
+            {anchorEl ? <ArrowDropUpIcon fontSize="small" /> : <SettingsIcon fontSize="small" />}
         </IconButton>
         <Menu
             anchorEl={anchorEl}

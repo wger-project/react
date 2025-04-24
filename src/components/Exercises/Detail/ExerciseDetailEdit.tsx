@@ -123,7 +123,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                 const aliasOrig = exerciseTranslation.aliases.map(a => a.alias);
                 const aliasNew = values.alternativeNames;
                 const aliasToCreate = aliasNew.filter(x => !aliasOrig.includes(x));
-                let aliasToDelete = aliasOrig.filter(x => !aliasNew.includes(x));
+                const aliasToDelete = aliasOrig.filter(x => !aliasNew.includes(x));
 
                 aliasToCreate.forEach(alias => {
                     postAlias(translation.id!, alias);

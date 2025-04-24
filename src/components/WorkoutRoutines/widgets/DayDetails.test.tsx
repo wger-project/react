@@ -12,7 +12,7 @@ jest.mock("services");
 describe("Test the DayDragAndDropGrid component", () => {
     let user: ReturnType<typeof userEvent.setup>;
     let mockSetSelectedDay: jest.Mock;
-    let mockAddDay = addDay as jest.Mock;
+    const mockAddDay = addDay as jest.Mock;
 
     beforeEach(() => {
         mockSetSelectedDay = jest.fn();

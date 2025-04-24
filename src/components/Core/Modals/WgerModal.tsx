@@ -1,10 +1,10 @@
-import React, { FunctionComponent } from 'react';
-import { Card, CardActions, CardContent, CardHeader, Modal } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import { Card, CardActions, CardContent, CardHeader, Modal } from "@mui/material";
+import React, { FunctionComponent } from 'react';
 
 export interface WgerModalProps {
-    title: String,
-    subtitle?: String,
+    title: string,
+    subtitle?: string,
     isOpen: boolean,
     closeFn: any,
     children: any
@@ -13,7 +13,7 @@ export interface WgerModalProps {
 export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, subtitle, isOpen, closeFn, children }) => {
 
     const style = {
-        position: 'absolute' as 'absolute',
+        position: 'absolute' as const,
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',

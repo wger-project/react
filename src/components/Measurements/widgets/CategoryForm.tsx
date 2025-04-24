@@ -69,7 +69,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             label={t('unit')}
                             error={formik.touched.unit && Boolean(formik.errors.unit)}
                             helperText={
-                                Boolean(formik.touched.unit && formik.errors.unit)
+                                formik.touched.unit && formik.errors.unit
                                     ? formik.errors.unit
                                     : t('measurements.unitFormHelpText')
                             }

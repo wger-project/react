@@ -27,7 +27,7 @@ export const OPERATION_REPLACE = 'r';
 export const OPERATION_ADD = '+';
 export const OPERATION_SUBSTRACT = '-';
 
-export const REQUIREMENTS_VALUES = ["weight", "reps", "rir", "rest"] as const
+export const REQUIREMENTS_VALUES = ["weight", "reps", "rir", "rest"] as const;
 
 export type OperationType = "+" | "-" | "r";
 export type StepType = "abs" | "percent";
@@ -49,7 +49,7 @@ export const RIR_VALUES_SELECT_LIST = [
     { value: '', label: '-/-' },
     ...[0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4].map(value => ({ value: value, label: value.toString() })),
     { value: 4.5, label: '4+' }
-]
+];
 
 export const RIR_VALUES_SELECT = [...RIR_VALUES_SELECT_LIST] as const;
 

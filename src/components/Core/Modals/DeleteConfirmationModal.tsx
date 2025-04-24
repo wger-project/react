@@ -4,9 +4,9 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from "react-i18next";
 
 export interface DeleteConfirmationModalProps {
-    title: String,
-    subtitle?: String,
-    message?: String,
+    title: string,
+    subtitle?: string,
+    message?: string,
     isOpen: boolean,
     closeFn: any,
     deleteFn: any

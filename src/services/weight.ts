@@ -2,9 +2,9 @@ import axios from 'axios';
 import { WeightAdapter, WeightEntry } from "components/BodyWeight/model";
 import { ApiBodyWeightType } from 'types';
 import { makeHeader, makeUrl } from "utils/url";
-import { ResponseType } from "./responseType";
 import { FilterType } from '../components/BodyWeight/widgets/FilterButtons';
 import { calculatePastDate } from '../utils/date';
+import { ResponseType } from "./responseType";
 
 export const WEIGHT_PATH = 'weightentry';
 
@@ -14,7 +14,7 @@ export const WEIGHT_PATH = 'weightentry';
 export const getWeights = async (filter: FilterType = ''): Promise<WeightEntry[]> => {
 
     const date__gte = calculatePastDate(filter);
-    
+
     const url = makeUrl(WEIGHT_PATH, { query: { ordering: '-date', limit: 900, ...(date__gte && { date__gte }) } });
     const { data: receivedWeights } = await axios.get<ResponseType<ApiBodyWeightType>>(url, {
         headers: makeHeader(),
@@ -27,7 +27,7 @@ export const getWeights = async (filter: FilterType = ''): Promise<WeightEntry[]
  * Delete a weight entry
  */
 export const deleteWeight = async (id: number): Promise<number> => {
-    const response = await axios.delete<Number>(makeUrl(WEIGHT_PATH, { id: id }), {
+    const response = await axios.delete<number>(makeUrl(WEIGHT_PATH, { id: id }), {
         headers: makeHeader(),
     });
 

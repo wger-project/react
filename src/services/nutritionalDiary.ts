@@ -24,7 +24,7 @@ export const getNutritionalDiaryEntries = async (
 
     for await (const page of fetchPaginated(url, makeHeader())) {
         for (const logData of page) {
-            let entry = adapter.fromJson(logData);
+            const entry = adapter.fromJson(logData);
 
             entry.weightUnit = await getWeightUnit(entry.weightUnitId);
             out.push(entry);
@@ -50,7 +50,6 @@ export interface EditDiaryEntryParams extends AddDiaryEntryParams {
 export const addNutritionalDiaryEntry = async (data: AddDiaryEntryParams): Promise<DiaryEntry> => {
     const response = await axios.post(
         makeUrl(ApiPath.NUTRITIONAL_DIARY),
-        // eslint-disable-next-line camelcase
         data,
         { headers: makeHeader() }
     );
@@ -61,7 +60,6 @@ export const addNutritionalDiaryEntry = async (data: AddDiaryEntryParams): Promi
 export const editNutritionalDiaryEntry = async (data: EditDiaryEntryParams): Promise<DiaryEntry> => {
     const response = await axios.patch(
         makeUrl(ApiPath.NUTRITIONAL_DIARY, { id: data.id }),
-        // eslint-disable-next-line camelcase
         data,
         { headers: makeHeader() }
     );

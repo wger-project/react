@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
 import { SlotData, SlotDataAdapter } from "components/WorkoutRoutines/models/SlotData";
 import { Adapter } from "utils/Adapter";

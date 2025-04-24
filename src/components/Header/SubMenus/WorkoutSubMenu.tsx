@@ -1,8 +1,8 @@
-import {Button, Menu, MenuItem} from "@mui/material";
+import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
-import {useTranslation} from "react-i18next";
-import {Link} from "react-router-dom";
-import {makeLink, WgerLink} from "../../../utils/url";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { makeLink, WgerLink } from "../../../utils/url";
 
 export const WorkoutSubMenu = () => {
     const { i18n } = useTranslation();
@@ -25,4 +25,4 @@ export const WorkoutSubMenu = () => {
             </Menu>
         </>
     );
-}
+};

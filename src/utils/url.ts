@@ -224,7 +224,7 @@ export function makeHeader(token?: string) {
     token = token || VITE_API_KEY;
     const DJANGO_CSRF_COOKIE = 'csrftoken';
 
-    let out: AxiosRequestConfig['headers'] = {};
+    const out: AxiosRequestConfig['headers'] = {};
     out['Content-Type'] = 'application/json';
 
     if (token) {
@@ -232,7 +232,6 @@ export function makeHeader(token?: string) {
     }
 
     const csrfCookie = getCookie(DJANGO_CSRF_COOKIE);
-    // eslint-disable-next-line eqeqeq
     if (IS_PROD && csrfCookie != undefined) {
         out['X-CSRFToken'] = csrfCookie;
     }

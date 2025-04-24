@@ -42,7 +42,7 @@ import { PAGINATION_OPTIONS } from "utils/consts";
 
 export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logEntries: WorkoutLog[] | undefined }) => {
     const { t } = useTranslation();
-    let logEntries = props.logEntries ?? [];
+    const logEntries = props.logEntries ?? [];
     const deleteLogQuery = useDeleteRoutineLogQuery(props.routineId);
     const editLogQuery = useEditRoutineLogQuery(props.routineId);
 

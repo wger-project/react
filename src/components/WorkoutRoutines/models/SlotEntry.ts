@@ -111,7 +111,7 @@ export class SlotEntry {
 
 export class SlotEntryAdapter implements Adapter<SlotEntry> {
     fromJson = (item: any) => {
-        let configs = {
+        const configs = {
             weightConfigs: [],
             maxWeightConfigs: [],
             repetitionsConfigs: [],

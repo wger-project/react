@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { Exercise } from "components/Exercises/models/exercise";
 import { SetConfigData, SetConfigDataAdapter } from "components/WorkoutRoutines/models/SetConfigData";
 import { Adapter } from "utils/Adapter";

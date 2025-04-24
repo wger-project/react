@@ -88,7 +88,7 @@ export const ExerciseOverviewList = () => {
         });
     };
 
-    let filteredExercises = useMemo(() => {
+    const filteredExercises = useMemo(() => {
         let filteredExercises = basesQuery.data || [];
 
         // Filter exercise bases by categories
