@@ -8,7 +8,7 @@ import { fetchPaginated } from "utils/requests";
 import { makeHeader, makeUrl } from "utils/url";
 
 export const deleteLog = async (id: number): Promise<number> => {
-    const response = await axios.delete<number>(makeUrl(ApiPath.WORKOUT_LOG_API_PATH, { id: id }), {
+    const response = await axios.delete<number>(makeUrl(ApiPath.WORKOUT_LOG, { id: id }), {
         headers: makeHeader(),
     });
 
@@ -19,7 +19,7 @@ export const deleteLog = async (id: number): Promise<number> => {
 export const editLog = async (entry: WorkoutLog): Promise<WorkoutLog> => {
     const adapter = new WorkoutLogAdapter();
     const response = await axios.patch(
-        makeUrl(ApiPath.WORKOUT_LOG_API_PATH, { id: entry.id }),
+        makeUrl(ApiPath.WORKOUT_LOG, { id: entry.id }),
         adapter.toJson(entry),
         { headers: makeHeader() }
     );

@@ -41,12 +41,22 @@ const Entries: React.FC<LogProps> = ({ selectedDay }) => {
                     </Typography>
                 }
             />
-            <CardContent sx={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <CardContent sx={{
+                flex: 1,
+                height: '100%',
+                overflow: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2
+            }}>
                 <List>
                     {/* Weight entries */}
                     {selectedDay.weightEntry &&
                         <ListItem>
-                            <ListItemText primary={t("weight")} secondary={selectedDay.weightEntry.weight.toFixed(1)} />
+                            <ListItemText
+                                primary={t("weight")}
+                                secondary={selectedDay.weightEntry.weight.toFixed(1)}
+                            />
                         </ListItem>}
 
                     {/* One measurement */}
@@ -61,14 +71,15 @@ const Entries: React.FC<LogProps> = ({ selectedDay }) => {
                     {/* Measurements */}
                     {selectedDay.measurements.length > 1 &&
                         <>
-                            <ListItemButton
-                                onClick={() => setOpenMeasurements(!openMeasurements)}
-                                selected={openMeasurements}
-                            >
-                                <ListItemText primary={t("measurements.measurements")} />
-                                {openMeasurements ? <ExpandLess /> : <ExpandMore />}
-                            </ListItemButton>
-
+                            <ListItem>
+                                <ListItemButton
+                                    onClick={() => setOpenMeasurements(!openMeasurements)}
+                                    selected={openMeasurements}
+                                >
+                                    <ListItemText primary={t("measurements.measurements")} />
+                                    {openMeasurements ? <ExpandLess /> : <ExpandMore />}
+                                </ListItemButton>
+                            </ListItem>
                             <Collapse in={openMeasurements} timeout="auto" unmountOnExit>
                                 <List sx={{ pl: 4, pt: 0 }}>
                                     {selectedDay.measurements.map((measurement, key) => (
@@ -80,28 +91,31 @@ const Entries: React.FC<LogProps> = ({ selectedDay }) => {
                                         </ListItem>))}
                                 </List>
                             </Collapse>
+
                         </>
                     }
 
                     {/* Workout session */}
                     {selectedDay.workoutSession && <>
-                        <ListItemButton
-                            onClick={() => setOpenSession(!openSession)}
-                            selected={openSession}
-                        >
-                            <ListItemText
-                                primary={t("routines.workoutSession")}
-                                secondary={selectedDay.workoutSession.textRepresentation}
-                                sx={{
-                                    '& .MuiListItemText-secondary': {
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis'
-                                    }
-                                }}
-                            />
-                            {openSession ? <ExpandLess /> : <ExpandMore />}
-                        </ListItemButton>
+                        <ListItem>
+                            <ListItemButton
+                                onClick={() => setOpenSession(!openSession)}
+                                selected={openSession}
+                            >
+                                <ListItemText
+                                    primary={t("routines.workoutSession")}
+                                    secondary={selectedDay.workoutSession.textRepresentation}
+                                    sx={{
+                                        '& .MuiListItemText-secondary': {
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis'
+                                        }
+                                    }}
+                                />
+                                {openSession ? <ExpandLess /> : <ExpandMore />}
+                            </ListItemButton>
+                        </ListItem>
                         <Collapse in={openSession} timeout="auto" unmountOnExit>
                             <List sx={{ pl: 4, pt: 0 }}>
                                 {selectedDay.workoutSession.logs.map((log, key) => (
@@ -113,29 +127,33 @@ const Entries: React.FC<LogProps> = ({ selectedDay }) => {
                                     </ListItem>))}
                             </List>
                         </Collapse>
+
                     </>}
 
                     {/* Nutrition diary */}
                     {selectedDay.nutritionLogs.length > 0 &&
                         <>
-                            <ListItemButton
-                                onClick={() => setOpenNutritionDiary(!openNutritionDiary)}
-                                selected={openNutritionDiary}
-                            >
-                                <ListItemText primary={t("nutrition.nutritionalDiary")} />
-                                {openNutritionDiary ? <ExpandLess /> : <ExpandMore />}
-                            </ListItemButton>
+                            <ListItem>
+                                <ListItemButton
+                                    onClick={() => setOpenNutritionDiary(!openNutritionDiary)}
+                                    selected={openNutritionDiary}
+                                >
+                                    <ListItemText primary={t("nutrition.nutritionalDiary")} />
+                                    {openNutritionDiary ? <ExpandLess /> : <ExpandMore />}
+                                </ListItemButton>
+                            </ListItem>
                             <Collapse in={openNutritionDiary} timeout="auto" unmountOnExit>
                                 <List sx={{ pl: 4, pt: 0 }}>
                                     {selectedDay.nutritionLogs.map((log, key) => (
                                         <ListItem key={key} dense>
                                             <ListItemText
-                                                primary={log.ingredientId}
-                                                secondary={`${log.amount} `}
+                                                primary={log.ingredient?.name}
+                                                secondary={`${log.amount} ${t('nutrition.gramShort')}`}
                                             />
                                         </ListItem>))}
                                 </List>
                             </Collapse>
+
                         </>}
                 </List>
 

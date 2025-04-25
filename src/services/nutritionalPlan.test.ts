@@ -34,8 +34,7 @@ describe("Nutritional plan service tests", () => {
             ]
         };
 
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: planResponse }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: planResponse }));
 
         const result = await getNutritionalPlansSparse();
         expect(axios.get).toHaveBeenCalledTimes(1);

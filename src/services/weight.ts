@@ -21,8 +21,7 @@ export const getWeights = async (filter: FilterType = ''): Promise<WeightEntry[]
     const { data: receivedWeights } = await axios.get<ResponseType<ApiBodyWeightType>>(url, {
         headers: makeHeader(),
     });
-    const adapter = new WeightAdapter();
-    return receivedWeights.results.map(weight => adapter.fromJson(weight));
+    return receivedWeights.results.map(weight => new WeightAdapter().fromJson(weight));
 };
 
 /*

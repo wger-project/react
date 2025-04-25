@@ -13,7 +13,7 @@ import { WorkoutSession } from "components/WorkoutRoutines/models/WorkoutSession
 import { useSessionsQuery } from "components/WorkoutRoutines/queries/sessions";
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { isSameDay } from "utils/date";
+import { dateToYYYYMMDD, isSameDay } from "utils/date";
 import Entries from './Entries';
 
 export interface DayProps {
@@ -27,11 +27,38 @@ export interface DayProps {
 
 const CalendarComponent = () => {
     const [t] = useTranslation();
+
+    const currentDate = new Date();
+    const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
+    const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
+
+    const startOfMonth = new Date(currentYear, currentMonth, 1);
+    const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
+
+
     const weightsQuery = useBodyWeightQuery();
-    const sessionQuery = useSessionsQuery();
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const categoryQuery = useMeasurementsCategoryQuery();
-    const nutritionDiaryQuery = useNutritionDiaryQuery();
+    const sessionQuery = useSessionsQuery({
+        filtersetQuerySessions: {
+            "date__gte": dateToYYYYMMDD(startOfMonth),
+            "date__lte": dateToYYYYMMDD(endOfMonth),
+        },
+        filtersetQueryLogs: {
+            "date__gte": dateToYYYYMMDD(startOfMonth),
+            "date__lte": dateToYYYYMMDD(endOfMonth),
+        }
+    });
+    const categoryQuery = useMeasurementsCategoryQuery({
+        filtersetQueryEntries: {
+            "date__gte": dateToYYYYMMDD(startOfMonth),
+            "date__lte": dateToYYYYMMDD(endOfMonth),
+        }
+    });
+    const nutritionDiaryQuery = useNutritionDiaryQuery({
+        filtersetQuery: {
+            "datetime__gte": dateToYYYYMMDD(startOfMonth),
+            "datetime__lte": dateToYYYYMMDD(endOfMonth),
+        }
+    });
 
     const isLoading = weightsQuery.isLoading || sessionQuery.isLoading || categoryQuery.isLoading || nutritionDiaryQuery.isLoading;
     const isSuccess = weightsQuery.isSuccess && sessionQuery.isSuccess && categoryQuery.isSuccess && nutritionDiaryQuery.isSuccess;
@@ -87,7 +114,6 @@ const CalendarComponent = () => {
         return days;
     };
 
-    const currentDate = new Date();
     const defaultDay: DayProps = {
         date: currentDate,
         weightEntry: undefined,
@@ -95,8 +121,7 @@ const CalendarComponent = () => {
         measurements: [],
         nutritionLogs: []
     };
-    const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
-    const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
+
 
     const days = getDaysInMonth(currentYear, currentMonth);
     const [selectedDay, setSelectedDay] = useState<DayProps>(days.find(day => isSameDay(day.date, currentDate)) || defaultDay);

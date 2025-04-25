@@ -1,22 +1,24 @@
+import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { WeightEntry } from "components/BodyWeight/model";
+import { useBodyWeightQuery } from "components/BodyWeight/queries";
+import { MeasurementCategory } from "components/Measurements/models/Category";
+import { MeasurementEntry } from "components/Measurements/models/Entry";
+import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
 import i18n from "i18next";
 import React from "react";
 import { I18nextProvider } from "react-i18next";
 import { BrowserRouter } from "react-router-dom";
+import { testQueryClient } from "tests/queryClient";
 import { dateToYYYYMMDD } from "utils/date";
-import { useBodyWeightQuery } from "../../BodyWeight/queries";
-import { MeasurementCategory } from "../../Measurements/models/Category";
-import { MeasurementEntry } from "../../Measurements/models/Entry";
-import { useMeasurementsCategoryQuery } from "../../Measurements/queries";
 import CalendarComponent from "./CalendarComponent";
 
-jest.mock('../../BodyWeight/queries', () => ({
+jest.mock('components/BodyWeight/queries', () => ({
     useBodyWeightQuery: jest.fn(),
 }));
 
-jest.mock('../../Measurements/queries', () => ({
+jest.mock('components/Measurements/queries', () => ({
     useMeasurementsCategoryQuery: jest.fn(),
 }));
 
@@ -62,7 +64,9 @@ describe('CalendarComponent', () => {
         render(
             <BrowserRouter>
                 <I18nextProvider i18n={i18n}>
-                    <CalendarComponent />
+                    <QueryClientProvider client={testQueryClient}>
+                        <CalendarComponent />
+                    </QueryClientProvider>
                 </I18nextProvider>
             </BrowserRouter>
         );
@@ -110,6 +114,7 @@ describe('CalendarComponent', () => {
         // Act
         const day = screen.getByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 1))}`);
         await user.click(day);
+        screen.logTestingPlaygroundURL();
 
         // Assert
         expect(screen.getByText(/body fat: 20 %/i)).toBeInTheDocument();

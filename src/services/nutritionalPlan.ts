@@ -9,6 +9,10 @@ import { makeHeader, makeUrl } from "utils/url";
 
 export const API_NUTRITIONAL_PLAN_PATH = 'nutritionplan';
 
+export type NutritionalPlanOptions = {
+    filtersetQueryLogs?: object,
+}
+
 export const getNutritionalPlansSparse = async (): Promise<NutritionalPlan[]> => {
     const { data: receivedPlans } = await axios.get<ResponseType<ApiNutritionalPlanType>>(
         makeUrl(API_NUTRITIONAL_PLAN_PATH),
@@ -32,13 +36,14 @@ export const getLastNutritionalPlan = async (): Promise<NutritionalPlan | null> 
     return await getNutritionalPlanFull(receivedPlan.results[0].id);
 };
 
-export const getNutritionalPlanFull = async (id: number | null, date?: Date): Promise<NutritionalPlan | null> => {
+export const getNutritionalPlanFull = async (id: number | null, options?: NutritionalPlanOptions): Promise<NutritionalPlan | null> => {
     if (id === null) {
         return null;
     }
+    const { filtersetQueryLogs = {} } = options || {};
 
     const { data: receivedPlan } = await axios.get<ApiNutritionalPlanType>(
-        makeUrl(API_NUTRITIONAL_PLAN_PATH, { id: id }),
+        makeUrl(API_NUTRITIONAL_PLAN_PATH, { id: id, }),
         { headers: makeHeader() },
     );
 
@@ -49,7 +54,7 @@ export const getNutritionalPlanFull = async (id: number | null, date?: Date): Pr
     const plan = adapter.fromJson(receivedPlan);
     const responses = await Promise.all([
         getMealsForPlan(id),
-        getNutritionalDiaryEntries({ planId: id, date: date })
+        getNutritionalDiaryEntries({ filtersetQuery: { plan: id, ...filtersetQueryLogs } })
     ]);
 
     plan.meals = responses[0];

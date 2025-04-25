@@ -5,13 +5,14 @@ import {
     deleteNutritionalDiaryEntry,
     EditDiaryEntryParams,
     editNutritionalDiaryEntry,
-    getNutritionalDiaryEntries
+    getNutritionalDiaryEntries,
+    NutritionalDiaryEntriesOptions
 } from "services/nutritionalDiary";
 import { QueryKey } from "utils/consts";
 
-export const useNutritionDiaryQuery = () => useQuery({
-    queryFn: () => getNutritionalDiaryEntries({}),
-    queryKey: [QueryKey.NUTRITIONAL_PLAN_DIARY],
+export const useNutritionDiaryQuery = (options?: NutritionalDiaryEntriesOptions) => useQuery({
+    queryFn: () => getNutritionalDiaryEntries(options),
+    queryKey: [QueryKey.NUTRITIONAL_PLAN_DIARY, JSON.stringify(options || {})],
 });
 
 export const useAddDiaryEntryQuery = (planId: number) => {

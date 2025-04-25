@@ -6,48 +6,73 @@ import { getMeasurementCategories, getMeasurementCategory } from "services/measu
 jest.mock("axios");
 
 describe('measurement service tests', () => {
+    const measurementEntryResponse = {
+        count: 2,
+        next: null,
+        previous: null,
+        results: [
+            {
+                "id": 1,
+                "category": 1,
+                "value": 80,
+                "date": "2021-01-01",
+                "notes": ""
+            }
+        ]
+    };
+
+    const measurementOverviewResponse = {
+        count: 2,
+        next: null,
+        previous: null,
+        results: [
+            {
+                "id": 1,
+                "name": "Weight",
+                "unit": "kg"
+            }
+        ]
+    };
+
+    const measurementDetailResponse = {
+        "id": 1,
+        "name": "Weight",
+        "unit": "kg"
+    };
+
 
     beforeEach(() => {
         jest.resetAllMocks();
-    });
 
-    test('GET measurement categories', async () => {
-        const measurementResponse = {
-            count: 2,
-            next: null,
-            previous: null,
-            results: [
-                {
-                    "id": 1,
-                    "name": "Weight",
-                    "unit": "kg"
-                }
-            ]
-        };
-
-        const measurementEntryResponse = {
-            count: 2,
-            next: null,
-            previous: null,
-            results: [
-                {
-                    "id": 1,
-                    "category": 1,
-                    "value": 80,
-                    "date": "2021-01-01",
-                    "notes": ""
-                }
-            ]
-        };
-
-        // @ts-ignore
-        axios.get.mockImplementation((url: string) => {
+        (axios.get as jest.Mock).mockImplementation((url: string) => {
             if (url.includes("measurement-category")) {
-                return Promise.resolve({ data: measurementResponse });
+                return Promise.resolve({ data: measurementOverviewResponse });
             } else if (url.includes("measurement/?category=1")) {
                 return Promise.resolve({ data: measurementEntryResponse });
             }
         });
+    });
+
+    test('Correctly filters categories and entries', async () => {
+
+        await getMeasurementCategories({
+            filtersetQueryEntries: { foo: "bar" },
+            filtersetQueryCategories: { baz: "1234" }
+        });
+
+        expect(axios.get).toHaveBeenCalledTimes(2);
+        expect(axios.get).toHaveBeenNthCalledWith(1,
+            expect.stringContaining('baz=1234'),
+            expect.anything()
+        );
+        expect(axios.get).toHaveBeenNthCalledWith(2,
+            expect.stringContaining('foo=bar'),
+            expect.anything()
+        );
+
+    });
+
+    test('GET measurement categories', async () => {
 
         const result = await getMeasurementCategories();
         expect(axios.get).toHaveBeenCalledTimes(2);
@@ -60,31 +85,10 @@ describe('measurement service tests', () => {
     });
 
     test('GET measurement category', async () => {
-        const measurementResponse = {
-            "id": 1,
-            "name": "Weight",
-            "unit": "kg"
-        };
 
-        const measurementEntryResponse = {
-            count: 2,
-            next: null,
-            previous: null,
-            results: [
-                {
-                    "id": 1,
-                    "category": 1,
-                    "value": 80,
-                    "date": "2021-01-01",
-                    "notes": ""
-                }
-            ]
-        };
-
-        // @ts-ignore
-        axios.get.mockImplementation((url: string) => {
+        (axios.get as jest.Mock).mockImplementation((url: string) => {
             if (url.includes("measurement-category/1")) {
-                return Promise.resolve({ data: measurementResponse });
+                return Promise.resolve({ data: measurementDetailResponse });
             } else if (url.includes("measurement/?category=1")) {
                 return Promise.resolve({ data: measurementEntryResponse });
             }

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AddSessionParams, EditSessionParams } from "components/WorkoutRoutines/models/WorkoutSession";
 import { addSession, editSession, searchSession } from "services";
-import { getSessions } from "services/session";
+import { getSessions, SessionQueryOptions } from "services/session";
 import { QueryKey, } from "utils/consts";
 
 
@@ -19,9 +19,9 @@ export const useAddSessionQuery = () => {
     });
 };
 
-export const useSessionsQuery = () => useQuery({
-    queryFn: () => getSessions(),
-    queryKey: [QueryKey.SESSIONS_FULL],
+export const useSessionsQuery = (options?: SessionQueryOptions) => useQuery({
+    queryFn: () => getSessions(options),
+    queryKey: [QueryKey.SESSIONS_FULL, JSON.stringify(options || {})],
 });
 
 

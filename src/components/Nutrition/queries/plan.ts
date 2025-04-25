@@ -10,7 +10,7 @@ import {
     getNutritionalPlansSparse
 } from "services/nutritionalPlan";
 import { QueryKey } from "utils/consts";
-import { number } from "yup";
+import { dateToYYYYMMDD } from "utils/date";
 
 export function useFetchNutritionalPlansQuery() {
     return useQuery({
@@ -41,7 +41,7 @@ export function useFetchNutritionalPlanQuery(planId: number) {
 export function useFetchNutritionalPlanDateQuery(planId: number | null, dateStr: string, enabled = true) {
     return useQuery({
         queryKey: [QueryKey.NUTRITIONAL_PLAN, planId, dateStr],
-        queryFn: () => getNutritionalPlanFull(planId, new Date(dateStr)),
+        queryFn: () => getNutritionalPlanFull(planId, { filtersetQueryLogs: { "datetime__lte": dateToYYYYMMDD(new Date(dateStr)) } }),
         enabled: enabled,
     });
 }

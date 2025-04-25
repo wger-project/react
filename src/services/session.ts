@@ -12,6 +12,11 @@ import { API_MAX_PAGE_SIZE, ApiPath } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
 import { makeHeader, makeUrl } from "utils/url";
 
+export type SessionQueryOptions = {
+    filtersetQuerySessions?: object,
+    filtersetQueryLogs?: object,
+}
+
 
 export const searchSession = async (queryParams: Record<string, any>): Promise<WorkoutSession | null> => {
     const response = await axios.get(
@@ -26,16 +31,24 @@ export const searchSession = async (queryParams: Record<string, any>): Promise<W
     return null;
 };
 
-export const getSessions = async (): Promise<WorkoutSession[]> => {
+export const getSessions = async (options?: SessionQueryOptions): Promise<WorkoutSession[]> => {
+
+    const { filtersetQuerySessions = {}, filtersetQueryLogs = {} } = options || {};
 
     const sessionAdapter = new WorkoutSessionAdapter();
     const logAdapter = new WorkoutLogAdapter();
-    const result: WorkoutSession[] = []
+    const result: WorkoutSession[] = [];
     const logs: WorkoutLog[] = [];
     const exercises: Record<number, Exercise> = {};
 
     // Fetch all logs first
-    for await (const logPage of fetchPaginated(makeUrl(ApiPath.WORKOUT_LOG, { query: { limit: API_MAX_PAGE_SIZE } }), makeHeader())) {
+    for await (const logPage of fetchPaginated(
+        makeUrl(
+            ApiPath.WORKOUT_LOG,
+            { query: { limit: API_MAX_PAGE_SIZE, ...filtersetQueryLogs } }
+        ),
+        makeHeader()
+    )) {
         for (const logData of logPage) {
             logs.push(logAdapter.fromJson(logData));
         }
@@ -49,8 +62,12 @@ export const getSessions = async (): Promise<WorkoutSession[]> => {
         log.exerciseObj = exercises[log.exerciseId];
     }
 
-
-    for await (const sessionPage of fetchPaginated(makeUrl(ApiPath.SESSION, { query: { limit: API_MAX_PAGE_SIZE } }), makeHeader())) {
+    for await (const sessionPage of fetchPaginated(
+        makeUrl(
+            ApiPath.SESSION,
+            { query: { limit: API_MAX_PAGE_SIZE, ...filtersetQuerySessions } }
+        ), makeHeader()
+    )) {
         for (const sessionData of sessionPage) {
             const session = sessionAdapter.fromJson(sessionData);
             session.logs = logs.filter(log => log.sessionId === session.id);
