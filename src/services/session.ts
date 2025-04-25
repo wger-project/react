@@ -7,7 +7,7 @@ import {
     WorkoutSession,
     WorkoutSessionAdapter
 } from "components/WorkoutRoutines/models/WorkoutSession";
-import { getExercise } from "services/exercise";
+import { getExercise } from "services";
 import { API_MAX_PAGE_SIZE, ApiPath } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
 import { makeHeader, makeUrl } from "utils/url";
