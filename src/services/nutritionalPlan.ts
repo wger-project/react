@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { NutritionalPlan, NutritionalPlanAdapter } from "components/Nutrition/models/nutritionalPlan";
+import { getNutritionalDiaryEntries } from "services";
 import { getIngredients } from "services/ingredient";
 import { getMealsForPlan } from "services/meal";
-import { getNutritionalDiaryEntries } from "services/nutritionalDiary";
 import { ResponseType } from "services/responseType";
 import { ApiNutritionalPlanType } from 'types';
 import { makeHeader, makeUrl } from "utils/url";

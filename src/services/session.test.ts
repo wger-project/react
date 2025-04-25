@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getSessions } from "services/session";
+import { getSessions } from "services";
 
 jest.mock("axios");
 

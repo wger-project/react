@@ -91,7 +91,11 @@ export {
     deleteMaxRirConfig,
 } from './config';
 
-export { addSession, editSession, searchSession } from './session';
+export { addSession, editSession, searchSession, getSessions } from './session';
+
+export {
+    getNutritionalDiaryEntries, deleteNutritionalDiaryEntry, addNutritionalDiaryEntry, editNutritionalDiaryEntry
+} from './nutritionalDiary';
 
 export { getProfile, editProfile } from './profile';
 

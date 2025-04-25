@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getNutritionalDiaryEntries } from "services/nutritionalDiary";
+import { getNutritionalDiaryEntries } from "services";
 
 jest.mock("axios");
 

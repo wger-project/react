@@ -10,8 +10,8 @@ import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { useNutritionDiaryQuery } from "components/Nutrition/queries";
 import { WorkoutSession } from "components/WorkoutRoutines/models/WorkoutSession";
-import { useSessionsQuery } from "components/WorkoutRoutines/queries/sessions";
-import React, { useEffect, useState } from 'react';
+import { useSessionsQuery } from "components/WorkoutRoutines/queries";
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { dateToYYYYMMDD, isSameDay } from "utils/date";
 import Entries from './Entries';
@@ -47,7 +47,7 @@ const CalendarComponent = () => {
             "date__lte": dateToYYYYMMDD(endOfMonth),
         }
     });
-    const categoryQuery = useMeasurementsCategoryQuery({
+    const measurementQuery = useMeasurementsCategoryQuery({
         filtersetQueryEntries: {
             "date__gte": dateToYYYYMMDD(startOfMonth),
             "date__lte": dateToYYYYMMDD(endOfMonth),
@@ -60,10 +60,10 @@ const CalendarComponent = () => {
         }
     });
 
-    const isLoading = weightsQuery.isLoading || sessionQuery.isLoading || categoryQuery.isLoading || nutritionDiaryQuery.isLoading;
-    const isSuccess = weightsQuery.isSuccess && sessionQuery.isSuccess && categoryQuery.isSuccess && nutritionDiaryQuery.isSuccess;
+    const isLoading = weightsQuery.isLoading || sessionQuery.isLoading || measurementQuery.isLoading || nutritionDiaryQuery.isLoading;
+    const isSuccess = weightsQuery.isSuccess && sessionQuery.isSuccess && measurementQuery.isSuccess && nutritionDiaryQuery.isSuccess;
 
-    const categories = categoryQuery.data;
+    const categories = measurementQuery.data;
     const measurements = categories?.flatMap(category =>
         category.entries.map(entry => new CalendarMeasurement(category.name, category.unit, entry.value, entry.date))
     ) ?? [];
@@ -122,12 +122,24 @@ const CalendarComponent = () => {
         nutritionLogs: []
     };
 
-
-    const days = getDaysInMonth(currentYear, currentMonth);
+    const days = useMemo(() =>
+            getDaysInMonth(currentYear, currentMonth),
+        [currentYear, currentMonth, weightsQuery.data, sessionQuery.data, measurementQuery.data, nutritionDiaryQuery.data]
+    );
     const [selectedDay, setSelectedDay] = useState<DayProps>(days.find(day => isSameDay(day.date, currentDate)) || defaultDay);
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+    useEffect(() => {
+        if (isSuccess) {
+            const todayWithData = days.find(day => isSameDay(day.date, currentDate));
+            if (todayWithData) {
+                setSelectedDay(todayWithData);
+            }
+        }
+    }, [isSuccess]);
+
 
     useEffect(() => {
         setCurrentMonth(selectedDay.date.getMonth());
