@@ -180,7 +180,7 @@ const CalendarComponent = () => {
         }}>
             <Card sx={{
                 width: { xs: 'auto', md: '65%' },
-                height: { xs: 'auto%', md: '100%' },
+                height: { xs: 'auto', md: '100%' },
                 m: { xs: 0, sm: 1, md: 2 },
                 p: { xs: 1, sm: 1.5, md: 2 },
                 display: 'flex',
