@@ -9,6 +9,7 @@ describe('editBaseConfig', () => {
     const mockBaseConfigData = {
         id: 1,
         value: 100,
+        // eslint-disable-next-line camelcase
         slot_entry: 1,
     };
 

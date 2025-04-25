@@ -218,6 +218,7 @@ export const ProgressionForm = (props: {
         // Split between min and max values
         const editList: EditBaseConfigParams[] = data.filter(data => data.id !== null).map(data => ({
             id: data.id!,
+            // eslint-disable-next-line camelcase
             slot_entry: props.slotEntryId,
             value: data.value as number,
             iteration: data.iteration,
@@ -227,6 +228,7 @@ export const ProgressionForm = (props: {
             requirements: { rules: data.requirements ?? [] }
         }));
         const addList: AddBaseConfigParams[] = data.filter(data => data.id === null && data.value !== '').map(data => ({
+            // eslint-disable-next-line camelcase
             slot_entry: props.slotEntryId,
             value: data.value as number,
             iteration: data.iteration,
@@ -246,6 +248,7 @@ export const ProgressionForm = (props: {
         // Max values
         const editListMax: EditBaseConfigParams[] = data.filter(data => data.idMax !== null && data.valueMax !== '').map(data => ({
             id: data.idMax!,
+            // eslint-disable-next-line camelcase
             slot_entry: props.slotEntryId,
             value: data.valueMax as number,
             iteration: data.iteration,
@@ -256,6 +259,7 @@ export const ProgressionForm = (props: {
         }));
         const addListMax: AddBaseConfigParams[] = data.filter(data => data.idMax === null && data.valueMax !== '').map(data => ({
             iteration: data.iteration,
+            // eslint-disable-next-line camelcase
             slot_entry: props.slotEntryId,
             value: data.valueMax as number,
             operation: data.operation,

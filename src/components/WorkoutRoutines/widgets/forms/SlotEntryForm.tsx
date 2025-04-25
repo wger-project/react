@@ -89,6 +89,7 @@ export const SlotEntryRepetitionUnitField = (props: { slotEntry: SlotEntry, rout
     }));
 
     const handleOnChange = (newValue: string) => {
+        // eslint-disable-next-line camelcase
         editSlotEntryQuery.mutate({ id: props.slotEntry.id, repetition_unit: parseInt(newValue), });
     };
 
@@ -130,6 +131,7 @@ export const SlotEntryWeightUnitField = (props: { slotEntry: SlotEntry, routineI
 
 
     const handleOnChange = (newValue: string) => {
+        // eslint-disable-next-line camelcase
         editSlotEntryQuery.mutate({ id: props.slotEntry.id, weight_unit: parseInt(newValue), });
     };
 
@@ -185,6 +187,7 @@ export const SlotEntryRoundingField = (props: SlotEntryRoundingFieldProps) => {
                 parsedValue = null;
             }
 
+            // eslint-disable-next-line camelcase
             const data = props.rounding === 'weight' ? { weight_rounding: parsedValue } : { reps_rounding: parsedValue };
             if (props.editProfile) {
                 editProfileQuery.mutate(data);

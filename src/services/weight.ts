@@ -13,8 +13,10 @@ export const WEIGHT_PATH = 'weightentry';
  */
 export const getWeights = async (filter: FilterType = ''): Promise<WeightEntry[]> => {
 
+    // eslint-disable-next-line camelcase
     const date__gte = calculatePastDate(filter);
 
+    // eslint-disable-next-line camelcase
     const url = makeUrl(WEIGHT_PATH, { query: { ordering: '-date', limit: 900, ...(date__gte && { date__gte }) } });
     const { data: receivedWeights } = await axios.get<ResponseType<ApiBodyWeightType>>(url, {
         headers: makeHeader(),

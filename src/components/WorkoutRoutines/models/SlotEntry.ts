@@ -111,6 +111,8 @@ export class SlotEntry {
 
 export class SlotEntryAdapter implements Adapter<SlotEntry> {
     fromJson = (item: any) => {
+        const adapter = new BaseConfigAdapter();
+
         const configs = {
             weightConfigs: [],
             maxWeightConfigs: [],
@@ -124,34 +126,34 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
             maxRirConfigs: [],
         };
         if (Object.hasOwn(item, 'weight_configs')) {
-            configs.weightConfigs = item.weight_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+            configs.weightConfigs = item.weight_configs.map((config: any) => adapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_weight_configs')) {
-            configs.maxWeightConfigs = item.max_weight_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+            configs.maxWeightConfigs = item.max_weight_configs.map((config: any) => adapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'repetitions_configs')) {
-            configs.repetitionsConfigs = item.repetitions_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+            configs.repetitionsConfigs = item.repetitions_configs.map((config: any) => adapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_repetitions_configs')) {
-            configs.maxRepetitionsConfigs = item.max_repetitions_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+            configs.maxRepetitionsConfigs = item.max_repetitions_configs.map((config: any) => adapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'set_nr_configs')) {
-            configs.nrOfSetsConfigs = item.set_nr_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+            configs.nrOfSetsConfigs = item.set_nr_configs.map((config: any) => adapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_set_nr_configs')) {
-            configs.maxNrOfSetsConfigs = item.max_set_nr_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+            configs.maxNrOfSetsConfigs = item.max_set_nr_configs.map((config: any) => adapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'rest_configs')) {
-            configs.restTimeConfigs = item.rest_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+            configs.restTimeConfigs = item.rest_configs.map((config: any) => adapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_rest_configs')) {
-            configs.maxRestTimeConfigs = item.max_rest_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+            configs.maxRestTimeConfigs = item.max_rest_configs.map((config: any) => adapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'rir_configs')) {
-            configs.rirConfigs = item.rir_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+            configs.rirConfigs = item.rir_configs.map((config: any) => adapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_rir_configs')) {
-            configs.maxRirConfigs = item.max_rir_configs.map((config: any) => new BaseConfigAdapter().fromJson(config));
+            configs.maxRirConfigs = item.max_rir_configs.map((config: any) => adapter.fromJson(config));
         }
 
         return new SlotEntry({

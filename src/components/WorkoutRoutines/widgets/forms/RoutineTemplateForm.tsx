@@ -31,7 +31,9 @@ export const RoutineTemplateForm = (props: { routine: Routine }) => {
     const handleSave = (isTemplate: boolean, isPublic: boolean) => {
         editRoutineQuery.mutate({
             id: props.routine.id,
+            // eslint-disable-next-line camelcase
             is_template: isTemplate,
+            // eslint-disable-next-line camelcase
             is_public: isPublic
         });
     };

@@ -71,17 +71,23 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                     exercise: l.exercise?.id,
                     day: dayId,
                     routine: routineId,
+                    // eslint-disable-next-line camelcase
                     slot_entry: l.slotEntry,
 
                     rir: l.rir !== '' ? l.rir : null,
+                    // eslint-disable-next-line camelcase
                     rir_target: l.rirTarget !== '' ? l.rirTarget : null,
 
+                    // eslint-disable-next-line camelcase
                     repetitions_unit: l.repetitionsUnit?.id,
                     repetitions: l.repetitions !== '' ? l.repetitions : null,
+                    // eslint-disable-next-line camelcase
                     repetitions_target: l.repetitionsTarget !== '' ? l.repetitionsTarget : null,
 
+                    // eslint-disable-next-line camelcase
                     weight_unit: l.weightUnit?.id,
                     weight: l.weight !== '' ? l.weight : null,
+                    // eslint-disable-next-line camelcase
                     weight_target: l.weightTarget !== '' ? l.weightTarget : null,
                 }
             ));
@@ -168,7 +174,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
             {formik => (
                 <Form>
                     <FieldArray name={"logs"}>
-                        {({ insert, remove, push }) => (<>
+                        {({ insert, remove }) => (<>
 
                                 {formik.values.logs.map((log, index) => (
                                     <Grid container key={index} spacing={1} sx={{ mt: 2 }}>
