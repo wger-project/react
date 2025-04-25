@@ -98,7 +98,9 @@ export const DayDragAndDropGrid = (props: {
             routine: props.routineId,
             name: `${t('routines.newDay')} ${routineQuery.data!.days.length + 1}`,
             order: routineQuery.data!.days.length + 1,
+            // eslint-disable-next-line camelcase
             is_rest: false,
+            // eslint-disable-next-line camelcase
             need_logs_to_advance: false,
         };
         const newDay = await addDayQuery.mutateAsync(newDayData);
@@ -390,6 +392,7 @@ export const DayDetails = (props: {
                                                             exercise: exercise.data.base_id,
                                                             type: 'normal',
                                                             order: slot.entries.length + 1,
+                                                            // eslint-disable-next-line camelcase
                                                             weight_unit: userProfileQuery.data!.useMetric ? WEIGHT_UNIT_KG : WEIGHT_UNIT_LB,
                                                         });
                                                         setShowAutocompleterForSlot(null);

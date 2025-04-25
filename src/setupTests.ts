@@ -32,7 +32,7 @@ jest.mock('./config', () => {
         VITE_API_SERVER: 'https://example.com',
         VITE_API_KEY: '122333444455555666666'
     };
-})
+});
 
 global.TextEncoder = TextEncoder as any;
 global.TextDecoder = TextDecoder as any;

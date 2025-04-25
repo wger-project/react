@@ -36,7 +36,7 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
     if (params.query) {
         const queryList = [];
         for (const key in params.query) {
-            if (params.query.hasOwnProperty(key)) {
+            if (Object.hasOwn(params.query, key)) {
                 // @ts-ignore
                 queryList.push(`${encodeURIComponent(key)}=${encodeURIComponent(params.query[key])}`);
             }
@@ -65,8 +65,6 @@ export enum WgerLink {
     ROUTINE_ICAL,
     ROUTINE_COPY,
     ROUTINE_ADD_LOG,
-    ROUTINE_EDIT_LOG,
-    ROUTINE_DELETE_LOG,
 
     TEMPLATE_DETAIL,
     PRIVATE_TEMPLATE_OVERVIEW,
@@ -137,10 +135,6 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
             return `/${langShort}/routine/${params!.id}/statistics`;
         case WgerLink.ROUTINE_ADD_LOG:
             return `/${langShort}/routine/${params!.id}/day/${params!.id2}/add-logs`;
-        case WgerLink.ROUTINE_EDIT_LOG:
-            return `/${langShort}/routine/log/${params!.id}/edit`;
-        case WgerLink.ROUTINE_DELETE_LOG:
-            return `/${langShort}/routine/log/${params!.id}/delete`;
         case WgerLink.CALENDAR:
             return `/${langShort}/routine/calendar`;
         // Templates
@@ -230,7 +224,7 @@ export function makeHeader(token?: string) {
     token = token || VITE_API_KEY;
     const DJANGO_CSRF_COOKIE = 'csrftoken';
 
-    let out: AxiosRequestConfig['headers'] = {};
+    const out: AxiosRequestConfig['headers'] = {};
     out['Content-Type'] = 'application/json';
 
     if (token) {
@@ -238,7 +232,6 @@ export function makeHeader(token?: string) {
     }
 
     const csrfCookie = getCookie(DJANGO_CSRF_COOKIE);
-    // eslint-disable-next-line eqeqeq
     if (IS_PROD && csrfCookie != undefined) {
         out['X-CSRFToken'] = csrfCookie;
     }

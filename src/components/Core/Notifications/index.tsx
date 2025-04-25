@@ -1,10 +1,9 @@
+import { Alert, AlertTitle, Button } from '@mui/material';
 import React from 'react';
 import { setNotification, useWeightStateValue } from 'state';
-import { Alert, AlertTitle, Button } from '@mui/material';
 import styles from './notifications.module.css';
 
 export const Notifications = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [state, dispatch] = useWeightStateValue();
 
     const closeNotification = () => {
@@ -36,7 +35,7 @@ export const Notifications = () => {
                         UNDO
                     </Button>
                 }
-                variant='filled'
+                variant="filled"
             >
                 <AlertTitle>{state.notification.title}</AlertTitle>
                 <strong>{state.notification.message}</strong>
@@ -49,7 +48,7 @@ export const Notifications = () => {
             className={styles.notification}
             severity={state.notification.severity}
             onClose={() => closeNotification()}
-            variant='filled'
+            variant="filled"
         >
             <AlertTitle>{state.notification.title}</AlertTitle>
             <strong>{state.notification.message}</strong>

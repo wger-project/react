@@ -13,11 +13,6 @@ const queryClient = new QueryClient();
 describe("Test the RoutineDetail component", () => {
 
     beforeEach(() => {
-        const crypto = require('crypto');
-        Object.defineProperty(globalThis, 'crypto', {
-            value: { getRandomValues: (arr: string | any[]) => crypto.randomBytes(arr.length) }
-        });
-
         // @ts-ignore
         useRoutineDetailQuery.mockImplementation(() => ({
             isSuccess: true,

@@ -1,6 +1,6 @@
 // See https://github.com/i18next/i18next-parser for more options
 
-module.exports = {
+export default {
     contextSeparator: '_',
 
     // Only set English here so only the english file gets updated, the rest happens on weblate

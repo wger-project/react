@@ -136,6 +136,7 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
     toJson = (item: WorkoutLog) => ({
         id: item.id,
         iteration: item.iteration,
+        date: item.date.toISOString(),
         slot_entry: item.slotEntryId,
         exercise: item.exerciseId,
         routine: item.routineId,

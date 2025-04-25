@@ -1,10 +1,11 @@
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { Alert, Box, Button, Divider, IconButton, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, IconButton, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
 import { WgerTextField } from "components/Common/forms/WgerTextField";
+import { FormQueryErrors } from "components/Core/Widgets/FormError";
 import {
     BaseConfig,
     BaseConfigEntryForm,
@@ -20,7 +21,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AddBaseConfigParams, EditBaseConfigParams } from "services/base_config";
 import { ApiPath } from "utils/consts";
-import { errorsToString } from "utils/forms";
 import * as yup from "yup";
 
 export const ProgressionForm = (props: {
@@ -218,6 +218,7 @@ export const ProgressionForm = (props: {
         // Split between min and max values
         const editList: EditBaseConfigParams[] = data.filter(data => data.id !== null).map(data => ({
             id: data.id!,
+            // eslint-disable-next-line camelcase
             slot_entry: props.slotEntryId,
             value: data.value as number,
             iteration: data.iteration,
@@ -227,6 +228,7 @@ export const ProgressionForm = (props: {
             requirements: { rules: data.requirements ?? [] }
         }));
         const addList: AddBaseConfigParams[] = data.filter(data => data.id === null && data.value !== '').map(data => ({
+            // eslint-disable-next-line camelcase
             slot_entry: props.slotEntryId,
             value: data.value as number,
             iteration: data.iteration,
@@ -246,6 +248,7 @@ export const ProgressionForm = (props: {
         // Max values
         const editListMax: EditBaseConfigParams[] = data.filter(data => data.idMax !== null && data.valueMax !== '').map(data => ({
             id: data.idMax!,
+            // eslint-disable-next-line camelcase
             slot_entry: props.slotEntryId,
             value: data.valueMax as number,
             iteration: data.iteration,
@@ -256,6 +259,7 @@ export const ProgressionForm = (props: {
         }));
         const addListMax: AddBaseConfigParams[] = data.filter(data => data.idMax === null && data.valueMax !== '').map(data => ({
             iteration: data.iteration,
+            // eslint-disable-next-line camelcase
             slot_entry: props.slotEntryId,
             value: data.valueMax as number,
             operation: data.operation,
@@ -469,10 +473,7 @@ export const ProgressionForm = (props: {
                                 )}
                             </FieldArray>
                             {processEntriesQuery.isError && <Grid size={12}>
-                                <Alert severity="error">
-                                    {/* TODO: how to properly type this */}
-                                    {errorsToString((processEntriesQuery.error as any).response?.data)}
-                                </Alert>
+                                <FormQueryErrors mutationQuery={processEntriesQuery} />
                             </Grid>}
 
                             <Grid size={12} display={"flex"} justifyContent={"end"}>

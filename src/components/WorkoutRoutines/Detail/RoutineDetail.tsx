@@ -18,6 +18,7 @@ export const RoutineDetail = () => {
         return <p>Please pass an integer as the routine id.</p>;
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const routineQuery = useRoutineDetailQuery(routineId);
 
     const routine = routineQuery.data;

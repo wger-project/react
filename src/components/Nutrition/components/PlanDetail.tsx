@@ -26,7 +26,9 @@ export const PlanDetail = () => {
         return <p>Please pass an integer as the nutritional plan id.</p>;
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const planQuery = useFetchNutritionalPlanQuery(planId);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [expandedForm, setExpandedForm] = useState(false);
     const handleToggleExpandedForm = () => setExpandedForm(!expandedForm);
 

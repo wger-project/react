@@ -41,7 +41,9 @@ export {
 
 export { useEditDayQuery, useAddDayQuery, useEditDayOrderQuery, useDeleteDayQuery, } from './days';
 
-export { useRoutineLogQuery, useAddRoutineLogsQuery } from "./logs";
+export {
+    useRoutineLogQuery, useAddRoutineLogsQuery, useEditRoutineLogQuery, useDeleteRoutineLogQuery,
+} from "./logs";
 
 export {
     useDeleteSlotEntryQuery,

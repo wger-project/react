@@ -59,8 +59,11 @@ export class ProfileAdapter implements Adapter<Profile> {
     toJson = (item: Profile): EditProfileParams => ({
         email: item.email,
         height: item.height,
+        // eslint-disable-next-line camelcase
         weight_unit: item.useMetric ? 'kg' : 'lb',
+        // eslint-disable-next-line camelcase
         weight_rounding: item.weightRounding,
+        // eslint-disable-next-line camelcase
         repetitions_rounding: item.repetitionsRounding,
     });
 }

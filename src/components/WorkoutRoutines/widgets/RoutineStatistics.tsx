@@ -72,13 +72,13 @@ export const StatsOptionDropdown: React.FC<DropdownProps> = ({ label, options, v
 export function getHumanReadableHeaders(exerciseList: Exercise[], language: Language, muscleList: Muscle[], groupBy: StatGroupBy, logData: LogData,) {
     switch (groupBy) {
         case StatGroupBy.Exercises: {
-            const exercises = Object.keys(logData.exercises).map(e => exerciseList.find(ex => ex.id === parseInt(e))?.getTranslation(language)?.name!);
+            const exercises = Object.keys(logData.exercises).map(e => exerciseList.find(ex => ex.id === parseInt(e))?.getTranslation(language)?.name);
             // const exercises = Object.keys(logData.exercises).map(e => `exercise ${e}`);
             const exercisesIds = Object.keys(logData.exercises).map(Number);
             return { headers: exercises, data: exercisesIds.map(ex => logData.exercises[ex]) };
         }
         case StatGroupBy.Muscles: {
-            const muscles = Object.keys(logData.muscle).map(e => i18n.t(getTranslationKey(muscleList.find(m => m.id === parseInt(e))?.nameEn!)));
+            const muscles = Object.keys(logData.muscle).map(e => i18n.t(getTranslationKey(muscleList.find(m => m.id === parseInt(e))?.nameEn)));
             // const muscles = Object.keys(logData.muscle).map(e =>  `muscle ${e}`);
             const musclesIds = Object.keys(logData.muscle).map(Number);
             return { headers: muscles, data: musclesIds.map(ms => logData.muscle[ms]) };

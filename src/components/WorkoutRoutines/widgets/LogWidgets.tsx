@@ -1,24 +1,26 @@
-import { Delete, Edit } from "@mui/icons-material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import {
-    Box,
-    Card,
-    CardContent,
-    IconButton,
-    Menu,
-    MenuItem,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TablePagination,
-    TableRow,
-    Typography
-} from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import { Box, Card, CardContent, Typography } from '@mui/material';
 import Grid from "@mui/material/Grid";
+import {
+    DataGrid,
+    GridActionsCellItem,
+    GridColDef,
+    GridEventListener,
+    GridRowEditStopReasons,
+    GridRowId,
+    GridRowModel,
+    GridRowModes,
+    GridRowModesModel,
+    GridRowsProp
+} from "@mui/x-data-grid";
+import { FormQueryErrors } from "components/Core/Widgets/FormError";
 import { Exercise } from "components/Exercises/models/exercise";
+import { RIR_VALUES_SELECT_LIST } from "components/WorkoutRoutines/models/BaseConfig";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
+import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "components/WorkoutRoutines/queries";
 import { DateTime } from "luxon";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -35,85 +37,173 @@ import {
 } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { generateChartColors } from "utils/colors";
-import { makeLink, WgerLink } from "utils/url";
-
-const LogTableRow = (props: { log: WorkoutLog }) => {
-    const [t, i18n] = useTranslation();
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const navigateEditLog = () => window.location.href = makeLink(
-        WgerLink.ROUTINE_EDIT_LOG,
-        i18n.language,
-        { id: props.log.id }
-    );
-    const navigateDeleteLog = () => window.location.href = makeLink(
-        WgerLink.ROUTINE_DELETE_LOG,
-        i18n.language,
-        { id: props.log.id }
-    );
+import { PAGINATION_OPTIONS } from "utils/consts";
 
 
-    return <TableRow key={props.log.id}>
-        <TableCell component="th" scope="row">
-            {DateTime.fromJSDate(props.log.date).toLocaleString(DateTime.DATE_MED)}
-        </TableCell>
-        <TableCell>
-            {props.log.repetitions}
-        </TableCell>
-        <TableCell>
-            {props.log.weight}{props.log.weightUnitObj?.name}
-        </TableCell>
-        <TableCell>
-            {props.log.rirString}
-        </TableCell>
-        <TableCell>
-            <IconButton aria-label="settings" onClick={handleClick}>
-                <MoreVertIcon fontSize={"small"} />
-            </IconButton>
-            <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{ 'aria-labelledby': 'basic-button' }}
-            >
-                <MenuItem onClick={navigateEditLog}>
-                    <Edit />
-                    {t('edit')}
-                </MenuItem>
-                <MenuItem onClick={navigateDeleteLog}>
-                    <Delete />
-                    {t('delete')}
-                </MenuItem>
-            </Menu>
-
-        </TableCell>
-    </TableRow>;
-};
-export const ExerciseLog = (props: { exercise: Exercise, logEntries: WorkoutLog[] | undefined }) => {
+export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logEntries: WorkoutLog[] | undefined }) => {
     const { t } = useTranslation();
-    let logEntries = props.logEntries ?? [];
+    const logEntries = props.logEntries ?? [];
+    const deleteLogQuery = useDeleteRoutineLogQuery(props.routineId);
+    const editLogQuery = useEditRoutineLogQuery(props.routineId);
 
-    const availableResultsPerPage = [5, 10, 20];
-    const [rowsPerPage, setRowsPerPage] = React.useState(availableResultsPerPage[0]);
-    const [page, setPage] = React.useState(0);
+    const initialRows: GridRowsProp = logEntries.map((logEntry: WorkoutLog) => ({
+        id: logEntry.id,
+        date: logEntry.date,
+        repetitions: logEntry.repetitions,
+        weight: logEntry.weight,
+        rir: logEntry.rir,
+        entry: logEntry
+    }));
 
-    const handleChangePage = (event: unknown, newPage: number) => {
-        setPage(newPage);
+
+    const [rows, setRows] = React.useState(initialRows);
+    const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+
+    const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
+        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+            event.defaultMuiPrevented = true;
+        }
     };
 
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+    const handleEditClick = (id: GridRowId) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
     };
 
+    const handleSaveClick = (id: GridRowId) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    };
+
+    const handleDeleteClick = (id: GridRowId) => () => {
+        deleteLogQuery.mutate(id as number);
+        setRows(rows.filter((row) => row.id !== id));
+    };
+
+    const handleCancelClick = (id: GridRowId) => () => {
+        setRowModesModel({
+            ...rowModesModel,
+            [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+
+        const editedRow = rows.find((row) => row.id === id);
+        if (editedRow!.isNew) {
+            setRows(rows.filter((row) => row.id !== id));
+        }
+    };
+
+    const processRowUpdate = (newRow: GridRowModel) => {
+
+        const log = newRow.entry;
+        if (log !== undefined) {
+            log.date = newRow.date;
+            log.repetitions = newRow.repetitions;
+            log.weight = newRow.weight;
+            log.rir = newRow.rir;
+
+            editLogQuery.mutate(log);
+        }
+
+        const updatedRow = { ...newRow, isNew: false };
+        setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+        return updatedRow;
+    };
+
+    const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+        setRowModesModel(newRowModesModel);
+    };
+
+    const columns: GridColDef[] = [
+        {
+            field: 'date',
+            type: 'dateTime',
+            flex: 1,
+            editable: true,
+            disableColumnMenu: true,
+            headerName: t('date'),
+            valueFormatter: (value?: Date) => {
+                if (value == null) {
+                    return '';
+                }
+                return `${value.toLocaleDateString()}`;
+            },
+        },
+        {
+            field: 'repetitions',
+            type: 'number',
+            disableColumnMenu: true,
+            editable: true,
+            headerName: t('routines.reps'),
+        },
+        {
+            field: 'weight',
+            type: 'number',
+            disableColumnMenu: true,
+            editable: true,
+            headerName: t('weight'),
+        },
+        {
+            field: 'rir',
+            type: 'singleSelect',
+            disableColumnMenu: true,
+
+            editable: true,
+            headerName: t('routines.rir'),
+            getOptionValue: (value: any) => value.value,
+            getOptionLabel: (value: any) => value.label,
+            valueOptions: RIR_VALUES_SELECT_LIST,
+        },
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Actions',
+            width: 100,
+            cellClassName: 'actions',
+            getActions: ({ id }) => {
+                const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+                if (isInEditMode) {
+                    return [
+                        <GridActionsCellItem
+                            icon={<SaveIcon />}
+                            sx={{ color: 'primary.main' }}
+                            label={t('save')}
+                            onClick={handleSaveClick(id)}
+                        />,
+                        <GridActionsCellItem
+                            icon={<CancelIcon />}
+                            label={t('cancel')}
+                            className="textPrimary"
+                            onClick={handleCancelClick(id)}
+                            color="inherit"
+                        />,
+                    ];
+                }
+
+                return [
+                    <GridActionsCellItem
+                        icon={<EditIcon />}
+                        label={t('edit')}
+                        className="textPrimary"
+                        onClick={handleEditClick(id)}
+                        color="inherit"
+                    />,
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label={t('delete')}
+                        onClick={handleDeleteClick(id)}
+                        color="inherit"
+                    />,
+                ];
+            },
+        },
+    ];
+
+    const initialState = {
+        pagination: {
+            paginationModel: {
+                pageSize: 5,
+            },
+        },
+    };
 
     return <>
         <Typography variant={"h6"} sx={{ mt: 4 }}>
@@ -121,37 +211,24 @@ export const ExerciseLog = (props: { exercise: Exercise, logEntries: WorkoutLog[
         </Typography>
 
         <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 5 }}>
-                <TableContainer>
-                    <Table aria-label="simple table" size="small">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>{t('date')}</TableCell>
-                                <TableCell>{t('routines.reps')}</TableCell>
-                                <TableCell>{t('weight')}</TableCell>
-                                <TableCell>{t('routines.rir')}</TableCell>
-                                <TableCell></TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {logEntries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((log) =>
-                                <LogTableRow log={log} key={log.id} />
-                            )}
-                        </TableBody>
-                    </Table>
-                    <TablePagination
-                        rowsPerPageOptions={availableResultsPerPage}
-                        component="div"
-                        count={logEntries.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </TableContainer>
+            <Grid size={{ xs: 12, md: 6 }}>
+                <FormQueryErrors mutationQuery={editLogQuery} />
+
+                <DataGrid
+                    initialState={initialState}
+                    pageSizeOptions={PAGINATION_OPTIONS.pageSizeOptions}
+                    disableRowSelectionOnClick
+                    rows={rows}
+                    columns={columns}
+                    editMode="row"
+                    rowModesModel={rowModesModel}
+                    onRowModesModelChange={handleRowModesModelChange}
+                    onRowEditStop={handleRowEditStop}
+                    processRowUpdate={processRowUpdate}
+                />
 
             </Grid>
-            <Grid size={{ xs: 12, md: 7 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
                 <TimeSeriesChart data={logEntries} key={props.exercise.id} />
             </Grid>
         </Grid>
@@ -172,9 +249,9 @@ const formatData = (data: WorkoutLog[]) =>
             entry: log,
         };
     });
+
 const ExerciseLogTooltip = ({ active, payload, label, }: TooltipProps<ValueType, NameType>) => {
     if (active) {
-
         // TODO: translate rir
         let rir = '';
         if (payload?.[1].payload?.entry.rir) {
@@ -188,26 +265,22 @@ const ExerciseLogTooltip = ({ active, payload, label, }: TooltipProps<ValueType,
                 </Typography>
 
                 <Typography variant="body2">
-                    {payload?.[1].payload?.entry.reps} × {payload?.[1].value}{payload?.[1].unit}{rir}
+                    {payload?.[1].payload?.entry.repetitions} × {payload?.[1].value}{payload?.[1].unit}{rir}
                 </Typography>
 
             </CardContent>
-            {/*<CardActions>*/}
-            {/*    <Button size="small">Edit</Button>*/}
-            {/*    <Button size="small">Delete</Button>*/}
-            {/*</CardActions>*/}
         </Card>;
     }
     return null;
 };
+
 export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
 
     // Group by rep count
     //
     // We draw series based on the same reps, as otherwise the chart wouldn't
     // make much sense
-    let result: Map<number, WorkoutLog[]>;
-    result = props.data.reduce(function (r, a) {
+    const result: Map<number, WorkoutLog[]> = props.data.reduce(function (r, a) {
         r.set(a.repetitions, r.get(a.repetitions) || []);
         r.get(a.repetitions)!.push(a);
         return r;
@@ -244,7 +317,7 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
                                 line={{ stroke: color }}
                                 lineType="joint"
                                 lineJointType="monotoneX"
-                                name={key.toString()}
+                                name={key?.toString()}
                             />;
                         }
                     )}

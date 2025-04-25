@@ -50,19 +50,12 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                 if (weightEntry) {
                     weightEntry.weight = values.weight;
                     weightEntry.date = new Date(values.date);
-                    try {
-                        editWeightQuery.mutate(weightEntry);
-                    } catch (error) {
+                    editWeightQuery.mutate(weightEntry);
 
-                    }
-
-                    // Create new weight entry
+                    // Create a new weight entry
                 } else {
                     weightEntry = new WeightEntry(new Date(values.date), values.weight);
-                    try {
-                        addWeightQuery.mutate(weightEntry);
-                    } catch (error) {
-                    }
+                    addWeightQuery.mutate(weightEntry);
                 }
 
                 if (closeFn) {

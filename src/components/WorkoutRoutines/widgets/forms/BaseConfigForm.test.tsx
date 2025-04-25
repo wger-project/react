@@ -95,6 +95,7 @@ describe('EntryDetailsField Component', () => {
                 expect(editMutation).toHaveBeenCalledTimes(1);
                 expect(editMutation).toHaveBeenCalledWith({
                     id: mockConfig.id,
+                    // eslint-disable-next-line camelcase
                     slot_entry: slotEntryId,
                     value: 52,
                 });
@@ -115,6 +116,7 @@ describe('EntryDetailsField Component', () => {
 
                 expect(addMutation).toHaveBeenCalledTimes(1);
                 expect(addMutation).toHaveBeenCalledWith({
+                    // eslint-disable-next-line camelcase
                     slot_entry: 2,
                     value: 8,
                     iteration: 1,

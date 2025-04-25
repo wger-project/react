@@ -51,10 +51,13 @@ export const WorkoutStats = () => {
         return <p>Please pass an integer as the routine id.</p>;
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const routineQuery = useRoutineDetailQuery(routineId);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const routineStatsQuery = useRoutineStatsQuery(routineId);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const musclesQuery = useMusclesQuery();
-
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const languageQuery = useLanguageQuery();
 
 

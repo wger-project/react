@@ -13,7 +13,6 @@ export const EXERCISE_SEARCH_PATH = 'exercise/search';
  * Fetch all exercise translations for a given exercise base
  */
 export const getExerciseTranslations = async (id: number): Promise<Translation[]> => {
-    // eslint-disable-next-line camelcase
     const url = makeUrl(EXERCISE_PATH, { query: { exercise: id } });
     const { data } = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
@@ -56,7 +55,6 @@ export const addTranslation = async (params: AddTranslationParams): Promise<Tran
 
     const url = makeUrl(EXERCISE_TRANSLATION_PATH);
     const baseData = {
-        // eslint-disable-next-line camelcase
         exercise: exerciseId,
         language: languageId,
         name: name,

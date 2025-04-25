@@ -29,6 +29,7 @@ const CalendarComponent = () => {
     const [t] = useTranslation();
     const weightsQuery = useBodyWeightQuery();
     const sessionQuery = useSessionsQuery();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const categoryQuery = useMeasurementsCategoryQuery();
     const nutritionDiaryQuery = useNutritionDiaryQuery();
 

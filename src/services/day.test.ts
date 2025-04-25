@@ -14,6 +14,7 @@ describe('editDay', () => {
         name: 'Test Day',
         description: 'A test day',
         order: 1,
+        // eslint-disable-next-line camelcase
         is_rest: false,
     };
 
@@ -63,7 +64,7 @@ describe('editDayOrder', () => {
         await editDayOrder(mockDayOrders);
 
         expect(axios.patch).toHaveBeenCalledTimes(mockDayOrders.length);
-        mockDayOrders.forEach(({ id, order }) => {
+        mockDayOrders.forEach(({ order }) => {
             expect(axios.patch).toHaveBeenCalledWith(
                 expect.any(String),
                 { order },
@@ -88,7 +89,9 @@ describe('addDay', () => {
         name: 'Test Day',
         description: 'A test day',
         order: 1,
+        // eslint-disable-next-line camelcase
         is_rest: false,
+        // eslint-disable-next-line camelcase
         need_logs_to_advance: false,
     };
 
@@ -97,7 +100,9 @@ describe('addDay', () => {
         name: 'Test Day',
         description: 'A test day',
         order: 1,
+        // eslint-disable-next-line camelcase
         is_rest: false,
+        // eslint-disable-next-line camelcase
         need_logs_to_advance: false,
     };
 

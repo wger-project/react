@@ -3,7 +3,9 @@ import { Adapter } from "utils/Adapter";
 export class LogData {
     exercises: { [exerciseId: number]: number } = {};
     muscle: { [muscleId: number]: number } = {};
+    // eslint-disable-next-line camelcase
     upper_body: number = 0;
+    // eslint-disable-next-line camelcase
     lower_body: number = 0;
     total: number = 0;
 
@@ -62,7 +64,9 @@ export class RoutineStatsDataAdapter implements Adapter<RoutineStatsData> {
             return new LogData({
                 exercises: exercises,
                 muscle: muscle,
+                // eslint-disable-next-line camelcase
                 upper_body: parseFloat(logData.upper_body),
+                // eslint-disable-next-line camelcase
                 lower_body: parseFloat(logData.lower_body),
                 total: parseFloat(logData.total),
             });

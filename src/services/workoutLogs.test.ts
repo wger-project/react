@@ -41,6 +41,7 @@ describe("workout logs service tests", () => {
         expect(result).toStrictEqual([
             new WorkoutLog({
                 id: 2,
+                routineId: 1,
                 date: new Date("2023-05-10"),
                 iteration: 1,
                 exerciseId: 100,
@@ -63,6 +64,7 @@ describe("workout logs service tests", () => {
 
             new WorkoutLog({
                 id: 1,
+                routineId: 1,
                 date: new Date("2023-05-13"),
                 iteration: 1,
                 exerciseId: 100,
@@ -106,6 +108,7 @@ describe("workout logs service tests", () => {
         expect(result).toStrictEqual([
             new WorkoutLog({
                 id: 2,
+                routineId: 1,
                 date: new Date("2023-05-10"),
                 iteration: 1,
                 exercise: testExerciseSquats,
@@ -130,6 +133,7 @@ describe("workout logs service tests", () => {
 
             new WorkoutLog({
                 id: 1,
+                routineId: 1,
                 date: new Date("2023-05-13"),
                 iteration: 1,
                 slotEntryId: 2,

@@ -111,7 +111,9 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
                     date: dateToYYYYMMDD(selectedDate.toJSDate()),
                     notes: values.notes!,
                     impression: values.impression,
+                    // eslint-disable-next-line camelcase
                     time_start: values.start ? dateTimeToHHMM(values.start.toJSDate()) : null,
+                    // eslint-disable-next-line camelcase
                     time_end: values.end ? dateTimeToHHMM(values.end.toJSDate()) : null
                 };
 

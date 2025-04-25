@@ -74,7 +74,7 @@ export class DayAdapter implements Adapter<Day> {
         needLogsToAdvance: item.need_logs_to_advance,
         type: item.type,
         config: item.config,
-        slots: item.hasOwnProperty('slots') ? item.slots.map((slot: any) => new SlotAdapter().fromJson(slot)) : [],
+        slots: Object.hasOwn(item, 'slots') ? item.slots.map((slot: any) => new SlotAdapter().fromJson(slot)) : [],
     });
 
     toJson = (item: Day) => ({

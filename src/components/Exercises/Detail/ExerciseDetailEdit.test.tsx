@@ -35,8 +35,8 @@ jest.mock("components/Exercises/queries");
 
 describe("Exercise translation edit tests", () => {
 
-    let editTranslationMutateMock: jest.Mock = jest.fn();
-    let addTranslationMutateMock: jest.Mock = jest.fn();
+    const editTranslationMutateMock: jest.Mock = jest.fn();
+    const addTranslationMutateMock: jest.Mock = jest.fn();
 
     beforeEach(() => {
         jest.resetAllMocks();

@@ -19,6 +19,7 @@ export const NutritionDiaryOverview = () => {
     }
 
     const date = new Date(params.date!);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const planQuery = useFetchNutritionalPlanDateQuery(planId, params.date!);
 
     return planQuery.isLoading

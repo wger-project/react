@@ -178,10 +178,10 @@ export const testRoutineDayData1 = [
                             maxWeight: null,
                             weightUnitId: 1,
                             weightRounding: 1.25,
-                        repetitions: 5,
-                        maxRepetitions: 6,
-                        repetitionsUnitId: 1,
-                        repetitionsRounding: 1,
+                            repetitions: 5,
+                            maxRepetitions: 6,
+                            repetitionsUnitId: 1,
+                            repetitionsRounding: 1,
                             rir: 2,
                             rpe: 8,
                             restTime: 120,
@@ -263,7 +263,7 @@ export const testPrivateTemplate1 = new Routine({
     fitInWeek: false,
     isTemplate: true,
     isPublic: false,
-})
+});
 
 export const TEST_ROUTINES = [testRoutine1, testRoutine2];
 

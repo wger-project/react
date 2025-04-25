@@ -88,7 +88,9 @@ export const DayForm = (props: {
             routine: props.routineId,
             ...(values.name !== undefined && { name: values.name }),
             ...(values.description !== undefined && { description: values.description }),
+            // eslint-disable-next-line camelcase
             ...(values.isRest !== undefined && { is_rest: isRest }),
+            // eslint-disable-next-line camelcase
             ...(values.needsLogsToAdvance !== undefined && { need_logs_to_advance: values.needsLogsToAdvance }),
         });
 

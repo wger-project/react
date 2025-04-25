@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { WorkoutLog, WorkoutLogAdapter } from "components/WorkoutRoutines/models/WorkoutLog";
 import { WorkoutSession, WorkoutSessionAdapter } from "components/WorkoutRoutines/models/WorkoutSession";
 import { Adapter } from "utils/Adapter";
