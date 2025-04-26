@@ -56,6 +56,7 @@ const Entries: React.FC<LogProps> = ({ selectedDay }) => {
                             <ListItemText
                                 primary={t("weight")}
                                 secondary={selectedDay.weightEntry.weight.toFixed(1)}
+                                sx={{ pl: 2 }}
                             />
                         </ListItem>}
 
@@ -65,6 +66,7 @@ const Entries: React.FC<LogProps> = ({ selectedDay }) => {
                             <ListItemText
                                 primary={t("measurements.measurements")}
                                 secondary={`${selectedDay.measurements[0].name}: ${selectedDay.measurements[0].value} ${selectedDay.measurements[0].unit}`}
+                                sx={{ pl: 2 }}
                             />
                         </ListItem>}
 
