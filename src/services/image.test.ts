@@ -28,8 +28,7 @@ describe("Image service API tests", () => {
             true
         );
 
-        // @ts-ignore
-        axios.post.mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
         const result = await postExerciseImage(
@@ -62,8 +61,7 @@ describe("Image service API tests", () => {
     test('DELETE an existing image', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
+        (axios.delete as jest.Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act
         const result = await deleteExerciseImage(101);

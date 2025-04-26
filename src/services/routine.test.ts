@@ -31,14 +31,10 @@ describe("workout routine service tests", () => {
     test('GET the routine data - shallow', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: responseApiWorkoutRoutine }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: responseApiWorkoutRoutine }));
 
         // Act
         const result = await getRoutinesShallow();
-
-        // @ts-ignore
-        // console.log(axios.get.mock.calls)
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
@@ -70,12 +66,9 @@ describe("workout routine service tests", () => {
     test('GET the routine logs', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
-        // @ts-ignore
-        getRoutineRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
-        // @ts-ignore
-        getRoutineWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
+        (getRoutineRepUnits as jest.Mock).mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
+        (getRoutineWeightUnits as jest.Mock).mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
 
         // Act
         const result = await getRoutineLogs(1);
@@ -90,7 +83,6 @@ describe("workout routine service tests", () => {
                 iteration: 1,
                 exerciseId: 100,
                 slotEntryId: 2,
-                routineId: 1,
                 repetitionsUnitId: 1,
                 repetitions: 12,
                 repetitionsTarget: 12,
@@ -108,7 +100,6 @@ describe("workout routine service tests", () => {
                 iteration: 1,
                 exerciseId: 100,
                 slotEntryId: 2,
-                routineId: 1,
                 repetitionsUnitId: 1,
                 repetitions: 10,
                 weight: 20,
@@ -124,8 +115,7 @@ describe("workout routine service tests", () => {
 
     test('GET the routine day data', async () => {
         // Arrange
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineDayData }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: responseRoutineDayData }));
 
         // Act
         const result = await getRoutineDayDataAllIterations(1);

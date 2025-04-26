@@ -33,8 +33,7 @@ describe("Language service tests", () => {
         };
 
         // Act
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: muscleResponse }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: muscleResponse }));
         const result = await getLanguages();
 
         // Assert

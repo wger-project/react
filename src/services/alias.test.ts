@@ -19,8 +19,7 @@ describe("Exercise translation service API tests", () => {
             "alias": "Elbow dislocator",
 
         };
-        // @ts-ignore
-        axios.post.mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
         const result = await postAlias(
@@ -36,8 +35,7 @@ describe("Exercise translation service API tests", () => {
     test('DELETE an existing alias', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
+        (axios.delete as jest.Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act
         const result = await deleteAlias(100);

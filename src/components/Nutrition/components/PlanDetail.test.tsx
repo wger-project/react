@@ -14,13 +14,12 @@ const queryClient = new QueryClient();
 describe("Test the PlanDetail component", () => {
 
     beforeEach(() => {
-        // @ts-ignore
-        useFetchNutritionalPlanQuery.mockImplementation(() => ({
+        (useFetchNutritionalPlanQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: TEST_NUTRITIONAL_PLAN_1
         }));
 
-        // @ts-ignore
+        // @ts-expect-error
         delete window.ResizeObserver;
         window.ResizeObserver = jest.fn().mockImplementation(() => ({
             observe: jest.fn(),

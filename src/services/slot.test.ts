@@ -19,8 +19,7 @@ describe("Slot service tests", () => {
     });
 
     test('Creates a new Slot', async () => {
-        // @ts-ignore
-        axios.post.mockImplementation(() => Promise.resolve({ data: { id: 123, ...slotData } }));
+        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: { id: 123, ...slotData } }));
 
         const result = await addSlot(slotData);
 
@@ -33,8 +32,12 @@ describe("Slot service tests", () => {
     });
 
     test('Update a Slot', async () => {
-        // @ts-ignore
-        axios.patch.mockImplementation(() => Promise.resolve({ data: { id: 123, ...slotData, comment: 'foo' } }));
+        (axios.patch as jest.Mock).mockImplementation(() => Promise.resolve({
+            data: {
+                id: 123, ...slotData,
+                comment: 'foo'
+            }
+        }));
 
         const result = await editSlot({ id: 123, comment: 'foo' });
 
@@ -47,8 +50,7 @@ describe("Slot service tests", () => {
     });
 
     test('Updates the order of Slots', async () => {
-        // @ts-ignore
-        axios.patch.mockImplementation(() => Promise.resolve({ data: {} }));
+        (axios.patch as jest.Mock).mockImplementation(() => Promise.resolve({ data: {} }));
         const data: EditSlotOrderParam[] = [
             { id: 10, order: 2 },
             { id: 41, order: 1 }
@@ -72,8 +74,7 @@ describe("Slot service tests", () => {
     });
 
     test('Delete a Slot', async () => {
-        // @ts-ignore
-        axios.delete.mockImplementation(() => Promise.resolve({}));
+        (axios.delete as jest.Mock).mockImplementation(() => Promise.resolve({}));
 
         await deleteSlot(1);
 

@@ -24,16 +24,11 @@ describe("Test the ExerciseOverview component", () => {
 
 
     beforeEach(() => {
-        // @ts-ignore
-        getLanguages.mockImplementation(() => Promise.resolve(testLanguages));
-        // @ts-ignore
-        getCategories.mockImplementation(() => Promise.resolve(testCategories));
-        // @ts-ignore
-        getMuscles.mockImplementation(() => Promise.resolve(testMuscles));
-        // @ts-ignore
-        getEquipment.mockImplementation(() => Promise.resolve(testEquipment));
-        // @ts-ignore
-        getExercises.mockImplementation(() => Promise.resolve([
+        (getLanguages as jest.Mock).mockImplementation(() => Promise.resolve(testLanguages));
+        (getCategories as jest.Mock).mockImplementation(() => Promise.resolve(testCategories));
+        (getMuscles as jest.Mock).mockImplementation(() => Promise.resolve(testMuscles));
+        (getEquipment as jest.Mock).mockImplementation(() => Promise.resolve(testEquipment));
+        (getExercises as jest.Mock).mockImplementation(() => Promise.resolve([
             testExerciseSquats,
             testExerciseBenchPress,
             testExerciseCurls,

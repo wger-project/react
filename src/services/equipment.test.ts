@@ -32,8 +32,7 @@ describe("equipment service tests", () => {
 
 
         // Act
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
         const result = await getEquipment();
 
         // Assert

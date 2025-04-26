@@ -44,30 +44,21 @@ describe("Exercise translation edit tests", () => {
         editTranslationMutateMock.mockResolvedValue(testExerciseSquats.translations[0]);
         addTranslationMutateMock.mockResolvedValue(testExerciseSquats.translations[1]);
 
-        // @ts-ignore
-        useExerciseQuery.mockImplementation(() => ({
+        (useExerciseQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: testExerciseSquats
         }));
-
-        // @ts-ignore
-        useAddTranslationQuery.mockImplementation(() => ({
+        (useAddTranslationQuery as jest.Mock).mockImplementation(() => ({
             isPending: false,
             mutateAsync: addTranslationMutateMock
         }));
-
-        // @ts-ignore
-        useEditTranslationQuery.mockImplementation(() => ({
+        (useEditTranslationQuery as jest.Mock).mockImplementation(() => ({
             isPending: false,
             mutateAsync: editTranslationMutateMock
         }));
-
-        // @ts-ignore
-        editTranslation.mockImplementation(() => Promise.resolve(testExerciseSquats.translations[1]));
-
-        // @ts-ignore
-        useProfileQuery.mockImplementation(() => Promise.resolve(testProfileDataVerified));
+        (editTranslation as jest.Mock).mockImplementation(() => Promise.resolve(testExerciseSquats.translations[1]));
+        (useProfileQuery as jest.Mock).mockImplementation(() => Promise.resolve(testProfileDataVerified));
 
         // @ts-ignore
         // addTranslation.mockImplementation(() => Promise.resolve(
@@ -80,11 +71,8 @@ describe("Exercise translation edit tests", () => {
         //     )
         // ));
 
-        // @ts-ignore
-        deleteAlias.mockImplementation(() => Promise.resolve({ status: 204 }));
-
-        // @ts-ignore
-        postAlias.mockImplementation(() => Promise.resolve(
+        (deleteAlias as jest.Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
+        (postAlias as jest.Mock).mockImplementation(() => Promise.resolve(
             {
                 status: 204,
                 data: {
@@ -93,18 +81,19 @@ describe("Exercise translation edit tests", () => {
                 }
             }
         ));
-
-        // @ts-ignore
-        usePermissionQuery.mockImplementation(() => Promise.resolve({ isSuccess: true, data: true }));
-
-        // @ts-ignore
-        useCategoriesQuery.mockImplementation(() => Promise.resolve({ isSuccess: true, data: testCategories }));
-
-        // @ts-ignore
-        useEquipmentQuery.mockImplementation(() => Promise.resolve({ isSuccess: true, data: testEquipment }));
-
-        // @ts-ignore
-        useMusclesQuery.mockImplementation(() => Promise.resolve({ isSuccess: true, data: testMuscles }));
+        (usePermissionQuery as jest.Mock).mockImplementation(() => Promise.resolve({ isSuccess: true, data: true }));
+        (useCategoriesQuery as jest.Mock).mockImplementation(() => Promise.resolve({
+            isSuccess: true,
+            data: testCategories
+        }));
+        (useEquipmentQuery as jest.Mock).mockImplementation(() => Promise.resolve({
+            isSuccess: true,
+            data: testEquipment
+        }));
+        (useMusclesQuery as jest.Mock).mockImplementation(() => Promise.resolve({
+            isSuccess: true,
+            data: testMuscles
+        }));
     });
 
     test('correctly renders the form', () => {

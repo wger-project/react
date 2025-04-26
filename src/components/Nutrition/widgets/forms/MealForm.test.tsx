@@ -19,11 +19,8 @@ describe('Test the MealForm component', () => {
         mutateEditMock = jest.fn();
         closeFnMock = jest.fn();
 
-        // @ts-ignore
-        useEditMealQuery.mockImplementation(() => ({ mutate: mutateEditMock }));
-
-        // @ts-ignore
-        useAddMealQuery.mockImplementation(() => ({ mutate: mutateAddMock }));
+        (useEditMealQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        (useAddMealQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
     });
 
     test('a new meal is correctly added', async () => {

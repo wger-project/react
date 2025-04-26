@@ -45,14 +45,9 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         mutateEditMock = jest.fn();
         closeFnMock = jest.fn();
 
-        // @ts-ignore
-        useEditDiaryEntryQuery.mockImplementation(() => ({ mutate: mutateEditMock }));
-
-        // @ts-ignore
-        useAddDiaryEntryQuery.mockImplementation(() => ({ mutate: mutateAddMock }));
-
-        // @ts-ignore
-        searchIngredient.mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
+        (useEditDiaryEntryQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        (useAddDiaryEntryQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
     });
 
 

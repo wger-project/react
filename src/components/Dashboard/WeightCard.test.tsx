@@ -12,8 +12,7 @@ describe("test the WeightCard component", () => {
 
     describe("Weights are available", () => {
         beforeEach(() => {
-            // @ts-ignore
-            useBodyWeightQuery.mockImplementation(() => ({
+            (useBodyWeightQuery as jest.Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: testWeightEntries
@@ -54,8 +53,7 @@ describe("test the WeightCard component", () => {
     describe("No weight entries available", () => {
 
         beforeEach(() => {
-            // @ts-ignore
-            useBodyWeightQuery.mockImplementation(() => ({
+            (useBodyWeightQuery as jest.Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: null

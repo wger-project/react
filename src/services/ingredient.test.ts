@@ -49,8 +49,7 @@ describe("Ingrediente service tests", () => {
         };
 
         // Act
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: ingredientInfoResponse }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: ingredientInfoResponse }));
         const result = await getIngredient(1);
 
         // Assert
@@ -68,7 +67,6 @@ describe("Ingrediente service tests", () => {
         expect(result.fiber).toEqual(null);
         expect(result.sodium).toEqual(0.508);
         expect(result.image?.url).toEqual('http://localhost:8000/media/ingredients/59197/b260b245-efe9-4c92-9d8f-d2c4406221dd.jpg');
-
     });
 });
 

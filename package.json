@@ -75,7 +75,8 @@
     "test": "LANG=de_de jest",
     "i18n": "i18next",
     "lint": "eslint src",
-    "lint:quiet": "eslint --quiet src"
+    "lint:quiet": "eslint --quiet src",
+    "lint:fix": "eslint --fix src"
   },
   "browserslist": {
     "production": [

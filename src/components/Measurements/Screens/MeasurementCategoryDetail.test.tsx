@@ -18,8 +18,7 @@ describe("Test the MeasurementCategoryDetail component", () => {
 
     beforeEach(() => {
 
-        // @ts-ignore
-        useMeasurementsQuery.mockImplementation(() => ({
+        (useMeasurementsQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: TEST_MEASUREMENT_CATEGORY_1

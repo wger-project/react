@@ -11,8 +11,7 @@ describe("Test the IngredientAutocompleter component", () => {
     // Arrange
     const mockCallback = jest.fn();
     beforeEach(() => {
-        // @ts-ignore
-        searchIngredient.mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
+        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
     });
 
     test('renders correct results', async () => {

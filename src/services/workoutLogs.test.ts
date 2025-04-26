@@ -25,13 +25,9 @@ describe("workout logs service tests", () => {
 
     test('GET the routine logs', async () => {
 
-        // Arrange
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
-        // @ts-ignore
-        getRoutineRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
-        // @ts-ignore
-        getRoutineWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
+        (getRoutineRepUnits as jest.Mock).mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
+        (getRoutineWeightUnits as jest.Mock).mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
 
         // Act
         const result = await getRoutineLogs(1);
@@ -46,7 +42,6 @@ describe("workout logs service tests", () => {
                 iteration: 1,
                 exerciseId: 100,
                 slotEntryId: 2,
-                routineId: 1,
 
                 repetitionsUnit: testRepUnit1,
                 repetitionsUnitId: 1,
@@ -69,7 +64,6 @@ describe("workout logs service tests", () => {
                 iteration: 1,
                 exerciseId: 100,
                 slotEntryId: 2,
-                routineId: 1,
 
                 repetitionsUnit: testRepUnit1,
                 repetitionsUnitId: 1,
@@ -91,14 +85,10 @@ describe("workout logs service tests", () => {
     test('GET the routine logs and the exercise bases', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
-        // @ts-ignore
-        getRoutineRepUnits.mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
-        // @ts-ignore
-        getRoutineWeightUnits.mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
-        // @ts-ignore
-        getExercise.mockImplementation(() => Promise.resolve(testExerciseSquats));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
+        (getRoutineRepUnits as jest.Mock).mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
+        (getRoutineWeightUnits as jest.Mock).mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
+        (getExercise as jest.Mock).mockImplementation(() => Promise.resolve(testExerciseSquats));
 
         // Act
         const result = await getRoutineLogs(1, { loadExercises: true });
@@ -114,7 +104,6 @@ describe("workout logs service tests", () => {
                 exercise: testExerciseSquats,
                 exerciseId: 100,
                 slotEntryId: 2,
-                routineId: 1,
                 sessionId: null,
 
                 repetitionsUnit: testRepUnit1,
@@ -139,7 +128,6 @@ describe("workout logs service tests", () => {
                 slotEntryId: 2,
                 exercise: testExerciseSquats,
                 exerciseId: 100,
-                routineId: 1,
                 sessionId: null,
 
                 repetitionsUnit: testRepUnit1,

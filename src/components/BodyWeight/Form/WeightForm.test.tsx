@@ -14,8 +14,7 @@ jest.mock("components/BodyWeight/queries");
 describe("Test WeightForm component", () => {
 
     beforeEach(() => {
-        // @ts-ignore
-        useBodyWeightQuery.mockImplementation(() => ({ isSuccess: true, data: testWeightEntries }));
+        (useBodyWeightQuery as jest.Mock).mockImplementation(() => ({ isSuccess: true, data: testWeightEntries }));
     });
 
 

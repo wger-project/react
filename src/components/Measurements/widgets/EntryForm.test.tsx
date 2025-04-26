@@ -1,13 +1,13 @@
-import { render, screen } from '@testing-library/react';
-import { EntryForm } from "components/Measurements/widgets/EntryForm";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from '@testing-library/react';
+import userEvent from "@testing-library/user-event";
 import {
     useAddMeasurementEntryQuery,
     useEditMeasurementEntryQuery,
     useMeasurementsQuery
 } from "components/Measurements/queries";
+import { EntryForm } from "components/Measurements/widgets/EntryForm";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_ENTRIES_1 } from "tests/measurementsTestData";
-import userEvent from "@testing-library/user-event";
 
 jest.mock("services/weight");
 
@@ -19,8 +19,7 @@ describe("Test the EntryForm component", () => {
     let mutate = jest.fn();
 
     beforeEach(() => {
-        // @ts-ignore
-        useMeasurementsQuery.mockImplementation(() => ({
+        (useMeasurementsQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: TEST_MEASUREMENT_CATEGORY_1
@@ -28,12 +27,10 @@ describe("Test the EntryForm component", () => {
 
         mutate = jest.fn();
 
-        // @ts-ignore
-        useEditMeasurementEntryQuery.mockImplementation(() => ({
+        (useEditMeasurementEntryQuery as jest.Mock).mockImplementation(() => ({
             mutate: mutate
         }));
-        // @ts-ignore
-        useAddMeasurementEntryQuery.mockImplementation(() => ({
+        (useAddMeasurementEntryQuery as jest.Mock).mockImplementation(() => ({
             mutate: mutate
         }));
     });

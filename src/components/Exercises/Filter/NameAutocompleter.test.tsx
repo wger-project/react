@@ -11,8 +11,7 @@ describe("Test the NameAutocompleter component", () => {
 
     // Arrange
     beforeEach(() => {
-        // @ts-ignore
-        searchExerciseTranslations.mockImplementation(() => Promise.resolve(searchResponse));
+        (searchExerciseTranslations as jest.Mock).mockImplementation(() => Promise.resolve(searchResponse));
     });
 
     test('renders correct results', async () => {

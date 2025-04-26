@@ -15,8 +15,7 @@ describe("Profile API tests", () => {
     test('get the user profile (logged in)', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: testProfileApiResponse }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: testProfileApiResponse }));
 
         // Act
         const result = await getProfile();
@@ -29,8 +28,7 @@ describe("Profile API tests", () => {
     test('get the user profile (logged out)', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ status: 403 }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ status: 403 }));
 
         // Act
         const result = await getProfile();

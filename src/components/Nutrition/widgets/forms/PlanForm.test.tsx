@@ -17,13 +17,11 @@ describe("Test the PlanForm component", () => {
     beforeEach(() => {
         mutate = jest.fn();
 
-        // @ts-ignore
-        useEditNutritionalPlanQuery.mockImplementation(() => ({
+        (useEditNutritionalPlanQuery as jest.Mock).mockImplementation(() => ({
             mutate: mutate
         }));
 
-        // @ts-ignore
-        useAddNutritionalPlanQuery.mockImplementation(() => ({
+        (useAddNutritionalPlanQuery as jest.Mock).mockImplementation(() => ({
             mutate: mutate
         }));
     });

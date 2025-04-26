@@ -15,8 +15,7 @@ describe("test the NutritionCard component", () => {
     describe("Plans available", () => {
 
         beforeEach(() => {
-            // @ts-ignore
-            useFetchLastNutritionalPlanQuery.mockImplementation(() => ({
+            (useFetchLastNutritionalPlanQuery as jest.Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: TEST_NUTRITIONAL_PLAN_1
@@ -61,8 +60,7 @@ describe("test the NutritionCard component", () => {
     describe("No plans available", () => {
 
         beforeEach(() => {
-            // @ts-ignore
-            useFetchLastNutritionalPlanQuery.mockImplementation(() => ({
+            (useFetchLastNutritionalPlanQuery as jest.Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: null

@@ -35,8 +35,7 @@ describe("Exercise video service API tests", () => {
             false
         );
 
-        // @ts-ignore
-        axios.post.mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
         const result = await postExerciseVideo(
@@ -58,8 +57,7 @@ describe("Exercise video service API tests", () => {
     test('DELETE an existing video', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
+        (axios.delete as jest.Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act
         const result = await deleteExerciseVideo(99);

@@ -19,11 +19,8 @@ describe("Test the ExerciseDeleteDialog component", () => {
     beforeEach(() => {
         jest.resetAllMocks();
 
-        // @ts-ignore
-        searchExerciseTranslations.mockImplementation(() => Promise.resolve(searchResponse));
-
-        // @ts-ignore
-        getExercise.mockImplementation(() => Promise.resolve(testExerciseBenchPress));
+        (searchExerciseTranslations as jest.Mock).mockImplementation(() => Promise.resolve(searchResponse));
+        (getExercise as jest.Mock).mockImplementation(() => Promise.resolve(testExerciseBenchPress));
     });
 
     function renderWidget() {

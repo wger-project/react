@@ -17,18 +17,13 @@ describe("Test the edit widget to live edit the category", () => {
     test('Clicking on a category immediately fires the request', async () => {
 
         // Arrange
-        // @ts-ignore
-        useCategoriesQuery.mockImplementation(() => (
+        (useCategoriesQuery as jest.Mock).mockImplementation(() => (
             { isSuccess: true, data: testCategories }
         ));
-
-        // @ts-ignore
-        useProfileQuery.mockImplementation(() => (
+        (useProfileQuery as jest.Mock).mockImplementation(() => (
             { isSuccess: true, data: testProfileDataVerified }
         ));
-
-        // @ts-ignore
-        editExercise.mockImplementation(() => (100));
+        (editExercise as jest.Mock).mockImplementation(() => (100));
         const user = userEvent.setup();
 
         // Act

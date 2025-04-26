@@ -29,14 +29,11 @@ describe("Contribute banner tests", () => {
 
     beforeEach(() => {
 
-        // @ts-ignore
-        useProfileQuery.mockImplementation(() => ({
+        (useProfileQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: testProfileDataNotVerified
         }));
-
-        // @ts-ignore
-        usePermissionQuery.mockImplementation(() => ({
+        (usePermissionQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: false
         }));
@@ -57,8 +54,7 @@ describe("Contribute banner tests", () => {
 
     test('Should show no banner to anonymous users', async () => {
         // Arrange
-        // @ts-ignore
-        useProfileQuery.mockImplementation(() => ({
+        (useProfileQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: null
         }));
@@ -72,8 +68,7 @@ describe("Contribute banner tests", () => {
 
     test('Should show the banner to admins', async () => {
         // Arrange
-        // @ts-ignore
-        usePermissionQuery.mockImplementation(() => ({
+        (usePermissionQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: true
         }));
@@ -87,8 +82,7 @@ describe("Contribute banner tests", () => {
 
     test('Should show the banner to verified users', () => {
         // Arrange
-        // @ts-ignore
-        useProfileQuery.mockImplementation(() => ({
+        (useProfileQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: testProfileDataVerified
         }));
