@@ -1,32 +1,41 @@
 import axios from 'axios';
 import { DiaryEntry, DiaryEntryAdapter } from "components/Nutrition/models/diaryEntry";
+import { getIngredient } from "services/ingredient";
 import { getWeightUnit } from "services/ingredientweightunit";
 import { API_MAX_PAGE_SIZE, ApiPath } from "utils/consts";
-import { dateToYYYYMMDD } from "utils/date";
 import { fetchPaginated } from "utils/requests";
 import { makeHeader, makeUrl } from "utils/url";
 
 
-export const getNutritionalDiaryEntries = async (
-    planId: number,
-    date?: Date
-): Promise<DiaryEntry[]> => {
-    const adapter = new DiaryEntryAdapter();
+export type NutritionalDiaryEntriesOptions = {
+    filtersetQuery?: object;
+    loadUnit?: true,
+    loadIngredient?: true
+}
 
-    const query = { plan: planId, limit: API_MAX_PAGE_SIZE };
-    if (date) {
-        // @ts-ignore
-        // eslint-disable-next-line camelcase
-        query.datetime__date = dateToYYYYMMDD(date);
-    }
-    const url = makeUrl(ApiPath.NUTRITIONAL_DIARY, { query: query });
+export const getNutritionalDiaryEntries = async (options?: NutritionalDiaryEntriesOptions): Promise<DiaryEntry[]> => {
+    const adapter = new DiaryEntryAdapter();
+    const { filtersetQuery = {}, loadUnit = true, loadIngredient = true } = options || {};
+
+    const url = makeUrl(ApiPath.NUTRITIONAL_DIARY, {
+        query: {
+            limit: API_MAX_PAGE_SIZE,
+            ...filtersetQuery
+        }
+    });
     const out: DiaryEntry[] = [];
 
     for await (const page of fetchPaginated(url, makeHeader())) {
         for (const logData of page) {
             const entry = adapter.fromJson(logData);
 
-            entry.weightUnit = await getWeightUnit(entry.weightUnitId);
+            if (loadUnit) {
+                entry.weightUnit = await getWeightUnit(entry.weightUnitId);
+            }
+
+            if (loadIngredient) {
+                entry.ingredient = await getIngredient(entry.ingredientId);
+            }
             out.push(entry);
         }
     }

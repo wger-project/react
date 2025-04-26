@@ -13,16 +13,16 @@ import {
     deleteMeasurementCategory,
     editMeasurementCategory,
     editMeasurementCategoryParams,
-    editMeasurementParams
+    editMeasurementParams,
+    MeasurementQueryOptions
 } from "services/measurements";
 import { QUERY_MEASUREMENTS, QUERY_MEASUREMENTS_CATEGORIES, } from "utils/consts";
-import { number } from "yup";
 
 
-export function useMeasurementsCategoryQuery() {
+export function useMeasurementsCategoryQuery(options?: MeasurementQueryOptions) {
     return useQuery({
-        queryKey: [QUERY_MEASUREMENTS_CATEGORIES],
-        queryFn: getMeasurementCategories
+        queryKey: [QUERY_MEASUREMENTS_CATEGORIES, JSON.stringify(options || {})],
+        queryFn: () => getMeasurementCategories(options)
     });
 }
 

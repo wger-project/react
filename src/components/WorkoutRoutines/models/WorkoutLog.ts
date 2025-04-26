@@ -25,7 +25,8 @@ export class WorkoutLog {
     public iteration: number | null;
     public exerciseId: number;
     public slotEntryId: number | null;
-    public routineId: number;
+    public sessionId: number | null;
+    public routineId: number | null;
 
     public repetitionUnitObj: RepetitionUnit | null;
     public repetitionUnitId: number | null;
@@ -51,7 +52,8 @@ export class WorkoutLog {
         date: Date | string;
         iteration: number | null;
         slotEntryId: number | null;
-        routineId: number;
+        sessionId?: number | null;
+        routineId?: number | null;
 
         exercise?: Exercise;
         exerciseId: number;
@@ -76,7 +78,8 @@ export class WorkoutLog {
         this.date = typeof data.date === 'string' ? new Date(data.date) : data.date;
         this.iteration = data.iteration;
         this.slotEntryId = data.slotEntryId;
-        this.routineId = data.routineId;
+        this.sessionId = data.sessionId || null;
+        this.routineId = data.routineId || null;
 
         this.exerciseObj = data.exercise;
         this.exerciseId = data.exerciseId;
@@ -112,6 +115,7 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
             iteration: item.iteration,
             exerciseId: item.exercise,
             slotEntryId: item.slot_entry,
+            sessionId: item.session,
             routineId: item.routine,
 
             repetitionsUnitId: item.repetitions_unit,

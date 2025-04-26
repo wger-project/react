@@ -18,10 +18,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({ day, currentMonth, currentDat
 
     const isSelected = isSameDay(day.date, selectedDay.date);
     const isToday = isSameDay(day.date, currentDate);
-    const isClickable = day.date.getMonth() === currentMonth
-        && (day.date.getDate() <= currentDate.getDate()
-            || day.date.getMonth() < currentDate.getMonth()
-            || day.date.getFullYear() < currentDate.getFullYear());
+    const isClickable = day.date.getTime() <= currentDate.getTime();
     const isWeekend = day.date.getDay() === 6 || day.date.getDay() === 0;
 
     const getDayColor = (): string => {
@@ -44,7 +41,8 @@ const CalendarDay: React.FC<CalendarDayProps> = ({ day, currentMonth, currentDat
 
     const hasDayEntry = () => {
         return day.measurements.length > 0 ||
-            day.weightEntry !== undefined;
+            day.weightEntry !== undefined ||
+            day.workoutSession !== undefined;
     };
 
     const handleClick = () => {

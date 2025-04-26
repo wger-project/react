@@ -1,5 +1,6 @@
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
+import i18n from 'i18next';
 import { Adapter } from "utils/Adapter";
 import { dateTimeToHHMM, dateToYYYYMMDD, HHMMToDateTime } from "utils/date";
 
@@ -62,6 +63,32 @@ export class WorkoutSession {
             this.dayObj = params.dayObj;
         }
         this.logs = params.logs ?? [];
+    }
+
+    // get the impression as a translated string
+    get impressionString(): string {
+        switch (this.impression) {
+            case IMPRESSION_BAD:
+                return i18n.t('routines.impressionBad');
+            case IMPRESSION_NEUTRAL:
+                return i18n.t('routines.impressionNeutral');
+            case IMPRESSION_GOOD:
+                return i18n.t('routines.impressionGood');
+            default:
+                return "";
+        }
+    }
+
+    get textRepresentation(): string {
+        const time = this.timeStart && this.timeEnd ? `${this.timeStart.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        })} - ${this.timeEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} /` : "";
+
+        const notes = this.notes ?? "";
+
+
+        return `${this.impressionString} ${time} ${notes}`;
     }
 }
 

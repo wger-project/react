@@ -161,7 +161,7 @@ export const getRoutinesShallow = async (): Promise<Routine[]> => {
 };
 
 export const getPrivateTemplatesShallow = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.PRIVATE_TEMPLATE_API_PATH);
+    const url = makeUrl(ApiPath.PRIVATE_TEMPLATE);
     const response = await axios.get<ResponseType<Routine>>(
         url,
         { headers: makeHeader() }
@@ -171,7 +171,7 @@ export const getPrivateTemplatesShallow = async (): Promise<Routine[]> => {
 };
 
 export const getPublicTemplatesShallow = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.PUBLIC_TEMPLATE_API_PATH);
+    const url = makeUrl(ApiPath.PUBLIC_TEMPLATE);
     const response = await axios.get<ResponseType<Routine>>(
         url,
         { headers: makeHeader() }

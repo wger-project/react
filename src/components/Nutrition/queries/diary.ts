@@ -1,13 +1,17 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-    AddDiaryEntryParams,
     addNutritionalDiaryEntry,
     deleteNutritionalDiaryEntry,
-    EditDiaryEntryParams,
-    editNutritionalDiaryEntry
-} from "services/nutritionalDiary";
+    editNutritionalDiaryEntry,
+    getNutritionalDiaryEntries
+} from "services";
+import { AddDiaryEntryParams, EditDiaryEntryParams, NutritionalDiaryEntriesOptions } from "services/nutritionalDiary";
 import { QueryKey } from "utils/consts";
-import { number } from "yup";
+
+export const useNutritionDiaryQuery = (options?: NutritionalDiaryEntriesOptions) => useQuery({
+    queryFn: () => getNutritionalDiaryEntries(options),
+    queryKey: [QueryKey.NUTRITIONAL_PLAN_DIARY, JSON.stringify(options || {})],
+});
 
 export const useAddDiaryEntryQuery = (planId: number) => {
     const queryClient = useQueryClient();
@@ -19,6 +23,7 @@ export const useAddDiaryEntryQuery = (planId: number) => {
         })
     });
 };
+
 export const useAddDiaryEntriesQuery = (planId: number) => {
     const queryClient = useQueryClient();
 
@@ -29,6 +34,7 @@ export const useAddDiaryEntriesQuery = (planId: number) => {
         })
     });
 };
+
 export const useDeleteDiaryEntryQuery = (planId: number) => {
     const queryClient = useQueryClient();
 
@@ -39,6 +45,7 @@ export const useDeleteDiaryEntryQuery = (planId: number) => {
         })
     });
 };
+
 export const useEditDiaryEntryQuery = (planId: number) => {
     const queryClient = useQueryClient();
 
