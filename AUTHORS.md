@@ -35,7 +35,6 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 
 ## Translators
 
-
 ### Tamil
 
 - தமிழ்நேரம் - [https://github.com/TamilNeram](https://github.com/TamilNeram)
