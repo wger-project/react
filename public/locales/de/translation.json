@@ -265,5 +265,9 @@
         "calculator": "BMI Rechner",
         "underweight": "Untergewicht",
         "result": "Dein BMI ist {{value}}"
-    }
+    },
+    "editName": "{{name}} Bearbeiten",
+    "start": "Start",
+    "end": "Ende",
+    "comment": "Kommentar"
 }
