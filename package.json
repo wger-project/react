@@ -29,7 +29,7 @@
     "react-responsive": "^10.0.0",
     "react-router-dom": "^7.1.5",
     "react-simple-wysiwyg": "^3.2.0",
-    "recharts": "^2.15.2",
+    "recharts": "^2.15.3",
     "slug": "^9.1.0",
     "typescript": "^5.8.2",
     "vite-tsconfig-paths": "^5.1.4",
