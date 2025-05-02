@@ -1,19 +1,18 @@
-import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { Breakpoint, Button, Container, Stack, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import React, { ReactNode } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 type WgerTemplateContainerRightSidebarProps = {
-    title?: string;
-    subTitle?: string;
-    mainContent: ReactJSXElement | null;
-    sideBar?: ReactJSXElement;
-    optionsMenu?: ReactJSXElement;
+    title?: string | ReactElement;
+    subTitle?: string | ReactElement;
+    mainContent: ReactElement | null;
+    sideBar?: ReactElement;
+    optionsMenu?: ReactElement;
     backToTitle?: string;
     backToUrl?: string;
-    fab?: ReactJSXElement;
+    fab?: ReactElement;
 };
 
 function BackButton(props: { href: string | undefined, backToTitle: string | undefined }) {
@@ -66,7 +65,7 @@ type WgerTemplateContainerFullWidthProps = {
     children: ReactNode;
     backToTitle?: string;
     backToUrl?: string;
-    optionsMenu?: ReactJSXElement;
+    optionsMenu?: ReactElement;
     maxWidth?: false | Breakpoint | undefined
 };
 

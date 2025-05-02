@@ -1,5 +1,5 @@
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Divider, List, ListItem, ListItemButton, ListItemText, Paper, } from "@mui/material";
+import { Chip, Divider, List, ListItem, ListItemButton, ListItemText, Paper, } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
@@ -10,17 +10,25 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { makeLink, WgerLink } from "utils/url";
 
-export const RoutineList = (props: { routine: Routine, linkDestination?: WgerLink }) => {
+export const RoutineList = (props: { routine: Routine, linkDestination?: WgerLink, showTemplateChip?: boolean }) => {
     const [t, i18n] = useTranslation();
+
+    const showTemplateChip = props.showTemplateChip ?? true;
 
     const destination = props.linkDestination ?? WgerLink.ROUTINE_DETAIL;
     const detailUrl = makeLink(destination, i18n.language, { id: props.routine.id });
+
+    const primaryText = props.routine.name !== '' ? props.routine.name : t('routines.routine');
+    const chip = props.routine.isTemplate && showTemplateChip
+        ? <Chip color="info" size="small" label={t('routines.template')} />
+        : null;
+
 
     return <>
         <ListItem sx={{ p: 0 }}>
             <ListItemButton component="a" href={detailUrl}>
                 <ListItemText
-                    primary={props.routine.name !== '' ? props.routine.name : t('routines.routine')}
+                    primary={<>{primaryText} {chip}</>}
                     secondary={`${props.routine.durationText} (${props.routine.start.toLocaleDateString()} - ${props.routine.end.toLocaleDateString()})`}
                 />
                 <ChevronRightIcon />

@@ -108,7 +108,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
  * Note: this returns all the data, including all sub-objects
  */
 export const getRoutines = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_template': false } });
+    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false } });
     const response = await axios.get<ResponseType<Routine>>(
         url,
         { headers: makeHeader() }
@@ -151,7 +151,7 @@ export const getRoutine = async (id: number): Promise<Routine> => {
  * Note: strictly only the routine data, no days or any other sub-objects
  */
 export const getRoutinesShallow = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false, 'is_template': false } });
+    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false } });
     const response = await axios.get<ResponseType<Routine>>(
         url,
         { headers: makeHeader() }
