@@ -110,7 +110,7 @@ export const ProgressionForm = (props: {
             .test(
                 'inter-entry-validation',
                 'Your error message here',
-                function (entries, context,) { // Use 'function' to access 'this'
+                function (entries) { // Use 'function' to access 'this'
                     const { createError } = this;
 
                     const data = entries as unknown as BaseConfigEntryForm[];

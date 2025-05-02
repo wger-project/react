@@ -64,7 +64,7 @@ export const addDay = async (data: AddDayParams): Promise<Day> => {
  * Deletes an existing day
  */
 export const deleteDay = async (id: number): Promise<void> => {
-    const response = await axios.delete(
+    await axios.delete(
         makeUrl(ApiPath.DAY, { id: id }),
         { headers: makeHeader() }
     );

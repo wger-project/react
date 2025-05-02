@@ -276,6 +276,7 @@ export const ConfigDetailsRequirementsField = (props: {
             onClose={() => setAnchorEl(null)}
         >
             {...REQUIREMENTS_VALUES.map((e, index) => <MenuItem
+                key={index}
                 onClick={() => handleSelection(e as unknown as RequirementsType)}>
                 <ListItemIcon>
                     {selectedElements.includes(e as unknown as RequirementsType)
