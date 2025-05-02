@@ -4,7 +4,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
 import { Muscle } from "components/Exercises/models/muscle";
-import { LogData, RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
+import { GroupedLogData, LogData, RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
 import i18n from 'i18next';
 import React from "react";
 import { getTranslationKey } from "utils/strings";
@@ -73,15 +73,14 @@ export function getHumanReadableHeaders(exerciseList: Exercise[], language: Lang
     switch (groupBy) {
         case StatGroupBy.Exercises: {
             const exercises = Object.keys(logData.exercises).map(e => exerciseList.find(ex => ex.id === parseInt(e))?.getTranslation(language)?.name);
-            // const exercises = Object.keys(logData.exercises).map(e => `exercise ${e}`);
             const exercisesIds = Object.keys(logData.exercises).map(Number);
-            return { headers: exercises, data: exercisesIds.map(ex => logData.exercises[ex]) };
+            return { headers: exercises as string[], data: exercisesIds.map(ex => logData.exercises[ex]) };
         }
         case StatGroupBy.Muscles: {
+            // @ts-expect-error We know the translation key exists
             const muscles = Object.keys(logData.muscle).map(e => i18n.t(getTranslationKey(muscleList.find(m => m.id === parseInt(e))?.nameEn)));
-            // const muscles = Object.keys(logData.muscle).map(e =>  `muscle ${e}`);
             const musclesIds = Object.keys(logData.muscle).map(Number);
-            return { headers: muscles, data: musclesIds.map(ms => logData.muscle[ms]) };
+            return { headers: muscles as string[], data: musclesIds.map(ms => logData.muscle[ms]) };
 
         }
         case StatGroupBy.Total:
@@ -117,7 +116,7 @@ export const getFullStatsData = (
     );
 
 
-    const getAllHeaders = (data: any) => {
+    const getAllHeaders = (data: GroupedLogData) => {
         let headers: string[] = [];
 
         switch (selectedValueSubType) {
@@ -125,18 +124,18 @@ export const getFullStatsData = (
                 headers = calculateStatsData(selectedValueGroupBy, statsData.mesocycle).headers;
                 break;
             case StatSubType.Iteration:
-                for (const iteration in statsData.iteration) {
-                    headers = headers.concat(calculateStatsData(selectedValueGroupBy, statsData.iteration[iteration]).headers);
+                for (const iteration in data.iteration) {
+                    headers = headers.concat(calculateStatsData(selectedValueGroupBy, data.iteration[iteration]).headers);
                 }
                 break;
             case StatSubType.Weekly:
-                for (const week in statsData.weekly) {
-                    headers = headers.concat(calculateStatsData(selectedValueGroupBy, statsData.weekly[week]).headers);
+                for (const week in data.weekly) {
+                    headers = headers.concat(calculateStatsData(selectedValueGroupBy, data.weekly[week]).headers);
                 }
                 break;
             case StatSubType.Daily:
-                for (const date in statsData.daily) {
-                    headers = headers.concat(calculateStatsData(selectedValueGroupBy, statsData.daily[date]).headers);
+                for (const date in data.daily) {
+                    headers = headers.concat(calculateStatsData(selectedValueGroupBy, data.daily[date]).headers);
                 }
                 break;
         }
