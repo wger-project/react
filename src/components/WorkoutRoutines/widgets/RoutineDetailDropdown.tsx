@@ -92,10 +92,11 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                {!props.routine.isTemplate && <MenuItem
+                <MenuItem
+                    disabled={props.routine.isTemplate}
                     onClick={navigateEdit}>
                     {t("edit")}
-                </MenuItem>}
+                </MenuItem>
                 <MenuItem
                     component={Link}
                     to={makeLink(WgerLink.ROUTINE_DETAIL_TABLE, i18n.language, { id: props.routine.id })}>

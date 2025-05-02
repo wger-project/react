@@ -22,16 +22,18 @@ export const RoutineDetail = () => {
     const routineQuery = useRoutineDetailQuery(routineId);
 
     const routine = routineQuery.data;
+    const subtitle = `${routine?.start.toLocaleDateString()} - ${routine?.end.toLocaleDateString()} (${routine?.durationText})`;
+    const chip = routine?.isTemplate
+        ? <Chip color="info" size="small" label={t('routines.template')} />
+        : null;
 
     return <RenderLoadingQuery
         query={routineQuery}
         child={routineQuery.isSuccess
             && <WgerContainerRightSidebar
-                title={routine!.name}
-                subTitle={`${routine!.start.toLocaleDateString()} - ${routine!.end.toLocaleDateString()} (${routine!.durationText})`}
-                optionsMenu={<>{routine!.isTemplate &&
-                    <Chip label={t('routines.template')} size="small" />}<RoutineDetailDropdown
-                    routine={routineQuery.data!} /></>}
+                title={<>{routine!.name} {chip}</>}
+                subTitle={subtitle}
+                optionsMenu={<RoutineDetailDropdown routine={routineQuery.data!} />}
                 mainContent={
                     <Stack spacing={2}>
 

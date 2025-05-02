@@ -28,6 +28,7 @@ export const PublicTemplateOverview = () => {
                         {routineQuery.data!.map(r => <RoutineList
                             routine={r}
                             linkDestination={WgerLink.TEMPLATE_DETAIL}
+                            showTemplateChip={false}
                             key={r.id} />
                         )}
                     </List>
