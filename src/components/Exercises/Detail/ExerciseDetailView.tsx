@@ -127,7 +127,7 @@ export const ExerciseDetailView = ({
                         <h3>{t("exercises.primaryMuscles")}</h3>
                         <ul>
                             {exercise.muscles.map((m: Muscle) => (
-                                <li key={m.id}>{m.getName(t)}</li>
+                                <li key={m.id}>{m.getName()}</li>
                             ))}
                         </ul>
                     </Grid>
@@ -155,7 +155,7 @@ export const ExerciseDetailView = ({
                         <h3>{t("exercises.secondaryMuscles")}</h3>
                         <ul>
                             {exercise.musclesSecondary.map((m: Muscle) => (
-                                <li key={m.id}>{m.getName(t)}</li>
+                                <li key={m.id}>{m.getName()}</li>
                             ))}
                         </ul>
                     </Grid>

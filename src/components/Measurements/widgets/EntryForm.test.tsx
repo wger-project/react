@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import {
     useAddMeasurementEntryQuery,
@@ -51,7 +51,7 @@ describe("Test the EntryForm component", () => {
         expect(screen.getByDisplayValue('2023-02-01')).toBeInTheDocument();
         expect(screen.getByDisplayValue('10')).toBeInTheDocument();
         expect(screen.getByDisplayValue('test note')).toBeInTheDocument();
-        expect(screen.getByLabelText('date')).toBeInTheDocument();
+        expect(screen.getAllByLabelText('date').length).toBeGreaterThan(0);
         expect(screen.getByLabelText('value')).toBeInTheDocument();
         expect(screen.getByLabelText('notes')).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'submit' })).toBeInTheDocument();
@@ -94,13 +94,13 @@ describe("Test the EntryForm component", () => {
                 <EntryForm categoryId={11} />
             </QueryClientProvider>
         );
-        const dateInput = await screen.findByLabelText('date');
+        const group = screen.getByRole('group', { name: /date/i });
+        const dateInput = within(group).getByRole('textbox', { hidden: true });
         const valueInput = await screen.findByLabelText('value');
         const notesInput = await screen.findByLabelText('notes');
         const submitButton = screen.getByRole('button', { name: 'submit' });
 
         // Act
-        await user.clear(dateInput);
         await user.type(dateInput, '2023-06-18');
         await user.clear(valueInput);
         await user.type(valueInput, '42.42');

@@ -61,7 +61,7 @@ describe('Tests for the getHumanReadableHeaders helper', () => {
             StatGroupBy.Muscles,
             mockLogData
         );
-        expect(result.headers).toEqual(["server.finger_muscle", "server.shoulders"]);
+        expect(result.headers).toEqual(["Finger muscle", "Shoulders"]);
         expect(result.data).toEqual([10, 15]);
     });
 
@@ -153,13 +153,13 @@ describe('Tests for the getFullStatsData function', () => {
             'en',
         );
 
-        expect(result.headers).toEqual(['server.finger_muscle', 'server.shoulders']);
+        expect(result.headers).toEqual(['Finger muscle', 'Shoulders']);
         expect(result.data).toEqual([
             { key: 'week 1', values: [5, 10] },
             { key: 'week 2', values: [8, 12] }
         ]);
 
-        expect(result.totals).toEqual({ 'server.finger_muscle': 13, 'server.shoulders': 22 });
+        expect(result.totals).toEqual({ 'Finger muscle': 13, 'Shoulders': 22 });
     });
 
 
@@ -217,12 +217,12 @@ describe('Tests for the getFullStatsData function', () => {
             mockLanguage,
             'en',
         );
-        expect(result.headers).toEqual(['server.finger_muscle', 'server.shoulders']);
+        expect(result.headers).toEqual(['Finger muscle', 'Shoulders']);
         expect(result.data).toEqual([
             { key: "3/1/2024", values: [15, 10] },
             { key: "3/3/2024", values: [18, 12] }
         ]);
-        expect(result.totals).toEqual({ "server.finger_muscle": 33, "server.shoulders": 22 });
+        expect(result.totals).toEqual({ "Finger muscle": 33, "Shoulders": 22 });
     });
 });
 
@@ -295,14 +295,14 @@ describe('formatStatsData', () => {
     it('should format data correctly for weekly', () => {
 
         const mockFullStatsData = {
-            headers: ['server.finger_muscle', 'server.shoulders'],
+            headers: ['Finger Muscle', 'Shoulders'],
             data: [
                 { key: 'week 1', values: [5, 10] },
                 { key: 'week 2', values: [8, 12] }
             ],
             totals: {
-                'server.finger_muscle': 13,
-                'server.shoulders': 22
+                'Finger Muscle': 13,
+                'Shoulders': 22
             }
         };
 
@@ -313,14 +313,14 @@ describe('formatStatsData', () => {
                 { category: "week 1", value: 5 },
                 { category: "week 2", value: 8 }
             ],
-            "name": "server.finger_muscle"
+            "name": "Finger Muscle"
         },
             {
                 "data": [
                     { category: "week 1", value: 10 },
                     { category: "week 2", value: 12 }
                 ],
-                "name": "server.shoulders"
+                "name": "Shoulders"
             }
         ]);
 

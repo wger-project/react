@@ -88,8 +88,8 @@ describe("Test the add exercise step 6 component", () => {
         expect(screen.getByText('A new exercise')).toBeInTheDocument();
         expect(screen.getByText('This very nice exercise will blow your mind')).toBeInTheDocument();
 
-        expect(screen.getByText('server.arms')).toBeInTheDocument();
-        expect(screen.getByText('server.dumbbell')).toBeInTheDocument();
+        expect(screen.getByText('Arms')).toBeInTheDocument();
+        expect(screen.getByText('Dumbbell')).toBeInTheDocument();
         expect(screen.getByText('exercises.step1HeaderBasics')).toBeInTheDocument();
         expect(screen.getByText(/Musculus dacttilaris/i)).toBeInTheDocument();
 

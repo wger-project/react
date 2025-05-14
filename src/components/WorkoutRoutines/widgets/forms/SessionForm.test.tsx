@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { WorkoutSession } from "components/WorkoutRoutines/models/WorkoutSession";
 import { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery } from "components/WorkoutRoutines/queries";
@@ -60,7 +60,7 @@ describe('SessionForm', () => {
         );
 
         // Assert
-        const datePicker = screen.getByRole('textbox', { name: /date/i });
+        const datePicker = screen.getByRole('group', { name: /date/i });
         const newDate = DateTime.now();
 
         await user.type(datePicker, newDate.toFormat('yyyy-MM-dd'));
@@ -121,16 +121,22 @@ describe('SessionForm', () => {
             </BrowserRouter>
         );
 
+        screen.logTestingPlaygroundURL();
+
         // Assert
         await waitFor(() => {
             // screen.logTestingPlaygroundURL();
             expect((screen.getByRole('textbox', { name: /notes/i }) as HTMLTextAreaElement).value).toBe('Test notes');
 
             // The date and time pickers are localized
-            expect((screen.getByRole('textbox', { name: /date/i }) as HTMLInputElement).value).toBe(formattedDate);
-            expect((screen.getByRole('textbox', { name: /start/i }) as HTMLInputElement).value).toBe(timeStartFormatted);
-            expect((screen.getByRole('textbox', { name: /end/i }) as HTMLInputElement).value).toBe(timeEndFormatted);
+            const dateGroup = screen.getByRole('group', { name: /date/i });
+            expect(within(dateGroup).getByRole('textbox', { hidden: true })).toHaveValue(formattedDate);
 
+            const startGroup = screen.getByRole('group', { name: /start/i });
+            expect(within(startGroup).getByRole('textbox', { hidden: true })).toHaveValue(timeStartFormatted);
+
+            const endGroup = screen.getByRole('group', { name: /end/i });
+            expect(within(endGroup).getByRole('textbox', { hidden: true })).toHaveValue(timeEndFormatted);
         });
     });
 

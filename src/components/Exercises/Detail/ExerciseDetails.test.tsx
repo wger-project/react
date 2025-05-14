@@ -76,8 +76,8 @@ describe("Render tests", () => {
         expect(screen.getByText("exercises.description")).toBeInTheDocument();
         expect(screen.getByText("Squats")).toBeInTheDocument();
 
-        expect(screen.getByText("Biggus musculus (server.big_muscle)")).toBeInTheDocument();
-        expect(screen.getByText('Rectus abdominis (server.abs)')).toBeInTheDocument();
+        expect(screen.getByText("Biggus musculus (Big muscle)")).toBeInTheDocument();
+        expect(screen.getByText('Rectus abdominis (Abs)')).toBeInTheDocument();
 
         // Header is only shown for exercises that have variations
 
