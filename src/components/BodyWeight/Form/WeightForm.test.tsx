@@ -91,7 +91,7 @@ describe("Test WeightForm component", () => {
         expect(dateInput).toBeInTheDocument();
         expect(weightInput).toBeInTheDocument();
         expect(submitButton).toBeInTheDocument();
-        user.click(submitButton);
+        await user.click(submitButton);
         await waitFor(() => {
             expect(useAddWeightEntryQuery).toHaveBeenCalled();
         });
