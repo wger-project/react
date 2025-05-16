@@ -41,7 +41,7 @@ export function useFetchNutritionalPlanQuery(planId: number) {
 export function useFetchNutritionalPlanDateQuery(planId: number | null, dateStr: string, enabled = true) {
     return useQuery({
         queryKey: [QueryKey.NUTRITIONAL_PLAN, planId, dateStr],
-        queryFn: () => getNutritionalPlanFull(planId, { filtersetQueryLogs: { "datetime__lte": dateToYYYYMMDD(new Date(dateStr)) } }),
+        queryFn: () => getNutritionalPlanFull(planId, { filtersetQueryLogs: { "datetime__eq": dateToYYYYMMDD(new Date(dateStr)) } }),
         enabled: enabled,
     });
 }
