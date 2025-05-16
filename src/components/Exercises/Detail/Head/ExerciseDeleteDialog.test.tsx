@@ -90,7 +90,6 @@ describe("Test the ExerciseDeleteDialog component", () => {
             await new Promise((r) => setTimeout(r, 250));
         });
         await user.click(screen.getByTestId('autocompleter-result-998'));
-        //screen.logTestingPlaygroundURL();
         expect(getExercise).toHaveBeenCalledWith(998);
         expect(screen.queryByText("exercises.noReplacementSelected")).not.toBeInTheDocument();
         expect(screen.getByText("Benchpress")).toBeInTheDocument();
@@ -99,8 +98,6 @@ describe("Test the ExerciseDeleteDialog component", () => {
         await user.click(screen.getByTestId('button-delete-and-replace'));
         expect(deleteExercise).toHaveBeenCalledWith(345, "abcdef-150a-4ac7-97ef-84643c6419bf");
         expect(deleteExerciseTranslation).not.toHaveBeenCalled();
-
-        //screen.logTestingPlaygroundURL();
     });
 
     test('correctly sets a replacement manually setting the ID', async () => {

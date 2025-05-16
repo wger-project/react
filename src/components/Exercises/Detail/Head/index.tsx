@@ -23,7 +23,6 @@ import { WgerPermissions } from "permissions";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
-import { getTranslationKey } from "utils/strings";
 import styles from './head.module.css';
 
 export interface HeadProp {
@@ -157,10 +156,16 @@ export const Head = ({
                         }
                     </div>
                     <Stack direction="row" spacing={1} mt={2}>
-                        <Chip label={t(getTranslationKey(exercise.category.name))} size="small" />
+                        <Chip
+                            label={exercise.category.translatedName}
+                            size="small" />
                         {exercise.equipment.map(e => {
-                            return <Chip key={e.id} label={t(getTranslationKey(e.name))} variant="outlined"
-                                         size="small" />;
+                            return <Chip
+                                key={e.id}
+                                label={e.translatedName}
+                                variant="outlined"
+                                size="small"
+                            />;
                         })}
                     </Stack>
                 </div>

@@ -4,7 +4,6 @@ import { useProfileQuery } from "components/User/queries/profile";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { editExercise } from "services";
-import { getTranslationKey } from "utils/strings";
 
 export function EditExerciseCategory(props: { exerciseId: number, initial: number }) {
     const { t } = useTranslation();
@@ -33,7 +32,7 @@ export function EditExerciseCategory(props: { exerciseId: number, initial: numbe
         >
             {categoryQuery.data!.map(category => (
                 <MenuItem key={category.id} value={category.id}>
-                    {t(getTranslationKey(category.name))}
+                    {category.translatedName}
                 </MenuItem>
             ))}
         </Select>

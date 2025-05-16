@@ -14,7 +14,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useExerciseSubmissionStateValue } from "state";
 import * as exerciseReducer from "state/exerciseSubmissionReducer";
-import { getTranslationKey } from "utils/strings";
 import * as yup from "yup";
 
 export const Step1Basics = ({ onContinue }: StepProps) => {
@@ -76,7 +75,7 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
                                     fieldName={'category'}
                                     options={categoryQuery.data!.map(category => (
                                         <MenuItem key={category.id} value={category.id}>
-                                            {t(getTranslationKey(category.name))}
+                                            {category.translatedName}
                                         </MenuItem>
                                     ))}
                                 />
@@ -97,7 +96,7 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
                                         getOptionDisabled={(option) =>
                                             secondaryMuscles.includes(option)
                                         }
-                                        getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName(t)}
+                                        getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName()}
                                         value={primaryMuscles}
                                         onChange={(event, newValue) => {
                                             setPrimaryMuscles(newValue);
@@ -124,7 +123,7 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
                                         getOptionDisabled={(option) =>
                                             primaryMuscles.includes(option)
                                         }
-                                        getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName(t)}
+                                        getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName()}
                                         value={secondaryMuscles}
                                         onChange={(event, newValue) => {
                                             setSecondaryMuscles(newValue);

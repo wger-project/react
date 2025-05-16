@@ -27,7 +27,6 @@ import { addNote } from "services/note";
 import { addVariation } from "services/variation";
 import { useExerciseSubmissionStateValue } from "state";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
-import { getTranslationKey } from "utils/strings";
 import { makeLink, WgerLink } from "utils/url";
 
 export const Step6Overview = ({ onBack }: StepProps) => {
@@ -151,19 +150,19 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('category')}</TableCell>
-                            <TableCell>{t(getTranslationKey(categoryQuery.data!.find(c => c.id === state.category)!.name))}</TableCell>
+                            <TableCell>{categoryQuery.data!.find(c => c.id === state.category)!.translatedName}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.equipment')}</TableCell>
-                            <TableCell>{state.equipment.map(e => t(getTranslationKey(equipmentQuery.data!.find(value => value.id === e)!.name))).join(', ')}</TableCell>
+                            <TableCell>{state.equipment.map(e => equipmentQuery.data!.find(value => value.id === e)!.translatedName).join(', ')}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.muscles')}</TableCell>
-                            <TableCell>{state.muscles.map(m => musclesQuery.data!.find(value => value.id === m)!.getName(t)).join(', ')}</TableCell>
+                            <TableCell>{state.muscles.map(m => musclesQuery.data!.find(value => value.id === m)!.getName()).join(', ')}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.secondaryMuscles')}</TableCell>
-                            <TableCell>{state.musclesSecondary.map(m => musclesQuery.data!.find(value => value.id === m)!.getName(t)).join(', ')}</TableCell>
+                            <TableCell>{state.musclesSecondary.map(m => musclesQuery.data!.find(value => value.id === m)!.getName()).join(', ')}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.variations')}</TableCell>

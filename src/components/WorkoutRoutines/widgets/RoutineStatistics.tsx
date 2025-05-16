@@ -7,7 +7,6 @@ import { Muscle } from "components/Exercises/models/muscle";
 import { GroupedLogData, LogData, RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
 import i18n from 'i18next';
 import React from "react";
-import { getTranslationKey } from "utils/strings";
 
 export const enum StatType {
     Volume = "volume",
@@ -77,8 +76,7 @@ export function getHumanReadableHeaders(exerciseList: Exercise[], language: Lang
             return { headers: exercises as string[], data: exercisesIds.map(ex => logData.exercises[ex]) };
         }
         case StatGroupBy.Muscles: {
-            // @ts-expect-error We know the translation key exists
-            const muscles = Object.keys(logData.muscle).map(e => i18n.t(getTranslationKey(muscleList.find(m => m.id === parseInt(e))?.nameEn)));
+            const muscles = Object.keys(logData.muscle).map(e => muscleList.find(m => m.id === parseInt(e))?.translatedName ?? '');
             const musclesIds = Object.keys(logData.muscle).map(Number);
             return { headers: muscles as string[], data: musclesIds.map(ms => logData.muscle[ms]) };
 

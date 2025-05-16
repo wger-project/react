@@ -30,9 +30,6 @@ jest.mock("state/exerciseSubmissionReducer", () => {
         setEquipment: jest.fn(),
         setPrimaryMuscles: jest.fn(),
         setSecondaryMuscles: jest.fn()
-
-        // TODO: mocking primary and secondary muscles break the test
-        // setPrimaryMuscles: jest.fn()
     };
 });
 
@@ -105,10 +102,10 @@ describe("<Step1Basics />", () => {
         await user.keyboard('{enter}');
 
         await user.click(screen.getByLabelText('category'));
-        await user.click(screen.getByText('server.arms'));
+        await user.click(screen.getByText('Arms'));
 
         await user.click(screen.getByLabelText('exercises.equipment'));
-        await user.click(screen.getByText('server.rocks'));
+        await user.click(screen.getByText('Rocks'));
 
         const muscles = screen.getByLabelText('exercises.muscles');
         await user.click(muscles);

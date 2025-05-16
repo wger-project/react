@@ -20,7 +20,6 @@ import { Muscle } from "components/Exercises/models/muscle";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import React, { useContext } from 'react';
 import { useTranslation } from "react-i18next";
-import { getTranslationKey } from "utils/strings";
 import { useMusclesQuery } from '../queries';
 import { ExerciseFiltersContext } from './ExerciseFiltersContext';
 
@@ -88,7 +87,8 @@ const MuscleFilterList = () => {
                             <ListItemText
                                 id={labelId}
                                 primary={m.name}
-                                secondary={m.nameEn !== '' ? t(getTranslationKey(m.nameEn)) : ''} />
+                                secondary={m.nameEn !== '' ? m.translatedName : ''}
+                            />
 
                         </ListItemButton>
                     </ListItem>

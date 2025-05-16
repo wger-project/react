@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     Accordion,
     AccordionDetails,
@@ -12,13 +12,12 @@ import {
     Switch,
     Typography
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import { Equipment } from "components/Exercises/models/equipment";
-import { getTranslationKey } from "utils/strings";
+import React, { useContext } from 'react';
+import { useTranslation } from "react-i18next";
+import { LoadingPlaceholder } from '../../Core/LoadingWidget/LoadingWidget';
 import { useEquipmentQuery } from '../queries';
 import { ExerciseFiltersContext } from './ExerciseFiltersContext';
-import { LoadingPlaceholder } from '../../Core/LoadingWidget/LoadingWidget';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const EquipmentFilterList = () => {
 
@@ -40,7 +39,7 @@ const EquipmentFilterList = () => {
     };
 
     if (isLoading) {
-        return <LoadingPlaceholder/>;
+        return <LoadingPlaceholder />;
     }
 
     return (
@@ -64,7 +63,10 @@ const EquipmentFilterList = () => {
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={t(getTranslationKey(equipment.name))}/>
+                            <ListItemText
+                                id={labelId}
+                                primary={equipment.translatedName}
+                            />
                         </ListItemButton>
                     </ListItem>
                 );
@@ -78,11 +80,11 @@ export const EquipmentFilterDropdown = () => {
 
     return (
         <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 {t('exercises.equipment')}
             </AccordionSummary>
             <AccordionDetails>
-                <EquipmentFilterList/>
+                <EquipmentFilterList />
             </AccordionDetails>
         </Accordion>
     );
@@ -97,7 +99,7 @@ export const EquipmentFilter = () => {
                 <Typography gutterBottom variant="h6" m={2}>
                     {t('exercises.equipment')}
                 </Typography>
-                <EquipmentFilterList/>
+                <EquipmentFilterList />
             </Paper>
         </div>
     );
