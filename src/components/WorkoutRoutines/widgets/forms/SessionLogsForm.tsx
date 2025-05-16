@@ -134,7 +134,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
         logs: [] as LogEntryForm[]
     };
 
-    const dayDataList = hasNoIterationData ? routine.dayDataCurrentIteration.filter(dayData => dayData.day!.id === dayId) : iterationDayData;
+    const dayDataList = hasNoIterationData ? routine.dayDataCurrentIteration.filter(dayData => dayData.day?.id === dayId) : iterationDayData;
 
     for (const dayData of dayDataList) {
         for (const slot of dayData.slots) {
