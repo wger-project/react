@@ -14,7 +14,7 @@ import {
     TextField
 } from "@mui/material";
 import { SERVER_URL } from "config";
-import throttle from 'lodash/throttle';
+import debounce from "lodash/debounce";
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -52,9 +52,10 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
 
     const fetchName = useMemo(
         () =>
-            throttle(
-                (request: string) => searchIngredient(request, i18n.language, searchEnglish).then(res => setOptions(res)),
-                200,
+            debounce(
+                (request: string) =>
+                    searchIngredient(request, i18n.language, searchEnglish).then((res) => setOptions(res)),
+                200
             ),
         [i18n.language, searchEnglish],
     );
