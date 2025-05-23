@@ -121,12 +121,12 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                             </ListItemIcon>
                             <ListItemText
                                 primary={option.value}
-                                primaryTypographyProps={{
-                                    style: {
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis'
-                                    }
+                                slotProps={{
+                                    primary: {
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                    },
                                 }}
                                 secondary={option.data.category}
                             />

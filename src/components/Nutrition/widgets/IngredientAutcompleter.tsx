@@ -101,17 +101,19 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                     {...params}
                     label={t('nutrition.searchIngredientName')}
                     fullWidth
-                    InputProps={{
-                        ...params.InputProps,
-                        startAdornment: (
-                            <>
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                                {params.InputProps.startAdornment}
-                            </>
-                        )
-                    }}
+                        slotProps={{
+                            input: {
+                                ...params.InputProps,
+                                startAdornment: (
+                                    <>
+                                        <InputAdornment position="start">
+                                            <SearchIcon />
+                                        </InputAdornment>
+                                        {params.InputProps.startAdornment}
+                                    </>
+                                ),
+                            },
+                        }}
                 />
             )}
             renderOption={(props, option) => {
@@ -127,13 +129,13 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                             </ListItemIcon>
                             <ListItemText
                                 primary={option.value}
-                                primaryTypographyProps={{
-                                    style: {
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis'
-                                    }
-                                }}
+                                    slotProps={{
+                                        primary: {
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                        },
+                                    }}
                             />
                         </ListItem>
                     </li>
