@@ -1,5 +1,5 @@
-import PhotoIcon from '@mui/icons-material/Photo';
-import SearchIcon from '@mui/icons-material/Search';
+import PhotoIcon from "@mui/icons-material/Photo";
+import SearchIcon from "@mui/icons-material/Search";
 import {
     Autocomplete,
     Avatar,
@@ -10,10 +10,10 @@ import {
     ListItemIcon,
     ListItemText,
     Switch,
-    TextField
+    TextField,
 } from "@mui/material";
 import { SERVER_URL } from "config";
-import throttle from 'lodash/throttle';
+import debounce from "lodash/debounce";
 import * as React from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -23,50 +23,44 @@ import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 
 type NameAutocompleterProps = {
     callback: (exerciseResponse: ExerciseSearchResponse | null) => void;
-    loadExercise?: boolean
-}
+    loadExercise?: boolean;
+};
 
 export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterProps) {
     const [value, setValue] = React.useState<ExerciseSearchResponse | null>(null);
-    const [inputValue, setInputValue] = React.useState('');
+    const [inputValue, setInputValue] = React.useState("");
     const [searchEnglish, setSearchEnglish] = useState<boolean>(true);
     const [options, setOptions] = React.useState<readonly ExerciseSearchResponse[]>([]);
     const [t, i18n] = useTranslation();
 
     loadExercise = loadExercise === undefined ? false : loadExercise;
 
-
     const fetchName = React.useMemo(
         () =>
-            throttle(
-                (request: string) => searchExerciseTranslations(request, i18n.language, searchEnglish).then(res => setOptions(res)),
-                200,
+            debounce(
+                (request: string) =>
+                    searchExerciseTranslations(request, i18n.language, searchEnglish).then((res) => setOptions(res)),
+                200
             ),
-        [i18n.language, searchEnglish],
+        [i18n.language, searchEnglish]
     );
 
-
     React.useEffect(() => {
-
-        if (inputValue === '') {
+        if (inputValue === "") {
             setOptions(value ? [value] : []);
             return undefined;
         }
 
         fetchName(inputValue);
 
-        return () => {
-        };
+        return () => {};
     }, [value, inputValue, fetchName]);
-
 
     return (
         <>
             <Autocomplete
                 id="exercise-name-autocomplete"
-                getOptionLabel={(option) =>
-                    option.value
-                }
+                getOptionLabel={(option) => option.value}
                 data-testid="autocomplete"
                 filterOptions={(x) => x}
                 options={options}
@@ -74,7 +68,7 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                 includeInputInList
                 filterSelectedOptions
                 value={value}
-                noOptionsText={t('noResults')}
+                noOptionsText={t("noResults")}
                 isOptionEqualToValue={(option, value) => option.value === value.value}
                 onChange={async (event: any, newValue: ExerciseSearchResponse | null) => {
                     setOptions(newValue ? [newValue, ...options] : options);
@@ -90,7 +84,7 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        label={t('exercises.searchExerciseName')}
+                        label={t("exercises.searchExerciseName")}
                         fullWidth
                         slotProps={{
                             input: {
@@ -102,43 +96,50 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                                         </InputAdornment>
                                         {params.InputProps.startAdornment}
                                     </>
-                                )
-                            }
+                                ),
+                            },
                         }}
                     />
                 )}
-                renderOption={(props, option, state) =>
-                    <li {...props}
+                renderOption={(props, option, state) => (
+                    <li
+                        {...props}
                         key={`exercise-${state.index}-${option.data.id}`}
                         data-testid={`autocompleter-result-${option.data.base_id}`}
                     >
                         <ListItem disablePadding component="div">
                             <ListItemIcon>
-                                {option.data.image ?
+                                {option.data.image ? (
                                     <Avatar alt="" src={`${SERVER_URL}${option.data.image}`} variant="rounded" />
-                                    : <PhotoIcon fontSize="large" />}
+                                ) : (
+                                    <PhotoIcon fontSize="large" />
+                                )}
                             </ListItemIcon>
                             <ListItemText
                                 primary={option.value}
-                                primaryTypographyProps={{
-                                    style: {
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis'
-                                    }
+                                slotProps={{
+                                    primary: {
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                    },
                                 }}
                                 secondary={option.data.category}
                             />
                         </ListItem>
                     </li>
-                }
+                )}
             />
-            {i18n.language !== LANGUAGE_SHORT_ENGLISH && <FormGroup>
-                <FormControlLabel
-                    control={<Switch checked={searchEnglish}
-                                     onChange={(event, checked) => setSearchEnglish(checked)} />}
-                    label={t('alsoSearchEnglish')} />
-            </FormGroup>}
+            {i18n.language !== LANGUAGE_SHORT_ENGLISH && (
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Switch checked={searchEnglish} onChange={(event, checked) => setSearchEnglish(checked)} />
+                        }
+                        label={t("alsoSearchEnglish")}
+                    />
+                </FormGroup>
+            )}
         </>
     );
 }
