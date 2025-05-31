@@ -147,7 +147,7 @@
     "notes": "Notatki",
     "value": "Wartość",
     "unit": "Jednostka",
-    "copyToClipboard": "Skopiuj do schowka",
+    "copyToClipboard": "Skopiuj do schowku (clipboard)",
     "nutrition": {
         "goalEnergy": "Cel energii",
         "macronutrient": "Makroskładnik",
@@ -248,5 +248,8 @@
     "comment": "Komentarz",
     "durationWeeksDays": "{{nrWeeks}} tygodni, {{nrDays}} dni",
     "undo": "Cofnij",
-    "successfullyDeleted": "Usunięto"
+    "successfullyDeleted": "Usunięto",
+    "editName": "Edytować {{name}}",
+    "min": "Min",
+    "max": "Max"
 }
