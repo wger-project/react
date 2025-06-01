@@ -89,7 +89,7 @@ export const DayForm = (props: {
             ...(values.name !== undefined && { name: values.name }),
             ...(values.description !== undefined && { description: values.description }),
             // eslint-disable-next-line camelcase
-            ...(values.isRest !== undefined && { is_rest: isRest }),
+            ...(values.isRest !== undefined && { is_rest: values.isRest }),
             // eslint-disable-next-line camelcase
             ...(values.needsLogsToAdvance !== undefined && { need_logs_to_advance: values.needsLogsToAdvance }),
         });
@@ -118,7 +118,6 @@ export const DayForm = (props: {
                                 title="Name"
                                 fieldProps={{ disabled: isRest }}
                             />
-
                         </Grid>
                         <Grid size={{ xs: 6, sm: 2 }}>
                             <FormControlLabel
