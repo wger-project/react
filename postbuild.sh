@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# This script assumes the wger backend is in a folder called "server"
-STATIC_FOLDER=../server/wger/core/static/react
+STATIC_FOLDER=${WGER_STATIC_FOLDER:-../server/wger/core/static/react}
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -17,5 +16,3 @@ else
   echo -e "${RED}*** ERROR ***: Django static folder ${STATIC_FOLDER} not found"
   echo -e "Build files could not be copied${NC}"
 fi
-
-
