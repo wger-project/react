@@ -21,8 +21,12 @@ in [AUTHORS.md](AUTHORS.md).
 **TLDR**
 
 ```bash
+# with node > 22
+
 cp .env.TEMPLATE .env.development
 vim .env.development
+yarn config set --home enableTelemetry 0
+yarn config set nodeLinker node-modules
 yarn install
 yarn start 
 ```
