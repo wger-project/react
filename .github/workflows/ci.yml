@@ -25,6 +25,7 @@ jobs:
       - name: Install modules
         run: |
           yarn config set --home enableTelemetry 0
+          yarn config set nodeLinker node-modules
           yarn
 
       - name: Run tests
