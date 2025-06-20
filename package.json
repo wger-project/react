@@ -30,7 +30,7 @@
     "react-router-dom": "^7.6.1",
     "react-simple-wysiwyg": "^3.2.0",
     "recharts": "^2.15.3",
-    "slug": "^9.1.0",
+    "slug": "^11.0.0",
     "typescript": "^5.8.2",
     "vite-tsconfig-paths": "^5.1.4",
     "web-vitals": "^4.2.2",
