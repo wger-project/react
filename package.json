@@ -104,5 +104,6 @@
     "setupFilesAfterEnv": [
       "./src/setupTests.ts"
     ]
-  }
+  },
+  "packageManager": "yarn@4.9.2"
 }
