@@ -16,11 +16,14 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'yarn'
 
       - name: Install modules
-        run: yarn
+        run: |
+          corepack enable
+          yarn config set --home enableTelemetry 0
+          yarn
 
       - name: Run ESLint
         run: yarn lint:quiet
