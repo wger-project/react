@@ -140,7 +140,8 @@
         "valueTooLong": "數值過長",
         "valueTooShort": "數值過短",
         "supportedImageFormats": "僅支援 20Mb 以下的 JPEG、PNG 和 WEBP 文件",
-        "maxValue": "此欄位的值必須小於 {{value}}"
+        "maxValue": "此欄位的值必須小於 {{value}}",
+        "enterNumber": "請輸入有效數字"
     },
     "save": "儲存",
     "videos": "影片",
