@@ -1,1 +1,12 @@
-{}
+{
+    "weight": "משקל",
+    "height": "גובה",
+    "cm": "ס״מ",
+    "date": "תאריך",
+    "timeOfDay": "שעה ביום",
+    "submit": "שליחה",
+    "edit": "עריכה",
+    "editName": "עריכת {{name}}",
+    "delete": "מחיקה",
+    "deleteConfirmation": "למחוק את"
+}
