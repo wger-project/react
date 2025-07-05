@@ -26,6 +26,35 @@
         "originalTitle": "כותרת"
     },
     "loading": "בטעינה...",
-    "nutritionalPlan": "תוכנית תזונה",
-    "addEntry": "הוספת ערך"
+    "nutritionalPlan": "תכנון תזונתי",
+    "addEntry": "הוספת ערך",
+    "currentWeight": "המשקל הנוכחי",
+    "workout": "אימון",
+    "seeDetails": "צפייה בפרטים",
+    "actions": "פעולות",
+    "nothingHereYet": "אין כאן כלום עדיין...",
+    "notes": "הערות",
+    "value": "ערך",
+    "unit": "יחידת מידה",
+    "copyToClipboard": "העתקה ללוח",
+    "filters": "מסננים",
+    "exercises": {
+        "replacements": "חלופות",
+        "translateExerciseNow": "לתרגום תרגיל זה כעת",
+        "alternativeNames": "שמות חלופיים",
+        "notes": "הערות",
+        "equipment": "ציוד",
+        "submitExercise": "שליחת תרגיל",
+        "description": "תיאור",
+        "exerciseNotTranslated": "אין תרגום זמין",
+        "alsoKnownAs": "מוכר גם בתור:",
+        "primaryMuscles": "שרירים ראשיים",
+        "deleteTranslation": "מחיקת תרגום",
+        "deleteExerciseReplace": "מחיקה והחלפה",
+        "exercises": "תרגילים",
+        "changeExerciseLanguage": "שינוי שפת התרגיל הזה",
+        "noEquipment": "ללא ציוד",
+        "missingExercise": "‍",
+        "imageStylePhoto": "תמונה"
+    }
 }
