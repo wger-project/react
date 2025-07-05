@@ -54,7 +54,19 @@
         "exercises": "תרגילים",
         "changeExerciseLanguage": "שינוי שפת התרגיל הזה",
         "noEquipment": "ללא ציוד",
-        "missingExercise": "‍",
+        "missingExercise": "חסר תרגיל משמעותי?",
         "imageStylePhoto": "תמונה"
+    },
+    "success": "הפעולה צלחה!",
+    "English": "עברית",
+    "save": "שמירה",
+    "total": "סה״כ",
+    "images": "תמונות",
+    "successfullyDeleted": "המחיקה צלחה",
+    "routines": {
+        "reps": "חזרות"
+    },
+    "server": {
+        "repetitions": "חזרות"
     }
 }
