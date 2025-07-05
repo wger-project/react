@@ -8,5 +8,24 @@
     "edit": "עריכה",
     "editName": "עריכת {{name}}",
     "delete": "מחיקה",
-    "deleteConfirmation": "למחוק את"
+    "deleteConfirmation": "למחוק את \"{{name}}\"?",
+    "add": "הוספה",
+    "close": "סגירה",
+    "difference": "הבדל",
+    "days": "ימים",
+    "all": "הכול",
+    "lastYear": "בשנה האחרונה",
+    "lastHalfYear": "ב־6 החודשים האחרונים",
+    "lastMonth": "בחודש האחרון",
+    "lastWeek": "בשבוע האחרון",
+    "start": "התחלה",
+    "end": "סיום",
+    "comment": "הערה",
+    "licenses": {
+        "authors": "יוצר(ים)",
+        "originalTitle": "כותרת"
+    },
+    "loading": "בטעינה...",
+    "nutritionalPlan": "תוכנית תזונה",
+    "addEntry": "הוספת ערך"
 }
