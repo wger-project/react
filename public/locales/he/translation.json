@@ -23,7 +23,8 @@
     "comment": "הערה",
     "licenses": {
         "authors": "יוצר(ים)",
-        "originalTitle": "כותרת"
+        "originalTitle": "כותרת",
+        "originalObjectUrl": "קישור לאתר המקור, אם יש"
     },
     "loading": "בטעינה...",
     "nutritionalPlan": "תכנון תזונתי",
@@ -55,7 +56,20 @@
         "changeExerciseLanguage": "שינוי שפת התרגיל הזה",
         "noEquipment": "ללא ציוד",
         "missingExercise": "חסר תרגיל משמעותי?",
-        "imageStylePhoto": "תמונה"
+        "imageStylePhoto": "תמונה",
+        "contributeExercise": "לתרום תרגיל",
+        "variations": "וריאציות",
+        "muscles": "שרירים",
+        "secondaryMuscles": "שרירים משניים",
+        "compatibleImagesCC": "על התמונות להיות תואמות לרישיון CC BY SA. אם יש ספק כלשהו, יש להעלות רק תמונות שצילמת בעצמך.",
+        "identicalExercise": "הימנעות משימוש חוזר בתרגילים",
+        "exerciseNotTranslatedBody": "תרגיל זה עדיין אינו זמין בשפה שנבחרה. האם ברצונך לתרום תרגום?",
+        "deleteExerciseFull": "מחיקת כל האימון",
+        "searchExerciseName": "חיפוש לפי שם אימון",
+        "newNote": "הערה חדשה",
+        "imageStyle3D": "תלת־ממד",
+        "imageDetails": "פרטי תמונה",
+        "swapExercise": "החלפת אימון"
     },
     "success": "הפעולה צלחה!",
     "English": "עברית",
@@ -68,5 +82,13 @@
     },
     "server": {
         "repetitions": "חזרות"
+    },
+    "nothingHereYetAction": "נא ללחוץ על כפתור הפעולה כדי להתחיל",
+    "alsoSearchEnglish": "לחפש גם לפי השמות באנגלית",
+    "nutrition": {
+        "plans": "תוכניות תזונתיות",
+        "copyPlan": "יצירת העתק של תוכנית זו",
+        "plan": "תוכנית תזונתית",
+        "goalsTitle": "מטרות"
     }
 }
