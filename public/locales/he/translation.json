@@ -89,6 +89,21 @@
         "plans": "תוכניות תזונתיות",
         "copyPlan": "יצירת העתק של תוכנית זו",
         "plan": "תוכנית תזונתית",
-        "goalsTitle": "מטרות"
+        "goalsTitle": "יעדים",
+        "useGoalsHelpText": "הוספת יעדים לתוכנית זו",
+        "goalEnergy": "יעד אנרגיה",
+        "goalProtein": "יעד חלבונים",
+        "goalFiber": "יעד סיבים תזונתיים",
+        "goalFat": "יעד שומנים",
+        "meal": "מנה",
+        "addMeal": "הוספת מנה",
+        "gramShort": "גר׳",
+        "kcal": "ק׳ קלוריות",
+        "percentEnergy": "אחוז אנרגיה",
+        "difference": "הבדל",
+        "today": "היום",
+        "energy": "אנרגיה",
+        "protein": "חלבונים",
+        "sugar": "סוכרים"
     }
 }
