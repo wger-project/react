@@ -78,7 +78,14 @@
     "images": "תמונות",
     "successfullyDeleted": "המחיקה צלחה",
     "routines": {
-        "reps": "חזרות"
+        "reps": "חזרות",
+        "sets": "סטים",
+        "intensity": "עצימות",
+        "currentRoutine": "שגרה נוכחית",
+        "restTime": "זמן מנוחה",
+        "backToRoutine": "חזרה לשגרה",
+        "addDay": "הוספת יום אימון",
+        "addExercise": "הוספת אימון"
     },
     "server": {
         "repetitions": "חזרות"
@@ -133,6 +140,7 @@
     "max": "מקס׳",
     "videos": "סרטונים",
     "undo": "ביטול פעולה",
-    "cannotBeUndone": "לא ניתן לבטל פעולה זו",
-    "cancel": "ביטול"
+    "cannotBeUndone": "לא ניתן לבטל פעולה זו.",
+    "cancel": "ביטול",
+    "noResults": "אין תוצאות"
 }
