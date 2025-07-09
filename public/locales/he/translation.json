@@ -104,6 +104,35 @@
         "today": "היום",
         "energy": "אנרגיה",
         "protein": "חלבונים",
-        "sugar": "סוכרים"
-    }
+        "sugar": "סוכר",
+        "fat": "שומנים",
+        "sodium": "נתרן"
+    },
+    "bmi": {
+        "calculator": "מחשבון BMI",
+        "overweight": "משקל עודף",
+        "normal": "משקל נורמלי",
+        "underweight": "תת־משקל",
+        "result": "ה־BMI שלך הוא {{value}}"
+    },
+    "downloadAsPdf": "הורדה בתור PDF",
+    "description": "תיאור",
+    "translation": "תרגום",
+    "preferences": "העדפות",
+    "continue": "המשך",
+    "goBack": "חזרה",
+    "language": "שפה",
+    "forms": {
+        "valueTooShort": "הערך קצר מדי",
+        "valueTooLong": "הערך ארוך מדי",
+        "fieldRequired": "זהו שדה חובה"
+    },
+    "name": "שם",
+    "category": "קטגוריה",
+    "min": "מינ׳",
+    "max": "מקס׳",
+    "videos": "סרטונים",
+    "undo": "ביטול פעולה",
+    "cannotBeUndone": "לא ניתן לבטל פעולה זו",
+    "cancel": "ביטול"
 }
