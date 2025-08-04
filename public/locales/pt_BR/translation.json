@@ -130,7 +130,7 @@
         "replacementsInfoText": "Opcionalmente, você pode também selecionar um exercício que pode substituir esse (ex: porque foi substituído duas vezes, or similar). Isso irá substituir o exercício em rotinas e também logs de treinos, ao invés de apenas excluí-lo. Essas mudanças irão também ser propagadas para qualquer instancia que sincroniza os exercícios a partir desse.",
         "deleteExerciseReplace": "Delete e substitua"
     },
-    "notes": "Notas",
+    "notes": "Comentários",
     "value": "Valor",
     "unit": "Unidade",
     "description": "Descrição",
@@ -236,5 +236,6 @@
     },
     "calendar": "Calendário",
     "entries": "Registros",
-    "no_entries_for_day": "Sem registros para este dia"
+    "no_entries_for_day": "Sem registros para este dia",
+    "comment": "Comentário"
 }
