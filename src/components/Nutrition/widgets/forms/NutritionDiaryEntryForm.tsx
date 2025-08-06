@@ -39,6 +39,8 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
             .min(1, t('forms.minValue', { value: '1' })),
         ingredient: yup
             .number()
+            .nullable()
+            .moreThan(0, t('forms.fieldRequired'))
             .required(t('forms.fieldRequired')),
         datetime: yup
             .date()
@@ -51,7 +53,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
             initialValues={{
                 datetime: new Date(),
                 amount: 0,
-                ingredient: 0,
+                ingredient: null,
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
@@ -80,7 +82,16 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                 <Form>
                     <Stack spacing={2}>
                         <IngredientAutocompleter
-                            callback={(value: IngredientSearchResponse | null) => formik.setFieldValue('ingredient', value?.data.id)} />
+                            callback={(value: IngredientSearchResponse | null) => {
+                                formik.setFieldTouched('ingredient', true);
+                                formik.setFieldValue('ingredient', value?.data.id ?? null);
+                            }}
+                            />
+                            {formik.touched.ingredient && formik.errors.ingredient && (
+                            <div style={{ color: 'crimson', fontSize: '0.7rem', marginLeft: '12px' }}>
+                                {formik.errors.ingredient}
+                            </div>
+                            )}
                         <TextField
                             fullWidth
                             id="amount"
