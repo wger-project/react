@@ -165,7 +165,7 @@
     "filters": "Filtros",
     "nothingHereYet": "Nada aqui ainda...",
     "nothingHereYetAction": "Pressione o botão de ação para iniciar",
-    "copyToClipboard": "Copiar para área de transferência",
+    "copyToClipboard": "Copiar ao clipboard",
     "nutrition": {
         "goalFat": "Objetivo de gordura",
         "addMeal": "Adicionar alimentação",
@@ -237,5 +237,8 @@
     "calendar": "Calendário",
     "entries": "Registros",
     "no_entries_for_day": "Sem registros para este dia",
-    "comment": "Comentário"
+    "comment": "Comentário",
+    "editName": "Editar {{name}}",
+    "min": "Min",
+    "max": "Max"
 }
