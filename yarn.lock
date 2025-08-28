@@ -880,10 +880,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:^9.29.0":
-  version: 9.29.0
-  resolution: "@eslint/js@npm:9.29.0"
-  checksum: 10c0/d0ccf37063fa27a3fae9347cb044f84ca10b5a2fa19ffb2b3fedf3b96843ac1ff359ea9f0ab0e80f2f16fda4cb0dc61ea0fed0375090f050fe0a029e7d6de3a3
+"@eslint/js@npm:^9.34.0":
+  version: 9.34.0
+  resolution: "@eslint/js@npm:9.34.0"
+  checksum: 10c0/53f1bfd2a374683d9382a6850354555f6e89a88416c34a5d34e9fbbaf717e97c2b06300e8f93e5eddba8bda8951ccab7f93a680e56ded1a3d21d526019e69bab
   languageName: node
   linkType: hard
 
@@ -10098,7 +10098,7 @@ __metadata:
     "@emotion/babel-plugin": "npm:^11.12.0"
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.0"
-    "@eslint/js": "npm:^9.29.0"
+    "@eslint/js": "npm:^9.34.0"
     "@hello-pangea/dnd": "npm:^18.0.1"
     "@mui/icons-material": "npm:^7.0.2"
     "@mui/lab": "npm:^7.0.0-beta.10"
