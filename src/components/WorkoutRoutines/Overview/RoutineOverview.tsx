@@ -41,6 +41,8 @@ export const RoutineList = (props: { routine: Routine, linkDestination?: WgerLin
 export const RoutineOverview = () => {
     const routineQuery = useRoutinesShallowQuery();
     const [t] = useTranslation();
+    // create the fabRef to pass it to OverviewEmpty and AddRoutineFab
+    const fabRef = React.useRef<HTMLButtonElement>(null);
 
     if (routineQuery.isLoading) {
         return <LoadingPlaceholder />;
@@ -51,13 +53,13 @@ export const RoutineOverview = () => {
         title={t("routines.routines")}
         mainContent={<>
             {routineQuery.data!.length === 0
-                ? <OverviewEmpty />
+                ? <OverviewEmpty fabRef={fabRef} />
                 : <Paper>
                     <List sx={{ py: 0 }} key={'abc'}>
                         {routineQuery.data!.map(r => <RoutineList routine={r} key={r.id} />)}
                     </List>
                 </Paper>}
         </>}
-        fab={<AddRoutineFab />}
+        fab={<AddRoutineFab ref={fabRef} />}  
     />;
 };
