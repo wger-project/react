@@ -37,7 +37,7 @@ const Entries: React.FC<LogProps> = ({ selectedDay }) => {
             <CardHeader
                 title={
                     <Typography variant="h5" component="div" sx={{ fontWeight: 'bold' }}>
-                        {t("entries")} - {selectedDay.date.toLocaleDateString()}
+                        {t("Your daily records")} - {selectedDay.date.toLocaleDateString()}
                     </Typography>
                 }
             />
