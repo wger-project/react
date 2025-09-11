@@ -23,8 +23,6 @@ import { useTranslation } from "react-i18next";
 import { dateToYYYYMMDD } from "utils/date";
 import * as yup from 'yup';
 
-/* eslint-disable camelcase */
-
 interface PlanFormProps {
     plan?: NutritionalPlan,
     closeFn?: Function,
@@ -47,37 +45,41 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             .min(3, t('forms.minLength', { chars: '3' })),
         onlyLogging: yup
             .boolean(),
-        goal_energy: yup
+        goalEnergy: yup
             .number()
             .notRequired()
             .positive()
             .max(6000, t('forms.maxValue', { value: '6000kcal' })),
-        // .test(
-        //     'goal_energy_test',
-        //     'the energy is too damn high!',
-        //     (value, context) => {
-        //         return context.parent.goal_protein * ENERGY_FACTOR.protein < context.parent.goal_energy;
-        //     }),
-        goal_protein: yup
+        goalProtein: yup
             .number()
             .notRequired()
             .positive()
             .max(500, t('forms.maxValue', { value: '500' })),
-        goal_carbohydrates: yup
+        goalCarbohydrates: yup
             .number()
             .notRequired()
             .positive() // TODO: allow 0 but not negative
             .max(750, t('forms.maxValue', { value: '750' })),
-        goal_fiber: yup
+        goalFiber: yup
             .number()
             .notRequired()
             .positive()
             .max(500, t('forms.maxValue', { value: '500' })),
-        goal_fat: yup
+        goalFat: yup
             .number()
             .notRequired()
             .positive()
             .max(500, t('forms.maxValue', { value: '500' })),
+        start: yup
+            .date()
+            .required(),
+        end: yup
+            .date()
+            .required()
+            .min(
+                yup.ref('start'),
+                t('forms.endBeforeStart')
+            )
     });
 
 
@@ -90,26 +92,26 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                 end: dateToYYYYMMDD(new Date()),
 
                 onlyLogging: plan ? plan.onlyLogging : true,
-                goal_energy: plan ? plan.goalEnergy : null,
-                goal_protein: plan ? plan.goalProtein : null,
-                goal_carbohydrates: plan ? plan.goalCarbohydrates : null,
-                goal_fiber: plan ? plan.goalFiber : null,
-                goal_fat: plan ? plan.goalFat : null,
+                goalEnergy: plan ? plan.goalEnergy : null,
+                goalProtein: plan ? plan.goalProtein : null,
+                goalCarbohydrates: plan ? plan.goalCarbohydrates : null,
+                goalFiber: plan ? plan.goalFiber : null,
+                goalFat: plan ? plan.goalFat : null,
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-                values.goal_energy = values.goal_energy ? values.goal_energy : null;
-                values.goal_protein = values.goal_protein ? values.goal_protein : null;
-                values.goal_carbohydrates = values.goal_carbohydrates ? values.goal_carbohydrates : null;
-                values.goal_fiber = values.goal_fiber ? values.goal_fiber : null;
-                values.goal_fat = values.goal_fat ? values.goal_fat : null;
+                values.goalEnergy = values.goalEnergy ? values.goalEnergy : null;
+                values.goalProtein = values.goalProtein ? values.goalProtein : null;
+                values.goalCarbohydrates = values.goalCarbohydrates ? values.goalCarbohydrates : null;
+                values.goalFiber = values.goalFiber ? values.goalFiber : null;
+                values.goalFat = values.goalFat ? values.goalFat : null;
 
                 if (!useGoals) {
-                    values.goal_energy = null;
-                    values.goal_protein = null;
-                    values.goal_carbohydrates = null;
-                    values.goal_fiber = null;
-                    values.goal_fat = null;
+                    values.goalEnergy = null;
+                    values.goalProtein = null;
+                    values.goalCarbohydrates = null;
+                    values.goalFiber = null;
+                    values.goalFat = null;
                 }
 
 
@@ -120,11 +122,11 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
 
                     description: values.description,
                     onlyLogging: values.onlyLogging,
-                    goalEnergy: values.goal_energy,
-                    goalProtein: values.goal_protein,
-                    goalCarbohydrates: values.goal_carbohydrates,
-                    goalFiber: values.goal_fiber,
-                    goalFat: values.goal_fat,
+                    goalEnergy: values.goalEnergy,
+                    goalProtein: values.goalProtein,
+                    goalCarbohydrates: values.goalCarbohydrates,
+                    goalFiber: values.goalFiber,
+                    goalFat: values.goalFat,
                 });
 
 
@@ -158,15 +160,23 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                     <DatePicker
                                         format="yyyy-MM-dd"
-                                        label={t('date')}
+                                        label={t('start')}
                                         value={startDateValue}
-                                        slotProps={{ textField: { variant: 'outlined' } }}
+                                        slotProps={{
+                                            textField: {
+                                                variant: "standard",
+                                                fullWidth: true,
+                                                error: formik.touched.start && Boolean(formik.errors.start),
+                                                helperText: formik.touched.start && formik.errors.start ? String(formik.errors.start) : ''
+                                            }
+                                        }}
                                         onChange={(newValue) => {
                                             if (newValue) {
                                                 formik.setFieldValue('start', newValue.toJSDate());
                                             }
                                             setStartDateValue(newValue);
                                         }}
+
                                     />
                                 </LocalizationProvider>
                             </Grid>
@@ -175,9 +185,16 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                     <DatePicker
                                         format="yyyy-MM-dd"
-                                        label={t('date')}
+                                        label={t('end')}
                                         value={endDateValue}
-                                        slotProps={{ textField: { variant: 'outlined' } }}
+                                        slotProps={{
+                                            textField: {
+                                                variant: "standard",
+                                                fullWidth: true,
+                                                error: formik.touched.end && Boolean(formik.errors.end),
+                                                helperText: formik.touched.end && formik.errors.end ? String(formik.errors.end) : ''
+                                            }
+                                        }}
                                         onChange={(newValue) => {
                                             if (newValue) {
                                                 formik.setFieldValue('end', newValue.toJSDate());
@@ -237,9 +254,9 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 fullWidth
                                 id="energy"
                                 label={t('nutrition.goalEnergy')}
-                                error={formik.touched.goal_energy && Boolean(formik.errors.goal_energy)}
-                                helperText={formik.touched.goal_energy && formik.errors.goal_energy}
-                                {...formik.getFieldProps('goal_energy')}
+                                error={formik.touched.goalEnergy && Boolean(formik.errors.goalEnergy)}
+                                helperText={formik.touched.goalEnergy && formik.errors.goalEnergy}
+                                {...formik.getFieldProps('goalEnergy')}
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end">{t('nutrition.kcal')}</InputAdornment>
                                 }}
@@ -250,13 +267,13 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         id="protein"
                                         fullWidth
                                         label={t('nutrition.goalProtein')}
-                                        error={formik.touched.goal_protein && Boolean(formik.errors.goal_protein)}
-                                        helperText={formik.touched.goal_protein && formik.errors.goal_protein}
-                                        {...formik.getFieldProps('goal_protein')}
+                                        error={formik.touched.goalProtein && Boolean(formik.errors.goalProtein)}
+                                        helperText={formik.touched.goalProtein && formik.errors.goalProtein}
+                                        {...formik.getFieldProps('goalProtein')}
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">
-                                                {formik.values.goal_protein !== null && formik.values.goal_protein !== undefined
-                                                    ? t('nutrition.valueEnergyKcal', { value: formik.values.goal_protein * ENERGY_FACTOR.protein })
+                                                {formik.values.goalProtein !== null && formik.values.goalProtein !== undefined
+                                                    ? t('nutrition.valueEnergyKcal', { value: formik.values.goalProtein * ENERGY_FACTOR.protein })
                                                     : ''}
                                             </InputAdornment>,
                                             endAdornment: <InputAdornment position="end">
@@ -270,13 +287,13 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         id="carbohydrates"
                                         fullWidth
                                         label={t('nutrition.goalCarbohydrates')}
-                                        error={formik.touched.goal_carbohydrates && Boolean(formik.errors.goal_carbohydrates)}
-                                        helperText={formik.touched.goal_carbohydrates && formik.errors.goal_carbohydrates}
-                                        {...formik.getFieldProps('goal_carbohydrates')}
+                                        error={formik.touched.goalCarbohydrates && Boolean(formik.errors.goalCarbohydrates)}
+                                        helperText={formik.touched.goalCarbohydrates && formik.errors.goalCarbohydrates}
+                                        {...formik.getFieldProps('goalCarbohydrates')}
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">
-                                                {formik.values.goal_carbohydrates !== null && formik.values.goal_carbohydrates !== undefined
-                                                    ? t('nutrition.valueEnergyKcal', { value: formik.values.goal_carbohydrates * ENERGY_FACTOR.carbohydrates })
+                                                {formik.values.goalCarbohydrates !== null && formik.values.goalCarbohydrates !== undefined
+                                                    ? t('nutrition.valueEnergyKcal', { value: formik.values.goalCarbohydrates * ENERGY_FACTOR.carbohydrates })
                                                     : ''}
                                             </InputAdornment>,
                                             endAdornment:
@@ -290,13 +307,13 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         id="fat"
                                         fullWidth
                                         label={t('nutrition.goalFat')}
-                                        error={formik.touched.goal_fat && Boolean(formik.errors.goal_fat)}
-                                        helperText={formik.touched.goal_fat && formik.errors.goal_fat}
-                                        {...formik.getFieldProps('goal_fat')}
+                                        error={formik.touched.goalFat && Boolean(formik.errors.goalFat)}
+                                        helperText={formik.touched.goalFat && formik.errors.goalFat}
+                                        {...formik.getFieldProps('goalFat')}
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">
-                                                {formik.values.goal_fat !== null && formik.values.goal_fat !== undefined
-                                                    ? t('nutrition.valueEnergyKcal', { value: formik.values.goal_fat * ENERGY_FACTOR.fat })
+                                                {formik.values.goalFat !== null && formik.values.goalFat !== undefined
+                                                    ? t('nutrition.valueEnergyKcal', { value: formik.values.goalFat * ENERGY_FACTOR.fat })
                                                     : ''}
                                             </InputAdornment>,
                                             endAdornment:
@@ -312,9 +329,9 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         id="fiber"
                                         fullWidth
                                         label={t('nutrition.goalFiber')}
-                                        error={formik.touched.goal_fiber && Boolean(formik.errors.goal_fiber)}
-                                        helperText={formik.touched.goal_fiber && formik.errors.goal_fiber}
-                                        {...formik.getFieldProps('goal_fiber')}
+                                        error={formik.touched.goalFiber && Boolean(formik.errors.goalFiber)}
+                                        helperText={formik.touched.goalFiber && formik.errors.goalFiber}
+                                        {...formik.getFieldProps('goalFiber')}
                                         InputProps={{
                                             startAdornment: <InputAdornment position="start">
                                                 {t('nutrition.valueEnergyKcal', { value: 0 })}
