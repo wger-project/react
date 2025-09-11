@@ -9,14 +9,21 @@ import {
     TextField
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 import { ENERGY_FACTOR } from "components/Nutrition/helpers/nutritionalValues";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
 import { Form, Formik } from "formik";
+import i18n from "i18n";
+import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
+import { dateToYYYYMMDD } from "utils/date";
 import * as yup from 'yup';
+
+/* eslint-disable camelcase */
 
 interface PlanFormProps {
     plan?: NutritionalPlan,
@@ -29,16 +36,17 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
     const addPlanQuery = useAddNutritionalPlanQuery();
     const editPlanQuery = useEditNutritionalPlanQuery(plan?.id!);
     const [useGoals, setUseGoals] = useState(plan?.hasAnyGoals);
+    const [startDateValue, setStartDateValue] = useState<DateTime | null>(plan ? DateTime.fromJSDate(plan.start) : DateTime.now);
+    const [endDateValue, setEndDateValue] = useState<DateTime | null>(plan && plan?.end !== null ? DateTime.fromJSDate(plan!.end) : null);
+
     const validationSchema = yup.object({
         description: yup
             .string()
             .required()
             .max(25, t('forms.maxLength', { chars: '25' }))
             .min(3, t('forms.minLength', { chars: '3' })),
-        // eslint-disable-next-line camelcase
-        only_logging: yup
+        onlyLogging: yup
             .boolean(),
-        // eslint-disable-next-line camelcase
         goal_energy: yup
             .number()
             .notRequired()
@@ -50,25 +58,21 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
         //     (value, context) => {
         //         return context.parent.goal_protein * ENERGY_FACTOR.protein < context.parent.goal_energy;
         //     }),
-        // eslint-disable-next-line camelcase
         goal_protein: yup
             .number()
             .notRequired()
             .positive()
             .max(500, t('forms.maxValue', { value: '500' })),
-        // eslint-disable-next-line camelcase
         goal_carbohydrates: yup
             .number()
             .notRequired()
             .positive() // TODO: allow 0 but not negative
             .max(750, t('forms.maxValue', { value: '750' })),
-        // eslint-disable-next-line camelcase
         goal_fiber: yup
             .number()
             .notRequired()
             .positive()
             .max(500, t('forms.maxValue', { value: '500' })),
-        // eslint-disable-next-line camelcase
         goal_fat: yup
             .number()
             .notRequired()
@@ -81,30 +85,23 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
         (<Formik
             initialValues={{
                 description: plan ? plan.description : t('nutrition.plan'),
-                // eslint-disable-next-line camelcase
-                only_logging: plan ? plan.onlyLogging : true,
-                // eslint-disable-next-line camelcase
+
+                start: dateToYYYYMMDD(new Date()),
+                end: dateToYYYYMMDD(new Date()),
+
+                onlyLogging: plan ? plan.onlyLogging : true,
                 goal_energy: plan ? plan.goalEnergy : null,
-                // eslint-disable-next-line camelcase
                 goal_protein: plan ? plan.goalProtein : null,
-                // eslint-disable-next-line camelcase
                 goal_carbohydrates: plan ? plan.goalCarbohydrates : null,
-                // eslint-disable-next-line camelcase
                 goal_fiber: plan ? plan.goalFiber : null,
-                // eslint-disable-next-line camelcase
                 goal_fat: plan ? plan.goalFat : null,
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-                // eslint-disable-next-line camelcase
                 values.goal_energy = values.goal_energy ? values.goal_energy : null;
-                // eslint-disable-next-line camelcase
                 values.goal_protein = values.goal_protein ? values.goal_protein : null;
-                // eslint-disable-next-line camelcase
                 values.goal_carbohydrates = values.goal_carbohydrates ? values.goal_carbohydrates : null;
-                // eslint-disable-next-line camelcase
                 values.goal_fiber = values.goal_fiber ? values.goal_fiber : null;
-                // eslint-disable-next-line camelcase
                 values.goal_fat = values.goal_fat ? values.goal_fat : null;
 
                 if (!useGoals) {
@@ -115,10 +112,27 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                     values.goal_fat = null;
                 }
 
+
+                const newPlan = new NutritionalPlan({
+
+                    start: new Date(values.start),
+                    end: values.end ? new Date(values.end) : null,
+
+                    description: values.description,
+                    onlyLogging: values.onlyLogging,
+                    goalEnergy: values.goal_energy,
+                    goalProtein: values.goal_protein,
+                    goalCarbohydrates: values.goal_carbohydrates,
+                    goalFiber: values.goal_fiber,
+                    goalFat: values.goal_fat,
+                });
+
+
                 if (plan) {
-                    editPlanQuery.mutate({ ...values, id: plan.id });
+                    newPlan.id = plan.id!;
+                    editPlanQuery.mutate(newPlan);
                 } else {
-                    addPlanQuery.mutate(values);
+                    addPlanQuery.mutate(newPlan);
                 }
 
                 // if closeFn is defined, close the modal (this form does not have to be displayed in one)
@@ -139,14 +153,51 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                             helperText={formik.touched.description && formik.errors.description}
                             {...formik.getFieldProps('description')}
                         />
+                        <Grid container spacing={1}>
+                            <Grid size={6}>
+                                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                                    <DatePicker
+                                        format="yyyy-MM-dd"
+                                        label={t('date')}
+                                        value={startDateValue}
+                                        slotProps={{ textField: { variant: 'outlined' } }}
+                                        onChange={(newValue) => {
+                                            if (newValue) {
+                                                formik.setFieldValue('start', newValue.toJSDate());
+                                            }
+                                            setStartDateValue(newValue);
+                                        }}
+                                    />
+                                </LocalizationProvider>
+                            </Grid>
+
+                            <Grid size={6}>
+                                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                                    <DatePicker
+                                        format="yyyy-MM-dd"
+                                        label={t('date')}
+                                        value={endDateValue}
+                                        slotProps={{ textField: { variant: 'outlined' } }}
+                                        onChange={(newValue) => {
+                                            if (newValue) {
+                                                formik.setFieldValue('end', newValue.toJSDate());
+                                            }
+                                            setEndDateValue(newValue);
+                                        }}
+
+                                    />
+                                </LocalizationProvider>
+                            </Grid>
+                        </Grid>
+
                         <FormGroup>
                             <FormControlLabel
                                 label={t('nutrition.onlyLoggingHelpText')}
                                 control={
                                     <Switch
                                         id="onlyLogging"
-                                        checked={formik.values.only_logging}
-                                        {...formik.getFieldProps('only_logging')}
+                                        checked={formik.values.onlyLogging}
+                                        {...formik.getFieldProps('onlyLogging')}
                                     />}
                             />
                         </FormGroup>
@@ -197,6 +248,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 <Grid size={4}>
                                     <TextField
                                         id="protein"
+                                        fullWidth
                                         label={t('nutrition.goalProtein')}
                                         error={formik.touched.goal_protein && Boolean(formik.errors.goal_protein)}
                                         helperText={formik.touched.goal_protein && formik.errors.goal_protein}
@@ -216,6 +268,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 <Grid size={4}>
                                     <TextField
                                         id="carbohydrates"
+                                        fullWidth
                                         label={t('nutrition.goalCarbohydrates')}
                                         error={formik.touched.goal_carbohydrates && Boolean(formik.errors.goal_carbohydrates)}
                                         helperText={formik.touched.goal_carbohydrates && formik.errors.goal_carbohydrates}
@@ -235,6 +288,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 <Grid size={4}>
                                     <TextField
                                         id="fat"
+                                        fullWidth
                                         label={t('nutrition.goalFat')}
                                         error={formik.touched.goal_fat && Boolean(formik.errors.goal_fat)}
                                         helperText={formik.touched.goal_fat && formik.errors.goal_fat}
@@ -256,6 +310,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 <Grid size={4}>
                                     <TextField
                                         id="fiber"
+                                        fullWidth
                                         label={t('nutrition.goalFiber')}
                                         error={formik.touched.goal_fiber && Boolean(formik.errors.goal_fiber)}
                                         helperText={formik.touched.goal_fiber && formik.errors.goal_fiber}
