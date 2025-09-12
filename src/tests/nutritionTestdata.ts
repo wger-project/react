@@ -153,11 +153,11 @@ export const TEST_MEAL_5 = new Meal(
 );
 TEST_MEAL_5.items = [TEST_MEAL_ITEM_8];
 
-export const TEST_NUTRITIONAL_PLAN_1 = new NutritionalPlan(
-    101,
-    new Date('2023-01-01'),
-    'Summer body!!!',
-);
+export const TEST_NUTRITIONAL_PLAN_1 = new NutritionalPlan({
+    id: 101,
+    creationDate: new Date('2023-01-01'),
+    description: 'Summer body!!!',
+});
 TEST_NUTRITIONAL_PLAN_1.meals = [
     TEST_MEAL_1,
     TEST_MEAL_2,
@@ -183,9 +183,9 @@ TEST_NUTRITIONAL_PLAN_1.diaryEntries = [
 ];
 
 
-export const TEST_NUTRITIONAL_PLAN_2 = new NutritionalPlan(
-    222,
-    new Date('2023-08-01'),
-    'Bulking till we puke',
-);
+export const TEST_NUTRITIONAL_PLAN_2 = new NutritionalPlan({
+    id: 222,
+    creationDate: new Date('2023-08-01'),
+    description: 'Bulking till we puke',
+});
 TEST_NUTRITIONAL_PLAN_2.meals = [TEST_MEAL_4, TEST_MEAL_5];

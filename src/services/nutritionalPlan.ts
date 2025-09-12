@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { NutritionalPlan, NutritionalPlanAdapter } from "components/Nutrition/models/nutritionalPlan";
+import { NutritionalPlan, nutritionalPlanAdapter } from "components/Nutrition/models/nutritionalPlan";
 import { getNutritionalDiaryEntries } from "services";
 import { getIngredients } from "services/ingredient";
 import { getMealsForPlan } from "services/meal";
@@ -18,9 +18,7 @@ export const getNutritionalPlansSparse = async (): Promise<NutritionalPlan[]> =>
         makeUrl(API_NUTRITIONAL_PLAN_PATH),
         { headers: makeHeader() },
     );
-    const adapter = new NutritionalPlanAdapter();
-
-    return receivedPlans.results.map((plan) => adapter.fromJson(plan));
+    return receivedPlans.results.map((plan) => nutritionalPlanAdapter.fromJson(plan));
 };
 
 export const getLastNutritionalPlan = async (): Promise<NutritionalPlan | null> => {
@@ -50,8 +48,7 @@ export const getNutritionalPlanFull = async (id: number | null, options?: Nutrit
     // Collect the ingredient ids from the diary entries
     const ingredientIds: number[] = [];
 
-    const adapter = new NutritionalPlanAdapter();
-    const plan = adapter.fromJson(receivedPlan);
+    const plan = nutritionalPlanAdapter.fromJson(receivedPlan);
     const responses = await Promise.all([
         getMealsForPlan(id),
         getNutritionalDiaryEntries({ filtersetQuery: { plan: id, ...filtersetQueryLogs } })
@@ -78,40 +75,25 @@ export const getNutritionalPlanFull = async (id: number | null, options?: Nutrit
     return plan;
 };
 
-export interface AddNutritionalPlanParams {
-    description: string;
-    only_logging: boolean;
-    goal_energy: number | string | null;
-    goal_protein: number | string | null;
-    goal_carbohydrates: number | string | null;
-    goal_fiber: number | string | null;
-    goal_fat: number | string | null;
-}
 
-export interface EditNutritionalPlanParams extends AddNutritionalPlanParams {
-    id: number,
-}
-
-export const addNutritionalPlan = async (data: AddNutritionalPlanParams): Promise<NutritionalPlan> => {
+export const addNutritionalPlan = async (plan: NutritionalPlan): Promise<NutritionalPlan> => {
     const response = await axios.post(
         makeUrl(API_NUTRITIONAL_PLAN_PATH,),
-        data,
+        nutritionalPlanAdapter.toJson(plan),
         { headers: makeHeader() }
     );
 
-    const adapter = new NutritionalPlanAdapter();
-    return adapter.fromJson(response.data);
+    return nutritionalPlanAdapter.fromJson(response.data);
 };
 
-export const editNutritionalPlan = async (data: EditNutritionalPlanParams): Promise<NutritionalPlan> => {
+export const editNutritionalPlan = async (plan: NutritionalPlan): Promise<NutritionalPlan> => {
     const response = await axios.patch(
-        makeUrl(API_NUTRITIONAL_PLAN_PATH, { id: data.id }),
-        data,
+        makeUrl(API_NUTRITIONAL_PLAN_PATH, { id: plan.id! }),
+        nutritionalPlanAdapter.toJson(plan),
         { headers: makeHeader() }
     );
 
-    const adapter = new NutritionalPlanAdapter();
-    return adapter.fromJson(response.data);
+    return nutritionalPlanAdapter.fromJson(response.data);
 };
 
 export const deleteNutritionalPlan = async (id: number): Promise<void> => {
