@@ -42,7 +42,7 @@ export const RoutineOverview = () => {
     const routineQuery = useRoutinesShallowQuery();
     const [t] = useTranslation();
     // create the fabRef to pass it to OverviewEmpty and AddRoutineFab
-    const fabRef = React.useRef<HTMLButtonElement>(null);
+    const fabRef = React.useRef<HTMLElement>(null);
 
     if (routineQuery.isLoading) {
         return <LoadingPlaceholder />;
