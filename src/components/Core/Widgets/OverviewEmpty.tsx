@@ -29,23 +29,78 @@ export const OverviewEmpty = (props: { height?: string; fabRef?: React.RefObject
             </Typography>
         </Box>
 
-        {/* arrow pointing to fab*/}
-        {props.fabRef && props.fabRef.current && (
-            <Box
-                sx={{
-                    position: 'fixed',
-                    bottom: '8rem', 
-                    right: '5rem', 
-                    zIndex: 8,
-                    width: 0,
-                    height: 0,
-                    borderLeft: '18px solid rgba(25, 118, 210, 0.9)',// make arrow bigger
-                    borderTop: '10px solid transparent',
-                    borderBottom: '10px solid transparent',
-                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
-                    display: props.fabRef.current ? 'block' : 'none',
+        {/* curved arrow */}
+        <Box
+            component="svg"
+            sx={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                zIndex: 1000,
+                pointerEvents: 'none',
+                animation: 'arrowPulse 2.5s infinite ease-in-out',
+                '@keyframes arrowPulse': {
+                    '0%': { opacity: 0.8 },
+                    '50%': { opacity: 0.4 },
+                    '100%': { opacity: 0.8 },
+                },
+            }}
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+        >
+            {/* arrow tail - from the text area, pointing to add button */}
+            <path
+                d="M 45 45 Q 70 25, 90 85"
+                stroke="#1976d2"
+                strokeWidth="0.8"
+                fill="none"
+                strokeDasharray="3,2"
+                strokeLinecap="round"
+                style={{
+                    filter: 'drop-shadow(0 0.2vw 0.4vw rgba(0,0,0,0.3))'
                 }}
             />
-        )}
+
+            {/* arrow tip */}
+            <svg
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    zIndex: 1000,
+                    pointerEvents: 'none',
+                }}
+            >
+                <defs>
+                    <marker
+                        id="arrowhead"
+                        markerWidth="4"
+                        markerHeight="4"
+                        refX="2"
+                        refY="2"
+                        orient="auto"
+                    >
+                        <polygon points="0 0, 4 2, 0 4" fill="#1976d2" />
+                    </marker>
+                </defs>
+
+                <path
+                    d="M 45 45 Q 70 25, 90 85"
+                    stroke="#1976d2"
+                    strokeWidth="0.8"
+                    fill="none"
+                    strokeDasharray="3,2"
+                    strokeLinecap="round"
+                    style={{ filter: 'drop-shadow(0 0.2vw 0.4vw rgba(0,0,0,0.3))' }}
+                    markerEnd="url(#arrowhead)"
+                />
+            </svg>
+        </Box>
     </>;
 };
