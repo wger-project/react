@@ -27,7 +27,7 @@ export const OPERATION_REPLACE = 'r';
 export const OPERATION_ADD = '+';
 export const OPERATION_SUBSTRACT = '-';
 
-export const REQUIREMENTS_VALUES = ["weight", "reps", "rir", "rest"] as const;
+export const REQUIREMENTS_VALUES = ["weight", "repetitions", "rir", "rest"] as const;
 
 export type OperationType = "+" | "-" | "r";
 export type StepType = "abs" | "percent";
