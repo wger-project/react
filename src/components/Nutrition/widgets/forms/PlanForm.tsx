@@ -75,7 +75,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             .required(),
         end: yup
             .date()
-            .required()
+            .nullable()
             .min(
                 yup.ref('start'),
                 t('forms.endBeforeStart')
@@ -89,7 +89,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                 description: plan ? plan.description : t('nutrition.plan'),
 
                 start: dateToYYYYMMDD(new Date()),
-                end: dateToYYYYMMDD(new Date()),
+                end: null,
 
                 onlyLogging: plan ? plan.onlyLogging : true,
                 goalEnergy: plan ? plan.goalEnergy : null,
