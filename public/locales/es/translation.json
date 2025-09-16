@@ -320,7 +320,7 @@
         "result": "Su IMC es {{value}}"
     },
     "editName": "Editar {{name}}",
-    "start": "Inicio",
+    "start": "Comenzar",
     "end": "Fin",
     "comment": "Comentar",
     "min": "Mínimo",
