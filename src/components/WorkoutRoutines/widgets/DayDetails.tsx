@@ -158,7 +158,6 @@ export const DayDragAndDropGrid = (props: {
                             onClick={handleAddDay}
                             disabled={addDayQuery.isPending}
                         >
-
                             {t('routines.addDay')}
                         </Button>
 

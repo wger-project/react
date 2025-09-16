@@ -1,4 +1,4 @@
-import { Box, Chip, Stack, Typography } from "@mui/material";
+import { Box, Button, Chip, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
@@ -6,9 +6,11 @@ import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { RoutineDetailDropdown } from "components/WorkoutRoutines/widgets/RoutineDetailDropdown";
 import { DayDetailsCard } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
+import i18n from "i18n";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { makeLink, WgerLink } from "utils/url";
 
 export const RoutineDetail = () => {
     const { t } = useTranslation();
@@ -43,9 +45,16 @@ export const RoutineDetail = () => {
                             </Typography>
                         }
 
+                        {routine!.isTemplate && <Button
+                            component="a"
+                            href={makeLink(WgerLink.ROUTINE_COPY, i18n.language, { id: routineId })}
+                            variant={"contained"}
+                        >{t('routines.copyAndUseTemplate')}</Button>}
+
                         {routine!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null).map((dayData, index) =>
                             // {routine!.dayDataCurrentIteration.map((dayData, index) =>
-                            <DayDetailsCard routineId={routineId} dayData={dayData} key={index} />
+                            <DayDetailsCard routineId={routineId} dayData={dayData} key={index}
+                                            readOnly={routine!.isTemplate} />
                         )}
                     </Stack>
                 }

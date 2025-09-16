@@ -25,7 +25,7 @@ export function EditExerciseMuscle(props: {
             multiple
             options={musclesQuery.data!.map(m => m.id)}
             getOptionDisabled={(option) => props.blocked.includes(option)}
-            getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName(t)}
+            getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName()}
             value={props.value}
             onChange={(event, newValue) => handleOnChange(newValue)}
             renderInput={params => (

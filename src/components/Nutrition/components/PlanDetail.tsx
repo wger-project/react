@@ -48,12 +48,12 @@ export const PlanDetail = () => {
                 {/*</Typography>*/}
                 {plan.meals.map(meal => <MealDetail
                     meal={meal}
-                    planId={plan.id}
+                    planId={plan.id!}
                     key={meal.id}
                     onlyLogging={plan.onlyLogging} />)}
                 <MealDetail
                     meal={planQuery.data!.pseudoMealOthers(t('nutrition.pseudoMealTitle'))}
-                    planId={plan.id}
+                    planId={plan.id!}
                     key={-1}
                     onlyLogging={true}
                 />
@@ -66,7 +66,7 @@ export const PlanDetail = () => {
                     </Tooltip>
                     <Collapse in={expandedForm} timeout="auto" unmountOnExit>
                         <p><b>{t('nutrition.addMeal')}</b></p>
-                        <MealForm planId={plan.id} closeFn={handleToggleExpandedForm} />
+                        <MealForm planId={plan.id!} closeFn={handleToggleExpandedForm} />
                     </Collapse>
                 </>}
 
@@ -88,7 +88,7 @@ export const PlanDetail = () => {
                     values={plan.loggedNutritionalValuesToday}
                 />
                 <DiaryOverview
-                    planId={plan.id}
+                    planId={plan.id!}
                     logged={plan.groupDiaryEntries}
                     planned={plan.plannedNutritionalValues}
                 />

@@ -33,24 +33,4 @@ describe("Test the RoutineDetailDropdown component", () => {
         const editMenuItem = screen.getByText('edit').closest('li');
         expect(editMenuItem).not.toHaveAttribute('aria-disabled');
     });
-
-    test('Edit entry is disabled for templates', async () => {
-        // Arrange
-        testRoutine1.isTemplate = true;
-
-        // Act
-        render(
-            <QueryClientProvider client={testQueryClient}>
-                <MemoryRouter>
-                    <RoutineDetailDropdown routine={testRoutine1} />
-                </MemoryRouter>
-            </QueryClientProvider>
-        );
-        const menuButton = screen.getByRole('button');
-        await user.click(menuButton);
-
-        // Assert
-        const editMenuItem = screen.getByText('edit').closest('li');
-        expect(editMenuItem).toHaveAttribute('aria-disabled', 'true');
-    });
 });

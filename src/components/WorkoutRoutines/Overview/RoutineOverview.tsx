@@ -10,17 +10,29 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { makeLink, WgerLink } from "utils/url";
 
-export const RoutineList = (props: { routine: Routine, linkDestination?: WgerLink, showTemplateChip?: boolean }) => {
+export const RoutineList = (props: {
+    routine: Routine,
+    linkDestination?: WgerLink,
+    showTemplateChip?: boolean,
+    showTemplateVisibility?: boolean
+}) => {
     const [t, i18n] = useTranslation();
 
     const showTemplateChip = props.showTemplateChip ?? true;
+    const showTemplateVisibility = props.showTemplateVisibility ?? false;
 
     const destination = props.linkDestination ?? WgerLink.ROUTINE_DETAIL;
-    const detailUrl = makeLink(destination, i18n.language, { id: props.routine.id });
+    const detailUrl = makeLink(destination, i18n.language, { id: props.routine.id! });
 
     const primaryText = props.routine.name !== '' ? props.routine.name : t('routines.routine');
-    const chip = props.routine.isTemplate && showTemplateChip
+
+    const chipTemplate = props.routine.isTemplate && showTemplateChip
         ? <Chip color="info" size="small" label={t('routines.template')} />
+        : null;
+
+    const chipVisibility = props.routine.isTemplate && showTemplateVisibility
+        ? <Chip color="info" size="small"
+                label={t(props.routine.isPublic ? 'public' : 'private')} />
         : null;
 
 
@@ -28,7 +40,7 @@ export const RoutineList = (props: { routine: Routine, linkDestination?: WgerLin
         <ListItem sx={{ p: 0 }}>
             <ListItemButton component="a" href={detailUrl}>
                 <ListItemText
-                    primary={<>{primaryText} {chip}</>}
+                    primary={<>{primaryText} {chipTemplate} {chipVisibility}</>}
                     secondary={`${props.routine.durationText} (${props.routine.start.toLocaleDateString()} - ${props.routine.end.toLocaleDateString()})`}
                 />
                 <ChevronRightIcon />

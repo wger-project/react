@@ -18,7 +18,7 @@ export const DEFAULT_WORKOUT_DURATION = 12;
 
 
 type RoutineConstructorParams = {
-    id: number;
+    id: number | null;
     name: string;
     description: string;
     created: Date;
@@ -32,7 +32,7 @@ type RoutineConstructorParams = {
 };
 
 export class Routine {
-    id: number;
+    id: number | null;
     name: string;
     description: string;
     created: Date;
@@ -46,7 +46,7 @@ export class Routine {
     dayData: RoutineDayData[] = [];
 
     constructor(data: RoutineConstructorParams) {
-        this.id = data.id;
+        this.id = data.id ?? null;
         this.name = data.name;
         this.description = data.description;
         this.created = data.created;
@@ -58,6 +58,10 @@ export class Routine {
 
         this.days = data.days ?? [];
         this.dayData = data.dayData ?? [];
+    }
+
+    get isNotTemplate() {
+        return !this.isTemplate;
     }
 
     get exercises() {
@@ -120,6 +124,29 @@ export class Routine {
         return this.dayDataCurrentIteration.length;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static fromJson(json: any): Routine {
+        return routineAdapter.fromJson(json);
+    }
+
+    static clone(routine: Routine): Routine {
+        return new Routine({
+            id: routine.id,
+            name: routine.name,
+            description: routine.description,
+            created: new Date(),
+            start: new Date(routine.start),
+            end: new Date(routine.end),
+            fitInWeek: routine.fitInWeek,
+            isTemplate: routine.isTemplate,
+            isPublic: routine.isPublic,
+        });
+    }
+
+    toJson(): object {
+        return routineAdapter.toJson(this);
+    }
+
     getIteration(date?: Date | undefined) {
         const dateToCheck = date ?? new Date();
 
@@ -146,7 +173,6 @@ export class Routine {
         return slotData?.setConfigs.find(setConfig => setConfig.slotEntryId === slotEntryId) || null;
     }
 
-
     /*
      * Returns the DayData for the given dayId and, optionally, iteration
      */
@@ -161,6 +187,7 @@ export class Routine {
 
 
 export class RoutineAdapter implements Adapter<Routine> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any) {
         return new Routine({
             id: item.id,
@@ -172,20 +199,24 @@ export class RoutineAdapter implements Adapter<Routine> {
             fitInWeek: item.fit_in_week,
             isTemplate: item.is_template,
             isPublic: item.is_public,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             days: item.days ? item.days.map((day: any) => new Day(day)) : []
         });
     }
 
     toJson(item: Routine) {
         return {
-            id: item.id,
+            ...(item.id != null ? { id: item.id } : {}),
+
             name: item.name,
             description: item.description,
             start: dateToYYYYMMDD(item.start),
             end: dateToYYYYMMDD(item.end),
             fit_in_week: item.fitInWeek,
+            is_template: item.isTemplate,
+            is_public: item.isPublic
         };
     }
 }
 
-export const routineAdapter = new RoutineAdapter();
+const routineAdapter = new RoutineAdapter();

@@ -2,6 +2,7 @@ import { List, Paper, } from "@mui/material";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
+import { AddPrivateTemplateFab } from "components/WorkoutRoutines/Overview/Fab";
 import { RoutineList } from "components/WorkoutRoutines/Overview/RoutineOverview";
 import { usePrivateRoutinesShallowQuery } from "components/WorkoutRoutines/queries/routines";
 import React from "react";
@@ -29,10 +30,12 @@ export const PrivateTemplateOverview = () => {
                             routine={r}
                             key={r.id}
                             showTemplateChip={false}
-                            linkDestination={WgerLink.TEMPLATE_DETAIL} />
+                            showTemplateVisibility={true}
+                            linkDestination={WgerLink.ROUTINE_DETAIL} />
                         )}
                     </List>
                 </Paper>}
         </>}
+        fab={<AddPrivateTemplateFab />}
     />;
 };

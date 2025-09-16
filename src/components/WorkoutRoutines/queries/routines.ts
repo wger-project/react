@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Routine } from "components/WorkoutRoutines/models/Routine";
 import {
     addRoutine,
     deleteRoutine,
@@ -12,7 +13,6 @@ import {
     getRoutinesShallow,
     getRoutineStatisticsData
 } from "services";
-import { AddRoutineParams, EditRoutineParams } from "services/routine";
 import { QueryKey, } from "utils/consts";
 
 
@@ -87,7 +87,7 @@ export const useAddRoutineQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: AddRoutineParams) => addRoutine(data),
+        mutationFn: (routine: Routine) => addRoutine(routine),
         onSuccess: () => queryClient.invalidateQueries(
             { queryKey: [QueryKey.ROUTINE_OVERVIEW] }
         ),
@@ -99,7 +99,7 @@ export const useEditRoutineQuery = (id: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: EditRoutineParams) => editRoutine(data),
+        mutationFn: (routine: Routine) => editRoutine(routine),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, id] });

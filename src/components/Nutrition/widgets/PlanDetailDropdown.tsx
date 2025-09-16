@@ -13,7 +13,7 @@ import { makeLink, WgerLink } from "utils/url";
 
 export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
 
-    const deletePlanQuery = useDeleteNutritionalPlanQuery(props.plan.id);
+    const deletePlanQuery = useDeleteNutritionalPlanQuery(props.plan.id!);
     const navigate = useNavigate();
 
     const [t, i18n] = useTranslation();
@@ -40,19 +40,17 @@ export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
     };
 
     const performDelete = () => {
-        deletePlanQuery.mutate(props.plan.id);
+        deletePlanQuery.mutate(props.plan.id!);
         navigate((makeLink(WgerLink.NUTRITION_OVERVIEW)));
     };
 
-    const navigateToPdfDownload = () => window.location.href = makeLink(WgerLink.NUTRITION_PLAN_PDF, i18n.language, { id: props.plan.id });
-    const navigateToCopyPlan = () => window.location.href = makeLink(WgerLink.NUTRITION_PLAN_COPY, i18n.language, { id: props.plan.id });
-
+    const navigateToPdfDownload = () => window.location.href = makeLink(WgerLink.NUTRITION_PLAN_PDF, i18n.language, { id: props.plan.id! });
+    const navigateToCopyPlan = () => window.location.href = makeLink(WgerLink.NUTRITION_PLAN_COPY, i18n.language, { id: props.plan.id! });
 
     const handleOpenEditModal = () => setOpenEditModal(true);
     const handleCloseEditModal = () => setOpenEditModal(false);
     const handleOpenDeleteModal = () => setOpenDeleteModal(true);
     const handleCloseDeleteModal = () => setOpenDeleteModal(false);
-
 
     return <>
         <Button onClick={handleClick}>
@@ -62,9 +60,6 @@ export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
             anchorEl={anchorEl}
             open={open}
             onClose={handleClose}
-            MenuListProps={{
-                'aria-labelledby': 'basic-button',
-            }}
         >
             <MenuItem onClick={handleEdit}>{t("edit")}</MenuItem>
             <MenuItem onClick={navigateToPdfDownload}>{t("downloadAsPdf")}</MenuItem>
