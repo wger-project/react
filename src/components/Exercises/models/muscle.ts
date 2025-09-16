@@ -15,7 +15,7 @@ export class Muscle {
         return i18n.t(getTranslationKey(this.nameEn), { defaultValue: this.nameEn });
     }
 
-    // Return the name and english name of the muscle, if available.
+    // Return the name and English name of the muscle, if available.
     public getName(): string {
         if (this.nameEn) {
             return `${this.name} (${this.translatedName})`;

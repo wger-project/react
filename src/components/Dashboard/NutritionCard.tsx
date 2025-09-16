@@ -80,7 +80,7 @@ function NutritionCardContent(props: { plan: NutritionalPlan }) {
                 />
                 <List>
                     {props.plan.meals.map(meal =>
-                        <MealListItem meal={meal} planId={props.plan.id} key={meal.id} />
+                        <MealListItem meal={meal} planId={props.plan.id!} key={meal.id} />
                     )}
                 </List>
             </CardContent>
@@ -89,7 +89,7 @@ function NutritionCardContent(props: { plan: NutritionalPlan }) {
                 alignItems: "flex-start",
             }}>
                 <Button size="small"
-                        href={makeLink(WgerLink.NUTRITION_DETAIL, i18n.language, { id: props.plan.id })}>
+                        href={makeLink(WgerLink.NUTRITION_DETAIL, i18n.language, { id: props.plan.id! })}>
                     {t('seeDetails')}
                 </Button>
                 <Tooltip title={t('nutrition.logThisMealItem')}>
@@ -104,7 +104,7 @@ function NutritionCardContent(props: { plan: NutritionalPlan }) {
                    closeFn={handleCloseLogModal}>
             <NutritionDiaryEntryForm
                 closeFn={handleCloseLogModal}
-                planId={props.plan.id}
+                planId={props.plan.id!}
                 meals={props.plan.meals}
             />
         </WgerModal>

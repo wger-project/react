@@ -28,25 +28,24 @@ export enum DialogToOpen {
 export const RoutineDetailDropdown = (props: { routine: Routine }) => {
 
     const navigate = useNavigate();
-    const useDeleteQuery = useDeleteRoutineQuery(props.routine.id);
+    const useDeleteQuery = useDeleteRoutineQuery(props.routine.id!);
 
     const [t, i18n] = useTranslation();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState<DialogToOpen>(DialogToOpen.NONE);
+    const [deleteConfirmationOpen, setConfirmationOpen] = useState<DialogToOpen>(DialogToOpen.NONE);
 
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 
-
     const handleDelete = () => {
-        setDeleteConfirmationOpen(DialogToOpen.DELETE_CONFIRMATION);
+        setConfirmationOpen(DialogToOpen.DELETE_CONFIRMATION);
         handleClose(); // Close the dropdown menu
     };
 
     const handleTemplate = () => {
-        setDeleteConfirmationOpen(DialogToOpen.EDIT_TEMPLATE);
+        setConfirmationOpen(DialogToOpen.EDIT_TEMPLATE);
         handleClose();
     };
 
@@ -56,7 +55,7 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
     };
 
     const handleCloseDialogs = () => {
-        setDeleteConfirmationOpen(DialogToOpen.NONE);
+        setConfirmationOpen(DialogToOpen.NONE);
     };
 
     const handleClose = () => {
@@ -75,7 +74,7 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
     const navigateEdit = () => window.location.href = makeLink(
         WgerLink.ROUTINE_EDIT,
         i18n.language,
-        { id: props.routine.id }
+        { id: props.routine.id! }
     );
 
 
@@ -88,33 +87,30 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                }}
             >
                 <MenuItem
-                    disabled={props.routine.isTemplate}
+                    // disabled={props.routine.isTemplate}
                     onClick={navigateEdit}>
                     {t("edit")}
                 </MenuItem>
                 <MenuItem
                     component={Link}
-                    to={makeLink(WgerLink.ROUTINE_DETAIL_TABLE, i18n.language, { id: props.routine.id })}>
+                    to={makeLink(WgerLink.ROUTINE_DETAIL_TABLE, i18n.language, { id: props.routine.id! })}>
                     Table view
                 </MenuItem>
-                <MenuItem
+                {props.routine.isNotTemplate && <MenuItem
                     component={Link}
-                    to={makeLink(WgerLink.ROUTINE_LOGS_OVERVIEW, i18n.language, { id: props.routine.id })}>
+                    to={makeLink(WgerLink.ROUTINE_LOGS_OVERVIEW, i18n.language, { id: props.routine.id! })}>
                     {t("routines.logsOverview")}
-                </MenuItem>
-                <MenuItem
+                </MenuItem>}
+                {props.routine.isNotTemplate && <MenuItem
                     component={Link}
-                    to={makeLink(WgerLink.ROUTINE_STATS_OVERVIEW, i18n.language, { id: props.routine.id })}>
+                    to={makeLink(WgerLink.ROUTINE_STATS_OVERVIEW, i18n.language, { id: props.routine.id! })}>
                     {t("routines.statsOverview")}
-                </MenuItem>
+                </MenuItem>}
                 <MenuItem
                     component="a"
-                    href={makeLink(WgerLink.ROUTINE_COPY, i18n.language, { id: props.routine.id })}
+                    href={makeLink(WgerLink.ROUTINE_COPY, i18n.language, { id: props.routine.id! })}
                 >
                     {t("routines.duplicate")}
                 </MenuItem>
@@ -123,19 +119,19 @@ export const RoutineDetailDropdown = (props: { routine: Routine }) => {
                 </MenuItem>
                 <MenuItem
                     component="a"
-                    href={makeLink(WgerLink.ROUTINE_PDF_TABLE, i18n.language, { id: props.routine.id })}
+                    href={makeLink(WgerLink.ROUTINE_PDF_TABLE, i18n.language, { id: props.routine.id! })}
                     download={`Routine-${props.routine.id}-table.pdf`}>
                     {t("routines.downloadPdfTable")}
                 </MenuItem>
                 <MenuItem
                     component="a"
-                    href={makeLink(WgerLink.ROUTINE_PDF_LOGS, i18n.language, { id: props.routine.id })}
+                    href={makeLink(WgerLink.ROUTINE_PDF_LOGS, i18n.language, { id: props.routine.id! })}
                     download={`Routine-${props.routine.id}-logs.pdf`}>
                     {t("routines.downloadPdfLogs")}
                 </MenuItem>
                 <MenuItem
                     component="a"
-                    href={makeLink(WgerLink.ROUTINE_ICAL, i18n.language, { id: props.routine.id })}
+                    href={makeLink(WgerLink.ROUTINE_ICAL, i18n.language, { id: props.routine.id! })}
                     download={`Routine-${props.routine.id}-calendar.ics`}>
                     {t("routines.downloadIcal")}
                 </MenuItem>

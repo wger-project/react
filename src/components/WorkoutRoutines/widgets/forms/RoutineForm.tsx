@@ -27,14 +27,16 @@ import * as yup from 'yup';
 
 interface RoutineFormProps {
     routine?: Routine,
+    isTemplate?: boolean,
+    isPublicTemplate?: boolean,
     closeFn?: Function,
 }
 
-export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
+export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = true, closeFn }: RoutineFormProps) => {
 
     const [t, i18n] = useTranslation();
     const addRoutineQuery = useAddRoutineQuery();
-    const editRoutineQuery = useEditRoutineQuery(routine?.id!);
+    const editRoutineQuery = useEditRoutineQuery(routine?.id ?? -1);
     const navigate = useNavigate();
 
     /*
@@ -112,23 +114,28 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
             validationSchema={validationSchema}
             onSubmit={async (values) => {
                 if (routine) {
-                    editRoutineQuery.mutate({
-                        ...values,
-                        fit_in_week: values.fitInWeek,
-                        start: values.start?.toISODate()!,
-                        end: values.end?.toISODate()!,
-                        id: routine.id
-                    });
+                    const newRoutine = Routine.clone(routine);
+                    newRoutine.fitInWeek = values.fitInWeek;
+                    newRoutine.name = values.name;
+                    newRoutine.description = values.description;
+                    newRoutine.start = values.start!.toJSDate();
+                    newRoutine.end = values.end!.toJSDate();
+                    editRoutineQuery.mutate(newRoutine);
+
                 } else {
-                    const result = await addRoutineQuery.mutateAsync({
-                        ...values,
-                        fit_in_week: values.fitInWeek,
-                        start: values.start?.toISODate()!,
-                        end: values.end?.toISODate()!,
-                    });
+                    const result = await addRoutineQuery.mutateAsync(new Routine({
+                        id: null,
+                        name: values.name,
+                        description: values.description,
+                        created: new Date(),
+                        start: values.start!.toJSDate(),
+                        end: values.end?.toJSDate(),
+                        fitInWeek: values.fitInWeek,
+                        isTemplate: isTemplate,
+                        isPublic: isPublicTemplate
+                    }));
 
-                    navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id }));
-
+                    navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
 
                     if (closeFn) {
                         closeFn();
@@ -139,10 +146,18 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
             {formik => (
                 <Form>
                     <Grid container spacing={2}>
-                        <Grid size={{ xs: 12, sm: 5 }}>
+
+                        <Grid size={{ xs: 12 }}>
                             <WgerTextField fieldName="name" title={t('name')} />
                         </Grid>
-                        <Grid size={{ xs: 6, sm: 3 }}>
+                        <Grid size={12}>
+                            <WgerTextField
+                                fieldName="description"
+                                title={t('description')}
+                                fieldProps={{ multiline: true, rows: 4 }}
+                            />
+                        </Grid>
+                        <Grid size={{ xs: 6 }}>
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
@@ -165,7 +180,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                                 />
                             </LocalizationProvider>
                         </Grid>
-                        <Grid size={{ xs: 6, sm: 3 }}>
+                        <Grid size={{ xs: 5 }}>
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
@@ -189,7 +204,7 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                             </LocalizationProvider>
                         </Grid>
                         <Grid
-                            size={{ xs: 12, sm: 1 }}
+                            size={{ xs: 1 }}
                             sx={{
                                 display: "flex",
                                 alignItems: "center",
@@ -201,13 +216,6 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
                                 nrWeeks: durationWeeks,
                                 nrDays: durationDays
                             })}
-                        </Grid>
-                        <Grid size={12}>
-                            <WgerTextField
-                                fieldName="description"
-                                title={t('description')}
-                                fieldProps={{ multiline: true, rows: 4 }}
-                            />
                         </Grid>
                         <Grid size={12}>
                             <FormControlLabel

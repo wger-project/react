@@ -2,7 +2,7 @@ import { Alert, Box, Stack } from "@mui/material";
 
 import { UseQueryResult } from "@tanstack/react-query";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import React from "react";
+import React, { JSX } from "react";
 
 
 export const RenderLoadingQuery = (props: { query: UseQueryResult, child: JSX.Element | boolean }) => {

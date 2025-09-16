@@ -118,7 +118,6 @@ export const DayForm = (props: {
                                 title="Name"
                                 fieldProps={{ disabled: isRest }}
                             />
-
                         </Grid>
                         <Grid size={{ xs: 6, sm: 2 }}>
                             <FormControlLabel
