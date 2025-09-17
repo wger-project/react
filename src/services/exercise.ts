@@ -80,26 +80,25 @@ type AliasSubmissionProps = {
     alias: string
 }
 type NotesSubmissionProps = {
-    note: string
+    comment: string
 }
 type TranslationSubmissionProps = {
     name: string,
     description: string,
     language: number,
     aliases?: AliasSubmissionProps[],
-    notes?: NotesSubmissionProps[]
+    comments?: NotesSubmissionProps[]
 }
 
-export const addFullExercise = async (
-    data: {
-        author?: string,
-        exercise: ExerciseSubmissionProps,
-        variation?: number | null,
-        translations: TranslationSubmissionProps[],
-        images?: []
+export type AddExerciseFullProps = {
+    author?: string,
+    exercise: ExerciseSubmissionProps,
+    variation?: number | null,
+    translations: TranslationSubmissionProps[],
+    images?: []
+}
 
-    }
-): Promise<number> => {
+export const addFullExercise = async (data: AddExerciseFullProps): Promise<number> => {
 
     const url = makeUrl(EXERCISE_PATH, { objectMethod: 'submission' });
 
@@ -119,7 +118,7 @@ export const addFullExercise = async (
                     //eslint-disable-next-line camelcase
                     license_author: data.author,
                     aliases: t.aliases ?? [],
-                    comments: t.notes ?? []
+                    comments: t.comments ?? []
                 })
             )
         ]

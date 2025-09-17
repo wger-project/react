@@ -22,6 +22,7 @@ import Grid from '@mui/material/Grid';
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { Exercise } from "components/Exercises/models/exercise";
+
 import { useExercisesQuery } from "components/Exercises/queries";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

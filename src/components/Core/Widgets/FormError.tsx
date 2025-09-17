@@ -1,6 +1,7 @@
 import { Alert, AlertTitle } from "@mui/material";
 import { collectValidationErrors } from "utils/forms";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FormQueryErrors = (props: { mutationQuery: any }) => {
     if (!props.mutationQuery?.isError) {
         return null;

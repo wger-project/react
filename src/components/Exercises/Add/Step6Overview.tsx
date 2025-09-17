@@ -15,13 +15,19 @@ import {
 import Grid from '@mui/material/Grid';
 import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { FormQueryErrors } from "components/Core/Widgets/FormError";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
+import {
+    useAddExerciseFullQuery,
+    useCategoriesQuery,
+    useEquipmentQuery,
+    useLanguageQuery,
+    useMusclesQuery
+} from "components/Exercises/queries";
 import { useProfileQuery } from "components/User/queries/profile";
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { addFullExercise } from "services";
 import { useExerciseSubmissionStateValue } from "state";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
@@ -37,13 +43,9 @@ export const Step6Overview = ({ onBack }: StepProps) => {
     const equipmentQuery = useEquipmentQuery();
     const profileQuery = useProfileQuery();
 
-    // This could be handled better and more cleanly...
-    type submissionStatus = 'initial' | 'loading' | 'done';
-    const [submissionState, setSubmissionState] = useState<submissionStatus>('initial',);
+    const addFullExerciseMutation = useAddExerciseFullQuery();
 
     const submitExercise = async () => {
-
-        setSubmissionState('loading');
 
         // TODO: handle variations properly
         const variationId: number | null = state.variationId;
@@ -52,9 +54,8 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         // } else {
         //     ....
         // }
-
         // Create the exercise
-        await addFullExercise({
+        await addFullExerciseMutation.mutateAsync({
             exercise: {
                 categoryId: state.category as number,
                 equipmentIds: state.equipment,
@@ -71,8 +72,8 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                     aliases: [
                         ...state.alternativeNamesEn.map(name => ({ alias: name }))
                     ],
-                    notes: [
-                        ...state.notesEn.map(name => ({ note: name }))
+                    comments: [
+                        ...state.notesEn.map(name => ({ comment: name }))
                     ]
                 },
                 ...(state.languageId !== null ? [{
@@ -82,15 +83,14 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                     aliases: [
                         ...state.alternativeNamesI18n.map(name => ({ alias: name }))
                     ],
-                    notes: [
-                        ...state.notesI18n.map(name => ({ note: name }))
+                    comments: [
+                        ...state.notesI18n.map(name => ({ comment: name }))
                     ]
                 }] : [])
             ]
         });
 
         console.log("Exercise created");
-        setSubmissionState('done');
     };
 
     const navigateToOverview = () => {
@@ -200,21 +200,24 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                 </>
             )}
 
-            {!(submissionState === 'done')
-                ? <Alert severity="info" sx={{ mt: 2 }}>
+            <Box sx={{ mt: 2 }}>
+                {addFullExerciseMutation.isIdle && <Alert severity="info">
                     {t('exercises.checkInformationBeforeSubmitting')}
-                </Alert>
-                : <Alert severity="success" sx={{ mt: 2 }}>
+                </Alert>}
+
+                {addFullExerciseMutation.isSuccess && <Alert severity="success">
                     <AlertTitle>{t('success')}</AlertTitle>
                     {t('exercises.cacheWarning')}
-                </Alert>
-            }
+                </Alert>}
+
+                <FormQueryErrors mutationQuery={addFullExerciseMutation} />
+            </Box>
 
             <Grid container>
                 <Grid display="flex" justifyContent={"end"} size={12}>
                     <Box sx={{ mb: 2 }}>
                         <div>
-                            {submissionState !== 'done' &&
+                            {!addFullExerciseMutation.isSuccess &&
                                 <Button
                                     onClick={onBack}
                                     sx={{ mt: 1, mr: 1 }}
@@ -222,10 +225,10 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                                     {t('goBack')}
                                 </Button>
                             }
-                            {submissionState !== 'done'
+                            {!addFullExerciseMutation.isSuccess
                                 && <Button
                                     variant="contained"
-                                    disabled={submissionState !== 'initial'}
+                                    disabled={addFullExerciseMutation.isError || addFullExerciseMutation.isPending}
                                     onClick={submitExercise}
                                     sx={{ mt: 1, mr: 1 }}
                                     color="info"
@@ -233,7 +236,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                                     {t('exercises.submitExercise')}
                                 </Button>
                             }
-                            {submissionState === 'done'
+                            {addFullExerciseMutation.isSuccess
                                 && <Button
                                     variant="contained"
                                     onClick={navigateToOverview}
