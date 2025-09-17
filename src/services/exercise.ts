@@ -68,40 +68,74 @@ export const getExercisesForVariation = async (id: number | null | undefined): P
 };
 
 /*
- * Create a new exercise base
+ * Create a new exercise with all its sub-entities
  */
-export const addExercise = async (
+type ExerciseSubmissionProps = {
     categoryId: number,
     equipmentIds: number[],
     muscleIds: number[],
     secondaryMuscleIds: number[],
-    variationId: number | null,
-    author: string | null
+}
+type AliasSubmissionProps = {
+    alias: string
+}
+type NotesSubmissionProps = {
+    note: string
+}
+type TranslationSubmissionProps = {
+    name: string,
+    description: string,
+    language: number,
+    aliases?: AliasSubmissionProps[],
+    notes?: NotesSubmissionProps[]
+}
+
+export const addFullExercise = async (
+    data: {
+        author?: string,
+        exercise: ExerciseSubmissionProps,
+        variation?: number | null,
+        translations: TranslationSubmissionProps[],
+        images?: []
+
+    }
 ): Promise<number> => {
 
-    const url = makeUrl(EXERCISE_PATH);
-    const baseData = {
-        category: categoryId,
-        equipment: equipmentIds,
-        muscles: muscleIds,
+    const url = makeUrl(EXERCISE_PATH, { objectMethod: 'submission' });
+
+    const payload = {
+        category: data.exercise.categoryId,
+        equipment: data.exercise.equipmentIds,
+        muscles: data.exercise.muscleIds,
         // eslint-disable-next-line camelcase
-        muscles_secondary: secondaryMuscleIds,
+        muscles_secondary: data.exercise.secondaryMuscleIds,
         // eslint-disable-next-line camelcase
-        variation_id: variationId,
-        // eslint-disable-next-line camelcase
-        license_author: author
+        license_author: data.author,
+        translations: [
+            ...data.translations.map(t => ({
+                    name: t.name,
+                    description: t.description,
+                    language: t.language,
+                    //eslint-disable-next-line camelcase
+                    license_author: data.author,
+                    aliases: t.aliases ?? [],
+                    comments: t.notes ?? []
+                })
+            )
+        ]
     };
-    const response = await axios.post(
+
+    const result = await axios.post(
         url,
-        baseData,
+        payload,
         { headers: makeHeader() }
     );
-
-    return response.data.id;
+    console.log(result);
+    return 1;
 };
 
 /*
- * Update an existing exercise base
+ * Update an existing exercise
  */
 type EditExerciseProps = {
     category?: number,

@@ -18,8 +18,8 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
     const [state, dispatch] = useExerciseSubmissionStateValue();
 
     const validationSchema = yup.object({
-        description: descriptionValidator(t),
-        notes: noteValidator(t)
+        description: descriptionValidator(),
+        notes: noteValidator()
     });
 
     return (

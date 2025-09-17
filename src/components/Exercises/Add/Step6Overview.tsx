@@ -16,15 +16,12 @@ import Grid from '@mui/material/Grid';
 import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { Note } from "components/Exercises/models/note";
 import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
 import { useProfileQuery } from "components/User/queries/profile";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { addExercise, addTranslation, postAlias, postExerciseImage } from "services";
-import { addNote } from "services/note";
-import { addVariation } from "services/variation";
+import { addFullExercise } from "services";
 import { useExerciseSubmissionStateValue } from "state";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
@@ -48,72 +45,49 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
         setSubmissionState('loading');
 
-        // Create a new variation object if needed
-        // TODO: PATCH the other exercise base (newVariationExerciseId) with the new variation id
-        let variationId;
-        if (state.newVariationExerciseId !== null) {
-            variationId = await addVariation();
-        } else {
-            variationId = state.variationId;
-        }
+        // TODO: handle variations properly
+        const variationId: number | null = state.variationId;
+        // if (state.newVariationExerciseId !== null) {
+        //     ...
+        // } else {
+        //     ....
+        // }
 
         // Create the exercise
-        const exerciseId = await addExercise(
-            state.category as number,
-            state.equipment,
-            state.muscles,
-            state.musclesSecondary,
-            variationId,
-            profileQuery.data!.username
-        );
-
-        // Create the English translation
-        const translation = await addTranslation({
-            exerciseId: exerciseId,
-            languageId: ENGLISH_LANGUAGE_ID,
-            name: state.nameEn,
-            description: state.descriptionEn,
-            author: profileQuery.data!.username
+        await addFullExercise({
+            exercise: {
+                categoryId: state.category as number,
+                equipmentIds: state.equipment,
+                muscleIds: state.muscles,
+                secondaryMuscleIds: state.musclesSecondary,
+            },
+            author: profileQuery.data!.username,
+            variation: variationId,
+            translations: [
+                {
+                    language: ENGLISH_LANGUAGE_ID,
+                    name: state.nameEn,
+                    description: state.descriptionEn,
+                    aliases: [
+                        ...state.alternativeNamesEn.map(name => ({ alias: name }))
+                    ],
+                    notes: [
+                        ...state.notesEn.map(name => ({ note: name }))
+                    ]
+                },
+                ...(state.languageId !== null ? [{
+                    language: state.languageId,
+                    name: state.nameI18n,
+                    description: state.descriptionI18n,
+                    aliases: [
+                        ...state.alternativeNamesI18n.map(name => ({ alias: name }))
+                    ],
+                    notes: [
+                        ...state.notesI18n.map(name => ({ note: name }))
+                    ]
+                }] : [])
+            ]
         });
-
-        // For each entry in alternative names, create a new alias
-        for (const alias of state.alternativeNamesEn) {
-            await postAlias(translation.id!, alias);
-        }
-
-        // Post the images
-        for (const image of state.images) {
-            await postExerciseImage({
-                exerciseId: exerciseId,
-                image: image.file,
-                imageData: image,
-            });
-        }
-
-        // Post the notes
-        for (const note of state.notesEn) {
-            await addNote(new Note(null, translation.id!, note));
-        }
-
-
-        // Create the translation if needed
-        if (state.languageId !== null) {
-            const exerciseI18n = await addTranslation({
-                exerciseId: exerciseId,
-                languageId: state.languageId,
-                name: state.nameI18n,
-                description: state.descriptionI18n,
-                author: profileQuery.data!.username
-            });
-
-            for (const alias of state.alternativeNamesI18n) {
-                await postAlias(exerciseI18n.id!, alias);
-            }
-
-            for (const note of state.notesI18n) {
-                await addNote(new Note(null, exerciseI18n.id!, note));
-            }
-        }
 
         console.log("Exercise created");
         setSubmissionState('done');

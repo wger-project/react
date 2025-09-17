@@ -49,10 +49,10 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
 
     const validationSchema = yup.object(
         translateExercise ? {
-            description: descriptionValidator(t),
-            name: nameValidator(t),
-            alternativeNames: alternativeNameValidator(t),
-            notes: noteValidator(t),
+            description: descriptionValidator(),
+            name: nameValidator(),
+            alternativeNames: alternativeNameValidator(),
+            notes: noteValidator(),
             language: yup
                 .number()
                 .required(),

@@ -37,9 +37,9 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
     const equipmentQuery = useEquipmentQuery();
 
     const validationSchema = yup.object({
-        nameEn: nameValidator(t),
-        newAlternativeNameEn: alternativeNameValidator(t),
-        category: categoryValidator(t),
+        nameEn: nameValidator(),
+        newAlternativeNameEn: alternativeNameValidator(),
+        category: categoryValidator(),
     });
 
     return (
