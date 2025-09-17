@@ -67,11 +67,11 @@ describe("Render tests", () => {
             await new Promise((r) => setTimeout(r, 20));
         });
 
-        expect(useLanguageQuery).toBeCalled();
-        expect(usePermissionQuery).toBeCalled();
-        expect(useProfileQuery).toBeCalled();
-        expect(getExercise).toBeCalled();
-        expect(getExercisesForVariation).toBeCalled();
+        expect(useLanguageQuery).toHaveBeenCalled();
+        expect(usePermissionQuery).toHaveBeenCalled();
+        expect(useProfileQuery).toHaveBeenCalled();
+        expect(getExercise).toHaveBeenCalled();
+        expect(getExercisesForVariation).toHaveBeenCalled();
 
         expect(screen.getByText("exercises.description")).toBeInTheDocument();
         expect(screen.getByText("Squats")).toBeInTheDocument();

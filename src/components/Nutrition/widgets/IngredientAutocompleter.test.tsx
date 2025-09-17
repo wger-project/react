@@ -55,6 +55,6 @@ describe("Test the IngredientAutocompleter component", () => {
         await user.keyboard('{ArrowDown}{Enter}');
 
         // Assert
-        expect(mockCallback).lastCalledWith(INGREDIENT_SEARCH[0]);
+        expect(mockCallback).toHaveBeenLastCalledWith(INGREDIENT_SEARCH[0]);
     });
 });

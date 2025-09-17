@@ -41,7 +41,7 @@ describe('editDay', () => {
         const errorMessage = 'Network Error';
         mockedAxios.patch.mockRejectedValue(new Error(errorMessage));
 
-        await expect(editDay(mockEditDayParams)).rejects.toThrowError(errorMessage);
+        await expect(editDay(mockEditDayParams)).rejects.toThrow(errorMessage);
         expect(axios.patch).toHaveBeenCalledTimes(1);
     });
 });

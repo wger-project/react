@@ -43,7 +43,7 @@ describe('Test the MealForm component', () => {
 
         // Assert
         expect(mutateEditMock).not.toHaveBeenCalled();
-        expect(closeFnMock).toBeCalled();
+        expect(closeFnMock).toHaveBeenCalled();
         expect(mutateAddMock).toHaveBeenCalledWith({
             name: '2nd breakfast',
             plan: 987,
@@ -71,7 +71,7 @@ describe('Test the MealForm component', () => {
 
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
-        expect(closeFnMock).toBeCalled();
+        expect(closeFnMock).toHaveBeenCalled();
         expect(mutateEditMock).toHaveBeenCalledWith({
             id: 78,
             name: '2nd breakfast',
