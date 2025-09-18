@@ -100,3 +100,5 @@ export {
 export { getProfile, editProfile } from './profile';
 
 export { processBaseConfigs } from './base_config';
+
+export { checkLanguage } from 'services/languageCheck';

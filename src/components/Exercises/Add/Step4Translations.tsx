@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
+import { useLanguageCheckQuery } from "components/Core/queries";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
@@ -42,6 +43,7 @@ import * as yup from "yup";
 export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
     const languageQuery = useLanguageQuery();
+    const languageCheckQuery = useLanguageCheckQuery();
     const [state, dispatch] = useExerciseSubmissionStateValue();
 
     const [translateExercise, setTranslateExercise] = useState<boolean>(state.languageId !== null);
@@ -69,7 +71,24 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
                 notes: state.notesI18n
             }}
             validationSchema={validationSchema}
-            onSubmit={(values) => {
+            onSubmit={async (values, { setFieldError }) => {
+                let canContinue = false;
+
+                const validationResult = await languageCheckQuery.mutateAsync({
+                    input: values.description,
+                    languageId: values.language! as unknown as number
+                });
+
+
+                // @ts-ignore - validationResult contains the message from the backend
+                if ("success" in validationResult) {
+                    canContinue = true;
+                } else {
+                    canContinue = false;
+
+                    // @ts-ignore - validationResult contains the message from the backend
+                    setFieldError('description', validationResult.check.message);
+                }
 
                 dispatch(setNameI18n(values.name));
                 dispatch(setDescriptionI18n(values.description));
@@ -77,7 +96,9 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
                 dispatch(setLanguageId(values.language === '' ? null : values.language as unknown as number));
                 dispatch(setNotesI18n(values.notes));
 
-                onContinue!();
+                if (canContinue) {
+                    onContinue!();
+                }
             }}
         >{formik => (
             <Form>
