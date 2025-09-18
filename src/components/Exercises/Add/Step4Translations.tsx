@@ -72,23 +72,25 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
             }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setFieldError }) => {
-                let canContinue = false;
+                let canContinue = true;
 
-                const validationResult = await languageCheckQuery.mutateAsync({
-                    input: values.description,
-                    languageId: values.language! as unknown as number
-                });
-
-
-                // @ts-ignore - validationResult contains the message from the backend
-                if ("success" in validationResult) {
-                    canContinue = true;
-                } else {
-                    canContinue = false;
+                if (values.description !== '') {
+                    const validationResult = await languageCheckQuery.mutateAsync({
+                        input: values.description,
+                        languageId: values.language! as unknown as number
+                    });
 
                     // @ts-ignore - validationResult contains the message from the backend
-                    setFieldError('description', validationResult.check.message);
+                    if ("success" in validationResult) {
+                        canContinue = true;
+                    } else {
+                        canContinue = false;
+
+                        // @ts-ignore - validationResult contains the message from the backend
+                        setFieldError('description', validationResult.check.message);
+                    }
                 }
+
 
                 dispatch(setNameI18n(values.name));
                 dispatch(setDescriptionI18n(values.description));

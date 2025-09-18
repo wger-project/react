@@ -8,11 +8,12 @@ import {
     AvatarGroup,
     Box,
     Button,
-    Divider,
     InputAdornment,
     List,
     ListItem,
     ListItemButton,
+    ListItemIcon,
+    ListItemText,
     Paper,
     Switch,
     TextField,
@@ -96,56 +97,33 @@ const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
     return (
         <ListItem disableGutters>
             <ListItemButton onClick={handleToggle(variationId, exerciseId)}>
-                <Grid container>
-                    <Grid
-                        display="flex"
-                        justifyContent={"start"}
-                        alignItems={"center"}
-                        size={{
-                            xs: 12,
-                            sm: 3
-                        }}>
-                        <AvatarGroup max={MAX_EXERCISE_IMAGES} spacing={"small"}>
-                            {exercises.map((base) =>
-                                base.mainImage
-                                    ? <Avatar key={base.id} src={base.mainImage.url} />
-                                    : <Avatar key={base.id} children={<PhotoIcon />} />
-                            )}
-                        </AvatarGroup>
-                    </Grid>
-                    <Grid
-                        size={{
-                            xs: 10,
-                            sm: 7
-                        }}>
-                        { /* map the bases */}
-                        {exercises.slice(0, showMore ? exercises.length : MAX_EXERCISE_NAMES).map((base) =>
-                            <p style={{ margin: 0 }} key={base.id}>{base.getTranslation().name}</p>
+                <ListItemIcon>
+                    <AvatarGroup max={MAX_EXERCISE_IMAGES} spacing={"small"}>
+                        {exercises.map((base) =>
+                            base.mainImage
+                                ? <Avatar key={base.id} src={base.mainImage.url} />
+                                : <Avatar key={base.id} children={<PhotoIcon />} />
                         )}
-                        {!showMore && exercises.length > MAX_EXERCISE_NAMES
-                            ? <ExpandMoreIcon onMouseEnter={() => setShowMore(true)} />
-                            : null
-                        }
-                    </Grid>
-                    <Grid
-                        display="flex"
-                        justifyContent={"end"}
-                        size={{
-                            xs: 2,
-                            sm: 2
-                        }}>
-                        <Switch
-                            key={`variation-${variationId}`}
-                            edge="start"
-                            checked={isChecked}
-                            tabIndex={-1}
-                            disableRipple
-                        />
-                    </Grid>
-                    <Grid size={12}>
-                        <Divider sx={{ pt: 1 }} />
-                    </Grid>
-                </Grid>
+                    </AvatarGroup>
+                </ListItemIcon>
+                <ListItemText
+                    primary={exercises.slice(0, showMore ? exercises.length : MAX_EXERCISE_NAMES).map((exercise) =>
+                        <p style={{ margin: 0 }} key={exercise.id}>{exercise.getTranslation().name}</p>
+                    )} />
+
+                <Switch
+                    key={`variation-${variationId}`}
+                    edge="start"
+                    checked={isChecked}
+                    tabIndex={-1}
+                    disableRipple
+                />
+
+                {!showMore && exercises.length > MAX_EXERCISE_NAMES
+                    ? <ExpandMoreIcon onMouseEnter={() => setShowMore(true)} />
+                    : null
+                }
+
             </ListItemButton>
         </ListItem>
     );
@@ -154,20 +132,21 @@ const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
 
 export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
-    const basesQuery = useExercisesQuery();
+    const exercisesQuery = useExercisesQuery();
+    const [state, dispatch] = useExerciseSubmissionStateValue();
 
-    const [searchTerm, setSearchTerms] = useState<string>('');
+    const [searchTerm, setSearchTerms] = useState<string>(state.nameEn);
 
-    // Group bases by variationId
-    let bases: Exercise[] = [];
-    let groupedBases = new Map<number, Exercise[]>();
-    if (basesQuery.isSuccess) {
-        bases = basesQuery.data;
+    // Group exercises by variationId
+    let exercises: Exercise[] = [];
+    let groupedExercises = new Map<number, Exercise[]>();
+    if (exercisesQuery.isSuccess) {
+        exercises = exercisesQuery.data;
         if (searchTerm !== '') {
-            bases = bases.filter((base) => base.getTranslation().name.toLowerCase().includes(searchTerm.toLowerCase()));
+            exercises = exercises.filter((base) => base.getTranslation().name.toLowerCase().includes(searchTerm.toLowerCase()));
         }
     }
-    groupedBases = groupBy(bases.filter(b => b.variationId !== null), (b: Exercise) => b.variationId);
+    groupedExercises = groupBy(exercises.filter(b => b.variationId !== null), (b: Exercise) => b.variationId);
 
     return <>
         <Grid container>
@@ -185,40 +164,43 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
                     xs: 12,
                     sm: 6
                 }}>
-                <TextField label={t('exercises.filterVariations')}
-                           variant="standard"
-                           onChange={(event) => setSearchTerms(event.target.value)}
-                           InputProps={{
-                               startAdornment: (
-                                   <InputAdornment position="start">
-                                       <SearchIcon />
-                                   </InputAdornment>
-                               ),
-                           }}
+                <TextField
+                    label={t('exercises.filterVariations')}
+                    defaultValue={state.nameEn}
+                    variant="standard"
+                    onChange={(event) => setSearchTerms(event.target.value)}
+                    slotProps={{
+                        input: {
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }
+                    }}
                 />
             </Grid>
         </Grid>
 
-        {basesQuery.isLoading ? (
-            <LoadingPlaceholder />
-        ) : (
-            <Paper elevation={2} sx={{ mt: 2 }}>
-                <List style={{ maxHeight: "400px", overflowY: "scroll" }}>
-                    {bases.filter(b => b.variationId === null).map(base =>
+        {exercisesQuery.isLoading
+            ? <LoadingPlaceholder />
+            : <Paper elevation={2} sx={{ mt: 2 }}>
+                <List style={{ height: "400px", overflowY: "scroll" }}>
+                    {exercises.filter(b => b.variationId === null).map(exercise =>
                         <ExerciseInfoListItem
-                            exercises={[base]}
-                            key={'base-' + base.id}
+                            exercises={[exercise]}
+                            key={'exercise-' + exercise.id}
                         />
                     )}
-                    {[...groupedBases.keys()].map(variationId =>
+                    {[...groupedExercises.keys()].map(variationId =>
                         <ExerciseInfoListItem
-                            exercises={groupedBases.get(variationId)!}
+                            exercises={groupedExercises.get(variationId)!}
                             key={'variation-' + variationId}
                         />
                     )}
                 </List>
             </Paper>
-        )}
+        }
 
         <Alert severity="info" variant="filled" sx={{ mt: 2 }}>
             <AlertTitle>{t("exercises.identicalExercise")}</AlertTitle>
