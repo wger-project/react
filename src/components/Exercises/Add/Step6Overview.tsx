@@ -43,7 +43,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
     const equipmentQuery = useEquipmentQuery();
     const profileQuery = useProfileQuery();
 
-    const addFullExerciseMutation = useAddExerciseFullQuery();
+    const addExerciseSubmissionMutation = useAddExerciseFullQuery();
 
     const submitExercise = async () => {
 
@@ -55,7 +55,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         //     ....
         // }
         // Create the exercise
-        await addFullExerciseMutation.mutateAsync({
+        await addExerciseSubmissionMutation.mutateAsync({
             exercise: {
                 categoryId: state.category as number,
                 equipmentIds: state.equipment,
@@ -197,23 +197,23 @@ export const Step6Overview = ({ onBack }: StepProps) => {
             )}
 
             <Box sx={{ mt: 2 }}>
-                {addFullExerciseMutation.isIdle && <Alert severity="info">
+                {addExerciseSubmissionMutation.isIdle && <Alert severity="info">
                     {t('exercises.checkInformationBeforeSubmitting')}
                 </Alert>}
 
-                {addFullExerciseMutation.isSuccess && <Alert severity="success">
+                {addExerciseSubmissionMutation.isSuccess && <Alert severity="success">
                     <AlertTitle>{t('success')}</AlertTitle>
                     {t('exercises.cacheWarning')}
                 </Alert>}
 
-                <FormQueryErrors mutationQuery={addFullExerciseMutation} />
+                <FormQueryErrors mutationQuery={addExerciseSubmissionMutation} />
             </Box>
 
             <Grid container>
                 <Grid display="flex" justifyContent={"end"} size={12}>
                     <Box sx={{ mb: 2 }}>
                         <div>
-                            {!addFullExerciseMutation.isSuccess &&
+                            {!addExerciseSubmissionMutation.isSuccess &&
                                 <Button
                                     onClick={onBack}
                                     sx={{ mt: 1, mr: 1 }}
@@ -221,10 +221,10 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                                     {t('goBack')}
                                 </Button>
                             }
-                            {!addFullExerciseMutation.isSuccess
+                            {!addExerciseSubmissionMutation.isSuccess
                                 && <Button
                                     variant="contained"
-                                    disabled={addFullExerciseMutation.isError || addFullExerciseMutation.isPending}
+                                    disabled={addExerciseSubmissionMutation.isError || addExerciseSubmissionMutation.isPending}
                                     onClick={submitExercise}
                                     sx={{ mt: 1, mr: 1 }}
                                     color="info"
@@ -232,10 +232,10 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                                     {t('exercises.submitExercise')}
                                 </Button>
                             }
-                            {addFullExerciseMutation.isSuccess
+                            {addExerciseSubmissionMutation.isSuccess
                                 && <Button
                                     variant="contained"
-                                    onClick={() => navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: addFullExerciseMutation.data! }))}
+                                    onClick={() => navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: addExerciseSubmissionMutation.data! }))}
                                     sx={{ mt: 1, mr: 1 }}
                                     color="success"
                                 >
