@@ -93,10 +93,6 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         console.log("Exercise created");
     };
 
-    const navigateToOverview = () => {
-        navigate(makeLink(WgerLink.EXERCISE_OVERVIEW, i18n.language));
-    };
-
     return equipmentQuery.isLoading || languageQuery.isLoading || musclesQuery.isLoading || categoryQuery.isLoading
         ? <LoadingPlaceholder />
         : <>
@@ -239,11 +235,11 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                             {addFullExerciseMutation.isSuccess
                                 && <Button
                                     variant="contained"
-                                    onClick={navigateToOverview}
+                                    onClick={() => navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: addFullExerciseMutation.data! }))}
                                     sx={{ mt: 1, mr: 1 }}
                                     color="success"
                                 >
-                                    {t('overview')}
+                                    {t('seeDetails')}
                                     <NavigateNextIcon />
                                 </Button>
                             }

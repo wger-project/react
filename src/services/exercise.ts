@@ -5,6 +5,7 @@ import { ResponseType } from "./responseType";
 
 export const EXERCISE_INFO_PATH = 'exerciseinfo';
 export const EXERCISE_PATH = 'exercise';
+export const EXERCISE_SUBMISSION_PATH = 'exercise-submission';
 
 /*
  * Process the response from the server and return the exercise bases
@@ -100,7 +101,7 @@ export type AddExerciseFullProps = {
 
 export const addFullExercise = async (data: AddExerciseFullProps): Promise<number> => {
 
-    const url = makeUrl(EXERCISE_PATH, { objectMethod: 'submission' });
+    const url = makeUrl(EXERCISE_SUBMISSION_PATH);
 
     const payload = {
         category: data.exercise.categoryId,
@@ -129,8 +130,7 @@ export const addFullExercise = async (data: AddExerciseFullProps): Promise<numbe
         payload,
         { headers: makeHeader() }
     );
-    console.log(result);
-    return 1;
+    return result.data.id;
 };
 
 /*
