@@ -401,11 +401,8 @@ export const DayDetails = (props: {
                                     </Grid>
                                 )}
                             </Draggable>
-                            <Box height={0}>
-                                {provided.placeholder}
-                            </Box>
-
                         </React.Fragment>)}
+                        {provided.placeholder}
                     </div>
                 )}
             </Droppable>
