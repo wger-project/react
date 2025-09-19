@@ -7,7 +7,8 @@ GREEN='\033[0;32m'
 NC='\033[0m'
 
 if [ -d "$STATIC_FOLDER" ]; then
-    cp build/assets/index-*.js $STATIC_FOLDER/main.js
+    cp build/main.js $STATIC_FOLDER/main.js
+    cp build/main.js.map $STATIC_FOLDER/main.js.map
     cp build/assets/index-*.css $STATIC_FOLDER/main.css
     cp -r build/locales $STATIC_FOLDER/
     cp -r build/muscles $STATIC_FOLDER/
