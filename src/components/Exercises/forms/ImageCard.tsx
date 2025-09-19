@@ -52,7 +52,7 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
         const [uploadedFile] = e.target.files;
         if (profileQuery.isSuccess) {
 
-            await addImageQuery.mutate({
+            await addImageQuery.mutateAsync({
                 exerciseId: exerciseId,
                 image: uploadedFile,
                 imageData: {

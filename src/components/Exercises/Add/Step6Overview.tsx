@@ -28,6 +28,7 @@ import { useProfileQuery } from "components/User/queries/profile";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { postExerciseImage } from "services";
 import { useExerciseSubmissionStateValue } from "state";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
@@ -55,7 +56,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         //     ....
         // }
         // Create the exercise
-        await addExerciseSubmissionMutation.mutateAsync({
+        const exerciseId = await addExerciseSubmissionMutation.mutateAsync({
             exercise: {
                 categoryId: state.category as number,
                 equipmentIds: state.equipment,
@@ -87,10 +88,19 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                         ...state.notesI18n.map(name => ({ comment: name }))
                     ]
                 }] : [])
-            ]
+            ],
         });
 
-        console.log("Exercise created");
+        // Post the images individually, it seems to be more reliable this way
+        // and most problems were happening when creating the exercise itself
+        for (const image of state.images) {
+            await postExerciseImage({
+                exerciseId: exerciseId,
+                image: image.file,
+                imageData: image,
+            });
+        }
+        
     };
 
     return equipmentQuery.isLoading || languageQuery.isLoading || musclesQuery.isLoading || categoryQuery.isLoading

@@ -96,13 +96,11 @@ export type AddExerciseFullProps = {
     exercise: ExerciseSubmissionProps,
     variation?: number | null,
     translations: TranslationSubmissionProps[],
-    images?: []
 }
 
 export const addFullExercise = async (data: AddExerciseFullProps): Promise<number> => {
 
     const url = makeUrl(EXERCISE_SUBMISSION_PATH);
-
     const payload = {
         category: data.exercise.categoryId,
         equipment: data.exercise.equipmentIds,
@@ -122,7 +120,7 @@ export const addFullExercise = async (data: AddExerciseFullProps): Promise<numbe
                     comments: t.comments ?? []
                 })
             )
-        ]
+        ],
     };
 
     const result = await axios.post(
