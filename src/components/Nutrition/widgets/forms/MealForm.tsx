@@ -77,7 +77,7 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
                             <TimePicker
                                 label={t('timeOfDay')}
                                 value={formik.values.time !== null ? DateTime.fromJSDate(formik.values.time) : null}
-                                onChange={(newValue) => formik.setFieldValue('time', newValue)}
+                                onChange={(newValue) => formik.setFieldValue('time', newValue ? newValue.toJSDate() : null)}
                             />
                         </LocalizationProvider>
                         <Stack direction="row" justifyContent="end" spacing={2}>
