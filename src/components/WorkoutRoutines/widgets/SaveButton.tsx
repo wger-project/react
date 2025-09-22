@@ -21,7 +21,7 @@ export const SaveButton: React.FC<SaveButtonProps> = ({
                                                           successText,
                                                           errorText,
                                                           defaultText,
-                                                          resetDelay = 2000,
+                                                          resetDelay = 1500,
                                                           ...buttonProps
                                                       }) => {
     const { t } = useTranslation();

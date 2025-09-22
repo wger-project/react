@@ -17,7 +17,7 @@ import {
 } from "components/WorkoutRoutines/models/Routine";
 import { useAddRoutineQuery, useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
 import { SlotEntryRoundingField } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
-import { SaveButton } from "components/WorkoutRoutines/widgets/saveButton";
+import { SaveButton } from "components/WorkoutRoutines/widgets/SaveButton";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
