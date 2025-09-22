@@ -17,6 +17,7 @@ import {
 } from "components/WorkoutRoutines/models/Routine";
 import { useAddRoutineQuery, useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
 import { SlotEntryRoundingField } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
+import { SaveButton } from "components/WorkoutRoutines/widgets/saveButton";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
@@ -27,16 +28,13 @@ import * as yup from 'yup';
 
 interface RoutineFormProps {
     routine?: Routine,
-    isTemplate?: boolean,
-    isPublicTemplate?: boolean,
     closeFn?: Function,
 }
 
-export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = true, closeFn }: RoutineFormProps) => {
-
+export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
     const [t, i18n] = useTranslation();
     const addRoutineQuery = useAddRoutineQuery();
-    const editRoutineQuery = useEditRoutineQuery(routine?.id ?? -1);
+    const editRoutineQuery = useEditRoutineQuery(routine?.id!);
     const navigate = useNavigate();
 
     /*
@@ -100,6 +98,33 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
         fitInWeek: yup.boolean()
     });
 
+    // new handle save
+    const handleSave = async (values: any) => {
+        if (routine) {
+            // when editing routine
+            await editRoutineQuery.mutateAsync({
+                ...values,
+                fit_in_week: values.fitInWeek,
+                start: values.start?.toISODate()!,
+                end: values.end?.toISODate()!,
+                id: routine.id
+            });
+        } else {
+            // when create new routine
+            const result = await addRoutineQuery.mutateAsync({
+                ...values,
+                fit_in_week: values.fitInWeek,
+                start: values.start?.toISODate()!,
+                end: values.end?.toISODate()!,
+            });
+
+            navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id }));
+
+            if (closeFn) {
+                closeFn();
+            }
+        }
+    };
 
     return (
         (<Formik
@@ -112,52 +137,15 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
             }}
 
             validationSchema={validationSchema}
-            onSubmit={async (values) => {
-                if (routine) {
-                    const newRoutine = Routine.clone(routine);
-                    newRoutine.fitInWeek = values.fitInWeek;
-                    newRoutine.name = values.name;
-                    newRoutine.description = values.description;
-                    newRoutine.start = values.start!.toJSDate();
-                    newRoutine.end = values.end!.toJSDate();
-                    editRoutineQuery.mutate(newRoutine);
-
-                } else {
-                    const result = await addRoutineQuery.mutateAsync(new Routine({
-                        id: null,
-                        name: values.name,
-                        description: values.description,
-                        created: new Date(),
-                        start: values.start!.toJSDate(),
-                        end: values.end?.toJSDate(),
-                        fitInWeek: values.fitInWeek,
-                        isTemplate: isTemplate,
-                        isPublic: isPublicTemplate
-                    }));
-
-                    navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
-
-                    if (closeFn) {
-                        closeFn();
-                    }
-                }
-            }}
+            onSubmit={handleSave} // use the new handle save
         >
             {formik => (
                 <Form>
                     <Grid container spacing={2}>
-
-                        <Grid size={{ xs: 12 }}>
+                        <Grid size={{ xs: 12, sm: 5 }}>
                             <WgerTextField fieldName="name" title={t('name')} />
                         </Grid>
-                        <Grid size={12}>
-                            <WgerTextField
-                                fieldName="description"
-                                title={t('description')}
-                                fieldProps={{ multiline: true, rows: 4 }}
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 6 }}>
+                        <Grid size={{ xs: 6, sm: 3 }}>
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
@@ -180,7 +168,7 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
                                 />
                             </LocalizationProvider>
                         </Grid>
-                        <Grid size={{ xs: 5 }}>
+                        <Grid size={{ xs: 6, sm: 3 }}>
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
@@ -204,7 +192,7 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
                             </LocalizationProvider>
                         </Grid>
                         <Grid
-                            size={{ xs: 1 }}
+                            size={{ xs: 12, sm: 1 }}
                             sx={{
                                 display: "flex",
                                 alignItems: "center",
@@ -216,6 +204,13 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
                                 nrWeeks: durationWeeks,
                                 nrDays: durationDays
                             })}
+                        </Grid>
+                        <Grid size={12}>
+                            <WgerTextField
+                                fieldName="description"
+                                title={t('description')}
+                                fieldProps={{ multiline: true, rows: 4 }}
+                            />
                         </Grid>
                         <Grid size={12}>
                             <FormControlLabel
@@ -230,14 +225,30 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
                             </Tooltip>
                         </Grid>
                         <Grid size={12}>
-                            <Button
-                                disabled={formik.isSubmitting}
-                                color="primary"
+                            <SaveButton
+                                onSave={async () => {
+                                    const errors = await formik.validateForm();
+                                    if (Object.keys(errors).length > 0) {
+                                        formik.setTouched(
+                                            Object.keys(errors).reduce((acc, key) => ({
+                                                ...acc,
+                                                [key]: true
+                                            }), {})
+                                        );
+                                        throw new Error('validation error');
+                                    }
+
+                                    await formik.submitForm();
+                                }}
+                                loadingText={t('saving', 'Saving...')}
+                                successText={`${t('save', 'Saved')} ✅`}
+                                errorText={`${t('save')} ❌`}
+                                defaultText={t('save')}
                                 variant="contained"
+                                color="primary"
                                 type="submit"
-                                sx={{ mt: 2 }}>
-                                {t('save')}
-                            </Button>
+                                sx={{ mt: 2 }}
+                            />
                         </Grid>
                     </Grid>
                 </Form>
