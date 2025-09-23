@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Ingredient, IngredientAdapter } from "components/Nutrition/models/Ingredient";
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { ApiIngredientType } from 'types';
 import { ApiPath, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
@@ -12,7 +12,7 @@ export const getIngredient = async (id: number): Promise<Ingredient> => {
         { headers: makeHeader() },
     );
 
-    return new IngredientAdapter().fromJson(receivedIngredient);
+    return Ingredient.fromJson(receivedIngredient);
 };
 
 export const getIngredients = async (ids: number[]): Promise<Ingredient[]> => {
@@ -25,13 +25,12 @@ export const getIngredients = async (ids: number[]): Promise<Ingredient[]> => {
 
     // eslint-disable-next-line camelcase
     const url = makeUrl(ApiPath.INGREDIENTINFO_PATH, { query: { id__in: ids.join(',') } });
-    const adapter = new IngredientAdapter();
     const out: Ingredient[] = [];
 
     // Collect all the ingredients
     for await (const page of fetchPaginated(url, makeHeader())) {
         for (const logData of page) {
-            out.push(adapter.fromJson(logData));
+            out.push(Ingredient.fromJson(logData));
         }
     }
 
@@ -57,5 +56,5 @@ export const searchIngredient = async (name: string, languageCode: string, searc
     );
 
     const { data } = await axios.get(url);
-    return data.results.map((entry: ApiIngredientType) => new IngredientAdapter().fromJson(entry));
+    return data.results.map((entry: ApiIngredientType) => Ingredient.fromJson(entry));
 };

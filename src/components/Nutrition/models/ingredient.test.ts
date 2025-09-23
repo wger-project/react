@@ -1,4 +1,4 @@
-import { IngredientAdapter } from "components/Nutrition/models/Ingredient";
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { INGREDIENT_API_RESPONSE } from "tests/api/ingredientInfoEndpoint";
 
 
@@ -7,7 +7,7 @@ describe('Test the ingredient model', () => {
     test('correctly creates an ingredient from the API response', () => {
 
         // Act
-        const ingredient = new IngredientAdapter().fromJson(INGREDIENT_API_RESPONSE.results[0]);
+        const ingredient = Ingredient.fromJson(INGREDIENT_API_RESPONSE.results[0]);
 
         // Assert
         expect(ingredient.id).toBe(59197);
