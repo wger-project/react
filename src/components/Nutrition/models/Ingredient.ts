@@ -1,4 +1,5 @@
-import { IngredientImage, IngredientImageAdapter } from "components/Nutrition/models/IngredientImage";
+import { IngredientImage } from "components/Nutrition/models/IngredientImage";
+import { IngredientImageThumbnails } from "components/Nutrition/models/IngredientImageThumbnails";
 import { ApiIngredientType } from "types";
 import { Adapter } from "utils/Adapter";
 
@@ -16,6 +17,7 @@ export type IngredientConstructorParams = {
     fiber: number | null;
     sodium: number | null;
     image?: IngredientImage | null;
+    thumbnails?: IngredientImageThumbnails | null;
 };
 
 export class Ingredient {
@@ -33,6 +35,7 @@ export class Ingredient {
     public fiber: number | null;
     public sodium: number | null;
     public image: IngredientImage | null;
+    public thumbnails: IngredientImageThumbnails | null;
 
     constructor(params: IngredientConstructorParams) {
         this.id = params.id;
@@ -48,10 +51,11 @@ export class Ingredient {
         this.fiber = params.fiber;
         this.sodium = params.sodium;
         this.image = params.image ?? null;
+        this.thumbnails = params.thumbnails ?? null;
     }
 
     static fromJson(json: ApiIngredientType): Ingredient {
-        return ingredientAdapter.fromJson(json);
+        return adapter.fromJson(json);
     }
 }
 
@@ -71,9 +75,10 @@ class IngredientAdapter implements Adapter<Ingredient> {
             fatSaturated: item.fat_saturated === null ? null : parseFloat(item.fat_saturated),
             fiber: item.fiber === null ? null : parseFloat(item.fiber),
             sodium: item.sodium === null ? null : parseFloat(item.sodium),
-            image: item.image === null ? null : new IngredientImageAdapter().fromJson(item.image),
+            image: item.image === null ? null : IngredientImage.fromJson(item.image),
+            thumbnails: item.thumbnails === null ? null : IngredientImageThumbnails.fromJson(item.thumbnails),
         });
     }
 }
 
-const ingredientAdapter = new IngredientAdapter();
+const adapter = new IngredientAdapter();

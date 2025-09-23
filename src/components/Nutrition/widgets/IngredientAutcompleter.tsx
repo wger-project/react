@@ -105,7 +105,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                         <li {...props} key={`ingredient-${ingredient.id}`}>
                             <ListItem disablePadding component="div">
                                 <ListItemIcon>
-                                    <Avatar alt="" src={ingredient.image?.url ?? ''}
+                                    <Avatar alt="" src={ingredient.thumbnails?.medium ?? ''}
                                             variant="rounded">
                                         <PhotoIcon />
                                     </Avatar>
