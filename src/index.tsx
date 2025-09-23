@@ -8,7 +8,6 @@ import { NutritionCard } from "components/Dashboard/NutritionCard";
 import { RoutineCard } from "components/Dashboard/RoutineCard";
 import { WeightCard } from "components/Dashboard/WeightCard";
 import { IngredientSearch } from "components/Nutrition/components/IngredientSearch";
-import { WeightOverview } from "pages";
 import React, { Suspense } from 'react';
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -22,14 +21,13 @@ import reportWebVitals from './reportWebVitals';
 
 
 const queryClient = new QueryClient({
-    // -> https://tanstack.com/query/v4/docs/react/reference/QueryClient
+    // -> https://tanstack.com/query/latest/docs/reference/QueryClient
     // time in milliseconds, so 1000 * 30 = 30s
 
     defaultOptions: {
         queries: {
             retry: 3,
             staleTime: 1000 * 60 * 5,
-            cacheTime: 1000 * 60 * 5,
             refetchOnMount: true,
             refetchOnWindowFocus: true,
             refetchOnReconnect: "always"
@@ -103,23 +101,28 @@ if (rootElement) {
     );
 }
 
-/*
- * Components used in the wger django app, don't change the IDs here
- */
-const weightOverview = document.getElementById("react-weight-overview");
-if (weightOverview) {
-    const root = createRoot(weightOverview);
+
+const rootNoShadowDom = document.getElementById("react-page-no-shadow-dom");
+if (rootNoShadowDom) {
+    const root = createRoot(rootNoShadowDom);
     root.render(
         <Suspense fallback={<LoadingWidget />}>
-            <ThemeProvider theme={theme}>
-                <QueryClientProvider client={queryClient}>
-                    <WeightOverview />
-                </QueryClientProvider>
-            </ThemeProvider>
+            <Router>
+                <ThemeProvider theme={theme}>
+                    <QueryClientProvider client={queryClient}>
+                        <WgerRoutes />
+                    </QueryClientProvider>
+                </ThemeProvider>
+            </Router>
         </Suspense>
     );
 }
 
+renderComponentShadowDom('react-page');
+
+/*
+ * Components used in the wger django app, don't change the IDs here
+ */
 const weightDashboard = document.getElementById("react-weight-dashboard");
 if (weightDashboard) {
     const root = createRoot(weightDashboard);
@@ -162,28 +165,6 @@ if (routineDashboard) {
     );
 }
 
-renderComponentShadowDom("react-exercise-overview");
-renderComponentShadowDom("react-exercise-contribute");
-
-
-const exerciseDetail = document.getElementById("react-exercise-detail");
-if (exerciseDetail) {
-    const root = createRoot(exerciseDetail);
-    root.render(
-        <Suspense fallback={<LoadingWidget />}>
-            <Router>
-                <ThemeProvider theme={theme}>
-                    <QueryClientProvider client={queryClient}>
-                        <WgerRoutes />
-                    </QueryClientProvider>
-                </ThemeProvider>
-            </Router>
-        </Suspense>
-    );
-}
-
-
-renderComponentShadowDom('react-page');
 
 const ingredientSearchBox = document.getElementById("react-ingredient-search");
 if (ingredientSearchBox) {

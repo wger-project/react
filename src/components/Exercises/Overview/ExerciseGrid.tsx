@@ -1,4 +1,4 @@
-import { Grid, } from "@mui/material";
+import Grid from '@mui/material/Grid';
 import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
 import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
@@ -27,12 +27,18 @@ export const ExerciseGrid = ({ exercises }: ExerciseGridProps) => {
     }
 
     return (
-        <Grid container spacing={1}>
+        (<Grid container spacing={1}>
             {exercises.map(b => (
-                <Grid item xs={6} md={4} key={b.id} sx={{ display: "flex" }}>
+                <Grid
+                    key={b.id}
+                    sx={{ display: "flex" }}
+                    size={{
+                        xs: 6,
+                        md: 4
+                    }}>
                     <OverviewCard exercise={b} language={currentUserLanguage} />
                 </Grid>
             ))}
-        </Grid>
+        </Grid>)
     );
 };

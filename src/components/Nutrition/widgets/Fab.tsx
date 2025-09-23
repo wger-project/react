@@ -58,7 +58,7 @@ export const AddNutritionDiaryEntryFab = (props: { plan: NutritionalPlan }) => {
                 <HistoryEduIcon />
             </Fab>
             <WgerModal title={t('nutrition.addNutritionalDiary')} isOpen={openModal} closeFn={handleCloseModal}>
-                <NutritionDiaryEntryForm closeFn={handleCloseModal} planId={props.plan.id} meals={props.plan.meals} />
+                <NutritionDiaryEntryForm closeFn={handleCloseModal} planId={props.plan.id!} meals={props.plan.meals} />
             </WgerModal>
         </div>
     );

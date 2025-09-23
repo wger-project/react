@@ -24,16 +24,11 @@ describe("Test the ExerciseOverview component", () => {
 
 
     beforeEach(() => {
-        // @ts-ignore
-        getLanguages.mockImplementation(() => Promise.resolve(testLanguages));
-        // @ts-ignore
-        getCategories.mockImplementation(() => Promise.resolve(testCategories));
-        // @ts-ignore
-        getMuscles.mockImplementation(() => Promise.resolve(testMuscles));
-        // @ts-ignore
-        getEquipment.mockImplementation(() => Promise.resolve(testEquipment));
-        // @ts-ignore
-        getExercises.mockImplementation(() => Promise.resolve([
+        (getLanguages as jest.Mock).mockImplementation(() => Promise.resolve(testLanguages));
+        (getCategories as jest.Mock).mockImplementation(() => Promise.resolve(testCategories));
+        (getMuscles as jest.Mock).mockImplementation(() => Promise.resolve(testMuscles));
+        (getEquipment as jest.Mock).mockImplementation(() => Promise.resolve(testEquipment));
+        (getExercises as jest.Mock).mockImplementation(() => Promise.resolve([
             testExerciseSquats,
             testExerciseBenchPress,
             testExerciseCurls,
@@ -82,7 +77,7 @@ describe("Test the ExerciseOverview component", () => {
         );
         await act(() => Promise.resolve());
         const { getByText: categoriesComponent } = within(screen.getByTestId('categories'));
-        fireEvent.click(categoriesComponent("server.arms"));
+        fireEvent.click(categoriesComponent("Arms"));
 
         // Assert
         expect(screen.queryByText('Benchpress')).not.toBeInTheDocument();
@@ -104,8 +99,8 @@ describe("Test the ExerciseOverview component", () => {
         );
         await act(() => Promise.resolve());
         const { getByText: categoriesComponent } = within(screen.getByTestId('categories'));
-        fireEvent.click(categoriesComponent("server.arms"));
-        fireEvent.click(categoriesComponent("server.legs"));
+        fireEvent.click(categoriesComponent("Arms"));
+        fireEvent.click(categoriesComponent("Legs"));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -127,7 +122,7 @@ describe("Test the ExerciseOverview component", () => {
         );
         await act(() => Promise.resolve());
         const { getByText: equipmentComponent } = within(screen.getByTestId('equipment'));
-        fireEvent.click(equipmentComponent("server.barbell"));
+        fireEvent.click(equipmentComponent("Barbell"));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -172,10 +167,10 @@ describe("Test the ExerciseOverview component", () => {
         await act(() => Promise.resolve());
 
         const { getByText: categoryComponent } = within(screen.getByTestId('categories'));
-        fireEvent.click(categoryComponent('server.legs'));
+        fireEvent.click(categoryComponent('Legs'));
 
         const { getByText: equipmentComponent } = within(screen.getByTestId('equipment'));
-        fireEvent.click(equipmentComponent('server.rocks'));
+        fireEvent.click(equipmentComponent('Rocks'));
 
         // Assert
         expect(screen.getByText('Squats')).toBeInTheDocument();

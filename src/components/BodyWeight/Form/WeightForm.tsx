@@ -3,11 +3,11 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WeightEntry } from "components/BodyWeight/model";
 import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "components/BodyWeight/queries";
+import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { createWeight, updateWeight } from "services";
 import { dateToYYYYMMDD } from "utils/date";
 import * as yup from 'yup';
 
@@ -22,7 +22,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
     const addWeightQuery = useAddWeightEntryQuery();
     const editWeightQuery = useEditWeightEntryQuery();
 
-    const [dateValue, setDateValue] = useState<Date | null>(weightEntry ? weightEntry.date : new Date());
+    const [dateValue, setDateValue] = useState<DateTime | null>(weightEntry ? DateTime.fromJSDate(weightEntry.date) : DateTime.now);
     const [t, i18n] = useTranslation();
 
     const validationSchema = yup.object({
@@ -33,8 +33,12 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
             .required('Weight field is required'),
     });
 
+    if (weightEntriesQuery.isLoading) {
+        return <LoadingPlaceholder />;
+    }
+
     return (
-        <Formik
+        (<Formik
             initialValues={{
                 weight: weightEntry ? weightEntry.weight : 0,
                 date: weightEntry ? dateToYYYYMMDD(weightEntry.date) : dateToYYYYMMDD(new Date()),
@@ -46,21 +50,12 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                 if (weightEntry) {
                     weightEntry.weight = values.weight;
                     weightEntry.date = new Date(values.date);
-                    try {
-                        const editedWeightEntry = await updateWeight(weightEntry);
-                        editWeightQuery.mutate(editedWeightEntry);
-                    } catch (error) {
+                    editWeightQuery.mutate(weightEntry);
 
-                    }
-
-                    // Create new weight entry
+                    // Create a new weight entry
                 } else {
                     weightEntry = new WeightEntry(new Date(values.date), values.weight);
-                    try {
-                        const newWeightEntry = await createWeight(weightEntry);
-                        addWeightQuery.mutate(newWeightEntry);
-                    } catch (error) {
-                    }
+                    addWeightQuery.mutate(weightEntry);
                 }
 
                 if (closeFn) {
@@ -82,21 +77,21 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
                         <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                             <DatePicker
-                                inputFormat="yyyy-MM-dd"
+                                format="yyyy-MM-dd"
                                 label={t('date')}
                                 value={dateValue}
-                                renderInput={(params) => <TextField {...params} {...formik.getFieldProps('date')} />}
+                                slotProps={{ textField: { variant: 'outlined' } }}
                                 disableFuture={true}
                                 onChange={(newValue) => {
                                     if (newValue) {
-                                        formik.setFieldValue('date', newValue);
+                                        formik.setFieldValue('date', newValue.toJSDate());
                                     }
                                     setDateValue(newValue);
                                 }}
                                 shouldDisableDate={(date) => {
 
                                     // Allow the date of the current weight entry, since we are editing it
-                                    if (weightEntry && dateToYYYYMMDD(weightEntry.date) === (date as unknown as DateTime).toISODate()) {
+                                    if (weightEntry && dateToYYYYMMDD(weightEntry.date) === date.toISODate()) {
                                         return false;
                                     }
 
@@ -118,6 +113,6 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                     </Stack>
                 </Form>
             )}
-        </Formik>
+        </Formik>)
     );
 };

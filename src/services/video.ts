@@ -13,11 +13,10 @@ export const postExerciseVideo = async (exerciseId: number, author: string, vide
     const headers = makeHeader();
     headers['Content-Type'] = 'multipart/form-data';
 
-    // eslint-disable-next-line camelcase
     const response = await axios.post(
         url,
         // eslint-disable-next-line camelcase
-        { exercise_base: exerciseId, license_author: author, video: video },
+        { exercise: exerciseId, license_author: author, video: video },
         { headers: headers }
     );
     return new ExerciseVideoAdapter().fromJson(response.data);

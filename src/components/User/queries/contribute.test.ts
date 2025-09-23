@@ -1,7 +1,7 @@
 import { Profile } from "components/User/models/profile";
-import { useProfileQuery } from "components/User/queries/profile";
-import { usePermissionQuery } from "components/User/queries/permission";
 import { useCanContributeExercises } from "components/User/queries/contribute";
+import { usePermissionQuery } from "components/User/queries/permission";
+import { useProfileQuery } from "components/User/queries/profile";
 
 jest.mock("components/User/queries/profile");
 jest.mock("components/User/queries/permission");
@@ -12,25 +12,28 @@ describe("Test the exercise contribution query", () => {
     let testProfile: Profile;
 
     beforeEach(() => {
-        // @ts-ignore
-        usePermissionQuery.mockImplementation(() => ({
+        (usePermissionQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: false
         }));
 
-        testProfile = new Profile(
-            'testerMcTest',
-            'admin@google.com',
-            false,
-            new Date(),
-            false);
+        testProfile = new Profile({
+            username: 'testerMcTest',
+            email: 'admin@google.com',
+            emailVerified: false,
+            dateJoined: new Date(),
+            isTrustworthy: false,
+            useMetric: true,
+            height: 180,
+            weightRounding: null,
+            repetitionsRounding: null,
+        });
     });
 
 
     test('no verified email', () => {
         // Arrange
-        // @ts-ignore
-        useProfileQuery.mockImplementation(() => ({
+        (useProfileQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: testProfile
         }));
@@ -50,8 +53,7 @@ describe("Test the exercise contribution query", () => {
         // Arrange
         testProfile.emailVerified = true;
 
-        // @ts-ignore
-        useProfileQuery.mockImplementation(() => ({
+        (useProfileQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: testProfile
         }));
@@ -71,8 +73,7 @@ describe("Test the exercise contribution query", () => {
         testProfile.emailVerified = true;
         testProfile.isTrustworthy = true;
 
-        // @ts-ignore
-        useProfileQuery.mockImplementation(() => ({
+        (useProfileQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: testProfile
         }));
@@ -92,8 +93,7 @@ describe("Test the exercise contribution query", () => {
         testProfile.emailVerified = true;
         testProfile.isTrustworthy = true;
 
-        // @ts-ignore
-        useProfileQuery.mockImplementation(() => ({
+        (useProfileQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: null
         }));
@@ -110,14 +110,12 @@ describe("Test the exercise contribution query", () => {
 
     test('user is admin, even without verified email', () => {
         // Arrange
-        // @ts-ignore
-        usePermissionQuery.mockImplementation(() => ({
+        (usePermissionQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: true
         }));
 
-        // @ts-ignore
-        useProfileQuery.mockImplementation(() => ({
+        (useProfileQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             data: testProfile
         }));

@@ -17,18 +17,17 @@ describe("Test the ExerciseDeleteDialog component", () => {
 
     // Arrange
     beforeEach(() => {
-        // @ts-ignore
-        searchExerciseTranslations.mockImplementation(() => Promise.resolve(searchResponse));
+        jest.resetAllMocks();
 
-        // @ts-ignore
-        getExercise.mockImplementation(() => Promise.resolve(testExerciseBenchPress));
+        (searchExerciseTranslations as jest.Mock).mockImplementation(() => Promise.resolve(searchResponse));
+        (getExercise as jest.Mock).mockImplementation(() => Promise.resolve(testExerciseBenchPress));
     });
 
     function renderWidget() {
         render(
             <MemoryRouter initialEntries={['/overview/exercises/9']}>
                 <Routes>
-                    <Route path="overview/exercises/:baseID" element={
+                    <Route path="overview/exercises/:exerciseId" element={
                         <ExerciseDeleteDialog
                             onClose={onCloseMock}
                             onChangeLanguage={onChangeLanguageMock}
@@ -81,7 +80,7 @@ describe("Test the ExerciseDeleteDialog component", () => {
         await user.click(autocomplete);
 
         // Assert
-        expect(searchExerciseTranslations).not.toBeCalled();
+        expect(searchExerciseTranslations).not.toHaveBeenCalled();
         await user.type(autocomplete, 'Cru');
 
         expect(screen.getByText("exercises.noReplacementSelected")).toBeInTheDocument();
@@ -90,8 +89,7 @@ describe("Test the ExerciseDeleteDialog component", () => {
         await act(async () => {
             await new Promise((r) => setTimeout(r, 250));
         });
-        await user.click(screen.getByTestId('autocompleter-result-1149'));
-        //screen.logTestingPlaygroundURL();
+        await user.click(screen.getByTestId('autocompleter-result-998'));
         expect(getExercise).toHaveBeenCalledWith(998);
         expect(screen.queryByText("exercises.noReplacementSelected")).not.toBeInTheDocument();
         expect(screen.getByText("Benchpress")).toBeInTheDocument();
@@ -100,8 +98,6 @@ describe("Test the ExerciseDeleteDialog component", () => {
         await user.click(screen.getByTestId('button-delete-and-replace'));
         expect(deleteExercise).toHaveBeenCalledWith(345, "abcdef-150a-4ac7-97ef-84643c6419bf");
         expect(deleteExerciseTranslation).not.toHaveBeenCalled();
-
-        //screen.logTestingPlaygroundURL();
     });
 
     test('correctly sets a replacement manually setting the ID', async () => {

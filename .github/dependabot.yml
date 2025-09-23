@@ -33,8 +33,6 @@ updates:
           - "minor"
           - "patch"
 
-
-
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

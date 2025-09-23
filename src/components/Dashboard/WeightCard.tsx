@@ -16,18 +16,18 @@ import { makeLink, WgerLink } from "utils/url";
 export const WeightCard = () => {
 
     const [t] = useTranslation();
-    const weightyQuery = useBodyWeightQuery();
+    const weightyQuery = useBodyWeightQuery('lastYear');
 
-    return (<>{weightyQuery.isLoading
-        ? <LoadingPlaceholder />
-        : <>{weightyQuery.data?.length !== undefined && weightyQuery.data?.length > 0
-            ? <WeightCardContent entries={weightyQuery.data} />
-            : <EmptyCard
-                title={t('weight')}
-                modalContent={<WeightForm />}
-            />}</>
+    if (weightyQuery.isLoading) {
+        return <LoadingPlaceholder />;
     }
-    </>);
+
+    return weightyQuery.data?.length !== undefined && weightyQuery.data?.length > 0
+        ? <WeightCardContent entries={weightyQuery.data} />
+        : <EmptyCard
+            title={t('weight')}
+            modalContent={<WeightForm />}
+        />;
 };
 export const WeightCardContent = (props: { entries: WeightEntry[] }) => {
 

@@ -14,7 +14,12 @@ export const NutritionDiaryOverview = () => {
     const params = useParams<{ planId: string, date: string }>();
 
     const planId = parseInt(params.planId!);
+    if (Number.isNaN(planId)) {
+        return <p>Please pass an integer as the nutritional plan id.</p>;
+    }
+
     const date = new Date(params.date!);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const planQuery = useFetchNutritionalPlanDateQuery(planId, params.date!);
 
     return planQuery.isLoading

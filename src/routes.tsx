@@ -2,30 +2,34 @@ import { Dashboard } from "components/Dashboard/Dashboard";
 import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
 import { MeasurementCategoryDetail } from "components/Measurements/Screens/MeasurementCategoryDetail";
 import { MeasurementCategoryOverview } from "components/Measurements/Screens/MeasurementCategoryOverview";
+import { BmiCalculator } from "components/Nutrition/components/BmiCalculator";
 import { NutritionDiaryOverview } from "components/Nutrition/components/NutritionDiaryOverview";
 import { PlanDetail } from "components/Nutrition/components/PlanDetail";
 import { PlansOverview } from "components/Nutrition/components/PlansOverview";
-import { RoutineDetails } from "components/WorkoutRoutines/Detail/RoutineDetails";
-import { RoutineLogs } from "components/WorkoutRoutines/Detail/RoutineLogs";
+import { RoutineAdd } from "components/WorkoutRoutines/Detail/RoutineAdd";
+import { RoutineDetail } from "components/WorkoutRoutines/Detail/RoutineDetail";
+import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
+import { RoutineEdit } from "components/WorkoutRoutines/Detail/RoutineEdit";
+import { SessionAdd } from "components/WorkoutRoutines/Detail/SessionAdd";
+import { SlotProgressionEdit } from "components/WorkoutRoutines/Detail/SlotProgressionEdit";
+import { TemplateDetail } from "components/WorkoutRoutines/Detail/TemplateDetail";
+import { WorkoutLogs } from "components/WorkoutRoutines/Detail/WorkoutLogs";
+import { WorkoutStats } from "components/WorkoutRoutines/Detail/WorkoutStats";
+import { PrivateTemplateOverview } from "components/WorkoutRoutines/Overview/PrivateTemplateOverview";
+import { PublicTemplateOverview } from "components/WorkoutRoutines/Overview/PublicTemplateOverview";
 import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
 import {
     About,
     AddExercise,
     AddWeight,
     ApiPage,
-    BmiCalculator,
     Calendar,
     CaloriesCalculator,
     Equipments,
-    Gallery,
     Ingredients,
     Login,
     Preferences,
-    PublicTemplate,
-    TemplatePage,
     WeightOverview,
-    Workout,
-    WorkoutSchedule
 } from "pages";
 import { ExerciseDetailPage } from "pages/ExerciseDetails";
 import React from "react";
@@ -35,34 +39,43 @@ import { Route, Routes } from "react-router-dom";
  * Routes for the application
  *
  * Don't change the routes of the elements which are also used in the django application
+ * See also src/utils/url.ts
  */
 export const WgerRoutes = () => {
     return <Routes>
         <Route path="/:lang">
-            <Route path="workout">
-                <Route path="overview" element={<Workout />} />
-                <Route path="schedule" element={<WorkoutSchedule />} />
-                <Route path="calendar">
-                    <Route path="user" element={<Calendar />} />
-                </Route>
-                <Route path="gallery" element={<Gallery />} />
 
-                <Route path="template">
-                    <Route path="overview" element={<TemplatePage />} />
-                    <Route path="public" element={<PublicTemplate />} />
-                </Route>
-            </Route>
             <Route path="routine">
                 <Route index element={<RoutineOverview />} />
                 <Route path="overview" element={<RoutineOverview />} />
-                <Route path=":routineId" element={<RoutineDetails />}>
-                    <Route path="view" element={<RoutineDetails />} />
+                <Route path="calendar" element={<Calendar />} />
+                <Route path="add" element={<RoutineAdd />} />
+
+                <Route path=":routineId">
+                    <Route path="day/:dayId">
+                        <Route path="add-logs" element={<SessionAdd />} />
+                    </Route>
+                    <Route path="edit">
+                        <Route index element={<RoutineEdit />} />
+                        <Route path="progression/:slotId" element={<SlotProgressionEdit />} />
+                    </Route>
+
+                    <Route path="view" element={<RoutineDetail />} />
+                    <Route path="table" element={<RoutineDetailsTable />} />
+                    <Route path="logs" element={<WorkoutLogs />} />
+                    <Route path="statistics" element={<WorkoutStats />} />
                 </Route>
-                <Route path="log">
-                    <Route path=":routineId" element={<RoutineLogs />}>
-                        <Route path="view" element={<RoutineLogs />} />
+
+                <Route path="templates">
+                    <Route path=":routineId">
+                        <Route path="view" element={<TemplateDetail />} />
+                    </Route>
+                    <Route path="overview">
+                        <Route path="private" element={<PrivateTemplateOverview />} />
+                        <Route path="public" element={<PublicTemplateOverview />} />
                     </Route>
                 </Route>
+
             </Route>
             <Route path="measurement">
                 <Route index element={<MeasurementCategoryOverview />} />
@@ -73,8 +86,8 @@ export const WgerRoutes = () => {
             <Route path="exercise">
                 <Route index element={<ExerciseOverview />} />
                 <Route path="overview" element={<ExerciseOverview />} />
-                <Route path=":baseID" element={<ExerciseDetailPage />}>
-                    <Route path="view-base" element={<ExerciseDetailPage />}>
+                <Route path=":exerciseId" element={<ExerciseDetailPage />}>
+                    <Route path="view" element={<ExerciseDetailPage />}>
                         <Route path=":slug" element={<ExerciseDetailPage />} />
                     </Route>
                 </Route>

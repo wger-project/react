@@ -1,4 +1,5 @@
-import { Box, Button, Grid, Stack } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
+import Grid from '@mui/material/Grid';
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
@@ -7,14 +8,14 @@ import { descriptionValidator, noteValidator } from "components/Exercises/forms/
 import { Form, Formik } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseStateValue } from "state";
-import { setDescriptionEn, setNotesEn } from "state/exerciseReducer";
+import { useExerciseSubmissionStateValue } from "state";
+import { setDescriptionEn, setNotesEn } from "state/exerciseSubmissionReducer";
 import * as yup from "yup";
 
 
 export const Step3Description = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
-    const [state, dispatch] = useExerciseStateValue();
+    const [state, dispatch] = useExerciseSubmissionStateValue();
 
     const validationSchema = yup.object({
         description: descriptionValidator(t),
@@ -22,7 +23,7 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
     });
 
     return (
-        <Formik
+        (<Formik
             initialValues={{
                 description: state.descriptionEn,
                 notes: state.notesEn,
@@ -39,11 +40,11 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
                     <ExerciseDescription fieldName={"description"} />
 
                     <PaddingBox />
-                    
+
                     <ExerciseNotes fieldName={'notes'} />
 
                     <Grid container>
-                        <Grid item xs={12} display="flex" justifyContent={"end"}>
+                        <Grid display="flex" justifyContent={"end"} size={12}>
                             <Box sx={{ mb: 2 }}>
                                 <div>
                                     <Button
@@ -65,6 +66,6 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
                     </Grid>
                 </Stack>
             </Form>
-        </Formik>
+        </Formik>)
     );
 };

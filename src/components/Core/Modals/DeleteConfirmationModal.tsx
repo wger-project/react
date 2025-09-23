@@ -1,12 +1,12 @@
-import { FunctionComponent } from 'react';
-import { Button, Card, CardActions, CardContent, CardHeader, Modal, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import { Button, Card, CardActions, CardContent, CardHeader, Modal, Typography } from "@mui/material";
+import { FunctionComponent } from 'react';
 import { useTranslation } from "react-i18next";
 
 export interface DeleteConfirmationModalProps {
-    title: String,
-    subtitle?: String,
-    message?: String,
+    title: string,
+    subtitle?: string,
+    message?: string,
     isOpen: boolean,
     closeFn: any,
     deleteFn: any
@@ -25,12 +25,15 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
     const [t] = useTranslation();
 
     const style = {
-        position: 'absolute' as 'absolute',
+        position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
+        // width: 500,
+        bgcolor: 'background.paper',
+        borderWidth: 0,
+        boxShadow: 24,
         p: 2,
-        minWidth: '400px'
     };
 
     const handleDelete = () => {
@@ -62,11 +65,10 @@ export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalP
                         {t('delete')}
                     </Button>
                     <Button color="primary" onClick={closeFn}>
-                        {t('cancel')}
+                        {t('close')}
                     </Button>
                 </CardActions>
             </Card>
         </Modal>
-
     );
 };

@@ -14,8 +14,8 @@ describe("Exercise video service API tests", () => {
         const response = {
             "id": 1,
             "uuid": "b1c934fa-c4f8-4d84-8cb4-7802be0d284c",
-            "exercise_base": 258,
-            "exercise_base_uuid": "6260e3aa-e46b-4b4b-8ada-58bfd0922d3a",
+            "exercise": 258,
+            "exercise_uuid": "6260e3aa-e46b-4b4b-8ada-58bfd0922d3a",
             "video": "http://localhost:8000/media/exercise-video/258/b1c934fa-c4f8-4d84-8cb4-7802be0d284c.mp4",
             "is_main": false,
             "size": 0,
@@ -35,8 +35,7 @@ describe("Exercise video service API tests", () => {
             false
         );
 
-        // @ts-ignore
-        axios.post.mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
         const result = await postExerciseVideo(
@@ -49,7 +48,7 @@ describe("Exercise video service API tests", () => {
         expect(axios.post).toHaveBeenCalled();
         expect(axios.post).toHaveBeenCalledWith(
             'https://example.com/api/v2/video/',
-            expect.objectContaining({ "exercise_base": 42 }),
+            expect.objectContaining({ "exercise": 42 }),
             expect.anything()
         );
         expect(result).toEqual(video);
@@ -58,8 +57,7 @@ describe("Exercise video service API tests", () => {
     test('DELETE an existing video', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
+        (axios.delete as jest.Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act
         const result = await deleteExerciseVideo(99);

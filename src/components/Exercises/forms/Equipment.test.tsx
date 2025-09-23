@@ -15,18 +15,13 @@ jest.mock("services");
 describe("Test the edit widget to live edit the equipment", () => {
 
     beforeEach(() => {
-        // @ts-ignore
-        useEquipmentQuery.mockImplementation(() => (
+        (useEquipmentQuery as jest.Mock).mockImplementation(() => (
             { isSuccess: true, data: testEquipment }
         ));
-
-        // @ts-ignore
-        useProfileQuery.mockImplementation(() => (
+        (useProfileQuery as jest.Mock).mockImplementation(() => (
             { isSuccess: true, data: testProfileDataVerified }
         ));
-
-        // @ts-ignore
-        editExercise.mockImplementation(() => (100));
+        (editExercise as jest.Mock).mockImplementation(() => (100));
     });
 
 

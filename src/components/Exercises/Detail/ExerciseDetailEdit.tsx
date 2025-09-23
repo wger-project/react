@@ -1,5 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Box, Button, Grid, IconButton, Typography } from "@mui/material";
+import { Alert, Box, Button, IconButton, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid';
+import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { EditExerciseCategory } from "components/Exercises/forms/Category";
 import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
@@ -14,47 +16,68 @@ import {
     descriptionValidator,
     nameValidator
 } from "components/Exercises/forms/yupValidators";
-import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
 import { Translation } from "components/Exercises/models/translation";
-import { useMusclesQuery } from "components/Exercises/queries";
+import {
+    useAddTranslationQuery,
+    useEditTranslationQuery,
+    useExerciseQuery,
+    useMusclesQuery
+} from "components/Exercises/queries";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
 import { Form, Formik } from "formik";
 import { WgerPermissions } from "permissions";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { addTranslation, deleteAlias, editExerciseTranslation, postAlias } from "services";
+import { deleteAlias, postAlias } from "services";
 import * as yup from "yup";
 
 export interface ViewProps {
-    exercise: Exercise;
+    exerciseId: number;
     language: Language;
 }
 
-export const ExerciseDetailEdit = ({
-                                       exercise,
-                                       language
-                                   }: ViewProps) => {
+export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
     const [t] = useTranslation();
 
-    const [alertIsVisible, setAlertIsVisible] = React.useState(false);
-    const [mainMuscles, setMainMuscles] = React.useState<number[]>(exercise.muscles.map((m) => m.id));
-    const [secondaryMuscles, setSecondaryMuscles] = React.useState<number[]>(exercise.musclesSecondary.map((m) => m.id));
+    const [alertIsVisible, setAlertIsVisible] = useState(false);
+    const [mainMuscles, setMainMuscles] = useState<number[]>([]);
+    const [secondaryMuscles, setSecondaryMuscles] = useState<number[]>([]);
+
+    const exerciseQuery = useExerciseQuery(exerciseId);
+    const addTranslationQuery = useAddTranslationQuery(exerciseId);
+    const editTranslationQuery = useEditTranslationQuery(exerciseId);
+    const addImagePermissionQuery = usePermissionQuery(WgerPermissions.ADD_IMAGE);
+    const deleteImagePermissionQuery = usePermissionQuery(WgerPermissions.DELETE_IMAGE);
+    const addVideoPermissionQuery = usePermissionQuery(WgerPermissions.ADD_VIDEO);
+    const deleteVideoPermissionQuery = usePermissionQuery(WgerPermissions.DELETE_VIDEO);
+    const editExercisePermissionQuery = usePermissionQuery(WgerPermissions.EDIT_EXERCISE);
+    const musclesQuery = useMusclesQuery();
+    const profileQuery = useProfileQuery();
+
+    const exercise = exerciseQuery.data!;
+
+    useEffect(() => {
+        if (exerciseQuery.data !== undefined) {
+            setMainMuscles(exercise.muscles.map((m) => m.id));
+            setSecondaryMuscles(exercise.musclesSecondary.map((m) => m.id));
+        }
+    }, [exerciseQuery.data]);
+
+
+    if (exerciseQuery.isLoading || musclesQuery.isLoading || exerciseQuery.isLoading || profileQuery.isLoading || addImagePermissionQuery.isLoading || deleteImagePermissionQuery.isLoading || addVideoPermissionQuery.isLoading || deleteVideoPermissionQuery.isLoading || editExercisePermissionQuery.isLoading) {
+        return <LoadingWidget />;
+    }
+
     const translationFromBase = exercise.getTranslation(language);
-    const isNewTranslation = language.id !== translationFromBase.language;
+    const isNewTranslation = language.id !== translationFromBase?.language;
     const exerciseTranslation =
         isNewTranslation
             ? new Translation(null, null, '', '', language.id)
             : translationFromBase;
     const exerciseEnglish = exercise.getTranslation();
-
-    const deleteImagePermissionQuery = usePermissionQuery(WgerPermissions.DELETE_IMAGE);
-    const deleteVideoPermissionQuery = usePermissionQuery(WgerPermissions.DELETE_VIDEO);
-    const editBasePermissionQuery = usePermissionQuery(WgerPermissions.EDIT_EXERCISE);
-    const musclesQuery = useMusclesQuery();
-    const profileQuery = useProfileQuery();
 
     const validationSchema = yup.object({
         name: nameValidator(t),
@@ -75,20 +98,21 @@ export const ExerciseDetailEdit = ({
 
                 // Exercise translation
                 const translation = exerciseTranslation.id
-                    ? await editExerciseTranslation(
-                        exerciseTranslation.id,
-                        exercise.id!,
-                        exerciseTranslation.language,
-                        values.name,
-                        values.description,
-                    )
-                    : await addTranslation(
-                        exercise.id!,
-                        language.id,
-                        values.name,
-                        values.description,
-                        profileQuery.data!.username
-                    );
+                    ? await editTranslationQuery.mutateAsync({
+                        id: exerciseTranslation.id,
+                        exerciseId: exercise.id!,
+                        languageId: language.id,
+                        name: values.name,
+                        description: values.description,
+                        author: ''
+                    })
+                    : await addTranslationQuery.mutateAsync({
+                        exerciseId: exercise.id!,
+                        languageId: language.id,
+                        name: values.name,
+                        description: values.description,
+                        author: profileQuery.data!.username
+                    });
 
                 // Edit aliases (this is currently really hacky)
                 // Since we only get the string from the form, we need to compare them to the list of
@@ -99,7 +123,7 @@ export const ExerciseDetailEdit = ({
                 const aliasOrig = exerciseTranslation.aliases.map(a => a.alias);
                 const aliasNew = values.alternativeNames;
                 const aliasToCreate = aliasNew.filter(x => !aliasOrig.includes(x));
-                let aliasToDelete = aliasOrig.filter(x => !aliasNew.includes(x));
+                const aliasToDelete = aliasOrig.filter(x => !aliasNew.includes(x));
 
                 aliasToCreate.forEach(alias => {
                     postAlias(translation.id!, alias);
@@ -114,9 +138,9 @@ export const ExerciseDetailEdit = ({
             }}
         >
             <Form>
-                <Grid container>
+                <Grid container spacing={1}>
                     {alertIsVisible &&
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Alert
                                 severity="success"
                                 action={
@@ -137,19 +161,19 @@ export const ExerciseDetailEdit = ({
                             <PaddingBox />
                         </Grid>}
 
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <Typography variant={'h5'}>{t('English')}</Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <Typography variant={'h5'}>
                             {language.nameLong} ({language.nameShort})
                         </Typography>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <PaddingBox />
                         <Typography variant={'h6'}>{t('name')}</Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         {exerciseEnglish.name}
                         <ul>
                             {exerciseEnglish.aliases.map((alias) => (
@@ -157,26 +181,39 @@ export const ExerciseDetailEdit = ({
                             ))}
                         </ul>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <Box mb={2}>
                             <ExerciseName fieldName={'name'} />
                         </Box>
                         <ExerciseAliases fieldName={'alternativeNames'} />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <PaddingBox />
                     </Grid>
 
 
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <Typography variant={'h6'}>{t('exercises.description')}</Typography>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <div dangerouslySetInnerHTML={{ __html: exerciseEnglish.description! }} />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <ExerciseDescription fieldName={"description"} />
                     </Grid>
+
+                    {editExercisePermissionQuery.data && <>
+                        <Grid size={12}>
+                            <PaddingBox />
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            <EditExerciseCategory exerciseId={exercise.id!} initial={exercise.category.id} />
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            <EditExerciseEquipment exerciseId={exercise.id!}
+                                                   initial={exercise.equipment.map(e => e.id)} />
+                        </Grid>
+                    </>}
 
                     {/*
                 <Grid item xs={12}>
@@ -200,37 +237,15 @@ export const ExerciseDetailEdit = ({
                         ))}
                     </ul>
                 </Grid>
-                <Grid item xs={12}>
-                    <Divider />
-                    <PaddingBox />
-                </Grid>
-                <Grid item xs={12}>
-                    <Typography variant={'h6'}>{t('exercises.muscles')}</Typography>
-                </Grid>
-                <Grid item sm={6}>
-                    <ul>
-                        {exercise.muscles.map((m) => (
-                            <li key={m.id}>{m.getName(t)}</li>
-                        ))}
-                    </ul>
-                </Grid>
-                <Grid item sm={6}>
-                    <ul>
-                        {exercise.musclesSecondary.map((m) => (
-                            <li key={m.id}>{m.getName(t)}</li>
-                        ))}
-                    </ul>
-                </Grid>
-
                 */}
 
-
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <PaddingBox />
                         <Button
                             variant="contained"
                             type="submit"
                             sx={{ mt: 1, mr: 1 }}
+                            disabled={exerciseQuery.isLoading || addTranslationQuery.isPending || editTranslationQuery.isPending}
                         >
                             {t('save')}
                         </Button>
@@ -239,59 +254,50 @@ export const ExerciseDetailEdit = ({
             </Form>
         </Formik>
 
-        <PaddingBox />
-        <Typography variant={'h5'}>{t('exercises.basics')}</Typography>
-
         {/* Images */}
-        {deleteImagePermissionQuery.isSuccess
-            && <>
-                <PaddingBox />
-                <Typography variant={'h6'}>{t('images')}</Typography>
-                <Grid container spacing={2} mt={2}>
-                    <Grid item md={3} key={'add'}>
-                        <AddImageCard exerciseId={exercise.id!} />
-                    </Grid>
+        <PaddingBox />
+        <Typography variant={'h6'}>{t('images')}</Typography>
+        <Grid container spacing={2} mt={2}>
+            {addImagePermissionQuery.data && <Grid key={'add'} size={{ md: 3 }}>
+                <AddImageCard exerciseId={exercise.id!} />
+            </Grid>}
 
-                    {exercise.images.map(img => (
-                        <Grid item md={3} key={img.id}>
-                            <ImageEditCard image={img} canDelete={deleteImagePermissionQuery.data} />
-                        </Grid>
-                    ))}
-                </Grid></>
-        }
+            {exercise.images.map(img => (
+                <Grid key={img.id} size={{ md: 3 }}>
+                    <ImageEditCard
+                        exerciseId={exercise.id!}
+                        image={img}
+                        canDelete={deleteImagePermissionQuery.data!}
+                    />
+                </Grid>
+            ))}
+        </Grid>
 
         {/* Videos */}
-        {deleteVideoPermissionQuery.isSuccess
-            && <>
-                <PaddingBox />
-                <Typography variant={'h6'}>{t('videos')}</Typography>
-                <Grid container spacing={2} mt={2}>
-                    {deleteVideoPermissionQuery.data
-                        && <Grid item md={3} key={'add'}>
-                            <AddVideoCard exerciseId={exercise.id!} />
-                        </Grid>
-                    }
-
-                    {exercise.videos.map(video => (
-                        <Grid item md={3} key={video.id}>
-                            <VideoEditCard video={video} canDelete={deleteVideoPermissionQuery.data} />
-                        </Grid>
-                    ))}
+        <PaddingBox />
+        <Typography variant={'h6'}>{t('videos')}</Typography>
+        <Grid container spacing={2} mt={2}>
+            {addVideoPermissionQuery.data
+                && <Grid key={'add'} size={{ md: 3 }}>
+                    <AddVideoCard exerciseId={exercise.id!} />
                 </Grid>
-            </>
-        }
+            }
+
+            {exercise.videos.map(video => (
+                <Grid key={video.id} size={{ md: 3 }}>
+                    <VideoEditCard video={video} canDelete={deleteVideoPermissionQuery.data!} />
+                </Grid>
+            ))}
+        </Grid>
 
         {/* Base data */}
-        {editBasePermissionQuery.isSuccess
-            && editBasePermissionQuery.data
-            && musclesQuery.isSuccess
+        {editExercisePermissionQuery.data
             && <>
                 <PaddingBox />
-                <EditExerciseCategory exerciseId={exercise.id!} initial={exercise.category.id} />
-                <EditExerciseEquipment exerciseId={exercise.id!} initial={exercise.equipment.map(e => e.id)} />
+                <Typography variant={'h6'}>{t('exercises.muscles')}</Typography>
+                <Grid container spacing={1} mt={2}>
 
-                <Grid container mt={1}>
-                    <Grid item sm={7}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <EditExerciseMuscle
                             exerciseId={exercise.id!}
                             value={mainMuscles}
@@ -299,6 +305,8 @@ export const ExerciseDetailEdit = ({
                             blocked={secondaryMuscles}
                             isMain
                         />
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <EditExerciseMuscle
                             exerciseId={exercise.id!}
                             value={secondaryMuscles}
@@ -307,16 +315,16 @@ export const ExerciseDetailEdit = ({
                             isMain={false}
                         />
                     </Grid>
-                    <Grid item sm={5}>
+                    <Grid size={{ sm: 6 }} offset={{ md: 3 }}>
                         <Grid container>
-                            <Grid item xs={6} display="flex" justifyContent={"center"}>
+                            <Grid display="flex" justifyContent={"center"} size={6}>
                                 <MuscleOverview
                                     primaryMuscles={mainMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                     secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                     isFront={true}
                                 />
                             </Grid>
-                            <Grid item xs={6} display="flex" justifyContent={"center"}>
+                            <Grid display="flex" justifyContent={"center"} size={6}>
                                 <MuscleOverview
                                     primaryMuscles={mainMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                     secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}

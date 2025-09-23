@@ -1,52 +1,42 @@
 # react components for wger
 
-This repository contains the React components for the wger app. Note that this React app is not supposed to be used by
-itself, but rather as a library that is used in wger.
+This repository contains the React components for the wger app. Note that this
+React app is not supposed to be used by itself, but rather as a library of
+components that are then used in wger.
 
 # Getting Started
 
-Copy `.env.TEMPLATE` to `.env.development` and edit it to your needs.
+Our goal is to build an awesome and flexible fitness and nutrition manager,
+along with a comprehensive list of exercises and ingredients, all released
+under a free license.
 
-You can use your own instance, but feel free to use the test server (the db
-is reset every day):
+For this, we’d love your help! Whether it’s code, translations, exercises or
+reporting issues and ideas, check out our
+[contribution guide](https://wger.readthedocs.io/en/latest/contributing.html)
+to get started.
+
+A huge thank you to everyone who has contributed so far! ❤️ See the full list
+in [AUTHORS.md](AUTHORS.md).
+
+**TLDR**
+
+```bash
+# with node > 22
+
+cp .env.TEMPLATE .env.development
+vim .env.development
+yarn config set --home enableTelemetry 0
+yarn install
+yarn start 
+```
+
+This is a regular react application, so there's no magic. You will need a backend
+for this, so feel free to use the test server for this (the db is reset daily):
 
 * URL: `https://wger-master.rge.uber.space`
+* key: `31e2ea0322c07b9df583a9b6d1e794f7139e78d4`
 * username: `user`
 * password: `flutteruser`
-* API key: `31e2ea0322c07b9df583a9b6d1e794f7139e78d4`
-
-Then, in the project directory, you can run:
-
-### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more
-information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-## Learn More
-
-You can learn more in
-the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## Translation
 

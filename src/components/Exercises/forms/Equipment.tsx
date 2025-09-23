@@ -4,7 +4,6 @@ import { useProfileQuery } from "components/User/queries/profile";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { editExercise } from "services";
-import { getTranslationKey } from "utils/strings";
 
 export function EditExerciseEquipment(props: { exerciseId: number, initial: number[] }) {
     const { t } = useTranslation();
@@ -24,7 +23,7 @@ export function EditExerciseEquipment(props: { exerciseId: number, initial: numb
             multiple
             value={value}
             options={equipmentQuery.data.map(e => e.id)}
-            getOptionLabel={option => t(getTranslationKey(equipmentQuery.data.find(e => e.id === option)!.name))}
+            getOptionLabel={option => equipmentQuery.data.find(e => e.id === option)!.translatedName}
             onChange={(event, newValue) => handleOnChange(newValue)}
             renderInput={params => (
                 <TextField

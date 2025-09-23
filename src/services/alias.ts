@@ -8,11 +8,11 @@ export const ALIAS_PATH = 'exercisealias';
 /*
  * Create a new alias
  */
-export const postAlias = async (exerciseId: number, alias: string): Promise<Alias> => {
+export const postAlias = async (translationId: number, alias: string): Promise<Alias> => {
     const url = makeUrl(ALIAS_PATH);
     const response = await axios.post(
         url,
-        { exercise: exerciseId, alias: alias },
+        { translation: translationId, alias: alias },
         { headers: makeHeader() }
     );
     const adapter = new AliasAdapter();

@@ -6,7 +6,6 @@ import {
     Alert,
     Box,
     Button,
-    Grid,
     IconButton,
     ImageListItem,
     ImageListItemBar,
@@ -14,6 +13,7 @@ import {
     Stack,
     Typography
 } from "@mui/material";
+import Grid from '@mui/material/Grid';
 import ImageList from '@mui/material/ImageList';
 import { LicenseAuthor } from "components/Common/forms/LicenseAuthor";
 import { LicenseAuthorUrl } from "components/Common/forms/LicenseAuthorUrl";
@@ -28,14 +28,14 @@ import { useProfileQuery } from "components/User/queries/profile";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseStateValue } from "state";
-import { setImages } from "state/exerciseReducer";
+import { useExerciseSubmissionStateValue } from "state";
+import { setImages } from "state/exerciseSubmissionReducer";
 
 export const Step5Images = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
     const profileQuery = useProfileQuery();
 
-    const [state, dispatch] = useExerciseStateValue();
+    const [state, dispatch] = useExerciseSubmissionStateValue();
     const [localImages, setLocalImages] = useState<ImageFormData[]>(state.images);
     const [popupImage, setPopupImage] = useState<ImageFormData | undefined>(undefined);
 
@@ -77,9 +77,9 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
         derivativeSourceUrl: string,
         imageStyle: number
     }) => {
-        setLocalImages(localImages?.concat({
-            url: popupImage?.url,
-            file: popupImage?.file,
+        setLocalImages(localImages.concat({
+            url: popupImage?.url!,
+            file: popupImage?.file!,
 
             author: data.author,
             authorUrl: data.authorUrl,
@@ -101,7 +101,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
     };
 
     const style = {
-        position: 'absolute' as 'absolute',
+        position: 'absolute' as const,
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
@@ -113,7 +113,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
     };
 
     return (
-        <div>
+        (<div>
             <Modal
                 open={openModal}
                 onClose={handleCloseModal}
@@ -127,7 +127,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                     </Typography>
 
                     <Grid container spacing={2}>
-                        <Grid item xs={4}>
+                        <Grid size={4}>
                             {popupImage && <img
                                 style={{ width: "100%", }}
                                 src={popupImage.url}
@@ -135,7 +135,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                                 loading="lazy"
                             />}
                         </Grid>
-                        <Grid item xs={8}>
+                        <Grid size={8}>
                             <Formik
                                 initialValues={{
                                     title: '',
@@ -183,7 +183,6 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                     </Grid>
                 </Box>
             </Modal>
-
             <Typography>
                 {t("exercises.compatibleImagesCC")}
 
@@ -246,7 +245,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                 {t("forms.supportedImageFormats")}
             </Typography>
             <Grid container>
-                <Grid item xs={12} display="flex" justifyContent={"end"}>
+                <Grid display="flex" justifyContent={"end"} size={12}>
                     <Box sx={{ mb: 2 }}>
                         <>
                             <Button
@@ -266,6 +265,6 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                     </Box>
                 </Grid>
             </Grid>
-        </div>
+        </div>)
     );
 };

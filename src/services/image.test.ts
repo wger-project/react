@@ -15,7 +15,7 @@ describe("Image service API tests", () => {
         const response = {
             "id": 1,
             "uuid": "004bb79f-36bf-4c48-8c00-d863d724717c",
-            "exercise_base": 101,
+            "exercise": 101,
             "image": "https://wger.de/media/exercise-images/1070/004bb79f-36bf-4c48-8c00-d863d724717c.jpg",
             "is_main": true,
             "status": "1",
@@ -28,8 +28,7 @@ describe("Image service API tests", () => {
             true
         );
 
-        // @ts-ignore
-        axios.post.mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
         const result = await postExerciseImage(
@@ -53,7 +52,7 @@ describe("Image service API tests", () => {
         expect(axios.post).toHaveBeenCalled();
         expect(axios.post).toHaveBeenCalledWith(
             'https://example.com/api/v2/exerciseimage/',
-            expect.objectContaining({ "exercise_base": 101 }),
+            expect.objectContaining({ "exercise": 101 }),
             expect.anything()
         );
         expect(result).toEqual(image);
@@ -62,8 +61,7 @@ describe("Image service API tests", () => {
     test('DELETE an existing image', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
+        (axios.delete as jest.Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act
         const result = await deleteExerciseImage(101);

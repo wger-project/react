@@ -10,8 +10,7 @@ const queryClient = new QueryClient();
 describe("Test the NutritionDiaryOverview component", () => {
 
     beforeEach(() => {
-        // @ts-ignore
-        useFetchNutritionalPlanDateQuery.mockImplementation(() => ({
+        (useFetchNutritionalPlanDateQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: TEST_NUTRITIONAL_PLAN_1

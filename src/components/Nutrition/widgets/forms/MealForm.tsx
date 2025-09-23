@@ -4,10 +4,11 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { Meal } from "components/Nutrition/models/meal";
 import { useAddMealQuery, useEditMealQuery } from "components/Nutrition/queries";
 import { Form, Formik } from "formik";
+import { DateTime } from "luxon";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { dateTimeToHHMM } from "utils/date";
-import * as yup from 'yup';
+import * as yup from "yup";
 
 interface MealFormProps {
     planId: number,
@@ -40,6 +41,7 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
+
 
                 // The result from the datepicker is a Luxon DateTime object, not a JS DateTime...
                 if (!(values.time instanceof Date)) {
@@ -74,13 +76,8 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
                         <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                             <TimePicker
                                 label={t('timeOfDay')}
-                                value={formik.values.time}
-                                onChange={(newValue) => formik.setFieldValue('time', newValue)}
-                                renderInput={(params) => <TextField
-                                    {...params}
-                                    {...formik.getFieldProps('time')}
-                                    type={"text"}
-                                />}
+                                value={formik.values.time !== null ? DateTime.fromJSDate(formik.values.time) : null}
+                                onChange={(newValue) => formik.setFieldValue('time', newValue ? newValue.toJSDate() : null)}
                             />
                         </LocalizationProvider>
                         <Stack direction="row" justifyContent="end" spacing={2}>
@@ -89,7 +86,7 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
                                     {t('close')}
                                 </Button>}
                             <Button
-                                disabled={addMealQuery.isLoading || editMealQuery.isLoading}
+                                disabled={addMealQuery.isPending || editMealQuery.isPending}
                                 color="primary"
                                 variant="contained"
                                 type="submit"

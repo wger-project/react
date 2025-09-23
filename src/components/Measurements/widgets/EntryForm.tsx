@@ -9,7 +9,7 @@ import {
     useMeasurementsQuery
 } from "components/Measurements/queries";
 import { Form, Formik } from "formik";
-import { Settings } from "luxon";
+import { DateTime, Settings } from "luxon";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { TIMEZONE } from "utils/consts";
@@ -31,7 +31,7 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
     const useEditEntryQuery = useEditMeasurementEntryQuery();
     const categoryQuery = useMeasurementsQuery(categoryId);
 
-    const [dateValue, setDateValue] = React.useState<Date | null>(entry ? entry.date : new Date());
+    const [dateValue, setDateValue] = React.useState<DateTime | null>(entry ? DateTime.fromJSDate(entry.date) : DateTime.now());
 
     const validationSchema = yup.object({
         value: yup
@@ -49,7 +49,7 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
 
 
     return (
-        <Formik
+        (<Formik
             initialValues={{
                 value: entry ? entry.value : 0,
                 date: entry ? entry.date : new Date(),
@@ -88,29 +88,25 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                             ? <LoadingPlaceholder />
                             : <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
-                                    inputFormat="yyyy-MM-dd"
+                                    format="yyyy-MM-dd"
                                     label={t('date')}
                                     value={dateValue}
-                                    renderInput={(params) =>
-                                        <TextField {...params} {...formik.getFieldProps('date')} />}
                                     disableFuture={true}
+
                                     onChange={(newValue) => {
                                         if (newValue) {
-                                            // @ts-ignore - new value is a Luxon DateTime!
                                             formik.setFieldValue('date', newValue.toJSDate());
                                         }
                                         setDateValue(newValue);
                                     }}
                                     shouldDisableDate={(date) => {
                                         // Allow the date of the current weight entry, since we are editing it
-                                        // @ts-ignore - date is a Luxon DateTime!
                                         if (entry && dateToYYYYMMDD(entry.date) === dateToYYYYMMDD(date.toJSDate())) {
                                             return false;
                                         }
 
                                         // if date is in list of existing entries, disable it
                                         if (date) {
-                                            // @ts-ignore - date is a Luxon DateTime!
                                             return categoryQuery.data!.entries.some(entry => dateToYYYYMMDD(entry.date) === dateToYYYYMMDD(date.toJSDate()));
                                         }
 
@@ -138,6 +134,6 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                     </Stack>
                 </Form>
             )}
-        </Formik>
+        </Formik>)
     );
 };

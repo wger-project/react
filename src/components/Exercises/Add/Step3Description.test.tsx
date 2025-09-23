@@ -1,10 +1,10 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
-import { Step3Description } from "components/Exercises/Add/Step3Description";
 import userEvent from "@testing-library/user-event";
+import { Step3Description } from "components/Exercises/Add/Step3Description";
+import React from "react";
 
-jest.mock("state/exerciseReducer", () => {
-    const originalModule = jest.requireActual("state/exerciseReducer");
+jest.mock("state/exerciseSubmissionReducer", () => {
+    const originalModule = jest.requireActual("state/exerciseSubmissionReducer");
     return {
         __esModule: true,
         ...originalModule,

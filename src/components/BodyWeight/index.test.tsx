@@ -1,9 +1,10 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { WeightEntry } from "components/BodyWeight/model";
 import { getWeights } from "services";
 import { testQueryClient } from "tests/queryClient";
 import { BodyWeight } from "./index";
+import { FilterType } from "./widgets/FilterButtons";
 
 const { ResizeObserver } = window;
 
@@ -29,16 +30,15 @@ describe("Test BodyWeight component", () => {
         jest.restoreAllMocks();
     });
 
+    // Arrange
+    const weightData = [
+        new WeightEntry(new Date('2021-12-10'), 80, 1),
+        new WeightEntry(new Date('2021-12-20'), 90, 2),
+    ];
+
     test('renders without crashing', async () => {
 
-        // Arrange
-        const weightData = [
-            new WeightEntry(new Date('2021-12-10'), 80, 1),
-            new WeightEntry(new Date('2021-12-20'), 90, 2),
-        ];
-
-        // @ts-ignore
-        getWeights.mockImplementation(() => Promise.resolve(weightData));
+        (getWeights as jest.Mock).mockImplementation(() => Promise.resolve(weightData));
 
         // Act
         render(
@@ -50,11 +50,43 @@ describe("Test BodyWeight component", () => {
         // Assert
         expect(getWeights).toHaveBeenCalledTimes(1);
 
-        // Both weights are found in th document
-        const textElement = await screen.findByText("80");
-        expect(textElement).toBeInTheDocument();
+        // Both weights are found in the document
+        expect(await screen.findByText("80")).toBeInTheDocument();
+        expect(await screen.findByText("90")).toBeInTheDocument();
+    });
 
-        const textElement2 = await screen.findByText("90");
-        expect(textElement2).toBeInTheDocument();
+
+    test('changes filter and updates displayed data', async () => {
+
+        // Mock the getWeights response based on the filter
+        (getWeights as jest.Mock).mockImplementation((filter: FilterType) => {
+            if (filter === 'lastYear') {
+                return Promise.resolve(weightData);
+            } else if (filter === 'lastMonth') {
+                return Promise.resolve([]);
+            }
+            return Promise.resolve([]);
+        });
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <BodyWeight />
+            </QueryClientProvider>
+        );
+
+        // Initially should display data for last year
+        expect(await screen.findByText("80")).toBeInTheDocument();
+        expect(await screen.findByText("90")).toBeInTheDocument();
+
+        // Change filter to 'lastMonth'
+        const filterButton = screen.getByRole('button', { name: /lastMonth/i });
+        fireEvent.click(filterButton);
+
+        // Expect getWeights to be called with 'lastMonth'
+        expect(getWeights).toHaveBeenCalledWith('lastMonth');
+
+        // Check that entries for last year are no longer in the document
+        expect(screen.queryByText("80")).not.toBeInTheDocument();
+        expect(screen.queryByText("90")).not.toBeInTheDocument();
     });
 });

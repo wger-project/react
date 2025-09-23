@@ -19,11 +19,8 @@ describe('Test the MealForm component', () => {
         mutateEditMock = jest.fn();
         closeFnMock = jest.fn();
 
-        // @ts-ignore
-        useEditMealQuery.mockImplementation(() => ({ mutate: mutateEditMock }));
-
-        // @ts-ignore
-        useAddMealQuery.mockImplementation(() => ({ mutate: mutateAddMock }));
+        (useEditMealQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        (useAddMealQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
     });
 
     test('a new meal is correctly added', async () => {
@@ -46,7 +43,7 @@ describe('Test the MealForm component', () => {
 
         // Assert
         expect(mutateEditMock).not.toHaveBeenCalled();
-        expect(closeFnMock).toBeCalled();
+        expect(closeFnMock).toHaveBeenCalled();
         expect(mutateAddMock).toHaveBeenCalledWith({
             name: '2nd breakfast',
             plan: 987,
@@ -74,7 +71,7 @@ describe('Test the MealForm component', () => {
 
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
-        expect(closeFnMock).toBeCalled();
+        expect(closeFnMock).toHaveBeenCalled();
         expect(mutateEditMock).toHaveBeenCalledWith({
             id: 78,
             name: '2nd breakfast',

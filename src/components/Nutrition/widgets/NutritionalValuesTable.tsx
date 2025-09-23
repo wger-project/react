@@ -82,7 +82,7 @@ export const NutritionalValuesTable = (props: { values: NutritionalValues }) => 
                     {/*<TableCell align="right"></TableCell>*/}
                 </TableRow>
                 <TableRow>
-                    <TableCell>{t('nutrition.fiber')}</TableCell>
+                    <TableCell>{t('nutrition.fibres')}</TableCell>
                     <TableCell align="right">
                         {numberGramLocale(props.values.fiber, i18n.language)}
                     </TableCell>

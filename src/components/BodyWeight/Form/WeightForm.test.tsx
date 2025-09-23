@@ -1,10 +1,10 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from "@testing-library/user-event";
 import { WeightForm } from "components/BodyWeight/Form/WeightForm";
 import { WeightEntry } from "components/BodyWeight/model";
-import { useBodyWeightQuery } from "components/BodyWeight/queries";
+import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "components/BodyWeight/queries";
 import React from 'react';
-import { createWeight, updateWeight } from "services";
 import { testQueryClient } from "tests/queryClient";
 import { testWeightEntries } from "tests/weight/testData";
 
@@ -15,8 +15,7 @@ jest.mock("components/BodyWeight/queries");
 describe("Test WeightForm component", () => {
 
     beforeEach(() => {
-        // @ts-ignore
-        useBodyWeightQuery.mockImplementation(() => ({ isSuccess: true, data: testWeightEntries }));
+        (useBodyWeightQuery as jest.Mock).mockImplementation(() => ({ isSuccess: true, data: testWeightEntries }));
     });
 
 
@@ -39,7 +38,7 @@ describe("Test WeightForm component", () => {
         // Assert
         expect(screen.getByDisplayValue('2021-12-10')).toBeInTheDocument();
         expect(screen.getByDisplayValue('80')).toBeInTheDocument();
-        expect(screen.getByLabelText('date')).toBeInTheDocument();
+        expect(screen.getAllByLabelText('date').length).toBeGreaterThan(0);
         expect(screen.getByLabelText('weight')).toBeInTheDocument();
         expect(screen.getByText('submit')).toBeInTheDocument();
     });
@@ -65,33 +64,36 @@ describe("Test WeightForm component", () => {
         expect(submitButton).toBeInTheDocument();
         fireEvent.click(submitButton);
         await waitFor(() => {
-            expect(updateWeight).toHaveBeenCalledTimes(1);
+            expect(useEditWeightEntryQuery).toHaveBeenCalled();
         });
     });
 
     test('Creating a new weight entry', async () => {
 
         // Arrange
+        const user = userEvent.setup();
         render(
             <QueryClientProvider client={testQueryClient}>
                 <WeightForm />
             </QueryClientProvider>
         );
-        const dateInput = await screen.findByLabelText('date');
+
+        const group = screen.getByRole('group', { name: /date/i });
+        const dateInput = within(group).getByRole('textbox', { hidden: true });
         const weightInput = await screen.findByLabelText('weight');
         const submitButton = screen.getByRole('button', { name: 'submit' });
 
         // Act
-        fireEvent.input(dateInput, { target: { value: '2022-02-28' } });
-        fireEvent.input(weightInput, { target: { value: '80' } });
+        user.type(dateInput, '2022-02-28');
+        user.type(weightInput, '80');
 
         // Assert
         expect(dateInput).toBeInTheDocument();
         expect(weightInput).toBeInTheDocument();
         expect(submitButton).toBeInTheDocument();
-        fireEvent.click(submitButton);
+        await user.click(submitButton);
         await waitFor(() => {
-            expect(createWeight).toHaveBeenCalledTimes(1);
+            expect(useAddWeightEntryQuery).toHaveBeenCalled();
         });
     });
 

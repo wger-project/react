@@ -18,8 +18,7 @@ describe("weight service tests", () => {
             ]
         };
 
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: weightResponse }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: weightResponse }));
 
         const result = await getWeights();
         expect(axios.get).toHaveBeenCalledTimes(1);
@@ -33,8 +32,7 @@ describe("weight service tests", () => {
     test('DELETE weight entry', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
+        (axios.delete as jest.Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act
         const result = await deleteWeight(1);
@@ -51,8 +49,7 @@ describe("weight service tests", () => {
         const weightResponse = { id: 1, weight: 80, date: '2021-12-10' };
 
         // Act
-        // @ts-ignore
-        axios.patch.mockImplementation(() => Promise.resolve(weightResponse));
+        (axios.patch as jest.Mock).mockImplementation(() => Promise.resolve(weightResponse));
         const result = await updateWeight(weightEntry);
 
         // Assert
@@ -67,8 +64,7 @@ describe("weight service tests", () => {
         const weightResponse = { data: { id: 1, weight: 80, date: '2021-12-10' } };
 
         // Act
-        // @ts-ignore
-        axios.post.mockImplementation(() => Promise.resolve(weightResponse));
+        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve(weightResponse));
         const result = await createWeight(weightEntry);
 
         // Assert

@@ -1,12 +1,13 @@
+import { Box, Card, CardContent, CardMedia, Skeleton, } from "@mui/material";
+import Grid from '@mui/material/Grid';
 import React from "react";
-import { Box, Card, CardContent, CardMedia, Grid, Skeleton, } from "@mui/material";
 
 export const ExerciseGridSkeleton = () => {
 
     return (
-        <Grid container spacing={1}>
-            {Array.apply(null, Array(21)).map((skeletonBase, idx) => (
-                <Grid item xs={4} key={idx} sx={{ display: "flex" }}>
+        (<Grid container spacing={1}>
+            {[...Array(21)].map((skeletonBase, idx) => (
+                <Grid key={idx} sx={{ display: "flex" }} size={4}>
                     <Card>
                         <CardMedia>
                             <Skeleton variant="rectangular" width={250} height={150} />
@@ -20,6 +21,6 @@ export const ExerciseGridSkeleton = () => {
                     </Card>
                 </Grid>
             ))}
-        </Grid>
+        </Grid>)
     );
 };

@@ -6,7 +6,6 @@ import { Language } from "components/Exercises/models/language";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
-import { getTranslationKey } from "utils/strings";
 import { makeLink, WgerLink } from "utils/url";
 
 type OverviewCardProps = {
@@ -46,7 +45,7 @@ export const OverviewCard = ({ exercise, language }: OverviewCardProps) => {
                     </Tooltip>
 
                     <Chip
-                        label={t(getTranslationKey(exercise.category.name))}
+                        label={exercise.category.translatedName}
                         key={exercise.category.id}
                         sx={{ position: "absolute", top: 8, left: 8 }}
                         color="primary"
@@ -54,7 +53,7 @@ export const OverviewCard = ({ exercise, language }: OverviewCardProps) => {
                     />
                     {exercise.equipment.map(equipment => (
                         <Typography display="inline" mr={1} key={equipment.id}>
-                            {t(getTranslationKey(equipment.name))}
+                            {equipment.translatedName}
                         </Typography>
                     ))}
                     {exercise.equipment.length === 0 && (

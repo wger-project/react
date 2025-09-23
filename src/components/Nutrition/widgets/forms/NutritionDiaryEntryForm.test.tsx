@@ -45,14 +45,9 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         mutateEditMock = jest.fn();
         closeFnMock = jest.fn();
 
-        // @ts-ignore
-        useEditDiaryEntryQuery.mockImplementation(() => ({ mutate: mutateEditMock }));
-
-        // @ts-ignore
-        useAddDiaryEntryQuery.mockImplementation(() => ({ mutate: mutateAddMock }));
-
-        // @ts-ignore
-        searchIngredient.mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
+        (useEditDiaryEntryQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        (useAddDiaryEntryQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
     });
 
 
@@ -72,7 +67,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(screen.getByDisplayValue('Baguette with cheese')).toBeInTheDocument();
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateEditMock).not.toHaveBeenCalled();
-        expect(closeFnMock).toBeCalled();
+        expect(closeFnMock).toHaveBeenCalled();
         expect(mutateAddMock).toHaveBeenCalledWith({
             amount: "120",
             datetime: expect.anything(),
@@ -99,7 +94,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(screen.getByDisplayValue('Baguette with cheese')).toBeInTheDocument();
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateEditMock).not.toHaveBeenCalled();
-        expect(closeFnMock).toBeCalled();
+        expect(closeFnMock).toHaveBeenCalled();
         expect(mutateAddMock).toHaveBeenCalledWith({
             amount: "120",
             datetime: expect.anything(),
@@ -125,7 +120,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
 
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
-        expect(closeFnMock).toBeCalled();
+        expect(closeFnMock).toHaveBeenCalled();
         expect(mutateEditMock).toHaveBeenCalledWith({
             id: 42,
             amount: "120",
@@ -152,7 +147,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
 
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
-        expect(closeFnMock).toBeCalled();
+        expect(closeFnMock).toHaveBeenCalled();
         expect(mutateEditMock).toHaveBeenCalledWith({
             id: 42,
             amount: "120",

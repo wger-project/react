@@ -30,8 +30,7 @@ describe("category service tests", () => {
         };
 
         // Act
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
         const result = await getCategories();
 
         // Assert

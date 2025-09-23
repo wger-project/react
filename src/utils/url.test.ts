@@ -12,6 +12,11 @@ describe("test url utility", () => {
         expect(result).toStrictEqual('http://localhost:8000/api/v2/endpoint/foo/');
     });
 
+    test('generate object method for object detail URL', () => {
+        const result = makeUrl('endpoint', { server: 'http://localhost:8000', id: 1234, objectMethod: 'foo' });
+        expect(result).toStrictEqual('http://localhost:8000/api/v2/endpoint/1234/foo/');
+    });
+
     test('generate overview URL, with query parameters', () => {
         const params = { server: 'http://localhost:8000', query: { limit: 900 } };
         const result = makeUrl('endpoint', params);
@@ -106,12 +111,12 @@ describe("test the clickable url utility", () => {
 
     test('link to exercise detail page - with slug', () => {
         const result = makeLink(WgerLink.EXERCISE_DETAIL, 'de', { id: 123, slug: 'foobar' });
-        expect(result).toEqual('/de/exercise/123/view-base/foobar');
+        expect(result).toEqual('/de/exercise/123/view/foobar');
     });
 
     test('link to exercise detail page - no slug', () => {
         const result = makeLink(WgerLink.EXERCISE_DETAIL, 'de', { id: 123 });
-        expect(result).toEqual('/de/exercise/123/view-base');
+        expect(result).toEqual('/de/exercise/123/view');
     });
 
     test('link to weight overview page', () => {

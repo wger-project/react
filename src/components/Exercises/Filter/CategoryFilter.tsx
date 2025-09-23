@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     Accordion,
     AccordionDetails,
@@ -12,13 +12,12 @@ import {
     Switch,
     Typography
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import { Category } from "components/Exercises/models/category";
-import { getTranslationKey } from "utils/strings";
+import React, { useContext } from 'react';
+import { useTranslation } from "react-i18next";
+import { LoadingPlaceholder } from '../../Core/LoadingWidget/LoadingWidget';
 import { useCategoriesQuery } from '../queries';
 import { ExerciseFiltersContext } from './ExerciseFiltersContext';
-import { LoadingPlaceholder } from '../../Core/LoadingWidget/LoadingWidget';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const CategoryFilterList = () => {
 
@@ -64,7 +63,10 @@ const CategoryFilterList = () => {
                                     inputProps={{ 'aria-labelledby': labelId }}
                                 />
                             </ListItemIcon>
-                            <ListItemText id={labelId} primary={t(getTranslationKey(category.name))} />
+                            <ListItemText
+                                id={labelId}
+                                primary={category.translatedName}
+                            />
                         </ListItemButton>
                     </ListItem>
                 );

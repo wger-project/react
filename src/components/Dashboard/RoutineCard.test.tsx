@@ -12,8 +12,7 @@ describe("test the RoutineCard component", () => {
 
     describe("Routines are available", () => {
         beforeEach(() => {
-            // @ts-ignore
-            useActiveRoutineQuery.mockImplementation(() => ({
+            (useActiveRoutineQuery as jest.Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: testRoutine1
@@ -39,8 +38,7 @@ describe("test the RoutineCard component", () => {
     describe("No routines available", () => {
 
         beforeEach(() => {
-            // @ts-ignore
-            useActiveRoutineQuery.mockImplementation(() => ({
+            (useActiveRoutineQuery as jest.Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: null

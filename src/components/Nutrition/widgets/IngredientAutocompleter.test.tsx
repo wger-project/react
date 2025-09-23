@@ -11,8 +11,7 @@ describe("Test the IngredientAutocompleter component", () => {
     // Arrange
     const mockCallback = jest.fn();
     beforeEach(() => {
-        // @ts-ignore
-        searchIngredient.mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
+        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
     });
 
     test('renders correct results', async () => {
@@ -56,6 +55,6 @@ describe("Test the IngredientAutocompleter component", () => {
         await user.keyboard('{ArrowDown}{Enter}');
 
         // Assert
-        expect(mockCallback).lastCalledWith(INGREDIENT_SEARCH[0]);
+        expect(mockCallback).toHaveBeenLastCalledWith(INGREDIENT_SEARCH[0]);
     });
 });

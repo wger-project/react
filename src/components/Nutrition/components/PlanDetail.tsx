@@ -21,74 +21,80 @@ import { useParams } from "react-router-dom";
 export const PlanDetail = () => {
     const [t] = useTranslation();
     const params = useParams<{ planId: string }>();
-    const planId = parseInt(params.planId!);
+    const planId = parseInt(params.planId ?? '');
+    if (Number.isNaN(planId)) {
+        return <p>Please pass an integer as the nutritional plan id.</p>;
+    }
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const planQuery = useFetchNutritionalPlanQuery(planId);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [expandedForm, setExpandedForm] = useState(false);
     const handleToggleExpandedForm = () => setExpandedForm(!expandedForm);
 
     const plan = planQuery.data!;
 
+    if (planQuery.isLoading) {
+        return <LoadingPlaceholder />;
+    }
 
-    return planQuery.isLoading
-        ? <LoadingPlaceholder />
-        : <WgerContainerRightSidebar
-            title={plan.description}
-            optionsMenu={<PlanDetailDropdown plan={plan} />}
-            mainContent={<>
-                <Stack spacing={2}>
-                    {/*<Typography gutterBottom variant="h4">*/}
-                    {/*    {t('nutrition.planned')}*/}
-                    {/*</Typography>*/}
-                    {plan.meals.map(meal => <MealDetail
-                        meal={meal}
-                        planId={plan.id}
-                        key={meal.id}
-                        onlyLogging={plan.onlyLogging} />)}
-                    <MealDetail
-                        meal={planQuery.data!.pseudoMealOthers(t('nutrition.pseudoMealTitle'))}
-                        planId={plan.id}
-                        key={-1}
-                        onlyLogging={true}
-                    />
+    return <WgerContainerRightSidebar
+        title={plan.description}
+        optionsMenu={<PlanDetailDropdown plan={plan} />}
+        mainContent={<>
+            <Stack spacing={2}>
+                {/*<Typography gutterBottom variant="h4">*/}
+                {/*    {t('nutrition.planned')}*/}
+                {/*</Typography>*/}
+                {plan.meals.map(meal => <MealDetail
+                    meal={meal}
+                    planId={plan.id!}
+                    key={meal.id}
+                    onlyLogging={plan.onlyLogging} />)}
+                <MealDetail
+                    meal={planQuery.data!.pseudoMealOthers(t('nutrition.pseudoMealTitle'))}
+                    planId={plan.id!}
+                    key={-1}
+                    onlyLogging={true}
+                />
 
-                    {!plan.onlyLogging && <>
-                        <Tooltip title={t('nutrition.addMeal')}>
-                            <IconButton onClick={handleToggleExpandedForm}>
-                                <Add />
-                            </IconButton>
-                        </Tooltip>
-                        <Collapse in={expandedForm} timeout="auto" unmountOnExit>
-                            <p><b>{t('nutrition.addMeal')}</b></p>
-                            <MealForm planId={plan.id} closeFn={handleToggleExpandedForm} />
-                        </Collapse>
-                    </>}
+                {!plan.onlyLogging && <>
+                    <Tooltip title={t('nutrition.addMeal')}>
+                        <IconButton onClick={handleToggleExpandedForm}>
+                            <Add />
+                        </IconButton>
+                    </Tooltip>
+                    <Collapse in={expandedForm} timeout="auto" unmountOnExit>
+                        <p><b>{t('nutrition.addMeal')}</b></p>
+                        <MealForm planId={plan.id!} closeFn={handleToggleExpandedForm} />
+                    </Collapse>
+                </>}
 
-                    <NutritionalValuesTable values={plan.plannedNutritionalValues} />
+                <NutritionalValuesTable values={plan.plannedNutritionalValues} />
 
-
-                    {plan.hasAnyPlanned &&
-                        <MacrosPieChart data={plan.plannedNutritionalValues} />
-                    }
-                    <Typography gutterBottom variant="h4">
-                        {t('nutrition.logged')}
-                    </Typography>
-                    <NutritionDiaryChart
-                        showPlanned={plan.hasAnyPlanned}
-                        planned={plan.plannedNutritionalValues}
-                        today={plan.loggedNutritionalValuesToday}
-                        avg7Days={plan.loggedNutritionalValues7DayAvg}
-                    />
-                    <NutritionalValuesTable
-                        values={plan.loggedNutritionalValuesToday}
-                    />
-                    <DiaryOverview
-                        planId={plan.id}
-                        logged={plan.groupDiaryEntries}
-                        planned={plan.plannedNutritionalValues}
-                    />
-                </Stack>
-            </>}
-            sideBar={<PlanSidebar plan={plan} />}
-            fab={<AddNutritionDiaryEntryFab plan={plan} />}
-        />;
+                {plan.hasAnyPlanned &&
+                    <MacrosPieChart data={plan.plannedNutritionalValues} />
+                }
+                <Typography gutterBottom variant="h4">
+                    {t('nutrition.logged')}
+                </Typography>
+                <NutritionDiaryChart
+                    showPlanned={plan.hasAnyPlanned}
+                    planned={plan.plannedNutritionalValues}
+                    today={plan.loggedNutritionalValuesToday}
+                    avg7Days={plan.loggedNutritionalValues7DayAvg}
+                />
+                <NutritionalValuesTable
+                    values={plan.loggedNutritionalValuesToday}
+                />
+                <DiaryOverview
+                    planId={plan.id!}
+                    logged={plan.groupDiaryEntries}
+                    planned={plan.plannedNutritionalValues}
+                />
+            </Stack>
+        </>}
+        sideBar={<PlanSidebar plan={plan} />}
+        fab={<AddNutritionDiaryEntryFab plan={plan} />}
+    />;
 };

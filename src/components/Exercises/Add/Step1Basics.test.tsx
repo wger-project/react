@@ -1,11 +1,10 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Step1Basics } from "components/Exercises/Add/Step1Basics";
-import { testCategories, testEquipment, testMuscles } from "tests/exerciseTestdata";
-import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
-import { ExerciseStateProvider } from "state";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { Step1Basics } from "components/Exercises/Add/Step1Basics";
+import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
+import React from "react";
+import { ExerciseSubmissionStateProvider } from "state";
 import {
     setAlternativeNamesEn,
     setCategory,
@@ -13,14 +12,15 @@ import {
     setNameEn,
     setPrimaryMuscles,
     setSecondaryMuscles
-} from "state/exerciseReducer";
+} from "state/exerciseSubmissionReducer";
+import { testCategories, testEquipment, testMuscles } from "tests/exerciseTestdata";
 
 // It seems we run into a timeout when running the tests on GitHub actions
 jest.setTimeout(15000);
 
 jest.mock("components/Exercises/queries");
-jest.mock("state/exerciseReducer", () => {
-    const originalModule = jest.requireActual("state/exerciseReducer");
+jest.mock("state/exerciseSubmissionReducer", () => {
+    const originalModule = jest.requireActual("state/exerciseSubmissionReducer");
     return {
         __esModule: true,
         ...originalModule,
@@ -30,9 +30,6 @@ jest.mock("state/exerciseReducer", () => {
         setEquipment: jest.fn(),
         setPrimaryMuscles: jest.fn(),
         setSecondaryMuscles: jest.fn()
-
-        // TODO: mocking primary and secondary muscles break the test
-        // setPrimaryMuscles: jest.fn()
     };
 });
 
@@ -66,11 +63,11 @@ describe("<Step1Basics />", () => {
         // Act
         const queryClient = new QueryClient();
         render(
-            <ExerciseStateProvider>
+            <ExerciseSubmissionStateProvider>
                 <QueryClientProvider client={queryClient}>
                     <Step1Basics onContinue={mockOnContinue} />
                 </QueryClientProvider>
-            </ExerciseStateProvider>
+            </ExerciseSubmissionStateProvider>
         );
 
         // Assert
@@ -89,11 +86,11 @@ describe("<Step1Basics />", () => {
         // Act
         const queryClient = new QueryClient();
         render(
-            <ExerciseStateProvider>
+            <ExerciseSubmissionStateProvider>
                 <QueryClientProvider client={queryClient}>
                     <Step1Basics onContinue={mockOnContinue} />
                 </QueryClientProvider>
-            </ExerciseStateProvider>
+            </ExerciseSubmissionStateProvider>
         );
 
         await user.type(screen.getByLabelText("name"), 'Biceps enlarger');
@@ -105,10 +102,10 @@ describe("<Step1Basics />", () => {
         await user.keyboard('{enter}');
 
         await user.click(screen.getByLabelText('category'));
-        await user.click(screen.getByText('server.arms'));
+        await user.click(screen.getByText('Arms'));
 
         await user.click(screen.getByLabelText('exercises.equipment'));
-        await user.click(screen.getByText('server.rocks'));
+        await user.click(screen.getByText('Rocks'));
 
         const muscles = screen.getByLabelText('exercises.muscles');
         await user.click(muscles);

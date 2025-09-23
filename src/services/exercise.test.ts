@@ -6,11 +6,14 @@ jest.mock("axios");
 
 describe("Exercise service API tests", () => {
 
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
+
     test('GET exercise data entries', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: responseApiExerciseInfo }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: responseApiExerciseInfo }));
 
         // Act
         const result = await getExercises();
@@ -23,8 +26,7 @@ describe("Exercise service API tests", () => {
     test('GET exercise data for single entry', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: responseApiExerciseInfo.results[0] }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: responseApiExerciseInfo.results[0] }));
 
         // Act
         const result = await getExercise(345);
@@ -48,8 +50,7 @@ describe("Exercise service API tests", () => {
             "equipment": [1, 2],
             "variations": null
         };
-        // @ts-ignore
-        axios.post.mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
         const result = await addExercise(
@@ -80,8 +81,7 @@ describe("Exercise service API tests", () => {
             "equipment": [1, 2],
             "variations": null
         };
-        // @ts-ignore
-        axios.patch.mockImplementation(() => Promise.resolve({ data: response, status: 200 }));
+        (axios.patch as jest.Mock).mockImplementation(() => Promise.resolve({ data: response, status: 200 }));
 
         // Act
         const result = await editExercise(
@@ -103,8 +103,7 @@ describe("Exercise service API tests", () => {
     test('DELETE exercise', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.delete.mockImplementation(() => Promise.resolve({ status: 204 }));
+        (axios.delete as jest.Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act
         const result = await deleteExercise(1);

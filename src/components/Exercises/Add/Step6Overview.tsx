@@ -4,7 +4,6 @@ import {
     AlertTitle,
     Box,
     Button,
-    Grid,
     ImageListItem,
     Table,
     TableBody,
@@ -13,6 +12,7 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
+import Grid from '@mui/material/Grid';
 import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
@@ -25,14 +25,13 @@ import { useNavigate } from "react-router-dom";
 import { addExercise, addTranslation, postAlias, postExerciseImage } from "services";
 import { addNote } from "services/note";
 import { addVariation } from "services/variation";
-import { useExerciseStateValue } from "state";
+import { useExerciseSubmissionStateValue } from "state";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
-import { getTranslationKey } from "utils/strings";
 import { makeLink, WgerLink } from "utils/url";
 
 export const Step6Overview = ({ onBack }: StepProps) => {
     const [t, i18n] = useTranslation();
-    const [state] = useExerciseStateValue();
+    const [state] = useExerciseSubmissionStateValue();
 
     const navigate = useNavigate();
     const categoryQuery = useCategoriesQuery();
@@ -50,9 +49,9 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         setSubmissionState('loading');
 
         // Create a new variation object if needed
-        // TODO: PATCH the other exercise base (newVariationBaseId) with the new variation id
+        // TODO: PATCH the other exercise base (newVariationExerciseId) with the new variation id
         let variationId;
-        if (state.newVariationBaseId !== null) {
+        if (state.newVariationExerciseId !== null) {
             variationId = await addVariation();
         } else {
             variationId = state.variationId;
@@ -69,13 +68,13 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         );
 
         // Create the English translation
-        const translation = await addTranslation(
-            exerciseId,
-            ENGLISH_LANGUAGE_ID,
-            state.nameEn,
-            state.descriptionEn,
-            profileQuery.data!.username
-        );
+        const translation = await addTranslation({
+            exerciseId: exerciseId,
+            languageId: ENGLISH_LANGUAGE_ID,
+            name: state.nameEn,
+            description: state.descriptionEn,
+            author: profileQuery.data!.username
+        });
 
         // For each entry in alternative names, create a new alias
         for (const alias of state.alternativeNamesEn) {
@@ -99,13 +98,13 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
         // Create the translation if needed
         if (state.languageId !== null) {
-            const exerciseI18n = await addTranslation(
-                exerciseId,
-                state.languageId,
-                state.nameI18n,
-                state.descriptionI18n,
-                profileQuery.data!.username
-            );
+            const exerciseI18n = await addTranslation({
+                exerciseId: exerciseId,
+                languageId: state.languageId,
+                name: state.nameI18n,
+                description: state.descriptionI18n,
+                author: profileQuery.data!.username
+            });
 
             for (const alias of state.alternativeNamesI18n) {
                 await postAlias(exerciseI18n.id!, alias);
@@ -151,23 +150,23 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('category')}</TableCell>
-                            <TableCell>{t(getTranslationKey(categoryQuery.data!.find(c => c.id === state.category)!.name))}</TableCell>
+                            <TableCell>{categoryQuery.data!.find(c => c.id === state.category)!.translatedName}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.equipment')}</TableCell>
-                            <TableCell>{state.equipment.map(e => t(getTranslationKey(equipmentQuery.data!.find(value => value.id === e)!.name))).join(', ')}</TableCell>
+                            <TableCell>{state.equipment.map(e => equipmentQuery.data!.find(value => value.id === e)!.translatedName).join(', ')}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.muscles')}</TableCell>
-                            <TableCell>{state.muscles.map(m => musclesQuery.data!.find(value => value.id === m)!.getName(t)).join(', ')}</TableCell>
+                            <TableCell>{state.muscles.map(m => musclesQuery.data!.find(value => value.id === m)!.getName()).join(', ')}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.secondaryMuscles')}</TableCell>
-                            <TableCell>{state.musclesSecondary.map(m => musclesQuery.data!.find(value => value.id === m)!.getName(t)).join(', ')}</TableCell>
+                            <TableCell>{state.musclesSecondary.map(m => musclesQuery.data!.find(value => value.id === m)!.getName()).join(', ')}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.variations')}</TableCell>
-                            <TableCell>{state.variationId} / {state.newVariationBaseId}</TableCell>
+                            <TableCell>{state.variationId} / {state.newVariationExerciseId}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
@@ -238,7 +237,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
             }
 
             <Grid container>
-                <Grid item xs={12} display="flex" justifyContent={"end"}>
+                <Grid display="flex" justifyContent={"end"} size={12}>
                     <Box sx={{ mb: 2 }}>
                         <div>
                             {submissionState !== 'done' &&

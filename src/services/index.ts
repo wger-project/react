@@ -17,7 +17,7 @@ export {
 } from './exercise';
 export {
     addTranslation,
-    editExerciseTranslation,
+    editTranslation,
     getExerciseTranslations,
     searchExerciseTranslations,
     deleteExerciseTranslation
@@ -29,12 +29,18 @@ export { postAlias, deleteAlias } from './alias';
 export { postExerciseVideo, deleteExerciseVideo } from './video';
 
 export {
-    getWorkoutRoutinesShallow,
-    getWorkoutRoutine,
-    getWorkoutRoutines,
-    getActiveWorkoutRoutine,
-    getRoutineLogs,
-} from './workoutRoutine';
+    getRoutinesShallow,
+    getPrivateTemplatesShallow,
+    getPublicTemplatesShallow,
+    getRoutine,
+    getRoutines,
+    getActiveRoutine,
+    addRoutine,
+    deleteRoutine,
+    editRoutine,
+    getRoutineStatisticsData,
+    getRoutineLogData
+} from './routine';
 
 export {
     getMeasurementCategories,
@@ -47,3 +53,50 @@ export { searchIngredient, getIngredient } from './ingredient';
 
 export { addMealItem, editMealItem, deleteMealItem } from './mealItem';
 export { getMealsForPlan, addMeal, editMeal, deleteMeal } from './meal';
+export { getRoutineLogs, addLogs, editLog, deleteLog } from "./workoutLogs";
+export { editSlotEntry, deleteSlotEntry } from './slot_entry';
+export { getRoutineRepUnits, getRoutineWeightUnits } from './workoutUnits';
+export { addDay, editDay, deleteDay, editDayOrder } from './day';
+export { addSlot, deleteSlot, editSlot, editSlotOrder } from './slot';
+export {
+    addRepetitionsConfig,
+    editRepetitionsConfig,
+    deleteRepetitionsConfig,
+    addMaxRepetitionsConfig,
+    editMaxRepetitionsConfig,
+    deleteMaxRepetitionsConfig,
+    addMaxWeightConfig,
+    editMaxWeightConfig,
+    deleteMaxWeightConfig,
+    addWeightConfig,
+    editWeightConfig,
+    deleteWeightConfig,
+    addNrOfSetsConfig,
+    editNrOfSetsConfig,
+    deleteNrOfSetsConfig,
+    addRirConfig,
+    editRirConfig,
+    deleteRirConfig,
+    addRestConfig,
+    editRestConfig,
+    deleteRestConfig,
+    editMaxRestConfig,
+    addMaxRestConfig,
+    deleteMaxRestConfig,
+    addMaxNrOfSetsConfig,
+    editMaxNrOfSetsConfig,
+    deleteMaxNrOfSetsConfig,
+    addMaxRirConfig,
+    editMaxRirConfig,
+    deleteMaxRirConfig,
+} from './config';
+
+export { addSession, editSession, searchSession, getSessions } from './session';
+
+export {
+    getNutritionalDiaryEntries, deleteNutritionalDiaryEntry, addNutritionalDiaryEntry, editNutritionalDiaryEntry
+} from './nutritionalDiary';
+
+export { getProfile, editProfile } from './profile';
+
+export { processBaseConfigs } from './base_config';

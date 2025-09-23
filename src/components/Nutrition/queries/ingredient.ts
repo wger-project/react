@@ -4,9 +4,9 @@ import { QueryKey } from "utils/consts";
 
 
 export function useFetchIngredientQuery(ingredientId: number) {
-    return useQuery(
-        [QueryKey.INGREDIENT, ingredientId],
-        () => getIngredient(ingredientId)
-    );
+    return useQuery({
+        queryKey: [QueryKey.INGREDIENT, ingredientId],
+        queryFn: () => getIngredient(ingredientId)
+    });
 }
 

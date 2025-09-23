@@ -6,7 +6,6 @@ import {
     Chip,
     Dialog,
     Divider,
-    Grid,
     ListItemIcon,
     ListItemText,
     Menu,
@@ -14,6 +13,7 @@ import {
     Stack,
     Typography
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { ExerciseDeleteDialog } from "components/Exercises/Detail/Head/ExerciseDeleteDialog";
 import { Exercise } from 'components/Exercises/models/exercise';
 import { Language } from 'components/Exercises/models/language';
@@ -23,7 +23,6 @@ import { WgerPermissions } from "permissions";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
-import { getTranslationKey } from "utils/strings";
 import styles from './head.module.css';
 
 export interface HeadProp {
@@ -85,8 +84,8 @@ export const Head = ({
     });
 
     return (
-        <Grid container>
-            <Grid item xs={12}>
+        (<Grid container>
+            <Grid size={12}>
                 <div className={styles.root}>
                     <Dialog
                         open={openDialog}
@@ -157,14 +156,20 @@ export const Head = ({
                         }
                     </div>
                     <Stack direction="row" spacing={1} mt={2}>
-                        <Chip label={t(getTranslationKey(exercise.category.name))} size="small" />
+                        <Chip
+                            label={exercise.category.translatedName}
+                            size="small" />
                         {exercise.equipment.map(e => {
-                            return <Chip key={e.id} label={t(getTranslationKey(e.name))} variant="outlined"
-                                         size="small" />;
+                            return <Chip
+                                key={e.id}
+                                label={e.translatedName}
+                                variant="outlined"
+                                size="small"
+                            />;
                         })}
                     </Stack>
                 </div>
             </Grid>
-        </Grid>
+        </Grid>)
     );
 };

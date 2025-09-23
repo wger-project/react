@@ -3,8 +3,8 @@ import { Exercise, ExerciseAdapter } from "components/Exercises/models/exercise"
 import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
 
-export const EXERCISE_INFO_PATH = 'exercisebaseinfo';
-export const EXERCISE_PATH = 'exercise-base';
+export const EXERCISE_INFO_PATH = 'exerciseinfo';
+export const EXERCISE_PATH = 'exercise';
 
 /*
  * Process the response from the server and return the exercise bases
@@ -103,7 +103,7 @@ export const addExercise = async (
 /*
  * Update an existing exercise base
  */
-type editExerciseProps = {
+type EditExerciseProps = {
     category?: number,
     equipment?: number[],
     muscles?: number[],
@@ -111,7 +111,7 @@ type editExerciseProps = {
     variation_id?: number | null,
     license_author?: string | null
 }
-export const editExercise = async (id: number, data: editExerciseProps): Promise<number> => {
+export const editExercise = async (id: number, data: EditExerciseProps): Promise<number> => {
 
     const url = makeUrl(EXERCISE_PATH, { id: id });
     const response = await axios.patch(

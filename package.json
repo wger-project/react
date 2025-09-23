@@ -2,90 +2,84 @@
   "name": "wger_react",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.15.21",
-    "@mui/lab": "^5.0.0-alpha.160",
-    "@mui/material": "^5.15.21",
-    "@mui/styles": "^5.15.21",
-    "@mui/x-data-grid": "^6.16.0",
-    "@mui/x-date-pickers": "^5.0.20",
-    "@tanstack/react-query": "^4.2.3",
-    "axios": "^1.6.7",
+    "@emotion/babel-plugin": "^11.12.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@hello-pangea/dnd": "^18.0.1",
+    "@mui/icons-material": "^7.0.2",
+    "@mui/lab": "^7.0.0-beta.10",
+    "@mui/material": "^7.0.2",
+    "@mui/system": "^7.0.1",
+    "@mui/x-data-grid": "^8.2.0",
+    "@mui/x-date-pickers": "^8.2.0",
+    "@tanstack/react-query": "^5.71.5",
+    "@vitejs/plugin-react": "^5.0.3",
+    "axios": "^1.12.2",
     "formik": "^2.4.6",
     "history": "^5.3.0",
-    "i18next": "^23.6.0",
-    "i18next-browser-languagedetector": "^7.2.0",
-    "i18next-http-backend": "^2.4.3",
-    "luxon": "^3.4.4",
-    "react": "^18.3.1",
-    "react-dom": "^18.2.0",
-    "react-i18next": "^14.1.0",
-    "react-responsive": "^10.0.0",
-    "react-router-dom": "^6.23.0",
-    "react-simple-wysiwyg": "^3.0.3",
-    "recharts": "^2.12.7",
+    "i18next": "^25.5.2",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "i18next-http-backend": "^3.0.2",
+    "luxon": "^3.7.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-i18next": "^15.7.3",
+    "react-is": "^19.1.1",
+    "react-responsive": "^10.0.1",
+    "react-router-dom": "^7.9.1",
+    "react-simple-wysiwyg": "^3.4.1",
+    "recharts": "^3.2.1",
     "slug": "^9.1.0",
-    "typescript": "5.1.6",
-    "web-vitals": "^4.2.1",
-    "yup": "^1.4.0"
+    "typescript": "^5.9.2",
+    "vite-tsconfig-paths": "^5.1.4",
+    "web-vitals": "^5.1.0",
+    "yup": "^1.7.0"
   },
   "devDependencies": {
-    "@tanstack/react-query-devtools": "^4.2.3",
+    "@eslint/js": "^9.29.0",
+    "@tanstack/react-query-devtools": "^5.85.3",
+    "@testing-library/dom": "^10.3.2",
     "@testing-library/jest-dom": "^6.4.6",
-    "@testing-library/react": "^14.2.1",
-    "@testing-library/user-event": "^14.5.2",
-    "@types/jest": "^29.5.12",
-    "@types/lodash": "^4.17.6",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^29.5.14",
+    "@types/lodash": "^4.17.17",
     "@types/luxon": "^3.4.2",
-    "@types/node": "^20.14.9",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.2.18",
-    "@types/recharts": "^1.8.29",
-    "@types/slug": "^5.0.7",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsx-a11y": "^6.9.0",
-    "eslint-plugin-react": "^7.34.1",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "i18next-parser": "^9.0.0",
-    "react-scripts": "^5.0.1"
+    "@types/node": "^22.15.3",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@types/react-is": "^19",
+    "@types/recharts": "^2.0.1",
+    "@types/slug": "^5.0.9",
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
+    "@typescript-eslint/parser": "^8.44.0",
+    "eslint": "^9.35.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "i18next-parser": "^9.3.0",
+    "jest": "^30.1.3",
+    "jest-environment-jsdom": "^30.1.2",
+    "jsdom": "^27.0.0",
+    "ts-jest": "^29.4.2",
+    "typescript-eslint": "^8.44.0",
+    "vite": "^7.1.5",
+    "vite-plugin-eslint": "^1.8.1",
+    "vitest": "^3.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
     "postbuild": "./postbuild.sh",
-    "test": "LANG=de_de react-scripts test --watchAll=false",
-    "eject": "react-scripts eject",
+    "test": "LANG=de_de jest",
     "i18n": "i18next",
-    "lint": "eslint ."
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "ignorePatterns": [
-      "build/**"
-    ],
-    "rules": {},
-    "overrides": [
-      {
-        "files": [
-          "**/*.ts?(x)"
-        ],
-        "rules": {
-          "semi": [
-            2,
-            "always"
-          ],
-          "camelcase": [
-            1
-          ]
-        }
-      }
-    ]
+    "lint": "eslint src",
+    "lint:quiet": "eslint --quiet src",
+    "lint:fix": "eslint --fix src"
   },
   "browserslist": {
     "production": [
@@ -101,7 +95,18 @@
   },
   "jest": {
     "moduleNameMapper": {
-      "^axios$": "axios/dist/axios.js"
-    }
-  }
+      "^axios$": "<rootDir>/node_modules/axios/dist/node/axios.cjs",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+    },
+    "preset": "ts-jest",
+    "testEnvironment": "jest-environment-jsdom",
+    "modulePaths": [
+      "<rootDir>/src"
+    ],
+    "setupFilesAfterEnv": [
+      "./src/setupTests.ts"
+    ]
+  },
+  "packageManager": "yarn@4.9.2"
 }

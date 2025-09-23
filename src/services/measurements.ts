@@ -1,29 +1,36 @@
 import axios from 'axios';
 import { MeasurementCategory, MeasurementCategoryAdapter } from "components/Measurements/models/Category";
 import { MeasurementEntry, MeasurementEntryAdapter } from "components/Measurements/models/Entry";
-import { ApiMeasurementCategoryType, ApiMeasurementEntryType } from 'types';
+import { ApiMeasurementCategoryType } from 'types';
 import { dateToYYYYMMDD } from "utils/date";
-import { makeHeader, makeUrl } from "utils/url";
-import { ResponseType } from "./responseType";
 import { fetchPaginated } from 'utils/requests';
+import { makeHeader, makeUrl } from "utils/url";
 
 export const API_MEASUREMENTS_CATEGORY_PATH = 'measurement-category';
 export const API_MEASUREMENTS_ENTRY_PATH = 'measurement';
 
+export type MeasurementQueryOptions = {
+    filtersetQueryCategories?: object,
+    filtersetQueryEntries?: object,
+}
 
-export const getMeasurementCategories = async (): Promise<MeasurementCategory[]> => {
+export const getMeasurementCategories = async (options?: MeasurementQueryOptions): Promise<MeasurementCategory[]> => {
+    const { filtersetQueryCategories = {}, filtersetQueryEntries = {} } = options || {};
+
     const adapter = new MeasurementCategoryAdapter();
     const entryAdapter = new MeasurementEntryAdapter();
-    const { data: receivedCategories } = await axios.get<ResponseType<ApiMeasurementCategoryType>>(
-        makeUrl(API_MEASUREMENTS_CATEGORY_PATH),
-        { headers: makeHeader(), }
-    );
-    const categories = receivedCategories.results.map(l => adapter.fromJson(l));
+    const categories: MeasurementCategory[] = [];
+
+    for await (const page of fetchPaginated(makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { query: { ...filtersetQueryCategories } }), makeHeader())) {
+        for (const catData of page) {
+            categories.push(adapter.fromJson(catData));
+        }
+    }
 
     // Load entries for each category
     const entryResponses = categories.map(async (category) => {
         const out: MeasurementEntry[] = [];
-        const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: category.id } });
+        const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: category.id, ...filtersetQueryEntries } });
 
         // Collect all pages of entries
         for await (const page of fetchPaginated(url, makeHeader())) {

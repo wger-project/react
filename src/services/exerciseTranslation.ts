@@ -13,8 +13,7 @@ export const EXERCISE_SEARCH_PATH = 'exercise/search';
  * Fetch all exercise translations for a given exercise base
  */
 export const getExerciseTranslations = async (id: number): Promise<Translation[]> => {
-    // eslint-disable-next-line camelcase
-    const url = makeUrl(EXERCISE_PATH, { query: { exercise_base: id } });
+    const url = makeUrl(EXERCISE_PATH, { query: { exercise: id } });
     const { data } = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
@@ -43,18 +42,20 @@ export const searchExerciseTranslations = async (name: string, languageCode: str
 /*
  * Create a new exercise translation
  */
-export const addTranslation = async (
-    exerciseId: number,
-    languageId: number,
-    name: string,
-    description: string,
-    author: string
-): Promise<Translation> => {
+export interface AddTranslationParams {
+    exerciseId: number;
+    languageId: number;
+    name: string;
+    description: string;
+    author: string;
+}
+
+export const addTranslation = async (params: AddTranslationParams): Promise<Translation> => {
+    const { exerciseId, languageId, name, description, author } = params;
 
     const url = makeUrl(EXERCISE_TRANSLATION_PATH);
     const baseData = {
-        // eslint-disable-next-line camelcase
-        exercise_base: exerciseId,
+        exercise: exerciseId,
         language: languageId,
         name: name,
         description: description,
@@ -72,17 +73,16 @@ export const addTranslation = async (
 /*
  * Edit an existing exercise translation
  */
-export const editExerciseTranslation = async (
-    id: number,
-    exerciseId: number,
-    languageId: number,
-    name: string,
-    description: string,
-): Promise<Translation> => {
+export interface EditTranslationParams extends AddTranslationParams {
+    id: number;
+}
+
+export const editTranslation = async (data: EditTranslationParams): Promise<Translation> => {
+    const { id, exerciseId, languageId, name, description } = data;
+
     const url = makeUrl(EXERCISE_TRANSLATION_PATH, { id: id });
     const baseData = {
-        // eslint-disable-next-line camelcase
-        exercise_base: exerciseId,
+        exercise: exerciseId,
         language: languageId,
         name: name,
         description: description,

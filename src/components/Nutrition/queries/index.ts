@@ -5,10 +5,13 @@ export {
     useAddNutritionalPlanQuery,
     useFetchNutritionalPlanQuery,
     useDeleteNutritionalPlanQuery,
-    useFetchLastNutritionalPlanQuery
+    useFetchLastNutritionalPlanQuery,
+
 } from './plan';
 
-export { useAddDiaryEntryQuery, useDeleteDiaryEntryQuery, useEditDiaryEntryQuery, } from './diary';
+export {
+    useAddDiaryEntryQuery, useDeleteDiaryEntryQuery, useEditDiaryEntryQuery, useNutritionDiaryQuery
+} from './diary';
 
 export { useEditMealQuery, useAddMealQuery, useDeleteMealQuery } from './meal';
 

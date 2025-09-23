@@ -12,8 +12,7 @@ describe("Variation service API tests", () => {
         const response = {
             "id": 123
         };
-        // @ts-ignore
-        axios.post.mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
         const result = await addVariation();

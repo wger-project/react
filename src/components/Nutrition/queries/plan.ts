@@ -1,33 +1,36 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
 import {
     addNutritionalPlan,
-    AddNutritionalPlanParams,
     deleteNutritionalPlan,
     editNutritionalPlan,
-    EditNutritionalPlanParams,
     getLastNutritionalPlan,
     getNutritionalPlanFull,
     getNutritionalPlansSparse
 } from "services/nutritionalPlan";
 import { QueryKey } from "utils/consts";
+import { dateToYYYYMMDD } from "utils/date";
 
 export function useFetchNutritionalPlansQuery() {
-    return useQuery([QueryKey.NUTRITIONAL_PLANS], getNutritionalPlansSparse);
+    return useQuery({
+        queryKey: [QueryKey.NUTRITIONAL_PLANS],
+        queryFn: () => getNutritionalPlansSparse()
+    });
 }
 
 
 export function useFetchLastNutritionalPlanQuery() {
-    return useQuery(
-        [QueryKey.NUTRITIONAL_PLAN, 'last'],
-        () => getLastNutritionalPlan()
-    );
+    return useQuery({
+        queryKey: [QueryKey.NUTRITIONAL_PLAN, 'last'],
+        queryFn: () => getLastNutritionalPlan()
+    });
 }
 
 export function useFetchNutritionalPlanQuery(planId: number) {
-    return useQuery(
-        [QueryKey.NUTRITIONAL_PLAN, planId],
-        () => getNutritionalPlanFull(planId)
-    );
+    return useQuery({
+        queryKey: [QueryKey.NUTRITIONAL_PLAN, planId],
+        queryFn: () => getNutritionalPlanFull(planId)
+    });
 }
 
 /*
@@ -37,7 +40,7 @@ export function useFetchNutritionalPlanQuery(planId: number) {
 export function useFetchNutritionalPlanDateQuery(planId: number | null, dateStr: string, enabled = true) {
     return useQuery({
         queryKey: [QueryKey.NUTRITIONAL_PLAN, planId, dateStr],
-        queryFn: () => getNutritionalPlanFull(planId, new Date(dateStr)),
+        queryFn: () => getNutritionalPlanFull(planId, { filtersetQueryLogs: { "datetime__eq": dateToYYYYMMDD(new Date(dateStr)) } }),
         enabled: enabled,
     });
 }
@@ -46,21 +49,30 @@ export const useAddNutritionalPlanQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: AddNutritionalPlanParams) => addNutritionalPlan(data),
+        mutationFn: (plan: NutritionalPlan) => addNutritionalPlan(plan),
         onSuccess: () => {
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLANS,]);
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN,]);
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLANS,]
+            });
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLAN,]
+            });
         }
     });
 };
+
 export const useDeleteNutritionalPlanQuery = (id: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: (id: number) => deleteNutritionalPlan(id),
         onSuccess: () => {
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLANS,]);
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, id]);
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLANS,]
+            });
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLAN, id]
+            });
         }
     });
 };
@@ -68,10 +80,14 @@ export const useEditNutritionalPlanQuery = (id: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: EditNutritionalPlanParams) => editNutritionalPlan(data),
+        mutationFn: (plan: NutritionalPlan) => editNutritionalPlan(plan),
         onSuccess: () => {
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLAN, id]);
-            queryClient.invalidateQueries([QueryKey.NUTRITIONAL_PLANS,]);
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLAN, id]
+            });
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.NUTRITIONAL_PLANS,]
+            });
         }
     });
 };

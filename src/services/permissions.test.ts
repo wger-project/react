@@ -10,8 +10,7 @@ describe("Permission API tests", () => {
     test('Check an exising permission', async () => {
 
         // Arrange
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ data: { "result": true } }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: { "result": true } }));
 
         // Act
         const result = await checkPermission('exercises.delete_exercise');
@@ -23,8 +22,7 @@ describe("Permission API tests", () => {
 
     test('Check permission logged out user', async () => {
         // Arrange
-        // @ts-ignore
-        axios.get.mockImplementation(() => Promise.resolve({ status: 400 }));
+        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ status: 400 }));
 
         // Act
         const result = await checkPermission('exercises.sus_scrofa');
