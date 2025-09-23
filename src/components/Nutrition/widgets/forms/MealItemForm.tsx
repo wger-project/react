@@ -1,10 +1,10 @@
 import { Button, InputAdornment, Stack, TextField } from "@mui/material";
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { MealItem } from "components/Nutrition/models/mealItem";
 import { useAddMealItemQuery, useDeleteMealItemQuery, useEditMealItemQuery } from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
 import { useTranslation } from "react-i18next";
-import { IngredientSearchResponse } from "services/responseType";
 import * as yup from "yup";
 
 type MealItemFormProps = {
@@ -74,8 +74,8 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                 <Form>
                     <Stack spacing={2}>
                         <IngredientAutocompleter
-                            callback={(value: IngredientSearchResponse | null) => formik.setFieldValue('ingredient', value ? value.data.id : null)}
-                            initialIngredient={item ? item.ingredient?.name : null}
+                            callback={(value: Ingredient | null) => formik.setFieldValue('ingredient', value ? value.id : null)}
+                            initialIngredient={item ? item.ingredient : null}
                         />
                         <TextField
                             fullWidth

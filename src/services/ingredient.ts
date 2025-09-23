@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Ingredient, IngredientAdapter } from "components/Nutrition/models/Ingredient";
-import { IngredientSearchResponse } from "services/responseType";
 import { ApiIngredientType } from 'types';
 import { ApiPath, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
@@ -40,7 +39,7 @@ export const getIngredients = async (ids: number[]): Promise<Ingredient[]> => {
 };
 
 
-export const searchIngredient = async (name: string, languageCode: string, searchEnglish: boolean = true): Promise<IngredientSearchResponse[]> => {
+export const searchIngredient = async (name: string, languageCode: string, searchEnglish: boolean = true): Promise<Ingredient[]> => {
     // TODO: this currently only converts the results from the new API to the old format
     //       but this should be properly converted.
     //       See also https://github.com/wger-project/wger/pull/1724
@@ -53,20 +52,10 @@ export const searchIngredient = async (name: string, languageCode: string, searc
 
     const url = makeUrl(
         ApiPath.INGREDIENTINFO_PATH,
-        { query: { name__search: name, language__codes: languages.join(',') } }
+        // eslint-disable-next-line camelcase
+        { query: { name__search: name, language__code: languages.join(',') } }
     );
 
     const { data } = await axios.get(url);
-
-    return data.results.map((entry: any) => (
-        {
-            value: entry.name,
-            data: {
-                id: entry.id,
-                name: entry.name,
-                image: entry.image?.image,
-                image_thumbnail: entry.image?.image,
-            }
-        }
-    ));
+    return data.results.map((entry: ApiIngredientType) => new IngredientAdapter().fromJson(entry));
 };
