@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { ApiIngredientType } from 'types';
-import { ApiPath, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
+import { API_RESULTS_PAGE_SIZE, ApiPath, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
 import { makeHeader, makeUrl } from "utils/url";
 
@@ -51,8 +51,13 @@ export const searchIngredient = async (name: string, languageCode: string, searc
 
     const url = makeUrl(
         ApiPath.INGREDIENTINFO_PATH,
-        // eslint-disable-next-line camelcase
-        { query: { name__search: name, language__code: languages.join(',') } }
+        {
+            query: {
+                'name__search': name,
+                'language__code': languages.join(','),
+                'limit': API_RESULTS_PAGE_SIZE,
+            }
+        }
     );
 
     const { data } = await axios.get(url);
