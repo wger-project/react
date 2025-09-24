@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import i18n from 'i18next';
@@ -21,7 +19,7 @@ type RoutineConstructorParams = {
     id: number | null;
     name: string;
     description: string;
-    created: Date;
+    created?: Date;
     start: Date;
     end: Date;
     fitInWeek: boolean;
@@ -49,7 +47,7 @@ export class Routine {
         this.id = data.id ?? null;
         this.name = data.name;
         this.description = data.description;
-        this.created = data.created;
+        this.created = data.created ?? new Date();
         this.start = data.start;
         this.end = data.end;
         this.fitInWeek = data.fitInWeek;
@@ -212,9 +210,9 @@ class RoutineAdapter implements Adapter<Routine> {
             description: item.description,
             start: dateToYYYYMMDD(item.start),
             end: dateToYYYYMMDD(item.end),
-            fit_in_week: item.fitInWeek,
-            is_template: item.isTemplate,
-            is_public: item.isPublic
+            "fit_in_week": item.fitInWeek,
+            "is_template": item.isTemplate,
+            "is_public": item.isPublic
         };
     }
 }

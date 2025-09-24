@@ -42,7 +42,6 @@ import { SlotDetails } from "components/WorkoutRoutines/widgets/SlotDetails";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { AddDayParams } from "services/day";
 import { ExerciseSearchResponse } from "services/responseType";
 import { SNACKBAR_AUTO_HIDE_DURATION, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
@@ -90,20 +89,16 @@ export const DayDragAndDropGrid = (props: {
         props.setSelectedDayIndex(result.destination.index);
 
         routineQuery.data!.days = updatedDays;
-        editDayOrderQuery.mutate(updatedDays.map((day, index) => ({ id: day.id, order: index + 1 })));
+        editDayOrderQuery.mutate(updatedDays.map((day, index) => (Day.clone(day, { order: index + 1 }))));
     };
 
     const handleAddDay = async () => {
-        const newDayData: AddDayParams = {
-            routine: props.routineId,
+        const newDay = new Day({
+            routineId: props.routineId,
             name: `${t('routines.newDay')} ${routineQuery.data!.days.length + 1}`,
             order: routineQuery.data!.days.length + 1,
-            // eslint-disable-next-line camelcase
-            is_rest: false,
-            // eslint-disable-next-line camelcase
-            need_logs_to_advance: false,
-        };
-        const newDay = await addDayQuery.mutateAsync(newDayData);
+        });
+        await addDayQuery.mutateAsync(newDay);
         props.setSelectedDayIndex(routineQuery.data!.days.length);
     };
 
@@ -128,7 +123,7 @@ export const DayDragAndDropGrid = (props: {
                                     style={getListStyle(snapshot.isDraggingOver)}
                                 >
                                     {routineQuery.data!.days.map((day, index) =>
-                                        <Draggable key={day.id} draggableId={day.id.toString()} index={index}>
+                                        <Draggable key={day.id} draggableId={day.id!.toString()} index={index}>
                                             {(provided, snapshot) => (
                                                 <Tab
                                                     ref={provided.innerRef}
@@ -243,7 +238,7 @@ export const DayDetails = (props: {
         return;
     };
 
-    const handleAddSlot = () => addSlotQuery.mutate({ day: props.day.id, order: props.day.slots.length + 1 });
+    const handleAddSlot = () => addSlotQuery.mutate({ day: props.day.id!, order: props.day.slots.length + 1 });
 
     /*
      * Drag'n'drop

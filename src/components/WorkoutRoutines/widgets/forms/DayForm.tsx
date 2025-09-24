@@ -55,7 +55,7 @@ export const DayForm = (props: {
 
     const handleConfirmDeleteDay = () => {
         props.setSelectedDayIndex(null);
-        deleteDayQuery.mutate(props.day.id);
+        deleteDayQuery.mutate(props.day.id!);
         setOpenDeleteDialog(false);
     };
 
@@ -83,16 +83,15 @@ export const DayForm = (props: {
         isRest: boolean,
         needsLogsToAdvance: boolean
     }>) =>
-        editDayQuery.mutate({
-            id: props.day.id,
-            routine: props.routineId,
-            ...(values.name !== undefined && { name: values.name }),
-            ...(values.description !== undefined && { description: values.description }),
-            // eslint-disable-next-line camelcase
-            ...(values.isRest !== undefined && { is_rest: isRest }),
-            // eslint-disable-next-line camelcase
-            ...(values.needsLogsToAdvance !== undefined && { need_logs_to_advance: values.needsLogsToAdvance }),
-        });
+        editDayQuery.mutate(Day.clone(
+            props.day,
+            {
+                ...(values.name !== undefined && { name: values.name }),
+                ...(values.description !== undefined && { description: values.description }),
+                ...(values.isRest !== undefined && { isRest: isRest }),
+                ...(values.needsLogsToAdvance !== undefined && { needLogsToAdvance: values.needsLogsToAdvance }),
+            })
+        );
 
     return <>
         <Formik

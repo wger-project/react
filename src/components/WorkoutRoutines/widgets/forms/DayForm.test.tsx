@@ -33,7 +33,7 @@ describe('Tests for the DayForm', () => {
             <QueryClientProvider client={testQueryClient}>
                 <DayForm
                     day={testRoutine1.days[0]}
-                    routineId={123}
+                    routineId={1}
                     setSelectedDayIndex={jest.fn()}
                 />
             </QueryClientProvider>
@@ -71,13 +71,16 @@ describe('Tests for the DayForm', () => {
 
         // Assert
         expect(mockEditDay).toHaveBeenCalledTimes(1);
-        expect(mockEditDay).toHaveBeenCalledWith({
-            "routine": 123,
-            "id": 5,
-            "name": 'New name',
-            "description": 'New description',
-            "is_rest": false,
-            "need_logs_to_advance": false
-        });
+        expect(mockEditDay).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: 5,
+                routineId: 1,
+                order: 1,
+                name: 'New name',
+                description: 'New description',
+                isRest: false,
+                needLogsToAdvance: false
+            })
+        );
     });
 });
