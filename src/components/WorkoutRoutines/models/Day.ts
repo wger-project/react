@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 
-import { Slot, SlotAdapter } from "components/WorkoutRoutines/models/Slot";
+import { Slot } from "components/WorkoutRoutines/models/Slot";
 import i18n from 'i18next';
 import { Adapter } from "utils/Adapter";
 
@@ -94,7 +94,7 @@ class DayAdapter implements Adapter<Day> {
         type: item.type,
         config: item.config,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        slots: Object.hasOwn(item, 'slots') ? item.slots.map((slot: any) => new SlotAdapter().fromJson(slot)) : [],
+        slots: Object.hasOwn(item, 'slots') ? item.slots.map((slot: any) => Slot.fromJson(slot)) : [],
     });
 
     toJson = (item: Day) => ({
@@ -105,6 +105,7 @@ class DayAdapter implements Adapter<Day> {
         is_rest: item.isRest,
         need_logs_to_advance: item.needLogsToAdvance,
         type: item.type,
+        config: item.config,
     });
 }
 

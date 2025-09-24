@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Day } from "components/WorkoutRoutines/models/Day";
-import { addDay, deleteDay, editDay, editDayOrder } from "services";
+import { addDay, deleteDay, editDay } from "services";
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -43,43 +43,6 @@ describe('editDay', () => {
     });
 });
 
-
-describe('editDayOrder', () => {
-    const testDayOrders = [
-        new Day({ id: 1, routineId: 123, name: '', order: 3 }),
-        new Day({ id: 2, routineId: 123, name: '', order: 1 }),
-        new Day({ id: 3, routineId: 123, name: '', order: 2 }),
-    ];
-
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
-    test('should update the order of multiple days', async () => {
-        mockedAxios.patch.mockResolvedValue({ status: 200 });
-
-        await editDayOrder(testDayOrders);
-
-        expect(axios.patch).toHaveBeenCalledTimes(testDayOrders.length);
-        testDayOrders.forEach(({ order, id }) => {
-            expect(axios.patch).toHaveBeenCalledWith(
-                expect.any(String),
-                expect.objectContaining({
-                    order: order,
-                }),
-                expect.any(Object)
-            );
-        });
-    });
-
-    test('should handle errors gracefully', async () => {
-        const errorMessage = 'Network Error';
-        mockedAxios.patch.mockRejectedValueOnce(new Error(errorMessage));
-
-        await expect(editDayOrder(testDayOrders)).rejects.toThrow(errorMessage);
-        expect(axios.patch).toHaveBeenCalledTimes(1);
-    });
-});
 
 describe('addDay', () => {
     const mockDayData = {

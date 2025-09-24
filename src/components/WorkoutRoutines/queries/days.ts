@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Day } from "components/WorkoutRoutines/models/Day";
-import { addDay, deleteDay, editDay, editDayOrder } from "services";
+import { addDay, deleteDay, editDay } from "services";
 import { QueryKey, } from "utils/consts";
 
 
@@ -17,7 +17,7 @@ export const useEditDayOrderQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (days: Day[]) => editDayOrder(days),
+        mutationFn: (days: Day[]) => Promise.all(days.map(editDay)),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, routineId] })
     });
 };

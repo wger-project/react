@@ -33,7 +33,7 @@ import {
     useAddSlotQuery,
     useDeleteSlotQuery,
     useEditDayOrderQuery,
-    useEditSlotOrderQuery,
+    useEditSlotsQuery,
     useRoutineDetailQuery
 } from "components/WorkoutRoutines/queries";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
@@ -182,7 +182,7 @@ export const DayDetails = (props: {
     const deleteSlotQuery = useDeleteSlotQuery(props.routineId);
     const addSlotEntryQuery = useAddSlotEntryQuery(props.routineId);
     const addSlotQuery = useAddSlotQuery(props.routineId);
-    const editSlotOrderQuery = useEditSlotOrderQuery(props.routineId);
+    const editSlotOrderQuery = useEditSlotsQuery(props.routineId);
     const userProfileQuery = useProfileQuery();
     const theme = useTheme();
 
@@ -198,7 +198,7 @@ export const DayDetails = (props: {
         if (slotToDelete !== null) {
             if (reason === 'timeout') {
                 // Delete on the server
-                deleteSlotQuery.mutate(slotToDelete.id);
+                deleteSlotQuery.mutate(slotToDelete.id!);
                 setSlotToDelete(null);
             } else if (reason !== 'clickaway') {
                 // Undo the deletion - re-add the slot using its sort value
@@ -238,7 +238,10 @@ export const DayDetails = (props: {
         return;
     };
 
-    const handleAddSlot = () => addSlotQuery.mutate({ day: props.day.id!, order: props.day.slots.length + 1 });
+    const handleAddSlot = () => addSlotQuery.mutate(new Slot({
+        dayId: props.day.id!,
+        order: props.day.slots.length + 1
+    }));
 
     /*
      * Drag'n'drop
@@ -255,7 +258,7 @@ export const DayDetails = (props: {
         const [movedSlot] = updatedSlots.splice(result.source.index, 1);
         updatedSlots.splice(result.destination.index, 0, movedSlot);
 
-        editSlotOrderQuery.mutate(updatedSlots.map((slot, index) => ({ id: slot.id, order: index + 1 })));
+        editSlotOrderQuery.mutate(updatedSlots.map((slot, index) => (Slot.clone(slot, { order: index + 1 }))));
         props.day.slots = updatedSlots;
     };
 
@@ -298,7 +301,7 @@ export const DayDetails = (props: {
                         style={getListStyle(snapshot.isDraggingOver)}
                     >
                         {props.day.slots.map((slot, index) => <React.Fragment key={`slot-${slot.id}-${index}`}>
-                            <Draggable key={slot.id} draggableId={slot.id.toString()} index={index}>
+                            <Draggable key={slot.id} draggableId={slot.id!.toString()} index={index}>
                                 {(provided, snapshot) => (
                                     <Grid container padding={1}
                                           ref={provided.innerRef}
@@ -321,7 +324,7 @@ export const DayDetails = (props: {
                                                             <DragIndicatorIcon />
                                                         </IconButton>
 
-                                                        <IconButton onClick={() => handleDeleteSlot(slot.id)}>
+                                                        <IconButton onClick={() => handleDeleteSlot(slot.id!)}>
                                                             <DeleteIcon />
                                                         </IconButton>
                                                         {slot.entries.length > 1 ? t('routines.supersetNr', { number: index + 1 }) : t('routines.exerciseNr', { number: index + 1 })}
@@ -331,7 +334,7 @@ export const DayDetails = (props: {
                                                 <Grid>
                                                     {slot.entries.length > 0 && <ButtonGroup variant="outlined">
                                                         <Button
-                                                            onClick={() => handleAddSlotEntry(slot.id)}
+                                                            onClick={() => handleAddSlotEntry(slot.id!)}
                                                             size={"small"}
                                                             disabled={addSlotEntryQuery.isPending}
                                                             startIcon={addSlotEntryQuery.isPending ?
@@ -348,7 +351,7 @@ export const DayDetails = (props: {
                                                                 size={"small"}
                                                                 to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {
                                                                     id: props.routineId,
-                                                                    id2: slot.id
+                                                                    id2: slot.id!
                                                                 })}
                                                             >
                                                                 {t('routines.editProgression')}
@@ -382,7 +385,7 @@ export const DayDetails = (props: {
                                                             return;
                                                         }
                                                         addSlotEntryQuery.mutate({
-                                                            slot: slot.id,
+                                                            slot: slot.id!,
                                                             exercise: exercise.data.base_id,
                                                             type: 'normal',
                                                             order: slot.entries.length + 1,

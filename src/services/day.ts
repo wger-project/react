@@ -17,16 +17,6 @@ export const editDay = async (day: Day): Promise<Day> => {
     return Day.fromJson(response.data);
 };
 
-export const editDayOrder = async (days: Day[]): Promise<void> => {
-
-    for (const day of days) {
-        await axios.patch(
-            makeUrl(ApiPath.DAY, { id: day.id! }),
-            day.toJson(),
-            { headers: makeHeader() }
-        );
-    }
-};
 
 /*
  * Creates a new day
