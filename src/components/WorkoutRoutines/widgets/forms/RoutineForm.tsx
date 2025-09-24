@@ -17,7 +17,9 @@ import {
 } from "components/WorkoutRoutines/models/Routine";
 import { useAddRoutineQuery, useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
 import { SlotEntryRoundingField } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
+import { SaveButton } from "components/WorkoutRoutines/widgets/SaveButton";
 import { Form, Formik } from "formik";
+import { FormQueryErrors } from "components/Core/Widgets/FormError";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -27,16 +29,13 @@ import * as yup from 'yup';
 
 interface RoutineFormProps {
     routine?: Routine,
-    isTemplate?: boolean,
-    isPublicTemplate?: boolean,
     closeFn?: Function,
 }
 
-export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = true, closeFn }: RoutineFormProps) => {
-
+export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
     const [t, i18n] = useTranslation();
     const addRoutineQuery = useAddRoutineQuery();
-    const editRoutineQuery = useEditRoutineQuery(routine?.id ?? -1);
+    const editRoutineQuery = useEditRoutineQuery(routine?.id!);
     const navigate = useNavigate();
 
     /*
@@ -100,6 +99,50 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
         fitInWeek: yup.boolean()
     });
 
+    // new handle save
+    const handleSave = async (values: any) => {
+        if (routine) {
+            // when editing routine
+            const updatedRoutine: Routine = new Routine({
+                id: routine.id,
+                name: values.name,
+                description: values.description ?? '',
+                created: routine.created,
+                start: values.start?.toJSDate() ?? routine.start,
+                end: values.end?.toJSDate() ?? routine.end,
+                fitInWeek: values.fitInWeek ?? routine.fitInWeek,
+                isTemplate: routine.isTemplate,
+                isPublic: routine.isPublic,
+                days: routine.days,
+                dayData: routine.dayData,
+            });
+
+            await editRoutineQuery.mutateAsync(updatedRoutine);
+        } else {
+            // when creating a new routine
+            const newRoutine: Routine = new Routine({
+                id: null,
+                name: values.name,
+                description: values.description ?? '',
+                created: new Date(),
+                start: values.start?.toJSDate() ?? new Date(),
+                end: values.end?.toJSDate() ?? new Date(),
+                fitInWeek: values.fitInWeek ?? true,
+                isTemplate: false,
+                isPublic: false,
+                days: [],
+                dayData: [],
+            });
+
+            const result = await addRoutineQuery.mutateAsync(newRoutine);
+
+            navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
+
+            if (closeFn) {
+                closeFn();
+            }
+        }
+    };
 
     return (
         (<Formik
@@ -112,52 +155,18 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
             }}
 
             validationSchema={validationSchema}
-            onSubmit={async (values) => {
-                if (routine) {
-                    const newRoutine = Routine.clone(routine);
-                    newRoutine.fitInWeek = values.fitInWeek;
-                    newRoutine.name = values.name;
-                    newRoutine.description = values.description;
-                    newRoutine.start = values.start!.toJSDate();
-                    newRoutine.end = values.end!.toJSDate();
-                    editRoutineQuery.mutate(newRoutine);
-
-                } else {
-                    const result = await addRoutineQuery.mutateAsync(new Routine({
-                        id: null,
-                        name: values.name,
-                        description: values.description,
-                        created: new Date(),
-                        start: values.start!.toJSDate(),
-                        end: values.end?.toJSDate(),
-                        fitInWeek: values.fitInWeek,
-                        isTemplate: isTemplate,
-                        isPublic: isPublicTemplate
-                    }));
-
-                    navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
-
-                    if (closeFn) {
-                        closeFn();
-                    }
-                }
-            }}
+            onSubmit={handleSave} // use the new handle save
         >
             {formik => (
                 <Form>
                     <Grid container spacing={2}>
-
-                        <Grid size={{ xs: 12 }}>
+                        <Grid size={12}>
+                            <FormQueryErrors mutationQuery={routine ? editRoutineQuery : addRoutineQuery} />
+                        </Grid>
+                        <Grid size={{ xs: 12, sm: 5 }}>
                             <WgerTextField fieldName="name" title={t('name')} />
                         </Grid>
-                        <Grid size={12}>
-                            <WgerTextField
-                                fieldName="description"
-                                title={t('description')}
-                                fieldProps={{ multiline: true, rows: 4 }}
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 6 }}>
+                        <Grid size={{ xs: 6, sm: 3 }}>
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
@@ -180,7 +189,7 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
                                 />
                             </LocalizationProvider>
                         </Grid>
-                        <Grid size={{ xs: 5 }}>
+                        <Grid size={{ xs: 6, sm: 3 }}>
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
@@ -204,7 +213,7 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
                             </LocalizationProvider>
                         </Grid>
                         <Grid
-                            size={{ xs: 1 }}
+                            size={{ xs: 12, sm: 1 }}
                             sx={{
                                 display: "flex",
                                 alignItems: "center",
@@ -216,6 +225,13 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
                                 nrWeeks: durationWeeks,
                                 nrDays: durationDays
                             })}
+                        </Grid>
+                        <Grid size={12}>
+                            <WgerTextField
+                                fieldName="description"
+                                title={t('description')}
+                                fieldProps={{ multiline: true, rows: 4 }}
+                            />
                         </Grid>
                         <Grid size={12}>
                             <FormControlLabel
@@ -230,14 +246,30 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
                             </Tooltip>
                         </Grid>
                         <Grid size={12}>
-                            <Button
-                                disabled={formik.isSubmitting}
-                                color="primary"
+                            <SaveButton
+                                onSave={async () => {
+                                    const errors = await formik.validateForm();
+                                    if (Object.keys(errors).length > 0) {
+                                        formik.setTouched(
+                                            Object.keys(errors).reduce((acc, key) => ({
+                                                ...acc,
+                                                [key]: true
+                                            }), {})
+                                        );
+                                        throw new Error('validation error');
+                                    }
+
+                                    await formik.submitForm();
+                                }}
+                                loadingText={t('saving', 'Saving...')}
+                                successText={`${t('save', 'Saved')} ✅`}
+                                errorText={`${t('save')} ❌`}
+                                defaultText={t('save')}
                                 variant="contained"
+                                color="primary"
                                 type="submit"
-                                sx={{ mt: 2 }}>
-                                {t('save')}
-                            </Button>
+                                sx={{ mt: 2 }}
+                            />
                         </Grid>
                     </Grid>
                 </Form>
