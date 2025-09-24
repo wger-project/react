@@ -19,6 +19,7 @@ import { useAddRoutineQuery, useEditRoutineQuery } from "components/WorkoutRouti
 import { SlotEntryRoundingField } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
 import { SaveButton } from "components/WorkoutRoutines/widgets/SaveButton";
 import { Form, Formik } from "formik";
+import { FormQueryErrors } from "components/Core/Widgets/FormError";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -159,6 +160,9 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
             {formik => (
                 <Form>
                     <Grid container spacing={2}>
+                        <Grid size={12}>
+                            <FormQueryErrors mutationQuery={routine ? editRoutineQuery : addRoutineQuery} />
+                        </Grid>
                         <Grid size={{ xs: 12, sm: 5 }}>
                             <WgerTextField fieldName="name" title={t('name')} />
                         </Grid>

@@ -26,6 +26,7 @@ export const SaveButton: React.FC<SaveButtonProps> = ({
                                                       }) => {
     const { t } = useTranslation();
     const [internalStatus, setInternalStatus] = useState<SaveStatus>('idle');
+    const [isCoolingDown, setIsCoolingDown] = useState<boolean>(false);
 
     const currentStatus = externalStatus || internalStatus;
 
@@ -35,25 +36,21 @@ export const SaveButton: React.FC<SaveButtonProps> = ({
             case 'loading':
                 return {
                     text: loadingText || t('saving', 'Saving...'),
-                    color: 'primary' as const,
                     disabled: true
                 };
             case 'success':
                 return {
                     text: successText || `${t('save', 'Save')} ✅`,
-                    color: 'success' as const,
                     disabled: true
                 };
             case 'error':
                 return {
                     text: errorText || `${t('save', 'Save')} ❌`,
-                    color: 'error' as const,
                     disabled: false
                 };
             default:
                 return {
                     text: defaultText || t('save', 'Save'),
-                    color: 'primary' as const,
                     disabled: false
                 };
         }
@@ -65,6 +62,10 @@ export const SaveButton: React.FC<SaveButtonProps> = ({
         if (currentStatus === 'loading') return;
 
         try {
+            // Start cooldown immediately on click
+            setIsCoolingDown(true);
+            const cooldownTimer = setTimeout(() => setIsCoolingDown(false), resetDelay);
+
             if (!externalStatus) {
                 setInternalStatus('loading');
             }
@@ -78,6 +79,8 @@ export const SaveButton: React.FC<SaveButtonProps> = ({
             if (!externalStatus) {
                 setInternalStatus('error');
             }
+        } finally {
+            // Ensure cooldown timer exists for at least resetDelay; already set above
         }
     };
 
@@ -95,8 +98,7 @@ export const SaveButton: React.FC<SaveButtonProps> = ({
     return (
         <Button
             {...buttonProps}
-            color={buttonConfig.color}
-            disabled={buttonConfig.disabled}
+            disabled={buttonConfig.disabled || isCoolingDown}
             onClick={handleClick}
         >
             {buttonConfig.text}
