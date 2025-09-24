@@ -120,14 +120,6 @@ export interface ApiNutritionalPlanType {
     goal_fat: number | null,
 }
 
-export interface ApiMealItemType {
-    id: number,
-    meal: number,
-    ingredient: number,
-    weight_unit: number,
-    order: number,
-    amount: string
-}
 
 export interface ApiNutritionDiaryType {
     id: number,

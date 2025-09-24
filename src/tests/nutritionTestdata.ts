@@ -42,74 +42,82 @@ export const TEST_WEIGHT_UNIT_CUP = new NutritionWeightUnit(
 );
 
 
-export const TEST_MEAL_ITEM_1 = new MealItem(
-    42,
-    101,
-    null,
-    120,
-    3,
-    TEST_INGREDIENT_1
-);
-export const TEST_MEAL_ITEM_2 = new MealItem(
-    43,
-    102,
-    null,
-    220,
-    1,
-    TEST_INGREDIENT_2
-);
-export const TEST_MEAL_ITEM_3 = new MealItem(
-    45,
-    104,
-    null,
-    320,
-    2,
-    TEST_INGREDIENT_4
-);
+export const TEST_MEAL_ITEM_1 = new MealItem({
+    id: 42,
+    mealId: 1001,
+    amount: 120,
+    order: 3,
+    ingredient: TEST_INGREDIENT_1,
+    ingredientId: 101,
+    weightUnitId: null,
+});
+export const TEST_MEAL_ITEM_2 = new MealItem({
+    id: 43,
+    mealId: 1001,
+    amount: 220,
+    order: 1,
+    ingredientId: 102,
+    weightUnitId: null,
+    ingredient: TEST_INGREDIENT_2
+});
+export const TEST_MEAL_ITEM_3 = new MealItem({
+    id: 45,
+    mealId: 1001,
+    amount: 320,
+    order: 2,
+    ingredientId: 104,
+    weightUnitId: null,
+    ingredient: TEST_INGREDIENT_4
+});
 
-export const TEST_MEAL_ITEM_4 = new MealItem(
-    46,
-    105,
-    null,
-    320,
-    1,
-    TEST_INGREDIENT_5
-);
+export const TEST_MEAL_ITEM_4 = new MealItem({
+    id: 46,
+    mealId: 999,
+    amount: 320,
+    order: 1,
+    ingredientId: 105,
+    weightUnitId: null,
+    ingredient: TEST_INGREDIENT_5
+});
 
-export const TEST_MEAL_ITEM_5 = new MealItem(
-    47,
-    101,
-    null,
-    320,
-    1,
-    TEST_INGREDIENT_1
-);
+export const TEST_MEAL_ITEM_5 = new MealItem({
+    id: 47,
+    mealId: 1,
+    amount: 320,
+    order: 1,
+    ingredientId: 101,
+    weightUnitId: null,
+    ingredient: TEST_INGREDIENT_1
+});
 
-export const TEST_MEAL_ITEM_6 = new MealItem(
-    48,
-    102,
-    null,
-    100,
-    2,
-    TEST_INGREDIENT_2
-);
-export const TEST_MEAL_ITEM_7 = new MealItem(
-    103,
-    109,
-    null,
-    100,
-    1,
-    TEST_INGREDIENT_3
-);
+export const TEST_MEAL_ITEM_6 = new MealItem({
+    id: 48,
+    mealId: 123,
+    amount: 100,
+    order: 2,
+    ingredientId: 102,
+    weightUnitId: null,
+    ingredient: TEST_INGREDIENT_2
+});
+export const TEST_MEAL_ITEM_7 = new MealItem({
+    id: 103,
+    mealId: 2345,
+    amount: 100,
+    order: 1,
+    ingredientId: 109,
+    weightUnitId: null,
+    ingredient: TEST_INGREDIENT_3
+});
 
-export const TEST_MEAL_ITEM_8 = new MealItem(
-    104,
-    110,
-    null,
-    120,
-    1,
-    TEST_INGREDIENT_4
-);
+export const TEST_MEAL_ITEM_8 = new MealItem({
+    id: 104,
+    mealId: 2222,
+    amount: 120,
+    order: 1,
+    ingredientId: 110,
+    weightUnitId: null,
+    ingredient: TEST_INGREDIENT_4
+});
 
 
 export const TEST_MEAL_1 = new Meal({

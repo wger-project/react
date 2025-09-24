@@ -66,13 +66,14 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateEditMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
-        expect(mutateAddMock).toHaveBeenCalledWith({
-            amount: "120",
-            ingredient: 101,
-            meal: 123,
-            // eslint-disable-next-line camelcase
-            weight_unit: null,
-        });
+        expect(mutateAddMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                mealId: 123,
+                amount: 120,
+                ingredientId: 101,
+                weightUnitId: null,
+            })
+        );
     });
     test('An existing entry should be updated', async () => {
         // Arrange
@@ -81,7 +82,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <MealItemForm mealId={123} planId={987} item={TEST_MEAL_ITEM_1} closeFn={closeFnMock} />
+                <MealItemForm planId={987} item={TEST_MEAL_ITEM_1} closeFn={closeFnMock} />
             </QueryClientProvider>
         );
         await fillInEntry(user);
@@ -91,13 +92,15 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateAddMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
-        expect(mutateEditMock).toHaveBeenCalledWith({
-            id: 42,
-            amount: "120",
-            ingredient: 102,
-            meal: 123,
-            // eslint-disable-next-line camelcase
-            weight_unit: null,
-        });
+        expect(mutateEditMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: 42,
+                mealId: 1001,
+                amount: 120,
+                order: 3,
+                ingredientId: 101,
+                weightUnitId: null,
+            })
+        );
     });
 });

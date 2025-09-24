@@ -74,15 +74,15 @@ export class Meal {
         return out;
     }
 
-    static clone(otherMeal: Meal, overrides?: MealConstructorParams): Meal {
+    static clone(other: Meal, overrides?: Partial<MealConstructorParams>): Meal {
         return new Meal({
-            id: overrides?.id ?? otherMeal.id,
-            planId: overrides?.planId ?? otherMeal.planId,
-            order: overrides?.order ?? otherMeal.order,
-            time: overrides?.time ?? otherMeal.time,
-            name: overrides?.name ?? otherMeal.name,
-            items: overrides?.items ?? otherMeal.items,
-            diaryEntries: overrides?.diaryEntries ?? otherMeal.diaryEntries,
+            id: overrides?.id ?? other.id,
+            planId: overrides?.planId ?? other.planId,
+            order: overrides?.order ?? other.order,
+            time: overrides?.time ?? other.time,
+            name: overrides?.name ?? other.name,
+            items: overrides?.items ?? other.items,
+            diaryEntries: overrides?.diaryEntries ?? other.diaryEntries,
         });
     }
 
