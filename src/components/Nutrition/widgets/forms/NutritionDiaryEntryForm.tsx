@@ -55,19 +55,29 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-                const data = {
-                    ...values,
-                    plan: planId,
-                    meal: selectedMeal,
-                    // eslint-disable-next-line camelcase
-                    weight_unit: null,
-                    datetime: values.datetime.toISOString()
-                };
 
+                // Make sure "amount" is a number
+                const newAmount = Number(values.amount);
+                
                 if (entry) {
-                    editDiaryQuery.mutate({ ...data, id: entry.id });
+                    // Edit
+                    const newDiaryEntry = DiaryEntry.clone(entry, {
+                        mealId: selectedMeal,
+                        planId: planId,
+                        amount: newAmount,
+                        datetime: values.datetime,
+                        ingredientId: values.ingredient
+                    });
+                    editDiaryQuery.mutate(newDiaryEntry);
                 } else {
-                    addDiaryQuery.mutate(data);
+                    // Add
+                    addDiaryQuery.mutate(new DiaryEntry({
+                        planId: planId,
+                        amount: newAmount,
+                        datetime: values.datetime,
+                        ingredientId: values.ingredient,
+                        mealId: selectedMeal,
+                    }));
                 }
 
                 // if closeFn is defined, close the modal (this form does not have to be displayed in one)

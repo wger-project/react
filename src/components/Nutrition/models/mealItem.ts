@@ -1,4 +1,5 @@
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
 import { Adapter } from "utils/Adapter";
@@ -82,6 +83,19 @@ export class MealItem {
             ingredient,
             weightUnitId: weightUnit ? weightUnit.id : (overrides?.weightUnitId ?? other.weightUnitId),
             weightUnit,
+        });
+    }
+
+    diaryEntry(planId: number, date?: Date): DiaryEntry {
+        return new DiaryEntry({
+            mealId: this.mealId,
+            planId: planId,
+            amount: this.amount,
+            datetime: date || new Date(),
+            ingredient: this.ingredient,
+            ingredientId: this.ingredientId,
+            weightUnitId: this.weightUnitId,
+            weightUnit: this.weightUnit,
         });
     }
 

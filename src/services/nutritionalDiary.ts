@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { DiaryEntry, DiaryEntryAdapter } from "components/Nutrition/models/diaryEntry";
+import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { getIngredient } from "services/ingredient";
 import { getWeightUnit } from "services/ingredientweightunit";
 import { API_MAX_PAGE_SIZE, ApiPath } from "utils/consts";
@@ -14,7 +14,6 @@ export type NutritionalDiaryEntriesOptions = {
 }
 
 export const getNutritionalDiaryEntries = async (options?: NutritionalDiaryEntriesOptions): Promise<DiaryEntry[]> => {
-    const adapter = new DiaryEntryAdapter();
     const { filtersetQuery = {}, loadUnit = true, loadIngredient = true } = options || {};
 
     const url = makeUrl(ApiPath.NUTRITIONAL_DIARY, {
@@ -27,7 +26,7 @@ export const getNutritionalDiaryEntries = async (options?: NutritionalDiaryEntri
 
     for await (const page of fetchPaginated(url, makeHeader())) {
         for (const logData of page) {
-            const entry = adapter.fromJson(logData);
+            const entry = DiaryEntry.fromJson(logData);
 
             if (loadUnit) {
                 entry.weightUnit = await getWeightUnit(entry.weightUnitId);
@@ -43,37 +42,24 @@ export const getNutritionalDiaryEntries = async (options?: NutritionalDiaryEntri
 };
 
 
-export interface AddDiaryEntryParams {
-    plan: number,
-    meal?: number | null,
-    ingredient: number,
-    weight_unit: number | null,
-    datetime: string,
-    amount: number
-}
-
-export interface EditDiaryEntryParams extends AddDiaryEntryParams {
-    id: number,
-}
-
-export const addNutritionalDiaryEntry = async (data: AddDiaryEntryParams): Promise<DiaryEntry> => {
+export const addNutritionalDiaryEntry = async (diaryEntry: DiaryEntry): Promise<DiaryEntry> => {
     const response = await axios.post(
         makeUrl(ApiPath.NUTRITIONAL_DIARY),
-        data,
+        diaryEntry.toJson(),
         { headers: makeHeader() }
     );
 
-    return new DiaryEntryAdapter().fromJson(response.data);
+    return DiaryEntry.fromJson(response.data);
 };
 
-export const editNutritionalDiaryEntry = async (data: EditDiaryEntryParams): Promise<DiaryEntry> => {
+export const editNutritionalDiaryEntry = async (diaryEntry: DiaryEntry): Promise<DiaryEntry> => {
     const response = await axios.patch(
-        makeUrl(ApiPath.NUTRITIONAL_DIARY, { id: data.id }),
-        data,
+        makeUrl(ApiPath.NUTRITIONAL_DIARY, { id: diaryEntry.id! }),
+        diaryEntry.toJson(),
         { headers: makeHeader() }
     );
 
-    return new DiaryEntryAdapter().fromJson(response.data);
+    return DiaryEntry.fromJson(response.data);
 };
 
 export const deleteNutritionalDiaryEntry = async (id: number): Promise<void> => {

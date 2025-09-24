@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { UserEvent } from "@testing-library/user-event/setup/setup";
+import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
 import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
 import React from 'react';
@@ -18,12 +19,12 @@ async function fillInEntry(user: UserEvent) {
     await user.click(autocomplete);
     await user.type(input, 'Bagu');
 
-    // There's a bounce period of 200ms between the input and the search
+    // There's a bounce period of 200 ms between the input and the search
     await act(async () => {
         await new Promise((r) => setTimeout(r, 250));
     });
 
-    // Select first result
+    // Select the first result
     await user.click(input);
     await user.keyboard('{ArrowDown}{Enter}');
 
@@ -68,15 +69,16 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateEditMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
-        expect(mutateAddMock).toHaveBeenCalledWith({
-            amount: "120",
-            datetime: expect.anything(),
-            ingredient: 101,
-            meal: null,
-            plan: 123,
-            // eslint-disable-next-line camelcase
-            weight_unit: null,
-        });
+        expect(mutateAddMock).toHaveBeenCalledWith(
+            new DiaryEntry({
+                amount: 120,
+                datetime: expect.any(Date),
+                ingredientId: 101,
+                planId: 123,
+                mealId: null,
+                weightUnitId: null,
+            })
+        );
     });
     test('A new entry should be added - passing meal ID', async () => {
         // Arrange
@@ -95,15 +97,17 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateEditMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
-        expect(mutateAddMock).toHaveBeenCalledWith({
-            amount: "120",
-            datetime: expect.anything(),
-            ingredient: 101,
-            meal: 456,
-            plan: 123,
-            // eslint-disable-next-line camelcase
-            weight_unit: null,
-        });
+        expect(mutateAddMock).toHaveBeenCalledWith(
+            new DiaryEntry({
+                amount: 120,
+                datetime: expect.any(Date),
+                ingredientId: 101,
+                planId: 123,
+                mealId: 456,
+                weightUnitId: null,
+
+            })
+        );
     });
 
     test('An existing diary entry should be edited', async () => {
@@ -121,16 +125,15 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
-        expect(mutateEditMock).toHaveBeenCalledWith({
-            id: 42,
-            amount: "120",
-            datetime: expect.anything(),
-            ingredient: 101,
-            meal: null,
-            plan: 123,
-            // eslint-disable-next-line camelcase
-            weight_unit: null,
-        });
+        expect(mutateEditMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: 42,
+                amount: 120,
+                mealId: 78,
+                planId: 123,
+                ingredientId: 101,
+            })
+        );
     });
 
     test('An existing diary entry should be edited - passing a meal Id', async () => {
@@ -148,15 +151,15 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
-        expect(mutateEditMock).toHaveBeenCalledWith({
-            id: 42,
-            amount: "120",
-            datetime: expect.anything(),
-            ingredient: 101,
-            meal: 456,
-            plan: 123,
-            // eslint-disable-next-line camelcase
-            weight_unit: null,
-        });
+        expect(mutateEditMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: 42,
+                planId: 123,
+                mealId: 456,
+                amount: 120,
+                ingredientId: 101,
+                weightUnitId: null,
+            })
+        );
     });
 });

@@ -27,8 +27,7 @@ import { EmptyCard } from "components/Dashboard/EmptyCard";
 import { Meal } from "components/Nutrition/models/meal";
 import { MealItem } from "components/Nutrition/models/mealItem";
 import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { useFetchLastNutritionalPlanQuery } from "components/Nutrition/queries";
-import { useAddDiaryEntriesQuery } from "components/Nutrition/queries/diary";
+import { useAddDiaryEntryQuery, useFetchLastNutritionalPlanQuery } from "components/Nutrition/queries";
 import { NutritionalValuesDashboardChart } from "components/Nutrition/widgets/charts/NutritionalValuesDashboardChart";
 import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
 import { PlanForm } from "components/Nutrition/widgets/forms/PlanForm";
@@ -113,7 +112,7 @@ function NutritionCardContent(props: { plan: NutritionalPlan }) {
 
 const MealListItem = (props: { meal: Meal, planId: number }) => {
     const [t, i18n] = useTranslation();
-    const addDiaryEntriesQuery = useAddDiaryEntriesQuery(props.planId);
+    const addDiaryEntryQuery = useAddDiaryEntryQuery(props.planId);
 
     const [expandView, setExpandView] = useState(false);
     const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -128,17 +127,7 @@ const MealListItem = (props: { meal: Meal, planId: number }) => {
     };
 
     const handleAddDiaryEntry = (item: MealItem) => {
-        const diaryData = [{
-            plan: props.planId,
-            meal: props.meal.id,
-            mealItem: item.id,
-            ingredient: item.ingredientId,
-            // eslint-disable-next-line camelcase
-            weight_unit: item.weightUnitId,
-            datetime: (new Date()).toISOString(),
-            amount: item.amount
-        }];
-        addDiaryEntriesQuery.mutate(diaryData);
+        addDiaryEntryQuery.mutate(item.diaryEntry(props.planId));
         setOpenSnackbar(true);
     };
 
