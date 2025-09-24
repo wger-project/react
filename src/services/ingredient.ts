@@ -1,19 +1,24 @@
 import axios from 'axios';
 import { Ingredient } from "components/Nutrition/models/Ingredient";
+import { memoize } from "lodash";
 import { ApiIngredientType } from 'types';
 import { API_RESULTS_PAGE_SIZE, ApiPath, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
 import { makeHeader, makeUrl } from "utils/url";
 
 
-export const getIngredient = async (id: number): Promise<Ingredient> => {
+/*
+ * Memoized version of getIngredient. This caches results in memory for the duration
+ * of the app session, which avoids multiple requests for the same ingredient.
+ */
+export const getIngredient = memoize(async (id: number): Promise<Ingredient> => {
     const { data: receivedIngredient } = await axios.get<ApiIngredientType>(
         makeUrl(ApiPath.INGREDIENTINFO_PATH, { id: id }),
         { headers: makeHeader() },
     );
 
     return Ingredient.fromJson(receivedIngredient);
-};
+});
 
 export const getIngredients = async (ids: number[]): Promise<Ingredient[]> => {
 
