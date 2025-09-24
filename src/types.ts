@@ -1,4 +1,5 @@
 import { AlertColor } from "@mui/material";
+import { ApiIngredientThumbnailType } from "components/Nutrition/models/IngredientImageThumbnails";
 
 export interface ApiBodyWeightType {
     id: number,
@@ -73,7 +74,8 @@ export interface ApiIngredientType {
         url: string
     },
     license_author: string,
-    image: ApiIngredientImageType
+    image: ApiIngredientImageType | null,
+    thumbnails: ApiIngredientThumbnailType | null,
 }
 
 export type ApiIngredientImageType = {

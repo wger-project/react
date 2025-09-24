@@ -2,6 +2,7 @@ import { Autocomplete, Button, InputAdornment, Stack, TextField } from "@mui/mat
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { Meal } from "components/Nutrition/models/meal";
 import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
@@ -9,7 +10,6 @@ import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { IngredientSearchResponse } from "services/responseType";
 import { dateToYYYYMMDD } from "utils/date";
 import * as yup from "yup";
 
@@ -80,13 +80,17 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                 <Form>
                     <Stack spacing={2}>
                         <IngredientAutocompleter
-                            callback={(value: IngredientSearchResponse | null) => formik.setFieldValue('ingredient', value?.data.id)} />
+                            callback={(value: Ingredient | null) => formik.setFieldValue('ingredient', value?.id)} />
                         <TextField
                             fullWidth
                             id="amount"
                             label={'amount'}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">{t('nutrition.gramShort')}</InputAdornment>
+                            slotProps={{
+                                input: {
+                                    endAdornment: <InputAdornment position="end">
+                                        {t('nutrition.gramShort')}
+                                    </InputAdornment>
+                                }
                             }}
                             error={formik.touched.amount && Boolean(formik.errors.amount)}
                             helperText={formik.touched.amount && formik.errors.amount}
