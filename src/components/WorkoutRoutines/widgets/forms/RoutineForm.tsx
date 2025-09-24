@@ -102,23 +102,40 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
     const handleSave = async (values: any) => {
         if (routine) {
             // when editing routine
-            await editRoutineQuery.mutateAsync({
-                ...values,
-                fit_in_week: values.fitInWeek,
-                start: values.start?.toISODate()!,
-                end: values.end?.toISODate()!,
-                id: routine.id
-            });
-        } else {
-            // when create new routine
-            const result = await addRoutineQuery.mutateAsync({
-                ...values,
-                fit_in_week: values.fitInWeek,
-                start: values.start?.toISODate()!,
-                end: values.end?.toISODate()!,
+            const updatedRoutine: Routine = new Routine({
+                id: routine.id,
+                name: values.name,
+                description: values.description ?? '',
+                created: routine.created,
+                start: values.start?.toJSDate() ?? routine.start,
+                end: values.end?.toJSDate() ?? routine.end,
+                fitInWeek: values.fitInWeek ?? routine.fitInWeek,
+                isTemplate: routine.isTemplate,
+                isPublic: routine.isPublic,
+                days: routine.days,
+                dayData: routine.dayData,
             });
 
-            navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id }));
+            await editRoutineQuery.mutateAsync(updatedRoutine);
+        } else {
+            // when creating a new routine
+            const newRoutine: Routine = new Routine({
+                id: null,
+                name: values.name,
+                description: values.description ?? '',
+                created: new Date(),
+                start: values.start?.toJSDate() ?? new Date(),
+                end: values.end?.toJSDate() ?? new Date(),
+                fitInWeek: values.fitInWeek ?? true,
+                isTemplate: false,
+                isPublic: false,
+                days: [],
+                dayData: [],
+            });
+
+            const result = await addRoutineQuery.mutateAsync(newRoutine);
+
+            navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
 
             if (closeFn) {
                 closeFn();
