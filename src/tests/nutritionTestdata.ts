@@ -112,45 +112,46 @@ export const TEST_MEAL_ITEM_8 = new MealItem(
 );
 
 
-export const TEST_MEAL_1 = new Meal(
-    78,
-    2,
-    HHMMToDateTime('12:30'),
-    'Second breakfast',
-);
+export const TEST_MEAL_1 = new Meal({
+    id: 78,
+    planId: 123,
+    order: 2,
+    time: HHMMToDateTime('12:30'),
+    name: 'Second breakfast',
+});
 TEST_MEAL_1.items = [TEST_MEAL_ITEM_1, TEST_MEAL_ITEM_2, TEST_MEAL_ITEM_3];
 
 
-export const TEST_MEAL_2 = new Meal(
-    999,
-    3,
-    HHMMToDateTime('22:30'),
-    'evening snack',
-);
+export const TEST_MEAL_2 = new Meal({
+    id: 999,
+    order: 3,
+    time: HHMMToDateTime('22:30'),
+    name: 'evening snack',
+});
 TEST_MEAL_2.items = [TEST_MEAL_ITEM_4];
 
-export const TEST_MEAL_3 = new Meal(
-    1,
-    1,
-    HHMMToDateTime('6:30'),
-    'breakfast',
-);
+export const TEST_MEAL_3 = new Meal({
+    id: 1,
+    order: 1,
+    time: HHMMToDateTime('6:30'),
+    name: 'breakfast',
+});
 TEST_MEAL_3.items = [TEST_MEAL_ITEM_5, TEST_MEAL_ITEM_6];
 
-export const TEST_MEAL_4 = new Meal(
-    2,
-    1,
-    HHMMToDateTime('7:45'),
-    'Cake time',
-);
+export const TEST_MEAL_4 = new Meal({
+    id: 2,
+    order: 1,
+    time: HHMMToDateTime('7:45'),
+    name: 'Cake time',
+});
 TEST_MEAL_4.items = [TEST_MEAL_ITEM_7];
 
-export const TEST_MEAL_5 = new Meal(
-    22,
-    2,
-    HHMMToDateTime('12:00'),
-    'Time to visit McDonalds',
-);
+export const TEST_MEAL_5 = new Meal({
+    id: 22,
+    order: 2,
+    time: HHMMToDateTime('12:00'),
+    name: 'Time to visit McDonalds',
+});
 TEST_MEAL_5.items = [TEST_MEAL_ITEM_8];
 
 export const TEST_NUTRITIONAL_PLAN_1 = new NutritionalPlan({

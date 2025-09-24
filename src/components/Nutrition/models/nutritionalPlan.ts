@@ -176,12 +176,11 @@ export class NutritionalPlan {
      * This contains all logs not logged to any of the other meals
      */
     pseudoMealOthers(name: string): Meal {
-        const out = new Meal(
-            PSEUDO_MEAL_ID,
-            -1,
-            null,
-            name
-        );
+        const out = new Meal({
+            id: PSEUDO_MEAL_ID,
+            order: -1,
+            name: name
+        });
         out.diaryEntries = this.diaryEntries.filter((entry) => entry.mealId === null);
 
         return out;

@@ -135,15 +135,15 @@ export class Routine {
             name: routine.name,
             description: routine.description,
             created: new Date(),
-            start: new Date(routine.start),
-            end: new Date(routine.end),
+            start: routine.start,
+            end: routine.end,
             fitInWeek: routine.fitInWeek,
             isTemplate: routine.isTemplate,
             isPublic: routine.isPublic,
         });
     }
 
-    toJson(): object {
+    toJson() {
         return routineAdapter.toJson(this);
     }
 
@@ -186,7 +186,7 @@ export class Routine {
 }
 
 
-export class RoutineAdapter implements Adapter<Routine> {
+class RoutineAdapter implements Adapter<Routine> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any) {
         return new Routine({
