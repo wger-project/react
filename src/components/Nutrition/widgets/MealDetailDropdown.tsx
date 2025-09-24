@@ -76,14 +76,14 @@ export const MealDetailDropdown = (props: {
 
 
     return <>
-        {!props.onlyLogging && <Tooltip title={t('nutrition.logThisMeal')}>
+        {props.meal.isRealMeal && !props.onlyLogging && <Tooltip title={t('nutrition.logThisMeal')}>
             <IconButton aria-label="settings" onClick={handleAddDiaryEntry}>
                 <HistoryEduIcon />
             </IconButton>
         </Tooltip>}
-        <IconButton aria-label="settings" onClick={handleClick}>
+        {props.meal.isRealMeal && <IconButton aria-label="settings" onClick={handleClick}>
             <MoreVertIcon />
-        </IconButton>
+        </IconButton>}
         <IconButton aria-label="settings" onClick={props.handleExpanded}>
             {props.isExpanded ? <InfoIcon /> : <InfoOutlinedIcon />}
         </IconButton>

@@ -152,7 +152,7 @@ export class NutritionalPlan {
         });
     }
 
-    copyWith(values: Partial<NutritionalPlan>): NutritionalPlan {
+    clone(values: Partial<NutritionalPlan>): NutritionalPlan {
         return new NutritionalPlan({
             id: values.id !== undefined ? values.id : this.id,
             creationDate: values.creationDate !== undefined ? values.creationDate : this.creationDate,

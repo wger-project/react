@@ -1,6 +1,7 @@
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { MealItem } from "components/Nutrition/models/mealItem";
+import { PSEUDO_MEAL_ID } from "components/Nutrition/models/nutritionalPlan";
 import { Adapter } from "utils/Adapter";
 import { dateTimeToHHMM, dateTimeToLocaleHHMM, HHMMToDateTime, isSameDay } from "utils/date";
 
@@ -41,6 +42,10 @@ export class Meal {
         this.name = params.name;
         this.items = params.items || [];
         this.diaryEntries = params.diaryEntries || [];
+    }
+
+    get isRealMeal() {
+        return this.id !== PSEUDO_MEAL_ID;
     }
 
     get timeHHMMLocale() {
