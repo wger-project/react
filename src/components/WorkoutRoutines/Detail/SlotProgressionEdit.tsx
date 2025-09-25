@@ -73,7 +73,7 @@ export const SlotProgressionEdit = () => {
                         <Grid size={5}>
                             <SlotEntryRoundingField
                                 routineId={routineId}
-                                entryId={slotEntry.id}
+                                slotEntry={slotEntry}
                                 initialValue={slotEntry.weightRounding}
                                 rounding="weight"
                                 editProfile={false}
@@ -82,7 +82,7 @@ export const SlotProgressionEdit = () => {
                         <Grid size={5}>
                             <SlotEntryRoundingField
                                 routineId={routineId}
-                                entryId={slotEntry.id}
+                                slotEntry={slotEntry}
                                 initialValue={slotEntry.repetitionRounding}
                                 rounding="reps"
                                 editProfile={false}
@@ -93,7 +93,7 @@ export const SlotProgressionEdit = () => {
                             type="sets"
                             configs={slotEntry.nrOfSetsConfigs}
                             configsMax={slotEntry.maxNrOfSetsConfigs}
-                            slotEntryId={slotEntry.id}
+                            slotEntryId={slotEntry.id!}
                             routineId={routineId}
                             iterations={iterations}
                             forceInteger={true}
@@ -103,7 +103,7 @@ export const SlotProgressionEdit = () => {
                             type="weight"
                             configs={slotEntry.weightConfigs}
                             configsMax={slotEntry.maxWeightConfigs}
-                            slotEntryId={slotEntry.id}
+                            slotEntryId={slotEntry.id!}
                             routineId={routineId}
                             iterations={iterations}
                             cycleLength={routine.cycleLength}
@@ -112,7 +112,7 @@ export const SlotProgressionEdit = () => {
                             type="reps"
                             configs={slotEntry.repetitionsConfigs}
                             configsMax={slotEntry.maxRepetitionsConfigs}
-                            slotEntryId={slotEntry.id}
+                            slotEntryId={slotEntry.id!}
                             routineId={routineId}
                             iterations={iterations}
                             cycleLength={routine.cycleLength}
@@ -121,7 +121,7 @@ export const SlotProgressionEdit = () => {
                             type="rir"
                             configs={slotEntry.rirConfigs}
                             configsMax={slotEntry.maxRirConfigs}
-                            slotEntryId={slotEntry.id}
+                            slotEntryId={slotEntry.id!}
                             routineId={routineId}
                             iterations={iterations}
                             cycleLength={routine.cycleLength}
@@ -130,7 +130,7 @@ export const SlotProgressionEdit = () => {
                             type="rest"
                             configs={slotEntry.restTimeConfigs}
                             configsMax={slotEntry.maxRestTimeConfigs}
-                            slotEntryId={slotEntry.id}
+                            slotEntryId={slotEntry.id!}
                             routineId={routineId}
                             iterations={iterations}
                             cycleLength={routine.cycleLength}
