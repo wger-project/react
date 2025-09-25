@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { WeightEntry } from "components/BodyWeight/model";
 import React from 'react';
 import { useTranslation } from "react-i18next";
+import { dateTimeToLocale } from "utils/date";
 
 
 const PREFIX = 'WeightTableDashboard';
@@ -50,9 +51,9 @@ export const WeightTableDashboard = ({ weights }: WeightTableProps) => {
                     </TableHead>
                     <TableBody>
                         {filteredWeight.map((row) => (
-                            <TableRow key={row.date.toLocaleDateString()}>
+                            <TableRow key={row.date.toISOString()}>
                                 <TableCell align="center">
-                                    {row.date.toLocaleDateString()}
+                                    {dateTimeToLocale(row.date)}
                                 </TableCell>
                                 <TableCell align="center">{row.weight}</TableCell>
                             </TableRow>

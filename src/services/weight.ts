@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { WeightAdapter, WeightEntry } from "components/BodyWeight/model";
+import { WeightEntry } from "components/BodyWeight/model";
 import { ApiBodyWeightType } from 'types';
 import { makeHeader, makeUrl } from "utils/url";
 import { FilterType } from '../components/BodyWeight/widgets/FilterButtons';
@@ -21,7 +21,7 @@ export const getWeights = async (filter: FilterType = ''): Promise<WeightEntry[]
     const { data: receivedWeights } = await axios.get<ResponseType<ApiBodyWeightType>>(url, {
         headers: makeHeader(),
     });
-    return receivedWeights.results.map(weight => new WeightAdapter().fromJson(weight));
+    return receivedWeights.results.map(weight => WeightEntry.fromJson(weight));
 };
 
 /*
@@ -39,22 +39,20 @@ export const deleteWeight = async (id: number): Promise<number> => {
  * Update a weight entry
  */
 export const updateWeight = async (entry: WeightEntry): Promise<WeightEntry> => {
-    const adapter = new WeightAdapter();
-    const response = await axios.patch(makeUrl(WEIGHT_PATH, { id: entry.id }), adapter.toJson(entry), {
+    const response = await axios.patch(makeUrl(WEIGHT_PATH, { id: entry.id }), entry.toJson(), {
         headers: makeHeader(),
     });
 
-    return adapter.fromJson(response);
+    return WeightEntry.fromJson(response);
 };
 
 /*
  * Add a new weight entry
  */
 export const createWeight = async (entry: WeightEntry): Promise<WeightEntry> => {
-    const adapter = new WeightAdapter();
-    const response = await axios.post(makeUrl(WEIGHT_PATH,), adapter.toJson(entry), {
+    const response = await axios.post(makeUrl(WEIGHT_PATH,), entry.toJson(), {
         headers: makeHeader(),
     });
 
-    return adapter.fromJson(response.data);
+    return WeightEntry.fromJson(response.data);
 };

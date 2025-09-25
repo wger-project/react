@@ -22,11 +22,11 @@ describe("Test WeightForm component", () => {
     test('Passing an existing entry renders its values in the form', () => {
 
         // Arrange
-        const weightEntry: WeightEntry = {
-            id: 1,
-            date: new Date('2021-12-10'),
-            weight: 80
-        };
+        const weightEntry = new WeightEntry(
+            new Date('2021-12-10 17:00'),
+            80,
+            1,
+        );
 
         // Act
         render(
@@ -36,7 +36,7 @@ describe("Test WeightForm component", () => {
         );
 
         // Assert
-        expect(screen.getByDisplayValue('2021-12-10')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('12/10/2021 05:00 PM')).toBeInTheDocument();
         expect(screen.getByDisplayValue('80')).toBeInTheDocument();
         expect(screen.getAllByLabelText('date').length).toBeGreaterThan(0);
         expect(screen.getByLabelText('weight')).toBeInTheDocument();
@@ -46,11 +46,11 @@ describe("Test WeightForm component", () => {
     test('Editing an existing entry', async () => {
 
         // Arrange
-        const weightEntry: WeightEntry = {
-            id: 1,
-            date: new Date('2022-02-28'),
-            weight: 80
-        };
+        const weightEntry = new WeightEntry(
+            new Date('2022-02-28'),
+            80,
+            1
+        );
 
         // Act
         render(
