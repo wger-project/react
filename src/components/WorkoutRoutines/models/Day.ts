@@ -6,7 +6,7 @@ import { Adapter } from "utils/Adapter";
 
 interface DayConstructorParams {
     id?: number;
-    routineId: number;
+    routineId: number | null;
     order: number;
     name: string;
     description?: string;
@@ -20,7 +20,10 @@ interface DayConstructorParams {
 export class Day {
 
     id: number | null = null;
-    routineId: number;
+    // Note that this can only be null when loading the data from dayData. Perhaps we should include
+    // it there as well? Otherwise we just have to be a bit careful when editing regular day
+    // objects in forms or so
+    routineId: number | null = null;
     order: number;
     name: string;
     description: string;
