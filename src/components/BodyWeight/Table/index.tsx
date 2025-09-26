@@ -39,7 +39,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
 
     const availableResultsPerPage = [10, 50, 100];
 
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const processedWeights = processWeight(weights);
     const [rowsPerPage, setRowsPerPage] = useState(availableResultsPerPage[0]);
