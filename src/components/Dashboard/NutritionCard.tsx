@@ -131,8 +131,8 @@ const MealListItem = (props: { meal: Meal, planId: number }) => {
         setOpenSnackbar(true);
     };
 
-    const primaryHeader = props.meal.name ? props.meal.name : dateTimeToLocaleHHMM(props.meal.time, i18n.language);
-    const secondaryHeader = props.meal.name ? dateTimeToLocaleHHMM(props.meal.time, i18n.language) : null;
+    const primaryHeader = props.meal.name ? props.meal.name : dateTimeToLocaleHHMM(props.meal.time);
+    const secondaryHeader = props.meal.name ? dateTimeToLocaleHHMM(props.meal.time) : null;
 
     return <>
         <ListItemButton onClick={handleToggleExpand} selected={expandView}>

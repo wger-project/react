@@ -52,8 +52,10 @@ export const WeightCardContent = (props: { entries: WeightEntry[] }) => {
                 justifyContent: "space-between",
                 alignItems: "flex-start",
             }}>
-                <Button size="small"
-                        href={makeLink(WgerLink.WEIGHT_OVERVIEW, i18n.language)}>
+                <Button
+                    size="small"
+                    href={makeLink(WgerLink.WEIGHT_OVERVIEW, i18n.language)}
+                >
                     {t('seeDetails')}
                 </Button>
                 <Tooltip title={t('addEntry')}>

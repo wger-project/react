@@ -22,7 +22,7 @@ describe('Test the meal model', () => {
         expect(meal.planId).toBe(1234);
         expect(meal.order).toBe(22);
         expect(meal.name).toBe('bla bla');
-        expect(meal.timeHHMMLocale).toBe('22:31');
+        expect(meal.timeHHMMLocale).toBe('10:31 PM');
     });
 
     test('correctly creates a meal from the API response - no time', () => {
