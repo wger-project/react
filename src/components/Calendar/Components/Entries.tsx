@@ -1,5 +1,6 @@
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import {
+    Box, // import box to show the hint
     Card,
     CardContent,
     CardHeader,
@@ -37,7 +38,7 @@ const Entries: React.FC<LogProps> = ({ selectedDay }) => {
             <CardHeader
                 title={
                     <Typography variant="h5" component="div" sx={{ fontWeight: 'bold' }}>
-                        {t("entries")} - {selectedDay.date.toLocaleDateString()}
+                        {t("Your daily records")} - {selectedDay.date.toLocaleDateString()}
                     </Typography>
                 }
             />
@@ -153,6 +154,26 @@ const Entries: React.FC<LogProps> = ({ selectedDay }) => {
                         </Collapse>
                     </>}
                 </List>
+                {/* when no data loaded, show up a hint */}
+                {!selectedDay.weightEntry && 
+                selectedDay.measurements.length === 0 && 
+                !selectedDay.workoutSession &&
+                 selectedDay.nutritionLogs.length ===0 && (
+                    <Box sx={{
+                        display:'flex',
+                        flexDirection:'column',
+                        alignItems:'center',
+                        py:4,
+                        color:'text.secondary'
+                    }}>
+                        <Typography variant="body1" sx={{ mb: 1 }}>
+                            {t("You haven't logged your weight/workout/nutritions today.")}
+                        </Typography>
+                        <Typography variant="body2" sx={{ mb: 1 }}>
+                            {t("Add your first record")}
+                        </Typography>
+                    </Box>
+                )}
 
             </CardContent>
         </Card>
