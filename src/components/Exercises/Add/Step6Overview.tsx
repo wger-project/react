@@ -15,16 +15,20 @@ import {
 import Grid from '@mui/material/Grid';
 import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { FormQueryErrors } from "components/Core/Widgets/FormError";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { Note } from "components/Exercises/models/note";
-import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
+import {
+    useAddExerciseFullQuery,
+    useCategoriesQuery,
+    useEquipmentQuery,
+    useLanguageQuery,
+    useMusclesQuery
+} from "components/Exercises/queries";
 import { useProfileQuery } from "components/User/queries/profile";
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { addExercise, addTranslation, postAlias, postExerciseImage } from "services";
-import { addNote } from "services/note";
-import { addVariation } from "services/variation";
+import { postExerciseImage } from "services";
 import { useExerciseSubmissionStateValue } from "state";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
@@ -40,48 +44,49 @@ export const Step6Overview = ({ onBack }: StepProps) => {
     const equipmentQuery = useEquipmentQuery();
     const profileQuery = useProfileQuery();
 
-    // This could be handled better and more cleanly...
-    type submissionStatus = 'initial' | 'loading' | 'done';
-    const [submissionState, setSubmissionState] = useState<submissionStatus>('initial',);
+    const addExerciseSubmissionMutation = useAddExerciseFullQuery();
 
     const submitExercise = async () => {
 
-        setSubmissionState('loading');
-
-        // Create a new variation object if needed
-        // TODO: PATCH the other exercise base (newVariationExerciseId) with the new variation id
-        let variationId;
-        if (state.newVariationExerciseId !== null) {
-            variationId = await addVariation();
-        } else {
-            variationId = state.variationId;
-        }
-
         // Create the exercise
-        const exerciseId = await addExercise(
-            state.category as number,
-            state.equipment,
-            state.muscles,
-            state.musclesSecondary,
-            variationId,
-            profileQuery.data!.username
-        );
-
-        // Create the English translation
-        const translation = await addTranslation({
-            exerciseId: exerciseId,
-            languageId: ENGLISH_LANGUAGE_ID,
-            name: state.nameEn,
-            description: state.descriptionEn,
-            author: profileQuery.data!.username
+        const exerciseId = await addExerciseSubmissionMutation.mutateAsync({
+            exercise: {
+                categoryId: state.category as number,
+                equipmentIds: state.equipment,
+                muscleIds: state.muscles,
+                secondaryMuscleIds: state.musclesSecondary,
+            },
+            author: profileQuery.data!.username,
+            variations: state.variationId,
+            variationsConnectTo: state.newVariationExerciseId,
+            translations: [
+                {
+                    language: ENGLISH_LANGUAGE_ID,
+                    name: state.nameEn,
+                    description: state.descriptionEn,
+                    aliases: [
+                        ...state.alternativeNamesEn.map(name => ({ alias: name }))
+                    ],
+                    comments: [
+                        ...state.notesEn.map(name => ({ comment: name }))
+                    ]
+                },
+                ...(state.languageId !== null ? [{
+                    language: state.languageId,
+                    name: state.nameI18n,
+                    description: state.descriptionI18n,
+                    aliases: [
+                        ...state.alternativeNamesI18n.map(name => ({ alias: name }))
+                    ],
+                    comments: [
+                        ...state.notesI18n.map(name => ({ comment: name }))
+                    ]
+                }] : [])
+            ],
         });
 
-        // For each entry in alternative names, create a new alias
-        for (const alias of state.alternativeNamesEn) {
-            await postAlias(translation.id!, alias);
-        }
-
-        // Post the images
+        // Post the images individually, it seems to be more reliable this way
+        // and most problems were happening when creating the exercise itself
         for (const image of state.images) {
             await postExerciseImage({
                 exerciseId: exerciseId,
@@ -90,38 +95,14 @@ export const Step6Overview = ({ onBack }: StepProps) => {
             });
         }
 
-        // Post the notes
-        for (const note of state.notesEn) {
-            await addNote(new Note(null, translation.id!, note));
-        }
-
-
-        // Create the translation if needed
-        if (state.languageId !== null) {
-            const exerciseI18n = await addTranslation({
-                exerciseId: exerciseId,
-                languageId: state.languageId,
-                name: state.nameI18n,
-                description: state.descriptionI18n,
-                author: profileQuery.data!.username
-            });
-
-            for (const alias of state.alternativeNamesI18n) {
-                await postAlias(exerciseI18n.id!, alias);
-            }
-
-            for (const note of state.notesI18n) {
-                await addNote(new Note(null, exerciseI18n.id!, note));
-            }
-        }
-
-        console.log("Exercise created");
-        setSubmissionState('done');
     };
 
-    const navigateToOverview = () => {
-        navigate(makeLink(WgerLink.EXERCISE_OVERVIEW, i18n.language));
-    };
+    const variationText =
+        state.variationId !== null
+            ? `Using variation ID ${state.variationId}`
+            : state.newVariationExerciseId !== null
+                ? `Connecting to exercise ${state.newVariationExerciseId}`
+                : '';
 
     return equipmentQuery.isLoading || languageQuery.isLoading || musclesQuery.isLoading || categoryQuery.isLoading
         ? <LoadingPlaceholder />
@@ -166,7 +147,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.variations')}</TableCell>
-                            <TableCell>{state.variationId} / {state.newVariationExerciseId}</TableCell>
+                            <TableCell>{variationText}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
@@ -226,21 +207,24 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                 </>
             )}
 
-            {!(submissionState === 'done')
-                ? <Alert severity="info" sx={{ mt: 2 }}>
+            <Box sx={{ mt: 2 }}>
+                {addExerciseSubmissionMutation.isIdle && <Alert severity="info">
                     {t('exercises.checkInformationBeforeSubmitting')}
-                </Alert>
-                : <Alert severity="success" sx={{ mt: 2 }}>
+                </Alert>}
+
+                {addExerciseSubmissionMutation.isSuccess && <Alert severity="success">
                     <AlertTitle>{t('success')}</AlertTitle>
                     {t('exercises.cacheWarning')}
-                </Alert>
-            }
+                </Alert>}
+
+                <FormQueryErrors mutationQuery={addExerciseSubmissionMutation} />
+            </Box>
 
             <Grid container>
                 <Grid display="flex" justifyContent={"end"} size={12}>
                     <Box sx={{ mb: 2 }}>
                         <div>
-                            {submissionState !== 'done' &&
+                            {!addExerciseSubmissionMutation.isSuccess &&
                                 <Button
                                     onClick={onBack}
                                     sx={{ mt: 1, mr: 1 }}
@@ -248,10 +232,10 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                                     {t('goBack')}
                                 </Button>
                             }
-                            {submissionState !== 'done'
+                            {!addExerciseSubmissionMutation.isSuccess
                                 && <Button
                                     variant="contained"
-                                    disabled={submissionState !== 'initial'}
+                                    disabled={addExerciseSubmissionMutation.isError || addExerciseSubmissionMutation.isPending}
                                     onClick={submitExercise}
                                     sx={{ mt: 1, mr: 1 }}
                                     color="info"
@@ -259,14 +243,14 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                                     {t('exercises.submitExercise')}
                                 </Button>
                             }
-                            {submissionState === 'done'
+                            {addExerciseSubmissionMutation.isSuccess
                                 && <Button
                                     variant="contained"
-                                    onClick={navigateToOverview}
+                                    onClick={() => navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: addExerciseSubmissionMutation.data! }))}
                                     sx={{ mt: 1, mr: 1 }}
                                     color="success"
                                 >
-                                    {t('overview')}
+                                    {t('seeDetails')}
                                     <NavigateNextIcon />
                                 </Button>
                             }

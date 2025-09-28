@@ -80,9 +80,9 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
     const exerciseEnglish = exercise.getTranslation();
 
     const validationSchema = yup.object({
-        name: nameValidator(t),
-        alternativeNames: alternativeNameValidator(t),
-        description: descriptionValidator(t)
+        name: nameValidator(),
+        alternativeNames: alternativeNameValidator(),
+        description: descriptionValidator()
     });
 
     return <>

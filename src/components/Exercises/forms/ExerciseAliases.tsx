@@ -16,7 +16,7 @@ export function ExerciseAliases(props: { fieldName: string }) {
         onChange={(event, newValue) => {
             helpers.setValue(newValue);
         }}
-        renderTags={(value: readonly string[], getTagProps) => {
+        renderValue={(value: readonly string[], getTagProps) => {
             return value.map((option: string, index: number) => (
                 <Chip label={option} {...getTagProps({ index })} key={index} />
             ));

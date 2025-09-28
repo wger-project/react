@@ -4,8 +4,6 @@ import {
     editTranslation,
     getCategories,
     getEquipment,
-    getExercise,
-    getExercises,
     getLanguages,
     getMuscles,
     postExerciseImage
@@ -14,20 +12,8 @@ import { AddTranslationParams, EditTranslationParams } from "services/exerciseTr
 import { deleteExerciseImage, PostExerciseImageParams } from "services/image";
 import { QueryKey } from "utils/consts";
 
+export { useExercisesQuery, useExerciseQuery, useAddExerciseFullQuery } from "./exercises";
 
-export function useExercisesQuery() {
-    return useQuery({
-        queryKey: [QueryKey.EXERCISES],
-        queryFn: getExercises
-    });
-}
-
-export function useExerciseQuery(id: number) {
-    return useQuery({
-        queryKey: [QueryKey.EXERCISE_DETAIL, id],
-        queryFn: () => getExercise(id)
-    });
-}
 
 export function useAddTranslationQuery(exerciseId: number) {
     const queryClient = useQueryClient();

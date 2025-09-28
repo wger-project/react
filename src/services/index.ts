@@ -7,11 +7,11 @@ export { getMuscles } from './muscles';
 export { getEquipment } from './equipment';
 export { getCategories } from './category';
 export {
+    addFullExercise,
     editExercise,
     getExercises,
     getExercise,
     getExercisesForVariation,
-    addExercise,
     deleteExercise,
     processExerciseApiData,
 } from './exercise';
@@ -100,3 +100,5 @@ export {
 export { getProfile, editProfile } from './profile';
 
 export { processBaseConfigs } from './base_config';
+
+export { checkLanguage } from 'services/languageCheck';
