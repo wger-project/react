@@ -48,13 +48,6 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
     const submitExercise = async () => {
 
-        // TODO: handle variations properly
-        const variationId: number | null = state.variationId;
-        // if (state.newVariationExerciseId !== null) {
-        //     ...
-        // } else {
-        //     ....
-        // }
         // Create the exercise
         const exerciseId = await addExerciseSubmissionMutation.mutateAsync({
             exercise: {
@@ -64,7 +57,8 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                 secondaryMuscleIds: state.musclesSecondary,
             },
             author: profileQuery.data!.username,
-            variation: variationId,
+            variations: state.variationId,
+            variationsConnectTo: state.newVariationExerciseId,
             translations: [
                 {
                     language: ENGLISH_LANGUAGE_ID,
@@ -100,8 +94,15 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                 imageData: image,
             });
         }
-        
+
     };
+
+    const variationText =
+        state.variationId !== null
+            ? `Using variation ID ${state.variationId}`
+            : state.newVariationExerciseId !== null
+                ? `Connecting to exercise ${state.newVariationExerciseId}`
+                : '';
 
     return equipmentQuery.isLoading || languageQuery.isLoading || musclesQuery.isLoading || categoryQuery.isLoading
         ? <LoadingPlaceholder />
@@ -146,7 +147,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.variations')}</TableCell>
-                            <TableCell>{state.variationId} / {state.newVariationExerciseId}</TableCell>
+                            <TableCell>{variationText}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>

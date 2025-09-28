@@ -135,7 +135,7 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
     const exercisesQuery = useExercisesQuery();
     const [state, dispatch] = useExerciseSubmissionStateValue();
 
-    const [searchTerm, setSearchTerms] = useState<string>(state.nameEn);
+    const [searchTerm, setSearchTerms] = useState<string>('');
 
     // Group exercises by variationId
     let exercises: Exercise[] = [];
@@ -165,8 +165,9 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
                     sm: 6
                 }}>
                 <TextField
-                    label={t('exercises.filterVariations')}
-                    defaultValue={state.nameEn}
+                    label={t('name')}
+                    helperText={t('exercises.filterVariations')}
+                    // defaultValue={state.nameEn}
                     variant="standard"
                     onChange={(event) => setSearchTerms(event.target.value)}
                     slotProps={{

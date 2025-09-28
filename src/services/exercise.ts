@@ -94,7 +94,8 @@ type TranslationSubmissionProps = {
 export type AddExerciseFullProps = {
     author?: string,
     exercise: ExerciseSubmissionProps,
-    variation?: number | null,
+    variations?: number | null,
+    variationsConnectTo?: number | null,
     translations: TranslationSubmissionProps[],
 }
 
@@ -108,14 +109,17 @@ export const addFullExercise = async (data: AddExerciseFullProps): Promise<numbe
         // eslint-disable-next-line camelcase
         muscles_secondary: data.exercise.secondaryMuscleIds,
         // eslint-disable-next-line camelcase
-        license_author: data.author,
+        license_author: data.author ?? '',
+        variations: data.variations ?? null,
+        //eslint-disable-next-line camelcase
+        variations_connect_to: data.variationsConnectTo ?? null,
         translations: [
             ...data.translations.map(t => ({
                     name: t.name,
                     description: t.description,
                     language: t.language,
                     //eslint-disable-next-line camelcase
-                    license_author: data.author,
+                    license_author: data.author ?? '',
                     aliases: t.aliases ?? [],
                     comments: t.comments ?? []
                 })
@@ -139,7 +143,7 @@ type EditExerciseProps = {
     equipment?: number[],
     muscles?: number[],
     muscles_secondary?: number[],
-    variation_id?: number | null,
+    variations?: number | null,
     license_author?: string | null
 }
 export const editExercise = async (id: number, data: EditExerciseProps): Promise<number> => {
