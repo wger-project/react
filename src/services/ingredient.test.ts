@@ -3,7 +3,7 @@ import { getIngredient } from "services/ingredient";
 
 jest.mock("axios");
 
-describe("Ingrediente service tests", () => {
+describe("Ingredient service tests", () => {
 
     test('GET an ingredient', async () => {
 
@@ -45,6 +45,14 @@ describe("Ingrediente service tests", () => {
                 "license_author": "kiliweb",
                 "license_author_url": "https://world.openfoodfacts.org/photographer/kiliweb",
                 "license_derivative_source_url": ""
+            },
+            "thumbnails": {
+                "small": "http://localhost:8000/974e62478222.jpg.200x200_q85.jpg",
+                "small_cropped": "http://localhost:8000/974e62478222.jpg.200x200_q85_crop-smart.jpg",
+                "medium": "http://localhost:8000/media/974e62478222.jpg.400x400_q85.jpg",
+                "medium_cropped": "http://localhost:8000/974e62478222.jpg.400x400_q85_crop-smart.jpg",
+                "large": "http://localhost:8000/media/974e62478222.jpg.800x800_q90.jpg",
+                "large_cropped": "http://localhost:8000/media/974e62478222.jpg.800x800_q90_crop-smart.jpg"
             }
         };
 

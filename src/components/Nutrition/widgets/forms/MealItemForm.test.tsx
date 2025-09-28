@@ -5,7 +5,7 @@ import { UserEvent } from "@testing-library/user-event/setup/setup";
 import { useAddMealItemQuery, useEditMealItemQuery } from "components/Nutrition/queries";
 import { MealItemForm } from "components/Nutrition/widgets/forms/MealItemForm";
 import { searchIngredient } from "services";
-import { INGREDIENT_SEARCH } from "tests/api/ingredientSearch";
+import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "tests/ingredientTestdata";
 import { TEST_MEAL_ITEM_1 } from "tests/nutritionTestdata";
 
 jest.mock('components/Nutrition/queries');
@@ -22,7 +22,7 @@ async function fillInEntry(user: UserEvent) {
         await new Promise((r) => setTimeout(r, 250));
     });
 
-    // Select first result
+    // Select the first result
     await user.click(input);
     await user.keyboard('{ArrowDown}{Enter}');
 
@@ -46,7 +46,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
 
         (useEditMealItemQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
         (useAddMealItemQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
-        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
+        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
     });
 
     test('A new entry should be added', async () => {
@@ -62,17 +62,18 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         await fillInEntry(user);
 
         // Assert
-        expect(screen.getByDisplayValue('Baguette with cheese')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('0% fat Greek style yogurt')).toBeInTheDocument();
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateEditMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
-        expect(mutateAddMock).toHaveBeenCalledWith({
-            amount: "120",
-            ingredient: 1234,
-            meal: 123,
-            // eslint-disable-next-line camelcase
-            weight_unit: null,
-        });
+        expect(mutateAddMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                mealId: 123,
+                amount: 120,
+                ingredientId: 101,
+                weightUnitId: null,
+            })
+        );
     });
     test('An existing entry should be updated', async () => {
         // Arrange
@@ -81,23 +82,25 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <MealItemForm mealId={123} planId={987} item={TEST_MEAL_ITEM_1} closeFn={closeFnMock} />
+                <MealItemForm planId={987} item={TEST_MEAL_ITEM_1} closeFn={closeFnMock} />
             </QueryClientProvider>
         );
         await fillInEntry(user);
 
         // Assert
-        expect(screen.getByDisplayValue('Baguette with cheese')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('1001 Nacht Haferbrei')).toBeInTheDocument();
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateAddMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
-        expect(mutateEditMock).toHaveBeenCalledWith({
-            id: 42,
-            amount: "120",
-            ingredient: 1234,
-            meal: 123,
-            // eslint-disable-next-line camelcase
-            weight_unit: null,
-        });
+        expect(mutateEditMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: 42,
+                mealId: 1001,
+                amount: 120,
+                order: 3,
+                ingredientId: 101,
+                weightUnitId: null,
+            })
+        );
     });
 });

@@ -72,7 +72,6 @@ describe('SessionForm', () => {
                 routine: routineId,
                 date: newDate.toFormat('yyyy-MM-dd'),
                 day: 2
-
             }
         );
     });

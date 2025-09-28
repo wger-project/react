@@ -118,10 +118,15 @@ function SlotDataList(props: {
     return (
         <Grid
             container
-            justifyContent="space-between"
             alignItems="flex-start"
+            columnGap={1}
+            wrap="nowrap"
         >
-            <Grid size={1}>
+            <Grid
+                sx={{
+                    flex: '0 0 50px',
+                }}
+            >
                 <Stack divider={<Box height="10px" />}>
                     {props.slotData.exercises.map((exercise, index) =>
                         <ExerciseImageAvatar
@@ -134,22 +139,23 @@ function SlotDataList(props: {
                 </Stack>
             </Grid>
 
-            <Grid size={11}>
+            <Grid
+                sx={{ flex: '1 1 auto', minWidth: 0 }}
+            >
                 {props.slotData.setConfigs.map((setConfig, index) => {
-                        // Only show the name of the exercise the first time it appears
-                        const showExercise = index === 0 || setConfig.exerciseId !== props.slotData.setConfigs[index - 1]?.exerciseId;
-                        return <SetConfigDataDetails
-                            setConfigData={setConfig}
-                            marginBottom="1em"
-                            key={index}
-                            showExercise={showExercise}
-                        />;
-                    }
-                )}
+                    const showExercise = index === 0 || setConfig.exerciseId !== props.slotData.setConfigs[index - 1]?.exerciseId;
+                    return <SetConfigDataDetails
+                        setConfigData={setConfig}
+                        marginBottom="1em"
+                        key={index}
+                        showExercise={showExercise}
+                    />;
+                })}
             </Grid>
         </Grid>
     );
 }
+
 
 export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: number, readOnly?: boolean }) => {
     const readOnly = (props.readOnly ?? false) || props.dayData.day === null || props.dayData.day.isRest;

@@ -1,5 +1,6 @@
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Box, Button, Card, CardActions, CardMedia } from "@mui/material";
+import { FormQueryErrorsSnackbar } from "components/Core/Widgets/FormError";
 import { ExerciseImage } from "components/Exercises/models/image";
 import { useAddExerciseImageQuery, useDeleteExerciseImageQuery } from "components/Exercises/queries";
 import { useProfileQuery } from "components/User/queries/profile";
@@ -52,7 +53,7 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
         const [uploadedFile] = e.target.files;
         if (profileQuery.isSuccess) {
 
-            await addImageQuery.mutateAsync({
+            addImageQuery.mutate({
                 exerciseId: exerciseId,
                 image: uploadedFile,
                 imageData: {
@@ -69,27 +70,32 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
         }
     };
 
-    return <Card>
-        <CardMedia>
-            <Box sx={{ backgroundColor: "lightgray", height: 120 }}
-                 display="flex"
-                 alignItems="center"
-                 justifyContent="center">
-                <AddCircleIcon sx={{ fontSize: 80, color: "gray" }} />
-            </Box>
-        </CardMedia>
-        <CardActions>
-            <Button component="label">
-                {t('add')}
-                <input
-                    style={{ display: "none" }}
-                    id="camera-input"
-                    type="file"
-                    accept="image/*"
-                    capture="environment"
-                    onChange={handleFileInputChange}
-                />
-            </Button>
-        </CardActions>
-    </Card>;
+    return <>
+        <Card>
+            <CardMedia>
+                <Box sx={{ backgroundColor: "lightgray", height: 120 }}
+                     display="flex"
+                     alignItems="center"
+                     justifyContent="center">
+                    <AddCircleIcon sx={{ fontSize: 80, color: "gray" }} />
+                </Box>
+            </CardMedia>
+            <CardActions>
+                <Button component="label">
+                    {t('add')}
+                    <input
+                        style={{ display: "none" }}
+                        id="camera-input"
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        onChange={handleFileInputChange}
+                    />
+                </Button>
+            </CardActions>
+        </Card>
+        {addImageQuery.isError &&
+            <FormQueryErrorsSnackbar mutationQuery={addImageQuery} />
+        }
+    </>;
 };

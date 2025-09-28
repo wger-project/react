@@ -1,58 +1,33 @@
 import axios from 'axios';
-import { Slot, SlotAdapter } from "components/WorkoutRoutines/models/Slot";
+import { Slot } from "components/WorkoutRoutines/models/Slot";
 import { ApiPath } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 
 
-export interface AddSlotParams {
-    day: number;
-    order: number;
-    comment?: string;
-}
-
-export interface EditSlotParams extends Partial<AddSlotParams> {
-    id: number,
-}
-
-export interface EditSlotOrderParam {
-    id: number,
-    order: number
-}
-
 /*
  * Creates a new Slot
  */
-export const addSlot = async (data: AddSlotParams): Promise<Slot> => {
+export const addSlot = async (slot: Slot): Promise<Slot> => {
     const response = await axios.post(
         makeUrl(ApiPath.SLOT),
-        data,
+        slot.toJson(),
         { headers: makeHeader() }
     );
 
-    return new SlotAdapter().fromJson(response.data);
+    return Slot.fromJson(response.data);
 };
+
 /*
  * Update a Slot
  */
-export const editSlot = async (data: EditSlotParams): Promise<Slot> => {
+export const editSlot = async (slot: Slot): Promise<Slot> => {
     const response = await axios.patch(
-        makeUrl(ApiPath.SLOT, { id: data.id }),
-        data,
+        makeUrl(ApiPath.SLOT, { id: slot.id! }),
+        slot.toJson(),
         { headers: makeHeader() }
     );
 
-    return new SlotAdapter().fromJson(response.data);
-};
-
-export const editSlotOrder = async (data: EditSlotOrderParam[]): Promise<void> => {
-
-    for (const value of data) {
-        await axios.patch(
-            makeUrl(ApiPath.SLOT, { id: value.id }),
-            { order: value.order },
-            { headers: makeHeader() }
-        );
-    }
+    return Slot.fromJson(response.data);
 };
 
 /*

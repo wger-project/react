@@ -127,7 +127,6 @@ export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = tru
                         id: null,
                         name: values.name,
                         description: values.description,
-                        created: new Date(),
                         start: values.start!.toJSDate(),
                         end: values.end?.toJSDate(),
                         fitInWeek: values.fitInWeek,

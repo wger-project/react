@@ -1,7 +1,7 @@
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { IngredientSearchResponse } from "services/responseType";
 import { makeLink, WgerLink } from "utils/url";
 
 
@@ -10,11 +10,11 @@ import { makeLink, WgerLink } from "utils/url";
  * detail page from the overview
  */
 export const IngredientSearch = () => {
-    const [t, i18n] = useTranslation();
+    const { i18n } = useTranslation();
 
-    const navigateToIngredient = (value: IngredientSearchResponse | null) => {
+    const navigateToIngredient = (value: Ingredient | null) => {
         if (value !== null) {
-            window.location.href = makeLink(WgerLink.INGREDIENT_DETAIL, i18n.language, { id: value.data.id });
+            window.location.href = makeLink(WgerLink.INGREDIENT_DETAIL, i18n.language, { id: value.id });
         }
     };
 

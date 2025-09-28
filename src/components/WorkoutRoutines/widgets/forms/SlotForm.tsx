@@ -18,7 +18,7 @@ export const SlotForm = (props: { slot: Slot, routineId: number }) => {
 
     const handleBlur = () => {
         if (isEditing) {
-            editSlotQuery.mutate({ id: props.slot.id, comment: slotComment });
+            editSlotQuery.mutate(Slot.clone(props.slot, { comment: slotComment }));
             setIsEditing(false);
         }
     };

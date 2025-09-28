@@ -1,39 +1,27 @@
 import axios from 'axios';
-import { MealItem, MealItemAdapter } from "components/Nutrition/models/mealItem";
+import { MealItem } from "components/Nutrition/models/mealItem";
 import { ApiPath } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 
 
-export interface AddMealItemParams {
-    meal: number,
-    ingredient: number,
-    weight_unit: number | null,
-    amount: number
-}
-
-export interface EditMealItemParams extends AddMealItemParams {
-    id: number,
-}
-
-
-export const addMealItem = async (data: AddMealItemParams): Promise<MealItem> => {
+export const addMealItem = async (data: MealItem): Promise<MealItem> => {
     const response = await axios.post(
         makeUrl(ApiPath.MEAL_ITEM),
-        data,
+        data.toJson(),
         { headers: makeHeader() }
     );
 
-    return new MealItemAdapter().fromJson(response.data);
+    return MealItem.fromJson(response.data);
 };
 
-export const editMealItem = async (data: EditMealItemParams): Promise<MealItem> => {
+export const editMealItem = async (mealItem: MealItem): Promise<MealItem> => {
     const response = await axios.patch(
-        makeUrl(ApiPath.MEAL_ITEM, { id: data.id }),
-        data,
+        makeUrl(ApiPath.MEAL_ITEM, { id: mealItem.id! }),
+        mealItem.toJson(),
         { headers: makeHeader() }
     );
 
-    return new MealItemAdapter().fromJson(response.data);
+    return MealItem.fromJson(response.data);
 };
 
 export const deleteMealItem = async (id: number): Promise<void> => {

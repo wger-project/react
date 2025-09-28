@@ -1,6 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
+import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
 import {
     SlotEntryRepetitionUnitField,
     SlotEntryRoundingField,
@@ -50,11 +51,13 @@ describe('SlotEntryTypeField', () => {
 
         const myoOption = screen.getByRole('option', { name: 'routines.set.myo' });
         await user.click(myoOption);
-        expect(mockEditSlotEntry).toHaveBeenCalledWith({ "id": 1, "type": "myo" });
+        expect(mockEditSlotEntry).toHaveBeenCalledWith(SlotEntry.clone(testDayLegs.slots[0].entries[0], { type: 'myo' }));
     });
 });
 
 describe('SlotEntryRepetitionUnitField', () => {
+
+    const testSlotEntry = testDayLegs.slots[0].entries[0];
 
     beforeEach(() => {
         jest.resetAllMocks();
@@ -66,7 +69,7 @@ describe('SlotEntryRepetitionUnitField', () => {
         render(
             <QueryClientProvider client={testQueryClient}>
                 <SlotEntryRepetitionUnitField
-                    slotEntry={testDayLegs.slots[0].entries[0]}
+                    slotEntry={testSlotEntry}
                     routineId={1}
                 />
             </QueryClientProvider>
@@ -81,11 +84,13 @@ describe('SlotEntryRepetitionUnitField', () => {
 
         const minutesOption = screen.getByRole('option', { name: 'Minutes' });
         await user.click(minutesOption);
-        expect(mockEditSlotEntry).toHaveBeenCalledWith({ "id": 1, "repetition_unit": 3 });
+        expect(mockEditSlotEntry).toHaveBeenCalledWith(SlotEntry.clone(testSlotEntry, { repetitionUnitId: 3 }));
     });
 });
 
 describe('SlotEntryWeightUnitField', () => {
+
+    const testSlotEntry = testDayLegs.slots[0].entries[0];
 
     beforeEach(() => {
         jest.resetAllMocks();
@@ -99,7 +104,7 @@ describe('SlotEntryWeightUnitField', () => {
         render(
             <QueryClientProvider client={testQueryClient}>
                 <SlotEntryWeightUnitField
-                    slotEntry={testDayLegs.slots[0].entries[0]}
+                    slotEntry={testSlotEntry}
                     routineId={1}
                 />
             </QueryClientProvider>
@@ -116,19 +121,21 @@ describe('SlotEntryWeightUnitField', () => {
 
         const platesOption = screen.getByRole('option', { name: 'Plates' });
         await user.click(platesOption);
-        expect(mockEditSlotEntry).toHaveBeenCalledWith({ "id": 1, "weight_unit": 3 });
+        expect(mockEditSlotEntry).toHaveBeenCalledWith(SlotEntry.clone(testSlotEntry, { weightUnitId: 3 }));
     });
 });
 
 describe('SlotEntryRoundingField', () => {
 
     const mockEditProfile = editProfile as jest.Mock;
+    const testSlotEntry = testDayLegs.slots[0].entries[0];
 
     beforeEach(() => {
         jest.resetAllMocks();
-        user = userEvent.setup();
-
+        (editProfile as jest.Mock).mockResolvedValue(testProfileDataVerified);
         (getProfile as jest.Mock).mockResolvedValue(testProfileDataVerified);
+
+        user = userEvent.setup();
     });
 
     test('correctly updates the weight rounding for the slot entry', async () => {
@@ -137,7 +144,7 @@ describe('SlotEntryRoundingField', () => {
             <QueryClientProvider client={testQueryClient}>
                 <SlotEntryRoundingField
                     editProfile={false}
-                    entryId={101}
+                    slotEntry={testSlotEntry}
                     initialValue={42}
                     rounding={'weight'}
                     routineId={1}
@@ -154,7 +161,7 @@ describe('SlotEntryRoundingField', () => {
 
         // Assert
         await waitFor(() => {
-            expect(mockEditSlotEntry).toHaveBeenCalledWith({ "id": 101, "weight_rounding": 33 });
+            expect(mockEditSlotEntry).toHaveBeenCalledWith(SlotEntry.clone(testSlotEntry, { weightRounding: 33 }));
             expect(mockEditProfile).not.toHaveBeenCalled();
         }, { timeout: DEBOUNCE_ROUTINE_FORMS + 100 });
     });
@@ -173,15 +180,16 @@ describe('SlotEntryRoundingField', () => {
         );
 
         // Act
-        const inputElement = screen.getByRole('textbox', { name: 'weight' });
+        const inputElement = await screen.findByRole('textbox', { name: 'weight' });
         await user.click(inputElement);
         await user.clear(inputElement);
         await user.type(inputElement, '34');
         await user.tab();
 
         // Assert
+
         await waitFor(() => {
-            expect(mockEditProfile).toHaveBeenCalledWith({ "weight_rounding": 34 });
+            expect(mockEditProfile).toHaveBeenCalledWith({ "weightRounding": 34 });
             expect(mockEditSlotEntry).not.toHaveBeenCalled();
         }, { timeout: DEBOUNCE_ROUTINE_FORMS + 100 });
     });
@@ -192,7 +200,7 @@ describe('SlotEntryRoundingField', () => {
             <QueryClientProvider client={testQueryClient}>
                 <SlotEntryRoundingField
                     editProfile={false}
-                    entryId={101}
+                    slotEntry={testSlotEntry}
                     initialValue={42}
                     rounding={'reps'}
                     routineId={1}
@@ -209,7 +217,7 @@ describe('SlotEntryRoundingField', () => {
 
         // Assert
         await waitFor(() => {
-            expect(mockEditSlotEntry).toHaveBeenCalledWith({ "id": 101, "reps_rounding": 33 });
+            expect(mockEditSlotEntry).toHaveBeenCalledWith(SlotEntry.clone(testSlotEntry, { repetitionRounding: 33 }));
             expect(mockEditProfile).not.toHaveBeenCalled();
         }, { timeout: DEBOUNCE_ROUTINE_FORMS + 100 });
     });

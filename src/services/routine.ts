@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Exercise } from "components/Exercises/models/exercise";
-import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
+import { Day } from "components/WorkoutRoutines/models/Day";
 import { RoutineStatsData, RoutineStatsDataAdapter } from "components/WorkoutRoutines/models/LogStats";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
 import { RoutineDayData, RoutineDayDataAdapter } from "components/WorkoutRoutines/models/RoutineDayData";
@@ -226,9 +226,8 @@ export const getRoutineStructure = async (routineId: number): Promise<Day[]> => 
         { headers: makeHeader() }
     );
 
-    const adapter = new DayAdapter();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return response.data.days.map((data: any) => adapter.fromJson(data));
+    return response.data.days.map((data: any) => Day.fromJson(data));
 };
 
 export const getRoutineLogData = async (routineId: number): Promise<RoutineLogData[]> => {

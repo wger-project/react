@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addSlot, deleteSlot, editSlot, editSlotOrder } from "services";
-import { AddSlotParams, EditSlotOrderParam, EditSlotParams } from "services/slot";
+import { Slot } from "components/WorkoutRoutines/models/Slot";
+import { addSlot, deleteSlot, editSlot } from "services";
 import { QueryKey, } from "utils/consts";
 
 
@@ -8,7 +8,7 @@ export const useAddSlotQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: AddSlotParams) => addSlot(data),
+        mutationFn: (slot: Slot) => addSlot(slot),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, routineId] })
     });
 };
@@ -17,15 +17,15 @@ export const useEditSlotQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: EditSlotParams) => editSlot(data),
+        mutationFn: (slot: Slot) => editSlot(slot),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, routineId] })
     });
 };
-export const useEditSlotOrderQuery = (routineId: number) => {
+export const useEditSlotsQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: EditSlotOrderParam[]) => editSlotOrder(data),
+        mutationFn: (slots: Slot[]) => Promise.all(slots.map(editSlot)),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, routineId] })
     });
 };
