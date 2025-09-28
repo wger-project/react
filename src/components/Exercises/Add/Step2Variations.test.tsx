@@ -128,7 +128,7 @@ describe("Test the add exercise step 2 component", () => {
                 <Step2Variations onContinue={mockOnContinue} />
             </QueryClientProvider>
         );
-        const input = screen.getByLabelText('exercises.filterVariations');
+        const input = screen.getByRole('textbox', { name: /name/i });
 
         // Assert
         expect(screen.getByText("Benchpress")).toBeInTheDocument();
