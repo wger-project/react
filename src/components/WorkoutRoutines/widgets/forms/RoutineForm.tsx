@@ -32,7 +32,7 @@ interface RoutineFormProps {
     closeFn?: Function,
 }
 
-export const RoutineForm = ({ routine, isTemplate = true, isPublicTemplate = true, closeFn }: RoutineFormProps) => {
+export const RoutineForm = ({ routine, isTemplate = false, isPublicTemplate = false, closeFn }: RoutineFormProps) => {
 
     const [t, i18n] = useTranslation();
     const addRoutineQuery = useAddRoutineQuery();
