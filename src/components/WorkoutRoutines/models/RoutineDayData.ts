@@ -15,10 +15,15 @@ export class RoutineDayData {
     ) {
         this.slots = slots ?? [];
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static fromJson(json: any) {
+        return adapter.fromJson(json);
+    }
 }
 
 
-export class RoutineDayDataAdapter implements Adapter<RoutineDayData> {
+class RoutineDayDataAdapter implements Adapter<RoutineDayData> {
     fromJson = (item: any) => new RoutineDayData(
         item.iteration,
         new Date(item.date),
@@ -27,3 +32,5 @@ export class RoutineDayDataAdapter implements Adapter<RoutineDayData> {
         item.slots.map((slot: any) => new SlotDataAdapter().fromJson(slot))
     );
 }
+
+const adapter = new RoutineDayDataAdapter();

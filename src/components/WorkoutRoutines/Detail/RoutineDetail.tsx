@@ -50,11 +50,13 @@ export const RoutineDetail = () => {
                             href={makeLink(WgerLink.ROUTINE_COPY, i18n.language, { id: routineId })}
                             variant={"contained"}
                         >{t('routines.copyAndUseTemplate')}</Button>}
-
-                        {routine!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null).map((dayData, index) =>
-                            // {routine!.dayDataCurrentIteration.map((dayData, index) =>
-                            <DayDetailsCard routineId={routineId} dayData={dayData} key={index}
-                                            readOnly={routine!.isTemplate} />
+                        {routine!.dayDataCurrentIterationNoNulls.map((dayData) =>
+                            <DayDetailsCard
+                                routineId={routineId}
+                                dayData={dayData}
+                                key={`dayDetails-${dayData.date.toISOString()}`}
+                                readOnly={routine!.isTemplate}
+                            />
                         )}
                     </Stack>
                 }

@@ -62,8 +62,16 @@ export class Routine {
 
     get dayDataCurrentIteration() {
         const iteration = this.getIteration() ?? 1;
-
         return this.dayData.filter(dayData => dayData.iteration === iteration);
+    }
+
+    /*
+     * Filter out dayData entries with null days
+     */
+    get dayDataCurrentIterationNoNulls() {
+        return this.dayDataCurrentIteration
+            .filter((dayData) => dayData.day !== null)
+            .sort((a, b) => a.day!.order - b.day!.order);
     }
 
     get groupedDayDataByIteration() {
