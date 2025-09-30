@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import i18n from 'i18next';
@@ -18,46 +16,40 @@ export const DEFAULT_WORKOUT_DURATION = 12;
 
 
 type RoutineConstructorParams = {
-    id: number | null;
+    id?: number | null;
     name: string;
     description: string;
-    created: Date;
-    start: Date;
+    created?: Date;
+    start?: Date;
     end: Date;
-    fitInWeek: boolean;
+    fitInWeek?: boolean;
     isTemplate?: boolean;
     isPublic?: boolean;
+
     days?: Day[];
     dayData?: RoutineDayData[];
 };
 
 export class Routine {
-    id: number | null;
+    id: number | null = null;
     name: string;
     description: string;
-    created: Date;
-    start: Date;
+    created: Date = new Date();
+    start: Date = new Date();
     end: Date;
-    fitInWeek: boolean;
-    isTemplate: boolean;
-    isPublic: boolean;
+    fitInWeek: boolean = false;
+    isTemplate: boolean = false;
+    isPublic: boolean = false;
 
     days: Day[] = [];
     dayData: RoutineDayData[] = [];
 
-    constructor(data: RoutineConstructorParams) {
-        this.id = data.id ?? null;
-        this.name = data.name;
-        this.description = data.description;
-        this.created = data.created;
-        this.start = data.start;
-        this.end = data.end;
-        this.fitInWeek = data.fitInWeek;
-        this.isTemplate = data.isTemplate ?? false;
-        this.isPublic = data.isPublic ?? false;
+    constructor(params: RoutineConstructorParams) {
+        this.name = params.name;
+        this.description = params.description;
+        this.end = params.end;
 
-        this.days = data.days ?? [];
-        this.dayData = data.dayData ?? [];
+        Object.assign(this, params);
     }
 
     get isNotTemplate() {
@@ -129,21 +121,23 @@ export class Routine {
         return routineAdapter.fromJson(json);
     }
 
-    static clone(routine: Routine): Routine {
+    static clone(routine: Routine, overrides?: Partial<RoutineConstructorParams>): Routine {
         return new Routine({
-            id: routine.id,
-            name: routine.name,
-            description: routine.description,
-            created: new Date(),
-            start: new Date(routine.start),
-            end: new Date(routine.end),
-            fitInWeek: routine.fitInWeek,
-            isTemplate: routine.isTemplate,
-            isPublic: routine.isPublic,
+            id: overrides?.id ?? routine.id,
+            name: overrides?.name ?? routine.name,
+            description: overrides?.description ?? routine.description,
+            created: overrides?.created ?? new Date(),
+            start: overrides?.start ?? routine.start,
+            end: overrides?.end ?? routine.end ?? undefined,
+            fitInWeek: overrides?.fitInWeek ?? routine.fitInWeek,
+            isTemplate: overrides?.isTemplate ?? routine.isTemplate,
+            isPublic: overrides?.isPublic ?? routine.isPublic,
+            days: overrides?.days ?? routine.days,
+            dayData: overrides?.dayData ?? routine.dayData,
         });
     }
 
-    toJson(): object {
+    toJson() {
         return routineAdapter.toJson(this);
     }
 
@@ -186,7 +180,7 @@ export class Routine {
 }
 
 
-export class RoutineAdapter implements Adapter<Routine> {
+class RoutineAdapter implements Adapter<Routine> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any) {
         return new Routine({
@@ -200,7 +194,7 @@ export class RoutineAdapter implements Adapter<Routine> {
             isTemplate: item.is_template,
             isPublic: item.is_public,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            days: item.days ? item.days.map((day: any) => new Day(day)) : []
+            days: item.days ? item.days.map((day: any) => Day.fromJson(day)) : []
         });
     }
 
@@ -212,9 +206,9 @@ export class RoutineAdapter implements Adapter<Routine> {
             description: item.description,
             start: dateToYYYYMMDD(item.start),
             end: dateToYYYYMMDD(item.end),
-            fit_in_week: item.fitInWeek,
-            is_template: item.isTemplate,
-            is_public: item.isPublic
+            "fit_in_week": item.fitInWeek,
+            "is_template": item.isTemplate,
+            "is_public": item.isPublic
         };
     }
 }

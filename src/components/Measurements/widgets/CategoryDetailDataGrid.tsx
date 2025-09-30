@@ -152,9 +152,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                         <GridActionsCellItem
                             icon={<SaveIcon />}
                             label="Save"
-                            sx={{
-                                color: 'primary.main',
-                            }}
                             onClick={handleSaveClick(id)}
                         />,
                         <GridActionsCellItem

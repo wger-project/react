@@ -215,7 +215,7 @@ function getCookie(name: string) {
 }
 
 /*
- * util function that generates the needed headers
+ * util function that generates the necessary headers
  *
  * Only during production when the script is embedded in the django application
  * do we need to add the CSRF token to the headers

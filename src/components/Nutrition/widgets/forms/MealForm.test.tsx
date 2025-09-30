@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { Meal } from "components/Nutrition/models/meal";
 import { useAddMealQuery, useEditMealQuery } from "components/Nutrition/queries";
 import { MealForm } from "components/Nutrition/widgets/forms/MealForm";
 import { TEST_MEAL_1 } from "tests/nutritionTestdata";
-import { dateTimeToHHMM } from "utils/date";
 
 jest.mock('components/Nutrition/queries');
 
@@ -43,12 +43,12 @@ describe('Test the MealForm component', () => {
 
         // Assert
         expect(mutateEditMock).not.toHaveBeenCalled();
-        expect(closeFnMock).toBeCalled();
-        expect(mutateAddMock).toHaveBeenCalledWith({
+        expect(closeFnMock).toHaveBeenCalled();
+        expect(mutateAddMock).toHaveBeenCalledWith(new Meal({
             name: '2nd breakfast',
-            plan: 987,
-            time: dateTimeToHHMM(new Date()),
-        });
+            planId: 987,
+            time: expect.any(Date),
+        }));
     });
 
     test('an existing meal is correctly edited', async () => {
@@ -71,12 +71,15 @@ describe('Test the MealForm component', () => {
 
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
-        expect(closeFnMock).toBeCalled();
-        expect(mutateEditMock).toHaveBeenCalledWith({
-            id: 78,
-            name: '2nd breakfast',
-            plan: 987,
-            time: '12:30',
-        });
+        expect(closeFnMock).toHaveBeenCalled();
+        expect(mutateEditMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: 78,
+                name: '2nd breakfast',
+                order: 2,
+                planId: 123,
+                time: TEST_MEAL_1.time
+            })
+        );
     });
 });

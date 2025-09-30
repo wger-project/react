@@ -5,6 +5,7 @@ import { ResponseType } from "./responseType";
 
 export const EXERCISE_INFO_PATH = 'exerciseinfo';
 export const EXERCISE_PATH = 'exercise';
+export const EXERCISE_SUBMISSION_PATH = 'exercise-submission';
 
 /*
  * Process the response from the server and return the exercise bases
@@ -68,47 +69,81 @@ export const getExercisesForVariation = async (id: number | null | undefined): P
 };
 
 /*
- * Create a new exercise base
+ * Create a new exercise with all its sub-entities
  */
-export const addExercise = async (
+type ExerciseSubmissionProps = {
     categoryId: number,
     equipmentIds: number[],
     muscleIds: number[],
     secondaryMuscleIds: number[],
-    variationId: number | null,
-    author: string | null
-): Promise<number> => {
+}
+type AliasSubmissionProps = {
+    alias: string
+}
+type NotesSubmissionProps = {
+    comment: string
+}
+type TranslationSubmissionProps = {
+    name: string,
+    description: string,
+    language: number,
+    aliases?: AliasSubmissionProps[],
+    comments?: NotesSubmissionProps[]
+}
 
-    const url = makeUrl(EXERCISE_PATH);
-    const baseData = {
-        category: categoryId,
-        equipment: equipmentIds,
-        muscles: muscleIds,
+export type AddExerciseFullProps = {
+    author?: string,
+    exercise: ExerciseSubmissionProps,
+    variations?: number | null,
+    variationsConnectTo?: number | null,
+    translations: TranslationSubmissionProps[],
+}
+
+export const addFullExercise = async (data: AddExerciseFullProps): Promise<number> => {
+
+    const url = makeUrl(EXERCISE_SUBMISSION_PATH);
+    const payload = {
+        category: data.exercise.categoryId,
+        equipment: data.exercise.equipmentIds,
+        muscles: data.exercise.muscleIds,
         // eslint-disable-next-line camelcase
-        muscles_secondary: secondaryMuscleIds,
+        muscles_secondary: data.exercise.secondaryMuscleIds,
         // eslint-disable-next-line camelcase
-        variation_id: variationId,
-        // eslint-disable-next-line camelcase
-        license_author: author
+        license_author: data.author ?? '',
+        variations: data.variations ?? null,
+        //eslint-disable-next-line camelcase
+        variations_connect_to: data.variationsConnectTo ?? null,
+        translations: [
+            ...data.translations.map(t => ({
+                    name: t.name,
+                    description: t.description,
+                    language: t.language,
+                    //eslint-disable-next-line camelcase
+                    license_author: data.author ?? '',
+                    aliases: t.aliases ?? [],
+                    comments: t.comments ?? []
+                })
+            )
+        ],
     };
-    const response = await axios.post(
+
+    const result = await axios.post(
         url,
-        baseData,
+        payload,
         { headers: makeHeader() }
     );
-
-    return response.data.id;
+    return result.data.id;
 };
 
 /*
- * Update an existing exercise base
+ * Update an existing exercise
  */
 type EditExerciseProps = {
     category?: number,
     equipment?: number[],
     muscles?: number[],
     muscles_secondary?: number[],
-    variation_id?: number | null,
+    variations?: number | null,
     license_author?: string | null
 }
 export const editExercise = async (id: number, data: EditExerciseProps): Promise<number> => {

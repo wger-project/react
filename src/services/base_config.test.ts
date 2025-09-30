@@ -42,7 +42,7 @@ describe('editBaseConfig', () => {
         const errorMessage = 'Network Error';
         mockedAxios.patch.mockRejectedValue(new Error(errorMessage));
 
-        await expect(editBaseConfig(mockEditBaseConfigParams, mockUrl)).rejects.toThrowError(errorMessage);
+        await expect(editBaseConfig(mockEditBaseConfigParams, mockUrl)).rejects.toThrow(errorMessage);
         expect(axios.patch).toHaveBeenCalledTimes(1);
     });
 });

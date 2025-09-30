@@ -129,6 +129,7 @@ describe("workout routine service tests", () => {
         expect(result[0].day).toStrictEqual(
             new Day({
                 id: 100,
+                routineId: null,
                 order: 5,
                 name: 'Push day',
                 description: '',

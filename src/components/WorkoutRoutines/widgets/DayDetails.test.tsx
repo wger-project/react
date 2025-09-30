@@ -1,6 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
+import { Day } from "components/WorkoutRoutines/models/Day";
 import { DayDragAndDropGrid } from "components/WorkoutRoutines/widgets/DayDetails";
 import React from 'react';
 import { addDay, getRoutine } from "services";
@@ -55,13 +56,13 @@ describe("Test the DayDragAndDropGrid component", () => {
         await user.click(screen.getByRole('button', { name: 'routines.addDay' }));
 
         // Assert
-        expect(mockAddDay).toHaveBeenCalledWith({
-            "is_rest": false,
-            "name": "routines.newDay 4",
-            "need_logs_to_advance": false,
-            "order": 4,
-            "routine": 222,
-        });
+        expect(mockAddDay).toHaveBeenCalledWith(new Day({
+            isRest: false,
+            name: "routines.newDay 4",
+            needLogsToAdvance: false,
+            order: 4,
+            routineId: 222,
+        }));
         expect(mockSetSelectedDay).toHaveBeenCalledWith(3);
     });
 });

@@ -80,7 +80,7 @@ describe("Test the ExerciseDeleteDialog component", () => {
         await user.click(autocomplete);
 
         // Assert
-        expect(searchExerciseTranslations).not.toBeCalled();
+        expect(searchExerciseTranslations).not.toHaveBeenCalled();
         await user.type(autocomplete, 'Cru');
 
         expect(screen.getByText("exercises.noReplacementSelected")).toBeInTheDocument();

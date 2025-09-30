@@ -1,5 +1,5 @@
 import axios from "axios";
-import { addExercise, deleteExercise, editExercise, getExercise, getExercises, processExerciseApiData } from "services";
+import { deleteExercise, editExercise, getExercise, getExercises, processExerciseApiData } from "services";
 import { responseApiExerciseInfo, testApiExercise1 } from "tests/responseApi";
 
 jest.mock("axios");
@@ -34,37 +34,6 @@ describe("Exercise service API tests", () => {
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
         expect(result).toEqual(testApiExercise1);
-    });
-
-    test('POST a new exercise', async () => {
-
-        // Arrange
-        const response = {
-            "id": 749,
-            "uuid": "1b020b3a-3732-4c7e-92fd-a0cec90ed69b",
-            "creation_date": "2022-06-23",
-            "update_date": "2022-06-23T18:22:54.909478+02:00",
-            "category": 3,
-            "muscles": [3, 4],
-            "muscles_secondary": [9],
-            "equipment": [1, 2],
-            "variations": null
-        };
-        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
-
-        // Act
-        const result = await addExercise(
-            3,
-            [1, 2],
-            [3, 4],
-            [9],
-            null,
-            'Jules Verne'
-        );
-
-        // Assert
-        expect(axios.post).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(749);
     });
 
     test('EDIT an existing exercise', async () => {

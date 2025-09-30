@@ -1,45 +1,31 @@
 import axios from 'axios';
-import { Meal, MealAdapter } from "components/Nutrition/models/meal";
-import { MealItemAdapter } from "components/Nutrition/models/mealItem";
+import { ApiMealType, Meal } from "components/Nutrition/models/meal";
+import { ApiMealItemType, MealItem } from "components/Nutrition/models/mealItem";
 import { getIngredients } from "services/ingredient";
 import { getWeightUnit } from "services/ingredientweightunit";
 import { ResponseType } from "services/responseType";
-import { ApiMealItemType, ApiMealType } from 'types';
 import { ApiPath } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 
 
-export interface AddMealParams {
-    plan: number;
-    name: string;
-    time: string | null;
-}
-
-export interface EditMealParams extends AddMealParams {
-    id: number,
-}
-
-
-export const addMeal = async (data: AddMealParams): Promise<Meal> => {
+export const addMeal = async (meal: Meal): Promise<Meal> => {
     const response = await axios.post(
         makeUrl(ApiPath.MEAL),
-        data,
+        meal.toJson(),
         { headers: makeHeader() }
     );
 
-    const adapter = new MealAdapter();
-    return adapter.fromJson(response.data);
+    return Meal.fromJson(response.data);
 };
 
-export const editMeal = async (data: EditMealParams): Promise<Meal> => {
+export const editMeal = async (meal: Meal): Promise<Meal> => {
     const response = await axios.patch(
-        makeUrl(ApiPath.MEAL, { id: data.id }),
-        data,
+        makeUrl(ApiPath.MEAL, { id: meal.id! }),
+        meal.toJson(),
         { headers: makeHeader() }
     );
 
-    const adapter = new MealAdapter();
-    return adapter.fromJson(response.data);
+    return Meal.fromJson(response.data);
 };
 
 export const deleteMeal = async (id: number): Promise<void> => {
@@ -52,13 +38,11 @@ export const deleteMeal = async (id: number): Promise<void> => {
 export const getMealsForPlan = async (planId: number): Promise<Meal[]> => {
 
     let ingredientIds: number[] = [];
-    const mealAdapter = new MealAdapter();
-    const mealItemAdapter = new MealItemAdapter();
     const { data: receivedMeals } = await axios.get<ResponseType<ApiMealType>>(
         makeUrl(ApiPath.MEAL, { query: { plan: planId } }),
         { headers: makeHeader() },
     );
-    const meals = receivedMeals.results.map((meal) => mealAdapter.fromJson(meal));
+    const meals = receivedMeals.results.map((meal) => Meal.fromJson(meal));
     for (const meal of meals) {
         ingredientIds = [];
 
@@ -66,7 +50,7 @@ export const getMealsForPlan = async (planId: number): Promise<Meal[]> => {
             makeUrl(ApiPath.MEAL_ITEM, { query: { meal: meal.id } }),
             { headers: makeHeader() },
         );
-        const items = receivedMealItems.results.map((item) => mealItemAdapter.fromJson(item));
+        const items = receivedMealItems.results.map((item) => MealItem.fromJson(item));
 
         for (const item of items) {
             ingredientIds.push(item.ingredientId);

@@ -1,7 +1,13 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { Step6Overview } from "components/Exercises/Add/Step6Overview";
-import { useCategoriesQuery, useEquipmentQuery, useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
+import {
+    useAddExerciseFullQuery,
+    useCategoriesQuery,
+    useEquipmentQuery,
+    useLanguageQuery,
+    useMusclesQuery
+} from "components/Exercises/queries";
 import { useProfileQuery } from "components/User/queries/profile";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
@@ -21,6 +27,7 @@ const mockedUseEquipmentQuery = useEquipmentQuery as jest.Mock;
 const mockedLanguageQuery = useLanguageQuery as jest.Mock;
 const mockedUseExerciseStateValue = useExerciseSubmissionStateValue as jest.Mock;
 const mockedUseProfileQuery = useProfileQuery as jest.Mock;
+const addFullExerciseMutation = useAddExerciseFullQuery as jest.Mock;
 
 const queryClient = new QueryClient();
 
@@ -42,6 +49,10 @@ describe("Test the add exercise step 6 component", () => {
 
         mockedUseProfileQuery.mockImplementation(() => (
             { isLoading: false, data: testProfileDataVerified }
+        ));
+
+        addFullExerciseMutation.mockImplementation(() => (
+            { isIdle: false, data: 1 }
         ));
 
         // there must be a better way to do this!!!

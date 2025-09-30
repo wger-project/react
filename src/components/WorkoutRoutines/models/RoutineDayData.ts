@@ -1,4 +1,4 @@
-import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
+import { Day } from "components/WorkoutRoutines/models/Day";
 import { SlotData, SlotDataAdapter } from "components/WorkoutRoutines/models/SlotData";
 import { Adapter } from "utils/Adapter";
 
@@ -23,7 +23,7 @@ export class RoutineDayDataAdapter implements Adapter<RoutineDayData> {
         item.iteration,
         new Date(item.date),
         item.label,
-        item.day != null ? new DayAdapter().fromJson(item.day) : null,
+        item.day != null ? Day.fromJson(item.day) : null,
         item.slots.map((slot: any) => new SlotDataAdapter().fromJson(slot))
     );
 }

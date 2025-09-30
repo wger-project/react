@@ -32,7 +32,9 @@ interface RoutineFormProps {
     closeFn?: Function,
 }
 
+
 export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
+
     const [t, i18n] = useTranslation();
     const addRoutineQuery = useAddRoutineQuery();
     const editRoutineQuery = useEditRoutineQuery(routine?.id!);
@@ -155,7 +157,9 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
             }}
 
             validationSchema={validationSchema}
+
             onSubmit={handleSave} // use the new handle save
+
         >
             {formik => (
                 <Form>

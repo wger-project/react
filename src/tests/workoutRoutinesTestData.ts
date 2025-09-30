@@ -27,6 +27,7 @@ export const testRepetitionUnits = [testRepUnitRepetitions, testRepUnitUnitFailu
 
 export const testDayLegs = new Day({
     id: 5,
+    routineId: 1,
     order: 1,
     name: "Every day is leg day 🦵🏻",
     description: '',
@@ -136,6 +137,7 @@ export const testDayLegs = new Day({
 
 const testDayPull = new Day({
     id: 6,
+    routineId: 1,
     order: 2,
     name: 'Pull day',
     description: '',
@@ -147,6 +149,7 @@ const testDayPull = new Day({
 
 const testRestDay = new Day({
     id: 19,
+    routineId: 1,
     order: 3,
     name: '',
     description: '',

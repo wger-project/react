@@ -51,7 +51,7 @@ export const MealDetailDropdown = (props: {
     };
 
     const performDelete = () => {
-        deleteMealQuery.mutate(props.meal.id);
+        deleteMealQuery.mutate(props.meal.id!);
     };
 
 
@@ -69,32 +69,21 @@ export const MealDetailDropdown = (props: {
 
 
     const handleAddDiaryEntry = () => {
-        const diaryData = props.meal.items.map(item => {
-            return {
-                plan: props.planId,
-                meal: props.meal.id,
-                mealItem: item.id,
-                ingredient: item.ingredientId,
-                // eslint-disable-next-line camelcase
-                weight_unit: item.weightUnitId,
-                datetime: (new Date()).toISOString(),
-                amount: item.amount
-            };
-        });
-        addDiaryEntriesQuery.mutate(diaryData);
+        const diaryEntries = props.meal.items.map(item => item.diaryEntry(props.planId));
+        addDiaryEntriesQuery.mutate(diaryEntries);
         setOpenSnackbar(true);
     };
 
 
     return <>
-        {!props.onlyLogging && <Tooltip title={t('nutrition.logThisMeal')}>
+        {props.meal.isRealMeal && !props.onlyLogging && <Tooltip title={t('nutrition.logThisMeal')}>
             <IconButton aria-label="settings" onClick={handleAddDiaryEntry}>
                 <HistoryEduIcon />
             </IconButton>
         </Tooltip>}
-        <IconButton aria-label="settings" onClick={handleClick}>
+        {props.meal.isRealMeal && <IconButton aria-label="settings" onClick={handleClick}>
             <MoreVertIcon />
-        </IconButton>
+        </IconButton>}
         <IconButton aria-label="settings" onClick={props.handleExpanded}>
             {props.isExpanded ? <InfoIcon /> : <InfoOutlinedIcon />}
         </IconButton>
@@ -102,9 +91,6 @@ export const MealDetailDropdown = (props: {
             anchorEl={anchorEl}
             open={open}
             onClose={handleClose}
-            MenuListProps={{
-                'aria-labelledby': 'basic-button',
-            }}
         >
             <MenuItem onClick={handleEdit}>{t("edit")}</MenuItem>
             <MenuItem onClick={handleDelete}>{t("delete")}</MenuItem>

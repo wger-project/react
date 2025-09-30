@@ -19,7 +19,6 @@ import {
 import Tooltip from "@mui/material/Tooltip";
 import { Meal } from "components/Nutrition/models/meal";
 import { MealItem } from "components/Nutrition/models/mealItem";
-import { PSEUDO_MEAL_ID } from "components/Nutrition/models/nutritionalPlan";
 import {
     NutritionalValuesPlannedLoggedChart
 } from "components/Nutrition/widgets/charts/NutritionalValuesPlannedLoggedChart";
@@ -66,7 +65,6 @@ const MealItemListItem = (props: { mealItem: MealItem, planId: number, mealId: n
 
 export const MealDetail = (props: { meal: Meal, planId: number, onlyLogging: boolean }) => {
     const theme = useTheme();
-    const isRealMeal = props.meal.id !== PSEUDO_MEAL_ID;
     const [t] = useTranslation();
     const [expandViewStats, setExpandViewStats] = useState(false);
     const handleToggleExpandStats = () => setExpandViewStats(!expandViewStats);
@@ -86,21 +84,20 @@ export const MealDetail = (props: { meal: Meal, planId: number, onlyLogging: boo
     return <Card>
         <CardHeader
             sx={{ bgcolor: theme.palette.grey["300"] }}
-            action={props.meal.id !== PSEUDO_MEAL_ID &&
-                <MealDetailDropdown
-                    meal={props.meal}
-                    planId={props.planId}
-                    onlyLogging={props.onlyLogging}
-                    isExpanded={expandViewStats}
-                    handleExpanded={handleToggleExpandStats}
-                />}
+            action={<MealDetailDropdown
+                meal={props.meal}
+                planId={props.planId}
+                onlyLogging={props.onlyLogging}
+                isExpanded={expandViewStats}
+                handleExpanded={handleToggleExpandStats}
+            />}
             title={props.meal.name}
             subheader={props.meal.timeHHMMLocale}
         />
         <CardContent sx={{ paddingY: 0 }}>
             <Collapse in={expandViewStats} timeout="auto" unmountOnExit>
                 {!props.onlyLogging && <IngredientDetailTable
-                    showSum={isRealMeal}
+                    showSum={props.meal.isRealMeal}
                     items={props.meal.items}
                     values={props.meal.plannedNutritionalValues}
                 />}
@@ -116,7 +113,7 @@ export const MealDetail = (props: { meal: Meal, planId: number, onlyLogging: boo
                     />}
 
                 <IngredientDetailTable
-                    showSum={isRealMeal}
+                    showSum={props.meal.isRealMeal}
                     items={props.meal.diaryEntriesToday}
                     values={props.meal.loggedNutritionalValuesToday}
                 />
@@ -129,7 +126,7 @@ export const MealDetail = (props: { meal: Meal, planId: number, onlyLogging: boo
                         <MealItemListItem
                             mealItem={item}
                             planId={props.planId}
-                            mealId={props.meal.id}
+                            mealId={props.meal.id!}
                             key={item.id}
                         />
                     ))}
@@ -155,7 +152,7 @@ export const MealDetail = (props: { meal: Meal, planId: number, onlyLogging: boo
                 <p><b>{t('nutrition.addMealItem')}</b></p>
                 <MealItemForm
                     planId={props.planId}
-                    mealId={props.meal.id}
+                    mealId={props.meal.id!}
                     closeFn={handleToggleExpandItemForm} />
             </CardContent>
         </Collapse>
@@ -165,7 +162,7 @@ export const MealDetail = (props: { meal: Meal, planId: number, onlyLogging: boo
                 <NutritionDiaryEntryForm
                     closeFn={handleToggleExpandDiaryForm}
                     planId={props.planId}
-                    mealId={props.meal.id !== PSEUDO_MEAL_ID ? props.meal.id : null} />
+                    mealId={props.meal.isRealMeal ? props.meal.id : null} />
             </CardContent>
         </Collapse>
 

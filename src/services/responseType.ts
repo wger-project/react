@@ -33,7 +33,3 @@ export interface IngredientSearchResponse {
         image_thumbnail: string | null,
     }
 }
-
-export interface IngredientSearchType {
-    suggestions: IngredientSearchResponse[];
-}

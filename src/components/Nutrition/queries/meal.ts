@@ -1,12 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addMeal, AddMealParams, deleteMeal, editMeal, EditMealParams } from "services/meal";
+import { Meal } from "components/Nutrition/models/meal";
+import { addMeal, deleteMeal, editMeal } from "services/meal";
 import { QueryKey } from "utils/consts";
 
 export const useAddMealQuery = (planId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: AddMealParams) => addMeal(data),
+        mutationFn: (data: Meal) => addMeal(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.NUTRITIONAL_PLAN, planId]
@@ -30,7 +31,7 @@ export const useEditMealQuery = (planId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: EditMealParams) => editMeal(data),
+        mutationFn: (meal: Meal) => editMeal(meal),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.NUTRITIONAL_PLAN, planId]

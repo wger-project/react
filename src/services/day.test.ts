@@ -1,7 +1,6 @@
 import axios from "axios";
-import { DayAdapter } from "components/WorkoutRoutines/models/Day";
-import { addDay, deleteDay, editDay, editDayOrder } from "services";
-import { AddDayParams, EditDayOrderParam, EditDayParams } from "services/day";
+import { Day } from "components/WorkoutRoutines/models/Day";
+import { addDay, deleteDay, editDay } from "services";
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -18,10 +17,8 @@ describe('editDay', () => {
         is_rest: false,
     };
 
-    const mockEditDayParams: EditDayParams = {
-        id: 1,
-        name: 'Updated Day',
-    };
+    const testDay = Day.fromJson(mockDayData);
+    testDay.name = 'Test Day';
 
     beforeEach(() => {
         // Reset mocks before each test
@@ -31,56 +28,21 @@ describe('editDay', () => {
     test('should update a day and return the updated day', async () => {
         mockedAxios.patch.mockResolvedValue({ data: mockDayData });
 
-        const updatedDay = await editDay(mockEditDayParams);
+        const updatedDay = await editDay(testDay);
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
-        expect(updatedDay).toEqual(new DayAdapter().fromJson(mockDayData));
+        expect(updatedDay).toEqual(Day.fromJson(mockDayData));
     });
 
     test('should handle errors gracefully', async () => {
         const errorMessage = 'Network Error';
         mockedAxios.patch.mockRejectedValue(new Error(errorMessage));
 
-        await expect(editDay(mockEditDayParams)).rejects.toThrowError(errorMessage);
+        await expect(editDay(testDay)).rejects.toThrow(errorMessage);
         expect(axios.patch).toHaveBeenCalledTimes(1);
     });
 });
 
-
-describe('editDayOrder', () => {
-    const mockDayOrders: EditDayOrderParam[] = [
-        { id: 1, order: 3 },
-        { id: 2, order: 1 },
-        { id: 3, order: 2 },
-    ];
-
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
-    test('should update the order of multiple days', async () => {
-        mockedAxios.patch.mockResolvedValue({ status: 200 });
-
-        await editDayOrder(mockDayOrders);
-
-        expect(axios.patch).toHaveBeenCalledTimes(mockDayOrders.length);
-        mockDayOrders.forEach(({ order }) => {
-            expect(axios.patch).toHaveBeenCalledWith(
-                expect.any(String),
-                { order },
-                expect.any(Object)
-            );
-        });
-    });
-
-    test('should handle errors gracefully', async () => {
-        const errorMessage = 'Network Error';
-        mockedAxios.patch.mockRejectedValueOnce(new Error(errorMessage));
-
-        await expect(editDayOrder(mockDayOrders)).rejects.toThrow(errorMessage);
-        expect(axios.patch).toHaveBeenCalledTimes(1);
-    });
-});
 
 describe('addDay', () => {
     const mockDayData = {
@@ -95,16 +57,14 @@ describe('addDay', () => {
         need_logs_to_advance: false,
     };
 
-    const mockAddDayParams: AddDayParams = {
-        routine: 1,
+    const testDay = new Day({
+        routineId: 1,
         name: 'Test Day',
         description: 'A test day',
         order: 1,
-        // eslint-disable-next-line camelcase
-        is_rest: false,
-        // eslint-disable-next-line camelcase
-        need_logs_to_advance: false,
-    };
+        isRest: false,
+        needLogsToAdvance: false,
+    });
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -113,17 +73,17 @@ describe('addDay', () => {
     test('should create a new day and return the created day', async () => {
         mockedAxios.post.mockResolvedValue({ data: mockDayData });
 
-        const newDay = await addDay(mockAddDayParams);
+        const newDay = await addDay(testDay);
 
         expect(axios.post).toHaveBeenCalledTimes(1);
-        expect(newDay).toEqual(new DayAdapter().fromJson(mockDayData));
+        expect(newDay).toEqual(Day.fromJson(mockDayData));
     });
 
     test('should handle errors gracefully', async () => {
         const errorMessage = 'Network Error';
         mockedAxios.post.mockRejectedValue(new Error(errorMessage));
 
-        await expect(addDay(mockAddDayParams)).rejects.toThrow(errorMessage);
+        await expect(addDay(testDay)).rejects.toThrow(errorMessage);
         expect(axios.post).toHaveBeenCalledTimes(1);
     });
 });

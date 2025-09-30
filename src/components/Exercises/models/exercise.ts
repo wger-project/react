@@ -64,7 +64,7 @@ export class Exercise {
         return this.images.filter(i => !i.isMain);
     }
 
-    // without an english translation.
+    // without an English translation.
     getTranslation(userLanguage?: Language): Translation {
         const languageId = userLanguage != null ? userLanguage.id : ENGLISH_LANGUAGE_ID;
 

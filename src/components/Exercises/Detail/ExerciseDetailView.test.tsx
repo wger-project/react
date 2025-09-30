@@ -47,8 +47,8 @@ describe("Contribute banner tests", () => {
         await renderComponent(testExerciseCrunches, testLanguageEnglish);
 
         // Assert
-        expect(usePermissionQuery).toBeCalled();
-        expect(useProfileQuery).toBeCalled();
+        expect(usePermissionQuery).toHaveBeenCalled();
+        expect(useProfileQuery).toHaveBeenCalled();
         expect(screen.queryByText("exercises.exerciseNotTranslated")).not.toBeInTheDocument();
     });
 

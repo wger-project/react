@@ -12,7 +12,7 @@ export const ExerciseImageAvatar = (props: {
     const iconSize = props.iconSize || 40;
 
     return <Avatar
-        sx={{ height: avatarSize, width: avatarSize, }}
+        sx={{ height: avatarSize, width: avatarSize, flexShrink: 0 }}
         src={props.image?.url}
     >
         <PhotoIcon sx={{ height: iconSize, width: iconSize }} />
