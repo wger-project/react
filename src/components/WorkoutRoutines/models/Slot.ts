@@ -5,15 +5,17 @@ export type SlotApiData = {
     id: number,
     day: number,
     order: number,
-    comment: string
-    config: any
-    entries?: any[]
+    comment: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    entries?: any[],
 }
 
 type SlotConstructorParams = {
     id?: number;
     dayId: number;
-    order: number;
+    order?: number;
     comment?: string;
     config?: object | null;
     entries?: SlotEntry[];
@@ -23,19 +25,16 @@ export class Slot {
 
     id: number | null = null;
     dayId: number;
-    order: number;
-    comment: string;
-    config: object | null;
+    order: number = 1;
+    comment: string = '';
+    config: object | null = null;
 
     entries: SlotEntry[] = [];
 
     constructor(data: SlotConstructorParams) {
-        this.id = data.id ?? null;
         this.dayId = data.dayId;
-        this.order = data.order;
-        this.comment = data.comment ?? '';
-        this.config = data.config ?? null;
-        this.entries = data.entries ?? [];
+
+        Object.assign(this, data || {});
     }
 
     static clone(other: Slot, overrides?: Partial<SlotConstructorParams>): Slot {
@@ -67,16 +66,16 @@ class SlotAdapter implements Adapter<Slot> {
         order: item.order,
         comment: item.comment,
         config: item.config,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         entries: Object.hasOwn(item, 'entries') ? item.entries!.map((entry: any) => SlotEntry.fromJson(entry)) : []
     });
 
-    toJson(item: Slot) {
+    toJson(item: Slot): Partial<SlotApiData> {
         return {
-            id: item.id,
             day: item.dayId,
             order: item.order,
             comment: item.comment,
-            config: item.config
+            config: item.config,
         };
     }
 }
