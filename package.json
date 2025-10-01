@@ -28,7 +28,7 @@
     "react-i18next": "^15.7.3",
     "react-is": "^19.1.1",
     "react-responsive": "^10.0.1",
-    "react-router-dom": "^7.9.1",
+    "react-router-dom": "^7.9.3",
     "react-simple-wysiwyg": "^3.4.1",
     "recharts": "^3.2.1",
     "slug": "^9.1.0",
