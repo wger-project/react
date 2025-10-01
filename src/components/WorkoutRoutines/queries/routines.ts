@@ -95,14 +95,14 @@ export const useAddRoutineQuery = () => {
 };
 
 
-export const useEditRoutineQuery = (id: number) => {
+export const useEditRoutineQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: (routine: Routine) => editRoutine(routine),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW] });
-            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, id] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, routineId] });
         }
     });
 };

@@ -7,7 +7,6 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WgerTextField } from "components/Common/forms/WgerTextField";
 import { useProfileQuery } from "components/User/queries/profile";
 import {
-    DEFAULT_WORKOUT_DURATION,
     DESCRIPTION_MAX_LENGTH,
     MAX_WORKOUT_DURATION,
     MIN_WORKOUT_DURATION,
@@ -26,25 +25,37 @@ import { makeLink, WgerLink } from "utils/url";
 import * as yup from 'yup';
 
 interface RoutineFormProps {
-    routine?: Routine,
+    existingRoutine?: Routine,
     isTemplate?: boolean,
     isPublicTemplate?: boolean,
     closeFn?: Function,
 }
 
-export const RoutineForm = ({ routine, isTemplate = false, isPublicTemplate = false, closeFn }: RoutineFormProps) => {
+export const RoutineForm = ({
+                                existingRoutine,
+                                isTemplate = false,
+                                isPublicTemplate = false,
+                                closeFn
+                            }: RoutineFormProps) => {
 
     const [t, i18n] = useTranslation();
     const addRoutineQuery = useAddRoutineQuery();
-    const editRoutineQuery = useEditRoutineQuery(routine?.id ?? -1);
+    const editRoutineQuery = useEditRoutineQuery(existingRoutine?.id ?? -1);
     const navigate = useNavigate();
+
+    const routine = existingRoutine
+        ? Routine.clone(existingRoutine)
+        : new Routine({
+            isTemplate: isTemplate,
+            isPublic: isPublicTemplate
+        });
 
     /*
      * Note: Controlling the state of the dates manually, otherwise some undebuggable errors
      *       about missing properties occur deep within formik.
      */
-    const [startDate, setStartDate] = useState<DateTime>(routine ? DateTime.fromJSDate(routine.start) : DateTime.now());
-    const [endDate, setEndDate] = useState<DateTime>(routine ? DateTime.fromJSDate(routine.end) : DateTime.now().plus({ weeks: DEFAULT_WORKOUT_DURATION }));
+    const [startDate, setStartDate] = useState<DateTime>(DateTime.fromJSDate(routine.start));
+    const [endDate, setEndDate] = useState<DateTime>(DateTime.fromJSDate(routine.end));
 
     const duration = endDate.diff(startDate, ['weeks', 'days']);
     const durationWeeks = Math.floor(duration.weeks);
@@ -104,36 +115,25 @@ export const RoutineForm = ({ routine, isTemplate = false, isPublicTemplate = fa
     return (
         (<Formik
             initialValues={{
-                name: routine ? routine.name : '',
-                description: routine ? routine.description : '',
+                name: routine.name,
+                description: routine.description,
                 start: startDate,
                 end: endDate,
-                fitInWeek: routine ? routine.fitInWeek : true
+                fitInWeek: routine.fitInWeek
             }}
 
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-                if (routine) {
-                    const newRoutine = Routine.clone(routine);
-                    newRoutine.fitInWeek = values.fitInWeek;
-                    newRoutine.name = values.name;
-                    newRoutine.description = values.description;
-                    newRoutine.start = values.start!.toJSDate();
-                    newRoutine.end = values.end!.toJSDate();
-                    editRoutineQuery.mutate(newRoutine);
+                routine.name = values.name;
+                routine.description = values.description;
+                routine.fitInWeek = values.fitInWeek;
+                routine.start = values.start!.toJSDate();
+                routine.end = values.end!.toJSDate();
 
+                if (routine.id !== null) {
+                    editRoutineQuery.mutate(routine);
                 } else {
-                    const result = await addRoutineQuery.mutateAsync(new Routine({
-                        id: null,
-                        name: values.name,
-                        description: values.description,
-                        start: values.start!.toJSDate(),
-                        end: values.end?.toJSDate(),
-                        fitInWeek: values.fitInWeek,
-                        isTemplate: isTemplate,
-                        isPublic: isPublicTemplate
-                    }));
-
+                    const result = await addRoutineQuery.mutateAsync(routine);
                     navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
 
                     if (closeFn) {
