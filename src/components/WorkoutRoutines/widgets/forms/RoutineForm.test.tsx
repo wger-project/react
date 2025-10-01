@@ -27,7 +27,7 @@ describe('RoutineForm', () => {
         render(
             <BrowserRouter>
                 <QueryClientProvider client={testQueryClient}>
-                    <RoutineForm routine={testRoutine1} />
+                    <RoutineForm existingRoutine={testRoutine1} />
                 </QueryClientProvider>
             </BrowserRouter>
         );
@@ -48,7 +48,7 @@ describe('RoutineForm', () => {
         render(
             <BrowserRouter>
                 <QueryClientProvider client={testQueryClient}>
-                    <RoutineForm routine={testRoutine1} />
+                    <RoutineForm existingRoutine={testRoutine1} />
                 </QueryClientProvider>
             </BrowserRouter>
         );

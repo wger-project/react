@@ -47,7 +47,7 @@ export const RoutineEdit = () => {
         <Grid container spacing={2}>
 
             <Grid size={routine.isTemplate ? 8 : 12}>
-                <RoutineForm routine={routine} />
+                <RoutineForm existingRoutine={routine} />
             </Grid>
             {routine.isTemplate && <Grid size={4}>
                 <Box height={20} />
