@@ -19,10 +19,12 @@ export class SlotData {
 
 
 export class SlotDataAdapter implements Adapter<SlotData> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson = (item: any) => new SlotData(
         item.comment,
         item.is_superset,
         item.exercises,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         item.sets.map((item: any) => new SetConfigDataAdapter().fromJson(item))
     );
 }

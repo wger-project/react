@@ -7,7 +7,7 @@ import { makeHeader, makeUrl } from "utils/url";
 jest.mock('axios');
 
 describe("Slot service tests", () => {
-    const slotData = {
+    const slotApiData = {
         day: 1,
         order: 1,
         comment: 'test',
@@ -19,8 +19,8 @@ describe("Slot service tests", () => {
     });
 
     test('Creates a new Slot', async () => {
-        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: { id: 123, ...slotData } }));
-        const slot = Slot.fromJson(slotData);
+        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: { id: 123, ...slotApiData } }));
+        const slot = Slot.fromJson(slotApiData);
 
         const result = await addSlot(slot);
 
@@ -36,12 +36,12 @@ describe("Slot service tests", () => {
         (axios.patch as jest.Mock).mockImplementation(() => Promise.resolve({
             data: {
                 id: 123,
-                ...slotData,
+                ...slotApiData,
                 comment: 'foo'
             }
         }));
 
-        const slot = Slot.fromJson(slotData);
+        const slot = Slot.fromJson(slotApiData);
         slot.comment = 'foo';
         slot.id = 123;
         const result = await editSlot(slot);
