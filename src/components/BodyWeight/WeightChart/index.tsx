@@ -5,6 +5,7 @@ import { WgerModal } from "components/Core/Modals/WgerModal";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { CartesianGrid, DotProps, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { dateToLocale } from "utils/date";
 
 export interface WeightChartProps {
     weights: WeightEntry[],
@@ -23,7 +24,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
         return (
             <Paper style={{ padding: 8 }}>
-                <p><strong>{new Date(label!).toLocaleDateString(i18n.language)}</strong></p>
+                <p><strong>{dateToLocale(new Date(label!))}</strong></p>
                 <p>{t('weight')}: {payload[0].value}</p>
             </Paper>
         );
@@ -90,7 +91,7 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
                         dataKey="date"
                         type={'number'}
                         domain={['dataMin', 'dataMax']}
-                        tickFormatter={timeStr => new Date(timeStr).toLocaleDateString(i18n.language)}
+                        tickFormatter={timeStr => dateToLocale(new Date(timeStr))}
                     />
                     <YAxis domain={['auto', 'auto']} />
                     <Tooltip content={<CustomTooltip />} />

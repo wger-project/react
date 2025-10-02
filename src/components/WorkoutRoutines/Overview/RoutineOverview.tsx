@@ -8,6 +8,7 @@ import { AddRoutineFab } from "components/WorkoutRoutines/Overview/Fab";
 import { useRoutinesShallowQuery } from "components/WorkoutRoutines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { dateToLocale } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
 
 export const RoutineList = (props: {
@@ -41,7 +42,7 @@ export const RoutineList = (props: {
             <ListItemButton component="a" href={detailUrl}>
                 <ListItemText
                     primary={<>{primaryText} {chipTemplate} {chipVisibility}</>}
-                    secondary={`${props.routine.durationText} (${props.routine.start.toLocaleDateString()} - ${props.routine.end.toLocaleDateString()})`}
+                    secondary={`${props.routine.durationText} (${dateToLocale(props.routine.start)} - ${dateToLocale(props.routine.end)})`}
                 />
                 <ChevronRightIcon />
             </ListItemButton>

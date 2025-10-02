@@ -8,6 +8,7 @@ import { DayDetailsCard } from "components/WorkoutRoutines/widgets/RoutineDetail
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { dateToLocale } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
 
 export const TemplateDetail = () => {
@@ -33,7 +34,7 @@ export const TemplateDetail = () => {
                 mainContent={
                     <Stack spacing={2}>
                         <Typography variant={"subtitle1"}>
-                            {routine!.start.toLocaleDateString()} - {routine!.end.toLocaleDateString()} ({routine!.durationText})
+                            {dateToLocale(routine!.start)} - {dateToLocale(routine!.end)} ({routine!.durationText})
                         </Typography>
 
                         {routine!.description !== ''

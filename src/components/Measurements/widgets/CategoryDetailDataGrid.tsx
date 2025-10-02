@@ -22,6 +22,7 @@ import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PAGINATION_OPTIONS } from "utils/consts";
+import { luxonDateTimeToLocale } from "utils/date";
 
 const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp => {
     return entries.map((entry) => {
@@ -128,7 +129,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                 if (value == null) {
                     return '';
                 }
-                return DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_MED);
+                return luxonDateTimeToLocale(DateTime.fromJSDate(value));
             },
         },
         {

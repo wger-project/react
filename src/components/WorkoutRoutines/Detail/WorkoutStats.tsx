@@ -112,13 +112,11 @@ export const WorkoutStats = () => {
         routine.exercises,
         musclesQuery.data!,
         language,
-        i18n.language,
     );
 
     const chartData = formatStatsData(statsData);
 
     const renderStatistics = () => {
-
 
         return (
             <TableContainer>

@@ -10,6 +10,7 @@ import i18n from "i18n";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { dateToLocale } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
 
 export const RoutineDetail = () => {
@@ -24,7 +25,7 @@ export const RoutineDetail = () => {
     const routineQuery = useRoutineDetailQuery(routineId);
 
     const routine = routineQuery.data;
-    const subtitle = `${routine?.start.toLocaleDateString()} - ${routine?.end.toLocaleDateString()} (${routine?.durationText})`;
+    const subtitle = routine !== undefined ? `${dateToLocale(routine!.start)} - ${dateToLocale(routine!.end)} (${routine?.durationText})` : '';
     const chip = routine?.isTemplate
         ? <Chip color="info" size="small" label={t('routines.template')} />
         : null;
