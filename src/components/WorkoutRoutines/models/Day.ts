@@ -4,6 +4,8 @@ import { Slot } from "components/WorkoutRoutines/models/Slot";
 import i18n from 'i18next';
 import { Adapter } from "utils/Adapter";
 
+export type DayType = 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap';
+
 interface DayConstructorParams {
     id?: number;
     routineId: number | null;
@@ -12,7 +14,8 @@ interface DayConstructorParams {
     description?: string;
     isRest?: boolean;
     needLogsToAdvance?: boolean;
-    type?: 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap';
+    type?: DayType;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config?: any | null;
     slots?: Slot[];
 }
@@ -29,7 +32,8 @@ export class Day {
     description: string;
     isRest: boolean;
     needLogsToAdvance: boolean;
-    type: 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap';
+    type: DayType;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: any | null;
 
     slots: Slot[] = [];

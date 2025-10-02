@@ -277,9 +277,19 @@
       "myo": "MYO",
       "partial": "Partial",
       "forced": "Forced",
-      "tut": "TUT",
-      "iso": "ISO",
+      "tut": "Time under tension",
+      "iso": "Isometric hold",
       "jump": "Jump"
+    },
+    "day": {
+      "custom": "Custom",
+      "enom": "Every Minute on The Minute",
+      "amrap": "As Many Rounds As Possible",
+      "hiit": "High Intensity Interval Training",
+      "tabata": "Tabata",
+      "edt": "Escalating Density Training",
+      "rft": "Rounds For Time",
+      "afap": "As Fast As Possible"
     }
   },
   "measurements": {

@@ -54,6 +54,7 @@ export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: num
         editQuery.mutate(SlotEntry.clone(props.slotEntry, { type: newValue as SlotEntryType }));
     };
 
+
     return <>
         <TextField
             fullWidth
@@ -66,7 +67,7 @@ export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: num
         >
             {options!.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                    {option.value.toUpperCase()} - {option.label}
                 </MenuItem>
             ))}
         </TextField>

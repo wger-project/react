@@ -111,10 +111,7 @@ export function SetConfigDataDetails(props: {
 }
 
 
-function SlotDataList(props: {
-    slotData: SlotData,
-    index: number,
-}) {
+function SlotDataList(props: { slotData: SlotData }) {
     return (
         <Grid
             container
@@ -163,6 +160,14 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
     const theme = useTheme();
     const [t, i18n] = useTranslation();
 
+    const isToday = isSameDay(props.dayData.date, new Date());
+
+    const typePrefix = props.dayData.day?.isSpecialType ? ` ${props.dayData.day?.type.toUpperCase()} - ` : '';
+    const title = <>
+        <Typography variant={"h5"}>{typePrefix} {getDayName(props.dayData.day)}</Typography>
+    </>;
+    const subheader = <Typography sx={{ whiteSpace: 'pre-line' }}>{props.dayData.day?.description}</Typography>;
+
     return (
         <Card sx={{ minWidth: 275 }}>
             <CardHeader
@@ -178,19 +183,16 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
                             <Addchart />
                         </IconButton>
                     </Tooltip>}
-                title={getDayName(props.dayData.day)}
-                avatar={isSameDay(props.dayData.date, new Date()) ? <TodayIcon /> : undefined}
-                subheader={<Typography sx={{ whiteSpace: 'pre-line' }}>{props.dayData.day?.description}</Typography>}
+                title={title}
+                avatar={isToday ? <TodayIcon /> : null}
+                subheader={subheader}
             />
             {props.dayData.slots.length > 0 && <CardContent sx={{ padding: 0, marginBottom: 0 }}>
                 <Stack>
                     {props.dayData.slots.map((slotData, index) => (
                         <div key={index}>
                             <Box padding={1}>
-                                <SlotDataList
-                                    slotData={slotData}
-                                    index={index}
-                                />
+                                <SlotDataList slotData={slotData} />
                             </Box>
                             <Divider />
                         </div>
