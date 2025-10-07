@@ -10,6 +10,7 @@ import i18n from "i18n";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { dateToLocale } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
 
 export const RoutineDetail = () => {
@@ -24,7 +25,7 @@ export const RoutineDetail = () => {
     const routineQuery = useRoutineDetailQuery(routineId);
 
     const routine = routineQuery.data;
-    const subtitle = `${routine?.start.toLocaleDateString()} - ${routine?.end.toLocaleDateString()} (${routine?.durationText})`;
+    const subtitle = routine !== undefined ? `${dateToLocale(routine!.start)} - ${dateToLocale(routine!.end)} (${routine?.durationText})` : '';
     const chip = routine?.isTemplate
         ? <Chip color="info" size="small" label={t('routines.template')} />
         : null;
@@ -50,11 +51,13 @@ export const RoutineDetail = () => {
                             href={makeLink(WgerLink.ROUTINE_COPY, i18n.language, { id: routineId })}
                             variant={"contained"}
                         >{t('routines.copyAndUseTemplate')}</Button>}
-
-                        {routine!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null).map((dayData, index) =>
-                            // {routine!.dayDataCurrentIteration.map((dayData, index) =>
-                            <DayDetailsCard routineId={routineId} dayData={dayData} key={index}
-                                            readOnly={routine!.isTemplate} />
+                        {routine!.dayDataCurrentIterationNoNulls.map((dayData) =>
+                            <DayDetailsCard
+                                routineId={routineId}
+                                dayData={dayData}
+                                key={`dayDetails-${dayData.date.toISOString()}`}
+                                readOnly={routine!.isTemplate}
+                            />
                         )}
                     </Stack>
                 }

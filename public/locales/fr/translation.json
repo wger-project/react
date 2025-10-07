@@ -335,5 +335,7 @@
         "result": "Votre BMI est {{value}}"
     },
     "editName": "Editer {{name}}",
-    "comment": "Commentaire"
+    "comment": "Commentaire",
+    "private": "privée",
+    "public": "publique"
 }

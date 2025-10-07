@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { WeightEntry } from 'components/BodyWeight/model';
 import React from 'react';
+import { dateToLocale } from "utils/date";
 import { DayProps } from './CalendarComponent';
 import Entries from './Entries';
 
@@ -26,7 +27,7 @@ describe('Entries Component', () => {
         render(<Entries selectedDay={defaultProps} />);
 
         expect(screen.getByText(/entries/i)).toBeInTheDocument();
-        expect(screen.getByText(mockDate.toLocaleDateString(), { exact: false })).toBeInTheDocument();
+        expect(screen.getByText(dateToLocale(mockDate), { exact: false })).toBeInTheDocument();
     });
 
     test('Shows weight entry, if available', () => {

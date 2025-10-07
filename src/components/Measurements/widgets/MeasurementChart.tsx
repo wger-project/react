@@ -1,12 +1,11 @@
+import { Box } from "@mui/material";
 import { MeasurementCategory } from "components/Measurements/models/Category";
-import { useTranslation } from "react-i18next";
+import React from "react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { theme } from "theme";
-import React from "react";
-import { Box } from "@mui/material";
+import { dateToLocale } from "utils/date";
 
 export const MeasurementChart = (props: { category: MeasurementCategory }) => {
-    const { i18n } = useTranslation();
     const NR_OF_ENTRIES_CHART_DOT = 30;
 
     // map the list of weights to an array of objects with the date and weight
@@ -42,7 +41,7 @@ export const MeasurementChart = (props: { category: MeasurementCategory }) => {
                     dataKey="date"
                     type={'number'}
                     domain={['dataMin', 'dataMax']}
-                    tickFormatter={timeStr => new Date(timeStr).toLocaleDateString(i18n.language)}
+                    tickFormatter={timeStr => dateToLocale(new Date(timeStr))!}
                     tickCount={10}
                 />
                 <YAxis domain={['auto', 'auto']} unit={props.category.unit} />

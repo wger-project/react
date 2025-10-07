@@ -173,7 +173,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
                         <IconButton
                             href={makeLink(WgerLink.ROUTINE_ADD_LOG, i18n.language, {
                                 id: props.routineId,
-                                id2: props.dayData.day!.id
+                                id2: props.dayData.day!.id!
                             })}>
                             <Addchart />
                         </IconButton>

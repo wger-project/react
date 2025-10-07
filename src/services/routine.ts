@@ -3,7 +3,7 @@ import { Exercise } from "components/Exercises/models/exercise";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { RoutineStatsData, RoutineStatsDataAdapter } from "components/WorkoutRoutines/models/LogStats";
 import { Routine } from "components/WorkoutRoutines/models/Routine";
-import { RoutineDayData, RoutineDayDataAdapter } from "components/WorkoutRoutines/models/RoutineDayData";
+import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { RoutineLogData, RoutineLogDataAdapter } from "components/WorkoutRoutines/models/RoutineLogData";
 import { getExercise } from "services/exercise";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "services/workoutUnits";
@@ -215,9 +215,8 @@ export const getRoutineDayDataAllIterations = async (routineId: number): Promise
         { headers: makeHeader() }
     );
 
-    const adapter = new RoutineDayDataAdapter();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return response.data.map((data: any) => adapter.fromJson(data));
+    return response.data.map((data: any) => RoutineDayData.fromJson(data));
 };
 
 export const getRoutineStructure = async (routineId: number): Promise<Day[]> => {

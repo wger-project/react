@@ -1,6 +1,5 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { LoadingButton } from "@mui/lab";
 import {
     Button,
     Dialog,
@@ -12,6 +11,7 @@ import {
     Switch,
     Tooltip
 } from "@mui/material";
+import LoadingButton from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
 import { WgerTextField } from "components/Common/forms/WgerTextField";
 import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
@@ -34,20 +34,20 @@ export const DayForm = (props: {
 
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
-    const [isRest, setIsRest] = useState(props.day.isRest);
+    const [isRestDay, setIsRestDay] = useState(props.day.isRest);
 
-    const handleRestChange = () => {
-        if (!isRest) {
-            setOpenDialog(true);
-        } else {
-            setIsRest(false);
+    const handleRestDayChange = () => {
+        if (isRestDay) {
+            setIsRestDay(false);
             handleSubmit({ isRest: false });
+        } else {
+            setOpenDialog(true);
         }
     };
     const handleDialogClose = () => setOpenDialog(false);
     const handleConfirmRestChange = () => {
-        handleSubmit({ isRest: !isRest });
-        setIsRest(!isRest);
+        setIsRestDay(true);
+        handleSubmit({ isRest: true });
         setOpenDialog(false);
     };
 
@@ -82,16 +82,15 @@ export const DayForm = (props: {
         description: string,
         isRest: boolean,
         needsLogsToAdvance: boolean
-    }>) =>
-        editDayQuery.mutate(Day.clone(
-            props.day,
-            {
-                ...(values.name !== undefined && { name: values.name }),
-                ...(values.description !== undefined && { description: values.description }),
-                ...(values.isRest !== undefined && { isRest: isRest }),
-                ...(values.needsLogsToAdvance !== undefined && { needLogsToAdvance: values.needsLogsToAdvance }),
-            })
-        );
+    }>) => editDayQuery.mutate(Day.clone(
+        props.day,
+        {
+            ...(values.name !== undefined && { name: values.name }),
+            ...(values.description !== undefined && { description: values.description }),
+            ...({ isRest: values.isRest }),
+            ...(values.needsLogsToAdvance !== undefined && { needLogsToAdvance: values.needsLogsToAdvance }),
+        })
+    );
 
     return <>
         <Formik
@@ -115,17 +114,17 @@ export const DayForm = (props: {
                             <WgerTextField
                                 fieldName="name"
                                 title="Name"
-                                fieldProps={{ disabled: isRest }}
+                                fieldProps={{ disabled: isRestDay }}
                             />
                         </Grid>
                         <Grid size={{ xs: 6, sm: 2 }}>
                             <FormControlLabel
-                                control={<Switch checked={isRest} onChange={handleRestChange} />}
+                                control={<Switch checked={isRestDay} onChange={handleRestDayChange} />}
                                 label={t('routines.restDay')} />
                         </Grid>
                         <Grid size={{ xs: 6, sm: 4 }}>
                             <FormControlLabel
-                                disabled={isRest}
+                                disabled={isRestDay}
                                 control={<Switch
                                     checked={formik.values.needsLogsToAdvance}
                                     {...formik.getFieldProps('needsLogsToAdvance')}
@@ -142,7 +141,7 @@ export const DayForm = (props: {
                             <WgerTextField
                                 fieldName="description"
                                 title="Description"
-                                fieldProps={{ multiline: true, rows: 4, disabled: isRest }}
+                                fieldProps={{ multiline: true, rows: 4, disabled: isRestDay }}
                             />
                         </Grid>
 
@@ -155,7 +154,7 @@ export const DayForm = (props: {
                                     variant="contained"
                                     color="primary"
                                     type="submit"
-                                    disabled={isRest}
+                                    disabled={isRestDay}
                                 >
                                     {t('save')}
                                 </Button>

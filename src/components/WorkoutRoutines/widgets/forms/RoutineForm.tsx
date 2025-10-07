@@ -7,7 +7,6 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WgerTextField } from "components/Common/forms/WgerTextField";
 import { useProfileQuery } from "components/User/queries/profile";
 import {
-    DEFAULT_WORKOUT_DURATION,
     DESCRIPTION_MAX_LENGTH,
     MAX_WORKOUT_DURATION,
     MIN_WORKOUT_DURATION,
@@ -28,24 +27,37 @@ import { makeLink, WgerLink } from "utils/url";
 import * as yup from 'yup';
 
 interface RoutineFormProps {
-    routine?: Routine,
+    existingRoutine?: Routine,
+    isTemplate?: boolean,
+    isPublicTemplate?: boolean,
     closeFn?: Function,
 }
 
-
-export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
+export const RoutineForm = ({
+                                existingRoutine,
+                                isTemplate = false,
+                                isPublicTemplate = false,
+                                closeFn
+                            }: RoutineFormProps) => {
 
     const [t, i18n] = useTranslation();
     const addRoutineQuery = useAddRoutineQuery();
-    const editRoutineQuery = useEditRoutineQuery(routine?.id!);
+    const editRoutineQuery = useEditRoutineQuery(existingRoutine?.id ?? -1);
     const navigate = useNavigate();
+
+    const routine = existingRoutine
+        ? Routine.clone(existingRoutine)
+        : new Routine({
+            isTemplate: isTemplate,
+            isPublic: isPublicTemplate
+        });
 
     /*
      * Note: Controlling the state of the dates manually, otherwise some undebuggable errors
      *       about missing properties occur deep within formik.
      */
-    const [startDate, setStartDate] = useState<DateTime>(routine ? DateTime.fromJSDate(routine.start) : DateTime.now());
-    const [endDate, setEndDate] = useState<DateTime>(routine ? DateTime.fromJSDate(routine.end) : DateTime.now().plus({ weeks: DEFAULT_WORKOUT_DURATION }));
+    const [startDate, setStartDate] = useState<DateTime>(DateTime.fromJSDate(routine.start));
+    const [endDate, setEndDate] = useState<DateTime>(DateTime.fromJSDate(routine.end));
 
     const duration = endDate.diff(startDate, ['weeks', 'days']);
     const durationWeeks = Math.floor(duration.weeks);
@@ -101,65 +113,36 @@ export const RoutineForm = ({ routine, closeFn }: RoutineFormProps) => {
         fitInWeek: yup.boolean()
     });
 
-    // new handle save
-    const handleSave = async (values: any) => {
-        if (routine) {
-            // when editing routine
-            const updatedRoutine: Routine = new Routine({
-                id: routine.id,
-                name: values.name,
-                description: values.description ?? '',
-                created: routine.created,
-                start: values.start?.toJSDate() ?? routine.start,
-                end: values.end?.toJSDate() ?? routine.end,
-                fitInWeek: values.fitInWeek ?? routine.fitInWeek,
-                isTemplate: routine.isTemplate,
-                isPublic: routine.isPublic,
-                days: routine.days,
-                dayData: routine.dayData,
-            });
-
-            await editRoutineQuery.mutateAsync(updatedRoutine);
-        } else {
-            // when creating a new routine
-            const newRoutine: Routine = new Routine({
-                id: null,
-                name: values.name,
-                description: values.description ?? '',
-                created: new Date(),
-                start: values.start?.toJSDate() ?? new Date(),
-                end: values.end?.toJSDate() ?? new Date(),
-                fitInWeek: values.fitInWeek ?? true,
-                isTemplate: false,
-                isPublic: false,
-                days: [],
-                dayData: [],
-            });
-
-            const result = await addRoutineQuery.mutateAsync(newRoutine);
-
-            navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
-
-            if (closeFn) {
-                closeFn();
-            }
-        }
-    };
 
     return (
         (<Formik
             initialValues={{
-                name: routine ? routine.name : '',
-                description: routine ? routine.description : '',
+                name: routine.name,
+                description: routine.description,
                 start: startDate,
                 end: endDate,
-                fitInWeek: routine ? routine.fitInWeek : true
+                fitInWeek: routine.fitInWeek
             }}
 
             validationSchema={validationSchema}
+            onSubmit={async (values) => {
+                routine.name = values.name;
+                routine.description = values.description;
+                routine.fitInWeek = values.fitInWeek;
+                routine.start = values.start!.toJSDate();
+                routine.end = values.end!.toJSDate();
 
-            onSubmit={handleSave} // use the new handle save
+                if (routine.id !== null) {
+                    editRoutineQuery.mutate(routine);
+                } else {
+                    const result = await addRoutineQuery.mutateAsync(routine);
+                    navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
 
+                    if (closeFn) {
+                        closeFn();
+                    }
+                }
+            }}
         >
             {formik => (
                 <Form>

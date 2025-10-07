@@ -4,6 +4,7 @@ import { GroupedDiaryEntries } from "components/Nutrition/models/nutritionalPlan
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { dateToLocale } from "utils/date";
 import { numberLocale } from "utils/numbers";
 import { makeLink, WgerLink } from "utils/url";
 
@@ -31,7 +32,7 @@ export const DiaryOverview = (props: {
                         <TableCell>
                             <Link
                                 to={makeLink(WgerLink.NUTRITION_DIARY, i18n.language, { id: props.planId, date: key })}>
-                                {new Date(key).toLocaleDateString(i18n.language)}
+                                {dateToLocale(new Date(key))}
                             </Link>
                         </TableCell>
                         <TableCell align="right">

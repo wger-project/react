@@ -21,7 +21,8 @@ type ConstructorParamsType = {
     weightUnit?: WeightUnit,
     order: number,
     comment: string,
-    type: SlotEntryType,
+    type: SlotEntryType
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any,
     config: any | null,
     configs?: {
         weightConfigs?: BaseConfig[],
@@ -50,6 +51,7 @@ export class SlotEntry {
     order: number;
     comment: string;
     type: SlotEntryType;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: any | null;
 
     weightConfigs: BaseConfig[] = [];
@@ -152,6 +154,7 @@ export class SlotEntry {
 
 
 class SlotEntryAdapter implements Adapter<SlotEntry> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson = (item: any) => {
         const baseConfigAdapter = new BaseConfigAdapter();
 
@@ -168,33 +171,43 @@ class SlotEntryAdapter implements Adapter<SlotEntry> {
             maxRirConfigs: [],
         };
         if (Object.hasOwn(item, 'weight_configs')) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             configs.weightConfigs = item.weight_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_weight_configs')) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             configs.maxWeightConfigs = item.max_weight_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'repetitions_configs')) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             configs.repetitionsConfigs = item.repetitions_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_repetitions_configs')) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             configs.maxRepetitionsConfigs = item.max_repetitions_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'set_nr_configs')) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             configs.nrOfSetsConfigs = item.set_nr_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_set_nr_configs')) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             configs.maxNrOfSetsConfigs = item.max_set_nr_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'rest_configs')) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             configs.restTimeConfigs = item.rest_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_rest_configs')) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             configs.maxRestTimeConfigs = item.max_rest_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'rir_configs')) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             configs.rirConfigs = item.rir_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_rir_configs')) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             configs.maxRirConfigs = item.max_rir_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
 

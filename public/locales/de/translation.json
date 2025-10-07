@@ -147,7 +147,7 @@
         "workoutNr": "Training {{number}}",
         "weekNr": "Woche {{number}}",
         "addDay": "Trainingstag hinzufügen",
-        "needsLogsToAdvance": "Benötigt Eintrag, um fortzufahren",
+        "needsLogsToAdvance": "Benötigt Logeinträge, um fortzufahren",
         "needsLogsToAdvanceHelpText": "Wenn du diese Option auswählst, wird die Routine nur dann zum nächsten geplanten Tag fortschreiten, wenn du ein Training für den aktuellen Tag protokolliert hast. Wenn diese Option nicht ausgewählt ist, wird die Routine automatisch zum nächsten Tag fortschreiten, unabhängig davon, ob du ein Training protokolliert hast oder nicht.",
         "routineHasNoDays": "Diese Routine hat keine Trainingstage",
         "setHasNoExercises": "Dieser Satz hat keine Übungen",

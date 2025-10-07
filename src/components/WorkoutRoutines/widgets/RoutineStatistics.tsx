@@ -7,6 +7,7 @@ import { Muscle } from "components/Exercises/models/muscle";
 import { GroupedLogData, LogData, RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
 import i18n from 'i18next';
 import React from "react";
+import { dateToLocale } from "utils/date";
 
 export const enum StatType {
     Volume = "volume",
@@ -97,7 +98,6 @@ export const getFullStatsData = (
     exerciseList: Exercise[],
     muscleList: Muscle[],
     language: Language,
-    languageCode: string,
 ): FullStatsData => {
     const columnTotals: { [header: string]: number } = {};
 
@@ -205,7 +205,7 @@ export const getFullStatsData = (
                 calculateLoopSum(data, logData);
 
                 return {
-                    key: new Date(date).toLocaleDateString(languageCode),
+                    key: dateToLocale(new Date(date)),
                     values: allHeaders.map(header => data[calculateStatsData(selectedValueGroupBy, logData).headers.indexOf(header)])
                 };
             });
