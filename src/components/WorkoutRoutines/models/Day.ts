@@ -56,7 +56,7 @@ export class Day {
         return adapter.fromJson(json);
     }
 
-    static clone(other: Day, overrides?: Partial<DayConstructorParams>): Day {
+    static clone(other: Day, overrides?: Partial<DayConstructorParams>) {
         return new Day({
             id: overrides?.id ?? (other.id ?? undefined),
             routineId: overrides?.routineId ?? other.routineId,
