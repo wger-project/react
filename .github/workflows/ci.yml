@@ -20,16 +20,13 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22
-          cache: 'yarn'
 
       - name: Install modules
         run: |
-          yarn config set --home enableTelemetry 0
-          yarn config set nodeLinker node-modules
-          yarn
+          npm install
 
       - name: Run tests
-        run: yarn test --coverage --collectCoverageFrom='!src/pages/**/*.tsx'
+        run: npm test --coverage --collectCoverageFrom='!src/pages/**/*.tsx'
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
