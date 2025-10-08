@@ -17,7 +17,9 @@ i18n
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({
 
-        load: 'languageOnly',
+        // Also load the language code with the region code
+        // e.g. 'pt' and 'pt-BR' are treated as different languages
+        load: 'all',
 
         // Options for the language detection
         // https://github.com/i18next/i18next-browser-languageDetector
@@ -41,11 +43,15 @@ i18n
         // During development the translation files are served from
         // locales/<lang>/<ns>.json but when copied over to the django site
         // (i.e.) production, the path is /static/react/locales/<lang>/<ns>.json
+        //
+        // To match the file name convention from weblate, we replace '-' with '_'
         backend: {
-            loadPath:
-                IS_PROD
-                    ? `/static/react/locales/{{lng}}/{{ns}}.json`
-                    : `/locales/{{lng}}/{{ns}}.json`
+            loadPath: (lng: string[], ns: string[]) => {
+                const lang = lng[0].replace('-', '_');
+                return IS_PROD
+                    ? `/static/react/locales/${lang}/${ns}.json`
+                    : `/locales/${lang}/${ns}.json`;
+            }
         },
 
         // TOOD: https://github.com/wger-project/react/issues/630
