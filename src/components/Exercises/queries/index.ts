@@ -10,6 +10,7 @@ import {
 } from "services";
 import { AddTranslationParams, EditTranslationParams } from "services/exerciseTranslation";
 import { deleteExerciseImage, PostExerciseImageParams } from "services/image";
+import { postExerciseVideo, PostExerciseVideoParams } from "services/video";
 import { QueryKey } from "utils/consts";
 
 export { useExercisesQuery, useExerciseQuery, useAddExerciseFullQuery } from "./exercises";
@@ -63,6 +64,22 @@ export function useAddExerciseImageQuery(exerciseId: number) {
     });
 }
 
+/**
+ * A query hook to add a new exercise video
+ * @param exerciseId {number} - Exercise ID to which the uploaded video will be added to
+ * @returns {useMutation} A mutation object to manage the video upload process
+ */
+export function useAddExerciseVideoQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: PostExerciseVideoParams) => postExerciseVideo(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        },
+    });
+}
 
 export function useCategoriesQuery() {
     return useQuery({

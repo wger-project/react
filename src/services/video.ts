@@ -4,11 +4,24 @@ import { makeHeader, makeUrl } from "utils/url";
 
 export const VIDEO_PATH = 'video';
 
+export type PostExerciseVideoParams = {
+    exerciseId: number;
+    author: string;
+    video: File;
+};
 
-/*
+/**
  * Post a new exercise video
+ * @param {number} exerciseId - ID of the exercise to which the video is linked
+ * @param {string} author - Name of the video's author (for license attribution)
+ * @param {File} video - Video file to upload
+ * @returns {Promise<ExerciseVideo>} - A promise that resolves to the uploaded ExerciseVideo object
  */
-export const postExerciseVideo = async (exerciseId: number, author: string, video: File): Promise<ExerciseVideo> => {
+export const postExerciseVideo = async ({
+    exerciseId,
+    author,
+    video,
+}: PostExerciseVideoParams): Promise<ExerciseVideo> => {
     const url = makeUrl(VIDEO_PATH);
     const headers = makeHeader();
     headers['Content-Type'] = 'multipart/form-data';
