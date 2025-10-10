@@ -13,8 +13,7 @@ const queryClient = new QueryClient();
 describe("Test the RoutineDetail component", () => {
 
     beforeEach(() => {
-        // @ts-ignore
-        useRoutineDetailQuery.mockImplementation(() => ({
+        (useRoutineDetailQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: testRoutine1

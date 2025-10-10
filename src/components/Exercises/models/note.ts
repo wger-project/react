@@ -10,6 +10,7 @@ export class Note {
 }
 
 export class NoteAdapter implements Adapter<Note> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any): Note {
         return new Note(
             item.id,

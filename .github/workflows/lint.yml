@@ -34,5 +34,5 @@ jobs:
           yarn config set --home enableTelemetry 0
           yarn
 
-      - name: Run ESLint
-        run: yarn lint:quiet
+      - name: Lint the code
+        run: yarn lint

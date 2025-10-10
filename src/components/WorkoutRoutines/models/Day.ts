@@ -13,6 +13,7 @@ interface DayConstructorParams {
     isRest?: boolean;
     needLogsToAdvance?: boolean;
     type?: 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config?: any | null;
     slots?: Slot[];
 }
@@ -30,6 +31,7 @@ export class Day {
     isRest: boolean;
     needLogsToAdvance: boolean;
     type: 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: any | null;
 
     slots: Slot[] = [];

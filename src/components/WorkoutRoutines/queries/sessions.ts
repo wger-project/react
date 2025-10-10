@@ -5,6 +5,7 @@ import { SessionQueryOptions } from "services/session";
 import { QueryKey, } from "utils/consts";
 
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useFindSessionQuery = (routineId: number, queryParams: Record<string, any>) => useQuery({
     queryFn: () => searchSession(queryParams),
     queryKey: [QueryKey.SESSION_SEARCH, routineId, JSON.stringify(queryParams)],

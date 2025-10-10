@@ -14,6 +14,7 @@ export class MeasurementEntry {
 
 
 export class MeasurementEntryAdapter implements Adapter<MeasurementEntry> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any) {
         return new MeasurementEntry(
             item.id,

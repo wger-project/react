@@ -39,6 +39,7 @@ export function useAddRoutineLogsQuery(routineId: number) {
     const queryClient = useQueryClient();
 
     return useMutation({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         mutationFn: (entries: any[]) => addLogs(entries),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_LOGS, routineId] });

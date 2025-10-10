@@ -1,8 +1,9 @@
-import { useTranslation } from "react-i18next";
 import { FormControl, FormHelperText, InputLabel, Select } from "@mui/material";
-import React from "react";
 import { useField } from "formik";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ExerciseSelect(props: { fieldName: string, options: any }) {
     const [t] = useTranslation();
     const [field, meta] = useField(props.fieldName);

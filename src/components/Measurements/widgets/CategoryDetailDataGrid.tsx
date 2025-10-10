@@ -96,6 +96,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
         return updatedRow;
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onProcessRowUpdateError = (error: any) => {
         console.log(error);
         //setRows(rows.map((row) => (row.id === newRow.id ? newRow : row)));
@@ -105,7 +106,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
         setRowModesModel(newRowModesModel);
     };
 
-    // @ts-ignore
     const columns: GridColDef[] = [
         {
             field: 'value',

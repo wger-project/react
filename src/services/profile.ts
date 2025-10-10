@@ -20,7 +20,7 @@ export const getProfile = async (): Promise<Profile | null> => {
             { headers: makeHeader() }
         );
         return Profile.fromJson(response.data);
-    } catch (error) {
+    } catch {
         return null;
     }
 };
@@ -30,13 +30,13 @@ export const getProfile = async (): Promise<Profile | null> => {
  */
 export const editProfile = async (data: Partial<EditProfileParams>): Promise<Profile> => {
 
-    const { weightRounding, repetitionRounding, ...rest } = data;
+    const { weightRounding, repetitionsRounding, ...rest } = data;
     const payload = {
         ...rest,
         // eslint-disable-next-line camelcase
         ...(weightRounding !== undefined && { weight_rounding: weightRounding }),
         // eslint-disable-next-line camelcase
-        ...(repetitionRounding !== undefined && { repetition_rounding: repetitionRounding }),
+        ...(repetitionsRounding !== undefined && { repetition_rounding: repetitionsRounding }),
     };
 
     const response = await axios.post(

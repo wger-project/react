@@ -52,6 +52,7 @@ import { useTranslation } from "react-i18next";
 import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
 import { errorsToString } from "utils/forms";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const QUERY_MAP: { [key: string]: any } = {
     'weight': {
         edit: useEditWeightConfigQuery,

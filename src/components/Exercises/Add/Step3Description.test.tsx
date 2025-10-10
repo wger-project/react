@@ -48,7 +48,7 @@ describe("Test the add exercise step 3 component", () => {
     test("Correctly set descriptionEn", async () => {
         // Arrange
         const user = userEvent.setup();
-        const text = 'The wild boar is a suid native to much of Eurasia and North Africa';
+        // const text = 'The wild boar is a suid native to much of Eurasia and North Africa';
 
         // Act
         renderStep();
