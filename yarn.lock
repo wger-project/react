@@ -546,7 +546,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/babel-plugin@npm:^11.12.0, @emotion/babel-plugin@npm:^11.13.5":
+"@emotion/babel-plugin@npm:^11.13.5":
   version: 11.13.5
   resolution: "@emotion/babel-plugin@npm:11.13.5"
   dependencies:
@@ -642,7 +642,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/styled@npm:^11.14.0":
+"@emotion/styled@npm:^11.14.1":
   version: 11.14.1
   resolution: "@emotion/styled@npm:11.14.1"
   dependencies:
@@ -938,7 +938,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.37.0, @eslint/js@npm:^9.29.0":
+"@eslint/js@npm:9.37.0, @eslint/js@npm:^9.37.0":
   version: 9.37.0
   resolution: "@eslint/js@npm:9.37.0"
   checksum: 10c0/84f98a6213522fc76ea104bd910f606136200bd918544e056a7a22442d3f9d5c3c5cd7f4cdf2499d49b1fa140155b87d597a1f16d01644920f05c228e9ca0378
@@ -1584,7 +1584,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-data-grid@npm:^8.13.1":
+"@mui/x-data-grid@npm:^8.14.0":
   version: 8.14.0
   resolution: "@mui/x-data-grid@npm:8.14.0"
   dependencies:
@@ -1611,7 +1611,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-date-pickers@npm:^8.12.0":
+"@mui/x-date-pickers@npm:^8.14.0":
   version: 8.14.0
   resolution: "@mui/x-date-pickers@npm:8.14.0"
   dependencies:
@@ -2021,7 +2021,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:^5.85.3":
+"@tanstack/react-query-devtools@npm:^5.90.2":
   version: 5.90.2
   resolution: "@tanstack/react-query-devtools@npm:5.90.2"
   dependencies:
@@ -2033,7 +2033,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.71.5":
+"@tanstack/react-query@npm:^5.90.2":
   version: 5.90.2
   resolution: "@tanstack/react-query@npm:5.90.2"
   dependencies:
@@ -2044,7 +2044,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^10.3.2":
+"@testing-library/dom@npm:^10.4.1":
   version: 10.4.1
   resolution: "@testing-library/dom@npm:10.4.1"
   dependencies:
@@ -2060,7 +2060,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:^6.4.6":
+"@testing-library/jest-dom@npm:^6.9.1":
   version: 6.9.1
   resolution: "@testing-library/jest-dom@npm:6.9.1"
   dependencies:
@@ -2354,7 +2354,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^22.18.8":
+"@types/node@npm:*, @types/node@npm:^22.18.9":
   version: 22.18.9
   resolution: "@types/node@npm:22.18.9"
   dependencies:
@@ -4650,17 +4650,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:^6.1.1":
-  version: 6.1.1
-  resolution: "eslint-plugin-react-hooks@npm:6.1.1"
+"eslint-plugin-react-hooks@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "eslint-plugin-react-hooks@npm:7.0.0"
   dependencies:
     "@babel/core": "npm:^7.24.4"
     "@babel/parser": "npm:^7.24.4"
+    hermes-parser: "npm:^0.25.1"
     zod: "npm:^3.22.4 || ^4.0.0"
     zod-validation-error: "npm:^3.0.3 || ^4.0.0"
   peerDependencies:
     eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
-  checksum: 10c0/579be053bc89c995a6c03996f9ee3f6bac88946b4b1c8b891b42f981e7c05a9c5de46324bbd2a33199855c0a602820c0e3eeb7f840730301b77a9ba3dc7a0ae2
+  checksum: 10c0/911c9efdd9b102ce2eabac247dff8c217ecb8d6972aaf3b7eecfb1cfc293d4d902766355993ff7a37a33c0abde3e76971f43bc1c8ff36d6c123310e5680d0423
   languageName: node
   linkType: hard
 
@@ -5503,6 +5504,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hermes-estree@npm:0.25.1":
+  version: 0.25.1
+  resolution: "hermes-estree@npm:0.25.1"
+  checksum: 10c0/48be3b2fa37a0cbc77a112a89096fa212f25d06de92781b163d67853d210a8a5c3784fac23d7d48335058f7ed283115c87b4332c2a2abaaccc76d0ead1a282ac
+  languageName: node
+  linkType: hard
+
+"hermes-parser@npm:^0.25.1":
+  version: 0.25.1
+  resolution: "hermes-parser@npm:0.25.1"
+  dependencies:
+    hermes-estree: "npm:0.25.1"
+  checksum: 10c0/3abaa4c6f1bcc25273f267297a89a4904963ea29af19b8e4f6eabe04f1c2c7e9abd7bfc4730ddb1d58f2ea04b6fee74053d8bddb5656ec6ebf6c79cc8d14202c
+  languageName: node
+  linkType: hard
+
 "history@npm:^5.3.0":
   version: 5.3.0
   resolution: "history@npm:5.3.0"
@@ -5658,7 +5675,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^25.5.3":
+"i18next@npm:^25.6.0":
   version: 25.6.0
   resolution: "i18next@npm:25.6.0"
   dependencies:
@@ -7986,7 +8003,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^7.9.3":
+"react-router-dom@npm:^7.9.4":
   version: 7.9.4
   resolution: "react-router-dom@npm:7.9.4"
   dependencies:
@@ -9286,7 +9303,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:^29.4.4":
+"ts-jest@npm:^29.4.5":
   version: 29.4.5
   resolution: "ts-jest@npm:29.4.5"
   dependencies:
@@ -9990,27 +10007,27 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wger_react@workspace:."
   dependencies:
-    "@emotion/babel-plugin": "npm:^11.12.0"
+    "@emotion/babel-plugin": "npm:^11.13.5"
     "@emotion/react": "npm:^11.14.0"
-    "@emotion/styled": "npm:^11.14.0"
-    "@eslint/js": "npm:^9.29.0"
+    "@emotion/styled": "npm:^11.14.1"
+    "@eslint/js": "npm:^9.37.0"
     "@hello-pangea/dnd": "npm:^18.0.1"
     "@mui/icons-material": "npm:^7.3.4"
     "@mui/lab": "npm:^7.0.1-beta.18"
     "@mui/material": "npm:^7.3.4"
     "@mui/system": "npm:^7.3.3"
-    "@mui/x-data-grid": "npm:^8.13.1"
-    "@mui/x-date-pickers": "npm:^8.12.0"
-    "@tanstack/react-query": "npm:^5.71.5"
-    "@tanstack/react-query-devtools": "npm:^5.85.3"
-    "@testing-library/dom": "npm:^10.3.2"
-    "@testing-library/jest-dom": "npm:^6.4.6"
+    "@mui/x-data-grid": "npm:^8.14.0"
+    "@mui/x-date-pickers": "npm:^8.14.0"
+    "@tanstack/react-query": "npm:^5.90.2"
+    "@tanstack/react-query-devtools": "npm:^5.90.2"
+    "@testing-library/dom": "npm:^10.4.1"
+    "@testing-library/jest-dom": "npm:^6.9.1"
     "@testing-library/react": "npm:^16.3.0"
     "@testing-library/user-event": "npm:^14.6.1"
     "@types/jest": "npm:^30.0.0"
     "@types/lodash": "npm:^4.17.20"
     "@types/luxon": "npm:^3.7.1"
-    "@types/node": "npm:^22.18.8"
+    "@types/node": "npm:^22.18.9"
     "@types/react": "npm:^19.2.2"
     "@types/react-dom": "npm:^19.2.1"
     "@types/react-is": "npm:^19.2.0"
@@ -10024,10 +10041,10 @@ __metadata:
     eslint-plugin-import: "npm:^2.32.0"
     eslint-plugin-jsx-a11y: "npm:^6.10.2"
     eslint-plugin-react: "npm:^7.37.5"
-    eslint-plugin-react-hooks: "npm:^6.1.1"
+    eslint-plugin-react-hooks: "npm:^7.0.0"
     formik: "npm:^2.4.6"
     history: "npm:^5.3.0"
-    i18next: "npm:^25.5.3"
+    i18next: "npm:^25.6.0"
     i18next-browser-languagedetector: "npm:^8.2.0"
     i18next-http-backend: "npm:^3.0.2"
     i18next-parser: "npm:^9.3.0"
@@ -10040,11 +10057,11 @@ __metadata:
     react-i18next: "npm:^16.0.0"
     react-is: "npm:^19.2.0"
     react-responsive: "npm:^10.0.1"
-    react-router-dom: "npm:^7.9.3"
+    react-router-dom: "npm:^7.9.4"
     react-simple-wysiwyg: "npm:^3.4.1"
     recharts: "npm:^3.2.1"
     slug: "npm:^9.1.0"
-    ts-jest: "npm:^29.4.4"
+    ts-jest: "npm:^29.4.5"
     typescript: "npm:^5.9.3"
     typescript-eslint: "npm:^8.46.0"
     vite: "npm:^7.1.9"
