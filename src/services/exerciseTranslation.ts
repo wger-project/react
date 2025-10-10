@@ -1,12 +1,12 @@
 import axios from 'axios';
+import { Exercise, ExerciseAdapter } from "components/Exercises/models/exercise";
 import { Translation, TranslationAdapter } from "components/Exercises/models/translation";
 import { ENGLISH_LANGUAGE_CODE, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
-import { ExerciseSearchResponse, ExerciseSearchType, ResponseType } from "./responseType";
+import { ResponseType } from "./responseType";
 
 export const EXERCISE_PATH = 'exercise';
 export const EXERCISE_TRANSLATION_PATH = 'exercise-translation';
-export const EXERCISE_SEARCH_PATH = 'exercise/search';
 
 
 /*
@@ -25,7 +25,7 @@ export const getExerciseTranslations = async (id: number): Promise<Translation[]
 /*
  * Search for exercises by name using the exerciseinfo endpoint
  */
-export const searchExerciseTranslations = async (name: string,languageCode: string = ENGLISH_LANGUAGE_CODE,searchEnglish: boolean = true): Promise<ExerciseSearchResponse[]> => {
+export const searchExerciseTranslations = async (name: string,languageCode: string = ENGLISH_LANGUAGE_CODE,searchEnglish: boolean = true): Promise<Exercise[]> => {
     const languages = [languageCode];
     if (languageCode !== LANGUAGE_SHORT_ENGLISH && searchEnglish) {
         languages.push(LANGUAGE_SHORT_ENGLISH);
@@ -46,25 +46,8 @@ export const searchExerciseTranslations = async (name: string,languageCode: stri
             return [];
         }
         
-        const results: ExerciseSearchResponse[] = [];
-        
-        for (const exercise of data.results) {
-            for (const translation of exercise.translations || []) {
-                results.push({
-                    value: translation.name,
-                    data: {
-                        id: translation.id,
-                        base_id: exercise.id,
-                        name: translation.name,
-                        category: exercise.category?.name || '',
-                        image: exercise.images?.[0]?.image || null,
-                        image_thumbnail: exercise.images?.[0]?.image || null,
-                    }
-                });
-            }
-        }
-        
-        return results;
+        const adapter = new ExerciseAdapter();
+        return data.results.map((item: any) => adapter.fromJson(item));
     } catch (error) {
         return [];
     }

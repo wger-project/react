@@ -15,7 +15,7 @@ import { useExercisesQuery } from "components/Exercises/queries";
 import React, { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { ExerciseSearchResponse } from "services/responseType";
+import { Exercise } from "components/Exercises/models/exercise";
 import { makeLink, WgerLink } from "utils/url";
 import { ExerciseFiltersContext } from './Filter/ExerciseFiltersContext';
 import { FilterDrawer } from './Filter/FilterDrawer';
@@ -134,12 +134,12 @@ export const ExerciseOverviewList = () => {
         page * ITEMS_PER_PAGE
     );
 
-    const exerciseAdded = (exerciseResponse: ExerciseSearchResponse | null) => {
-        if (!exerciseResponse) {
+    const exerciseAdded = (exercise: Exercise | null) => {
+        if (!exercise) {
             return;
         }
 
-        navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: exerciseResponse.data.base_id }));
+        navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: exercise.id }));
     };
 
     return (
