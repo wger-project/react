@@ -28,7 +28,7 @@ interface RoutineFormProps {
     existingRoutine?: Routine,
     isTemplate?: boolean,
     isPublicTemplate?: boolean,
-    closeFn?: Function,
+    closeFn?: () => void,
 }
 
 export const RoutineForm = ({

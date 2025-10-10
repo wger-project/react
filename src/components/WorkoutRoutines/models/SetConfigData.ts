@@ -95,6 +95,7 @@ export class SetConfigData {
 
 
 export class SetConfigDataAdapter implements Adapter<SetConfigData> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson = (item: any) => new SetConfigData({
         exerciseId: item.exercise,
         slotEntryId: item.slot_entry_id,

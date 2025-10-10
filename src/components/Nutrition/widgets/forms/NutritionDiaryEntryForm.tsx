@@ -18,7 +18,7 @@ type NutritionDiaryEntryFormProps = {
     entry?: DiaryEntry,
     mealId?: number | null,
     meals?: Meal[],
-    closeFn?: Function,
+    closeFn?: () => void,
 }
 
 export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn }: NutritionDiaryEntryFormProps) => {
@@ -58,7 +58,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
 
                 // Make sure "amount" is a number
                 const newAmount = Number(values.amount);
-                
+
                 if (entry) {
                     // Edit
                     const newDiaryEntry = DiaryEntry.clone(entry, {

@@ -24,11 +24,13 @@ export class RoutineDayData {
 
 
 class RoutineDayDataAdapter implements Adapter<RoutineDayData> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson = (item: any) => new RoutineDayData(
         item.iteration,
         new Date(item.date),
         item.label,
         item.day != null ? Day.fromJson(item.day) : null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         item.slots.map((slot: any) => new SlotDataAdapter().fromJson(slot))
     );
 }

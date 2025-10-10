@@ -16,7 +16,7 @@ export function ImageStyleToggle(props: { fieldName: string }) {
 
     const [style, setStyle] = React.useState<number | null>(ImageStyle.PHOTO);
 
-    const [field, meta, helpers] = useField(props.fieldName);
+    const [, , helpers] = useField(props.fieldName);
 
 
     const handleAlignment = (

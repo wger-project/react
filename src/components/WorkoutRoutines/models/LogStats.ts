@@ -47,8 +47,9 @@ export class RoutineStatsData {
 
 export class RoutineStatsDataAdapter implements Adapter<RoutineStatsData> {
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any): RoutineStatsData {
-
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const convertLogDataToClass = (logData: any): LogData => {
 
             const exercises: { [exerciseId: number]: number } = {};

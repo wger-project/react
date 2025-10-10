@@ -12,14 +12,11 @@ export class RepetitionUnit {
 
 
 export class RepetitionUnitAdapter implements Adapter<RepetitionUnit> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any): RepetitionUnit {
         return new RepetitionUnit(
             item.id,
             item.name,
         );
-    }
-
-    toJson(item: RepetitionUnit) {
-        return {};
     }
 }

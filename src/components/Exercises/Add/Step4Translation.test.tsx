@@ -80,7 +80,7 @@ describe("Test the add exercise step 4 component", () => {
     test("Correctly saves the values to the provider", async () => {
         // Arrange
         const user = userEvent.setup();
-        const text = 'Der Armvernichter ist eine ein alter chinesische Kraftübung, die...';
+        // const text = 'Der Armvernichter ist eine ein alter chinesische Kraftübung, die...';
 
         // Act
         render(

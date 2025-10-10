@@ -3,9 +3,10 @@ import { useField } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ExerciseEquipmentSelect(props: { fieldName: string, options: any[] }) {
     const [t] = useTranslation();
-    const [field, meta, helpers] = useField(props.fieldName);
+    const [field, , helpers] = useField(props.fieldName);
 
     return <Autocomplete
         multiple

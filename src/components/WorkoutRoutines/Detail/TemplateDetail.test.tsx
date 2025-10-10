@@ -5,7 +5,7 @@ import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { getLanguages, getRoutine } from "services";
 import { testLanguages } from "tests/exerciseTestdata";
-import { testQueryClient } from "tests/queryClient";
+import { getTestQueryClient } from "tests/queryClient";
 import { testRoutine1 } from "tests/workoutRoutinesTestData";
 
 jest.mock("services");
@@ -21,7 +21,7 @@ describe("Smoke tests the TemplateDetail component", () => {
 
         // Act
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <MemoryRouter initialEntries={['/test/101']}>
                     <Routes>
                         <Route path="/test/:routineId" element={<TemplateDetail />} />
@@ -34,7 +34,9 @@ describe("Smoke tests the TemplateDetail component", () => {
         await waitFor(() => {
             expect(getRoutine).toHaveBeenCalledTimes(1);
         });
-        expect(screen.getByText('Test routine 1')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText('Test routine 1')).toBeInTheDocument();
+        });
         expect(screen.getByText('Full body routine')).toBeInTheDocument();
         expect(screen.getByText('routines.template')).toBeInTheDocument();
         expect(screen.getByText('routines.copyAndUseTemplate')).toBeInTheDocument();

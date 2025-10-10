@@ -8,14 +8,14 @@ import * as yup from 'yup';
 
 interface CategoryFormProps {
     category?: MeasurementCategory,
-    closeFn?: Function,
+    closeFn?: () => void,
 }
 
 export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
 
     const [t] = useTranslation();
     const useAddCategoryQuery = useAddMeasurementCategoryQuery();
-    const useEditCategoryQuery = useEditMeasurementCategoryQuery(category?.id!);
+    const useEditCategoryQuery = useEditMeasurementCategoryQuery(category?.id || 0);
     const validationSchema = yup.object({
         name: yup
             .string()

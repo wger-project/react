@@ -6,8 +6,8 @@ export interface WgerModalProps {
     title: string,
     subtitle?: string,
     isOpen: boolean,
-    closeFn: any,
-    children: any
+    closeFn: () => void,
+    children: React.ReactNode
 }
 
 export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, subtitle, isOpen, closeFn, children }) => {
