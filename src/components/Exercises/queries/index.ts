@@ -6,15 +6,14 @@ import {
     getEquipment,
     getLanguages,
     getMuscles,
-    postExerciseImage
+    postExerciseImage,
 } from "services";
 import { AddTranslationParams, EditTranslationParams } from "services/exerciseTranslation";
 import { deleteExerciseImage, PostExerciseImageParams } from "services/image";
-import { postExerciseVideo, PostExerciseVideoParams } from "services/video";
+import { deleteExerciseVideo, postExerciseVideo, PostExerciseVideoParams } from "services/video";
 import { QueryKey } from "utils/consts";
 
 export { useExercisesQuery, useExerciseQuery, useAddExerciseFullQuery } from "./exercises";
-
 
 export function useAddTranslationQuery(exerciseId: number) {
     const queryClient = useQueryClient();
@@ -24,7 +23,7 @@ export function useAddTranslationQuery(exerciseId: number) {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
-        }
+        },
     });
 }
 
@@ -36,7 +35,7 @@ export function useEditTranslationQuery(exerciseId: number) {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
-        }
+        },
     });
 }
 
@@ -48,7 +47,7 @@ export function useDeleteExerciseImageQuery(exerciseId: number) {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
-        }
+        },
     });
 }
 
@@ -60,7 +59,7 @@ export function useAddExerciseImageQuery(exerciseId: number) {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
-        }
+        },
     });
 }
 
@@ -81,37 +80,54 @@ export function useAddExerciseVideoQuery(exerciseId: number) {
     });
 }
 
+/**
+ * A query hook to delete a exercise video
+ * @param exerciseId {number} - Exercise ID to which the video is linked
+ * @returns {useMutation} A mutation object to manage the video deletion process
+ */
+export function useDeleteExerciseVideoQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: number) => deleteExerciseVideo(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        },
+    });
+}
+
 export function useCategoriesQuery() {
     return useQuery({
         queryKey: [QueryKey.CATEGORIES],
-        queryFn: getCategories
+        queryFn: getCategories,
     });
 }
 
 export function useMusclesQuery() {
     return useQuery({
         queryKey: [QueryKey.MUSCLES],
-        queryFn: getMuscles
+        queryFn: getMuscles,
     });
 }
 
 export function useEquipmentQuery() {
     return useQuery({
         queryKey: [QueryKey.EQUIPMENT],
-        queryFn: getEquipment
+        queryFn: getEquipment,
     });
 }
 
 export function useLanguageQuery() {
     return useQuery({
         queryKey: [QueryKey.LANGUAGES],
-        queryFn: getLanguages
+        queryFn: getLanguages,
     });
 }
 
 export function useNotesQuery(translationId: number) {
     return useQuery({
         queryKey: [QueryKey.LANGUAGES, translationId],
-        queryFn: getLanguages
+        queryFn: getLanguages,
     });
 }
