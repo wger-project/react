@@ -19,6 +19,7 @@ export class ExerciseImage {
 }
 
 export class ExerciseImageAdapter implements Adapter<ExerciseImage> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any): ExerciseImage {
         return new ExerciseImage(
             item.id,

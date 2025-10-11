@@ -14,12 +14,13 @@ export interface WeightChartProps {
 
 export interface TooltipProps {
     active?: boolean,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload?: any,
     label?: string,
 }
 
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     if (active && payload && payload.length) {
         return (
@@ -39,7 +40,7 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
     height = height || 300;
 
     const theme = useTheme();
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const [currentEntry, setCurrentEntry] = React.useState<WeightEntry>();
     const handleCloseModal = () => setIsModalOpen(false);
@@ -56,6 +57,8 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
     /*
      * Edit the currently selected weight
      */
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function handleClick(e: DotProps, data: any) {
         setCurrentEntry(data.payload.entry);
         setIsModalOpen(true);

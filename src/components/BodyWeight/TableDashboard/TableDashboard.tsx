@@ -12,11 +12,7 @@ const classes = {
     table: `${PREFIX}-table`
 };
 
-const Root = styled('div')((
-    {
-        theme: Theme
-    }
-) => {
+const Root = styled('div')(() => {
     return {
         [`&.${classes.table}`]: {
             "& .MuiPaper-root": {

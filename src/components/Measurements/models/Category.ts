@@ -1,5 +1,5 @@
-import { Adapter } from "utils/Adapter";
 import { MeasurementEntry } from "components/Measurements/models/Entry";
+import { Adapter } from "utils/Adapter";
 
 export class MeasurementCategory {
 
@@ -19,6 +19,7 @@ export class MeasurementCategory {
 
 
 export class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any) {
         return new MeasurementCategory(
             item.id,

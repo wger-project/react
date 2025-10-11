@@ -9,7 +9,7 @@ import {
     SlotEntryWeightUnitField
 } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
 import { editProfile, editSlotEntry, getProfile, getRoutineRepUnits, getRoutineWeightUnits } from "services";
-import { testQueryClient } from "tests/queryClient";
+import { getTestQueryClient } from "tests/queryClient";
 import { testProfileDataVerified } from "tests/userTestdata";
 import { testDayLegs, testRepetitionUnits, testWeightUnits } from "tests/workoutRoutinesTestData";
 import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
@@ -29,7 +29,7 @@ describe('SlotEntryTypeField', () => {
 
     test('correctly updates the slot entry on change', async () => {
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <SlotEntryTypeField
                     slotEntry={testDayLegs.slots[0].entries[0]}
                     routineId={1}
@@ -67,7 +67,7 @@ describe('SlotEntryRepetitionUnitField', () => {
 
     test('correctly updates the slot entry on change', async () => {
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <SlotEntryRepetitionUnitField
                     slotEntry={testSlotEntry}
                     routineId={1}
@@ -79,8 +79,10 @@ describe('SlotEntryRepetitionUnitField', () => {
             expect(getRoutineRepUnits).toHaveBeenCalled();
         });
 
-        const dropdown = screen.getByRole('combobox', { name: 'unit' });
-        await user.click(dropdown);
+        await waitFor(async () => {
+            const dropdown = screen.getByRole('combobox', { name: 'unit' });
+            await user.click(dropdown);
+        });
 
         const minutesOption = screen.getByRole('option', { name: 'Minutes' });
         await user.click(minutesOption);
@@ -102,7 +104,7 @@ describe('SlotEntryWeightUnitField', () => {
 
     test('correctly updates the slot entry on change', async () => {
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <SlotEntryWeightUnitField
                     slotEntry={testSlotEntry}
                     routineId={1}
@@ -115,9 +117,10 @@ describe('SlotEntryWeightUnitField', () => {
             expect(getProfile).toHaveBeenCalled();
         });
 
-
-        const dropdown = screen.getByRole('combobox', { name: 'unit' });
-        await user.click(dropdown);
+        await waitFor(async () => {
+            const dropdown = screen.getByRole('combobox', { name: 'unit' });
+            await user.click(dropdown);
+        });
 
         const platesOption = screen.getByRole('option', { name: 'Plates' });
         await user.click(platesOption);
@@ -141,7 +144,7 @@ describe('SlotEntryRoundingField', () => {
     test('correctly updates the weight rounding for the slot entry', async () => {
         // Arrange
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <SlotEntryRoundingField
                     editProfile={false}
                     slotEntry={testSlotEntry}
@@ -169,7 +172,7 @@ describe('SlotEntryRoundingField', () => {
     test('correctly updates the weight rounding for the slot entry and the user profile', async () => {
         // Arrange
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <SlotEntryRoundingField
                     editProfile={true}
                     initialValue={42}
@@ -197,7 +200,7 @@ describe('SlotEntryRoundingField', () => {
     test('correctly updates the reps rounding for the slot entry', async () => {
         // Arrange
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <SlotEntryRoundingField
                     editProfile={false}
                     slotEntry={testSlotEntry}

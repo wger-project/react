@@ -27,7 +27,6 @@ const MuscleFilterList = () => {
 
     const { data: muscles, isLoading } = useMusclesQuery();
     const { selectedMuscles, setSelectedMuscles } = useContext(ExerciseFiltersContext);
-    const [t] = useTranslation();
 
     const handleToggle = (value: Muscle) => () => {
         const currentIndex = selectedMuscles.indexOf(value);

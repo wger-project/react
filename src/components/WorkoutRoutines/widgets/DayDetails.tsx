@@ -27,6 +27,7 @@ import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter"
 import { useProfileQuery } from "components/User/queries/profile";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
+import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
 import {
     useAddDayQuery,
     useAddSlotEntryQuery,
@@ -384,14 +385,13 @@ export const DayDetails = (props: {
                                                         if (exercise === null) {
                                                             return;
                                                         }
-                                                        addSlotEntryQuery.mutate({
-                                                            slot: slot.id!,
-                                                            exercise: exercise.data.base_id,
+                                                        addSlotEntryQuery.mutate(new SlotEntry({
+                                                            slotId: slot.id!,
+                                                            exerciseId: exercise.data.base_id,
                                                             type: 'normal',
                                                             order: slot.entries.length + 1,
-                                                            // eslint-disable-next-line camelcase
-                                                            weight_unit: userProfileQuery.data!.useMetric ? WEIGHT_UNIT_KG : WEIGHT_UNIT_LB,
-                                                        });
+                                                            weightUnitId: userProfileQuery.data!.useMetric ? WEIGHT_UNIT_KG : WEIGHT_UNIT_LB,
+                                                        }));
                                                         setShowAutocompleterForSlot(null);
                                                     }}
                                                 />

@@ -6,7 +6,8 @@ interface makeUrlInterface {
     id?: number,
     server?: string,
     objectMethod?: string,
-    query?: object,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    query?: { [key: string]: any },
 }
 
 
@@ -37,7 +38,6 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
         const queryList = [];
         for (const key in params.query) {
             if (Object.hasOwn(params.query, key)) {
-                // @ts-ignore
                 queryList.push(`${encodeURIComponent(key)}=${encodeURIComponent(params.query[key])}`);
             }
         }

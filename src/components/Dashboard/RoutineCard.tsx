@@ -69,7 +69,6 @@ const RoutineCardContent = (props: { routine: Routine }) => {
 
 const DayListItem = (props: { dayData: RoutineDayData }) => {
     const [expandView, setExpandView] = useState(false);
-    const { t } = useTranslation();
 
     const handleToggleExpand = () => setExpandView(!expandView);
 
