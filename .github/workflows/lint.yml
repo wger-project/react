@@ -21,9 +21,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install modules
-        run: |
-          npm install
-
       - name: Lint the code
-        run: npm lint
+        run: |
+          npm ci
+          npm lint

@@ -21,12 +21,10 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install modules
-        run: |
-          npm install
-
       - name: Run tests
-        run: npm test --coverage --collectCoverageFrom='!src/pages/**/*.tsx'
+        run: |
+          npm ci
+          npm test --coverage --collectCoverageFrom='!src/pages/**/*.tsx'
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
