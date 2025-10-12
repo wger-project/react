@@ -82,7 +82,6 @@
     "start": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "postbuild1111": "./postbuild.sh",
     "test": "LANG=de_de jest",
     "i18n": "i18next",
     "lint": "eslint src",
