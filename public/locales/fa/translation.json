@@ -55,7 +55,8 @@
         "imageStyleLowPoly": "کم کیفیت",
         "imageStyleOther": "دیگر",
         "imageDetails": "جزئیات تصویر",
-        "swapExercise": "تعویض و مبادله تمرین"
+        "swapExercise": "تعویض و مبادله تمرین",
+        "replacements": "‌جایگزین ها"
     },
     "description": "توضیحات",
     "name": "نام",
@@ -117,5 +118,10 @@
     "max": "حداکثر",
     "bmi": {
         "calculator": "حسابگر BMI (شاخص توده بدنی)"
-    }
+    },
+    "unit": "واحد",
+    "alsoSearchEnglish": "همچنین اسامی را به انگلیسی هم جستجو کنید",
+    "filters": "فیلتر ها",
+    "private": "خصوصی",
+    "public": "عمومی"
 }
