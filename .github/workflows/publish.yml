@@ -11,7 +11,7 @@ on:
 
 jobs:
   publish:
-    name: BPublish to npm
+    name: Publish to npm
     runs-on: ubuntu-latest
 
     env:
