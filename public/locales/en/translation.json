@@ -168,7 +168,7 @@
   "goBack": "Go back",
   "language": "Language",
   "forms": {
-    "supportedImageFormats": "Only JPEG, PNG and WEBP files below 20Mb are supported",
+    "supportedImageFormats": "Only JPEG, PNG, WEBP and AVIF files below 20Mb are supported",
     "enterNumber": "Please enter a valid number",
     "enterInteger": "Please enter a whole number",
     "fieldRequired": "This field is required",
