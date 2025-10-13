@@ -1,9 +1,11 @@
 {
   "name": "@wger-project/react-components",
   "files": [
-    "build/",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "index.html",
+    "src/",
+    "build/"
   ],
   "version": "0.1.4",
   "repository": "https://github.com/wger-project/react",
@@ -86,7 +88,8 @@
     "i18n": "i18next",
     "lint": "eslint src",
     "lint:quiet": "eslint --quiet src",
-    "lint:fix": "eslint --fix src"
+    "lint:fix": "eslint --fix src",
+    "postinstall": "npm run build"
   },
   "browserslist": {
     "production": [
