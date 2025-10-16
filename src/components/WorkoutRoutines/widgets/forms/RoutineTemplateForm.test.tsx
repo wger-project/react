@@ -28,11 +28,15 @@ describe('RoutineTemplateForm', () => {
         );
 
         // Assert
-        const templateToggle = screen.getByRole('checkbox', { name: 'routines.template' });
+        const templateToggle = screen.getByRole('switch', { name: 'routines.template' });
         expect(templateToggle).not.toBeChecked();
         await user.click(templateToggle);
         expect(mockEditRoutine).toHaveBeenCalledTimes(1);
-        expect(mockEditRoutine).toHaveBeenCalledWith({ "id": 1, "is_public": false, "is_template": true });
+        expect(mockEditRoutine).toHaveBeenCalledWith(expect.objectContaining({
+            "id": 1,
+            "isPublic": false,
+            "isTemplate": true
+        }));
     });
 
     test('calls editRoutine when setting the public template flag', async () => {
@@ -45,8 +49,8 @@ describe('RoutineTemplateForm', () => {
         );
 
         // Assert
-        const templateToggle = screen.getByRole('checkbox', { name: 'routines.template' });
-        const publicTemplateToggle = screen.getByRole('checkbox', { name: 'routines.publicTemplate' });
+        const templateToggle = screen.getByRole('switch', { name: 'routines.template' });
+        const publicTemplateToggle = screen.getByRole('switch', { name: 'routines.publicTemplate' });
         expect(templateToggle).not.toBeChecked();
         expect(publicTemplateToggle).not.toBeChecked();
 
@@ -57,6 +61,10 @@ describe('RoutineTemplateForm', () => {
         await user.click(publicTemplateToggle);
         expect(publicTemplateToggle).not.toBeDisabled();
         expect(mockEditRoutine).toHaveBeenCalledTimes(2);
-        expect(mockEditRoutine).toHaveBeenNthCalledWith(2, { "id": 1, "is_public": true, "is_template": true });
+        expect(mockEditRoutine).toHaveBeenNthCalledWith(2, expect.objectContaining({
+            "id": 1,
+            "isPublic": true,
+            "isTemplate": true
+        }));
     });
 });

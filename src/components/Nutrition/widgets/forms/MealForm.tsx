@@ -7,13 +7,12 @@ import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { dateTimeToHHMM } from "utils/date";
 import * as yup from "yup";
 
 interface MealFormProps {
     planId: number,
     meal?: Meal,
-    closeFn?: Function,
+    closeFn?: () => void,
 }
 
 export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
@@ -41,19 +40,23 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-
-
-                // The result from the datepicker is a Luxon DateTime object, not a JS DateTime...
                 if (!(values.time instanceof Date)) {
-                    // @ts-ignore
+                    // @ts-ignore - The result from the datepicker is a Luxon DateTime object, not a JS DateTime
                     values.time = values.time.toJSDate();
                 }
-                const data = { ...values, time: dateTimeToHHMM(values.time) };
 
                 if (meal) {
-                    editMealQuery.mutate({ ...data, plan: planId, id: meal.id });
+                    // Edit
+                    const newMeal = Meal.clone(meal, { name: values.name, time: values.time });
+                    editMealQuery.mutate(newMeal);
+
                 } else {
-                    addMealQuery.mutate({ ...data, plan: planId });
+                    // Add
+                    addMealQuery.mutate(new Meal({
+                        planId: planId,
+                        name: values.name,
+                        time: values.time,
+                    }));
                 }
 
                 if (closeFn) {
@@ -77,7 +80,7 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
                             <TimePicker
                                 label={t('timeOfDay')}
                                 value={formik.values.time !== null ? DateTime.fromJSDate(formik.values.time) : null}
-                                onChange={(newValue) => formik.setFieldValue('time', newValue)}
+                                onChange={(newValue) => formik.setFieldValue('time', newValue ? newValue.toJSDate() : null)}
                             />
                         </LocalizationProvider>
                         <Stack direction="row" justifyContent="end" spacing={2}>

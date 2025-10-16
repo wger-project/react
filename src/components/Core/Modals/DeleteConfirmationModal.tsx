@@ -8,8 +8,8 @@ export interface DeleteConfirmationModalProps {
     subtitle?: string,
     message?: string,
     isOpen: boolean,
-    closeFn: any,
-    deleteFn: any
+    closeFn: () => void,
+    deleteFn: () => void
 }
 
 export const DeleteConfirmationModal: FunctionComponent<DeleteConfirmationModalProps> = (

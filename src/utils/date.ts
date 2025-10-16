@@ -1,11 +1,7 @@
 import { FilterType } from "components/BodyWeight/widgets/FilterButtons";
+import i18n from 'i18next';
+import { DateTime, DateTimeFormatOptions } from "luxon";
 
-/*
- * Util function that converts a date to a YYYY-MM-DD string
- */
-export function dateToYYYYMMDD(date: Date): string {
-    return date.toISOString().split('T')[0];
-}
 
 export function isSameDay(date1: Date, date2: Date): boolean {
     return (
@@ -16,26 +12,74 @@ export function isSameDay(date1: Date, date2: Date): boolean {
 }
 
 /*
- * Returns the localized time from a date object
+ * Util function that converts a date to a YYYY-MM-DD string
  */
-export function dateTimeToLocaleYYYYMMDD(dateTime: Date | null) {
-    if (dateTime == null) {
-        return null;
-    }
-
-    return dateTime.toLocaleDateString([]);
+export function dateToYYYYMMDD(date: Date): string {
+    return date.toISOString().split('T')[0];
 }
+
 
 /*
  * Returns the localized time from a date object
  */
-export function dateTimeToLocaleHHMM(dateTime: Date | null, locale?: string) {
+export function dateTimeToLocaleHHMM(dateTime: Date | null, locale?: string, options?: Intl.DateTimeFormatOptions) {
     if (dateTime == null) {
         return null;
     }
+    locale = locale ?? i18n.language;
+    options = options ?? { hour: '2-digit', minute: '2-digit' };
+
+    return dateTime.toLocaleTimeString(
+        locale ? [locale] : [],
+        options
+    );
+}
+
+export function dateTimeToLocale(dateTime: Date | null, locale?: string, options?: Intl.DateTimeFormatOptions,) {
+    if (dateTime == null) {
+        console.warn("dateTimeToLocaleHHMM called with null datetime!");
+        return '';
+    }
+
+    locale = locale ?? i18n.language;
+    options = options ?? {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+
+    return dateTime.toLocaleString(locale ? [locale] : [], options);
+}
+
+export function luxonDateTimeToLocale(dateTime: DateTime | null, locale?: string, options?: DateTimeFormatOptions,) {
+    if (dateTime == null) {
+        console.warn("luxonDateTimeToLocale called with null datetime!");
+        return '';
+    }
+
+    locale = locale ?? i18n.language;
+    options = options ?? DateTime.DATE_MED;
+
+    return dateTime.toLocaleString(options, { locale: locale });
+}
+
+export function dateToLocale(dateTime: Date | null, locale?: string, options?: Intl.DateTimeFormatOptions) {
+    if (dateTime == null) {
+        console.warn('dateToLocale called with null date!');
+        return '';
+    }
+
+    locale = locale ?? i18n.language;
+    options = options ?? {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+    };
 
 
-    return dateTime.toLocaleTimeString(locale ? [locale] : [], { hour: '2-digit', minute: '2-digit' });
+    return dateTime.toLocaleString(locale ? [locale] : [], options);
 }
 
 /*

@@ -1,4 +1,4 @@
-import { slotEntryAdapter } from "components/WorkoutRoutines/models/SlotEntry";
+import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
 import { testSlotEntryApiResponse } from "tests/slotEntryApiResponse";
 
 describe('SlotEntry model tests', () => {
@@ -6,7 +6,7 @@ describe('SlotEntry model tests', () => {
 
     test('correctly parses the JSON response', () => {
         // Act
-        const result = slotEntryAdapter.fromJson(testSlotEntryApiResponse);
+        const result = SlotEntry.fromJson(testSlotEntryApiResponse);
 
         // Assert
         expect(result.id).toEqual(143);

@@ -94,6 +94,7 @@ export class WorkoutSession {
 
 
 export class WorkoutSessionAdapter implements Adapter<WorkoutSession> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson = (item: any) => new WorkoutSession({
         id: item.id,
         dayId: item.day!,

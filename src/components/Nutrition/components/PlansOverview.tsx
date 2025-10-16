@@ -8,6 +8,7 @@ import { useFetchNutritionalPlansQuery } from "components/Nutrition/queries";
 import { AddNutritionalPlanFab } from "components/Nutrition/widgets/Fab";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { dateToLocale } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
 
 export const PlansOverview = () => {
@@ -31,14 +32,18 @@ export const PlansOverview = () => {
 
 const PlanListItem = (props: { plan: NutritionalPlan }) => {
     const [t, i18n] = useTranslation();
-    const detailUrl = makeLink(WgerLink.NUTRITION_DETAIL, i18n.language, { id: props.plan.id });
+    const detailUrl = makeLink(WgerLink.NUTRITION_DETAIL, i18n.language, { id: props.plan.id! });
 
     return <>
         <ListItem sx={{ p: 0 }}>
             <ListItemButton component="a" href={detailUrl}>
                 <ListItemText
                     primary={props.plan.description !== '' ? props.plan.description : t('routines.routine')}
-                    secondary={props.plan.creationDate.toLocaleDateString()}
+                    secondary={
+                        props.plan.end
+                            ? `${dateToLocale(props.plan.start)} – ${dateToLocale(props.plan.end)}`
+                            : `${dateToLocale(props.plan.start)}`
+                    }
                 />
                 <ChevronRightIcon />
             </ListItemButton>

@@ -12,27 +12,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Enable Corepack
         run: corepack enable
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: 'yarn'
 
-      - name: Install modules
+      - name: Lint the code
         run: |
-          yarn config set --home enableTelemetry 0
-          yarn config set nodeLinker node-modules
-          yarn
-
-      - name: Install modules
-        run: |
-          corepack enable
-          yarn config set --home enableTelemetry 0
-          yarn
-
-      - name: Run ESLint
-        run: yarn lint:quiet
+          npm ci
+          npm run lint

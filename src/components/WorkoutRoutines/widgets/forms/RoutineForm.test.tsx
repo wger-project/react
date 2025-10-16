@@ -27,7 +27,7 @@ describe('RoutineForm', () => {
         render(
             <BrowserRouter>
                 <QueryClientProvider client={testQueryClient}>
-                    <RoutineForm routine={testRoutine1} />
+                    <RoutineForm existingRoutine={testRoutine1} />
                 </QueryClientProvider>
             </BrowserRouter>
         );
@@ -48,7 +48,7 @@ describe('RoutineForm', () => {
         render(
             <BrowserRouter>
                 <QueryClientProvider client={testQueryClient}>
-                    <RoutineForm routine={testRoutine1} />
+                    <RoutineForm existingRoutine={testRoutine1} />
                 </QueryClientProvider>
             </BrowserRouter>
         );
@@ -58,15 +58,14 @@ describe('RoutineForm', () => {
         await user.click(screen.getByRole('button', { name: /save/i }));
 
         // Assert
-        expect(mockEditRoutine).toHaveBeenCalledWith({
+        expect(mockEditRoutine).toHaveBeenCalledWith(expect.objectContaining({
             "description": "Full body routine",
-            "end": "2024-06-01",
             "fitInWeek": false,
-            "fit_in_week": false,
             "id": 1,
             "name": "Updated routine name",
-            "start": "2024-05-01",
-        });
+            "isTemplate": false,
+            "isPublic": false,
+        }));
     });
 
     test('empty form', async () => {

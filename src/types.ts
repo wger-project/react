@@ -1,4 +1,5 @@
 import { AlertColor } from "@mui/material";
+import { ApiIngredientThumbnailType } from "components/Nutrition/models/IngredientImageThumbnails";
 
 export interface ApiBodyWeightType {
     id: number,
@@ -73,7 +74,8 @@ export interface ApiIngredientType {
         url: string
     },
     license_author: string,
-    image: ApiIngredientImageType
+    image: ApiIngredientImageType | null,
+    thumbnails: ApiIngredientThumbnailType | null,
 }
 
 export type ApiIngredientImageType = {
@@ -107,6 +109,8 @@ export type ApiIngredientWeightUnitType = {
 export interface ApiNutritionalPlanType {
     id: number,
     creation_date: string,
+    start: string,
+    end: string | null,
     description: string,
     only_logging: boolean,
     goal_energy: number | null,
@@ -116,31 +120,6 @@ export interface ApiNutritionalPlanType {
     goal_fat: number | null,
 }
 
-export interface ApiMealType {
-    id: number,
-    order: number,
-    time: string | null,
-    name: string
-}
-
-export interface ApiMealItemType {
-    id: number,
-    meal: number,
-    ingredient: number,
-    weight_unit: number,
-    order: number,
-    amount: string
-}
-
-export interface ApiNutritionDiaryType {
-    id: number,
-    plan: number,
-    meal: number | null,
-    ingredient: number,
-    weight_unit: number,
-    datetime: Date,
-    amount: string
-}
 
 export interface ApiMeasurementEntryType {
     id: number,

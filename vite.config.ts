@@ -7,6 +7,14 @@ export default defineConfig(() => {
     return {
         build: {
             outDir: 'build',
+            sourcemap: true,
+            rollupOptions: {
+                output: {
+                    entryFileNames: 'main.js',
+                    chunkFileNames: 'chunks/[name]-[hash].js',
+                    assetFileNames: 'assets/[name][extname]',
+                }
+            }
         },
         server: {
             open: true,

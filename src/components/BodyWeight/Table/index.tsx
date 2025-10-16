@@ -5,6 +5,7 @@ import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionBut
 import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
+import { dateTimeToLocale } from "utils/date";
 import { processWeight } from '../utils';
 
 
@@ -14,11 +15,7 @@ const classes = {
     table: `${PREFIX}-table`
 };
 
-const Root = styled('div')((
-    {
-        theme: Theme
-    }
-) => {
+const Root = styled('div')(() => {
     return {
         [`&.${classes.table}`]: {
             "& .MuiPaper-root": {
@@ -38,7 +35,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
 
     const availableResultsPerPage = [10, 50, 100];
 
-    const [t] = useTranslation();
+    const { t } = useTranslation();
 
     const processedWeights = processWeight(weights);
     const [rowsPerPage, setRowsPerPage] = useState(availableResultsPerPage[0]);
@@ -69,15 +66,15 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                     <TableBody>
                         {processedWeights.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                             <TableRow
-                                key={row.entry.date.toLocaleDateString()}
+                                key={row.entry.date.toISOString()}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row" align="center">
-                                    {row.entry.date.toLocaleDateString()}
+                                    {dateTimeToLocale(row.entry.date)}
                                 </TableCell>
                                 <TableCell align="center">{row.entry.weight}</TableCell>
                                 <TableCell align="center">{+row.change.toFixed(2)}</TableCell>
-                                <TableCell align="center">{row.days}</TableCell>
+                                <TableCell align="center">{row.days.toFixed(1)}</TableCell>
                                 <TableCell align="center">
                                     <ActionButton weight={row.entry} />
                                 </TableCell>

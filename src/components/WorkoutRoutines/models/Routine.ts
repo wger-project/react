@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import i18n from 'i18next';
@@ -18,46 +16,40 @@ export const DEFAULT_WORKOUT_DURATION = 12;
 
 
 type RoutineConstructorParams = {
-    id: number;
-    name: string;
-    description: string;
-    created: Date;
-    start: Date;
-    end: Date;
-    fitInWeek: boolean;
+    id?: number | null;
+    name?: string;
+    description?: string;
+    created?: Date;
+    start?: Date;
+    end?: Date;
+    fitInWeek?: boolean;
     isTemplate?: boolean;
     isPublic?: boolean;
+
     days?: Day[];
     dayData?: RoutineDayData[];
 };
 
 export class Routine {
-    id: number;
-    name: string;
-    description: string;
-    created: Date;
-    start: Date;
-    end: Date;
-    fitInWeek: boolean;
-    isTemplate: boolean;
-    isPublic: boolean;
+    id: number | null = null;
+    name: string = '';
+    description: string = '';
+    created: Date = new Date();
+    start: Date = new Date();
+    end: Date = DateTime.local().plus({ weeks: DEFAULT_WORKOUT_DURATION }).toJSDate();
+    fitInWeek: boolean = true;
+    isTemplate: boolean = false;
+    isPublic: boolean = false;
 
     days: Day[] = [];
     dayData: RoutineDayData[] = [];
 
-    constructor(data: RoutineConstructorParams) {
-        this.id = data.id;
-        this.name = data.name;
-        this.description = data.description;
-        this.created = data.created;
-        this.start = data.start;
-        this.end = data.end;
-        this.fitInWeek = data.fitInWeek;
-        this.isTemplate = data.isTemplate ?? false;
-        this.isPublic = data.isPublic ?? false;
+    constructor(params?: RoutineConstructorParams) {
+        Object.assign(this, params || {});
+    }
 
-        this.days = data.days ?? [];
-        this.dayData = data.dayData ?? [];
+    get isNotTemplate() {
+        return !this.isTemplate;
     }
 
     get exercises() {
@@ -66,8 +58,16 @@ export class Routine {
 
     get dayDataCurrentIteration() {
         const iteration = this.getIteration() ?? 1;
-
         return this.dayData.filter(dayData => dayData.iteration === iteration);
+    }
+
+    /*
+     * Filter out dayData entries with null days
+     */
+    get dayDataCurrentIterationNoNulls() {
+        return this.dayDataCurrentIteration
+            .filter((dayData) => dayData.day !== null)
+            .sort((a, b) => a.day!.order - b.day!.order);
     }
 
     get groupedDayDataByIteration() {
@@ -120,6 +120,31 @@ export class Routine {
         return this.dayDataCurrentIteration.length;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static fromJson(json: any): Routine {
+        return routineAdapter.fromJson(json);
+    }
+
+    static clone(routine: Routine, overrides?: Partial<RoutineConstructorParams>): Routine {
+        return new Routine({
+            id: overrides?.id ?? routine.id,
+            name: overrides?.name ?? routine.name,
+            description: overrides?.description ?? routine.description,
+            created: overrides?.created ?? new Date(),
+            start: overrides?.start ?? routine.start,
+            end: overrides?.end ?? routine.end ?? undefined,
+            fitInWeek: overrides?.fitInWeek ?? routine.fitInWeek,
+            isTemplate: overrides?.isTemplate ?? routine.isTemplate,
+            isPublic: overrides?.isPublic ?? routine.isPublic,
+            days: overrides?.days ?? routine.days,
+            dayData: overrides?.dayData ?? routine.dayData,
+        });
+    }
+
+    toJson() {
+        return routineAdapter.toJson(this);
+    }
+
     getIteration(date?: Date | undefined) {
         const dateToCheck = date ?? new Date();
 
@@ -146,7 +171,6 @@ export class Routine {
         return slotData?.setConfigs.find(setConfig => setConfig.slotEntryId === slotEntryId) || null;
     }
 
-
     /*
      * Returns the DayData for the given dayId and, optionally, iteration
      */
@@ -160,7 +184,8 @@ export class Routine {
 }
 
 
-export class RoutineAdapter implements Adapter<Routine> {
+class RoutineAdapter implements Adapter<Routine> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any) {
         return new Routine({
             id: item.id,
@@ -172,20 +197,22 @@ export class RoutineAdapter implements Adapter<Routine> {
             fitInWeek: item.fit_in_week,
             isTemplate: item.is_template,
             isPublic: item.is_public,
-            days: item.days ? item.days.map((day: any) => new Day(day)) : []
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            days: item.days ? item.days.map((day: any) => Day.fromJson(day)) : []
         });
     }
 
     toJson(item: Routine) {
         return {
-            id: item.id,
             name: item.name,
             description: item.description,
             start: dateToYYYYMMDD(item.start),
             end: dateToYYYYMMDD(item.end),
-            fit_in_week: item.fitInWeek,
+            "fit_in_week": item.fitInWeek,
+            "is_template": item.isTemplate,
+            "is_public": item.isPublic
         };
     }
 }
 
-export const routineAdapter = new RoutineAdapter();
+const routineAdapter = new RoutineAdapter();

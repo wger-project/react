@@ -108,6 +108,7 @@ export class WorkoutLog {
 
 
 export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson = (item: any) =>
         new WorkoutLog({
             id: item.id,

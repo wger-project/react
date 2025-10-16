@@ -5,7 +5,7 @@ import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { getLanguages, getRoutine } from "services";
 import { testLanguages } from "tests/exerciseTestdata";
-import { testQueryClient } from "tests/queryClient";
+import { getTestQueryClient } from "tests/queryClient";
 import { testRoutine1 } from "tests/workoutRoutinesTestData";
 
 jest.mock("services");
@@ -21,7 +21,7 @@ describe("Smoke tests the SlotProgressionEdit component", () => {
 
         // Act
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <MemoryRouter initialEntries={['/test/101/2']}>
                     <Routes>
                         <Route path="/test/:routineId/:slotId" element={<SlotProgressionEdit />} />
@@ -31,8 +31,9 @@ describe("Smoke tests the SlotProgressionEdit component", () => {
         );
 
         // Assert
+        expect(getRoutine).toHaveBeenCalledTimes(1);
         await waitFor(() => {
-            expect(getRoutine).toHaveBeenCalledTimes(1);
+            expect(screen.getByText('routines.editProgression')).toBeInTheDocument();
         });
         expect(screen.getByText('routines.editProgression')).toBeInTheDocument();
         expect(screen.getByText('Benchpress')).toBeInTheDocument();

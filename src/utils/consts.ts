@@ -79,7 +79,7 @@ export enum ApiPath {
     MEAL = 'meal',
     MEAL_ITEM = 'mealitem',
     NUTRITIONAL_DIARY = 'nutritiondiary',
-    INGREDIENT_PATH = 'ingredientinfo',
+    INGREDIENTINFO_PATH = 'ingredientinfo',
     INGREDIENT_SEARCH_PATH = 'ingredient/search',
     INGREDIENT_WEIGHT_UNIT = 'ingredientweightunit',
 
@@ -110,6 +110,8 @@ export enum ApiPath {
 
 
 export const API_MAX_PAGE_SIZE = '999';
+
+export const API_RESULTS_PAGE_SIZE = '100';
 
 /*
  * List of colors to use in charts

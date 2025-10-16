@@ -10,6 +10,7 @@ import { Equipment } from "components/Exercises/models/equipment";
 import { Muscle } from "components/Exercises/models/muscle";
 import { ExerciseGrid } from "components/Exercises/Overview/ExerciseGrid";
 import { ExerciseGridSkeleton } from "components/Exercises/Overview/ExerciseGridLoadingSkeleton";
+
 import { useExercisesQuery } from "components/Exercises/queries";
 import React, { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -79,6 +80,7 @@ export const ExerciseOverviewList = () => {
     const isMobile = useMediaQuery('(max-width:600px)');
 
     const [page, setPage] = React.useState(1);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handlePageChange = (event: any, value: number) => {
         setPage(value);
 

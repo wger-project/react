@@ -12,24 +12,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - name: Enable Corepack
-        run: corepack enable
-
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: 'yarn'
-
-      - name: Install modules
-        run: |
-          yarn config set --home enableTelemetry 0
-          yarn config set nodeLinker node-modules
-          yarn
 
       - name: Run tests
-        run: yarn test --coverage --collectCoverageFrom='!src/pages/**/*.tsx'
+        run: |
+          npm ci
+          npm run test:coverage
 
       - name: Coveralls
         uses: coverallsapp/github-action@master

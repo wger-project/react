@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { Exercise } from "components/Exercises/models/exercise";
-import { Day, DayAdapter } from "components/WorkoutRoutines/models/Day";
+import { Day } from "components/WorkoutRoutines/models/Day";
 import { RoutineStatsData, RoutineStatsDataAdapter } from "components/WorkoutRoutines/models/LogStats";
-import { Routine, routineAdapter } from "components/WorkoutRoutines/models/Routine";
-import { RoutineDayData, RoutineDayDataAdapter } from "components/WorkoutRoutines/models/RoutineDayData";
+import { Routine } from "components/WorkoutRoutines/models/Routine";
+import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
 import { RoutineLogData, RoutineLogDataAdapter } from "components/WorkoutRoutines/models/RoutineLogData";
 import { getExercise } from "services/exercise";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "services/workoutUnits";
@@ -28,7 +28,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
         makeUrl(ApiPath.ROUTINE, { id: id }),
         { headers: makeHeader() }
     );
-    const routine = routineAdapter.fromJson(response.data);
+    const routine = Routine.fromJson(response.data);
 
     const responses = await Promise.all([
         getRoutineRepUnits(),
@@ -97,7 +97,6 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     routine.dayData = dayDataAllIterations;
     routine.days = dayStructure;
 
-
     return routine;
 };
 
@@ -116,7 +115,7 @@ export const getRoutines = async (): Promise<Routine[]> => {
 
     const out: Routine[] = [];
     for (const routineData of response.data.results) {
-        out.push(await processRoutine(routineData.id));
+        out.push(await processRoutine(routineData.id!));
     }
     return out;
 };
@@ -138,7 +137,7 @@ export const getActiveRoutine = async (): Promise<null | Routine> => {
         return null;
     }
 
-    return await processRoutine(response.data.results[0].id);
+    return await processRoutine(response.data.results[0].id!);
 };
 
 export const getRoutine = async (id: number): Promise<Routine> => {
@@ -157,7 +156,7 @@ export const getRoutinesShallow = async (): Promise<Routine[]> => {
         { headers: makeHeader() }
     );
 
-    return response.data.results.map(routineData => routineAdapter.fromJson(routineData));
+    return response.data.results.map(routineData => Routine.fromJson(routineData)).filter(routine => routine.isNotTemplate);
 };
 
 export const getPrivateTemplatesShallow = async (): Promise<Routine[]> => {
@@ -167,7 +166,7 @@ export const getPrivateTemplatesShallow = async (): Promise<Routine[]> => {
         { headers: makeHeader() }
     );
 
-    return response.data.results.map(routineData => routineAdapter.fromJson(routineData));
+    return response.data.results.map(routineData => Routine.fromJson(routineData));
 };
 
 export const getPublicTemplatesShallow = async (): Promise<Routine[]> => {
@@ -177,42 +176,27 @@ export const getPublicTemplatesShallow = async (): Promise<Routine[]> => {
         { headers: makeHeader() }
     );
 
-    return response.data.results.map(routineData => routineAdapter.fromJson(routineData));
+    return response.data.results.map(routineData => Routine.fromJson(routineData));
 };
 
-
-export interface AddRoutineParams {
-    name: string;
-    description: string;
-    start: string;
-    end: string;
-    fit_in_week: boolean;
-    is_template?: boolean;
-    is_public?: boolean;
-}
-
-export interface EditRoutineParams extends Partial<AddRoutineParams> {
-    id: number,
-}
-
-export const addRoutine = async (data: AddRoutineParams): Promise<Routine> => {
+export const addRoutine = async (routine: Routine): Promise<Routine> => {
     const response = await axios.post(
         makeUrl(ApiPath.ROUTINE,),
-        data,
+        routine.toJson(),
         { headers: makeHeader() }
     );
 
-    return routineAdapter.fromJson(response.data);
+    return Routine.fromJson(response.data);
 };
 
-export const editRoutine = async (data: EditRoutineParams): Promise<Routine> => {
+export const editRoutine = async (routine: Routine): Promise<Routine> => {
     const response = await axios.patch(
-        makeUrl(ApiPath.ROUTINE, { id: data.id }),
-        data,
+        makeUrl(ApiPath.ROUTINE, { id: routine.id! }),
+        routine.toJson(),
         { headers: makeHeader() }
     );
 
-    return routineAdapter.fromJson(response.data);
+    return Routine.fromJson(response.data);
 };
 
 export const deleteRoutine = async (id: number): Promise<number> => {
@@ -231,8 +215,8 @@ export const getRoutineDayDataAllIterations = async (routineId: number): Promise
         { headers: makeHeader() }
     );
 
-    const adapter = new RoutineDayDataAdapter();
-    return response.data.map((data: any) => adapter.fromJson(data));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return response.data.map((data: any) => RoutineDayData.fromJson(data));
 };
 
 export const getRoutineStructure = async (routineId: number): Promise<Day[]> => {
@@ -241,8 +225,8 @@ export const getRoutineStructure = async (routineId: number): Promise<Day[]> => 
         { headers: makeHeader() }
     );
 
-    const adapter = new DayAdapter();
-    return response.data.days.map((data: any) => adapter.fromJson(data));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return response.data.days.map((data: any) => Day.fromJson(data));
 };
 
 export const getRoutineLogData = async (routineId: number): Promise<RoutineLogData[]> => {
@@ -252,6 +236,7 @@ export const getRoutineLogData = async (routineId: number): Promise<RoutineLogDa
     );
 
     const adapter = new RoutineLogDataAdapter();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return response.data.map((data: any) => adapter.fromJson(data));
 };
 

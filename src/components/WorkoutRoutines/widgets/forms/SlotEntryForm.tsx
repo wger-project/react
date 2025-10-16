@@ -7,6 +7,7 @@ import {
     useFetchRoutineRepUnitsQuery,
     useFetchRoutineWeighUnitsQuery
 } from "components/WorkoutRoutines/queries";
+import debounce from "lodash/debounce";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
@@ -51,8 +52,9 @@ export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: num
     ] as const;
 
     const handleOnChange = (newValue: string) => {
-        editQuery.mutate({ id: props.slotEntry.id, type: newValue as SlotEntryType, });
+        editQuery.mutate(SlotEntry.clone(props.slotEntry, { type: newValue as SlotEntryType }));
     };
+
 
     return <>
         <TextField
@@ -66,7 +68,7 @@ export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: num
         >
             {options!.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                    {option.value.toUpperCase()} - {option.label}
                 </MenuItem>
             ))}
         </TextField>
@@ -89,8 +91,7 @@ export const SlotEntryRepetitionUnitField = (props: { slotEntry: SlotEntry, rout
     }));
 
     const handleOnChange = (newValue: string) => {
-        // eslint-disable-next-line camelcase
-        editSlotEntryQuery.mutate({ id: props.slotEntry.id, repetition_unit: parseInt(newValue), });
+        editSlotEntryQuery.mutate(SlotEntry.clone(props.slotEntry, { repetitionUnitId: parseInt(newValue) }));
     };
 
 
@@ -105,7 +106,7 @@ export const SlotEntryRepetitionUnitField = (props: { slotEntry: SlotEntry, rout
             onChange={e => handleOnChange(e.target.value)}
         >
             {options!.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
+                <MenuItem key={option.value} value={option.value ?? ''}>
                     {option.label}
                 </MenuItem>
             ))}
@@ -131,8 +132,7 @@ export const SlotEntryWeightUnitField = (props: { slotEntry: SlotEntry, routineI
 
 
     const handleOnChange = (newValue: string) => {
-        // eslint-disable-next-line camelcase
-        editSlotEntryQuery.mutate({ id: props.slotEntry.id, weight_unit: parseInt(newValue), });
+        editSlotEntryQuery.mutate(SlotEntry.clone(props.slotEntry, { weightUnitId: parseInt(newValue) }));
     };
 
     return <>
@@ -146,22 +146,13 @@ export const SlotEntryWeightUnitField = (props: { slotEntry: SlotEntry, routineI
             onChange={e => handleOnChange(e.target.value)}
         >
             {options!.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
+                <MenuItem key={option.value} value={option.value ?? ''}>
                     {option.label}
                 </MenuItem>
             ))}
         </TextField>
     </>;
 };
-
-
-function debounce(func: (...args: any[]) => void, wait: number) {
-    let timeout: NodeJS.Timeout;
-    return (...args: any[]) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
-    };
-}
 
 type BaseSlotEntryRoundingFieldProps = {
     initialValue: number | null;
@@ -171,10 +162,11 @@ type BaseSlotEntryRoundingFieldProps = {
 
 type SlotEntryRoundingFieldProps =
     | (BaseSlotEntryRoundingFieldProps & { editProfile: true })
-    | (BaseSlotEntryRoundingFieldProps & { editProfile: false; entryId: number });
+    | (BaseSlotEntryRoundingFieldProps & { editProfile: false; slotEntry: SlotEntry });
 
 export const SlotEntryRoundingField = (props: SlotEntryRoundingFieldProps) => {
     const { t } = useTranslation();
+
     const editSlotEntryQuery = useEditSlotEntryQuery(props.routineId);
     const editProfileQuery = useEditProfileQuery();
 
@@ -182,17 +174,16 @@ export const SlotEntryRoundingField = (props: SlotEntryRoundingFieldProps) => {
 
     const debouncedSave = useCallback(
         debounce((newValue: string) => {
-            let parsedValue: number | null = parseFloat(newValue);
-            if (Number.isNaN(parsedValue)) {
-                parsedValue = null;
-            }
+            const parsedValue = isNaN(Number(newValue)) ? null : parseFloat(newValue);
 
-            // eslint-disable-next-line camelcase
-            const data = props.rounding === 'weight' ? { weight_rounding: parsedValue } : { reps_rounding: parsedValue };
+            const data = props.rounding === 'weight'
+                ? { weightRounding: parsedValue }
+                : { repetitionRounding: parsedValue };
+
             if (props.editProfile) {
                 editProfileQuery.mutate(data);
             } else {
-                editSlotEntryQuery.mutate({ id: props.entryId, ...data });
+                editSlotEntryQuery.mutate(SlotEntry.clone(props.slotEntry, data));
             }
         }, DEBOUNCE_ROUTINE_FORMS),
         []

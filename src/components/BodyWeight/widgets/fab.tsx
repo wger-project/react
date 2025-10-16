@@ -20,7 +20,7 @@ export const AddBodyWeightEntryFab = () => {
                 sx={{
                     position: 'fixed',
                     bottom: '5rem',
-                    right: (theme) => theme.spacing(2),
+                    right: (theme) => `max(${theme.spacing(2)}, calc((100vw - ${theme.breakpoints.values.lg}px) / 2 + ${theme.spacing(2)}))`,
                     zIndex: 9,
                 }}>
                 <AddIcon />

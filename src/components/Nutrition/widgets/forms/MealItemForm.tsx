@@ -1,18 +1,15 @@
 import { Button, InputAdornment, Stack, TextField } from "@mui/material";
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { MealItem } from "components/Nutrition/models/mealItem";
 import { useAddMealItemQuery, useDeleteMealItemQuery, useEditMealItemQuery } from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
 import { useTranslation } from "react-i18next";
-import { IngredientSearchResponse } from "services/responseType";
 import * as yup from "yup";
 
-type MealItemFormProps = {
-    planId: number,
-    mealId: number,
-    item?: MealItem,
-    closeFn?: () => void,
-}
+type MealItemFormProps =
+    | { planId: number; item: MealItem; closeFn?: () => void; mealId?: number }
+    | { planId: number; mealId: number; item?: undefined; closeFn?: () => void };
 
 export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProps) => {
 
@@ -23,7 +20,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
 
     const handleDelete = () => {
         if (item) {
-            deleteMealItemQuery.mutate(item.id);
+            deleteMealItemQuery.mutate(item.id!);
         }
 
         if (closeFn) {
@@ -52,17 +49,25 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
             validationSchema={validationSchema}
             onSubmit={async (values) => {
 
-                const data = {
-                    ...values,
-                    meal: mealId,
-                    // eslint-disable-next-line camelcase
-                    weight_unit: null
-                };
+                // Just to make sure we get a number
+                const newAmount = Math.round(values.amount);
 
                 if (item) {
-                    editMealItemQuery.mutate({ ...data, id: item.id });
+                    // Edit
+                    const newMealItem = MealItem.clone(item, {
+                        amount: newAmount,
+                        ingredientId: values.ingredient,
+                        weightUnitId: null,
+                    });
+                    editMealItemQuery.mutate(newMealItem);
                 } else {
-                    addMealItemQuery.mutate(data);
+                    // Add
+                    addMealItemQuery.mutate(new MealItem({
+                        mealId: mealId,
+                        amount: newAmount,
+                        ingredientId: values.ingredient,
+                        order: 1,
+                    }));
                 }
 
                 if (closeFn) {
@@ -74,8 +79,8 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                 <Form>
                     <Stack spacing={2}>
                         <IngredientAutocompleter
-                            callback={(value: IngredientSearchResponse | null) => formik.setFieldValue('ingredient', value ? value.data.id : null)}
-                            initialIngredient={item ? item.ingredient?.name : null}
+                            callback={(value: Ingredient | null) => formik.setFieldValue('ingredient', value ? value.id : null)}
+                            initialIngredient={item ? item.ingredient : null}
                         />
                         <TextField
                             fullWidth

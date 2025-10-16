@@ -69,7 +69,7 @@ describe("Test the add exercise step 4 component", () => {
                 />
             </QueryClientProvider>
         );
-        const button = screen.getByRole('checkbox');
+        const button = screen.getByRole('switch');
         await user.click(button);
 
         expect(screen.getByText("name")).toBeInTheDocument();
@@ -80,7 +80,7 @@ describe("Test the add exercise step 4 component", () => {
     test("Correctly saves the values to the provider", async () => {
         // Arrange
         const user = userEvent.setup();
-        const text = 'Der Armvernichter ist eine ein alter chinesische Kraftübung, die...';
+        // const text = 'Der Armvernichter ist eine ein alter chinesische Kraftübung, die...';
 
         // Act
         render(
@@ -91,7 +91,7 @@ describe("Test the add exercise step 4 component", () => {
                 />
             </QueryClientProvider>
         );
-        const button = screen.getByRole('checkbox');
+        const button = screen.getByRole('switch');
         await user.click(button);
 
         await user.click(screen.getByRole('combobox', { name: /language/i }));

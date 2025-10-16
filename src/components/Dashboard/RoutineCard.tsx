@@ -53,8 +53,8 @@ const RoutineCardContent = (props: { routine: Routine }) => {
         {/* Note: not 500 like the other cards, but a bit more since we don't have an action icon... */}
         <CardContent sx={{ height: "510px", overflow: "auto" }}>
             <List>
-                {props.routine.dayDataCurrentIteration.filter(dayData => dayData.day !== null).map((dayData, index) =>
-                    <DayListItem dayData={dayData} key={index} />)}
+                {props.routine.dayDataCurrentIterationNoNulls.map((dayData) =>
+                    <DayListItem dayData={dayData} key={`dayDetails-${dayData.date.toISOString()}`} />)}
             </List>
         </CardContent>
 
@@ -69,7 +69,6 @@ const RoutineCardContent = (props: { routine: Routine }) => {
 
 const DayListItem = (props: { dayData: RoutineDayData }) => {
     const [expandView, setExpandView] = useState(false);
-    const { t } = useTranslation();
 
     const handleToggleExpand = () => setExpandView(!expandView);
 

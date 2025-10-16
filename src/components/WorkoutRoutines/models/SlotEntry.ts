@@ -5,23 +5,55 @@ import { BaseConfig, BaseConfigAdapter } from "components/WorkoutRoutines/models
 import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
 import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
 import { Adapter } from "utils/Adapter";
+import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG } from "utils/consts";
 
 export type SlotEntryType = 'normal' | 'dropset' | 'myo' | 'partial' | 'forced' | 'tut' | 'iso' | 'jump';
 
+type ConstructorParamsType = {
+    id?: number | null,
+    slotId: number,
+    exerciseId: number,
+    exercise?: Exercise,
+    repetitionUnitId?: number,
+    repetitionUnit?: RepetitionUnit,
+    repetitionRounding?: number | null,
+    weightUnitId?: number,
+    weightRounding?: number | null,
+    weightUnit?: WeightUnit,
+    order?: number,
+    comment?: string,
+    type?: SlotEntryType
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any,
+    config?: any | null;
+    configs?: {
+        weightConfigs?: BaseConfig[],
+        maxWeightConfigs?: BaseConfig[],
+        repetitionsConfigs?: BaseConfig[],
+        maxRepetitionsConfigs?: BaseConfig[],
+        restTimeConfigs?: BaseConfig[],
+        maxRestTimeConfigs?: BaseConfig[],
+        nrOfSetsConfigs?: BaseConfig[],
+        maxNrOfSetsConfigs?: BaseConfig[],
+        rirConfigs?: BaseConfig[],
+        maxRirConfigs?: BaseConfig[],
+    }
+};
+
+
 export class SlotEntry {
 
-    id: number;
+    id: number | null = null;
     slotId: number;
     exerciseId: number;
     repetitionUnitId: number;
-    repetitionRounding: number;
+    repetitionRounding: number | null;
     weightUnitId: number;
-    weightRounding: number;
+    weightRounding: number | null;
     order: number;
     comment: string;
     type: SlotEntryType;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: any | null;
-
 
     weightConfigs: BaseConfig[] = [];
     maxWeightConfigs: BaseConfig[] = [];
@@ -39,46 +71,19 @@ export class SlotEntry {
     weightUnit: WeightUnit | null = null;
 
 
-    constructor(
-        data: {
-            id: number,
-            slotId: number,
-            exerciseId: number,
-            exercise?: Exercise,
-            repetitionUnitId: number,
-            repetitionRounding: number,
-            weightUnitId: number,
-            weightRounding: number,
-            order: number,
-            comment: string,
-            type: SlotEntryType,
-            config: any | null,
-            configs?: {
-                weightConfigs?: BaseConfig[],
-                maxWeightConfigs?: BaseConfig[],
-                repetitionsConfigs?: BaseConfig[],
-                maxRepetitionsConfigs?: BaseConfig[],
-                restTimeConfigs?: BaseConfig[],
-                maxRestTimeConfigs?: BaseConfig[],
-                nrOfSetsConfigs?: BaseConfig[],
-                maxNrOfSetsConfigs?: BaseConfig[],
-                rirConfigs?: BaseConfig[],
-                maxRirConfigs?: BaseConfig[],
-            }
-        }
-    ) {
-        this.id = data.id;
+    constructor(data: ConstructorParamsType) {
+        this.id = data.id ?? null;
         this.slotId = data.slotId;
         this.exerciseId = data.exerciseId;
         this.exercise = data.exercise;
-        this.repetitionUnitId = data.repetitionUnitId;
-        this.repetitionRounding = data.repetitionRounding;
-        this.weightUnitId = data.weightUnitId;
-        this.weightRounding = data.weightRounding;
-        this.order = data.order;
-        this.comment = data.comment;
-        this.type = data.type;
-        this.config = data.config;
+        this.repetitionUnitId = data.repetitionUnitId ?? REP_UNIT_REPETITIONS;
+        this.repetitionRounding = data.repetitionRounding ?? null;
+        this.weightUnitId = data.weightUnitId ?? WEIGHT_UNIT_KG;
+        this.weightRounding = data.weightRounding ?? null;
+        this.order = data.order ?? 1;
+        this.comment = data.comment ?? '';
+        this.type = data.type ?? 'normal';
+        this.config = data.config ?? null;
 
         if (data.configs !== undefined) {
             this.weightConfigs = data.configs.weightConfigs ?? [];
@@ -91,6 +96,16 @@ export class SlotEntry {
             this.maxNrOfSetsConfigs = data.configs.maxNrOfSetsConfigs ?? [];
             this.rirConfigs = data.configs.rirConfigs ?? [];
             this.maxRirConfigs = data.configs.maxRirConfigs ?? [];
+        }
+
+        if (data.weightUnit !== undefined) {
+            this.weightUnit = data.weightUnit;
+            this.weightUnitId = data.weightUnit.id;
+        }
+
+        if (data.repetitionUnit !== undefined) {
+            this.repetitionUnit = data.repetitionUnit;
+            this.repetitionUnitId = data.repetitionUnit.id;
         }
     }
 
@@ -106,12 +121,43 @@ export class SlotEntry {
             || this.rirConfigs.length > 1
             || this.maxRirConfigs.length > 1;
     }
+
+    static clone(other: SlotEntry, overrides?: Partial<ConstructorParamsType>): SlotEntry {
+        return new SlotEntry({
+            id: overrides?.id ?? other?.id,
+            exerciseId: overrides?.exerciseId ?? other.exerciseId,
+            exercise: overrides?.exercise ?? other.exercise,
+            slotId: overrides?.slotId ?? other.slotId,
+            config: overrides?.config ?? other.config,
+            type: overrides?.type ?? other.type,
+            order: overrides?.order ?? other.order,
+            comment: overrides?.comment ?? other.comment,
+
+            repetitionUnit: overrides?.repetitionUnit ?? (other.repetitionUnit ?? undefined),
+            repetitionUnitId: overrides?.repetitionUnitId ?? other.repetitionUnitId,
+            repetitionRounding: overrides?.repetitionRounding ?? other.repetitionRounding,
+
+            weightUnit: overrides?.weightUnit ?? (other.weightUnit ?? undefined),
+            weightUnitId: overrides?.weightUnitId ?? other.weightUnitId,
+            weightRounding: overrides?.weightRounding ?? other.weightRounding,
+        });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static fromJson(json: any) {
+        return adapter.fromJson(json);
+    }
+
+    toJson() {
+        return adapter.toJson(this);
+    }
 }
 
 
-export class SlotEntryAdapter implements Adapter<SlotEntry> {
+class SlotEntryAdapter implements Adapter<SlotEntry> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson = (item: any) => {
-        const adapter = new BaseConfigAdapter();
+        const baseConfigAdapter = new BaseConfigAdapter();
 
         const configs = {
             weightConfigs: [],
@@ -126,34 +172,44 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
             maxRirConfigs: [],
         };
         if (Object.hasOwn(item, 'weight_configs')) {
-            configs.weightConfigs = item.weight_configs.map((config: any) => adapter.fromJson(config));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            configs.weightConfigs = item.weight_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_weight_configs')) {
-            configs.maxWeightConfigs = item.max_weight_configs.map((config: any) => adapter.fromJson(config));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            configs.maxWeightConfigs = item.max_weight_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'repetitions_configs')) {
-            configs.repetitionsConfigs = item.repetitions_configs.map((config: any) => adapter.fromJson(config));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            configs.repetitionsConfigs = item.repetitions_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_repetitions_configs')) {
-            configs.maxRepetitionsConfigs = item.max_repetitions_configs.map((config: any) => adapter.fromJson(config));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            configs.maxRepetitionsConfigs = item.max_repetitions_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'set_nr_configs')) {
-            configs.nrOfSetsConfigs = item.set_nr_configs.map((config: any) => adapter.fromJson(config));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            configs.nrOfSetsConfigs = item.set_nr_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_set_nr_configs')) {
-            configs.maxNrOfSetsConfigs = item.max_set_nr_configs.map((config: any) => adapter.fromJson(config));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            configs.maxNrOfSetsConfigs = item.max_set_nr_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'rest_configs')) {
-            configs.restTimeConfigs = item.rest_configs.map((config: any) => adapter.fromJson(config));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            configs.restTimeConfigs = item.rest_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_rest_configs')) {
-            configs.maxRestTimeConfigs = item.max_rest_configs.map((config: any) => adapter.fromJson(config));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            configs.maxRestTimeConfigs = item.max_rest_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'rir_configs')) {
-            configs.rirConfigs = item.rir_configs.map((config: any) => adapter.fromJson(config));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            configs.rirConfigs = item.rir_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
         if (Object.hasOwn(item, 'max_rir_configs')) {
-            configs.maxRirConfigs = item.max_rir_configs.map((config: any) => adapter.fromJson(config));
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            configs.maxRirConfigs = item.max_rir_configs.map((config: any) => baseConfigAdapter.fromJson(config));
         }
 
         return new SlotEntry({
@@ -186,4 +242,4 @@ export class SlotEntryAdapter implements Adapter<SlotEntry> {
     });
 }
 
-export const slotEntryAdapter = new SlotEntryAdapter();
+const adapter = new SlotEntryAdapter();

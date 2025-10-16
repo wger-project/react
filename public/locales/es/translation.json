@@ -119,7 +119,7 @@
     "language": "Lenguaje",
     "goBack": "Atrás",
     "forms": {
-        "supportedImageFormats": "Solo se admiten archivos JPEG, PNG y WEBP de menos de 20 Mb",
+        "supportedImageFormats": "Solo se admiten archivos JPEG, PNG, WEBP y AVIF de menos de 20 Mb",
         "valueTooShort": "El valor es demasiado corto",
         "valueTooLong": "El valor es demasiado largo",
         "fieldRequired": "Este campo es obligatorio",
@@ -167,7 +167,7 @@
         "addSuperset": "Añadir superset",
         "addExercise": "Añadir ejercicio",
         "exerciseNr": "Ejercicio {{number}}",
-        "supersetNr": "",
+        "supersetNr": "Superserie {{number}}",
         "editProgression": "Editar progreso",
         "progressionNeedsReplace": "Una de las entradas anteriores debe tener ser reemplazada",
         "exerciseHasProgression": "Este ejercicio tiene reglas de progresión y no se puede editar aquí. Para hacerlo, haga clic en el botón.",
@@ -197,13 +197,14 @@
         "publicTemplates": "Plantillas públicas",
         "set": {
             "dropSet": "Borrar conjunto",
-            "myo": "",
-            "tut": "",
+            "myo": "Técnica MYO",
+            "tut": "Trabajo bajo tensión",
             "normalSet": "Conjunto normal",
             "partial": "Parcial",
             "forced": "Forzado",
             "type": "Tipo",
-            "jump": "Salto"
+            "jump": "Salto",
+            "iso": "ISO"
         },
         "roundingHelp": "Establezca el redondeo predeterminado para obtener peso y repeticiones (esto es especialmente útil cuando se usan incrementos porcentuales en la progresión). Esto se aplicará a todos los conjuntos nuevos, pero se puede cambiar individualmente en el formulario de progresión. Deja vacío para deshabilitar el redondeo.",
         "maxLengthRoutine": "La rutina debe tener como mucho {{number}} semanas",
@@ -320,13 +321,15 @@
         "result": "Su IMC es {{value}}"
     },
     "editName": "Editar {{name}}",
-    "start": "Inicio",
+    "start": "Comenzar",
     "end": "Fin",
     "comment": "Comentar",
-    "min": "Min",
-    "max": "Max",
+    "min": "Mínimo",
+    "max": "Máximo",
     "durationWeeks": "{{number}} semanas",
     "durationWeeksDays": "{{nrWeeks}} semanas, {{nrDays}} días",
     "undo": "Deshacer",
-    "successfullyDeleted": "Borrado completado"
+    "successfullyDeleted": "Borrado completado",
+    "public": "Público",
+    "private": "Privado"
 }

@@ -1,5 +1,6 @@
 import { Box, Button, Stack } from "@mui/material";
 import Grid from '@mui/material/Grid';
+import { useLanguageCheckQuery } from "components/Core/queries";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
@@ -10,16 +11,18 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useExerciseSubmissionStateValue } from "state";
 import { setDescriptionEn, setNotesEn } from "state/exerciseSubmissionReducer";
+import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 import * as yup from "yup";
 
 
 export const Step3Description = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
     const [state, dispatch] = useExerciseSubmissionStateValue();
+    const languageCheckQuery = useLanguageCheckQuery();
 
     const validationSchema = yup.object({
-        description: descriptionValidator(t),
-        notes: noteValidator(t)
+        description: descriptionValidator(),
+        notes: noteValidator()
     });
 
     return (
@@ -29,10 +32,31 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
                 notes: state.notesEn,
             }}
             validationSchema={validationSchema}
-            onSubmit={values => {
+            onSubmit={async (values, { setFieldError }) => {
+                let canContinue = false;
+
+                const validationResult = await languageCheckQuery.mutateAsync({
+                    input: values.description,
+                    languageId: ENGLISH_LANGUAGE_ID
+                });
+
+                // @ts-ignore - validationResult contains the message from the backend
+                if ("success" in validationResult) {
+                    canContinue = true;
+                } else {
+                    canContinue = false;
+
+                    // @ts-ignore - validationResult contains the message from the backend
+                    setFieldError('description', validationResult.check.message);
+                }
+
                 dispatch(setDescriptionEn(values.description));
                 dispatch(setNotesEn(values.notes));
-                onContinue!();
+
+                if (canContinue) {
+                    onContinue!();
+                }
+
             }}
         >
             <Form>
@@ -56,6 +80,7 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
                                     <Button
                                         variant="contained"
                                         type="submit"
+                                        disabled={languageCheckQuery.isPending}
                                         sx={{ mt: 1, mr: 1 }}
                                     >
                                         {t('continue')}

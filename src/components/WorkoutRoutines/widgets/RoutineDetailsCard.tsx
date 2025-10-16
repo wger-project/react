@@ -111,17 +111,19 @@ export function SetConfigDataDetails(props: {
 }
 
 
-function SlotDataList(props: {
-    slotData: SlotData,
-    index: number,
-}) {
+function SlotDataList(props: { slotData: SlotData }) {
     return (
         <Grid
             container
-            justifyContent="space-between"
             alignItems="flex-start"
+            columnGap={1}
+            wrap="nowrap"
         >
-            <Grid size={1}>
+            <Grid
+                sx={{
+                    flex: '0 0 50px',
+                }}
+            >
                 <Stack divider={<Box height="10px" />}>
                     {props.slotData.exercises.map((exercise, index) =>
                         <ExerciseImageAvatar
@@ -134,28 +136,32 @@ function SlotDataList(props: {
                 </Stack>
             </Grid>
 
-            <Grid size={11}>
+            <Grid
+                sx={{ flex: '1 1 auto', minWidth: 0 }}
+            >
                 {props.slotData.setConfigs.map((setConfig, index) => {
-                        // Only show the name of the exercise the first time it appears
-                        const showExercise = index === 0 || setConfig.exerciseId !== props.slotData.setConfigs[index - 1]?.exerciseId;
-                        return <SetConfigDataDetails
-                            setConfigData={setConfig}
-                            marginBottom="1em"
-                            key={index}
-                            showExercise={showExercise}
-                        />;
-                    }
-                )}
+                    const showExercise = index === 0 || setConfig.exerciseId !== props.slotData.setConfigs[index - 1]?.exerciseId;
+                    return <SetConfigDataDetails
+                        setConfigData={setConfig}
+                        marginBottom="1em"
+                        key={index}
+                        showExercise={showExercise}
+                    />;
+                })}
             </Grid>
         </Grid>
     );
 }
+
 
 export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: number, readOnly?: boolean }) => {
     const readOnly = (props.readOnly ?? false) || props.dayData.day === null || props.dayData.day.isRest;
 
     const theme = useTheme();
     const [t, i18n] = useTranslation();
+
+    const isToday = isSameDay(props.dayData.date, new Date());
+    const subheader = <Typography sx={{ whiteSpace: 'pre-line' }}>{props.dayData.day?.description}</Typography>;
 
     return (
         <Card sx={{ minWidth: 275 }}>
@@ -167,24 +173,21 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
                         <IconButton
                             href={makeLink(WgerLink.ROUTINE_ADD_LOG, i18n.language, {
                                 id: props.routineId,
-                                id2: props.dayData.day!.id
+                                id2: props.dayData.day!.id!
                             })}>
                             <Addchart />
                         </IconButton>
                     </Tooltip>}
-                title={getDayName(props.dayData.day)}
-                avatar={isSameDay(props.dayData.date, new Date()) ? <TodayIcon /> : undefined}
-                subheader={<Typography sx={{ whiteSpace: 'pre-line' }}>{props.dayData.day?.description}</Typography>}
+                title={<Typography variant={"h5"}>{getDayName(props.dayData.day)}</Typography>}
+                avatar={isToday ? <TodayIcon /> : null}
+                subheader={subheader}
             />
             {props.dayData.slots.length > 0 && <CardContent sx={{ padding: 0, marginBottom: 0 }}>
                 <Stack>
                     {props.dayData.slots.map((slotData, index) => (
                         <div key={index}>
                             <Box padding={1}>
-                                <SlotDataList
-                                    slotData={slotData}
-                                    index={index}
-                                />
+                                <SlotDataList slotData={slotData} />
                             </Box>
                             <Divider />
                         </div>

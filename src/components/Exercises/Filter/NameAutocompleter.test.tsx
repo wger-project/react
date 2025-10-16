@@ -26,7 +26,7 @@ describe("Test the NameAutocompleter component", () => {
         });
 
         // Assert
-        expect(searchExerciseTranslations).not.toBeCalled();
+        expect(searchExerciseTranslations).not.toHaveBeenCalled();
         fireEvent.input(input, { target: { value: 'Cru' } });
 
         expect(screen.getByLabelText("exercises.searchExerciseName")).toBeInTheDocument();
@@ -40,7 +40,7 @@ describe("Test the NameAutocompleter component", () => {
         await act(async () => {
             await new Promise((r) => setTimeout(r, 250));
         });
-        expect(searchExerciseTranslations).toBeCalled();
+        expect(searchExerciseTranslations).toHaveBeenCalled();
         expect(screen.getByText("Crunches an Negativbank")).toBeInTheDocument();
         expect(screen.getByText("Bauch")).toBeInTheDocument();
         expect(screen.getByText("Crunches am Seil")).toBeInTheDocument();
@@ -71,6 +71,6 @@ describe("Test the NameAutocompleter component", () => {
         });
 
         // Assert
-        expect(mockCallback).lastCalledWith(searchResponse[0]);
+        expect(mockCallback).toHaveBeenLastCalledWith(searchResponse[0]);
     });
 });

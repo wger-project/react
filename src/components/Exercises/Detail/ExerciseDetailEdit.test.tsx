@@ -208,7 +208,7 @@ describe("Exercise translation edit tests", () => {
         window.focus = () => {
         };
 
-        const wrapper = screen.getByTestId('jodit-editor');
+        // const wrapper = screen.getByTestId('jodit-editor');
 
         //const textarea = container.querySelector('textarea');
         //await user.click(textarea!);

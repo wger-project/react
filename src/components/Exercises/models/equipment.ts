@@ -16,6 +16,7 @@ export class Equipment {
 }
 
 export class EquipmentAdapter implements Adapter<Equipment> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any): Equipment {
         return new Equipment(
             item.id,

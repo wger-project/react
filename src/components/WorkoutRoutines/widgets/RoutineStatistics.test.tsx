@@ -150,7 +150,6 @@ describe('Tests for the getFullStatsData function', () => {
             mockExerciseList,
             mockMuscleList,
             mockLanguage,
-            'en',
         );
 
         expect(result.headers).toEqual(['Finger muscle', 'Shoulders']);
@@ -182,7 +181,6 @@ describe('Tests for the getFullStatsData function', () => {
             mockExerciseList,
             mockMuscleList,
             mockLanguage,
-            'en',
         );
         expect(result.headers).toEqual(["Benchpress", "Crunches"]);
         expect(result.data).toEqual([
@@ -215,12 +213,11 @@ describe('Tests for the getFullStatsData function', () => {
             mockExerciseList,
             mockMuscleList,
             mockLanguage,
-            'en',
         );
         expect(result.headers).toEqual(['Finger muscle', 'Shoulders']);
         expect(result.data).toEqual([
-            { key: "3/1/2024", values: [15, 10] },
-            { key: "3/3/2024", values: [18, 12] }
+            { key: "03/01/24", values: [15, 10] },
+            { key: "03/03/24", values: [18, 12] }
         ]);
         expect(result.totals).toEqual({ "Finger muscle": 33, "Shoulders": 22 });
     });

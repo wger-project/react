@@ -7,6 +7,7 @@ import { RoutineTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTa
 import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
 import { DayDetails, DayDragAndDropGrid } from "components/WorkoutRoutines/widgets/DayDetails";
 import { RoutineForm } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
+import { RoutineTemplateForm } from "components/WorkoutRoutines/widgets/forms/RoutineTemplateForm";
 import { RoutineDetailsCard } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -32,20 +33,26 @@ export const RoutineEdit = () => {
         return <p>Error: {routineQuery.error.message}</p>;
     }
 
-    if (selectedDayIndex === null && routineQuery.data!.days.length > 0) {
+    const routine = routineQuery.data!;
+
+    if (selectedDayIndex === null && routine.days.length > 0) {
         setSelectedDayIndex(0);
     }
 
 
     return <WgerContainerFullWidth
-        title={t('editName', { name: routineQuery.data?.name })}
+        title={t('editName', { name: routine.name })}
         backToUrl={makeLink(WgerLink.ROUTINE_DETAIL, i18n.language, { id: routineId })}
     >
-        <Grid container>
-            <Grid size={12}>
-                <RoutineForm routine={routineQuery.data!} />
-            </Grid>
+        <Grid container spacing={2}>
 
+            <Grid size={routine.isTemplate ? 8 : 12}>
+                <RoutineForm existingRoutine={routine} />
+            </Grid>
+            {routine.isTemplate && <Grid size={4}>
+                <Box height={20} />
+                <RoutineTemplateForm routine={routine} />
+            </Grid>}
 
             <Grid size={12}>
                 <Box height={20} />
@@ -59,7 +66,7 @@ export const RoutineEdit = () => {
                 <Grid size={12} sx={{ backgroundColor: theme.palette.grey[100], padding: 1 }}>
                     <Box>
                         <DayDetails
-                            day={routineQuery.data!.days[selectedDayIndex]}
+                            day={routine.days[selectedDayIndex]}
                             routineId={routineId}
                             setSelectedDayIndex={setSelectedDayIndex}
                         />

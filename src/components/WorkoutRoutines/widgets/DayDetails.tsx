@@ -27,13 +27,14 @@ import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter"
 import { useProfileQuery } from "components/User/queries/profile";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
+import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
 import {
     useAddDayQuery,
     useAddSlotEntryQuery,
     useAddSlotQuery,
     useDeleteSlotQuery,
     useEditDayOrderQuery,
-    useEditSlotOrderQuery,
+    useEditSlotsQuery,
     useRoutineDetailQuery
 } from "components/WorkoutRoutines/queries";
 import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
@@ -42,7 +43,6 @@ import { SlotDetails } from "components/WorkoutRoutines/widgets/SlotDetails";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { AddDayParams } from "services/day";
 import { ExerciseSearchResponse } from "services/responseType";
 import { SNACKBAR_AUTO_HIDE_DURATION, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
@@ -90,20 +90,16 @@ export const DayDragAndDropGrid = (props: {
         props.setSelectedDayIndex(result.destination.index);
 
         routineQuery.data!.days = updatedDays;
-        editDayOrderQuery.mutate(updatedDays.map((day, index) => ({ id: day.id, order: index + 1 })));
+        editDayOrderQuery.mutate(updatedDays.map((day, index) => (Day.clone(day, { order: index + 1 }))));
     };
 
     const handleAddDay = async () => {
-        const newDayData: AddDayParams = {
-            routine: props.routineId,
+        const newDay = new Day({
+            routineId: props.routineId,
             name: `${t('routines.newDay')} ${routineQuery.data!.days.length + 1}`,
             order: routineQuery.data!.days.length + 1,
-            // eslint-disable-next-line camelcase
-            is_rest: false,
-            // eslint-disable-next-line camelcase
-            need_logs_to_advance: false,
-        };
-        const newDay = await addDayQuery.mutateAsync(newDayData);
+        });
+        await addDayQuery.mutateAsync(newDay);
         props.setSelectedDayIndex(routineQuery.data!.days.length);
     };
 
@@ -128,7 +124,7 @@ export const DayDragAndDropGrid = (props: {
                                     style={getListStyle(snapshot.isDraggingOver)}
                                 >
                                     {routineQuery.data!.days.map((day, index) =>
-                                        <Draggable key={day.id} draggableId={day.id.toString()} index={index}>
+                                        <Draggable key={day.id} draggableId={day.id!.toString()} index={index}>
                                             {(provided, snapshot) => (
                                                 <Tab
                                                     ref={provided.innerRef}
@@ -139,7 +135,7 @@ export const DayDragAndDropGrid = (props: {
                                                         provided.draggableProps.style ?? {}
                                                     )}
 
-                                                    label={day.getDisplayName()}
+                                                    label={day.displayName}
                                                     value={day.id}
                                                     icon={<DragIndicatorIcon />}
                                                     iconPosition="start"
@@ -158,7 +154,6 @@ export const DayDragAndDropGrid = (props: {
                             onClick={handleAddDay}
                             disabled={addDayQuery.isPending}
                         >
-
                             {t('routines.addDay')}
                         </Button>
 
@@ -188,7 +183,7 @@ export const DayDetails = (props: {
     const deleteSlotQuery = useDeleteSlotQuery(props.routineId);
     const addSlotEntryQuery = useAddSlotEntryQuery(props.routineId);
     const addSlotQuery = useAddSlotQuery(props.routineId);
-    const editSlotOrderQuery = useEditSlotOrderQuery(props.routineId);
+    const editSlotOrderQuery = useEditSlotsQuery(props.routineId);
     const userProfileQuery = useProfileQuery();
     const theme = useTheme();
 
@@ -204,7 +199,7 @@ export const DayDetails = (props: {
         if (slotToDelete !== null) {
             if (reason === 'timeout') {
                 // Delete on the server
-                deleteSlotQuery.mutate(slotToDelete.id);
+                deleteSlotQuery.mutate(slotToDelete.id!);
                 setSlotToDelete(null);
             } else if (reason !== 'clickaway') {
                 // Undo the deletion - re-add the slot using its sort value
@@ -244,7 +239,10 @@ export const DayDetails = (props: {
         return;
     };
 
-    const handleAddSlot = () => addSlotQuery.mutate({ day: props.day.id, order: props.day.slots.length + 1 });
+    const handleAddSlot = () => addSlotQuery.mutate(new Slot({
+        dayId: props.day.id!,
+        order: props.day.slots.length + 1
+    }));
 
     /*
      * Drag'n'drop
@@ -261,7 +259,7 @@ export const DayDetails = (props: {
         const [movedSlot] = updatedSlots.splice(result.source.index, 1);
         updatedSlots.splice(result.destination.index, 0, movedSlot);
 
-        editSlotOrderQuery.mutate(updatedSlots.map((slot, index) => ({ id: slot.id, order: index + 1 })));
+        editSlotOrderQuery.mutate(updatedSlots.map((slot, index) => (Slot.clone(slot, { order: index + 1 }))));
         props.day.slots = updatedSlots;
     };
 
@@ -304,7 +302,7 @@ export const DayDetails = (props: {
                         style={getListStyle(snapshot.isDraggingOver)}
                     >
                         {props.day.slots.map((slot, index) => <React.Fragment key={`slot-${slot.id}-${index}`}>
-                            <Draggable key={slot.id} draggableId={slot.id.toString()} index={index}>
+                            <Draggable key={slot.id} draggableId={slot.id!.toString()} index={index}>
                                 {(provided, snapshot) => (
                                     <Grid container padding={1}
                                           ref={provided.innerRef}
@@ -327,7 +325,7 @@ export const DayDetails = (props: {
                                                             <DragIndicatorIcon />
                                                         </IconButton>
 
-                                                        <IconButton onClick={() => handleDeleteSlot(slot.id)}>
+                                                        <IconButton onClick={() => handleDeleteSlot(slot.id!)}>
                                                             <DeleteIcon />
                                                         </IconButton>
                                                         {slot.entries.length > 1 ? t('routines.supersetNr', { number: index + 1 }) : t('routines.exerciseNr', { number: index + 1 })}
@@ -337,7 +335,7 @@ export const DayDetails = (props: {
                                                 <Grid>
                                                     {slot.entries.length > 0 && <ButtonGroup variant="outlined">
                                                         <Button
-                                                            onClick={() => handleAddSlotEntry(slot.id)}
+                                                            onClick={() => handleAddSlotEntry(slot.id!)}
                                                             size={"small"}
                                                             disabled={addSlotEntryQuery.isPending}
                                                             startIcon={addSlotEntryQuery.isPending ?
@@ -354,7 +352,7 @@ export const DayDetails = (props: {
                                                                 size={"small"}
                                                                 to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {
                                                                     id: props.routineId,
-                                                                    id2: slot.id
+                                                                    id2: slot.id!
                                                                 })}
                                                             >
                                                                 {t('routines.editProgression')}
@@ -387,14 +385,13 @@ export const DayDetails = (props: {
                                                         if (exercise === null) {
                                                             return;
                                                         }
-                                                        addSlotEntryQuery.mutate({
-                                                            slot: slot.id,
-                                                            exercise: exercise.data.base_id,
+                                                        addSlotEntryQuery.mutate(new SlotEntry({
+                                                            slotId: slot.id!,
+                                                            exerciseId: exercise.data.base_id,
                                                             type: 'normal',
                                                             order: slot.entries.length + 1,
-                                                            // eslint-disable-next-line camelcase
-                                                            weight_unit: userProfileQuery.data!.useMetric ? WEIGHT_UNIT_KG : WEIGHT_UNIT_LB,
-                                                        });
+                                                            weightUnitId: userProfileQuery.data!.useMetric ? WEIGHT_UNIT_KG : WEIGHT_UNIT_LB,
+                                                        }));
                                                         setShowAutocompleterForSlot(null);
                                                     }}
                                                 />

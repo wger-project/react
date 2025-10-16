@@ -50,6 +50,7 @@ export class Translation {
 
 
 export class TranslationAdapter implements Adapter<Translation> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any): Translation {
         return new Translation(
             item.id,
@@ -57,7 +58,9 @@ export class TranslationAdapter implements Adapter<Translation> {
             item.name,
             item.description,
             item.language,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             item.notes?.map((e: any) => (new NoteAdapter().fromJson(e))),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             item.aliases?.map((e: any) => (new AliasAdapter().fromJson(e))),
             item.author_history
         );

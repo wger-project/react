@@ -1,69 +1,83 @@
-import { SlotEntry, slotEntryAdapter } from "components/WorkoutRoutines/models/SlotEntry";
+import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
 import { Adapter } from "utils/Adapter";
 
 export type SlotApiData = {
     id: number,
     day: number,
     order: number,
-    comment: string
-    config: any
-    entries?: any[]
+    comment: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    config: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    entries?: any[],
 }
 
 type SlotConstructorParams = {
-    id: number;
+    id?: number;
     dayId: number;
-    order: number;
-    comment: string;
-    config: object | null;
+    order?: number;
+    comment?: string;
+    config?: object | null;
     entries?: SlotEntry[];
 };
 
 export class Slot {
 
-    id: number;
+    id: number | null = null;
     dayId: number;
-    order: number;
-    comment: string;
-    config: object | null;
+    order: number = 1;
+    comment: string = '';
+    config: object | null = null;
 
     entries: SlotEntry[] = [];
 
-    constructor({
-                    id,
-                    dayId,
-                    order,
-                    comment,
-                    config,
-                    entries = []
-                }: SlotConstructorParams) {
-        this.id = id;
-        this.dayId = dayId;
-        this.order = order;
-        this.comment = comment;
-        this.config = config;
-        this.entries = entries;
+    constructor(data: SlotConstructorParams) {
+        this.dayId = data.dayId;
+
+        Object.assign(this, data || {});
+    }
+
+    static clone(other: Slot, overrides?: Partial<SlotConstructorParams>): Slot {
+        return new Slot({
+            id: overrides?.id ?? other.id ?? undefined,
+            dayId: overrides?.dayId ?? other.dayId,
+            order: overrides?.order ?? other.order,
+            comment: overrides?.comment ?? other.comment,
+            config: overrides?.config ?? other.config,
+            // entries: overrides?.entries ?? other.entries.map(entry => SlotEntry.clone(entry))
+        });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static fromJson(json: any): Slot {
+        return adapter.fromJson(json);
+    }
+
+    toJson() {
+        return adapter.toJson(this);
     }
 }
 
 
-export class SlotAdapter implements Adapter<Slot> {
+class SlotAdapter implements Adapter<Slot> {
     fromJson = (item: SlotApiData) => new Slot({
         id: item.id,
         dayId: item.day,
         order: item.order,
         comment: item.comment,
         config: item.config,
-        entries: Object.hasOwn(item, 'entries') ? item.entries!.map((entry: any) => slotEntryAdapter.fromJson(entry)) : []
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        entries: Object.hasOwn(item, 'entries') ? item.entries!.map((entry: any) => SlotEntry.fromJson(entry)) : []
     });
 
-    toJson(item: Slot) {
+    toJson(item: Slot): Partial<SlotApiData> {
         return {
-            id: item.id,
             day: item.dayId,
             order: item.order,
-            comment: item.order,
-            config: item.config
+            comment: item.comment,
+            config: item.config,
         };
     }
 }
+
+const adapter = new SlotAdapter();

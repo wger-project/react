@@ -150,11 +150,11 @@ describe("Test the nutritional plan model", () => {
     test('the planned helper getters work correctly', async () => {
 
         // Act
-        const plan = new NutritionalPlan(
-            1,
-            new Date(),
-            'test 1',
-        );
+        const plan = new NutritionalPlan({
+            id: 1,
+            creationDate: new Date(),
+            description: 'test 1',
+        });
 
         // Assert
         expect(plan.hasAnyPlanned).toBe(false);

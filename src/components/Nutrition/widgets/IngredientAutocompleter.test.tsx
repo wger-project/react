@@ -2,7 +2,7 @@ import { act, render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { IngredientAutocompleter } from 'components/Nutrition/widgets/IngredientAutcompleter';
 import { searchIngredient } from 'services';
-import { INGREDIENT_SEARCH } from "tests/api/ingredientSearch";
+import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "tests/ingredientTestdata";
 
 jest.mock("services");
 
@@ -11,7 +11,7 @@ describe("Test the IngredientAutocompleter component", () => {
     // Arrange
     const mockCallback = jest.fn();
     beforeEach(() => {
-        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve(INGREDIENT_SEARCH));
+        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
     });
 
     test('renders correct results', async () => {
@@ -30,8 +30,8 @@ describe("Test the IngredientAutocompleter component", () => {
             await new Promise((r) => setTimeout(r, 250));
         });
         expect(searchIngredient).toHaveBeenCalled();
-        expect(screen.getByText('Blue cheese')).toBeInTheDocument();
-        expect(screen.getByText('Baguette with cheese')).toBeInTheDocument();
+        expect(screen.getByText('0% fat Greek style yogurt')).toBeInTheDocument();
+        expect(screen.getByText('1001 Nacht Haferbrei')).toBeInTheDocument();
     });
 
     test('callback was correctly called', async () => {
@@ -50,11 +50,11 @@ describe("Test the IngredientAutocompleter component", () => {
             await new Promise((r) => setTimeout(r, 250));
         });
 
-        // Select first result
+        // Select the first result
         await user.click(input);
         await user.keyboard('{ArrowDown}{Enter}');
 
         // Assert
-        expect(mockCallback).lastCalledWith(INGREDIENT_SEARCH[0]);
+        expect(mockCallback).toHaveBeenLastCalledWith(TEST_INGREDIENT_1);
     });
 });

@@ -26,12 +26,10 @@ import {
     Calendar,
     CaloriesCalculator,
     Equipments,
-    Gallery,
     Ingredients,
     Login,
     Preferences,
     WeightOverview,
-    Workout,
 } from "pages";
 import { ExerciseDetailPage } from "pages/ExerciseDetails";
 import React from "react";
@@ -46,10 +44,6 @@ import { Route, Routes } from "react-router-dom";
 export const WgerRoutes = () => {
     return <Routes>
         <Route path="/:lang">
-            <Route path="workout">
-                <Route path="overview" element={<Workout />} />
-                <Route path="gallery" element={<Gallery />} />
-            </Route>
 
             <Route path="routine">
                 <Route index element={<RoutineOverview />} />

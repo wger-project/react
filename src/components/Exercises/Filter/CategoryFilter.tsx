@@ -23,7 +23,6 @@ const CategoryFilterList = () => {
 
     const { data: categories, isLoading } = useCategoriesQuery();
     const { selectedCategories, setSelectedCategories } = useContext(ExerciseFiltersContext);
-    const [t] = useTranslation();
 
     const handleToggle = (value: Category) => () => {
         const currentIndex = selectedCategories.indexOf(value);

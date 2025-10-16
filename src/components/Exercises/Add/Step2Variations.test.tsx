@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Step2Variations } from "components/Exercises/Add/Step2Variations";
+
 import { useExercisesQuery } from "components/Exercises/queries";
 import React from "react";
 import { ExerciseSubmissionStateProvider } from "state";
@@ -127,7 +128,7 @@ describe("Test the add exercise step 2 component", () => {
                 <Step2Variations onContinue={mockOnContinue} />
             </QueryClientProvider>
         );
-        const input = screen.getByLabelText('exercises.filterVariations');
+        const input = screen.getByRole('textbox', { name: /name/i });
 
         // Assert
         expect(screen.getByText("Benchpress")).toBeInTheDocument();

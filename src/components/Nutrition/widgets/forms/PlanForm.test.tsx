@@ -45,6 +45,7 @@ describe("Test the PlanForm component", () => {
         // Arrange
         const user = userEvent.setup();
 
+
         // Act
         render(
             <QueryClientProvider client={queryClient}>
@@ -57,22 +58,17 @@ describe("Test the PlanForm component", () => {
 
         // Assert
         await user.click(screen.getByRole('button', { name: 'submit' }));
-        expect(mutate).toHaveBeenCalledWith({
-            id: 101,
-            description: "a better name",
-            // eslint-disable-next-line camelcase
-            goal_carbohydrates: null,
-            // eslint-disable-next-line camelcase
-            goal_fiber: null,
-            // eslint-disable-next-line camelcase
-            goal_energy: null,
-            // eslint-disable-next-line camelcase
-            goal_fat: null,
-            // eslint-disable-next-line camelcase
-            goal_protein: null,
-            // eslint-disable-next-line camelcase
-            only_logging: false,
-        });
+        expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
+                id: 101,
+                description: "a better name",
+                goalCarbohydrates: null,
+                goalFiber: null,
+                goalEnergy: null,
+                goalFat: null,
+                goalProtein: null,
+                onlyLogging: false,
+            })
+        );
     });
 
     test('Creating a new plan', async () => {
@@ -91,20 +87,15 @@ describe("Test the PlanForm component", () => {
 
         // Assert
         await user.click(screen.getByRole('button', { name: 'submit' }));
-        expect(mutate).toHaveBeenCalledWith({
-            description: 'a new, cool plan',
-            // eslint-disable-next-line camelcase
-            only_logging: true,
-            // eslint-disable-next-line camelcase
-            goal_carbohydrates: null,
-            // eslint-disable-next-line camelcase
-            goal_energy: null,
-            // eslint-disable-next-line camelcase
-            goal_fat: null,
-            // eslint-disable-next-line camelcase
-            goal_protein: null,
-            // eslint-disable-next-line camelcase
-            goal_fiber: null,
-        });
+        expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
+                description: 'a new, cool plan',
+                onlyLogging: true,
+                goalCarbohydrates: null,
+                goalEnergy: null,
+                goalFat: null,
+                goalProtein: null,
+                goalFiber: null,
+            })
+        );
     });
 });

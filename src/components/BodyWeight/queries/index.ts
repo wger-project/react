@@ -28,10 +28,7 @@ export const useAddWeightEntryQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: WeightEntry) => createWeight(data),
-        onError: (error: any) => {
-            console.log(error);
-        },
+        mutationFn: (weightEntry: WeightEntry) => createWeight(weightEntry),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.BODY_WEIGHT,]
         })

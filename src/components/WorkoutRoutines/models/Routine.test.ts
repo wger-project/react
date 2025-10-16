@@ -1,4 +1,5 @@
-import { Routine } from "components/WorkoutRoutines/models/Routine";
+import { DEFAULT_WORKOUT_DURATION, Routine } from "components/WorkoutRoutines/models/Routine";
+import { DateTime } from "luxon";
 import {
     testMuscleBiggus,
     testMuscleDacttilaris,
@@ -6,6 +7,7 @@ import {
     testMuscleRectusAbdominis
 } from "tests/exerciseTestdata";
 import { testRoutine1, testRoutineDayData1 } from "tests/workoutRoutinesTestData";
+import { isSameDay } from "utils/date";
 
 describe('Routine model tests', () => {
 
@@ -15,6 +17,27 @@ describe('Routine model tests', () => {
         routine = testRoutine1;
     });
 
+
+    test('Correctly initialises the object with default values', () => {
+        // Arrange
+        const testRoutine = new Routine();
+
+        // Assert
+        expect(testRoutine.id).toEqual(null);
+        expect(testRoutine.name).toEqual('');
+        expect(testRoutine.description).toEqual('');
+        expect(isSameDay(testRoutine.created, new Date())).toBeTruthy();
+        expect(isSameDay(testRoutine.start, new Date())).toBeTruthy();
+        expect(isSameDay(
+            testRoutine.end,
+            DateTime.local().plus({ weeks: DEFAULT_WORKOUT_DURATION }).toJSDate()
+        )).toBeTruthy();
+        expect(testRoutine.fitInWeek).toEqual(true);
+        expect(testRoutine.isTemplate).toEqual(false);
+        expect(testRoutine.isPublic).toEqual(false);
+        expect(testRoutine.days).toEqual([]);
+        expect(testRoutine.dayData).toEqual([]);
+    });
 
     test('correctly calculates the routine duration - less than 1 week', () => {
         // Arrange

@@ -3,7 +3,9 @@ import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { Meal } from "components/Nutrition/models/meal";
 import { ApiNutritionalPlanType } from "types";
 import { Adapter } from "utils/Adapter";
-import { isSameDay } from "utils/date";
+import { dateToYYYYMMDD, isSameDay } from "utils/date";
+
+/* eslint-disable camelcase */
 
 export type GroupedDiaryEntries = {
     entries: DiaryEntry[];
@@ -13,25 +15,57 @@ export type GroupedDiaryEntries = {
 export const PSEUDO_MEAL_ID = -1;
 
 
+type NutritionalPlanConstructorParams = {
+    id?: number | null,
+    creationDate?: Date,
+    start?: Date,
+    end?: Date | null,
+    description?: string,
+    onlyLogging?: boolean,
+    goalEnergy?: number | null,
+    goalProtein?: number | null,
+    goalCarbohydrates?: number | null,
+    goalFiber?: number | null,
+    goalSodium?: number | null,
+    goalFat?: number | null,
+    goalFatsSaturated?: number | null,
+};
+
+
 export class NutritionalPlan {
+    id: number | null;
+    creationDate: Date;
+    start: Date;
+    end: Date | null;
+    description: string;
+    onlyLogging: boolean;
+    goalEnergy: number | null;
+    goalProtein: number | null;
+    goalCarbohydrates: number | null;
+    goalFiber: number | null;
+    goalSodium: number | null;
+    goalFat: number | null;
+    goalFatsSaturated: number | null;
 
     meals: Meal[] = [];
     diaryEntries: DiaryEntry[] = [];
 
-    constructor(
-        public id: number,
-        public creationDate: Date,
-        public description: string,
-        public onlyLogging: boolean = false,
-        public goalEnergy: number | null = null,
-        public goalProtein: number | null = null,
-        public goalCarbohydrates: number | null = null,
-        public goalFiber: number | null = null,
-        public goalSodium: number | null = null,
-        public goalFat: number | null = null,
-        public goalFatsSaturated: number | null = null,
-    ) {
+    constructor(data: NutritionalPlanConstructorParams) {
+        this.id = data.id ?? null;
+        this.creationDate = data.creationDate ?? new Date();
+        this.start = data.start ?? this.creationDate;
+        this.end = data.end ?? null;
+        this.description = data.description ?? '';
+        this.onlyLogging = data.onlyLogging ?? false;
+        this.goalEnergy = data.goalEnergy ?? null;
+        this.goalProtein = data.goalProtein ?? null;
+        this.goalCarbohydrates = data.goalCarbohydrates ?? null;
+        this.goalFiber = data.goalFiber ?? null;
+        this.goalSodium = data.goalSodium ?? null;
+        this.goalFat = data.goalFat ?? null;
+        this.goalFatsSaturated = data.goalFatsSaturated ?? null;
     }
+
 
     get hasAnyGoals() {
         return this.goalEnergy !== null
@@ -118,18 +152,35 @@ export class NutritionalPlan {
         });
     }
 
+    clone(values: Partial<NutritionalPlan>): NutritionalPlan {
+        return new NutritionalPlan({
+            id: values.id !== undefined ? values.id : this.id,
+            creationDate: values.creationDate !== undefined ? values.creationDate : this.creationDate,
+            start: values.start !== undefined ? values.start : this.start,
+            end: values.end !== undefined ? values.end : this.end,
+            description: values.description !== undefined ? values.description : this.description,
+            onlyLogging: values.onlyLogging !== undefined ? values.onlyLogging : this.onlyLogging,
+            goalEnergy: values.goalEnergy !== undefined ? values.goalEnergy : this.goalEnergy,
+            goalProtein: values.goalProtein !== undefined ? values.goalProtein : this.goalProtein,
+            goalCarbohydrates: values.goalCarbohydrates !== undefined ? values.goalCarbohydrates : this.goalCarbohydrates,
+            goalFiber: values.goalFiber !== undefined ? values.goalFiber : this.goalFiber,
+            goalSodium: values.goalSodium !== undefined ? values.goalSodium : this.goalSodium,
+            goalFat: values.goalFat !== undefined ? values.goalFat : this.goalFat,
+            goalFatsSaturated: values.goalFatsSaturated !== undefined ? values.goalFatsSaturated : this.goalFatsSaturated,
+        });
+    }
+
     /*
      * Returns a synthetic meal object for the pseudo meal 'Others'
      *
-     * This contains all logs which were not logged to any of the other meals
+     * This contains all logs not logged to any of the other meals
      */
     pseudoMealOthers(name: string): Meal {
-        const out = new Meal(
-            PSEUDO_MEAL_ID,
-            -1,
-            null,
-            name
-        );
+        const out = new Meal({
+            id: PSEUDO_MEAL_ID,
+            order: -1,
+            name: name
+        });
         out.diaryEntries = this.diaryEntries.filter((entry) => entry.mealId === null);
 
         return out;
@@ -178,23 +229,40 @@ export class NutritionalPlan {
 
 export class NutritionalPlanAdapter implements Adapter<NutritionalPlan> {
     fromJson(item: ApiNutritionalPlanType) {
-        return new NutritionalPlan(
-            item.id,
-            new Date(item.creation_date),
-            item.description,
-            item.only_logging,
-            item.goal_energy,
-            item.goal_protein,
-            item.goal_carbohydrates,
-            item.goal_fiber,
-            null, // sodium
-            item.goal_fat,
-        );
+        return new NutritionalPlan({
+            id: item.id,
+            creationDate: new Date(item.creation_date),
+            start: new Date(item.start),
+            end: item.end !== null ? new Date(item.end) : null,
+            description: item.description,
+            onlyLogging: item.only_logging,
+            goalEnergy: item.goal_energy,
+            goalProtein: item.goal_protein,
+            goalCarbohydrates: item.goal_carbohydrates,
+            goalFiber: item.goal_fiber,
+            goalSodium: null,
+            goalFat: item.goal_fat,
+            goalFatsSaturated: null,
+        });
     }
 
     toJson(item: NutritionalPlan) {
         return {
-            description: item.description
+            ...(item.id != null ? { id: item.id } : {}),
+
+            start: dateToYYYYMMDD(item.start),
+            end: item.end ? dateToYYYYMMDD(item.end) : null,
+            description: item.description,
+            only_logging: item.onlyLogging,
+            goal_energy: item.goalEnergy,
+            goal_protein: item.goalProtein,
+            goal_carbohydrates: item.goalCarbohydrates,
+            goal_fiber: item.goalFiber,
+            goal_sodium: item.goalSodium,
+            goal_fat: item.goalFat,
+            goal_fats_saturated: item.goalFatsSaturated,
         };
     }
 }
+
+export const nutritionalPlanAdapter = new NutritionalPlanAdapter();

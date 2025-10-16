@@ -29,13 +29,12 @@ export const RoutineTemplateForm = (props: { routine: Routine }) => {
     };
 
     const handleSave = (isTemplate: boolean, isPublic: boolean) => {
-        editRoutineQuery.mutate({
-            id: props.routine.id,
-            // eslint-disable-next-line camelcase
-            is_template: isTemplate,
-            // eslint-disable-next-line camelcase
-            is_public: isPublic
-        });
+
+        const routine = Routine.clone(props.routine);
+        routine.isTemplate = isTemplate;
+        routine.isPublic = isPublic;
+
+        editRoutineQuery.mutate(routine);
     };
 
     return (

@@ -22,6 +22,7 @@ import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PAGINATION_OPTIONS } from "utils/consts";
+import { luxonDateTimeToLocale } from "utils/date";
 
 const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp => {
     return entries.map((entry) => {
@@ -95,6 +96,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
         return updatedRow;
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onProcessRowUpdateError = (error: any) => {
         console.log(error);
         //setRows(rows.map((row) => (row.id === newRow.id ? newRow : row)));
@@ -104,7 +106,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
         setRowModesModel(newRowModesModel);
     };
 
-    // @ts-ignore
     const columns: GridColDef[] = [
         {
             field: 'value',
@@ -128,7 +129,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                 if (value == null) {
                     return '';
                 }
-                return DateTime.fromJSDate(value).toLocaleString(DateTime.DATE_MED);
+                return luxonDateTimeToLocale(DateTime.fromJSDate(value));
             },
         },
         {
@@ -152,9 +153,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                         <GridActionsCellItem
                             icon={<SaveIcon />}
                             label="Save"
-                            sx={{
-                                color: 'primary.main',
-                            }}
                             onClick={handleSaveClick(id)}
                         />,
                         <GridActionsCellItem

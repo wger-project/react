@@ -2,6 +2,7 @@ import { Autocomplete, Button, InputAdornment, Stack, TextField } from "@mui/mat
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
+import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { Meal } from "components/Nutrition/models/meal";
 import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
@@ -9,7 +10,6 @@ import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { IngredientSearchResponse } from "services/responseType";
 import { dateToYYYYMMDD } from "utils/date";
 import * as yup from "yup";
 
@@ -18,7 +18,7 @@ type NutritionDiaryEntryFormProps = {
     entry?: DiaryEntry,
     mealId?: number | null,
     meals?: Meal[],
-    closeFn?: Function,
+    closeFn?: () => void,
 }
 
 export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn }: NutritionDiaryEntryFormProps) => {
@@ -57,19 +57,29 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-                const data = {
-                    ...values,
-                    plan: planId,
-                    meal: selectedMeal,
-                    // eslint-disable-next-line camelcase
-                    weight_unit: null,
-                    datetime: values.datetime.toISOString()
-                };
+
+                // Make sure "amount" is a number
+                const newAmount = Number(values.amount);
 
                 if (entry) {
-                    editDiaryQuery.mutate({ ...data, id: entry.id });
+                    // Edit
+                    const newDiaryEntry = DiaryEntry.clone(entry, {
+                        mealId: selectedMeal,
+                        planId: planId,
+                        amount: newAmount,
+                        datetime: values.datetime,
+                        ingredientId: values.ingredient
+                    });
+                    editDiaryQuery.mutate(newDiaryEntry);
                 } else {
-                    addDiaryQuery.mutate(data);
+                    // Add
+                    addDiaryQuery.mutate(new DiaryEntry({
+                        planId: planId,
+                        amount: newAmount,
+                        datetime: values.datetime,
+                        ingredientId: values.ingredient,
+                        mealId: selectedMeal,
+                    }));
                 }
 
                 // if closeFn is defined, close the modal (this form does not have to be displayed in one)
@@ -82,9 +92,9 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                 <Form>
                     <Stack spacing={2}>
                         <IngredientAutocompleter
-                            callback={(value: IngredientSearchResponse | null) => {
+                            callback={(value: Ingredient | null) => {
                                 formik.setFieldTouched('ingredient', true);
-                                formik.setFieldValue('ingredient', value?.data.id ?? null);
+                                formik.setFieldValue('ingredient', value?.id ?? null);
                             }}
                             />
                             {formik.touched.ingredient && formik.errors.ingredient && (
@@ -96,8 +106,12 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                             fullWidth
                             id="amount"
                             label={'amount'}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">{t('nutrition.gramShort')}</InputAdornment>
+                            slotProps={{
+                                input: {
+                                    endAdornment: <InputAdornment position="end">
+                                        {t('nutrition.gramShort')}
+                                    </InputAdornment>
+                                }
                             }}
                             error={formik.touched.amount && Boolean(formik.errors.amount)}
                             helperText={formik.touched.amount && formik.errors.amount}

@@ -1,5 +1,5 @@
 import { Button, Stack, TextField } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WeightEntry } from "components/BodyWeight/model";
 import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "components/BodyWeight/queries";
@@ -13,7 +13,7 @@ import * as yup from 'yup';
 
 interface WeightFormProps {
     weightEntry?: WeightEntry,
-    closeFn?: Function,
+    closeFn?: () => void,
 }
 
 export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
@@ -76,8 +76,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                         />
 
                         <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                            <DatePicker
-                                format="yyyy-MM-dd"
+                            <DateTimePicker
                                 label={t('date')}
                                 value={dateValue}
                                 slotProps={{ textField: { variant: 'outlined' } }}
@@ -87,21 +86,6 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                                         formik.setFieldValue('date', newValue.toJSDate());
                                     }
                                     setDateValue(newValue);
-                                }}
-                                shouldDisableDate={(date) => {
-
-                                    // Allow the date of the current weight entry, since we are editing it
-                                    if (weightEntry && dateToYYYYMMDD(weightEntry.date) === date.toISODate()) {
-                                        return false;
-                                    }
-
-                                    // if date is in list of weight entries, disable it
-                                    if (date) {
-                                        return weightEntriesQuery.data!.some(entry => dateToYYYYMMDD(entry.date) === (date as unknown as DateTime).toISODate());
-                                    }
-
-                                    // all other dates are allowed
-                                    return false;
                                 }}
                             />
                         </LocalizationProvider>

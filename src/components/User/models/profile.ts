@@ -1,11 +1,13 @@
+/* eslint-disable camelcase */
+
 import { Adapter } from "utils/Adapter";
 
 export interface EditProfileParams {
     email: string,
     height: number,
     weight_unit: 'kg' | 'lb',
-    weight_rounding: number | null,
-    repetitions_rounding: number | null,
+    weightRounding: number | null,
+    repetitionsRounding: number | null,
 }
 
 export class Profile {
@@ -40,9 +42,19 @@ export class Profile {
         this.weightRounding = data.weightRounding;
         this.repetitionsRounding = data.repetitionsRounding;
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static fromJson(json: any) {
+        return adapter.fromJson(json);
+    }
+
+    toJson() {
+        return adapter.toJson(this);
+    }
 }
 
-export class ProfileAdapter implements Adapter<Profile> {
+class ProfileAdapter implements Adapter<Profile> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson = (item: any): Profile => new Profile({
         username: item.username,
         email: item.email,
@@ -56,14 +68,14 @@ export class ProfileAdapter implements Adapter<Profile> {
     });
 
 
-    toJson = (item: Profile): EditProfileParams => ({
+    toJson = (item: Profile) => ({
         email: item.email,
         height: item.height,
-        // eslint-disable-next-line camelcase
         weight_unit: item.useMetric ? 'kg' : 'lb',
-        // eslint-disable-next-line camelcase
         weight_rounding: item.weightRounding,
-        // eslint-disable-next-line camelcase
         repetitions_rounding: item.repetitionsRounding,
     });
 }
+
+
+const adapter = new ProfileAdapter();
