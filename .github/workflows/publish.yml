@@ -27,8 +27,11 @@ jobs:
           node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
+      # Note that deleting package-lock.json is a workaround for an npm issue related to
+      # optional dependencies: https://github.com/npm/cli/issues/4828
       - name: Build the project
         run: |
+          rm package-lock.json
           npm install
           npm run build
 
