@@ -49,7 +49,7 @@ i18n
             loadPath: (lng: string[], ns: string[]) => {
                 const lang = lng[0].replace('-', '_');
                 return IS_PROD
-                    ? `/static/react/locales/${lang}/${ns}.json`
+                    ? `/static/node/@wger-project/react-components/build/locales/${lang}/${ns}.json`
                     : `/locales/${lang}/${ns}.json`;
             }
         },

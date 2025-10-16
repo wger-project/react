@@ -1,0 +1,45 @@
+name: Publish React Components to npm
+
+# The workflow needs to be started manually
+on:
+  workflow_dispatch:
+    inputs:
+      version_tag:
+        description: 'Optional npm tag (e.g. beta, next)'
+        required: false
+        default: 'latest'
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Build the project
+        run: |
+          npm ci
+          npm run build
+
+      - name: Publish to npm
+        id: publish
+        run: |
+          npm publish --tag ${{ github.event.inputs.version_tag || 'latest' }}
+          
+          PUBLISHED_VERSION=$(node -p "require('./package.json').version")
+          echo "published_version=$PUBLISHED_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Output published version
+        run: |
+          echo "Successfully published version: ${{ steps.publish.outputs.published_version }}"

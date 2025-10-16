@@ -1,8 +1,22 @@
 {
-  "name": "wger_react",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@wger-project/react-components",
+  "files": [
+    "README.md",
+    "LICENSE",
+    "index.html",
+    "src/",
+    "build/"
+  ],
+  "main": "build/main.js",
+  "exports": {
+    ".": "./build/index.js"
+  },
+  "version": "0.1.4",
+  "repository": "https://github.com/wger-project/react",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@emotion/babel-plugin": "^11.13.5",
     "@emotion/react": "^11.14.0",
@@ -51,7 +65,6 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.1",
     "@types/react-is": "^19.2.0",
-    "@types/recharts": "^2.0.1",
     "@types/slug": "^5.0.9",
     "@typescript-eslint/eslint-plugin": "^8.46.0",
     "@typescript-eslint/parser": "^8.46.0",
@@ -74,7 +87,6 @@
     "start": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "postbuild": "./postbuild.sh",
     "test": "LANG=de_de jest",
     "i18n": "i18next",
     "lint": "eslint src",
@@ -108,5 +120,5 @@
       "./src/setupTests.ts"
     ]
   },
-  "packageManager": "yarn@4.9.2"
+  "packageManager": "npm@10.5.0"
 }

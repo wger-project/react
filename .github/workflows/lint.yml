@@ -20,19 +20,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: 'yarn'
-
-      - name: Install modules
-        run: |
-          yarn config set --home enableTelemetry 0
-          yarn config set nodeLinker node-modules
-          yarn
-
-      - name: Install modules
-        run: |
-          corepack enable
-          yarn config set --home enableTelemetry 0
-          yarn
 
       - name: Lint the code
-        run: yarn lint
+        run: |
+          npm ci
+          npm lint
