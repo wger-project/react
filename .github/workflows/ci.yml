@@ -24,7 +24,7 @@ jobs:
       - name: Run tests
         run: |
           npm ci
-          npm test --coverage --collectCoverageFrom='!src/pages/**/*.tsx'
+          npm run test:coverate
 
       - name: Coveralls
         uses: coverallsapp/github-action@master

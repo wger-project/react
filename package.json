@@ -88,6 +88,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "test": "LANG=de_de jest",
+    "test:coverage": "LANG=de_de jest --coverage --collectCoverageFrom='!src/pages/**/*.tsx'",
     "i18n": "i18next",
     "lint": "eslint src",
     "lint:quiet": "eslint --quiet src",

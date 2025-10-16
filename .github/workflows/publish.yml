@@ -1,4 +1,4 @@
-name: Publish React Components to npm
+name: Publish package to npm
 
 # The workflow needs to be started manually
 on:
@@ -29,7 +29,7 @@ jobs:
 
       - name: Build the project
         run: |
-          npm ci
+          npm install
           npm run build
 
       - name: Publish to npm
