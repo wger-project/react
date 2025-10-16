@@ -21,13 +21,12 @@ in [AUTHORS.md](AUTHORS.md).
 **TLDR**
 
 ```bash
-# with node > 22
+# with node >= 22
 
 cp .env.TEMPLATE .env.development
 vim .env.development
-yarn config set --home enableTelemetry 0
-yarn install
-yarn start 
+npm install
+npm start 
 ```
 
 This is a regular react application, so there's no magic. You will need a backend

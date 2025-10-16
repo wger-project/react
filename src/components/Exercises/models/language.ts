@@ -12,15 +12,12 @@ export class Language {
 
 
 export class LanguageAdapter implements Adapter<Language> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any): Language {
         return new Language(
             item.id,
             item.short_name,
             item.full_name
         );
-    }
-
-    toJson(item: Language) {
-        return {};
     }
 }

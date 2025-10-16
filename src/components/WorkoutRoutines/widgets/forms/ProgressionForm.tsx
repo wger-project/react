@@ -34,7 +34,6 @@ export const ProgressionForm = (props: {
     cycleLength: number;
 }) => {
     const { t } = useTranslation();
-    const [linkMinMax, setLinkMinMax] = useState<boolean>(true);
     const [iterationsToDelete, setIterationsToDelete] = useState<number[]>([]);
     const processEntriesQuery = useProcessConfigsQuery(props.routineId);
 
@@ -310,9 +309,6 @@ export const ProgressionForm = (props: {
                         <Grid container spacing={1}>
                             <Grid size={4} offset={2} textAlign={"center"}>
                                 {t('value')}
-                                {/*<IconButton onClick={() => setLinkMinMax(!linkMinMax)}>*/}
-                                {/*    {linkMinMax ? <LinkIcon /> : <LinkOffIcon />}*/}
-                                {/*</IconButton>*/}
                             </Grid>
                             <Grid size={6}>
                                 <Grid container spacing={1}>

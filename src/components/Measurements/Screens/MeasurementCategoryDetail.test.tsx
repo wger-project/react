@@ -57,11 +57,11 @@ describe("Test the MeasurementCategoryDetail component", () => {
         expect(screen.getByText('Biceps')).toBeInTheDocument();
 
         expect(screen.getByText('10cm')).toBeInTheDocument();
-        expect(screen.getByText(/1\. feb\. 2023/i)).toBeInTheDocument();
+        expect(screen.getByText(/Feb 1, 2023/i)).toBeInTheDocument();
         expect(screen.getByText('test note')).toBeInTheDocument();
 
         expect(screen.getByText('20cm')).toBeInTheDocument();
-        expect(screen.getByText(/2\. feb\. 2023/i)).toBeInTheDocument();
+        expect(screen.getByText(/Feb 2, 2023/i)).toBeInTheDocument();
         expect(screen.getByText('important note')).toBeInTheDocument();
     });
 });

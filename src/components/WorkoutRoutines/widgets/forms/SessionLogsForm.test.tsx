@@ -13,9 +13,9 @@ jest.mock("components/WorkoutRoutines/queries");
 
 describe('SessionLogsForm', () => {
 
-    const mockUseLanguageQuery = jest.mocked(useLanguageQuery);
-    const mockAddLogsQuery = jest.mocked(useAddRoutineLogsQuery);
-    const mockRoutineDetailQuery = jest.mocked(useRoutineDetailQuery);
+    const mockUseLanguageQuery = useLanguageQuery as jest.Mock;
+    const mockAddLogsQuery = useAddRoutineLogsQuery as jest.Mock;
+    const mockRoutineDetailQuery = useRoutineDetailQuery as jest.Mock;
     const mockMutateAsync = jest.fn();
 
     beforeEach(() => {
@@ -23,16 +23,16 @@ describe('SessionLogsForm', () => {
         mockRoutineDetailQuery.mockReturnValue({
             isLoading: false,
             data: testRoutine1,
-        } as any);
+        });
         mockAddLogsQuery.mockReturnValue({
             isPending: false,
             data: {},
             mutateAsync: mockMutateAsync,
-        } as any);
+        });
         mockUseLanguageQuery.mockReturnValue({
             isLoading: false,
             data: testLanguages,
-        } as any);
+        });
     });
 
 

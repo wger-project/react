@@ -5,6 +5,7 @@ import { WgerModal } from "components/Core/Modals/WgerModal";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { CartesianGrid, DotProps, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { dateToLocale } from "utils/date";
 
 export interface WeightChartProps {
     weights: WeightEntry[],
@@ -13,17 +14,18 @@ export interface WeightChartProps {
 
 export interface TooltipProps {
     active?: boolean,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload?: any,
     label?: string,
 }
 
 const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     if (active && payload && payload.length) {
         return (
             <Paper style={{ padding: 8 }}>
-                <p><strong>{new Date(label!).toLocaleDateString(i18n.language)}</strong></p>
+                <p><strong>{dateToLocale(new Date(label!))}</strong></p>
                 <p>{t('weight')}: {payload[0].value}</p>
             </Paper>
         );
@@ -38,7 +40,7 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
     height = height || 300;
 
     const theme = useTheme();
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const [currentEntry, setCurrentEntry] = React.useState<WeightEntry>();
     const handleCloseModal = () => setIsModalOpen(false);
@@ -55,6 +57,8 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
     /*
      * Edit the currently selected weight
      */
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function handleClick(e: DotProps, data: any) {
         setCurrentEntry(data.payload.entry);
         setIsModalOpen(true);
@@ -90,7 +94,7 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
                         dataKey="date"
                         type={'number'}
                         domain={['dataMin', 'dataMax']}
-                        tickFormatter={timeStr => new Date(timeStr).toLocaleDateString(i18n.language)}
+                        tickFormatter={timeStr => dateToLocale(new Date(timeStr))}
                     />
                     <YAxis domain={['auto', 'auto']} />
                     <Tooltip content={<CustomTooltip />} />

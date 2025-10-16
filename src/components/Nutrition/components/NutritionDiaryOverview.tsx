@@ -7,6 +7,7 @@ import { LoggedPlannedNutritionalValuesTable } from "components/Nutrition/widget
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { dateToLocale } from "utils/date";
 
 
 export const NutritionDiaryOverview = () => {
@@ -29,7 +30,7 @@ export const NutritionDiaryOverview = () => {
             mainContent={<>
                 <Stack spacing={2}>
                     <Typography gutterBottom variant="h4">
-                        {date.toLocaleDateString()}
+                        {dateToLocale(date)}
                     </Typography>
                     <LoggedPlannedNutritionalValuesTable
                         logged={planQuery.data!.loggedNutritionalValuesDate(date)}

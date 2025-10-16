@@ -6,7 +6,8 @@ interface makeUrlInterface {
     id?: number,
     server?: string,
     objectMethod?: string,
-    query?: object,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    query?: { [key: string]: any },
 }
 
 
@@ -37,7 +38,6 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
         const queryList = [];
         for (const key in params.query) {
             if (Object.hasOwn(params.query, key)) {
-                // @ts-ignore
                 queryList.push(`${encodeURIComponent(key)}=${encodeURIComponent(params.query[key])}`);
             }
         }
@@ -101,90 +101,86 @@ type UrlParams = { id: number, id2?: number, slug?: string, date?: string };
  */
 export function makeLink(link: WgerLink, language?: string, params?: UrlParams): string {
 
-    language = language || 'en-us';
-
-    // If the name is in the form of "en-US", remove the country code since
-    // our django app can't work with that at the moment.
-    const langShort = language.split('-')[0];
+    language = language?.toLowerCase() || 'en';
 
     switch (link) {
         // Workout routines
         case WgerLink.ROUTINE_OVERVIEW:
-            return `/${langShort}/routine/overview`;
+            return `/${language}/routine/overview`;
         case WgerLink.ROUTINE_DETAIL:
-            return `/${langShort}/routine/${params!.id}/view`;
+            return `/${language}/routine/${params!.id}/view`;
         case WgerLink.ROUTINE_DETAIL_TABLE:
-            return `/${langShort}/routine/${params!.id}/table`;
+            return `/${language}/routine/${params!.id}/table`;
         case WgerLink.ROUTINE_EDIT:
-            return `/${langShort}/routine/${params!.id}/edit`;
+            return `/${language}/routine/${params!.id}/edit`;
         case WgerLink.ROUTINE_EDIT_PROGRESSION:
-            return `/${langShort}/routine/${params!.id}/edit/progression/${params!.id2}`;
+            return `/${language}/routine/${params!.id}/edit/progression/${params!.id2}`;
         case WgerLink.ROUTINE_ADD:
-            return `/${langShort}/routine/add`;
+            return `/${language}/routine/add`;
         case WgerLink.ROUTINE_COPY:
-            return `/${langShort}/routine/${params!.id}/copy`;
+            return `/${language}/routine/${params!.id}/copy`;
         case WgerLink.ROUTINE_PDF_TABLE:
-            return `/${langShort}/routine/${params!.id}/pdf/table`;
+            return `/${language}/routine/${params!.id}/pdf/table`;
         case WgerLink.ROUTINE_PDF_LOGS:
-            return `/${langShort}/routine/${params!.id}/pdf/log`;
+            return `/${language}/routine/${params!.id}/pdf/log`;
         case WgerLink.ROUTINE_ICAL:
-            return `/${langShort}/routine/${params!.id}/ical`;
+            return `/${language}/routine/${params!.id}/ical`;
         case WgerLink.ROUTINE_LOGS_OVERVIEW:
-            return `/${langShort}/routine/${params!.id}/logs`;
+            return `/${language}/routine/${params!.id}/logs`;
         case WgerLink.ROUTINE_STATS_OVERVIEW:
-            return `/${langShort}/routine/${params!.id}/statistics`;
+            return `/${language}/routine/${params!.id}/statistics`;
         case WgerLink.ROUTINE_ADD_LOG:
-            return `/${langShort}/routine/${params!.id}/day/${params!.id2}/add-logs`;
+            return `/${language}/routine/${params!.id}/day/${params!.id2}/add-logs`;
         case WgerLink.CALENDAR:
-            return `/${langShort}/routine/calendar`;
+            return `/${language}/routine/calendar`;
         // Templates
         case WgerLink.TEMPLATE_DETAIL:
-            return `/${langShort}/routine/templates/${params!.id}/view`;
+            return `/${language}/routine/templates/${params!.id}/view`;
         case WgerLink.PRIVATE_TEMPLATE_OVERVIEW:
-            return `/${langShort}/routine/templates/overview/private`;
+            return `/${language}/routine/templates/overview/private`;
         case WgerLink.PUBLIC_TEMPLATE_OVERVIEW:
-            return `/${langShort}/routine/templates/overview/public`;
+            return `/${language}/routine/templates/overview/public`;
 
         // Exercises
         case WgerLink.EXERCISE_CONTRIBUTE:
-            return `/${langShort}/exercise/contribute`;
+            return `/${language}/exercise/contribute`;
 
         case WgerLink.EXERCISE_DETAIL:
             if (params!.slug) {
-                return `/${langShort}/exercise/${params!.id}/view/${slug(params!.slug)}`;
+                return `/${language}/exercise/${params!.id}/view/${slug(params!.slug)}`;
             } else {
-                return `/${langShort}/exercise/${params!.id}/view`;
+                return `/${language}/exercise/${params!.id}/view`;
             }
 
         case WgerLink.EXERCISE_OVERVIEW:
-            return `/${langShort}/exercise/overview`;
+            return `/${language}/exercise/overview`;
 
         // Weight
         case WgerLink.WEIGHT_OVERVIEW:
-            return `/${langShort}/weight/overview`;
+            return `/${language}/weight/overview`;
         case WgerLink.WEIGHT_ADD:
-            return `/${langShort}/weight/add`;
+            return `/${language}/weight/add`;
 
         // Measurements
         case WgerLink.MEASUREMENT_OVERVIEW:
-            return `/${langShort}/measurement/overview`;
+            return `/${language}/measurement/overview`;
         case WgerLink.MEASUREMENT_DETAIL:
-            return `/${langShort}/measurement/category/${params!.id}`;
+            return `/${language}/measurement/category/${params!.id}`;
 
         // Nutrition
         case WgerLink.NUTRITION_OVERVIEW:
-            return `/${langShort}/nutrition/overview`;
+            return `/${language}/nutrition/overview`;
         case WgerLink.NUTRITION_DETAIL:
-            return `/${langShort}/nutrition/${params!.id}/view`;
+            return `/${language}/nutrition/${params!.id}/view`;
         case WgerLink.NUTRITION_DIARY:
-            return `/${langShort}/nutrition/${params!.id}/${params!.date}`;
+            return `/${language}/nutrition/${params!.id}/${params!.date}`;
         case WgerLink.NUTRITION_PLAN_PDF:
-            return `/${langShort}/nutrition/${params!.id}/pdf`;
+            return `/${language}/nutrition/${params!.id}/pdf`;
         case WgerLink.NUTRITION_PLAN_COPY:
-            return `/${langShort}/nutrition/${params!.id}/copy`;
+            return `/${language}/nutrition/${params!.id}/copy`;
 
         case WgerLink.INGREDIENT_DETAIL:
-            return `/${langShort}/nutrition/ingredient/${params!.id}/view`;
+            return `/${language}/nutrition/ingredient/${params!.id}/view`;
 
         // Dashboard
         case WgerLink.DASHBOARD:

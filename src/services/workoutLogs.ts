@@ -26,6 +26,7 @@ export const editLog = async (entry: WorkoutLog): Promise<WorkoutLog> => {
     return adapter.fromJson(response.data);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const addLogs = async (entries: any[]): Promise<WorkoutLog[]> => {
     const adapter = new WorkoutLogAdapter();
     const out = [] as WorkoutLog[];

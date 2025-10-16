@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
 import { deleteSlotEntry, editSlotEntry } from "services";
-import { addSlotEntry, AddSlotEntryParams } from "services/slot_entry";
+import { addSlotEntry } from "services/slot_entry";
 import { QueryKey, } from "utils/consts";
 
 
@@ -18,7 +18,7 @@ export const useAddSlotEntryQuery = (routineId: number) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: AddSlotEntryParams) => addSlotEntry(data),
+        mutationFn: (slotEntry: SlotEntry) => addSlotEntry(slotEntry),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, routineId] })
     });
 };

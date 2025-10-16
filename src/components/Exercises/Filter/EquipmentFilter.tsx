@@ -23,7 +23,6 @@ const EquipmentFilterList = () => {
 
     const { data: equipment, isLoading } = useEquipmentQuery();
     const { selectedEquipment, setSelectedEquipment } = useContext(ExerciseFiltersContext);
-    const [t] = useTranslation();
 
     const handleToggle = (value: Equipment) => () => {
         const currentIndex = selectedEquipment.indexOf(value);

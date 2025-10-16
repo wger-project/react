@@ -37,7 +37,7 @@ describe("Test the NutritionDiaryOverview component", () => {
         // shown in the tests
 
         expect(useFetchNutritionalPlanDateQuery).toHaveBeenCalled();
-        expect(screen.getByText('1.7.2023')).toBeInTheDocument();
+        expect(screen.getByText('07/01/23')).toBeInTheDocument();
 
         expect(screen.getByRole('cell', { name: /0% fat Greek style yogurt/i })).toBeInTheDocument();
         expect(screen.getByText(/120g/i)).toBeInTheDocument();

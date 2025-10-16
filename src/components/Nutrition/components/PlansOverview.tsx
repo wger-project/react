@@ -8,6 +8,7 @@ import { useFetchNutritionalPlansQuery } from "components/Nutrition/queries";
 import { AddNutritionalPlanFab } from "components/Nutrition/widgets/Fab";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { dateToLocale } from "utils/date";
 import { makeLink, WgerLink } from "utils/url";
 
 export const PlansOverview = () => {
@@ -40,8 +41,8 @@ const PlanListItem = (props: { plan: NutritionalPlan }) => {
                     primary={props.plan.description !== '' ? props.plan.description : t('routines.routine')}
                     secondary={
                         props.plan.end
-                            ? `${props.plan.start.toLocaleDateString()} – ${props.plan.end.toLocaleDateString()}`
-                            : `${props.plan.start.toLocaleDateString()}`
+                            ? `${dateToLocale(props.plan.start)} – ${dateToLocale(props.plan.end)}`
+                            : `${dateToLocale(props.plan.start)}`
                     }
                 />
                 <ChevronRightIcon />

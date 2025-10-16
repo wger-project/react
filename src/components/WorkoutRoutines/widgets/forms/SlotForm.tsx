@@ -10,6 +10,10 @@ export const SlotForm = (props: { slot: Slot, routineId: number }) => {
     const editSlotQuery = useEditSlotQuery(props.routineId);
     const [slotComment, setSlotComment] = useState<string>(props.slot.comment);
 
+    const handleChange = (value: string) => {
+        setSlotComment(value);
+    };
+
     const handleBlur = () => {
         editSlotQuery.mutate(Slot.clone(props.slot, { comment: slotComment }));
     };

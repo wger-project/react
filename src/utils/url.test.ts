@@ -82,7 +82,7 @@ describe("test the header utility", () => {
 });
 
 
-describe("test the clickable url utility", () => {
+describe("test the makeLink helper", () => {
 
     test('link to dashboard', () => {
         const result = makeLink(WgerLink.DASHBOARD, 'de');
@@ -96,7 +96,7 @@ describe("test the clickable url utility", () => {
 
     test('link to exercise overview, complex language code', () => {
         const result = makeLink(WgerLink.EXERCISE_OVERVIEW, 'de-DE');
-        expect(result).toEqual('/de/exercise/overview');
+        expect(result).toEqual('/de-de/exercise/overview');
     });
 
     test('link to exercise overview, no language code', () => {

@@ -1,10 +1,10 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { FilterButtons, FilterButtonsProps, FilterType } from './FilterButtons';
+import React from 'react';
+import { FilterButtons, FilterType } from './FilterButtons';
 
 describe('FilterButtons Component', () => {
-    const onFilterChange = jest.fn(); 
+    const onFilterChange = jest.fn();
 
     const renderComponent = (currentFilter: FilterType) => {
         render(

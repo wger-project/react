@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 export const DiaryDetail = (props: { entries: DiaryEntry[], planValues: NutritionalValues }) => {
 
-    const [t, i18n] = useTranslation();
+    const { t } = useTranslation();
 
 
     return <TableContainer>
