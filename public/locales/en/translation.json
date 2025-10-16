@@ -283,13 +283,13 @@
     },
     "day": {
       "custom": "Custom",
-      "enom": "Every Minute on The Minute",
-      "amrap": "As Many Rounds As Possible",
-      "hiit": "High Intensity Interval Training",
+      "enom": "Every minute on the minute",
+      "amrap": "As many rounds as possible",
+      "hiit": "High intensity interval training",
       "tabata": "Tabata",
-      "edt": "Escalating Density Training",
-      "rft": "Rounds For Time",
-      "afap": "As Fast As Possible"
+      "edt": "Escalating density training",
+      "rft": "Rounds for time",
+      "afap": "As fast as possible"
     }
   },
   "measurements": {
