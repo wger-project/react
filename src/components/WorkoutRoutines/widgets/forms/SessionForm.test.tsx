@@ -120,8 +120,6 @@ describe('SessionForm', () => {
             </BrowserRouter>
         );
 
-        screen.logTestingPlaygroundURL();
-
         // Assert
         await waitFor(() => {
             // screen.logTestingPlaygroundURL();

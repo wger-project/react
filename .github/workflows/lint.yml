@@ -24,4 +24,4 @@ jobs:
       - name: Lint the code
         run: |
           npm ci
-          npm lint
+          npm run lint
