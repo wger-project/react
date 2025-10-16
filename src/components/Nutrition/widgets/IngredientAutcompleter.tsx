@@ -22,7 +22,7 @@ import { searchIngredient } from "services";
 import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 
 type IngredientAutocompleterProps = {
-    callback: () => void;
+    callback: (ingredient: Ingredient | null) => void;
     initialIngredient?: Ingredient | null;
 };
 

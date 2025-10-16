@@ -68,7 +68,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         planId: planId,
                         amount: newAmount,
                         datetime: values.datetime,
-                        ingredientId: values.ingredient
+                        ingredientId: values.ingredient!
                     });
                     editDiaryQuery.mutate(newDiaryEntry);
                 } else {
@@ -77,7 +77,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         planId: planId,
                         amount: newAmount,
                         datetime: values.datetime,
-                        ingredientId: values.ingredient,
+                        ingredientId: values.ingredient!,
                         mealId: selectedMeal,
                     }));
                 }
