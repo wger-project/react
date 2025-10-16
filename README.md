@@ -21,7 +21,7 @@ in [AUTHORS.md](AUTHORS.md).
 **TLDR**
 
 ```bash
-# with node > 22
+# with node >= 22
 
 cp .env.TEMPLATE .env.development
 vim .env.development
