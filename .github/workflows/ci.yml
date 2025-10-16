@@ -14,9 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Enable Corepack
-        run: corepack enable
-
       - uses: actions/setup-node@v6
         with:
           node-version: 22
@@ -24,7 +21,7 @@ jobs:
       - name: Run tests
         run: |
           npm ci
-          npm run test:coverate
+          npm run test:coverage
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
