@@ -40,16 +40,18 @@ describe('SlotEntryTypeField', () => {
         const dropdown = screen.getByRole('combobox', { name: 'routines.set.type' });
         await user.click(dropdown);
 
-        expect(screen.queryAllByText('routines.set.normalSet')).toHaveLength(2); // One in the options menu, one in the selected value
-        expect(screen.getByText('routines.set.dropSet')).toBeInTheDocument();
-        expect(screen.getByText('routines.set.myo')).toBeInTheDocument();
-        expect(screen.getByText('routines.set.partial')).toBeInTheDocument();
-        expect(screen.getByText('routines.set.forced')).toBeInTheDocument();
-        expect(screen.getByText('routines.set.tut')).toBeInTheDocument();
-        expect(screen.getByText('routines.set.iso')).toBeInTheDocument();
-        expect(screen.getByText('routines.set.jump')).toBeInTheDocument();
+        // One in the options menu, one in the selected value
+        expect(screen.queryAllByText(/routines\.set\.normalSet/)).toHaveLength(2);
+        expect(screen.getByText(/routines\.set\.dropSet/)).toBeInTheDocument();
+        expect(screen.getByText(/routines\.set\.myo/)).toBeInTheDocument();
+        expect(screen.getByText(/routines\.set\.partial/)).toBeInTheDocument();
+        expect(screen.getByText(/routines\.set\.forced/)).toBeInTheDocument();
+        expect(screen.getByText(/routines\.set\.tut/)).toBeInTheDocument();
+        expect(screen.getByText(/routines\.set\.iso/)).toBeInTheDocument();
+        expect(screen.getByText(/routines\.set\.jump/)).toBeInTheDocument();
 
-        const myoOption = screen.getByRole('option', { name: 'routines.set.myo' });
+
+        const myoOption = screen.getByRole('option', { name: /routines\.set\.myo/ });
         await user.click(myoOption);
         expect(mockEditSlotEntry).toHaveBeenCalledWith(SlotEntry.clone(testDayLegs.slots[0].entries[0], { type: 'myo' }));
     });
