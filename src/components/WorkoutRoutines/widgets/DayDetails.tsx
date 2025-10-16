@@ -135,7 +135,7 @@ export const DayDragAndDropGrid = (props: {
                                                         provided.draggableProps.style ?? {}
                                                     )}
 
-                                                    label={day.getDisplayName()}
+                                                    label={day.displayName}
                                                     value={day.id}
                                                     icon={<DragIndicatorIcon />}
                                                     iconPosition="start"

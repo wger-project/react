@@ -55,6 +55,14 @@ export class Day {
         return this.type !== 'custom';
     }
 
+    public get displayNameWithType(): string {
+        return this.isSpecialType ? `${this.type.toUpperCase()} - ${this.displayName}` : this.displayName;
+    }
+
+    public get displayName(): string {
+        return this.isRest ? i18n.t('routines.restDay') : this.name;
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static fromJson(json: any): Day {
         return adapter.fromJson(json);
@@ -75,9 +83,6 @@ export class Day {
         });
     }
 
-    public getDisplayName(): string {
-        return this.isRest ? i18n.t('routines.restDay') : this.name;
-    }
 
     toJson() {
         return adapter.toJson(this);
@@ -85,7 +90,10 @@ export class Day {
 
 }
 
-export const getDayName = (day: Day | null): string => day === null || day.isRest ? i18n.t('routines.restDay') : day.getDisplayName();
+/*
+ * Returns the display name of the day, or "Rest day" if it's a rest day or null
+ */
+export const getDayName = (day: Day | null): string => day === null || day.isRest ? i18n.t('routines.restDay') : day.displayNameWithType;
 
 
 class DayAdapter implements Adapter<Day> {

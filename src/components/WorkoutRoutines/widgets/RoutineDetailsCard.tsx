@@ -161,11 +161,6 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
     const [t, i18n] = useTranslation();
 
     const isToday = isSameDay(props.dayData.date, new Date());
-
-    const typePrefix = props.dayData.day?.isSpecialType ? ` ${props.dayData.day?.type.toUpperCase()} - ` : '';
-    const title = <>
-        <Typography variant={"h5"}>{typePrefix} {getDayName(props.dayData.day)}</Typography>
-    </>;
     const subheader = <Typography sx={{ whiteSpace: 'pre-line' }}>{props.dayData.day?.description}</Typography>;
 
     return (
@@ -183,7 +178,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
                             <Addchart />
                         </IconButton>
                     </Tooltip>}
-                title={title}
+                title={<Typography variant={"h5"}>{getDayName(props.dayData.day)}</Typography>}
                 avatar={isToday ? <TodayIcon /> : null}
                 subheader={subheader}
             />

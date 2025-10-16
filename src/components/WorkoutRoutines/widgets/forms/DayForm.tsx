@@ -200,7 +200,7 @@ export const DayForm = (props: {
                     </Dialog>
 
                     <DeleteConfirmationModal
-                        title={t('deleteConfirmation', { name: props.day.getDisplayName() })}
+                        title={t('deleteConfirmation', { name: props.day.displayName })}
                         message={t('routines.deleteDayConfirmation')}
                         isOpen={openDeleteDialog}
                         closeFn={handleCancelDeleteDay}
