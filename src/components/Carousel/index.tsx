@@ -41,7 +41,7 @@ export const Carousel: React.FC<CarouselProps> = ({ children }: CarouselProps) =
                 className={styles.inner}
                 style={{ transform: `translateX(-${activeIndex * 100}%)` }}
             >
-                {React.Children.map(children, (child, index) => {
+                {React.Children.map(children, (child) => {
                     if (React.isValidElement(child)) {
                         return React.cloneElement(child);
                     }

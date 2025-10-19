@@ -94,6 +94,7 @@ export class BaseConfig {
 }
 
 export class BaseConfigAdapter implements Adapter<BaseConfig> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson = (item: any) => new BaseConfig({
         id: item.id,
         slotEntryId: item.slot_entry,

@@ -28,7 +28,7 @@ describe('RoutineTemplateForm', () => {
         );
 
         // Assert
-        const templateToggle = screen.getByRole('checkbox', { name: 'routines.template' });
+        const templateToggle = screen.getByRole('switch', { name: 'routines.template' });
         expect(templateToggle).not.toBeChecked();
         await user.click(templateToggle);
         expect(mockEditRoutine).toHaveBeenCalledTimes(1);
@@ -49,8 +49,8 @@ describe('RoutineTemplateForm', () => {
         );
 
         // Assert
-        const templateToggle = screen.getByRole('checkbox', { name: 'routines.template' });
-        const publicTemplateToggle = screen.getByRole('checkbox', { name: 'routines.publicTemplate' });
+        const templateToggle = screen.getByRole('switch', { name: 'routines.template' });
+        const publicTemplateToggle = screen.getByRole('switch', { name: 'routines.publicTemplate' });
         expect(templateToggle).not.toBeChecked();
         expect(publicTemplateToggle).not.toBeChecked();
 

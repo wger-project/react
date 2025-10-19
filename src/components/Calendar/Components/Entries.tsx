@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useTranslation } from "react-i18next";
+import { dateToLocale } from "utils/date";
 import { DayProps } from "./CalendarComponent";
 
 interface LogProps {
@@ -37,7 +38,7 @@ const Entries: React.FC<LogProps> = ({ selectedDay }) => {
             <CardHeader
                 title={
                     <Typography variant="h5" component="div" sx={{ fontWeight: 'bold' }}>
-                        {t("entries")} - {selectedDay.date.toLocaleDateString()}
+                        {t("entries")} - {dateToLocale(selectedDay.date)}
                     </Typography>
                 }
             />

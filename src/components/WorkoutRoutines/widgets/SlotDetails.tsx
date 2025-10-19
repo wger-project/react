@@ -100,7 +100,7 @@ export const SlotEntryDetails = (props: {
             return;
         }
 
-        editSlotEntryQuery.mutate({ id: props.slotEntry.id, exercise: searchResponse.data.base_id });
+        editSlotEntryQuery.mutate(SlotEntry.clone(props.slotEntry, { exerciseId: searchResponse.data.base_id }));
         setEditExercise(false);
     };
 
@@ -117,17 +117,17 @@ export const SlotEntryDetails = (props: {
                 <Grid
                     key={`sets-config-${props.slotEntry.id}`}
                     size={{ xs: 12, sm: 2, }}>
-                    {getConfigComponent('sets', props.slotEntry.nrOfSetsConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('sets', props.slotEntry.nrOfSetsConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
                 <Grid
                     key={`weight-config-${props.slotEntry.id}`}
                     size={{ xs: 12, sm: 3 }}>
-                    {getConfigComponent('weight', props.slotEntry.weightConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('weight', props.slotEntry.weightConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
                 <Grid
                     key={`reps-config-${props.slotEntry.id}`}
                     size={{ xs: 12, sm: 3 }}>
-                    {getConfigComponent('reps', props.slotEntry.repetitionsConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('reps', props.slotEntry.repetitionsConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
             </React.Fragment>
 
@@ -135,10 +135,10 @@ export const SlotEntryDetails = (props: {
             : <React.Fragment>
 
                 <Grid size={{ xs: 6, sm: 1 }}>
-                    {getConfigComponent('sets', props.slotEntry.nrOfSetsConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('sets', props.slotEntry.nrOfSetsConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
                 <Grid size={{ xs: 6, sm: 1 }}>
-                    {getConfigComponent('max-sets', props.slotEntry.maxNrOfSetsConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('max-sets', props.slotEntry.maxNrOfSetsConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
                 <Grid size={{ xs: 6, sm: 2 }}>
                     <SlotEntryTypeField routineId={props.routineId} slotEntry={props.slotEntry} />
@@ -147,23 +147,23 @@ export const SlotEntryDetails = (props: {
                     <ConfigDetailsRiRField
                         routineId={props.routineId}
                         config={props.slotEntry.rirConfigs.length > 0 ? props.slotEntry.rirConfigs[0] : undefined}
-                        slotEntryId={props.slotEntry.id}
+                        slotEntryId={props.slotEntry.id!}
                     />
                 </Grid>
 
                 <Grid size={{ xs: 6, sm: 1 }}>
-                    {getConfigComponent('rest', props.slotEntry.restTimeConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('rest', props.slotEntry.restTimeConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
                 <Grid size={{ xs: 6, sm: 1 }}>
-                    {getConfigComponent('max-rest', props.slotEntry.maxRestTimeConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('max-rest', props.slotEntry.maxRestTimeConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
 
 
                 <Grid size={{ xs: 6, sm: 2 }} offset={{ sm: 4 }}>
-                    {getConfigComponent('weight', props.slotEntry.weightConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('weight', props.slotEntry.weightConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
                 <Grid size={{ xs: 6, sm: 2 }}>
-                    {getConfigComponent('max-weight', props.slotEntry.maxWeightConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('max-weight', props.slotEntry.maxWeightConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
                 <Grid size={{ xs: 12, sm: 4 }}>
                     <SlotEntryWeightUnitField slotEntry={props.slotEntry} routineId={props.routineId} />
@@ -171,10 +171,10 @@ export const SlotEntryDetails = (props: {
 
 
                 <Grid size={{ xs: 6, sm: 2 }} offset={{ sm: 4 }}>
-                    {getConfigComponent('reps', props.slotEntry.repetitionsConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('reps', props.slotEntry.repetitionsConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
                 <Grid size={{ xs: 6, sm: 2 }}>
-                    {getConfigComponent('max-reps', props.slotEntry.maxRepetitionsConfigs, props.routineId, props.slotEntry.id)}
+                    {getConfigComponent('max-reps', props.slotEntry.maxRepetitionsConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
                 <Grid size={{ xs: 12, sm: 4 }}>
                     <SlotEntryRepetitionUnitField slotEntry={props.slotEntry} routineId={props.routineId} />
@@ -197,7 +197,7 @@ export const SlotEntryDetails = (props: {
                     </IconButton>
                     <IconButton
                         size={"small"}
-                        onClick={() => deleteSlotEntryQuery.mutate(props.slotEntry.id)}
+                        onClick={() => deleteSlotEntryQuery.mutate(props.slotEntry.id!)}
                         disabled={isPending}
                     >
                         <DeleteIcon />

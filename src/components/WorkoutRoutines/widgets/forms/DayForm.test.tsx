@@ -48,8 +48,8 @@ describe('Tests for the DayForm', () => {
 
         // Assert
         expect(screen.getByRole('textbox', { name: /name/i })).toHaveValue('Every day is leg day 🦵🏻');
-        expect(screen.getByRole('checkbox', { name: /routines\.restday/i })).not.toBeChecked();
-        expect(screen.getByRole('checkbox', { name: /routines\.needslogstoadvance/i })).not.toBeChecked();
+        expect(screen.getByRole('switch', { name: /routines\.restday/i })).not.toBeChecked();
+        expect(screen.getByRole('switch', { name: /routines\.needslogstoadvance/i })).not.toBeChecked();
         expect(screen.getByRole('textbox', { name: /description/i })).toHaveValue('');
     });
 

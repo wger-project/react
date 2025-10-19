@@ -29,13 +29,14 @@ interface SessionFormProps {
 
 export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, setSelectedDate }: SessionFormProps) => {
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let formik: FormikProps<any> | null;
 
     const [t, i18n] = useTranslation();
     const [session, setSession] = React.useState<WorkoutSession | undefined>(initialSession);
 
     const addSessionQuery = useAddSessionQuery();
-    const editSessionQuery = useEditSessionQuery(session?.id!);
+    const editSessionQuery = useEditSessionQuery(session?.id || 0);
     const findSessionQuery = useFindSessionQuery(
         routineId,
         {

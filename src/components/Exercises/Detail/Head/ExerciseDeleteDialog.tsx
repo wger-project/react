@@ -27,8 +27,8 @@ import { deleteExercise, deleteExerciseTranslation, getExercise } from "services
 import { ExerciseSearchResponse } from "services/responseType";
 
 export function ExerciseDeleteDialog(props: {
-    onClose: Function,
-    onChangeLanguage: Function,
+    onClose: () => void,
+    onChangeLanguage: () => void,
     currentExercise: Exercise,
     currentLanguage: Language | undefined,
 }) {
@@ -44,14 +44,14 @@ export function ExerciseDeleteDialog(props: {
     };
 
     const handleDeleteTranslation = async () => {
-        await deleteExerciseTranslation(props.currentExercise.getTranslation(props.currentLanguage)?.id!);
+        await deleteExerciseTranslation(props.currentExercise.getTranslation(props.currentLanguage)!.id!);
         props.onClose();
         props.onChangeLanguage();
     };
 
     const handleDeleteBase = async (handleReplacement: boolean = false) => {
         if (handleReplacement) {
-            await deleteExercise(props.currentExercise.id!, replacementExercise?.uuid!);
+            await deleteExercise(props.currentExercise.id!, replacementExercise!.uuid!);
         } else {
             await deleteExercise(props.currentExercise.id!);
         }

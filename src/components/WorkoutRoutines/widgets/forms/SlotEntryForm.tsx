@@ -7,6 +7,7 @@ import {
     useFetchRoutineRepUnitsQuery,
     useFetchRoutineWeighUnitsQuery
 } from "components/WorkoutRoutines/queries";
+import debounce from "lodash/debounce";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
@@ -54,6 +55,7 @@ export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: num
         editQuery.mutate(SlotEntry.clone(props.slotEntry, { type: newValue as SlotEntryType }));
     };
 
+
     return <>
         <TextField
             fullWidth
@@ -66,7 +68,7 @@ export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: num
         >
             {options!.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                    {option.value.toUpperCase()} - {option.label}
                 </MenuItem>
             ))}
         </TextField>
@@ -151,15 +153,6 @@ export const SlotEntryWeightUnitField = (props: { slotEntry: SlotEntry, routineI
         </TextField>
     </>;
 };
-
-
-function debounce(func: (...args: any[]) => void, wait: number) {
-    let timeout: NodeJS.Timeout;
-    return (...args: any[]) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
-    };
-}
 
 type BaseSlotEntryRoundingFieldProps = {
     initialValue: number | null;

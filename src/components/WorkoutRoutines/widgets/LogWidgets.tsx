@@ -38,6 +38,7 @@ import {
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { generateChartColors } from "utils/colors";
 import { PAGINATION_OPTIONS } from "utils/consts";
+import { dateToLocale, luxonDateTimeToLocale } from "utils/date";
 
 
 export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logEntries: WorkoutLog[] | undefined }) => {
@@ -123,7 +124,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
                 if (value == null) {
                     return '';
                 }
-                return `${value.toLocaleDateString()}`;
+                return `${dateToLocale(value)}`;
             },
         },
         {
@@ -147,7 +148,9 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
 
             editable: true,
             headerName: t('routines.rir'),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             getOptionValue: (value: any) => value.value,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             getOptionLabel: (value: any) => value.label,
             valueOptions: RIR_VALUES_SELECT_LIST,
         },
@@ -250,7 +253,7 @@ const formatData = (data: WorkoutLog[]) =>
         };
     });
 
-const ExerciseLogTooltip = ({ active, payload, label, }: TooltipProps<ValueType, NameType>) => {
+const ExerciseLogTooltip = ({ active, payload }: TooltipProps<ValueType, NameType>) => {
     if (active) {
         // TODO: translate rir
         let rir = '';
@@ -261,13 +264,12 @@ const ExerciseLogTooltip = ({ active, payload, label, }: TooltipProps<ValueType,
         return <Card>
             <CardContent>
                 <Typography variant="body1">
-                    {DateTime.fromMillis(payload?.[0].value as number).toLocaleString(DateTime.DATE_MED)}
+                    {luxonDateTimeToLocale(DateTime.fromMillis(payload?.[0].value as number))}
                 </Typography>
 
                 <Typography variant="body2">
                     {payload?.[1].payload?.entry.repetitions} × {payload?.[1].value}{payload?.[1].unit}{rir}
                 </Typography>
-
             </CardContent>
         </Card>;
     }
@@ -296,7 +298,7 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
                         dataKey="time"
                         domain={["auto", "auto"]}
                         name="Time"
-                        tickFormatter={unixTime => DateTime.fromMillis(unixTime).toLocaleString(DateTime.DATE_MED)}
+                        tickFormatter={unixTime => luxonDateTimeToLocale(DateTime.fromMillis(unixTime))}
                         type="number"
                     />
                     <YAxis

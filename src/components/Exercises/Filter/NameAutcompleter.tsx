@@ -53,7 +53,8 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
 
         fetchName(inputValue);
 
-        return () => {};
+        return () => {
+        };
     }, [value, inputValue, fetchName]);
 
     return (
@@ -70,7 +71,7 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                 value={value}
                 noOptionsText={t("noResults")}
                 isOptionEqualToValue={(option, value) => option.value === value.value}
-                onChange={async (event: any, newValue: ExerciseSearchResponse | null) => {
+                onChange={async (event: React.SyntheticEvent, newValue: ExerciseSearchResponse | null) => {
                     setOptions(newValue ? [newValue, ...options] : options);
                     setValue(newValue);
                     if (loadExercise && newValue !== null) {

@@ -4,6 +4,8 @@ import { Slot } from "components/WorkoutRoutines/models/Slot";
 import i18n from 'i18next';
 import { Adapter } from "utils/Adapter";
 
+export type DayType = 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap';
+
 interface DayConstructorParams {
     id?: number;
     routineId: number | null;
@@ -12,7 +14,8 @@ interface DayConstructorParams {
     description?: string;
     isRest?: boolean;
     needLogsToAdvance?: boolean;
-    type?: 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap';
+    type?: DayType;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config?: any | null;
     slots?: Slot[];
 }
@@ -29,7 +32,8 @@ export class Day {
     description: string;
     isRest: boolean;
     needLogsToAdvance: boolean;
-    type: 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap';
+    type: DayType;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: any | null;
 
     slots: Slot[] = [];
@@ -51,12 +55,20 @@ export class Day {
         return this.type !== 'custom';
     }
 
+    public get displayNameWithType(): string {
+        return this.isSpecialType ? `${this.type.toUpperCase()} - ${this.displayName}` : this.displayName;
+    }
+
+    public get displayName(): string {
+        return this.isRest ? i18n.t('routines.restDay') : this.name;
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static fromJson(json: any): Day {
         return adapter.fromJson(json);
     }
 
-    static clone(other: Day, overrides?: Partial<DayConstructorParams>): Day {
+    static clone(other: Day, overrides?: Partial<DayConstructorParams>) {
         return new Day({
             id: overrides?.id ?? (other.id ?? undefined),
             routineId: overrides?.routineId ?? other.routineId,
@@ -71,9 +83,6 @@ export class Day {
         });
     }
 
-    public getDisplayName(): string {
-        return this.isRest ? i18n.t('routines.restDay') : this.name;
-    }
 
     toJson() {
         return adapter.toJson(this);
@@ -81,7 +90,10 @@ export class Day {
 
 }
 
-export const getDayName = (day: Day | null): string => day === null || day.isRest ? i18n.t('routines.restDay') : day.getDisplayName();
+/*
+ * Returns the display name of the day, or "Rest day" if it's a rest day or null
+ */
+export const getDayName = (day: Day | null): string => day === null || day.isRest ? i18n.t('routines.restDay') : day.displayNameWithType;
 
 
 class DayAdapter implements Adapter<Day> {

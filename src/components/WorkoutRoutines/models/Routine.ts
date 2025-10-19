@@ -17,11 +17,11 @@ export const DEFAULT_WORKOUT_DURATION = 12;
 
 type RoutineConstructorParams = {
     id?: number | null;
-    name: string;
-    description: string;
+    name?: string;
+    description?: string;
     created?: Date;
     start?: Date;
-    end: Date;
+    end?: Date;
     fitInWeek?: boolean;
     isTemplate?: boolean;
     isPublic?: boolean;
@@ -32,24 +32,20 @@ type RoutineConstructorParams = {
 
 export class Routine {
     id: number | null = null;
-    name: string;
-    description: string;
+    name: string = '';
+    description: string = '';
     created: Date = new Date();
     start: Date = new Date();
-    end: Date;
-    fitInWeek: boolean = false;
+    end: Date = DateTime.local().plus({ weeks: DEFAULT_WORKOUT_DURATION }).toJSDate();
+    fitInWeek: boolean = true;
     isTemplate: boolean = false;
     isPublic: boolean = false;
 
     days: Day[] = [];
     dayData: RoutineDayData[] = [];
 
-    constructor(params: RoutineConstructorParams) {
-        this.name = params.name;
-        this.description = params.description;
-        this.end = params.end;
-
-        Object.assign(this, params);
+    constructor(params?: RoutineConstructorParams) {
+        Object.assign(this, params || {});
     }
 
     get isNotTemplate() {
@@ -208,8 +204,6 @@ class RoutineAdapter implements Adapter<Routine> {
 
     toJson(item: Routine) {
         return {
-            ...(item.id != null ? { id: item.id } : {}),
-
             name: item.name,
             description: item.description,
             start: dateToYYYYMMDD(item.start),

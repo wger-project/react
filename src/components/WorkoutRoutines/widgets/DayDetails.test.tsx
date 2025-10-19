@@ -5,7 +5,7 @@ import { Day } from "components/WorkoutRoutines/models/Day";
 import { DayDragAndDropGrid } from "components/WorkoutRoutines/widgets/DayDetails";
 import React from 'react';
 import { addDay, getRoutine } from "services";
-import { testQueryClient } from "tests/queryClient";
+import { getTestQueryClient } from "tests/queryClient";
 import { testRoutine1 } from "tests/workoutRoutinesTestData";
 
 jest.mock("services");
@@ -26,17 +26,16 @@ describe("Test the DayDragAndDropGrid component", () => {
 
         // Act
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <DayDragAndDropGrid routineId={222} selectedDayIndex={0} setSelectedDayIndex={mockSetSelectedDay} />
             </QueryClientProvider>
         );
-        await waitFor(() => {
-            expect(getRoutine).toHaveBeenCalled();
-        });
 
         // Assert
-
-        expect(screen.getByText('Every day is leg day 🦵🏻')).toBeInTheDocument();
+        expect(getRoutine).toHaveBeenCalled();
+        await waitFor(() => {
+            expect(screen.getByText('Every day is leg day 🦵🏻')).toBeInTheDocument();
+        });
         expect(screen.getByText('routines.restDay')).toBeInTheDocument();
         expect(screen.getByText('Pull day')).toBeInTheDocument();
         expect(mockSetSelectedDay).not.toHaveBeenCalled();
@@ -46,14 +45,16 @@ describe("Test the DayDragAndDropGrid component", () => {
 
         // Act
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <DayDragAndDropGrid routineId={222} selectedDayIndex={0} setSelectedDayIndex={mockSetSelectedDay} />
             </QueryClientProvider>
         );
         await waitFor(() => {
             expect(getRoutine).toHaveBeenCalled();
         });
-        await user.click(screen.getByRole('button', { name: 'routines.addDay' }));
+        await waitFor(async () => {
+            await user.click(screen.getByRole('button', { name: 'routines.addDay' }));
+        });
 
         // Assert
         expect(mockAddDay).toHaveBeenCalledWith(new Day({

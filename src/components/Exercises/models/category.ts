@@ -18,6 +18,7 @@ export class Category {
 
 
 export class CategoryAdapter implements Adapter<Category> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any): Category {
         return new Category(
             item.id,
