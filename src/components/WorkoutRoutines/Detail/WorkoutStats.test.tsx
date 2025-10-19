@@ -6,7 +6,7 @@ import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { getLanguages, getMuscles, getRoutine, getRoutineStatisticsData } from "services";
 import { testLanguages, testMuscles } from "tests/exerciseTestdata";
-import { testQueryClient } from "tests/queryClient";
+import { getTestQueryClient } from "tests/queryClient";
 import { testRoutine1 } from "tests/workoutRoutinesTestData";
 
 jest.mock("services");
@@ -39,7 +39,7 @@ describe("Smoke tests the WorkoutStats component", () => {
 
         // Act
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <MemoryRouter initialEntries={['/test/101']}>
                     <Routes>
                         <Route path="/test/:routineId" element={<WorkoutStats />} />
@@ -55,7 +55,9 @@ describe("Smoke tests the WorkoutStats component", () => {
             expect(getLanguages).toHaveBeenCalledTimes(1);
             expect(getMuscles).toHaveBeenCalledTimes(1);
         });
-        expect(screen.getByText('routines.statsOverview - Test routine 1')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText('routines.statsOverview - Test routine 1')).toBeInTheDocument();
+        });
         expect(screen.getByText('routines.volume')).toBeInTheDocument();
         expect(screen.getByText('routines.daily')).toBeInTheDocument();
         expect(screen.getByText('exercises.exercises')).toBeInTheDocument();

@@ -17,7 +17,7 @@ export type SessionQueryOptions = {
     filtersetQueryLogs?: object,
 }
 
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const searchSession = async (queryParams: Record<string, any>): Promise<WorkoutSession | null> => {
     const response = await axios.get(
         makeUrl(ApiPath.SESSION, { query: queryParams }),

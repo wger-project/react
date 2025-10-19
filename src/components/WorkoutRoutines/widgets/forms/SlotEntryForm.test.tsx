@@ -9,7 +9,7 @@ import {
     SlotEntryWeightUnitField
 } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
 import { editProfile, editSlotEntry, getProfile, getRoutineRepUnits, getRoutineWeightUnits } from "services";
-import { testQueryClient } from "tests/queryClient";
+import { getTestQueryClient } from "tests/queryClient";
 import { testProfileDataVerified } from "tests/userTestdata";
 import { testDayLegs, testRepetitionUnits, testWeightUnits } from "tests/workoutRoutinesTestData";
 import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
@@ -29,7 +29,7 @@ describe('SlotEntryTypeField', () => {
 
     test('correctly updates the slot entry on change', async () => {
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <SlotEntryTypeField
                     slotEntry={testDayLegs.slots[0].entries[0]}
                     routineId={1}
@@ -40,16 +40,18 @@ describe('SlotEntryTypeField', () => {
         const dropdown = screen.getByRole('combobox', { name: 'routines.set.type' });
         await user.click(dropdown);
 
-        expect(screen.queryAllByText('routines.set.normalSet')).toHaveLength(2); // One in the options menu, one in the selected value
-        expect(screen.getByText('routines.set.dropSet')).toBeInTheDocument();
-        expect(screen.getByText('routines.set.myo')).toBeInTheDocument();
-        expect(screen.getByText('routines.set.partial')).toBeInTheDocument();
-        expect(screen.getByText('routines.set.forced')).toBeInTheDocument();
-        expect(screen.getByText('routines.set.tut')).toBeInTheDocument();
-        expect(screen.getByText('routines.set.iso')).toBeInTheDocument();
-        expect(screen.getByText('routines.set.jump')).toBeInTheDocument();
+        // One in the options menu, one in the selected value
+        expect(screen.queryAllByText(/routines\.set\.normalSet/)).toHaveLength(2);
+        expect(screen.getByText(/routines\.set\.dropSet/)).toBeInTheDocument();
+        expect(screen.getByText(/routines\.set\.myo/)).toBeInTheDocument();
+        expect(screen.getByText(/routines\.set\.partial/)).toBeInTheDocument();
+        expect(screen.getByText(/routines\.set\.forced/)).toBeInTheDocument();
+        expect(screen.getByText(/routines\.set\.tut/)).toBeInTheDocument();
+        expect(screen.getByText(/routines\.set\.iso/)).toBeInTheDocument();
+        expect(screen.getByText(/routines\.set\.jump/)).toBeInTheDocument();
 
-        const myoOption = screen.getByRole('option', { name: 'routines.set.myo' });
+
+        const myoOption = screen.getByRole('option', { name: /routines\.set\.myo/ });
         await user.click(myoOption);
         expect(mockEditSlotEntry).toHaveBeenCalledWith(SlotEntry.clone(testDayLegs.slots[0].entries[0], { type: 'myo' }));
     });
@@ -67,7 +69,7 @@ describe('SlotEntryRepetitionUnitField', () => {
 
     test('correctly updates the slot entry on change', async () => {
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <SlotEntryRepetitionUnitField
                     slotEntry={testSlotEntry}
                     routineId={1}
@@ -79,8 +81,10 @@ describe('SlotEntryRepetitionUnitField', () => {
             expect(getRoutineRepUnits).toHaveBeenCalled();
         });
 
-        const dropdown = screen.getByRole('combobox', { name: 'unit' });
-        await user.click(dropdown);
+        await waitFor(async () => {
+            const dropdown = screen.getByRole('combobox', { name: 'unit' });
+            await user.click(dropdown);
+        });
 
         const minutesOption = screen.getByRole('option', { name: 'Minutes' });
         await user.click(minutesOption);
@@ -102,7 +106,7 @@ describe('SlotEntryWeightUnitField', () => {
 
     test('correctly updates the slot entry on change', async () => {
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <SlotEntryWeightUnitField
                     slotEntry={testSlotEntry}
                     routineId={1}
@@ -115,9 +119,10 @@ describe('SlotEntryWeightUnitField', () => {
             expect(getProfile).toHaveBeenCalled();
         });
 
-
-        const dropdown = screen.getByRole('combobox', { name: 'unit' });
-        await user.click(dropdown);
+        await waitFor(async () => {
+            const dropdown = screen.getByRole('combobox', { name: 'unit' });
+            await user.click(dropdown);
+        });
 
         const platesOption = screen.getByRole('option', { name: 'Plates' });
         await user.click(platesOption);
@@ -141,7 +146,7 @@ describe('SlotEntryRoundingField', () => {
     test('correctly updates the weight rounding for the slot entry', async () => {
         // Arrange
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <SlotEntryRoundingField
                     editProfile={false}
                     slotEntry={testSlotEntry}
@@ -169,7 +174,7 @@ describe('SlotEntryRoundingField', () => {
     test('correctly updates the weight rounding for the slot entry and the user profile', async () => {
         // Arrange
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <SlotEntryRoundingField
                     editProfile={true}
                     initialValue={42}
@@ -197,7 +202,7 @@ describe('SlotEntryRoundingField', () => {
     test('correctly updates the reps rounding for the slot entry', async () => {
         // Arrange
         render(
-            <QueryClientProvider client={testQueryClient}>
+            <QueryClientProvider client={getTestQueryClient()}>
                 <SlotEntryRoundingField
                     editProfile={false}
                     slotEntry={testSlotEntry}

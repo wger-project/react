@@ -119,7 +119,7 @@
     "language": "Lenguaje",
     "goBack": "Atrás",
     "forms": {
-        "supportedImageFormats": "Solo se admiten archivos JPEG, PNG y WEBP de menos de 20 Mb",
+        "supportedImageFormats": "Solo se admiten archivos JPEG, PNG, WEBP y AVIF de menos de 20 Mb",
         "valueTooShort": "El valor es demasiado corto",
         "valueTooLong": "El valor es demasiado largo",
         "fieldRequired": "Este campo es obligatorio",
@@ -203,7 +203,8 @@
             "partial": "Parcial",
             "forced": "Forzado",
             "type": "Tipo",
-            "jump": "Salto"
+            "jump": "Salto",
+            "iso": "ISO"
         },
         "roundingHelp": "Establezca el redondeo predeterminado para obtener peso y repeticiones (esto es especialmente útil cuando se usan incrementos porcentuales en la progresión). Esto se aplicará a todos los conjuntos nuevos, pero se puede cambiar individualmente en el formulario de progresión. Deja vacío para deshabilitar el redondeo.",
         "maxLengthRoutine": "La rutina debe tener como mucho {{number}} semanas",

@@ -285,7 +285,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
 
             {exercise.videos.map(video => (
                 <Grid key={video.id} size={{ md: 3 }}>
-                    <VideoEditCard video={video} canDelete={deleteVideoPermissionQuery.data!} />
+                    <VideoEditCard exerciseId={exercise.id!} video={video} canDelete={deleteVideoPermissionQuery.data!} />
                 </Grid>
             ))}
         </Grid>

@@ -40,7 +40,6 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
     const [popupImage, setPopupImage] = useState<ImageFormData | undefined>(undefined);
 
     const [openModal, setOpenModal] = React.useState(false);
-    const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
 
     useEffect(() => {

@@ -13,7 +13,7 @@ import * as yup from 'yup';
 
 interface WeightFormProps {
     weightEntry?: WeightEntry,
-    closeFn?: Function,
+    closeFn?: () => void,
 }
 
 export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {

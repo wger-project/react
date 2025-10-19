@@ -33,8 +33,11 @@ import { setNewBaseVariationId, setVariationId } from "state/exerciseSubmissionR
 /*
  * Groups a list of objects by a property
  */
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function groupBy(list: any[], keyGetter: Function) {
     const map = new Map();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     list.forEach((item: any) => {
         const key = keyGetter(item);
         const collection = map.get(key);

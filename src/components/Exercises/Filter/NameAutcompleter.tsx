@@ -53,7 +53,8 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
 
         fetchName(inputValue);
 
-        return () => {};
+        return () => {
+        };
     }, [value, inputValue, fetchName]);
 
     return (

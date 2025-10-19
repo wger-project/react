@@ -15,8 +15,9 @@ import LoadingButton from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
 import { WgerTextField } from "components/Common/forms/WgerTextField";
 import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
-import { Day } from "components/WorkoutRoutines/models/Day";
+import { Day, DayType } from "components/WorkoutRoutines/models/Day";
 import { useDeleteDayQuery, useEditDayQuery } from "components/WorkoutRoutines/queries";
+import { DayTypeSelect } from "components/WorkoutRoutines/widgets/forms/DayTypeSelect";
 import { DefaultRoundingMenu } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
@@ -74,21 +75,25 @@ export const DayForm = (props: {
         description: Yup.string()
             .max(descriptionMaxLength, t('forms.maxLength', { chars: descriptionMaxLength })),
         isRest: Yup.boolean(),
-        needsLogsToAdvance: Yup.boolean()
+        needsLogsToAdvance: Yup.boolean(),
+        type: Yup.string(),
     });
 
     const handleSubmit = (values: Partial<{
         name: string,
         description: string,
         isRest: boolean,
-        needsLogsToAdvance: boolean
-    }>) => editDayQuery.mutate(Day.clone(
+        needsLogsToAdvance: boolean,
+        type: string
+    }>) =>
+        editDayQuery.mutate(Day.clone(
         props.day,
         {
             ...(values.name !== undefined && { name: values.name }),
             ...(values.description !== undefined && { description: values.description }),
             ...({ isRest: values.isRest }),
             ...(values.needsLogsToAdvance !== undefined && { needLogsToAdvance: values.needsLogsToAdvance }),
+                ...(values.type !== undefined && { type: values.type as DayType }),
         })
     );
 
@@ -98,7 +103,8 @@ export const DayForm = (props: {
                 name: props.day.name,
                 description: props.day.description,
                 isRest: props.day.isRest,
-                needsLogsToAdvance: props.day.needLogsToAdvance
+                needsLogsToAdvance: props.day.needLogsToAdvance,
+                type: props.day.type,
             }}
             validationSchema={validationSchema}
             onSubmit={(values, { setSubmitting }) => {
@@ -110,19 +116,25 @@ export const DayForm = (props: {
             {(formik) => (
                 <Form>
                     <Grid container spacing={2}>
-                        <Grid size={{ xs: 12, sm: 6 }}>
+                        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                             <WgerTextField
                                 fieldName="name"
                                 title="Name"
                                 fieldProps={{ disabled: isRestDay }}
                             />
                         </Grid>
-                        <Grid size={{ xs: 6, sm: 2 }}>
+                        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                            <DayTypeSelect
+                                fieldName="type"
+                                title="Type"
+                            />
+                        </Grid>
+                        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
                             <FormControlLabel
                                 control={<Switch checked={isRestDay} onChange={handleRestDayChange} />}
                                 label={t('routines.restDay')} />
                         </Grid>
-                        <Grid size={{ xs: 6, sm: 4 }}>
+                        <Grid size={{ xs: 12, sm: 4, md: 3 }}>
                             <FormControlLabel
                                 disabled={isRestDay}
                                 control={<Switch
@@ -188,7 +200,7 @@ export const DayForm = (props: {
                     </Dialog>
 
                     <DeleteConfirmationModal
-                        title={t('deleteConfirmation', { name: props.day.getDisplayName() })}
+                        title={t('deleteConfirmation', { name: props.day.displayName })}
                         message={t('routines.deleteDayConfirmation')}
                         isOpen={openDeleteDialog}
                         closeFn={handleCancelDeleteDay}

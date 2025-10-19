@@ -20,7 +20,7 @@ Settings.defaultZone = TIMEZONE;
 
 interface EntryFormProps {
     entry?: MeasurementEntry,
-    closeFn?: Function,
+    closeFn?: () => void,
     categoryId: number,
 }
 

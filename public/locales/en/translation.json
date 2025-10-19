@@ -168,7 +168,7 @@
   "goBack": "Go back",
   "language": "Language",
   "forms": {
-    "supportedImageFormats": "Only JPEG, PNG and WEBP files below 20Mb are supported",
+    "supportedImageFormats": "Only JPEG, PNG, WEBP and AVIF files below 20Mb are supported",
     "enterNumber": "Please enter a valid number",
     "enterInteger": "Please enter a whole number",
     "fieldRequired": "This field is required",
@@ -277,9 +277,19 @@
       "myo": "MYO",
       "partial": "Partial",
       "forced": "Forced",
-      "tut": "TUT",
-      "iso": "ISO",
+      "tut": "Time under tension",
+      "iso": "Isometric hold",
       "jump": "Jump"
+    },
+    "day": {
+      "custom": "Custom",
+      "enom": "Every minute on the minute",
+      "amrap": "As many rounds as possible",
+      "hiit": "High intensity interval training",
+      "tabata": "Tabata",
+      "edt": "Escalating density training",
+      "rft": "Rounds for time",
+      "afap": "As fast as possible"
     }
   },
   "measurements": {

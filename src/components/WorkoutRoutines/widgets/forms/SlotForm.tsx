@@ -26,7 +26,7 @@ export const SlotForm = (props: { slot: Slot, routineId: number }) => {
             size={"small"}
             value={slotComment}
             disabled={editSlotQuery.isPending}
-            onChange={(e) => handleChange(e.target.value)}
+            onChange={(e) => setSlotComment(e.target.value)}
             onBlur={handleBlur}
             slotProps={{
                 input: { endAdornment: editSlotQuery.isPending && <LoadingProgressIcon /> }

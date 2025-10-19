@@ -54,6 +54,7 @@ export class Profile {
 }
 
 class ProfileAdapter implements Adapter<Profile> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson = (item: any): Profile => new Profile({
         username: item.username,
         email: item.email,

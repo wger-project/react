@@ -148,7 +148,9 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
 
             editable: true,
             headerName: t('routines.rir'),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             getOptionValue: (value: any) => value.value,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             getOptionLabel: (value: any) => value.label,
             valueOptions: RIR_VALUES_SELECT_LIST,
         },

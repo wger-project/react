@@ -5,6 +5,7 @@ import { BaseConfig, BaseConfigAdapter } from "components/WorkoutRoutines/models
 import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
 import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
 import { Adapter } from "utils/Adapter";
+import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG } from "utils/consts";
 
 export type SlotEntryType = 'normal' | 'dropset' | 'myo' | 'partial' | 'forced' | 'tut' | 'iso' | 'jump';
 
@@ -13,17 +14,17 @@ type ConstructorParamsType = {
     slotId: number,
     exerciseId: number,
     exercise?: Exercise,
-    repetitionUnitId: number,
+    repetitionUnitId?: number,
     repetitionUnit?: RepetitionUnit,
     repetitionRounding?: number | null,
-    weightUnitId: number,
+    weightUnitId?: number,
     weightRounding?: number | null,
     weightUnit?: WeightUnit,
-    order: number,
-    comment: string,
-    type: SlotEntryType
+    order?: number,
+    comment?: string,
+    type?: SlotEntryType
     // eslint-disable-next-line @typescript-eslint/no-explicit-any,
-    config: any | null,
+    config?: any | null;
     configs?: {
         weightConfigs?: BaseConfig[],
         maxWeightConfigs?: BaseConfig[],
@@ -75,14 +76,14 @@ export class SlotEntry {
         this.slotId = data.slotId;
         this.exerciseId = data.exerciseId;
         this.exercise = data.exercise;
-        this.repetitionUnitId = data.repetitionUnitId;
+        this.repetitionUnitId = data.repetitionUnitId ?? REP_UNIT_REPETITIONS;
         this.repetitionRounding = data.repetitionRounding ?? null;
-        this.weightUnitId = data.weightUnitId;
+        this.weightUnitId = data.weightUnitId ?? WEIGHT_UNIT_KG;
         this.weightRounding = data.weightRounding ?? null;
-        this.order = data.order;
-        this.comment = data.comment;
-        this.type = data.type;
-        this.config = data.config;
+        this.order = data.order ?? 1;
+        this.comment = data.comment ?? '';
+        this.type = data.type ?? 'normal';
+        this.config = data.config ?? null;
 
         if (data.configs !== undefined) {
             this.weightConfigs = data.configs.weightConfigs ?? [];

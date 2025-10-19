@@ -212,7 +212,7 @@ export const RoutineTable = (props: {
                 borderBottomWidth: showLogs ? 0 : null
             }}>{slotEntry.exercise?.getTranslation(language).name}</TableCell>
             {iterations.map((iteration) => {
-                const setConfig = props.routine.getSetConfigData(day.id, iteration, slotEntry.id);
+                const setConfig = props.routine.getSetConfigData(day.id!, iteration, slotEntry.id!);
 
                 return <React.Fragment key={iteration}>
                     <TableCell align={'center'} sx={sx}>
@@ -268,7 +268,7 @@ export const RoutineTable = (props: {
                 <small>{t('nutrition.logged')}</small>
             </TableCell>
             {iterations.map((iteration) => {
-                const setConfig = props.routine.getSetConfigData(day.id, iteration, slotEntry.id);
+                const setConfig = props.routine.getSetConfigData(day.id!, iteration, slotEntry.id!);
                 const iterationLogs = groupedLogs[iteration] ?? [];
 
                 const logs = iterationLogs.filter((log) => log.slotEntryId === slotEntry.id);
@@ -330,7 +330,7 @@ export const RoutineTable = (props: {
                             sx={{ backgroundColor: theme.palette.action.hover }}
                             className={classes.stickyColumn}
                         >
-                            <b>{day.getDisplayName()}</b>
+                            <b>{day.displayName}</b>
                         </TableCell>
                         <TableCell sx={{ backgroundColor: theme.palette.action.hover }} colSpan={5 * iterations.length}>
                         </TableCell>

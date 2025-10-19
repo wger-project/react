@@ -82,10 +82,6 @@ export const useAddMeasurementEntryQuery = () => {
 
     return useMutation({
         mutationFn: (data: AddMeasurementParams) => addMeasurementEntry(data),
-        onError: (error: any) => {
-            console.log(error);
-            // toast.error(error.message);
-        },
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QUERY_MEASUREMENTS,]
