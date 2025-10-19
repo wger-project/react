@@ -124,4 +124,8 @@ describe("test the clickable url utility", () => {
         expect(result).toEqual('/de/weight/overview');
     });
 
+    test('link to weight overview page', () => {
+        const result = makeLink(WgerLink.USER_PREFERENCES, 'de',);
+        expect(result).toEqual('/de/user/preferences');
+    });
 });

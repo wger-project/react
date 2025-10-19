@@ -3,12 +3,11 @@ import { IS_PROD, VITE_API_KEY, VITE_API_SERVER } from "config";
 import slug from "slug";
 
 interface makeUrlInterface {
-    id?: number,
-    server?: string,
-    objectMethod?: string,
-    query?: object,
+    id?: number;
+    server?: string;
+    objectMethod?: string;
+    query?: object;
 }
-
 
 /*
  * util function that generates a url string from a base url and a query object
@@ -18,7 +17,7 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
 
     // Base data
     const serverUrl = params.server || VITE_API_SERVER;
-    const paths = [serverUrl, 'api', 'v2', path];
+    const paths = [serverUrl, "api", "v2", path];
 
     // Detail view
     if (params.id) {
@@ -30,7 +29,7 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
         paths.push(params.objectMethod);
     }
 
-    paths.push('');
+    paths.push("");
 
     // Query parameters
     if (params.query) {
@@ -42,12 +41,11 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
             }
         }
         paths.pop();
-        paths.push(`?${queryList.join('&')}`);
+        paths.push(`?${queryList.join("&")}`);
     }
 
-    return paths.join('/');
+    return paths.join("/");
 }
-
 
 export enum WgerLink {
     DASHBOARD,
@@ -86,13 +84,14 @@ export enum WgerLink {
     NUTRITION_PLAN_COPY,
     NUTRITION_DIARY,
 
+    USER_PREFERENCES,
+
     INGREDIENT_DETAIL,
 
-    CALENDAR
+    CALENDAR,
 }
 
-type UrlParams = { id: number, id2?: number, slug?: string, date?: string };
-
+type UrlParams = { id: number; id2?: number; slug?: string; date?: string };
 
 /*
  * Util function that generates a clickable url
@@ -100,12 +99,11 @@ type UrlParams = { id: number, id2?: number, slug?: string, date?: string };
  * These URLs need to be kept in sync with the ones used in django
  */
 export function makeLink(link: WgerLink, language?: string, params?: UrlParams): string {
-
-    language = language || 'en-us';
+    language = language || "en-us";
 
     // If the name is in the form of "en-US", remove the country code since
     // our django app can't work with that at the moment.
-    const langShort = language.split('-')[0];
+    const langShort = language.split("-")[0];
 
     switch (link) {
         // Workout routines
@@ -185,6 +183,8 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
 
         case WgerLink.INGREDIENT_DETAIL:
             return `/${langShort}/nutrition/ingredient/${params!.id}/view`;
+        case WgerLink.USER_PREFERENCES:
+            return `/${langShort}/user/preferences`;
 
         // Dashboard
         case WgerLink.DASHBOARD:
@@ -200,12 +200,12 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
  */
 function getCookie(name: string) {
     let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
             // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            if (cookie.substring(0, name.length + 1) === name + "=") {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
             }
@@ -222,20 +222,19 @@ function getCookie(name: string) {
  */
 export function makeHeader(token?: string) {
     token = token || VITE_API_KEY;
-    const DJANGO_CSRF_COOKIE = 'csrftoken';
+    const DJANGO_CSRF_COOKIE = "csrftoken";
 
-    const out: AxiosRequestConfig['headers'] = {};
-    out['Content-Type'] = 'application/json';
+    const out: AxiosRequestConfig["headers"] = {};
+    out["Content-Type"] = "application/json";
 
     if (token) {
-        out['Authorization'] = `Token ${token}`;
+        out["Authorization"] = `Token ${token}`;
     }
 
     const csrfCookie = getCookie(DJANGO_CSRF_COOKIE);
     if (IS_PROD && csrfCookie != undefined) {
-        out['X-CSRFToken'] = csrfCookie;
+        out["X-CSRFToken"] = csrfCookie;
     }
 
     return out;
 }
-
