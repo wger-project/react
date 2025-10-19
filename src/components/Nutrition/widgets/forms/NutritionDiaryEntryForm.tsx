@@ -18,7 +18,7 @@ type NutritionDiaryEntryFormProps = {
     entry?: DiaryEntry,
     mealId?: number | null,
     meals?: Meal[],
-    closeFn?: Function,
+    closeFn?: () => void,
 }
 
 export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn }: NutritionDiaryEntryFormProps) => {
@@ -39,6 +39,8 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
             .min(1, t('forms.minValue', { value: '1' })),
         ingredient: yup
             .number()
+            .nullable()
+            .moreThan(0, t('forms.fieldRequired'))
             .required(t('forms.fieldRequired')),
         datetime: yup
             .date()
@@ -51,14 +53,14 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
             initialValues={{
                 datetime: new Date(),
                 amount: 0,
-                ingredient: 0,
+                ingredient: null,
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
 
                 // Make sure "amount" is a number
                 const newAmount = Number(values.amount);
-                
+
                 if (entry) {
                     // Edit
                     const newDiaryEntry = DiaryEntry.clone(entry, {
@@ -66,7 +68,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         planId: planId,
                         amount: newAmount,
                         datetime: values.datetime,
-                        ingredientId: values.ingredient
+                        ingredientId: values.ingredient!
                     });
                     editDiaryQuery.mutate(newDiaryEntry);
                 } else {
@@ -75,7 +77,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         planId: planId,
                         amount: newAmount,
                         datetime: values.datetime,
-                        ingredientId: values.ingredient,
+                        ingredientId: values.ingredient!,
                         mealId: selectedMeal,
                     }));
                 }
@@ -90,7 +92,16 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                 <Form>
                     <Stack spacing={2}>
                         <IngredientAutocompleter
-                            callback={(value: Ingredient | null) => formik.setFieldValue('ingredient', value?.id)} />
+                            callback={(value: Ingredient | null) => {
+                                formik.setFieldTouched('ingredient', true);
+                                formik.setFieldValue('ingredient', value?.id ?? null);
+                            }}
+                            />
+                            {formik.touched.ingredient && formik.errors.ingredient && (
+                            <div style={{ color: 'crimson', fontSize: '0.7rem', marginLeft: '12px' }}>
+                                {formik.errors.ingredient}
+                            </div>
+                            )}
                         <TextField
                             fullWidth
                             id="amount"

@@ -7,12 +7,12 @@ import { collectValidationErrors } from "utils/forms";
 export const FormQueryErrors = (props: { mutationQuery: any }) => {
     const [openAlert, setOpenAlert] = useState(true);
 
-    const handleCloseAlert = (event?: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpenAlert(false);
-    };
+    // const handleCloseAlert = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    //     if (reason === 'clickaway') {
+    //         return;
+    //     }
+    //     setOpenAlert(false);
+    // };
 
     if (!props.mutationQuery?.isError) {
         return null;
@@ -24,8 +24,7 @@ export const FormQueryErrors = (props: { mutationQuery: any }) => {
                 <Alert severity="error" sx={{ mb: 1 }} /*onClose={handleCloseAlert}*/>
                     <AlertTitle>{props.mutationQuery.error?.message}</AlertTitle>
                     <ul>
-                        {/* TODO: how to properly type this */}
-                        {collectValidationErrors((props.mutationQuery.error as any).response?.data).map((error, index) =>
+                        {collectValidationErrors(props.mutationQuery.error.response?.data).map((error, index) =>
                             <li key={index}>{error}</li>
                         )}
                     </ul>
@@ -55,8 +54,7 @@ export const FormQueryErrorsSnackbar = (props: { mutationQuery: any }) => {
             <Alert /* onClose={handleCloseSnackbar} */ severity="error" sx={{ width: '100%' }}>
                 <AlertTitle>{props.mutationQuery.error?.message}</AlertTitle>
                 <ul>
-                    {/* TODO: how to properly type this */}
-                    {collectValidationErrors((props.mutationQuery.error as any).response?.data).map((error, index) =>
+                    {collectValidationErrors(props.mutationQuery.error.response?.data).map((error, index) =>
                         <li key={index}>{error}</li>
                     )}
                 </ul>

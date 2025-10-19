@@ -80,6 +80,7 @@ export const ExerciseOverviewList = () => {
     const isMobile = useMediaQuery('(max-width:600px)');
 
     const [page, setPage] = React.useState(1);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handlePageChange = (event: any, value: number) => {
         setPage(value);
 

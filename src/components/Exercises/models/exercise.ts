@@ -87,6 +87,8 @@ export class ExerciseAdapter implements Adapter<Exercise> {
     /*
      * needs the items from exerciseinfo
      */
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any): Exercise {
         const categoryAdapter = new CategoryAdapter();
         const equipmentAdapter = new EquipmentAdapter();
@@ -99,12 +101,18 @@ export class ExerciseAdapter implements Adapter<Exercise> {
             item.id,
             item.uuid,
             categoryAdapter.fromJson(item.category),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             item.equipment.map((e: any) => (equipmentAdapter.fromJson(e))),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             item.muscles.map((m: any) => (muscleAdapter.fromJson(m))),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             item.muscles_secondary.map((m: any) => (muscleAdapter.fromJson(m))),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             item.images.map((i: any) => (imageAdapter.fromJson(i))),
             item.variations,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             item.translations.map((t: any) => translationAdapter.fromJson(t)),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             item.videos.map((t: any) => videoAdapter.fromJson(t)),
             item.author_history
         );

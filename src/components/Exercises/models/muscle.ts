@@ -27,6 +27,7 @@ export class Muscle {
 }
 
 export class MuscleAdapter implements Adapter<Muscle> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any): Muscle {
         return new Muscle(
             item.id,
@@ -34,9 +35,5 @@ export class MuscleAdapter implements Adapter<Muscle> {
             item.name_en,
             item.is_front
         );
-    }
-
-    toJson(item: Muscle) {
-        return {};
     }
 }

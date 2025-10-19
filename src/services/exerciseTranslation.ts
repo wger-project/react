@@ -14,6 +14,7 @@ export const EXERCISE_TRANSLATION_PATH = 'exercise-translation';
  */
 export const getExerciseTranslations = async (id: number): Promise<Translation[]> => {
     const url = makeUrl(EXERCISE_PATH, { query: { exercise: id } });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data } = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });

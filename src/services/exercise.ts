@@ -10,6 +10,8 @@ export const EXERCISE_SUBMISSION_PATH = 'exercise-submission';
 /*
  * Process the response from the server and return the exercise bases
  */
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function processExerciseApiData(data: any): Exercise[] {
     const adapter = new ExerciseAdapter();
 
@@ -30,6 +32,7 @@ export function processExerciseApiData(data: any): Exercise[] {
  */
 export const getExercises = async (): Promise<Exercise[]> => {
     const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 900 } });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
@@ -44,6 +47,7 @@ export const getExercises = async (): Promise<Exercise[]> => {
 export const getExercise = async (id: number): Promise<Exercise> => {
     const adapter = new ExerciseAdapter();
     const url = makeUrl(EXERCISE_INFO_PATH, { id: id });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });
@@ -61,6 +65,7 @@ export const getExercisesForVariation = async (id: number | null | undefined): P
     }
 
     const url = makeUrl(EXERCISE_INFO_PATH, { query: { variations: id } });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
     });

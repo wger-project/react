@@ -16,14 +16,17 @@ export const MacrosPieChart = (props: { data: NutritionalValues }) => {
     ];
 
     const RADIAN = Math.PI / 180;
-    const renderCustomizedLabel = ({
-                                       cx,
-                                       cy,
-                                       midAngle,
-                                       innerRadius,
-                                       outerRadius,
-                                       payload,
-                                   }: any) => {
+    const renderCustomizedLabel = (
+        {
+            cx,
+            cy,
+            midAngle,
+            innerRadius,
+            outerRadius,
+            payload,
+        }:
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        any) => {
 
 
         const radius = innerRadius + (outerRadius - innerRadius) * 0.4;

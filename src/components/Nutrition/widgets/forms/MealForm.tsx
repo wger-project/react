@@ -12,7 +12,7 @@ import * as yup from "yup";
 interface MealFormProps {
     planId: number,
     meal?: Meal,
-    closeFn?: Function,
+    closeFn?: () => void,
 }
 
 export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
