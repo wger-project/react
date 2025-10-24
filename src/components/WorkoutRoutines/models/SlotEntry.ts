@@ -133,11 +133,16 @@ export class SlotEntry {
             order: overrides?.order ?? other.order,
             comment: overrides?.comment ?? other.comment,
 
-            repetitionUnit: overrides?.repetitionUnit ?? (other.repetitionUnit ?? undefined),
+            // NOTE: temporarily commented out to avoid issues. The constructor will see the
+            // unit objects and set the ids accordingly, ignoring the explicit IDs. This is
+            // probably OK since we always load the whole routine again after an edit, but
+            // it is a bit ugly.
+
+            // repetitionUnit: overrides?.repetitionUnit ?? (other.repetitionUnit ?? undefined),
             repetitionUnitId: overrides?.repetitionUnitId ?? other.repetitionUnitId,
             repetitionRounding: overrides?.repetitionRounding ?? other.repetitionRounding,
 
-            weightUnit: overrides?.weightUnit ?? (other.weightUnit ?? undefined),
+            // weightUnit: overrides?.weightUnit ?? (other.weightUnit ?? undefined),
             weightUnitId: overrides?.weightUnitId ?? other.weightUnitId,
             weightRounding: overrides?.weightRounding ?? other.weightRounding,
         });
