@@ -41,7 +41,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
         (<Formik
             initialValues={{
                 weight: weightEntry ? weightEntry.weight : 0,
-                date: weightEntry ? dateToYYYYMMDD(weightEntry.date) : dateToYYYYMMDD(new Date()),
+                date: weightEntry ? weightEntry.date : new Date(),
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
@@ -49,12 +49,12 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                 // Edit existing weight entry
                 if (weightEntry) {
                     weightEntry.weight = values.weight;
-                    weightEntry.date = new Date(values.date);
+                    weightEntry.date = values.date;
                     editWeightQuery.mutate(weightEntry);
 
                     // Create a new weight entry
                 } else {
-                    weightEntry = new WeightEntry(new Date(values.date), values.weight);
+                    weightEntry = new WeightEntry(values.date, values.weight);
                     addWeightQuery.mutate(weightEntry);
                 }
 
