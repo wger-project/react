@@ -237,15 +237,30 @@ export const RoutineForm = ({
                             </Tooltip>
                         </Grid>
                         <Grid size={12}>
-                            <Button
-                                disabled={formik.isSubmitting}
-                                color="primary"
-                                variant="contained"
-                                type="submit"
+                            {buttonState === 'loading' ? (
+                                <LoadingButton
+                                    loading
+                                    loadingPosition="center"
+                                    variant="contained"
+                                    color="primary"
+                                    sx={{ mt: 2 }}
+                                >
+                                    {t('save')}
+                                </LoadingButton>
+                            ) : (
+                                <Button
+                                    variant="contained"
+                                    type="submit"
+                                    sx={{ mt: 2 }}
+                                >
+                                    {buttonState === 'success'
+                                        ? 'SAVE ✅'
+                                        : buttonState === 'error'
+                                            ? 'SAVE ❌'
+                                            : t('save')}
+                                </Button>
+                            )}
 
-                                sx={{ mt: 2 }}>
-                                {t('save')}
-                            </Button>
                         </Grid>
                     </Grid>
                 </Form>
