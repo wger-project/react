@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { makeLink, WgerLink } from "utils/url";
 import * as yup from 'yup';
+import LoadingButton from "@mui/material/Button";
 
 interface RoutineFormProps {
     existingRoutine?: Routine,
@@ -42,6 +43,7 @@ export const RoutineForm = ({
     const addRoutineQuery = useAddRoutineQuery();
     const editRoutineQuery = useEditRoutineQuery(existingRoutine?.id ?? -1);
     const navigate = useNavigate();
+    const [buttonState, setButtonState] = useState<'idle'|'loading'|'error'|'success'>('idle');
 
     const routine = existingRoutine
         ? Routine.clone(existingRoutine)
@@ -124,22 +126,28 @@ export const RoutineForm = ({
 
             validationSchema={validationSchema}
             onSubmit={async (values) => {
+                setButtonState('loading');
+                const minWait = new Promise(res => setTimeout(res, 1000)); // set minimum loading time to 1 second
                 routine.name = values.name;
                 routine.description = values.description;
                 routine.fitInWeek = values.fitInWeek;
                 routine.start = values.start!.toJSDate();
                 routine.end = values.end!.toJSDate();
 
-                if (routine.id !== null) {
+                try{if (routine.id !== null) {
                     editRoutineQuery.mutate(routine);
                 } else {
                     const result = await addRoutineQuery.mutateAsync(routine);
                     navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
 
-                    if (closeFn) {
+                    if (closeFn)
                         closeFn();
-                    }
                 }
+                setButtonState('success');
+                } catch(err){
+                    setButtonState('error');
+                }
+                setTimeout(()=> setButtonState("idle"),1000);
             }}
         >
             {formik => (
@@ -234,6 +242,7 @@ export const RoutineForm = ({
                                 color="primary"
                                 variant="contained"
                                 type="submit"
+
                                 sx={{ mt: 2 }}>
                                 {t('save')}
                             </Button>
