@@ -1,15 +1,11 @@
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import PhotoIcon from "@mui/icons-material/Photo";
 import {
     Alert,
     Avatar,
     Button,
-    Card,
-    CardActions,
-    CardContent,
-    CardHeader,
     Collapse,
     IconButton,
     List,
@@ -19,7 +15,7 @@ import {
     ListItemIcon,
     ListItemText,
     Snackbar,
-} from '@mui/material';
+} from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { WgerModal } from "components/Core/Modals/WgerModal";
@@ -31,16 +27,15 @@ import { useAddDiaryEntryQuery, useFetchLastNutritionalPlanQuery } from "compone
 import { NutritionalValuesDashboardChart } from "components/Nutrition/widgets/charts/NutritionalValuesDashboardChart";
 import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
 import { PlanForm } from "components/Nutrition/widgets/forms/PlanForm";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
 import { dateTimeToLocaleHHMM } from "utils/date";
 import { numberGramLocale } from "utils/numbers";
 import { makeLink, WgerLink } from "utils/url";
-
+import { DashboardCard } from "./DashboardCard";
 
 export const NutritionCard = () => {
-
     const [t] = useTranslation();
     const planQuery = useFetchLastNutritionalPlanQuery();
 
@@ -48,13 +43,11 @@ export const NutritionCard = () => {
         return <LoadingPlaceholder />;
     }
 
-    return planQuery.data !== null
-        ? <NutritionCardContent plan={planQuery.data!} />
-        : <EmptyCard
-            title={t('nutritionalPlan')}
-            modalContent={<PlanForm />}
-            modalTitle={t('add')}
-        />;
+    return planQuery.data !== null ? (
+        <NutritionCardContent plan={planQuery.data!} />
+    ) : (
+        <EmptyCard title={t("nutritionalPlan")} modalContent={<PlanForm />} modalTitle={t("add")} />
+    );
 };
 
 function NutritionCardContent(props: { plan: NutritionalPlan }) {
@@ -64,53 +57,50 @@ function NutritionCardContent(props: { plan: NutritionalPlan }) {
     const handleOpenLogModal = () => setOpenLogModal(true);
     const handleCloseLogModal = () => setOpenLogModal(false);
 
-
-    return <>
-        <Card>
-            <CardHeader
-                title={t('nutritionalPlan')}
+    return (
+        <>
+            <DashboardCard
+                title={t("nutritionalPlan")}
                 subheader={props.plan.description}
-            />
-            <CardContent sx={{ height: "500px", overflow: "auto" }}>
+                actions={
+                    <>
+                        <Button
+                            size="small"
+                            href={makeLink(WgerLink.NUTRITION_DETAIL, i18n.language, { id: props.plan.id! })}
+                        >
+                            {t("seeDetails")}
+                        </Button>
+                        <Tooltip title={t("nutrition.logThisMealItem")}>
+                            <IconButton onClick={handleOpenLogModal}>
+                                <HistoryEduIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </>
+                }
+            >
                 <NutritionalValuesDashboardChart
                     percentage={props.plan.percentageValuesLoggedToday}
                     planned={props.plan.plannedNutritionalValues}
                     logged={props.plan.loggedNutritionalValuesToday}
                 />
                 <List>
-                    {props.plan.meals.map(meal =>
+                    {props.plan.meals.map((meal) => (
                         <MealListItem meal={meal} planId={props.plan.id!} key={meal.id} />
-                    )}
+                    ))}
                 </List>
-            </CardContent>
-            <CardActions sx={{
-                justifyContent: "space-between",
-                alignItems: "flex-start",
-            }}>
-                <Button size="small"
-                        href={makeLink(WgerLink.NUTRITION_DETAIL, i18n.language, { id: props.plan.id! })}>
-                    {t('seeDetails')}
-                </Button>
-                <Tooltip title={t('nutrition.logThisMealItem')}>
-                    <IconButton onClick={handleOpenLogModal}>
-                        <HistoryEduIcon />
-                    </IconButton>
-                </Tooltip>
-            </CardActions>
-        </Card>
-        <WgerModal title={t('nutrition.addNutritionalDiary')}
-                   isOpen={openLogModal}
-                   closeFn={handleCloseLogModal}>
-            <NutritionDiaryEntryForm
-                closeFn={handleCloseLogModal}
-                planId={props.plan.id!}
-                meals={props.plan.meals}
-            />
-        </WgerModal>
-    </>;
+            </DashboardCard>
+            <WgerModal title={t("nutrition.addNutritionalDiary")} isOpen={openLogModal} closeFn={handleCloseLogModal}>
+                <NutritionDiaryEntryForm
+                    closeFn={handleCloseLogModal}
+                    planId={props.plan.id!}
+                    meals={props.plan.meals}
+                />
+            </WgerModal>
+        </>
+    );
 }
 
-const MealListItem = (props: { meal: Meal, planId: number }) => {
+const MealListItem = (props: { meal: Meal; planId: number }) => {
     const [t, i18n] = useTranslation();
     const addDiaryEntryQuery = useAddDiaryEntryQuery(props.planId);
 
@@ -120,7 +110,7 @@ const MealListItem = (props: { meal: Meal, planId: number }) => {
     const handleToggleExpand = () => setExpandView(!expandView);
 
     const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') {
+        if (reason === "clickaway") {
             return;
         }
         setOpenSnackbar(false);
@@ -134,45 +124,47 @@ const MealListItem = (props: { meal: Meal, planId: number }) => {
     const primaryHeader = props.meal.name ? props.meal.name : dateTimeToLocaleHHMM(props.meal.time);
     const secondaryHeader = props.meal.name ? dateTimeToLocaleHHMM(props.meal.time) : null;
 
-    return <>
-        <ListItemButton onClick={handleToggleExpand} selected={expandView}>
-            <ListItemIcon>
-                {expandView ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </ListItemIcon>
-            <ListItemText primary={primaryHeader} secondary={secondaryHeader} />
-
-        </ListItemButton>
-        <Collapse in={expandView} timeout="auto" unmountOnExit>
-            <List>
-                {props.meal.items.map((item) =>
-                    <ListItem key={item.id} secondaryAction={
-                        <Tooltip title={t('nutrition.logThisMealItem')}>
-                            <IconButton edge="end" onClick={() => handleAddDiaryEntry(item)}>
-                                <HistoryEduIcon />
-                            </IconButton>
-                        </Tooltip>
-                    }>
-                        <ListItemAvatar>
-                            <Avatar
-                                alt={item.ingredient?.name}
-                                src={item.ingredient?.image?.url}
-                                sx={{ width: 45, height: 45 }}
-                            >
-                                <PhotoIcon />
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary={item.ingredient?.name}
-                            secondary={numberGramLocale(item.amount, i18n.language)}
-                        />
-                    </ListItem>
-                )}
-            </List>
-        </Collapse>
-        <Snackbar open={openSnackbar} autoHideDuration={SNACKBAR_AUTO_HIDE_DURATION} onClose={handleCloseSnackbar}>
-            <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-                {t('nutrition.diaryEntrySaved')}
-            </Alert>
-        </Snackbar>
-    </>;
+    return (
+        <>
+            <ListItemButton onClick={handleToggleExpand} selected={expandView}>
+                <ListItemIcon>{expandView ? <ExpandLessIcon /> : <ExpandMoreIcon />}</ListItemIcon>
+                <ListItemText primary={primaryHeader} secondary={secondaryHeader} />
+            </ListItemButton>
+            <Collapse in={expandView} timeout="auto" unmountOnExit>
+                <List>
+                    {props.meal.items.map((item) => (
+                        <ListItem
+                            key={item.id}
+                            secondaryAction={
+                                <Tooltip title={t("nutrition.logThisMealItem")}>
+                                    <IconButton edge="end" onClick={() => handleAddDiaryEntry(item)}>
+                                        <HistoryEduIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            }
+                        >
+                            <ListItemAvatar>
+                                <Avatar
+                                    alt={item.ingredient?.name}
+                                    src={item.ingredient?.image?.url}
+                                    sx={{ width: 45, height: 45 }}
+                                >
+                                    <PhotoIcon />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={item.ingredient?.name}
+                                secondary={numberGramLocale(item.amount, i18n.language)}
+                            />
+                        </ListItem>
+                    ))}
+                </List>
+            </Collapse>
+            <Snackbar open={openSnackbar} autoHideDuration={SNACKBAR_AUTO_HIDE_DURATION} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: "100%" }}>
+                    {t("nutrition.diaryEntrySaved")}
+                </Alert>
+            </Snackbar>
+        </>
+    );
 };
