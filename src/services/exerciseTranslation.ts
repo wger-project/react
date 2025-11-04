@@ -15,7 +15,7 @@ export const EXERCISE_TRANSLATION_PATH = 'exercise-translation';
 export const getExerciseTranslations = async (id: number): Promise<Translation[]> => {
     const url = makeUrl(EXERCISE_PATH, { query: { exercise: id } });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data } = await axios.get<ResponseType<any>>(url, {
+    const { data } = await axios.get<ResponseType<Translation>>(url, {
         headers: makeHeader(),
     });
     const adapter = new TranslationAdapter();
@@ -41,15 +41,15 @@ export const searchExerciseTranslations = async (name: string,languageCode: stri
     });
 
     try {
-        const { data } = await axios.get<ResponseType<any>>(url);
+        const { data } = await axios.get<ResponseType<Exercise>>(url);
         
         if (!data || !data.results || !Array.isArray(data.results)) {
             return [];
         }
         
         const adapter = new ExerciseAdapter();
-        return data.results.map((item: any) => adapter.fromJson(item));
-    } catch (error) {
+        return data.results.map((item: unknown) => adapter.fromJson(item));
+    } catch {
         return [];
     }
 };

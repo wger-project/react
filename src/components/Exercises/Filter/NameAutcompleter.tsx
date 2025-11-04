@@ -71,7 +71,7 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                 value={value}
                 noOptionsText={t("noResults")}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
-                onChange={async (event: any, newValue: Exercise | null) => {
+                onChange={async (event: React.SyntheticEvent, newValue: Exercise | null) => {
                     setOptions(newValue ? [newValue, ...options] : options);
                     setValue(newValue);
                     callback(newValue);
