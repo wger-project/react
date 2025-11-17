@@ -4,7 +4,7 @@ import { WeightEntry } from "components/BodyWeight/model";
 import { WgerModal } from "components/Core/Modals/WgerModal";
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { CartesianGrid, DotProps, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, DotProps, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { dateToLocale } from "utils/date";
 
 export interface WeightChartProps {
@@ -72,34 +72,31 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
                     <WeightForm weightEntry={currentEntry} />
                 </WgerModal>
             }
-            <ResponsiveContainer height={height}>
-
-                <LineChart data={weightData}>
-                    <Line
-                        type="monotone"
-                        dataKey="weight"
-                        stroke={theme.palette.secondary.main}
-                        strokeWidth={2}
-                        dot={weightData.length > NR_OF_WEIGHTS_CHART_DOT ? false : { strokeWidth: 1, r: 4 }}
-                        activeDot={{
-                            stroke: 'black',
-                            strokeWidth: 1,
-                            r: 6,
-                            onClick: handleClick
-                        }} />
-                    <CartesianGrid
-                        stroke="#ccc"
-                        strokeDasharray="5 5" />
-                    <XAxis
-                        dataKey="date"
-                        type={'number'}
-                        domain={['dataMin', 'dataMax']}
-                        tickFormatter={timeStr => dateToLocale(new Date(timeStr))}
-                    />
-                    <YAxis domain={['auto', 'auto']} />
-                    <Tooltip content={<CustomTooltip />} />
-                </LineChart>
-            </ResponsiveContainer>
+            <LineChart data={weightData} responsive height={height}>
+                <Line
+                    type="monotone"
+                    dataKey="weight"
+                    stroke={theme.palette.secondary.main}
+                    strokeWidth={2}
+                    dot={weightData.length > NR_OF_WEIGHTS_CHART_DOT ? false : { strokeWidth: 1, r: 4 }}
+                    activeDot={{
+                        stroke: 'black',
+                        strokeWidth: 1,
+                        r: 6,
+                        onClick: handleClick
+                    }} />
+                <CartesianGrid
+                    stroke="#ccc"
+                    strokeDasharray="5 5" />
+                <XAxis
+                    dataKey="date"
+                    type={'number'}
+                    domain={['dataMin', 'dataMax']}
+                    tickFormatter={timeStr => dateToLocale(new Date(timeStr))}
+                />
+                <YAxis domain={['auto', 'auto']} />
+                <Tooltip content={<CustomTooltip />} />
+            </LineChart>
         </div>
     );
 };
