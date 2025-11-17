@@ -1,7 +1,7 @@
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import { generateChartColors } from "utils/colors";
 import { numberLocale } from "utils/numbers";
 
@@ -50,46 +50,47 @@ export const NutritionDiaryChart = ({ showPlanned, planned, today, avg7Days }: N
     ];
 
     return (
-        <ResponsiveContainer width={"100%"} height={300}>
-            <BarChart
-                data={data}
-                margin={{
-                    top: 20,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                }}
-            >
-                <CartesianGrid strokeDasharray="3 4" />
-                <XAxis dataKey="name" />
-                <YAxis
-                    type="number"
-                    orientation="left"
-                    unit={t('nutrition.gramShort')}
-                />
-                <Tooltip formatter={(value: number) => numberLocale(value, i18n.language)} />
-                <Legend />
-                {showPlanned &&
-                    <Bar
-                        dataKey="planned"
-                        unit={t('nutrition.gramShort')}
-                        name={t('nutrition.planned')}
-                        fill={colorGenerator.next().value!}
-                    />
-                }
+        <BarChart
+            data={data}
+            margin={{
+                top: 20,
+                right: 30,
+                left: 20,
+                bottom: 5,
+            }}
+            responsive
+            width={"100%"}
+            height={300}
+        >
+            <CartesianGrid strokeDasharray="3 4" />
+            <XAxis dataKey="name" />
+            <YAxis
+                type="number"
+                orientation="left"
+                unit={t('nutrition.gramShort')}
+            />
+            <Tooltip formatter={(value: number) => numberLocale(value, i18n.language)} />
+            <Legend />
+            {showPlanned &&
                 <Bar
-                    dataKey="today"
+                    dataKey="planned"
                     unit={t('nutrition.gramShort')}
-                    name={t('nutrition.today')}
+                    name={t('nutrition.planned')}
                     fill={colorGenerator.next().value!}
                 />
-                <Bar
-                    dataKey="avg7Days"
-                    unit={t('nutrition.gramShort')}
-                    name={t('nutrition.7dayAvg')}
-                    fill={colorGenerator.next().value!}
-                />
-            </BarChart>
-        </ResponsiveContainer>
+            }
+            <Bar
+                dataKey="today"
+                unit={t('nutrition.gramShort')}
+                name={t('nutrition.today')}
+                fill={colorGenerator.next().value!}
+            />
+            <Bar
+                dataKey="avg7Days"
+                unit={t('nutrition.gramShort')}
+                name={t('nutrition.7dayAvg')}
+                fill={colorGenerator.next().value!}
+            />
+        </BarChart>
     );
 };

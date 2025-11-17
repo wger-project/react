@@ -209,25 +209,23 @@ export const WorkoutStats = () => {
 
                 <Grid size={12}>
                     <Box width="100%" height={400}>
-                        <ResponsiveContainer width="100%" height="100%">
-                            <LineChart width={500} height={300}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="category" type="category" allowDuplicatedCategory={false} />
-                                <YAxis dataKey="value" />
-                                <Tooltip
-                                    formatter={(value: number) => Number.isInteger(value) ? value.toFixed(0) : value.toFixed(2)} />
-                                <Legend
-                                    layout={"vertical"}
-                                    verticalAlign="middle"
-                                    align="right"
-                                    wrapperStyle={{ paddingLeft: "20px" }}
-                                />
-                                {chartData.map((s) => (
-                                    <Line dataKey="value" data={s.data} name={s.name} key={s.name}
-                                          stroke={colorGenerator.next()!.value!} />
-                                ))}
-                            </LineChart>
-                        </ResponsiveContainer>
+                        <LineChart width="100%" height="100%" responsive>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="category" type="category" allowDuplicatedCategory={false} />
+                            <YAxis dataKey="value" />
+                            <Tooltip
+                                formatter={(value: number) => Number.isInteger(value) ? value.toFixed(0) : value.toFixed(2)} />
+                            <Legend
+                                layout={"vertical"}
+                                verticalAlign="middle"
+                                align="right"
+                                wrapperStyle={{ paddingLeft: "20px" }}
+                            />
+                            {chartData.map((s) => (
+                                <Line dataKey="value" data={s.data} name={s.name} key={s.name}
+                                      stroke={colorGenerator.next()!.value!} />
+                            ))}
+                        </LineChart>
                     </Box>
                 </Grid>
 

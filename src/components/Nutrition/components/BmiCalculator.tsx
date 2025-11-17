@@ -6,7 +6,7 @@ import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
 import { useProfileQuery } from "components/User/queries/profile";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Area, AreaChart, CartesianGrid, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis, } from "recharts";
+import { Area, AreaChart, CartesianGrid, ReferenceDot, Tooltip, XAxis, YAxis, } from "recharts";
 
 const bmiRanges = [
     { range: "obese", color: "#FF5733", min: 30, max: 100 },
@@ -128,48 +128,46 @@ export const BmiCalculator = () => {
                         {t('bmi.result', { value: bmi.toFixed(1) })}
                     </Typography>
                     }
-                    <ResponsiveContainer width="100%" height={400}>
-                        <AreaChart data={chartData}>
-                            <XAxis
-                                dataKey="height"
-                                type="number"
-                                domain={[140, 220]}
-                                unit="cm"
-                            />
-                            <YAxis
-                                domain={[40, 150]}
-                                tickFormatter={(value) => Math.round(value).toString()} // Format as integers
-                                unit="kg"
-                            />
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <Tooltip
-                                // @ts-ignore
-                                formatter={(value, name) => [Math.round(value as number), t('bmi.' + (name as string))]}
-                            />
+                    <AreaChart data={chartData} responsive width="100%" height={400}>
+                        <XAxis
+                            dataKey="height"
+                            type="number"
+                            domain={[140, 220]}
+                            unit="cm"
+                        />
+                        <YAxis
+                            domain={[40, 150]}
+                            tickFormatter={(value) => Math.round(value).toString()} // Format as integers
+                            unit="kg"
+                        />
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <Tooltip
+                            // @ts-ignore
+                            formatter={(value, name) => [Math.round(value as number), t('bmi.' + (name as string))]}
+                        />
 
-                            {bmiRanges.map((range) => (
-                                <Area
-                                    key={range.range}
-                                    type="monotone"
-                                    dataKey={range.range}
-                                    stroke={"black"}
-                                    // stroke={range.color}
-                                    fill={range.color}
-                                    fillOpacity={0.8}
-                                />
-                            ))}
+                        {bmiRanges.map((range) => (
+                            <Area
+                                key={range.range}
+                                type="monotone"
+                                dataKey={range.range}
+                                stroke={"black"}
+                                // stroke={range.color}
+                                fill={range.color}
+                                fillOpacity={0.8}
+                            />
+                        ))}
 
-                            {bmi !== null &&
-                                <ReferenceDot
-                                    x={height!}
-                                    y={weight!}
-                                    r={8}
-                                    fill="black"
-                                    stroke="none"
-                                />}
+                        {bmi !== null &&
+                            <ReferenceDot
+                                x={height!}
+                                y={weight!}
+                                r={8}
+                                fill="black"
+                                stroke="none"
+                            />}
 
-                        </AreaChart>
-                    </ResponsiveContainer>
+                    </AreaChart>
                     <Stack direction={"row"} justifyContent="center">
                         <Box
                             height={20}

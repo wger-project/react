@@ -27,7 +27,6 @@ import { useTranslation } from "react-i18next";
 import {
     CartesianGrid,
     Legend,
-    ResponsiveContainer,
     Scatter,
     ScatterChart,
     Tooltip,
@@ -292,43 +291,41 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
 
     return (
         <Box>
-            <ResponsiveContainer width={"100%"} height={250}>
-                <ScatterChart>
-                    <XAxis
-                        dataKey="time"
-                        domain={["auto", "auto"]}
-                        name="Time"
-                        tickFormatter={unixTime => luxonDateTimeToLocale(DateTime.fromMillis(unixTime))}
-                        type="number"
-                    />
-                    <YAxis
-                        domain={["auto", "auto"]}
-                        dataKey="value"
-                        name="Value"
-                        unit="kg"
-                    />
+            <ScatterChart responsive width={"100%"} height={250}>
+                <XAxis
+                    dataKey="time"
+                    domain={["auto", "auto"]}
+                    name="Time"
+                    tickFormatter={unixTime => luxonDateTimeToLocale(DateTime.fromMillis(unixTime))}
+                    type="number"
+                />
+                <YAxis
+                    domain={["auto", "auto"]}
+                    dataKey="value"
+                    name="Value"
+                    unit="kg"
+                />
 
-                    {Array.from(result).map(([key, value]) => {
-                            const color = colorGenerator.next().value!;
-                            const formattedData = formatData(value);
+                {Array.from(result).map(([key, value]) => {
+                        const color = colorGenerator.next().value!;
+                        const formattedData = formatData(value);
 
-                            return <Scatter
-                                key={key}
-                                data={formattedData}
-                                fill={color}
-                                line={{ stroke: color }}
-                                lineType="joint"
-                                lineJointType="monotoneX"
-                                name={key?.toString()}
-                            />;
-                        }
-                    )}
+                        return <Scatter
+                            key={key}
+                            data={formattedData}
+                            fill={color}
+                            line={{ stroke: color }}
+                            lineType="joint"
+                            lineJointType="monotoneX"
+                            name={key?.toString()}
+                        />;
+                    }
+                )}
 
-                    <Tooltip content={<ExerciseLogTooltip />} />
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <Legend />
-                </ScatterChart>
-            </ResponsiveContainer>
+                <Tooltip content={<ExerciseLogTooltip />} />
+                <CartesianGrid strokeDasharray="3 3" />
+                <Legend />
+            </ScatterChart>
         </Box>
     );
 };
