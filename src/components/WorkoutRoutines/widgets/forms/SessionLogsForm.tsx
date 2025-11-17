@@ -6,6 +6,7 @@ import Grid from '@mui/material/Grid';
 import { WgerTextField } from "components/Common/forms/WgerTextField";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
+import { Exercise } from "components/Exercises/models/exercise";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { RIR_VALUES_SELECT } from "components/WorkoutRoutines/models/BaseConfig";
 import { LogEntryForm } from "components/WorkoutRoutines/models/WorkoutLog";
@@ -15,7 +16,6 @@ import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { getLanguageByShortName } from "services";
-import { ExerciseSearchResponse } from "services/responseType";
 import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
 import * as yup from "yup";
 
@@ -96,11 +96,11 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
         setSnackbarOpen(true);
     };
 
-    const handleCallback = async (exerciseResponse: ExerciseSearchResponse | null, formik: FormikProps<{
+    const handleCallback = async (exercise: Exercise | null, formik: FormikProps<{
         logs: LogEntryForm[]
     }>) => {
 
-        if (exerciseResponse === null) {
+        if (exercise === null) {
             return;
         }
 
@@ -115,7 +115,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                     repetitionsTarget: '',
                     rir: '',
                     rirTarget: '',
-                    exercise: exerciseResponse.exercise!,
+                    exercise: exercise,
                 };
             }
             return log;

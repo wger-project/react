@@ -24,7 +24,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { deleteExercise, deleteExerciseTranslation, getExercise } from "services";
-import { ExerciseSearchResponse } from "services/responseType";
 
 export function ExerciseDeleteDialog(props: {
     onClose: () => void,
@@ -91,10 +90,10 @@ export function ExerciseDeleteDialog(props: {
             <p>{t('exercises.replacementsSearch')}</p>
 
             <NameAutocompleter
-                callback={(exercise: ExerciseSearchResponse | null) => {
+                callback={(exercise: Exercise | null) => {
                     if (exercise !== null) {
-                        setReplacementId(exercise.data.base_id);
-                        loadCurrentReplacement(exercise.data.base_id);
+                        setReplacementId(exercise.id!);
+                        loadCurrentReplacement(exercise.id!);
                     }
                 }}
             />

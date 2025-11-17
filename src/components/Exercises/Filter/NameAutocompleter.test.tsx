@@ -3,6 +3,7 @@ import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter"
 import React from 'react';
 import { searchExerciseTranslations } from "services";
 import { searchResponse } from "tests/exercises/searchResponse";
+import { Exercise } from "components/Exercises/models/exercise"; 
 
 jest.mock("services");
 const mockCallback = jest.fn();
@@ -71,6 +72,6 @@ describe("Test the NameAutocompleter component", () => {
         });
 
         // Assert
-        expect(mockCallback).toHaveBeenLastCalledWith(searchResponse[0]);
+        expect(mockCallback).toHaveBeenCalledWith(expect.any(Exercise));
     });
 });
