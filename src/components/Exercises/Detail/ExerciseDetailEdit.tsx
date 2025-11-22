@@ -67,7 +67,17 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
     }, [exerciseQuery.data]);
 
 
-    if (exerciseQuery.isLoading || musclesQuery.isLoading || exerciseQuery.isLoading || profileQuery.isLoading || addImagePermissionQuery.isLoading || deleteImagePermissionQuery.isLoading || addVideoPermissionQuery.isLoading || deleteVideoPermissionQuery.isLoading || editExercisePermissionQuery.isLoading) {
+    if (
+        exerciseQuery.isLoading
+        || musclesQuery.isLoading
+        || exerciseQuery.isLoading
+        || profileQuery.isLoading
+        || addImagePermissionQuery.isLoading
+        || deleteImagePermissionQuery.isLoading
+        || addVideoPermissionQuery.isLoading
+        || deleteVideoPermissionQuery.isLoading
+        || editExercisePermissionQuery.isLoading
+    ) {
         return <LoadingWidget />;
     }
 
@@ -89,7 +99,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
         <Formik
             initialValues={{
                 name: exerciseTranslation.name,
-                alternativeNames: exerciseTranslation.aliases.map(a => a.alias),
+                alternativeNames: exerciseTranslation.aliases.map(a => ({ id: a.id, alias: a.alias })),
                 description: exerciseTranslation.description,
             }}
             enableReinitialize
@@ -114,24 +124,24 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                         author: profileQuery.data!.username
                     });
 
-                // Edit aliases (this is currently really hacky)
-                // Since we only get the string from the form, we need to compare them to the list of
-                // current aliases and decide which stay the same and which will be updated (which we
-                // can't directly do, so the old one gets deleted and a new one created)
+                // Alias handling
+                const aliasOrig = (exerciseTranslation.aliases).map(a => ({ id: a.id, alias: a.alias }));
+                const aliasNew = values.alternativeNames ?? [];
 
-                // https://stackoverflow.com/questions/1187518/
-                const aliasOrig = exerciseTranslation.aliases.map(a => a.alias);
-                const aliasNew = values.alternativeNames;
-                const aliasToCreate = aliasNew.filter(x => !aliasOrig.includes(x));
-                const aliasToDelete = aliasOrig.filter(x => !aliasNew.includes(x));
+                const aliasToCreate = aliasNew.filter(n => !aliasOrig.some(o => o.alias === n.alias));
+                const aliasToDelete = aliasOrig.filter(o => !aliasNew.some(n => n.alias === o.alias));
 
-                aliasToCreate.forEach(alias => {
-                    postAlias(translation.id!, alias);
-                });
+                // Create new aliases
+                for (const a of aliasToCreate) {
+                    await postAlias(translation.id!, a.alias);
+                }
 
-                aliasToDelete.forEach(alias => {
-                    deleteAlias(exerciseTranslation.aliases.find(a => a.alias === alias)!.id);
-                });
+                // Delete removed aliases
+                for (const a of aliasToDelete) {
+                    if (a.id) {
+                        await deleteAlias(a.id);
+                    }
+                }
 
                 // Notify the user
                 setAlertIsVisible(true);
@@ -161,11 +171,14 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                             <PaddingBox />
                         </Grid>}
 
-                    <Grid size={6}>
-                        <Typography variant={'h5'}>{t('English')}</Typography>
+                    <Grid size={12}>
+                        <Typography variant={'h5'}>{t('translation')}</Typography>
                     </Grid>
                     <Grid size={6}>
-                        <Typography variant={'h5'}>
+                        <Typography variant={'h6'}>{t('English')}</Typography>
+                    </Grid>
+                    <Grid size={6}>
+                        <Typography variant={'h6'}>
                             {language.nameLong} ({language.nameShort})
                         </Typography>
                     </Grid>
@@ -205,6 +218,9 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                     {editExercisePermissionQuery.data && <>
                         <Grid size={12}>
                             <PaddingBox />
+                        </Grid>
+                        <Grid size={12}>
+                            <Typography variant={'h5'}>{t('nutrition.others')}</Typography>
                         </Grid>
                         <Grid size={{ xs: 12, md: 6 }}>
                             <EditExerciseCategory exerciseId={exercise.id!} initial={exercise.category.id} />
@@ -256,7 +272,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
 
         {/* Images */}
         <PaddingBox />
-        <Typography variant={'h6'}>{t('images')}</Typography>
+        <Typography variant={'h5'}>{t('images')}</Typography>
         <Grid container spacing={2} mt={2}>
             {addImagePermissionQuery.data && <Grid key={'add'} size={{ md: 3 }}>
                 <AddImageCard exerciseId={exercise.id!} />
@@ -275,7 +291,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
 
         {/* Videos */}
         <PaddingBox />
-        <Typography variant={'h6'}>{t('videos')}</Typography>
+        <Typography variant={'h5'}>{t('videos')}</Typography>
         <Grid container spacing={2} mt={2}>
             {addVideoPermissionQuery.data
                 && <Grid key={'add'} size={{ md: 3 }}>
@@ -285,7 +301,8 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
 
             {exercise.videos.map(video => (
                 <Grid key={video.id} size={{ md: 3 }}>
-                    <VideoEditCard exerciseId={exercise.id!} video={video} canDelete={deleteVideoPermissionQuery.data!} />
+                    <VideoEditCard exerciseId={exercise.id!} video={video}
+                                   canDelete={deleteVideoPermissionQuery.data!} />
                 </Grid>
             ))}
         </Grid>
@@ -294,9 +311,8 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
         {editExercisePermissionQuery.data
             && <>
                 <PaddingBox />
-                <Typography variant={'h6'}>{t('exercises.muscles')}</Typography>
+                <Typography variant={'h5'}>{t('exercises.muscles')}</Typography>
                 <Grid container spacing={1} mt={2}>
-
                     <Grid size={{ xs: 12, md: 6 }}>
                         <EditExerciseMuscle
                             exerciseId={exercise.id!}
@@ -305,8 +321,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                             blocked={secondaryMuscles}
                             isMain
                         />
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
+                        <Box sx={{ mt: 2 }} />
                         <EditExerciseMuscle
                             exerciseId={exercise.id!}
                             value={secondaryMuscles}
@@ -315,7 +330,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                             isMain={false}
                         />
                     </Grid>
-                    <Grid size={{ sm: 6 }} offset={{ md: 3 }}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <Grid container>
                             <Grid display="flex" justifyContent={"center"} size={6}>
                                 <MuscleOverview
@@ -333,6 +348,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                             </Grid>
                         </Grid>
                     </Grid>
+
                 </Grid>
             </>
         }

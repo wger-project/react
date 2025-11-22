@@ -127,7 +127,10 @@ describe("<Step1Basics />", () => {
         expect(setSecondaryMuscles).toHaveBeenNthCalledWith(2, [4]);
         expect(setNameEn).toHaveBeenCalledWith('Biceps enlarger');
         expect(setCategory).toHaveBeenCalledWith(1);
-        expect(setAlternativeNamesEn).toHaveBeenCalledWith(['Biceps enlarger 2000', 'Arms exploder']);
+        expect(setAlternativeNamesEn).toHaveBeenCalledWith([
+            { 'alias': 'Biceps enlarger 2000' },
+            { 'alias': 'Arms exploder' }
+        ]);
         expect(setEquipment).toHaveBeenCalledWith([42]);
     });
 });
