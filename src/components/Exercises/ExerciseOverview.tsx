@@ -7,6 +7,7 @@ import { MuscleFilter, MuscleFilterDropdown } from "components/Exercises/Filter/
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
 import { Category } from "components/Exercises/models/category";
 import { Equipment } from "components/Exercises/models/equipment";
+import { Exercise } from "components/Exercises/models/exercise";
 import { Muscle } from "components/Exercises/models/muscle";
 import { ExerciseGrid } from "components/Exercises/Overview/ExerciseGrid";
 import { ExerciseGridSkeleton } from "components/Exercises/Overview/ExerciseGridLoadingSkeleton";
@@ -15,7 +16,6 @@ import { useExercisesQuery } from "components/Exercises/queries";
 import React, { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { Exercise } from "components/Exercises/models/exercise";
 import { makeLink, WgerLink } from "utils/url";
 import { ExerciseFiltersContext } from './Filter/ExerciseFiltersContext';
 import { FilterDrawer } from './Filter/FilterDrawer';
@@ -73,7 +73,7 @@ const NoResultsBanner = () => {
 };
 
 export const ExerciseOverviewList = () => {
-    const basesQuery = useExercisesQuery();
+    const exerciseQuery = useExercisesQuery();
     const [t, i18n] = useTranslation();
     const navigate = useNavigate();
     const { selectedCategories, selectedEquipment, selectedMuscles } = useContext(ExerciseFiltersContext);
@@ -91,7 +91,7 @@ export const ExerciseOverviewList = () => {
     };
 
     const filteredExercises = useMemo(() => {
-        let filteredExercises = basesQuery.data || [];
+        let filteredExercises = exerciseQuery.data || [];
 
         // Filter exercise bases by categories
         if (selectedCategories.length > 0) {
@@ -123,7 +123,7 @@ export const ExerciseOverviewList = () => {
         }
 
         return filteredExercises;
-    }, [basesQuery.data, selectedCategories, selectedEquipment, selectedMuscles]);
+    }, [exerciseQuery.data, selectedCategories, selectedEquipment, selectedMuscles]);
 
     // Should be a multiple of three, since there are three columns in the grid
     const ITEMS_PER_PAGE = 21;
@@ -140,7 +140,7 @@ export const ExerciseOverviewList = () => {
             return;
         }
 
-        navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: exercise.id }));
+        navigate(makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, { id: exercise.id! }));
     };
 
     return (
@@ -251,7 +251,7 @@ export const ExerciseOverviewList = () => {
                         xs: 12,
                         sm: 9
                     }}>
-                    {basesQuery.isLoading
+                    {exerciseQuery.isLoading
                         ? <ExerciseGridSkeleton />
                         : <>
                             <ExerciseGrid exercises={paginatedExercises} />

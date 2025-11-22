@@ -41,20 +41,21 @@ const image = new ExerciseImage(
     true
 );
 
-export const testApiExercise1 = new Exercise(
-    345,
-    "c788d643-150a-4ac7-97ef-84643c6419bf",
-    category,
-    [equipment1, equipment2],
-    [muscle1],
-    [muscle2],
-    [image],
-    228,
-    [
+export const testApiExercise1 = new Exercise({
+    id: 345,
+    uuid: "c788d643-150a-4ac7-97ef-84643c6419bf",
+    lastUpdateGlobal: new Date("2025-11-22T19:32:02.590941+01:00"),
+    category: category,
+    equipment: [equipment1, equipment2],
+    muscles: [muscle1],
+    musclesSecondary: [muscle2],
+    images: [image],
+    variationId: 228,
+    translations: [
         testExerciseTranslation1,
         testExerciseTranslation2
     ],
-    [
+    videos: [
         new ExerciseVideo(
             1,
             "b1c934fa-c4f8-4d84-8cb4-7802be0d284c",
@@ -62,12 +63,13 @@ export const testApiExercise1 = new Exercise(
             false
         )
     ],
-    [
+    authors: [
         "wger.de",
         "author 1",
-        "somebody else"
+        "somebody else",
+        "Mr. T"
     ]
-);
+});
 
 
 export const responseApiExerciseInfo = {
@@ -77,6 +79,9 @@ export const responseApiExerciseInfo = {
     "results": [{
         "id": 345,
         "uuid": "c788d643-150a-4ac7-97ef-84643c6419bf",
+        "created": "2023-08-06T10:17:17.422900+02:00",
+        "last_update": "2025-11-22T14:17:20.119332+01:00",
+        "last_update_global": "2025-11-22T19:32:02.590941+01:00",
         "category": {
             "id": 10,
             "name": "Abs"
@@ -192,6 +197,12 @@ export const responseApiExerciseInfo = {
             "wger.de",
             "author 1",
             "somebody else"
+        ],
+        "total_authors_history": [
+            "wger.de",
+            "author 1",
+            "somebody else",
+            "Mr. T"
         ]
     }]
 };

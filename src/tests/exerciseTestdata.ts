@@ -46,16 +46,16 @@ export const testEquipment = [
     testEquipmentRocks,
 ];
 
-export const testExerciseSquats = new Exercise(
-    345,
-    "c788d643-150a-4ac7-97ef-84643c6419bf",
-    testCategoryLegs,
-    [testEquipmentBarbell, testEquipmentRocks],
-    [testMuscleBiggus, testMuscleRectusAbdominis],
-    [],
-    [],
-    null,
-    [
+export const testExerciseSquats = new Exercise({
+    id: 345,
+    uuid: "c788d643-150a-4ac7-97ef-84643c6419bf",
+    category: testCategoryLegs,
+    equipment: [testEquipmentBarbell, testEquipmentRocks],
+    muscles: [testMuscleBiggus, testMuscleRectusAbdominis],
+    musclesSecondary: [],
+    images: [],
+    variationId: null,
+    translations: [
         new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Squats',
@@ -74,18 +74,18 @@ export const testExerciseSquats = new Exercise(
             ]
         )
     ]
-);
+});
 
-export const testExerciseBenchPress = new Exercise(
-    2,
-    "abcdef-150a-4ac7-97ef-84643c6419bf",
-    testCategoryLegs,
-    [testEquipmentBarbell, testEquipmentRocks],
-    [testMuscleDacttilaris, testMuscleDeltoid],
-    [],
-    [],
-    1,
-    [
+export const testExerciseBenchPress = new Exercise({
+    id: 2,
+    uuid: "abcdef-150a-4ac7-97ef-84643c6419bf",
+    category: testCategoryLegs,
+    equipment: [testEquipmentBarbell, testEquipmentRocks],
+    muscles: [testMuscleDacttilaris, testMuscleDeltoid],
+    musclesSecondary: [],
+    images: [],
+    variationId: 1,
+    translations: [
         new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Benchpress',
@@ -93,17 +93,19 @@ export const testExerciseBenchPress = new Exercise(
             2
         ),
     ]
-);
-export const testExerciseCurls = new Exercise(
-    3,
-    "abcdef-150a-4ac7-97ef-84643c6419bf",
-    testCategoryArms,
-    [testEquipmentDumbbell],
-    [testMuscleBiggus, testMuscleDacttilaris],
-    [],
-    [],
-    1,
-    [
+});
+
+export const testExerciseCurls = new Exercise({
+    id: 3,
+    uuid: "abcdef-150a-4ac7-97ef-84643c6419bf",
+    lastUpdateGlobal: new Date(),
+    category: testCategoryArms,
+    equipment: [testEquipmentDumbbell],
+    muscles: [testMuscleBiggus, testMuscleDacttilaris],
+    musclesSecondary: [],
+    images: [],
+    variationId: 1,
+    translations: [
         new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Curls',
@@ -111,17 +113,19 @@ export const testExerciseCurls = new Exercise(
             2
         ),
     ]
-);
-export const testExerciseCrunches = new Exercise(
-    4,
-    "abcdef-150a-4ac7-97ef-84643c6419bf",
-    testCategoryChest,
-    [testEquipmentRocks],
-    [testMuscleDeltoid],
-    [],
-    [],
-    null,
-    [
+});
+
+export const testExerciseCrunches = new Exercise({
+    id: 4,
+    uuid: "abcdef-150a-4ac7-97ef-84643c6419bf",
+    lastUpdateGlobal: new Date(),
+    category: testCategoryChest,
+    equipment: [testEquipmentRocks],
+    muscles: [testMuscleDeltoid],
+    musclesSecondary: [],
+    images: [],
+    variationId: null,
+    translations: [
         new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Crunches',
@@ -129,17 +133,19 @@ export const testExerciseCrunches = new Exercise(
             2
         ),
     ]
-);
-export const testExerciseSkullCrusher = new Exercise(
-    5,
-    "abcdef-150a-4ac7-97ef-84643c6419bf",
-    testCategoryArms,
-    [testEquipmentBarbell],
-    [testMuscleRectusAbdominis],
-    [],
-    [],
-    2,
-    [
+});
+
+export const testExerciseSkullCrusher = new Exercise({
+    id: 5,
+    uuid: "abcdef-150a-4ac7-97ef-84643c6419bf",
+    lastUpdateGlobal: new Date(),
+    category: testCategoryArms,
+    equipment: [testEquipmentBarbell],
+    muscles: [testMuscleRectusAbdominis],
+    musclesSecondary: [],
+    images: [],
+    variationId: 2,
+    translations: [
         new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Skull crusher',
@@ -147,7 +153,7 @@ export const testExerciseSkullCrusher = new Exercise(
             2
         ),
     ]
-);
+});
 
 export const testExercises = [
     testExerciseSquats,
