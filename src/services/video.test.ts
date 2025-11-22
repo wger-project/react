@@ -11,17 +11,17 @@ describe("Exercise video service API tests", () => {
             id: 1,
             uuid: "b1c934fa-c4f8-4d84-8cb4-7802be0d284c",
             exercise: 258,
-            exercise_uuid: "6260e3aa-e46b-4b4b-8ada-58bfd0922d3a",
+            "exercise_uuid": "6260e3aa-e46b-4b4b-8ada-58bfd0922d3a",
             video: "http://localhost:8000/media/exercise-video/258/b1c934fa-c4f8-4d84-8cb4-7802be0d284c.mp4",
-            is_main: false,
+            "is_main": false,
             size: 0,
             duration: "0.00",
             width: 0,
             height: 0,
             codec: "",
-            codec_long: "",
+            "codec_long": "",
             license: 2,
-            license_author: null,
+            "license_author": null,
         };
 
         const video = new ExerciseVideo(

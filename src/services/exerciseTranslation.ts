@@ -14,7 +14,6 @@ export const EXERCISE_TRANSLATION_PATH = 'exercise-translation';
  */
 export const getExerciseTranslations = async (id: number): Promise<Translation[]> => {
     const url = makeUrl(EXERCISE_PATH, { query: { exercise: id } });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data } = await axios.get<ResponseType<Translation>>(url, {
         headers: makeHeader(),
     });
@@ -26,7 +25,7 @@ export const getExerciseTranslations = async (id: number): Promise<Translation[]
 /*
  * Search for exercises by name using the exerciseinfo endpoint
  */
-export const searchExerciseTranslations = async (name: string,languageCode: string = ENGLISH_LANGUAGE_CODE,searchEnglish: boolean = true): Promise<Exercise[]> => {
+export const searchExerciseTranslations = async (name: string, languageCode: string = ENGLISH_LANGUAGE_CODE, searchEnglish: boolean = true): Promise<Exercise[]> => {
     const languages = [languageCode];
     if (languageCode !== LANGUAGE_SHORT_ENGLISH && searchEnglish) {
         languages.push(LANGUAGE_SHORT_ENGLISH);
@@ -34,19 +33,19 @@ export const searchExerciseTranslations = async (name: string,languageCode: stri
 
     const url = makeUrl('exerciseinfo', {
         query: {
-            name__search: name,
-            language__code: languages.join(','),
+            "name__search": name,
+            "language__code": languages.join(','),
             limit: 50,
         }
     });
 
     try {
         const { data } = await axios.get<ResponseType<Exercise>>(url);
-        
+
         if (!data || !data.results || !Array.isArray(data.results)) {
             return [];
         }
-        
+
         const adapter = new ExerciseAdapter();
         return data.results.map((item: unknown) => adapter.fromJson(item));
     } catch {

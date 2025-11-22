@@ -30,7 +30,7 @@ import {
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { getLanguageByShortName } from "services";
 import { generateChartColors } from "utils/colors";
 import { makeLink, WgerLink } from "utils/url";

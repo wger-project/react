@@ -65,7 +65,7 @@ export function ExerciseDeleteDialog(props: {
             try {
                 const exercise = await getExercise(id);
                 setReplacementExercise(exercise);
-            } catch (e) {
+            } catch {
                 setReplacementExercise(null);
             }
         }
