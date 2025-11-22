@@ -11,7 +11,7 @@
   "exports": {
     ".": "./build/index.js"
   },
-  "version": "25.11.17",
+  "version": "25.11.22",
   "repository": "https://github.com/wger-project/react",
   "type": "module",
   "publishConfig": {
