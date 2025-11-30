@@ -116,7 +116,7 @@
     "images": "Bilder",
     "description": "Beschreibung",
     "translation": "Übersetzung",
-    "overview": "Übersicht",
+    "overview": "Überblick",
     "goBack": "Zurück",
     "language": "Sprache",
     "forms": {
@@ -204,8 +204,8 @@
             "forced": "Erzwungenes",
             "normalSet": "Normaler Satz",
             "dropSet": "Absteigender Satz",
-            "tut": "TUT",
-            "iso": "ISO",
+            "tut": "Zeit unter Spannung",
+            "iso": "Isometrischer Halt",
             "jump": "Sprung"
         },
         "impressionBad": "Schlecht",
@@ -218,7 +218,16 @@
         "fitDaysInWeekHelpText": "Diese Einstellung steuert die Verteilung der Trainingstage deiner Routine über mehrere Wochen. Ist diese Option aktiviert, wiederholen sich die Tage wöchentlich. Beispielsweise wird ein Trainingsplan mit Trainingseinheiten am Montag, Mittwoch und Freitag am darauffolgenden Montag, Mittwoch und Freitag fortgesetzt. Ist diese Option deaktiviert, werden die Trainingstage unabhängig vom Wochenbeginn nacheinander abgearbeitet. Dies ist nützlich für Trainingspläne, die keinem strengen Wochenplan folgen.",
         "templatesHelpText": "Vorlagen ermöglichen es Ihnen, Ihre Routine für die spätere Verwendung zu speichern und als Ausgangspunkt für weitere Routinen zu verwenden. Sie können Vorlagen nicht bearbeiten, aber Sie können sie duplizieren und Änderungen an der Kopie vornehmen (und sie natürlich auch wieder in eine reguläre Routine umwandeln).",
         "roundingHelp": "Lege die Standardrundung für Gewicht und Wiederholungen fest (dies ist besonders nützlich, wenn du den prozentualen Steigerungsschritt in der Progression verwendest). Dies gilt für alle neuen Sätze, kann aber im Progressionsformular individuell geändert werden. Lasse das Feld leer, um die Rundung zu deaktivieren.",
-        "addAdditionalLog": "Hinzufügen eines zusätzlichen Eintrags"
+        "addAdditionalLog": "Hinzufügen eines zusätzlichen Eintrags",
+        "day": {
+            "custom": "personalisiert",
+            "enom": "Jede volle Minute",
+            "amrap": "So viele Runden wie möglich",
+            "hiit": "Hochintensives Intervalltraining",
+            "edt": "Eskalierendes Intensivtraining",
+            "rft": "Runden auf Zeit",
+            "afap": "So schnell wie möglich"
+        }
     },
     "name": "Name",
     "cancel": "Abbrechen",
