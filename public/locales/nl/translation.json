@@ -7,7 +7,7 @@
     "lastYear": "Vorig jaar",
     "cm": "cm",
     "date": "Datum",
-    "weight": "Lichaams Gewicht",
+    "weight": "Gewicht",
     "timeOfDay": "Tijd vandaag",
     "licenses": {
         "authorProfile": "Link naar de auteur website of profiel, indien beschikbaar",
@@ -238,5 +238,9 @@
     "no_entries_for_day": "Geen items voor deze dag",
     "calendar": "Kalender",
     "start": "Start",
-    "end": "Einde"
+    "end": "Einde",
+    "editName": "Bewerk {{naam}}",
+    "comment": "Commentaar",
+    "private": "Privé",
+    "public": "Publiek"
 }
