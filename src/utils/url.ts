@@ -222,7 +222,7 @@ export function makeHeader(token?: string) {
 
     const out: AxiosRequestConfig['headers'] = {};
     out['Content-Type'] = 'application/json';
-
+    out['Accept-Language'] = getAcceptLanguage();
     if (token) {
         out['Authorization'] = `Token ${token}`;
     }
@@ -231,7 +231,16 @@ export function makeHeader(token?: string) {
     if (IS_PROD && csrfCookie != undefined) {
         out['X-CSRFToken'] = csrfCookie;
     }
-
     return out;
 }
 
+export function getAcceptLanguage():string{
+const languages = navigator.languages || []; // get language preference from user's browser settings
+if (languages.length === 0) {
+    return 'en-US,en;';  //fallback 
+  }
+
+return languages.map((language,_)=>{
+    return language;
+}).join(',');
+}
