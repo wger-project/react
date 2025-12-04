@@ -13,7 +13,7 @@
         "volume": "Volume",
         "weekNr": "Semana {{number}}",
         "sets": "Séries",
-        "reps": "Repetições",
+        "reps": "Reps",
         "iteration": "iteração",
         "weekly": "Semanalmente",
         "daily": "Diariamente",
@@ -82,7 +82,8 @@
             "forced": "Forçado",
             "tut": "Tempo sob tensão",
             "iso": "Fixação isométrica",
-            "jump": "Pular"
+            "jump": "Pular",
+            "myo": "MYO"
         },
         "day": {
             "custom": "Personalizado",
@@ -91,7 +92,8 @@
             "hiit": "Treinamento intervalado de alta intensidade",
             "edt": "Treinamento de densidade crescente",
             "rft": "Rodadas para ganhar tempo",
-            "afap": "O mais rápido possível"
+            "afap": "O mais rápido possível",
+            "tabata": "HIIT"
         }
     },
     "server": {
@@ -166,7 +168,7 @@
     "overview": "Visão geral",
     "preferences": "Preferências",
     "continue": "Continuar",
-    "goBack": "Voltar",
+    "goBack": "Retornar",
     "language": "Linguagem",
     "noResultsDescription": "Não foram encontrados resultados para essa consulta, considere a possibilidade de reduzir o número de filtros.",
     "exercises": {
@@ -209,14 +211,14 @@
         "exerciseNotTranslatedBody": "Este exercício não está disponível no idioma atualmente selecionado. Você deseja contribuir com uma tradução?",
         "replacements": "Substituições",
         "imageStylePhoto": "Foto",
-        "replacementsSearch": "Procure por um exercício ou copie e cole um ID conhecido no campo e e client no botão \"carregar\".",
+        "replacementsSearch": "Procure um exercício ou copie e cole um ID conhecido no campo e clique no botão \"carregar\".",
         "noReplacementSelected": " .Nenhum exercício selecionado para substituição",
         "imageStyle3D": "3D",
         "imageStyleLine": "Linha",
         "imageStyleLowPoly": "Polia Baixa",
         "imageStyleOther": "Outros",
         "imageDetails": "Detalhes da Imagem",
-        "replacementsInfoText": "Opcionalmente, você pode também selecionar um exercício que pode substituir esse (ex: porque foi substituído duas vezes, or similar). Isso irá substituir o exercício em rotinas e também logs de treinos, ao invés de apenas excluí-lo. Essas mudanças irão também ser propagadas para qualquer instancia que sincroniza os exercícios a partir desse.",
+        "replacementsInfoText": "Opcionalmente, você também pode selecionar um exercício que deve substituir este (por exemplo, porque foi enviado duas vezes ou similar). Isso substituirá o exercício nas rotinas, bem como nos registros de treino, em vez de apenas excluí-lo. Essas alterações também serão propagadas para qualquer instância que sincronize os exercícios a partir deste.",
         "deleteExerciseReplace": "Delete e substitua",
         "swapExercise": "Substituir exercício"
     },
@@ -250,7 +252,7 @@
         "originalTitle": "Título",
         "derivativeSourceUrl": "Link para o conteúdo original, se isso é um trabalho derivativo",
         "originalObjectUrl": "Link ao website de origem, se disponível",
-        "derivativeSourceUrlHelper": "Observe que um trabalho derivativo é um em que não é somente baseado em um trabalho anterior, mas que também contém suficientemente novos, conteúdos criativos para dar títulos aos próprios copyrights"
+        "derivativeSourceUrlHelper": "Observe que um trabalho derivativo é um em que não é somente baseado em um trabalho anterior, mas que também contém suficientemente novos, conteúdos criativos para dar títulos aos próprios copyright."
     },
     "filters": "Filtros",
     "nothingHereYet": "Nada aqui ainda...",
@@ -275,8 +277,8 @@
         "valueTooMany": "muitos",
         "goalFiber": "Objetivo de fibras",
         "plans": "Planos nutricionais",
-        "goalsTitle": "Objectivos",
-        "useGoalsHelpText": "Adicione objectivos a esse plano",
+        "goalsTitle": "Objetivos",
+        "useGoalsHelpText": "Adicionar metas a este plano",
         "goalEnergy": "Objetivo energético",
         "goalProtein": "Objetivo proteico",
         "goalCarbohydrates": "Objetivo de carboidratos",
@@ -295,15 +297,15 @@
         "fibres": "Fibras",
         "planDeleteInfo": "Isso também apagará/excluirá todas as entradas do diário de nutrição",
         "sodium": "Sódio",
-        "mealDeleteInfo": "As entradas do diário de nutrição referentes a esta refeição não serão excluídas e aparecerão em 'outros registos/logs",
-        "diaryEntrySaved": "Entrada de dados diária salvo com sucesso",
-        "logThisMealItem": "Registrar este ingrediente como está no diário de nutrição",
+        "mealDeleteInfo": "As entradas do diário de nutrição referentes a esta refeição não serão excluídas e aparecerão em \"outros registos/logs\"",
+        "diaryEntrySaved": "Entrada do diário salvo com sucesso",
+        "logThisMealItem": "Registre este ingrediente como está no diário nutricional",
         "valueRemaining": "restantes",
         "energy": "Energia",
         "carbohydrates": "Carboidratos",
-        "logThisMeal": "Registrar esta refeição como está no diário de nutrição",
+        "logThisMeal": "Registre esta refeição como está no diário nutricional",
         "copyPlan": "Faça uma cópia deste plano",
-        "onlyLoggingHelpText": "Apenas acompanha calorias. Selecione o box se você apenas quer logar suas calorias e não que iniciar um plano de nutrição detalhado com alimentação específica",
+        "onlyLoggingHelpText": "Rastrear apenas calorias. Marque a caixa se quiser apenas registrar suas calorias e não quiser configurar um plano nutricional detalhado com refeições específicas",
         "useGoalsHelpTextLong": "Isto permite que você defina objetivos gerais para energia, proteína, carboidratos ou gorduras para o plano. Note que se você iniciar um plano alimentar detalhado, estes valores tem precedência.",
         "protein": "Proteína",
         "meal": "Alimentação"
@@ -331,7 +333,7 @@
     "editName": "Editar {{name}}",
     "min": "Min",
     "max": "Max",
-    "successfullyDeleted": "Deletado com sucesso",
+    "successfullyDeleted": "Excluído com sucesso",
     "undo": "Desfazer",
     "public": "Público",
     "private": "Privado",
