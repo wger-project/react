@@ -123,49 +123,6 @@ renderComponentShadowDom('react-page');
 /*
  * Components used in the wger django app, don't change the IDs here
  */
-const weightDashboard = document.getElementById("react-weight-dashboard");
-if (weightDashboard) {
-    const root = createRoot(weightDashboard);
-    root.render(
-        <Suspense fallback={<LoadingWidget />}>
-            <ThemeProvider theme={theme}>
-                <QueryClientProvider client={queryClient}>
-                    <WeightCard />
-                </QueryClientProvider>
-            </ThemeProvider>
-        </Suspense>
-    );
-}
-
-const nutritionDashboard = document.getElementById('react-nutrition-dashboard');
-if (nutritionDashboard) {
-    const root = createRoot(nutritionDashboard);
-    root.render(
-        <Suspense fallback={<LoadingWidget />}>
-            <ThemeProvider theme={theme}>
-                <QueryClientProvider client={queryClient}>
-                    <NutritionCard />
-                </QueryClientProvider>
-            </ThemeProvider>
-        </Suspense>
-    );
-}
-
-const routineDashboard = document.getElementById('react-routine-dashboard');
-if (routineDashboard) {
-    const root = createRoot(routineDashboard);
-    root.render(
-        <Suspense fallback={<LoadingWidget />}>
-            <ThemeProvider theme={theme}>
-                <QueryClientProvider client={queryClient}>
-                    <RoutineCard />
-                </QueryClientProvider>
-            </ThemeProvider>
-        </Suspense>
-    );
-}
-
-
 const ingredientSearchBox = document.getElementById("react-ingredient-search");
 if (ingredientSearchBox) {
     const root = createRoot(ingredientSearchBox);

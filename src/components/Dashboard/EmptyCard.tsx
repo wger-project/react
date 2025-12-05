@@ -32,14 +32,14 @@ export const EmptyCard = (props: {
         </Button>;
 
     return (<>
-        <Card>
+        <Card sx={{ paddingTop: 0, height: "100%", }}>
             <CardHeader
                 title={props.title}
                 subheader={'.'}
                 sx={{ paddingBottom: 0 }} />
 
-            <CardContent sx={{ paddingTop: 0, height: "500px", }}>
-                <OverviewEmpty />
+            <CardContent>
+                <OverviewEmpty height={'50%'} />
             </CardContent>
 
             <CardActions>
