@@ -9,13 +9,15 @@ on:
         required: false
         default: 'latest'
 
+# https://docs.npmjs.com/trusted-publishers
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   publish:
     name: Publish to npm
     runs-on: ubuntu-latest
-
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - name: Checkout
