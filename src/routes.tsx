@@ -119,6 +119,10 @@ export const WgerRoutes = () => {
                 <Route path="user">
                     <Route path="preferences" element={<Preferences />} />
                 </Route>
+                <Route path="dashboard">
+                    <Route index element={<ConfigurableDashboard />} />
+                    <Route path="" element={<ConfigurableDashboard />} />
+                </Route>
             </Route>
             <Route path="/" element={<ConfigurableDashboard />} />
 

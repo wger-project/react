@@ -1,4 +1,13 @@
 {
+  "dashboard": {
+    "customizeDashboard": "Customize dashboard",
+    "dragWidgetsHelp": "Drag widgets to reposition them or resize using the bottom-right corner.",
+    "resetLayout": "Reset to the default layout"
+  },
+  "core": {
+    "exitEditMode": "Exit edit mode",
+    "customize": "Customize"
+  },
   "weight": "Weight",
   "height": "Height",
   "cm": "cm",

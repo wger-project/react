@@ -1,6 +1,7 @@
 import { Box, Button, IconButton, Tooltip } from "@mui/material";
 import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import DoneIcon from '@mui/icons-material/Done';
 import React, { useState, useCallback, useMemo } from "react";
 import { Responsive, WidthProvider, Layout, Layouts } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
@@ -8,7 +9,7 @@ import "react-resizable/css/styles.css";
 import { NutritionCard } from "components/Dashboard/NutritionCard";
 import { RoutineCard } from "components/Dashboard/RoutineCard";
 import { WeightCard } from "components/Dashboard/WeightCard";
-import { GoalsCard } from "./GoalCard";
+import { useTranslation } from "react-i18next";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -16,7 +17,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const LAYOUT_STORAGE_KEY = "dashboard-layout";
 
 // Define widget types for extensibility
-export type WidgetType = "routine" | "nutrition" | "weight" | "goals";
+export type WidgetType = "routine" | "nutrition" | "weight";
 
 export interface WidgetConfig {
     id: string;
@@ -38,25 +39,19 @@ export const AVAILABLE_WIDGETS: WidgetConfig[] = [
         id: "routine",
         type: "routine",
         component: RoutineCard,
-        defaultLayout: { w: 4, h: 3, x: 0, y: 0, minW: 3, minH: 2 },
+        defaultLayout: { w: 4, h: 5, x: 0, y: 0, minW: 3, minH: 2 },
     },
     {
         id: "nutrition",
         type: "nutrition",
         component: NutritionCard,
-        defaultLayout: { w: 4, h: 3, x: 4, y: 0, minW: 3, minH: 2 },
+        defaultLayout: { w: 4, h: 5, x: 4, y: 0, minW: 3, minH: 2 },
     },
     {
         id: "weight",
         type: "weight",
         component: WeightCard,
-        defaultLayout: { w: 4, h: 3, x: 8, y: 0, minW: 3, minH: 2 },
-    },
-    {
-        id: "goal",
-        type: "goals",
-        component: GoalsCard,
-        defaultLayout: { w: 4, h: 3, x: 0, y: 3, minW: 3, minH: 2 },
+        defaultLayout: { w: 4, h: 5, x: 8, y: 0, minW: 3, minH: 2 },
     },
 ];
 
@@ -113,6 +108,7 @@ const saveLayouts = (layouts: Layouts) => {
 };
 
 export const ConfigurableDashboard: React.FC = () => {
+    const [t] = useTranslation();
     const [isEditMode, setIsEditMode] = useState(false);
     const [layouts, setLayouts] = useState<Layouts>(() => {
         const savedLayouts = loadLayouts();
@@ -167,17 +163,15 @@ export const ConfigurableDashboard: React.FC = () => {
                     <Box
                         sx={{
                             p: 1,
-                            bgcolor: "primary.light",
-                            color: "primary.contrastText",
                             borderRadius: 1,
                             fontSize: "0.875rem",
                         }}
                     >
-                        Drag widgets to reposition them or resize using the bottom-right corner.
+                        {t('dashboard.dragWidgetsHelp')}
                     </Box>
                 )}
                 {isEditMode && (
-                    <Tooltip title="Reset to Default Layout">
+                    <Tooltip title={t('dashboard.resetLayout')}>
                         <IconButton
                             onClick={handleResetLayout}
                             size="small"
@@ -191,17 +185,15 @@ export const ConfigurableDashboard: React.FC = () => {
                         </IconButton>
                     </Tooltip>
                 )}
-                <Tooltip title={isEditMode ? "Exit Edit Mode" : "Customize Dashboard"}>
+                <Tooltip title={isEditMode ? t('core.exitEditMode') : t('dashboard.customizeDashboard')}>
                     <Button
                         variant={isEditMode ? "contained" : "outlined"}
-                        startIcon={<DashboardCustomizeIcon />}
+                        startIcon={isEditMode ? <DoneIcon /> : <DashboardCustomizeIcon />}
                         onClick={toggleEditMode}
                         size="small"
-                        sx={{
-                            p: 1,
-                        }}
+                        sx={{ p: 1 }}
                     >
-                        {isEditMode ? "Done" : "Customize"}
+                        {isEditMode ? t('save') : t('core.customize')}
                     </Button>
                 </Tooltip>
             </Box>
@@ -221,8 +213,8 @@ export const ConfigurableDashboard: React.FC = () => {
                                 cursor: isEditMode ? "move" : "default",
                                 "&:hover": isEditMode
                                     ? {
-                                          borderColor: "primary.dark",
-                                      }
+                                        borderColor: "primary.dark",
+                                    }
                                     : {},
                             }}
                         >
