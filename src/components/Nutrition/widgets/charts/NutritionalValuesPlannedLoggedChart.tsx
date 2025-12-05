@@ -1,7 +1,7 @@
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { generateChartColors } from "utils/colors";
 
 
@@ -32,23 +32,24 @@ export const NutritionalValuesPlannedLoggedChart = (props: {
 
 
     return (
-        <ResponsiveContainer width={"100%"} height={150}>
-            <BarChart
-                data={data}
-                layout="vertical"
-                margin={{
-                    left: 60,
-                }}
-            >
-                <CartesianGrid strokeDasharray="3 4" />
-                <XAxis type={'number'} unit={'%'} />
-                <YAxis type={'category'} dataKey={'name'} />
-                <Bar
-                    dataKey="value"
-                    unit={'%'}
-                    fill={colorGenerator.next().value!}
-                />
-            </BarChart>
-        </ResponsiveContainer>
+        <BarChart
+            data={data}
+            layout="vertical"
+            margin={{
+                left: 60,
+            }}
+            responsive
+            width={"100%"}
+            height={150}
+        >
+            <CartesianGrid strokeDasharray="3 4" />
+            <XAxis type={'number'} unit={'%'} />
+            <YAxis type={'category'} dataKey={'name'} />
+            <Bar
+                dataKey="value"
+                unit={'%'}
+                fill={colorGenerator.next().value!}
+            />
+        </BarChart>
     );
 };

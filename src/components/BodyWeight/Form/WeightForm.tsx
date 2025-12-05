@@ -8,7 +8,6 @@ import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToYYYYMMDD } from "utils/date";
 import * as yup from 'yup';
 
 interface WeightFormProps {

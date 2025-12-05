@@ -52,15 +52,17 @@ describe("Test the MeasurementCategoryDetail component", () => {
             </QueryClientProvider>
         );
 
+        screen.logTestingPlaygroundURL();
+
         // Assert
         expect(useMeasurementsQuery).toHaveBeenCalled();
         expect(screen.getByText('Biceps')).toBeInTheDocument();
 
-        expect(screen.getByText('10cm')).toBeInTheDocument();
+        expect(screen.getByRole('gridcell', { name: /10cm/i })).toBeInTheDocument();
         expect(screen.getByText(/Feb 1, 2023/i)).toBeInTheDocument();
         expect(screen.getByText('test note')).toBeInTheDocument();
 
-        expect(screen.getByText('20cm')).toBeInTheDocument();
+        expect(screen.getByRole('gridcell', { name: /20cm/i })).toBeInTheDocument();
         expect(screen.getByText(/Feb 2, 2023/i)).toBeInTheDocument();
         expect(screen.getByText('important note')).toBeInTheDocument();
     });

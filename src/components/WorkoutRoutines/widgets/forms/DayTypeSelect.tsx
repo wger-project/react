@@ -10,8 +10,7 @@ interface DayTypeSelectProps {
 
 export const DayTypeSelect = (props: DayTypeSelectProps) => {
     const { t } = useTranslation();
-    const [field, meta] = useField(props.fieldName);
-
+    const [field] = useField(props.fieldName);
     const options = [
         {
             value: 'custom',

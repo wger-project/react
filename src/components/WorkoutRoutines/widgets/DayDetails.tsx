@@ -24,6 +24,7 @@ import {
 import Grid from '@mui/material/Grid';
 import { LoadingPlaceholder, LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
+import { Exercise } from "components/Exercises/models/exercise";
 import { useProfileQuery } from "components/User/queries/profile";
 import { Day } from "components/WorkoutRoutines/models/Day";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
@@ -43,7 +44,6 @@ import { SlotDetails } from "components/WorkoutRoutines/widgets/SlotDetails";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { ExerciseSearchResponse } from "services/responseType";
 import { SNACKBAR_AUTO_HIDE_DURATION, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
 import { makeLink, WgerLink } from "utils/url";
 
@@ -381,13 +381,13 @@ export const DayDetails = (props: {
                                             && <Grid size={12}>
                                                 <Box height={20} />
                                                 <NameAutocompleter
-                                                    callback={(exercise: ExerciseSearchResponse | null) => {
+                                                    callback={(exercise: Exercise | null) => {
                                                         if (exercise === null) {
                                                             return;
                                                         }
                                                         addSlotEntryQuery.mutate(new SlotEntry({
                                                             slotId: slot.id!,
-                                                            exerciseId: exercise.data.base_id,
+                                                            exerciseId: exercise.id!,
                                                             type: 'normal',
                                                             order: slot.entries.length + 1,
                                                             weightUnitId: userProfileQuery.data!.useMetric ? WEIGHT_UNIT_KG : WEIGHT_UNIT_LB,

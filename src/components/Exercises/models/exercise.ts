@@ -8,42 +8,53 @@ import { ExerciseVideo, ExerciseVideoAdapter } from "components/Exercises/models
 import { Adapter } from "utils/Adapter";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
 
+export type ExerciseConstructorParams = {
+    id: number | null;
+    uuid: string | null;
+    category: Category;
+    equipment?: Equipment[];
+    muscles?: Muscle[];
+    musclesSecondary?: Muscle[];
+    images?: ExerciseImage[];
+    variationId?: number | null;
+    lastUpdateGlobal?: Date;
+    translations?: Translation[];
+    videos?: ExerciseVideo[];
+    authors?: string[];
+};
+
 export class Exercise {
-    translations: Translation[] = [];
+    id: number | null;
+    uuid: string | null;
+    variationId: number | null;
+    category: Category;
+    lastUpdateGlobal: Date;
+
+    muscles: Muscle[] = [];
+    musclesSecondary: Muscle[] = [];
+    images: ExerciseImage[] = [];
     videos: ExerciseVideo[] = [];
+    equipment: Equipment[] = [];
     authors: string[] = [];
+    translations: Translation[] = [];
 
-    constructor(
-        public id: number | null,
-        public uuid: string | null,
-        public category: Category,
-        public equipment: Equipment[],
-        public muscles: Muscle[],
-        public musclesSecondary: Muscle[],
-        public images: ExerciseImage[],
-        public variationId: number | null,
-        translations?: Translation[],
-        videos?: ExerciseVideo[],
-        authors?: string[]
-        /*
-            license: number,
-            licenseAuthorS: string[],
-         */
-    ) {
-        if (translations) {
-            this.translations = translations;
-        }
+    constructor(init: ExerciseConstructorParams) {
+        this.id = init.id;
+        this.uuid = init.uuid;
+        this.category = init.category;
+        this.variationId = init.variationId ?? null;
+        this.lastUpdateGlobal = init.lastUpdateGlobal ?? new Date();
 
-        if (videos) {
-            this.videos = videos;
-        }
-
-        if (authors) {
-            this.authors = authors;
-        }
+        this.muscles = init.muscles ?? [];
+        this.musclesSecondary = init.musclesSecondary ?? [];
+        this.images = init.images ?? [];
+        this.videos = init.videos ?? [];
+        this.equipment = init.equipment ?? [];
+        this.authors = init.authors ?? [];
+        this.translations = init.translations ?? [];
     }
 
-    // Returns the users translation or english as a fallback
+    // Returns the users' translation or English as a fallback
     //
     // Note that we still check for the case that no english translation can be
     // found. While this can't happen for the "regular" wger server, other local
@@ -97,25 +108,26 @@ export class ExerciseAdapter implements Adapter<Exercise> {
         const translationAdapter = new TranslationAdapter();
         const videoAdapter = new ExerciseVideoAdapter();
 
-        const exercise = new Exercise(
-            item.id,
-            item.uuid,
-            categoryAdapter.fromJson(item.category),
+        const exercise = new Exercise({
+            id: item.id,
+            uuid: item.uuid,
+            category: categoryAdapter.fromJson(item.category),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            item.equipment.map((e: any) => (equipmentAdapter.fromJson(e))),
+            equipment: item.equipment.map((e: any) => equipmentAdapter.fromJson(e)),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            item.muscles.map((m: any) => (muscleAdapter.fromJson(m))),
+            muscles: item.muscles.map((m: any) => muscleAdapter.fromJson(m)),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            item.muscles_secondary.map((m: any) => (muscleAdapter.fromJson(m))),
+            musclesSecondary: item.muscles_secondary.map((m: any) => muscleAdapter.fromJson(m)),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            item.images.map((i: any) => (imageAdapter.fromJson(i))),
-            item.variations,
+            images: item.images.map((i: any) => imageAdapter.fromJson(i)),
+            variationId: item.variations,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            item.translations.map((t: any) => translationAdapter.fromJson(t)),
+            translations: item.translations.map((t: any) => translationAdapter.fromJson(t)),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            item.videos.map((t: any) => videoAdapter.fromJson(t)),
-            item.author_history
-        );
+            videos: item.videos.map((t: any) => videoAdapter.fromJson(t)),
+            authors: item.total_authors_history,
+            lastUpdateGlobal: new Date(item.last_update_global),
+        });
 
         if (!exercise.translations.some(t => t.language === ENGLISH_LANGUAGE_ID)) {
             console.info(`No english translation found for exercise base ${exercise.uuid}!`);

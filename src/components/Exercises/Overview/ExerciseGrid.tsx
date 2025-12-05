@@ -15,8 +15,7 @@ export const ExerciseGrid = ({ exercises }: ExerciseGridProps) => {
 
     const languageQuery = useLanguageQuery();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [t, i18n] = useTranslation();
+    const { i18n } = useTranslation();
 
     let currentUserLanguage: Language | undefined;
     if (languageQuery.isSuccess) {

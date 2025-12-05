@@ -6,5 +6,30 @@
     "description": "Popis",
     "name": "Názov",
     "save": "Uložiť",
-    "nutritionalPlan": "Výživový plán"
+    "nutritionalPlan": "Výživový plán",
+    "height": "Výška",
+    "cm": "cm",
+    "date": "Dátum",
+    "timeOfDay": "čas dňa",
+    "submit": "Potvrdiť",
+    "edit": "Upravit",
+    "editName": "upravit_meno",
+    "delete": "Odstrániť",
+    "deleteConfirmation": "Ste si istí, že chcete odstrániť \"{{meno}}\"?",
+    "add": "Pridať",
+    "close": "Ukončiť",
+    "difference": "Rozdiel",
+    "days": "Dni",
+    "all": "Všetko",
+    "lastYear": "Minulý rok",
+    "lastHalfYear": "Posledných 6 Mesiacov",
+    "lastMonth": "Posledný mesiac",
+    "lastWeek": "Posledný týždeň",
+    "start": "Štart",
+    "end": "Koniec",
+    "licenses": {
+        "authors": "Autor(i)",
+        "authorProfile": "Odkaz na webovú stránku alebo profil autora, ak je k dispozícii",
+        "derivativeSourceUrl": "Odkaz na pôvodný zdroj, ak je to derivát práce"
+    }
 }

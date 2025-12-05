@@ -27,17 +27,13 @@ describe("Test the exercise overview card component", () => {
     const category = new Category(10, "Abs");
     const equipment1 = new Equipment(10, "Kettlebell");
     const equipment2 = new Equipment(1, "Test 123");
-    const exercise = new Exercise(
-        345,
-        "c788d643-150a-4ac7-97ef-84643c6419bf",
-        category,
-        [equipment1, equipment2],
-        [],
-        [],
-        [],
-        null,
-        [exerciseTranslation1, exerciseTranslation2]
-    );
+    const exercise = new Exercise({
+        id: 345,
+        uuid: "c788d643-150a-4ac7-97ef-84643c6419bf",
+        category: category,
+        equipment: [equipment1, equipment2],
+        translations: [exerciseTranslation1, exerciseTranslation2]
+    });
 
     test("Render the overview card, no language selected -> use english", () => {
         // Act

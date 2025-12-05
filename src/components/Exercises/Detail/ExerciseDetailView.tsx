@@ -11,6 +11,7 @@ import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { useCanContributeExercises } from "components/User/queries/contribute";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { dateTimeToLocale } from "utils/date";
 
 
 const TranslateExerciseBanner = ({ setEditMode }: { setEditMode: (mode: boolean) => void }) => {
@@ -60,6 +61,15 @@ export const ExerciseDetailView = ({
     const currentTranslation = exercise.getTranslation(language);
     const isNewTranslation = language && language.id !== currentTranslation.language;
 
+    const muscleLegendStyle = {
+        height: '17px',
+        width: '17px',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        borderRadius: 4,
+        opacity: 0.8,
+    };
+
     return (
         <Grid container>
             {isNewTranslation
@@ -92,8 +102,7 @@ export const ExerciseDetailView = ({
                     </>}
 
                 <Typography variant="h5">{t("exercises.description")}</Typography>
-                <div
-                    dangerouslySetInnerHTML={{ __html: currentTranslation?.description! }} />
+                <div dangerouslySetInnerHTML={{ __html: currentTranslation?.description! }} />
                 <PaddingBox />
 
                 {currentTranslation?.notes.length > 0 && <Typography variant="h5">{t("exercises.notes")}</Typography>}
@@ -124,7 +133,12 @@ export const ExerciseDetailView = ({
                             xs: 6,
                             md: 3
                         }}>
-                        <h3>{t("exercises.primaryMuscles")}</h3>
+                        <div>
+                            <div style={{ ...muscleLegendStyle, backgroundColor: '#fc0000' }}></div>
+                            <b style={{ marginLeft: 8, verticalAlign: 'middle' }}>
+                                {t("exercises.primaryMuscles")}
+                            </b>
+                        </div>
                         <ul>
                             {exercise.muscles.map((m: Muscle) => (
                                 <li key={m.id}>{m.getName()}</li>
@@ -152,7 +166,13 @@ export const ExerciseDetailView = ({
                             xs: 6,
                             md: 3
                         }}>
-                        <h3>{t("exercises.secondaryMuscles")}</h3>
+                        <div>
+                            <div style={{ ...muscleLegendStyle, backgroundColor: '#f57900' }}></div>
+                            <b style={{ marginLeft: 8, verticalAlign: 'middle' }}>
+                                {t("exercises.secondaryMuscles")}
+                            </b>
+                        </div>
+
                         <ul>
                             {exercise.musclesSecondary.map((m: Muscle) => (
                                 <li key={m.id}>{m.getName()}</li>
@@ -197,19 +217,19 @@ export const ExerciseDetailView = ({
                             */}
 
                 {/* This gallery only displays on medium screens upwards */}
-                <SideGallery
-                    mainImage={exercise.mainImage}
-                    sideImages={exercise.sideImages}
-                />
-
-                <PaddingBox />
-                <SideVideoGallery videos={exercise.videos} />
+                <Box sx={{ pl: 1 }}>
+                    <SideGallery
+                        mainImage={exercise.mainImage}
+                        sideImages={exercise.sideImages}
+                    />
+                    <PaddingBox />
+                    <SideVideoGallery videos={exercise.videos} />
+                </Box>
             </Grid>
 
 
             <Grid order={{ xs: 3 }} size={12}>
 
-                <Divider />
                 <PaddingBox />
 
                 {variations.length > 0 && <Typography variant={"h5"}>{t('exercises.variations')}</Typography>}
@@ -230,11 +250,31 @@ export const ExerciseDetailView = ({
                     )}
                 </Grid>
             </Grid>
-            <Grid order={{ xs: 4 }} size={12}>
-                <Typography variant="caption" display="block" mt={2}>
-                    The text on this page is available under the <a
-                    href="https://creativecommons.org/licenses/by-sa/4.0/deed">CC BY-SA 4
-                    License</a>.
+            <Grid order={{ xs: 4, }} sx={{ mt: 3 }} size={12}>
+
+                <Divider />
+                <Typography
+                    variant="caption"
+                    display="block"
+                    mt={1}
+                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                >
+                    <i className="fa-brands fa-creative-commons" style={{ fontSize: 20 }}></i>
+                    The content on this page is available under the
+                    <a href="https://creativecommons.org/licenses/by-sa/4.0/deed">
+                        CC BY-SA 4 License
+                    </a>.
+                </Typography>
+
+                <Typography
+                    variant="caption"
+                    display="block" mt={1}
+                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                >
+                    <>
+                        Authors: {exercise.authors.join(", ")}<br />
+                        Last update: {dateTimeToLocale(exercise.lastUpdateGlobal)}
+                    </>
                 </Typography>
             </Grid>
         </Grid>

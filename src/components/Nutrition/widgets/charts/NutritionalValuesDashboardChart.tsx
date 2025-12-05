@@ -3,7 +3,7 @@ import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValue
 import { LinearPlannedLoggedChart } from "components/Nutrition/widgets/charts/LinearPlannedLoggedChart";
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
+import { Cell, Pie, PieChart } from 'recharts';
 import { numberLocale } from "utils/numbers";
 
 
@@ -32,34 +32,32 @@ export const NutritionalValuesDashboardChart = (props: {
 
 
     return <Stack direction={'row'}>
-        <ResponsiveContainer width={'50%'} height={140}>
-            <PieChart>
-                <Pie
-                    // cx={0}
-                    // cy={'10'}
-                    height={100}
-                    data={data}
-                    startAngle={200}
-                    endAngle={-20}
-                    innerRadius={60}
-                    outerRadius={70}
-                    paddingAngle={2}
-                    dataKey="value"
-                >
-                    {data.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                </Pie>
-                <g>
-                    <text x={'50%'} y={'45%'} fontSize="1.25em" textAnchor="middle">{/*fill="#333"*/}
-                        {t('nutrition.valueEnergyKcal', { value: numberLocale(energyDiff, i18n.language) })}
-                    </text>
-                    <text x={'50%'} y={'60%'} fontSize="1em" textAnchor="middle">
-                        {props.planned.energy > 0 && t(energyPercentage < 100 ? 'nutrition.valueRemaining' : 'nutrition.valueTooMany')}
-                    </text>
-                </g>
-            </PieChart>
-        </ResponsiveContainer>
+        <PieChart responsive width={'50%'} height={140}>
+            <Pie
+                // cx={0}
+                // cy={'10'}
+                height={100}
+                data={data}
+                startAngle={200}
+                endAngle={-20}
+                innerRadius={60}
+                outerRadius={70}
+                paddingAngle={2}
+                dataKey="value"
+            >
+                {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+            </Pie>
+            <g>
+                <text x={'50%'} y={'45%'} fontSize="1.25em" textAnchor="middle">{/*fill="#333"*/}
+                    {t('nutrition.valueEnergyKcal', { value: numberLocale(energyDiff, i18n.language) })}
+                </text>
+                <text x={'50%'} y={'60%'} fontSize="1em" textAnchor="middle">
+                    {props.planned.energy > 0 && t(energyPercentage < 100 ? 'nutrition.valueRemaining' : 'nutrition.valueTooMany')}
+                </text>
+            </g>
+        </PieChart>
         <Stack width={'50%'} spacing={1}>
             <LinearPlannedLoggedChart
                 title={t('nutrition.protein')}

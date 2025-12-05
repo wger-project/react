@@ -2,6 +2,7 @@ import axios from 'axios';
 import { MeasurementCategory, MeasurementCategoryAdapter } from "components/Measurements/models/Category";
 import { MeasurementEntry, MeasurementEntryAdapter } from "components/Measurements/models/Entry";
 import { ApiMeasurementCategoryType } from 'types';
+import { API_MAX_PAGE_SIZE } from "utils/consts";
 import { dateToYYYYMMDD } from "utils/date";
 import { fetchPaginated } from 'utils/requests';
 import { makeHeader, makeUrl } from "utils/url";
@@ -20,8 +21,14 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
     const adapter = new MeasurementCategoryAdapter();
     const entryAdapter = new MeasurementEntryAdapter();
     const categories: MeasurementCategory[] = [];
+    const categoryUrl = makeUrl(API_MEASUREMENTS_CATEGORY_PATH, {
+        query: {
+            limit: API_MAX_PAGE_SIZE,
+            ...filtersetQueryCategories
+        }
+    });
 
-    for await (const page of fetchPaginated(makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { query: { ...filtersetQueryCategories } }), makeHeader())) {
+    for await (const page of fetchPaginated(categoryUrl, makeHeader())) {
         for (const catData of page) {
             categories.push(adapter.fromJson(catData));
         }
@@ -30,7 +37,13 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
     // Load entries for each category
     const entryResponses = categories.map(async (category) => {
         const out: MeasurementEntry[] = [];
-        const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: category.id, ...filtersetQueryEntries } });
+        const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
+            query: {
+                category: category.id,
+                limit: API_MAX_PAGE_SIZE,
+                ...filtersetQueryEntries,
+            }
+        });
 
         // Collect all pages of entries
         for await (const page of fetchPaginated(url, makeHeader())) {

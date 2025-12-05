@@ -4,6 +4,7 @@ import EditOffIcon from '@mui/icons-material/EditOff';
 import { Alert, AlertTitle, IconButton, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
+import { Exercise } from "components/Exercises/models/exercise";
 import { useLanguageQuery } from "components/Exercises/queries";
 import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
 import { Slot } from "components/WorkoutRoutines/models/Slot";
@@ -21,7 +22,6 @@ import {
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getLanguageByShortName } from "services";
-import { ExerciseSearchResponse } from "services/responseType";
 
 /*
  * Converts a number to an alphabetic string, useful for counting
@@ -95,12 +95,12 @@ export const SlotEntryDetails = (props: {
 
     const isPending = editSlotEntryQuery.isPending || deleteSlotEntryQuery.isPending;
 
-    const handleExerciseChange = (searchResponse: ExerciseSearchResponse | null) => {
-        if (searchResponse === null) {
+    const handleExerciseChange = (exercise: Exercise | null) => {
+        if (exercise === null) {
             return;
         }
 
-        editSlotEntryQuery.mutate(SlotEntry.clone(props.slotEntry, { exerciseId: searchResponse.data.base_id }));
+        editSlotEntryQuery.mutate(SlotEntry.clone(props.slotEntry, { exerciseId: exercise.id! }));
         setEditExercise(false);
     };
 
