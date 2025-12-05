@@ -31,8 +31,12 @@ jobs:
 
       # Note that deleting package-lock.json is a workaround for an npm issue related to
       # optional dependencies: https://github.com/npm/cli/issues/4828
+      #
+      # Also, we need to ensure npm 11.5.1 or later is installed so that trusted publishing
+      # with GitHub Actions works correctly.
       - name: Build the project
         run: |
+          npm install -g npm@latest
           rm package-lock.json
           npm install
           npm run build
