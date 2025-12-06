@@ -159,7 +159,7 @@
         "deleteInfo": "Isso excluirá a categoria, bem como todas as suas entradas"
     },
     "category": "Categoria",
-    "success": "Êxito!",
+    "success": "Êxito !",
     "English": "Inglês",
     "save": "Salvar",
     "videos": "Vídeos",
@@ -333,12 +333,21 @@
     "editName": "Editar {{name}}",
     "min": "Min",
     "max": "Max",
-    "successfullyDeleted": "Excluído com sucesso",
+    "successfullyDeleted": "Deletado com sucesso",
     "undo": "Desfazer",
     "public": "Público",
     "private": "Privado",
     "durationWeeks": "{{number}} semanas",
     "durationWeeksDays": "{{nrWeeks}} semanas, {{nrDays}} dias",
     "start": "Começar",
-    "end": "Acabar"
+    "end": "Acabar",
+    "dashboard": {
+        "customizeDashboard": "Personalizar painel",
+        "dragWidgetsHelp": "Arraste widgets para reposicioná-los ou redimensione usando o canto inferior direito.",
+        "resetLayout": "Redefinir para o layout padrão"
+    },
+    "core": {
+        "exitEditMode": "Sair do modo de edição",
+        "customize": "Personalizar"
+    }
 }
