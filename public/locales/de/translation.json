@@ -171,7 +171,7 @@
         "maxLengthRoutine": "Die Routine darf maximal {{number}} Wochen lang sein",
         "resultingRoutine": "Resultierende Routine",
         "deleteDayConfirmation": "Dies löscht alle Sets, Übungen und Fortschrittsregeln",
-        "fitDaysInWeek": "Tage in die Woche einpassen",
+        "fitDaysInWeek": "Trainingstage pro Woche",
         "defaultRounding": "Standardrundung",
         "rounding": "Rundung (diese Übung)",
         "weightLogNotPlanned": "Speichere Log an einem Tag ohne geplantes Workout.",
@@ -226,7 +226,8 @@
             "hiit": "Hochintensives Intervalltraining",
             "edt": "Eskalierendes Intensivtraining",
             "rft": "Runden auf Zeit",
-            "afap": "So schnell wie möglich"
+            "afap": "So schnell wie möglich",
+            "tabata": "Tabata"
         }
     },
     "name": "Name",
@@ -343,5 +344,14 @@
     "undo": "Rückgängig machen",
     "successfullyDeleted": "Erfolgreich gelöscht",
     "private": "Privat",
-    "public": "Öffentlich"
+    "public": "Öffentlich",
+    "dashboard": {
+        "customizeDashboard": "Dashboard anpassen",
+        "dragWidgetsHelp": "Ziehen Sie Widgets, um sie neu zu positionieren, oder ändern Sie ihre Größe über die rechte untere Ecke.",
+        "resetLayout": "Auf Standardlayout zurücksetzen"
+    },
+    "core": {
+        "exitEditMode": "Bearbeitungsmodus verlassen",
+        "customize": "Anpassen"
+    }
 }
