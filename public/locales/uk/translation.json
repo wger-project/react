@@ -345,5 +345,14 @@
     "successfullyDeleted": "Успішно вилучено",
     "durationWeeksDays": "{{nrWeeks}} тижнів, {{nrDays}} днів",
     "private": "Приватний",
-    "public": "Громадськість"
+    "public": "Громадськість",
+    "dashboard": {
+        "customizeDashboard": "Налаштувати інформаційну панель",
+        "dragWidgetsHelp": "Перетягуйте віджети, щоб змінити їх розташування або розмір, використовуючи правий нижній кут.",
+        "resetLayout": "Скинути до стандартного макета"
+    },
+    "core": {
+        "exitEditMode": "Вийти з режиму редагування",
+        "customize": "Налаштувати"
+    }
 }
