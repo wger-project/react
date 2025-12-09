@@ -10,14 +10,19 @@ import { NutritionCard } from "components/Dashboard/NutritionCard";
 import { RoutineCard } from "components/Dashboard/RoutineCard";
 import { WeightCard } from "components/Dashboard/WeightCard";
 import { useTranslation } from "react-i18next";
+import { FastingTimerCard } from "components/Fasting/FastingTimerCard";
+
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 // Local storage key for persisting layouts
-const LAYOUT_STORAGE_KEY = "dashboard-layout";
+//const LAYOUT_STORAGE_KEY = "dashboard-layout";
+const LAYOUT_STORAGE_KEY = "dashboard-layout-v2";
+
 
 // Define widget types for extensibility
-export type WidgetType = "routine" | "nutrition" | "weight";
+//export type WidgetType = "routine" | "nutrition" | "weight";
+export type WidgetType = "routine" | "nutrition" | "weight" | "fasting";
 
 export interface WidgetConfig {
     id: string;
@@ -34,26 +39,60 @@ export interface WidgetConfig {
 }
 
 // Widget registry - easy to add new widgets in the future
+// export const AVAILABLE_WIDGETS: WidgetConfig[] = [
+//     {
+//         id: "routine",
+//         type: "routine",
+//         component: RoutineCard,
+//         defaultLayout: { w: 4, h: 5, x: 0, y: 0, minW: 3, minH: 2 },
+//     },
+//     {
+//         id: "fasting",
+//         type: "fasting",
+//         component: FastingTimerCard,
+//         defaultLayout: { w: 4, h: 5, x: 0, y: 5, minW: 3, minH: 3 },
+//     },
+//     {
+//         id: "nutrition",
+//         type: "nutrition",
+//         component: NutritionCard,
+//         defaultLayout: { w: 4, h: 5, x: 4, y: 0, minW: 3, minH: 2 },
+//     },
+//     {
+//         id: "weight",
+//         type: "weight",
+//         component: WeightCard,
+//         defaultLayout: { w: 4, h: 5, x: 8, y: 0, minW: 3, minH: 2 },
+//     },
+// ];
+// Widget registry - easy to add new widgets in the future
 export const AVAILABLE_WIDGETS: WidgetConfig[] = [
     {
         id: "routine",
         type: "routine",
         component: RoutineCard,
-        defaultLayout: { w: 4, h: 5, x: 0, y: 0, minW: 3, minH: 2 },
+        defaultLayout: { w: 3, h: 5, x: 0, y: 0, minW: 3, minH: 2 },
     },
     {
         id: "nutrition",
         type: "nutrition",
         component: NutritionCard,
-        defaultLayout: { w: 4, h: 5, x: 4, y: 0, minW: 3, minH: 2 },
+        defaultLayout: { w: 3, h: 5, x: 3, y: 0, minW: 3, minH: 2 },
     },
     {
         id: "weight",
         type: "weight",
         component: WeightCard,
-        defaultLayout: { w: 4, h: 5, x: 8, y: 0, minW: 3, minH: 2 },
+        defaultLayout: { w: 3, h: 5, x: 6, y: 0, minW: 3, minH: 2 },
+    },
+    {
+        id: "fasting",
+        type: "fasting",
+        component: FastingTimerCard,
+        defaultLayout: { w: 3, h: 5, x: 9, y: 0, minW: 3, minH: 3 },
     },
 ];
+
 
 // Generate default layouts for all breakpoints
 const generateDefaultLayouts = (): Layouts => {
@@ -205,6 +244,7 @@ export const ConfigurableDashboard: React.FC = () => {
                         <Box
                             key={widget.id}
                             sx={{
+                                height: "100%",
                                 // Add visual feedback in edit mode
                                 border: isEditMode ? "1px dashed" : "none",
                                 borderColor: "primary.main",
