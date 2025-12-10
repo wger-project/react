@@ -217,7 +217,8 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                                 value={values.description}
                                 onChange={(val) => setFieldValue('description', val)}
                                 error={touched.description && Boolean(errors.description)}
-                                helperText={touched.description && errors.description}
+                                // FIXED: Use ternary to ensure we return undefined instead of false
+                                helperText={touched.description ? errors.description : undefined}
                             />
                         </Grid>
 

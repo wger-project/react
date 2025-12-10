@@ -61,13 +61,12 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
             {({ values, errors, touched, setFieldValue }) => (
                 <Form>
                     <Stack>
-                        {/* REPLACED ExerciseDescription with MarkdownEditor */}
                         <MarkdownEditor
                             label={t('exercises.description')}
                             value={values.description}
                             onChange={(val) => setFieldValue('description', val)}
                             error={touched.description && Boolean(errors.description)}
-                            helperText={touched.description && errors.description}
+                            helperText={touched.description ? errors.description : undefined}
                         />
 
                         <PaddingBox />

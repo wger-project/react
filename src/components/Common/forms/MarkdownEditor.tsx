@@ -1,15 +1,53 @@
 import React, { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { Box, Button, TextField, Typography, Paper } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import Markdown, { MarkdownToJSX } from 'markdown-to-jsx';
+import { Box, Button, TextField, Typography, Paper, ButtonGroup } from '@mui/material';
+
+const StripElement = ({ children }: { children: React.ReactNode }) => <span>{children}</span>;
+
+const StripBlock = ({ children }: { children: React.ReactNode }) => (
+    <Typography variant="body1" component="div" sx={{ mb: 1.5 }}>
+        {children}
+    </Typography>
+);
+
+const MarkdownOptions: MarkdownToJSX.Options = {
+    overrides: {
+        p: {
+            component: Typography,
+            props: { variant: 'body1', sx: { mb: 1.5 } }
+        },
+
+        // Allowed inline/list tags
+        strong: { component: 'strong' },
+        b: { component: 'b' },
+        em: { component: 'em' },
+        i: { component: 'i' },
+        ul: { component: 'ul', props: { style: { paddingLeft: '20px', margin: '0 0 16px 0' } } },
+        ol: { component: 'ol', props: { style: { paddingLeft: '20px', margin: '0 0 16px 0' } } }, li: { component: 'li' },
+
+        // Block links and headings by mapping them to plan spans.
+        a: { component: StripElement },
+
+        // --- BLOCKED TAGS (No headings allowed) ---
+        h1: { component: StripBlock },
+        h2: { component: StripBlock },
+        h3: { component: StripBlock },
+        h4: { component: StripBlock },
+        h5: { component: StripBlock },
+        h6: { component: StripBlock },        // Tables, images, etc. are naturally ignored by markdown-to-jsx if not explicitly defined
+
+        img: { component: () => null },
+
+        table: { component: 'div' },
+    },
+};
 
 interface MarkdownEditorProps {
     value: string;
     onChange: (value: string) => void;
     label?: string;
     error?: boolean;
-    helperText?: string | false;
+    helperText?: string;
 }
 
 export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
@@ -21,57 +59,53 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 }) => {
     const [isPreview, setIsPreview] = useState(false);
 
-    // Allowed tags for wger
-    const allowedTags = ['p', 'strong', 'em', 'ul', 'ol', 'li', 'b', 'i'];
-
     return (
         <Box mb={2}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                {/* Tabs/Buttons */}
-                <Box>
+                <Typography variant="subtitle2" color={error ? 'error' : 'textSecondary'}>
+                    {label}
+                </Typography>
+                <ButtonGroup size="small" variant="outlined">
                     <Button
-                        startIcon={<EditIcon />}
-                        variant={!isPreview ? "contained" : "text"}
-                        size="small"
+                        variant={!isPreview ? 'contained' : 'outlined'}
                         onClick={() => setIsPreview(false)}
-                        sx={{ mr: 1 }}
                     >
                         Write
                     </Button>
                     <Button
-                        startIcon={<VisibilityIcon />}
-                        variant={isPreview ? "contained" : "text"}
-                        size="small"
+                        variant={isPreview ? 'contained' : 'outlined'}
                         onClick={() => setIsPreview(true)}
                     >
                         Preview
                     </Button>
-                </Box>
+                </ButtonGroup>
             </Box>
 
             {isPreview ? (
-                <Paper variant="outlined" sx={{ p: 2, minHeight: '150px', backgroundColor: '#f5f5f5' }}>
-                    {value ? (
-                        <ReactMarkdown allowedElements={allowedTags}>
-                            {value}
-                        </ReactMarkdown>
-                    ) : (
-                        <Typography variant="body2" color="textSecondary">
-                            <em>Nothing to preview</em>
-                        </Typography>
-                    )}
+                <Paper
+                    variant="outlined"
+                    sx={{
+                        p: 2,
+                        minHeight: '100px',
+                        borderColor: error ? 'error.main' : undefined,
+                        backgroundColor: 'background.default'
+                    }}
+                >
+                    {/* The library handles the parsing based on our secure options */}
+                    <Markdown options={MarkdownOptions}>
+                        {value || '*No content*'}
+                    </Markdown>
                 </Paper>
             ) : (
                 <TextField
                     fullWidth
                     multiline
-                    minRows={6}
-                    label={label}
+                    minRows={4}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     error={error}
-                    helperText={helperText || "Supported: **Bold**, *Italic*, Lists."}
-                    variant="outlined"
+                    helperText={helperText}
+                    placeholder="Use Markdown: *italic*, **bold**, - list"
                 />
             )}
         </Box>

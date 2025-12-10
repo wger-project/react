@@ -1,53 +1,84 @@
+import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import { MarkdownEditor } from './MarkdownEditor';
-import { I18nextProvider } from 'react-i18next';
-import i18n from '../../../i18n'; // Assuming standard i18n setup
+import '@testing-library/jest-dom';
 
 describe('MarkdownEditor', () => {
-    const mockOnChange = jest.fn();
+    const mockChange = jest.fn();
 
-    it('renders in write mode by default with correct label', () => {
-        render(<I18nextProvider i18n={i18n}>
-            <MarkdownEditor value="Test value" onChange={mockOnChange} label="Exercise Instructions" />
-        </I18nextProvider>);
-
-        // Should find the Write button and the textarea
-        expect(screen.getByText('Write')).toHaveAttribute('aria-current', 'true');
-        expect(screen.getByRole('textbox', { name: /exercise instructions/i })).toHaveValue('Test value');
+    it('renders in Write mode by default', () => {
+        render(<MarkdownEditor value="Test content" onChange={mockChange} />);
+        // Check for the textarea
+        expect(screen.getByRole('textbox')).toBeInTheDocument();
+        // Check content exists inside textbox
+        expect(screen.getByDisplayValue('Test content')).toBeInTheDocument();
     });
 
-    it('toggles to preview mode and displays content', () => {
-        render(<I18nextProvider i18n={i18n}>
-            <MarkdownEditor value="This is **bold** text." onChange={mockOnChange} />
-        </I18nextProvider>);
+    it('calls onChange when typing', () => {
+        render(<MarkdownEditor value="" onChange={mockChange} />);
+        const input = screen.getByRole('textbox');
+        fireEvent.change(input, { target: { value: 'New text' } });
+        expect(mockChange).toHaveBeenCalledWith('New text');
+    });
+
+    it('toggles to preview mode and renders basic formatting', () => {
+        const markdown = "This is **bold** and *italic*";
+        render(<MarkdownEditor value={markdown} onChange={mockChange} />);
 
         // Switch to Preview
         fireEvent.click(screen.getByText('Preview'));
 
-        // Check if the bold text is rendered (ReactMarkdown uses <strong>)
-        expect(screen.getByText('bold', { selector: 'strong' })).toBeInTheDocument();
+        // Check that bold and italic tags are rendered
+        // Note: markdown-to-jsx might use <strong> or <b>, check your overrides.
+        // We overrode 'strong' to 'strong', so we look for that.
+        const boldElement = screen.getByText('bold');
+        expect(boldElement.tagName).toBe('STRONG');
 
-        // Should NOT render disallowed tags like headings
-        const markdownInput = '# Heading\n\nSimple text';
-        render(<I18nextProvider i18n={i18n}>
-            <MarkdownEditor value={markdownInput} onChange={mockOnChange} />
-        </I18nextProvider>);
-        fireEvent.click(screen.getByText('Preview'));
-        expect(screen.queryByRole('heading')).toBeNull(); // Assert H1 is not rendered
+        const italicElement = screen.getByText('italic');
+        expect(italicElement.tagName).toBe('EM');
     });
 
-    it('calls onChange handler on input change', () => {
-        render(<I18nextProvider i18n={i18n}>
-            <MarkdownEditor value="" onChange={mockOnChange} />
-        </I18nextProvider>);
+    it('blocks Heading tags (h1-h6) and renders them as plain text/paragraphs', () => {
+        // We provide a # Heading. 
+        // Expected result: Text "Forbidden Heading" is visible, but NOT inside an <h1> tag.
+        render(<MarkdownEditor value="# Forbidden Heading" onChange={mockChange} />);
 
-        const textarea = screen.getByRole('textbox');
-        fireEvent.change(textarea, { target: { value: 'New text' } });
+        fireEvent.click(screen.getByText('Preview'));
 
-        expect(mockOnChange).toHaveBeenCalledWith('New text');
+        // 1. The text should still be readable
+        expect(screen.getByText('Forbidden Heading')).toBeInTheDocument();
+
+        // 2. But there should be NO heading role in the document
+        const heading = screen.queryByRole('heading', { level: 1 });
+        expect(heading).toBeNull();
+    });
+
+    it('blocks Link tags (a) and renders plain text', () => {
+        const markdown = "[Malicious Link](http://evil.com)";
+        render(<MarkdownEditor value={markdown} onChange={mockChange} />);
+
+        fireEvent.click(screen.getByText('Preview'));
+
+        // 1. The text anchor should be visible
+        expect(screen.getByText('Malicious Link')).toBeInTheDocument();
+
+        // 2. But it should NOT be a link (no anchor tag)
+        const link = screen.queryByRole('link');
+        expect(link).toBeNull();
+
+        // 3. Ensure the href is not present in the DOM (security check)
+        const textElement = screen.getByText('Malicious Link');
+        expect(textElement).not.toHaveAttribute('href');
+    });
+
+    it('blocks Images', () => {
+        // Image syntax: ![alt text](url)
+        render(<MarkdownEditor value="![Hidden Image](image.png)" onChange={mockChange} />);
+
+        fireEvent.click(screen.getByText('Preview'));
+
+        // Ensure the image tag is not rendered
+        const img = screen.queryByRole('img');
+        expect(img).toBeNull();
     });
 });
-
-// To run this test:
-// npm test -- MarkdownEditor
