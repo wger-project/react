@@ -85,7 +85,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
     const isNewTranslation = language.id !== translationFromBase?.language;
     const exerciseTranslation =
         isNewTranslation
-            ? new Translation(null, null, '', '', language.id)
+            ? new Translation(null, null, '', '', language.id, [], [], [], '')
             : translationFromBase;
     const exerciseEnglish = exercise.getTranslation();
 
@@ -227,7 +227,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                         </Grid>
                         <Grid size={{ xs: 12, md: 6 }}>
                             <EditExerciseEquipment exerciseId={exercise.id!}
-                                                   initial={exercise.equipment.map(e => e.id)} />
+                                initial={exercise.equipment.map(e => e.id)} />
                         </Grid>
                     </>}
 
@@ -302,7 +302,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
             {exercise.videos.map(video => (
                 <Grid key={video.id} size={{ md: 3 }}>
                     <VideoEditCard exerciseId={exercise.id!} video={video}
-                                   canDelete={deleteVideoPermissionQuery.data!} />
+                        canDelete={deleteVideoPermissionQuery.data!} />
                 </Grid>
             ))}
         </Grid>
