@@ -149,7 +149,8 @@ describe("Exercise translation edit tests", () => {
             id: 9,
             languageId: 1,
             author: "",
-            description: "Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur",
+            description: "",
+            descriptionSource: "Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur",
             name: "Mangalitza"
         });
     });

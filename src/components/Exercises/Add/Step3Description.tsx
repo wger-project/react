@@ -3,11 +3,10 @@ import Grid from '@mui/material/Grid';
 import { useLanguageCheckQuery } from "components/Core/queries";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
-import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
+import { MarkdownEditor } from "components/Common/forms/MarkdownEditor";
 import { ExerciseNotes } from "components/Exercises/forms/ExerciseNotes";
 import { descriptionValidator, noteValidator } from "components/Exercises/forms/yupValidators";
 import { Form, Formik } from "formik";
-import React from "react";
 import { useTranslation } from "react-i18next";
 import { useExerciseSubmissionStateValue } from "state";
 import { setDescriptionEn, setNotesEn } from "state/exerciseSubmissionReducer";
@@ -59,38 +58,46 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
 
             }}
         >
-            <Form>
-                <Stack>
-                    <ExerciseDescription fieldName={"description"} />
+            {({ values, errors, touched, setFieldValue }) => (
+                <Form>
+                    <Stack>
+                        <MarkdownEditor
+                            label={t('exercises.description')}
+                            value={values.description}
+                            onChange={(val) => setFieldValue('description', val)}
+                            error={touched.description && Boolean(errors.description)}
+                            helperText={touched.description ? errors.description : undefined}
+                        />
 
-                    <PaddingBox />
+                        <PaddingBox />
 
-                    <ExerciseNotes fieldName={'notes'} />
+                        <ExerciseNotes fieldName={'notes'} />
 
-                    <Grid container>
-                        <Grid display="flex" justifyContent={"end"} size={12}>
-                            <Box sx={{ mb: 2 }}>
-                                <div>
-                                    <Button
-                                        onClick={onBack}
-                                        sx={{ mt: 1, mr: 1 }}
-                                    >
-                                        {t('goBack')}
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        type="submit"
-                                        disabled={languageCheckQuery.isPending}
-                                        sx={{ mt: 1, mr: 1 }}
-                                    >
-                                        {t('continue')}
-                                    </Button>
-                                </div>
-                            </Box>
+                        <Grid container>
+                            <Grid display="flex" justifyContent={"end"} size={12}>
+                                <Box sx={{ mb: 2 }}>
+                                    <div>
+                                        <Button
+                                            onClick={onBack}
+                                            sx={{ mt: 1, mr: 1 }}
+                                        >
+                                            {t('goBack')}
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            type="submit"
+                                            disabled={languageCheckQuery.isPending}
+                                            sx={{ mt: 1, mr: 1 }}
+                                        >
+                                            {t('continue')}
+                                        </Button>
+                                    </div>
+                                </Box>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </Stack>
-            </Form>
+                    </Stack>
+                </Form>
+            )}
         </Formik>)
     );
 };
