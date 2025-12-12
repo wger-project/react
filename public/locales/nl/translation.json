@@ -1,6 +1,6 @@
 {
     "days": "Dagen",
-    "edit": "Bewerk",
+    "edit": "Wijzig",
     "close": "Sluit",
     "submit": "Verzend",
     "height": "Lengte",
@@ -17,7 +17,7 @@
         "derivativeSourceUrlHelper": "Wees ervan bewust dat \"afgeleid werk\" niet alleen gebaseerd is op een eerder werk, maar dat ook voldoende nieuwe, creatieve inhoud bevat om recht te geven op eigen auteursrecht.",
         "originalObjectUrl": "Link naar de bron website, indien mogelijk"
     },
-    "nutritionalPlan": "Maaltijden Plan",
+    "nutritionalPlan": "Voedingsplan",
     "delete": "Verwijder",
     "lastWeek": "Vorige week",
     "deleteConfirmation": "Weet je zeker dat je wil verwijderen \"{{name}}\"?",
@@ -35,7 +35,7 @@
     "addEntry": "Item toevoegen",
     "notes": "Notities",
     "unit": "Eenheid",
-    "copyToClipboard": "Kopieer naar geheugen",
+    "copyToClipboard": "Kopieer naar klembord",
     "exercises": {
         "replacementsSearch": "Zoek naar een oefening of kopieer en plak een bekende ID in het veld en klik op de knop “laden”.",
         "noReplacementSelected": " Geen oefening geselecteerd voor vervanging",
@@ -84,7 +84,8 @@
         "alsoKnownAs": "Ook bekend als:",
         "compatibleImagesCC": "Afbeeldingen moeten compatibel zijn met de CC BY SA-licentie. Als je twijfelt, upload dan alleen foto's die je zelf hebt gemaakt.",
         "checkInformationBeforeSubmitting": "Controleer of de ingevoerde informatie correct is voordat u de oefening verzendt",
-        "deleteExerciseBody": "Wil je de oefening “{{naam}}” verwijderen? Je kunt de huidige {{taal}} vertaling verwijderen of de volledige oefening met alle vertalingen, afbeeldingen, enz."
+        "deleteExerciseBody": "Wil je de oefening “{{naam}}” verwijderen? Je kunt de huidige {{taal}} vertaling verwijderen of de volledige oefening met alle vertalingen, afbeeldingen, enz.",
+        "swapExercise": "Wissel oefening"
     },
     "filters": "Filters",
     "nothingHereYet": "Nog niets ingevuld...",
@@ -152,7 +153,7 @@
     },
     "downloadAsPdf": "Download als PDF",
     "total": "Totaal",
-    "description": "Omschrijving",
+    "description": "Beschrijving",
     "translation": "Vertaling",
     "images": "Foto's",
     "overview": "Overzicht",
@@ -168,7 +169,11 @@
         "maxLength": "Voer minder dan {{chars}} tekens in",
         "minLength": "Voer meer dan {{chars}} tekens in",
         "minValue": "De waarde voor dit veld moet hoger zijn dan {{value}}",
-        "maxValue": "De waarde voor dit veld moet kleiner zijn dan {{value}}"
+        "maxValue": "De waarde voor dit veld moet kleiner zijn dan {{value}}",
+        "enterNumber": "Voer een geldig nummer in",
+        "enterInteger": "Voer een geheel getal in",
+        "maxLessThanMin": "De maximale waarde moet groter zijn dan de minimale waarde",
+        "endBeforeStart": "De eindwaarde mag niet vóór de beginwaarde liggen"
     },
     "name": "Naam",
     "category": "Categorie",
@@ -188,7 +193,32 @@
         "routines": "Routines",
         "rir": "RiR",
         "addLogToDay": "Logboek toevoegen aan deze dag",
-        "logsFilterNote": "Merk op dat alleen items met een gewichtseenheid van kg of lb en herhalingen in kaart worden gebracht, andere combinaties zoals tijd of tot falen worden hier genegeerd"
+        "logsFilterNote": "Merk op dat alleen items met een gewichtseenheid van kg of lb en herhalingen in kaart worden gebracht, andere combinaties zoals tijd of tot falen worden hier genegeerd",
+        "sets": "Sets",
+        "reps": "Herhalingen",
+        "volume": "Volume",
+        "intensity": "Intensiteit",
+        "currentRoutine": "Huidige routine",
+        "iteration": "Iteratie",
+        "weekly": "Wekelijks",
+        "daily": "Dagelijks",
+        "restTime": "Rust tijd",
+        "workoutNr": "Workout Nr. {{number}}",
+        "weekNr": "Week {{number}}",
+        "backToRoutine": "Terug naar routine",
+        "minLengthRoutine": "De routine moet minimaal {{number}} weken duren",
+        "maxLengthRoutine": "De routine kan maximaal {{number}} weken duren",
+        "resultingRoutine": "Resulterende routine",
+        "deleteDayConfirmation": "Hierdoor worden alle sets, oefeningen en progressieregels verwijderd",
+        "routineHasNoDays": "De routine heeft geen dagen",
+        "setHasNoExercises": "Deze set heeft geen oefeningen",
+        "fitDaysInWeek": "Fitte dagen in de week",
+        "fitDaysInWeekHelpText": "Deze instelling bepaalt hoe de dagen van je trainingsschema over meerdere weken worden ingepland. Indien ingeschakeld, herhalen de dagen zich in een wekelijkse cyclus. Een schema met trainingen op maandag, woensdag en vrijdag zal dit patroon bijvoorbeeld voortzetten op de daaropvolgende maandag, woensdag en vrijdag. Indien uitgeschakeld, volgen de dagen elkaar op zonder rekening te houden met het begin van een nieuwe week. Dit is handig voor schema's die geen strikt wekelijks schema volgen.",
+        "needsLogsToAdvance": "Logs zijn nodig om verder te gaan",
+        "needsLogsToAdvanceHelpText": "Als u deze optie selecteert, gaat de routine alleen door naar de volgende geplande dag als u voor de huidige dag een training hebt geregistreerd. Als deze optie niet is geselecteerd, gaat de routine automatisch door naar de volgende dag, ongeacht of u een training hebt geregistreerd of niet.",
+        "addSuperset": "Superset toevoegen",
+        "addExercise": "Oefening toevoegen",
+        "exerciseNr": "Oefening {{number}}"
     },
     "measurements": {
         "measurements": "Metingen",
@@ -242,5 +272,20 @@
     "editName": "Bewerk {{naam}}",
     "comment": "Commentaar",
     "private": "Privé",
-    "public": "Publiek"
+    "public": "Publiek",
+    "dashboard": {
+        "customizeDashboard": "Dashboard aanpassen",
+        "dragWidgetsHelp": "Sleep widgets om ze te herpositioneren of verander de grootte vanuit de hoek rechts onder.",
+        "resetLayout": "Reset naar de standaard layout"
+    },
+    "core": {
+        "exitEditMode": "Sluit bewerkmodus",
+        "customize": "Bewerk"
+    },
+    "min": "Min",
+    "max": "Max",
+    "durationWeeks": "{{number}} weken",
+    "durationWeeksDays": "{{nrWeeks}} weken, {{nrDays}} dagen",
+    "undo": "Ongedaan maken",
+    "successfullyDeleted": "Succesvol verwijderd"
 }
