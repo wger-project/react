@@ -46,7 +46,7 @@
     "react-router-dom": "^7.9.4",
     "react-simple-wysiwyg": "^3.4.1",
     "recharts": "^3.4.1",
-    "slug": "^9.1.0",
+    "slug": "^11.0.1",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^5.1.4",
     "web-vitals": "^5.1.0",
