@@ -15,7 +15,7 @@ import { EntryForm } from "components/Measurements/widgets/EntryForm";
 import { WgerModal } from "components/Core/Modals/WgerModal";
 
 
-const CategoryList = (props: { category: MeasurementCategory }) => {
+export const CategoryList = (props: { category: MeasurementCategory }) => {
 
     const [t, i18n] = useTranslation();
     const [openModal, setOpenModal] = React.useState(false);
