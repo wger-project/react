@@ -1,5 +1,5 @@
+import CalendarComponent from "components/Calendar/Components/CalendarComponent";
 import { DashboardCard } from "components/Dashboard/DashboardCard";
-import { Calendar } from "pages";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,10 +9,8 @@ export const CalendarCard = () => {
 
 
     return (
-        <DashboardCard
-            title={t("calendar")}
-        >
-            <Calendar />
+        <DashboardCard title={t("calendar")}>
+            <CalendarComponent showBorder={false} />
         </DashboardCard>
     );
 };

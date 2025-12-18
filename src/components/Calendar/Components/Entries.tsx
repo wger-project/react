@@ -17,22 +17,27 @@ import { DayProps } from "./CalendarComponent";
 
 interface LogProps {
     selectedDay: DayProps;
+    showBorder?: boolean;
 }
 
-const Entries: React.FC<LogProps> = ({ selectedDay }) => {
+const Entries: React.FC<LogProps> = ({ selectedDay, showBorder }) => {
     const [t] = useTranslation();
 
     const [openMeasurements, setOpenMeasurements] = React.useState(false);
     const [openSession, setOpenSession] = React.useState(false);
     const [openNutritionDiary, setOpenNutritionDiary] = React.useState(false);
 
+    showBorder = showBorder ?? true;
+
     return (
         <Card
             sx={{
+                boxShadow: showBorder ? undefined : 'none',
                 width: { xs: 'auto', md: '45%' },
                 height: { xs: '60%', md: '100%' },
                 // m: { xs: 0, sm: 1, md: 2 },
                 // p: { xs: 1, sm: 1.5, md: 2 }
+
             }}
         >
             <CardHeader

@@ -25,7 +25,7 @@ export interface DayProps {
 }
 
 
-const CalendarComponent = () => {
+const CalendarComponent = (props: { showBorder?: boolean }) => {
     const [t] = useTranslation();
 
     const currentDate = new Date();
@@ -34,6 +34,8 @@ const CalendarComponent = () => {
 
     const startOfMonth = new Date(currentYear, currentMonth, 1);
     const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
+
+    const showBorder = props.showBorder ?? true;
 
 
     const weightsQuery = useBodyWeightQuery();
@@ -179,6 +181,7 @@ const CalendarComponent = () => {
             width: '100%',
         }}>
             <Card sx={{
+                boxShadow: showBorder ? undefined : 'none',
                 width: { xs: 'auto', md: '65%' },
                 height: { xs: 'auto', md: '100%' },
                 // m: { xs: 0, sm: 1, md: 2 },
@@ -242,7 +245,7 @@ const CalendarComponent = () => {
                     <LoadingPlaceholder />
                 </Card>}
 
-            {isSuccess && <Entries selectedDay={selectedDay} />}
+            {isSuccess && <Entries selectedDay={selectedDay} showBorder={showBorder} />}
         </Box>
     );
 };
