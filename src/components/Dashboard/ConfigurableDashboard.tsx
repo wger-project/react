@@ -110,6 +110,8 @@ export const loadDashboardState = (): DashboardState | null => {
 
         // For future migrations, e.g.:
         // if (parsedAny.version === 1) {
+        //     Note that here we should add widget defaults when new ones are added to AVAILABLE_WIDGETS
+        //     in future versions
         //     out = migrateFromV1(parsedAny)
         // }
 
@@ -130,6 +132,7 @@ export const loadDashboardState = (): DashboardState | null => {
                 (out.layouts as Layouts)[bp] = arr.filter((item: Layout) => item && allowed.has(String(item.i)));
             }
         }
+
 
         return out;
     } catch (error) {
