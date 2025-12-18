@@ -31,8 +31,8 @@ const Entries: React.FC<LogProps> = ({ selectedDay }) => {
             sx={{
                 width: { xs: 'auto', md: '45%' },
                 height: { xs: '60%', md: '100%' },
-                m: { xs: 0, sm: 1, md: 2 },
-                p: { xs: 1, sm: 1.5, md: 2 }
+                // m: { xs: 0, sm: 1, md: 2 },
+                // p: { xs: 1, sm: 1.5, md: 2 }
             }}
         >
             <CardHeader

@@ -2,6 +2,7 @@ import { Box, Button, IconButton, Tooltip } from "@mui/material";
 import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import DoneIcon from '@mui/icons-material/Done';
+import { CalendarCard } from "components/Dashboard/CalendarCard";
 import React, { useState, useCallback, useMemo } from "react";
 import { Responsive, WidthProvider, Layout, Layouts } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
@@ -17,7 +18,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const LAYOUT_STORAGE_KEY = "dashboard-layout";
 
 // Define widget types for extensibility
-export type WidgetType = "routine" | "nutrition" | "weight";
+export type WidgetType = "routine" | "nutrition" | "weight" | "calendar";
 
 export interface WidgetConfig {
     id: string;
@@ -52,6 +53,12 @@ export const AVAILABLE_WIDGETS: WidgetConfig[] = [
         type: "weight",
         component: WeightCard,
         defaultLayout: { w: 4, h: 5, x: 8, y: 0, minW: 3, minH: 2 },
+    },
+    {
+        id: "calendar",
+        type: "calendar",
+        component: CalendarCard,
+        defaultLayout: { w: 6, h: 4, x: 0, y: 1, minW: 3, minH: 2 },
     },
 ];
 
