@@ -41,17 +41,15 @@ export const WeightTableDashboard = ({ weights }: WeightTableProps) => {
                 <Table size={"small"}>
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center">{t('date')}</TableCell>
-                            <TableCell align="center">{t('weight')}</TableCell>
+                            <TableCell>{t('date')}</TableCell>
+                            <TableCell>{t('weight')}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {filteredWeight.map((row) => (
                             <TableRow key={row.date.toISOString()}>
-                                <TableCell align="center">
-                                    {dateTimeToLocale(row.date)}
-                                </TableCell>
-                                <TableCell align="center">{row.weight}</TableCell>
+                                <TableCell>{dateTimeToLocale(row.date)}</TableCell>
+                                <TableCell>{row.weight}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
