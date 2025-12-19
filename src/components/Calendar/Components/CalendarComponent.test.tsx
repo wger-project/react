@@ -33,33 +33,29 @@ describe('CalendarComponent', () => {
     beforeEach(() => {
 
         (getWeights as jest.Mock).mockImplementation(() => Promise.resolve([
-                new WeightEntry(
-                    new Date(currentYear, currentMonth, 2, 12, 0),
-                    70
-                ),
-            ]
-        ));
+            new WeightEntry(
+                new Date(currentYear, currentMonth, 2, 12, 0),
+                70
+            ),
+        ]));
 
-        (getSessions as jest.Mock).mockImplementation(() => Promise.resolve([
-                testWorkoutSession
-            ]
+        (getSessions as jest.Mock).mockImplementation(() => Promise.resolve(
+            [testWorkoutSession]
         ));
 
         (getMeasurementCategories as jest.Mock).mockImplementation(() => Promise.resolve([
-                new MeasurementCategory(
-                    1,
-                    "Body Fat",
-                    "%",
-                    [new MeasurementEntry(1, 1, new Date(currentYear, currentMonth, 1, 12, 0), 20, "Normal")]
-                ),
-            ],
-        ));
+            new MeasurementCategory(
+                1,
+                "Body Fat",
+                "%",
+                [new MeasurementEntry(1, 1, new Date(currentYear, currentMonth, 1, 12, 0), 20, "Normal")]
+            ),
+        ]));
 
         (getNutritionalDiaryEntries as jest.Mock).mockImplementation(() => Promise.resolve([
-                TEST_DIARY_ENTRY_1,
-                TEST_DIARY_ENTRY_2,
-            ],
-        ));
+            TEST_DIARY_ENTRY_1,
+            TEST_DIARY_ENTRY_2,
+        ]));
 
         testQueryClient.clear();
     });

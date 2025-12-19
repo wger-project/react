@@ -4,7 +4,7 @@ import CalendarComponent from "../../components/Calendar/Components/CalendarComp
 export const Calendar = () => {
     return (
         <div>
-            <CalendarComponent/>
+            <CalendarComponent />
         </div>
     );
 };

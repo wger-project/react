@@ -72,19 +72,21 @@ export interface DashboardCardProps {
  * </DashboardCard>
  * ```
  */
-export const DashboardCard: React.FC<DashboardCardProps> = ({
-    title,
-    subheader,
-    children,
-    actions,
-    headerAction,
-    contentHeight,
-    scrollable = true,
-    cardSx = {},
-    contentSx = {},
-}) => {
+export const DashboardCard: React.FC<DashboardCardProps> = (
+    {
+        title,
+        subheader,
+        children,
+        actions,
+        headerAction,
+        contentHeight,
+        scrollable = true,
+        cardSx = {},
+        contentSx = {},
+    }) => {
     return (
         <Card
+
             sx={{
                 height: "100%",
                 display: "flex",
