@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Tooltip, Typography, } from "@mui/material";
+import { Button, Card, CardContent, CardMedia, Tooltip, Typography, } from "@mui/material";
 import Box from "@mui/system/Box";
 import Stack from "@mui/system/Stack";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
@@ -7,6 +7,7 @@ import { UserTrophy } from "components/Trophies/models/userTrophy";
 import { useUserTrophiesQuery } from "components/Trophies/queries/trophies";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { makeLink, WgerLink } from "utils/url";
 import { DashboardCard } from "./DashboardCard";
 
 export const TrophiesCard = () => {
@@ -25,12 +26,26 @@ export const TrophiesCard = () => {
 };
 
 function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
+    const { t, i18n } = useTranslation();
 
     const tooltipWidget = (tooltip: string) => <Typography variant="body2" textAlign={'center'}>
         {tooltip}
     </Typography>;
 
-    return (<DashboardCard title={''} scrollable={false}>
+    return (<DashboardCard
+        title={''}
+        scrollable={false}
+        actions={
+            <>
+                <Button
+                    size="small"
+                    href={makeLink(WgerLink.TROPHIES, i18n.language)}
+                >
+                    {t("seeDetails")}
+                </Button>
+            </>
+        }
+    >
         <Box sx={{ overflowX: 'auto', width: '100%' }}>
             <Stack direction="row" spacing={1} sx={{ display: 'flex' }}>
                 {props.trophies.map((userTrophy) => (
