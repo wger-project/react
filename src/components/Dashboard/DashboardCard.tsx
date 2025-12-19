@@ -73,16 +73,16 @@ export interface DashboardCardProps {
  * ```
  */
 export const DashboardCard: React.FC<DashboardCardProps> = ({
-    title,
-    subheader,
-    children,
-    actions,
-    headerAction,
-    contentHeight,
-    scrollable = true,
-    cardSx = {},
-    contentSx = {},
-}) => {
+                                                                title,
+                                                                subheader,
+                                                                children,
+                                                                actions,
+                                                                headerAction,
+                                                                contentHeight,
+                                                                scrollable = true,
+                                                                cardSx = {},
+                                                                contentSx = {},
+                                                            }) => {
     return (
         <Card
             sx={{
@@ -92,7 +92,7 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
                 ...cardSx,
             }}
         >
-            <CardHeader title={title} subheader={subheader} action={headerAction} />
+            {title !== '' && <CardHeader title={title} subheader={subheader} action={headerAction} />}
 
             <CardContent
                 sx={{

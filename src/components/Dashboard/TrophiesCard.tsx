@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Typography, } from "@mui/material";
+import { Card, CardContent, CardMedia, Tooltip, Typography, } from "@mui/material";
 import Box from "@mui/system/Box";
 import Stack from "@mui/system/Stack";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
@@ -25,27 +25,34 @@ export const TrophiesCard = () => {
 };
 
 function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
-    const { t } = useTranslation();
 
-    return (<DashboardCard title={t("trophies.trophies")}>
-        <Box sx={{ overflowX: 'auto', width: '100%', py: 1 }}>
-            <Stack direction="row" spacing={2} sx={{ display: 'flex' }}>
+    const tooltipWidget = (tooltip: string) => <Typography variant="body2" textAlign={'center'}>
+        {tooltip}
+    </Typography>;
+
+    return (<DashboardCard title={''} scrollable={false}>
+        <Box sx={{ overflowX: 'auto', width: '100%' }}>
+            <Stack direction="row" spacing={1} sx={{ display: 'flex' }}>
                 {props.trophies.map((userTrophy) => (
-                    <Card sx={{ width: 200, flex: '0 0 auto' }} key={userTrophy.trophy.uuid}>
-                        <CardMedia
-                            sx={{ height: 140 }}
-                            image={userTrophy.trophy.image}
-                            title={userTrophy.trophy.name}
-                        />
-                        <CardContent>
-                            <Typography gutterBottom variant="h6" component="div">
-                                {userTrophy.trophy.name}
-                            </Typography>
-                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                {userTrophy.trophy.description}
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                    <Tooltip title={tooltipWidget(userTrophy.trophy.description)} arrow>
+                        <Card sx={{ width: 100, flex: '0 0 auto', boxShadow: 'none' }} key={userTrophy.trophy.uuid}>
+                            <CardMedia
+                                component="img"
+                                image={userTrophy.trophy.image}
+                                title={userTrophy.trophy.name}
+                            />
+                            <CardContent sx={{ p: 0 }}>
+
+                                <Typography gutterBottom variant="h6" component="div" textAlign="center">
+                                    {userTrophy.trophy.name}
+                                </Typography>
+
+                                {/*<Typography variant="body2" sx={{ color: 'text.secondary' }}>*/}
+                                {/*    {userTrophy.trophy.description}*/}
+                                {/*</Typography>*/}
+                            </CardContent>
+                        </Card>
+                    </Tooltip>
                 ))}
             </Stack>
         </Box>

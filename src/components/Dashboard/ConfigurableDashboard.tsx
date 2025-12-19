@@ -18,7 +18,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const LAYOUT_STORAGE_KEY = "dashboard-layout";
 
 // Define widget types for extensibility
-export type WidgetType = "routine" | "nutrition" | "weight";
+export type WidgetType = "routine" | "nutrition" | "weight" | "trophies";
 
 export interface WidgetConfig {
     id: string;
@@ -53,6 +53,12 @@ export const AVAILABLE_WIDGETS: WidgetConfig[] = [
         type: "weight",
         component: WeightCard,
         defaultLayout: { w: 4, h: 5, x: 8, y: 0, minW: 3, minH: 2 },
+    },
+    {
+        id: "trophies",
+        type: "trophies",
+        component: TrophiesCard,
+        defaultLayout: { w: 12, h: 2, x: 0, y: 1, minW: 3, minH: 2 },
     },
 ];
 
@@ -198,8 +204,6 @@ export const ConfigurableDashboard: React.FC = () => {
                     </Button>
                 </Tooltip>
             </Box>
-
-            < TrophiesCard />
 
             <ResponsiveGridLayout {...gridConfig}>
                 {AVAILABLE_WIDGETS.map((widget) => {
