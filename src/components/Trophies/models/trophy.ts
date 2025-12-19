@@ -47,14 +47,8 @@ export class Trophy {
         this.isProgressive = params.isProgressive;
     }
 
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static fromJson(json: any): Trophy {
+    static fromJson(json: ApiTrophyType): Trophy {
         return adapter.fromJson(json);
-    }
-
-    toJson() {
-        return adapter.toJson(this);
     }
 }
 

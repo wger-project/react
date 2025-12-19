@@ -1,8 +1,8 @@
-import { Trophy } from "components/Trophies/models/trophy";
+import { ApiTrophyType, Trophy } from "components/Trophies/models/trophy";
 import { Adapter } from "utils/Adapter";
 
 export interface ApiUserTrophyType {
-    trophy: number,
+    trophy: ApiTrophyType,
     is_earned: boolean
     earned_at: string | null,
     progress: number,
@@ -41,14 +41,8 @@ export class UserTrophyProgression {
         this.progressDisplay = params.progressDisplay;
     }
 
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static fromJson(json: any): UserTrophyProgression {
+    static fromJson(json: ApiUserTrophyType): UserTrophyProgression {
         return adapter.fromJson(json);
-    }
-
-    toJson() {
-        return adapter.toJson(this);
     }
 }
 

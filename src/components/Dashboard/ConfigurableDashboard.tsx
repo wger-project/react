@@ -1,14 +1,15 @@
-import { Box, Button, IconButton, Tooltip } from "@mui/material";
 import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import DoneIcon from '@mui/icons-material/Done';
-import React, { useState, useCallback, useMemo } from "react";
-import { Responsive, WidthProvider, Layout, Layouts } from "react-grid-layout";
-import "react-grid-layout/css/styles.css";
-import "react-resizable/css/styles.css";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import { Box, Button, IconButton, Tooltip } from "@mui/material";
 import { NutritionCard } from "components/Dashboard/NutritionCard";
 import { RoutineCard } from "components/Dashboard/RoutineCard";
+import { TrophiesCard } from "components/Dashboard/TrophiesCard";
 import { WeightCard } from "components/Dashboard/WeightCard";
+import React, { useCallback, useMemo, useState } from "react";
+import { Layout, Layouts, Responsive, WidthProvider } from "react-grid-layout";
+import "react-grid-layout/css/styles.css";
+import "react-resizable/css/styles.css";
 import { useTranslation } from "react-i18next";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -197,6 +198,8 @@ export const ConfigurableDashboard: React.FC = () => {
                     </Button>
                 </Tooltip>
             </Box>
+
+            < TrophiesCard />
 
             <ResponsiveGridLayout {...gridConfig}>
                 {AVAILABLE_WIDGETS.map((widget) => {

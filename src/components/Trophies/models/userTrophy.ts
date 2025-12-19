@@ -1,9 +1,9 @@
-import { Trophy } from "components/Trophies/models/trophy";
+import { ApiTrophyType, Trophy } from "components/Trophies/models/trophy";
 import { Adapter } from "utils/Adapter";
 
 export interface ApiUserTrophyType {
     id: number,
-    trophy: number,
+    trophy: ApiTrophyType,
     earned_at: string,
     progress: number,
     "is_notified": boolean,
@@ -36,9 +36,7 @@ export class UserTrophy {
         this.isNotified = params.isNotified;
     }
 
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static fromJson(json: any): UserTrophy {
+    static fromJson(json: ApiUserTrophyType): UserTrophy {
         return adapter.fromJson(json);
     }
 
@@ -58,10 +56,12 @@ class UserTrophyAdapter implements Adapter<UserTrophy> {
         });
     }
 
-    toJson(item: UserTrophy) {
-        return {};
+    toJson(trophy: UserTrophy) {
+        return {
+            id: trophy.id,
+            "is_notified": trophy.isNotified,
+        };
     }
 }
-
 
 const adapter = new UserTrophyAdapter();

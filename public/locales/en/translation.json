@@ -30,6 +30,9 @@
   "start": "Start",
   "end": "End",
   "comment": "Comment",
+  "trophies": {
+    "trophies": "Trophies"
+  },
   "licenses": {
     "authors": "Author(s)",
     "authorProfile": "Link to author website or profile, if available",
