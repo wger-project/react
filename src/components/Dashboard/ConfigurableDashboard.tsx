@@ -23,6 +23,7 @@ const VERSION = 1;
 type DashboardState = {
     version: number;
     selectedWidgetIds: string[];
+    hiddenWidgetIds: string[];
     layouts: Layouts | null;
 };
 
@@ -96,43 +97,58 @@ export const loadDashboardState = (): DashboardState | null => {
             return null;
         }
 
-        let out: DashboardState | null = null;
-
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const parsedAny = JSON.parse(raw) as any;
+
+        let out: DashboardState | null = null;
 
         // If version is not present -> treat as old format and migrate
         //TODO: Once some time has passed, this can be removed after some time, e.g. after 2026-01-31.
         if (typeof parsedAny.version === 'undefined') {
             out = migrateOldDashboardState(parsedAny);
             saveDashboardState(out);
+        } else {
+            out = parsedAny as DashboardState;
         }
 
-        // For future migrations, e.g.:
-        // if (parsedAny.version === 1) {
-        //     Note that here we should add widget defaults when new ones are added to AVAILABLE_WIDGETS
-        //     in future versions
-        //     out = migrateFromV1(parsedAny)
-        // }
+        if (!out) {
+            return null;
+        }
 
-        out = parsedAny as DashboardState;
 
         // Sanity checks
-        // * remove unknown ids from the selected widgets
-        const allowed = new Set(AVAILABLE_WIDGETS.map((w) => w.id));
-        out.selectedWidgetIds = out.selectedWidgetIds.filter((id) => allowed.has(id));
+        // -> remove unknown widget ids
+        const allowedWidgets = new Set(AVAILABLE_WIDGETS.map((w) => w.id));
+
+        out.selectedWidgetIds = Array.isArray(out.selectedWidgetIds)
+            ? out.selectedWidgetIds.filter((id) => allowedWidgets.has(id))
+            : [];
+
+        out.hiddenWidgetIds = Array.isArray(out.hiddenWidgetIds)
+            ? out.hiddenWidgetIds.filter((id) => allowedWidgets.has(id))
+            : [];
+
+        // -> If selected list is empty, default to all available, except those explicitly hidden
         if (out.selectedWidgetIds.length === 0) {
-            out.selectedWidgetIds = AVAILABLE_WIDGETS.map((w) => w.id);
+            out.selectedWidgetIds = AVAILABLE_WIDGETS.map((w) => w.id).filter((id) => !out.hiddenWidgetIds.includes(id));
         }
 
-        // * remove unknown ids from the layout
+        // -> remove unknown ids from the layout
         for (const bp of BREAKPOINTS) {
             const arr = (out.layouts as Layouts)[bp] as Layout[] | undefined;
             if (Array.isArray(arr)) {
-                (out.layouts as Layouts)[bp] = arr.filter((item: Layout) => item && allowed.has(String(item.i)));
+                (out.layouts as Layouts)[bp] = arr.filter((item: Layout) => item && allowedWidgets.has(String(item.i)));
             }
         }
 
+        // -> if there are widgets in AVAILABLE_WIDGETS that are not in selected or hidden
+        //   (e.g. because they have been added in the meantime), add them to selected
+        const known = new Set([...out.selectedWidgetIds, ...out.hiddenWidgetIds]);
+        const missing: string[] = AVAILABLE_WIDGETS.map((w) => w.id).filter((id) => !known.has(id));
+        if (missing.length > 0) {
+            out.selectedWidgetIds = [...out.selectedWidgetIds, ...missing];
+            saveDashboardState(out);
+        }
 
         return out;
     } catch (error) {
@@ -147,6 +163,7 @@ const saveDashboardState = (state: DashboardState) => {
             ...state,
             version: state.version ?? 1,
             selectedWidgetIds: Array.isArray(state.selectedWidgetIds) ? [...state.selectedWidgetIds].slice().sort() : [],
+            hiddenWidgetIds: Array.isArray(state.hiddenWidgetIds) ? [...state.hiddenWidgetIds].slice().sort() : [],
         };
         localStorage.setItem(DASHBOARD_STORAGE_KEY, JSON.stringify(toSave));
     } catch (error) {
@@ -159,6 +176,9 @@ const saveDashboardState = (state: DashboardState) => {
 const migrateOldDashboardState = (parsedAny: any): DashboardState => {
     const parsed = parsedAny as DashboardState;
     parsed.version = 1;
+
+    // Ensure hiddenWidgetIds exists in migrated state
+    if (!Array.isArray(parsed.hiddenWidgetIds)) parsed.hiddenWidgetIds = [];
 
     // If selectedWidgetIds missing, try to extract from layouts (or top-level breakpoints)
     if (!Array.isArray(parsed.selectedWidgetIds)) {
@@ -192,7 +212,6 @@ const migrateOldDashboardState = (parsedAny: any): DashboardState => {
 
         if (ids.size > 0) parsed.selectedWidgetIds = Array.from(ids);
         else parsed.selectedWidgetIds = AVAILABLE_WIDGETS.map((w) => w.id);
-
 
     }
 
@@ -254,6 +273,13 @@ export const ConfigurableDashboard: React.FC<ConfigurableDashboardProps> = ({ en
         return AVAILABLE_WIDGETS.map((w) => w.id);
     });
 
+    // Hidden widgets (persisted)
+    const [hiddenWidgetIds, setHiddenWidgetIds] = useState<string[]>(() => {
+        const saved = loadDashboardState();
+        if (saved && Array.isArray(saved.hiddenWidgetIds)) return saved.hiddenWidgetIds;
+        return [];
+    });
+
     // Menu anchor for widget selection
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -290,10 +316,16 @@ export const ConfigurableDashboard: React.FC<ConfigurableDashboardProps> = ({ en
     const handleResetLayout = useCallback(() => {
         const allWidgetIds = AVAILABLE_WIDGETS.map((w) => w.id);
         setSelectedWidgetIds(allWidgetIds);
+        setHiddenWidgetIds([]);
 
         const defaultLayouts = generateDefaultLayouts(AVAILABLE_WIDGETS);
         setLayouts(defaultLayouts);
-        saveDashboardState({ selectedWidgetIds: allWidgetIds, layouts: defaultLayouts, version: VERSION });
+        saveDashboardState({
+            selectedWidgetIds: allWidgetIds,
+            hiddenWidgetIds: [],
+            layouts: defaultLayouts,
+            version: VERSION
+        });
     }, []);
 
     const toggleEditMode = useCallback(() => {
@@ -305,12 +337,20 @@ export const ConfigurableDashboard: React.FC<ConfigurableDashboardProps> = ({ en
     const closeWidgetMenu = () => setAnchorEl(null);
 
     const toggleWidget = (id: string) => {
-        setSelectedWidgetIds((prev) => (prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]));
+        // If currently selected -> remove from selected and add to hidden
+        if (selectedWidgetIds.includes(id)) {
+            setSelectedWidgetIds((prev) => prev.filter((p) => p !== id));
+            setHiddenWidgetIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+        } else {
+            // If currently hidden or not present -> add to selected and remove from hidden
+            setSelectedWidgetIds((prev) => [...prev, id]);
+            setHiddenWidgetIds((prev) => prev.filter((h) => h !== id));
+        }
     };
 
     useEffect(() => {
-        saveDashboardState({ selectedWidgetIds, layouts, version: VERSION });
-    }, [selectedWidgetIds, layouts]);
+        saveDashboardState({ selectedWidgetIds, hiddenWidgetIds, layouts, version: VERSION });
+    }, [selectedWidgetIds, hiddenWidgetIds, layouts]);
 
     // Grid configuration
     const gridConfig = useMemo(
