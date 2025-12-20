@@ -7,6 +7,7 @@ import { CalendarCard } from "components/Dashboard/CalendarCard";
 import { MeasurementCard } from "components/Dashboard/MeasurementCard";
 import { NutritionCard } from "components/Dashboard/NutritionCard";
 import { RoutineCard } from "components/Dashboard/RoutineCard";
+import { TrophiesCard } from "components/Dashboard/TrophiesCard";
 import { WeightCard } from "components/Dashboard/WeightCard";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Layout, Layouts, Responsive, WidthProvider } from "react-grid-layout";
@@ -30,7 +31,7 @@ type DashboardState = {
 const BREAKPOINTS = ['lg', 'md', 'sm', 'xs'] as const;
 
 // Define widget types for extensibility
-export type WidgetType = "routine" | "nutrition" | "weight" | "calendar" | "measurement";
+export type WidgetType = "routine" | "nutrition" | "weight" | "calendar" | "measurement" | "trophies";
 
 export interface WidgetConfig {
     id: string;
@@ -83,6 +84,13 @@ export const AVAILABLE_WIDGETS: WidgetConfig[] = [
         component: MeasurementCard,
         translationKey: 'measurements.measurements',
         defaultLayout: { w: 4, h: 4, x: 8, y: 1, minW: 3, minH: 2 },
+    },
+    {
+        id: "trophies",
+        type: "trophies",
+        component: TrophiesCard,
+        translationKey: 'trophies.trophies',
+        defaultLayout: { w: 12, h: 2, x: 0, y: 2, minW: 3, minH: 2 },
     },
 ];
 
