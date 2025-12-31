@@ -1,5 +1,8 @@
 {
     "date": "तारीख",
     "edit": "संपादित करना",
-    "cm": "cm"
+    "cm": "cm",
+    "dashboard": {
+        "customizeDashboard": "डैशबोर्ड को अनुकूलित करें"
+    }
 }
