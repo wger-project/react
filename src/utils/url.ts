@@ -50,8 +50,10 @@ export function makeUrl(path: string, params?: makeUrlInterface) {
 
 
 export enum WgerLink {
+    // Dashboard
     DASHBOARD,
 
+    // Routines
     ROUTINE_OVERVIEW,
     ROUTINE_DETAIL,
     ROUTINE_EDIT,
@@ -70,16 +72,20 @@ export enum WgerLink {
     PRIVATE_TEMPLATE_OVERVIEW,
     PUBLIC_TEMPLATE_OVERVIEW,
 
+    // Exercises
     EXERCISE_DETAIL,
     EXERCISE_OVERVIEW,
     EXERCISE_CONTRIBUTE,
 
+    // Body weight
     WEIGHT_OVERVIEW,
     WEIGHT_ADD,
 
+    // Measurements
     MEASUREMENT_OVERVIEW,
     MEASUREMENT_DETAIL,
 
+    // Nutrition
     NUTRITION_OVERVIEW,
     NUTRITION_DETAIL,
     NUTRITION_PLAN_PDF,
@@ -88,7 +94,9 @@ export enum WgerLink {
 
     INGREDIENT_DETAIL,
 
-    CALENDAR
+    // Other
+    CALENDAR,
+    TROPHIES,
 }
 
 type UrlParams = { id: number, id2?: number, slug?: string, date?: string };
@@ -181,6 +189,9 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
 
         case WgerLink.INGREDIENT_DETAIL:
             return `/${language}/nutrition/ingredient/${params!.id}/view`;
+
+        case WgerLink.TROPHIES:
+            return `/${language}/trophies`;
 
         // Dashboard
         case WgerLink.DASHBOARD:
