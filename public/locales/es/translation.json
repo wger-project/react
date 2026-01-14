@@ -204,7 +204,7 @@
             "forced": "Forzado",
             "type": "Tipo",
             "jump": "Salto",
-            "iso": "ISO"
+            "iso": "Aguante isométrico"
         },
         "roundingHelp": "Establezca el redondeo predeterminado para obtener peso y repeticiones (esto es especialmente útil cuando se usan incrementos porcentuales en la progresión). Esto se aplicará a todos los conjuntos nuevos, pero se puede cambiar individualmente en el formulario de progresión. Deja vacío para deshabilitar el redondeo.",
         "maxLengthRoutine": "La rutina debe tener como mucho {{number}} semanas",
@@ -221,7 +221,17 @@
         "templates": "Plantillas",
         "publicTemplate": "Plantilla pública",
         "publicTemplateHelpText": "Las plantillas públicas están disponibles para todos los usuarios.",
-        "copyAndUseTemplate": "Copiar y usar plantilla"
+        "copyAndUseTemplate": "Copiar y usar plantilla",
+        "day": {
+            "custom": "Personalizado",
+            "enom": "Cada minuto, en el minuto",
+            "amrap": "Tantas rondas como sea posible",
+            "hiit": "Entrenamiento en intervalos de alta intensidad",
+            "tabata": "Entrenamiento Tabata",
+            "edt": "Entrenamiento de densidad creciente",
+            "rft": "Rondas por tiempo",
+            "afap": "Tan rápido como sea posible"
+        }
     },
     "actions": "Acciones",
     "value": "Valor",
@@ -331,5 +341,14 @@
     "undo": "Deshacer",
     "successfullyDeleted": "Borrado completado",
     "public": "Público",
-    "private": "Privado"
+    "private": "Privado",
+    "dashboard": {
+        "customizeDashboard": "Personalizar panel de control",
+        "dragWidgetsHelp": "Arrastra widgets para recolocarlos o cambia su tamaño con la esquina inferior izquierda.",
+        "resetLayout": "Reestablecer a la disposición por defecto"
+    },
+    "core": {
+        "exitEditMode": "Salir del modo edición",
+        "customize": "Personalizar"
+    }
 }
