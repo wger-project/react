@@ -33,7 +33,13 @@ export const TrophiesDetail = () => {
 function TrophyProgressCard(props: { trophyProgression: UserTrophyProgression }) {
     return <Card sx={{ height: "100%" }}>
         <CardMedia
-            sx={{ opacity: props.trophyProgression.isEarned ? 1 : 0.3 }}
+            sx={{
+                opacity: props.trophyProgression.isEarned ? 1 : 0.3,
+                p: 1,
+                width: 'auto',
+                mx: 'auto',
+                maxHeight: 130,
+            }}
             component="img"
             image={props.trophyProgression.trophy.image}
             title={props.trophyProgression.trophy.name}
@@ -46,11 +52,12 @@ function TrophyProgressCard(props: { trophyProgression: UserTrophyProgression })
 
             <Box sx={{ mb: 2, mt: 0 }}>
                 {(props.trophyProgression.trophy.isProgressive && !props.trophyProgression.isEarned) &&
-                    <LinearProgressWithLabel
-                        value={props.trophyProgression.progress}
-                        progressLabel={props.trophyProgression.progressDisplay}
-                    />
+                    <LinearProgressWithLabel value={props.trophyProgression.progress} />
                 }
+                <Typography variant="body2" sx={{ color: "text.secondary", textAlign: 'center' }}>
+                    {props.trophyProgression.progressDisplay}
+                </Typography>
+
             </Box>
 
             <Typography variant="body2" sx={{ color: "text.secondary" }}>

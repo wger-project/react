@@ -1,6 +1,6 @@
 import { Adapter } from "utils/Adapter";
 
-type trophyType = 'time' | 'volume' | 'count' | 'sequence' | 'date' | 'pr' | 'other';
+export type trophyType = 'time' | 'volume' | 'count' | 'sequence' | 'date' | 'pr' | 'other';
 
 export interface ApiTrophyType {
     id: number,
