@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import { IS_PROD, VITE_API_KEY, VITE_API_SERVER } from "config";
+import i18n from "i18n";
 import slug from "slug";
 
 interface makeUrlInterface {
@@ -222,7 +223,7 @@ export function makeHeader(token?: string) {
 
     const out: AxiosRequestConfig['headers'] = {};
     out['Content-Type'] = 'application/json';
-
+    out['Accept-Language'] = getAcceptLanguage();
     if (token) {
         out['Authorization'] = `Token ${token}`;
     }
@@ -231,7 +232,16 @@ export function makeHeader(token?: string) {
     if (IS_PROD && csrfCookie != undefined) {
         out['X-CSRFToken'] = csrfCookie;
     }
-
     return out;
 }
 
+export function getAcceptLanguage(): string {
+    const languages = i18n.languages || [];
+    if (languages.length === 0) {
+        return 'en';
+    }
+
+    return languages.map((language) => {
+        return language;
+    }).join(', ');
+}
