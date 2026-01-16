@@ -1,8 +1,7 @@
-import { Button, Card, CardContent, CardMedia, Tooltip, Typography, } from "@mui/material";
+import { Button, Card, CardContent, CardHeader, CardMedia, Tooltip, Typography, } from "@mui/material";
 import Box from "@mui/system/Box";
 import Stack from "@mui/system/Stack";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { EmptyCard } from "components/Dashboard/EmptyCard";
 import { UserTrophy } from "components/Trophies/models/userTrophy";
 import { useUserTrophiesQuery } from "components/Trophies/queries/trophies";
 import React from "react";
@@ -18,11 +17,9 @@ export const TrophiesCard = () => {
         return <LoadingPlaceholder />;
     }
 
-    return trophiesQuery.data !== null ? (
-        <TrophiesCardContent trophies={trophiesQuery.data!} />
-    ) : (
-        <EmptyCard title={t("trophies.trophies")} />
-    );
+    return trophiesQuery.data !== null
+        ? <TrophiesCardContent trophies={trophiesQuery.data!} />
+        : <EmptyTrophiesCardContent />;
 };
 
 function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
@@ -49,7 +46,7 @@ function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
         <Box sx={{ overflowX: 'auto', width: '100%' }}>
             <Stack direction="row" spacing={3} sx={{ display: 'flex' }}>
                 {props.trophies.map((userTrophy) => (
-                    <Tooltip title={tooltipWidget(userTrophy.trophy.description)} arrow>
+                    <Tooltip title={tooltipWidget(userTrophy.trophy.description)} arrow key={userTrophy.trophy.id}>
                         <Card sx={{ width: 80, flex: '0 0 auto', boxShadow: 'none' }} key={userTrophy.trophy.uuid}>
                             <CardMedia
                                 component="img"
@@ -68,3 +65,21 @@ function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
         </Box>
     </DashboardCard>);
 }
+
+export const EmptyTrophiesCardContent = () => {
+    const [t] = useTranslation();
+
+    return (<>
+        <Card sx={{ paddingTop: 0, height: "100%", }}>
+            <CardHeader
+                title={t("trophies.trophies")}
+                sx={{ paddingBottom: 0 }}
+            />
+            <CardContent>
+                <Typography variant="h6" mr={3}>
+                    {t('nothingHereYet')}
+                </Typography>
+            </CardContent>
+        </Card>
+    </>);
+};

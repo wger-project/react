@@ -1,4 +1,5 @@
 import { Trophy } from "components/Trophies/models/trophy";
+import { UserTrophy } from "components/Trophies/models/userTrophy";
 import { UserTrophyProgression } from "components/Trophies/models/userTrophyProgression";
 
 export const testTrophies = () => {
@@ -55,6 +56,25 @@ export const testUserProgressionTrophies = () => {
             currentValue: 4,
             targetValue: 30,
             progressDisplay: '4/30',
+        }),
+    ];
+};
+
+export const testUserTrophies = () => {
+    return [
+        new UserTrophy({
+            id: 123,
+            isNotified: true,
+            trophy: testTrophies()[0],
+            earnedAt: new Date('2025-12-19T10:00:00Z'),
+            progress: 100,
+        }),
+        new UserTrophy({
+            id: 456,
+            isNotified: true,
+            trophy: testTrophies()[1],
+            earnedAt: new Date('2025-12-19T10:00:00Z'),
+            progress: 100,
         }),
     ];
 };
