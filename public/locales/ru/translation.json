@@ -43,7 +43,8 @@
         "changeExerciseLanguage": "Изменить язык этого упражнения",
         "newNote": "Новая заметка",
         "imageStylePhoto": "Фото",
-        "imageStyle3D": "3D"
+        "imageStyle3D": "3D",
+        "cacheWarning": "Из-за кэширования может потребоваться некоторое время, прежде чем изменения станут видны во всём приложении."
     },
     "noResults": "Нет результатов",
     "noResultsDescription": "Для этого запроса не найдено результатов, рассмотрите возможность уменьшения количества фильтров.",
@@ -70,7 +71,10 @@
         "shoulders": "Плечи",
         "swiss_ball": "Фитбол",
         "sz-bar": "Изогнутый SZ гриф",
-        "until_failure": "До неудачи"
+        "until_failure": "До неудачи",
+        "triceps": "Трицепс",
+        "kg": "кг",
+        "plates": "Блины"
     },
     "submit": "Отправить",
     "weight": "Вес",
@@ -112,5 +116,37 @@
     "comment": "Комментарий",
     "end": "Конец",
     "description": "Описание",
-    "save": "Сохранить"
+    "save": "Сохранить",
+    "dashboard": {
+        "customizeDashboard": "Изменить панель управления"
+    },
+    "core": {
+        "customize": "Настроить",
+        "exitEditMode": "Выйти из режима редактирования"
+    },
+    "calendar": "Календарь",
+    "bmi": {
+        "calculator": "Калькулятор ИМТ",
+        "result": "Ваш ИМТ"
+    },
+    "cancel": "Отмена",
+    "category": "Категория",
+    "continue": "Продолжить",
+    "downloadAsPdf": "Скачать в PDF",
+    "English": "Английский",
+    "entries": "Элементы",
+    "goBack": "Вернуться",
+    "total": "Итого",
+    "forms": {
+        "enterNumber": "Пожалуйста, введите корректный номер"
+    },
+    "success": "Успешно!",
+    "videos": "Видео",
+    "min": "Минимум",
+    "max": "Максимум",
+    "durationWeeks": "{{number}} недели",
+    "durationWeeksDays": "{{nrWeeks}} недели, {{nrDays}} дней",
+    "undo": "Отменить",
+    "successfullyDeleted": "Успешно удалено",
+    "cannotBeUndone": "Это действие нельзя отменить."
 }
