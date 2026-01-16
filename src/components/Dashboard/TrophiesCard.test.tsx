@@ -34,7 +34,7 @@ describe("test the TrophiesCard component", () => {
     });
 
 
-    describe("No weight entries available", () => {
+    describe("No trophies available", () => {
 
         beforeEach(() => {
             (useUserTrophiesQuery as jest.Mock).mockImplementation(() => ({
