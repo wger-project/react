@@ -21,7 +21,7 @@ export const testTrophies = () => {
             uuid: 'trophy-456',
             name: 'Unstoppable',
             description: 'Maintain a 30-day workout streak',
-            image: 'https://example.com/images/unstoppaböe.png',
+            image: 'https://example.com/images/unstoppable.png',
             isProgressive: true,
         }),
         new Trophy({
