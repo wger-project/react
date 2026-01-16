@@ -46,8 +46,8 @@ function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
         <Box sx={{ overflowX: 'auto', width: '100%' }}>
             <Stack direction="row" spacing={3} sx={{ display: 'flex' }}>
                 {props.trophies.map((userTrophy) => (
-                    <Tooltip title={tooltipWidget(userTrophy.trophy.description)} arrow key={userTrophy.trophy.id}>
-                        <Card sx={{ width: 80, flex: '0 0 auto', boxShadow: 'none' }} key={userTrophy.trophy.uuid}>
+                    <Tooltip title={tooltipWidget(userTrophy.trophy.description)} arrow key={userTrophy.trophy.uuid}>
+                        <Card sx={{ width: 80, flex: '0 0 auto', boxShadow: 'none' }}>
                             <CardMedia
                                 component="img"
                                 image={userTrophy.trophy.image}
