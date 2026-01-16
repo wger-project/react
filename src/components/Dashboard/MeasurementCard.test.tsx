@@ -35,6 +35,7 @@ describe("smoke test the MeasurementCard component", () => {
 
             // Assert
             expect(useMeasurementsCategoryQuery).toHaveBeenCalled();
+            expect(screen.getAllByText('Biceps').length).toBeGreaterThan(0);
             expect(screen.getAllByText('11 %').length).toBeGreaterThan(0);
             expect(screen.getAllByText('22 %').length).toBeGreaterThan(0);
             expect(screen.getAllByText('33 %').length).toBeGreaterThan(0);
