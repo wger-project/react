@@ -10,7 +10,6 @@ import { makeLink, WgerLink } from "utils/url";
 import { DashboardCard } from "./DashboardCard";
 
 export const TrophiesCard = () => {
-    const { t } = useTranslation();
     const trophiesQuery = useUserTrophiesQuery();
 
     if (trophiesQuery.isLoading) {
