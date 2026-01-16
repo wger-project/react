@@ -24,7 +24,7 @@ export const getUserTrophies = async (): Promise<UserTrophy[]> => {
 
 export const setTrophyAsNotified = async (trophyId: number): Promise<void> => {
 
-    await axios.post(
+    await axios.patch(
         makeUrl(ApiPath.API_USER_TROPHIES_PATH, { id: trophyId }),
         { id: trophyId, "is_notified": true },
         { headers: makeHeader() }
