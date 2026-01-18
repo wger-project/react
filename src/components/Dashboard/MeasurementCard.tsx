@@ -4,6 +4,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { DashboardCard } from "components/Dashboard/DashboardCard";
 import { EmptyCard } from "components/Dashboard/EmptyCard";
@@ -76,6 +77,9 @@ const MeasurementCardTableContent = (props: { category: MeasurementCategory }) =
     const { t } = useTranslation();
 
     return (<>
+        <Typography variant="h6" gutterBottom>
+            {props.category.name}
+        </Typography>
         <MeasurementChart category={props.category} />
         <Table size="small">
             <TableHead>

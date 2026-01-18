@@ -6,6 +6,7 @@ import { BmiCalculator } from "components/Nutrition/components/BmiCalculator";
 import { NutritionDiaryOverview } from "components/Nutrition/components/NutritionDiaryOverview";
 import { PlanDetail } from "components/Nutrition/components/PlanDetail";
 import { PlansOverview } from "components/Nutrition/components/PlansOverview";
+import { TrophiesDetail } from "components/Trophies/components/TrophiesDetail";
 import { RoutineAdd } from "components/WorkoutRoutines/Detail/RoutineAdd";
 import { RoutineDetail } from "components/WorkoutRoutines/Detail/RoutineDetail";
 import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
@@ -123,10 +124,14 @@ export const WgerRoutes = () => {
                     <Route index element={<ConfigurableDashboard />} />
                     <Route path="" element={<ConfigurableDashboard />} />
                 </Route>
+                <Route path="trophies">
+                    <Route index element={<TrophiesDetail />} />
+                    <Route path="" element={<TrophiesDetail />} />
+                </Route>
             </Route>
             <Route path="/" element={<ConfigurableDashboard />} />
 
-            {/* This route matches when no other route match, so a 404 */}
+            {/* This route matches when no other route matches, so a 404 */}
             <Route
                 path="*"
                 element={

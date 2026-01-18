@@ -35,6 +35,8 @@ export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
  * These don't have any meaning, they just need to be globally unique
  */
 export enum QueryKey {
+
+    // Routines
     ROUTINE_OVERVIEW = 'routine-overview',
     ROUTINE_DETAIL = 'routine-detail',
     SESSION_SEARCH = 'session-search',
@@ -46,20 +48,23 @@ export enum QueryKey {
     ROUTINES_SHALLOW = 'routines-shallow',
     PRIVATE_TEMPLATES = 'private-templates',
     PUBLIC_TEMPLATES = 'public-templates',
+    ROUTINE_WEIGHT_UNITS = 'weight-units',
+    ROUTINE_REP_UNITS = 'rep-units',
 
+    // Nutrition
     NUTRITIONAL_PLANS = 'nutritional-plans',
     NUTRITIONAL_PLAN = 'nutritional-plan',
     NUTRITIONAL_PLAN_DIARY = 'nutritional-plan-diary',
     NUTRITIONAL_PLAN_LAST = 'nutritional-plan-last',
     INGREDIENT = 'ingredient',
 
+    // Body weight
     BODY_WEIGHT = 'body-weight',
 
-    ROUTINE_WEIGHT_UNITS = 'weight-units',
-    ROUTINE_REP_UNITS = 'rep-units',
-
+    // Profile
     QUERY_PROFILE = 'profile',
 
+    // Exercises
     EXERCISES = 'exercises',
     EXERCISE_VARIATIONS = 'variations',
     EXERCISE_DETAIL = 'detail',
@@ -68,6 +73,11 @@ export enum QueryKey {
     EQUIPMENT = 'equipment',
     MUSCLES = 'muscles',
     QUERY_NOTES = 'notes',
+
+    // Trophies
+    TROPHIES = 'trophies',
+    USER_TROPHIES = 'user-trophies',
+    USER_TROPHY_PROGRESSION = 'user-trophy-progression',
 }
 
 /*
@@ -106,6 +116,11 @@ export enum ApiPath {
 
     // Profile
     API_PROFILE_PATH = 'userprofile',
+
+    // Trophies
+    API_TROPHIES_PATH = 'trophy',
+    API_USER_TROPHIES_PATH = 'user-trophy',
+    API_USER_TROPHY_PROGRESSION_PATH = 'trophy/progress',
 }
 
 
