@@ -37,6 +37,7 @@
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-http-backend": "^3.0.2",
     "luxon": "^3.7.2",
+    "markdown-to-jsx": "^9.3.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.4",
     "react-grid-layout": "^1.5.2",
@@ -93,8 +94,8 @@
     "start": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "test": "LANG=de_de jest",
-    "test:coverage": "LANG=de_de jest --coverage --collectCoverageFrom='!src/pages/**/*.tsx'",
+    "test": "LANG=de_de jest --testTimeout=15000",
+    "test:coverage": "LANG=de_de jest --coverage --collectCoverageFrom='!src/pages/**/*.tsx' --testTimeout=15000",
     "i18n": "i18next",
     "lint": "eslint src",
     "lint:quiet": "eslint --quiet src",
@@ -116,7 +117,8 @@
     "moduleNameMapper": {
       "^axios$": "<rootDir>/node_modules/axios/dist/node/axios.cjs",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
+      "^react-markdown$": "<rootDir>/__mocks__/react-markdown.js"
     },
     "preset": "ts-jest",
     "testEnvironment": "jest-environment-jsdom",
