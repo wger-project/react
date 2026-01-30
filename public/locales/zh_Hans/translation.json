@@ -286,6 +286,16 @@
             "tut": "肌肉张力时间",
             "iso": "等长收缩",
             "jump": "跳"
+        },
+        "day": {
+            "custom": "自定义",
+            "enom": "每一分钟循环一次",
+            "amrap": "最大轮次挑战",
+            "hiit": "高强度间歇训练",
+            "tabata": "塔巴塔训练法",
+            "edt": "渐进式密度训练",
+            "rft": "计时赛模式",
+            "afap": "用最快速度完成"
         }
     },
     "language": "语言",
@@ -332,5 +342,19 @@
     "durationWeeksDays": "{{nrWeeks}} 周, {{nrDays}} 天",
     "undo": "撤销",
     "successfullyDeleted": "成功删除",
-    "end": "结束"
+    "end": "结束",
+    "dashboard": {
+        "customizeDashboard": "自定义仪表盘",
+        "dragWidgetsHelp": "拖动小组件可调整位置，或通过右下角调整大小。",
+        "resetLayout": "恢复默认布局"
+    },
+    "core": {
+        "exitEditMode": "退出编辑模式",
+        "customize": "自定义"
+    },
+    "trophies": {
+        "trophies": "奖杯"
+    },
+    "private": "私有",
+    "public": "公开"
 }
