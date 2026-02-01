@@ -23,7 +23,7 @@
     "@emotion/styled": "^11.14.1",
     "@hello-pangea/dnd": "^18.0.1",
     "@mui/icons-material": "^7.3.7",
-    "@mui/lab": "^7.0.1-beta.18",
+    "@mui/lab": "^7.0.1-beta.21",
     "@mui/material": "^7.3.4",
     "@mui/system": "^7.3.3",
     "@mui/x-data-grid": "^8.26.0",
