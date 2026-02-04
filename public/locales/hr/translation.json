@@ -147,7 +147,7 @@
         "routines": "Rutine",
         "logsFilterNote": "Napomena: prikazuju se samo unosi s jedinicom težine kg ili lb i ponavljanja, druge kombinacije kao što su vrijeme ili do neuspjeha se ovdje zanemaruju",
         "logsHeader": "Dnevnik treninga za trening",
-        "rir": "PUR",
+        "rir": "Broj ponavljanja u rezervi",
         "sets": "Serije",
         "reps": "Ponavljanja",
         "intensity": "Intenzitet",
