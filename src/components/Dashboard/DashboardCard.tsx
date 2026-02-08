@@ -72,7 +72,8 @@ export interface DashboardCardProps {
  * </DashboardCard>
  * ```
  */
-export const DashboardCard: React.FC<DashboardCardProps> = ({
+export const DashboardCard: React.FC<DashboardCardProps> = (
+    {
     title,
     subheader,
     children,
@@ -92,7 +93,7 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
                 ...cardSx,
             }}
         >
-            <CardHeader title={title} subheader={subheader} action={headerAction} />
+            {title !== '' && <CardHeader title={title} subheader={subheader} action={headerAction} />}
 
             <CardContent
                 sx={{

@@ -25,7 +25,7 @@ export interface DayProps {
 }
 
 
-const CalendarComponent = () => {
+const CalendarComponent = (props: { showBorder?: boolean }) => {
     const [t] = useTranslation();
 
     const currentDate = new Date();
@@ -34,6 +34,8 @@ const CalendarComponent = () => {
 
     const startOfMonth = new Date(currentYear, currentMonth, 1);
     const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
+
+    const showBorder = props.showBorder ?? true;
 
 
     const weightsQuery = useBodyWeightQuery();
@@ -175,14 +177,15 @@ const CalendarComponent = () => {
             display: 'flex',
             gap: 2,
             flexDirection: { xs: 'column', md: 'row' },
-            height: { xs: 'auto', md: 'calc(100vh - 130px)' },
+            // height: { xs: 'auto', md: 'calc(100vh - 130px)' },
             width: '100%',
         }}>
             <Card sx={{
+                boxShadow: showBorder ? undefined : 'none',
                 width: { xs: 'auto', md: '65%' },
                 height: { xs: 'auto', md: '100%' },
-                m: { xs: 0, sm: 1, md: 2 },
-                p: { xs: 1, sm: 1.5, md: 2 },
+                // m: { xs: 0, sm: 1, md: 2 },
+                // p: { xs: 1, sm: 1.5, md: 2 },
                 display: 'flex',
                 flexDirection: 'column'
             }}>
@@ -193,7 +196,7 @@ const CalendarComponent = () => {
                             <div style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                marginBottom: '16px'
+                                // marginBottom: '16px'
                             }}>
                                 <CalendarMonthIcon style={{
                                     width: isMobile ? '28px' : '32px',
@@ -235,14 +238,14 @@ const CalendarComponent = () => {
                     sx={{
                         width: { xs: 'auto', md: '65%' },
                         height: { xs: '60%', md: '100%' },
-                        m: { xs: 0, sm: 1, md: 2 },
-                        p: { xs: 1, sm: 1.5, md: 2 }
+                        // m: { xs: 0, sm: 1, md: 2 },
+                        // p: { xs: 1, sm: 1.5, md: 2 }
                     }}
                 >
                     <LoadingPlaceholder />
                 </Card>}
 
-            {isSuccess && <Entries selectedDay={selectedDay} />}
+            {isSuccess && <Entries selectedDay={selectedDay} showBorder={showBorder} />}
         </Box>
     );
 };

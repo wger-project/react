@@ -15,10 +15,19 @@ export class MeasurementCategory {
             this.entries = entries;
         }
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    static fromJson(json: any): MeasurementCategory {
+        return adapter.fromJson(json);
+    }
+
+    toJson() {
+        return adapter.toJson(this);
+    }
 }
 
 
-export class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
+class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any) {
         return new MeasurementCategory(
@@ -36,3 +45,5 @@ export class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> 
         };
     }
 }
+
+const adapter = new MeasurementCategoryAdapter();

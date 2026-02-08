@@ -1,4 +1,5 @@
-import { makeHeader, makeLink, makeUrl, WgerLink } from "utils/url";
+import i18n from "i18n";
+import { getAcceptLanguage, makeHeader, makeLink, makeUrl, WgerLink } from "utils/url";
 
 describe("test url utility", () => {
 
@@ -67,6 +68,7 @@ describe("test the header utility", () => {
     test('generate header', () => {
         const result = makeHeader('123');
         expect(result).toStrictEqual({
+            'Accept-Language': 'en',
             'Authorization': `Token 123`,
             'Content-Type': 'application/json',
         });
@@ -75,6 +77,7 @@ describe("test the header utility", () => {
     test('generate header - token from config', () => {
         const result = makeHeader();
         expect(result).toStrictEqual({
+            'Accept-Language': 'en',
             'Authorization': `Token 122333444455555666666`,
             'Content-Type': 'application/json',
         });
@@ -123,5 +126,33 @@ describe("test the makeLink helper", () => {
         const result = makeLink(WgerLink.WEIGHT_OVERVIEW, 'de',);
         expect(result).toEqual('/de/weight/overview');
     });
+});
 
+describe("test the getAcceptLanguage helper", () => {
+
+    beforeEach(() => {
+        // @ts-expect-error - test helper assignment
+        i18n.languages = undefined;
+    });
+
+    test("returns default when languages is undefined", () => {
+        // @ts-expect-error - test helper assignment
+        i18n.languages = undefined;
+        expect(getAcceptLanguage()).toBe("en");
+    });
+
+    test("returns default when languages is an empty array", () => {
+        i18n.languages = [];
+        expect(getAcceptLanguage()).toBe("en");
+    });
+
+    test("returns single language code", () => {
+        i18n.languages = ["de"];
+        expect(getAcceptLanguage()).toBe("de");
+    });
+
+    test("joins multiple language codes with comma", () => {
+        i18n.languages = ["de-DE", "fr-FR"];
+        expect(getAcceptLanguage()).toBe("de-DE, fr-FR");
+    });
 });

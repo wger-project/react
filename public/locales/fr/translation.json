@@ -347,5 +347,14 @@
     "editName": "Editer {{name}}",
     "comment": "Commentaire",
     "private": "privée",
-    "public": "publique"
+    "public": "publique",
+    "dashboard": {
+        "customizeDashboard": "Personnaliser le tableau de bord",
+        "dragWidgetsHelp": "Faites glisser les widgets pour les repositionner ou redimensionner en utilisant le coin inférieur droit.",
+        "resetLayout": "Réinitialiser avec la mise en page par défaut"
+    },
+    "core": {
+        "exitEditMode": "Quitter le mode édition",
+        "customize": "Personnaliser"
+    }
 }
