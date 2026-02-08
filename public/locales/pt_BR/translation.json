@@ -349,5 +349,8 @@
     "core": {
         "exitEditMode": "Sair do modo de edição",
         "customize": "Personalizar"
+    },
+    "trophies": {
+        "trophies": "Troféus"
     }
 }
