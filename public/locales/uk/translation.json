@@ -354,5 +354,8 @@
     "core": {
         "exitEditMode": "Вийти з режиму редагування",
         "customize": "Налаштувати"
+    },
+    "trophies": {
+        "trophies": "Трофеї"
     }
 }
