@@ -1,46 +1,9 @@
+import { Box, Button, ButtonGroup, Paper, TextField, Typography } from '@mui/material';
+import Markdown from 'markdown-to-jsx';
 import React, { useState } from 'react';
-import Markdown, { MarkdownToJSX } from 'markdown-to-jsx';
-import { Box, Button, TextField, Typography, Paper, ButtonGroup } from '@mui/material';
+import { useTranslation } from "react-i18next";
+import { MarkdownOptions } from "utils/markdown";
 
-const StripElement = ({ children }: { children: React.ReactNode }) => <span>{children}</span>;
-
-const StripBlock = ({ children }: { children: React.ReactNode }) => (
-    <Typography variant="body1" component="div" sx={{ mb: 1.5 }}>
-        {children}
-    </Typography>
-);
-
-const MarkdownOptions: MarkdownToJSX.Options = {
-    overrides: {
-        p: {
-            component: Typography,
-            props: { variant: 'body1', sx: { mb: 1.5 } }
-        },
-
-        // Allowed inline/list tags
-        strong: { component: 'strong' },
-        b: { component: 'b' },
-        em: { component: 'em' },
-        i: { component: 'i' },
-        ul: { component: 'ul', props: { style: { paddingLeft: '20px', margin: '0 0 16px 0' } } },
-        ol: { component: 'ol', props: { style: { paddingLeft: '20px', margin: '0 0 16px 0' } } }, li: { component: 'li' },
-
-        // Block links and headings by mapping them to plan spans.
-        a: { component: StripElement },
-
-        // --- BLOCKED TAGS (No headings allowed) ---
-        h1: { component: StripBlock },
-        h2: { component: StripBlock },
-        h3: { component: StripBlock },
-        h4: { component: StripBlock },
-        h5: { component: StripBlock },
-        h6: { component: StripBlock },        // Tables, images, etc. are naturally ignored by markdown-to-jsx if not explicitly defined
-
-        img: { component: () => null },
-
-        table: { component: 'div' },
-    },
-};
 
 interface MarkdownEditorProps {
     value: string;
@@ -51,13 +14,14 @@ interface MarkdownEditorProps {
 }
 
 export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
-    value,
-    onChange,
-    label = "Description",
-    error,
-    helperText
-}) => {
+                                                                  value,
+                                                                  onChange,
+                                                                  label = "Description",
+                                                                  error,
+                                                                  helperText
+                                                              }) => {
     const [isPreview, setIsPreview] = useState(false);
+    const [t] = useTranslation();
 
     return (
         <Box mb={2}>
@@ -70,13 +34,13 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                         variant={!isPreview ? 'contained' : 'outlined'}
                         onClick={() => setIsPreview(false)}
                     >
-                        Write
+                        {t('edit')}
                     </Button>
                     <Button
                         variant={isPreview ? 'contained' : 'outlined'}
                         onClick={() => setIsPreview(true)}
                     >
-                        Preview
+                        {t('preview')}
                     </Button>
                 </ButtonGroup>
             </Box>
@@ -105,7 +69,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                     onChange={(e) => onChange(e.target.value)}
                     error={error}
                     helperText={helperText}
-                    placeholder="Use Markdown: *italic*, **bold**, - list"
+                    placeholder={t('useMarkdownHint')}
                 />
             )}
         </Box>
