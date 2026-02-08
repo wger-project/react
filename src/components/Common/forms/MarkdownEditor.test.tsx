@@ -1,5 +1,5 @@
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
 import { MarkdownEditor } from './MarkdownEditor';
 import '@testing-library/jest-dom';
 
@@ -26,7 +26,7 @@ describe('MarkdownEditor', () => {
         render(<MarkdownEditor value={markdown} onChange={mockChange} />);
 
         // Switch to Preview
-        fireEvent.click(screen.getByText('Preview'));
+        fireEvent.click(screen.getByText('preview'));
 
         // Check that bold and italic tags are rendered
         // Note: markdown-to-jsx might use <strong> or <b>, check your overrides.
@@ -43,7 +43,7 @@ describe('MarkdownEditor', () => {
         // Expected result: Text "Forbidden Heading" is visible, but NOT inside an <h1> tag.
         render(<MarkdownEditor value="# Forbidden Heading" onChange={mockChange} />);
 
-        fireEvent.click(screen.getByText('Preview'));
+        fireEvent.click(screen.getByText('preview'));
 
         // 1. The text should still be readable
         expect(screen.getByText('Forbidden Heading')).toBeInTheDocument();
@@ -57,7 +57,7 @@ describe('MarkdownEditor', () => {
         const markdown = "[Malicious Link](http://evil.com)";
         render(<MarkdownEditor value={markdown} onChange={mockChange} />);
 
-        fireEvent.click(screen.getByText('Preview'));
+        fireEvent.click(screen.getByText('preview'));
 
         // 1. The text anchor should be visible
         expect(screen.getByText('Malicious Link')).toBeInTheDocument();
@@ -75,7 +75,7 @@ describe('MarkdownEditor', () => {
         // Image syntax: ![alt text](url)
         render(<MarkdownEditor value="![Hidden Image](image.png)" onChange={mockChange} />);
 
-        fireEvent.click(screen.getByText('Preview'));
+        fireEvent.click(screen.getByText('preview'));
 
         // Ensure the image tag is not rendered
         const img = screen.queryByRole('img');

@@ -111,20 +111,16 @@ export const addFullExercise = async (data: AddExerciseFullProps): Promise<numbe
         category: data.exercise.categoryId,
         equipment: data.exercise.equipmentIds,
         muscles: data.exercise.muscleIds,
-        // eslint-disable-next-line camelcase
-        muscles_secondary: data.exercise.secondaryMuscleIds,
-        // eslint-disable-next-line camelcase
-        license_author: data.author ?? '',
+        "muscles_secondary": data.exercise.secondaryMuscleIds,
+        "license_author": data.author ?? '',
         variations: data.variations ?? null,
-        //eslint-disable-next-line camelcase
-        variations_connect_to: data.variationsConnectTo ?? null,
+        "variations_connect_to": data.variationsConnectTo ?? null,
         translations: [
             ...data.translations.map(t => ({
                     name: t.name,
-                    description: t.description,
+                    "description_source": t.description,
                     language: t.language,
-                    //eslint-disable-next-line camelcase
-                    license_author: data.author ?? '',
+                    "license_author": data.author ?? '',
                     aliases: t.aliases ?? [],
                     comments: t.comments ?? []
                 })

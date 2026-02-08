@@ -25,12 +25,14 @@ import {
     useMusclesQuery
 } from "components/Exercises/queries";
 import { useProfileQuery } from "components/User/queries/profile";
+import Markdown from 'markdown-to-jsx';
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { postExerciseImage } from "services";
 import { useExerciseSubmissionStateValue } from "state";
 import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { MarkdownOptions } from "utils/markdown";
 import { makeLink, WgerLink } from "utils/url";
 
 export const Step6Overview = ({ onBack }: StepProps) => {
@@ -123,7 +125,11 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('description')}</TableCell>
-                            <TableCell>{state.descriptionEn}</TableCell>
+                            <TableCell>
+                                <Markdown options={MarkdownOptions}>
+                                    {state.descriptionEn}
+                                </Markdown>
+                            </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.notes')}</TableCell>
@@ -193,7 +199,11 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
                                 <TableRow>
                                     <TableCell>{t('description')}</TableCell>
-                                    <TableCell>{state.descriptionI18n}</TableCell>
+                                    <TableCell>
+                                        <Markdown options={MarkdownOptions}>
+                                            {state.descriptionI18n}
+                                        </Markdown>
+                                    </TableCell>
                                 </TableRow>
 
 
