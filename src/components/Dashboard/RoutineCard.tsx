@@ -44,7 +44,7 @@ const RoutineCardContent = (props: { routine: Routine }) => {
             }
         >
             <List>
-                {props.routine.dayDataCurrentIterationNoNulls.map((dayData) => (
+                {props.routine.dayDataCurrentIterationFiltered.map((dayData) => (
                     <DayListItem dayData={dayData} key={`dayDetails-${dayData.date.toISOString()}`} />
                 ))}
             </List>

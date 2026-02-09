@@ -110,4 +110,21 @@ describe('Routine model tests', () => {
         // Assert
         expect(routine.dayDataCurrentIteration).toEqual(testRoutineDayData1);
     });
+
+    test('correctly filters out null days', () => {
+
+        // Arrange
+        routine.dayData = [
+            ...testRoutineDayData1,
+            ...testRoutineDayData1,
+            ...testRoutineDayData1,
+        ];
+        routine.dayData[0].date = new Date('2026-01-01');
+        routine.dayData[1].date = new Date('2026-01-02');
+        routine.dayData[2].date = new Date('2026-01-03');
+
+        // Assert
+        expect(routine.dayDataCurrentIteration.length).toEqual(3);
+        expect(routine.dayDataCurrentIterationFiltered).toEqual(testRoutineDayData1);
+    });
 });

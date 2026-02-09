@@ -48,7 +48,7 @@ export const TemplateDetail = () => {
                             variant={"contained"}
                         >{t('routines.copyAndUseTemplate')}</Button>
 
-                        {routine!.dayDataCurrentIterationNoNulls.map((dayData) =>
+                        {routine!.dayDataCurrentIterationFiltered.map((dayData) =>
                             <DayDetailsCard
                                 dayData={dayData}
                                 routineId={routineId}

@@ -51,7 +51,7 @@ export const RoutineDetail = () => {
                             href={makeLink(WgerLink.ROUTINE_COPY, i18n.language, { id: routineId })}
                             variant={"contained"}
                         >{t('routines.copyAndUseTemplate')}</Button>}
-                        {routine!.dayDataCurrentIterationNoNulls.map((dayData) =>
+                        {routine!.dayDataCurrentIterationFiltered.map((dayData) =>
                             <DayDetailsCard
                                 routineId={routineId}
                                 dayData={dayData}
