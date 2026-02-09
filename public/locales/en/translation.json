@@ -227,7 +227,7 @@
     "deleteDayConfirmation": "This will remove all sets, exercises and progression rules",
     "routineHasNoDays": "The routine has no days",
     "setHasNoExercises": "This set has no exercises",
-    "fitDaysInWeek": "Fit days in week",
+    "fitDaysInWeek": "Fixed weekly schedule",
     "fitDaysInWeekHelpText": "This setting controls how your routine's days are scheduled across multiple weeks. If enabled, the days will repeat in a weekly cycle. For example, a routine with workouts on Monday, Wednesday, and Friday will continue this pattern on the following Monday, Wednesday, and Friday. If disabled, the days will follow sequentially without regard to the start of a new week. This is useful for routines that don't follow a strict weekly schedule.",
     "needsLogsToAdvance": "Needs logs to advance",
     "needsLogsToAdvanceHelpText": "If you select this option, the routine will only progress to the next scheduled day if you've logged a workout for the current day. If this option is not selected, the routine will automatically advance to the next day regardless of whether you logged a workout or not.",
