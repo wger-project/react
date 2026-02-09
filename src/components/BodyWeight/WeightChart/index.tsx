@@ -4,7 +4,7 @@ import { WeightEntry } from "components/BodyWeight/model";
 import { WgerModal } from "components/Core/Modals/WgerModal";
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { CartesianGrid, Line, LineChart, ReferenceLine, Tooltip, XAxis, YAxis, Legend } from 'recharts';
+import { CartesianGrid, DotProps, Line, LineChart, ReferenceLine, Tooltip, XAxis, YAxis, Legend } from 'recharts';
 import { dateToLocale } from "utils/date";
 
 export interface WeightChartProps {
@@ -19,18 +19,30 @@ export interface TooltipProps {
     label?: string,
 }
 
+interface WeightDataPoint {
+    date: number;
+    weight: number;
+    entry: WeightEntry;
+}
+
+interface EMADataPoint {
+    date: number;
+    weight: number;
+    ema: number;
+}
+
 /**
  * Calculate exponentially weighted moving average (EMA)
  * Using the Hacker's Diet approach with approximately 10% smoothing
  */
-const calculateEMA = (weights: { date: number, weight: number }[], period: number = 10) => {
+const calculateEMA = (weights: WeightDataPoint[], period: number = 10): EMADataPoint[] => {
     if (weights.length === 0) return [];
     
     // Smoothing factor: 2 / (period + 1)
     // For period=10, this gives us ~0.18 (10% smoothing as in Hacker's Diet)
     const smoothing = 2 / (period + 1);
     
-    const emaData: { date: number, weight: number, ema: number }[] = [];
+    const emaData: EMADataPoint[] = [];
     let ema = weights[0].weight; // Start with first measurement
     
     for (let i = 0; i < weights.length; i++) {
@@ -55,7 +67,9 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     const [t] = useTranslation();
 
     if (active && payload && payload.length) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const actualWeight = payload.find((p: any) => p.dataKey === 'weight');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const trendWeight = payload.find((p: any) => p.dataKey === 'ema');
         const variance = actualWeight && trendWeight ? actualWeight.value - trendWeight.value : 0;
         
@@ -76,45 +90,15 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     return null;
 };
 
-/**
- * Custom shape to render vertical lines from each point to the trendline
- */
-const VarianceLine = (props: any) => {
-    const { points, emaData } = props;
-    
-    if (!points || points.length === 0 || !emaData) return null;
-    
-    return (
-        <g>
-            {points.map((point: any, index: number) => {
-                if (!point || !emaData[index]) return null;
-                
-                const emaPoint = emaData[index];
-                const x = point.x;
-                const y1 = point.y; // Actual weight y-coordinate
-                
-                // Find the corresponding EMA y-coordinate
-                // We need to calculate it based on the chart's scale
-                const yScale = point.y / point.payload.weight;
-                const y2 = emaPoint.ema * yScale; // EMA weight y-coordinate
-                
-                return (
-                    <line
-                        key={`variance-line-${index}`}
-                        x1={x}
-                        y1={y1}
-                        x2={x}
-                        y2={y2}
-                        stroke={point.payload.weight > emaPoint.ema ? '#ff6b6b' : '#51cf66'}
-                        strokeWidth={1}
-                        strokeDasharray="2,2"
-                        opacity={0.5}
-                    />
-                );
-            })}
-        </g>
-    );
-};
+interface CustomDotProps extends DotProps {
+    cx?: number;
+    cy?: number;
+    payload?: EMADataPoint;
+    emaData: EMADataPoint[];
+    yAxisDomain: [number, number];
+    chartHeight: number;
+    onClick: (payload: EMADataPoint) => void;
+}
 
 export const WeightChart = ({ weights, height }: WeightChartProps) => {
 
@@ -128,7 +112,7 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
 
     // Sort and map the weights
     const sortedWeights = [...weights].sort((a, b) => a.date.getTime() - b.date.getTime());
-    const weightData = sortedWeights.map(weight => ({
+    const weightData: WeightDataPoint[] = sortedWeights.map(weight => ({
         date: weight.date.getTime(),
         weight: weight.weight,
         entry: weight
@@ -145,27 +129,51 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
     // Get current trend (latest EMA value)
     const currentTrend = emaData.length > 0 ? emaData[emaData.length - 1].ema : 0;
 
+    // Calculate Y-axis domain for proper variance line positioning
+    const allWeights = emaData.flatMap(d => [d.weight, d.ema]);
+    const minWeight = Math.min(...allWeights);
+    const maxWeight = Math.max(...allWeights);
+    const padding = (maxWeight - minWeight) * 0.1; // 10% padding
+    const yAxisDomain: [number, number] = [minWeight - padding, maxWeight + padding];
+
     /*
      * Edit the currently selected weight
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function handleClick(data: any) {
-        setCurrentEntry(data.entry);
-        setIsModalOpen(true);
+    function handleClick(payload: EMADataPoint) {
+        const entry = weights.find(w => w.date.getTime() === payload.date);
+        if (entry) {
+            setCurrentEntry(entry);
+            setIsModalOpen(true);
+        }
     }
 
     // Custom dot component that also renders variance lines
-    const CustomDot = (props: any) => {
-        const { cx, cy, payload, index } = props;
+    const CustomDot = (props: CustomDotProps) => {
+        const { cx, cy, payload, emaData, yAxisDomain, chartHeight, onClick } = props;
         
-        if (!payload || !emaData[index]) return null;
+        if (cx === undefined || cy === undefined || !payload) {
+            return null;
+        }
+
+        // Find the EMA value for this data point
+        const emaPoint = emaData.find(d => d.date === payload.date);
+        if (!emaPoint) {
+            return null;
+        }
         
-        const emaPoint = emaData[index];
         const variance = payload.weight - emaPoint.ema;
         
-        // Calculate EMA point y-coordinate on the same scale
-        const yScale = (props.yAxis.scale as any);
-        const emaY = yScale(emaPoint.ema);
+        // Calculate the y-coordinate for the EMA point
+        // Map the EMA value to the chart coordinate system
+        const [minY, maxY] = yAxisDomain;
+        const valueRange = maxY - minY;
+        const normalizedEma = (emaPoint.ema - minY) / valueRange;
+        
+        // In SVG, y=0 is at the top, so we need to invert
+        // Account for chart margins (approximately 5 pixels top and bottom)
+        const margin = 5;
+        const effectiveHeight = chartHeight - (2 * margin);
+        const emaY = margin + effectiveHeight * (1 - normalizedEma);
         
         return (
             <g>
@@ -189,7 +197,7 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
                     stroke={theme.palette.secondary.dark}
                     strokeWidth={1}
                     style={{ cursor: 'pointer' }}
-                    onClick={() => handleClick(payload)}
+                    onClick={() => onClick(payload)}
                 />
             </g>
         );
@@ -213,7 +221,7 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
                     domain={['dataMin', 'dataMax']}
                     tickFormatter={timeStr => dateToLocale(new Date(timeStr))}
                 />
-                <YAxis domain={['auto', 'auto']} />
+                <YAxis domain={yAxisDomain} />
                 
                 {/* Mean weight reference line */}
                 <ReferenceLine 
@@ -262,7 +270,15 @@ export const WeightChart = ({ weights, height }: WeightChartProps) => {
                     dataKey="weight"
                     stroke="transparent"
                     strokeWidth={0}
-                    dot={<CustomDot emaData={emaData} />}
+                    dot={(props: DotProps) => (
+                        <CustomDot 
+                            {...props} 
+                            emaData={emaData} 
+                            yAxisDomain={yAxisDomain}
+                            chartHeight={height}
+                            onClick={handleClick} 
+                        />
+                    )}
                     activeDot={{
                         stroke: 'black',
                         strokeWidth: 2,
