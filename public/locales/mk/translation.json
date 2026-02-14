@@ -94,7 +94,13 @@
         "swapExercise": "Замени вежба",
         "deleteTranslation": "Избриши превод",
         "notes": "Белешки",
-        "equipment": "Опрема"
+        "equipment": "Опрема",
+        "submitExercise": "Испрати вежба",
+        "notEnoughRightsHeader": "Не можете да придонесите за вежбите",
+        "notEnoughRights": "Можете да придонесувате во вежбите само ако вашиот акаунт е по стар од {{days}} и има верифицирана емаил адреса",
+        "exerciseNotTranslatedBody": "Оваа вежба моментално не е достапна во моменталиот избран јазик. Дали би сакал да придонесиш со превод?",
+        "alsoKnownAs": "Иста така познато како:",
+        "primaryMuscles": "Главни мускули"
     },
     "height": "Висина",
     "cm": "цм",
@@ -117,5 +123,16 @@
     "seeDetails": "Види детали",
     "actions": "Дејства",
     "nothingHereYet": "Ништо сеуште...",
-    "nothingHereYetAction": "Притиснете го копчето за да започнете"
+    "nothingHereYetAction": "Притиснете го копчето за да започнете",
+    "continue": "Продолжи",
+    "goBack": "Назад",
+    "forms": {
+        "enterInteger": "Ве молиме внесете целосен број"
+    },
+    "durationWeeks": "{{number}} недели",
+    "durationWeeksDays": "{{nrWeeks}} недели, {{nrDays}} денови",
+    "videos": "Видеа",
+    "undo": "Назад",
+    "successfullyDeleted": "Успешно избришано",
+    "cannotBeUndone": "Оваа акција не може да се однаправи."
 }
