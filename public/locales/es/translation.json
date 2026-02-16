@@ -161,7 +161,7 @@
         "resultingRoutine": "Rutina resultante",
         "routineHasNoDays": "La rutina no tiene días",
         "setHasNoExercises": "El conjunto no tiene días",
-        "fitDaysInWeek": "Meter días en la semana",
+        "fitDaysInWeek": "Horario semanal fijo",
         "needsLogsToAdvance": "Necesita registros para avanzar",
         "needsLogsToAdvanceHelpText": "Si selecciona esta opción, la rutina solo progresará al próximo día programado si ha registrado un entrenamiento para el día actual. Si esta opción no está seleccionada, la rutina avanzará automáticamente al día siguiente, independientemente de si registró un entrenamiento o no.",
         "addSuperset": "Añadir superset",
@@ -350,5 +350,8 @@
     "core": {
         "exitEditMode": "Salir del modo edición",
         "customize": "Personalizar"
+    },
+    "trophies": {
+        "trophies": "Trofeos"
     }
 }
