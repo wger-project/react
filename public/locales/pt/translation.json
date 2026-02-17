@@ -186,7 +186,7 @@
         "deleteDayConfirmation": "Isto removerá todas as regras de séries, exercícios e progressões",
         "routineHasNoDays": "A rotina não tem dias",
         "setHasNoExercises": "Este conjunto não tem exercícios",
-        "fitDaysInWeek": "Encaixa os dias na semana",
+        "fitDaysInWeek": "Plano semanal fixo",
         "needsLogsToAdvance": "Precisa de registo para avançar",
         "needsLogsToAdvanceHelpText": "Se escolher esta opção, a rotina só progredirá para o próximo dia agendado se registou um treino para o dia corrente. Se não estiver selecionada, a rotina avançará um dia independentemente de ter registado um treino ou não.",
         "addSuperset": "Juntar superset",
