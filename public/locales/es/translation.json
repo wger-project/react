@@ -344,7 +344,7 @@
     "private": "Privado",
     "dashboard": {
         "customizeDashboard": "Personalizar panel de control",
-        "dragWidgetsHelp": "Arrastra widgets para recolocarlos o cambia su tamaño con la esquina inferior izquierda.",
+        "dragWidgetsHelp": "Arrastra widgets para recolocarlos o cambia su tamaño con la esquina inferior derecha.",
         "resetLayout": "Reestablecer a la disposición por defecto"
     },
     "core": {
