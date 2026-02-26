@@ -57,4 +57,16 @@ describe("Test the IngredientAutocompleter component", () => {
         // Assert
         expect(mockCallback).toHaveBeenLastCalledWith(TEST_INGREDIENT_1);
     });
+
+    test('filters are shown after clicking the toggle icon', async () => {
+        const user = userEvent.setup();
+
+        render(<IngredientAutocompleter callback={mockCallback} />);
+
+        expect(screen.queryByText('nutrition.filterVegan')).not.toBeInTheDocument();
+
+        await user.click(screen.getByLabelText('Toggle filters'));
+
+        expect(screen.getByText('nutrition.filterVegan')).toBeInTheDocument();
+    });
 });

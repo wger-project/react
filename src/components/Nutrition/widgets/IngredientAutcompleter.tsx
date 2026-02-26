@@ -1,14 +1,17 @@
 import PhotoIcon from "@mui/icons-material/Photo";
 import SearchIcon from "@mui/icons-material/Search";
+import TuneIcon from '@mui/icons-material/Tune';
 import {
     Autocomplete,
     Avatar,
     FormControlLabel,
     FormGroup,
+    IconButton,
     InputAdornment,
     ListItem,
     ListItemIcon,
     ListItemText,
+    Popover,
     Stack,
     Switch,
     TextField,
@@ -32,6 +35,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     const [searchEnglish, setSearchEnglish] = useState<boolean>(true);
     const [filterVegan, setFilterVegan] = useState<boolean>(false);
     const [filterVegetarian, setFilterVegetarian] = useState<boolean>(false);
+    const [filtersAnchorEl, setFiltersAnchorEl] = useState<HTMLElement | null>(null);
     const [value, setValue] = useState<Ingredient | null>(initialData);
     const [inputValue, setInputValue] = useState("");
     const [options, setOptions] = useState<readonly Ingredient[]>([]);
@@ -65,6 +69,9 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
             fetchName.cancel();
         };
     }, [value, inputValue, fetchName]);
+
+    const isFiltersOpen = Boolean(filtersAnchorEl);
+    const filtersPopoverId = isFiltersOpen ? "ingredient-filters-popover" : undefined;
 
     return (
         <Stack>
@@ -104,6 +111,27 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                                         {params.InputProps.startAdornment}
                                     </>
                                 ),
+                                endAdornment: (
+                                    <>
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="Toggle filters"
+                                                aria-describedby={filtersPopoverId}
+                                                aria-expanded={isFiltersOpen}
+                                                onMouseDown={(event) => event.preventDefault()}
+                                                onClick={(event) =>
+                                                    setFiltersAnchorEl((current) =>
+                                                        current ? null : (event.currentTarget as HTMLElement)
+                                                    )
+                                                }
+                                                edge="end"
+                                                size="small"
+                                            >
+                                                <TuneIcon fontSize="small" />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    </>
+                                ),
                             },
                         }}
                     />
@@ -133,30 +161,51 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                     );
                 }}
             />
-            <FormGroup row>
-                <FormControlLabel
-                    control={
-                        <Switch checked={filterVegan} onChange={(event, checked) => setFilterVegan(checked)} />
-                    }
-                    label={t("nutrition.filterVegan")}
-                />
-                <FormControlLabel
-                    control={
-                        <Switch checked={filterVegetarian} onChange={(event, checked) => setFilterVegetarian(checked)} />
-                    }
-                    label={t("nutrition.filterVegetarian")}
-                />
-            </FormGroup>
-            {i18n.language !== LANGUAGE_SHORT_ENGLISH && (
-                <FormGroup>
-                    <FormControlLabel
-                        control={
-                            <Switch checked={searchEnglish} onChange={(event, checked) => setSearchEnglish(checked)} />
-                        }
-                        label={t("alsoSearchEnglish")}
-                    />
-                </FormGroup>
-            )}
+            <Popover
+                id={filtersPopoverId}
+                open={isFiltersOpen}
+                anchorEl={filtersAnchorEl}
+                onClose={() => setFiltersAnchorEl(null)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Stack padding={2} spacing={1}>
+                    {i18n.language !== LANGUAGE_SHORT_ENGLISH && (
+                        <FormGroup row>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={searchEnglish}
+                                        onChange={(event, checked) => setSearchEnglish(checked)}
+                                    />
+                                }
+                                label={t("alsoSearchEnglish")}
+                            />
+                        </FormGroup>
+                    )}
+
+                    <FormGroup row>
+                        <FormControlLabel
+                            control={
+                                <Switch checked={filterVegan} onChange={(event, checked) => setFilterVegan(checked)} />
+                            }
+                            label={t("nutrition.filterVegan")}
+                        />
+                    </FormGroup>
+
+                    <FormGroup row>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={filterVegetarian}
+                                    onChange={(event, checked) => setFilterVegetarian(checked)}
+                                />
+                            }
+                            label={t("nutrition.filterVegetarian")}
+                        />
+                    </FormGroup>
+                </Stack>
+            </Popover>
         </Stack>
     );
 }
