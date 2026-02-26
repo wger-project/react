@@ -54,8 +54,9 @@ describe('loadDashboardState migration', () => {
         expect(res).not.toBeNull();
         expect(res!.selectedWidgetIds).not.toContain('foo');
         expect(res!.selectedWidgetIds).toContain('routine');
-        expect(res!.layouts!.lg.length).toEqual(1);
-        expect(res!.layouts!.lg[0].i).toEqual('routine');
+        const lg = res?.layouts?.lg ?? [];
+        expect(lg.length).toEqual(1);
+        expect(lg[0]?.i).toEqual('routine');
     });
 
     test('migrates old top-level structure', () => {

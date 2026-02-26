@@ -10,12 +10,10 @@ import { RoutineCard } from "components/Dashboard/RoutineCard";
 import { TrophiesCard } from "components/Dashboard/TrophiesCard";
 import { WeightCard } from "components/Dashboard/WeightCard";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Layout, Layouts, Responsive, WidthProvider } from "react-grid-layout";
+import { Layout, LayoutItem, Responsive, ResponsiveLayouts, useContainerWidth, } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import { useTranslation } from "react-i18next";
-
-const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DASHBOARD_STORAGE_KEY = "dashboard-state";
 
@@ -25,7 +23,7 @@ type DashboardState = {
     version: number;
     selectedWidgetIds: string[];
     hiddenWidgetIds: string[];
-    layouts: Layouts | null;
+    layouts: ResponsiveLayouts | null;
 };
 
 const BREAKPOINTS = ['lg', 'md', 'sm', 'xs'] as const;
@@ -143,9 +141,11 @@ export const loadDashboardState = (): DashboardState | null => {
 
         // -> remove unknown ids from the layout
         for (const bp of BREAKPOINTS) {
-            const arr = (out.layouts as Layouts)[bp] as Layout[] | undefined;
+            const arr = (out.layouts as ResponsiveLayouts)[bp] as Layout | undefined;
             if (Array.isArray(arr)) {
-                (out.layouts as Layouts)[bp] = arr.filter((item: Layout) => item && allowedWidgets.has(String(item.i)));
+                (out.layouts as ResponsiveLayouts)[bp] = arr.filter(
+                    (item: LayoutItem) => item && allowedWidgets.has(String(item.i))
+                );
             }
         }
 
@@ -191,16 +191,16 @@ const migrateOldDashboardState = (parsedAny: any): DashboardState => {
     // If selectedWidgetIds missing, try to extract from layouts (or top-level breakpoints)
     if (!Array.isArray(parsed.selectedWidgetIds)) {
         const ids = new Set<string>();
-        let layoutsSource: Layouts | undefined;
+        let layoutsSource: ResponsiveLayouts | undefined;
         if (parsed && parsed.layouts) {
-            layoutsSource = parsed.layouts as Layouts;
+            layoutsSource = parsed.layouts as ResponsiveLayouts;
         } else if (parsedAny && (parsedAny.lg || parsedAny.md || parsedAny.sm || parsedAny.xs)) {
             layoutsSource = {
                 lg: parsedAny.lg ?? [],
                 md: parsedAny.md ?? [],
                 sm: parsedAny.sm ?? [],
                 xs: parsedAny.xs ?? [],
-            } as Layouts;
+            } as ResponsiveLayouts;
             parsed.layouts = layoutsSource;
 
             delete parsedAny.lg;
@@ -211,8 +211,8 @@ const migrateOldDashboardState = (parsedAny: any): DashboardState => {
 
         if (layoutsSource) {
             for (const bp of BREAKPOINTS) {
-                const arr = layoutsSource[bp] as Layout[] | undefined;
-                if (Array.isArray(arr)) arr.forEach((item: Layout) => {
+                const arr = layoutsSource[bp] as Layout | undefined;
+                if (Array.isArray(arr)) arr.forEach((item: LayoutItem) => {
                     if (item && item.i) ids.add(String(item.i));
                 });
             }
@@ -228,14 +228,14 @@ const migrateOldDashboardState = (parsedAny: any): DashboardState => {
 
 
 // Generate default layouts for all breakpoints
-const generateDefaultLayouts = (widgets: WidgetConfig[] = AVAILABLE_WIDGETS): Layouts => {
-    const lg: Layout[] = widgets.map((widget) => ({
+const generateDefaultLayouts = (widgets: WidgetConfig[] = AVAILABLE_WIDGETS): ResponsiveLayouts => {
+    const lg: Layout = widgets.map((widget) => ({
         i: widget.id,
         ...widget.defaultLayout,
     }));
 
     // For medium screens, make widgets full width in pairs
-    const md: Layout[] = widgets.map((widget, index) => ({
+    const md: Layout = widgets.map((widget, index) => ({
         i: widget.id,
         w: 6,
         h: widget.defaultLayout.h,
@@ -246,7 +246,7 @@ const generateDefaultLayouts = (widgets: WidgetConfig[] = AVAILABLE_WIDGETS): La
     }));
 
     // For small screens, stack vertically
-    const sm: Layout[] = widgets.map((widget, index) => ({
+    const sm: Layout = widgets.map((widget, index) => ({
         i: widget.id,
         w: 12,
         h: widget.defaultLayout.h,
@@ -268,6 +268,8 @@ export const ConfigurableDashboard: React.FC<ConfigurableDashboardProps> = ({ en
     const [tRaw] = useTranslation();
     // Cast t to a looser signature so we can call dynamic keys like `dashboard.widgets` without TS errors
     const t = tRaw as unknown as (key: string) => string;
+
+    const { width, containerRef, mounted } = useContainerWidth();
 
     const [isEditMode, setIsEditMode] = useState(false);
 
@@ -295,7 +297,7 @@ export const ConfigurableDashboard: React.FC<ConfigurableDashboardProps> = ({ en
         return AVAILABLE_WIDGETS.filter((w) => selectedWidgetIds.includes(w.id));
     }, [selectedWidgetIds]);
 
-    const [layouts, setLayouts] = useState<Layouts>(() => {
+    const [layouts, setLayouts] = useState<ResponsiveLayouts>(() => {
         const saved = loadDashboardState();
         return (saved && saved.layouts) || generateDefaultLayouts(visibleWidgets);
     });
@@ -316,7 +318,7 @@ export const ConfigurableDashboard: React.FC<ConfigurableDashboardProps> = ({ en
         setLayouts(generateDefaultLayouts(visibleWidgets));
     }, [selectedWidgetIds, visibleWidgets]);
 
-    const handleLayoutChange = useCallback((_: Layout[], allLayouts: Layouts) => {
+    const handleLayoutChange = useCallback((_: Layout, allLayouts: ResponsiveLayouts) => {
         setLayouts(allLayouts);
     }, []);
 
@@ -361,19 +363,25 @@ export const ConfigurableDashboard: React.FC<ConfigurableDashboardProps> = ({ en
     }, [selectedWidgetIds, hiddenWidgetIds, layouts]);
 
     // Grid configuration
-    const gridConfig = useMemo(
+    const gridProps = useMemo(
         () => ({
             className: "layout",
             layouts: layouts,
             breakpoints: { lg: 1200, md: 996, sm: 768, xs: 480 },
             cols: { lg: 12, md: 12, sm: 12, xs: 12 },
-            rowHeight: 100,
-            isDraggable: isEditMode,
-            isResizable: isEditMode,
             onLayoutChange: handleLayoutChange,
-            draggableHandle: isEditMode ? undefined : ".no-drag",
-            margin: [16, 16] as [number, number],
-            containerPadding: [0, 0] as [number, number],
+            dragConfig: {
+                enabled: isEditMode,
+                handle: isEditMode ? undefined : ".no-drag",
+            },
+            resizeConfig: {
+                enabled: isEditMode,
+            },
+            gridConfig: {
+                rowHeight: 100,
+                margin: [16, 16],
+                containerPadding: [0, 0],
+            },
         }),
         [layouts, isEditMode, handleLayoutChange]
     );
@@ -449,31 +457,35 @@ export const ConfigurableDashboard: React.FC<ConfigurableDashboardProps> = ({ en
                 </Tooltip>
             </Box>
 
-            <ResponsiveGridLayout {...gridConfig}>
-                {visibleWidgets.map((widget) => {
-                    const WidgetComponent = widget.component;
-                    return (
-                        <Box
-                            key={widget.id}
-                            sx={{
-                                // Add visual feedback in edit mode
-                                border: isEditMode ? "1px dashed" : "none",
-                                borderColor: "primary.main",
-                                borderRadius: 1,
-                                transition: "border 0.2s",
-                                cursor: isEditMode ? "move" : "default",
-                                "&:hover": isEditMode
-                                    ? {
-                                        borderColor: "primary.dark",
-                                    }
-                                    : {},
-                            }}
-                        >
-                            <WidgetComponent />
-                        </Box>
-                    );
-                })}
-            </ResponsiveGridLayout>
+            <Box ref={containerRef}>
+                {mounted && (
+                    <Responsive {...gridProps} width={width}>
+                        {visibleWidgets.map((widget) => {
+                            const WidgetComponent = widget.component;
+                            return (
+                                <Box
+                                    key={widget.id}
+                                    sx={{
+                                        // Add visual feedback in edit mode
+                                        border: isEditMode ? "1px dashed" : "none",
+                                        borderColor: "primary.main",
+                                        borderRadius: 1,
+                                        transition: "border 0.2s",
+                                        cursor: isEditMode ? "move" : "default",
+                                        "&:hover": isEditMode
+                                            ? {
+                                                borderColor: "primary.dark",
+                                            }
+                                            : {},
+                                    }}
+                                >
+                                    <WidgetComponent />
+                                </Box>
+                            );
+                        })}
+                    </Responsive>
+                )}
+            </Box>
         </Box>
     );
 };
