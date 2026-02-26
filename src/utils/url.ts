@@ -172,7 +172,7 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
 
         // Measurements
         case WgerLink.MEASUREMENT_OVERVIEW:
-            return `/${language}/measurement/overview`;
+            return `/${language}/measurement/`;
         case WgerLink.MEASUREMENT_DETAIL:
             return `/${language}/measurement/category/${params!.id}`;
 
