@@ -132,6 +132,8 @@
     "valueEnergyKcal": "{{value}} kcal",
     "valueEnergyKcalKj": "{{kcal}} kcal / {{kj}} kJ",
     "searchIngredientName": "Search by ingredient name",
+    "filterVegan": "Vegan only",
+    "filterVegetarian": "Vegetarian only",
     "macronutrient": "Macronutrient",
     "percentEnergy": "Percent of energy",
     "gPerBodyKg": "g per body-kg",

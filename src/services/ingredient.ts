@@ -43,27 +43,35 @@ export const getIngredients = async (ids: number[]): Promise<Ingredient[]> => {
 };
 
 
-export const searchIngredient = async (name: string, languageCode: string, searchEnglish: boolean = true): Promise<Ingredient[]> => {
+export const searchIngredient = async (
+    name: string,
+    languageCode: string,
+    searchEnglish: boolean = true,
+    isVegan?: boolean,
+    isVegetarian?: boolean,
+): Promise<Ingredient[]> => {
     // TODO: this currently only converts the results from the new API to the old format
     //       but this should be properly converted.
     //       See also https://github.com/wger-project/wger/pull/1724
-
 
     const languages = [languageCode];
     if (languageCode !== LANGUAGE_SHORT_ENGLISH && searchEnglish) {
         languages.push(LANGUAGE_SHORT_ENGLISH);
     }
 
-    const url = makeUrl(
-        ApiPath.INGREDIENTINFO_PATH,
-        {
-            query: {
-                'name__search': name,
-                'language__code': languages.join(','),
-                'limit': API_RESULTS_PAGE_SIZE,
-            }
-        }
-    );
+    const query: Record<string, string | number> = {
+        'name__search': name,
+        'language__code': languages.join(','),
+        'limit': API_RESULTS_PAGE_SIZE,
+    };
+    if (isVegan !== undefined) {
+        query['is_vegan'] = String(isVegan);
+    }
+    if (isVegetarian !== undefined) {
+        query['is_vegetarian'] = String(isVegetarian);
+    }
+
+    const url = makeUrl(ApiPath.INGREDIENTINFO_PATH, { query });
 
     const { data } = await axios.get(url);
     return data.results.map((entry: ApiIngredientType) => Ingredient.fromJson(entry));

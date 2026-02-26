@@ -74,6 +74,8 @@ export interface ApiIngredientType {
         url: string
     },
     license_author: string,
+    is_vegan: boolean | null,
+    is_vegetarian: boolean | null,
     image: ApiIngredientImageType | null,
     thumbnails: ApiIngredientThumbnailType | null,
 }

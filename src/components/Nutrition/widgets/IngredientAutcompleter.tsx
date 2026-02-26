@@ -30,6 +30,8 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     const initialData = initialIngredient ?? null;
 
     const [searchEnglish, setSearchEnglish] = useState<boolean>(true);
+    const [filterVegan, setFilterVegan] = useState<boolean>(false);
+    const [filterVegetarian, setFilterVegetarian] = useState<boolean>(false);
     const [value, setValue] = useState<Ingredient | null>(initialData);
     const [inputValue, setInputValue] = useState("");
     const [options, setOptions] = useState<readonly Ingredient[]>([]);
@@ -39,10 +41,16 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
         () =>
             debounce(
                 (request: string) =>
-                    searchIngredient(request, i18n.language, searchEnglish).then((res) => setOptions(res)),
+                    searchIngredient(
+                        request,
+                        i18n.language,
+                        searchEnglish,
+                        filterVegan || undefined,
+                        filterVegetarian || undefined,
+                    ).then((res) => setOptions(res)),
                 200
             ),
-        [i18n.language, searchEnglish]
+        [i18n.language, searchEnglish, filterVegan, filterVegetarian]
     );
 
     useEffect(() => {
@@ -125,6 +133,20 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                     );
                 }}
             />
+            <FormGroup row>
+                <FormControlLabel
+                    control={
+                        <Switch checked={filterVegan} onChange={(event, checked) => setFilterVegan(checked)} />
+                    }
+                    label={t("nutrition.filterVegan")}
+                />
+                <FormControlLabel
+                    control={
+                        <Switch checked={filterVegetarian} onChange={(event, checked) => setFilterVegetarian(checked)} />
+                    }
+                    label={t("nutrition.filterVegetarian")}
+                />
+            </FormGroup>
             {i18n.language !== LANGUAGE_SHORT_ENGLISH && (
                 <FormGroup>
                     <FormControlLabel
