@@ -64,9 +64,12 @@ describe("Test the IngredientAutocompleter component", () => {
         render(<IngredientAutocompleter callback={mockCallback} />);
 
         expect(screen.queryByText('nutrition.filterVegan')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('language')).not.toBeInTheDocument();
 
         await user.click(screen.getByLabelText('Toggle filters'));
 
+        const popover = screen.getByRole('presentation');
+        expect(within(popover).getByLabelText('language')).toBeInTheDocument();
         expect(screen.getByText('nutrition.filterVegan')).toBeInTheDocument();
     });
 });
