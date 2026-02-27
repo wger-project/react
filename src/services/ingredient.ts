@@ -65,6 +65,6 @@ export const searchIngredient = async (name: string, languageCode: string, searc
         }
     );
 
-    const { data } = await axios.get(url);
+    const { data } = await axios.get(url, { headers: makeHeader() });
     return data.results.map((entry: ApiIngredientType) => Ingredient.fromJson(entry));
 };

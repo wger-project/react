@@ -40,7 +40,9 @@ export const searchExerciseTranslations = async (name: string, languageCode: str
     });
 
     try {
-        const { data } = await axios.get<ResponseType<Exercise>>(url);
+        const { data } = await axios.get<ResponseType<Exercise>>(url, {
+            headers: makeHeader(),
+        });
 
         if (!data || !data.results || !Array.isArray(data.results)) {
             return [];
