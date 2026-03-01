@@ -1,11 +1,11 @@
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { Button, FormControlLabel, IconButton, Menu, MenuItem, Stack, Switch } from "@mui/material";
+import {Button, FormControlLabel, IconButton, Menu, MenuItem, Stack, Switch} from "@mui/material";
 import Grid from '@mui/material/Grid';
 import Tooltip from "@mui/material/Tooltip";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { WgerTextField } from "components/Common/forms/WgerTextField";
-import { useProfileQuery } from "components/User/queries/profile";
+import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import {AdapterLuxon} from "@mui/x-date-pickers/AdapterLuxon";
+import {WgerTextField} from "components/Common/forms/WgerTextField";
+import {useProfileQuery} from "components/User/queries/profile";
 import {
     DESCRIPTION_MAX_LENGTH,
     MAX_WORKOUT_DURATION,
@@ -14,15 +14,16 @@ import {
     NAME_MIN_LENGTH,
     Routine
 } from "components/WorkoutRoutines/models/Routine";
-import { useAddRoutineQuery, useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
-import { SlotEntryRoundingField } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
-import { Form, Formik } from "formik";
-import { DateTime } from "luxon";
-import React, { useState } from 'react';
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import { makeLink, WgerLink } from "utils/url";
+import {useAddRoutineQuery, useEditRoutineQuery} from "components/WorkoutRoutines/queries/routines";
+import {SlotEntryRoundingField} from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
+import {Form, Formik} from "formik";
+import {DateTime} from "luxon";
+import React, {useState} from 'react';
+import {useTranslation} from "react-i18next";
+import {useNavigate} from "react-router-dom";
+import {makeLink, WgerLink} from "utils/url";
 import * as yup from 'yup';
+import LoadingButton from "@mui/material/Button";
 
 interface RoutineFormProps {
     existingRoutine?: Routine,
@@ -42,6 +43,7 @@ export const RoutineForm = ({
     const addRoutineQuery = useAddRoutineQuery();
     const editRoutineQuery = useEditRoutineQuery(existingRoutine?.id ?? -1);
     const navigate = useNavigate();
+    const [buttonState, setButtonState] = useState<'idle' | 'loading' | 'error' | 'success'>('idle');
 
     const routine = existingRoutine
         ? Routine.clone(existingRoutine)
@@ -65,11 +67,11 @@ export const RoutineForm = ({
         name: yup
             .string()
             .required()
-            .max(NAME_MAX_LENGTH, t('forms.maxLength', { chars: NAME_MAX_LENGTH }))
-            .min(NAME_MIN_LENGTH, t('forms.minLength', { chars: NAME_MIN_LENGTH })),
+            .max(NAME_MAX_LENGTH, t('forms.maxLength', {chars: NAME_MAX_LENGTH}))
+            .min(NAME_MIN_LENGTH, t('forms.minLength', {chars: NAME_MIN_LENGTH})),
         description: yup
             .string()
-            .max(DESCRIPTION_MAX_LENGTH, t('forms.maxLength', { chars: DESCRIPTION_MAX_LENGTH })),
+            .max(DESCRIPTION_MAX_LENGTH, t('forms.maxLength', {chars: DESCRIPTION_MAX_LENGTH})),
         start: yup
             .date()
             .required(),
@@ -82,7 +84,7 @@ export const RoutineForm = ({
             )
             .test(
                 'hasMinimumDuration',
-                t('routines.minLengthRoutine', { number: MIN_WORKOUT_DURATION }),
+                t('routines.minLengthRoutine', {number: MIN_WORKOUT_DURATION}),
                 function (value) {
                     const startDate = this.parent.start;
                     if (startDate && value) {
@@ -96,7 +98,7 @@ export const RoutineForm = ({
             )
             .test(
                 'hasMaximumDuration',
-                t('routines.maxLengthRoutine', { number: MAX_WORKOUT_DURATION }),
+                t('routines.maxLengthRoutine', {number: MAX_WORKOUT_DURATION}),
                 function (value) {
                     const startDate = this.parent.start;
                     if (startDate && value) {
@@ -124,39 +126,46 @@ export const RoutineForm = ({
 
             validationSchema={validationSchema}
             onSubmit={async (values) => {
+                setButtonState('loading');
+                const minWait = new Promise(res => setTimeout(res, 1000)); // set minimum loading time to 1 second
                 routine.name = values.name;
                 routine.description = values.description;
                 routine.fitInWeek = values.fitInWeek;
                 routine.start = values.start!.toJSDate();
                 routine.end = values.end!.toJSDate();
 
-                if (routine.id !== null) {
-                    editRoutineQuery.mutate(routine);
-                } else {
-                    const result = await addRoutineQuery.mutateAsync(routine);
-                    navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
+                try {
+                    if (routine.id !== null) {
+                        editRoutineQuery.mutate(routine);
+                    } else {
+                        const result = await addRoutineQuery.mutateAsync(routine);
+                        navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, {id: result.id!}));
 
-                    if (closeFn) {
-                        closeFn();
+                        if (closeFn)
+                            closeFn();
                     }
+                    setButtonState('success');
+                } catch (err) {
+                    setButtonState('error');
                 }
+                setTimeout(() => setButtonState("idle"), 1000);
             }}
         >
             {formik => (
                 <Form>
                     <Grid container spacing={2}>
 
-                        <Grid size={{ xs: 12 }}>
-                            <WgerTextField fieldName="name" title={t('name')} />
+                        <Grid size={{xs: 12}}>
+                            <WgerTextField fieldName="name" title={t('name')}/>
                         </Grid>
                         <Grid size={12}>
                             <WgerTextField
                                 fieldName="description"
                                 title={t('description')}
-                                fieldProps={{ multiline: true, rows: 4 }}
+                                fieldProps={{multiline: true, rows: 4}}
                             />
                         </Grid>
-                        <Grid size={{ xs: 6 }}>
+                        <Grid size={{xs: 6}}>
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
@@ -179,7 +188,7 @@ export const RoutineForm = ({
                                 />
                             </LocalizationProvider>
                         </Grid>
-                        <Grid size={{ xs: 5 }}>
+                        <Grid size={{xs: 5}}>
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
@@ -203,7 +212,7 @@ export const RoutineForm = ({
                             </LocalizationProvider>
                         </Grid>
                         <Grid
-                            size={{ xs: 1 }}
+                            size={{xs: 1}}
                             sx={{
                                 display: "flex",
                                 alignItems: "center",
@@ -211,7 +220,7 @@ export const RoutineForm = ({
                                 textAlign: "center"
                             }}
                         >
-                            {durationDays === 0 ? t('durationWeeks', { number: durationWeeks }) : t('durationWeeksDays', {
+                            {durationDays === 0 ? t('durationWeeks', {number: durationWeeks}) : t('durationWeeksDays', {
                                 nrWeeks: durationWeeks,
                                 nrDays: durationDays
                             })}
@@ -221,22 +230,38 @@ export const RoutineForm = ({
                                 control={
                                     <Switch checked={formik.values.fitInWeek} {...formik.getFieldProps('fitInWeek')} />
                                 }
-                                label={t('routines.fitDaysInWeek')} />
+                                label={t('routines.fitDaysInWeek')}/>
                             <Tooltip title={t('routines.fitDaysInWeekHelpText')}>
                                 <IconButton size="small">
-                                    <HelpOutlineIcon fontSize="inherit" />
+                                    <HelpOutlineIcon fontSize="inherit"/>
                                 </IconButton>
                             </Tooltip>
                         </Grid>
                         <Grid size={12}>
-                            <Button
-                                disabled={formik.isSubmitting}
-                                color="primary"
-                                variant="contained"
-                                type="submit"
-                                sx={{ mt: 2 }}>
-                                {t('save')}
-                            </Button>
+                            {buttonState === 'loading' ? (
+                                <LoadingButton
+                                    loading
+                                    loadingPosition="center"
+                                    variant="contained"
+                                    color="primary"
+                                    sx={{mt: 2}}
+                                >
+                                    {t('save')}
+                                </LoadingButton>
+                            ) : (
+                                <Button
+                                    variant="contained"
+                                    type="submit"
+                                    sx={{mt: 2}}
+                                >
+                                    {buttonState === 'success'
+                                        ? 'SAVE ✅'
+                                        : buttonState === 'error'
+                                            ? 'SAVE ❌'
+                                            : t('save')}
+                                </Button>
+                            )}
+
                         </Grid>
                     </Grid>
                 </Form>
@@ -248,7 +273,7 @@ export const RoutineForm = ({
 
 export const DefaultRoundingMenu = (props: { routineId: number }) => {
     const userProfileQuery = useProfileQuery();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -301,7 +326,7 @@ export const DefaultRoundingMenu = (props: { routineId: number }) => {
             <Tooltip title={t('routines.roundingHelp')}>
                 <IconButton onClick={() => {
                 }}>
-                    <HelpOutlineIcon fontSize="small" />
+                    <HelpOutlineIcon fontSize="small"/>
                 </IconButton>
             </Tooltip>
         </Stack>
