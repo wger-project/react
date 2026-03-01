@@ -297,12 +297,17 @@
         "useGoalsHelpTextLong": "So kannst du allgemeine Ziele für Energie, Eiweiß, Kohlenhydrate oder Fett für den Plan festlegen. Beachte, dass diese Werte Vorrang haben, wenn du einen detaillierten Mahlzeitenplan erstellst.",
         "addMealItem": "Zutat zu Mahlzeit hinzufügen",
         "searchIngredientName": "Suche nach Zutatenname",
+        "languageFilterCurrentOnly": "Nur in aktueller Sprache ({{lang}})",
+        "languageFilterCurrentAndEnglish": "Aktuelle Sprache ({{lang}}) & Englisch",
+        "languageFilterAll": "Alle Sprachen",
         "saturatedFat": "Gesättigte Fette",
         "valueTooMany": "zu viele",
         "logThisMealItem": "Diese Zutat unverändert in das Ernährungstagebuch eintragen",
         "onlyLoggingHelpText": "Nur Kalorien verfolgen. Markiere das Kästchen, wenn du nur deine Kalorien protokollieren möchtest und keinen detaillierten Ernährungsplan mit spezifischen Mahlzeiten einrichten willst",
         "goalFiber": "Ballaststoffziel",
-        "logThisMeal": "Dieses Gericht unverändert in das Ernährungstagebuch eintragen"
+        "logThisMeal": "Dieses Gericht unverändert in das Ernährungstagebuch eintragen",
+        "filterVegan": "Vegan",
+        "filterVegetarian": "Vegetarisch"
     },
     "downloadAsPdf": "Download als PDF",
     "total": "Gesamt",

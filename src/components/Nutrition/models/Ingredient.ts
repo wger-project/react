@@ -16,6 +16,8 @@ export type IngredientConstructorParams = {
     fatSaturated: number | null;
     fiber: number | null;
     sodium: number | null;
+    isVegan?: boolean | null;
+    isVegetarian?: boolean | null;
     image?: IngredientImage | null;
     thumbnails?: IngredientImageThumbnails | null;
 };
@@ -34,6 +36,8 @@ export class Ingredient {
     public fatSaturated: number | null;
     public fiber: number | null;
     public sodium: number | null;
+    public isVegan: boolean | null;
+    public isVegetarian: boolean | null;
     public image: IngredientImage | null;
     public thumbnails: IngredientImageThumbnails | null;
 
@@ -50,6 +54,8 @@ export class Ingredient {
         this.fatSaturated = params.fatSaturated;
         this.fiber = params.fiber;
         this.sodium = params.sodium;
+        this.isVegan = params.isVegan ?? null;
+        this.isVegetarian = params.isVegetarian ?? null;
         this.image = params.image ?? null;
         this.thumbnails = params.thumbnails ?? null;
     }
@@ -75,6 +81,8 @@ class IngredientAdapter implements Adapter<Ingredient> {
             fatSaturated: item.fat_saturated === null ? null : parseFloat(item.fat_saturated),
             fiber: item.fiber === null ? null : parseFloat(item.fiber),
             sodium: item.sodium === null ? null : parseFloat(item.sodium),
+            isVegan: item.is_vegan,
+            isVegetarian: item.is_vegetarian,
             image: item.image === null ? null : IngredientImage.fromJson(item.image),
             thumbnails: item.thumbnails === null ? null : IngredientImageThumbnails.fromJson(item.thumbnails),
         });
