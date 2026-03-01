@@ -148,6 +148,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                                 ),
                                 endAdornment: (
                                     <>
+                                        {params.InputProps.endAdornment}
                                         <InputAdornment position="end">
                                             <IconButton
                                                 aria-label="Toggle filters"

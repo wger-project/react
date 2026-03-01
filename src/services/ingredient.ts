@@ -73,6 +73,6 @@ export const searchIngredient = async (
 
     const url = makeUrl(ApiPath.INGREDIENTINFO_PATH, { query });
 
-    const { data } = await axios.get(url);
+    const { data } = await axios.get(url, { headers: makeHeader() },);
     return data.results.map((entry: ApiIngredientType) => Ingredient.fromJson(entry));
 };
