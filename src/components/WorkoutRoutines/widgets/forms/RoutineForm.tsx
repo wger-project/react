@@ -16,7 +16,9 @@ import {
 } from "components/WorkoutRoutines/models/Routine";
 import { useAddRoutineQuery, useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
 import { SlotEntryRoundingField } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
+import { SaveButton } from "components/WorkoutRoutines/widgets/SaveButton";
 import { Form, Formik } from "formik";
+import { FormQueryErrors } from "components/Core/Widgets/FormError";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -145,18 +147,13 @@ export const RoutineForm = ({
             {formik => (
                 <Form>
                     <Grid container spacing={2}>
-
-                        <Grid size={{ xs: 12 }}>
+                        <Grid size={12}>
+                            <FormQueryErrors mutationQuery={routine ? editRoutineQuery : addRoutineQuery} />
+                        </Grid>
+                        <Grid size={{ xs: 12, sm: 5 }}>
                             <WgerTextField fieldName="name" title={t('name')} />
                         </Grid>
-                        <Grid size={12}>
-                            <WgerTextField
-                                fieldName="description"
-                                title={t('description')}
-                                fieldProps={{ multiline: true, rows: 4 }}
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 6 }}>
+                        <Grid size={{ xs: 6, sm: 3 }}>
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
@@ -179,7 +176,7 @@ export const RoutineForm = ({
                                 />
                             </LocalizationProvider>
                         </Grid>
-                        <Grid size={{ xs: 5 }}>
+                        <Grid size={{ xs: 6, sm: 3 }}>
                             <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                                 <DatePicker
                                     defaultValue={DateTime.now()}
@@ -203,7 +200,7 @@ export const RoutineForm = ({
                             </LocalizationProvider>
                         </Grid>
                         <Grid
-                            size={{ xs: 1 }}
+                            size={{ xs: 12, sm: 1 }}
                             sx={{
                                 display: "flex",
                                 alignItems: "center",
@@ -215,6 +212,13 @@ export const RoutineForm = ({
                                 nrWeeks: durationWeeks,
                                 nrDays: durationDays
                             })}
+                        </Grid>
+                        <Grid size={12}>
+                            <WgerTextField
+                                fieldName="description"
+                                title={t('description')}
+                                fieldProps={{ multiline: true, rows: 4 }}
+                            />
                         </Grid>
                         <Grid size={12}>
                             <FormControlLabel
@@ -229,14 +233,30 @@ export const RoutineForm = ({
                             </Tooltip>
                         </Grid>
                         <Grid size={12}>
-                            <Button
-                                disabled={formik.isSubmitting}
-                                color="primary"
+                            <SaveButton
+                                onSave={async () => {
+                                    const errors = await formik.validateForm();
+                                    if (Object.keys(errors).length > 0) {
+                                        formik.setTouched(
+                                            Object.keys(errors).reduce((acc, key) => ({
+                                                ...acc,
+                                                [key]: true
+                                            }), {})
+                                        );
+                                        throw new Error('validation error');
+                                    }
+
+                                    await formik.submitForm();
+                                }}
+                                loadingText={t('saving', 'Saving...')}
+                                successText={`${t('save', 'Saved')} ✅`}
+                                errorText={`${t('save')} ❌`}
+                                defaultText={t('save')}
                                 variant="contained"
+                                color="primary"
                                 type="submit"
-                                sx={{ mt: 2 }}>
-                                {t('save')}
-                            </Button>
+                                sx={{ mt: 2 }}
+                            />
                         </Grid>
                     </Grid>
                 </Form>
