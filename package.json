@@ -86,7 +86,7 @@
     "vite": "^7.3.1",
     "vite-plugin-eslint": "^1.8.1",
     "vitest": "^4.0.18",
-    "webpack-bundle-analyzer": "^4.10.2"
+    "webpack-bundle-analyzer": "^5.2.0"
   },
   "scripts": {
     "start": "vite",
