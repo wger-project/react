@@ -50,6 +50,7 @@ export {
 } from './measurements';
 
 export { searchIngredient, getIngredient } from './ingredient';
+export type { IngredientLanguageFilter } from './ingredient';
 
 export { addMealItem, editMealItem, deleteMealItem } from './mealItem';
 export { getMealsForPlan, addMeal, editMeal, deleteMeal } from './meal';
