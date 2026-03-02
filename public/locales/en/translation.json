@@ -296,7 +296,8 @@
       "forced": "Forced",
       "tut": "Time under tension",
       "iso": "Isometric hold",
-      "jump": "Jump"
+      "jump": "Jump",
+      "warmup": "Warmup"
     },
     "day": {
       "custom": "Custom",

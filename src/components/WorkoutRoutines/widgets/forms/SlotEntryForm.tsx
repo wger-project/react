@@ -22,6 +22,10 @@ export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: num
             label: t('routines.set.normalSet'),
         },
         {
+            value: 'warmup',
+            label: t('routines.set.warmup'),
+        },
+        {
             value: 'dropset',
             label: t('routines.set.dropSet'),
         },

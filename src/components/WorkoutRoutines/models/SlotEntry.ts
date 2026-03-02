@@ -7,7 +7,7 @@ import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
 import { Adapter } from "utils/Adapter";
 import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG } from "utils/consts";
 
-export type SlotEntryType = 'normal' | 'dropset' | 'myo' | 'partial' | 'forced' | 'tut' | 'iso' | 'jump';
+export type SlotEntryType = 'normal' | 'warmup' | 'dropset' | 'myo' | 'partial' | 'forced' | 'tut' | 'iso' | 'jump';
 
 type ConstructorParamsType = {
     id?: number | null,
