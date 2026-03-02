@@ -293,7 +293,8 @@
         "7dayAvg": "Média de 7 dias",
         "logThisMealItem": "Registrar este ingrediente como está no diário nutricional",
         "mealDeleteInfo": "As entradas do diário nutricional para esta refeição não serão excluídas e aparecerão em 'outros registros'",
-        "goalFiber": "Meta de fibra"
+        "goalFiber": "Meta de fibra",
+        "filterVegetarian": "Vegetariano"
     },
     "downloadAsPdf": "Download como PDF",
     "nothingHereYet": "Nada aqui por enquanto...",
