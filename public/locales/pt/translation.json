@@ -92,7 +92,7 @@
     "overview": "Panorama",
     "preferences": "Preferências",
     "continue": "Continuar",
-    "goBack": "Costas",
+    "goBack": "Desça novamente",
     "forms": {
         "fieldRequired": "Esse campo é obrigatório",
         "supportedImageFormats": "São aceitos somente JPEG, PNG, WEBP e AVIF menores de 20Mb",
@@ -192,7 +192,7 @@
         "addSuperset": "Juntar superset",
         "addExercise": "Adicionar exercício",
         "exerciseNr": "Exercício {{number}}",
-        "supersetNr": "Superset {{number}}",
+        "supersetNr": "Super série {{number}}",
         "editProgression": "Editar a progressão",
         "progressionNeedsReplace": "Uma das entradas anteriores precisa duma operação de substituição",
         "exerciseHasProgression": "Este exercício tem regras de progressão e não pode ser editado aqui. Para o fazer, pressione o botão.",
@@ -230,7 +230,31 @@
         "publicTemplate": "Modelo público",
         "fitDaysInWeekHelpText": "Esta opção controla a forma com é agendada a tua rotina ao longo de várias semanas. Se marcada, os dias repetir-se-ão ao longo duma semana. Por exemplo: uma rotina com treinos à segunda, quarta e sexta continuará este padrão na próxima segunda, quarta e sexta. Se desmarcada, os dias seguir-se-ão de forma sequencial independentemente do início duma nova semana. Isto é útil para rotinas que não seguem uma rotina estritamente semanal.",
         "repeat": "Repetir regra",
-        "newDay": "Novo dia"
+        "newDay": "Novo dia",
+        "templatesHelpText": "Os modelos são uma forma de salvar sua rotina para uso posterior e como ponto de partida para outras rotinas. Você não pode editar modelos, mas pode duplicá-los e fazer alterações na cópia (além de convertê-los de volta à rotina normal, é claro).",
+        "publicTemplateHelpText": "Os modelos públicos estão disponíveis para todos os usuários.",
+        "copyAndUseTemplate": "Copie e utilize o modelo",
+        "set": {
+            "type": "Tipo",
+            "normalSet": "Série normal",
+            "dropSet": "Série descendente",
+            "myo": "MYO",
+            "partial": "Parcial",
+            "forced": "Forçado",
+            "tut": "Tempo sob tensão",
+            "iso": "Posição isométrica",
+            "jump": "Pular"
+        },
+        "day": {
+            "custom": "Personalizado",
+            "enom": "A cada minuto",
+            "amrap": "O máximo de rodadas possível",
+            "hiit": "Treinamento intervalado de alta intensidade",
+            "tabata": "Tabata",
+            "edt": "Treinamento de densidade crescente",
+            "rft": "Rodadas por tempo",
+            "afap": "O mais rápido possível"
+        }
     },
     "measurements": {
         "measurements": "Medidas",
@@ -294,7 +318,11 @@
         "logThisMealItem": "Registrar este ingrediente como está no diário nutricional",
         "mealDeleteInfo": "As entradas do diário nutricional para esta refeição não serão excluídas e aparecerão em 'outros registros'",
         "goalFiber": "Meta de fibra",
-        "filterVegetarian": "Vegetariano"
+        "filterVegetarian": "Vegetariano",
+        "languageFilterCurrentOnly": "Somente no idioma atual ({{lang}})",
+        "languageFilterCurrentAndEnglish": "Idioma atual ({{lang}}) & English",
+        "languageFilterAll": "Todos os idiomas",
+        "filterVegan": "Vegano"
     },
     "downloadAsPdf": "Download como PDF",
     "nothingHereYet": "Nada aqui por enquanto...",
@@ -339,5 +367,19 @@
     "min": "Min",
     "max": "Máximo",
     "durationWeeks": "{{number}} semanas",
-    "durationWeeksDays": "{{nrWeeks}} semanas, {{nrDays}} dias"
+    "durationWeeksDays": "{{nrWeeks}} semanas, {{nrDays}} dias",
+    "dashboard": {
+        "customizeDashboard": "Personalize o painel de controle",
+        "dragWidgetsHelp": "Arraste os widgets para reposicioná-los ou redimensioná-los usando o canto inferior direito.",
+        "resetLayout": "Restaurar o layout padrão"
+    },
+    "core": {
+        "exitEditMode": "Sair do modo de edição",
+        "customize": "Personalizar"
+    },
+    "trophies": {
+        "trophies": "Troféus"
+    },
+    "private": "Privado",
+    "public": "Público"
 }
