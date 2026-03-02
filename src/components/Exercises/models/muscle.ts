@@ -1,6 +1,4 @@
-import i18n from 'i18next';
 import { Adapter } from "utils/Adapter";
-import { getTranslationKey } from "utils/strings";
 
 export class Muscle {
     constructor(
@@ -11,14 +9,10 @@ export class Muscle {
     ) {
     }
 
-    public get translatedName(): string {
-        return i18n.t(getTranslationKey(this.nameEn), { defaultValue: this.nameEn });
-    }
-
     // Return the name and English name of the muscle, if available.
     public getName(): string {
         if (this.nameEn) {
-            return `${this.name} (${this.translatedName})`;
+            return `${this.name} (${this.nameEn})`;
         } else {
             return this.name;
         }

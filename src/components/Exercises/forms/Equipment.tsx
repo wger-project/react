@@ -23,7 +23,7 @@ export function EditExerciseEquipment(props: { exerciseId: number, initial: numb
             multiple
             value={value}
             options={equipmentQuery.data.map(e => e.id)}
-            getOptionLabel={option => equipmentQuery.data.find(e => e.id === option)!.translatedName}
+            getOptionLabel={option => equipmentQuery.data.find(e => e.id === option)!.name}
             onChange={(event, newValue) => handleOnChange(newValue)}
             renderInput={params => (
                 <TextField

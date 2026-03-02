@@ -157,12 +157,12 @@ export const Head = ({
                     </div>
                     <Stack direction="row" spacing={1} mt={2}>
                         <Chip
-                            label={exercise.category.translatedName}
+                            label={exercise.category.name}
                             size="small" />
                         {exercise.equipment.map(e => {
                             return <Chip
                                 key={e.id}
-                                label={e.translatedName}
+                                label={e.name}
                                 variant="outlined"
                                 size="small"
                             />;

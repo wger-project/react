@@ -64,7 +64,7 @@ const EquipmentFilterList = () => {
                             </ListItemIcon>
                             <ListItemText
                                 id={labelId}
-                                primary={equipment.translatedName}
+                                primary={equipment.name}
                             />
                         </ListItemButton>
                     </ListItem>

@@ -131,11 +131,11 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('category')}</TableCell>
-                            <TableCell>{categoryQuery.data!.find(c => c.id === state.category)!.translatedName}</TableCell>
+                            <TableCell>{categoryQuery.data!.find(c => c.id === state.category)!.name}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.equipment')}</TableCell>
-                            <TableCell>{state.equipment.map(e => equipmentQuery.data!.find(value => value.id === e)!.translatedName).join(', ')}</TableCell>
+                            <TableCell>{state.equipment.map(e => equipmentQuery.data!.find(value => value.id === e)!.name).join(', ')}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.muscles')}</TableCell>

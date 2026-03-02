@@ -45,7 +45,7 @@ export const OverviewCard = ({ exercise, language }: OverviewCardProps) => {
                     </Tooltip>
 
                     <Chip
-                        label={exercise.category.translatedName}
+                        label={exercise.category.name}
                         key={exercise.category.id}
                         sx={{ position: "absolute", top: 8, left: 8 }}
                         color="primary"
@@ -53,7 +53,7 @@ export const OverviewCard = ({ exercise, language }: OverviewCardProps) => {
                     />
                     {exercise.equipment.map(equipment => (
                         <Typography display="inline" mr={1} key={equipment.id}>
-                            {equipment.translatedName}
+                            {equipment.name}
                         </Typography>
                     ))}
                     {exercise.equipment.length === 0 && (

@@ -75,7 +75,7 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
                                     fieldName={'category'}
                                     options={categoryQuery.data!.map(category => (
                                         <MenuItem key={category.id} value={category.id}>
-                                            {category.translatedName}
+                                            {category.name}
                                         </MenuItem>
                                     ))}
                                 />

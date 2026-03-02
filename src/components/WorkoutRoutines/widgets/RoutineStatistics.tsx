@@ -77,7 +77,7 @@ export function getHumanReadableHeaders(exerciseList: Exercise[], language: Lang
             return { headers: exercises as string[], data: exercisesIds.map(ex => logData.exercises[ex]) };
         }
         case StatGroupBy.Muscles: {
-            const muscles = Object.keys(logData.muscle).map(e => muscleList.find(m => m.id === parseInt(e))?.translatedName ?? '');
+            const muscles = Object.keys(logData.muscle).map(e => muscleList.find(m => m.id === parseInt(e))?.nameEn ?? '');
             const musclesIds = Object.keys(logData.muscle).map(Number);
             return { headers: muscles as string[], data: musclesIds.map(ms => logData.muscle[ms]) };
 

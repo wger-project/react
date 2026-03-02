@@ -86,7 +86,7 @@ const MuscleFilterList = () => {
                             <ListItemText
                                 id={labelId}
                                 primary={m.name}
-                                secondary={m.nameEn !== '' ? m.translatedName : ''}
+                                secondary={m.nameEn}
                             />
 
                         </ListItemButton>
