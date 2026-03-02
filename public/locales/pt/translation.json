@@ -243,7 +243,8 @@
             "forced": "Forçado",
             "tut": "Tempo sob tensão",
             "iso": "Posição isométrica",
-            "jump": "Pular"
+            "jump": "Pular",
+            "warmup": "Aquecimento"
         },
         "day": {
             "custom": "Personalizado",
