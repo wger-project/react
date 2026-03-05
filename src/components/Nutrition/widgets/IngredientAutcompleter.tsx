@@ -37,11 +37,23 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     const initialData = initialIngredient ?? null;
     const [t, i18n] = useTranslation();
 
-    const [languageFilter, setLanguageFilter] = useState<IngredientLanguageFilter>(
-        i18n.language === LANGUAGE_SHORT_ENGLISH ? "current" : "current_english"
-    );
-    const [filterVegan, setFilterVegan] = useState<boolean>(false);
-    const [filterVegetarian, setFilterVegetarian] = useState<boolean>(false);
+    const STORAGE_KEY_LANGUAGE_FILTER = "wger.ingredientSearch.languageFilter";
+    const STORAGE_KEY_VEGAN = "wger.ingredientSearch.filterVegan";
+    const STORAGE_KEY_VEGETARIAN = "wger.ingredientSearch.filterVegetarian";
+
+    const defaultLanguageFilter: IngredientLanguageFilter =
+        i18n.language === LANGUAGE_SHORT_ENGLISH ? "current" : "current_english";
+
+    const [languageFilter, setLanguageFilter] = useState<IngredientLanguageFilter>(() => {
+        const stored = localStorage.getItem(STORAGE_KEY_LANGUAGE_FILTER);
+        return (stored as IngredientLanguageFilter | null) ?? defaultLanguageFilter;
+    });
+    const [filterVegan, setFilterVegan] = useState<boolean>(() => {
+        return localStorage.getItem(STORAGE_KEY_VEGAN) === "true";
+    });
+    const [filterVegetarian, setFilterVegetarian] = useState<boolean>(() => {
+        return localStorage.getItem(STORAGE_KEY_VEGETARIAN) === "true";
+    });
     const [filtersAnchorEl, setFiltersAnchorEl] = useState<HTMLElement | null>(null);
     const [value, setValue] = useState<Ingredient | null>(initialData);
     const [inputValue, setInputValue] = useState("");
@@ -52,6 +64,18 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
             setLanguageFilter("current");
         }
     }, [i18n.language, languageFilter]);
+
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY_LANGUAGE_FILTER, languageFilter);
+    }, [languageFilter]);
+
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY_VEGAN, String(filterVegan));
+    }, [filterVegan]);
+
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY_VEGETARIAN, String(filterVegetarian));
+    }, [filterVegetarian]);
 
     const languageOptions = useMemo(() => {
         const options: Array<{ value: IngredientLanguageFilter; label: string }> = [
