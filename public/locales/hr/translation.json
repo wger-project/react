@@ -174,7 +174,8 @@
             "iso": "Izometrijsko držanje",
             "jump": "Skok",
             "myo": "MYO (intenzivnije aktiviranje mišićnih vlakana)",
-            "dropSet": "Drop set (serije sa smanjivanjem težine)"
+            "dropSet": "Drop set (serije sa smanjivanjem težine)",
+            "warmup": "Zagrijavanje"
         },
         "restTime": "Vrijeme odmora",
         "workoutNr": "Trening br. {{number}}",
@@ -222,7 +223,7 @@
         "workoutSession": "Sesija treninga",
         "routineHasNoDays": "Rutina nema dane",
         "setHasNoExercises": "Ova serija nema vježbe",
-        "fitDaysInWeek": "Prilagodi dane u tjednu",
+        "fitDaysInWeek": "Fiksiran tjedni raspored",
         "fitDaysInWeekHelpText": "Ova postavka kontrolira kako su dani vaše rutine raspoređeni tijekom više tjedana. Ako je aktivirana, dani će se ponavljati u tjednom ciklusu. Na primjer, rutina s vježbama u ponedjeljak, srijedu i petak nastavit će ovaj uzorak sljedeći ponedjeljak, srijedu i petak. Ako je deaktivirana, dani će slijediti sekvencijalno bez obzira na početak novog tjedna. Ovo je korisno za rutine koje ne slijede strogi tjedni raspored.",
         "needsLogsToAdvanceHelpText": "Ako odabereš ovu opciju, rutina će prijeći na sljedeći zakazani dan samo ako je trening zabilježen za trenutačni dan. Ako ova opcija nije odabrana, rutina će automatski prijeći na sljedeći dan bez obzira je li trening zabilježen ili ne.",
         "addSuperset": "Dodaj super-seriju",
@@ -298,7 +299,12 @@
         "searchIngredientName": "Traži prema imenu sastojka",
         "sodium": "Natrij",
         "pseudoMealTitle": "Drugi dnevnici",
-        "goalFiber": "Cilj za vlakna"
+        "goalFiber": "Cilj za vlakna",
+        "languageFilterCurrentOnly": "Samo u trenutačnom jeziku ({{lang}})",
+        "languageFilterCurrentAndEnglish": "Trenutačni jezik ({{lang}}) i engleski",
+        "languageFilterAll": "Svi jezici",
+        "filterVegan": "Vegan",
+        "filterVegetarian": "Vegetarijan"
     },
     "downloadAsPdf": "Preuzmi kao PDF",
     "total": "Ukupno",
