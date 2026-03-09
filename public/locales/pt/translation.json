@@ -248,7 +248,7 @@
         },
         "day": {
             "custom": "Personalizado",
-            "enom": "A cada minuto",
+            "enom": "Dê minuto em minuto",
             "amrap": "O máximo de rodadas possível",
             "hiit": "Treinamento intervalado de alta intensidade",
             "tabata": "Tabata",
