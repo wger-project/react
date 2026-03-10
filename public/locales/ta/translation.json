@@ -327,5 +327,8 @@
     "durationWeeks": "{{number}} வாரங்கள்",
     "undo": "செயல்தவிர்",
     "durationWeeksDays": "{{nrWeeks}} வாரங்கள், {{nrDays}} நாட்கள்",
-    "successfullyDeleted": "வெற்றிகரமாக நீக்கப்பட்டது"
+    "successfullyDeleted": "வெற்றிகரமாக நீக்கப்பட்டது",
+    "core": {
+        "customize": "தனிப்பயனாக்கு"
+    }
 }
