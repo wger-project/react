@@ -31,5 +31,18 @@
     "height": "Alçada",
     "cm": "cm",
     "all": "Tot",
-    "lastWeek": "Darrera setmana"
+    "lastWeek": "Darrera setmana",
+    "dashboard": {
+        "customizeDashboard": "Personalitzar el tauler de control",
+        "dragWidgetsHelp": "Arrastra els ginys per a reposicionar-los o canvia la mida amb la cantonada inferior dreta.",
+        "resetLayout": "Restableix a la disposició per defecte"
+    },
+    "core": {
+        "exitEditMode": "Surt del mode d'edició",
+        "customize": "Personalitza"
+    },
+    "copyToClipboard": "Copia al porta-retalls",
+    "min": "Mínim",
+    "max": "Màxim",
+    "overview": "Visió general"
 }
