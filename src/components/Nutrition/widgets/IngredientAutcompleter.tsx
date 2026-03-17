@@ -33,13 +33,13 @@ type IngredientAutocompleterProps = {
     initialIngredient?: Ingredient | null;
 };
 
+export const STORAGE_KEY_LANGUAGE_FILTER = "wger.ingredientSearch.languageFilter";
+export const STORAGE_KEY_VEGAN = "wger.ingredientSearch.filterVegan";
+export const STORAGE_KEY_VEGETARIAN = "wger.ingredientSearch.filterVegetarian";
+
 export function IngredientAutocompleter({ callback, initialIngredient }: IngredientAutocompleterProps) {
     const initialData = initialIngredient ?? null;
     const [t, i18n] = useTranslation();
-
-    const STORAGE_KEY_LANGUAGE_FILTER = "wger.ingredientSearch.languageFilter";
-    const STORAGE_KEY_VEGAN = "wger.ingredientSearch.filterVegan";
-    const STORAGE_KEY_VEGETARIAN = "wger.ingredientSearch.filterVegetarian";
 
     const defaultLanguageFilter: IngredientLanguageFilter =
         i18n.language === LANGUAGE_SHORT_ENGLISH ? "current" : "current_english";
