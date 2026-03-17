@@ -1,6 +1,11 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { IngredientAutocompleter } from 'components/Nutrition/widgets/IngredientAutcompleter';
+import {
+    IngredientAutocompleter,
+    STORAGE_KEY_LANGUAGE_FILTER,
+    STORAGE_KEY_VEGAN,
+    STORAGE_KEY_VEGETARIAN
+} from 'components/Nutrition/widgets/IngredientAutcompleter';
 import { searchIngredient } from 'services';
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "tests/ingredientTestdata";
 
@@ -71,5 +76,48 @@ describe("Test the IngredientAutocompleter component", () => {
         const popover = screen.getByRole('presentation');
         expect(within(popover).getByLabelText('language')).toBeInTheDocument();
         expect(screen.getByText('nutrition.filterVegan')).toBeInTheDocument();
+    });
+
+    test('local storage settings are saved', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+        render(<IngredientAutocompleter callback={mockCallback} />);
+
+        // Act
+        await user.click(screen.getByLabelText('Toggle filters'));
+
+        // Assert
+        const veganFilter = screen.getByLabelText('nutrition.filterVegan');
+        await user.click(veganFilter);
+        expect(setItemSpy).toHaveBeenCalledWith(STORAGE_KEY_VEGAN, 'true');
+
+        const vegetarianFilter = screen.getByLabelText('nutrition.filterVegetarian');
+        await user.click(vegetarianFilter);
+        expect(setItemSpy).toHaveBeenCalledWith(STORAGE_KEY_VEGETARIAN, 'true');
+
+        await user.click(screen.getByLabelText('language'));
+        await user.click(screen.getByRole('option', { name: 'nutrition.languageFilterAll' }));
+        expect(setItemSpy).toHaveBeenCalledWith(STORAGE_KEY_LANGUAGE_FILTER, 'all');
+
+        setItemSpy.mockRestore();
+    });
+
+    test('local storage settings are loaded', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        localStorage.setItem(STORAGE_KEY_VEGAN, 'true');
+        localStorage.setItem(STORAGE_KEY_VEGETARIAN, 'true');
+        localStorage.setItem(STORAGE_KEY_LANGUAGE_FILTER, 'all');
+        render(<IngredientAutocompleter callback={mockCallback} />);
+
+        // Act
+        await user.click(screen.getByLabelText('Toggle filters'));
+
+        // Assert
+        expect(screen.getByLabelText('nutrition.filterVegan')).toBeChecked();
+        expect(screen.getByLabelText('nutrition.filterVegetarian')).toBeChecked();
+        expect(screen.getByText('nutrition.languageFilterAll')).toBeInTheDocument();
+        localStorage.clear();
     });
 });
