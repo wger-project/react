@@ -40,6 +40,12 @@ export const MeasurementCard = () => {
 const MeasurementCardContent = (props: { categories: MeasurementCategory[] }) => {
     const { t } = useTranslation();
 
+    // TODO: is there a better solution for this?
+    // Workaround for react-slick import issue where it returns a module object
+    // instead of the component
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SlickSlider = (Slider as any).default ?? Slider;
+
     const settings: Settings = {
         dots: true,
         infinite: true,
@@ -64,9 +70,9 @@ const MeasurementCardContent = (props: { categories: MeasurementCategory[] }) =>
             }
         >
             <div className="slider-container">
-                <Slider {...settings}>
+                <SlickSlider {...settings}>
                     {props.categories.map(c => <MeasurementCardTableContent category={c} />)}
-                </Slider>
+                </SlickSlider>
             </div>
         </DashboardCard>
     </>);
