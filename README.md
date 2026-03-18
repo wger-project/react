@@ -32,7 +32,7 @@ npm start
 This is a regular react application, so there's no magic. You will need a backend
 for this, so feel free to use the test server for this (the db is reset daily):
 
-* URL: `https://wger-master.rge.uber.space`
+* URL: `https://dev.wger.de`
 * key: `31e2ea0322c07b9df583a9b6d1e794f7139e78d4`
 * username: `user`
 * password: `flutteruser`
