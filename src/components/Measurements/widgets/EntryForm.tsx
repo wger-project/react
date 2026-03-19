@@ -13,7 +13,6 @@ import { DateTime, Settings } from "luxon";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { TIMEZONE } from "utils/consts";
-import { dateToYYYYMMDD } from "utils/date";
 import * as yup from 'yup';
 
 Settings.defaultZone = TIMEZONE;
@@ -92,26 +91,11 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                                     label={t('date')}
                                     value={dateValue}
                                     disableFuture={true}
-
                                     onChange={(newValue) => {
                                         if (newValue) {
                                             formik.setFieldValue('date', newValue.toJSDate());
                                         }
                                         setDateValue(newValue);
-                                    }}
-                                    shouldDisableDate={(date) => {
-                                        // Allow the date of the current weight entry, since we are editing it
-                                        if (entry && dateToYYYYMMDD(entry.date) === dateToYYYYMMDD(date.toJSDate())) {
-                                            return false;
-                                        }
-
-                                        // if date is in list of existing entries, disable it
-                                        if (date) {
-                                            return categoryQuery.data!.entries.some(entry => dateToYYYYMMDD(entry.date) === dateToYYYYMMDD(date.toJSDate()));
-                                        }
-
-                                        // all other dates are allowed
-                                        return false;
                                     }}
                                 />
                             </LocalizationProvider>}
