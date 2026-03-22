@@ -1,6 +1,9 @@
 import { WeightEntry } from "components/BodyWeight/model";
 
 export const processWeight = (weights: WeightEntry[]) => {
+    // get first weight as reference for changes, if there are no weights, use 0 as reference
+    const firstWeight = weights.length > 0 ? weights[0].weight : 0;
+
     // go through weights, referencing the same weights to have days and weight changes
     return weights.map((entry, i) => {
 
@@ -9,14 +12,16 @@ export const processWeight = (weights: WeightEntry[]) => {
             return {
                 entry,
                 change: 0,
-                days: Math.abs(entry.date.getTime() - entry.date.getTime()) / (1000 * 60 * 60 * 24)
+                days: Math.abs(entry.date.getTime() - entry.date.getTime()) / (1000 * 60 * 60 * 24),
+                totalChange: 0
             };
         }
 
         return {
             entry,
             change: weights[i].weight - weights[i - 1].weight,
-            days: Math.abs(entry.date.getTime() - weights[i - 1].date.getTime()) / (1000 * 60 * 60 * 24)
+            days: Math.abs(entry.date.getTime() - weights[i - 1].date.getTime()) / (1000 * 60 * 60 * 24),
+            totalChange: weights[i].weight - firstWeight
         };
     });
 };

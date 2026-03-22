@@ -32,7 +32,8 @@ export interface WeightTableProps {
 }
 
 export const WeightTable = ({ weights }: WeightTableProps) => {
-
+    console.log('WeightTable rendered with weights:', weights);
+    console.log('Processed weights:', processWeight(weights));
     const availableResultsPerPage = [10, 50, 100];
 
     const { t } = useTranslation();
@@ -59,6 +60,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                             <TableCell align="center">{t('date')}</TableCell>
                             <TableCell align="center">{t('weight')}</TableCell>
                             <TableCell align="center">{t('difference')}</TableCell>
+                            <TableCell align="center">{t('totalChange')}</TableCell>
                             <TableCell align="center">{t('days')}</TableCell>
                             <TableCell align="center" />
                         </TableRow>
@@ -74,6 +76,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                                 </TableCell>
                                 <TableCell align="center">{row.entry.weight}</TableCell>
                                 <TableCell align="center">{+row.change.toFixed(2)}</TableCell>
+                                <TableCell align="center">{+row.totalChange.toFixed(2)}</TableCell>
                                 <TableCell align="center">{row.days.toFixed(1)}</TableCell>
                                 <TableCell align="center">
                                     <ActionButton weight={row.entry} />
