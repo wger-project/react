@@ -141,7 +141,12 @@
         "logThisMeal": "تسجيل هذه الوجبة كما هي في اليومية الغذائية",
         "logThisMealItem": "تسجيل هذا المكون كما هو في اليومية الغذائية",
         "valueRemaining": "متبقي",
-        "valueTooMany": "زيادة"
+        "valueTooMany": "زيادة",
+        "languageFilterCurrentOnly": "متوفر فقط باللغة الحالية ({{lang}})",
+        "languageFilterCurrentAndEnglish": "اللغة الحالية ({{lang}}) والإنجليزية",
+        "languageFilterAll": "كافة اللغات",
+        "filterVegan": "نباتي",
+        "filterVegetarian": "نباتي"
     },
     "bmi": {
         "calculator": "حاسبة مؤشر كتلة الجسم",
@@ -156,7 +161,7 @@
     "description": "الوصف",
     "translation": "الترجمة",
     "images": "الصور",
-    "overview": "نظرة عامة",
+    "overview": "ملخص",
     "preferences": "التفضيلات",
     "continue": "متابعة",
     "goBack": "رجوع",
@@ -264,7 +269,9 @@
             "partial": "جزئي",
             "forced": "قسري",
             "tut": "الزمن تحت التوتر",
-            "jump": "قفز"
+            "jump": "قفز",
+            "iso": "الثبات المتساوي",
+            "warmup": "تسخين"
         },
         "day": {
             "custom": "مخصص",
@@ -275,7 +282,11 @@
             "edt": "التدريب المتزايدة عالي الكثافة",
             "rft": "جولات الوقت",
             "afap": "بأسرع وقت ممكن"
-        }
+        },
+        "volume": "مقدار",
+        "defaultRounding": "التجميع الافتراضي",
+        "rounding": "تجميع (هذا التمرين)",
+        "workoutSession": "جلسة تمرين"
     },
     "measurements": {
         "measurements": "القياسات",
@@ -342,8 +353,8 @@
     "comment": "تعليق",
     "private": "خاص",
     "public": "عام",
-    "min": "الحد الأدنى",
-    "max": "الحد الأقصى",
+    "min": "الادنى",
+    "max": "الاقصى",
     "durationWeeks": "{{number}} اسابيع",
     "durationWeeksDays": "{{nrWeeks}} اسابيع, {{nrDays}} ايام",
     "undo": "تراجع",
