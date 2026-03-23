@@ -393,7 +393,7 @@ describe("Exercise image tests", () => {
         await user.clear(authorURLInput);
         await user.type(authorURLInput, "https://updatedAutorurl.com");
         // DerivativeSourceURL
-        const derivativeURLInput = await getModalInput("derivativeSourceUrl")
+        const derivativeURLInput = await getModalInput("derivativeSourceUrl");
         await user.clear(derivativeURLInput);
         await user.type(derivativeURLInput, "https://updated-derivative.com");
 

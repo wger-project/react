@@ -36,7 +36,7 @@ import { useTranslation } from "react-i18next";
 import { deleteAlias, postAlias } from "services";
 import * as yup from "yup";
 import { ImageFormModal } from '../forms/ImageModal';
-import { ExerciseImage } from '../models/image';
+import { ExerciseImage, ImageStyle } from '../models/image';
 import { ImageFormData } from '../models/exercise';
 import { FormQueryErrorsSnackbar } from 'components/Core/Widgets/FormError';
 
@@ -56,7 +56,7 @@ export const mapToImageFormData = (
             authorUrl: image.authorUrl || '',
             objectUrl: image.objectUrl || '',
             derivativeSourceUrl: image.derivativeSourceUrl || '',
-            style: image.style?.toString() || '1', // Default to Photo
+            style: image.style || ImageStyle.PHOTO, // Default to Photo
         };
     }
 
@@ -69,7 +69,7 @@ export const mapToImageFormData = (
         authorUrl: '',
         objectUrl: '',
         derivativeSourceUrl: '',
-        style: '1',
+        style: ImageStyle.PHOTO,
     };
 };
 
@@ -153,7 +153,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
             authorUrl: image.authorUrl || '',
             objectUrl: image.objectUrl || '',
             derivativeSourceUrl: image.derivativeSourceUrl || '',
-            style: image.style?.toString() || '1',
+            style: image.style || ImageStyle.PHOTO,
         });
         setEditingImageId(image.id);
         setOpenModal(true);

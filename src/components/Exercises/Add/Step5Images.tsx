@@ -54,7 +54,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
             title: "",
             derivativeSourceUrl: "",
             objectUrl: "",
-            style: ImageStyle.PHOTO.toString()
+            style: ImageStyle.PHOTO
         });
         setOpenModal(true);
     };

@@ -8,9 +8,7 @@ import { LicenseTitle } from "components/Common/forms/LicenseTitle";
 import { Form, Formik } from "formik";
 import { ImageStyleToggle } from "./ImageStyle";
 import { useTranslation } from "react-i18next";
-import { useProfileQuery } from "components/User/queries/profile";
 import { ImageFormData } from "../models/exercise";
-import { ImageStyle } from "../models/image";
 
 interface ImageFormModalProps {
     open: boolean;
@@ -43,7 +41,6 @@ export const ImageFormModal = ({
     submitLabel 
 }: ImageFormModalProps) => {
     const { t } = useTranslation();
-    const profileQuery = useProfileQuery();
 
     // If no image is provided, don't render or show a loader
     if (!image) return null;

@@ -33,12 +33,12 @@ export class ExerciseImageAdapter implements Adapter<ExerciseImage> {
             item.uuid,
             item.image,
             item.is_main,
-            item.license_title ?? '',
-            item.license_author ?? '',
-            item.license_author_url ?? '',
-            item.license_object_url ?? '',
-            item.license_derivative_source_url ?? '',
-            item.style ? Number(item.style) : undefined
+            item.license_title,
+            item.license_author,
+            item.license_author_url,
+            item.license_object_url,
+            item.license_derivative_source_url,
+            item.style,
         );
     }
 

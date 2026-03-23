@@ -17,8 +17,8 @@ export function ImageStyleToggle(props: { fieldName: string }) {
     const [field, , helpers] = useField(props.fieldName);
     const selectedStyle = (field.value !== undefined && field.value !== null && field.value !== '')
         ? Number(field.value)
-        : ImageStyle.PHOTO;
-    const [style, setStyle] = React.useState<number | null>(selectedStyle);
+        : undefined;
+    const [style, setStyle] = React.useState<number | undefined>(selectedStyle);
 
     const handleAlignment = (
         event: React.MouseEvent<HTMLElement>,
