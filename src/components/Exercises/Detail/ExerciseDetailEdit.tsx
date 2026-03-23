@@ -19,7 +19,9 @@ import {
 import { Language } from "components/Exercises/models/language";
 import { Translation } from "components/Exercises/models/translation";
 import {
+    useAddExerciseImageQuery,
     useAddTranslationQuery,
+    useEditExerciseImageQuery,
     useEditTranslationQuery,
     useExerciseQuery,
     useMusclesQuery
@@ -33,6 +35,43 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { deleteAlias, postAlias } from "services";
 import * as yup from "yup";
+import { ImageFormModal } from '../forms/ImageModal';
+import { ExerciseImage } from '../models/image';
+import { ImageFormData } from '../models/exercise';
+import { FormQueryErrorsSnackbar } from 'components/Core/Widgets/FormError';
+
+export const mapToImageFormData = (
+    image: ExerciseImage | File | null
+): ImageFormData | null => {
+    if (!image) return null;
+
+    // Case 1: Editing an existing ExerciseImage
+    if (image instanceof ExerciseImage) {
+        // Get the image/file from url
+        return {
+            url: image.url,
+            file: undefined,
+            title: image.title || '',
+            author: image.author || '',
+            authorUrl: image.authorUrl || '',
+            objectUrl: image.objectUrl || '',
+            derivativeSourceUrl: image.derivativeSourceUrl || '',
+            style: image.style?.toString() || '1', // Default to Photo
+        };
+    }
+
+    // Case 2: Adding a new File
+    return {
+        url: URL.createObjectURL(image),
+        file: image,
+        title: '',
+        author: '', 
+        authorUrl: '',
+        objectUrl: '',
+        derivativeSourceUrl: '',
+        style: '1',
+    };
+};
 
 export interface ViewProps {
     exerciseId: number;
@@ -58,6 +97,14 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
     const profileQuery = useProfileQuery();
 
     const exercise = exerciseQuery.data!;
+    
+    const [openModal, setOpenModal] = React.useState(false);
+    const [imageGuardError, setImageGuardError] = useState<string | null>(null);
+
+    const [selectedImage, setSelectedImage] = useState<ImageFormData | null>(null);
+    const [editingImageId, setEditingImageId] = useState<number | null>(null);
+
+    const editImageMutation = useEditExerciseImageQuery(exerciseId);
 
     useEffect(() => {
         if (exerciseQuery.data !== undefined) {
@@ -94,6 +141,42 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
         alternativeNames: alternativeNameValidator(),
         description: descriptionValidator()
     });
+
+    // Called when clicking "Edit" on an existing card
+    // Inside handleEditClick in ExerciseDetailEdit.tsx
+    const handleEditClick = (image: ExerciseImage) => {
+        setSelectedImage({
+            url: image.url,
+            file: undefined,
+            title: image.title || '',
+            author: image.author || '',
+            authorUrl: image.authorUrl || '',
+            objectUrl: image.objectUrl || '',
+            derivativeSourceUrl: image.derivativeSourceUrl || '',
+            style: image.style?.toString() || '1',
+        });
+        setEditingImageId(image.id);
+        setOpenModal(true);
+        setImageGuardError(null);
+    };
+
+    const handleSaveImage = async (values: ImageFormData) => {
+        if (!editingImageId) {
+            setImageGuardError('Could not edit image: missing image id.');
+            return;
+        }
+
+        await editImageMutation.mutateAsync({
+            imageId: editingImageId,
+            image: values.file, // This will be undefined if they didn't pick a new file
+            imageData: values
+        });
+        
+        setOpenModal(false);
+        setEditingImageId(null);
+        setSelectedImage(null);
+        setImageGuardError(null);
+    };
 
     return <>
         <Formik
@@ -284,6 +367,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                         exerciseId={exercise.id!}
                         image={img}
                         canDelete={deleteImagePermissionQuery.data!}
+                        onEdit={handleEditClick}
                     />
                 </Grid>
             ))}
@@ -352,5 +436,26 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                 </Grid>
             </>
         }
+
+        <ImageFormModal 
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            image={selectedImage}
+            onSubmit={handleSaveImage}
+            submitLabel={t('save')}
+        />
+
+        {editImageMutation.isError && (
+            <FormQueryErrorsSnackbar mutationQuery={editImageMutation} />
+        )}
+
+        {imageGuardError && (
+            <FormQueryErrorsSnackbar
+                mutationQuery={{
+                isError: true,
+                error: { message: imageGuardError, response: { data: null } }
+                }}
+            />
+        )}
     </>;
 };

@@ -11,9 +11,10 @@ type ImageCardProps = {
     exerciseId: number;
     image: ExerciseImage;
     canDelete: boolean
+    onEdit: (image: ExerciseImage) => void; 
 };
 
-export const ImageEditCard = ({ exerciseId, image, canDelete }: ImageCardProps) => {
+export const ImageEditCard = ({ exerciseId, image, canDelete, onEdit }: ImageCardProps) => {
     const [t] = useTranslation();
     const deleteImageQuery = useDeleteExerciseImageQuery(exerciseId);
 
@@ -24,7 +25,7 @@ export const ImageEditCard = ({ exerciseId, image, canDelete }: ImageCardProps) 
             sx={{ height: 120 }}
             alt=""
         />
-        <CardActions>
+        <CardActions style={{justifyContent: 'space-between'}}>
             {canDelete &&
                 <Button
                     color="primary"
@@ -32,6 +33,15 @@ export const ImageEditCard = ({ exerciseId, image, canDelete }: ImageCardProps) 
                 >
                     {t('delete')}
                 </Button>}
+            {canDelete && 
+                <Button
+                    color="primary"
+                    onClick={() => onEdit(image)}
+                    data-testid={`edit-image-${image.id}`}
+                >
+                    {t('edit')}
+                </Button>
+            }
         </CardActions>
     </Card>;
 };

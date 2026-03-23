@@ -9,7 +9,7 @@ import {
     postExerciseImage,
 } from "services";
 import { AddTranslationParams, EditTranslationParams } from "services/exerciseTranslation";
-import { deleteExerciseImage, PostExerciseImageParams } from "services/image";
+import { deleteExerciseImage, PostExerciseImageParams, patchExerciseImage, PatchExerciseImageParams } from "services/image";
 import { deleteExerciseVideo, postExerciseVideo, PostExerciseVideoParams } from "services/video";
 import { QueryKey } from "utils/consts";
 
@@ -61,6 +61,19 @@ export function useAddExerciseImageQuery(exerciseId: number) {
             queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
         },
     });
+}
+
+export function useEditExerciseImageQuery(exerciseId: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: PatchExerciseImageParams) => patchExerciseImage(data),
+    onSuccess: () => {
+      // Invalidate the cache so the UI shows the updated title/author immediately
+      queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+      queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+    }
+  });
 }
 
 /**

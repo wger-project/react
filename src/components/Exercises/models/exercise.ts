@@ -160,7 +160,7 @@ export class ExerciseAdapter implements Adapter<Exercise> {
 
 export type ImageFormData = {
     url: string;
-    file: File;
+    file?: File;    // When editing an existing image, this is undefined
     author: string;
     authorUrl: string;
     title: string,
