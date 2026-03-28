@@ -48,7 +48,7 @@
     "react-slick": "^0.31.0",
     "recharts": "^3.8.0",
     "slick-carousel": "^1.8.1",
-    "slug": "^9.1.0",
+    "slug": "^11.0.1",
     "typescript": "^5.9.3",
     "web-vitals": "^5.1.0",
     "yup": "^1.7.1"
@@ -117,6 +117,19 @@
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
     },
     "preset": "ts-jest",
+    "transform": {
+      "^.+\\.(ts|tsx|js|jsx)$": [
+        "ts-jest",
+        {
+          "tsconfig": {
+            "allowJs": true
+          }
+        }
+      ]
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!slug/)"
+    ],
     "testEnvironment": "jest-environment-jsdom",
     "modulePaths": [
       "<rootDir>/src"
