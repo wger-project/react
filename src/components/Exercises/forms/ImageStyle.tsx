@@ -14,17 +14,21 @@ import { useTranslation } from "react-i18next";
 export function ImageStyleToggle(props: { fieldName: string }) {
     const [t] = useTranslation();
 
-    const [style, setStyle] = React.useState<number | null>(ImageStyle.PHOTO);
-
-    const [, , helpers] = useField(props.fieldName);
-
+    const [field, , helpers] = useField(props.fieldName);
+    const selectedStyle = (field.value !== undefined && field.value !== null && field.value !== '')
+        ? Number(field.value)
+        : undefined;
+    const [style, setStyle] = React.useState<number | undefined>(selectedStyle);
 
     const handleAlignment = (
         event: React.MouseEvent<HTMLElement>,
         newStyle: number | null,
     ) => {
-        setStyle(newStyle);
+        if (newStyle === null) {
+          return;
+        }
         helpers.setValue(newStyle);
+        setStyle(newStyle);
     };
 
     return (

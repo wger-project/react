@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ExerciseImage } from "components/Exercises/models/image";
+import { ExerciseImage, ImageStyle } from "components/Exercises/models/image";
 import { postExerciseImage } from "services";
 import { deleteExerciseImage } from "services/image";
 
@@ -19,13 +19,24 @@ describe("Image service API tests", () => {
             "image": "https://wger.de/media/exercise-images/1070/004bb79f-36bf-4c48-8c00-d863d724717c.jpg",
             "is_main": true,
             "status": "1",
-            "style": "4"
+            "style": ImageStyle.THREE_D,
+            "license_title": "image",
+            "license_object_url": "https://object-url.com",
+            "license_author": "Test user",
+            "license_author_url": "https://author-url.com",
+            "license_derivative_source_url": "https://derivative-source-url.com"
         };
         const image = new ExerciseImage(
             1,
             "004bb79f-36bf-4c48-8c00-d863d724717c",
             "https://wger.de/media/exercise-images/1070/004bb79f-36bf-4c48-8c00-d863d724717c.jpg",
-            true
+            true, 
+            "image",
+            "Test user",
+            "https://author-url.com",
+            "https://object-url.com",
+            "https://derivative-source-url.com",
+            ImageStyle.THREE_D
         );
 
         (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
@@ -43,7 +54,7 @@ describe("Image service API tests", () => {
                     title: "top title",
                     objectUrl: "",
                     derivativeSourceUrl: "",
-                    style: "3d",
+                    style: ImageStyle.THREE_D,
                 }
             }
         );
