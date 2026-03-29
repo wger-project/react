@@ -69,4 +69,21 @@ describe('SlotDetails Component', () => {
         expect(screen.getByTestId('rest-field')).toBeInTheDocument();
         expect(screen.getByTestId('max-rest-field')).toBeInTheDocument();
     });
+
+    test('hides edit/delete icons and exercise name when isGrouped', () => {
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <SlotDetails slot={testSlot} routineId={1} simpleMode={true} isGrouped={true} />
+            </QueryClientProvider>
+        );
+
+        // Config fields should still render
+        expect(screen.getByTestId('sets-field')).toBeInTheDocument();
+        expect(screen.getByTestId('weight-field')).toBeInTheDocument();
+        expect(screen.getByTestId('reps-field')).toBeInTheDocument();
+
+        // Edit/delete icons and exercise name should be hidden
+        expect(screen.queryByTestId('EditIcon')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('DeleteOutlinedIcon')).not.toBeInTheDocument();
+    });
 });

@@ -31,6 +31,7 @@ describe("SlotHeader component", () => {
         dragHandleProps: null,
         routineId: 1,
         onDelete: jest.fn(),
+        onDuplicate: jest.fn(),
         onAddSuperset: jest.fn(),
         addSupersetIsPending: false,
     };
@@ -87,5 +88,18 @@ describe("SlotHeader component", () => {
         await userEvent.click(screen.getByText('routines.addSuperset'));
 
         expect(onAddSuperset).toHaveBeenCalledWith(testDayLegs.slots[0].id);
+    });
+
+    // grouped mode
+    test('renders "Set N" label when grouped', () => {
+        renderComponent({ groupSize: 3, indexInGroup: 1 });
+        expect(screen.getByText('routines.setNr')).toBeInTheDocument();
+        expect(screen.queryByText('routines.exerciseNr')).not.toBeInTheDocument();
+    });
+
+    test('does not render add superset or add set buttons when grouped', () => {
+        renderComponent({ groupSize: 3, indexInGroup: 0 });
+        expect(screen.queryByText('routines.addSuperset')).not.toBeInTheDocument();
+        expect(screen.queryByText('routines.addSet')).not.toBeInTheDocument();
     });
 });

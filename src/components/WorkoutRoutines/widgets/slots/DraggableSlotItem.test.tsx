@@ -19,6 +19,7 @@ describe("DraggableSlotItem component", () => {
         simpleMode: true,
         showAutocompleter: false,
         onDelete: jest.fn(),
+        onDuplicate: jest.fn(),
         onAddSuperset: jest.fn(),
         addSupersetIsPending: false,
         onExerciseSelected: jest.fn(),
