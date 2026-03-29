@@ -255,7 +255,9 @@
             "edt": "Treinamento de densidade crescente",
             "rft": "Rodadas por tempo",
             "afap": "O mais rápido possível"
-        }
+        },
+        "addSet": "Adicionar uma série",
+        "setNr": "Defina número de séries {{number}}"
     },
     "measurements": {
         "measurements": "Medidas",
