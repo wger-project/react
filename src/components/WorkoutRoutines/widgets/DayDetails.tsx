@@ -1,12 +1,14 @@
 import { DragDropContext, Draggable, DraggableStyle, Droppable, DropResult } from "@hello-pangea/dnd";
 import AddIcon from "@mui/icons-material/Add";
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import {
     Alert,
     AlertTitle,
     Box,
     Button,
+    ButtonGroup,
     FormControlLabel,
     Snackbar,
     SnackbarCloseReason,
@@ -14,6 +16,8 @@ import {
     Switch,
     Tab,
     Tabs,
+    Typography,
+    useTheme,
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { LoadingPlaceholder, LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
@@ -202,6 +206,82 @@ const useSlotDeletion = (day: Day, routineId: number) => {
 };
 
 
+type SlotGroup = {
+    exerciseId: number | null,
+    exerciseName: string | null,
+    slots: { slot: Slot, originalIndex: number }[],
+};
+
+export const groupSlotsByExercise = (slots: Slot[]): SlotGroup[] => {
+    const groups: SlotGroup[] = [];
+
+    for (let i = 0; i < slots.length; i++) {
+        const slot = slots[i];
+        const primaryEntry = slot.entries.length === 1 ? slot.entries[0] : null;
+        const exerciseId = primaryEntry?.exerciseId ?? null;
+
+        const lastGroup = groups[groups.length - 1];
+        if (lastGroup && exerciseId !== null && lastGroup.exerciseId === exerciseId) {
+            lastGroup.slots.push({ slot, originalIndex: i });
+        } else {
+            groups.push({
+                exerciseId,
+                exerciseName: primaryEntry?.exercise?.getTranslation()?.name ?? null,
+                slots: [{ slot, originalIndex: i }],
+            });
+        }
+    }
+
+    return groups;
+};
+
+
+const SlotGroupContainer = (props: {
+    group: SlotGroup,
+    routineId: number,
+    onDuplicate: (slotId: number) => void,
+    children: React.ReactNode,
+}) => {
+    const theme = useTheme();
+    const [t] = useTranslation();
+
+    if (props.group.slots.length <= 1) {
+        return <>{props.children}</>;
+    }
+
+    const lastSlot = props.group.slots[props.group.slots.length - 1].slot;
+
+    return (
+        <Box sx={{
+            border: `1px solid ${theme.palette.grey[300]}`,
+            backgroundColor: "white",
+            marginBottom: 1,
+            padding: 1,
+        }}>
+            <Grid container justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+                <Grid>
+                    <Typography variant={"h6"}>
+                        {props.group.exerciseName}
+                    </Typography>
+                </Grid>
+                <Grid>
+                    <ButtonGroup variant="outlined">
+                        <Button
+                            onClick={() => props.onDuplicate(lastSlot.id!)}
+                            size={"small"}
+                            startIcon={<ContentCopyIcon />}
+                        >
+                            {t('routines.addSet')}
+                        </Button>
+                    </ButtonGroup>
+                </Grid>
+            </Grid>
+            {props.children}
+        </Box>
+    );
+};
+
+
 export const DayDetails = (props: {
     day: Day,
     routineId: number,
@@ -230,6 +310,41 @@ export const DayDetails = (props: {
         } else {
             setShowAutocompleterForSlot(slotId);
         }
+    };
+
+    const handleDuplicateSlot = async (slotId: number) => {
+        const sourceIndex = props.day.slots.findIndex(s => s.id === slotId);
+        const sourceSlot = props.day.slots[sourceIndex];
+        if (!sourceSlot || sourceSlot.entries.length === 0) {
+            return;
+        }
+
+        // Use array index for ordering (1-based), insert after source
+        const insertOrder = sourceIndex + 2;
+
+        // First, bump the order of all slots after the source (wait for completion)
+        const slotsToUpdate = props.day.slots
+            .slice(sourceIndex + 1)
+            .map((s, i) => Slot.clone(s, { order: insertOrder + 1 + i }));
+        if (slotsToUpdate.length > 0) {
+            await editSlotOrderQuery.mutateAsync(slotsToUpdate);
+        }
+
+        // Then create the new slot at the correct position
+        const entry = sourceSlot.entries[0];
+        const newSlot = await addSlotQuery.mutateAsync(new Slot({
+            dayId: props.day.id!,
+            order: insertOrder,
+        }));
+
+        // Finally add the exercise entry
+        await addSlotEntryQuery.mutateAsync(new SlotEntry({
+            slotId: newSlot.id!,
+            exerciseId: entry.exerciseId,
+            type: 'normal',
+            order: 1,
+            weightUnitId: entry.weightUnitId,
+        }));
     };
 
     const handleAddSlot = () => addSlotQuery.mutate(new Slot({
@@ -279,28 +394,36 @@ export const DayDetails = (props: {
                         ref={provided.innerRef}
                         style={getListStyle(snapshot.isDraggingOver)}
                     >
-                        {props.day.slots.map((slot, index) =>
-                            <DraggableSlotItem
-                                key={slot.id}
-                                slot={slot}
-                                index={index}
-                                routineId={props.routineId}
-                                simpleMode={simpleMode}
-                                showAutocompleter={showAutocompleterForSlot === slot.id || slot.entries.length === 0}
-                                onDelete={handleDeleteSlot}
-                                onAddSuperset={handleAddSlotEntry}
-                                addSupersetIsPending={addSlotEntryQuery.isPending}
-                                onExerciseSelected={(exercise) => {
-                                    addSlotEntryQuery.mutate(new SlotEntry({
-                                        slotId: slot.id!,
-                                        exerciseId: exercise.id!,
-                                        type: 'normal',
-                                        order: slot.entries.length + 1,
-                                        weightUnitId: userProfileQuery.data!.useMetric ? WEIGHT_UNIT_KG : WEIGHT_UNIT_LB,
-                                    }));
-                                    setShowAutocompleterForSlot(null);
-                                }}
-                            />
+                        {groupSlotsByExercise(props.day.slots).map((group) =>
+                            <SlotGroupContainer key={group.slots[0].slot.id} group={group} routineId={props.routineId}
+                                                onDuplicate={handleDuplicateSlot}>
+                                {group.slots.map(({ slot, originalIndex }, indexInGroup) =>
+                                    <DraggableSlotItem
+                                        key={slot.id}
+                                        slot={slot}
+                                        index={originalIndex}
+                                        routineId={props.routineId}
+                                        simpleMode={simpleMode}
+                                        showAutocompleter={showAutocompleterForSlot === slot.id || slot.entries.length === 0}
+                                        onDelete={handleDeleteSlot}
+                                        onDuplicate={handleDuplicateSlot}
+                                        onAddSuperset={handleAddSlotEntry}
+                                        addSupersetIsPending={addSlotEntryQuery.isPending}
+                                        groupSize={group.slots.length}
+                                        indexInGroup={indexInGroup}
+                                        onExerciseSelected={(exercise) => {
+                                            addSlotEntryQuery.mutate(new SlotEntry({
+                                                slotId: slot.id!,
+                                                exerciseId: exercise.id!,
+                                                type: 'normal',
+                                                order: slot.entries.length + 1,
+                                                weightUnitId: userProfileQuery.data!.useMetric ? WEIGHT_UNIT_KG : WEIGHT_UNIT_LB,
+                                            }));
+                                            setShowAutocompleterForSlot(null);
+                                        }}
+                                    />
+                                )}
+                            </SlotGroupContainer>
                         )}
                         {provided.placeholder}
                     </div>

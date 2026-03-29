@@ -2,15 +2,107 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { Day } from "components/WorkoutRoutines/models/Day";
-import { DayDetails, DayDragAndDropGrid } from "components/WorkoutRoutines/widgets/DayDetails";
+import { Slot } from "components/WorkoutRoutines/models/Slot";
+import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
+import { DayDetails, DayDragAndDropGrid, groupSlotsByExercise } from "components/WorkoutRoutines/widgets/DayDetails";
 import React from 'react';
 import { MemoryRouter } from "react-router-dom";
-import { addDay, getLanguages, getProfile, getRoutine } from "services";
+import { addDay, addSlot, getLanguages, getProfile, getRoutine } from "services";
+import { addSlotEntry } from "services/slot_entry";
 import { getTestQueryClient } from "tests/queryClient";
 import { testProfileDataVerified } from "tests/userTestdata";
 import { testDayLegs, testRoutine1 } from "tests/workoutRoutinesTestData";
 
 jest.mock("services");
+jest.mock("services/slot_entry");
+
+const makeSlot = (id: number, exerciseId: number) => new Slot({
+    id, dayId: 1, order: id, comment: '', config: null,
+    entries: [
+        new SlotEntry({
+            id, slotId: id, exerciseId,
+            repetitionUnitId: 1, repetitionRounding: 1,
+            weightUnitId: 1, weightRounding: 1,
+            order: 1, comment: '', type: 'normal', config: null,
+        })
+    ]
+});
+
+const makeEmptySlot = (id: number) => new Slot({
+    id, dayId: 1, order: id, comment: '', config: null, entries: []
+});
+
+const makeSupersetSlot = (id: number, exerciseIds: number[]) => new Slot({
+    id, dayId: 1, order: id, comment: '', config: null,
+    entries: exerciseIds.map((exId, i) => new SlotEntry({
+        id: id * 100 + i, slotId: id, exerciseId: exId,
+        repetitionUnitId: 1, repetitionRounding: 1,
+        weightUnitId: 1, weightRounding: 1,
+        order: i + 1, comment: '', type: 'normal', config: null,
+    }))
+});
+
+describe("groupSlotsByExercise", () => {
+
+    test('groups consecutive slots with the same exercise', () => {
+        const slots = [makeSlot(1, 10), makeSlot(2, 10), makeSlot(3, 10)];
+        const groups = groupSlotsByExercise(slots);
+
+        expect(groups).toHaveLength(1);
+        expect(groups[0].exerciseId).toBe(10);
+        expect(groups[0].slots).toHaveLength(3);
+    });
+
+    test('does not group non-consecutive slots with the same exercise', () => {
+        const slots = [makeSlot(1, 10), makeSlot(2, 20), makeSlot(3, 10)];
+        const groups = groupSlotsByExercise(slots);
+
+        expect(groups).toHaveLength(3);
+        expect(groups[0].exerciseId).toBe(10);
+        expect(groups[1].exerciseId).toBe(20);
+        expect(groups[2].exerciseId).toBe(10);
+    });
+
+    test('does not group superset slots (multiple entries)', () => {
+        const slots = [makeSupersetSlot(1, [10, 20]), makeSlot(2, 10)];
+        const groups = groupSlotsByExercise(slots);
+
+        expect(groups).toHaveLength(2);
+        expect(groups[0].slots).toHaveLength(1);
+        expect(groups[1].slots).toHaveLength(1);
+    });
+
+    test('does not group empty slots', () => {
+        const slots = [makeEmptySlot(1), makeEmptySlot(2)];
+        const groups = groupSlotsByExercise(slots);
+
+        expect(groups).toHaveLength(2);
+    });
+
+    test('handles mixed slots correctly', () => {
+        const slots = [
+            makeSlot(1, 10),
+            makeSlot(2, 10),
+            makeSupersetSlot(3, [10, 20]),
+            makeSlot(4, 30),
+            makeSlot(5, 30),
+        ];
+        const groups = groupSlotsByExercise(slots);
+
+        expect(groups).toHaveLength(3);
+        expect(groups[0].slots).toHaveLength(2);  // 2x exercise 10
+        expect(groups[1].slots).toHaveLength(1);  // superset
+        expect(groups[2].slots).toHaveLength(2);  // 2x exercise 30
+    });
+
+    test('preserves original indices', () => {
+        const slots = [makeSlot(1, 10), makeSlot(2, 20), makeSlot(3, 20)];
+        const groups = groupSlotsByExercise(slots);
+
+        expect(groups[1].slots[0].originalIndex).toBe(1);
+        expect(groups[1].slots[1].originalIndex).toBe(2);
+    });
+});
 
 describe("Test the DayDragAndDropGrid component", () => {
     let user: ReturnType<typeof userEvent.setup>;
@@ -140,5 +232,34 @@ describe("DayDetails component", () => {
         // Snackbar should appear
         expect(screen.getByText('Set successfully deleted')).toBeInTheDocument();
         expect(screen.getByText('undo')).toBeInTheDocument();
+    });
+
+    // handleDuplicateSlot
+    test('duplicate inserts new slot after source with correct order and exerciseId', async () => {
+        const user = userEvent.setup();
+
+        const mockAddSlot = addSlot as jest.Mock;
+        mockAddSlot.mockResolvedValue(new Slot({ id: 999, dayId: 5, order: 2 }));
+        (addSlotEntry as jest.Mock).mockResolvedValue({});
+
+        renderComponent(testDayLegs);
+
+        // Click "Add set" on the first slot
+        const addSetButtons = screen.getAllByText('routines.addSet');
+        await user.click(addSetButtons[0]);
+
+        // New slot should be created with order = sourceIndex + 2 (1-based, after source)
+        await waitFor(() => {
+            expect(mockAddSlot).toHaveBeenCalledWith(
+                expect.objectContaining({ order: 2 })
+            );
+        });
+
+        // SlotEntry should be created with the same exerciseId as the source
+        await waitFor(() => {
+            expect(addSlotEntry).toHaveBeenCalledWith(
+                expect.objectContaining({ exerciseId: testDayLegs.slots[0].entries[0].exerciseId })
+            );
+        });
     });
 });
