@@ -134,6 +134,9 @@
     "modulePaths": [
       "<rootDir>/src"
     ],
+    "roots": [
+      "<rootDir>/src"
+    ],
     "setupFilesAfterEnv": [
       "./src/setupTests.ts"
     ]
