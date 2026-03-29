@@ -243,7 +243,7 @@ const SlotGroupContainer = (props: {
     children: React.ReactNode,
 }) => {
     const theme = useTheme();
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     if (props.group.slots.length <= 1) {
         return <>{props.children}</>;
