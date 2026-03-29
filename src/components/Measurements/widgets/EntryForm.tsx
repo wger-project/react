@@ -1,5 +1,5 @@
 import { Button, Stack, TextField } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
 import { MeasurementEntry } from "components/Measurements/models/Entry";
@@ -86,10 +86,10 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                         {categoryQuery.isLoading
                             ? <LoadingPlaceholder />
                             : <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                                <DatePicker
-                                    format="yyyy-MM-dd"
+                                <DateTimePicker
                                     label={t('date')}
                                     value={dateValue}
+                                    slotProps={{ textField: { variant: 'outlined' } }}
                                     disableFuture={true}
                                     onChange={(newValue) => {
                                         if (newValue) {
