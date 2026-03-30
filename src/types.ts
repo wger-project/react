@@ -102,10 +102,9 @@ export type ApiIngredientImageType = {
 
 export type ApiIngredientWeightUnitType = {
     id: number,
-    amount: string,
     ingredient: number,
     gram: number,
-    unit: number
+    name: string,
 }
 
 export interface ApiNutritionalPlanType {

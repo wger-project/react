@@ -1,6 +1,7 @@
 import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
 import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
+import i18n from "i18n";
 import { Adapter } from "utils/Adapter";
 
 export interface ApiNutritionDiaryType {
@@ -60,7 +61,10 @@ export class DiaryEntry {
     }
 
     get amountString(): string {
-        return this.amount.toFixed().toString() + (this.weightUnitId !== null ? ` ${this.weightUnit?.name}` : 'g');
+        if (this.weightUnit) {
+            return `${this.amount.toFixed()} × ${this.weightUnit.name}`;
+        }
+        return i18n.t('common:nutrition.valueGram', { value: this.amount.toFixed() });
     }
 
     get nutritionalValues() {

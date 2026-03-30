@@ -55,7 +55,10 @@ export class MealItem {
     }
 
     get amountString(): string {
-        return this.amount.toFixed().toString() + (this.weightUnitId !== null ? ` ${this.weightUnit?.name}` : 'g');
+        if (this.weightUnit) {
+            return `${this.amount.toFixed()} × ${this.weightUnit.name}`;
+        }
+        return `${this.amount.toFixed()}g`;
     }
 
     get nutritionalValues() {

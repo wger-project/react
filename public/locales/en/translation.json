@@ -128,6 +128,7 @@
     "addMealItem": "Add ingredient to meal",
     "nutritionalDiary": "Nutrition diary",
     "gramShort": "g",
+    "valueGram": "{{value}}g",
     "kcal": "kcal",
     "valueEnergyKcal": "{{value}} kcal",
     "valueEnergyKcalKj": "{{kcal}} kcal / {{kj}} kJ",
