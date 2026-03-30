@@ -257,7 +257,7 @@
             "afap": "O mais rápido possível"
         },
         "addSet": "Adicionar uma série",
-        "setNr": "Defina número de séries {{number}}"
+        "setNr": "Série {{number}}"
     },
     "measurements": {
         "measurements": "Medidas",
