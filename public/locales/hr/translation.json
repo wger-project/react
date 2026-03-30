@@ -235,7 +235,9 @@
         "templatesHelpText": "Predlošci su način spremanja tvoje rutine za kasniju upotrebu i kao polazna točka za nove rutine. Predlošci se ne mogu uređivati, ali se mogu duplicirati i izraditi promjene na kopiji (kao i naravno pretvoriti ih natrag u običnu rutinu).",
         "progressionNeedsReplace": "Jedan od prethodnih unosa mora imati operaciju zamjene",
         "operation": "Operacija",
-        "volume": "Ukupna težina"
+        "volume": "Ukupna težina",
+        "addSet": "Dodaj seriju",
+        "setNr": "Serija {{number}}"
     },
     "preferences": "Postavke",
     "notes": "Bilješke",
