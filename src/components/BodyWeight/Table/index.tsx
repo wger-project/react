@@ -32,13 +32,14 @@ export interface WeightTableProps {
 }
 
 export const WeightTable = ({ weights }: WeightTableProps) => {
-    console.log('WeightTable rendered with weights:', weights);
-    console.log('Processed weights:', processWeight(weights));
     const availableResultsPerPage = [10, 50, 100];
 
     const { t } = useTranslation();
 
-    const processedWeights = processWeight(weights);
+    const processedWeights = [...processWeight(weights)].reverse().map((row, idx, arr) => ({
+        ...row,
+        days: idx === 0 ? 0 : arr[idx - 1].days  // take days from the row above (newer)
+    }));
     const [rowsPerPage, setRowsPerPage] = useState(availableResultsPerPage[0]);
     const [page, setPage] = useState(0);
 
