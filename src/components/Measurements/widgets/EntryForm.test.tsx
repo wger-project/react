@@ -88,7 +88,7 @@ describe("Test the EntryForm component", () => {
     test('Creating a new entry', async () => {
         // Arrange
         const fakeNow = new Date(2023, 5, 18, 14, 30);
-        jest.useFakeTimers({ now: fakeNow });
+        jest.useFakeTimers({ now: fakeNow.getTime() });
         const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
 
         // Act
