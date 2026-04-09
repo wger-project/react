@@ -215,7 +215,7 @@
         "replacements": "Substituições",
         "imageStylePhoto": "Foto",
         "replacementsSearch": "Procure por um exercício ou copie e cole um ID conhecido no campo e clique no botão \"carregar\".",
-        "noReplacementSelected": " ‐Nenhum exercício selecionado para substituição",
+        "noReplacementSelected": " Nenhum exercício selecionado para substituição",
         "imageStyle3D": "3D",
         "imageStyleLine": "Linha",
         "imageStyleLowPoly": "Polia Baixa",
@@ -255,7 +255,7 @@
         "originalTitle": "Título",
         "derivativeSourceUrl": "Link para o conteúdo original, se isso é um trabalho derivativo",
         "originalObjectUrl": "Link ao website de origem, se disponível",
-        "derivativeSourceUrlHelper": "Observe que um trabalho derivativo é um em que não é somente baseado em um trabalho anterior, mas que também contém suficientemente novos, conteúdos criativos para dar títulos aos próprios copyright."
+        "derivativeSourceUrlHelper": "Observe que um trabalho derivado é aquele que não se baseia apenas em um trabalho anterior, mas que também contém conteúdo novo e criativo suficiente para ter direito aos seus próprios direitos autorais."
     },
     "filters": "Filtros",
     "nothingHereYet": "Nada por aqui ainda...",
