@@ -22,7 +22,7 @@ describe("test the NutritionCard component", () => {
             }));
 
 
-            jest.setSystemTime(new Date('2023-09-01'));
+            jest.setSystemTime(new Date('2023-09-01').getTime());
 
             // @ts-ignore
             delete window.ResizeObserver;
