@@ -261,10 +261,16 @@
     "end": "Koniec",
     "dashboard": {
         "customizeDashboard": "Personalizuj dashboard",
-        "resetLayout": "Reset do domyślnego wyglądu"
+        "resetLayout": "Reset do domyślnego wyglądu",
+        "dragWidgetsHelp": "Przeciągnij widgety aby zmienić ich położenie, lub zmienić rozmiar używając dolnego-prawego rogu."
     },
     "core": {
         "exitEditMode": "Zakończ edytowanie",
         "customize": "Dostosuj"
-    }
+    },
+    "trophies": {
+        "trophies": "Trofea"
+    },
+    "private": "Prywatny",
+    "public": "Publiczny"
 }

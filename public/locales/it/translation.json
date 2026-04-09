@@ -334,5 +334,11 @@
     "undo": "Annulla",
     "successfullyDeleted": "Eliminato con successo",
     "private": "Privato",
-    "public": "Pubblico"
+    "public": "Pubblico",
+    "core": {
+        "customize": "Personalizza"
+    },
+    "dashboard": {
+        "resetLayout": "Ripristina la disposizione predefinita"
+    }
 }

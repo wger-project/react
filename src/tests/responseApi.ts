@@ -38,7 +38,13 @@ const image = new ExerciseImage(
     7,
     "2fe5f04b-5c9d-448c-a973-3fad6ddd4f74",
     "http://localhost:8000/media/exercise-images/9/2fe5f04b-5c9d-448c-a973-3fad6ddd4f74.jpg",
-    true
+    true, 
+    "image",
+    "Test user",
+    "https://author-url.com",
+    "https://object-url.com",
+    "https://derivative-source-url.com",
+    4
 );
 
 export const testApiExercise1 = new Exercise({
@@ -129,7 +135,12 @@ export const responseApiExerciseInfo = {
             "image": "http://localhost:8000/media/exercise-images/9/2fe5f04b-5c9d-448c-a973-3fad6ddd4f74.jpg",
             "is_main": true,
             "status": "2",
-            "style": "4"
+            "style": 4,
+            "license_title": "image",
+            "license_object_url": "https://object-url.com",
+            "license_author": "Test user",
+            "license_author_url": "https://author-url.com",
+            "license_derivative_source_url": "https://derivative-source-url.com"
         }],
         "videos": [
             {

@@ -11,17 +11,17 @@
     "exercises": {
         "alsoKnownAs": "Poznata i kao:",
         "category": "Kategorija",
-        "contributeExercise": "Doprinesi vježbu",
+        "contributeExercise": "Dodaj vježbu",
         "description": "Opis",
         "equipment": "Oprema",
         "exercises": "Vježbe",
         "missingExercise": "Nedostaje određena vježba?",
         "missingExerciseDescription": "Pomogni zajednici svojim doprinosom!",
         "muscles": "Mišići",
-        "noEquipment": "Nema opreme",
+        "noEquipment": "Bez opreme",
         "notes": "Bilješke",
         "primaryMuscles": "Primarni mišići",
-        "searchExerciseName": "Traži po imenu vježbe",
+        "searchExerciseName": "Traži prema imenu vježbe",
         "secondaryMuscles": "Sekundarni mišići",
         "deleteExerciseBody": "Želiš li izbrisati vježbu „{{name}}”? Možeš izbrisati trenutačni {{language}} prijevod ili cijelu vježbu sa svim prijevodima, slikama itd.",
         "deleteExerciseFull": "Izbriši cijelu vježbu",
@@ -235,7 +235,9 @@
         "templatesHelpText": "Predlošci su način spremanja tvoje rutine za kasniju upotrebu i kao polazna točka za nove rutine. Predlošci se ne mogu uređivati, ali se mogu duplicirati i izraditi promjene na kopiji (kao i naravno pretvoriti ih natrag u običnu rutinu).",
         "progressionNeedsReplace": "Jedan od prethodnih unosa mora imati operaciju zamjene",
         "operation": "Operacija",
-        "volume": "Ukupna težina"
+        "volume": "Ukupna težina",
+        "addSet": "Dodaj seriju",
+        "setNr": "Serija {{number}}"
     },
     "preferences": "Postavke",
     "notes": "Bilješke",
@@ -303,8 +305,8 @@
         "languageFilterCurrentOnly": "Samo u trenutačnom jeziku ({{lang}})",
         "languageFilterCurrentAndEnglish": "Trenutačni jezik ({{lang}}) i engleski",
         "languageFilterAll": "Svi jezici",
-        "filterVegan": "Vegan",
-        "filterVegetarian": "Vegetarijan"
+        "filterVegan": "Veganski",
+        "filterVegetarian": "Vegetarijanski"
     },
     "downloadAsPdf": "Preuzmi kao PDF",
     "total": "Ukupno",

@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { ExerciseDeleteDialog } from "components/Exercises/Detail/Head/ExerciseDeleteDialog";
 import React from 'react';
@@ -77,11 +77,11 @@ describe("Test the ExerciseDeleteDialog component", () => {
         renderWidget();
 
         const autocomplete = screen.getByTestId('autocomplete');
-        await user.click(autocomplete);
+        const input = within(autocomplete).getByRole('combobox');
 
         // Assert
         expect(searchExerciseTranslations).not.toHaveBeenCalled();
-        await user.type(autocomplete, 'Cru');
+        await user.type(input, 'Cru');
 
         expect(screen.getByText("exercises.noReplacementSelected")).toBeInTheDocument();
 

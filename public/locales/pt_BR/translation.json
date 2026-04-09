@@ -1,6 +1,6 @@
 {
     "routines": {
-        "rir": "RIR",
+        "rir": "RiR",
         "routine": "Rotina",
         "routines": "Rotinas",
         "addDay": "Adicionar dia de treinamento",
@@ -26,7 +26,7 @@
         "deleteDayConfirmation": "Isso removerá todas as séries, exercícios e regras de progressão",
         "routineHasNoDays": "A rotina não tem dias",
         "setHasNoExercises": "Esta série não tem exercícios",
-        "fitDaysInWeek": "Ajustar dias na semana",
+        "fitDaysInWeek": "Cronograma semanal fixo",
         "fitDaysInWeekHelpText": "Esta configuração controla como os dias da sua rotina são agendados ao longo de múltiplas semanas. Se ativada, os dias se repetirão em um ciclo semanal. Por exemplo, uma rotina com treinos na Segunda, Quarta e Sexta continuará este padrão nas segundas, quartas e sextas seguintes. Se desativada, os dias seguirão sequencialmente sem considerar o início de uma nova semana. Isso é útil para rotinas que não seguem um cronograma semanal rigoroso.",
         "needsLogsToAdvance": "Precisa de registros para avançar",
         "needsLogsToAdvanceHelpText": "Se você selecionar esta opção, a rotina somente progredirá para o próximo dia agendado se você tiver registrado um treino para o dia atual. Se esta opção não estiver selecionada, a rotina avançará automaticamente para o próximo dia, independentemente de você ter registrado um treino ou não.",
@@ -83,18 +83,21 @@
             "tut": "Tempo sob tensão",
             "iso": "Fixação isométrica",
             "jump": "Pular",
-            "myo": "MYO"
+            "myo": "MYO",
+            "warmup": "Aquecimento"
         },
         "day": {
             "custom": "Personalizado",
-            "enom": "ENOM - Cada minuto a minuto",
+            "enom": "EMOM - A cada minuto, no minuto",
             "amrap": "AMRAP - Tantas rodadas quanto possível",
             "hiit": "HIIT - Treinamento intervalado de alta intensidade",
             "edt": "EDT - Treinamento de densidade crescente",
             "rft": "RFT - Rodadas para ganhar tempo",
             "afap": "AFAP - O mais rápido possível",
             "tabata": "TABATA - tabata"
-        }
+        },
+        "addSet": "Adicionar série",
+        "setNr": "Série {{number}}"
     },
     "server": {
         "glutes": "Glúteos",
@@ -308,13 +311,18 @@
         "onlyLoggingHelpText": "Monitore apenas calorias. Marque a caixa se quiser apenas registrar suas calorias e não quiser montar um plano nutricional detalhado com refeições específicas",
         "useGoalsHelpTextLong": "Isto permite que você defina objetivos gerais para energia, proteína, carboidratos ou gorduras para o plano. Note que se você iniciar um plano alimentar detalhado, estes valores tem precedência.",
         "protein": "Proteína",
-        "meal": "Alimentação"
+        "meal": "Alimentação",
+        "languageFilterCurrentOnly": "Apenas no idioma atual ({{lang}})",
+        "languageFilterCurrentAndEnglish": "Idioma atual ({{lang}}) & inglês",
+        "languageFilterAll": "Todos os idiomas",
+        "filterVegan": "Vegano",
+        "filterVegetarian": "Vegetariano"
     },
     "downloadAsPdf": "Baixar como PDF",
     "height": "Altura",
     "cm": "cm",
     "all": "Tudo",
-    "lastYear": "Ano Passado",
+    "lastYear": "Último Ano",
     "lastHalfYear": "Últimos 6 meses",
     "lastMonth": "Mês passado",
     "lastWeek": "Semana passada",
@@ -339,8 +347,8 @@
     "private": "Privado",
     "durationWeeks": "{{number}} semanas",
     "durationWeeksDays": "{{nrWeeks}} semanas, {{nrDays}} dias",
-    "start": "Começar",
-    "end": "Acabar",
+    "start": "Iniciar",
+    "end": "Fim",
     "dashboard": {
         "customizeDashboard": "Personalizar painel",
         "dragWidgetsHelp": "Arraste widgets para reposicioná-los ou redimensione usando o canto inferior direito.",

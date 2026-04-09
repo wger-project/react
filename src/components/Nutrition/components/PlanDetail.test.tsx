@@ -27,7 +27,7 @@ describe("Test the PlanDetail component", () => {
             disconnect: jest.fn()
         }));
 
-        jest.setSystemTime(new Date('2023-07-01'));
+        jest.setSystemTime(new Date('2023-07-01').getTime());
     });
 
     afterEach(() => {

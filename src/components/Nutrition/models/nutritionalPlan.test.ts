@@ -6,7 +6,7 @@ jest.useFakeTimers();
 describe("Test the nutritional plan model", () => {
 
     beforeAll(() => {
-        jest.setSystemTime(new Date('2023-07-01'));
+        jest.setSystemTime(new Date('2023-07-01').getTime());
     });
 
     afterAll(() => {

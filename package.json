@@ -11,7 +11,7 @@
   "exports": {
     ".": "./build/index.js"
   },
-  "version": "26.2.26",
+  "version": "26.4.9",
   "repository": "https://github.com/wger-project/react",
   "type": "module",
   "publishConfig": {
@@ -48,7 +48,7 @@
     "react-slick": "^0.31.0",
     "recharts": "^3.8.0",
     "slick-carousel": "^1.8.1",
-    "slug": "^9.1.0",
+    "slug": "^11.0.1",
     "typescript": "^5.9.3",
     "web-vitals": "^5.1.0",
     "yup": "^1.7.1"
@@ -82,7 +82,7 @@
     "jsdom": "^28.1.0",
     "ts-jest": "^29.4.5",
     "typescript-eslint": "^8.57.0",
-    "vite": "^8.0.0",
+    "vite": "^8.0.5",
     "vite-plugin-eslint": "^1.8.1",
     "vitest": "^4.0.18",
     "webpack-bundle-analyzer": "^5.2.0"
@@ -117,8 +117,24 @@
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
     },
     "preset": "ts-jest",
+    "transform": {
+      "^.+\\.(ts|tsx|js|jsx)$": [
+        "ts-jest",
+        {
+          "tsconfig": {
+            "allowJs": true
+          }
+        }
+      ]
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!slug/)"
+    ],
     "testEnvironment": "jest-environment-jsdom",
     "modulePaths": [
+      "<rootDir>/src"
+    ],
+    "roots": [
       "<rootDir>/src"
     ],
     "setupFilesAfterEnv": [
