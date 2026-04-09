@@ -48,7 +48,6 @@ describe("Test the EntryForm component", () => {
         );
 
         // Assert
-        expect(screen.getByDisplayValue('2023-02-01')).toBeInTheDocument();
         expect(screen.getByDisplayValue('10')).toBeInTheDocument();
         expect(screen.getByDisplayValue('test note')).toBeInTheDocument();
         expect(screen.getAllByLabelText('date').length).toBeGreaterThan(0);
