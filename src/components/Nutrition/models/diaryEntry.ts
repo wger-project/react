@@ -3,6 +3,7 @@ import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
 import i18n from "i18n";
 import { Adapter } from "utils/Adapter";
+import { numberGramLocale } from "utils/numbers";
 
 export interface ApiNutritionDiaryType {
     id: number,
@@ -64,7 +65,7 @@ export class DiaryEntry {
         if (this.weightUnit) {
             return `${this.amount.toFixed()} × ${this.weightUnit.name}`;
         }
-        return i18n.t('common:nutrition.valueGram', { value: this.amount.toFixed() });
+        return numberGramLocale(this.amount, i18n.language);
     }
 
     get nutritionalValues() {

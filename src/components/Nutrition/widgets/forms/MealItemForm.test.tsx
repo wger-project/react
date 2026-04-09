@@ -32,7 +32,7 @@ async function fillInEntry(user: UserEvent) {
     await user.click(submitButton);
 }
 
-describe('Test the NutritionDiaryEntryForm component', () => {
+describe('Test the MealItemForm component', () => {
     const queryClient = new QueryClient();
     let mutateAddMock = jest.fn();
     let mutateEditMock = jest.fn();

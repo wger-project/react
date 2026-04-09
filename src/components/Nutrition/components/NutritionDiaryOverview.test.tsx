@@ -40,12 +40,12 @@ describe("Test the NutritionDiaryOverview component", () => {
         expect(screen.getByText('07/01/23')).toBeInTheDocument();
 
         expect(screen.getByRole('cell', { name: /0% fat Greek style yogurt/i })).toBeInTheDocument();
-        expect(screen.getByText(/120g/i)).toBeInTheDocument();
+        expect(screen.getByText(/120 g/i)).toBeInTheDocument();
 
         expect(screen.getByRole('cell', { name: /1001 nacht haferbrei/i })).toBeInTheDocument();
-        expect(screen.getByText(/50g/)).toBeInTheDocument();
+        expect(screen.getByText(/50 g/)).toBeInTheDocument();
 
         expect(screen.getByRole('cell', { name: /100% boosted juice smoothie/i })).toBeInTheDocument();
-        expect(screen.getByText(/200g/)).toBeInTheDocument();
+        expect(screen.getByText(/200 g/)).toBeInTheDocument();
     });
 });
