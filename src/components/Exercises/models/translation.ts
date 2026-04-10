@@ -12,13 +12,14 @@ export class Translation {
     authors: string[] = [];
 
     constructor(public id: number | null,
-                public uuid: string | null,
-                public name: string,
-                public description: string,
-                public language: number,
-                notes?: Note[],
-                aliases?: Alias[],
-                authors?: string[]
+        public uuid: string | null,
+        public name: string,
+        public description: string,
+        public language: number,
+        notes?: Note[],
+        aliases?: Alias[],
+        authors?: string[],
+        public descriptionSource?: string
     ) {
         if (notes) {
             this.notes = notes;
@@ -62,7 +63,8 @@ export class TranslationAdapter implements Adapter<Translation> {
             item.notes?.map((e: any) => (new NoteAdapter().fromJson(e))),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             item.aliases?.map((e: any) => (new AliasAdapter().fromJson(e))),
-            item.author_history
+            item.author_history,
+            item.description_source
         );
     }
 
@@ -78,6 +80,7 @@ export class TranslationAdapter implements Adapter<Translation> {
             name: item.name,
             description: item.description,
             language: item.language,
+            description_source: item.descriptionSource,
         };
     }
 }

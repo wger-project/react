@@ -33,6 +33,7 @@ describe("Exercise translation model tests", () => {
             language: 1,
             notes: [],
             aliases: [],
+            description_source: undefined,
             // eslint-disable-next-line camelcase
             author_history: ['author1', 'author2', 'author3']
         })).toStrictEqual(e1);
@@ -48,6 +49,7 @@ describe("Exercise translation model tests", () => {
             name: "a very long name that should be truncated",
             description: "description",
             language: 1,
+            description_source: undefined,
         });
     });
 
