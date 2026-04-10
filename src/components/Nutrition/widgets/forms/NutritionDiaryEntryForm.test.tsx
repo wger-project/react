@@ -1,9 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, render, screen, within } from '@testing-library/react';
-import userEvent from "@testing-library/user-event";
-import { UserEvent } from "@testing-library/user-event/setup/setup";
+import userEvent, { UserEvent } from "@testing-library/user-event";
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
+import { useAddDiaryEntryQuery, useEditDiaryEntryQuery, useFetchWeightUnitsQuery } from "components/Nutrition/queries";
 import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
 import React from 'react';
 import { searchIngredient } from "services";
@@ -48,6 +47,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
 
         (useEditDiaryEntryQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
         (useAddDiaryEntryQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        (useFetchWeightUnitsQuery as jest.Mock).mockImplementation(() => ({ data: [] }));
         (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
     });
 

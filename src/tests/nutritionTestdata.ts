@@ -30,13 +30,11 @@ import { HHMMToDateTime } from "utils/date";
 
 export const TEST_WEIGHT_UNIT_SLICE = new NutritionWeightUnit(
     5432,
-    1,
     50,
     'slice',
 );
 export const TEST_WEIGHT_UNIT_CUP = new NutritionWeightUnit(
     5544,
-    1,
     300,
     'Cup',
 );
