@@ -6,7 +6,7 @@ import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { dateTimeToLocale } from "utils/date";
-import { processWeight } from '../utils';
+import { processWeights } from '../utils';
 
 
 const PREFIX = 'WeightTable';
@@ -36,10 +36,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
 
     const { t } = useTranslation();
 
-    const processedWeights = [...processWeight(weights)].reverse().map((row, idx, arr) => ({
-        ...row,
-        days: idx === 0 ? 0 : arr[idx - 1].days  // take days from the row above (newer)
-    }));
+    const processedWeights = processWeights(weights);
     const [rowsPerPage, setRowsPerPage] = useState(availableResultsPerPage[0]);
     const [page, setPage] = useState(0);
 
