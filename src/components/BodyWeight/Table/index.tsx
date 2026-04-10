@@ -6,7 +6,7 @@ import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { dateTimeToLocale } from "utils/date";
-import { processWeight } from '../utils';
+import { processWeights } from '../utils';
 
 
 const PREFIX = 'WeightTable';
@@ -32,12 +32,11 @@ export interface WeightTableProps {
 }
 
 export const WeightTable = ({ weights }: WeightTableProps) => {
-
     const availableResultsPerPage = [10, 50, 100];
 
     const { t } = useTranslation();
 
-    const processedWeights = processWeight(weights);
+    const processedWeights = processWeights(weights);
     const [rowsPerPage, setRowsPerPage] = useState(availableResultsPerPage[0]);
     const [page, setPage] = useState(0);
 
@@ -59,6 +58,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                             <TableCell align="center">{t('date')}</TableCell>
                             <TableCell align="center">{t('weight')}</TableCell>
                             <TableCell align="center">{t('difference')}</TableCell>
+                            <TableCell align="center">{t('totalChange')}</TableCell>
                             <TableCell align="center">{t('days')}</TableCell>
                             <TableCell align="center" />
                         </TableRow>
@@ -74,6 +74,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                                 </TableCell>
                                 <TableCell align="center">{row.entry.weight}</TableCell>
                                 <TableCell align="center">{+row.change.toFixed(2)}</TableCell>
+                                <TableCell align="center">{+row.totalChange.toFixed(2)}</TableCell>
                                 <TableCell align="center">{row.days.toFixed(1)}</TableCell>
                                 <TableCell align="center">
                                     <ActionButton weight={row.entry} />
