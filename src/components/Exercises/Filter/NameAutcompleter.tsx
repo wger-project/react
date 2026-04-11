@@ -51,26 +51,30 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
     const filtersPopoverId = isFiltersOpen ? "exercise-filters-popover" : undefined;
 
     const searchEnglish = languageFilter === "current_english" || languageFilter === "all";
+    const [exactMatch, setExactMatch] = useState<boolean>(() => {
+        return localStorage.getItem("wger.exerciseSearch.exactMatch") === "true";
+    });
 
     const languageOptions = useMemo(() => {
+        const displayLang = i18n.language?.split('-')[0] ?? 'en';
         const opts: Array<{ value: string; label: string }> = [
-            { 
-                value: "current", 
-                label: t("nutrition.languageFilterCurrentOnly", { lang: i18n.language }) 
+            {
+                value: "current",
+                label: t("nutrition.languageFilterCurrentOnly", { lang: displayLang })
             },
             {
                 value: "current_english",
-                label: t("nutrition.languageFilterCurrentAndEnglish", { lang: i18n.language }),
+                label: t("nutrition.languageFilterCurrentAndEnglish", { lang: displayLang }),
             },
-            { 
-                value: "all", 
-                label: t("nutrition.languageFilterAll") 
+            {
+                value: "all",
+                label: t("nutrition.languageFilterAll")
             },
         ];
         return opts;
     }, [i18n.language, t]);
     const [options, setOptions] = React.useState<readonly Exercise[]>([]);
-    
+
 
     loadExercise = loadExercise === undefined ? false : loadExercise;
 
@@ -78,10 +82,10 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
         () =>
             debounce(
                 (request: string) =>
-                    searchExerciseTranslations(request, i18n.language, searchEnglish).then((res) => setOptions(res)),
+                    searchExerciseTranslations(request, i18n.language, searchEnglish, exactMatch).then((res) => setOptions(res)),
                 200
             ),
-        [i18n.language, searchEnglish]
+        [i18n.language, searchEnglish, exactMatch]
     );
 
     React.useEffect(() => {
@@ -223,6 +227,20 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                             ))}
                         </Select>
                     </FormControl>
+                    <FormGroup row>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={exactMatch}
+                                    onChange={(e, checked) => {
+                                        setExactMatch(checked);
+                                        localStorage.setItem("wger.exerciseSearch.exactMatch", String(checked));
+                                    }}
+                                />
+                            }
+                            label={t("Exact match")}
+                        />
+                    </FormGroup>
                 </Stack>
             </Popover>
         </>

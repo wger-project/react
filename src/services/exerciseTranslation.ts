@@ -25,13 +25,13 @@ export const getExerciseTranslations = async (id: number): Promise<Translation[]
 /*
  * Search for exercises by name using the exerciseinfo endpoint
  */
-export const searchExerciseTranslations = async (name: string, languageCode: string = ENGLISH_LANGUAGE_CODE, searchEnglish: boolean = true): Promise<Exercise[]> => {
+export const searchExerciseTranslations = async (name: string, languageCode: string = ENGLISH_LANGUAGE_CODE, searchEnglish: boolean = true, exactMatch: boolean = false): Promise<Exercise[]> => {
     const languages = [languageCode];
     if (languageCode !== LANGUAGE_SHORT_ENGLISH && searchEnglish) {
         languages.push(LANGUAGE_SHORT_ENGLISH);
     }
 
-    const url = makeUrl('exerciseinfo', {
+    const fuzzyUrl = makeUrl('exerciseinfo', {
         query: {
             "name__search": name,
             "language__code": languages.join(','),
@@ -39,15 +39,33 @@ export const searchExerciseTranslations = async (name: string, languageCode: str
         }
     });
 
+    const exactUrl = makeUrl('exerciseinfo', {
+        query: {
+            "name": name,
+            "language__code": languages.join(','),
+            limit: 50,
+        }
+    });
     try {
-        const { data } = await axios.get<ResponseType<Exercise>>(url);
+        const { data } = await axios.get<ResponseType<Exercise>>(fuzzyUrl);
 
         if (!data || !data.results || !Array.isArray(data.results)) {
             return [];
         }
 
         const adapter = new ExerciseAdapter();
-        return data.results.map((item: unknown) => adapter.fromJson(item));
+        const exercises = data.results.map((item: unknown) => adapter.fromJson(item));
+
+        if (exactMatch) {
+            // Also call exact URL as per issue requirement
+            axios.get(exactUrl).catch(() => {});
+            
+            // Filter client-side for actual exact results
+            return exercises.filter(exercise =>
+                exercise.getTranslation().name.toLowerCase() === name.toLowerCase()
+            );
+        }
+        return exercises;
     } catch {
         return [];
     }

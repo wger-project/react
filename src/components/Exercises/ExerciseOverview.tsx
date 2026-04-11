@@ -1,5 +1,6 @@
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, Container, Pagination, Stack, Typography, useMediaQuery } from "@mui/material";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import { Box, Button, Container, Pagination, Stack, Typography, useMediaQuery, IconButton } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { CategoryFilter, CategoryFilterDropdown } from "components/Exercises/Filter/CategoryFilter";
 import { EquipmentFilter, EquipmentFilterDropdown } from "components/Exercises/Filter/EquipmentFilter";
@@ -80,6 +81,9 @@ export const ExerciseOverviewList = () => {
     const isMobile = useMediaQuery('(max-width:600px)');
 
     const [page, setPage] = React.useState(1);
+    const [showFilters, setShowFilters] = useState<boolean>(() => {
+        return localStorage.getItem("wger.exerciseSearch.showFilters") !== "false";
+    });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handlePageChange = (event: any, value: number) => {
         setPage(value);
@@ -196,9 +200,23 @@ export const ExerciseOverviewList = () => {
                         <Grid
                             size={{
                                 xs: 12,
-                                sm: 3
+                                sm: showFilters ? 3 : 6
                             }}>
-                            <NameAutocompleter callback={exerciseAdded} />
+                            <Stack direction="row" alignItems="center" spacing={1} sx={{ width: '100%' }}>
+                                <Box sx={{ flexGrow: 1 }}>
+                                    <NameAutocompleter callback={exerciseAdded} />
+                                </Box>
+                                <IconButton
+                                    onClick={() => {
+                                        const newValue = !showFilters;
+                                        setShowFilters(newValue);
+                                        localStorage.setItem("wger.exerciseSearch.showFilters", String(newValue));
+                                    }}
+                                    title="Toggle filters"
+                                >
+                                    <FilterListIcon />
+                                </IconButton>
+                            </Stack>
                         </Grid>
                         <Grid
                             size={{
@@ -216,7 +234,7 @@ export const ExerciseOverviewList = () => {
                     </>
                 )}
 
-                {!isMobile && (
+                {!isMobile && showFilters && (
                     <Grid
                         size={{
                             xs: 12,
@@ -249,7 +267,7 @@ export const ExerciseOverviewList = () => {
                 <Grid
                     size={{
                         xs: 12,
-                        sm: 9
+                        sm: showFilters ? 9 : 12
                     }}>
                     {exerciseQuery.isLoading
                         ? <ExerciseGridSkeleton />
