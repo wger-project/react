@@ -1,14 +1,22 @@
 import PhotoIcon from "@mui/icons-material/Photo";
 import SearchIcon from "@mui/icons-material/Search";
+import TuneIcon from "@mui/icons-material/Tune";
 import {
     Autocomplete,
     Avatar,
+    FormControl,
     FormControlLabel,
     FormGroup,
+    IconButton,
     InputAdornment,
+    InputLabel,
     ListItem,
     ListItemIcon,
     ListItemText,
+    MenuItem,
+    Popover,
+    Select,
+    Stack,
     Switch,
     TextField,
 } from "@mui/material";
@@ -16,7 +24,7 @@ import { Exercise } from "components/Exercises/models/exercise";
 import { SERVER_URL } from "config";
 import debounce from "lodash/debounce";
 import * as React from "react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { searchExerciseTranslations } from "services";
 import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
@@ -28,10 +36,41 @@ type NameAutocompleterProps = {
 
 export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterProps) {
     const [value, setValue] = React.useState<Exercise | null>(null);
-    const [inputValue, setInputValue] = React.useState("");
-    const [searchEnglish, setSearchEnglish] = useState<boolean>(true);
-    const [options, setOptions] = React.useState<readonly Exercise[]>([]);
     const [t, i18n] = useTranslation();
+    const [inputValue, setInputValue] = React.useState("");
+    const defaultLanguageFilter = i18n.language === LANGUAGE_SHORT_ENGLISH
+        ? "current"
+        : "current_english";
+
+    const [languageFilter, setLanguageFilter] = useState<string>(() => {
+        return localStorage.getItem("wger.exerciseSearch.languageFilter") ?? defaultLanguageFilter;
+    });
+
+    const [filtersAnchorEl, setFiltersAnchorEl] = useState<HTMLElement | null>(null);
+    const isFiltersOpen = Boolean(filtersAnchorEl);
+    const filtersPopoverId = isFiltersOpen ? "exercise-filters-popover" : undefined;
+
+    const searchEnglish = languageFilter === "current_english" || languageFilter === "all";
+
+    const languageOptions = useMemo(() => {
+        const opts: Array<{ value: string; label: string }> = [
+            { 
+                value: "current", 
+                label: t("nutrition.languageFilterCurrentOnly", { lang: i18n.language }) 
+            },
+            {
+                value: "current_english",
+                label: t("nutrition.languageFilterCurrentAndEnglish", { lang: i18n.language }),
+            },
+            { 
+                value: "all", 
+                label: t("nutrition.languageFilterAll") 
+            },
+        ];
+        return opts;
+    }, [i18n.language, t]);
+    const [options, setOptions] = React.useState<readonly Exercise[]>([]);
+    
 
     loadExercise = loadExercise === undefined ? false : loadExercise;
 
@@ -95,6 +134,28 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                                         {params.InputProps.startAdornment}
                                     </>
                                 ),
+                                endAdornment: (
+                                    <>
+                                        {params.InputProps.endAdornment}
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="Toggle filters"
+                                                aria-describedby={filtersPopoverId}
+                                                aria-expanded={isFiltersOpen}
+                                                onMouseDown={(e) => e.preventDefault()}
+                                                onClick={(e) =>
+                                                    setFiltersAnchorEl((current) =>
+                                                        current ? null : e.currentTarget
+                                                    )
+                                                }
+                                                edge="end"
+                                                size="small"
+                                            >
+                                                <TuneIcon fontSize="small" />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    </>
+                                ),
                             },
                         }}
                     />
@@ -102,7 +163,7 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                 renderOption={(props, option, state) => {
                     const translation = option.getTranslation();
                     const mainImage = option.mainImage;
-                    
+
                     return (
                         <li
                             {...props}
@@ -133,16 +194,37 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                     );
                 }}
             />
-            {i18n.language !== LANGUAGE_SHORT_ENGLISH && (
-                <FormGroup>
-                    <FormControlLabel
-                        control={
-                            <Switch checked={searchEnglish} onChange={(event, checked) => setSearchEnglish(checked)} />
-                        }
-                        label={t("alsoSearchEnglish")}
-                    />
-                </FormGroup>
-            )}
+            <Popover
+                id={filtersPopoverId}
+                open={isFiltersOpen}
+                anchorEl={filtersAnchorEl}
+                onClose={() => setFiltersAnchorEl(null)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Stack padding={2} spacing={1}>
+                    <FormControl fullWidth size="small">
+                        <InputLabel id="exercise-language-filter-label">
+                            {t("language")}
+                        </InputLabel>
+                        <Select
+                            labelId="exercise-language-filter-label"
+                            value={languageFilter}
+                            label={t("language")}
+                            onChange={(e) => {
+                                setLanguageFilter(e.target.value);
+                                localStorage.setItem("wger.exerciseSearch.languageFilter", e.target.value);
+                            }}
+                        >
+                            {languageOptions.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Stack>
+            </Popover>
         </>
     );
 }
