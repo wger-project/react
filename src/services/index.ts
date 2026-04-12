@@ -26,6 +26,7 @@ export { getLanguages, getLanguageByShortName } from './language';
 export { postExerciseImage } from './image';
 export { updateWeight, createWeight } from './weight';
 export { postAlias, deleteAlias } from './alias';
+export { addNote, editNote, deleteNote } from './note';
 export { postExerciseVideo, deleteExerciseVideo } from './video';
 
 export {

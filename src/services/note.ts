@@ -36,4 +36,12 @@ export const editNote = async (note: Note): Promise<Note> => {
     return adapter.fromJson(response.data);
 };
 
+/*
+ * Delete an existing note
+ */
+export const deleteNote = async (id: number): Promise<void> => {
+    const url = makeUrl(API_NOTE_PATH, { id: id });
+    await axios.delete(url, { headers: makeHeader() });
+};
+
 

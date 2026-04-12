@@ -4,6 +4,7 @@ import { Equipment } from "components/Exercises/models/equipment";
 import { Exercise } from "components/Exercises/models/exercise";
 import { Language } from "components/Exercises/models/language";
 import { Muscle } from "components/Exercises/models/muscle";
+import { Note } from "components/Exercises/models/note";
 import { Translation } from "components/Exercises/models/translation";
 
 export const testCategoryArms = new Category(1, 'Arms');
@@ -60,14 +61,19 @@ export const testExerciseSquats = new Exercise({
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             'Squats',
             'Do a squat',
-            2
+            2,
+            [
+                new Note(10, 111, 'keep your back straight'),
+            ]
         ),
         new Translation(9,
             'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
             'Kniebeuge',
             'Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur',
             1,
-            [],
+            [
+                new Note(11, 9, 'Rücken gerade halten'),
+            ],
             [
                 new Alias(1, 'e30eab18-7adf-4361-ad63-192c76103cf0', 'Königsübung'),
                 new Alias(2, 'f4f616f8-224e-4aba-a4e1-11ec0b59af33', 'Beinverdicker'),

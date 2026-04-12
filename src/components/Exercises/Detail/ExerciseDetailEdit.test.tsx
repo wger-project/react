@@ -4,10 +4,13 @@ import userEvent from "@testing-library/user-event";
 import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
 import {
     useAddExerciseImageQuery,
+    useAddNoteQuery,
     useAddTranslationQuery,
     useCategoriesQuery,
     useDeleteExerciseImageQuery,
+    useDeleteNoteQuery,
     useEditExerciseImageQuery,
+    useEditNoteQuery,
     useEditTranslationQuery,
     useEquipmentQuery,
     useExerciseQuery,
@@ -82,6 +85,22 @@ describe("Exercise translation edit tests", () => {
             mutateAsync: jest.fn(),
         }));
 
+        (useAddNoteQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutate: jest.fn(),
+            mutateAsync: jest.fn(),
+        }));
+        (useEditNoteQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutate: jest.fn(),
+            mutateAsync: jest.fn(),
+        }));
+        (useDeleteNoteQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutate: jest.fn(),
+            mutateAsync: jest.fn(),
+        }));
+
         // @ts-ignore
         // addTranslation.mockImplementation(() => Promise.resolve(
         //     new Translation(
@@ -140,6 +159,27 @@ describe("Exercise translation edit tests", () => {
         expect(screen.getByText('Königsübung')).toBeInTheDocument();
         expect(screen.getByText('Beinverdicker')).toBeInTheDocument();
         expect(screen.getByText('Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur')).toBeInTheDocument();
+    });
+
+    test('renders notes section with existing notes', () => {
+        // Act
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <ExerciseDetailEdit
+                    exerciseId={345}
+                    language={testLanguageGerman}
+                />
+            </QueryClientProvider>
+        );
+
+        // Assert - English notes shown as read-only
+        expect(screen.getByText('keep your back straight')).toBeInTheDocument();
+
+        // Assert - German notes shown as editable text field
+        expect(screen.getByDisplayValue('Rücken gerade halten')).toBeInTheDocument();
+
+        // Assert - "New note" input is present
+        expect(screen.getByLabelText('exercises.newNote')).toBeInTheDocument();
     });
 
     test('correctly updates the exercise', async () => {
@@ -294,6 +334,21 @@ describe("Exercise image tests", () => {
             isError: false,
             isPending: false,
             mutateAsync: editImageMutateMock
+        }));
+        (useAddNoteQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutate: jest.fn(),
+            mutateAsync: jest.fn(),
+        }));
+        (useEditNoteQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutate: jest.fn(),
+            mutateAsync: jest.fn(),
+        }));
+        (useDeleteNoteQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutate: jest.fn(),
+            mutateAsync: jest.fn(),
         }));
         (useAddExerciseImageQuery as jest.Mock).mockImplementation(() => asPromiseHookResult({
             isError: false,

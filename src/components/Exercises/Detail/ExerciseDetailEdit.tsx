@@ -1,7 +1,11 @@
+import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Box, Button, IconButton, Typography } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
+import { Alert, Box, Button, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
+import { FormQueryErrorsSnackbar } from 'components/Core/Widgets/FormError';
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { EditExerciseCategory } from "components/Exercises/forms/Category";
 import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
@@ -17,11 +21,14 @@ import {
     nameValidator
 } from "components/Exercises/forms/yupValidators";
 import { Language } from "components/Exercises/models/language";
+import { Note } from "components/Exercises/models/note";
 import { Translation } from "components/Exercises/models/translation";
 import {
-    useAddExerciseImageQuery,
+    useAddNoteQuery,
     useAddTranslationQuery,
+    useDeleteNoteQuery,
     useEditExerciseImageQuery,
+    useEditNoteQuery,
     useEditTranslationQuery,
     useExerciseQuery,
     useMusclesQuery
@@ -36,42 +43,8 @@ import { useTranslation } from "react-i18next";
 import { deleteAlias, postAlias } from "services";
 import * as yup from "yup";
 import { ImageFormModal } from '../forms/ImageModal';
-import { ExerciseImage, ImageStyle } from '../models/image';
 import { ImageFormData } from '../models/exercise';
-import { FormQueryErrorsSnackbar } from 'components/Core/Widgets/FormError';
-
-export const mapToImageFormData = (
-    image: ExerciseImage | File | null
-): ImageFormData | null => {
-    if (!image) return null;
-
-    // Case 1: Editing an existing ExerciseImage
-    if (image instanceof ExerciseImage) {
-        // Get the image/file from url
-        return {
-            url: image.url,
-            file: undefined,
-            title: image.title || '',
-            author: image.author || '',
-            authorUrl: image.authorUrl || '',
-            objectUrl: image.objectUrl || '',
-            derivativeSourceUrl: image.derivativeSourceUrl || '',
-            style: image.style || ImageStyle.PHOTO, // Default to Photo
-        };
-    }
-
-    // Case 2: Adding a new File
-    return {
-        url: URL.createObjectURL(image),
-        file: image,
-        title: '',
-        author: '', 
-        authorUrl: '',
-        objectUrl: '',
-        derivativeSourceUrl: '',
-        style: ImageStyle.PHOTO,
-    };
-};
+import { ExerciseImage, ImageStyle } from '../models/image';
 
 export interface ViewProps {
     exerciseId: number;
@@ -97,7 +70,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
     const profileQuery = useProfileQuery();
 
     const exercise = exerciseQuery.data!;
-    
+
     const [openModal, setOpenModal] = React.useState(false);
     const [imageGuardError, setImageGuardError] = useState<string | null>(null);
 
@@ -105,11 +78,18 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
     const [editingImageId, setEditingImageId] = useState<number | null>(null);
 
     const editImageMutation = useEditExerciseImageQuery(exerciseId);
+    const addNoteMutation = useAddNoteQuery(exerciseId);
+    const editNoteMutation = useEditNoteQuery(exerciseId);
+    const deleteNoteMutation = useDeleteNoteQuery(exerciseId);
+
+    const [newNoteValue, setNewNoteValue] = useState('');
+    const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
+    const [editingNoteValue, setEditingNoteValue] = useState('');
 
     useEffect(() => {
         if (exerciseQuery.data !== undefined) {
-            setMainMuscles(exercise.muscles.map((m) => m.id));
-            setSecondaryMuscles(exercise.musclesSecondary.map((m) => m.id));
+            setMainMuscles(exerciseQuery.data.muscles.map((m) => m.id));
+            setSecondaryMuscles(exerciseQuery.data.musclesSecondary.map((m) => m.id));
         }
     }, [exerciseQuery.data]);
 
@@ -171,7 +151,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
             image: values.file, // This will be undefined if they didn't pick a new file
             imageData: values
         });
-        
+
         setOpenModal(false);
         setEditingImageId(null);
         setSelectedImage(null);
@@ -314,29 +294,104 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                         </Grid>
                     </>}
 
-                    {/*
-                <Grid item xs={12}>
-                    <PaddingBox />
-                </Grid>
+                    <Grid size={12}>
+                        <PaddingBox />
+                    </Grid>
 
-                <Grid item xs={12}>
-                    <Typography variant={'h6'}>{t('exercises.notes')}</Typography>
-                </Grid>
-                <Grid item sm={6}>
-                    <ul>
-                        {exerciseEnglish.notes.map((note: Note) => (
-                            <li key={note.id}>{note.note}</li>
-                        ))}
-                    </ul>
-                </Grid>
-                <Grid item sm={6}>
-                    <ul>
+                    <Grid size={12}>
+                        <Typography variant={'h6'}>{t('exercises.notes')}</Typography>
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                        <ul>
+                            {exerciseEnglish.notes.map((note: Note) => (
+                                <li key={note.id}>{note.note}</li>
+                            ))}
+                        </ul>
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         {exerciseTranslation.notes.map((note: Note) => (
-                            <li key={note.id}>{note.note}</li>
+                            <TextField
+                                key={note.id}
+                                fullWidth
+                                value={editingNoteId === note.id ? editingNoteValue : note.note}
+                                onChange={(e) => {
+                                    if (editingNoteId !== note.id) {
+                                        setEditingNoteId(note.id);
+                                        setEditingNoteValue(e.target.value);
+                                    } else {
+                                        setEditingNoteValue(e.target.value);
+                                    }
+                                }}
+                                onFocus={() => {
+                                    if (editingNoteId !== note.id) {
+                                        setEditingNoteId(note.id);
+                                        setEditingNoteValue(note.note);
+                                    }
+                                }}
+                                sx={{ mb: 1 }}
+                                variant="standard"
+                                slotProps={{
+                                    input: {
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                {editingNoteId === note.id && editingNoteValue !== note.note && (
+                                                    <IconButton
+                                                        onClick={async () => {
+                                                            await editNoteMutation.mutateAsync(
+                                                                new Note(note.id, note.translation, editingNoteValue)
+                                                            );
+                                                            setEditingNoteId(null);
+                                                            setEditingNoteValue('');
+                                                        }}
+                                                        disabled={editNoteMutation.isPending}
+                                                    >
+                                                        <SaveIcon />
+                                                    </IconButton>
+                                                )}
+                                                <IconButton
+                                                    onClick={() => deleteNoteMutation.mutate(note.id!)}
+                                                    disabled={deleteNoteMutation.isPending}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }
+                                }}
+                            />
                         ))}
-                    </ul>
-                </Grid>
-                */}
+                        {exerciseTranslation.id && (
+                            <TextField
+                                fullWidth
+                                label={t('exercises.newNote')}
+                                variant="standard"
+                                value={newNoteValue}
+                                onChange={(e) => setNewNoteValue(e.target.value)}
+                                helperText={t('exercises.notesHelpText')}
+                                slotProps={{
+                                    input: {
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    onClick={async () => {
+                                                        if (newNoteValue.trim()) {
+                                                            await addNoteMutation.mutateAsync(
+                                                                new Note(null, exerciseTranslation.id!, newNoteValue)
+                                                            );
+                                                            setNewNoteValue('');
+                                                        }
+                                                    }}
+                                                    disabled={addNoteMutation.isPending || !newNoteValue.trim()}
+                                                >
+                                                    <AddIcon />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }
+                                }}
+                            />
+                        )}
+                    </Grid>
 
                     <Grid size={12}>
                         <PaddingBox />
@@ -437,7 +492,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
             </>
         }
 
-        <ImageFormModal 
+        <ImageFormModal
             open={openModal}
             onClose={() => setOpenModal(false)}
             image={selectedImage}
@@ -452,8 +507,8 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
         {imageGuardError && (
             <FormQueryErrorsSnackbar
                 mutationQuery={{
-                isError: true,
-                error: { message: imageGuardError, response: { data: null } }
+                    isError: true,
+                    error: { message: imageGuardError, response: { data: null } }
                 }}
             />
         )}
