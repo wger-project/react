@@ -15,7 +15,7 @@ const testExerciseTranslation1 = new Translation(
     'Do a squat',
     2,
     [
-        new Note(133, 174, 'do the exercise correctly'),
+        new Note(133, 111, 'do the exercise correctly'),
     ],
     [
         new Alias(1, '9a05bdba-e977-4fb1-8fca-2ff2c016c59d', 'test 123'),
@@ -56,7 +56,7 @@ export const testApiExercise1 = new Exercise({
     muscles: [muscle1],
     musclesSecondary: [muscle2],
     images: [image],
-    variationId: 228,
+    variationGroup: '4e1bb2fc-3b0e-4a1a-bd3e-3728a0e6d8a7',
     translations: [
         testExerciseTranslation1,
         testExerciseTranslation2
@@ -160,7 +160,7 @@ export const responseApiExerciseInfo = {
                 "license_author": null
             }
         ],
-        "variations": 228,
+        "variation_group": "4e1bb2fc-3b0e-4a1a-bd3e-3728a0e6d8a7",
         "translations": [
             {
                 "id": 111,
@@ -186,7 +186,7 @@ export const responseApiExerciseInfo = {
                 "notes": [
                     {
                         "id": 133,
-                        "exercise": 174,
+                        "translation": 111,
                         "comment": "do the exercise correctly"
                     }
                 ]

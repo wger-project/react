@@ -1,22 +1,23 @@
 import { WeightEntry } from "components/BodyWeight/model";
 
-export const processWeight = (weights: WeightEntry[]) => {
-    // go through weights, referencing the same weights to have days and weight changes
-    return weights.map((entry, i) => {
+/**
+ * Sorts weight entries by date (newest first) and computes the difference to
+ * the previous entry ("change"), number of days since the previous entry ("days"),
+ * as well as the cumulative change relative to the first entry ("totalChange").
+ */
+export const processWeights = (weights: WeightEntry[]) => {
+    if (weights.length === 0) {
+        return [];
+    }
 
-        // since there is no day before day 1, changes are 0
-        if (i === 0) {
-            return {
-                entry,
-                change: 0,
-                days: Math.abs(entry.date.getTime() - entry.date.getTime()) / (1000 * 60 * 60 * 24)
-            };
-        }
+    const sorted = [...weights].sort((a, b) => b.date.getTime() - a.date.getTime());
+    const lastIndex = sorted.length - 1;
+    const firstWeight = sorted[lastIndex].weight;
 
-        return {
-            entry,
-            change: weights[i].weight - weights[i - 1].weight,
-            days: Math.abs(entry.date.getTime() - weights[i - 1].date.getTime()) / (1000 * 60 * 60 * 24)
-        };
-    });
+    return sorted.map((entry, index) => ({
+        entry,
+        change: index === lastIndex ? 0 : entry.weight - sorted[index + 1].weight,
+        days: index === lastIndex ? 0 : (entry.date.getTime() - sorted[index + 1].date.getTime()) / (1000 * 60 * 60 * 24),
+        totalChange: entry.weight - firstWeight
+    }));
 };

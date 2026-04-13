@@ -12,7 +12,7 @@ export const searchResponse: Exercise[] = [
         muscles: [],
         musclesSecondary: [],
         images: [],
-        variationId: null,
+        variationGroup: null,
         translations: [
             new Translation(
                 1149, // id
@@ -34,7 +34,7 @@ export const searchResponse: Exercise[] = [
         muscles: [],
         musclesSecondary: [],
         images: [],
-        variationId: null,
+        variationGroup: null,
         translations: [
             new Translation(
                 1213, // id
