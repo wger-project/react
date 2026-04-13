@@ -21,33 +21,44 @@ export function EditExerciseVariation(props: { exerciseId: number, initial: stri
     };
 
     const handleChangeNewVariationExerciseId = async (id: number | null) => {
+        const previousVariationId = selectedVariationId;
         setSelectedNewVariationExerciseId(id);
         setSelectedVariationId(null);
 
         if (id !== null) {
             // Generate a new variation group UUID and assign both exercises to it
             const variationGroup = crypto.randomUUID();
-            await editExercise(props.exerciseId, {
-                // eslint-disable-next-line camelcase
-                variation_group: variationGroup,
-                // eslint-disable-next-line camelcase
-                license_author: profileQuery.data!.username
-            });
-            await editExercise(id, {
-                // eslint-disable-next-line camelcase
-                variation_group: variationGroup,
-                // eslint-disable-next-line camelcase
-                license_author: profileQuery.data!.username
-            });
-            setSelectedVariationId(variationGroup);
-            setSelectedNewVariationExerciseId(null);
+            try {
+                await editExercise(props.exerciseId, {
+                    // eslint-disable-next-line camelcase
+                    variation_group: variationGroup,
+                    // eslint-disable-next-line camelcase
+                    license_author: profileQuery.data!.username
+                });
+                await editExercise(id, {
+                    // eslint-disable-next-line camelcase
+                    variation_group: variationGroup,
+                    // eslint-disable-next-line camelcase
+                    license_author: profileQuery.data!.username
+                });
+                setSelectedVariationId(variationGroup);
+                setSelectedNewVariationExerciseId(null);
+            } catch {
+                // Rollback on failure
+                setSelectedVariationId(previousVariationId);
+                setSelectedNewVariationExerciseId(null);
+            }
         } else {
-            await editExercise(props.exerciseId, {
-                // eslint-disable-next-line camelcase
-                variation_group: null,
-                // eslint-disable-next-line camelcase
-                license_author: profileQuery.data!.username
-            });
+            try {
+                await editExercise(props.exerciseId, {
+                    // eslint-disable-next-line camelcase
+                    variation_group: null,
+                    // eslint-disable-next-line camelcase
+                    license_author: profileQuery.data!.username
+                });
+            } catch {
+                setSelectedVariationId(previousVariationId);
+            }
         }
     };
 

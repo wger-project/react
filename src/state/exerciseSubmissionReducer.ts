@@ -119,7 +119,7 @@ export const exerciseSubmissionReducer = (state: ExerciseSubmissionState, action
         case SetExerciseSubmissionState.SET_VARIATION_ID:
             return {
                 ...state,
-                variationGroup: action.payload as string
+                variationGroup: action.payload as string | null
             };
 
         case SetExerciseSubmissionState.SET_NEW_VARIATION_BASE_ID:

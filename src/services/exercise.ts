@@ -57,7 +57,7 @@ export const getExercise = async (id: number): Promise<Exercise> => {
 
 
 /*
- * Fetch exercise bases with a given variation ID
+ * Fetch exercises that belong to the same variation group
  */
 export const getExercisesForVariation = async (id: string | null | undefined): Promise<Exercise[]> => {
     if (!id) {

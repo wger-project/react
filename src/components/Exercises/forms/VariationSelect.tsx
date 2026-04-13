@@ -25,11 +25,9 @@ import { useTranslation } from "react-i18next";
  * Groups a list of objects by a property
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function groupBy(list: any[], keyGetter: Function) {
-    const map = new Map();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    list.forEach((item: any) => {
+function groupBy<T, K>(list: T[], keyGetter: (item: T) => K): Map<K, T[]> {
+    const map = new Map<K, T[]>();
+    list.forEach((item: T) => {
         const key = keyGetter(item);
         const collection = map.get(key);
         if (!collection) {
@@ -156,7 +154,7 @@ export function VariationSelect({
         }
 
         // Group first (including current exercise, so groups show all members)
-        groupedExercises = groupBy(allExercises.filter(b => b.variationGroup !== null), (b: Exercise) => b.variationGroup);
+        groupedExercises = groupBy(allExercises.filter(b => b.variationGroup !== null), (b: Exercise) => b.variationGroup as string);
 
         // Filter out the current exercise only for the standalone list
         exercises = exerciseId

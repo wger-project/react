@@ -99,7 +99,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
     const variationText =
         state.variationGroup !== null
-            ? `Using variation ID ${state.variationGroup}`
+            ? `Using variation group ${state.variationGroup}`
             : state.newVariationExerciseId !== null
                 ? `Connecting to exercise ${state.newVariationExerciseId}`
                 : '';
