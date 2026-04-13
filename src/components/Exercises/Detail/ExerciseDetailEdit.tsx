@@ -164,8 +164,8 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
             initialValues={{
                 name: exerciseTranslation.name,
                 alternativeNames: exerciseTranslation.aliases.map(a => ({ id: a.id, alias: a.alias })),
-                // Fallback: Use Source if available, else HTML (legacy), else empty
-                description: exerciseTranslation.descriptionSource || exerciseTranslation.description || '',
+                // Use source (markdown) if available, otherwise fall back to rendered HTML
+                description: exerciseTranslation.descriptionSource || exerciseTranslation.description,
             }}
             enableReinitialize
             validationSchema={validationSchema}

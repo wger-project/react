@@ -63,7 +63,7 @@ export interface AddTranslationParams {
     name: string;
     description: string;
     author: string;
-    descriptionSource?: string;
+    descriptionSource: string;
 }
 
 export const addTranslation = async (params: AddTranslationParams): Promise<Translation> => {

@@ -27,7 +27,7 @@ export class Translation {
     notes: Note[] = [];
     aliases: Alias[] = [];
     authors: string[] = [];
-    descriptionSource?: string;
+    descriptionSource: string;
 
     constructor(init: TranslationConstructorParams) {
         this.id = init.id;
@@ -35,7 +35,7 @@ export class Translation {
         this.name = init.name;
         this.description = init.description;
         this.language = init.language;
-        this.descriptionSource = init.descriptionSource;
+        this.descriptionSource = init.descriptionSource ?? '';
 
         if (init.notes) {
             this.notes = init.notes;
