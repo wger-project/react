@@ -57,7 +57,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                 secondaryMuscleIds: state.musclesSecondary,
             },
             author: profileQuery.data!.username,
-            variations: state.variationId,
+            variationGroup: state.variationGroup,
             variationsConnectTo: state.newVariationExerciseId,
             translations: [
                 {
@@ -98,8 +98,8 @@ export const Step6Overview = ({ onBack }: StepProps) => {
     };
 
     const variationText =
-        state.variationId !== null
-            ? `Using variation ID ${state.variationId}`
+        state.variationGroup !== null
+            ? `Using variation ID ${state.variationGroup}`
             : state.newVariationExerciseId !== null
                 ? `Connecting to exercise ${state.newVariationExerciseId}`
                 : '';

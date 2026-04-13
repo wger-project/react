@@ -55,7 +55,7 @@ export const testExerciseSquats = new Exercise({
     muscles: [testMuscleBiggus, testMuscleRectusAbdominis],
     musclesSecondary: [],
     images: [],
-    variationId: null,
+    variationGroup: null,
     translations: [
         new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
@@ -90,7 +90,7 @@ export const testExerciseBenchPress = new Exercise({
     muscles: [testMuscleDacttilaris, testMuscleDeltoid],
     musclesSecondary: [],
     images: [],
-    variationId: 1,
+    variationGroup: 'a1b2c3d4-0001-0000-0000-000000000001',
     translations: [
         new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
@@ -110,7 +110,7 @@ export const testExerciseCurls = new Exercise({
     muscles: [testMuscleBiggus, testMuscleDacttilaris],
     musclesSecondary: [],
     images: [],
-    variationId: 1,
+    variationGroup: 'a1b2c3d4-0001-0000-0000-000000000001',
     translations: [
         new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
@@ -130,7 +130,7 @@ export const testExerciseCrunches = new Exercise({
     muscles: [testMuscleDeltoid],
     musclesSecondary: [],
     images: [],
-    variationId: null,
+    variationGroup: null,
     translations: [
         new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',
@@ -150,7 +150,7 @@ export const testExerciseSkullCrusher = new Exercise({
     muscles: [testMuscleRectusAbdominis],
     musclesSecondary: [],
     images: [],
-    variationId: 2,
+    variationGroup: 'a1b2c3d4-0002-0000-0000-000000000002',
     translations: [
         new Translation(111,
             '583281c7-2362-48e7-95d5-8fd6c455e0fb',

@@ -56,7 +56,7 @@ export const testApiExercise1 = new Exercise({
     muscles: [muscle1],
     musclesSecondary: [muscle2],
     images: [image],
-    variationId: 228,
+    variationGroup: '4e1bb2fc-3b0e-4a1a-bd3e-3728a0e6d8a7',
     translations: [
         testExerciseTranslation1,
         testExerciseTranslation2
@@ -160,7 +160,7 @@ export const responseApiExerciseInfo = {
                 "license_author": null
             }
         ],
-        "variations": 228,
+        "variation_group": "4e1bb2fc-3b0e-4a1a-bd3e-3728a0e6d8a7",
         "translations": [
             {
                 "id": 111,

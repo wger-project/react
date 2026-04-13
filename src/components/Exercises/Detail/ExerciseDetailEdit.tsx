@@ -14,6 +14,7 @@ import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescript
 import { ExerciseName } from "components/Exercises/forms/ExerciseName";
 import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCard";
 import { EditExerciseMuscle } from "components/Exercises/forms/Muscle";
+import { EditExerciseVariation } from "components/Exercises/forms/Variation";
 import { AddVideoCard, VideoEditCard } from "components/Exercises/forms/VideoCard";
 import {
     alternativeNameValidator,
@@ -291,6 +292,13 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                         <Grid size={{ xs: 12, md: 6 }}>
                             <EditExerciseEquipment exerciseId={exercise.id!}
                                                    initial={exercise.equipment.map(e => e.id)} />
+                        </Grid>
+                        <Grid size={12}>
+                            <PaddingBox />
+                            <Typography variant={'h5'}>{t('exercises.variations')}</Typography>
+                        </Grid>
+                        <Grid size={12}>
+                            <EditExerciseVariation exerciseId={exercise.id!} initial={exercise.variationGroup} />
                         </Grid>
                     </>}
 

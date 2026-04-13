@@ -18,6 +18,7 @@ import {
 } from "components/Exercises/queries";
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
+import { WgerPermissions } from "permissions";
 import { deleteAlias, editTranslation, postAlias } from "services";
 import {
     testCategories,
@@ -29,9 +30,8 @@ import {
 } from "tests/exerciseTestdata";
 import { testQueryClient } from "tests/queryClient";
 import { testProfileDataVerified } from "tests/userTestdata";
-import { ExerciseImage } from "../models/image";
 import { Exercise } from "../models/exercise";
-import { WgerPermissions } from "permissions";
+import { ExerciseImage } from "../models/image";
 
 // It seems we run into a timeout when running the tests on GitHub actions
 jest.setTimeout(15000);

@@ -59,12 +59,12 @@ export const getExercise = async (id: number): Promise<Exercise> => {
 /*
  * Fetch exercise bases with a given variation ID
  */
-export const getExercisesForVariation = async (id: number | null | undefined): Promise<Exercise[]> => {
+export const getExercisesForVariation = async (id: string | null | undefined): Promise<Exercise[]> => {
     if (!id) {
         return [];
     }
 
-    const url = makeUrl(EXERCISE_INFO_PATH, { query: { variations: id } });
+    const url = makeUrl(EXERCISE_INFO_PATH, { query: { variation_group: id } });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response = await axios.get<ResponseType<any>>(url, {
         headers: makeHeader(),
@@ -99,7 +99,7 @@ type TranslationSubmissionProps = {
 export type AddExerciseFullProps = {
     author?: string,
     exercise: ExerciseSubmissionProps,
-    variations?: number | null,
+    variationGroup?: string | null,
     variationsConnectTo?: number | null,
     translations: TranslationSubmissionProps[],
 }
@@ -115,7 +115,8 @@ export const addFullExercise = async (data: AddExerciseFullProps): Promise<numbe
         muscles_secondary: data.exercise.secondaryMuscleIds,
         // eslint-disable-next-line camelcase
         license_author: data.author ?? '',
-        variations: data.variations ?? null,
+        // eslint-disable-next-line camelcase
+        variation_group: data.variationGroup ?? null,
         //eslint-disable-next-line camelcase
         variations_connect_to: data.variationsConnectTo ?? null,
         translations: [
@@ -148,7 +149,7 @@ type EditExerciseProps = {
     equipment?: number[],
     muscles?: number[],
     muscles_secondary?: number[],
-    variations?: number | null,
+    variation_group?: string | null,
     license_author?: string | null
 }
 export const editExercise = async (id: number, data: EditExerciseProps): Promise<number> => {
