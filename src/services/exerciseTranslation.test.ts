@@ -32,7 +32,7 @@ describe("Exercise translation service API tests", () => {
             exerciseId: 100,
             languageId: 2,
             name: "Test exercise",
-            description: "Test description",
+            descriptionSource: "Test description",
             author: "Asimov"
         });
 
@@ -70,7 +70,7 @@ describe("Exercise translation service API tests", () => {
             exerciseId: 100,
             languageId: 2,
             name: "A new, cooler name!!!",
-            description: "A new, cooler description!!!",
+            descriptionSource: "A new, cooler description!!!",
             author: "Asimov"
         });
 

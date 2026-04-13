@@ -176,7 +176,6 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                     exerciseId: exercise.id!,
                     languageId: language.id,
                     name: values.name,
-                    description: '',
                     descriptionSource: values.description,
                     author: ''
                 };

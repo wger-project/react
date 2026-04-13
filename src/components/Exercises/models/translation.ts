@@ -21,13 +21,21 @@ export class Translation {
 
     id: number | null;
     uuid: string | null;
+
     name: string;
+
+    // The exercise's description, parsed to HTML from the description source
     description: string;
+
+    // The source description of the translation in markdown. This field is usually only used
+    descriptionSource: string;
+
+    // The languageID of the translation
     language: number;
+
     notes: Note[] = [];
     aliases: Alias[] = [];
     authors: string[] = [];
-    descriptionSource: string;
 
     constructor(init: TranslationConstructorParams) {
         this.id = init.id;
@@ -96,7 +104,7 @@ export class TranslationAdapter implements Adapter<Translation> {
             name: item.name,
             description: item.description,
             language: item.language,
-            description_source: item.descriptionSource,
+            "description_source": item.descriptionSource,
         };
     }
 }
