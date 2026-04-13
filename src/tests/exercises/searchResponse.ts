@@ -19,6 +19,7 @@ export const searchResponse: Exercise[] = [
                 uuid: "uuid-1149",
                 name: "Crunches an Negativbank",
                 description: "",
+                descriptionSource: '',
                 language: 1,
             })
         ],
@@ -41,6 +42,7 @@ export const searchResponse: Exercise[] = [
                 uuid: "uuid-1213",
                 name: "Crunches am Seil",
                 description: "",
+                descriptionSource: '',
                 language: 1,
             })
         ],

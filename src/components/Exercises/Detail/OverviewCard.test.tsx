@@ -15,6 +15,7 @@ describe("Test the exercise overview card component", () => {
         uuid: "583281c7-2362-48e7-95d5-8fd6c455e0fb",
         name: "Squats",
         description: "Do a squat",
+        descriptionSource: "Do a squat",
         language: 2,
     });
     const exerciseTranslation2 = new Translation({
@@ -22,6 +23,7 @@ describe("Test the exercise overview card component", () => {
         uuid: "dae6f6ed-9408-4e62-a59a-1a33f4e8ab36",
         name: "Kniebeuge",
         description: "Kniebeuge machen",
+        descriptionSource: "Kniebeuge machen",
         language: 1,
     });
     const category = new Category(10, "Abs");

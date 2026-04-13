@@ -62,6 +62,7 @@ export const testExerciseSquats = new Exercise({
             uuid: '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             name: 'Squats',
             description: 'Do a squat',
+            descriptionSource: 'Do a squat',
             language: 2,
             notes: [
                 new Note(10, 111, 'keep your back straight'),
@@ -72,6 +73,7 @@ export const testExerciseSquats = new Exercise({
             uuid: 'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
             name: 'Kniebeuge',
             description: 'Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur',
+            descriptionSource: 'Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur',
             language: 1,
             notes: [
                 new Note(11, 9, 'Rücken gerade halten'),
@@ -99,6 +101,7 @@ export const testExerciseBenchPress = new Exercise({
             uuid: '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             name: 'Benchpress',
             description: 'Do a benchpress',
+            descriptionSource: 'Do a benchpress',
             language: 2,
         }),
     ]
@@ -120,6 +123,7 @@ export const testExerciseCurls = new Exercise({
             uuid: '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             name: 'Curls',
             description: 'curls! yeah!',
+            descriptionSource: 'curls! yeah!',
             language: 2,
         }),
     ]
@@ -141,6 +145,7 @@ export const testExerciseCrunches = new Exercise({
             uuid: '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             name: 'Crunches',
             description: 'Do some crunches',
+            descriptionSource: 'Do some crunches',
             language: 2,
         }),
     ]
@@ -162,6 +167,7 @@ export const testExerciseSkullCrusher = new Exercise({
             uuid: '583281c7-2362-48e7-95d5-8fd6c455e0fb',
             name: 'Skull crusher',
             description: 'get some sick triceps pump',
+            descriptionSource: 'get some sick triceps pump',
             language: 2,
         }),
     ]

@@ -13,6 +13,7 @@ const testExerciseTranslation1 = new Translation({
     uuid: '583281c7-2362-48e7-95d5-8fd6c455e0fb',
     name: 'Squats',
     description: 'Do a squat',
+    descriptionSource: 'Do a squat',
     language: 2,
     notes: [
         new Note(133, 111, 'do the exercise correctly'),
@@ -27,6 +28,7 @@ const testExerciseTranslation2 = new Translation({
     uuid: 'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
     name: 'Kniebeuge',
     description: 'Kniebeuge machen',
+    descriptionSource: 'Kniebeuge machen',
     language: 1,
 });
 const category = new Category(10, "Abs");
@@ -167,6 +169,7 @@ export const responseApiExerciseInfo = {
                 "uuid": "583281c7-2362-48e7-95d5-8fd6c455e0fb",
                 "name": "Squats",
                 "description": "Do a squat",
+                "description_source": "Do a squat",
                 "creation_date": "2022-10-22",
                 "language": 2,
                 "license": 2,
@@ -196,6 +199,7 @@ export const responseApiExerciseInfo = {
                 "uuid": "dae6f6ed-9408-4e62-a59a-1a33f4e8ab36",
                 "name": "Kniebeuge",
                 "description": "Kniebeuge machen",
+                "description_source": "Kniebeuge machen",
                 "creation_date": "2022-01-01",
                 "language": 1,
                 "license": 2,
