@@ -57,28 +57,30 @@ export const testExerciseSquats = new Exercise({
     images: [],
     variationGroup: null,
     translations: [
-        new Translation(111,
-            '583281c7-2362-48e7-95d5-8fd6c455e0fb',
-            'Squats',
-            'Do a squat',
-            2,
-            [
+        new Translation({
+            id: 111,
+            uuid: '583281c7-2362-48e7-95d5-8fd6c455e0fb',
+            name: 'Squats',
+            description: 'Do a squat',
+            language: 2,
+            notes: [
                 new Note(10, 111, 'keep your back straight'),
-            ]
-        ),
-        new Translation(9,
-            'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
-            'Kniebeuge',
-            'Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur',
-            1,
-            [
+            ],
+        }),
+        new Translation({
+            id: 9,
+            uuid: 'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
+            name: 'Kniebeuge',
+            description: 'Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur',
+            language: 1,
+            notes: [
                 new Note(11, 9, 'Rücken gerade halten'),
             ],
-            [
+            aliases: [
                 new Alias(1, 'e30eab18-7adf-4361-ad63-192c76103cf0', 'Königsübung'),
                 new Alias(2, 'f4f616f8-224e-4aba-a4e1-11ec0b59af33', 'Beinverdicker'),
-            ]
-        )
+            ],
+        })
     ]
 });
 
@@ -92,12 +94,13 @@ export const testExerciseBenchPress = new Exercise({
     images: [],
     variationGroup: 'a1b2c3d4-0001-0000-0000-000000000001',
     translations: [
-        new Translation(111,
-            '583281c7-2362-48e7-95d5-8fd6c455e0fb',
-            'Benchpress',
-            'Do a benchpress',
-            2
-        ),
+        new Translation({
+            id: 111,
+            uuid: '583281c7-2362-48e7-95d5-8fd6c455e0fb',
+            name: 'Benchpress',
+            description: 'Do a benchpress',
+            language: 2,
+        }),
     ]
 });
 
@@ -112,12 +115,13 @@ export const testExerciseCurls = new Exercise({
     images: [],
     variationGroup: 'a1b2c3d4-0001-0000-0000-000000000001',
     translations: [
-        new Translation(111,
-            '583281c7-2362-48e7-95d5-8fd6c455e0fb',
-            'Curls',
-            'curls! yeah!',
-            2
-        ),
+        new Translation({
+            id: 111,
+            uuid: '583281c7-2362-48e7-95d5-8fd6c455e0fb',
+            name: 'Curls',
+            description: 'curls! yeah!',
+            language: 2,
+        }),
     ]
 });
 
@@ -132,12 +136,13 @@ export const testExerciseCrunches = new Exercise({
     images: [],
     variationGroup: null,
     translations: [
-        new Translation(111,
-            '583281c7-2362-48e7-95d5-8fd6c455e0fb',
-            'Crunches',
-            'Do some crunches',
-            2
-        ),
+        new Translation({
+            id: 111,
+            uuid: '583281c7-2362-48e7-95d5-8fd6c455e0fb',
+            name: 'Crunches',
+            description: 'Do some crunches',
+            language: 2,
+        }),
     ]
 });
 
@@ -152,12 +157,13 @@ export const testExerciseSkullCrusher = new Exercise({
     images: [],
     variationGroup: 'a1b2c3d4-0002-0000-0000-000000000002',
     translations: [
-        new Translation(111,
-            '583281c7-2362-48e7-95d5-8fd6c455e0fb',
-            'Skull crusher',
-            'get some sick triceps pump',
-            2
-        ),
+        new Translation({
+            id: 111,
+            uuid: '583281c7-2362-48e7-95d5-8fd6c455e0fb',
+            name: 'Skull crusher',
+            description: 'get some sick triceps pump',
+            language: 2,
+        }),
     ]
 });
 

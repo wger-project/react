@@ -116,32 +116,33 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                             fullWidth
                             id="amount"
                             label={'amount'}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {weightUnits.length > 0 ? (
-                                            <Select
-                                                variant="standard"
-                                                disableUnderline
-                                                value={selectedUnit?.id?.toString() ?? GRAM_UNIT_VALUE}
-                                                onChange={(e) => handleUnitChange(e.target.value)}
-                                            >
-                                                <MenuItem value={GRAM_UNIT_VALUE}>
-                                                    {t('nutrition.gramShort')}
-                                                </MenuItem>
-                                                {weightUnits.map(unit => (
-                                                    <MenuItem key={unit.id} value={unit.id.toString()}>
-                                                        {unit.name} ({unit.grams}g)
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            {weightUnits.length > 0 ? (
+                                                <Select
+                                                    variant="standard"
+                                                    disableUnderline
+                                                    value={selectedUnit?.id?.toString() ?? GRAM_UNIT_VALUE}
+                                                    onChange={(e) => handleUnitChange(e.target.value)}
+                                                >
+                                                    <MenuItem value={GRAM_UNIT_VALUE}>
+                                                        {t('nutrition.gramShort')}
                                                     </MenuItem>
-                                                ))}
-                                            </Select>
-                                        ) : (
-                                            t('nutrition.gramShort')
-                                        )}
-                                    </InputAdornment>
-                                )
+                                                    {weightUnits.map(unit => (
+                                                        <MenuItem key={unit.id} value={unit.id.toString()}>
+                                                            {unit.name} ({unit.grams}g)
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            ) : (
+                                                t('nutrition.gramShort')
+                                            )}
+                                        </InputAdornment>
+                                    )
+                                }
                             }}
-
                             error={formik.touched.amount && Boolean(formik.errors.amount)}
                             helperText={formik.touched.amount && formik.errors.amount}
                             {...formik.getFieldProps('amount')}

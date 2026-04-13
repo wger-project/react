@@ -16,18 +16,20 @@ interface MarkdownEditorProps {
 export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
                                                                   value,
                                                                   onChange,
-                                                                  label = "Description",
+                                                                  label,
                                                                   error,
                                                                   helperText
                                                               }) => {
     const [isPreview, setIsPreview] = useState(false);
     const [t] = useTranslation();
 
+    const resolvedLabel = label ?? t('description');
+
     return (
         <Box mb={2}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                 <Typography variant="subtitle2" color={error ? 'error' : 'textSecondary'}>
-                    {label}
+                    {resolvedLabel}
                 </Typography>
                 <ButtonGroup size="small" variant="outlined">
                     <Button

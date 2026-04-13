@@ -5,32 +5,48 @@ import { Adapter } from "utils/Adapter";
 import { truncateLongNames } from "utils/strings";
 
 
+export type TranslationConstructorParams = {
+    id: number | null;
+    uuid: string | null;
+    name: string;
+    description: string;
+    language: number;
+    notes?: Note[];
+    aliases?: Alias[];
+    authors?: string[];
+    descriptionSource?: string;
+};
+
 export class Translation {
 
+    id: number | null;
+    uuid: string | null;
+    name: string;
+    description: string;
+    language: number;
     notes: Note[] = [];
     aliases: Alias[] = [];
     authors: string[] = [];
+    descriptionSource?: string;
 
-    constructor(public id: number | null,
-        public uuid: string | null,
-        public name: string,
-        public description: string,
-        public language: number,
-        notes?: Note[],
-        aliases?: Alias[],
-        authors?: string[],
-        public descriptionSource?: string
-    ) {
-        if (notes) {
-            this.notes = notes;
+    constructor(init: TranslationConstructorParams) {
+        this.id = init.id;
+        this.uuid = init.uuid;
+        this.name = init.name;
+        this.description = init.description;
+        this.language = init.language;
+        this.descriptionSource = init.descriptionSource;
+
+        if (init.notes) {
+            this.notes = init.notes;
         }
 
-        if (aliases) {
-            this.aliases = aliases;
+        if (init.aliases) {
+            this.aliases = init.aliases;
         }
 
-        if (authors) {
-            this.authors = authors;
+        if (init.authors) {
+            this.authors = init.authors;
         }
     }
 
@@ -53,19 +69,19 @@ export class Translation {
 export class TranslationAdapter implements Adapter<Translation> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any): Translation {
-        return new Translation(
-            item.id,
-            item.uuid,
-            item.name,
-            item.description,
-            item.language,
+        return new Translation({
+            id: item.id,
+            uuid: item.uuid,
+            name: item.name,
+            description: item.description,
+            language: item.language,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            item.notes?.map((e: any) => (new NoteAdapter().fromJson(e))),
+            notes: item.notes?.map((e: any) => (new NoteAdapter().fromJson(e))),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            item.aliases?.map((e: any) => (new AliasAdapter().fromJson(e))),
-            item.author_history,
-            item.description_source
-        );
+            aliases: item.aliases?.map((e: any) => (new AliasAdapter().fromJson(e))),
+            authors: item.author_history,
+            descriptionSource: item.description_source,
+        });
     }
 
     /**
