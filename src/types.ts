@@ -54,6 +54,9 @@ export interface ApiMeasurementCategoryType {
     unit: string
 }
 
+export const NUTRI_SCORES = ['a', 'b', 'c', 'd', 'e'] as const;
+export type NutriScoreValue = typeof NUTRI_SCORES[number];
+
 export interface ApiIngredientType {
     id: number,
     uuid: string,
@@ -76,6 +79,7 @@ export interface ApiIngredientType {
     license_author: string,
     is_vegan: boolean | null,
     is_vegetarian: boolean | null,
+    nutriscore: NutriScoreValue | null,
     image: ApiIngredientImageType | null,
     thumbnails: ApiIngredientThumbnailType | null,
 }

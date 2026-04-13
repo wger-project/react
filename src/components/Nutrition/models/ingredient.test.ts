@@ -23,6 +23,9 @@ describe('Test the ingredient model', () => {
         expect(ingredient.fatSaturated).toBe(0.6);
         expect(ingredient.fiber).toBe(0.8);
         expect(ingredient.sodium).toBe(0.356);
+        expect(ingredient.isVegan).toBe(false);
+        expect(ingredient.isVegetarian).toBe(false);
+        expect(ingredient.nutriscore).toBe('d');
 
         expect(ingredient.image!.url).toBe("http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg");
         expect(ingredient.image!.uuid).toBe("7f4120cd-a5c1-4a3a-b31b-974e62478222");
