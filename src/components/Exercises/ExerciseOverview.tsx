@@ -25,9 +25,9 @@ const ContributeExerciseBanner = () => {
 
     return (
         <Box
-            marginTop={4}
-            padding={4}
             sx={{
+                marginTop: 4,
+                padding: 4,
                 width: "100%",
                 backgroundColor: "#ebebeb",
                 textAlign: "center",
@@ -53,9 +53,9 @@ const NoResultsBanner = () => {
 
     return (
         <Box
-            marginTop={4}
-            padding={4}
             sx={{
+                marginTop: 4,
+                padding: 4,
                 width: "100%",
                 backgroundColor: "#ebebeb",
                 textAlign: "center",
@@ -253,7 +253,7 @@ export const ExerciseOverviewList = () => {
                         ? <ExerciseGridSkeleton />
                         : <>
                             <ExerciseGrid exercises={paginatedExercises} />
-                            <Stack spacing={2} alignItems="center" sx={{ mt: 2 }}>
+                            <Stack spacing={2} sx={{ alignItems: "center", mt: 2 }}>
                                 <Pagination
                                     count={pageCount}
                                     color="primary"

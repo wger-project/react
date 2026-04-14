@@ -26,8 +26,8 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     const resolvedLabel = label ?? t('description');
 
     return (
-        <Box mb={2}>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+        <Box sx={{ mb: 2 }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
                 <Typography variant="subtitle2" color={error ? 'error' : 'textSecondary'}>
                     {resolvedLabel}
                 </Typography>

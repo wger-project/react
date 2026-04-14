@@ -24,7 +24,7 @@ export function NutriScoreBadge({ score, size = 'medium' }: NutriScoreBadgeProps
     const dim = SIZES[size];
 
     return (
-        <Box display="inline-flex" alignItems="center">
+        <Box sx={{ display: "inline-flex", alignItems: "center" }}>
             {NUTRI_SCORES.map((s, i) => {
                 const isActive = s === score;
                 const height = isActive ? dim.activeHeight : dim.height;

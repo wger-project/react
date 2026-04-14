@@ -214,9 +214,11 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                                     primary={ingredient.name}
                                     slotProps={{
                                         primary: {
-                                            whiteSpace: "nowrap",
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
+                                            sx: {
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            },
                                         },
                                     }}
                                 />
@@ -253,7 +255,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
-                <Stack padding={2} spacing={1}>
+                <Stack sx={{ padding: 2 }} spacing={1}>
                     <FormControl fullWidth size="small">
                         <InputLabel id="ingredient-language-filter-label">
                             {t("language")}

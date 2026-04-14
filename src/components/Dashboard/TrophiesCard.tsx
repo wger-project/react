@@ -75,7 +75,7 @@ export const EmptyTrophiesCardContent = () => {
                 sx={{ paddingBottom: 0 }}
             />
             <CardContent>
-                <Typography variant="h6" mr={3}>
+                <Typography variant="h6" sx={{ mr: 3 }}>
                     {t('nothingHereYet')}
                 </Typography>
             </CardContent>

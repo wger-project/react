@@ -189,7 +189,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
                 <Stack>
                     {props.dayData.slots.map((slotData, index) => (
                         <div key={index}>
-                            <Box padding={1}>
+                            <Box sx={{ padding: 1 }}>
                                 <SlotDataList slotData={slotData} />
                             </Box>
                             <Divider />
