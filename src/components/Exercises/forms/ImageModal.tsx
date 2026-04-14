@@ -89,7 +89,7 @@ export const ImageFormModal = ({
                                         </Alert>
                                     </Stack>
 
-                                    <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
+                                    <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                                         <Button 
                                             variant="contained" 
                                             onClick={submitForm}

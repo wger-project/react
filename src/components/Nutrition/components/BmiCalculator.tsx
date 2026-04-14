@@ -168,29 +168,31 @@ export const BmiCalculator = () => {
                             />}
 
                     </AreaChart>
-                    <Stack direction={"row"} justifyContent="center">
+                    <Stack direction={"row"} sx={{ justifyContent: "center" }}>
                         <Box
-                            height={20}
-                            width={20}
-                            sx={{ backgroundColor: getRangeColor('obese') }} />
+                            sx={{ height: 20, width: 20, backgroundColor: getRangeColor('obese') }} />
                         {t('bmi.obese')}
 
                         <Box
-                            height={20}
-                            width={20}
-                            sx={{ backgroundColor: getRangeColor('overweight'), marginLeft: 2 }} />
+                            sx={{
+                                height: 20,
+                                width: 20,
+                                backgroundColor: getRangeColor('overweight'),
+                                marginLeft: 2
+                            }} />
                         {t('bmi.overweight')}
 
                         <Box
-                            height={20}
-                            width={20}
-                            sx={{ backgroundColor: getRangeColor('normal'), marginLeft: 2 }} />
+                            sx={{ height: 20, width: 20, backgroundColor: getRangeColor('normal'), marginLeft: 2 }} />
                         {t('bmi.normal')}
 
                         <Box
-                            height={20}
-                            width={20}
-                            sx={{ backgroundColor: getRangeColor('underweight'), marginLeft: 2 }} />
+                            sx={{
+                                height: 20,
+                                width: 20,
+                                backgroundColor: getRangeColor('underweight'),
+                                marginLeft: 2
+                            }} />
                         {t('bmi.underweight')}
                     </Stack>
 

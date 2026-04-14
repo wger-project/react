@@ -163,19 +163,20 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                         label={t("nutrition.searchIngredientName")}
                         fullWidth
                         slotProps={{
+                            ...params.slotProps,
                             input: {
-                                ...params.InputProps,
+                                ...params.slotProps?.input,
                                 startAdornment: (
                                     <>
                                         <InputAdornment position="start">
                                             <SearchIcon />
                                         </InputAdornment>
-                                        {params.InputProps.startAdornment}
+                                        {params.slotProps?.input?.startAdornment}
                                     </>
                                 ),
                                 endAdornment: (
                                     <>
-                                        {params.InputProps.endAdornment}
+                                        {params.slotProps?.input?.endAdornment}
                                         <InputAdornment position="end">
                                             <IconButton
                                                 aria-label="Toggle filters"

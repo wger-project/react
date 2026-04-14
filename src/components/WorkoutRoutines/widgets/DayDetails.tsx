@@ -258,7 +258,7 @@ const SlotGroupContainer = (props: {
             marginBottom: 1,
             padding: 1,
         }}>
-            <Grid container justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+            <Grid container sx={{ justifyContent: "space-between", alignItems: "center", mb: 1 }}>
                 <Grid>
                     <Typography variant={"h6"}>
                         {props.group.exerciseName}
@@ -379,13 +379,13 @@ export const DayDetails = (props: {
         />
 
         {(!props.day.isRest && props.day.slots.length > 0) && <>
-            <Box height={40} />
+            <Box sx={{ height: 40 }} />
             <FormControlLabel
                 control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
                 label={t('routines.simpleMode')} />
         </>}
 
-        <Box height={20} />
+        <Box sx={{ height: 20 }} />
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="setDroppable" direction="vertical">
                 {(provided, snapshot) => (

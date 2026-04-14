@@ -11,7 +11,7 @@ type ImageCardProps = {
     exerciseId: number;
     image: ExerciseImage;
     canDelete: boolean
-    onEdit: (image: ExerciseImage) => void; 
+    onEdit: (image: ExerciseImage) => void;
 };
 
 export const ImageEditCard = ({ exerciseId, image, canDelete, onEdit }: ImageCardProps) => {
@@ -25,7 +25,7 @@ export const ImageEditCard = ({ exerciseId, image, canDelete, onEdit }: ImageCar
             sx={{ height: 120 }}
             alt=""
         />
-        <CardActions style={{justifyContent: 'space-between'}}>
+        <CardActions style={{ justifyContent: 'space-between' }}>
             {canDelete &&
                 <Button
                     color="primary"
@@ -33,7 +33,7 @@ export const ImageEditCard = ({ exerciseId, image, canDelete, onEdit }: ImageCar
                 >
                     {t('delete')}
                 </Button>}
-            {canDelete && 
+            {canDelete &&
                 <Button
                     color="primary"
                     onClick={() => onEdit(image)}
@@ -83,10 +83,13 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
     return <>
         <Card>
             <CardMedia>
-                <Box sx={{ backgroundColor: "lightgray", height: 120 }}
-                     display="flex"
-                     alignItems="center"
-                     justifyContent="center">
+                <Box sx={{
+                    backgroundColor: "lightgray",
+                    height: 120,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center"
+                }}>
                     <AddCircleIcon sx={{ fontSize: 80, color: "gray" }} />
                 </Box>
             </CardMedia>

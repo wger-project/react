@@ -1,6 +1,6 @@
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CollectionsIcon from '@mui/icons-material/Collections';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import {
     Box,
     Button,
@@ -86,7 +86,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                 {t("exercises.compatibleImagesCC")}
 
             </Typography>
-            <Stack direction={"row"} justifyContent="center">
+            <Stack direction={"row"} sx={{ justifyContent: "center" }}>
                 <div>
                     <label htmlFor="camera-input">
                         <CameraAltIcon fontSize="large" sx={{ m: 2 }} />
@@ -144,7 +144,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                 {t("forms.supportedImageFormats")}
             </Typography>
             <Grid container>
-                <Grid display="flex" justifyContent={"end"} size={12}>
+                <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
                     <Box sx={{ mb: 2 }}>
                         <>
                             <Button

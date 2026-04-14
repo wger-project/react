@@ -145,7 +145,7 @@ export const ExerciseOverviewList = () => {
 
     return (
         (<Container maxWidth="lg">
-            <Grid container spacing={2} mt={2}>
+            <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid
                     size={{
                         xs: 10,
@@ -170,16 +170,14 @@ export const ExerciseOverviewList = () => {
                             </Button>
                         </Grid>
                         <Grid
-                            flexGrow={1}
+                            sx={{ flexGrow: 1 }}
                             size={{
                                 sm: 6
                             }}>
                             <NameAutocompleter callback={exerciseAdded} />
                         </Grid>
                         <Grid
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
+                            sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
                             size={{
                                 xs: 2,
                                 sm: 6

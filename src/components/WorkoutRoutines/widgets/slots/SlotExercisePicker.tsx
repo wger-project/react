@@ -14,7 +14,7 @@ export const SlotExercisePicker = (props: {
 
     return (
         <Grid size={12}>
-            <Box height={20} />
+            <Box sx={{ height: 20 }} />
             <NameAutocompleter
                 callback={(exercise: Exercise | null) => {
                     if (exercise !== null) {

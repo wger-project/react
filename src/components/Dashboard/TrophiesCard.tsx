@@ -24,7 +24,7 @@ export const TrophiesCard = () => {
 function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
     const { t, i18n } = useTranslation();
 
-    const tooltipWidget = (tooltip: string) => <Typography variant="body2" textAlign={'center'}>
+    const tooltipWidget = (tooltip: string) => <Typography variant="body2" sx={{ textAlign: 'center' }}>
         {tooltip}
     </Typography>;
 
@@ -53,7 +53,7 @@ function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
                                 title={userTrophy.trophy.name}
                             />
                             <CardContent>
-                                <Typography gutterBottom variant="body2" component="div" textAlign="center">
+                                <Typography gutterBottom variant="body2" component="div" sx={{ textAlign: "center" }}>
                                     {userTrophy.trophy.name}
                                 </Typography>
                             </CardContent>

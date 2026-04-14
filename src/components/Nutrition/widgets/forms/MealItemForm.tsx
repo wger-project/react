@@ -148,7 +148,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                             {...formik.getFieldProps('amount')}
                         />
 
-                        <Stack direction="row" justifyContent="end" spacing={2}>
+                        <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
                             {(closeFn !== undefined && item !== undefined)
                                 && <Button color="error" variant="outlined" onClick={handleDelete}>
                                     {t('delete')}

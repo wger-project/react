@@ -384,5 +384,6 @@
         "trophies": "Troféus"
     },
     "private": "Privado",
-    "public": "Público"
+    "public": "Público",
+    "totalChange": "Variação total"
 }

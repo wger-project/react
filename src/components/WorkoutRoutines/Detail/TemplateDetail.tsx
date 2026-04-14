@@ -60,7 +60,7 @@ export const TemplateDetail = () => {
                 }
                 sideBar={
                     <Stack>
-                        <Box height={40} />
+                        <Box sx={{ height: 40 }} />
                         <Grid container>
                             <Grid size={6}>
                                 <MuscleOverview

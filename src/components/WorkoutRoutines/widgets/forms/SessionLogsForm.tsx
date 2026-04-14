@@ -302,7 +302,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                         )}
                     </FieldArray>
                     <Grid container spacing={2}>
-                        <Grid size={12} display={"flex"} justifyContent={"end"}>
+                        <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
                             <Button
                                 color="primary"
                                 // disabled={!formik.isValid || formik.isSubmitting || !formik.dirty}

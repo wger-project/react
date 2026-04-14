@@ -59,9 +59,7 @@ export const WorkoutLogs = () => {
                 <React.Fragment key={index}>
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
-                        justifyContent="space-between"
-                        alignItems="center"
-                        sx={{ mt: 4 }}
+                        sx={{ justifyContent: "space-between", alignItems: "center", mt: 4 }}
                     >
                         <Typography variant={"h4"}>
                             {dayData.day!.name}

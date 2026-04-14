@@ -231,7 +231,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
             </Box>
 
             <Grid container>
-                <Grid display="flex" justifyContent={"end"} size={12}>
+                <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
                     <Box sx={{ mb: 2 }}>
                         <div>
                             {!addExerciseSubmissionMutation.isSuccess &&

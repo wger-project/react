@@ -23,6 +23,29 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
             <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography>{t('exercises.whatVariationsExist')}</Typography>
             </Grid>
+            <Grid
+                sx={{ display: "flex", justifyContent: "end" }}
+                size={{
+                    xs: 12,
+                    sm: 6
+                }}>
+                <TextField
+                    label={t('name')}
+                    helperText={t('exercises.filterVariations')}
+                    // defaultValue={state.nameEn}
+                    variant="standard"
+                    onChange={(event) => setSearchTerms(event.target.value)}
+                    slotProps={{
+                        input: {
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }
+                    }}
+                />
+            </Grid>
         </Grid>
 
         <VariationSelect
@@ -38,7 +61,7 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
         </Alert>
 
         <Grid container>
-            <Grid display="flex" justifyContent={"end"} size={12}>
+            <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
                 <Box sx={{ mb: 2 }}>
                     <div>
                         <Button

@@ -39,12 +39,24 @@
     "lastWeek": "Siste uke",
     "lastHalfYear": "Siste 6 måneder",
     "currentWeight": "Nåværende vekt",
-    "workout": "Treningsøkt",
+    "workout": "Treningsøvelse",
     "actions": "Handlinger",
     "nothingHereYetAction": "Trykk på handlingsknappen for å starte",
     "notes": "Notater",
     "value": "Verdi",
     "filters": "Filtre",
     "alsoSearchEnglish": "Søk også etter navn på engelsk",
-    "copyToClipboard": "Kopier til utklippstavlen"
+    "copyToClipboard": "Kopier til utklippstavlen",
+    "dashboard": {
+        "customizeDashboard": "Tilpass dashboard",
+        "dragWidgetsHelp": "Dra modulene for å flytte dem eller juster størrelsen ved å bruke hjørnet nede til høyre.",
+        "resetLayout": "Nullstill til standard oppsett"
+    },
+    "core": {
+        "exitEditMode": "Avslutt redigeringsmodus",
+        "customize": "Tilpass"
+    },
+    "trophies": {
+        "trophies": "Trofeer"
+    }
 }

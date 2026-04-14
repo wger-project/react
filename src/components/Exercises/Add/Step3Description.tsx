@@ -74,7 +74,7 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
                         <ExerciseNotes fieldName={'notes'} />
 
                         <Grid container>
-                            <Grid display="flex" justifyContent={"end"} size={12}>
+                            <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
                                 <Box sx={{ mb: 2 }}>
                                     <div>
                                         <Button

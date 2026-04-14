@@ -21,7 +21,7 @@ export const NotEnoughRights = () => {
                     textAlign: "center",
                 }}
             >
-                <Typography mb={2}>{t('exercises.notEnoughRights', { days: MIN_ACCOUNT_AGE })}</Typography>
+                <Typography sx={{ mb: 2 }}>{t('exercises.notEnoughRights', { days: MIN_ACCOUNT_AGE })}</Typography>
 
                 {!contributeQuery.anonymous && !contributeQuery.emailVerified
                     &&

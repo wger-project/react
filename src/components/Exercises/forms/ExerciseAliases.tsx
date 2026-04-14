@@ -75,14 +75,15 @@ export function ExerciseAliases(props: { fieldName: string }) {
                     error={meta.touched && Boolean(meta.error)}
                     helperText={meta.touched ? formatError(meta.error) : undefined}
                     slotProps={{
+                        ...params.slotProps,
                         input: {
+                            ...params.slotProps?.input,
                             startAdornment: (
                                 <InputAdornment
                                     position="start"
                                     sx={{ display: "flex", gap: 0.5, alignItems: "center" }}
                                 >
                                     {chips}
-                                    {/*{params.InputProps?.startAdornment}*/}
                                 </InputAdornment>
                             ),
                         },

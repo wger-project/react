@@ -155,7 +155,7 @@ export const Head = ({
                             </nav>
                         }
                     </div>
-                    <Stack direction="row" spacing={1} mt={2}>
+                    <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
                         <Chip
                             label={exercise.category.translatedName}
                             size="small" />

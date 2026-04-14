@@ -255,9 +255,7 @@ export const ExerciseDetailView = ({
                 <Divider />
                 <Typography
                     variant="caption"
-                    display="block"
-                    mt={1}
-                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                    sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
                 >
                     <i className="fa-brands fa-creative-commons" style={{ fontSize: 20 }}></i>
                     The content on this page is available under the
