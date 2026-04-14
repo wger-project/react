@@ -307,7 +307,7 @@ export const ProgressionForm = (props: {
                 {formik => (
                     <Form>
                         <Grid container spacing={1}>
-                            <Grid size={4} offset={2} textAlign={"center"}>
+                            <Grid size={4} offset={2} sx={{ textAlign: "center" }}>
                                 {t('value')}
                             </Grid>
                             <Grid size={6}>
@@ -318,7 +318,7 @@ export const ProgressionForm = (props: {
                                     <Grid size={3}>
                                         {t('routines.step')}
                                     </Grid>
-                                    <Grid size={3} textAlign={'center'}>
+                                    <Grid size={3} sx={{ textAlign: 'center' }}>
                                         {t('routines.requirements')}
                                         <br />
                                         <Tooltip title={t('routines.requirementsHelpText')}>
@@ -328,7 +328,7 @@ export const ProgressionForm = (props: {
                                             </IconButton>
                                         </Tooltip>
                                     </Grid>
-                                    <Grid size={3} textAlign={'center'}>
+                                    <Grid size={3} sx={{ textAlign: 'center' }}>
                                         {t('routines.repeat')}
                                         <br />
                                         <Tooltip title={t('routines.repeatHelpText')}>
@@ -350,8 +350,11 @@ export const ProgressionForm = (props: {
 
                                         {formik.values.entries.map((log, index) => (
                                             <React.Fragment key={index}>
-                                                <Grid size={2} display={'flex'} justifyContent={'space-around'}
-                                                      alignItems={'center'}>
+                                                <Grid size={2} sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-around',
+                                                    alignItems: 'center'
+                                                }}>
                                                     {props.cycleLength === 7 ? t('routines.weekNr', { number: log.iteration }) : t('routines.workoutNr', { number: log.iteration })}
                                                     {log.edited
                                                         ? <IconButton
@@ -441,7 +444,7 @@ export const ProgressionForm = (props: {
                                                                     </MenuItem>}
                                                             </TextField>}
                                                         </Grid>
-                                                        <Grid size={3} textAlign={'center'}>
+                                                        <Grid size={3} sx={{ textAlign: 'center' }}>
                                                             {log.edited &&
                                                                 <ConfigDetailsRequirementsField
                                                                     disabled={log.iteration === 1 || log.operation === OPERATION_REPLACE}
@@ -454,7 +457,7 @@ export const ProgressionForm = (props: {
                                                                 </Typography>
                                                             ))}
                                                         </Grid>
-                                                        <Grid size={3} textAlign={'center'}>
+                                                        <Grid size={3} sx={{ textAlign: 'center' }}>
                                                             {log.edited && <Switch
                                                                 checked={formik.values.entries[index].repeat}
                                                                 {...formik.getFieldProps(`entries.${index}.repeat`)}
@@ -472,7 +475,7 @@ export const ProgressionForm = (props: {
                                 <FormQueryErrors mutationQuery={processEntriesQuery} />
                             </Grid>}
 
-                            <Grid size={12} display={"flex"} justifyContent={"end"}>
+                            <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
                                 <Button
                                     color="primary"
                                     disabled={!formik.isValid || formik.isSubmitting || !formik.dirty}
@@ -483,7 +486,7 @@ export const ProgressionForm = (props: {
                                 </Button>
                             </Grid>
                             <Grid size={12}>
-                                <Box height={20}></Box>
+                                <Box sx={{ height: 20 }}></Box>
                             </Grid>
                         </Grid>
                     </Form>

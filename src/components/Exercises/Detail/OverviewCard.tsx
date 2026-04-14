@@ -52,12 +52,12 @@ export const OverviewCard = ({ exercise, language }: OverviewCardProps) => {
                         size="small"
                     />
                     {exercise.equipment.map(equipment => (
-                        <Typography display="inline" mr={1} key={equipment.id}>
+                        <Typography sx={{ display: "inline", mr: 1 }} key={equipment.id}>
                             {equipment.translatedName}
                         </Typography>
                     ))}
                     {exercise.equipment.length === 0 && (
-                        <Typography color="text.secondary" display="inline" mr={1}>
+                        <Typography sx={{ color: "text.secondary", display: "inline", mr: 1 }}>
                             {t("exercises.noEquipment")}
                         </Typography>
                     )}

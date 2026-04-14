@@ -258,7 +258,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                         </ul>
                     </Grid>
                     <Grid size={6}>
-                        <Box mb={2}>
+                        <Box sx={{ mb: 2 }}>
                             <ExerciseName fieldName={'name'} />
                         </Box>
                         <ExerciseAliases fieldName={'alternativeNames'} />
@@ -411,7 +411,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
         {/* Images */}
         <PaddingBox />
         <Typography variant={'h5'}>{t('images')}</Typography>
-        <Grid container spacing={2} mt={2}>
+        <Grid container spacing={2} sx={{ mt: 2 }}>
             {addImagePermissionQuery.data && <Grid key={'add'} size={{ md: 3 }}>
                 <AddImageCard exerciseId={exercise.id!} />
             </Grid>}
@@ -431,7 +431,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
         {/* Videos */}
         <PaddingBox />
         <Typography variant={'h5'}>{t('videos')}</Typography>
-        <Grid container spacing={2} mt={2}>
+        <Grid container spacing={2} sx={{ mt: 2 }}>
             {addVideoPermissionQuery.data
                 && <Grid key={'add'} size={{ md: 3 }}>
                     <AddVideoCard exerciseId={exercise.id!} />
@@ -451,7 +451,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
             && <>
                 <PaddingBox />
                 <Typography variant={'h5'}>{t('exercises.muscles')}</Typography>
-                <Grid container spacing={1} mt={2}>
+                <Grid container spacing={1} sx={{ mt: 2 }}>
                     <Grid size={{ xs: 12, md: 6 }}>
                         <EditExerciseMuscle
                             exerciseId={exercise.id!}
@@ -471,14 +471,14 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                     </Grid>
                     <Grid size={{ xs: 12, md: 6 }}>
                         <Grid container>
-                            <Grid display="flex" justifyContent={"center"} size={6}>
+                            <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
                                 <MuscleOverview
                                     primaryMuscles={mainMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                     secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                     isFront={true}
                                 />
                             </Grid>
-                            <Grid display="flex" justifyContent={"center"} size={6}>
+                            <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
                                 <MuscleOverview
                                     primaryMuscles={mainMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                     secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}

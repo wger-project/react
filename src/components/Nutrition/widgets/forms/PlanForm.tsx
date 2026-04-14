@@ -345,7 +345,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                             </Grid>
                         </>}
 
-                        <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
+                        <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary"
                                     variant="contained"
                                     type="submit"

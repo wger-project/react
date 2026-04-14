@@ -22,8 +22,8 @@ export const FilterDrawer = ({ children }: FilterDrawerProps) => {
                 <FilterAltIcon />
             </Button>
             <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography gutterBottom variant="h6" m={2}>
+                <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center" }}>
+                    <Typography gutterBottom variant="h6" sx={{ m: 2 }}>
                         {t('filters')}
                     </Typography>
                     <Button onClick={toggleDrawer(false)}>

@@ -156,7 +156,7 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
                 </Stack>
 
                 <Grid container>
-                    <Grid display="flex" justifyContent={"end"} size={12}>
+                    <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
                         <Box sx={{ mb: 2 }}>
                             <div>
                                 <Button

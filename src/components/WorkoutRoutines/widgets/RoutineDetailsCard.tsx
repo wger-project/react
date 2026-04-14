@@ -83,9 +83,12 @@ export function SetConfigDataDetails(props: {
 
     return (
         <Grid container
-              alignItems="center"
-              justifyContent={"center"}
-              sx={{ height: props.rowHeight, marginBottom: props.marginBottom }}>
+              sx={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: props.rowHeight,
+                  marginBottom: props.marginBottom
+              }}>
             <Grid size={12}>
                 <Stack spacing={0}>
                     <Typography variant={"h6"}>
@@ -124,7 +127,7 @@ function SlotDataList(props: { slotData: SlotData }) {
                     flex: '0 0 50px',
                 }}
             >
-                <Stack divider={<Box height="10px" />}>
+                <Stack divider={<Box sx={{ height: "10px" }} />}>
                     {props.slotData.exercises.map((exercise, index) =>
                         <ExerciseImageAvatar
                             image={exercise.mainImage}

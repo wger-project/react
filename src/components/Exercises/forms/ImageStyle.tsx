@@ -40,35 +40,35 @@ export function ImageStyleToggle(props: { fieldName: string }) {
             aria-label="text alignment"
         >
             <ToggleButton value={ImageStyle.PHOTO}>
-                <Stack justifyContent="center" alignItems="center">
+                <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
                     <PhotoCameraIcon />
                     <Typography variant="caption">{t('exercises.imageStylePhoto')}</Typography>
                 </Stack>
             </ToggleButton>
 
             <ToggleButton value={ImageStyle.THREE_D}>
-                <Stack justifyContent="center" alignItems="center">
+                <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
                     <LandscapeIcon />
                     <Typography variant="caption">{t('exercises.imageStyle3D')}</Typography>
                 </Stack>
             </ToggleButton>
 
             <ToggleButton value={ImageStyle.LINE_ART}>
-                <Stack justifyContent="center" alignItems="center">
+                <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
                     <LandscapeOutlinedIcon />
                     <Typography variant="caption">{t('exercises.imageStyleLine')}</Typography>
                 </Stack>
             </ToggleButton>
 
             <ToggleButton value={ImageStyle.LOW_POLY}>
-                <Stack justifyContent="center" alignItems="center">
+                <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
                     <LandscapeTwoToneIcon />
                     <Typography variant="caption">{t('exercises.imageStyleLowPoly')}</Typography>
                 </Stack>
             </ToggleButton>
 
             <ToggleButton value={ImageStyle.OTHER}>
-                <Stack justifyContent="center" alignItems="center">
+                <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
                     <MoreHorizIcon />
                     <Typography variant="caption">{t('exercises.imageStyleOther')}</Typography>
                 </Stack>

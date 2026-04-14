@@ -66,7 +66,7 @@ export const DraggableSlotItem = (props: {
                             routineId={props.routineId}
                             slot={props.slot}
                             key={`slot-form-${props.slot.id}`} />
-                        <Box height={10} />
+                        <Box sx={{ height: 10 }} />
                     </Grid>}
                     <Grid size={12}>
                         <SlotDetails

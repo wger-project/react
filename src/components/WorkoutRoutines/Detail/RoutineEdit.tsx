@@ -50,12 +50,12 @@ export const RoutineEdit = () => {
                 <RoutineForm existingRoutine={routine} />
             </Grid>
             {routine.isTemplate && <Grid size={4}>
-                <Box height={20} />
+                <Box sx={{ height: 20 }} />
                 <RoutineTemplateForm routine={routine} />
             </Grid>}
 
             <Grid size={12}>
-                <Box height={20} />
+                <Box sx={{ height: 20 }} />
                 <DayDragAndDropGrid
                     routineId={routineId}
                     selectedDayIndex={selectedDayIndex}
@@ -77,7 +77,7 @@ export const RoutineEdit = () => {
 
 
         {routineQuery.data!.days.length > 0 && <Stack spacing={2} sx={{ mt: 2 }}>
-            <Box height={40} />
+            <Box sx={{ height: 40 }} />
             <Typography variant={"h4"}>
                 {t('routines.resultingRoutine')}
             </Typography>
@@ -85,7 +85,7 @@ export const RoutineEdit = () => {
 
             <Box>
                 <RoutineDetailsCard />
-                <Box height={20} />
+                <Box sx={{ height: 20 }} />
                 <RoutineTable routine={routineQuery.data!} />
             </Box>
         </Stack>}
