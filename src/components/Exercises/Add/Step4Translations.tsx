@@ -11,12 +11,12 @@ import {
     Switch
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
+import { MarkdownEditor } from "components/Common/forms/MarkdownEditor";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
 import { useLanguageCheckQuery } from "components/Core/queries";
 import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
-import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
 import { ExerciseName } from "components/Exercises/forms/ExerciseName";
 import { ExerciseNotes } from "components/Exercises/forms/ExerciseNotes";
 import {
@@ -147,7 +147,13 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
 
                             <ExerciseAliases fieldName={'alternativeNames'} />
 
-                            <ExerciseDescription fieldName={"description"} />
+                            <MarkdownEditor
+                                label={t('exercises.description')}
+                                value={formik.values.description}
+                                onChange={(val) => formik.setFieldValue('description', val)}
+                                error={formik.touched.description && Boolean(formik.errors.description)}
+                                helperText={formik.touched.description ? formik.errors.description : undefined}
+                            />
 
                             <PaddingBox />
                             <ExerciseNotes fieldName={'notes'} />

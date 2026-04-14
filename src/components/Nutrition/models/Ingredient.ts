@@ -1,6 +1,6 @@
 import { IngredientImage } from "components/Nutrition/models/IngredientImage";
 import { IngredientImageThumbnails } from "components/Nutrition/models/IngredientImageThumbnails";
-import { ApiIngredientType } from "types";
+import { ApiIngredientType, NutriScoreValue } from "types";
 import { Adapter } from "utils/Adapter";
 
 export type IngredientConstructorParams = {
@@ -18,6 +18,7 @@ export type IngredientConstructorParams = {
     sodium: number | null;
     isVegan?: boolean | null;
     isVegetarian?: boolean | null;
+    nutriscore?: NutriScoreValue | null;
     image?: IngredientImage | null;
     thumbnails?: IngredientImageThumbnails | null;
 };
@@ -38,6 +39,7 @@ export class Ingredient {
     public sodium: number | null;
     public isVegan: boolean | null;
     public isVegetarian: boolean | null;
+    public nutriscore: NutriScoreValue | null;
     public image: IngredientImage | null;
     public thumbnails: IngredientImageThumbnails | null;
 
@@ -56,6 +58,7 @@ export class Ingredient {
         this.sodium = params.sodium;
         this.isVegan = params.isVegan ?? null;
         this.isVegetarian = params.isVegetarian ?? null;
+        this.nutriscore = params.nutriscore ?? null;
         this.image = params.image ?? null;
         this.thumbnails = params.thumbnails ?? null;
     }
@@ -83,6 +86,7 @@ class IngredientAdapter implements Adapter<Ingredient> {
             sodium: item.sodium === null ? null : parseFloat(item.sodium),
             isVegan: item.is_vegan,
             isVegetarian: item.is_vegetarian,
+            nutriscore: item.nutriscore,
             image: item.image === null ? null : IngredientImage.fromJson(item.image),
             thumbnails: item.thumbnails === null ? null : IngredientImageThumbnails.fromJson(item.thumbnails),
         });

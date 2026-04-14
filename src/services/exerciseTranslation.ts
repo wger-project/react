@@ -61,19 +61,19 @@ export interface AddTranslationParams {
     exerciseId: number;
     languageId: number;
     name: string;
-    description: string;
     author: string;
+    descriptionSource: string;
 }
 
 export const addTranslation = async (params: AddTranslationParams): Promise<Translation> => {
-    const { exerciseId, languageId, name, description, author } = params;
+    const { exerciseId, languageId, name, author, descriptionSource } = params;
 
     const url = makeUrl(EXERCISE_TRANSLATION_PATH);
     const baseData = {
         exercise: exerciseId,
         language: languageId,
         name: name,
-        description: description,
+        description_source: descriptionSource,
         // eslint-disable-next-line camelcase
         license_author: author
     };
@@ -93,14 +93,14 @@ export interface EditTranslationParams extends AddTranslationParams {
 }
 
 export const editTranslation = async (data: EditTranslationParams): Promise<Translation> => {
-    const { id, exerciseId, languageId, name, description } = data;
+    const { id, exerciseId, languageId, name, descriptionSource } = data;
 
     const url = makeUrl(EXERCISE_TRANSLATION_PATH, { id: id });
     const baseData = {
         exercise: exerciseId,
         language: languageId,
         name: name,
-        description: description,
+        description_source: descriptionSource,
     };
     const response = await axios.patch(
         url,

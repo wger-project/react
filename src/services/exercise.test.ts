@@ -48,7 +48,7 @@ describe("Exercise service API tests", () => {
             "muscles": [3, 4],
             "muscles_secondary": [9],
             "equipment": [1, 2],
-            "variations": null
+            "variation_group": null
         };
         (axios.patch as jest.Mock).mockImplementation(() => Promise.resolve({ data: response, status: 200 }));
 

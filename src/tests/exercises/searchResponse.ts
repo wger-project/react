@@ -12,15 +12,16 @@ export const searchResponse: Exercise[] = [
         muscles: [],
         musclesSecondary: [],
         images: [],
-        variationId: null,
+        variationGroup: null,
         translations: [
-            new Translation(
-                1149, // id
-                "uuid-1149", // uuid
-                "Crunches an Negativbank", // name
-                "", // description
-                1 // language (German)
-            )
+            new Translation({
+                id: 1149,
+                uuid: "uuid-1149",
+                name: "Crunches an Negativbank",
+                description: "",
+                descriptionSource: '',
+                language: 1,
+            })
         ],
         videos: [],
         authors: []
@@ -34,15 +35,16 @@ export const searchResponse: Exercise[] = [
         muscles: [],
         musclesSecondary: [],
         images: [],
-        variationId: null,
+        variationGroup: null,
         translations: [
-            new Translation(
-                1213, // id
-                "uuid-1213", // uuid
-                "Crunches am Seil", // name
-                "", // description
-                1 // language (German)
-            )
+            new Translation({
+                id: 1213,
+                uuid: "uuid-1213",
+                name: "Crunches am Seil",
+                description: "",
+                descriptionSource: '',
+                language: 1,
+            })
         ],
         videos: [],
         authors: []

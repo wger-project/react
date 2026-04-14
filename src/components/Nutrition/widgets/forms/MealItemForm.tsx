@@ -1,11 +1,20 @@
-import { Button, InputAdornment, Stack, TextField } from "@mui/material";
+import { Button, InputAdornment, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { MealItem } from "components/Nutrition/models/mealItem";
-import { useAddMealItemQuery, useDeleteMealItemQuery, useEditMealItemQuery } from "components/Nutrition/queries";
+import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
+import {
+    useAddMealItemQuery,
+    useDeleteMealItemQuery,
+    useEditMealItemQuery,
+    useFetchWeightUnitsQuery
+} from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
+import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
+
+const GRAM_UNIT_VALUE = 'g';
 
 type MealItemFormProps =
     | { planId: number; item: MealItem; closeFn?: () => void; mealId?: number }
@@ -17,6 +26,12 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
     const addMealItemQuery = useAddMealItemQuery(planId);
     const editMealItemQuery = useEditMealItemQuery(planId);
     const deleteMealItemQuery = useDeleteMealItemQuery(planId);
+
+    const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(item?.weightUnit ?? null);
+    const [ingredientId, setIngredientId] = useState<number | null>(item?.ingredientId ?? null);
+
+    const weightUnitsQuery = useFetchWeightUnitsQuery(ingredientId);
+    const weightUnits = weightUnitsQuery.data ?? [];
 
     const handleDelete = () => {
         if (item) {
@@ -39,6 +54,14 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
             .required(t('forms.fieldRequired')),
     });
 
+    const handleUnitChange = (value: string) => {
+        if (value === GRAM_UNIT_VALUE) {
+            setSelectedUnit(null);
+        } else {
+            const unit = weightUnits.find(u => u.id === Number(value));
+            setSelectedUnit(unit ?? null);
+        }
+    };
 
     return (
         <Formik
@@ -57,7 +80,8 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                     const newMealItem = MealItem.clone(item, {
                         amount: newAmount,
                         ingredientId: values.ingredient,
-                        weightUnitId: null,
+                        weightUnitId: selectedUnit?.id ?? null,
+                        weightUnit: selectedUnit,
                     });
                     editMealItemQuery.mutate(newMealItem);
                 } else {
@@ -66,6 +90,8 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                         mealId: mealId,
                         amount: newAmount,
                         ingredientId: values.ingredient,
+                        weightUnitId: selectedUnit?.id ?? null,
+                        weightUnit: selectedUnit,
                         order: 1,
                     }));
                 }
@@ -79,17 +105,44 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                 <Form>
                     <Stack spacing={2}>
                         <IngredientAutocompleter
-                            callback={(value: Ingredient | null) => formik.setFieldValue('ingredient', value ? value.id : null)}
+                            callback={(value: Ingredient | null) => {
+                                formik.setFieldValue('ingredient', value ? value.id : null);
+                                setIngredientId(value?.id ?? null);
+                                setSelectedUnit(null);
+                            }}
                             initialIngredient={item ? item.ingredient : null}
                         />
                         <TextField
                             fullWidth
                             id="amount"
                             label={'amount'}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">{t('nutrition.gramShort')}</InputAdornment>
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            {weightUnits.length > 0 ? (
+                                                <Select
+                                                    variant="standard"
+                                                    disableUnderline
+                                                    value={selectedUnit?.id?.toString() ?? GRAM_UNIT_VALUE}
+                                                    onChange={(e) => handleUnitChange(e.target.value)}
+                                                >
+                                                    <MenuItem value={GRAM_UNIT_VALUE}>
+                                                        {t('nutrition.gramShort')}
+                                                    </MenuItem>
+                                                    {weightUnits.map(unit => (
+                                                        <MenuItem key={unit.id} value={unit.id.toString()}>
+                                                            {unit.name} ({unit.grams}g)
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            ) : (
+                                                t('nutrition.gramShort')
+                                            )}
+                                        </InputAdornment>
+                                    )
+                                }
                             }}
-
                             error={formik.touched.amount && Boolean(formik.errors.amount)}
                             helperText={formik.touched.amount && formik.errors.amount}
                             {...formik.getFieldProps('amount')}

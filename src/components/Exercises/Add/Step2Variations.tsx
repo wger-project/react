@@ -169,7 +169,6 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
                 <TextField
                     label={t('name')}
                     helperText={t('exercises.filterVariations')}
-                    // defaultValue={state.nameEn}
                     variant="standard"
                     onChange={(event) => setSearchTerms(event.target.value)}
                     slotProps={{

@@ -16,7 +16,7 @@ export type ExerciseConstructorParams = {
     muscles?: Muscle[];
     musclesSecondary?: Muscle[];
     images?: ExerciseImage[];
-    variationId?: number | null;
+    variationGroup?: string | null;
     lastUpdateGlobal?: Date;
     translations?: Translation[];
     videos?: ExerciseVideo[];
@@ -26,7 +26,7 @@ export type ExerciseConstructorParams = {
 export class Exercise {
     id: number | null;
     uuid: string | null;
-    variationId: number | null;
+    variationGroup: string | null;
     category: Category;
     lastUpdateGlobal: Date;
 
@@ -42,7 +42,7 @@ export class Exercise {
         this.id = init.id;
         this.uuid = init.uuid;
         this.category = init.category;
-        this.variationId = init.variationId ?? null;
+        this.variationGroup = init.variationGroup ?? null;
         this.lastUpdateGlobal = init.lastUpdateGlobal ?? new Date();
 
         this.muscles = init.muscles ?? [];
@@ -120,7 +120,7 @@ export class ExerciseAdapter implements Adapter<Exercise> {
             musclesSecondary: item.muscles_secondary.map((m: any) => muscleAdapter.fromJson(m)),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             images: item.images.map((i: any) => imageAdapter.fromJson(i)),
-            variationId: item.variations,
+            variationGroup: item.variation_group,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             translations: item.translations.map((t: any) => translationAdapter.fromJson(t)),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

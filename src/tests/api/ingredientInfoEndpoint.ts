@@ -23,6 +23,9 @@ export const INGREDIENT_API_RESPONSE = {
             "fat_saturated": "0.600",
             "fiber": "0.800",
             "sodium": "0.356",
+            "is_vegan": false,
+            "is_vegetarian": false,
+            "nutriscore": "d",
             "weight_units": [],
             "language": {
                 "id": 1,

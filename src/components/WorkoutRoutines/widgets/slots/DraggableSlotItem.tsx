@@ -41,7 +41,7 @@ export const DraggableSlotItem = (props: {
     return (
         <Draggable draggableId={props.slot.id!.toString()} index={props.index}>
             {(provided, snapshot) => (
-                <Grid container padding={1}
+                <Grid container sx={{ padding: 1 }}
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       style={getItemStyle(

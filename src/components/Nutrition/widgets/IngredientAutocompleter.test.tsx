@@ -7,7 +7,7 @@ import {
     STORAGE_KEY_VEGETARIAN
 } from 'components/Nutrition/widgets/IngredientAutcompleter';
 import { searchIngredient } from 'services';
-import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "tests/ingredientTestdata";
+import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_4 } from "tests/ingredientTestdata";
 
 jest.mock("services");
 
@@ -101,6 +101,72 @@ describe("Test the IngredientAutocompleter component", () => {
         expect(setItemSpy).toHaveBeenCalledWith(STORAGE_KEY_LANGUAGE_FILTER, 'all');
 
         setItemSpy.mockRestore();
+    });
+
+    test('shows vegan chip only when ingredient is vegan, not both vegan and vegetarian', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        (searchIngredient as jest.Mock).mockImplementation(() =>
+            Promise.resolve([TEST_INGREDIENT_2])
+        );
+
+        // Act
+        render(<IngredientAutocompleter callback={mockCallback} />);
+        const autocomplete = screen.getByTestId('autocomplete');
+        const input = within(autocomplete).getByRole('combobox');
+        await user.click(autocomplete);
+        await user.type(input, 'Haferbrei');
+        await act(async () => {
+            await new Promise((r) => setTimeout(r, 250));
+        });
+
+        // Assert - vegan ingredient should show "Vegan" but not "Vegetarian"
+        expect(screen.getByText('nutrition.filterVegan')).toBeInTheDocument();
+        expect(screen.queryByText('nutrition.filterVegetarian')).not.toBeInTheDocument();
+    });
+
+    test('shows vegetarian chip when ingredient is only vegetarian', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        (searchIngredient as jest.Mock).mockImplementation(() =>
+            Promise.resolve([TEST_INGREDIENT_1])
+        );
+
+        // Act
+        render(<IngredientAutocompleter callback={mockCallback} />);
+        const autocomplete = screen.getByTestId('autocomplete');
+        const input = within(autocomplete).getByRole('combobox');
+        await user.click(autocomplete);
+        await user.type(input, 'yogurt');
+        await act(async () => {
+            await new Promise((r) => setTimeout(r, 250));
+        });
+
+        // Assert - vegetarian-only ingredient should show "Vegetarian" but not "Vegan"
+        expect(screen.getByText('nutrition.filterVegetarian')).toBeInTheDocument();
+        expect(screen.queryByText('nutrition.filterVegan')).not.toBeInTheDocument();
+    });
+
+    test('shows no dietary chips when ingredient has no dietary info', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        (searchIngredient as jest.Mock).mockImplementation(() =>
+            Promise.resolve([TEST_INGREDIENT_4])
+        );
+
+        // Act
+        render(<IngredientAutocompleter callback={mockCallback} />);
+        const autocomplete = screen.getByTestId('autocomplete');
+        const input = within(autocomplete).getByRole('combobox');
+        await user.click(autocomplete);
+        await user.type(input, 'Cacao');
+        await act(async () => {
+            await new Promise((r) => setTimeout(r, 250));
+        });
+
+        // Assert - no dietary info, no chips
+        expect(screen.queryByText('nutrition.filterVegan')).not.toBeInTheDocument();
+        expect(screen.queryByText('nutrition.filterVegetarian')).not.toBeInTheDocument();
     });
 
     test('local storage settings are loaded', async () => {

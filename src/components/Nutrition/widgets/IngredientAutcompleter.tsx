@@ -4,6 +4,8 @@ import TuneIcon from '@mui/icons-material/Tune';
 import {
     Autocomplete,
     Avatar,
+    Box,
+    Chip,
     FormControl,
     FormControlLabel,
     FormGroup,
@@ -21,6 +23,7 @@ import {
     TextField,
 } from "@mui/material";
 import { Ingredient } from "components/Nutrition/models/Ingredient";
+import { NutriScoreBadge } from "components/Nutrition/widgets/NutriScoreBadge";
 import debounce from "lodash/debounce";
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
@@ -211,12 +214,34 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                                     primary={ingredient.name}
                                     slotProps={{
                                         primary: {
-                                            whiteSpace: "nowrap",
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
+                                            sx: {
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            },
                                         },
                                     }}
                                 />
+                                {ingredient.isVegan === true && (
+                                    <Chip
+                                        label={t("nutrition.filterVegan")}
+                                        color="success"
+                                        size="small"
+                                    />
+                                )}
+                                {ingredient.isVegetarian === true && !ingredient.isVegan && (
+                                    <Chip
+                                        label={t("nutrition.filterVegetarian")}
+                                        color="success"
+                                        size="small"
+                                        sx={{ ml: 1 }}
+                                    />
+                                )}
+                                {ingredient.nutriscore !== null && (
+                                    <Box sx={{ ml: 1 }}>
+                                        <NutriScoreBadge score={ingredient.nutriscore} size="small" />
+                                    </Box>
+                                )}
                             </ListItem>
                         </li>
                     );
@@ -230,7 +255,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
-                <Stack padding={2} spacing={1}>
+                <Stack sx={{ padding: 2 }} spacing={1}>
                     <FormControl fullWidth size="small">
                         <InputLabel id="ingredient-language-filter-label">
                             {t("language")}
