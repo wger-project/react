@@ -242,7 +242,7 @@
     "no_entries_for_day": "本日無紀錄",
     "comment": "註解",
     "editName": "編輯 {{name}}",
-    "successfullyDeleted": "刪除成功",
+    "successfullyDeleted": "成功刪除",
     "core": {
         "exitEditMode": "離開編輯模式",
         "customize": "自訂"
@@ -254,5 +254,12 @@
     },
     "durationWeeks": "{{number}} 週",
     "durationWeeksDays": "{{nrWeeks}} 週, {{nrDays}} 天",
-    "undo": "復原"
+    "undo": "復原",
+    "preview": "預覽",
+    "useMarkdownHint": "您可以使用基本的 Markdown 來格式化文字：斜體、粗體或清單。",
+    "start": "開始",
+    "end": "結束",
+    "totalChange": "總變化",
+    "private": "私人",
+    "public": "公開"
 }
