@@ -140,6 +140,8 @@
     "languageFilterAll": "All languages",
     "filterVegan": "Vegan",
     "filterVegetarian": "Vegetarian",
+    "filterNutriscore": "Filter by Nutri-Score",
+    "filterNutriscoreMax": "Worst acceptable grade",
     "macronutrient": "Macronutrient",
     "percentEnergy": "Percent of energy",
     "gPerBodyKg": "g per body-kg",

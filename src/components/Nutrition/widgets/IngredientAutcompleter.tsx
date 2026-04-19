@@ -18,9 +18,11 @@ import {
     MenuItem,
     Popover,
     Select,
+    Slider,
     Stack,
     Switch,
     TextField,
+    Typography,
 } from "@mui/material";
 import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { NutriScoreBadge } from "components/Nutrition/widgets/NutriScoreBadge";
@@ -29,6 +31,7 @@ import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { IngredientLanguageFilter, searchIngredient } from "services";
+import { NUTRI_SCORES, NutriScoreValue } from "types";
 import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 
 type IngredientAutocompleterProps = {
@@ -39,6 +42,11 @@ type IngredientAutocompleterProps = {
 export const STORAGE_KEY_LANGUAGE_FILTER = "wger.ingredientSearch.languageFilter";
 export const STORAGE_KEY_VEGAN = "wger.ingredientSearch.filterVegan";
 export const STORAGE_KEY_VEGETARIAN = "wger.ingredientSearch.filterVegetarian";
+export const STORAGE_KEY_NUTRISCORE_ENABLED = "wger.ingredientSearch.filterNutriscoreEnabled";
+export const STORAGE_KEY_NUTRISCORE_MAX = "wger.ingredientSearch.filterNutriscoreMax";
+
+const isNutriScoreValue = (value: string | null): value is NutriScoreValue =>
+    value !== null && (NUTRI_SCORES as readonly string[]).includes(value);
 
 export function IngredientAutocompleter({ callback, initialIngredient }: IngredientAutocompleterProps) {
     const initialData = initialIngredient ?? null;
@@ -56,6 +64,13 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     });
     const [filterVegetarian, setFilterVegetarian] = useState<boolean>(() => {
         return localStorage.getItem(STORAGE_KEY_VEGETARIAN) === "true";
+    });
+    const [filterNutriscoreEnabled, setFilterNutriscoreEnabled] = useState<boolean>(() => {
+        return localStorage.getItem(STORAGE_KEY_NUTRISCORE_ENABLED) === "true";
+    });
+    const [nutriscoreMax, setNutriscoreMax] = useState<NutriScoreValue>(() => {
+        const stored = localStorage.getItem(STORAGE_KEY_NUTRISCORE_MAX);
+        return isNutriScoreValue(stored) ? stored : "c";
     });
     const [filtersAnchorEl, setFiltersAnchorEl] = useState<HTMLElement | null>(null);
     const [value, setValue] = useState<Ingredient | null>(initialData);
@@ -79,6 +94,14 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY_VEGETARIAN, String(filterVegetarian));
     }, [filterVegetarian]);
+
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY_NUTRISCORE_ENABLED, String(filterNutriscoreEnabled));
+    }, [filterNutriscoreEnabled]);
+
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, nutriscoreMax);
+    }, [nutriscoreMax]);
 
     const languageOptions = useMemo(() => {
         const options: Array<{ value: IngredientLanguageFilter; label: string }> = [
@@ -107,16 +130,16 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
         () =>
             debounce(
                 (request: string) =>
-                    searchIngredient(
-                        request,
-                        i18n.language,
+                    searchIngredient(request, {
+                        languageCode: i18n.language,
                         languageFilter,
-                        filterVegan || undefined,
-                        filterVegetarian || undefined,
-                    ).then((res) => setOptions(res)),
+                        isVegan: filterVegan || undefined,
+                        isVegetarian: filterVegetarian || undefined,
+                        nutriscoreMax: filterNutriscoreEnabled ? nutriscoreMax : undefined,
+                    }).then((res) => setOptions(res)),
                 200
             ),
-        [i18n.language, languageFilter, filterVegan, filterVegetarian]
+        [i18n.language, languageFilter, filterVegan, filterVegetarian, filterNutriscoreEnabled, nutriscoreMax]
     );
 
     useEffect(() => {
@@ -297,6 +320,41 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                             label={t("nutrition.filterVegetarian")}
                         />
                     </FormGroup>
+
+                    <FormGroup row>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={filterNutriscoreEnabled}
+                                    onChange={(event, checked) => setFilterNutriscoreEnabled(checked)}
+                                />
+                            }
+                            label={t("nutrition.filterNutriscore")}
+                        />
+                    </FormGroup>
+
+                    {filterNutriscoreEnabled && (
+                        <Box sx={{ px: 2, pt: 1, minWidth: 220 }}>
+                            <Typography id="ingredient-nutriscore-slider-label" gutterBottom variant="body2">
+                                {t("nutrition.filterNutriscoreMax")}
+                            </Typography>
+                            <Slider
+                                aria-labelledby="ingredient-nutriscore-slider-label"
+                                value={NUTRI_SCORES.indexOf(nutriscoreMax)}
+                                onChange={(event, value) =>
+                                    setNutriscoreMax(NUTRI_SCORES[value as number])
+                                }
+                                getAriaValueText={(value) => NUTRI_SCORES[value].toUpperCase()}
+                                step={1}
+                                min={0}
+                                max={NUTRI_SCORES.length - 1}
+                                marks={NUTRI_SCORES.map((score, index) => ({
+                                    value: index,
+                                    label: score.toUpperCase(),
+                                }))}
+                            />
+                        </Box>
+                    )}
                 </Stack>
             </Popover>
         </Stack>
