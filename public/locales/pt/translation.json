@@ -325,7 +325,11 @@
         "languageFilterCurrentOnly": "Somente no idioma atual ({{lang}})",
         "languageFilterCurrentAndEnglish": "Idioma atual ({{lang}}) & English",
         "languageFilterAll": "Todos os idiomas",
-        "filterVegan": "Vegano"
+        "filterVegan": "Vegano",
+        "filterNutriscore": "Filtro Nutri-Score",
+        "filterNutriscoreOff": "Desligado",
+        "filterNutriscoreNoFilter": "Sem filtro",
+        "filterNutriscoreOrBetter": "{{grade}} ou melhor"
     },
     "downloadAsPdf": "Download como PDF",
     "nothingHereYet": "Nada aqui por enquanto...",
@@ -385,5 +389,7 @@
     },
     "private": "Privado",
     "public": "Público",
-    "totalChange": "Variação total"
+    "totalChange": "Variação total",
+    "preview": "Ensaio",
+    "useMarkdownHint": "Podes usar markdown básico para formatar o texto: *itálico*, **negrigo**, - lista"
 }
