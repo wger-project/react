@@ -1,13 +1,22 @@
 import axios from 'axios';
 import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { memoize } from "lodash";
-import { ApiIngredientType } from 'types';
+import { ApiIngredientType, NutriScoreValue } from 'types';
 import { API_RESULTS_PAGE_SIZE, ApiPath, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
 import { makeHeader, makeUrl } from "utils/url";
 import { SearchLanguageFilter } from 'components/Core/Widgets/SearchLanguageFilter';
 
 export type IngredientLanguageFilter = SearchLanguageFilter;
+
+export interface IngredientSearchFilters {
+    languageCode: string;
+    languageFilter?: IngredientLanguageFilter;
+    isVegan?: boolean;
+    isVegetarian?: boolean;
+    /** Worst acceptable Nutri-Score grade; sent as `nutriscore__lte`. */
+    nutriscoreMax?: NutriScoreValue;
+}
 
 
 /*
@@ -48,11 +57,16 @@ export const getIngredients = async (ids: number[]): Promise<Ingredient[]> => {
 
 export const searchIngredient = async (
     name: string,
-    languageCode: string,
-    languageFilter: IngredientLanguageFilter = "current_english",
-    isVegan?: boolean,
-    isVegetarian?: boolean,
+    filters: IngredientSearchFilters,
 ): Promise<Ingredient[]> => {
+    const {
+        languageCode,
+        languageFilter = "current_english",
+        isVegan,
+        isVegetarian,
+        nutriscoreMax,
+    } = filters;
+
     const languages = languageFilter === "all" ? null : [languageCode];
     if (languages && languageFilter === "current_english" && languageCode !== LANGUAGE_SHORT_ENGLISH) {
         languages.push(LANGUAGE_SHORT_ENGLISH);
@@ -70,6 +84,9 @@ export const searchIngredient = async (
     }
     if (isVegetarian !== undefined) {
         query['is_vegetarian'] = String(isVegetarian);
+    }
+    if (nutriscoreMax !== undefined) {
+        query['nutriscore__lte'] = nutriscoreMax;
     }
 
     const url = makeUrl(ApiPath.INGREDIENTINFO_PATH, { query });

@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import {
     IngredientAutocompleter,
     STORAGE_KEY_LANGUAGE_FILTER,
+    STORAGE_KEY_NUTRISCORE_MAX,
     STORAGE_KEY_VEGAN,
     STORAGE_KEY_VEGETARIAN
 } from 'components/Nutrition/widgets/IngredientAutcompleter';
@@ -16,6 +17,7 @@ describe("Test the IngredientAutocompleter component", () => {
     // Arrange
     const mockCallback = jest.fn();
     beforeEach(() => {
+        localStorage.clear();
         (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
     });
 
@@ -185,5 +187,113 @@ describe("Test the IngredientAutocompleter component", () => {
         expect(screen.getByLabelText('nutrition.filterVegetarian')).toBeChecked();
         expect(screen.getByText('nutrition.languageFilterAll')).toBeInTheDocument();
         localStorage.clear();
+    });
+
+    test('nutriscore slider defaults to Off and is always visible in the popover', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        render(<IngredientAutocompleter callback={mockCallback} />);
+
+        // Act
+        await user.click(screen.getByLabelText('Toggle filters'));
+
+        // Assert — slider rendered with Off position (index 0) on first load
+        const slider = screen.getByRole('slider', { name: 'nutrition.filterNutriscore' });
+        expect(slider).toBeInTheDocument();
+        expect(slider).toHaveAttribute('aria-valuetext', 'nutrition.filterNutriscoreNoFilter');
+        expect(slider).toHaveAttribute('aria-valuenow', '0');
+    });
+
+    test('moving the slider persists the selected grade to local storage', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+        render(<IngredientAutocompleter callback={mockCallback} />);
+
+        // Act
+        await user.click(screen.getByLabelText('Toggle filters'));
+        const slider = screen.getByRole('slider', { name: 'nutrition.filterNutriscore' });
+        slider.focus();
+        await user.keyboard('{ArrowRight}');
+
+        // Assert — index 1 -> 'a'
+        expect(setItemSpy).toHaveBeenCalledWith(STORAGE_KEY_NUTRISCORE_MAX, 'a');
+
+        setItemSpy.mockRestore();
+    });
+
+    test('moving the slider back to Off removes the stored grade', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, 'a');
+        const removeItemSpy = jest.spyOn(Storage.prototype, 'removeItem');
+        render(<IngredientAutocompleter callback={mockCallback} />);
+
+        // Act
+        await user.click(screen.getByLabelText('Toggle filters'));
+        const slider = screen.getByRole('slider', { name: 'nutrition.filterNutriscore' });
+        slider.focus();
+        await user.keyboard('{ArrowLeft}');
+
+        // Assert
+        expect(removeItemSpy).toHaveBeenCalledWith(STORAGE_KEY_NUTRISCORE_MAX);
+
+        removeItemSpy.mockRestore();
+    });
+
+    test('nutriscore filter state is loaded from local storage', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, 'b');
+        render(<IngredientAutocompleter callback={mockCallback} />);
+
+        // Act
+        await user.click(screen.getByLabelText('Toggle filters'));
+
+        // Assert
+        expect(screen.getByRole('slider', { name: 'nutrition.filterNutriscore' })).toHaveAttribute('aria-valuetext', 'nutrition.filterNutriscoreOrBetter');
+    });
+
+    test('searchIngredient is called with nutriscoreMax when a grade is selected', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, 'b');
+        render(<IngredientAutocompleter callback={mockCallback} />);
+        const autocomplete = screen.getByTestId('autocomplete');
+        const input = within(autocomplete).getByRole('combobox');
+
+        // Act
+        await user.click(autocomplete);
+        await user.type(input, 'Yog');
+        await act(async () => {
+            await new Promise((r) => setTimeout(r, 250));
+        });
+
+        // Assert
+        expect(searchIngredient).toHaveBeenCalledWith(
+            'Yog',
+            expect.objectContaining({ nutriscoreMax: 'b' }),
+        );
+    });
+
+    test('nutriscoreMax is omitted when the slider is at Off', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        render(<IngredientAutocompleter callback={mockCallback} />);
+        const autocomplete = screen.getByTestId('autocomplete');
+        const input = within(autocomplete).getByRole('combobox');
+
+        // Act
+        await user.click(autocomplete);
+        await user.type(input, 'Yog');
+        await act(async () => {
+            await new Promise((r) => setTimeout(r, 250));
+        });
+
+        // Assert
+        expect(searchIngredient).toHaveBeenCalledWith(
+            'Yog',
+            expect.objectContaining({ nutriscoreMax: undefined }),
+        );
     });
 });
