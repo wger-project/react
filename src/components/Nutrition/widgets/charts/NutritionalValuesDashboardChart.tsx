@@ -58,7 +58,7 @@ export const NutritionalValuesDashboardChart = (props: {
                 </text>
             </g>
         </PieChart>
-        <Stack width={'50%'} spacing={1}>
+        <Stack spacing={1} sx={{ width: '50%' }}>
             <LinearPlannedLoggedChart
                 title={t('nutrition.protein')}
                 percentage={props.percentage.protein}

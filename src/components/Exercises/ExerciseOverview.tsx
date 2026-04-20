@@ -26,9 +26,9 @@ const ContributeExerciseBanner = () => {
 
     return (
         <Box
-            marginTop={4}
-            padding={4}
             sx={{
+                marginTop: 4,
+                padding: 4,
                 width: "100%",
                 backgroundColor: "#ebebeb",
                 textAlign: "center",
@@ -54,9 +54,9 @@ const NoResultsBanner = () => {
 
     return (
         <Box
-            marginTop={4}
-            padding={4}
             sx={{
+                marginTop: 4,
+                padding: 4,
                 width: "100%",
                 backgroundColor: "#ebebeb",
                 textAlign: "center",
@@ -149,7 +149,7 @@ export const ExerciseOverviewList = () => {
 
     return (
         (<Container maxWidth="lg">
-            <Grid container spacing={2} mt={2}>
+            <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid
                     size={{
                         xs: 10,
@@ -174,16 +174,14 @@ export const ExerciseOverviewList = () => {
                             </Button>
                         </Grid>
                         <Grid
-                            flexGrow={1}
+                            sx={{ flexGrow: 1 }}
                             size={{
                                 sm: 6
                             }}>
                             <NameAutocompleter callback={exerciseAdded} />
                         </Grid>
                         <Grid
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
+                            sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
                             size={{
                                 xs: 2,
                                 sm: 6
@@ -273,7 +271,7 @@ export const ExerciseOverviewList = () => {
                         ? <ExerciseGridSkeleton />
                         : <>
                             <ExerciseGrid exercises={paginatedExercises} />
-                            <Stack spacing={2} alignItems="center" sx={{ mt: 2 }}>
+                            <Stack spacing={2} sx={{ alignItems: "center", mt: 2 }}>
                                 <Pagination
                                     count={pageCount}
                                     color="primary"

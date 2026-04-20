@@ -4,16 +4,16 @@ import { Translation, TranslationAdapter } from "components/Exercises/models/tra
 describe("Exercise translation model tests", () => {
 
     // Arrange
-    const e1 = new Translation(
-        2,
-        "uuid",
-        "a very long name that should be truncated",
-        "description",
-        1,
-        [],
-        [],
-        ['author1', 'author2', 'author3']
-    );
+    const e1 = new Translation({
+        id: 2,
+        uuid: "uuid",
+        name: "a very long name that should be truncated",
+        description: "description",
+        language: 1,
+        notes: [],
+        aliases: [],
+        authors: ['author1', 'author2', 'author3'],
+    });
 
     test('name helper', () => {
 
@@ -33,6 +33,7 @@ describe("Exercise translation model tests", () => {
             language: 1,
             notes: [],
             aliases: [],
+            description_source: '',
             // eslint-disable-next-line camelcase
             author_history: ['author1', 'author2', 'author3']
         })).toStrictEqual(e1);
@@ -48,18 +49,19 @@ describe("Exercise translation model tests", () => {
             name: "a very long name that should be truncated",
             description: "description",
             language: 1,
+            description_source: '',
         });
     });
 
     test('slug apadpter', () => {
         // Arrange
-        const e1 = new Translation(
-            2,
-            "uuid",
-            "Grüß Göttles",
-            "description",
-            1
-        );
+        const e1 = new Translation({
+            id: 2,
+            uuid: "uuid",
+            name: "Grüß Göttles",
+            description: "description",
+            language: 1,
+        });
 
         // Assert
         expect(e1.nameSlug).toEqual('gruss-gottles');

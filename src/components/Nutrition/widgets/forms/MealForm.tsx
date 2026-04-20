@@ -83,7 +83,7 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
                                 onChange={(newValue) => formik.setFieldValue('time', newValue ? newValue.toJSDate() : null)}
                             />
                         </LocalizationProvider>
-                        <Stack direction="row" justifyContent="end" spacing={2}>
+                        <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
                             {closeFn !== undefined
                                 && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
                                     {t('close')}

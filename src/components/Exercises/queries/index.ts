@@ -9,6 +9,8 @@ import {
     postExerciseImage,
 } from "services";
 import { AddTranslationParams, EditTranslationParams } from "services/exerciseTranslation";
+import { Note } from "components/Exercises/models/note";
+import { addNote, editNote, deleteNote } from "services";
 import { deleteExerciseImage, PostExerciseImageParams, patchExerciseImage, PatchExerciseImageParams } from "services/image";
 import { deleteExerciseVideo, postExerciseVideo, PostExerciseVideoParams } from "services/video";
 import { QueryKey } from "utils/consts";
@@ -138,9 +140,38 @@ export function useLanguageQuery() {
     });
 }
 
-export function useNotesQuery(translationId: number) {
-    return useQuery({
-        queryKey: [QueryKey.LANGUAGES, translationId],
-        queryFn: getLanguages,
+export function useAddNoteQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (note: Note) => addNote(note),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        },
+    });
+}
+
+export function useEditNoteQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (note: Note) => editNote(note),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        },
+    });
+}
+
+export function useDeleteNoteQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: number) => deleteNote(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        },
     });
 }

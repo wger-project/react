@@ -140,14 +140,14 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
                                 </>
                             }
                             <Grid container>
-                                <Grid display="flex" justifyContent={"center"} size={6}>
+                                <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
                                     <MuscleOverview
                                         primaryMuscles={primaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                         secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                         isFront={true}
                                     />
                                 </Grid>
-                                <Grid display="flex" justifyContent={"center"} size={6}>
+                                <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
                                     <MuscleOverview
                                         primaryMuscles={primaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                         secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
@@ -157,7 +157,7 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
                             </Grid>
                         </Stack>
                         <Grid container>
-                            <Grid display="flex" justifyContent={"end"} size={12}>
+                            <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
                                 <Box sx={{ mb: 2 }}>
                                     <div>
                                         <Button

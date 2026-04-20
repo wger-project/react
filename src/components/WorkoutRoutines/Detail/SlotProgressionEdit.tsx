@@ -64,7 +64,7 @@ export const SlotProgressionEdit = () => {
                         {slotEntry.exercise?.getTranslation(language).name}
                     </Typography>
                     <Grid container spacing={1}>
-                        <Grid size={2} display="flex" alignItems="end">
+                        <Grid size={2} sx={{ display: "flex", alignItems: "end" }}>
                             <Typography variant={"body2"}>
                                 {t('routines.rounding')}
                             </Typography>

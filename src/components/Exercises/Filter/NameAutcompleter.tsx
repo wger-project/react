@@ -132,14 +132,15 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                         label={t("exercises.searchExerciseName")}
                         fullWidth
                         slotProps={{
+                            ...params.slotProps,
                             input: {
-                                ...params.InputProps,
+                                ...params.slotProps?.input,
                                 startAdornment: (
                                     <>
                                         <InputAdornment position="start">
                                             <SearchIcon />
                                         </InputAdornment>
-                                        {params.InputProps.startAdornment}
+                                        {params.slotProps?.input?.startAdornment}
                                     </>
                                 ),
                                 endAdornment: (

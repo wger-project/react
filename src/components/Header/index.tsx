@@ -11,7 +11,7 @@ export const Header = () => {
     return (
         <AppBar position="static">
             <Toolbar>
-                <Typography variant="h6" component="div" mr={3}>
+                <Typography variant="h6" component="div" sx={{ mr: 3 }}>
                     wger
                 </Typography>
 

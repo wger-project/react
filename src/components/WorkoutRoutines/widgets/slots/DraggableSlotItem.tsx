@@ -41,7 +41,7 @@ export const DraggableSlotItem = (props: {
     return (
         <Draggable draggableId={props.slot.id!.toString()} index={props.index}>
             {(provided, snapshot) => (
-                <Grid container padding={1}
+                <Grid container sx={{ padding: 1 }}
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       style={getItemStyle(
@@ -66,7 +66,7 @@ export const DraggableSlotItem = (props: {
                             routineId={props.routineId}
                             slot={props.slot}
                             key={`slot-form-${props.slot.id}`} />
-                        <Box height={10} />
+                        <Box sx={{ height: 10 }} />
                     </Grid>}
                     <Grid size={12}>
                         <SlotDetails

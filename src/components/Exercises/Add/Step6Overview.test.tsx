@@ -61,7 +61,7 @@ describe("Test the add exercise step 6 component", () => {
                 category: 1,
                 muscles: [2],
                 musclesSecondary: [],
-                variationId: null,
+                variationGroup: null,
                 newVariationExerciseId: null,
                 languageId: 3,
                 equipment: [2],

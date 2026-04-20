@@ -39,7 +39,7 @@ export const SlotHeader = (props: {
     if (isGrouped) {
         return (
             <Grid size={12}>
-                <Grid container justifyContent="space-between" alignItems="center">
+                <Grid container sx={{ justifyContent: "space-between", alignItems: "center" }}>
                     <Grid>
                         <Typography variant={"h6"}>
                             <IconButton size="small" {...props.dragHandleProps}>
@@ -62,7 +62,7 @@ export const SlotHeader = (props: {
                 backgroundColor: theme.palette.common.white,
             }}
             size={12}>
-            <Grid container justifyContent="space-between" alignItems="center">
+            <Grid container sx={{ justifyContent: "space-between", alignItems: "center" }}>
                 <Grid>
                     <Typography variant={"h6"}>
                         <IconButton {...props.dragHandleProps}>

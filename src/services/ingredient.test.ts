@@ -25,6 +25,7 @@ describe("Ingredient service tests", () => {
             "sodium": "0.508",
             "is_vegan": true,
             "is_vegetarian": true,
+            "nutriscore": "a",
             "license": 5,
             "license_title": "감자깡",
             "license_object_url": "",
@@ -78,6 +79,7 @@ describe("Ingredient service tests", () => {
         expect(result.sodium).toEqual(0.508);
         expect(result.isVegan).toEqual(true);
         expect(result.isVegetarian).toEqual(true);
+        expect(result.nutriscore).toEqual('a');
         expect(result.image?.url).toEqual('http://localhost:8000/media/ingredients/59197/b260b245-efe9-4c92-9d8f-d2c4406221dd.jpg');
     });
 });

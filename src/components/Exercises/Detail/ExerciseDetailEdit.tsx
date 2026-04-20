@@ -1,15 +1,20 @@
+import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, Box, Button, IconButton, Typography } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
+import { Alert, Box, Button, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
+import { MarkdownEditor } from "components/Common/forms/MarkdownEditor";
 import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
+import { FormQueryErrorsSnackbar } from 'components/Core/Widgets/FormError';
 import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
 import { EditExerciseCategory } from "components/Exercises/forms/Category";
 import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
 import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
-import { ExerciseDescription } from "components/Exercises/forms/ExerciseDescription";
 import { ExerciseName } from "components/Exercises/forms/ExerciseName";
 import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCard";
 import { EditExerciseMuscle } from "components/Exercises/forms/Muscle";
+import { EditExerciseVariation } from "components/Exercises/forms/Variation";
 import { AddVideoCard, VideoEditCard } from "components/Exercises/forms/VideoCard";
 import {
     alternativeNameValidator,
@@ -17,11 +22,14 @@ import {
     nameValidator
 } from "components/Exercises/forms/yupValidators";
 import { Language } from "components/Exercises/models/language";
+import { Note } from "components/Exercises/models/note";
 import { Translation } from "components/Exercises/models/translation";
 import {
-    useAddExerciseImageQuery,
+    useAddNoteQuery,
     useAddTranslationQuery,
+    useDeleteNoteQuery,
     useEditExerciseImageQuery,
+    useEditNoteQuery,
     useEditTranslationQuery,
     useExerciseQuery,
     useMusclesQuery
@@ -36,42 +44,8 @@ import { useTranslation } from "react-i18next";
 import { deleteAlias, postAlias } from "services";
 import * as yup from "yup";
 import { ImageFormModal } from '../forms/ImageModal';
-import { ExerciseImage, ImageStyle } from '../models/image';
 import { ImageFormData } from '../models/exercise';
-import { FormQueryErrorsSnackbar } from 'components/Core/Widgets/FormError';
-
-export const mapToImageFormData = (
-    image: ExerciseImage | File | null
-): ImageFormData | null => {
-    if (!image) return null;
-
-    // Case 1: Editing an existing ExerciseImage
-    if (image instanceof ExerciseImage) {
-        // Get the image/file from url
-        return {
-            url: image.url,
-            file: undefined,
-            title: image.title || '',
-            author: image.author || '',
-            authorUrl: image.authorUrl || '',
-            objectUrl: image.objectUrl || '',
-            derivativeSourceUrl: image.derivativeSourceUrl || '',
-            style: image.style || ImageStyle.PHOTO, // Default to Photo
-        };
-    }
-
-    // Case 2: Adding a new File
-    return {
-        url: URL.createObjectURL(image),
-        file: image,
-        title: '',
-        author: '', 
-        authorUrl: '',
-        objectUrl: '',
-        derivativeSourceUrl: '',
-        style: ImageStyle.PHOTO,
-    };
-};
+import { ExerciseImage, ImageStyle } from '../models/image';
 
 export interface ViewProps {
     exerciseId: number;
@@ -97,7 +71,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
     const profileQuery = useProfileQuery();
 
     const exercise = exerciseQuery.data!;
-    
+
     const [openModal, setOpenModal] = React.useState(false);
     const [imageGuardError, setImageGuardError] = useState<string | null>(null);
 
@@ -105,11 +79,18 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
     const [editingImageId, setEditingImageId] = useState<number | null>(null);
 
     const editImageMutation = useEditExerciseImageQuery(exerciseId);
+    const addNoteMutation = useAddNoteQuery(exerciseId);
+    const editNoteMutation = useEditNoteQuery(exerciseId);
+    const deleteNoteMutation = useDeleteNoteQuery(exerciseId);
+
+    const [newNoteValue, setNewNoteValue] = useState('');
+    const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
+    const [editingNoteValue, setEditingNoteValue] = useState('');
 
     useEffect(() => {
         if (exerciseQuery.data !== undefined) {
-            setMainMuscles(exercise.muscles.map((m) => m.id));
-            setSecondaryMuscles(exercise.musclesSecondary.map((m) => m.id));
+            setMainMuscles(exerciseQuery.data.muscles.map((m) => m.id));
+            setSecondaryMuscles(exerciseQuery.data.musclesSecondary.map((m) => m.id));
         }
     }, [exerciseQuery.data]);
 
@@ -132,7 +113,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
     const isNewTranslation = language.id !== translationFromBase?.language;
     const exerciseTranslation =
         isNewTranslation
-            ? new Translation(null, null, '', '', language.id)
+            ? new Translation({ id: null, uuid: null, name: '', description: '', language: language.id })
             : translationFromBase;
     const exerciseEnglish = exercise.getTranslation();
 
@@ -171,7 +152,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
             image: values.file, // This will be undefined if they didn't pick a new file
             imageData: values
         });
-        
+
         setOpenModal(false);
         setEditingImageId(null);
         setSelectedImage(null);
@@ -183,29 +164,25 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
             initialValues={{
                 name: exerciseTranslation.name,
                 alternativeNames: exerciseTranslation.aliases.map(a => ({ id: a.id, alias: a.alias })),
-                description: exerciseTranslation.description,
+                // Use source (markdown) if available, otherwise fall back to rendered HTML
+                description: exerciseTranslation.descriptionSource || exerciseTranslation.description,
             }}
             enableReinitialize
             validationSchema={validationSchema}
             onSubmit={async values => {
 
                 // Exercise translation
+                const payload = {
+                    exerciseId: exercise.id!,
+                    languageId: language.id,
+                    name: values.name,
+                    descriptionSource: values.description,
+                    author: ''
+                };
+
                 const translation = exerciseTranslation.id
-                    ? await editTranslationQuery.mutateAsync({
-                        id: exerciseTranslation.id,
-                        exerciseId: exercise.id!,
-                        languageId: language.id,
-                        name: values.name,
-                        description: values.description,
-                        author: ''
-                    })
-                    : await addTranslationQuery.mutateAsync({
-                        exerciseId: exercise.id!,
-                        languageId: language.id,
-                        name: values.name,
-                        description: values.description,
-                        author: profileQuery.data!.username
-                    });
+                    ? await editTranslationQuery.mutateAsync({ ...payload, id: exerciseTranslation.id })
+                    : await addTranslationQuery.mutateAsync({ ...payload, author: profileQuery.data!.username });
 
                 // Alias handling
                 const aliasOrig = (exerciseTranslation.aliases).map(a => ({ id: a.id, alias: a.alias }));
@@ -230,133 +207,226 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                 setAlertIsVisible(true);
             }}
         >
-            <Form>
-                <Grid container spacing={1}>
-                    {alertIsVisible &&
-                        <Grid size={12}>
-                            <Alert
-                                severity="success"
-                                action={
-                                    <IconButton
-                                        aria-label="close"
-                                        size="small"
-                                        color="inherit"
-                                        onClick={() => {
-                                            setAlertIsVisible(false);
-                                        }}
-                                    >
-                                        <CloseIcon fontSize="inherit" />
-                                    </IconButton>
-                                }
-                            >
-                                {t('exercises.successfullyUpdated')}
-                            </Alert>
-                            <PaddingBox />
-                        </Grid>}
+            {({ values, touched, errors, setFieldValue }) => (
+                <Form>
+                    <Grid container spacing={1}>
+                        {alertIsVisible &&
+                            <Grid size={12}>
+                                <Alert
+                                    severity="success"
+                                    action={
+                                        <IconButton
+                                            aria-label="close"
+                                            size="small"
+                                            color="inherit"
+                                            onClick={() => {
+                                                setAlertIsVisible(false);
+                                            }}
+                                        >
+                                            <CloseIcon fontSize="inherit" />
+                                        </IconButton>
+                                    }
+                                >
+                                    {t('exercises.successfullyUpdated')}
+                                </Alert>
+                                <PaddingBox />
+                            </Grid>}
 
-                    <Grid size={12}>
-                        <Typography variant={'h5'}>{t('translation')}</Typography>
-                    </Grid>
-                    <Grid size={6}>
-                        <Typography variant={'h6'}>{t('English')}</Typography>
-                    </Grid>
-                    <Grid size={6}>
-                        <Typography variant={'h6'}>
-                            {language.nameLong} ({language.nameShort})
-                        </Typography>
-                    </Grid>
-                    <Grid size={12}>
-                        <PaddingBox />
-                        <Typography variant={'h6'}>{t('name')}</Typography>
-                    </Grid>
-                    <Grid size={6}>
-                        {exerciseEnglish.name}
-                        <ul>
-                            {exerciseEnglish.aliases.map((alias) => (
-                                <li key={alias.id}>{alias.alias}</li>
+                        <Grid size={12}>
+                            <Typography variant={'h5'}>{t('translation')}</Typography>
+                        </Grid>
+                        <Grid size={6}>
+                            <Typography variant={'h6'}>{t('English')}</Typography>
+                        </Grid>
+                        <Grid size={6}>
+                            <Typography variant={'h6'}>
+                                {language.nameLong} ({language.nameShort})
+                            </Typography>
+                        </Grid>
+                        <Grid size={12}>
+                            <PaddingBox />
+                            <Typography variant={'h6'}>{t('name')}</Typography>
+                        </Grid>
+                        <Grid size={6}>
+                            {exerciseEnglish.name}
+                            <ul>
+                                {exerciseEnglish.aliases.map((alias) => (
+                                    <li key={alias.id}>{alias.alias}</li>
+                                ))}
+                            </ul>
+                        </Grid>
+                        <Grid size={6}>
+                            <Box sx={{ mb: 2 }}>
+                                <ExerciseName fieldName={'name'} />
+                            </Box>
+                            <ExerciseAliases fieldName={'alternativeNames'} />
+                        </Grid>
+                        <Grid size={12}>
+                            <PaddingBox />
+                        </Grid>
+
+
+                        <Grid size={12}>
+                            <Typography variant={'h6'}>{t('exercises.description')}</Typography>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            {/* English/Base Description (Read Only) */}
+                            <Typography variant="h6" gutterBottom>English Description (Reference)</Typography>
+                            <div dangerouslySetInnerHTML={{ __html: exerciseEnglish.description || '' }} />
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            {/* Markdown Editor */}
+                            <MarkdownEditor
+                                value={values.description}
+                                onChange={(val) => setFieldValue('description', val)}
+                                error={touched.description && Boolean(errors.description)}
+                                // FIXED: Use ternary to ensure we return undefined instead of false
+                                helperText={touched.description ? errors.description : undefined}
+                            />
+                        </Grid>
+
+                        {editExercisePermissionQuery.data && <>
+                            <Grid size={12}>
+                                <PaddingBox />
+                            </Grid>
+                            <Grid size={12}>
+                                <Typography variant={'h5'}>{t('nutrition.others')}</Typography>
+                            </Grid>
+                            <Grid size={{ xs: 12, md: 6 }}>
+                                <EditExerciseCategory exerciseId={exercise.id!} initial={exercise.category.id} />
+                            </Grid>
+                            <Grid size={{ xs: 12, md: 6 }}>
+                                <EditExerciseEquipment exerciseId={exercise.id!}
+                                                       initial={exercise.equipment.map(e => e.id)} />
+                            </Grid>
+                            <Grid size={12}>
+                                <PaddingBox />
+                                <Typography variant={'h5'}>{t('exercises.variations')}</Typography>
+                            </Grid>
+                            <Grid size={12}>
+                                <EditExerciseVariation exerciseId={exercise.id!} initial={exercise.variationGroup} />
+                            </Grid>
+                        </>}
+
+                        <Grid size={12}>
+                            <PaddingBox />
+                        </Grid>
+
+                        <Grid size={12}>
+                            <Typography variant={'h6'}>{t('exercises.notes')}</Typography>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            <ul>
+                                {exerciseEnglish.notes.map((note: Note) => (
+                                    <li key={note.id}>{note.note}</li>
+                                ))}
+                            </ul>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 6 }}>
+                            {exerciseTranslation.notes.map((note: Note) => (
+                                <TextField
+                                    key={note.id}
+                                    fullWidth
+                                    value={editingNoteId === note.id ? editingNoteValue : note.note}
+                                    onChange={(e) => {
+                                        if (editingNoteId !== note.id) {
+                                            setEditingNoteId(note.id);
+                                            setEditingNoteValue(e.target.value);
+                                        } else {
+                                            setEditingNoteValue(e.target.value);
+                                        }
+                                    }}
+                                    onFocus={() => {
+                                        if (editingNoteId !== note.id) {
+                                            setEditingNoteId(note.id);
+                                            setEditingNoteValue(note.note);
+                                        }
+                                    }}
+                                    sx={{ mb: 1 }}
+                                    variant="standard"
+                                    slotProps={{
+                                        input: {
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    {editingNoteId === note.id && editingNoteValue !== note.note && (
+                                                        <IconButton
+                                                            onClick={async () => {
+                                                                await editNoteMutation.mutateAsync(
+                                                                    new Note(note.id, note.translation, editingNoteValue)
+                                                                );
+                                                                setEditingNoteId(null);
+                                                                setEditingNoteValue('');
+                                                            }}
+                                                            disabled={editNoteMutation.isPending}
+                                                        >
+                                                            <SaveIcon />
+                                                        </IconButton>
+                                                    )}
+                                                    <IconButton
+                                                        onClick={() => deleteNoteMutation.mutate(note.id!)}
+                                                        disabled={deleteNoteMutation.isPending}
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }
+                                    }}
+                                />
                             ))}
-                        </ul>
-                    </Grid>
-                    <Grid size={6}>
-                        <Box mb={2}>
-                            <ExerciseName fieldName={'name'} />
-                        </Box>
-                        <ExerciseAliases fieldName={'alternativeNames'} />
-                    </Grid>
-                    <Grid size={12}>
-                        <PaddingBox />
-                    </Grid>
+                            {exerciseTranslation.id && (
+                                <TextField
+                                    fullWidth
+                                    label={t('exercises.newNote')}
+                                    variant="standard"
+                                    value={newNoteValue}
+                                    onChange={(e) => setNewNoteValue(e.target.value)}
+                                    helperText={t('exercises.notesHelpText')}
+                                    slotProps={{
+                                        input: {
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        onClick={async () => {
+                                                            if (newNoteValue.trim()) {
+                                                                await addNoteMutation.mutateAsync(
+                                                                    new Note(null, exerciseTranslation.id!, newNoteValue)
+                                                                );
+                                                                setNewNoteValue('');
+                                                            }
+                                                        }}
+                                                        disabled={addNoteMutation.isPending || !newNoteValue.trim()}
+                                                    >
+                                                        <AddIcon />
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            ),
+                                        }
+                                    }}
+                                />
+                            )}
+                        </Grid>
 
-
-                    <Grid size={12}>
-                        <Typography variant={'h6'}>{t('exercises.description')}</Typography>
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                        <div dangerouslySetInnerHTML={{ __html: exerciseEnglish.description! }} />
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                        <ExerciseDescription fieldName={"description"} />
-                    </Grid>
-
-                    {editExercisePermissionQuery.data && <>
                         <Grid size={12}>
                             <PaddingBox />
+                            <Button
+                                variant="contained"
+                                type="submit"
+                                sx={{ mt: 1, mr: 1 }}
+                                disabled={exerciseQuery.isLoading || addTranslationQuery.isPending || editTranslationQuery.isPending}
+                            >
+                                {t('save')}
+                            </Button>
                         </Grid>
-                        <Grid size={12}>
-                            <Typography variant={'h5'}>{t('nutrition.others')}</Typography>
-                        </Grid>
-                        <Grid size={{ xs: 12, md: 6 }}>
-                            <EditExerciseCategory exerciseId={exercise.id!} initial={exercise.category.id} />
-                        </Grid>
-                        <Grid size={{ xs: 12, md: 6 }}>
-                            <EditExerciseEquipment exerciseId={exercise.id!}
-                                                   initial={exercise.equipment.map(e => e.id)} />
-                        </Grid>
-                    </>}
-
-                    {/*
-                <Grid item xs={12}>
-                    <PaddingBox />
-                </Grid>
-
-                <Grid item xs={12}>
-                    <Typography variant={'h6'}>{t('exercises.notes')}</Typography>
-                </Grid>
-                <Grid item sm={6}>
-                    <ul>
-                        {exerciseEnglish.notes.map((note: Note) => (
-                            <li key={note.id}>{note.note}</li>
-                        ))}
-                    </ul>
-                </Grid>
-                <Grid item sm={6}>
-                    <ul>
-                        {exerciseTranslation.notes.map((note: Note) => (
-                            <li key={note.id}>{note.note}</li>
-                        ))}
-                    </ul>
-                </Grid>
-                */}
-
-                    <Grid size={12}>
-                        <PaddingBox />
-                        <Button
-                            variant="contained"
-                            type="submit"
-                            sx={{ mt: 1, mr: 1 }}
-                            disabled={exerciseQuery.isLoading || addTranslationQuery.isPending || editTranslationQuery.isPending}
-                        >
-                            {t('save')}
-                        </Button>
                     </Grid>
-                </Grid>
-            </Form>
+                </Form>
+            )}
         </Formik>
 
         {/* Images */}
         <PaddingBox />
         <Typography variant={'h5'}>{t('images')}</Typography>
-        <Grid container spacing={2} mt={2}>
+        <Grid container spacing={2} sx={{ mt: 2 }}>
             {addImagePermissionQuery.data && <Grid key={'add'} size={{ md: 3 }}>
                 <AddImageCard exerciseId={exercise.id!} />
             </Grid>}
@@ -376,7 +446,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
         {/* Videos */}
         <PaddingBox />
         <Typography variant={'h5'}>{t('videos')}</Typography>
-        <Grid container spacing={2} mt={2}>
+        <Grid container spacing={2} sx={{ mt: 2 }}>
             {addVideoPermissionQuery.data
                 && <Grid key={'add'} size={{ md: 3 }}>
                     <AddVideoCard exerciseId={exercise.id!} />
@@ -396,7 +466,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
             && <>
                 <PaddingBox />
                 <Typography variant={'h5'}>{t('exercises.muscles')}</Typography>
-                <Grid container spacing={1} mt={2}>
+                <Grid container spacing={1} sx={{ mt: 2 }}>
                     <Grid size={{ xs: 12, md: 6 }}>
                         <EditExerciseMuscle
                             exerciseId={exercise.id!}
@@ -416,14 +486,14 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                     </Grid>
                     <Grid size={{ xs: 12, md: 6 }}>
                         <Grid container>
-                            <Grid display="flex" justifyContent={"center"} size={6}>
+                            <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
                                 <MuscleOverview
                                     primaryMuscles={mainMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                     secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                     isFront={true}
                                 />
                             </Grid>
-                            <Grid display="flex" justifyContent={"center"} size={6}>
+                            <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
                                 <MuscleOverview
                                     primaryMuscles={mainMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
                                     secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
@@ -437,7 +507,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
             </>
         }
 
-        <ImageFormModal 
+        <ImageFormModal
             open={openModal}
             onClose={() => setOpenModal(false)}
             image={selectedImage}
@@ -452,8 +522,8 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
         {imageGuardError && (
             <FormQueryErrorsSnackbar
                 mutationQuery={{
-                isError: true,
-                error: { message: imageGuardError, response: { data: null } }
+                    isError: true,
+                    error: { message: imageGuardError, response: { data: null } }
                 }}
             />
         )}

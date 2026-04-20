@@ -245,7 +245,7 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
 
                             </ButtonGroup>
                         </Grid>
-                        <Grid size={12} display={"flex"} justifyContent={"end"}>
+                        <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
                             <Button
                                 disabled={isLoading}
                                 color="primary"

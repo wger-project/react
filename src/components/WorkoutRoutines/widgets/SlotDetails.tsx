@@ -191,9 +191,9 @@ export const SlotEntryDetails = (props: {
 
     return (
         (<React.Fragment>
-            <Grid container paddingTop={1} spacing={1}>
+            <Grid container sx={{ paddingTop: 1 }} spacing={1}>
                 {!props.isGrouped && <>
-                    <Grid size={{ xs: 3, sm: 1 }} alignContent={"center"}>
+                    <Grid size={{ xs: 3, sm: 1 }} sx={{ alignContent: "center" }}>
                         <IconButton size={"small"} onClick={toggleEditExercise} disabled={isPending}>
                             {editExercise ? <EditOffIcon /> : <EditIcon />}
                         </IconButton>
@@ -206,7 +206,7 @@ export const SlotEntryDetails = (props: {
                         </IconButton>
                     </Grid>
 
-                    <Grid size={{ xs: 9, sm: 3 }} alignContent={"center"}>
+                    <Grid size={{ xs: 9, sm: 3 }} sx={{ alignContent: "center" }}>
                         <Typography variant={"body1"}>
                             {counter} {props.slotEntry.exercise?.getTranslation(language).name}
                         </Typography>

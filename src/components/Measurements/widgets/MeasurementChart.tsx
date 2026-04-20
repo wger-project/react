@@ -18,7 +18,7 @@ export const MeasurementChart = (props: { category: MeasurementCategory }) => {
     });
 
 
-    return <Box alignItems={'center'} display={'flex'} flexDirection={'column'}>
+    return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
         <LineChart data={entryData} responsive width="90%" height={200}>
             <Line
                 type="monotone"

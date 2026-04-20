@@ -46,7 +46,7 @@ function TrophyProgressCard(props: { trophyProgression: UserTrophyProgression })
         />
         <CardContent sx={{ opacity: props.trophyProgression.isEarned ? 1 : 0.6 }}>
 
-            <Typography gutterBottom variant="h6" component="div" textAlign="center">
+            <Typography gutterBottom variant="h6" component="div" sx={{ textAlign: "center" }}>
                 {props.trophyProgression.trophy.name}
             </Typography>
 

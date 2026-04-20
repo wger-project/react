@@ -44,7 +44,7 @@ export const setPrimaryMuscles = (ids: number[]): ExerciseSubmissionAction => {
 export const setSecondaryMuscles = (ids: number[]): ExerciseSubmissionAction => {
     return { type: SetExerciseSubmissionState.SET_MUSCLES_SECONDARY, payload: ids };
 };
-export const setVariationId = (id: number | null): ExerciseSubmissionAction => {
+export const setVariationId = (id: string | null): ExerciseSubmissionAction => {
     return { type: SetExerciseSubmissionState.SET_VARIATION_ID, payload: id };
 };
 export const setNewBaseVariationId = (id: number | null): ExerciseSubmissionAction => {
@@ -119,7 +119,7 @@ export const exerciseSubmissionReducer = (state: ExerciseSubmissionState, action
         case SetExerciseSubmissionState.SET_VARIATION_ID:
             return {
                 ...state,
-                variationId: action.payload as number
+                variationGroup: action.payload as string | null
             };
 
         case SetExerciseSubmissionState.SET_NEW_VARIATION_BASE_ID:

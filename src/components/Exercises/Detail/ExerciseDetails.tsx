@@ -39,8 +39,8 @@ export const ExerciseDetails = () => {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const variationsQuery = useQuery({
-        queryKey: [QUERY_EXERCISE_VARIATIONS, exerciseQuery.data?.variationId],
-        queryFn: () => getExercisesForVariation(exerciseQuery.data?.variationId),
+        queryKey: [QUERY_EXERCISE_VARIATIONS, exerciseQuery.data?.variationGroup],
+        queryFn: () => getExercisesForVariation(exerciseQuery.data?.variationGroup),
         enabled: exerciseQuery.isSuccess
     });
 

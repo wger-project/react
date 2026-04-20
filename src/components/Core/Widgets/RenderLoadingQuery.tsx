@@ -13,10 +13,9 @@ export const RenderLoadingQuery = (props: { query: UseQueryResult, child: JSX.El
 
     if (props.query.isError) {
         return <Box
-            sx={{ height: 200, alignItems: "center", mt: 2 }}
+            sx={{ height: 200, alignItems: "center", mt: 2, justifyContent: "center" }}
             component={Stack}
-            direction="column"
-            justifyContent="center">
+            direction="column">
             {/*// @ts-ignore */}
             <Alert severity="error">Error while fetching data: {props.query.error!.message}</Alert>
         </Box>;

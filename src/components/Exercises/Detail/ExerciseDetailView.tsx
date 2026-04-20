@@ -19,9 +19,9 @@ const TranslateExerciseBanner = ({ setEditMode }: { setEditMode: (mode: boolean)
 
     return (
         <Box
-            mb={2}
-            paddingY={2}
             sx={{
+                mb: 2,
+                paddingY: 2,
                 width: "100%",
                 backgroundColor: "#ebebeb",
                 textAlign: "center",
@@ -255,9 +255,7 @@ export const ExerciseDetailView = ({
                 <Divider />
                 <Typography
                     variant="caption"
-                    display="block"
-                    mt={1}
-                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                    sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
                 >
                     <i className="fa-brands fa-creative-commons" style={{ fontSize: 20 }}></i>
                     The content on this page is available under the
@@ -268,8 +266,7 @@ export const ExerciseDetailView = ({
 
                 <Typography
                     variant="caption"
-                    display="block" mt={1}
-                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                    sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
                 >
                     <>
                         Authors: {exercise.authors.join(", ")}<br />

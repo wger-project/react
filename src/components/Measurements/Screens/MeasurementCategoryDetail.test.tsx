@@ -59,7 +59,7 @@ describe("Test the MeasurementCategoryDetail component", () => {
         expect(screen.getByText('Biceps')).toBeInTheDocument();
 
         expect(screen.getByRole('gridcell', { name: /10cm/i })).toBeInTheDocument();
-        expect(screen.getByText(/Feb 1, 2023/i)).toBeInTheDocument();
+        expect(screen.getAllByText(/Feb 1, 2023/i).length).toBeGreaterThanOrEqual(1);
         expect(screen.getByText('test note')).toBeInTheDocument();
 
         expect(screen.getByRole('gridcell', { name: /20cm/i })).toBeInTheDocument();

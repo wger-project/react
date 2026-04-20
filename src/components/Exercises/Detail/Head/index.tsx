@@ -132,7 +132,7 @@ export const Head = ({
                         </div>
                     </div>
                     <div className={styles.header}>
-                        <Typography gutterBottom variant="h2" margin={0} sx={{ mt: 2 }}>
+                        <Typography gutterBottom variant="h2" sx={{ margin: 0, mt: 2 }}>
                             {exercise.getTranslation(language)?.name}
                         </Typography>
                         {!userIsAnonymous &&
@@ -155,7 +155,7 @@ export const Head = ({
                             </nav>
                         }
                     </div>
-                    <Stack direction="row" spacing={1} mt={2}>
+                    <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
                         <Chip
                             label={exercise.category.translatedName}
                             size="small" />

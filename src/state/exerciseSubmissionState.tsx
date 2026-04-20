@@ -24,7 +24,7 @@ export type ExerciseSubmissionState = {
     muscles: number[];
     musclesSecondary: number[];
     equipment: number[];
-    variationId: number | null;
+    variationGroup: string | null;
     newVariationExerciseId: number | null;
 
     images: ImageFormData[];
@@ -34,7 +34,7 @@ export const exerciseSubmissionInitialState: ExerciseSubmissionState = {
     category: null,
     muscles: [],
     musclesSecondary: [],
-    variationId: null,
+    variationGroup: null,
     newVariationExerciseId: null,
     languageId: null,
     equipment: [],

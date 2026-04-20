@@ -4,10 +4,13 @@ import userEvent from "@testing-library/user-event";
 import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
 import {
     useAddExerciseImageQuery,
+    useAddNoteQuery,
     useAddTranslationQuery,
     useCategoriesQuery,
     useDeleteExerciseImageQuery,
+    useDeleteNoteQuery,
     useEditExerciseImageQuery,
+    useEditNoteQuery,
     useEditTranslationQuery,
     useEquipmentQuery,
     useExerciseQuery,
@@ -15,6 +18,7 @@ import {
 } from "components/Exercises/queries";
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
+import { WgerPermissions } from "permissions";
 import { deleteAlias, editTranslation, postAlias } from "services";
 import {
     testCategories,
@@ -26,9 +30,8 @@ import {
 } from "tests/exerciseTestdata";
 import { testQueryClient } from "tests/queryClient";
 import { testProfileDataVerified } from "tests/userTestdata";
-import { ExerciseImage } from "../models/image";
 import { Exercise } from "../models/exercise";
-import { WgerPermissions } from "permissions";
+import { ExerciseImage } from "../models/image";
 
 // It seems we run into a timeout when running the tests on GitHub actions
 jest.setTimeout(15000);
@@ -77,6 +80,22 @@ describe("Exercise translation edit tests", () => {
 
         (useAddExerciseImageQuery as jest.Mock).mockImplementation(() => ({
             isError: false,
+            isPending: false,
+            mutate: jest.fn(),
+            mutateAsync: jest.fn(),
+        }));
+
+        (useAddNoteQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutate: jest.fn(),
+            mutateAsync: jest.fn(),
+        }));
+        (useEditNoteQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutate: jest.fn(),
+            mutateAsync: jest.fn(),
+        }));
+        (useDeleteNoteQuery as jest.Mock).mockImplementation(() => ({
             isPending: false,
             mutate: jest.fn(),
             mutateAsync: jest.fn(),
@@ -142,6 +161,27 @@ describe("Exercise translation edit tests", () => {
         expect(screen.getByText('Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur')).toBeInTheDocument();
     });
 
+    test('renders notes section with existing notes', () => {
+        // Act
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <ExerciseDetailEdit
+                    exerciseId={345}
+                    language={testLanguageGerman}
+                />
+            </QueryClientProvider>
+        );
+
+        // Assert - English notes shown as read-only
+        expect(screen.getByText('keep your back straight')).toBeInTheDocument();
+
+        // Assert - German notes shown as editable text field
+        expect(screen.getByDisplayValue('Rücken gerade halten')).toBeInTheDocument();
+
+        // Assert - "New note" input is present
+        expect(screen.getByLabelText('exercises.newNote')).toBeInTheDocument();
+    });
+
     test('correctly updates the exercise', async () => {
         // Arrange
         const user = userEvent.setup();
@@ -171,7 +211,7 @@ describe("Exercise translation edit tests", () => {
             id: 9,
             languageId: 1,
             author: "",
-            description: "Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur",
+            descriptionSource: "Die Kniebeuge ist eine Übung zur Kräftigung der Oberschenkelmuskulatur",
             name: "Mangalitza"
         });
     });
@@ -294,6 +334,21 @@ describe("Exercise image tests", () => {
             isError: false,
             isPending: false,
             mutateAsync: editImageMutateMock
+        }));
+        (useAddNoteQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutate: jest.fn(),
+            mutateAsync: jest.fn(),
+        }));
+        (useEditNoteQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutate: jest.fn(),
+            mutateAsync: jest.fn(),
+        }));
+        (useDeleteNoteQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutate: jest.fn(),
+            mutateAsync: jest.fn(),
         }));
         (useAddExerciseImageQuery as jest.Mock).mockImplementation(() => asPromiseHookResult({
             isError: false,

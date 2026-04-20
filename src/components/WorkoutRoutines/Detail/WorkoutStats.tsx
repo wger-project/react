@@ -208,7 +208,7 @@ export const WorkoutStats = () => {
                 </Grid>
 
                 <Grid size={12}>
-                    <Box width="100%" height={400}>
+                    <Box sx={{ width: "100%", height: 400 }}>
                         <LineChart width="100%" height="100%" responsive>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="category" type="category" allowDuplicatedCategory={false} />
@@ -230,7 +230,7 @@ export const WorkoutStats = () => {
                 </Grid>
 
                 <Grid size={12}>
-                    <Box height={20} />
+                    <Box sx={{ height: 20 }} />
                     {renderStatistics()}
                 </Grid>
             </Grid>

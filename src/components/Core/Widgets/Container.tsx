@@ -34,8 +34,8 @@ export const WgerContainerRightSidebar = (props: WgerTemplateContainerRightSideb
         <Container maxWidth="lg">
             <Grid container spacing={2}>
                 <Grid sx={{ mb: 2 }} size={8}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Stack alignItems="start">
+                    <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center" }}>
+                        <Stack sx={{ alignItems: "start" }}>
                             <Typography variant="h3">
                                 {props.title}
                             </Typography>
@@ -76,9 +76,9 @@ export const WgerContainerFullWidth = (props: WgerTemplateContainerFullWidthProp
         <Container maxWidth={props.maxWidth}>
             <Grid container spacing={2}>
                 <Grid sx={{ mb: 2 }} size={12}>
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center" }}>
 
-                        <Stack alignItems="start">
+                        <Stack sx={{ alignItems: "start" }}>
                             <Typography variant="h3">
                                 {props.title}
                             </Typography>

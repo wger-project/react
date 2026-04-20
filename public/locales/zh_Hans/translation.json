@@ -356,5 +356,6 @@
         "trophies": "奖杯"
     },
     "private": "私有",
-    "public": "公开"
+    "public": "公开",
+    "totalChange": "总变化"
 }
