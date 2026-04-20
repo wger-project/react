@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import {
     IngredientAutocompleter,
     STORAGE_KEY_LANGUAGE_FILTER,
-    STORAGE_KEY_NUTRISCORE_ENABLED,
     STORAGE_KEY_NUTRISCORE_MAX,
     STORAGE_KEY_VEGAN,
     STORAGE_KEY_VEGETARIAN
@@ -190,7 +189,7 @@ describe("Test the IngredientAutocompleter component", () => {
         localStorage.clear();
     });
 
-    test('nutriscore slider is hidden until the filter switch is enabled', async () => {
+    test('nutriscore slider defaults to Off and is always visible in the popover', async () => {
         // Arrange
         const user = userEvent.setup();
         render(<IngredientAutocompleter callback={mockCallback} />);
@@ -198,17 +197,14 @@ describe("Test the IngredientAutocompleter component", () => {
         // Act
         await user.click(screen.getByLabelText('Toggle filters'));
 
-        // Assert
-        const nutriscoreSwitch = screen.getByLabelText('nutrition.filterNutriscore');
-        expect(nutriscoreSwitch).not.toBeChecked();
-        expect(screen.queryByRole('slider', { name: 'nutrition.filterNutriscoreMax' })).not.toBeInTheDocument();
-
-        await user.click(nutriscoreSwitch);
-
-        expect(screen.getByRole('slider', { name: 'nutrition.filterNutriscoreMax' })).toBeInTheDocument();
+        // Assert — slider rendered with Off position (index 0) on first load
+        const slider = screen.getByRole('slider', { name: 'nutrition.filterNutriscore' });
+        expect(slider).toBeInTheDocument();
+        expect(slider).toHaveAttribute('aria-valuetext', 'nutrition.filterNutriscoreNoFilter');
+        expect(slider).toHaveAttribute('aria-valuenow', '0');
     });
 
-    test('nutriscore filter settings are saved to local storage', async () => {
+    test('moving the slider persists the selected grade to local storage', async () => {
         // Arrange
         const user = userEvent.setup();
         const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
@@ -216,24 +212,38 @@ describe("Test the IngredientAutocompleter component", () => {
 
         // Act
         await user.click(screen.getByLabelText('Toggle filters'));
-        await user.click(screen.getByLabelText('nutrition.filterNutriscore'));
-
-        // Assert
-        expect(setItemSpy).toHaveBeenCalledWith(STORAGE_KEY_NUTRISCORE_ENABLED, 'true');
-
-        // Moving the slider with the keyboard changes the selected grade and persists it
-        const slider = screen.getByRole('slider', { name: 'nutrition.filterNutriscoreMax' });
+        const slider = screen.getByRole('slider', { name: 'nutrition.filterNutriscore' });
         slider.focus();
         await user.keyboard('{ArrowRight}');
-        expect(setItemSpy).toHaveBeenCalledWith(STORAGE_KEY_NUTRISCORE_MAX, 'd');
+
+        // Assert — index 1 -> 'a'
+        expect(setItemSpy).toHaveBeenCalledWith(STORAGE_KEY_NUTRISCORE_MAX, 'a');
 
         setItemSpy.mockRestore();
+    });
+
+    test('moving the slider back to Off removes the stored grade', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, 'a');
+        const removeItemSpy = jest.spyOn(Storage.prototype, 'removeItem');
+        render(<IngredientAutocompleter callback={mockCallback} />);
+
+        // Act
+        await user.click(screen.getByLabelText('Toggle filters'));
+        const slider = screen.getByRole('slider', { name: 'nutrition.filterNutriscore' });
+        slider.focus();
+        await user.keyboard('{ArrowLeft}');
+
+        // Assert
+        expect(removeItemSpy).toHaveBeenCalledWith(STORAGE_KEY_NUTRISCORE_MAX);
+
+        removeItemSpy.mockRestore();
     });
 
     test('nutriscore filter state is loaded from local storage', async () => {
         // Arrange
         const user = userEvent.setup();
-        localStorage.setItem(STORAGE_KEY_NUTRISCORE_ENABLED, 'true');
         localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, 'b');
         render(<IngredientAutocompleter callback={mockCallback} />);
 
@@ -241,15 +251,12 @@ describe("Test the IngredientAutocompleter component", () => {
         await user.click(screen.getByLabelText('Toggle filters'));
 
         // Assert
-        expect(screen.getByLabelText('nutrition.filterNutriscore')).toBeChecked();
-        expect(screen.getByRole('slider', { name: 'nutrition.filterNutriscoreMax' })).toHaveAttribute('aria-valuetext', 'B');
-        localStorage.clear();
+        expect(screen.getByRole('slider', { name: 'nutrition.filterNutriscore' })).toHaveAttribute('aria-valuetext', 'nutrition.filterNutriscoreOrBetter');
     });
 
-    test('searchIngredient is called with nutriscoreMax when the filter is enabled', async () => {
+    test('searchIngredient is called with nutriscoreMax when a grade is selected', async () => {
         // Arrange
         const user = userEvent.setup();
-        localStorage.setItem(STORAGE_KEY_NUTRISCORE_ENABLED, 'true');
         localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, 'b');
         render(<IngredientAutocompleter callback={mockCallback} />);
         const autocomplete = screen.getByTestId('autocomplete');
@@ -267,10 +274,9 @@ describe("Test the IngredientAutocompleter component", () => {
             'Yog',
             expect.objectContaining({ nutriscoreMax: 'b' }),
         );
-        localStorage.clear();
     });
 
-    test('nutriscoreMax is omitted when the filter switch is off', async () => {
+    test('nutriscoreMax is omitted when the slider is at Off', async () => {
         // Arrange
         const user = userEvent.setup();
         render(<IngredientAutocompleter callback={mockCallback} />);

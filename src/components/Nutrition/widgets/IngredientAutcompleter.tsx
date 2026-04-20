@@ -42,11 +42,18 @@ type IngredientAutocompleterProps = {
 export const STORAGE_KEY_LANGUAGE_FILTER = "wger.ingredientSearch.languageFilter";
 export const STORAGE_KEY_VEGAN = "wger.ingredientSearch.filterVegan";
 export const STORAGE_KEY_VEGETARIAN = "wger.ingredientSearch.filterVegetarian";
-export const STORAGE_KEY_NUTRISCORE_ENABLED = "wger.ingredientSearch.filterNutriscoreEnabled";
 export const STORAGE_KEY_NUTRISCORE_MAX = "wger.ingredientSearch.filterNutriscoreMax";
+
+const NUTRISCORE_OFF_INDEX = 0;
 
 const isNutriScoreValue = (value: string | null): value is NutriScoreValue =>
     value !== null && (NUTRI_SCORES as readonly string[]).includes(value);
+
+const sliderIndexToNutriscore = (index: number): NutriScoreValue | null =>
+    index === NUTRISCORE_OFF_INDEX ? null : NUTRI_SCORES[index - 1];
+
+const nutriscoreToSliderIndex = (value: NutriScoreValue | null): number =>
+    value === null ? NUTRISCORE_OFF_INDEX : NUTRI_SCORES.indexOf(value) + 1;
 
 export function IngredientAutocompleter({ callback, initialIngredient }: IngredientAutocompleterProps) {
     const initialData = initialIngredient ?? null;
@@ -65,12 +72,9 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     const [filterVegetarian, setFilterVegetarian] = useState<boolean>(() => {
         return localStorage.getItem(STORAGE_KEY_VEGETARIAN) === "true";
     });
-    const [filterNutriscoreEnabled, setFilterNutriscoreEnabled] = useState<boolean>(() => {
-        return localStorage.getItem(STORAGE_KEY_NUTRISCORE_ENABLED) === "true";
-    });
-    const [nutriscoreMax, setNutriscoreMax] = useState<NutriScoreValue>(() => {
+    const [nutriscoreMax, setNutriscoreMax] = useState<NutriScoreValue | null>(() => {
         const stored = localStorage.getItem(STORAGE_KEY_NUTRISCORE_MAX);
-        return isNutriScoreValue(stored) ? stored : "c";
+        return isNutriScoreValue(stored) ? stored : null;
     });
     const [filtersAnchorEl, setFiltersAnchorEl] = useState<HTMLElement | null>(null);
     const [value, setValue] = useState<Ingredient | null>(initialData);
@@ -96,11 +100,11 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     }, [filterVegetarian]);
 
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY_NUTRISCORE_ENABLED, String(filterNutriscoreEnabled));
-    }, [filterNutriscoreEnabled]);
-
-    useEffect(() => {
-        localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, nutriscoreMax);
+        if (nutriscoreMax === null) {
+            localStorage.removeItem(STORAGE_KEY_NUTRISCORE_MAX);
+        } else {
+            localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, nutriscoreMax);
+        }
     }, [nutriscoreMax]);
 
     const languageOptions = useMemo(() => {
@@ -135,11 +139,11 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                         languageFilter,
                         isVegan: filterVegan || undefined,
                         isVegetarian: filterVegetarian || undefined,
-                        nutriscoreMax: filterNutriscoreEnabled ? nutriscoreMax : undefined,
+                        nutriscoreMax: nutriscoreMax ?? undefined,
                     }).then((res) => setOptions(res)),
                 200
             ),
-        [i18n.language, languageFilter, filterVegan, filterVegetarian, filterNutriscoreEnabled, nutriscoreMax]
+        [i18n.language, languageFilter, filterVegan, filterVegetarian, nutriscoreMax]
     );
 
     useEffect(() => {
@@ -321,40 +325,38 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                         />
                     </FormGroup>
 
-                    <FormGroup row>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={filterNutriscoreEnabled}
-                                    onChange={(event, checked) => setFilterNutriscoreEnabled(checked)}
-                                />
+                    <Box sx={{ px: 2, pt: 1, minWidth: 240 }}>
+                        <Typography id="ingredient-nutriscore-slider-label" variant="body2">
+                            {t("nutrition.filterNutriscore")}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" gutterBottom>
+                            {nutriscoreMax === null
+                                ? t("nutrition.filterNutriscoreNoFilter")
+                                : t("nutrition.filterNutriscoreOrBetter", { grade: nutriscoreMax.toUpperCase() })}
+                        </Typography>
+                        <Slider
+                            aria-labelledby="ingredient-nutriscore-slider-label"
+                            value={nutriscoreToSliderIndex(nutriscoreMax)}
+                            onChange={(event, value) =>
+                                setNutriscoreMax(sliderIndexToNutriscore(value as number))
                             }
-                            label={t("nutrition.filterNutriscore")}
-                        />
-                    </FormGroup>
-
-                    {filterNutriscoreEnabled && (
-                        <Box sx={{ px: 2, pt: 1, minWidth: 220 }}>
-                            <Typography id="ingredient-nutriscore-slider-label" gutterBottom variant="body2">
-                                {t("nutrition.filterNutriscoreMax")}
-                            </Typography>
-                            <Slider
-                                aria-labelledby="ingredient-nutriscore-slider-label"
-                                value={NUTRI_SCORES.indexOf(nutriscoreMax)}
-                                onChange={(event, value) =>
-                                    setNutriscoreMax(NUTRI_SCORES[value as number])
-                                }
-                                getAriaValueText={(value) => NUTRI_SCORES[value].toUpperCase()}
-                                step={1}
-                                min={0}
-                                max={NUTRI_SCORES.length - 1}
-                                marks={NUTRI_SCORES.map((score, index) => ({
-                                    value: index,
+                            getAriaValueText={(value) =>
+                                value === NUTRISCORE_OFF_INDEX
+                                    ? t("nutrition.filterNutriscoreNoFilter")
+                                    : t("nutrition.filterNutriscoreOrBetter", { grade: NUTRI_SCORES[value - 1].toUpperCase() })
+                            }
+                            step={1}
+                            min={0}
+                            max={NUTRI_SCORES.length}
+                            marks={[
+                                { value: NUTRISCORE_OFF_INDEX, label: t("nutrition.filterNutriscoreOff") },
+                                ...NUTRI_SCORES.map((score, index) => ({
+                                    value: index + 1,
                                     label: score.toUpperCase(),
-                                }))}
-                            />
-                        </Box>
-                    )}
+                                })),
+                            ]}
+                        />
+                    </Box>
                 </Stack>
             </Popover>
         </Stack>
