@@ -4,6 +4,7 @@ import React from 'react';
 import { searchExerciseTranslations } from "services";
 import { searchResponse } from "tests/exercises/searchResponse";
 import { Exercise } from "components/Exercises/models/exercise";
+import { STORAGE_KEY_EXERCISE_LANGUAGE, STORAGE_KEY_EXERCISE_EXACT_MATCH } from "components/Exercises/Filter/NameAutcompleter";
 
 jest.mock("services");
 const mockCallback = jest.fn();
@@ -12,6 +13,7 @@ describe("Test the NameAutocompleter component", () => {
 
     // Arrange
     beforeEach(() => {
+        localStorage.clear();
         (searchExerciseTranslations as jest.Mock).mockImplementation(() => Promise.resolve(searchResponse));
     });
 
@@ -108,24 +110,22 @@ describe("Test the NameAutocompleter component", () => {
 
         // Arrange
         localStorage.clear();
-        localStorage.setItem('wger.exerciseSearch.exactMatch', 'false');
+        localStorage.setItem(STORAGE_KEY_EXERCISE_EXACT_MATCH, 'false');
 
         // Act
         render(<NameAutocompleter callback={mockCallback} />);
 
         // Directly set localStorage as if user toggled
-        localStorage.setItem('wger.exerciseSearch.exactMatch', 'true');
+        localStorage.setItem(STORAGE_KEY_EXERCISE_EXACT_MATCH, 'true');
 
         // Assert
-        expect(localStorage.getItem('wger.exerciseSearch.exactMatch')).toBe('true');
+        expect(localStorage.getItem(STORAGE_KEY_EXERCISE_EXACT_MATCH)).toBe('true');
     });
 
     test('language filter saves to localStorage when component renders', async () => {
 
-        // Arrange
         localStorage.clear();
 
-        // Act - just render the component
         render(<NameAutocompleter callback={mockCallback} />);
 
         // Type something to trigger the search
@@ -137,15 +137,42 @@ describe("Test the NameAutocompleter component", () => {
             await new Promise((r) => setTimeout(r, 250));
         });
 
-        // Assert - searchExerciseTranslations should have been called
-        expect(searchExerciseTranslations).toHaveBeenCalled();
+        expect(searchExerciseTranslations).toHaveBeenCalledWith(
+            'test',
+            expect.any(String),
+            expect.any(String),   
+            false   
+        );
+    });
+
+    test('language filter is read from localStorage on render', async () => {
+
+        localStorage.clear();
+        localStorage.setItem(STORAGE_KEY_EXERCISE_LANGUAGE, 'all');
+
+        render(<NameAutocompleter callback={mockCallback} />);
+
+        const autocomplete = screen.getByTestId('autocomplete');
+        const input = within(autocomplete).getByRole('combobox');
+        fireEvent.input(input, { target: { value: 'test' } });
+
+        await act(async () => {
+            await new Promise((r) => setTimeout(r, 250));
+        });
+
+        expect(searchExerciseTranslations).toHaveBeenCalledWith(
+            'test',
+            expect.any(String),
+            'all',
+            false
+        );
     });
 
     test('exact match calls searchExerciseTranslations with exactMatch=true', async () => {
 
         // Arrange
         localStorage.clear();
-        localStorage.setItem('wger.exerciseSearch.exactMatch', 'true');
+        localStorage.setItem(STORAGE_KEY_EXERCISE_EXACT_MATCH, 'true');
 
         // Act
         render(<NameAutocompleter callback={mockCallback} />);
@@ -164,7 +191,7 @@ describe("Test the NameAutocompleter component", () => {
         expect(searchExerciseTranslations).toHaveBeenCalledWith(
             'Bench Press',
             expect.any(String),
-            expect.any(Boolean),
+            expect.any(String),
             true
         );
     });

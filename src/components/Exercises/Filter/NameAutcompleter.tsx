@@ -28,6 +28,11 @@ import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { searchExerciseTranslations } from "services";
 import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
+import { SearchLanguageFilter } from "components/Core/Widgets/SearchLanguageFilter";
+
+
+export const STORAGE_KEY_EXERCISE_LANGUAGE = "wger.exerciseSearch.languageFilter";
+export const STORAGE_KEY_EXERCISE_EXACT_MATCH = "wger.exerciseSearch.exactMatch";
 
 type NameAutocompleterProps = {
     callback: (exercise: Exercise | null) => void;
@@ -38,26 +43,25 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
     const [value, setValue] = React.useState<Exercise | null>(null);
     const [t, i18n] = useTranslation();
     const [inputValue, setInputValue] = React.useState("");
-    const defaultLanguageFilter = i18n.language === LANGUAGE_SHORT_ENGLISH
+    const defaultLanguageFilter : SearchLanguageFilter = i18n.language === LANGUAGE_SHORT_ENGLISH
         ? "current"
         : "current_english";
 
-    const [languageFilter, setLanguageFilter] = useState<string>(() => {
-        return localStorage.getItem("wger.exerciseSearch.languageFilter") ?? defaultLanguageFilter;
+    const [languageFilter, setLanguageFilter] = useState<SearchLanguageFilter>(() => {
+        return localStorage.getItem(STORAGE_KEY_EXERCISE_LANGUAGE) as SearchLanguageFilter ?? defaultLanguageFilter as SearchLanguageFilter;
     });
 
     const [filtersAnchorEl, setFiltersAnchorEl] = useState<HTMLElement | null>(null);
     const isFiltersOpen = Boolean(filtersAnchorEl);
     const filtersPopoverId = isFiltersOpen ? "exercise-filters-popover" : undefined;
 
-    const searchEnglish = languageFilter === "current_english" || languageFilter === "all";
     const [exactMatch, setExactMatch] = useState<boolean>(() => {
-        return localStorage.getItem("wger.exerciseSearch.exactMatch") === "true";
+        return localStorage.getItem(STORAGE_KEY_EXERCISE_EXACT_MATCH) === "true";
     });
 
     const languageOptions = useMemo(() => {
         const displayLang = i18n.language?.split('-')[0] ?? 'en';
-        const opts: Array<{ value: string; label: string }> = [
+        const opts: Array<{ value: SearchLanguageFilter; label: string }> = [
             {
                 value: "current",
                 label: t("nutrition.languageFilterCurrentOnly", { lang: displayLang })
@@ -82,10 +86,10 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
         () =>
             debounce(
                 (request: string) =>
-                    searchExerciseTranslations(request, i18n.language, searchEnglish, exactMatch).then((res) => setOptions(res)),
+                    searchExerciseTranslations(request, i18n.language, languageFilter, exactMatch).then((res) => setOptions(res)),
                 200
             ),
-        [i18n.language, searchEnglish, exactMatch]
+        [i18n.language, languageFilter, exactMatch]
     );
 
     React.useEffect(() => {
@@ -216,8 +220,8 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                             value={languageFilter}
                             label={t("language")}
                             onChange={(e) => {
-                                setLanguageFilter(e.target.value);
-                                localStorage.setItem("wger.exerciseSearch.languageFilter", e.target.value);
+                                setLanguageFilter(e.target.value as SearchLanguageFilter);
+                                localStorage.setItem(STORAGE_KEY_EXERCISE_LANGUAGE, e.target.value);
                             }}
                         >
                             {languageOptions.map((option) => (
@@ -234,11 +238,11 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                                     checked={exactMatch}
                                     onChange={(e, checked) => {
                                         setExactMatch(checked);
-                                        localStorage.setItem("wger.exerciseSearch.exactMatch", String(checked));
+                                        localStorage.setItem(STORAGE_KEY_EXERCISE_EXACT_MATCH, String(checked));
                                     }}
                                 />
                             }
-                            label={t("Exact match")}
+                            label={t("exercises.exactMatch")}
                         />
                     </FormGroup>
                 </Stack>

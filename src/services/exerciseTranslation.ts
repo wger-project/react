@@ -4,6 +4,7 @@ import { Translation, TranslationAdapter } from "components/Exercises/models/tra
 import { ENGLISH_LANGUAGE_CODE, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 import { makeHeader, makeUrl } from "utils/url";
 import { ResponseType } from "./responseType";
+import { SearchLanguageFilter } from 'components/Core/Widgets/SearchLanguageFilter';
 
 export const EXERCISE_PATH = 'exercise';
 export const EXERCISE_TRANSLATION_PATH = 'exercise-translation';
@@ -25,52 +26,77 @@ export const getExerciseTranslations = async (id: number): Promise<Translation[]
 /*
  * Search for exercises by name using the exerciseinfo endpoint
  */
-export const searchExerciseTranslations = async (name: string, languageCode: string = ENGLISH_LANGUAGE_CODE, searchEnglish: boolean = true, exactMatch: boolean = false): Promise<Exercise[]> => {
-    const languages = [languageCode];
-    if (languageCode !== LANGUAGE_SHORT_ENGLISH && searchEnglish) {
+export const searchExerciseTranslations = async (
+    name: string,
+    languageCode: string = ENGLISH_LANGUAGE_CODE,
+    languageFilter: SearchLanguageFilter = "current_english",
+    exactMatch: boolean = false
+): Promise<Exercise[]> => {
+    const languages = languageFilter === "all" ? null : [languageCode];
+    if (languages && languageFilter === "current_english" && languageCode !== LANGUAGE_SHORT_ENGLISH) {
         languages.push(LANGUAGE_SHORT_ENGLISH);
     }
 
-    const fuzzyUrl = makeUrl('exerciseinfo', {
-        query: {
-            "name__search": name,
-            "language__code": languages.join(','),
-            limit: 50,
-        }
-    });
-
-    const exactUrl = makeUrl('exerciseinfo', {
-        query: {
-            "name": name,
-            "language__code": languages.join(','),
-            limit: 50,
-        }
-    });
     try {
-        const { data } = await axios.get<ResponseType<Exercise>>(fuzzyUrl);
-
-        if (!data || !data.results || !Array.isArray(data.results)) {
-            return [];
-        }
-
-        const adapter = new ExerciseAdapter();
-        const exercises = data.results.map((item: unknown) => adapter.fromJson(item));
-
         if (exactMatch) {
-            // Also call exact URL as per issue requirement
-            axios.get(exactUrl).catch(() => {});
-            
-            // Filter client-side for actual exact results
-            return exercises.filter(exercise =>
-                exercise.getTranslation().name.toLowerCase() === name.toLowerCase()
-            );
+            // Use exercise-translation endpoint for exact match
+            const exactUrl = makeUrl('exercise-translation', {
+                query: {
+                    "name": name,
+                    ...(languages ? { "language__short_name": languages.join(',') } : {}),
+                    limit: 50,
+                }
+            });
+
+            const { data: translationData } = await axios.get(exactUrl);
+
+            if (!translationData?.results?.length) {
+                return [];
+            }
+
+            const exerciseIds = translationData.results
+                .map((t: { exercise: number }) => t.exercise)
+                .join(',');
+
+            const exerciseUrl = makeUrl('exerciseinfo', {
+                query: {
+                    "id__in": exerciseIds,
+                    limit: 50,
+                }
+            });
+
+            const { data } = await axios.get<ResponseType<Exercise>>(exerciseUrl);
+
+            if (!data?.results?.length) {
+                return [];
+            }
+
+            const adapter = new ExerciseAdapter();
+            return data.results.map((item: unknown) => adapter.fromJson(item));
+
+        } else {
+            // Use exerciseinfo with name__search for fuzzy match
+            const fuzzyUrl = makeUrl('exerciseinfo', {
+                query: {
+                    "name__search": name,
+                    ...(languages ? { "language__code": languages.join(',') } : {}),
+                    limit: 50,
+                }
+            });
+
+            const { data } = await axios.get<ResponseType<Exercise>>(fuzzyUrl);
+
+            if (!data?.results?.length) {
+                return [];
+            }
+
+            const adapter = new ExerciseAdapter();
+            return data.results.map((item: unknown) => adapter.fromJson(item));
         }
-        return exercises;
     } catch {
         return [];
     }
 };
-
 
 /*
  * Create a new exercise translation

@@ -25,7 +25,8 @@ import debounce from "lodash/debounce";
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { IngredientLanguageFilter, searchIngredient } from "services";
+import { searchIngredient } from "services";
+import { SearchLanguageFilter } from "components/Core/Widgets/SearchLanguageFilter";
 import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 
 type IngredientAutocompleterProps = {
@@ -41,12 +42,12 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     const initialData = initialIngredient ?? null;
     const [t, i18n] = useTranslation();
 
-    const defaultLanguageFilter: IngredientLanguageFilter =
+    const defaultLanguageFilter: SearchLanguageFilter =
         i18n.language === LANGUAGE_SHORT_ENGLISH ? "current" : "current_english";
 
-    const [languageFilter, setLanguageFilter] = useState<IngredientLanguageFilter>(() => {
+    const [languageFilter, setLanguageFilter] = useState<SearchLanguageFilter>(() => {
         const stored = localStorage.getItem(STORAGE_KEY_LANGUAGE_FILTER);
-        return (stored as IngredientLanguageFilter | null) ?? defaultLanguageFilter;
+        return (stored as SearchLanguageFilter | null) ?? defaultLanguageFilter;
     });
     const [filterVegan, setFilterVegan] = useState<boolean>(() => {
         return localStorage.getItem(STORAGE_KEY_VEGAN) === "true";
@@ -78,7 +79,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     }, [filterVegetarian]);
 
     const languageOptions = useMemo(() => {
-        const options: Array<{ value: IngredientLanguageFilter; label: string }> = [
+        const options: Array<{ value: SearchLanguageFilter; label: string }> = [
             {
                 value: "current",
                 label: t("nutrition.languageFilterCurrentOnly", { lang: i18n.language }),
@@ -238,7 +239,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                             labelId="ingredient-language-filter-label"
                             value={languageFilter}
                             label={t("language")}
-                            onChange={(event) => setLanguageFilter(event.target.value as IngredientLanguageFilter)}
+                            onChange={(event) => setLanguageFilter(event.target.value as SearchLanguageFilter)}
                         >
                             {languageOptions.map((option) => (
                                 <MenuItem key={option.value} value={option.value}>
