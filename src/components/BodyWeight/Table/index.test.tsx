@@ -5,64 +5,55 @@ import { BrowserRouter } from "react-router-dom";
 import { testQueryClient } from "tests/queryClient";
 import { WeightTable } from './index';
 
-describe("Body weight test", () => {
-    test('renders without crashing', async () => {
+const renderTable = (weights: WeightEntry[]) =>
+    render(
+        <BrowserRouter>
+            <QueryClientProvider client={testQueryClient}>
+                <WeightTable weights={weights} />
+            </QueryClientProvider>
+        </BrowserRouter>
+    );
 
-        const weightsData: WeightEntry[] = [
+describe("Body weight table", () => {
+    test('renders rows for all weight entries', async () => {
+        const weights: WeightEntry[] = [
             new WeightEntry(new Date('2021/12/10'), 80, 1),
             new WeightEntry(new Date('2021/12/20'), 90, 2),
         ];
 
-        // since I used context api to provide state, also need it here
-        render(
-            <BrowserRouter>
-                <QueryClientProvider client={testQueryClient}>
-                    <WeightTable weights={weightsData} />
-                </QueryClientProvider>
-            </BrowserRouter>
-        );
+        renderTable(weights);
 
-
-        // Both weights are found in th document
-        const weightRow = await screen.findByText('80');
-        expect(weightRow).toBeInTheDocument();
-
-        const weightRow2 = await screen.findByText("90");
-        expect(weightRow2).toBeInTheDocument();
+        expect(await screen.findByText('80')).toBeInTheDocument();
+        expect(await screen.findByText('90')).toBeInTheDocument();
     });
 
     test('displays total change column correctly', async () => {
-        const weightsData: WeightEntry[] = [
+        const weights: WeightEntry[] = [
             new WeightEntry(new Date('2021/12/10'), 80, 1),
             new WeightEntry(new Date('2021/12/20'), 90, 2),
             new WeightEntry(new Date('2021/12/25'), 85, 3),
         ];
 
-        render(
-            <BrowserRouter>
-                <QueryClientProvider client={testQueryClient}>
-                    <WeightTable weights={weightsData} />
-                </QueryClientProvider>
-            </BrowserRouter>
-        );
-
-    // Wait for the table to load
+        renderTable(weights);
         await screen.findByText('80');
 
-        // Find all rows in the table
-        const rows = screen.getAllByRole('row');
-        
-        // Skip header row (index 0), then check each data row
-        // Row 1: totalChange is in the 4th column (index 3) and should be 5
-        const firstRowCells = rows[1].querySelectorAll('th, td');
-        expect(firstRowCells[3]).toHaveTextContent('5');
-        
-        // Row 2: totalChange should be 10
-        const secondRowCells = rows[2].querySelectorAll('th, td');
-        expect(secondRowCells[3]).toHaveTextContent('10');
-        
-        // Row 3: totalChange should be 0
-        const thirdRowCells = rows[3].querySelectorAll('th, td');
-        expect(thirdRowCells[3]).toHaveTextContent('0');
+        // DataGrid rows are sorted newest-first: 85 (total +5), 90 (+10), 80 (0)
+        const expectedTotals: Record<string, string> = { '85': '5', '90': '10', '80': '0' };
+
+        for (const [weight, totalChange] of Object.entries(expectedTotals)) {
+            const row = document.querySelector(`[data-id="${weight === '80' ? 1 : weight === '90' ? 2 : 3}"]`) as HTMLElement;
+            expect(row).not.toBeNull();
+            const cell = row.querySelector('[data-field="totalChange"]') as HTMLElement;
+            expect(cell.textContent).toBe(totalChange);
+        }
+    });
+
+    test('shows inline edit and delete actions per row', async () => {
+        const weights: WeightEntry[] = [new WeightEntry(new Date('2021/12/10'), 80, 1)];
+        renderTable(weights);
+
+        await screen.findByText('80');
+        expect(screen.getByRole('menuitem', { name: /edit/i })).toBeInTheDocument();
+        expect(screen.getByRole('menuitem', { name: /delete/i })).toBeInTheDocument();
     });
 });
