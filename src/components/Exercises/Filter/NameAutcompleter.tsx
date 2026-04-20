@@ -20,15 +20,15 @@ import {
     Switch,
     TextField,
 } from "@mui/material";
+import { SearchLanguageFilter } from "components/Core/Widgets/SearchLanguageFilter";
 import { Exercise } from "components/Exercises/models/exercise";
 import { SERVER_URL } from "config";
 import debounce from "lodash/debounce";
 import * as React from "react";
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { searchExerciseTranslations } from "services";
 import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
-import { SearchLanguageFilter } from "components/Core/Widgets/SearchLanguageFilter";
 
 
 export const STORAGE_KEY_EXERCISE_LANGUAGE = "wger.exerciseSearch.languageFilter";
@@ -43,7 +43,7 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
     const [value, setValue] = React.useState<Exercise | null>(null);
     const [t, i18n] = useTranslation();
     const [inputValue, setInputValue] = React.useState("");
-    const defaultLanguageFilter : SearchLanguageFilter = i18n.language === LANGUAGE_SHORT_ENGLISH
+    const defaultLanguageFilter: SearchLanguageFilter = i18n.language === LANGUAGE_SHORT_ENGLISH
         ? "current"
         : "current_english";
 
@@ -145,7 +145,7 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                                 ),
                                 endAdornment: (
                                     <>
-                                        {params.InputProps.endAdornment}
+                                        {params.slotProps.input.endAdornment}
                                         <InputAdornment position="end">
                                             <IconButton
                                                 aria-label="Toggle filters"
@@ -189,12 +189,10 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                                 </ListItemIcon>
                                 <ListItemText
                                     primary={translation.name}
-                                    slotProps={{
-                                        primary: {
-                                            whiteSpace: "nowrap",
-                                            overflow: "hidden",
-                                            textOverflow: "ellipsis",
-                                        },
+                                    sx={{
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
                                     }}
                                     secondary={option.category.name}
                                 />
@@ -211,7 +209,7 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
-                <Stack padding={2} spacing={1}>
+                <Stack sx={{ padding: 1, minWidth: 200 }} spacing={1}>
                     <FormControl fullWidth size="small">
                         <InputLabel id="exercise-language-filter-label">
                             {t("language")}

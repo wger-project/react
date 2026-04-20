@@ -107,14 +107,17 @@ export function ExerciseDeleteDialog(props: {
                     setReplacementId(event.target.value !== '' ? parseInt(event.target.value) : null);
                 }}
                 value={replacementId ?? ""}
-                InputProps={{
-                    endAdornment:
-                        <InputAdornment position="start">
-                            <IconButton onClick={() => loadCurrentReplacement()}>
-                                <CachedIcon />
-                            </IconButton>
-                        </InputAdornment>
-                }}
+                slotProps={{
+                    input: {
+                        endAdornment:
+                            <InputAdornment position="start">
+                                <IconButton onClick={() => loadCurrentReplacement()}>
+                                    <CachedIcon />
+                                </IconButton>
+                            </InputAdornment>
+                    }
+                }
+                }
                 fullWidth={true}
                 variant="standard"
             />
