@@ -18,9 +18,11 @@ import {
     MenuItem,
     Popover,
     Select,
+    Slider,
     Stack,
     Switch,
     TextField,
+    Typography,
 } from "@mui/material";
 import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { NutriScoreBadge } from "components/Nutrition/widgets/NutriScoreBadge";
@@ -29,6 +31,7 @@ import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { IngredientLanguageFilter, searchIngredient } from "services";
+import { NUTRI_SCORES, NutriScoreValue } from "types";
 import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 
 type IngredientAutocompleterProps = {
@@ -39,6 +42,18 @@ type IngredientAutocompleterProps = {
 export const STORAGE_KEY_LANGUAGE_FILTER = "wger.ingredientSearch.languageFilter";
 export const STORAGE_KEY_VEGAN = "wger.ingredientSearch.filterVegan";
 export const STORAGE_KEY_VEGETARIAN = "wger.ingredientSearch.filterVegetarian";
+export const STORAGE_KEY_NUTRISCORE_MAX = "wger.ingredientSearch.filterNutriscoreMax";
+
+const NUTRISCORE_OFF_INDEX = 0;
+
+const isNutriScoreValue = (value: string | null): value is NutriScoreValue =>
+    value !== null && (NUTRI_SCORES as readonly string[]).includes(value);
+
+const sliderIndexToNutriscore = (index: number): NutriScoreValue | null =>
+    index === NUTRISCORE_OFF_INDEX ? null : NUTRI_SCORES[index - 1];
+
+const nutriscoreToSliderIndex = (value: NutriScoreValue | null): number =>
+    value === null ? NUTRISCORE_OFF_INDEX : NUTRI_SCORES.indexOf(value) + 1;
 
 export function IngredientAutocompleter({ callback, initialIngredient }: IngredientAutocompleterProps) {
     const initialData = initialIngredient ?? null;
@@ -56,6 +71,10 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     });
     const [filterVegetarian, setFilterVegetarian] = useState<boolean>(() => {
         return localStorage.getItem(STORAGE_KEY_VEGETARIAN) === "true";
+    });
+    const [nutriscoreMax, setNutriscoreMax] = useState<NutriScoreValue | null>(() => {
+        const stored = localStorage.getItem(STORAGE_KEY_NUTRISCORE_MAX);
+        return isNutriScoreValue(stored) ? stored : null;
     });
     const [filtersAnchorEl, setFiltersAnchorEl] = useState<HTMLElement | null>(null);
     const [value, setValue] = useState<Ingredient | null>(initialData);
@@ -79,6 +98,14 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY_VEGETARIAN, String(filterVegetarian));
     }, [filterVegetarian]);
+
+    useEffect(() => {
+        if (nutriscoreMax === null) {
+            localStorage.removeItem(STORAGE_KEY_NUTRISCORE_MAX);
+        } else {
+            localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, nutriscoreMax);
+        }
+    }, [nutriscoreMax]);
 
     const languageOptions = useMemo(() => {
         const options: Array<{ value: IngredientLanguageFilter; label: string }> = [
@@ -107,16 +134,16 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
         () =>
             debounce(
                 (request: string) =>
-                    searchIngredient(
-                        request,
-                        i18n.language,
+                    searchIngredient(request, {
+                        languageCode: i18n.language,
                         languageFilter,
-                        filterVegan || undefined,
-                        filterVegetarian || undefined,
-                    ).then((res) => setOptions(res)),
+                        isVegan: filterVegan || undefined,
+                        isVegetarian: filterVegetarian || undefined,
+                        nutriscoreMax: nutriscoreMax ?? undefined,
+                    }).then((res) => setOptions(res)),
                 200
             ),
-        [i18n.language, languageFilter, filterVegan, filterVegetarian]
+        [i18n.language, languageFilter, filterVegan, filterVegetarian, nutriscoreMax]
     );
 
     useEffect(() => {
@@ -297,6 +324,39 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                             label={t("nutrition.filterVegetarian")}
                         />
                     </FormGroup>
+
+                    <Box sx={{ px: 2, pt: 1, minWidth: 240 }}>
+                        <Typography id="ingredient-nutriscore-slider-label" variant="body2">
+                            {t("nutrition.filterNutriscore")}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" gutterBottom>
+                            {nutriscoreMax === null
+                                ? t("nutrition.filterNutriscoreNoFilter")
+                                : t("nutrition.filterNutriscoreOrBetter", { grade: nutriscoreMax.toUpperCase() })}
+                        </Typography>
+                        <Slider
+                            aria-labelledby="ingredient-nutriscore-slider-label"
+                            value={nutriscoreToSliderIndex(nutriscoreMax)}
+                            onChange={(event, value) =>
+                                setNutriscoreMax(sliderIndexToNutriscore(value as number))
+                            }
+                            getAriaValueText={(value) =>
+                                value === NUTRISCORE_OFF_INDEX
+                                    ? t("nutrition.filterNutriscoreNoFilter")
+                                    : t("nutrition.filterNutriscoreOrBetter", { grade: NUTRI_SCORES[value - 1].toUpperCase() })
+                            }
+                            step={1}
+                            min={0}
+                            max={NUTRI_SCORES.length}
+                            marks={[
+                                { value: NUTRISCORE_OFF_INDEX, label: t("nutrition.filterNutriscoreOff") },
+                                ...NUTRI_SCORES.map((score, index) => ({
+                                    value: index + 1,
+                                    label: score.toUpperCase(),
+                                })),
+                            ]}
+                        />
+                    </Box>
                 </Stack>
             </Popover>
         </Stack>
