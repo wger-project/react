@@ -340,5 +340,6 @@
     },
     "dashboard": {
         "resetLayout": "Ripristina la disposizione predefinita"
-    }
+    },
+    "preview": "Anteprima"
 }
