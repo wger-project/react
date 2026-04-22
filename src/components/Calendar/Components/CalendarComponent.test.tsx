@@ -45,10 +45,14 @@ describe('CalendarComponent', () => {
 
         (getMeasurementCategories as jest.Mock).mockImplementation(() => Promise.resolve([
             new MeasurementCategory(
-                1,
+                'cccccccc-cccc-cccc-cccc-000000000001',
                 "Body Fat",
                 "%",
-                [new MeasurementEntry(1, 1, new Date(currentYear, currentMonth, 1, 12, 0), 20, "Normal")]
+                [new MeasurementEntry(
+                    'dddddddd-dddd-dddd-dddd-000000000001',
+                    'cccccccc-cccc-cccc-cccc-000000000001',
+                    new Date(currentYear, currentMonth, 1, 12, 0), 20, "Normal"
+                )]
             ),
         ]));
 

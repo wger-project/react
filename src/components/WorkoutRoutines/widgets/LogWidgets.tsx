@@ -74,7 +74,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
     };
 
     const handleDeleteClick = (id: GridRowId) => () => {
-        deleteLogQuery.mutate(id as number);
+        deleteLogQuery.mutate(id.toString());
         setRows(rows.filter((row) => row.id !== id));
     };
 

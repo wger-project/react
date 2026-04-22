@@ -54,7 +54,7 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
     const settingsResponses = await Promise.all(entryResponses);
 
     // Save entries to each category
-    let categoryId: number;
+    let categoryId: string;
     settingsResponses.forEach((entries) => {
         if (entries.length > 0) {
             categoryId = entries[0].category;
@@ -65,7 +65,7 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
     return categories;
 };
 
-export const getMeasurementCategory = async (id: number): Promise<MeasurementCategory> => {
+export const getMeasurementCategory = async (id: string): Promise<MeasurementCategory> => {
     const { data: receivedCategories } = await axios.get<ApiMeasurementCategoryType>(
         makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: id }),
         { headers: makeHeader() },
@@ -106,7 +106,7 @@ export const addMeasurementCategory = async (data: AddMeasurementCategoryParams)
 };
 
 export interface editMeasurementCategoryParams {
-    id: number,
+    id: string,
     name: string;
     unit: string;
 }
@@ -124,18 +124,18 @@ export const editMeasurementCategory = async (data: editMeasurementCategoryParam
     return MeasurementCategory.fromJson(response.data);
 };
 
-export const deleteMeasurementCategory = async (id: number): Promise<void> => {
+export const deleteMeasurementCategory = async (id: string): Promise<void> => {
     await axios.delete(makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: id }), { headers: makeHeader() });
 };
 
 
-export const deleteMeasurementEntry = async (id: number): Promise<void> => {
+export const deleteMeasurementEntry = async (id: string): Promise<void> => {
     await axios.delete(makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: id }), { headers: makeHeader() });
 };
 
 export interface editMeasurementParams {
-    id: number,
-    categoryId?: number,
+    id: string,
+    categoryId?: string,
     date: Date;
     value: number;
     notes: string;
@@ -156,7 +156,7 @@ export const editMeasurementEntry = async (data: editMeasurementParams): Promise
 };
 
 export interface AddMeasurementParams {
-    categoryId: number;
+    categoryId: string;
     date: Date;
     value: number;
     notes: string;

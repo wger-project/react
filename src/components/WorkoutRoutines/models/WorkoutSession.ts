@@ -21,11 +21,11 @@ export interface AddSessionParams {
 }
 
 export interface EditSessionParams extends Partial<AddSessionParams> {
-    id: number,
+    id: string,
 }
 
 interface WorkoutSessionParams {
-    id: number;
+    id: string;
     dayId: number;
     routineId: number;
     date: Date;
@@ -39,7 +39,7 @@ interface WorkoutSessionParams {
 
 export class WorkoutSession {
 
-    id: number;
+    id: string;
     dayId: number;
     routineId: number;
     date: Date;

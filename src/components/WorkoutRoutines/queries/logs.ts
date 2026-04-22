@@ -7,7 +7,7 @@ export function useDeleteRoutineLogQuery(routineId: number) {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (logId: number) => deleteLog(logId),
+        mutationFn: (logId: string) => deleteLog(logId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_LOG_DATA, routineId] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_STATS, routineId] });

@@ -26,7 +26,7 @@ export const useSessionsQuery = (options?: SessionQueryOptions) => useQuery({
 });
 
 
-export const useEditSessionQuery = (id: number) => {
+export const useEditSessionQuery = (id: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({

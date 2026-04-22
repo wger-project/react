@@ -32,7 +32,7 @@ describe('SessionForm', () => {
         // Arrange
         const user = userEvent.setup();
         const mockSession = new WorkoutSession({
-            id: 0,
+            id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000000',
             dayId: 0,
             routineId: 0,
             date: new Date(),
@@ -92,7 +92,7 @@ describe('SessionForm', () => {
         const timeEndFormatted = timeEnd.toLocaleString(DateTime.TIME_SIMPLE, { locale: 'en-us' });
 
         const mockSession = new WorkoutSession({
-            id: 1,
+            id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000001',
             dayId: dayId,
             routineId: routineId,
             date: date.toJSDate(),

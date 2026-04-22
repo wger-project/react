@@ -20,7 +20,7 @@ Settings.defaultZone = TIMEZONE;
 interface EntryFormProps {
     entry?: MeasurementEntry,
     closeFn?: () => void,
-    categoryId: number,
+    categoryId: string,
 }
 
 export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {

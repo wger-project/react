@@ -11,9 +11,9 @@ import { useParams } from "react-router-dom";
 
 export const MeasurementCategoryDetail = () => {
     const params = useParams<{ categoryId: string }>();
-    const categoryId = parseInt(params.categoryId ?? '');
-    if (Number.isNaN(categoryId)) {
-        return <p>Please pass an integer as the category id.</p>;
+    const categoryId = params.categoryId ?? '';
+    if (!categoryId) {
+        return <p>Please pass a category id.</p>;
     }
 
     // eslint-disable-next-line react-hooks/rules-of-hooks

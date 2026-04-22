@@ -20,12 +20,12 @@ export interface LogEntryForm {
 
 
 export class WorkoutLog {
-    public id: number;
+    public id: string;
     public date: Date;
     public iteration: number | null;
     public exerciseId: number;
     public slotEntryId: number | null;
-    public sessionId: number | null;
+    public sessionId: string | null;
     public routineId: number | null;
 
     public repetitionUnitObj: RepetitionUnit | null;
@@ -48,11 +48,11 @@ export class WorkoutLog {
     public exerciseObj?: Exercise;
 
     constructor(data: {
-        id: number;
+        id: string;
         date: Date | string;
         iteration: number | null;
         slotEntryId: number | null;
-        sessionId?: number | null;
+        sessionId?: string | null;
         routineId?: number | null;
 
         exercise?: Exercise;

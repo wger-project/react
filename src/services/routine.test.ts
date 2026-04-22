@@ -77,7 +77,7 @@ describe("workout routine service tests", () => {
         expect(axios.get).toHaveBeenCalledTimes(1);
         expect(result).toStrictEqual([
             new WorkoutLog({
-                id: 2,
+                id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000002',
                 routineId: 1,
                 date: new Date("2023-05-10"),
                 iteration: 1,
@@ -94,7 +94,7 @@ describe("workout routine service tests", () => {
             }),
 
             new WorkoutLog({
-                id: 1,
+                id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000001',
                 routineId: 1,
                 date: new Date("2023-05-13"),
                 iteration: 1,

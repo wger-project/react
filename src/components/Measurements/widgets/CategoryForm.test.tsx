@@ -64,7 +64,7 @@ describe("Test the CategoryForm component", () => {
         // Assert
         await user.click(submitButton);
         expect(mutate).toHaveBeenCalledWith({
-            id: 2,
+            id: 'cccccccc-cccc-cccc-cccc-000000000002',
             name: "a better name",
             unit: 'K/m2',
         });

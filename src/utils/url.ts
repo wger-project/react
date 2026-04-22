@@ -4,7 +4,7 @@ import i18n from "i18n";
 import slug from "slug";
 
 interface makeUrlInterface {
-    id?: number,
+    id?: number | string,
     server?: string,
     objectMethod?: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -100,7 +100,7 @@ export enum WgerLink {
     TROPHIES,
 }
 
-type UrlParams = { id: number, id2?: number, slug?: string, date?: string };
+type UrlParams = { id: number | string, id2?: number | string, slug?: string, date?: string };
 
 
 /*

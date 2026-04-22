@@ -5,6 +5,10 @@ import { getMeasurementCategories, getMeasurementCategory } from "services/measu
 
 jest.mock("axios");
 
+// Test-marker UUIDs matching the Django fixtures convention.
+const CATEGORY_UUID = 'cccccccc-cccc-cccc-cccc-000000000001';
+const ENTRY_UUID = 'dddddddd-dddd-dddd-dddd-000000000001';
+
 describe('measurement service tests', () => {
     const measurementEntryResponse = {
         count: 2,
@@ -12,8 +16,8 @@ describe('measurement service tests', () => {
         previous: null,
         results: [
             {
-                "id": 1,
-                "category": 1,
+                "id": ENTRY_UUID,
+                "category": CATEGORY_UUID,
                 "value": 80,
                 "date": "2021-01-01",
                 "notes": ""
@@ -27,7 +31,7 @@ describe('measurement service tests', () => {
         previous: null,
         results: [
             {
-                "id": 1,
+                "id": CATEGORY_UUID,
                 "name": "Weight",
                 "unit": "kg"
             }
@@ -35,7 +39,7 @@ describe('measurement service tests', () => {
     };
 
     const measurementDetailResponse = {
-        "id": 1,
+        "id": CATEGORY_UUID,
         "name": "Weight",
         "unit": "kg"
     };
@@ -47,7 +51,7 @@ describe('measurement service tests', () => {
         (axios.get as jest.Mock).mockImplementation((url: string) => {
             if (url.includes("measurement-category")) {
                 return Promise.resolve({ data: measurementOverviewResponse });
-            } else if (url.includes("measurement/?category=1")) {
+            } else if (url.includes(`measurement/?category=${CATEGORY_UUID}`)) {
                 return Promise.resolve({ data: measurementEntryResponse });
             }
         });
@@ -78,8 +82,8 @@ describe('measurement service tests', () => {
         expect(axios.get).toHaveBeenCalledTimes(2);
 
         expect(result).toStrictEqual([
-            new MeasurementCategory(1, "Weight", "kg", [
-                new MeasurementEntry(1, 1, new Date("2021-01-01"), 80, "")
+            new MeasurementCategory(CATEGORY_UUID, "Weight", "kg", [
+                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, new Date("2021-01-01"), 80, "")
             ])
         ]);
     });
@@ -87,19 +91,19 @@ describe('measurement service tests', () => {
     test('GET measurement category', async () => {
 
         (axios.get as jest.Mock).mockImplementation((url: string) => {
-            if (url.includes("measurement-category/1")) {
+            if (url.includes(`measurement-category/${CATEGORY_UUID}`)) {
                 return Promise.resolve({ data: measurementDetailResponse });
-            } else if (url.includes("measurement/?category=1")) {
+            } else if (url.includes(`measurement/?category=${CATEGORY_UUID}`)) {
                 return Promise.resolve({ data: measurementEntryResponse });
             }
         });
 
-        const result = await getMeasurementCategory(1);
+        const result = await getMeasurementCategory(CATEGORY_UUID);
         expect(axios.get).toHaveBeenCalledTimes(2);
 
         expect(result).toStrictEqual(
-            new MeasurementCategory(1, "Weight", "kg", [
-                new MeasurementEntry(1, 1, new Date("2021-01-01"), 80, "")
+            new MeasurementCategory(CATEGORY_UUID, "Weight", "kg", [
+                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, new Date("2021-01-01"), 80, "")
             ])
         );
     });

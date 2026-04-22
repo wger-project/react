@@ -3,8 +3,8 @@ import { Adapter } from "utils/Adapter";
 export class MeasurementEntry {
 
     constructor(
-        public id: number | null,
-        public category: number,
+        public id: string | null,
+        public category: string,
         public date: Date,
         public value: number,
         public notes: string

@@ -4,7 +4,7 @@ import { testExerciseSquats } from "tests/exerciseTestdata";
 import { testRepUnitRepetitions, testWeightUnitKg } from "tests/workoutRoutinesTestData";
 
 const testWorkoutLog1 = new WorkoutLog({
-    id: 5,
+    id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000005',
     routineId: 1,
     date: new Date(2023, 1, 1),
     iteration: 345,
@@ -21,7 +21,7 @@ const testWorkoutLog1 = new WorkoutLog({
 });
 
 const testWorkoutLog2 = new WorkoutLog({
-    id: 6,
+    id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000006',
     routineId: 1,
     date: new Date(2023, 1, 2),
     iteration: 345,
@@ -38,7 +38,7 @@ const testWorkoutLog2 = new WorkoutLog({
 });
 
 const testWorkoutLog3 = new WorkoutLog({
-    id: 7,
+    id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000007',
     routineId: 1,
     date: new Date(2023, 1, 3),
     iteration: 345,
@@ -55,7 +55,7 @@ const testWorkoutLog3 = new WorkoutLog({
 });
 
 const testWorkoutLog4 = new WorkoutLog({
-    id: 8,
+    id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000008',
     routineId: 1,
     date: new Date(2023, 1, 10),
     iteration: 345,
@@ -79,7 +79,7 @@ export const testWorkoutLogs = [
 ];
 
 export const testWorkoutSession = new WorkoutSession({
-    id: 1,
+    id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000001',
     dayId: 2,
     routineId: 3,
     date: new Date(2025, 1, 10),

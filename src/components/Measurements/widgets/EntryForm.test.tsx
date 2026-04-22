@@ -20,7 +20,7 @@ describe("Test the EntryForm component", () => {
     const queryClient = new QueryClient();
     let mutate = jest.fn();
 
-    const renderComponent = (props: { entry?: MeasurementEntry, categoryId: number }) => {
+    const renderComponent = (props: { entry?: MeasurementEntry, categoryId: string }) => {
         return render(
             <QueryClientProvider client={queryClient}>
                 <EntryForm {...props} />
@@ -51,7 +51,7 @@ describe("Test the EntryForm component", () => {
         const entry = TEST_MEASUREMENT_ENTRIES_1[0];
 
         // Act
-        renderComponent({ entry, categoryId: 1 });
+        renderComponent({ entry, categoryId: 'cccccccc-cccc-cccc-cccc-000000000001' });
 
         // Assert
         expect(screen.getByDisplayValue('10')).toBeInTheDocument();
@@ -69,7 +69,7 @@ describe("Test the EntryForm component", () => {
         const user = userEvent.setup();
 
         // Act
-        renderComponent({ entry, categoryId: 1 });
+        renderComponent({ entry, categoryId: 'cccccccc-cccc-cccc-cccc-000000000001' });
         const submitButton = screen.getByRole('button', { name: 'submit' });
         await user.clear(screen.getByLabelText('value'));
         await user.type(screen.getByLabelText('value'), '25');
@@ -79,7 +79,7 @@ describe("Test the EntryForm component", () => {
         await user.click(submitButton);
         expect(mutate).toHaveBeenCalledWith({
             date: expect.anything(),
-            id: 1,
+            id: 'dddddddd-dddd-dddd-dddd-000000000001',
             notes: "test note",
             value: 25,
         });
@@ -92,7 +92,7 @@ describe("Test the EntryForm component", () => {
         const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
 
         // Act
-        renderComponent({ categoryId: 11 });
+        renderComponent({ categoryId: 'cccccccc-cccc-cccc-cccc-000000000011' });
         const valueInput = await screen.findByLabelText('value');
         const notesInput = await screen.findByLabelText('notes');
         const submitButton = screen.getByRole('button', { name: 'submit' });
@@ -106,7 +106,7 @@ describe("Test the EntryForm component", () => {
         expect(submitButton).toBeInTheDocument();
         await user.click(submitButton);
         expect(mutate).toHaveBeenCalledWith({
-            categoryId: 11,
+            categoryId: 'cccccccc-cccc-cccc-cccc-000000000011',
             date: fakeNow,
             notes: 'The Shiba Inu is a breed of hunting dog from Japan.',
             value: 42.42,
@@ -124,7 +124,7 @@ describe("Test the EntryForm component", () => {
             i18n.changeLanguage('en');
             const entry = TEST_MEASUREMENT_ENTRIES_1[0];
 
-            const { container } = renderComponent({ entry, categoryId: 1 });
+            const { container } = renderComponent({ entry, categoryId: 'cccccccc-cccc-cccc-cccc-000000000001' });
 
             const picker = container.querySelector('.MuiPickersInputBase-root');
             expect(picker?.textContent).toContain('02/01/2023');
@@ -135,7 +135,7 @@ describe("Test the EntryForm component", () => {
             i18n.changeLanguage('de');
             const entry = TEST_MEASUREMENT_ENTRIES_1[0];
 
-            const { container } = renderComponent({ entry, categoryId: 1 });
+            const { container } = renderComponent({ entry, categoryId: 'cccccccc-cccc-cccc-cccc-000000000001' });
 
             const picker = container.querySelector('.MuiPickersInputBase-root');
             expect(picker?.textContent).toContain('01.02.2023');

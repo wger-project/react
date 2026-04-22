@@ -42,7 +42,7 @@ export const AddMeasurementEntryFab = () => {
     const handleCloseModal = () => setOpenModal(false);
 
     const params = useParams<{ categoryId: string }>();
-    const categoryId = parseInt(params.categoryId!);
+    const categoryId = params.categoryId!;
 
 
     return (<>
