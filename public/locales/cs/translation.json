@@ -48,7 +48,8 @@
         "changeExerciseLanguage": "Změnit jazyk tohoto cvičení",
         "missingExerciseDescription": "Pomozte komunitě jeho přidáním!",
         "newNote": "Nová poznámka",
-        "swapExercise": "Změna cvičení"
+        "swapExercise": "Změna cvičení",
+        "exactMatch": "Přesná shoda"
     },
     "nutrition": {
         "plans": "Výživové plány",
@@ -100,7 +101,16 @@
         "mealDeleteInfo": "Záznamy ve výživovém deníku u tohoto jídla nebudou odstraněny a budou přesunuty pod „ostatní záznamy“",
         "logThisMeal": "Zaznamenat jídlo do deníku tak jak je",
         "logThisMealItem": "Zaznamenat ingredienci do deníku tak jak je",
-        "goalFiber": "Cíl vlákniny"
+        "goalFiber": "Cíl vlákniny",
+        "languageFilterCurrentOnly": "Pouze v aktuálním jazyce ({{lang}})",
+        "languageFilterCurrentAndEnglish": "Aktuální jazyk ({{lang}}) & Angličtina",
+        "languageFilterAll": "Všechny jazyky",
+        "filterVegan": "Vegan",
+        "filterVegetarian": "Vegetarián",
+        "filterNutriscore": "Nutri-Score filter",
+        "filterNutriscoreOff": "Vypnout",
+        "filterNutriscoreNoFilter": "Žádný filtr",
+        "filterNutriscoreOrBetter": "{{grade}} nebo lepší"
     },
     "add": "Přidat",
     "licenses": {
@@ -149,7 +159,67 @@
         "routines": "Rutiny",
         "rir": "OvR",
         "reps": "Repetice",
-        "currentRoutine": "Současná trasa"
+        "currentRoutine": "Současná trasa",
+        "routineHasNoDays": "Tento program nemá žádné dny",
+        "setHasNoExercises": "Tato sada neobsahuje žádná cvičení",
+        "fitDaysInWeek": "Pevný týdenní rozvrh",
+        "fitDaysInWeekHelpText": "Toto nastavení určuje, jak se dny ve vašem tréninkovém plánu rozvrhují v rámci více týdnů. Je-li tato funkce zapnutá, budou se dny opakovat v týdenním cyklu. Například tréninkový plán s tréninky v pondělí, ve středu a v pátek bude v tomto vzoru pokračovat i v následující pondělí, středu a pátek. Je-li tato funkce vypnutá, budou se dny řadit za sebou bez ohledu na začátek nového týdne. To se hodí pro tréninkové plány, které se neřídí striktním týdenním rozvrhem.",
+        "needsLogsToAdvance": "K postupu jsou zapotřebí záznamy",
+        "needsLogsToAdvanceHelpText": "Pokud tuto možnost zaškrtnete, tréninkový plán přejde k dalšímu naplánovanému dni pouze v případě, že jste zaznamenali trénink za aktuální den. Pokud tuto možnost nezaškrtnete, tréninkový plán automaticky přejde k dalšímu dni bez ohledu na to, zda jste trénink zaznamenali, či nikoli.",
+        "addSuperset": "Přidat superset",
+        "addExercise": "Přidat cvičení",
+        "exerciseNr": "Cvičení {{number}}",
+        "supersetNr": "Superset {{number}}",
+        "editProgression": "Upravit postup",
+        "progressionNeedsReplace": "Jeden z předchozích záznamů musí obsahovat nahrazení",
+        "exerciseHasProgression": "Toto cvičení má pravidla postupu a nelze jej zde upravit. Chcete-li jej upravit, klikněte na tlačítko.",
+        "defaultRounding": "Základní zaokrouhlení",
+        "rounding": "Zaokrouhlování (toto cvičení)",
+        "roundingHelp": "Nastavte výchozí zaokrouhlování pro váhu a počet opakování (to se hodí zejména při použití kroku s procentuálním nárůstem v progresi). Toto nastavení se použije na všechny nové série, lze jej však individuálně změnit v formuláři progrese. Chcete-li zaokrouhlování deaktivovat, ponechte pole prázdné.",
+        "newDay": "Nový den",
+        "weightLogNotPlanned": "Ukládání záznamů do kalendáře, ve kterém nebyla naplánována žádná cvičení.",
+        "logsOverview": "Přehled protokolů",
+        "alsoShowLogs": "Zobrazit také protokoly",
+        "statsOverview": "Statistiky",
+        "simpleMode": "Základní režim",
+        "restDay": "Den odpočinku",
+        "confirmRestDay": "Potvrďte změnu dne odpočinku",
+        "confirmRestDayHelpText": "Upozorňujeme, že jakmile označíte daný den jako den odpočinku, budou všechny tréninkové sestavy a cviky odstraněny.",
+        "duplicate": "Duplikovat rutinu",
+        "downloadPdfTable": "Stáhnout PDF (tabulka)",
+        "downloadPdfLogs": "Stáhnout PDF (záznamy)",
+        "downloadIcal": "Stáhnout iCal soubor (kalendář)",
+        "impression": "Celkový dojem",
+        "impressionGood": "Dobré",
+        "impressionNeutral": "Neutrální",
+        "impressionBad": "Špatné",
+        "impressionHelpText": "Tento formulář zaznamenává výsledky vašeho tréninku (počet opakování, váhu atd.) u každého cvičení. Změny, které zde provedete, jako je odstranění nebo výměna cvičení, se projeví pouze v konkrétních záznamech, které uložíte, a neovlivní váš celkový tréninkový plán. Ukládají se pouze řádky, které obsahují hodnoty pro váhu nebo počet opakování.",
+        "addAdditionalLog": "Přidat další záznam",
+        "operation": "Provoz",
+        "step": "Krok",
+        "requirements": "Požadavky",
+        "requirementsHelpText": "Vyberte výsledky tréninku (z předchozích záznamů), které musí být splněny, aby se toto pravidlo uplatnilo",
+        "repeat": "Opakovací pravidlo",
+        "repeatHelpText": "Zaškrtněte toto políčko, pokud chcete, aby se toto pravidlo nadále vztahovalo na následující tréninky, dokud nenastavíte nové",
+        "markAsTemplate": "Spravovat šablonu",
+        "template": "Šablona",
+        "templates": "Šablony",
+        "publicTemplate": "Veřejná šablona",
+        "publicTemplates": "Veřejné šablony",
+        "templatesHelpText": "Šablony slouží k uložení vaší rutiny pro pozdější použití a jako výchozí bod pro další rutiny. Šablony nelze upravovat, ale můžete je duplikovat a provádět změny v kopii (samozřejmě je také můžete převést zpět na běžnou rutinu).",
+        "publicTemplateHelpText": "Veřejné šablony jsou k dispozici všem uživatelům.",
+        "copyAndUseTemplate": "Zkopírujte a použijte šablonu",
+        "set": {
+            "type": "Napiš",
+            "normalSet": "Normální série",
+            "dropSet": "Drop série",
+            "myo": "MYO",
+            "partial": "Částečná",
+            "forced": "Nucený",
+            "tut": "Čas pod zátěží",
+            "iso": "Izometrické držení",
+            "jump": "Skok"
+        }
     },
     "measurements": {
         "measurements": "Měření",
@@ -255,7 +325,20 @@
         "result": "Vaše BMI je {{value}}"
     },
     "dashboard": {
-        "customizeDashboard": "Upravit nástěnku",
-        "dragWidgetsHelp": "Přetažením widgetů můžete změnit jejich umístění nebo velikost pomocí pravého dolního rohu."
-    }
+        "customizeDashboard": "Přizpůsobit panel",
+        "dragWidgetsHelp": "Přetažením widgetů můžete změnit jejich umístění nebo velikost pomocí pravého dolního rohu.",
+        "resetLayout": "Zpět na základní rozvržení"
+    },
+    "core": {
+        "exitEditMode": "Opustit upravovací režim",
+        "customize": "Upravit"
+    },
+    "preview": "Náhled",
+    "useMarkdownHint": "Pro formátování textu můžete použít základní Markdown: *italic*, **bold**, - list",
+    "trophies": {
+        "trophies": "Trofeje"
+    },
+    "totalChange": "Celkoví změna",
+    "private": "Soukromý",
+    "public": "Veřejný"
 }
