@@ -261,5 +261,7 @@
     "end": "結束",
     "totalChange": "總變化",
     "private": "私人",
-    "public": "公開"
+    "public": "公開",
+    "min": "最小",
+    "max": "最大"
 }
