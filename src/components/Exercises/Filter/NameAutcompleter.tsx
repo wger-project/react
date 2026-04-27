@@ -87,7 +87,7 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
             debounce(
                 (request: string) =>
                     searchExerciseTranslations(request, i18n.language, languageFilter, exactMatch).then((res) => setOptions(res)),
-                200
+                400
             ),
         [i18n.language, languageFilter, exactMatch]
     );
@@ -101,6 +101,7 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
         fetchName(inputValue);
 
         return () => {
+            fetchName.cancel();
         };
     }, [value, inputValue, fetchName]);
 

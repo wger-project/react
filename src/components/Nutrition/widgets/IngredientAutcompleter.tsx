@@ -142,7 +142,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                         isVegetarian: filterVegetarian || undefined,
                         nutriscoreMax: nutriscoreMax ?? undefined,
                     }).then((res) => setOptions(res)),
-                200
+                400
             ),
         [i18n.language, languageFilter, filterVegan, filterVegetarian, nutriscoreMax]
     );
