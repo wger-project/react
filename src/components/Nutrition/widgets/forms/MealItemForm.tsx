@@ -6,7 +6,6 @@ import {
     useAddMealItemQuery,
     useDeleteMealItemQuery,
     useEditMealItemQuery,
-    useFetchWeightUnitsQuery
 } from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
@@ -28,10 +27,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
     const deleteMealItemQuery = useDeleteMealItemQuery(planId);
 
     const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(item?.weightUnit ?? null);
-    const [ingredientId, setIngredientId] = useState<number | null>(item?.ingredientId ?? null);
-
-    const weightUnitsQuery = useFetchWeightUnitsQuery(ingredientId);
-    const weightUnits = weightUnitsQuery.data ?? [];
+    const [weightUnits, setWeightUnits] = useState<NutritionWeightUnit[]>(item?.ingredient?.weightUnits ?? []);
 
     const handleDelete = () => {
         if (item) {
@@ -107,7 +103,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                         <IngredientAutocompleter
                             callback={(value: Ingredient | null) => {
                                 formik.setFieldValue('ingredient', value ? value.id : null);
-                                setIngredientId(value?.id ?? null);
+                                setWeightUnits(value?.weightUnits ?? []);
                                 setSelectedUnit(null);
                             }}
                             initialIngredient={item ? item.ingredient : null}

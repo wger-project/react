@@ -1,5 +1,6 @@
 import { IngredientImage } from "components/Nutrition/models/IngredientImage";
 import { IngredientImageThumbnails } from "components/Nutrition/models/IngredientImageThumbnails";
+import { NutritionWeightUnit, NutritionWeightUnitAdapter } from "components/Nutrition/models/weightUnit";
 import { ApiIngredientType, NutriScoreValue } from "types";
 import { Adapter } from "utils/Adapter";
 
@@ -21,6 +22,7 @@ export type IngredientConstructorParams = {
     nutriscore?: NutriScoreValue | null;
     image?: IngredientImage | null;
     thumbnails?: IngredientImageThumbnails | null;
+    weightUnits?: NutritionWeightUnit[];
 };
 
 export class Ingredient {
@@ -42,6 +44,7 @@ export class Ingredient {
     public nutriscore: NutriScoreValue | null;
     public image: IngredientImage | null;
     public thumbnails: IngredientImageThumbnails | null;
+    public weightUnits: NutritionWeightUnit[];
 
     constructor(params: IngredientConstructorParams) {
         this.id = params.id;
@@ -61,6 +64,7 @@ export class Ingredient {
         this.nutriscore = params.nutriscore ?? null;
         this.image = params.image ?? null;
         this.thumbnails = params.thumbnails ?? null;
+        this.weightUnits = params.weightUnits ?? [];
     }
 
     static fromJson(json: ApiIngredientType): Ingredient {
@@ -71,6 +75,7 @@ export class Ingredient {
 
 class IngredientAdapter implements Adapter<Ingredient> {
     fromJson(item: ApiIngredientType) {
+        const weightUnitAdapter = new NutritionWeightUnitAdapter();
         return new Ingredient({
             id: item.id,
             uuid: item.uuid,
@@ -89,6 +94,7 @@ class IngredientAdapter implements Adapter<Ingredient> {
             nutriscore: item.nutriscore,
             image: item.image === null ? null : IngredientImage.fromJson(item.image),
             thumbnails: item.thumbnails === null ? null : IngredientImageThumbnails.fromJson(item.thumbnails),
+            weightUnits: (item.weight_units ?? []).map((u) => weightUnitAdapter.fromJson(u)),
         });
     }
 }

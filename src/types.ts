@@ -82,6 +82,7 @@ export interface ApiIngredientType {
     nutriscore: NutriScoreValue | null,
     image: ApiIngredientImageType | null,
     thumbnails: ApiIngredientThumbnailType | null,
+    weight_units: ApiIngredientWeightUnitType[],
 }
 
 export type ApiIngredientImageType = {

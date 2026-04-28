@@ -36,5 +36,13 @@ describe('Test the ingredient model', () => {
         expect(ingredient.thumbnails!.small!).toBe("http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.200x200_q85.jpg");
         expect(ingredient.thumbnails!.medium!).toBe("http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.400x400_q85.jpg");
         expect(ingredient.thumbnails!.large!).toBe("http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.800x800_q90.jpg");
+
+        expect(ingredient.weightUnits).toHaveLength(2);
+        expect(ingredient.weightUnits[0].id).toBe(11);
+        expect(ingredient.weightUnits[0].grams).toBe(30);
+        expect(ingredient.weightUnits[0].name).toBe("Stück");
+        expect(ingredient.weightUnits[1].id).toBe(12);
+        expect(ingredient.weightUnits[1].grams).toBe(240);
+        expect(ingredient.weightUnits[1].name).toBe("Packung");
     });
 });

@@ -5,7 +5,7 @@ import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { Ingredient } from "components/Nutrition/models/Ingredient";
 import { Meal } from "components/Nutrition/models/meal";
 import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
-import { useAddDiaryEntryQuery, useEditDiaryEntryQuery, useFetchWeightUnitsQuery } from "components/Nutrition/queries";
+import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
 import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
@@ -36,10 +36,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
     const [selectedMeal, setSelectedMeal] = useState<number | null>(meal);
 
     const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(entry?.weightUnit ?? null);
-    const [ingredientId, setIngredientId] = useState<number | null>(entry?.ingredientId ?? null);
-
-    const weightUnitsQuery = useFetchWeightUnitsQuery(ingredientId);
-    const weightUnits = weightUnitsQuery.data ?? [];
+    const [weightUnits, setWeightUnits] = useState<NutritionWeightUnit[]>(entry?.ingredient?.weightUnits ?? []);
 
     const validationSchema = yup.object({
         amount: yup
@@ -117,7 +114,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                             callback={(value: Ingredient | null) => {
                                 formik.setFieldTouched('ingredient', true);
                                 formik.setFieldValue('ingredient', value?.id ?? null);
-                                setIngredientId(value?.id ?? null);
+                                setWeightUnits(value?.weightUnits ?? []);
                                 setSelectedUnit(null);
                             }}
                             />

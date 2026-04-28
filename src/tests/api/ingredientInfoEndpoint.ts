@@ -26,7 +26,20 @@ export const INGREDIENT_API_RESPONSE = {
             "is_vegan": false,
             "is_vegetarian": false,
             "nutriscore": "d",
-            "weight_units": [],
+            "weight_units": [
+                {
+                    "id": 11,
+                    "ingredient": 59197,
+                    "gram": 30,
+                    "name": "Stück"
+                },
+                {
+                    "id": 12,
+                    "ingredient": 59197,
+                    "gram": 240,
+                    "name": "Packung"
+                }
+            ],
             "language": {
                 "id": 1,
                 "short_name": "de",

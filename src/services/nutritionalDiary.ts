@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { getIngredient } from "services/ingredient";
-import { getWeightUnit } from "services/ingredientweightunit";
+import { getIngredients } from "services/ingredient";
 import { API_MAX_PAGE_SIZE, ApiPath } from "utils/consts";
 import { fetchPaginated } from "utils/requests";
 import { makeHeader, makeUrl } from "utils/url";
@@ -9,12 +8,10 @@ import { makeHeader, makeUrl } from "utils/url";
 
 export type NutritionalDiaryEntriesOptions = {
     filtersetQuery?: object;
-    loadUnit?: true,
-    loadIngredient?: true
 }
 
 export const getNutritionalDiaryEntries = async (options?: NutritionalDiaryEntriesOptions): Promise<DiaryEntry[]> => {
-    const { filtersetQuery = {}, loadUnit = true, loadIngredient = true } = options || {};
+    const { filtersetQuery = {} } = options || {};
 
     const url = makeUrl(ApiPath.NUTRITIONAL_DIARY, {
         query: {
@@ -26,18 +23,26 @@ export const getNutritionalDiaryEntries = async (options?: NutritionalDiaryEntri
 
     for await (const page of fetchPaginated(url, makeHeader())) {
         for (const logData of page) {
-            const entry = DiaryEntry.fromJson(logData);
-
-            if (loadUnit) {
-                entry.weightUnit = await getWeightUnit(entry.weightUnitId);
-            }
-
-            if (loadIngredient) {
-                entry.ingredient = await getIngredient(entry.ingredientId);
-            }
-            out.push(entry);
+            out.push(DiaryEntry.fromJson(logData));
         }
     }
+
+    if (out.length === 0) {
+        return out;
+    }
+
+    const ingredientIds = [...new Set(out.map((entry) => entry.ingredientId))];
+    const ingredients = await getIngredients(ingredientIds);
+    const ingredientById = new Map(ingredients.map((i) => [i.id, i]));
+
+    for (const entry of out) {
+        const ingredient = ingredientById.get(entry.ingredientId) ?? null;
+        entry.ingredient = ingredient;
+        entry.weightUnit = entry.weightUnitId !== null && ingredient
+            ? ingredient.weightUnits.find((u) => u.id === entry.weightUnitId) ?? null
+            : null;
+    }
+
     return out;
 };
 

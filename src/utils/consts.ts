@@ -57,7 +57,6 @@ export enum QueryKey {
     NUTRITIONAL_PLAN_DIARY = 'nutritional-plan-diary',
     NUTRITIONAL_PLAN_LAST = 'nutritional-plan-last',
     INGREDIENT = 'ingredient',
-    INGREDIENT_WEIGHT_UNITS = 'ingredient-weight-units',
 
     // Body weight
     BODY_WEIGHT = 'body-weight',
@@ -91,7 +90,6 @@ export enum ApiPath {
     MEAL_ITEM = 'mealitem',
     NUTRITIONAL_DIARY = 'nutritiondiary',
     INGREDIENTINFO_PATH = 'ingredientinfo',
-    INGREDIENT_WEIGHT_UNIT = 'ingredientweightunit',
 
     // Routines
     ROUTINE = 'routine',
