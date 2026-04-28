@@ -2,6 +2,7 @@ import { act, render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import {
     IngredientAutocompleter,
+    SEARCH_DEBOUNCE_MS,
     STORAGE_KEY_LANGUAGE_FILTER,
     STORAGE_KEY_NUTRISCORE_MAX,
     STORAGE_KEY_VEGAN,
@@ -9,6 +10,8 @@ import {
 } from 'components/Nutrition/widgets/IngredientAutcompleter';
 import { searchIngredient } from 'services';
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_4 } from "tests/ingredientTestdata";
+
+const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
 jest.mock("services");
 
@@ -32,9 +35,9 @@ describe("Test the IngredientAutocompleter component", () => {
         await user.click(autocomplete);
         await user.type(input, 'Bag');
 
-        // There's a bounce period of 200ms between the input and the search
+        // Wait for debounce
         await act(async () => {
-            await new Promise((r) => setTimeout(r, 250));
+            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
         });
         expect(searchIngredient).toHaveBeenCalled();
         expect(screen.getByText('0% fat Greek style yogurt')).toBeInTheDocument();
@@ -52,9 +55,9 @@ describe("Test the IngredientAutocompleter component", () => {
         await user.click(autocomplete);
         await user.type(input, 'Cru');
 
-        // There's a bounce period of 200ms between the input and the search
+        // Wait for debounce
         await act(async () => {
-            await new Promise((r) => setTimeout(r, 250));
+            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
         });
 
         // Select the first result
@@ -119,7 +122,7 @@ describe("Test the IngredientAutocompleter component", () => {
         await user.click(autocomplete);
         await user.type(input, 'Haferbrei');
         await act(async () => {
-            await new Promise((r) => setTimeout(r, 250));
+            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
         });
 
         // Assert - vegan ingredient should show "Vegan" but not "Vegetarian"
@@ -141,7 +144,7 @@ describe("Test the IngredientAutocompleter component", () => {
         await user.click(autocomplete);
         await user.type(input, 'yogurt');
         await act(async () => {
-            await new Promise((r) => setTimeout(r, 250));
+            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
         });
 
         // Assert - vegetarian-only ingredient should show "Vegetarian" but not "Vegan"
@@ -163,7 +166,7 @@ describe("Test the IngredientAutocompleter component", () => {
         await user.click(autocomplete);
         await user.type(input, 'Cacao');
         await act(async () => {
-            await new Promise((r) => setTimeout(r, 250));
+            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
         });
 
         // Assert - no dietary info, no chips
@@ -266,7 +269,7 @@ describe("Test the IngredientAutocompleter component", () => {
         await user.click(autocomplete);
         await user.type(input, 'Yog');
         await act(async () => {
-            await new Promise((r) => setTimeout(r, 250));
+            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
         });
 
         // Assert
@@ -287,7 +290,7 @@ describe("Test the IngredientAutocompleter component", () => {
         await user.click(autocomplete);
         await user.type(input, 'Yog');
         await act(async () => {
-            await new Promise((r) => setTimeout(r, 250));
+            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
         });
 
         // Assert

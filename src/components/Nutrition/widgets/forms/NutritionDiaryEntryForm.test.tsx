@@ -3,11 +3,14 @@ import { act, render, screen, within } from '@testing-library/react';
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
 import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
+import { SEARCH_DEBOUNCE_MS } from "components/Nutrition/widgets/IngredientAutcompleter";
 import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
 import React from 'react';
 import { searchIngredient } from "services";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "tests/ingredientTestdata";
 import { TEST_DIARY_ENTRY_1 } from "tests/nutritionDiaryTestdata";
+
+const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
 jest.mock('components/Nutrition/queries');
 jest.mock('services');
@@ -18,9 +21,9 @@ async function fillInEntry(user: UserEvent) {
     await user.click(autocomplete);
     await user.type(input, 'Bagu');
 
-    // There's a bounce period of 200 ms between the input and the search
+    // Wait for debounce
     await act(async () => {
-        await new Promise((r) => setTimeout(r, 250));
+        await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
     });
 
     // Select the first result

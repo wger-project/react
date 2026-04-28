@@ -33,6 +33,7 @@ import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
 
 export const STORAGE_KEY_EXERCISE_LANGUAGE = "wger.exerciseSearch.languageFilter";
 export const STORAGE_KEY_EXERCISE_EXACT_MATCH = "wger.exerciseSearch.exactMatch";
+export const SEARCH_DEBOUNCE_MS = 400;
 
 type NameAutocompleterProps = {
     callback: (exercise: Exercise | null) => void;
@@ -87,7 +88,7 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
             debounce(
                 (request: string) =>
                     searchExerciseTranslations(request, i18n.language, languageFilter, exactMatch).then((res) => setOptions(res)),
-                400
+                SEARCH_DEBOUNCE_MS
             ),
         [i18n.language, languageFilter, exactMatch]
     );

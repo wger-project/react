@@ -44,6 +44,7 @@ export const STORAGE_KEY_LANGUAGE_FILTER = "wger.ingredientSearch.languageFilter
 export const STORAGE_KEY_VEGAN = "wger.ingredientSearch.filterVegan";
 export const STORAGE_KEY_VEGETARIAN = "wger.ingredientSearch.filterVegetarian";
 export const STORAGE_KEY_NUTRISCORE_MAX = "wger.ingredientSearch.filterNutriscoreMax";
+export const SEARCH_DEBOUNCE_MS = 400;
 
 const NUTRISCORE_OFF_INDEX = 0;
 
@@ -142,7 +143,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                         isVegetarian: filterVegetarian || undefined,
                         nutriscoreMax: nutriscoreMax ?? undefined,
                     }).then((res) => setOptions(res)),
-                400
+                SEARCH_DEBOUNCE_MS
             ),
         [i18n.language, languageFilter, filterVegan, filterVegetarian, nutriscoreMax]
     );
