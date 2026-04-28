@@ -1,5 +1,19 @@
 {
   "name": "@wger-project/react-components",
+  "description": "React components for the wger fitness and nutrition manager",
+  "keywords": [
+    "wger",
+    "fitness",
+    "nutrition",
+    "workout",
+    "react",
+    "components"
+  ],
+  "author": "wger team",
+  "homepage": "https://github.com/wger-project/react",
+  "bugs": {
+    "url": "https://github.com/wger-project/react/issues"
+  },
   "files": [
     "README.md",
     "LICENSE",
@@ -12,6 +26,7 @@
     ".": "./build/index.js"
   },
   "version": "26.4.28",
+  "license": "AGPL-3.0-or-later",
   "repository": "https://github.com/wger-project/react",
   "type": "module",
   "publishConfig": {
