@@ -38,7 +38,7 @@ const PlanListItem = (props: { plan: NutritionalPlan }) => {
         <ListItem sx={{ p: 0 }}>
             <ListItemButton component="a" href={detailUrl}>
                 <ListItemText
-                    primary={props.plan.description !== '' ? props.plan.description : t('routines.routine')}
+                    primary={props.plan.description !== '' ? props.plan.description : t('nutrition.plan')}
                     secondary={
                         props.plan.end
                             ? `${dateToLocale(props.plan.start)} – ${dateToLocale(props.plan.end)}`
