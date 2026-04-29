@@ -1,9 +1,32 @@
-import { Box } from "@mui/material";
+import { Box, Paper } from "@mui/material";
+import { categoryValidator } from "components/Exercises/forms/yupValidators";
 import { MeasurementCategory } from "components/Measurements/models/Category";
 import React from "react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { theme } from "theme";
 import { dateToLocale } from "utils/date";
+
+export interface TooltipProps {
+    active?: boolean,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload?: any,
+    label?: string,
+    category: MeasurementCategory
+}
+
+const CustomTooltip = ({ active, payload, label, category }: TooltipProps) => {
+    if (active && payload && payload.length) {
+        return (
+            <Paper style={{ padding: 8 }}>
+                <p><strong>{dateToLocale(new Date(label!))}</strong></p>
+                <p>{category.name}: {payload[0].value} {category.unit}</p>
+            </Paper>
+        );
+    }
+
+    return null;
+};
+
 
 export const MeasurementChart = (props: { category: MeasurementCategory }) => {
     const NR_OF_ENTRIES_CHART_DOT = 30;
@@ -43,7 +66,7 @@ export const MeasurementChart = (props: { category: MeasurementCategory }) => {
                 tickCount={10}
             />
             <YAxis domain={['auto', 'auto']} unit={props.category.unit} />
-            {/*<Tooltip content={<CustomTooltip />} />*/}
+            {<Tooltip content={(<CustomTooltip category={props.category} />)} />}
         </LineChart>
     </Box>;
 };
