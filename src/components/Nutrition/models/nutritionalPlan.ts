@@ -208,14 +208,14 @@ export class NutritionalPlan {
             return out;
         }
 
-        out.energy = out.energy / nrOfEntries;
-        out.protein = out.protein / nrOfEntries;
-        out.carbohydrates = out.carbohydrates / nrOfEntries;
-        out.carbohydratesSugar = out.carbohydratesSugar / nrOfEntries;
-        out.fat = out.fat / nrOfEntries;
-        out.fatSaturated = out.fatSaturated / nrOfEntries;
-        out.fiber = out.fiber / nrOfEntries;
-        out.sodium = out.sodium / nrOfEntries;
+        out.energy = +(out.energy / 7).toFixed(0);
+        out.protein = +(out.protein/7).toFixed(0);
+        out.carbohydrates = +(out.carbohydrates/7).toFixed(0);
+        out.carbohydratesSugar = +(out.carbohydratesSugar/7).toFixed(0);
+        out.fat = +(out.fat/7).toFixed(0);
+        out.fatSaturated = +(out.fatSaturated/7).toFixed(0);
+        out.fiber = +(out.fiber/7).toFixed(0);
+        out.sodium = +(out.sodium/7).toFixed(0);
         return out;
     }
 
