@@ -118,7 +118,9 @@
         "planDeleteInfo": "這也會刪除所有營養日記條目",
         "mealDeleteInfo": "本餐的營養日記條目不會被刪除，並會顯示在「其他日誌」下",
         "ofWhichSugars": "哪種糖",
-        "goalFiber": "纖維目標"
+        "goalFiber": "纖維目標",
+        "languageFilterAll": "所有語言",
+        "filterVegetarian": "素食者"
     },
     "images": "圖片",
     "language": "語言",
@@ -126,7 +128,7 @@
     "downloadAsPdf": "下載成 PDF",
     "total": "總計",
     "description": "描述",
-    "overview": "總覽",
+    "overview": "概述",
     "preferences": "偏好",
     "category": "類別",
     "success": "成功！",
@@ -159,7 +161,29 @@
         "addWeightLog": "增加訓練日誌",
         "routine": "常規項目",
         "routines": "常規項目",
-        "restTime": "休息時間"
+        "restTime": "休息時間",
+        "intensity": "強度",
+        "weekly": "每週",
+        "daily": "每天",
+        "statsOverview": "統計",
+        "restDay": "休息日",
+        "publicTemplates": "公共模板",
+        "set": {
+            "jump": "跳",
+            "warmup": "暖身",
+            "type": "類型",
+            "tut": "肌肉受壓力時間"
+        },
+        "copyAndUseTemplate": "複製並使用範本",
+        "template": "範本",
+        "templates": "範本",
+        "publicTemplate": "公共模板",
+        "day": {
+            "edt": "逐步增加訓練密度",
+            "rft": "限時完成指定次數",
+            "afap": "越快越好"
+        },
+        "markAsTemplate": "管理模板"
     },
     "server": {
         "arms": "手臂",
@@ -256,7 +280,7 @@
     "durationWeeksDays": "{{nrWeeks}} 週, {{nrDays}} 天",
     "undo": "復原",
     "preview": "預覽",
-    "useMarkdownHint": "您可以使用基本的 Markdown 來格式化文字：斜體、粗體或清單。",
+    "useMarkdownHint": "您可以使用基本的 Markdown 來格式化文字：*斜體*、**粗體**、-清單",
     "start": "開始",
     "end": "結束",
     "totalChange": "總變化",
