@@ -177,7 +177,7 @@
         "daily": "每天",
         "statsOverview": "統計",
         "restDay": "休息日",
-        "publicTemplates": "公用範本",
+        "publicTemplates": "公開模板",
         "set": {
             "jump": "跳",
             "warmup": "暖身",
@@ -187,7 +187,7 @@
         "copyAndUseTemplate": "複製並使用範本",
         "template": "範本",
         "templates": "範本",
-        "publicTemplate": "公用範本",
+        "publicTemplate": "公開模板",
         "day": {
             "edt": "逐步增加訓練密度",
             "rft": "限時完成指定次數",
