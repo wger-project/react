@@ -14,9 +14,9 @@ export const NutritionDiaryOverview = () => {
     const [t] = useTranslation();
     const params = useParams<{ planId: string, date: string }>();
 
-    const planId = parseInt(params.planId!);
-    if (Number.isNaN(planId)) {
-        return <p>Please pass an integer as the nutritional plan id.</p>;
+    const planId = params.planId ?? '';
+    if (planId === '') {
+        return <p>Please pass a UUID as the nutritional plan id.</p>;
     }
 
     const date = new Date(params.date!);

@@ -41,8 +41,8 @@ export const TEST_WEIGHT_UNIT_CUP = new NutritionWeightUnit(
 
 
 export const TEST_MEAL_ITEM_1 = new MealItem({
-    id: 42,
-    mealId: 1001,
+    id: 'cccccccc-0000-0000-0000-000000000042',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000001001',
     amount: 120,
     order: 3,
     ingredient: TEST_INGREDIENT_1,
@@ -50,8 +50,8 @@ export const TEST_MEAL_ITEM_1 = new MealItem({
     weightUnitId: null,
 });
 export const TEST_MEAL_ITEM_2 = new MealItem({
-    id: 43,
-    mealId: 1001,
+    id: 'cccccccc-0000-0000-0000-000000000043',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000001001',
     amount: 220,
     order: 1,
     ingredientId: 102,
@@ -59,8 +59,8 @@ export const TEST_MEAL_ITEM_2 = new MealItem({
     ingredient: TEST_INGREDIENT_2
 });
 export const TEST_MEAL_ITEM_3 = new MealItem({
-    id: 45,
-    mealId: 1001,
+    id: 'cccccccc-0000-0000-0000-000000000045',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000001001',
     amount: 320,
     order: 2,
     ingredientId: 104,
@@ -69,8 +69,8 @@ export const TEST_MEAL_ITEM_3 = new MealItem({
 });
 
 export const TEST_MEAL_ITEM_4 = new MealItem({
-    id: 46,
-    mealId: 999,
+    id: 'cccccccc-0000-0000-0000-000000000046',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000999',
     amount: 320,
     order: 1,
     ingredientId: 105,
@@ -79,8 +79,8 @@ export const TEST_MEAL_ITEM_4 = new MealItem({
 });
 
 export const TEST_MEAL_ITEM_5 = new MealItem({
-    id: 47,
-    mealId: 1,
+    id: 'cccccccc-0000-0000-0000-000000000047',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000001',
     amount: 320,
     order: 1,
     ingredientId: 101,
@@ -89,8 +89,8 @@ export const TEST_MEAL_ITEM_5 = new MealItem({
 });
 
 export const TEST_MEAL_ITEM_6 = new MealItem({
-    id: 48,
-    mealId: 123,
+    id: 'cccccccc-0000-0000-0000-000000000048',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000123',
     amount: 100,
     order: 2,
     ingredientId: 102,
@@ -98,8 +98,8 @@ export const TEST_MEAL_ITEM_6 = new MealItem({
     ingredient: TEST_INGREDIENT_2
 });
 export const TEST_MEAL_ITEM_7 = new MealItem({
-    id: 103,
-    mealId: 2345,
+    id: 'cccccccc-0000-0000-0000-000000000103',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000002345',
     amount: 100,
     order: 1,
     ingredientId: 109,
@@ -108,8 +108,8 @@ export const TEST_MEAL_ITEM_7 = new MealItem({
 });
 
 export const TEST_MEAL_ITEM_8 = new MealItem({
-    id: 104,
-    mealId: 2222,
+    id: 'cccccccc-0000-0000-0000-000000000104',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000002222',
     amount: 120,
     order: 1,
     ingredientId: 110,
@@ -119,8 +119,8 @@ export const TEST_MEAL_ITEM_8 = new MealItem({
 
 
 export const TEST_MEAL_1 = new Meal({
-    id: 78,
-    planId: 123,
+    id: 'bbbbbbbb-0000-0000-0000-000000000078',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000123',
     order: 2,
     time: HHMMToDateTime('12:30'),
     name: 'Second breakfast',
@@ -129,7 +129,7 @@ TEST_MEAL_1.items = [TEST_MEAL_ITEM_1, TEST_MEAL_ITEM_2, TEST_MEAL_ITEM_3];
 
 
 export const TEST_MEAL_2 = new Meal({
-    id: 999,
+    id: 'bbbbbbbb-0000-0000-0000-000000000999',
     order: 3,
     time: HHMMToDateTime('22:30'),
     name: 'evening snack',
@@ -137,7 +137,7 @@ export const TEST_MEAL_2 = new Meal({
 TEST_MEAL_2.items = [TEST_MEAL_ITEM_4];
 
 export const TEST_MEAL_3 = new Meal({
-    id: 1,
+    id: 'bbbbbbbb-0000-0000-0000-000000000001',
     order: 1,
     time: HHMMToDateTime('6:30'),
     name: 'breakfast',
@@ -145,7 +145,7 @@ export const TEST_MEAL_3 = new Meal({
 TEST_MEAL_3.items = [TEST_MEAL_ITEM_5, TEST_MEAL_ITEM_6];
 
 export const TEST_MEAL_4 = new Meal({
-    id: 2,
+    id: 'bbbbbbbb-0000-0000-0000-000000000002',
     order: 1,
     time: HHMMToDateTime('7:45'),
     name: 'Cake time',
@@ -153,7 +153,7 @@ export const TEST_MEAL_4 = new Meal({
 TEST_MEAL_4.items = [TEST_MEAL_ITEM_7];
 
 export const TEST_MEAL_5 = new Meal({
-    id: 22,
+    id: 'bbbbbbbb-0000-0000-0000-000000000022',
     order: 2,
     time: HHMMToDateTime('12:00'),
     name: 'Time to visit McDonalds',
@@ -161,7 +161,7 @@ export const TEST_MEAL_5 = new Meal({
 TEST_MEAL_5.items = [TEST_MEAL_ITEM_8];
 
 export const TEST_NUTRITIONAL_PLAN_1 = new NutritionalPlan({
-    id: 101,
+    id: 'aaaaaaaa-0000-0000-0000-000000000101',
     creationDate: new Date('2023-01-01'),
     description: 'Summer body!!!',
 });
@@ -191,7 +191,7 @@ TEST_NUTRITIONAL_PLAN_1.diaryEntries = [
 
 
 export const TEST_NUTRITIONAL_PLAN_2 = new NutritionalPlan({
-    id: 222,
+    id: 'aaaaaaaa-0000-0000-0000-000000000222',
     creationDate: new Date('2023-08-01'),
     description: 'Bulking till we puke',
 });

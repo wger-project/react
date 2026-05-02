@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 
 interface MealFormProps {
-    planId: number,
+    planId: string,
     meal?: Meal,
     closeFn?: () => void,
 }

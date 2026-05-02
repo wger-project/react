@@ -34,7 +34,7 @@ export const getLastNutritionalPlan = async (): Promise<NutritionalPlan | null> 
     return await getNutritionalPlanFull(receivedPlan.results[0].id);
 };
 
-export const getNutritionalPlanFull = async (id: number | null, options?: NutritionalPlanOptions): Promise<NutritionalPlan | null> => {
+export const getNutritionalPlanFull = async (id: string | null, options?: NutritionalPlanOptions): Promise<NutritionalPlan | null> => {
     if (id === null) {
         return null;
     }
@@ -96,7 +96,7 @@ export const editNutritionalPlan = async (plan: NutritionalPlan): Promise<Nutrit
     return nutritionalPlanAdapter.fromJson(response.data);
 };
 
-export const deleteNutritionalPlan = async (id: number): Promise<void> => {
+export const deleteNutritionalPlan = async (id: string): Promise<void> => {
     await axios.delete(
         makeUrl(API_NUTRITIONAL_PLAN_PATH, { id: id }),
         { headers: makeHeader() },

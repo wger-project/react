@@ -59,7 +59,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <NutritionDiaryEntryForm planId={123} closeFn={closeFnMock} />
+                <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123" closeFn={closeFnMock} />
             </QueryClientProvider>
         );
         await fillInEntry(user);
@@ -74,7 +74,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                 amount: 120,
                 datetime: expect.any(Date),
                 ingredientId: 101,
-                planId: 123,
+                planId: 'aaaaaaaa-0000-0000-0000-000000000123',
                 mealId: null,
                 weightUnitId: null,
             })
@@ -87,7 +87,8 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <NutritionDiaryEntryForm planId={123} mealId={456} closeFn={closeFnMock} />
+                <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123"
+                                         mealId="bbbbbbbb-0000-0000-0000-000000000456" closeFn={closeFnMock} />
             </QueryClientProvider>
         );
         await fillInEntry(user);
@@ -102,8 +103,8 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                 amount: 120,
                 datetime: expect.any(Date),
                 ingredientId: 101,
-                planId: 123,
-                mealId: 456,
+                planId: 'aaaaaaaa-0000-0000-0000-000000000123',
+                mealId: 'bbbbbbbb-0000-0000-0000-000000000456',
                 weightUnitId: null,
 
             })
@@ -117,7 +118,8 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <NutritionDiaryEntryForm planId={123} entry={TEST_DIARY_ENTRY_1} closeFn={closeFnMock} />
+                <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123" entry={TEST_DIARY_ENTRY_1}
+                                         closeFn={closeFnMock} />
             </QueryClientProvider>
         );
         await fillInEntry(user);
@@ -127,10 +129,10 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(closeFnMock).toHaveBeenCalled();
         expect(mutateEditMock).toHaveBeenCalledWith(
             expect.objectContaining({
-                id: 42,
+                id: 'dddddddd-0000-0000-0000-000000000042',
                 amount: 120,
-                mealId: 78,
-                planId: 123,
+                mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
+                planId: 'aaaaaaaa-0000-0000-0000-000000000123',
                 ingredientId: 101,
             })
         );
@@ -143,7 +145,9 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <NutritionDiaryEntryForm planId={123} mealId={456} entry={TEST_DIARY_ENTRY_1} closeFn={closeFnMock} />
+                <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123"
+                                         mealId="bbbbbbbb-0000-0000-0000-000000000456" entry={TEST_DIARY_ENTRY_1}
+                                         closeFn={closeFnMock} />
             </QueryClientProvider>
         );
         await fillInEntry(user);
@@ -153,9 +157,9 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(closeFnMock).toHaveBeenCalled();
         expect(mutateEditMock).toHaveBeenCalledWith(
             expect.objectContaining({
-                id: 42,
-                planId: 123,
-                mealId: 456,
+                id: 'dddddddd-0000-0000-0000-000000000042',
+                planId: 'aaaaaaaa-0000-0000-0000-000000000123',
+                mealId: 'bbbbbbbb-0000-0000-0000-000000000456',
                 amount: 120,
                 ingredientId: 101,
                 weightUnitId: null,

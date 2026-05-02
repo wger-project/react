@@ -1,4 +1,4 @@
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
+import { NutritionalPlan, PSEUDO_MEAL_ID } from "components/Nutrition/models/nutritionalPlan";
 import { TEST_MEAL_1, TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
 
 jest.useFakeTimers();
@@ -142,7 +142,7 @@ describe("Test the nutritional plan model", () => {
         const meal = TEST_NUTRITIONAL_PLAN_1.pseudoMealOthers('the name');
 
         // Assert
-        expect(meal.id).toBe(-1);
+        expect(meal.id).toBe(PSEUDO_MEAL_ID);
         expect(meal.name).toBe('the name');
         expect(meal.diaryEntries.length).toBe(2);
     });
@@ -151,7 +151,7 @@ describe("Test the nutritional plan model", () => {
 
         // Act
         const plan = new NutritionalPlan({
-            id: 1,
+            id: '00000000-0000-0000-0000-000000000001',
             creationDate: new Date(),
             description: 'test 1',
         });

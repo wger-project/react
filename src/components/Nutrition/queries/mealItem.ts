@@ -3,7 +3,7 @@ import { MealItem } from "components/Nutrition/models/mealItem";
 import { addMealItem, deleteMealItem, editMealItem } from "services/mealItem";
 import { QueryKey } from "utils/consts";
 
-export const useAddMealItemQuery = (planId: number) => {
+export const useAddMealItemQuery = (planId: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -16,7 +16,7 @@ export const useAddMealItemQuery = (planId: number) => {
     });
 };
 
-export const useEditMealItemQuery = (planId: number) => {
+export const useEditMealItemQuery = (planId: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -29,11 +29,11 @@ export const useEditMealItemQuery = (planId: number) => {
     });
 };
 
-export const useDeleteMealItemQuery = (planId: number) => {
+export const useDeleteMealItemQuery = (planId: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (id: number) => deleteMealItem(id),
+        mutationFn: (id: string) => deleteMealItem(id),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.NUTRITIONAL_PLAN, planId]

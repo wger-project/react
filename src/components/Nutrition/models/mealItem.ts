@@ -7,8 +7,8 @@ import { Adapter } from "utils/Adapter";
 import { numberGramLocale } from "utils/numbers";
 
 export interface ApiMealItemType {
-    id: number,
-    meal: number,
+    id: string,
+    meal: string,
     ingredient: number,
     weight_unit: number,
     order: number,
@@ -16,8 +16,8 @@ export interface ApiMealItemType {
 }
 
 export type MealItemConstructorParams = {
-    id?: number;
-    mealId: number;
+    id?: string;
+    mealId: string;
     amount: number;
     order: number;
 
@@ -29,8 +29,8 @@ export type MealItemConstructorParams = {
 };
 
 export class MealItem {
-    public id?: number | null;
-    public mealId: number;
+    public id?: string | null;
+    public mealId: string;
     public ingredientId: number;
     public weightUnitId: number | null;
     public amount: number;
@@ -91,7 +91,7 @@ export class MealItem {
         });
     }
 
-    diaryEntry(planId: number, date?: Date): DiaryEntry {
+    diaryEntry(planId: string, date?: Date): DiaryEntry {
         return new DiaryEntry({
             mealId: this.mealId,
             planId: planId,

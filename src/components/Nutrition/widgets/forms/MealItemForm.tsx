@@ -17,8 +17,8 @@ import * as yup from "yup";
 const GRAM_UNIT_VALUE = 'g';
 
 type MealItemFormProps =
-    | { planId: number; item: MealItem; closeFn?: () => void; mealId?: number }
-    | { planId: number; mealId: number; item?: undefined; closeFn?: () => void };
+    | { planId: string; item: MealItem; closeFn?: () => void; mealId?: string }
+    | { planId: string; mealId: string; item?: undefined; closeFn?: () => void };
 
 export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProps) => {
 
@@ -87,7 +87,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                 } else {
                     // Add
                     addMealItemQuery.mutate(new MealItem({
-                        mealId: mealId,
+                        mealId: mealId!,
                         amount: newAmount,
                         ingredientId: values.ingredient,
                         weightUnitId: selectedUnit?.id ?? null,

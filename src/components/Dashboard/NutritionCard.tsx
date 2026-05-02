@@ -100,7 +100,7 @@ function NutritionCardContent(props: { plan: NutritionalPlan }) {
     );
 }
 
-const MealListItem = (props: { meal: Meal; planId: number }) => {
+const MealListItem = (props: { meal: Meal; planId: string }) => {
     const [t, i18n] = useTranslation();
     const addDiaryEntryQuery = useAddDiaryEntryQuery(props.planId);
 

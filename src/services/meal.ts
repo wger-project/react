@@ -28,14 +28,14 @@ export const editMeal = async (meal: Meal): Promise<Meal> => {
     return Meal.fromJson(response.data);
 };
 
-export const deleteMeal = async (id: number): Promise<void> => {
+export const deleteMeal = async (id: string): Promise<void> => {
     await axios.delete(
         makeUrl(ApiPath.MEAL, { id: id }),
         { headers: makeHeader() },
     );
 };
 
-export const getMealsForPlan = async (planId: number): Promise<Meal[]> => {
+export const getMealsForPlan = async (planId: string): Promise<Meal[]> => {
 
     let ingredientIds: number[] = [];
     const { data: receivedMeals } = await axios.get<ResponseType<ApiMealType>>(

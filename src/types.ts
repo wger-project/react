@@ -49,7 +49,7 @@ export interface ApiAliasType {
 }
 
 export interface ApiMeasurementCategoryType {
-    id: number,
+    id: string,
     name: string,
     unit: string
 }
@@ -112,7 +112,7 @@ export type ApiIngredientWeightUnitType = {
 }
 
 export interface ApiNutritionalPlanType {
-    id: number,
+    id: string,
     creation_date: string,
     start: string,
     end: string | null,
@@ -127,8 +127,8 @@ export interface ApiNutritionalPlanType {
 
 
 export interface ApiMeasurementEntryType {
-    id: number,
-    category: number,
+    id: string,
+    category: string,
     date: Date,
     value: number,
     notes: string

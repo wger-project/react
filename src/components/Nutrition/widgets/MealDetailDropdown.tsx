@@ -17,7 +17,7 @@ import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
 
 export const MealDetailDropdown = (props: {
     meal: Meal,
-    planId: number,
+    planId: string,
     onlyLogging: boolean,
     isExpanded: boolean,
     handleExpanded: () => void,

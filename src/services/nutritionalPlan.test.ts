@@ -14,7 +14,7 @@ describe("Nutritional plan service tests", () => {
             previous: null,
             results: [
                 {
-                    "id": 72559,
+                    "id": "00000000-0000-0000-0000-000000072559",
                     "creation_date": "2023-05-26",
                     "start": "2023-06-01",
                     "end": "2023-06-30",
@@ -22,7 +22,7 @@ describe("Nutritional plan service tests", () => {
                     "only_logging": true,
                 },
                 {
-                    "id": 60131,
+                    "id": "00000000-0000-0000-0000-000000060131",
                     "creation_date": "2022-06-01",
                     "start": "2022-06-01",
                     "end": null,
@@ -30,7 +30,7 @@ describe("Nutritional plan service tests", () => {
                     "only_logging": false,
                 },
                 {
-                    "id": 24752,
+                    "id": "00000000-0000-0000-0000-000000024752",
                     "creation_date": "2023-08-01",
                     "start": "2023-08-01",
                     "end": "2023-08-31",
@@ -47,7 +47,7 @@ describe("Nutritional plan service tests", () => {
 
         expect(result).toStrictEqual([
             new NutritionalPlan({
-                id: 72559,
+                id: '00000000-0000-0000-0000-000000072559',
                 creationDate: new Date('2023-05-26'),
                 start: new Date('2023-06-01'),
                 end: new Date('2023-06-30'),
@@ -55,13 +55,13 @@ describe("Nutritional plan service tests", () => {
                 onlyLogging: true
             }),
             new NutritionalPlan({
-                id: 60131,
+                id: '00000000-0000-0000-0000-000000060131',
                 creationDate: new Date('2022-06-01'),
                 description: '',
                 onlyLogging: false
             }),
             new NutritionalPlan({
-                id: 24752,
+                id: '00000000-0000-0000-0000-000000024752',
                 creationDate: new Date('2023-08-01'),
                 start: new Date('2023-08-01'),
                 end: new Date('2023-08-31'),

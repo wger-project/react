@@ -62,7 +62,7 @@ export const editNutritionalDiaryEntry = async (diaryEntry: DiaryEntry): Promise
     return DiaryEntry.fromJson(response.data);
 };
 
-export const deleteNutritionalDiaryEntry = async (id: number): Promise<void> => {
+export const deleteNutritionalDiaryEntry = async (id: string): Promise<void> => {
     await axios.delete(
         makeUrl(ApiPath.NUTRITIONAL_DIARY, { id: id }),
         { headers: makeHeader() },

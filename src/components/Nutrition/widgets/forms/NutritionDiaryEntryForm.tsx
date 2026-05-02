@@ -17,9 +17,9 @@ import * as yup from "yup";
 const GRAM_UNIT_VALUE = 'g';
 
 type NutritionDiaryEntryFormProps = {
-    planId: number,
+    planId: string,
     entry?: DiaryEntry,
-    mealId?: number | null,
+    mealId?: string | null,
     meals?: Meal[],
     closeFn?: () => void,
 }
@@ -33,7 +33,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
     const addDiaryQuery = useAddDiaryEntryQuery(planId);
     const editDiaryQuery = useEditDiaryEntryQuery(planId);
     const [dateValue, setDateValue] = useState<DateTime | null>(entry ? DateTime.fromJSDate(entry.datetime) : DateTime.now());
-    const [selectedMeal, setSelectedMeal] = useState<number | null>(meal);
+    const [selectedMeal, setSelectedMeal] = useState<string | null>(meal);
 
     const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(entry?.weightUnit ?? null);
     const [ingredientId, setIngredientId] = useState<number | null>(entry?.ingredientId ?? null);

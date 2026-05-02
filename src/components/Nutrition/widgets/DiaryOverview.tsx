@@ -9,7 +9,7 @@ import { numberLocale } from "utils/numbers";
 import { makeLink, WgerLink } from "utils/url";
 
 export const DiaryOverview = (props: {
-    planId: number,
+    planId: string,
     logged: Map<string, GroupedDiaryEntries>,
     planned: NutritionalValues
 }) => {

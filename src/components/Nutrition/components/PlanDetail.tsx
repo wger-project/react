@@ -21,9 +21,9 @@ import { useParams } from "react-router-dom";
 export const PlanDetail = () => {
     const [t] = useTranslation();
     const params = useParams<{ planId: string }>();
-    const planId = parseInt(params.planId ?? '');
-    if (Number.isNaN(planId)) {
-        return <p>Please pass an integer as the nutritional plan id.</p>;
+    const planId = params.planId ?? '';
+    if (planId === '') {
+        return <p>Please pass a UUID as the nutritional plan id.</p>;
     }
 
     // eslint-disable-next-line react-hooks/rules-of-hooks

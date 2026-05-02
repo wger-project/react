@@ -14,7 +14,7 @@ export const useNutritionDiaryQuery = (options?: NutritionalDiaryEntriesOptions)
     queryKey: [QueryKey.NUTRITIONAL_PLAN_DIARY, JSON.stringify(options || {})],
 });
 
-export const useAddDiaryEntryQuery = (planId: number) => {
+export const useAddDiaryEntryQuery = (planId: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -25,7 +25,7 @@ export const useAddDiaryEntryQuery = (planId: number) => {
     });
 };
 
-export const useAddDiaryEntriesQuery = (planId: number) => {
+export const useAddDiaryEntriesQuery = (planId: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -36,18 +36,18 @@ export const useAddDiaryEntriesQuery = (planId: number) => {
     });
 };
 
-export const useDeleteDiaryEntryQuery = (planId: number) => {
+export const useDeleteDiaryEntryQuery = (planId: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (id: number) => deleteNutritionalDiaryEntry(id),
+        mutationFn: (id: string) => deleteNutritionalDiaryEntry(id),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.NUTRITIONAL_PLAN, planId]
         })
     });
 };
 
-export const useEditDiaryEntryQuery = (planId: number) => {
+export const useEditDiaryEntryQuery = (planId: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({

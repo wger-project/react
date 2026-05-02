@@ -6,9 +6,9 @@ import { Adapter } from "utils/Adapter";
 import { numberGramLocale } from "utils/numbers";
 
 export interface ApiNutritionDiaryType {
-    id: number,
-    plan: number,
-    meal: number | null,
+    id: string,
+    plan: string,
+    meal: string | null,
     ingredient: number,
     weight_unit: number,
     datetime: Date,
@@ -16,9 +16,9 @@ export interface ApiNutritionDiaryType {
 }
 
 export type DiaryEntryConstructorParams = {
-    id?: number;
-    planId: number;
-    mealId?: number | null;
+    id?: string;
+    planId: string;
+    mealId?: string | null;
     ingredientId: number;
     weightUnitId?: number | null;
     amount: number;
@@ -29,9 +29,9 @@ export type DiaryEntryConstructorParams = {
 
 export class DiaryEntry {
 
-    public id?: number | null;
-    public planId: number;
-    public mealId: number | null;
+    public id?: string | null;
+    public planId: string;
+    public mealId: string | null;
     public amount: number;
     public datetime: Date;
 

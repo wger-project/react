@@ -3,9 +3,9 @@ import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_3, TEST_INGREDIEN
 
 
 export const TEST_DIARY_ENTRY_1 = new DiaryEntry({
-    id: 42,
-    planId: 1,
-    mealId: 78,
+    id: 'dddddddd-0000-0000-0000-000000000042',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
     ingredientId: 101,
     weightUnitId: null,
     amount: 120,
@@ -14,9 +14,9 @@ export const TEST_DIARY_ENTRY_1 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_2 = new DiaryEntry({
-    id: 44,
-    planId: 1,
-    mealId: 78,
+    id: 'dddddddd-0000-0000-0000-000000000044',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
     ingredientId: 102,
     weightUnitId: null,
     amount: 50,
@@ -25,9 +25,9 @@ export const TEST_DIARY_ENTRY_2 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_3 = new DiaryEntry({
-    id: 45,
-    planId: 1,
-    mealId: 78,
+    id: 'dddddddd-0000-0000-0000-000000000045',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
     ingredientId: 103,
     weightUnitId: null,
     amount: 200,
@@ -36,9 +36,9 @@ export const TEST_DIARY_ENTRY_3 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_4 = new DiaryEntry({
-    id: 46,
-    planId: 1,
-    mealId: 78,
+    id: 'dddddddd-0000-0000-0000-000000000046',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
     ingredientId: 103,
     weightUnitId: null,
     amount: 20,
@@ -47,9 +47,9 @@ export const TEST_DIARY_ENTRY_4 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_5 = new DiaryEntry({
-    id: 47,
-    planId: 1,
-    mealId: 78,
+    id: 'dddddddd-0000-0000-0000-000000000047',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
     ingredientId: 103,
     weightUnitId: null,
     amount: 20,
@@ -58,9 +58,9 @@ export const TEST_DIARY_ENTRY_5 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_6 = new DiaryEntry({
-    id: 48,
-    planId: 1,
-    mealId: 78,
+    id: 'dddddddd-0000-0000-0000-000000000048',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
     ingredientId: 103,
     weightUnitId: null,
     amount: 50,
@@ -69,9 +69,9 @@ export const TEST_DIARY_ENTRY_6 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_7 = new DiaryEntry({
-    id: 49,
-    planId: 1,
-    mealId: 78,
+    id: 'dddddddd-0000-0000-0000-000000000049',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
     ingredientId: 103,
     weightUnitId: null,
     amount: 50,
@@ -80,9 +80,9 @@ export const TEST_DIARY_ENTRY_7 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_8 = new DiaryEntry({
-    id: 50,
-    planId: 1,
-    mealId: 78,
+    id: 'dddddddd-0000-0000-0000-000000000050',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
     ingredientId: 103,
     weightUnitId: null,
     amount: 100,
@@ -91,9 +91,9 @@ export const TEST_DIARY_ENTRY_8 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_9 = new DiaryEntry({
-    id: 51,
-    planId: 1,
-    mealId: 999,
+    id: 'dddddddd-0000-0000-0000-000000000051',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000999',
     ingredientId: 103,
     weightUnitId: null,
     amount: 80,
@@ -102,9 +102,9 @@ export const TEST_DIARY_ENTRY_9 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_10 = new DiaryEntry({
-    id: 51,
-    planId: 1,
-    mealId: 78,
+    id: 'dddddddd-0000-0000-0000-000000000051',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
     ingredientId: 103,
     weightUnitId: null,
     amount: 80,
@@ -113,9 +113,9 @@ export const TEST_DIARY_ENTRY_10 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_11 = new DiaryEntry({
-    id: 52,
-    planId: 1,
-    mealId: 999,
+    id: 'dddddddd-0000-0000-0000-000000000052',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000999',
     ingredientId: 103,
     weightUnitId: null,
     amount: 500,
@@ -124,9 +124,9 @@ export const TEST_DIARY_ENTRY_11 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_12 = new DiaryEntry({
-    id: 52,
-    planId: 1,
-    mealId: 999,
+    id: 'dddddddd-0000-0000-0000-000000000052',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000999',
     ingredientId: 104,
     weightUnitId: null,
     amount: 500,
@@ -135,9 +135,9 @@ export const TEST_DIARY_ENTRY_12 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_13 = new DiaryEntry({
-    id: 53,
-    planId: 1,
-    mealId: 78,
+    id: 'dddddddd-0000-0000-0000-000000000053',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
+    mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
     ingredientId: 104,
     weightUnitId: null,
     amount: 500,
@@ -146,8 +146,8 @@ export const TEST_DIARY_ENTRY_13 = new DiaryEntry({
 });
 
 export const TEST_DIARY_ENTRY_14 = new DiaryEntry({
-    id: 54,
-    planId: 1,
+    id: 'dddddddd-0000-0000-0000-000000000054',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
     mealId: null,
     ingredientId: 104,
     weightUnitId: null,
@@ -156,8 +156,8 @@ export const TEST_DIARY_ENTRY_14 = new DiaryEntry({
     ingredient: TEST_INGREDIENT_4
 });
 export const TEST_DIARY_ENTRY_15 = new DiaryEntry({
-    id: 54,
-    planId: 1,
+    id: 'dddddddd-0000-0000-0000-000000000054',
+    planId: 'aaaaaaaa-0000-0000-0000-000000000001',
     mealId: null,
     ingredientId: 103,
     weightUnitId: null,

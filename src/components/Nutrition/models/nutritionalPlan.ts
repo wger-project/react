@@ -12,11 +12,11 @@ export type GroupedDiaryEntries = {
     nutritionalValues: NutritionalValues;
 }
 
-export const PSEUDO_MEAL_ID = -1;
+export const PSEUDO_MEAL_ID = '00000000-0000-0000-0000-000000000000';
 
 
 type NutritionalPlanConstructorParams = {
-    id?: number | null,
+    id?: string | null,
     creationDate?: Date,
     start?: Date,
     end?: Date | null,
@@ -33,7 +33,7 @@ type NutritionalPlanConstructorParams = {
 
 
 export class NutritionalPlan {
-    id: number | null;
+    id: string | null;
     creationDate: Date;
     start: Date;
     end: Date | null;

@@ -29,7 +29,7 @@ import { MealDetailDropdown } from "components/Nutrition/widgets/MealDetailDropd
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const MealItemListItem = (props: { mealItem: MealItem, planId: number, mealId: number }) => {
+const MealItemListItem = (props: { mealItem: MealItem, planId: string, mealId: string }) => {
     const [expandForm, setExpandForm] = useState(false);
     const handleToggleForm = () => setExpandForm(!expandForm);
 
@@ -63,7 +63,7 @@ const MealItemListItem = (props: { mealItem: MealItem, planId: number, mealId: n
     </>;
 };
 
-export const MealDetail = (props: { meal: Meal, planId: number, onlyLogging: boolean }) => {
+export const MealDetail = (props: { meal: Meal, planId: string, onlyLogging: boolean }) => {
     const theme = useTheme();
     const [t] = useTranslation();
     const [expandViewStats, setExpandViewStats] = useState(false);
