@@ -24,6 +24,7 @@ describe("Test the ExerciseDeleteDialog component", () => {
 
         (searchExerciseTranslations as jest.Mock).mockImplementation(() => Promise.resolve(searchResponse));
         (getExercise as jest.Mock).mockImplementation(() => Promise.resolve(testExerciseBenchPress));
+        (deleteExercise as jest.Mock).mockImplementation(() => Promise.resolve(204));
     });
 
     function renderWidget() {
@@ -99,8 +100,31 @@ describe("Test the ExerciseDeleteDialog component", () => {
         expect(screen.getByText("2 (abcdef-150a-4ac7-97ef-84643c6419bf)")).toBeInTheDocument();
 
         await user.click(screen.getByTestId('button-delete-and-replace'));
-        expect(deleteExercise).toHaveBeenCalledWith(345, "abcdef-150a-4ac7-97ef-84643c6419bf");
+        expect(deleteExercise).toHaveBeenCalledWith(345, {
+            replacementUUID: "abcdef-150a-4ac7-97ef-84643c6419bf",
+            transferMedia: true,
+            transferTranslations: true,
+        });
         expect(deleteExerciseTranslation).not.toHaveBeenCalled();
+    });
+
+    test('passes both transfer flags as false when both checkboxes are unchecked', async () => {
+        const user = userEvent.setup();
+        renderWidget();
+
+        await user.type(screen.getByRole('textbox'), '111');
+        await user.click(screen.getByText("exercises.noReplacementSelected"));
+
+        await user.click(screen.getByLabelText("exercises.transferMediaLabel"));
+        await user.click(screen.getByLabelText("exercises.transferTranslationsLabel"));
+
+        await user.click(screen.getByTestId('button-delete-and-replace'));
+
+        expect(deleteExercise).toHaveBeenCalledWith(345, {
+            replacementUUID: "abcdef-150a-4ac7-97ef-84643c6419bf",
+            transferMedia: false,
+            transferTranslations: false,
+        });
     });
 
     test('correctly sets a replacement manually setting the ID', async () => {
@@ -122,7 +146,11 @@ describe("Test the ExerciseDeleteDialog component", () => {
         expect(screen.getByText("2 (abcdef-150a-4ac7-97ef-84643c6419bf)")).toBeInTheDocument();
 
         await user.click(screen.getByTestId('button-delete-and-replace'));
-        expect(deleteExercise).toHaveBeenCalledWith(345, "abcdef-150a-4ac7-97ef-84643c6419bf");
+        expect(deleteExercise).toHaveBeenCalledWith(345, {
+            replacementUUID: "abcdef-150a-4ac7-97ef-84643c6419bf",
+            transferMedia: true,
+            transferTranslations: true,
+        });
         expect(deleteExerciseTranslation).not.toHaveBeenCalled();
     });
 });
