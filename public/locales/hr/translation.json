@@ -58,7 +58,8 @@
         "imageStyleLowPoly": "Grubi poligoni",
         "imageStyleOther": "Drugo",
         "imageDetails": "Detalji slike",
-        "swapExercise": "Zamijeni vježbu"
+        "swapExercise": "Zamijeni vježbu",
+        "exactMatch": "Točno podudaranje"
     },
     "noResults": "Nema rezultata",
     "noResultsDescription": "Za ovaj upit nisu pronađeni rezultati. Smanji broja filtara.",
@@ -306,7 +307,11 @@
         "languageFilterCurrentAndEnglish": "Trenutačni jezik ({{lang}}) i engleski",
         "languageFilterAll": "Svi jezici",
         "filterVegan": "Veganski",
-        "filterVegetarian": "Vegetarijanski"
+        "filterVegetarian": "Vegetarijanski",
+        "filterNutriscore": "Nutri-Score filtar",
+        "filterNutriscoreOff": "Isključeno",
+        "filterNutriscoreNoFilter": "Bez filtra",
+        "filterNutriscoreOrBetter": "{{grade}} ili bolje"
     },
     "downloadAsPdf": "Preuzmi kao PDF",
     "total": "Ukupno",
@@ -365,5 +370,8 @@
     "core": {
         "exitEditMode": "Zatvori modus uređivanja",
         "customize": "Prilagodi"
-    }
+    },
+    "preview": "Pregledaj",
+    "useMarkdownHint": "Za formatiranje teksta se može koristiti osnovni Markdown: *kurziv*, **podebljano**, - popis",
+    "totalChange": "Ukupna promjena"
 }
