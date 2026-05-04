@@ -163,8 +163,11 @@ export function VariationSelect({
     }
 
     const handleToggle = (variationId: string | null, newVariationId: number | null) => {
-        onChangeVariationId(variationId);
-        onChangeNewVariationExerciseId(newVariationId);
+        if (newVariationId !== null) {
+            onChangeNewVariationExerciseId(newVariationId);
+        } else {
+            onChangeVariationId(variationId);
+        }
     };
 
     return <>
