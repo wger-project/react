@@ -27,12 +27,14 @@ import { Translation } from "components/Exercises/models/translation";
 import {
     useAddNoteQuery,
     useAddTranslationQuery,
+    useDeleteAliasQuery,
     useDeleteNoteQuery,
     useEditExerciseImageQuery,
     useEditNoteQuery,
     useEditTranslationQuery,
     useExerciseQuery,
-    useMusclesQuery
+    useMusclesQuery,
+    usePostAliasQuery
 } from "components/Exercises/queries";
 import { MuscleOverview } from "components/Muscles/MuscleOverview";
 import { usePermissionQuery } from "components/User/queries/permission";
@@ -41,7 +43,6 @@ import { Form, Formik } from "formik";
 import { WgerPermissions } from "permissions";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { deleteAlias, postAlias } from "services";
 import * as yup from "yup";
 import { ImageFormModal } from '../forms/ImageModal';
 import { ImageFormData } from '../models/exercise';
@@ -62,6 +63,8 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
     const exerciseQuery = useExerciseQuery(exerciseId);
     const addTranslationQuery = useAddTranslationQuery(exerciseId);
     const editTranslationQuery = useEditTranslationQuery(exerciseId);
+    const postAliasQuery = usePostAliasQuery(exerciseId);
+    const deleteAliasQuery = useDeleteAliasQuery(exerciseId);
     const addImagePermissionQuery = usePermissionQuery(WgerPermissions.ADD_IMAGE);
     const deleteImagePermissionQuery = usePermissionQuery(WgerPermissions.DELETE_IMAGE);
     const addVideoPermissionQuery = usePermissionQuery(WgerPermissions.ADD_VIDEO);
@@ -192,13 +195,13 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
 
                 // Create new aliases
                 for (const a of aliasToCreate) {
-                    await postAlias(translation.id!, a.alias);
+                    await postAliasQuery.mutateAsync({ translationId: translation.id!, alias: a.alias });
                 }
 
                 // Delete removed aliases
                 for (const a of aliasToDelete) {
                     if (a.id) {
-                        await deleteAlias(a.id);
+                        await deleteAliasQuery.mutateAsync(a.id);
                     }
                 }
 

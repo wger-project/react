@@ -7,6 +7,7 @@ import {
     useAddNoteQuery,
     useAddTranslationQuery,
     useCategoriesQuery,
+    useDeleteAliasQuery,
     useDeleteExerciseImageQuery,
     useDeleteNoteQuery,
     useEditExerciseImageQuery,
@@ -14,12 +15,13 @@ import {
     useEditTranslationQuery,
     useEquipmentQuery,
     useExerciseQuery,
-    useMusclesQuery
+    useMusclesQuery,
+    usePostAliasQuery
 } from "components/Exercises/queries";
 import { usePermissionQuery } from "components/User/queries/permission";
 import { useProfileQuery } from "components/User/queries/profile";
 import { WgerPermissions } from "permissions";
-import { deleteAlias, editTranslation, postAlias } from "services";
+import { editTranslation } from "services";
 import {
     testCategories,
     testEquipment,
@@ -49,12 +51,16 @@ describe("Exercise translation edit tests", () => {
 
     const editTranslationMutateMock: jest.Mock = jest.fn();
     const addTranslationMutateMock: jest.Mock = jest.fn();
+    const postAliasMutateMock: jest.Mock = jest.fn();
+    const deleteAliasMutateMock: jest.Mock = jest.fn();
 
     beforeEach(() => {
         jest.resetAllMocks();
 
         editTranslationMutateMock.mockResolvedValue(testExerciseSquats.translations[0]);
         addTranslationMutateMock.mockResolvedValue(testExerciseSquats.translations[1]);
+        postAliasMutateMock.mockResolvedValue({ id: 123, alias: 'Foo' });
+        deleteAliasMutateMock.mockResolvedValue(204);
 
         (useExerciseQuery as jest.Mock).mockImplementation(() => ({
             isSuccess: true,
@@ -112,16 +118,14 @@ describe("Exercise translation edit tests", () => {
         //     )
         // ));
 
-        (deleteAlias as jest.Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
-        (postAlias as jest.Mock).mockImplementation(() => Promise.resolve(
-            {
-                status: 204,
-                data: {
-                    id: 123,
-                    name: 'Foo',
-                }
-            }
-        ));
+        (usePostAliasQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutateAsync: postAliasMutateMock,
+        }));
+        (useDeleteAliasQuery as jest.Mock).mockImplementation(() => ({
+            isPending: false,
+            mutateAsync: deleteAliasMutateMock,
+        }));
         (usePermissionQuery as jest.Mock).mockImplementation(() => Promise.resolve({ isSuccess: true, data: true }));
         (useCategoriesQuery as jest.Mock).mockImplementation(() => Promise.resolve({
             isSuccess: true,
@@ -216,6 +220,31 @@ describe("Exercise translation edit tests", () => {
         });
     });
 
+    test('removes an existing alias when only its X is clicked', async () => {
+        const user = userEvent.setup();
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <ExerciseDetailEdit
+                    exerciseId={345}
+                    language={testLanguageGerman}
+                />
+            </QueryClientProvider>
+        );
+
+        // Remove "Beinverdicker" (id=2 in the test fixture)
+        const button = screen.getByRole('button', { name: 'Beinverdicker' });
+        const cancelIcon = within(button).getByTestId('CancelIcon');
+        await user.click(cancelIcon);
+
+        const save = screen.getByText('save');
+        await user.click(save);
+
+        // Only the deletion should fire
+        await waitFor(() => expect(deleteAliasMutateMock).toHaveBeenCalledWith(2));
+        expect(postAliasMutateMock).not.toHaveBeenCalled();
+    });
+
     test('correctly updates the aliases', async () => {
         // Arrange
         const user = userEvent.setup();
@@ -244,8 +273,8 @@ describe("Exercise translation edit tests", () => {
         await user.click(save);
 
         // Assert
-        expect(deleteAlias).toHaveBeenCalledWith(2);
-        expect(postAlias).toHaveBeenCalledWith(111, 'another name');
+        expect(deleteAliasMutateMock).toHaveBeenCalledWith(2);
+        expect(postAliasMutateMock).toHaveBeenCalledWith({ translationId: 111, alias: 'another name' });
     });
 
 
@@ -288,14 +317,14 @@ describe("Exercise translation edit tests", () => {
         await user.click(button);
 
         // Assert
-        expect(deleteAlias).not.toHaveBeenCalled();
+        expect(deleteAliasMutateMock).not.toHaveBeenCalled();
 
         // TODO: fix tests, see https://github.com/wger-project/react/issues/404
         /*
-        expect(postAlias).toHaveBeenCalledWith(
-            300, // new translation id
-            "Sanglier d'Europe"
-        );
+        expect(postAliasMutateMock).toHaveBeenCalledWith({
+            translationId: 300, // new translation id
+            alias: "Sanglier d'Europe",
+        });
         */
 
         expect(editTranslation).not.toHaveBeenCalled();

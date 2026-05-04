@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     addTranslation,
+    deleteAlias,
     editTranslation,
     getCategories,
     getEquipment,
     getLanguages,
     getMuscles,
+    postAlias,
     postExerciseImage,
 } from "services";
 import { AddTranslationParams, EditTranslationParams } from "services/exerciseTranslation";
@@ -76,6 +78,40 @@ export function useEditExerciseImageQuery(exerciseId: number) {
       queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
     }
   });
+}
+
+/**
+ * A query hook to add a new alias to a translation. Invalidates the parent
+ * exercise queries on success so that newly added aliases are reflected in
+ * the cached exercise data.
+ */
+export function usePostAliasQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ translationId, alias }: { translationId: number; alias: string }) =>
+            postAlias(translationId, alias),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        },
+    });
+}
+
+/**
+ * A query hook to delete an existing alias. Invalidates the parent exercise
+ * queries on success.
+ */
+export function useDeleteAliasQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (aliasId: number) => deleteAlias(aliasId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        },
+    });
 }
 
 /**
