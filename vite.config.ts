@@ -41,11 +41,8 @@ export default defineConfig(({ mode }) => {
             testTimeout: 15000,
             include: ['src/**/*.{test,spec}.{ts,tsx}'],
             css: false,
-            // Threads pool with bounded concurrency — forks oversubscribes the
-            // machine on multi-core systems and each worker re-bootstraps jsdom
-            // & the i18n init, ballooning total runtime.
             pool: 'threads',
-            maxWorkers: 4,
+            maxWorkers: '50%',
             minWorkers: 1,
 
             coverage: {

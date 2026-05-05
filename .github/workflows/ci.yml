@@ -19,10 +19,20 @@ jobs:
           node-version: 24
           cache: 'npm'
 
-      - name: Run tests
-        run: |
-          npm ci
-          npm run test:coverage
+      - name: Install dependencies
+        run: npm ci
+
+      # Note: must come *after* npm ci, as that step removes node_modules entirely
+      - name: Cache Vite dependency optimizer output
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.vite
+          key: vite-deps-${{ runner.os }}-${{ hashFiles('package-lock.json', 'vite.config.ts') }}
+          restore-keys: |
+            vite-deps-${{ runner.os }}-
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
