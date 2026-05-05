@@ -257,8 +257,11 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 error={formik.touched.goalEnergy && Boolean(formik.errors.goalEnergy)}
                                 helperText={formik.touched.goalEnergy && formik.errors.goalEnergy}
                                 {...formik.getFieldProps('goalEnergy')}
-                                InputProps={{
-                                    endAdornment: <InputAdornment position="end">{t('nutrition.kcal')}</InputAdornment>
+                                slotProps={{
+                                    input: {
+                                        endAdornment: <InputAdornment
+                                            position="end">{t('nutrition.kcal')}</InputAdornment>
+                                    }
                                 }}
                             />
                             <Grid container spacing={1}>
@@ -270,15 +273,17 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         error={formik.touched.goalProtein && Boolean(formik.errors.goalProtein)}
                                         helperText={formik.touched.goalProtein && formik.errors.goalProtein}
                                         {...formik.getFieldProps('goalProtein')}
-                                        InputProps={{
-                                            startAdornment: <InputAdornment position="start">
-                                                {formik.values.goalProtein !== null && formik.values.goalProtein !== undefined
-                                                    ? t('nutrition.valueEnergyKcal', { value: formik.values.goalProtein * ENERGY_FACTOR.protein })
-                                                    : ''}
-                                            </InputAdornment>,
-                                            endAdornment: <InputAdornment position="end">
-                                                {t('nutrition.gramShort')}
-                                            </InputAdornment>
+                                        slotProps={{
+                                            input: {
+                                                startAdornment: <InputAdornment position="start">
+                                                    {formik.values.goalProtein !== null && formik.values.goalProtein !== undefined
+                                                        ? t('nutrition.valueEnergyKcal', { value: formik.values.goalProtein * ENERGY_FACTOR.protein })
+                                                        : ''}
+                                                </InputAdornment>,
+                                                endAdornment: <InputAdornment position="end">
+                                                    {t('nutrition.gramShort')}
+                                                </InputAdornment>
+                                            }
                                         }}
                                     />
                                 </Grid>
@@ -290,15 +295,17 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         error={formik.touched.goalCarbohydrates && Boolean(formik.errors.goalCarbohydrates)}
                                         helperText={formik.touched.goalCarbohydrates && formik.errors.goalCarbohydrates}
                                         {...formik.getFieldProps('goalCarbohydrates')}
-                                        InputProps={{
-                                            startAdornment: <InputAdornment position="start">
-                                                {formik.values.goalCarbohydrates !== null && formik.values.goalCarbohydrates !== undefined
-                                                    ? t('nutrition.valueEnergyKcal', { value: formik.values.goalCarbohydrates * ENERGY_FACTOR.carbohydrates })
-                                                    : ''}
-                                            </InputAdornment>,
-                                            endAdornment:
-                                                <InputAdornment
-                                                    position="end">{t('nutrition.gramShort')}</InputAdornment>
+                                        slotProps={{
+                                            input: {
+                                                startAdornment: <InputAdornment position="start">
+                                                    {formik.values.goalCarbohydrates !== null && formik.values.goalCarbohydrates !== undefined
+                                                        ? t('nutrition.valueEnergyKcal', { value: formik.values.goalCarbohydrates * ENERGY_FACTOR.carbohydrates })
+                                                        : ''}
+                                                </InputAdornment>,
+                                                endAdornment:
+                                                    <InputAdornment
+                                                        position="end">{t('nutrition.gramShort')}</InputAdornment>
+                                            }
                                         }}
                                     />
                                 </Grid>
@@ -310,15 +317,17 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         error={formik.touched.goalFat && Boolean(formik.errors.goalFat)}
                                         helperText={formik.touched.goalFat && formik.errors.goalFat}
                                         {...formik.getFieldProps('goalFat')}
-                                        InputProps={{
-                                            startAdornment: <InputAdornment position="start">
-                                                {formik.values.goalFat !== null && formik.values.goalFat !== undefined
-                                                    ? t('nutrition.valueEnergyKcal', { value: formik.values.goalFat * ENERGY_FACTOR.fat })
-                                                    : ''}
-                                            </InputAdornment>,
-                                            endAdornment:
-                                                <InputAdornment
-                                                    position="end">{t('nutrition.gramShort')}</InputAdornment>
+                                        slotProps={{
+                                            input: {
+                                                startAdornment: <InputAdornment position="start">
+                                                    {formik.values.goalFat !== null && formik.values.goalFat !== undefined
+                                                        ? t('nutrition.valueEnergyKcal', { value: formik.values.goalFat * ENERGY_FACTOR.fat })
+                                                        : ''}
+                                                </InputAdornment>,
+                                                endAdornment:
+                                                    <InputAdornment
+                                                        position="end">{t('nutrition.gramShort')}</InputAdornment>
+                                            }
                                         }}
                                     />
                                 </Grid>
@@ -332,13 +341,15 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         error={formik.touched.goalFiber && Boolean(formik.errors.goalFiber)}
                                         helperText={formik.touched.goalFiber && formik.errors.goalFiber}
                                         {...formik.getFieldProps('goalFiber')}
-                                        InputProps={{
-                                            startAdornment: <InputAdornment position="start">
-                                                {t('nutrition.valueEnergyKcal', { value: 0 })}
-                                            </InputAdornment>,
-                                            endAdornment: <InputAdornment position="end">
-                                                {t('nutrition.gramShort')}
-                                            </InputAdornment>
+                                        slotProps={{
+                                            input: {
+                                                startAdornment: <InputAdornment position="start">
+                                                    {t('nutrition.valueEnergyKcal', { value: 0 })}
+                                                </InputAdornment>,
+                                                endAdornment: <InputAdornment position="end">
+                                                    {t('nutrition.gramShort')}
+                                                </InputAdornment>
+                                            }
                                         }}
                                     />
                                 </Grid>

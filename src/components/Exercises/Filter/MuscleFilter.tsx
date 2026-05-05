@@ -79,7 +79,7 @@ const MuscleFilterList = () => {
                                     checked={selectedMuscles.indexOf(m) !== -1}
                                     tabIndex={-1}
                                     disableRipple
-                                    inputProps={{ 'aria-labelledby': labelId }}
+                                    slotProps={{ input: { 'aria-labelledby': labelId } }}
                                 />
                             </ListItemIcon>
 
@@ -120,7 +120,7 @@ export const MuscleFilter = () => {
     return (
         <div data-testid={"muscles"}>
             <Paper sx={{ mt: 2 }}>
-                <Typography gutterBottom variant="h6" m={2}>
+                <Typography component="h6" gutterBottom variant="h6" sx={{ m: 2 }}>
                     {t('exercises.muscles')}
                 </Typography>
                 <MuscleFilterList />
