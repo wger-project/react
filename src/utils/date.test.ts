@@ -1,4 +1,4 @@
-import { calculatePastDate, dateTimeToHHMM, dateToYYYYMMDD } from "utils/date";
+import { calculatePastDate, dateTimeToHHMM, dateToYYYYMMDD } from "@/utils/date";
 
 describe("test date utility", () => {
 

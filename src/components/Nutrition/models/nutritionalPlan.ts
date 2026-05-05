@@ -1,9 +1,9 @@
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { Meal } from "components/Nutrition/models/meal";
-import { ApiNutritionalPlanType } from "types";
-import { Adapter } from "utils/Adapter";
-import { dateToYYYYMMDD, isSameDay } from "utils/date";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { ApiNutritionalPlanType } from "@/types";
+import { Adapter } from "@/utils/Adapter";
+import { dateToYYYYMMDD, isSameDay } from "@/utils/date";
 
 /* eslint-disable camelcase */
 

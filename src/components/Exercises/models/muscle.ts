@@ -1,6 +1,6 @@
 import i18n from 'i18next';
-import { Adapter } from "utils/Adapter";
-import { getTranslationKey } from "utils/strings";
+import { Adapter } from "@/utils/Adapter";
+import { getTranslationKey } from "@/utils/strings";
 
 export class Muscle {
     constructor(

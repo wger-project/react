@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
-import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { useEditSlotQuery } from "components/WorkoutRoutines/queries";
+import { LoadingProgressIcon } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
+import { useEditSlotQuery } from "@/components/WorkoutRoutines/queries";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 

@@ -1,21 +1,21 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
 import {
     SlotEntryRepetitionUnitField,
     SlotEntryRoundingField,
     SlotEntryTypeField,
     SlotEntryWeightUnitField
-} from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
-import { editProfile, editSlotEntry, getProfile, getRoutineRepUnits, getRoutineWeightUnits } from "services";
-import { getTestQueryClient } from "tests/queryClient";
-import { testProfileDataVerified } from "tests/userTestdata";
-import { testDayLegs, testRepetitionUnits, testWeightUnits } from "tests/workoutRoutinesTestData";
-import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
+} from "@/components/WorkoutRoutines/widgets/forms/SlotEntryForm";
+import { editProfile, editSlotEntry, getProfile, getRoutineRepUnits, getRoutineWeightUnits } from "@/services";
+import { getTestQueryClient } from "@/tests/queryClient";
+import { testProfileDataVerified } from "@/tests/userTestdata";
+import { testDayLegs, testRepetitionUnits, testWeightUnits } from "@/tests/workoutRoutinesTestData";
+import { DEBOUNCE_ROUTINE_FORMS } from "@/utils/consts";
 
 
-jest.mock("services");
+jest.mock("@/services");
 
 let user: ReturnType<typeof userEvent.setup>;
 const mockEditSlotEntry = editSlotEntry as jest.Mock;

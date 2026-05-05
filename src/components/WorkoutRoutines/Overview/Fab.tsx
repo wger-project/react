@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Fab } from "@mui/material";
-import { WgerModal } from "components/Core/Modals/WgerModal";
-import { RoutineForm } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
+import { WgerModal } from "@/components/Core/Modals/WgerModal";
+import { RoutineForm } from "@/components/WorkoutRoutines/widgets/forms/RoutineForm";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

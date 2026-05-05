@@ -1,16 +1,16 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { useProfileQuery } from "components/User/queries/profile";
-import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
-import { editDay } from "services";
-import { testQueryClient } from "tests/queryClient";
-import { testProfileDataVerified } from "tests/userTestdata";
-import { testRoutine1 } from "tests/workoutRoutinesTestData";
+import { useProfileQuery } from "@/components/User/queries/profile";
+import { DayForm } from "@/components/WorkoutRoutines/widgets/forms/DayForm";
+import { editDay } from "@/services";
+import { testQueryClient } from "@/tests/queryClient";
+import { testProfileDataVerified } from "@/tests/userTestdata";
+import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 
 
-jest.mock("services");
-jest.mock("components/User/queries/profile");
+jest.mock("@/services");
+jest.mock("@/components/User/queries/profile");
 const mockEditDay = editDay as jest.Mock;
 const mockUseProfileQuery = useProfileQuery as jest.Mock;
 

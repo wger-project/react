@@ -12,11 +12,11 @@ import {
     useTheme
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
+import { LoadingProgressIcon } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { makeLink, WgerLink } from "utils/url";
+import { makeLink, WgerLink } from "@/utils/url";
 
 
 export const SlotHeader = (props: {

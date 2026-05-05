@@ -1,6 +1,6 @@
 import axios from "axios";
-import { getProfile } from "services";
-import { testProfileApiResponse, testProfileDataVerified } from "tests/userTestdata";
+import { getProfile } from "@/services";
+import { testProfileApiResponse, testProfileDataVerified } from "@/tests/userTestdata";
 
 jest.mock("axios");
 

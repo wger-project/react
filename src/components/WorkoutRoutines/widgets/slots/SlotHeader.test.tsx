@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
-import { SlotHeader } from "components/WorkoutRoutines/widgets/slots/SlotHeader";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
+import { SlotHeader } from "@/components/WorkoutRoutines/widgets/slots/SlotHeader";
 import React from 'react';
 import { MemoryRouter } from "react-router-dom";
-import { testDayLegs } from "tests/workoutRoutinesTestData";
+import { testDayLegs } from "@/tests/workoutRoutinesTestData";
 
 const testSlotEntry = (id: number, slotId: number) => new SlotEntry({
     id, slotId, exerciseId: id,

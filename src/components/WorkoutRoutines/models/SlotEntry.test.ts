@@ -1,5 +1,5 @@
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
-import { testSlotEntryApiResponse } from "tests/slotEntryApiResponse";
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
+import { testSlotEntryApiResponse } from "@/tests/slotEntryApiResponse";
 
 describe('SlotEntry model tests', () => {
 

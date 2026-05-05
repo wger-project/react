@@ -1,12 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { WorkoutLogs } from "components/WorkoutRoutines/Detail/WorkoutLogs";
-import { useRoutineDetailQuery, useRoutineLogData } from "components/WorkoutRoutines/queries";
+import { WorkoutLogs } from "@/components/WorkoutRoutines/Detail/WorkoutLogs";
+import { useRoutineDetailQuery, useRoutineLogData } from "@/components/WorkoutRoutines/queries";
 import React from 'react';
 import { MemoryRouter, Route, Routes } from "react-router";
-import { testRoutine1, testRoutineLogData } from "tests/workoutRoutinesTestData";
+import { testRoutine1, testRoutineLogData } from "@/tests/workoutRoutinesTestData";
 
-jest.mock("components/WorkoutRoutines/queries");
+jest.mock("@/components/WorkoutRoutines/queries");
 
 const { ResizeObserver } = window;
 

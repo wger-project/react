@@ -16,11 +16,11 @@ import {
     GridRowModesModel,
     GridRowsProp
 } from "@mui/x-data-grid";
-import { FormQueryErrors } from "components/Core/Widgets/FormError";
-import { Exercise } from "components/Exercises/models/exercise";
-import { RIR_VALUES_SELECT_LIST } from "components/WorkoutRoutines/models/BaseConfig";
-import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
-import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "components/WorkoutRoutines/queries";
+import { FormQueryErrors } from "@/components/Core/Widgets/FormError";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { RIR_VALUES_SELECT_LIST } from "@/components/WorkoutRoutines/models/BaseConfig";
+import { WorkoutLog } from "@/components/WorkoutRoutines/models/WorkoutLog";
+import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "@/components/WorkoutRoutines/queries";
 import { DateTime } from "luxon";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -35,9 +35,9 @@ import {
     YAxis
 } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
-import { generateChartColors } from "utils/colors";
-import { PAGINATION_OPTIONS } from "utils/consts";
-import { dateToLocale, luxonDateTimeToLocale } from "utils/date";
+import { generateChartColors } from "@/utils/colors";
+import { PAGINATION_OPTIONS } from "@/utils/consts";
+import { dateToLocale, luxonDateTimeToLocale } from "@/utils/date";
 
 
 export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logEntries: WorkoutLog[] | undefined }) => {

@@ -1,9 +1,9 @@
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
+import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { RoutineDayData } from "@/components/WorkoutRoutines/models/RoutineDayData";
 import i18n from 'i18next';
 import { DateTime } from "luxon";
-import { Adapter } from "utils/Adapter";
-import { dateToYYYYMMDD, isSameDay } from "utils/date";
+import { Adapter } from "@/utils/Adapter";
+import { dateToYYYYMMDD, isSameDay } from "@/utils/date";
 
 export const NAME_MIN_LENGTH = 3;
 export const NAME_MAX_LENGTH = 25;

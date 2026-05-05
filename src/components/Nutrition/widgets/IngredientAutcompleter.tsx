@@ -24,16 +24,16 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { NutriScoreBadge } from "components/Nutrition/widgets/NutriScoreBadge";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { NutriScoreBadge } from "@/components/Nutrition/widgets/NutriScoreBadge";
 import debounce from "lodash/debounce";
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { searchIngredient } from "services";
-import { NUTRI_SCORES, NutriScoreValue } from "types";
-import { SearchLanguageFilter } from "components/Core/Widgets/SearchLanguageFilter";
-import { LANGUAGE_SHORT_ENGLISH } from "utils/consts";
+import { searchIngredient } from "@/services";
+import { NUTRI_SCORES, NutriScoreValue } from "@/types";
+import { SearchLanguageFilter } from "@/components/Core/Widgets/SearchLanguageFilter";
+import { LANGUAGE_SHORT_ENGLISH } from "@/utils/consts";
 
 type IngredientAutocompleterProps = {
     callback: (ingredient: Ingredient | null) => void;

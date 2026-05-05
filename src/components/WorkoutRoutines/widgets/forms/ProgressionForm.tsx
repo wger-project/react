@@ -4,8 +4,8 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutlined";
 import { Box, Button, Divider, IconButton, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
-import { WgerTextField } from "components/Common/forms/WgerTextField";
-import { FormQueryErrors } from "components/Core/Widgets/FormError";
+import { WgerTextField } from "@/components/Common/forms/WgerTextField";
+import { FormQueryErrors } from "@/components/Core/Widgets/FormError";
 import {
     BaseConfig,
     BaseConfigEntryForm,
@@ -13,14 +13,14 @@ import {
     OPERATION_VALUES_SELECT,
     REQUIREMENTS_VALUES,
     STEP_VALUES_SELECT
-} from "components/WorkoutRoutines/models/BaseConfig";
-import { useProcessConfigsQuery } from "components/WorkoutRoutines/queries/configs";
-import { ConfigDetailsRequirementsField, ConfigType } from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
+} from "@/components/WorkoutRoutines/models/BaseConfig";
+import { useProcessConfigsQuery } from "@/components/WorkoutRoutines/queries/configs";
+import { ConfigDetailsRequirementsField, ConfigType } from "@/components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import { FieldArray, Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AddBaseConfigParams, EditBaseConfigParams } from "services/base_config";
-import { ApiPath } from "utils/consts";
+import { AddBaseConfigParams, EditBaseConfigParams } from "@/services/base_config";
+import { ApiPath } from "@/utils/consts";
 import * as yup from "yup";
 
 export const ProgressionForm = (props: {

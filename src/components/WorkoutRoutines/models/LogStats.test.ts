@@ -1,5 +1,5 @@
-import { LogData, RoutineStatsDataAdapter } from "components/WorkoutRoutines/models/LogStats";
-import { testRoutineStatistics } from "tests/workoutStatisticsTestData";
+import { LogData, RoutineStatsDataAdapter } from "@/components/WorkoutRoutines/models/LogStats";
+import { testRoutineStatistics } from "@/tests/workoutStatisticsTestData";
 
 describe('RoutineStatsDataAdapter parser tests', () => {
 

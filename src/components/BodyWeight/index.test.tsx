@@ -1,14 +1,14 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from '@testing-library/react';
-import { WeightEntry } from "components/BodyWeight/model";
-import { getWeights } from "services";
-import { testQueryClient } from "tests/queryClient";
+import { WeightEntry } from "@/components/BodyWeight/model";
+import { getWeights } from "@/services";
+import { testQueryClient } from "@/tests/queryClient";
 import { BodyWeight } from "./index";
 import { FilterType } from "./widgets/FilterButtons";
 
 const { ResizeObserver } = window;
 
-jest.mock("services");
+jest.mock("@/services");
 console.log = jest.fn();
 
 

@@ -1,16 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
-import { useEquipmentQuery } from "components/Exercises/queries";
-import { useProfileQuery } from "components/User/queries/profile";
+import { EditExerciseEquipment } from "@/components/Exercises/forms/Equipment";
+import { useEquipmentQuery } from "@/components/Exercises/queries";
+import { useProfileQuery } from "@/components/User/queries/profile";
 import React from "react";
-import { editExercise } from "services";
-import { testEquipment } from "tests/exerciseTestdata";
-import { testProfileDataVerified } from "tests/userTestdata";
+import { editExercise } from "@/services";
+import { testEquipment } from "@/tests/exerciseTestdata";
+import { testProfileDataVerified } from "@/tests/userTestdata";
 
-jest.mock("components/User/queries/profile");
-jest.mock("components/Exercises/queries");
-jest.mock("services");
+jest.mock("@/components/User/queries/profile");
+jest.mock("@/components/Exercises/queries");
+jest.mock("@/services");
 
 describe("Test the edit widget to live edit the equipment", () => {
 

@@ -1,14 +1,14 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
-import { compareValue, RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
+import { compareValue, RoutineDetailsTable } from "@/components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { getLanguages, getRoutine, getRoutineLogData } from "services";
-import { testLanguages } from "tests/exerciseTestdata";
-import { testQueryClient } from "tests/queryClient";
-import { testRoutine1, testRoutineLogData } from "tests/workoutRoutinesTestData";
+import { getLanguages, getRoutine, getRoutineLogData } from "@/services";
+import { testLanguages } from "@/tests/exerciseTestdata";
+import { testQueryClient } from "@/tests/queryClient";
+import { testRoutine1, testRoutineLogData } from "@/tests/workoutRoutinesTestData";
 
-jest.mock("services");
+jest.mock("@/services");
 
 describe("Smoke tests the RoutineDetailsTable component", () => {
 

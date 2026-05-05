@@ -1,6 +1,6 @@
 import axios from "axios";
-import { deleteExercise, editExercise, getExercise, getExercises, processExerciseApiData } from "services";
-import { responseApiExerciseInfo, testApiExercise1 } from "tests/responseApi";
+import { deleteExercise, editExercise, getExercise, getExercises, processExerciseApiData } from "@/services";
+import { responseApiExerciseInfo, testApiExercise1 } from "@/tests/responseApi";
 
 jest.mock("axios");
 

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 
-import { Adapter } from "utils/Adapter";
+import { Adapter } from "@/utils/Adapter";
 
 export interface EditProfileParams {
     email: string,

@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { MeasurementCard } from "components/Dashboard/MeasurementCard";
-import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
-import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "tests/measurementsTestData";
+import { MeasurementCard } from "@/components/Dashboard/MeasurementCard";
+import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
+import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
 
-jest.mock("components/Measurements/queries");
+jest.mock("@/components/Measurements/queries");
 jest.useFakeTimers();
 
 const queryClient = new QueryClient();

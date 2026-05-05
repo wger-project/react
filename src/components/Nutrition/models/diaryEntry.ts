@@ -1,9 +1,9 @@
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
-import i18n from "i18n";
-import { Adapter } from "utils/Adapter";
-import { numberGramLocale } from "utils/numbers";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
+import i18n from "@/i18n";
+import { Adapter } from "@/utils/Adapter";
+import { numberGramLocale } from "@/utils/numbers";
 
 export interface ApiNutritionDiaryType {
     id: number,

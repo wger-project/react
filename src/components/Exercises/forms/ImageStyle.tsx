@@ -6,7 +6,7 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { Stack, Typography } from "@mui/material";
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { ImageStyle } from "components/Exercises/models/image";
+import { ImageStyle } from "@/components/Exercises/models/image";
 import { useField } from "formik";
 import * as React from 'react';
 import { useTranslation } from "react-i18next";

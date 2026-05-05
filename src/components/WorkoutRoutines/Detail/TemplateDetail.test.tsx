@@ -1,14 +1,14 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
-import { TemplateDetail } from "components/WorkoutRoutines/Detail/TemplateDetail";
+import { TemplateDetail } from "@/components/WorkoutRoutines/Detail/TemplateDetail";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { getLanguages, getRoutine } from "services";
-import { testLanguages } from "tests/exerciseTestdata";
-import { getTestQueryClient } from "tests/queryClient";
-import { testRoutine1 } from "tests/workoutRoutinesTestData";
+import { getLanguages, getRoutine } from "@/services";
+import { testLanguages } from "@/tests/exerciseTestdata";
+import { getTestQueryClient } from "@/tests/queryClient";
+import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 
-jest.mock("services");
+jest.mock("@/services");
 
 describe("Smoke tests the TemplateDetail component", () => {
 

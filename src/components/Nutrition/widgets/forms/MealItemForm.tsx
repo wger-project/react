@@ -1,13 +1,13 @@
 import { Button, InputAdornment, MenuItem, Select, Stack, TextField } from "@mui/material";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { MealItem } from "components/Nutrition/models/mealItem";
-import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
+import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
 import {
     useAddMealItemQuery,
     useDeleteMealItemQuery,
     useEditMealItemQuery,
-} from "components/Nutrition/queries";
-import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
+} from "@/components/Nutrition/queries";
+import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";

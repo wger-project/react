@@ -1,5 +1,8 @@
+import {
+    DeleteConfirmationModal,
+    DeleteConfirmationModalProps
+} from "@/components/Core/Modals/DeleteConfirmationModal";
 import { render, screen } from '@testing-library/react';
-import { DeleteConfirmationModal, DeleteConfirmationModalProps } from "components/Core/Modals/DeleteConfirmationModal";
 import userEvent from "@testing-library/user-event";
 
 describe("Test the DeleteConfirmationModal component", () => {

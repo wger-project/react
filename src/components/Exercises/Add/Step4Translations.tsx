@@ -11,33 +11,33 @@ import {
     Switch
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { MarkdownEditor } from "components/Common/forms/MarkdownEditor";
-import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
-import { useLanguageCheckQuery } from "components/Core/queries";
-import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
-import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
-import { ExerciseName } from "components/Exercises/forms/ExerciseName";
-import { ExerciseNotes } from "components/Exercises/forms/ExerciseNotes";
+import { MarkdownEditor } from "@/components/Common/forms/MarkdownEditor";
+import { LoadingWidget } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { useLanguageCheckQuery } from "@/components/Core/queries";
+import { StepProps } from "@/components/Exercises/Add/AddExerciseStepper";
+import { PaddingBox } from "@/components/Exercises/Detail/ExerciseDetails";
+import { ExerciseAliases } from "@/components/Exercises/forms/ExerciseAliases";
+import { ExerciseName } from "@/components/Exercises/forms/ExerciseName";
+import { ExerciseNotes } from "@/components/Exercises/forms/ExerciseNotes";
 import {
     alternativeNameValidator,
     descriptionValidator,
     nameValidator,
     noteValidator
-} from "components/Exercises/forms/yupValidators";
-import { useLanguageQuery } from "components/Exercises/queries";
+} from "@/components/Exercises/forms/yupValidators";
+import { useLanguageQuery } from "@/components/Exercises/queries";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseSubmissionStateValue } from "state";
+import { useExerciseSubmissionStateValue } from "@/state";
 import {
     setAlternativeNamesI18n,
     setDescriptionI18n,
     setLanguageId,
     setNameI18n,
     setNotesI18n
-} from "state/exerciseSubmissionReducer";
-import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+} from "@/state/exerciseSubmissionReducer";
+import { ENGLISH_LANGUAGE_ID } from "@/utils/consts";
 import * as yup from "yup";
 
 export const Step4Translations = ({ onContinue, onBack }: StepProps) => {

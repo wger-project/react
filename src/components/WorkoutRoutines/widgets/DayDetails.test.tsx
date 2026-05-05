@@ -1,20 +1,20 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
-import { DayDetails, DayDragAndDropGrid, groupSlotsByExercise } from "components/WorkoutRoutines/widgets/DayDetails";
+import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
+import { DayDetails, DayDragAndDropGrid, groupSlotsByExercise } from "@/components/WorkoutRoutines/widgets/DayDetails";
 import React from 'react';
 import { MemoryRouter } from "react-router-dom";
-import { addDay, addSlot, getLanguages, getProfile, getRoutine } from "services";
-import { addSlotEntry } from "services/slot_entry";
-import { getTestQueryClient } from "tests/queryClient";
-import { testProfileDataVerified } from "tests/userTestdata";
-import { testDayLegs, testRoutine1 } from "tests/workoutRoutinesTestData";
+import { addDay, addSlot, getLanguages, getProfile, getRoutine } from "@/services";
+import { addSlotEntry } from "@/services/slot_entry";
+import { getTestQueryClient } from "@/tests/queryClient";
+import { testProfileDataVerified } from "@/tests/userTestdata";
+import { testDayLegs, testRoutine1 } from "@/tests/workoutRoutinesTestData";
 
-jest.mock("services");
-jest.mock("services/slot_entry");
+jest.mock("@/services");
+jest.mock("@/services/slot_entry");
 
 const makeSlot = (id: number, exerciseId: number) => new Slot({
     id, dayId: 1, order: id, comment: '', config: null,

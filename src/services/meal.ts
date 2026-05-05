@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { ApiMealType, Meal } from "components/Nutrition/models/meal";
-import { ApiMealItemType, MealItem } from "components/Nutrition/models/mealItem";
-import { getIngredients } from "services/ingredient";
-import { ResponseType } from "services/responseType";
-import { ApiPath } from "utils/consts";
-import { makeHeader, makeUrl } from "utils/url";
+import { ApiMealType, Meal } from "@/components/Nutrition/models/meal";
+import { ApiMealItemType, MealItem } from "@/components/Nutrition/models/mealItem";
+import { getIngredients } from "@/services/ingredient";
+import { ResponseType } from "@/services/responseType";
+import { ApiPath } from "@/utils/consts";
+import { makeHeader, makeUrl } from "@/utils/url";
 
 
 export const addMeal = async (meal: Meal): Promise<Meal> => {

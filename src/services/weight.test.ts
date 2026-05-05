@@ -1,5 +1,5 @@
 import axios from "axios";
-import { WeightEntry } from "components/BodyWeight/model";
+import { WeightEntry } from "@/components/BodyWeight/model";
 import { createWeight, deleteWeight, getWeights, updateWeight } from "./weight";
 
 jest.mock("axios");

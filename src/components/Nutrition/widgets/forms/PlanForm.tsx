@@ -12,15 +12,15 @@ import Grid from '@mui/material/Grid';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
-import { ENERGY_FACTOR } from "components/Nutrition/helpers/nutritionalValues";
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
+import { ENERGY_FACTOR } from "@/components/Nutrition/helpers/nutritionalValues";
+import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
+import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/components/Nutrition/queries";
 import { Form, Formik } from "formik";
-import i18n from "i18n";
+import i18n from "@/i18n";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToYYYYMMDD } from "utils/date";
+import { dateToYYYYMMDD } from "@/utils/date";
 import * as yup from 'yup';
 
 interface PlanFormProps {

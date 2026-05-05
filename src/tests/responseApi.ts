@@ -1,12 +1,12 @@
-import { Alias } from "components/Exercises/models/alias";
-import { Category } from "components/Exercises/models/category";
-import { Equipment } from "components/Exercises/models/equipment";
-import { Exercise } from "components/Exercises/models/exercise";
-import { ExerciseImage } from "components/Exercises/models/image";
-import { Muscle } from "components/Exercises/models/muscle";
-import { Note } from "components/Exercises/models/note";
-import { Translation } from "components/Exercises/models/translation";
-import { ExerciseVideo } from "components/Exercises/models/video";
+import { Alias } from "@/components/Exercises/models/alias";
+import { Category } from "@/components/Exercises/models/category";
+import { Equipment } from "@/components/Exercises/models/equipment";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { ExerciseImage } from "@/components/Exercises/models/image";
+import { Muscle } from "@/components/Exercises/models/muscle";
+import { Note } from "@/components/Exercises/models/note";
+import { Translation } from "@/components/Exercises/models/translation";
+import { ExerciseVideo } from "@/components/Exercises/models/video";
 
 const testExerciseTranslation1 = new Translation({
     id: 111,

@@ -2,13 +2,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 
-import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "components/Nutrition/queries";
-import { PlanForm } from "components/Nutrition/widgets/forms/PlanForm";
+import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/components/Nutrition/queries";
+import { PlanForm } from "@/components/Nutrition/widgets/forms/PlanForm";
 import React from 'react';
-import { TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
+import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 
-jest.mock("services/weight");
-jest.mock("components/Nutrition/queries");
+jest.mock("@/services/weight");
+jest.mock("@/components/Nutrition/queries");
 
 describe("Test the PlanForm component", () => {
     const queryClient = new QueryClient();

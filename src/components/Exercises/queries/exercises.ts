@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addFullExercise, getExercise, getExercises } from "services";
-import { AddExerciseFullProps } from "services/exercise";
-import { QueryKey } from "utils/consts";
+import { addFullExercise, getExercise, getExercises } from "@/services";
+import { AddExerciseFullProps } from "@/services/exercise";
+import { QueryKey } from "@/utils/consts";
 
 export function useExercisesQuery() {
     return useQuery({

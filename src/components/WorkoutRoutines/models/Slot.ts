@@ -1,5 +1,5 @@
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
-import { Adapter } from "utils/Adapter";
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
+import { Adapter } from "@/utils/Adapter";
 
 export type SlotApiData = {
     id: number,

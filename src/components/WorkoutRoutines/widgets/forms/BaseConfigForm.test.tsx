@@ -1,21 +1,21 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { BaseConfig, OPERATION_REPLACE } from 'components/WorkoutRoutines/models/BaseConfig';
+import { BaseConfig, OPERATION_REPLACE } from '@/components/WorkoutRoutines/models/BaseConfig';
 
-import { SlotBaseConfigValueField } from 'components/WorkoutRoutines/widgets/forms/BaseConfigForm';
+import { SlotBaseConfigValueField } from '@/components/WorkoutRoutines/widgets/forms/BaseConfigForm';
 import React from 'react';
-import { testQueryClient } from "tests/queryClient";
+import { testQueryClient } from "@/tests/queryClient";
 
 
-jest.mock('utils/consts', () => {
+jest.mock('@/utils/consts', () => {
     return {
         DEBOUNCE_ROUTINE_FORMS: '5'
     };
 });
 
 
-jest.mock('components/WorkoutRoutines/queries', () => ({
+jest.mock('@/components/WorkoutRoutines/queries', () => ({
     useEditWeightConfigQuery: jest.fn(() => ({ mutate: editMutation })),
     useAddWeightConfigQuery: jest.fn(() => ({ mutate: addMutation })),
     useDeleteWeightConfigQuery: jest.fn(() => ({ mutate: deleteMutation })),

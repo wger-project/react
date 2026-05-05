@@ -1,12 +1,12 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Step3Description } from "components/Exercises/Add/Step3Description";
+import { Step3Description } from "@/components/Exercises/Add/Step3Description";
 import React from "react";
-import { testQueryClient } from "tests/queryClient";
+import { testQueryClient } from "@/tests/queryClient";
 
-jest.mock("state/exerciseSubmissionReducer", () => {
-    const originalModule = jest.requireActual("state/exerciseSubmissionReducer");
+jest.mock("@/state/exerciseSubmissionReducer", () => {
+    const originalModule = jest.requireActual("@/state/exerciseSubmissionReducer");
     return {
         __esModule: true,
         ...originalModule,

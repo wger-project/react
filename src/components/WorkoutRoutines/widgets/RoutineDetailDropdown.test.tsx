@@ -1,11 +1,11 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { RoutineDetailDropdown } from "components/WorkoutRoutines/widgets/RoutineDetailDropdown";
+import { RoutineDetailDropdown } from "@/components/WorkoutRoutines/widgets/RoutineDetailDropdown";
 import React from 'react';
 import { MemoryRouter } from "react-router-dom";
-import { testQueryClient } from "tests/queryClient";
-import { testRoutine1 } from "tests/workoutRoutinesTestData";
+import { testQueryClient } from "@/tests/queryClient";
+import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 
 describe("Test the RoutineDetailDropdown component", () => {
 

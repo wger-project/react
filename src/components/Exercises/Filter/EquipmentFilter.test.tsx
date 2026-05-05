@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
-import { EquipmentFilter } from "components/Exercises/Filter/EquipmentFilter";
-import { Equipment } from "components/Exercises/models/equipment";
-import { useEquipmentQuery } from "components/Exercises/queries";
+import { EquipmentFilter } from "@/components/Exercises/Filter/EquipmentFilter";
+import { Equipment } from "@/components/Exercises/models/equipment";
+import { useEquipmentQuery } from "@/components/Exercises/queries";
 import React from 'react';
 import { ExerciseFiltersContext } from "./ExerciseFiltersContext";
 
 
-jest.mock("components/Exercises/queries");
+jest.mock("@/components/Exercises/queries");
 const mockedEquipmentQuery = useEquipmentQuery as jest.Mock;
 
 describe("Test the CategoryFilter component", () => {

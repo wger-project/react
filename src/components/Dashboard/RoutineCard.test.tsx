@@ -1,11 +1,11 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { RoutineCard } from "components/Dashboard/RoutineCard";
-import { useActiveRoutineQuery } from "components/WorkoutRoutines/queries";
-import { testQueryClient } from "tests/queryClient";
-import { testRoutine1 } from "tests/workoutRoutinesTestData";
+import { RoutineCard } from "@/components/Dashboard/RoutineCard";
+import { useActiveRoutineQuery } from "@/components/WorkoutRoutines/queries";
+import { testQueryClient } from "@/tests/queryClient";
+import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 
-jest.mock("components/WorkoutRoutines/queries");
+jest.mock("@/components/WorkoutRoutines/queries");
 jest.useFakeTimers();
 
 describe("test the RoutineCard component", () => {

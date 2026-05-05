@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { NutritionDiaryOverview } from "components/Nutrition/components/NutritionDiaryOverview";
-import { useFetchNutritionalPlanDateQuery } from "components/Nutrition/queries";
+import { NutritionDiaryOverview } from "@/components/Nutrition/components/NutritionDiaryOverview";
+import { useFetchNutritionalPlanDateQuery } from "@/components/Nutrition/queries";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
+import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 
-jest.mock("components/Nutrition/queries");
+jest.mock("@/components/Nutrition/queries");
 const queryClient = new QueryClient();
 describe("Test the NutritionDiaryOverview component", () => {
 

@@ -1,20 +1,20 @@
 import axios from "axios";
-import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
-import { getExercise } from "services";
-import { getRoutineLogs } from "services/workoutLogs";
-import { getRoutineRepUnits, getRoutineWeightUnits } from "services/workoutUnits";
-import { testExerciseSquats } from "tests/exerciseTestdata";
+import { WorkoutLog } from "@/components/WorkoutRoutines/models/WorkoutLog";
+import { getExercise } from "@/services";
+import { getRoutineLogs } from "@/services/workoutLogs";
+import { getRoutineRepUnits, getRoutineWeightUnits } from "@/services/workoutUnits";
+import { testExerciseSquats } from "@/tests/exerciseTestdata";
 import {
     responseRoutineLogs,
     testRepUnit1,
     testRepUnit2,
     testWeightUnit1,
     testWeightUnit2
-} from "tests/workoutRoutinesTestData";
+} from "@/tests/workoutRoutinesTestData";
 
 jest.mock("axios");
-jest.mock("services/workoutUnits");
-jest.mock("services/exercise");
+jest.mock("@/services/workoutUnits");
+jest.mock("@/services/exercise");
 
 
 describe("workout logs service tests", () => {

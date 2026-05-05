@@ -1,12 +1,12 @@
-import { ExerciseAdapter } from "components/Exercises/models/exercise";
-import { Language } from "components/Exercises/models/language";
+import { ExerciseAdapter } from "@/components/Exercises/models/exercise";
+import { Language } from "@/components/Exercises/models/language";
 import {
     testExerciseBenchPress,
     testExerciseSquats,
     testLanguageEnglish,
     testLanguageGerman
-} from "tests/exerciseTestdata";
-import { responseApiExerciseInfo, testApiExercise1 } from "tests/responseApi";
+} from "@/tests/exerciseTestdata";
+import { responseApiExerciseInfo, testApiExercise1 } from "@/tests/responseApi";
 
 
 describe("Exercise base model tests", () => {

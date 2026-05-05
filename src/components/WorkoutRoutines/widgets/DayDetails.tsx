@@ -20,11 +20,11 @@ import {
     useTheme,
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { LoadingPlaceholder, LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
-import { useProfileQuery } from "components/User/queries/profile";
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
+import { LoadingPlaceholder, LoadingProgressIcon } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { useProfileQuery } from "@/components/User/queries/profile";
+import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
 import {
     useAddDayQuery,
     useAddSlotEntryQuery,
@@ -33,12 +33,12 @@ import {
     useEditDayOrderQuery,
     useEditSlotsQuery,
     useRoutineDetailQuery
-} from "components/WorkoutRoutines/queries";
-import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
-import { DraggableSlotItem } from "components/WorkoutRoutines/widgets/slots/DraggableSlotItem";
+} from "@/components/WorkoutRoutines/queries";
+import { DayForm } from "@/components/WorkoutRoutines/widgets/forms/DayForm";
+import { DraggableSlotItem } from "@/components/WorkoutRoutines/widgets/slots/DraggableSlotItem";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { SNACKBAR_AUTO_HIDE_DURATION, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
+import { SNACKBAR_AUTO_HIDE_DURATION, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/utils/consts";
 
 
 export const DayDragAndDropGrid = (props: {

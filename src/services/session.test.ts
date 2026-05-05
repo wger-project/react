@@ -1,10 +1,10 @@
 import axios from "axios";
-import { getSessions } from "services";
-import * as exerciseService from "services/exercise";
-import { testExerciseBenchPress, testExerciseSquats } from "tests/exerciseTestdata";
+import { getSessions } from "@/services";
+import * as exerciseService from "@/services/exercise";
+import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
 
 jest.mock("axios");
-jest.mock("services/exercise");
+jest.mock("@/services/exercise");
 
 describe("Session service tests", () => {
     beforeEach(() => {

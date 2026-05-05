@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Fab } from "@mui/material";
-import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import { WgerModal } from "components/Core/Modals/WgerModal";
+import { WeightForm } from "@/components/BodyWeight/Form/WeightForm";
+import { WgerModal } from "@/components/Core/Modals/WgerModal";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 

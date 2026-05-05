@@ -1,17 +1,17 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { ExerciseDeleteDialog } from "components/Exercises/Detail/Head/ExerciseDeleteDialog";
-import { SEARCH_DEBOUNCE_MS } from "components/Exercises/Filter/NameAutcompleter";
+import { ExerciseDeleteDialog } from "@/components/Exercises/Detail/Head/ExerciseDeleteDialog";
+import { SEARCH_DEBOUNCE_MS } from "@/components/Exercises/Filter/NameAutcompleter";
 import React from 'react';
 import { MemoryRouter, Routes } from "react-router";
 import { Route } from "react-router-dom";
-import { deleteExercise, deleteExerciseTranslation, getExercise, searchExerciseTranslations } from "services";
-import { searchResponse } from "tests/exercises/searchResponse";
-import { testExerciseBenchPress, testExerciseSquats, testLanguageGerman } from "tests/exerciseTestdata";
+import { deleteExercise, deleteExerciseTranslation, getExercise, searchExerciseTranslations } from "@/services";
+import { searchResponse } from "@/tests/exercises/searchResponse";
+import { testExerciseBenchPress, testExerciseSquats, testLanguageGerman } from "@/tests/exerciseTestdata";
 
 const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
-jest.mock("services");
+jest.mock("@/services");
 
 describe("Test the ExerciseDeleteDialog component", () => {
 

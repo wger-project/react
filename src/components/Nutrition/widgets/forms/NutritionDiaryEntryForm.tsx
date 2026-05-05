@@ -1,17 +1,17 @@
 import { Autocomplete, Button, InputAdornment, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { Meal } from "components/Nutrition/models/meal";
-import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
-import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
-import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
+import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "@/components/Nutrition/queries";
+import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToYYYYMMDD } from "utils/date";
+import { dateToYYYYMMDD } from "@/utils/date";
 import * as yup from "yup";
 
 const GRAM_UNIT_VALUE = 'g';

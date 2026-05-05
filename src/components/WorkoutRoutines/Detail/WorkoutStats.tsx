@@ -13,11 +13,11 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { SelectChangeEvent } from '@mui/material/Select';
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
-import { useLanguageQuery, useMusclesQuery } from "components/Exercises/queries";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
-import { useRoutineStatsQuery } from "components/WorkoutRoutines/queries/routines";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
+import { useLanguageQuery, useMusclesQuery } from "@/components/Exercises/queries";
+import { useRoutineDetailQuery } from "@/components/WorkoutRoutines/queries";
+import { useRoutineStatsQuery } from "@/components/WorkoutRoutines/queries/routines";
 import {
     DropdownOption,
     formatStatsData,
@@ -26,14 +26,14 @@ import {
     StatsOptionDropdown,
     StatSubType,
     StatType
-} from "components/WorkoutRoutines/widgets/RoutineStatistics";
+} from "@/components/WorkoutRoutines/widgets/RoutineStatistics";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
-import { getLanguageByShortName } from "services";
-import { generateChartColors } from "utils/colors";
-import { makeLink, WgerLink } from "utils/url";
+import { getLanguageByShortName } from "@/services";
+import { generateChartColors } from "@/utils/colors";
+import { makeLink, WgerLink } from "@/utils/url";
 
 
 export const WorkoutStats = () => {

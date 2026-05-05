@@ -1,12 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Meal } from "components/Nutrition/models/meal";
-import { useAddMealQuery, useEditMealQuery } from "components/Nutrition/queries";
-import { MealForm } from "components/Nutrition/widgets/forms/MealForm";
-import { TEST_MEAL_1 } from "tests/nutritionTestdata";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { useAddMealQuery, useEditMealQuery } from "@/components/Nutrition/queries";
+import { MealForm } from "@/components/Nutrition/widgets/forms/MealForm";
+import { TEST_MEAL_1 } from "@/tests/nutritionTestdata";
 
-jest.mock('components/Nutrition/queries');
+jest.mock('@/components/Nutrition/queries');
 
 describe('Test the MealForm component', () => {
     const queryClient = new QueryClient();

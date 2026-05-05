@@ -7,13 +7,13 @@ import {
     STORAGE_KEY_NUTRISCORE_MAX,
     STORAGE_KEY_VEGAN,
     STORAGE_KEY_VEGETARIAN
-} from 'components/Nutrition/widgets/IngredientAutcompleter';
-import { searchIngredient } from 'services';
-import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_4 } from "tests/ingredientTestdata";
+} from '@/components/Nutrition/widgets/IngredientAutcompleter';
+import { searchIngredient } from '@/services';
+import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_4 } from "@/tests/ingredientTestdata";
 
 const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
-jest.mock("services");
+jest.mock("@/services");
 
 describe("Test the IngredientAutocompleter component", () => {
 

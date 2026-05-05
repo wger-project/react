@@ -1,11 +1,11 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { TrophiesCard } from "components/Dashboard/TrophiesCard";
-import { useUserTrophiesQuery } from "components/Trophies/queries/trophies";
-import { testQueryClient } from "tests/queryClient";
-import { testUserTrophies } from "tests/trophies/trophiesTestData";
+import { TrophiesCard } from "@/components/Dashboard/TrophiesCard";
+import { useUserTrophiesQuery } from "@/components/Trophies/queries/trophies";
+import { testQueryClient } from "@/tests/queryClient";
+import { testUserTrophies } from "@/tests/trophies/trophiesTestData";
 
-jest.mock("components/Trophies/queries/trophies");
+jest.mock("@/components/Trophies/queries/trophies");
 
 describe("test the TrophiesCard component", () => {
 

@@ -1,5 +1,5 @@
-import { MeasurementCategory } from "components/Measurements/models/Category";
-import { MeasurementEntry } from "components/Measurements/models/Entry";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 
 export const TEST_MEASUREMENT_ENTRIES_1 = [
     new MeasurementEntry(1, 1, new Date(2023, 1, 1, 8, 0), 10, "test note"),

@@ -1,5 +1,5 @@
-import { ApiIngredientWeightUnitType } from "types";
-import { Adapter } from "utils/Adapter";
+import { ApiIngredientWeightUnitType } from "@/types";
+import { Adapter } from "@/utils/Adapter";
 
 export class NutritionWeightUnit {
 

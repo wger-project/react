@@ -1,15 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { useLanguageQuery } from "components/Exercises/queries";
-import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
-import { SessionLogsForm } from 'components/WorkoutRoutines/widgets/forms/SessionLogsForm';
+import { useLanguageQuery } from "@/components/Exercises/queries";
+import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "@/components/WorkoutRoutines/queries";
+import { SessionLogsForm } from '@/components/WorkoutRoutines/widgets/forms/SessionLogsForm';
 import { DateTime } from "luxon";
-import { testLanguages } from "tests/exerciseTestdata";
-import { testRoutine1 } from "tests/workoutRoutinesTestData";
+import { testLanguages } from "@/tests/exerciseTestdata";
+import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 
 
-jest.mock("components/Exercises/queries");
-jest.mock("components/WorkoutRoutines/queries");
+jest.mock("@/components/Exercises/queries");
+jest.mock("@/components/WorkoutRoutines/queries");
 
 describe('SessionLogsForm', () => {
 

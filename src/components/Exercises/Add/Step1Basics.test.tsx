@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Step1Basics } from "components/Exercises/Add/Step1Basics";
-import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
+import { Step1Basics } from "@/components/Exercises/Add/Step1Basics";
+import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "@/components/Exercises/queries";
 import React from "react";
-import { ExerciseSubmissionStateProvider } from "state";
+import { ExerciseSubmissionStateProvider } from "@/state";
 import {
     setAlternativeNamesEn,
     setCategory,
@@ -12,15 +12,15 @@ import {
     setNameEn,
     setPrimaryMuscles,
     setSecondaryMuscles
-} from "state/exerciseSubmissionReducer";
-import { testCategories, testEquipment, testMuscles } from "tests/exerciseTestdata";
+} from "@/state/exerciseSubmissionReducer";
+import { testCategories, testEquipment, testMuscles } from "@/tests/exerciseTestdata";
 
 // It seems we run into a timeout when running the tests on GitHub actions
 jest.setTimeout(15000);
 
-jest.mock("components/Exercises/queries");
-jest.mock("state/exerciseSubmissionReducer", () => {
-    const originalModule = jest.requireActual("state/exerciseSubmissionReducer");
+jest.mock("@/components/Exercises/queries");
+jest.mock("@/state/exerciseSubmissionReducer", () => {
+    const originalModule = jest.requireActual("@/state/exerciseSubmissionReducer");
     return {
         __esModule: true,
         ...originalModule,

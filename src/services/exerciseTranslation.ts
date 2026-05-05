@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { Exercise, ExerciseAdapter } from "components/Exercises/models/exercise";
-import { Translation, TranslationAdapter } from "components/Exercises/models/translation";
-import { ENGLISH_LANGUAGE_CODE, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
-import { makeHeader, makeUrl } from "utils/url";
+import { Exercise, ExerciseAdapter } from "@/components/Exercises/models/exercise";
+import { Translation, TranslationAdapter } from "@/components/Exercises/models/translation";
+import { ENGLISH_LANGUAGE_CODE, LANGUAGE_SHORT_ENGLISH } from "@/utils/consts";
+import { makeHeader, makeUrl } from "@/utils/url";
 import { ResponseType } from "./responseType";
-import { SearchLanguageFilter } from 'components/Core/Widgets/SearchLanguageFilter';
+import { SearchLanguageFilter } from '@/components/Core/Widgets/SearchLanguageFilter';
 
 export const EXERCISE_PATH = 'exercise';
 export const EXERCISE_TRANSLATION_PATH = 'exercise-translation';

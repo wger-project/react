@@ -1,4 +1,4 @@
-import { Trophy } from "components/Trophies/models/trophy";
+import { Trophy } from "@/components/Trophies/models/trophy";
 
 
 describe('Test the trophy model', () => {

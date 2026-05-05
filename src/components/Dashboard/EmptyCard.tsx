@@ -1,6 +1,6 @@
 import { Button, Card, CardActions, CardContent, CardHeader } from "@mui/material";
-import { WgerModal } from "components/Core/Modals/WgerModal";
-import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
+import { WgerModal } from "@/components/Core/Modals/WgerModal";
+import { OverviewEmpty } from "@/components/Core/Widgets/OverviewEmpty";
 import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 

@@ -1,5 +1,5 @@
-import { NotificationState } from 'state';
-import { Notification } from "types";
+import { NotificationState } from '@/state';
+import { Notification } from "@/types";
 import { SetNotificationState } from "./stateTypes";
 
 export type WeightAction = {

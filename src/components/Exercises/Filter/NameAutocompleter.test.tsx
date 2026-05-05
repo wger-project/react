@@ -1,19 +1,19 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
+import { NameAutocompleter } from "@/components/Exercises/Filter/NameAutcompleter";
 import React from 'react';
-import { searchExerciseTranslations } from "services";
-import { searchResponse } from "tests/exercises/searchResponse";
-import { Exercise } from "components/Exercises/models/exercise";
+import { searchExerciseTranslations } from "@/services";
+import { searchResponse } from "@/tests/exercises/searchResponse";
+import { Exercise } from "@/components/Exercises/models/exercise";
 import {
     SEARCH_DEBOUNCE_MS,
     STORAGE_KEY_EXERCISE_EXACT_MATCH,
     STORAGE_KEY_EXERCISE_LANGUAGE
-} from "components/Exercises/Filter/NameAutcompleter";
+} from "@/components/Exercises/Filter/NameAutcompleter";
 
 const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
-jest.mock("services");
+jest.mock("@/services");
 const mockCallback = jest.fn();
 
 describe("Test the NameAutocompleter component", () => {

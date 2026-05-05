@@ -65,7 +65,7 @@
     "recharts": "^3.8.0",
     "slick-carousel": "^1.8.1",
     "slug": "^11.0.1",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "web-vitals": "^5.1.0",
     "yup": "^1.7.1"
   },
@@ -128,6 +128,7 @@
   },
   "jest": {
     "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
       "^axios$": "<rootDir>/node_modules/axios/dist/node/axios.cjs",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
@@ -139,6 +140,11 @@
         {
           "tsconfig": {
             "allowJs": true
+          },
+          "diagnostics": {
+            "ignoreCodes": [
+              5107
+            ]
           }
         }
       ]
@@ -147,9 +153,6 @@
       "/node_modules/(?!slug/)"
     ],
     "testEnvironment": "jest-environment-jsdom",
-    "modulePaths": [
-      "<rootDir>/src"
-    ],
     "roots": [
       "<rootDir>/src"
     ],

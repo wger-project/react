@@ -1,13 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { EditExerciseMuscle } from "components/Exercises/forms/Muscle";
-import { useMusclesQuery } from "components/Exercises/queries";
+import { EditExerciseMuscle } from "@/components/Exercises/forms/Muscle";
+import { useMusclesQuery } from "@/components/Exercises/queries";
 import React from "react";
-import { editExercise } from "services";
-import { testMuscles } from "tests/exerciseTestdata";
+import { editExercise } from "@/services";
+import { testMuscles } from "@/tests/exerciseTestdata";
 
-jest.mock("components/Exercises/queries");
-jest.mock("services/exercise");
+jest.mock("@/components/Exercises/queries");
+jest.mock("@/services/exercise");
 
 describe("Test the widget to live edit the muscles", () => {
 

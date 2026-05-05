@@ -14,10 +14,10 @@ import {
     Switch,
     Typography
 } from "@mui/material";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { LightTooltip } from "components/Core/Tooltips/LightToolTip";
-import { Muscle } from "components/Exercises/models/muscle";
-import { MuscleOverview } from "components/Muscles/MuscleOverview";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LightTooltip } from "@/components/Core/Tooltips/LightToolTip";
+import { Muscle } from "@/components/Exercises/models/muscle";
+import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
 import React, { useContext } from 'react';
 import { useTranslation } from "react-i18next";
 import { useMusclesQuery } from '../queries';

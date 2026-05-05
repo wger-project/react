@@ -1,6 +1,6 @@
 import axios from "axios";
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { addDay, deleteDay, editDay } from "services";
+import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { addDay, deleteDay, editDay } from "@/services";
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;

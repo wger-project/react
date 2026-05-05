@@ -1,17 +1,17 @@
 import { Box, Button, Divider, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
-import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
-import { SideGallery, SideVideoGallery } from "components/Exercises/Detail/SideGallery";
-import { Exercise } from "components/Exercises/models/exercise";
-import { Language } from "components/Exercises/models/language";
-import { Muscle } from "components/Exercises/models/muscle";
-import { Note } from "components/Exercises/models/note";
-import { MuscleOverview } from "components/Muscles/MuscleOverview";
-import { useCanContributeExercises } from "components/User/queries/contribute";
+import { PaddingBox } from "@/components/Exercises/Detail/ExerciseDetails";
+import { OverviewCard } from "@/components/Exercises/Detail/OverviewCard";
+import { SideGallery, SideVideoGallery } from "@/components/Exercises/Detail/SideGallery";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Language } from "@/components/Exercises/models/language";
+import { Muscle } from "@/components/Exercises/models/muscle";
+import { Note } from "@/components/Exercises/models/note";
+import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
+import { useCanContributeExercises } from "@/components/User/queries/contribute";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { dateTimeToLocale } from "utils/date";
+import { dateTimeToLocale } from "@/utils/date";
 
 
 const TranslateExerciseBanner = ({ setEditMode }: { setEditMode: (mode: boolean) => void }) => {

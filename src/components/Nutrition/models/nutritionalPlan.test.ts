@@ -1,5 +1,5 @@
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { TEST_MEAL_1, TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
+import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
+import { TEST_MEAL_1, TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 
 jest.useFakeTimers();
 

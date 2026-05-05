@@ -1,4 +1,4 @@
-import { Profile } from "components/User/models/profile";
+import { Profile } from "@/components/User/models/profile";
 
 export const testProfileDataVerified = new Profile({
     username: 'admin',

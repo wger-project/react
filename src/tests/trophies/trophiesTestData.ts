@@ -1,6 +1,6 @@
-import { Trophy } from "components/Trophies/models/trophy";
-import { UserTrophy } from "components/Trophies/models/userTrophy";
-import { UserTrophyProgression } from "components/Trophies/models/userTrophyProgression";
+import { Trophy } from "@/components/Trophies/models/trophy";
+import { UserTrophy } from "@/components/Trophies/models/userTrophy";
+import { UserTrophyProgression } from "@/components/Trophies/models/userTrophyProgression";
 
 export const testTrophies = () => {
     return [

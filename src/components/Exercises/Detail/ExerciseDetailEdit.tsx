@@ -4,26 +4,26 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import { Alert, Box, Button, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { MarkdownEditor } from "components/Common/forms/MarkdownEditor";
-import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
-import { FormQueryErrorsSnackbar } from 'components/Core/Widgets/FormError';
-import { PaddingBox } from "components/Exercises/Detail/ExerciseDetails";
-import { EditExerciseCategory } from "components/Exercises/forms/Category";
-import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
-import { ExerciseAliases } from "components/Exercises/forms/ExerciseAliases";
-import { ExerciseName } from "components/Exercises/forms/ExerciseName";
-import { AddImageCard, ImageEditCard } from "components/Exercises/forms/ImageCard";
-import { EditExerciseMuscle } from "components/Exercises/forms/Muscle";
-import { EditExerciseVariation } from "components/Exercises/forms/Variation";
-import { AddVideoCard, VideoEditCard } from "components/Exercises/forms/VideoCard";
+import { MarkdownEditor } from "@/components/Common/forms/MarkdownEditor";
+import { LoadingWidget } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { FormQueryErrorsSnackbar } from '@/components/Core/Widgets/FormError';
+import { PaddingBox } from "@/components/Exercises/Detail/ExerciseDetails";
+import { EditExerciseCategory } from "@/components/Exercises/forms/Category";
+import { EditExerciseEquipment } from "@/components/Exercises/forms/Equipment";
+import { ExerciseAliases } from "@/components/Exercises/forms/ExerciseAliases";
+import { ExerciseName } from "@/components/Exercises/forms/ExerciseName";
+import { AddImageCard, ImageEditCard } from "@/components/Exercises/forms/ImageCard";
+import { EditExerciseMuscle } from "@/components/Exercises/forms/Muscle";
+import { EditExerciseVariation } from "@/components/Exercises/forms/Variation";
+import { AddVideoCard, VideoEditCard } from "@/components/Exercises/forms/VideoCard";
 import {
     alternativeNameValidator,
     descriptionValidator,
     nameValidator
-} from "components/Exercises/forms/yupValidators";
-import { Language } from "components/Exercises/models/language";
-import { Note } from "components/Exercises/models/note";
-import { Translation } from "components/Exercises/models/translation";
+} from "@/components/Exercises/forms/yupValidators";
+import { Language } from "@/components/Exercises/models/language";
+import { Note } from "@/components/Exercises/models/note";
+import { Translation } from "@/components/Exercises/models/translation";
 import {
     useAddNoteQuery,
     useAddTranslationQuery,
@@ -35,12 +35,12 @@ import {
     useExerciseQuery,
     useMusclesQuery,
     usePostAliasQuery
-} from "components/Exercises/queries";
-import { MuscleOverview } from "components/Muscles/MuscleOverview";
-import { usePermissionQuery } from "components/User/queries/permission";
-import { useProfileQuery } from "components/User/queries/profile";
+} from "@/components/Exercises/queries";
+import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
+import { usePermissionQuery } from "@/components/User/queries/permission";
+import { useProfileQuery } from "@/components/User/queries/profile";
 import { Form, Formik } from "formik";
-import { WgerPermissions } from "permissions";
+import { WgerPermissions } from "@/permissions";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";

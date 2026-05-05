@@ -1,7 +1,7 @@
 import axios from "axios";
-import { ExerciseImage, ImageStyle } from "components/Exercises/models/image";
-import { postExerciseImage } from "services";
-import { deleteExerciseImage } from "services/image";
+import { ExerciseImage, ImageStyle } from "@/components/Exercises/models/image";
+import { postExerciseImage } from "@/services";
+import { deleteExerciseImage } from "@/services/image";
 
 jest.mock("axios");
 

@@ -1,10 +1,10 @@
 import { Stack, useTheme } from "@mui/material";
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { LinearPlannedLoggedChart } from "components/Nutrition/widgets/charts/LinearPlannedLoggedChart";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
+import { LinearPlannedLoggedChart } from "@/components/Nutrition/widgets/charts/LinearPlannedLoggedChart";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { Cell, Pie, PieChart } from 'recharts';
-import { numberLocale } from "utils/numbers";
+import { numberLocale } from "@/utils/numbers";
 
 
 export const NutritionalValuesDashboardChart = (props: {

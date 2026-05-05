@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Routine } from "components/WorkoutRoutines/models/Routine";
+import { Routine } from "@/components/WorkoutRoutines/models/Routine";
 import {
     addRoutine,
     deleteRoutine,
@@ -12,8 +12,8 @@ import {
     getRoutines,
     getRoutinesShallow,
     getRoutineStatisticsData
-} from "services";
-import { QueryKey, } from "utils/consts";
+} from "@/services";
+import { QueryKey, } from "@/utils/consts";
 
 
 export function useRoutinesQuery() {

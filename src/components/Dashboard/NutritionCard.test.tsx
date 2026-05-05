@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { NutritionCard } from "components/Dashboard/NutritionCard";
-import { useFetchLastNutritionalPlanQuery } from "components/Nutrition/queries";
-import { TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
+import { NutritionCard } from "@/components/Dashboard/NutritionCard";
+import { useFetchLastNutritionalPlanQuery } from "@/components/Nutrition/queries";
+import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 
-jest.mock("components/Nutrition/queries");
+jest.mock("@/components/Nutrition/queries");
 jest.useFakeTimers();
 
 const { ResizeObserver } = window;

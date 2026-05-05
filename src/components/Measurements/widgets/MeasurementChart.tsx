@@ -1,9 +1,9 @@
 import { Box } from "@mui/material";
-import { MeasurementCategory } from "components/Measurements/models/Category";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import React from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
-import { theme } from "theme";
-import { dateToLocale } from "utils/date";
+import { theme } from "@/theme";
+import { dateToLocale } from "@/utils/date";
 
 export const MeasurementChart = (props: { category: MeasurementCategory }) => {
     const NR_OF_ENTRIES_CHART_DOT = 30;

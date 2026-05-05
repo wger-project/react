@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { fetchPaginated } from "utils/requests";
-import { makeHeader } from "utils/url";
+import { fetchPaginated } from "@/utils/requests";
+import { makeHeader } from "@/utils/url";
 
 jest.mock('axios');
 

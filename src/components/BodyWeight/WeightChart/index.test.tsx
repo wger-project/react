@@ -1,8 +1,8 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { WeightEntry } from "components/BodyWeight/model";
+import { WeightEntry } from "@/components/BodyWeight/model";
 import React from 'react';
-import { testQueryClient } from "tests/queryClient";
+import { testQueryClient } from "@/tests/queryClient";
 import { WeightChart } from "./index";
 
 const { ResizeObserver } = window;

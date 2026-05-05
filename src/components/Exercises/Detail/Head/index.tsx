@@ -14,12 +14,12 @@ import {
     Typography
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { ExerciseDeleteDialog } from "components/Exercises/Detail/Head/ExerciseDeleteDialog";
-import { Exercise } from 'components/Exercises/models/exercise';
-import { Language } from 'components/Exercises/models/language';
-import { usePermissionQuery } from "components/User/queries/permission";
-import { useProfileQuery } from "components/User/queries/profile";
-import { WgerPermissions } from "permissions";
+import { ExerciseDeleteDialog } from "@/components/Exercises/Detail/Head/ExerciseDeleteDialog";
+import { Exercise } from '@/components/Exercises/models/exercise';
+import { Language } from '@/components/Exercises/models/language';
+import { usePermissionQuery } from "@/components/User/queries/permission";
+import { useProfileQuery } from "@/components/User/queries/profile";
+import { WgerPermissions } from "@/permissions";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';

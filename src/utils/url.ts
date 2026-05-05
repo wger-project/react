@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from "axios";
-import { IS_PROD, VITE_API_KEY, VITE_API_SERVER } from "config";
-import i18n from "i18n";
+import { IS_PROD, VITE_API_KEY, VITE_API_SERVER } from "@/config";
+import i18n from "@/i18n";
 import slug from "slug";
 
 interface makeUrlInterface {

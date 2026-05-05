@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
-import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
+import { ExerciseOverview } from "@/components/Exercises/ExerciseOverview";
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { getCategories, getEquipment, getExercises, getLanguages, getMuscles } from "services";
+import { getCategories, getEquipment, getExercises, getLanguages, getMuscles } from "@/services";
 import {
     testCategories,
     testEquipment,
@@ -14,9 +14,9 @@ import {
     testExerciseSquats,
     testLanguages,
     testMuscles
-} from "tests/exerciseTestdata";
+} from "@/tests/exerciseTestdata";
 
-jest.mock("services");
+jest.mock("@/services");
 
 const queryClient = new QueryClient();
 

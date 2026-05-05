@@ -1,4 +1,4 @@
-import { collectValidationErrors } from "utils/forms";
+import { collectValidationErrors } from "@/utils/forms";
 
 describe('test the collectValidationErrors function', () => {
     test('correctly collects all errors from lists', () => {

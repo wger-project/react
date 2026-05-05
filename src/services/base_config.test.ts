@@ -1,6 +1,6 @@
 import axios from "axios";
-import { BaseConfigAdapter } from "components/WorkoutRoutines/models/BaseConfig";
-import { editBaseConfig, EditBaseConfigParams } from "services/base_config";
+import { BaseConfigAdapter } from "@/components/WorkoutRoutines/models/BaseConfig";
+import { editBaseConfig, EditBaseConfigParams } from "@/services/base_config";
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;

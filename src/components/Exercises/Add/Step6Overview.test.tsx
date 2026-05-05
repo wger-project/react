@@ -1,24 +1,24 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { Step6Overview } from "components/Exercises/Add/Step6Overview";
+import { Step6Overview } from "@/components/Exercises/Add/Step6Overview";
 import {
     useAddExerciseFullQuery,
     useCategoriesQuery,
     useEquipmentQuery,
     useLanguageQuery,
     useMusclesQuery
-} from "components/Exercises/queries";
-import { useProfileQuery } from "components/User/queries/profile";
+} from "@/components/Exercises/queries";
+import { useProfileQuery } from "@/components/User/queries/profile";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { useExerciseSubmissionStateValue } from "state";
-import { testCategories, testEquipment, testLanguages, testMuscles } from "tests/exerciseTestdata";
-import { testProfileDataVerified } from "tests/userTestdata";
+import { useExerciseSubmissionStateValue } from "@/state";
+import { testCategories, testEquipment, testLanguages, testMuscles } from "@/tests/exerciseTestdata";
+import { testProfileDataVerified } from "@/tests/userTestdata";
 
 
-jest.mock("components/Exercises/queries");
-jest.mock("components/User/queries/profile");
-jest.mock("state");
+jest.mock("@/components/Exercises/queries");
+jest.mock("@/components/User/queries/profile");
+jest.mock("@/state");
 
 const mockOnContinue = jest.fn();
 const mockedUseCategoriesQuery = useCategoriesQuery as jest.Mock;

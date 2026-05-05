@@ -1,15 +1,15 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import { WeightEntry } from "components/BodyWeight/model";
-import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "components/BodyWeight/queries";
+import { WeightForm } from "@/components/BodyWeight/Form/WeightForm";
+import { WeightEntry } from "@/components/BodyWeight/model";
+import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "@/components/BodyWeight/queries";
 import React from 'react';
-import { testQueryClient } from "tests/queryClient";
-import { testWeightEntries } from "tests/weight/testData";
+import { testQueryClient } from "@/tests/queryClient";
+import { testWeightEntries } from "@/tests/weight/testData";
 
-jest.mock("services");
-jest.mock("components/BodyWeight/queries");
+jest.mock("@/services");
+jest.mock("@/components/BodyWeight/queries");
 
 
 describe("Test WeightForm component", () => {

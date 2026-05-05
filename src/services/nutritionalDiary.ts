@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { getIngredients } from "services/ingredient";
-import { API_MAX_PAGE_SIZE, ApiPath } from "utils/consts";
-import { fetchPaginated } from "utils/requests";
-import { makeHeader, makeUrl } from "utils/url";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { getIngredients } from "@/services/ingredient";
+import { API_MAX_PAGE_SIZE, ApiPath } from "@/utils/consts";
+import { fetchPaginated } from "@/utils/requests";
+import { makeHeader, makeUrl } from "@/utils/url";
 
 
 export type NutritionalDiaryEntriesOptions = {

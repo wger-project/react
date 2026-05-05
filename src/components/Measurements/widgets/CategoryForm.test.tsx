@@ -1,14 +1,14 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "components/Measurements/queries";
-import { CategoryForm } from "components/Measurements/widgets/CategoryForm";
+import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "@/components/Measurements/queries";
+import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
 import React from 'react';
-import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "tests/measurementsTestData";
+import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
 
-jest.mock("services/weight");
+jest.mock("@/services/weight");
 
-jest.mock("components/Measurements/queries");
+jest.mock("@/components/Measurements/queries");
 
 
 describe("Test the CategoryForm component", () => {

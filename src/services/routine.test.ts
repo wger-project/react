@@ -1,12 +1,12 @@
 import axios from "axios";
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { Routine } from "components/WorkoutRoutines/models/Routine";
-import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
-import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
-import { getRoutinesShallow } from "services";
-import { getRoutineDayDataAllIterations } from "services/routine";
-import { getRoutineLogs } from "services/workoutLogs";
-import { getRoutineRepUnits, getRoutineWeightUnits } from "services/workoutUnits";
+import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { Routine } from "@/components/WorkoutRoutines/models/Routine";
+import { SetConfigData } from "@/components/WorkoutRoutines/models/SetConfigData";
+import { WorkoutLog } from "@/components/WorkoutRoutines/models/WorkoutLog";
+import { getRoutinesShallow } from "@/services";
+import { getRoutineDayDataAllIterations } from "@/services/routine";
+import { getRoutineLogs } from "@/services/workoutLogs";
+import { getRoutineRepUnits, getRoutineWeightUnits } from "@/services/workoutUnits";
 import {
     responseApiWorkoutRoutine,
     responseRoutineDayData,
@@ -15,11 +15,11 @@ import {
     testRepUnit2,
     testWeightUnit1,
     testWeightUnit2
-} from "tests/workoutRoutinesTestData";
+} from "@/tests/workoutRoutinesTestData";
 
 jest.mock("axios");
-jest.mock("services/workoutUnits");
-jest.mock("services/exercise");
+jest.mock("@/services/workoutUnits");
+jest.mock("@/services/exercise");
 
 describe("workout routine service tests", () => {
 

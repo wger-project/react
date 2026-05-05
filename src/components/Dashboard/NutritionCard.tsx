@@ -17,22 +17,22 @@ import {
     Snackbar,
 } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { WgerModal } from "components/Core/Modals/WgerModal";
-import { EmptyCard } from "components/Dashboard/EmptyCard";
-import { Meal } from "components/Nutrition/models/meal";
-import { MealItem } from "components/Nutrition/models/mealItem";
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { useAddDiaryEntryQuery, useFetchLastNutritionalPlanQuery } from "components/Nutrition/queries";
-import { NutritionalValuesDashboardChart } from "components/Nutrition/widgets/charts/NutritionalValuesDashboardChart";
-import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
-import { PlanForm } from "components/Nutrition/widgets/forms/PlanForm";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { WgerModal } from "@/components/Core/Modals/WgerModal";
+import { EmptyCard } from "@/components/Dashboard/EmptyCard";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
+import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
+import { useAddDiaryEntryQuery, useFetchLastNutritionalPlanQuery } from "@/components/Nutrition/queries";
+import { NutritionalValuesDashboardChart } from "@/components/Nutrition/widgets/charts/NutritionalValuesDashboardChart";
+import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
+import { PlanForm } from "@/components/Nutrition/widgets/forms/PlanForm";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
-import { dateTimeToLocaleHHMM } from "utils/date";
-import { numberGramLocale } from "utils/numbers";
-import { makeLink, WgerLink } from "utils/url";
+import { SNACKBAR_AUTO_HIDE_DURATION } from "@/utils/consts";
+import { dateTimeToLocaleHHMM } from "@/utils/date";
+import { numberGramLocale } from "@/utils/numbers";
+import { makeLink, WgerLink } from "@/utils/url";
 import { DashboardCard } from "./DashboardCard";
 
 export const NutritionCard = () => {

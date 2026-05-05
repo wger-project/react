@@ -1,6 +1,6 @@
 import PhotoIcon from "@mui/icons-material/Photo";
 import { Avatar } from "@mui/material";
-import { ExerciseImage } from "components/Exercises/models/image";
+import { ExerciseImage } from "@/components/Exercises/models/image";
 import React from "react";
 
 export const ExerciseImageAvatar = (props: {

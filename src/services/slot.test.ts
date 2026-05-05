@@ -1,8 +1,8 @@
 import axios from "axios";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { addSlot, deleteSlot, editSlot } from "services/slot";
-import { ApiPath } from "utils/consts";
-import { makeHeader, makeUrl } from "utils/url";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
+import { addSlot, deleteSlot, editSlot } from "@/services/slot";
+import { ApiPath } from "@/utils/consts";
+import { makeHeader, makeUrl } from "@/utils/url";
 
 jest.mock('axios');
 

@@ -15,15 +15,15 @@ import {
     GridRowModesModel,
     GridRowsProp,
 } from "@mui/x-data-grid";
-import { WeightEntry } from "components/BodyWeight/model";
-import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
-import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "components/BodyWeight/queries";
-import { processWeights } from "components/BodyWeight/utils";
+import { WeightEntry } from "@/components/BodyWeight/model";
+import { WeightEntryFab } from "@/components/BodyWeight/Table/Fab/Fab";
+import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "@/components/BodyWeight/queries";
+import { processWeights } from "@/components/BodyWeight/utils";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PAGINATION_OPTIONS } from "utils/consts";
-import { luxonDateTimeToLocale } from "utils/date";
+import { PAGINATION_OPTIONS } from "@/utils/consts";
+import { luxonDateTimeToLocale } from "@/utils/date";
 
 export interface WeightTableProps {
     weights: WeightEntry[];

@@ -1,11 +1,11 @@
-import { Alias } from "components/Exercises/models/alias";
-import { Category } from "components/Exercises/models/category";
-import { Equipment } from "components/Exercises/models/equipment";
-import { Exercise } from "components/Exercises/models/exercise";
-import { Language } from "components/Exercises/models/language";
-import { Muscle } from "components/Exercises/models/muscle";
-import { Note } from "components/Exercises/models/note";
-import { Translation } from "components/Exercises/models/translation";
+import { Alias } from "@/components/Exercises/models/alias";
+import { Category } from "@/components/Exercises/models/category";
+import { Equipment } from "@/components/Exercises/models/equipment";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Language } from "@/components/Exercises/models/language";
+import { Muscle } from "@/components/Exercises/models/muscle";
+import { Note } from "@/components/Exercises/models/note";
+import { Translation } from "@/components/Exercises/models/translation";
 
 export const testCategoryArms = new Category(1, 'Arms');
 export const testCategoryLegs = new Category(2, 'Legs');

@@ -1,8 +1,8 @@
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
-import { generateChartColors } from "utils/colors";
+import { generateChartColors } from "@/utils/colors";
 
 
 export const NutritionalValuesPlannedLoggedChart = (props: {

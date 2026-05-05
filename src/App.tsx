@@ -1,8 +1,8 @@
 import Grid from '@mui/material/Grid';
-import { Header, } from 'components';
-import { Notifications } from 'components/Core/Notifications';
+import { Header, } from '@/components';
+import { Notifications } from '@/components/Core/Notifications';
 import React from 'react';
-import { WgerRoutes } from "routes";
+import { WgerRoutes } from "@/routes";
 
 
 function App() {

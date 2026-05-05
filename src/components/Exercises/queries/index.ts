@@ -1,7 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Note } from "@/components/Exercises/models/note";
 import {
+    addNote,
     addTranslation,
     deleteAlias,
+    deleteNote,
+    editNote,
     editTranslation,
     getCategories,
     getEquipment,
@@ -9,13 +12,17 @@ import {
     getMuscles,
     postAlias,
     postExerciseImage,
-} from "services";
-import { AddTranslationParams, EditTranslationParams } from "services/exerciseTranslation";
-import { Note } from "components/Exercises/models/note";
-import { addNote, editNote, deleteNote } from "services";
-import { deleteExerciseImage, PostExerciseImageParams, patchExerciseImage, PatchExerciseImageParams } from "services/image";
-import { deleteExerciseVideo, postExerciseVideo, PostExerciseVideoParams } from "services/video";
-import { QueryKey } from "utils/consts";
+} from "@/services";
+import { AddTranslationParams, EditTranslationParams } from "@/services/exerciseTranslation";
+import {
+    deleteExerciseImage,
+    patchExerciseImage,
+    PatchExerciseImageParams,
+    PostExerciseImageParams
+} from "@/services/image";
+import { deleteExerciseVideo, postExerciseVideo, PostExerciseVideoParams } from "@/services/video";
+import { QueryKey } from "@/utils/consts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export { useExercisesQuery, useExerciseQuery, useAddExerciseFullQuery } from "./exercises";
 
@@ -68,16 +75,16 @@ export function useAddExerciseImageQuery(exerciseId: number) {
 }
 
 export function useEditExerciseImageQuery(exerciseId: number) {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (data: PatchExerciseImageParams) => patchExerciseImage(data),
-    onSuccess: () => {
-      // Invalidate the cache so the UI shows the updated title/author immediately
-      queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
-      queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
-    }
-  });
+    return useMutation({
+        mutationFn: (data: PatchExerciseImageParams) => patchExerciseImage(data),
+        onSuccess: () => {
+            // Invalidate the cache so the UI shows the updated title/author immediately
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        }
+    });
 }
 
 /**

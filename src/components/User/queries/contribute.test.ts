@@ -1,10 +1,10 @@
-import { Profile } from "components/User/models/profile";
-import { useCanContributeExercises } from "components/User/queries/contribute";
-import { usePermissionQuery } from "components/User/queries/permission";
-import { useProfileQuery } from "components/User/queries/profile";
+import { Profile } from "@/components/User/models/profile";
+import { useCanContributeExercises } from "@/components/User/queries/contribute";
+import { usePermissionQuery } from "@/components/User/queries/permission";
+import { useProfileQuery } from "@/components/User/queries/profile";
 
-jest.mock("components/User/queries/profile");
-jest.mock("components/User/queries/permission");
+jest.mock("@/components/User/queries/profile");
+jest.mock("@/components/User/queries/permission");
 
 
 describe("Test the exercise contribution query", () => {

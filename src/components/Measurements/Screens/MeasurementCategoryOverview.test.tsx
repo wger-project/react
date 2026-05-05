@@ -1,12 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, render, screen } from '@testing-library/react';
-import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
-import { MeasurementCategoryOverview } from "components/Measurements/Screens/MeasurementCategoryOverview";
+import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
+import { MeasurementCategoryOverview } from "@/components/Measurements/Screens/MeasurementCategoryOverview";
 import React from 'react';
 import { BrowserRouter } from "react-router-dom";
-import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "tests/measurementsTestData";
+import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
 
-jest.mock("components/Measurements/queries");
+jest.mock("@/components/Measurements/queries");
 
 const queryClient = new QueryClient();
 

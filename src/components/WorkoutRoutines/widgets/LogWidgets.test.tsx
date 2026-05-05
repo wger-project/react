@@ -1,14 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from 'components/WorkoutRoutines/queries';
-import { ExerciseLog } from "components/WorkoutRoutines/widgets/LogWidgets";
-import { testExerciseBenchPress } from "tests/exerciseTestdata";
-import { testWorkoutLogs } from "tests/workoutLogsRoutinesTestData";
+import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from '@/components/WorkoutRoutines/queries';
+import { ExerciseLog } from "@/components/WorkoutRoutines/widgets/LogWidgets";
+import { testExerciseBenchPress } from "@/tests/exerciseTestdata";
+import { testWorkoutLogs } from "@/tests/workoutLogsRoutinesTestData";
 
 
 const { ResizeObserver } = window;
 
-jest.mock('components/WorkoutRoutines/queries', () => ({
+jest.mock('@/components/WorkoutRoutines/queries', () => ({
     useDeleteRoutineLogQuery: jest.fn(),
     useEditRoutineLogQuery: jest.fn()
 }));

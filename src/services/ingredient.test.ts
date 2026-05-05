@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getIngredient } from "services/ingredient";
+import { getIngredient } from "@/services/ingredient";
 
 jest.mock("axios");
 

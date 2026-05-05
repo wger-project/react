@@ -1,14 +1,14 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { RoutineForm } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
+import { RoutineForm } from "@/components/WorkoutRoutines/widgets/forms/RoutineForm";
 import { BrowserRouter } from "react-router-dom";
-import { addRoutine, editRoutine } from 'services';
-import { testQueryClient } from "tests/queryClient";
-import { testRoutine1 } from "tests/workoutRoutinesTestData";
+import { addRoutine, editRoutine } from '@/services';
+import { testQueryClient } from "@/tests/queryClient";
+import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 
 
-jest.mock("services");
+jest.mock("@/services");
 const mockEditRoutine = editRoutine as jest.Mock;
 const mockAddRoutine = addRoutine as jest.Mock;
 

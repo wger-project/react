@@ -12,7 +12,7 @@ import {
     Switch,
     Typography
 } from "@mui/material";
-import { Category } from "components/Exercises/models/category";
+import { Category } from "@/components/Exercises/models/category";
 import React, { useContext } from 'react';
 import { useTranslation } from "react-i18next";
 import { LoadingPlaceholder } from '../../Core/LoadingWidget/LoadingWidget';

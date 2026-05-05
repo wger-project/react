@@ -1,17 +1,17 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
-import { useAddMealItemQuery, useEditMealItemQuery } from "components/Nutrition/queries";
-import { SEARCH_DEBOUNCE_MS } from "components/Nutrition/widgets/IngredientAutcompleter";
-import { MealItemForm } from "components/Nutrition/widgets/forms/MealItemForm";
-import { searchIngredient } from "services";
-import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "tests/ingredientTestdata";
-import { TEST_MEAL_ITEM_1 } from "tests/nutritionTestdata";
+import { useAddMealItemQuery, useEditMealItemQuery } from "@/components/Nutrition/queries";
+import { SEARCH_DEBOUNCE_MS } from "@/components/Nutrition/widgets/IngredientAutcompleter";
+import { MealItemForm } from "@/components/Nutrition/widgets/forms/MealItemForm";
+import { searchIngredient } from "@/services";
+import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
+import { TEST_MEAL_ITEM_1 } from "@/tests/nutritionTestdata";
 
 const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
-jest.mock('components/Nutrition/queries');
-jest.mock('services');
+jest.mock('@/components/Nutrition/queries');
+jest.mock('@/services');
 
 async function fillInEntry(user: UserEvent) {
     const autocomplete = screen.getByTestId('autocomplete');

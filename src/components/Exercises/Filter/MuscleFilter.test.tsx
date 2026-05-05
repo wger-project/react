@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import { MuscleFilter } from "components/Exercises/Filter/MuscleFilter";
-import { Muscle } from "components/Exercises/models/muscle";
-import { useMusclesQuery } from "components/Exercises/queries";
+import { MuscleFilter } from "@/components/Exercises/Filter/MuscleFilter";
+import { Muscle } from "@/components/Exercises/models/muscle";
+import { useMusclesQuery } from "@/components/Exercises/queries";
 import React from 'react';
 import { ExerciseFiltersContext } from './ExerciseFiltersContext';
 
-jest.mock("components/Exercises/queries");
+jest.mock("@/components/Exercises/queries");
 const mockedMuscleQuery = useMusclesQuery as jest.Mock;
 
 describe("Test the CategoryFilter component", () => {

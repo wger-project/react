@@ -20,15 +20,15 @@ import {
     Typography
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { Exercise } from "components/Exercises/models/exercise";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { StepProps } from "@/components/Exercises/Add/AddExerciseStepper";
+import { Exercise } from "@/components/Exercises/models/exercise";
 
-import { useExercisesQuery } from "components/Exercises/queries";
+import { useExercisesQuery } from "@/components/Exercises/queries";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseSubmissionStateValue } from "state";
-import { setNewBaseVariationId, setVariationId } from "state/exerciseSubmissionReducer";
+import { useExerciseSubmissionStateValue } from "@/state";
+import { setNewBaseVariationId, setVariationId } from "@/state/exerciseSubmissionReducer";
 
 /*
  * Groups a list of objects by a property

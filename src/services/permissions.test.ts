@@ -1,5 +1,5 @@
 import axios from "axios";
-import { checkPermission } from "services/permission";
+import { checkPermission } from "@/services/permission";
 
 jest.mock("axios");
 

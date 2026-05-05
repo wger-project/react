@@ -1,4 +1,4 @@
-import { UserTrophy } from "components/Trophies/models/userTrophy";
+import { UserTrophy } from "@/components/Trophies/models/userTrophy";
 
 
 describe('Test the user UserTrophy model', () => {

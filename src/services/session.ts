@@ -1,16 +1,16 @@
 import axios from 'axios';
-import { Exercise } from "components/Exercises/models/exercise";
-import { WorkoutLog, WorkoutLogAdapter } from "components/WorkoutRoutines/models/WorkoutLog";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { WorkoutLog, WorkoutLogAdapter } from "@/components/WorkoutRoutines/models/WorkoutLog";
 import {
     AddSessionParams,
     EditSessionParams,
     WorkoutSession,
     WorkoutSessionAdapter
-} from "components/WorkoutRoutines/models/WorkoutSession";
-import { getExercise } from "services";
-import { API_MAX_PAGE_SIZE, ApiPath } from "utils/consts";
-import { fetchPaginated } from "utils/requests";
-import { makeHeader, makeUrl } from "utils/url";
+} from "@/components/WorkoutRoutines/models/WorkoutSession";
+import { getExercise } from "@/services";
+import { API_MAX_PAGE_SIZE, ApiPath } from "@/utils/consts";
+import { fetchPaginated } from "@/utils/requests";
+import { makeHeader, makeUrl } from "@/utils/url";
 
 export type SessionQueryOptions = {
     filtersetQuerySessions?: object,

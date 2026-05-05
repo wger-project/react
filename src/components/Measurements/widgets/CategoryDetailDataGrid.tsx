@@ -15,14 +15,14 @@ import {
     GridRowModesModel,
     GridRowsProp,
 } from "@mui/x-data-grid";
-import { MeasurementCategory } from "components/Measurements/models/Category";
-import { MeasurementEntry } from "components/Measurements/models/Entry";
-import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "components/Measurements/queries";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
+import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PAGINATION_OPTIONS } from "utils/consts";
-import { luxonDateTimeToLocale } from "utils/date";
+import { PAGINATION_OPTIONS } from "@/utils/consts";
+import { luxonDateTimeToLocale } from "@/utils/date";
 
 const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp => {
     return entries.map((entry) => {

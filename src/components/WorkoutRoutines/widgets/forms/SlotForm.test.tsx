@@ -1,14 +1,14 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
-import { editSlot } from "services";
-import { testQueryClient } from "tests/queryClient";
-import { testDayLegs } from "tests/workoutRoutinesTestData";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
+import { SlotForm } from "@/components/WorkoutRoutines/widgets/forms/SlotForm";
+import { editSlot } from "@/services";
+import { testQueryClient } from "@/tests/queryClient";
+import { testDayLegs } from "@/tests/workoutRoutinesTestData";
 
 
-jest.mock("services");
+jest.mock("@/services");
 
 let user: ReturnType<typeof userEvent.setup>;
 const mockEditSlot = editSlot as jest.Mock;

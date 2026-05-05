@@ -1,7 +1,7 @@
 import axios from "axios";
-import { MeasurementCategory } from "components/Measurements/models/Category";
-import { MeasurementEntry } from "components/Measurements/models/Entry";
-import { getMeasurementCategories, getMeasurementCategory } from "services/measurements";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
+import { getMeasurementCategories, getMeasurementCategory } from "@/services/measurements";
 
 jest.mock("axios");
 

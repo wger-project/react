@@ -1,19 +1,19 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { MeasurementEntry } from "components/Measurements/models/Entry";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
     useAddMeasurementEntryQuery,
     useEditMeasurementEntryQuery,
     useMeasurementsQuery
-} from "components/Measurements/queries";
-import { EntryForm } from "components/Measurements/widgets/EntryForm";
+} from "@/components/Measurements/queries";
+import { EntryForm } from "@/components/Measurements/widgets/EntryForm";
 import i18n from "i18next";
-import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_ENTRIES_1 } from "tests/measurementsTestData";
+import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_ENTRIES_1 } from "@/tests/measurementsTestData";
 
-jest.mock("services/weight");
+jest.mock("@/services/weight");
 
-jest.mock("components/Measurements/queries");
+jest.mock("@/components/Measurements/queries");
 
 
 describe("Test the EntryForm component", () => {

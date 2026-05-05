@@ -23,18 +23,18 @@ import {
     editRestConfig,
     editRirConfig,
     editWeightConfig
-} from "services";
+} from "@/services";
 import {
     addBaseConfig,
     AddBaseConfigParams,
     deleteBaseConfig,
     editBaseConfig,
     EditBaseConfigParams
-} from "services/base_config";
-import { ApiPath } from "utils/consts";
+} from "@/services/base_config";
+import { ApiPath } from "@/utils/consts";
 
-jest.mock("services/base_config", () => {
-    const originalModule = jest.requireActual("services/base_config");
+jest.mock("@/services/base_config", () => {
+    const originalModule = jest.requireActual("@/services/base_config");
     return {
         __esModule: true,
         ...originalModule, // Include all original exports

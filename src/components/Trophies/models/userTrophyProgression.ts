@@ -1,5 +1,5 @@
-import { ApiTrophyType, Trophy } from "components/Trophies/models/trophy";
-import { Adapter } from "utils/Adapter";
+import { ApiTrophyType, Trophy } from "@/components/Trophies/models/trophy";
+import { Adapter } from "@/utils/Adapter";
 
 export interface ApiUserTrophyType {
     trophy: ApiTrophyType,

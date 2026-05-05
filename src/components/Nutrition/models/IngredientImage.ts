@@ -1,5 +1,5 @@
-import { ApiIngredientImageType } from "types";
-import { Adapter } from "utils/Adapter";
+import { ApiIngredientImageType } from "@/types";
+import { Adapter } from "@/utils/Adapter";
 
 
 export type IngredientImageConstructorParams = {

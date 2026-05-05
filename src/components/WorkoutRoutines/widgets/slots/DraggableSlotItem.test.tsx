@@ -2,14 +2,14 @@ import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { DraggableSlotItem } from "components/WorkoutRoutines/widgets/slots/DraggableSlotItem";
+import { DraggableSlotItem } from "@/components/WorkoutRoutines/widgets/slots/DraggableSlotItem";
 import React from 'react';
 import { MemoryRouter } from "react-router-dom";
-import { getLanguages } from "services";
-import { getTestQueryClient } from "tests/queryClient";
-import { testDayLegs } from "tests/workoutRoutinesTestData";
+import { getLanguages } from "@/services";
+import { getTestQueryClient } from "@/tests/queryClient";
+import { testDayLegs } from "@/tests/workoutRoutinesTestData";
 
-jest.mock("services");
+jest.mock("@/services");
 
 describe("DraggableSlotItem component", () => {
     const defaultProps = {

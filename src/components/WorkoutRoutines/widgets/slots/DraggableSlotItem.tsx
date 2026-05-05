@@ -1,12 +1,12 @@
 import { Draggable, DraggableStyle } from "@hello-pangea/dnd";
 import { Box, useTheme } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { Exercise } from "components/Exercises/models/exercise";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { SlotDetails } from "components/WorkoutRoutines/widgets/SlotDetails";
-import { SlotExercisePicker } from "components/WorkoutRoutines/widgets/slots/SlotExercisePicker";
-import { SlotHeader } from "components/WorkoutRoutines/widgets/slots/SlotHeader";
-import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
+import { SlotDetails } from "@/components/WorkoutRoutines/widgets/SlotDetails";
+import { SlotExercisePicker } from "@/components/WorkoutRoutines/widgets/slots/SlotExercisePicker";
+import { SlotHeader } from "@/components/WorkoutRoutines/widgets/slots/SlotHeader";
+import { SlotForm } from "@/components/WorkoutRoutines/widgets/forms/SlotForm";
 
 
 export const DraggableSlotItem = (props: {

@@ -1,15 +1,15 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
-import { WorkoutStats } from "components/WorkoutRoutines/Detail/WorkoutStats";
-import { RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
+import { WorkoutStats } from "@/components/WorkoutRoutines/Detail/WorkoutStats";
+import { RoutineStatsData } from "@/components/WorkoutRoutines/models/LogStats";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import { getLanguages, getMuscles, getRoutine, getRoutineStatisticsData } from "services";
-import { testLanguages, testMuscles } from "tests/exerciseTestdata";
-import { getTestQueryClient } from "tests/queryClient";
-import { testRoutine1 } from "tests/workoutRoutinesTestData";
+import { getLanguages, getMuscles, getRoutine, getRoutineStatisticsData } from "@/services";
+import { testLanguages, testMuscles } from "@/tests/exerciseTestdata";
+import { getTestQueryClient } from "@/tests/queryClient";
+import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 
-jest.mock("services");
+jest.mock("@/services");
 
 const { ResizeObserver } = window;
 

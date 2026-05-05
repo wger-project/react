@@ -1,7 +1,7 @@
 import { Alert, Box, Stack } from "@mui/material";
 
 import { UseQueryResult } from "@tanstack/react-query";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
 import React, { JSX } from "react";
 
 

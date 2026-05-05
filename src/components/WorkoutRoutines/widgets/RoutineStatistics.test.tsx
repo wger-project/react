@@ -1,7 +1,7 @@
-import { Exercise } from "components/Exercises/models/exercise";
-import { Language } from "components/Exercises/models/language";
-import { Muscle } from "components/Exercises/models/muscle";
-import { GroupedLogData, LogData, RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Language } from "@/components/Exercises/models/language";
+import { Muscle } from "@/components/Exercises/models/muscle";
+import { GroupedLogData, LogData, RoutineStatsData } from "@/components/WorkoutRoutines/models/LogStats";
 import {
     formatStatsData,
     getFullStatsData,
@@ -9,14 +9,14 @@ import {
     StatGroupBy,
     StatSubType,
     StatType
-} from "components/WorkoutRoutines/widgets/RoutineStatistics";
+} from "@/components/WorkoutRoutines/widgets/RoutineStatistics";
 import {
     testExerciseBenchPress,
     testExerciseCrunches,
     testExerciseCurls,
     testLanguageEnglish,
     testMuscles
-} from "tests/exerciseTestdata";
+} from "@/tests/exerciseTestdata";
 
 
 // Mock data
