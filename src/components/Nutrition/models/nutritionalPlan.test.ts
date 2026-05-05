@@ -1,5 +1,7 @@
 import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
+import { TEST_DIARY_ENTRY_3, TEST_DIARY_ENTRY_4 } from "@/tests/nutritionDiaryTestdata";
 import { TEST_MEAL_1, TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
+
 
 vi.useFakeTimers();
 
@@ -51,14 +53,14 @@ describe("Test the nutritional plan model", () => {
         const values = TEST_NUTRITIONAL_PLAN_1.loggedNutritionalValues7DayAvg;
 
         // Assert
-        expect(values.energy).toBeCloseTo(67.18, 2);
-        expect(values.protein).toBeCloseTo(2.73, 2);
-        expect(values.carbohydrates).toBeCloseTo(12.105, 2);
-        expect(values.carbohydratesSugar).toBeCloseTo(7.73, 2);
-        expect(values.fat).toBeCloseTo(1.77, 2);
-        expect(values.fatSaturated).toBeCloseTo(0.89, 2);
-        expect(values.fiber).toBeCloseTo(2.19, 2);
-        expect(values.sodium).toBeCloseTo(0.0085, 2);
+        expect(values.energy).toBeCloseTo(115.171, 2);
+        expect(values.protein).toBeCloseTo(4.683, 2);
+        expect(values.carbohydrates).toBeCloseTo(20.753, 2);
+        expect(values.carbohydratesSugar).toBeCloseTo(13.257, 2);
+        expect(values.fat).toBeCloseTo(3.03, 2);
+        expect(values.fatSaturated).toBeCloseTo(1.526, 2);
+        expect(values.fiber).toBeCloseTo(3.75, 2);
+        expect(values.sodium).toBeCloseTo(0.01443, 2);
     });
 
     test('correctly calculates the planned nutritional values', async () => {
@@ -83,14 +85,14 @@ describe("Test the nutritional plan model", () => {
         const values = TEST_NUTRITIONAL_PLAN_1.loggedNutritionalValues7DayAvg;
 
         // Assert
-        expect(values.energy).toBeCloseTo(67.18, 2);
-        expect(values.protein).toBeCloseTo(2.731, 2);
-        expect(values.carbohydrates).toBeCloseTo(12.105, 2);
-        expect(values.carbohydratesSugar).toBeCloseTo(7.733, 2);
-        expect(values.fat).toBeCloseTo(1.7675, 2);
-        expect(values.fatSaturated).toBeCloseTo(0.89, 2);
-        expect(values.fiber).toBeCloseTo(2.1875, 2);
-        expect(values.sodium).toBeCloseTo(0.0088, 2);
+        expect(values.energy).toBeCloseTo(115.171, 2);
+        expect(values.protein).toBeCloseTo(4.683, 2);
+        expect(values.carbohydrates).toBeCloseTo(20.753, 2);
+        expect(values.carbohydratesSugar).toBeCloseTo(13.257, 2);
+        expect(values.fat).toBeCloseTo(3.03, 2);
+        expect(values.fatSaturated).toBeCloseTo(1.526, 2);
+        expect(values.fiber).toBeCloseTo(3.75, 2);
+        expect(values.sodium).toBeCloseTo(0.01443, 2);
     });
 
     test('correctly calculates the average nutritional values for the current day', async () => {
@@ -134,6 +136,31 @@ describe("Test the nutritional plan model", () => {
 
         expect(values.get("2023-07-02")!.entries.length).toBe(1);
         expect(values.get("2023-07-02")!.nutritionalValues.energy).toBeCloseTo(12, 2);
+    });
+
+    test('7-day average returns zero values when no entries exist', () => {
+        const plan = new NutritionalPlan({ id: 1, creationDate: new Date(), description: 'test' });
+        const values = plan.loggedNutritionalValues7DayAvg;
+
+        expect(values.energy).toBe(0);
+        expect(values.protein).toBe(0);
+        expect(values.carbohydrates).toBe(0);
+        expect(values.fat).toBe(0);
+    });
+
+    test('7-day average divides total by 7 without rounding', () => {
+        // INGREDIENT_3: energy=60, protein=0.89, carbs=14, sugar=11.78, sodium=0.006 per 100g
+        // ENTRY_3: 200g → energy=120; ENTRY_4: 20g → energy=12; total=132, avg=132/7≈18.857
+        const plan = new NutritionalPlan({ id: 1, creationDate: new Date(), description: 'test' });
+        plan.diaryEntries = [TEST_DIARY_ENTRY_3, TEST_DIARY_ENTRY_4];
+
+        const values = plan.loggedNutritionalValues7DayAvg;
+
+        expect(values.energy).toBeCloseTo(132 / 7, 5);
+        expect(values.protein).toBeCloseTo(1.958 / 7, 5);
+        expect(values.carbohydrates).toBeCloseTo(30.8 / 7, 5);
+        expect(values.carbohydratesSugar).toBeCloseTo(25.916 / 7, 5);
+        expect(values.sodium).toBeCloseTo(0.0132 / 7, 5);
     });
 
     test('correctly generates the synthetic meal entry', async () => {

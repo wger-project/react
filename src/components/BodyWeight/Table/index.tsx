@@ -18,7 +18,7 @@ import {
 import { WeightEntry } from "@/components/BodyWeight/model";
 import { WeightEntryFab } from "@/components/BodyWeight/Table/Fab/Fab";
 import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "@/components/BodyWeight/queries";
-import { processWeights } from "@/components/BodyWeight/utils";
+import { processTimeSeries } from "@/components/Core/utils/timeSeries";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -30,7 +30,7 @@ export interface WeightTableProps {
 }
 
 const buildRows = (weights: WeightEntry[]): GridRowsProp =>
-    processWeights(weights).map((row) => ({
+    processTimeSeries(weights, e => e.weight).map((row) => ({
         id: row.entry.id,
         date: row.entry.date,
         weight: row.entry.weight,
