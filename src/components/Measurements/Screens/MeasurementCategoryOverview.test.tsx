@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
 import { MeasurementCategoryOverview } from "@/components/Measurements/Screens/MeasurementCategoryOverview";
 import React from 'react';
@@ -37,14 +37,10 @@ describe("Test the MeasurementCategoryOverview component", () => {
                 </QueryClientProvider>
             </BrowserRouter>
         );
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, 20));
-        });
-
         // Assert
-        expect(useMeasurementsCategoryQuery).toHaveBeenCalledTimes(1);
+        await waitFor(() => expect(useMeasurementsCategoryQuery).toHaveBeenCalledTimes(1));
+        expect(await screen.findByText('Biceps')).toBeInTheDocument();
         expect(screen.getByText('measurements.measurements')).toBeInTheDocument();
-        expect(screen.getByText('Biceps')).toBeInTheDocument();
         expect(screen.getByText('Body fat')).toBeInTheDocument();
     });
 });

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { useLanguageQuery } from "@/components/Exercises/queries";
 import { usePermissionQuery } from "@/components/User/queries/permission";
 import { useProfileQuery } from "@/components/User/queries/profile";
@@ -64,17 +64,14 @@ describe("Render tests", () => {
             </QueryClientProvider>
         );
 
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, 20));
-        });
-
+        // Wait until the page has actually rendered (not just the queries
+        // firing) — the description shows up only after every query resolved.
+        expect(await screen.findByText("exercises.description")).toBeInTheDocument();
         expect(useLanguageQuery).toHaveBeenCalled();
         expect(usePermissionQuery).toHaveBeenCalled();
         expect(useProfileQuery).toHaveBeenCalled();
         expect(getExercise).toHaveBeenCalled();
         expect(getExercisesForVariation).toHaveBeenCalled();
-
-        expect(screen.getByText("exercises.description")).toBeInTheDocument();
         expect(screen.getByText("Squats")).toBeInTheDocument();
 
         expect(screen.getByText("Biggus musculus (Big muscle)")).toBeInTheDocument();

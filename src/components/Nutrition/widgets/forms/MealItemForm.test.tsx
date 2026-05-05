@@ -14,6 +14,12 @@ const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 vi.mock('@/components/Nutrition/queries');
 vi.mock('@/services');
 
+// Note: this helper still relies on a real-time sleep rather than waitFor.
+// The MUI Autocomplete flow with a prefilled value has subtle ordering
+// requirements between the typed search, the dropdown render, and ArrowDown+
+// Enter — replacing the sleep with waitFor on searchIngredient changes the
+// outcome of "An existing entry should be updated" (display value differs).
+// Worth revisiting if/when the test expectations are modernized.
 async function fillInEntry(user: UserEvent) {
     const autocomplete = screen.getByTestId('autocomplete');
     const input = within(autocomplete).getByRole('combobox');

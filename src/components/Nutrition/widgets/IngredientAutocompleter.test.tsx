@@ -1,8 +1,7 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import {
     IngredientAutocompleter,
-    SEARCH_DEBOUNCE_MS,
     STORAGE_KEY_LANGUAGE_FILTER,
     STORAGE_KEY_NUTRISCORE_MAX,
     STORAGE_KEY_VEGAN,
@@ -11,8 +10,6 @@ import {
 import type { Mock } from 'vitest';
 import { searchIngredient } from '@/services';
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_4 } from "@/tests/ingredientTestdata";
-
-const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
 vi.mock("@/services");
 
@@ -35,13 +32,8 @@ describe("Test the IngredientAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
         await user.type(input, 'Bag');
-
-        // Wait for debounce
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
-        expect(searchIngredient).toHaveBeenCalled();
-        expect(screen.getByText('0% fat Greek style yogurt')).toBeInTheDocument();
+        await waitFor(() => expect(searchIngredient).toHaveBeenCalled());
+        expect(await screen.findByText('0% fat Greek style yogurt')).toBeInTheDocument();
         expect(screen.getByText('1001 Nacht Haferbrei')).toBeInTheDocument();
     });
 
@@ -55,11 +47,10 @@ describe("Test the IngredientAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
         await user.type(input, 'Cru');
-
-        // Wait for debounce
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
+        // Wait for the option to actually be in the dropdown — not just for
+        // the search call. Otherwise ArrowDown+Enter fires before React has
+        // rendered the resolved results.
+        await screen.findByText('0% fat Greek style yogurt');
 
         // Select the first result
         await user.click(input);
@@ -122,12 +113,9 @@ describe("Test the IngredientAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
         await user.type(input, 'Haferbrei');
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
 
         // Assert - vegan ingredient should show "Vegan" but not "Vegetarian"
-        expect(screen.getByText('nutrition.filterVegan')).toBeInTheDocument();
+        expect(await screen.findByText('nutrition.filterVegan')).toBeInTheDocument();
         expect(screen.queryByText('nutrition.filterVegetarian')).not.toBeInTheDocument();
     });
 
@@ -144,12 +132,9 @@ describe("Test the IngredientAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
         await user.type(input, 'yogurt');
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
 
         // Assert - vegetarian-only ingredient should show "Vegetarian" but not "Vegan"
-        expect(screen.getByText('nutrition.filterVegetarian')).toBeInTheDocument();
+        expect(await screen.findByText('nutrition.filterVegetarian')).toBeInTheDocument();
         expect(screen.queryByText('nutrition.filterVegan')).not.toBeInTheDocument();
     });
 
@@ -166,9 +151,7 @@ describe("Test the IngredientAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
         await user.type(input, 'Cacao');
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
+        await waitFor(() => expect(searchIngredient).toHaveBeenCalled());
 
         // Assert - no dietary info, no chips
         expect(screen.queryByText('nutrition.filterVegan')).not.toBeInTheDocument();
@@ -269,15 +252,12 @@ describe("Test the IngredientAutocompleter component", () => {
         // Act
         await user.click(autocomplete);
         await user.type(input, 'Yog');
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
 
         // Assert
-        expect(searchIngredient).toHaveBeenCalledWith(
+        await waitFor(() => expect(searchIngredient).toHaveBeenCalledWith(
             'Yog',
             expect.objectContaining({ nutriscoreMax: 'b' }),
-        );
+        ));
     });
 
     test('nutriscoreMax is omitted when the slider is at Off', async () => {
@@ -290,14 +270,11 @@ describe("Test the IngredientAutocompleter component", () => {
         // Act
         await user.click(autocomplete);
         await user.type(input, 'Yog');
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
 
         // Assert
-        expect(searchIngredient).toHaveBeenCalledWith(
+        await waitFor(() => expect(searchIngredient).toHaveBeenCalledWith(
             'Yog',
             expect.objectContaining({ nutriscoreMax: undefined }),
-        );
+        ));
     });
 });

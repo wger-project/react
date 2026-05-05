@@ -1,16 +1,12 @@
-import { act, render, screen, within } from '@testing-library/react';
-import userEvent from "@testing-library/user-event";
 import { ExerciseDeleteDialog } from "@/components/Exercises/Detail/Head/ExerciseDeleteDialog";
-import { SEARCH_DEBOUNCE_MS } from "@/components/Exercises/Filter/NameAutcompleter";
-import React from 'react';
-import { MemoryRouter, Routes } from "react-router-dom";
-import { Route } from "react-router-dom";
 import { deleteExercise, deleteExerciseTranslation, getExercise, searchExerciseTranslations } from "@/services";
 import { searchResponse } from "@/tests/exercises/searchResponse";
 import { testExerciseBenchPress, testExerciseSquats, testLanguageGerman } from "@/tests/exerciseTestdata";
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from "@testing-library/user-event";
+import React from 'react';
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import type { Mock } from 'vitest';
-
-const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
 vi.mock("@/services");
 
@@ -90,10 +86,7 @@ describe("Test the ExerciseDeleteDialog component", () => {
 
         expect(screen.getByText("exercises.noReplacementSelected")).toBeInTheDocument();
 
-        // Wait for debounce
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
+        await waitFor(() => expect(searchExerciseTranslations).toHaveBeenCalled());
         await user.click(screen.getByTestId('autocompleter-result-998'));
         expect(getExercise).toHaveBeenCalledWith(998);
         expect(screen.queryByText("exercises.noReplacementSelected")).not.toBeInTheDocument();

@@ -1,5 +1,5 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { BaseConfig, OPERATION_REPLACE } from '@/components/WorkoutRoutines/models/BaseConfig';
 
@@ -53,8 +53,6 @@ const editMutation = vi.fn();
 const addMutation = vi.fn();
 const deleteMutation = vi.fn();
 
-const DEBOUNCE_WAIT = 10;
-
 describe('EntryDetailsField Component', () => {
     const routineId = 1;
     const slotEntryId = 2;
@@ -94,11 +92,8 @@ describe('EntryDetailsField Component', () => {
 
                 await user.type(screen.getByTestId(`${type}-field`), '2');
 
-
-                await new Promise((resolve) => setTimeout(resolve, DEBOUNCE_WAIT));
-
+                await waitFor(() => expect(editMutation).toHaveBeenCalledTimes(1));
                 expect(addMutation).toHaveBeenCalledTimes(0);
-                expect(editMutation).toHaveBeenCalledTimes(1);
                 expect(editMutation).toHaveBeenCalledWith({
                     id: mockConfig.id,
                     // eslint-disable-next-line camelcase
@@ -118,9 +113,8 @@ describe('EntryDetailsField Component', () => {
                 );
 
                 await user.type(screen.getByTestId(`${type}-field`), '8');
-                await new Promise((resolve) => setTimeout(resolve, DEBOUNCE_WAIT));
 
-                expect(addMutation).toHaveBeenCalledTimes(1);
+                await waitFor(() => expect(addMutation).toHaveBeenCalledTimes(1));
                 expect(addMutation).toHaveBeenCalledWith({
                     // eslint-disable-next-line camelcase
                     slot_entry: 2,
@@ -155,11 +149,10 @@ describe('EntryDetailsField Component', () => {
                 );
 
                 await user.clear(screen.getByTestId(`${type}-field`));
-                await new Promise((resolve) => setTimeout(resolve, DEBOUNCE_WAIT));
 
+                await waitFor(() => expect(deleteMutation).toHaveBeenCalledTimes(1));
                 expect(addMutation).toHaveBeenCalledTimes(0);
                 expect(editMutation).toHaveBeenCalledTimes(0);
-                expect(deleteMutation).toHaveBeenCalledTimes(1);
                 expect(deleteMutation).toHaveBeenCalledWith(mockConfig.id);
             });
         });

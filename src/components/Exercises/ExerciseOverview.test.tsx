@@ -12,7 +12,7 @@ import {
     testMuscles
 } from "@/tests/exerciseTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -50,17 +50,13 @@ describe("Test the ExerciseOverview component", () => {
                 </QueryClientProvider>
             </BrowserRouter>
         );
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, 20));
-        });
-
         // Assert
+        await waitFor(() => expect(getExercises).toHaveBeenCalledTimes(1));
         expect(getCategories).toHaveBeenCalledTimes(1);
         expect(getMuscles).toHaveBeenCalledTimes(1);
         expect(getEquipment).toHaveBeenCalledTimes(1);
-        expect(getExercises).toHaveBeenCalledTimes(1);
 
-        expect(screen.getByText('Benchpress')).toBeInTheDocument();
+        expect(await screen.findByText('Benchpress')).toBeInTheDocument();
         expect(screen.getByText('Squats')).toBeInTheDocument();
         expect(screen.getByText('Curls')).toBeInTheDocument();
         expect(screen.getByText('Crunches')).toBeInTheDocument();
