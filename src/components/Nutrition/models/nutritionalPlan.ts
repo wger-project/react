@@ -113,9 +113,19 @@ export class NutritionalPlan {
     get loggedNutritionalValues7DayAvg(): NutritionalValues {
         const today = new Date();
         const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-        const relevantEntries = this.diaryEntries.filter(entry => entry.datetime >= sevenDaysAgo);
+        const out = this.getNutritionalValuesFromDiaryEntries(
+            this.diaryEntries.filter(entry => entry.datetime >= sevenDaysAgo)
+        );
 
-        return this.getAverageNutritionalValuesFromDiaryEntries(relevantEntries);
+        out.energy = out.energy / 7;
+        out.protein = out.protein / 7;
+        out.carbohydrates = out.carbohydrates / 7;
+        out.carbohydratesSugar = out.carbohydratesSugar / 7;
+        out.fat = out.fat / 7;
+        out.fatSaturated = out.fatSaturated / 7;
+        out.fiber = out.fiber / 7;
+        out.sodium = out.sodium / 7;
+        return out;
     }
 
     /*
@@ -123,8 +133,6 @@ export class NutritionalPlan {
      */
     get loggedNutritionalValuesToday() {
         const relevantEntries = this.diaryEntries.filter(entry => isSameDay(entry.datetime, new Date()));
-        // console.log(relevantEntries);
-        // console.log(this.getNutritionalValuesFromDiaryEntries(relevantEntries));
         return this.getNutritionalValuesFromDiaryEntries(relevantEntries);
     }
 
@@ -198,25 +206,6 @@ export class NutritionalPlan {
      */
     loggedEntriesDate(date: Date) {
         return this.diaryEntries.filter(entry => isSameDay(entry.datetime, date));
-    }
-
-    getAverageNutritionalValuesFromDiaryEntries(entries: DiaryEntry[]) {
-        const nrOfEntries = entries.length;
-        const out = this.getNutritionalValuesFromDiaryEntries(entries);
-
-        if (nrOfEntries === 0) {
-            return out;
-        }
-
-        out.energy = out.energy / nrOfEntries;
-        out.protein = out.protein / nrOfEntries;
-        out.carbohydrates = out.carbohydrates / nrOfEntries;
-        out.carbohydratesSugar = out.carbohydratesSugar / nrOfEntries;
-        out.fat = out.fat / nrOfEntries;
-        out.fatSaturated = out.fatSaturated / nrOfEntries;
-        out.fiber = out.fiber / nrOfEntries;
-        out.sodium = out.sodium / nrOfEntries;
-        return out;
     }
 
     getNutritionalValuesFromDiaryEntries(entries: DiaryEntry[]) {
