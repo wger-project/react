@@ -1,7 +1,3 @@
-export enum SetNotificationState {
-    SET_NOTIFICATION
-}
-
 export enum SetExerciseSubmissionState {
     RESET,
 
