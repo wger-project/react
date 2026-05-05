@@ -50,6 +50,7 @@ export default defineConfig(({ mode }) => {
 
             coverage: {
                 provider: 'v8',
+                reporter: ['text', 'lcov'],
                 // Pages are integration shells — covered by e2e elsewhere.
                 exclude: ['src/pages/**/*.tsx'],
             },
