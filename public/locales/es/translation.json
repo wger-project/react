@@ -61,7 +61,10 @@
         "imageStyleLine": "Línea",
         "imageDetails": "Detalles de la imagen",
         "imageStyleLowPoly": "Bajo poligonaje (Low-Poly)",
-        "swapExercise": "Cambiar ejercicio"
+        "swapExercise": "Cambiar ejercicio",
+        "replacementCannotBeSame": "El reemplazo no puede ser el mismo ejercicio que se está eliminando.",
+        "transferMediaLabel": "Transferir archivos multimedia al ejercicio de reemplazo",
+        "exactMatch": "Coincidencia exacta"
     },
     "loading": "Cargando...",
     "images": "Imágenes",
@@ -294,7 +297,12 @@
         "searchIngredientName": "Búsqueda por nombre de ingrediente",
         "sodium": "Sodio",
         "pseudoMealTitle": "Otros registros",
-        "goalFiber": "Objetivo de fibra"
+        "goalFiber": "Objetivo de fibra",
+        "languageFilterCurrentOnly": "Solo en el idioma actual ({{lang}})",
+        "languageFilterCurrentAndEnglish": "Idioma actual ({{lang}}) e Inglés",
+        "languageFilterAll": "Todos los idiomas",
+        "filterVegan": "Vegana",
+        "filterVegetarian": "Vegetariana"
     },
     "downloadAsPdf": "Descargar como un PDF",
     "total": "Total",
@@ -353,5 +361,8 @@
     },
     "trophies": {
         "trophies": "Trofeos"
-    }
+    },
+    "preview": "Vista previa",
+    "useMarkdownHint": "Puedes usar Markdown básico para dar formato al texto: *cursiva*, **negrita**, - lista",
+    "totalChange": "Cambio total"
 }
