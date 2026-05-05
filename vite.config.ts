@@ -48,6 +48,11 @@ export default defineConfig(({ mode }) => {
             maxWorkers: 4,
             minWorkers: 1,
 
+            coverage: {
+                provider: 'v8',
+                // Pages are integration shells — covered by e2e elsewhere.
+                exclude: ['src/pages/**/*.tsx'],
+            },
             // Pre-bundle heavy dependencies once (esbuild) instead of letting
             // Vite resolve every MUI/recharts/etc. module on demand per test
             // file. Without this, each test file pays a ~60s cold-import cost.
