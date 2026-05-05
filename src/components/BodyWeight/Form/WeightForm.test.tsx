@@ -9,7 +9,6 @@ import { testQueryClient } from "@/tests/queryClient";
 import { testWeightEntries } from "@/tests/weight/testData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
 vi.mock("@/components/BodyWeight/queries");
 
 
