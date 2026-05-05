@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer } from "react";
-import { notificationReducer, WeightAction } from "state/notificationReducer";
-import { Notification } from "types";
+import { notificationReducer, WeightAction } from "@/state/notificationReducer";
+import { Notification } from "@/types";
 
 export type NotificationState = {
     notification: Notification

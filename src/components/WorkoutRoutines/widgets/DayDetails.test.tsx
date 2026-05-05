@@ -1,20 +1,21 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
-import { DayDetails, DayDragAndDropGrid, groupSlotsByExercise } from "components/WorkoutRoutines/widgets/DayDetails";
+import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
+import { DayDetails, DayDragAndDropGrid, groupSlotsByExercise } from "@/components/WorkoutRoutines/widgets/DayDetails";
 import React from 'react';
 import { MemoryRouter } from "react-router-dom";
-import { addDay, addSlot, getLanguages, getProfile, getRoutine } from "services";
-import { addSlotEntry } from "services/slot_entry";
-import { getTestQueryClient } from "tests/queryClient";
-import { testProfileDataVerified } from "tests/userTestdata";
-import { testDayLegs, testRoutine1 } from "tests/workoutRoutinesTestData";
+import { addDay, addSlot, getLanguages, getProfile, getRoutine } from "@/services";
+import { addSlotEntry } from "@/services/slot_entry";
+import { getTestQueryClient } from "@/tests/queryClient";
+import { testProfileDataVerified } from "@/tests/userTestdata";
+import { testDayLegs, testRoutine1 } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("services");
-jest.mock("services/slot_entry");
+vi.mock("@/services");
+vi.mock("@/services/slot_entry");
 
 const makeSlot = (id: number, exerciseId: number) => new Slot({
     id, dayId: 1, order: id, comment: '', config: null,
@@ -106,14 +107,14 @@ describe("groupSlotsByExercise", () => {
 
 describe("Test the DayDragAndDropGrid component", () => {
     let user: ReturnType<typeof userEvent.setup>;
-    let mockSetSelectedDay: jest.Mock;
-    const mockAddDay = addDay as jest.Mock;
+    let mockSetSelectedDay: Mock;
+    const mockAddDay = addDay as Mock;
 
     beforeEach(() => {
-        mockSetSelectedDay = jest.fn();
+        mockSetSelectedDay = vi.fn();
         user = userEvent.setup();
-        (getRoutine as jest.Mock).mockResolvedValue(testRoutine1);
-        (getLanguages as jest.Mock).mockResolvedValue([]);
+        (getRoutine as Mock).mockResolvedValue(testRoutine1);
+        (getLanguages as Mock).mockResolvedValue([]);
         mockAddDay.mockResolvedValue(testRoutine1.days[0]);
     });
 
@@ -165,12 +166,12 @@ describe("Test the DayDragAndDropGrid component", () => {
 
 
 describe("DayDetails component", () => {
-    let mockSetSelectedDay: jest.Mock;
+    let mockSetSelectedDay: Mock;
 
     beforeEach(() => {
-        mockSetSelectedDay = jest.fn();
-        (getProfile as jest.Mock).mockResolvedValue(testProfileDataVerified);
-        (getLanguages as jest.Mock).mockResolvedValue([]);
+        mockSetSelectedDay = vi.fn();
+        (getProfile as Mock).mockResolvedValue(testProfileDataVerified);
+        (getLanguages as Mock).mockResolvedValue([]);
     });
 
     const renderComponent = (day: Day = testDayLegs) => {
@@ -238,9 +239,9 @@ describe("DayDetails component", () => {
     test('duplicate inserts new slot after source with correct order and exerciseId', async () => {
         const user = userEvent.setup();
 
-        const mockAddSlot = addSlot as jest.Mock;
+        const mockAddSlot = addSlot as Mock;
         mockAddSlot.mockResolvedValue(new Slot({ id: 999, dayId: 5, order: 2 }));
-        (addSlotEntry as jest.Mock).mockResolvedValue({});
+        (addSlotEntry as Mock).mockResolvedValue({});
 
         renderComponent(testDayLegs);
 

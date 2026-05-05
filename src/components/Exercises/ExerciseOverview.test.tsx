@@ -1,9 +1,5 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
-import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { getCategories, getEquipment, getExercises, getLanguages, getMuscles } from "services";
+import { ExerciseOverview } from "@/components/Exercises/ExerciseOverview";
+import { getCategories, getEquipment, getExercises, getLanguages, getMuscles } from "@/services";
 import {
     testCategories,
     testEquipment,
@@ -14,9 +10,15 @@ import {
     testExerciseSquats,
     testLanguages,
     testMuscles
-} from "tests/exerciseTestdata";
+} from "@/tests/exerciseTestdata";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
-jest.mock("services");
+import type { Mock } from 'vitest';
+
+vi.mock("@/services");
 
 const queryClient = new QueryClient();
 
@@ -24,11 +26,11 @@ describe("Test the ExerciseOverview component", () => {
 
 
     beforeEach(() => {
-        (getLanguages as jest.Mock).mockImplementation(() => Promise.resolve(testLanguages));
-        (getCategories as jest.Mock).mockImplementation(() => Promise.resolve(testCategories));
-        (getMuscles as jest.Mock).mockImplementation(() => Promise.resolve(testMuscles));
-        (getEquipment as jest.Mock).mockImplementation(() => Promise.resolve(testEquipment));
-        (getExercises as jest.Mock).mockImplementation(() => Promise.resolve([
+        (getLanguages as Mock).mockImplementation(() => Promise.resolve(testLanguages));
+        (getCategories as Mock).mockImplementation(() => Promise.resolve(testCategories));
+        (getMuscles as Mock).mockImplementation(() => Promise.resolve(testMuscles));
+        (getEquipment as Mock).mockImplementation(() => Promise.resolve(testEquipment));
+        (getExercises as Mock).mockImplementation(() => Promise.resolve([
             testExerciseSquats,
             testExerciseBenchPress,
             testExerciseCurls,
@@ -48,17 +50,13 @@ describe("Test the ExerciseOverview component", () => {
                 </QueryClientProvider>
             </BrowserRouter>
         );
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, 20));
-        });
-
         // Assert
+        await waitFor(() => expect(getExercises).toHaveBeenCalledTimes(1));
         expect(getCategories).toHaveBeenCalledTimes(1);
         expect(getMuscles).toHaveBeenCalledTimes(1);
         expect(getEquipment).toHaveBeenCalledTimes(1);
-        expect(getExercises).toHaveBeenCalledTimes(1);
 
-        expect(screen.getByText('Benchpress')).toBeInTheDocument();
+        expect(await screen.findByText('Benchpress')).toBeInTheDocument();
         expect(screen.getByText('Squats')).toBeInTheDocument();
         expect(screen.getByText('Curls')).toBeInTheDocument();
         expect(screen.getByText('Crunches')).toBeInTheDocument();

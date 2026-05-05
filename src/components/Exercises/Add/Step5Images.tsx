@@ -12,14 +12,14 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import ImageList from '@mui/material/ImageList';
-import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { ImageFormModal } from "components/Exercises/forms/ImageModal";
-import { ImageFormData } from "components/Exercises/models/exercise";
-import { ImageStyle } from "components/Exercises/models/image";
+import { StepProps } from "@/components/Exercises/Add/AddExerciseStepper";
+import { ImageFormModal } from "@/components/Exercises/forms/ImageModal";
+import { ImageFormData } from "@/components/Exercises/models/exercise";
+import { ImageStyle } from "@/components/Exercises/models/image";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseSubmissionStateValue } from "state";
-import { setImages } from "state/exerciseSubmissionReducer";
+import { useExerciseSubmissionStateValue } from "@/state";
+import { setImages } from "@/state/exerciseSubmissionReducer";
 
 export const Step5Images = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();

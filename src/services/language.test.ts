@@ -1,8 +1,9 @@
 import axios from "axios";
-import { Language } from "components/Exercises/models/language";
-import { getLanguageByShortName, getLanguages } from "services";
+import { Language } from "@/components/Exercises/models/language";
+import { getLanguageByShortName, getLanguages } from "@/services";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 describe("Language service tests", () => {
 
@@ -33,7 +34,7 @@ describe("Language service tests", () => {
         };
 
         // Act
-        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: muscleResponse }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: muscleResponse }));
         const result = await getLanguages();
 
         // Assert

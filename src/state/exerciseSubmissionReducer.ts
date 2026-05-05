@@ -1,6 +1,6 @@
-import { ImageFormData } from "components/Exercises/models/exercise";
-import { exerciseSubmissionInitialState, SetExerciseSubmissionState } from 'state';
-import { ExerciseSubmissionAction, ExerciseSubmissionState } from "state/exerciseSubmissionState";
+import { ImageFormData } from "@/components/Exercises/models/exercise";
+import { exerciseSubmissionInitialState, SetExerciseSubmissionState } from '@/state';
+import { ExerciseSubmissionAction, ExerciseSubmissionState } from "@/state/exerciseSubmissionState";
 
 
 export const reset = (): ExerciseSubmissionAction => {

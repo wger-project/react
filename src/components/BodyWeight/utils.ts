@@ -1,4 +1,4 @@
-import { WeightEntry } from "components/BodyWeight/model";
+import { WeightEntry } from "@/components/BodyWeight/model";
 
 /**
  * Sorts weight entries by date (newest first) and computes the difference to

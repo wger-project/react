@@ -1,16 +1,16 @@
 import { MenuItem, TextField } from "@mui/material";
-import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
-import { useEditProfileQuery, useProfileQuery } from "components/User/queries/profile";
-import { SlotEntry, SlotEntryType } from "components/WorkoutRoutines/models/SlotEntry";
+import { LoadingProgressIcon } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { useEditProfileQuery, useProfileQuery } from "@/components/User/queries/profile";
+import { SlotEntry, SlotEntryType } from "@/components/WorkoutRoutines/models/SlotEntry";
 import {
     useEditSlotEntryQuery,
     useFetchRoutineRepUnitsQuery,
     useFetchRoutineWeighUnitsQuery
-} from "components/WorkoutRoutines/queries";
+} from "@/components/WorkoutRoutines/queries";
 import debounce from "lodash/debounce";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
+import { DEBOUNCE_ROUTINE_FORMS } from "@/utils/consts";
 
 export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: number }) => {
     const { t } = useTranslation();

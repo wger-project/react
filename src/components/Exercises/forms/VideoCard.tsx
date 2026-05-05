@@ -1,8 +1,8 @@
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Box, Button, Card, CardActions, CardMedia } from "@mui/material";
-import { FormQueryErrorsSnackbar } from "components/Core/Widgets/FormError";
-import { ExerciseVideo } from "components/Exercises/models/video";
-import { useProfileQuery } from "components/User/queries/profile";
+import { FormQueryErrorsSnackbar } from "@/components/Core/Widgets/FormError";
+import { ExerciseVideo } from "@/components/Exercises/models/video";
+import { useProfileQuery } from "@/components/User/queries/profile";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useAddExerciseVideoQuery, useDeleteExerciseVideoQuery } from "../queries";

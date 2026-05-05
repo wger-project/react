@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
+import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import {
     addNutritionalPlan,
     deleteNutritionalPlan,
@@ -7,9 +7,9 @@ import {
     getLastNutritionalPlan,
     getNutritionalPlanFull,
     getNutritionalPlansSparse
-} from "services/nutritionalPlan";
-import { QueryKey } from "utils/consts";
-import { dateToYYYYMMDD } from "utils/date";
+} from "@/services/nutritionalPlan";
+import { QueryKey } from "@/utils/consts";
+import { dateToYYYYMMDD } from "@/utils/date";
 
 export function useFetchNutritionalPlansQuery() {
     return useQuery({

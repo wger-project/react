@@ -15,21 +15,21 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import Tooltip from "@mui/material/Tooltip";
-import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
-import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";
-import { Language } from "components/Exercises/models/language";
-import { useLanguageQuery } from "components/Exercises/queries";
-import { getDayName } from "components/WorkoutRoutines/models/Day";
-import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
-import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
-import { SlotData } from "components/WorkoutRoutines/models/SlotData";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { RenderLoadingQuery } from "@/components/Core/Widgets/RenderLoadingQuery";
+import { ExerciseImageAvatar } from "@/components/Exercises/Detail/ExerciseImageAvatar";
+import { Language } from "@/components/Exercises/models/language";
+import { useLanguageQuery } from "@/components/Exercises/queries";
+import { getDayName } from "@/components/WorkoutRoutines/models/Day";
+import { RoutineDayData } from "@/components/WorkoutRoutines/models/RoutineDayData";
+import { SetConfigData } from "@/components/WorkoutRoutines/models/SetConfigData";
+import { SlotData } from "@/components/WorkoutRoutines/models/SlotData";
+import { useRoutineDetailQuery } from "@/components/WorkoutRoutines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { getLanguageByShortName } from "services";
-import { isSameDay } from "utils/date";
-import { makeLink, WgerLink } from "utils/url";
+import { getLanguageByShortName } from "@/services";
+import { isSameDay } from "@/utils/date";
+import { makeLink, WgerLink } from "@/utils/url";
 
 
 export const RoutineDetailsCard = () => {

@@ -1,4 +1,4 @@
-import { Ingredient } from "components/Nutrition/models/Ingredient";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 
 export const TEST_INGREDIENT_1 = new Ingredient({
     id: 101,

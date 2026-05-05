@@ -1,21 +1,22 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
-import { compareValue, RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
+import { compareValue, RoutineDetailsTable } from "@/components/WorkoutRoutines/Detail/RoutineDetailsTable";
 import React from "react";
-import { MemoryRouter, Route, Routes } from "react-router";
-import { getLanguages, getRoutine, getRoutineLogData } from "services";
-import { testLanguages } from "tests/exerciseTestdata";
-import { testQueryClient } from "tests/queryClient";
-import { testRoutine1, testRoutineLogData } from "tests/workoutRoutinesTestData";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { getLanguages, getRoutine, getRoutineLogData } from "@/services";
+import { testLanguages } from "@/tests/exerciseTestdata";
+import { testQueryClient } from "@/tests/queryClient";
+import { testRoutine1, testRoutineLogData } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("services");
+vi.mock("@/services");
 
 describe("Smoke tests the RoutineDetailsTable component", () => {
 
     beforeEach(() => {
-        (getRoutine as jest.Mock).mockResolvedValue(testRoutine1);
-        (getLanguages as jest.Mock).mockResolvedValue(testLanguages);
-        (getRoutineLogData as jest.Mock).mockResolvedValue(testRoutineLogData);
+        (getRoutine as Mock).mockResolvedValue(testRoutine1);
+        (getLanguages as Mock).mockResolvedValue(testLanguages);
+        (getRoutineLogData as Mock).mockResolvedValue(testRoutineLogData);
     });
 
     test('renders the routine table', async () => {

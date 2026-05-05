@@ -1,9 +1,9 @@
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Cell, Legend, Pie, PieChart } from 'recharts';
-import { generateChartColors } from "utils/colors";
-import { numberGramLocale } from "utils/numbers";
+import { generateChartColors } from "@/utils/colors";
+import { numberGramLocale } from "@/utils/numbers";
 
 export const MacrosPieChart = (props: { data: NutritionalValues }) => {
     const [t, i18n] = useTranslation();

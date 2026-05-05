@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { WgerModal, WgerModalProps } from "components/Core/Modals/WgerModal";
+import { WgerModal, WgerModalProps } from "@/components/Core/Modals/WgerModal";
 
 describe("Test WgerModal component", () => {
     test('Renders title and subtitle when openFn is true', () => {
@@ -9,7 +9,7 @@ describe("Test WgerModal component", () => {
         const props: WgerModalProps = {
             title: "Test title",
             subtitle: "Test subtitle",
-            closeFn: jest.fn(),
+            closeFn: vi.fn(),
             isOpen: true,
             children: null
         };
@@ -29,7 +29,7 @@ describe("Test WgerModal component", () => {
         const props: WgerModalProps = {
             title: "Test title",
             subtitle: "Test subtitle",
-            closeFn: jest.fn(),
+            closeFn: vi.fn(),
             isOpen: false,
             children: null
         };

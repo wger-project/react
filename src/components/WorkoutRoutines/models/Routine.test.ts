@@ -1,13 +1,13 @@
-import { DEFAULT_WORKOUT_DURATION, Routine } from "components/WorkoutRoutines/models/Routine";
+import { DEFAULT_WORKOUT_DURATION, Routine } from "@/components/WorkoutRoutines/models/Routine";
 import { DateTime } from "luxon";
 import {
     testMuscleBiggus,
     testMuscleDacttilaris,
     testMuscleDeltoid,
     testMuscleRectusAbdominis
-} from "tests/exerciseTestdata";
-import { testRoutine1, testRoutineDayData1 } from "tests/workoutRoutinesTestData";
-import { isSameDay } from "utils/date";
+} from "@/tests/exerciseTestdata";
+import { testRoutine1, testRoutineDayData1 } from "@/tests/workoutRoutinesTestData";
+import { isSameDay } from "@/utils/date";
 
 describe('Routine model tests', () => {
 

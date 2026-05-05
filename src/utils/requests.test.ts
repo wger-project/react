@@ -1,8 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { fetchPaginated } from "utils/requests";
-import { makeHeader } from "utils/url";
+import { fetchPaginated } from "@/utils/requests";
+import { makeHeader } from "@/utils/url";
+import type { Mock } from 'vitest';
 
-jest.mock('axios');
+vi.mock('axios');
 
 describe("test the pagination utilities", () => {
 
@@ -22,8 +23,8 @@ describe("test the pagination utilities", () => {
 
 
     test('should fetch and yield results from all pages', async () => {
-        (axios.get as jest.Mock).mockResolvedValueOnce(mockResponse1);
-        (axios.get as jest.Mock).mockResolvedValueOnce(mockResponse2);
+        (axios.get as Mock).mockResolvedValueOnce(mockResponse1);
+        (axios.get as Mock).mockResolvedValueOnce(mockResponse2);
 
         const generator = fetchPaginated('/api/endpoint');
         const headers = makeHeader();
@@ -47,7 +48,7 @@ describe("test the pagination utilities", () => {
     });
 
     test('should use custom headers when provided', async () => {
-        (axios.get as jest.Mock).mockResolvedValue(mockResponse1);
+        (axios.get as Mock).mockResolvedValue(mockResponse1);
 
         const headers: AxiosRequestConfig['headers'] = {
             Authorization: 'Bearer token',

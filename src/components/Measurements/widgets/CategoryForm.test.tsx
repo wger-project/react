@@ -1,27 +1,28 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "components/Measurements/queries";
-import { CategoryForm } from "components/Measurements/widgets/CategoryForm";
+import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "@/components/Measurements/queries";
+import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
 import React from 'react';
-import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "tests/measurementsTestData";
+import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("services/weight");
+vi.mock("@/services/weight");
 
-jest.mock("components/Measurements/queries");
+vi.mock("@/components/Measurements/queries");
 
 
 describe("Test the CategoryForm component", () => {
     const queryClient = new QueryClient();
-    let mutate = jest.fn();
+    let mutate = vi.fn();
 
     beforeEach(() => {
-        mutate = jest.fn();
+        mutate = vi.fn();
 
-        (useEditMeasurementCategoryQuery as jest.Mock).mockImplementation(() => ({
+        (useEditMeasurementCategoryQuery as Mock).mockImplementation(() => ({
             mutate: mutate
         }));
-        (useAddMeasurementCategoryQuery as jest.Mock).mockImplementation(() => ({
+        (useAddMeasurementCategoryQuery as Mock).mockImplementation(() => ({
             mutate: mutate
         }));
     });

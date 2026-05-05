@@ -1,4 +1,4 @@
-import { Day } from "components/WorkoutRoutines/models/Day";
+import { Day } from "@/components/WorkoutRoutines/models/Day";
 
 describe('Day model tests', () => {
 

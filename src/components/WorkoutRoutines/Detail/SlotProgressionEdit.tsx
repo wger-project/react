@@ -1,18 +1,18 @@
 import { Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
-import { Language } from "components/Exercises/models/language";
-import { useLanguageQuery } from "components/Exercises/queries";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
-import { ProgressionForm } from "components/WorkoutRoutines/widgets/forms/ProgressionForm";
-import { SlotEntryRoundingField } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
+import { Language } from "@/components/Exercises/models/language";
+import { useLanguageQuery } from "@/components/Exercises/queries";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
+import { useRoutineDetailQuery } from "@/components/WorkoutRoutines/queries";
+import { ProgressionForm } from "@/components/WorkoutRoutines/widgets/forms/ProgressionForm";
+import { SlotEntryRoundingField } from "@/components/WorkoutRoutines/widgets/forms/SlotEntryForm";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { getLanguageByShortName } from "services";
-import { makeLink, WgerLink } from "utils/url";
+import { getLanguageByShortName } from "@/services";
+import { makeLink, WgerLink } from "@/utils/url";
 
 export const SlotProgressionEdit = () => {
 

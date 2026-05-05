@@ -31,9 +31,9 @@ import {
     editRirConfig,
     editWeightConfig,
     processBaseConfigs
-} from "services";
-import { AddBaseConfigParams, EditBaseConfigParams, ProcessBaseConfigsParams } from "services/base_config";
-import { QueryKey, } from "utils/consts";
+} from "@/services";
+import { AddBaseConfigParams, EditBaseConfigParams, ProcessBaseConfigsParams } from "@/services/base_config";
+import { QueryKey, } from "@/utils/consts";
 
 
 export const useProcessConfigsQuery = (routineId: number) => {

@@ -1,9 +1,10 @@
 import axios from "axios";
-import { ExerciseImage, ImageStyle } from "components/Exercises/models/image";
-import { postExerciseImage } from "services";
-import { deleteExerciseImage } from "services/image";
+import { ExerciseImage, ImageStyle } from "@/components/Exercises/models/image";
+import { postExerciseImage } from "@/services";
+import { deleteExerciseImage } from "@/services/image";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 
 describe("Image service API tests", () => {
@@ -39,7 +40,7 @@ describe("Image service API tests", () => {
             ImageStyle.THREE_D
         );
 
-        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.post as Mock).mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
         const result = await postExerciseImage(
@@ -72,7 +73,7 @@ describe("Image service API tests", () => {
     test('DELETE an existing image', async () => {
 
         // Arrange
-        (axios.delete as jest.Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
+        (axios.delete as Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act
         const result = await deleteExerciseImage(101);

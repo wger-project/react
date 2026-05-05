@@ -15,9 +15,9 @@ import {
     TextField,
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { Exercise } from "components/Exercises/models/exercise";
-import { useExercisesQuery } from "components/Exercises/queries";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { useExercisesQuery } from "@/components/Exercises/queries";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -163,8 +163,11 @@ export function VariationSelect({
     }
 
     const handleToggle = (variationId: string | null, newVariationId: number | null) => {
-        onChangeVariationId(variationId);
-        onChangeNewVariationExerciseId(newVariationId);
+        if (newVariationId !== null) {
+            onChangeNewVariationExerciseId(newVariationId);
+        } else {
+            onChangeVariationId(variationId);
+        }
     };
 
     return <>

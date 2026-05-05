@@ -1,11 +1,11 @@
 import { Paper, useTheme } from "@mui/material";
-import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import { WeightEntry } from "components/BodyWeight/model";
-import { WgerModal } from "components/Core/Modals/WgerModal";
+import { WeightForm } from "@/components/BodyWeight/Form/WeightForm";
+import { WeightEntry } from "@/components/BodyWeight/model";
+import { WgerModal } from "@/components/Core/Modals/WgerModal";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { CartesianGrid, DotProps, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
-import { dateToLocale } from "utils/date";
+import { dateToLocale } from "@/utils/date";
 
 export interface WeightChartProps {
     weights: WeightEntry[],

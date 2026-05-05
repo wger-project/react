@@ -1,14 +1,14 @@
 import axios from 'axios';
-import { Exercise } from "components/Exercises/models/exercise";
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { RoutineStatsData, RoutineStatsDataAdapter } from "components/WorkoutRoutines/models/LogStats";
-import { Routine } from "components/WorkoutRoutines/models/Routine";
-import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
-import { RoutineLogData, RoutineLogDataAdapter } from "components/WorkoutRoutines/models/RoutineLogData";
-import { getExercise } from "services/exercise";
-import { getRoutineRepUnits, getRoutineWeightUnits } from "services/workoutUnits";
-import { ApiPath } from "utils/consts";
-import { makeHeader, makeUrl } from "utils/url";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { RoutineStatsData, RoutineStatsDataAdapter } from "@/components/WorkoutRoutines/models/LogStats";
+import { Routine } from "@/components/WorkoutRoutines/models/Routine";
+import { RoutineDayData } from "@/components/WorkoutRoutines/models/RoutineDayData";
+import { RoutineLogData, RoutineLogDataAdapter } from "@/components/WorkoutRoutines/models/RoutineLogData";
+import { getExercise } from "@/services/exercise";
+import { getRoutineRepUnits, getRoutineWeightUnits } from "@/services/workoutUnits";
+import { ApiPath } from "@/utils/consts";
+import { makeHeader, makeUrl } from "@/utils/url";
 import { ResponseType } from "./responseType";
 
 export const ROUTINE_API_STRUCTURE_PATH = 'structure';

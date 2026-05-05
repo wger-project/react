@@ -14,26 +14,26 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import ImageList from "@mui/material/ImageList";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { FormQueryErrors } from "components/Core/Widgets/FormError";
-import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { FormQueryErrors } from "@/components/Core/Widgets/FormError";
+import { StepProps } from "@/components/Exercises/Add/AddExerciseStepper";
 import {
     useAddExerciseFullQuery,
     useCategoriesQuery,
     useEquipmentQuery,
     useLanguageQuery,
     useMusclesQuery
-} from "components/Exercises/queries";
-import { useProfileQuery } from "components/User/queries/profile";
+} from "@/components/Exercises/queries";
+import { useProfileQuery } from "@/components/User/queries/profile";
 import Markdown from 'markdown-to-jsx';
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { postExerciseImage } from "services";
-import { useExerciseSubmissionStateValue } from "state";
-import { ENGLISH_LANGUAGE_ID } from "utils/consts";
-import { MarkdownOptions } from "utils/markdown";
-import { makeLink, WgerLink } from "utils/url";
+import { postExerciseImage } from "@/services";
+import { useExerciseSubmissionStateValue } from "@/state";
+import { ENGLISH_LANGUAGE_ID } from "@/utils/consts";
+import { MarkdownOptions } from "@/utils/markdown";
+import { makeLink, WgerLink } from "@/utils/url";
 
 export const Step6Overview = ({ onBack }: StepProps) => {
     const [t, i18n] = useTranslation();

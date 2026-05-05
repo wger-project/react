@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
-import { ApiPath } from "utils/consts";
-import { makeHeader, makeUrl } from "utils/url";
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
+import { ApiPath } from "@/utils/consts";
+import { makeHeader, makeUrl } from "@/utils/url";
 
 
 /*

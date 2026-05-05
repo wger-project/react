@@ -5,9 +5,9 @@ import {
     OperationType,
     RuleRequirements,
     StepType
-} from "components/WorkoutRoutines/models/BaseConfig";
-import { ApiPath } from "utils/consts";
-import { makeHeader, makeUrl } from "utils/url";
+} from "@/components/WorkoutRoutines/models/BaseConfig";
+import { ApiPath } from "@/utils/consts";
+import { makeHeader, makeUrl } from "@/utils/url";
 
 export interface AddBaseConfigParams {
     value: number;

@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
-import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
-import { Category } from "components/Exercises/models/category";
-import { Equipment } from "components/Exercises/models/equipment";
-import { Exercise } from "components/Exercises/models/exercise";
-import { Language } from "components/Exercises/models/language";
-import { Translation } from "components/Exercises/models/translation";
+import { OverviewCard } from "@/components/Exercises/Detail/OverviewCard";
+import { Category } from "@/components/Exercises/models/category";
+import { Equipment } from "@/components/Exercises/models/equipment";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Language } from "@/components/Exercises/models/language";
+import { Translation } from "@/components/Exercises/models/translation";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 

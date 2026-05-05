@@ -1,6 +1,6 @@
 import { Alert, AlertTitle, Button } from '@mui/material';
 import React from 'react';
-import { setNotification, useWeightStateValue } from 'state';
+import { setNotification, useWeightStateValue } from '@/state';
 import styles from './notifications.module.css';
 
 export const Notifications = () => {

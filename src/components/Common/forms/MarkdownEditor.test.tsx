@@ -4,7 +4,7 @@ import { MarkdownEditor } from './MarkdownEditor';
 import '@testing-library/jest-dom';
 
 describe('MarkdownEditor', () => {
-    const mockChange = jest.fn();
+    const mockChange = vi.fn();
 
     it('renders in Write mode by default', () => {
         render(<MarkdownEditor value="Test content" onChange={mockChange} />);

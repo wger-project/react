@@ -1,9 +1,9 @@
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { useCategoriesQuery } from "components/Exercises/queries";
-import { useProfileQuery } from "components/User/queries/profile";
+import { useCategoriesQuery } from "@/components/Exercises/queries";
+import { useProfileQuery } from "@/components/User/queries/profile";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { editExercise } from "services";
+import { editExercise } from "@/services";
 
 export function EditExerciseCategory(props: { exerciseId: number, initial: number }) {
     const { t } = useTranslation();

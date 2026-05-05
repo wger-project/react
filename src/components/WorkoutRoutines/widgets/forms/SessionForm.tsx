@@ -3,20 +3,20 @@ import { Button, ButtonGroup, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { WgerTextField } from "components/Common/forms/WgerTextField";
+import { WgerTextField } from "@/components/Common/forms/WgerTextField";
 import {
     IMPRESSION_BAD,
     IMPRESSION_GOOD,
     IMPRESSION_NEUTRAL,
     NOTES_MAX_LENGTH,
     WorkoutSession
-} from "components/WorkoutRoutines/models/WorkoutSession";
-import { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery } from "components/WorkoutRoutines/queries";
+} from "@/components/WorkoutRoutines/models/WorkoutSession";
+import { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery } from "@/components/WorkoutRoutines/queries";
 import { Form, Formik, FormikProps } from "formik";
 import { DateTime } from "luxon";
 import React, { useEffect } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateTimeToHHMM, dateToYYYYMMDD } from "utils/date";
+import { dateTimeToHHMM, dateToYYYYMMDD } from "@/utils/date";
 import * as yup from 'yup';
 
 interface SessionFormProps {

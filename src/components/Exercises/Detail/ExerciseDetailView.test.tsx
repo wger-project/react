@@ -1,16 +1,17 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailView";
-import { Exercise } from "components/Exercises/models/exercise";
-import { Language } from "components/Exercises/models/language";
-import { usePermissionQuery } from "components/User/queries/permission";
-import { useProfileQuery } from "components/User/queries/profile";
+import { ExerciseDetailView } from "@/components/Exercises/Detail/ExerciseDetailView";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Language } from "@/components/Exercises/models/language";
+import { usePermissionQuery } from "@/components/User/queries/permission";
+import { useProfileQuery } from "@/components/User/queries/profile";
 import React from 'react';
-import { testExerciseCrunches, testLanguageEnglish, testLanguageFrench } from "tests/exerciseTestdata";
-import { testProfileDataNotVerified, testProfileDataVerified } from "tests/userTestdata";
+import { testExerciseCrunches, testLanguageEnglish, testLanguageFrench } from "@/tests/exerciseTestdata";
+import { testProfileDataNotVerified, testProfileDataVerified } from "@/tests/userTestdata";
+import type { Mock } from 'vitest';
 
-jest.mock("components/User/queries/profile");
-jest.mock("components/User/queries/permission");
+vi.mock("@/components/User/queries/profile");
+vi.mock("@/components/User/queries/permission");
 
 const queryClient = new QueryClient();
 
@@ -21,7 +22,7 @@ describe("Contribute banner tests", () => {
             <ExerciseDetailView
                 exercise={exercise}
                 language={language}
-                setEditMode={jest.fn}
+                setEditMode={vi.fn}
                 variations={[]}
             />
         </QueryClientProvider>
@@ -29,11 +30,11 @@ describe("Contribute banner tests", () => {
 
     beforeEach(() => {
 
-        (useProfileQuery as jest.Mock).mockImplementation(() => ({
+        (useProfileQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             data: testProfileDataNotVerified
         }));
-        (usePermissionQuery as jest.Mock).mockImplementation(() => ({
+        (usePermissionQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             data: false
         }));
@@ -54,7 +55,7 @@ describe("Contribute banner tests", () => {
 
     test('Should show no banner to anonymous users', async () => {
         // Arrange
-        (useProfileQuery as jest.Mock).mockImplementation(() => ({
+        (useProfileQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             data: null
         }));
@@ -68,7 +69,7 @@ describe("Contribute banner tests", () => {
 
     test('Should show the banner to admins', async () => {
         // Arrange
-        (usePermissionQuery as jest.Mock).mockImplementation(() => ({
+        (usePermissionQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             data: true
         }));
@@ -82,7 +83,7 @@ describe("Contribute banner tests", () => {
 
     test('Should show the banner to verified users', () => {
         // Arrange
-        (useProfileQuery as jest.Mock).mockImplementation(() => ({
+        (useProfileQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             data: testProfileDataVerified
         }));

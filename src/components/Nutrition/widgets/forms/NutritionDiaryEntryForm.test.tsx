@@ -1,19 +1,17 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, render, screen, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent, { UserEvent } from "@testing-library/user-event";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
-import { SEARCH_DEBOUNCE_MS } from "components/Nutrition/widgets/IngredientAutcompleter";
-import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "@/components/Nutrition/queries";
+import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
 import React from 'react';
-import { searchIngredient } from "services";
-import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "tests/ingredientTestdata";
-import { TEST_DIARY_ENTRY_1 } from "tests/nutritionDiaryTestdata";
+import { searchIngredient } from "@/services";
+import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
+import { TEST_DIARY_ENTRY_1 } from "@/tests/nutritionDiaryTestdata";
+import type { Mock } from 'vitest';
 
-const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
-
-jest.mock('components/Nutrition/queries');
-jest.mock('services');
+vi.mock('@/components/Nutrition/queries');
+vi.mock('@/services');
 
 async function fillInEntry(user: UserEvent) {
     const autocomplete = screen.getByTestId('autocomplete');
@@ -21,10 +19,9 @@ async function fillInEntry(user: UserEvent) {
     await user.click(autocomplete);
     await user.type(input, 'Bagu');
 
-    // Wait for debounce
-    await act(async () => {
-        await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-    });
+    // Wait for the debounced search results to render in the dropdown
+    // before navigating to them with the keyboard.
+    await screen.findByText('0% fat Greek style yogurt');
 
     // Select the first result
     await user.click(input);
@@ -39,18 +36,18 @@ async function fillInEntry(user: UserEvent) {
 
 describe('Test the NutritionDiaryEntryForm component', () => {
     const queryClient = new QueryClient();
-    let mutateAddMock = jest.fn();
-    let mutateEditMock = jest.fn();
-    let closeFnMock = jest.fn();
+    let mutateAddMock = vi.fn();
+    let mutateEditMock = vi.fn();
+    let closeFnMock = vi.fn();
 
     beforeEach(() => {
-        mutateAddMock = jest.fn();
-        mutateEditMock = jest.fn();
-        closeFnMock = jest.fn();
+        mutateAddMock = vi.fn();
+        mutateEditMock = vi.fn();
+        closeFnMock = vi.fn();
 
-        (useEditDiaryEntryQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
-        (useAddDiaryEntryQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
-        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
+        (useEditDiaryEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        (useAddDiaryEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        (searchIngredient as Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
     });
 
 

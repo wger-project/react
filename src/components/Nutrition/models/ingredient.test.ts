@@ -1,5 +1,5 @@
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { INGREDIENT_API_RESPONSE } from "tests/api/ingredientInfoEndpoint";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { INGREDIENT_API_RESPONSE } from "@/tests/api/ingredientInfoEndpoint";
 
 
 describe('Test the ingredient model', () => {

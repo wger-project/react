@@ -1,12 +1,12 @@
 import { Card, CardActionArea, CardContent, CardMedia, Chip, Typography, } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import { ExerciseImagePlaceholder } from "components/Exercises/Detail/ExerciseImagePlaceholder";
-import { Exercise } from "components/Exercises/models/exercise";
-import { Language } from "components/Exercises/models/language";
+import { ExerciseImagePlaceholder } from "@/components/Exercises/Detail/ExerciseImagePlaceholder";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Language } from "@/components/Exercises/models/language";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { ENGLISH_LANGUAGE_ID } from "utils/consts";
-import { makeLink, WgerLink } from "utils/url";
+import { ENGLISH_LANGUAGE_ID } from "@/utils/consts";
+import { makeLink, WgerLink } from "@/utils/url";
 
 type OverviewCardProps = {
     exercise: Exercise;

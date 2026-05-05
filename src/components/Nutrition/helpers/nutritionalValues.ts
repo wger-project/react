@@ -1,5 +1,5 @@
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
 
 type NutritionalValuesConstructor = {
     energy?: number;

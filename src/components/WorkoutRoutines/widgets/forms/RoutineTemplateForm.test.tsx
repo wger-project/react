@@ -1,21 +1,22 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { RoutineTemplateForm } from "components/WorkoutRoutines/widgets/forms/RoutineTemplateForm";
-import { editRoutine } from 'services';
-import { testQueryClient } from "tests/queryClient";
-import { testRoutine1 } from "tests/workoutRoutinesTestData";
+import { RoutineTemplateForm } from "@/components/WorkoutRoutines/widgets/forms/RoutineTemplateForm";
+import { editRoutine } from '@/services';
+import { testQueryClient } from "@/tests/queryClient";
+import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
 
-jest.mock("services");
-const mockEditRoutine = editRoutine as jest.Mock;
+vi.mock("@/services");
+const mockEditRoutine = editRoutine as Mock;
 
 describe('RoutineTemplateForm', () => {
     let user: ReturnType<typeof userEvent.setup>;
 
     beforeEach(() => {
         user = userEvent.setup();
-        jest.resetAllMocks();
+        vi.resetAllMocks();
     });
 
     test('calls editRoutine when setting the template flag', async () => {

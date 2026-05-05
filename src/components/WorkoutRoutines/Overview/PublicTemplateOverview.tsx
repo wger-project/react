@@ -1,13 +1,13 @@
 import { List, Paper, } from "@mui/material";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
-import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
-import { AddPublicTemplateFab } from "components/WorkoutRoutines/Overview/Fab";
-import { RoutineList } from "components/WorkoutRoutines/Overview/RoutineOverview";
-import { usePublicRoutinesShallowQuery } from "components/WorkoutRoutines/queries";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
+import { OverviewEmpty } from "@/components/Core/Widgets/OverviewEmpty";
+import { AddPublicTemplateFab } from "@/components/WorkoutRoutines/Overview/Fab";
+import { RoutineList } from "@/components/WorkoutRoutines/Overview/RoutineOverview";
+import { usePublicRoutinesShallowQuery } from "@/components/WorkoutRoutines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { WgerLink } from "utils/url";
+import { WgerLink } from "@/utils/url";
 
 
 export const PublicTemplateOverview = () => {

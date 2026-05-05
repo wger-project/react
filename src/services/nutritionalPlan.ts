@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { NutritionalPlan, nutritionalPlanAdapter } from "components/Nutrition/models/nutritionalPlan";
-import { getNutritionalDiaryEntries } from "services";
-import { getMealsForPlan } from "services/meal";
-import { ResponseType } from "services/responseType";
-import { ApiNutritionalPlanType } from 'types';
-import { makeHeader, makeUrl } from "utils/url";
+import { NutritionalPlan, nutritionalPlanAdapter } from "@/components/Nutrition/models/nutritionalPlan";
+import { getNutritionalDiaryEntries } from "@/services";
+import { getMealsForPlan } from "@/services/meal";
+import { ResponseType } from "@/services/responseType";
+import { ApiNutritionalPlanType } from '@/types';
+import { makeHeader, makeUrl } from "@/utils/url";
 
 export const API_NUTRITIONAL_PLAN_PATH = 'nutritionplan';
 

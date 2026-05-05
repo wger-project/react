@@ -1,39 +1,31 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { PlanDetail } from "components/Nutrition/components/PlanDetail";
-import { useFetchNutritionalPlanQuery } from "components/Nutrition/queries";
-import { MemoryRouter, Route, Routes } from "react-router";
-import { TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
+import { PlanDetail } from "@/components/Nutrition/components/PlanDetail";
+import { useFetchNutritionalPlanQuery } from "@/components/Nutrition/queries";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
+import type { Mock } from 'vitest';
 
-jest.mock("components/Nutrition/queries");
-jest.useFakeTimers();
+vi.mock("@/components/Nutrition/queries");
+vi.useFakeTimers();
 
-const { ResizeObserver } = window;
 const queryClient = new QueryClient();
 
 describe("Test the PlanDetail component", () => {
 
     beforeEach(() => {
-        (useFetchNutritionalPlanQuery as jest.Mock).mockImplementation(() => ({
+        (useFetchNutritionalPlanQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             data: TEST_NUTRITIONAL_PLAN_1
         }));
 
         // @ts-expect-error
-        delete window.ResizeObserver;
-        window.ResizeObserver = jest.fn().mockImplementation(() => ({
-            observe: jest.fn(),
-            unobserve: jest.fn(),
-            disconnect: jest.fn()
-        }));
-
-        jest.setSystemTime(new Date('2023-07-01').getTime());
+        vi.setSystemTime(new Date('2023-07-01').getTime());
     });
 
     afterEach(() => {
-        window.ResizeObserver = ResizeObserver;
-        jest.restoreAllMocks();
-        jest.useRealTimers();
+        vi.restoreAllMocks();
+        vi.useRealTimers();
     });
 
     test('renders the current nutritional plan correctly', async () => {

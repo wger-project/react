@@ -1,10 +1,10 @@
 import { Alert, Box, Button, Grid, Modal, Stack, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
-import { LicenseAuthor } from "components/Common/forms/LicenseAuthor";
-import { LicenseAuthorUrl } from "components/Common/forms/LicenseAuthorUrl";
-import { LicenseDerivativeSourceUrl } from "components/Common/forms/LicenseDerivativeSourceUrl";
-import { LicenseObjectUrl } from "components/Common/forms/LicenseObjectUrl";
-import { LicenseTitle } from "components/Common/forms/LicenseTitle";
+import { LicenseAuthor } from "@/components/Common/forms/LicenseAuthor";
+import { LicenseAuthorUrl } from "@/components/Common/forms/LicenseAuthorUrl";
+import { LicenseDerivativeSourceUrl } from "@/components/Common/forms/LicenseDerivativeSourceUrl";
+import { LicenseObjectUrl } from "@/components/Common/forms/LicenseObjectUrl";
+import { LicenseTitle } from "@/components/Common/forms/LicenseTitle";
 import { Form, Formik } from "formik";
 import { ImageStyleToggle } from "./ImageStyle";
 import { useTranslation } from "react-i18next";

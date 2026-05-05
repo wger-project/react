@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
 
-import { Exercise } from "components/Exercises/models/exercise";
-import { BaseConfig, BaseConfigAdapter } from "components/WorkoutRoutines/models/BaseConfig";
-import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
-import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
-import { Adapter } from "utils/Adapter";
-import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG } from "utils/consts";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { BaseConfig, BaseConfigAdapter } from "@/components/WorkoutRoutines/models/BaseConfig";
+import { RepetitionUnit } from "@/components/WorkoutRoutines/models/RepetitionUnit";
+import { WeightUnit } from "@/components/WorkoutRoutines/models/WeightUnit";
+import { Adapter } from "@/utils/Adapter";
+import { REP_UNIT_REPETITIONS, WEIGHT_UNIT_KG } from "@/utils/consts";
 
 export type SlotEntryType = 'normal' | 'warmup' | 'dropset' | 'myo' | 'partial' | 'forced' | 'tut' | 'iso' | 'jump';
 

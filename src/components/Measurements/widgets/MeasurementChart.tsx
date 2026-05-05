@@ -1,10 +1,9 @@
 import { Box, Paper } from "@mui/material";
-import { categoryValidator } from "components/Exercises/forms/yupValidators";
-import { MeasurementCategory } from "components/Measurements/models/Category";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import React from "react";
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
-import { theme } from "theme";
-import { dateToLocale } from "utils/date";
+import { theme } from "@/theme";
+import { dateToLocale } from "@/utils/date";
 
 export interface TooltipProps {
     active?: boolean,

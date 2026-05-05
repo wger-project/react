@@ -1,11 +1,11 @@
 import { Stack, } from "@mui/material";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
-import { useMeasurementsQuery } from "components/Measurements/queries";
-import { CategoryDetailDataGrid } from "components/Measurements/widgets/CategoryDetailDataGrid";
-import { CategoryDetailDropdown } from "components/Measurements/widgets/CategoryDetailDropdown";
-import { AddMeasurementEntryFab } from "components/Measurements/widgets/fab";
-import { MeasurementChart } from "components/Measurements/widgets/MeasurementChart";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
+import { useMeasurementsQuery } from "@/components/Measurements/queries";
+import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
+import { CategoryDetailDropdown } from "@/components/Measurements/widgets/CategoryDetailDropdown";
+import { AddMeasurementEntryFab } from "@/components/Measurements/widgets/fab";
+import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
 import React from "react";
 import { useParams } from "react-router-dom";
 

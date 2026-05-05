@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { Button, Menu, MenuItem } from "@mui/material";
-import { makeLink, WgerLink } from "utils/url";
+import { makeLink, WgerLink } from "@/utils/url";
 import React from "react";
 
 export const NutritionSubMenu = () => {

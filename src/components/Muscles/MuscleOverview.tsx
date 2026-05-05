@@ -1,5 +1,5 @@
-import { Muscle } from "components/Exercises/models/muscle";
-import { PUBLIC_URL } from "config";
+import { Muscle } from "@/components/Exercises/models/muscle";
+import { PUBLIC_URL } from "@/config";
 import React from "react";
 
 type OverviewCardProps = {

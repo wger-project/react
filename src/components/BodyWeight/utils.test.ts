@@ -1,4 +1,4 @@
-import { WeightEntry } from "components/BodyWeight/model";
+import { WeightEntry } from "@/components/BodyWeight/model";
 import { processWeights } from "./utils";
 
 describe("process_weight tests", () => {

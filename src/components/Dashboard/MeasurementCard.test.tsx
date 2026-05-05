@@ -1,11 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { MeasurementCard } from "components/Dashboard/MeasurementCard";
-import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
-import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "tests/measurementsTestData";
+import { MeasurementCard } from "@/components/Dashboard/MeasurementCard";
+import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
+import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("components/Measurements/queries");
-jest.useFakeTimers();
+vi.mock("@/components/Measurements/queries");
+vi.useFakeTimers();
 
 const queryClient = new QueryClient();
 
@@ -14,7 +15,7 @@ describe("smoke test the MeasurementCard component", () => {
     describe("Measurements available", () => {
 
         beforeEach(() => {
-            (useMeasurementsCategoryQuery as jest.Mock).mockImplementation(() => ({
+            (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: [
@@ -47,7 +48,7 @@ describe("smoke test the MeasurementCard component", () => {
     describe("No data available", () => {
 
         beforeEach(() => {
-            (useMeasurementsCategoryQuery as jest.Mock).mockImplementation(() => ({
+            (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: null

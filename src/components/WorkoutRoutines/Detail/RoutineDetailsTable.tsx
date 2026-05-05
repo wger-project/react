@@ -16,22 +16,22 @@ import {
     useTheme
 } from "@mui/material";
 import { styled } from '@mui/material/styles';
-import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
-import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
-import { Language } from "components/Exercises/models/language";
-import { useLanguageQuery } from "components/Exercises/queries";
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { Routine } from "components/WorkoutRoutines/models/Routine";
-import { RoutineLogData } from "components/WorkoutRoutines/models/RoutineLogData";
-import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
-import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
-import { useRoutineDetailQuery, useRoutineLogData } from "components/WorkoutRoutines/queries";
+import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
+import { RenderLoadingQuery } from "@/components/Core/Widgets/RenderLoadingQuery";
+import { Language } from "@/components/Exercises/models/language";
+import { useLanguageQuery } from "@/components/Exercises/queries";
+import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { Routine } from "@/components/WorkoutRoutines/models/Routine";
+import { RoutineLogData } from "@/components/WorkoutRoutines/models/RoutineLogData";
+import { SetConfigData } from "@/components/WorkoutRoutines/models/SetConfigData";
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
+import { WorkoutLog } from "@/components/WorkoutRoutines/models/WorkoutLog";
+import { useRoutineDetailQuery, useRoutineLogData } from "@/components/WorkoutRoutines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { getLanguageByShortName } from "services";
-import { makeLink, WgerLink } from "utils/url";
+import { getLanguageByShortName } from "@/services";
+import { makeLink, WgerLink } from "@/utils/url";
 
 
 const PREFIX = 'RoutineDetailsTable';

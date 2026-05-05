@@ -1,10 +1,10 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Step1Basics } from "components/Exercises/Add/Step1Basics";
-import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "components/Exercises/queries";
+import { Step1Basics } from "@/components/Exercises/Add/Step1Basics";
+import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "@/components/Exercises/queries";
 import React from "react";
-import { ExerciseSubmissionStateProvider } from "state";
+import { ExerciseSubmissionStateProvider } from "@/state";
 import {
     setAlternativeNamesEn,
     setCategory,
@@ -12,30 +12,31 @@ import {
     setNameEn,
     setPrimaryMuscles,
     setSecondaryMuscles
-} from "state/exerciseSubmissionReducer";
-import { testCategories, testEquipment, testMuscles } from "tests/exerciseTestdata";
+} from "@/state/exerciseSubmissionReducer";
+import type { Mock } from 'vitest';
+import { testCategories, testEquipment, testMuscles } from "@/tests/exerciseTestdata";
 
 // It seems we run into a timeout when running the tests on GitHub actions
-jest.setTimeout(15000);
+vi.setConfig({ testTimeout: 15000 });
 
-jest.mock("components/Exercises/queries");
-jest.mock("state/exerciseSubmissionReducer", () => {
-    const originalModule = jest.requireActual("state/exerciseSubmissionReducer");
+vi.mock("@/components/Exercises/queries");
+vi.mock("@/state/exerciseSubmissionReducer", async () => {
+    const originalModule = await vi.importActual<typeof import("@/state/exerciseSubmissionReducer")>("@/state/exerciseSubmissionReducer");
     return {
         __esModule: true,
         ...originalModule,
-        setNameEn: jest.fn(),
-        setCategory: jest.fn(),
-        setAlternativeNamesEn: jest.fn(),
-        setEquipment: jest.fn(),
-        setPrimaryMuscles: jest.fn(),
-        setSecondaryMuscles: jest.fn()
+        setNameEn: vi.fn(),
+        setCategory: vi.fn(),
+        setAlternativeNamesEn: vi.fn(),
+        setEquipment: vi.fn(),
+        setPrimaryMuscles: vi.fn(),
+        setSecondaryMuscles: vi.fn()
     };
 });
 
-const mockedUseCategoriesQuery = useCategoriesQuery as jest.Mock;
-const mockedMuscleQuery = useMusclesQuery as jest.Mock;
-const mockedUseEquipmentQuery = useEquipmentQuery as jest.Mock;
+const mockedUseCategoriesQuery = useCategoriesQuery as Mock;
+const mockedMuscleQuery = useMusclesQuery as Mock;
+const mockedUseEquipmentQuery = useEquipmentQuery as Mock;
 
 
 describe("<Step1Basics />", () => {
@@ -53,12 +54,12 @@ describe("<Step1Basics />", () => {
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test("Renders without crashing", () => {
         // Arrange
-        const mockOnContinue = jest.fn();
+        const mockOnContinue = vi.fn();
 
         // Act
         const queryClient = new QueryClient();
@@ -80,7 +81,7 @@ describe("<Step1Basics />", () => {
 
     test("Correctly saves the values to the provider", async () => {
         // Arrange
-        const mockOnContinue = jest.fn();
+        const mockOnContinue = vi.fn();
         const user = userEvent.setup();
 
         // Act

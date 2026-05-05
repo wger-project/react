@@ -4,10 +4,13 @@ import ClearIcon from "@mui/icons-material/Clear";
 import PhotoIcon from "@mui/icons-material/Photo";
 import {
     Avatar,
+    Box,
     Button,
+    Checkbox,
     DialogActions,
     DialogContent,
     DialogTitle,
+    FormControlLabel,
     IconButton,
     InputAdornment,
     ListItem,
@@ -16,14 +19,14 @@ import {
     TextField,
     Tooltip
 } from "@mui/material";
-import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { Exercise } from "components/Exercises/models/exercise";
-import { Language } from "components/Exercises/models/language";
-import { SERVER_URL } from "config";
+import { NameAutocompleter } from "@/components/Exercises/Filter/NameAutcompleter";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Language } from "@/components/Exercises/models/language";
+import { SERVER_URL } from "@/config";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { deleteExercise, deleteExerciseTranslation, getExercise } from "services";
+import { deleteExercise, deleteExerciseTranslation, getExercise } from "@/services";
 
 export function ExerciseDeleteDialog(props: {
     onClose: () => void,
@@ -33,6 +36,10 @@ export function ExerciseDeleteDialog(props: {
 }) {
     const [replacementId, setReplacementId] = React.useState<number | null>(null);
     const [replacementExercise, setReplacementExercise] = React.useState<Exercise | null>(null);
+    const [sameExerciseError, setSameExerciseError] = React.useState(false);
+    const [transferMedia, setTransferMedia] = React.useState(true);
+    const [transferTranslations, setTransferTranslations] = React.useState(true);
+    const [isProcessing, setIsProcessing] = React.useState(false);
 
     const [t] = useTranslation();
     const navigate = useNavigate();
@@ -40,6 +47,7 @@ export function ExerciseDeleteDialog(props: {
     const resetReplacement = () => {
         setReplacementExercise(null);
         setReplacementId(null);
+        setSameExerciseError(false);
     };
 
     const handleDeleteTranslation = async () => {
@@ -49,10 +57,19 @@ export function ExerciseDeleteDialog(props: {
     };
 
     const handleDeleteBase = async (handleReplacement: boolean = false) => {
-        if (handleReplacement) {
-            await deleteExercise(props.currentExercise.id!, replacementExercise!.uuid!);
-        } else {
-            await deleteExercise(props.currentExercise.id!);
+        setIsProcessing(true);
+        try {
+            if (handleReplacement) {
+                await deleteExercise(props.currentExercise.id!, {
+                    replacementUUID: replacementExercise!.uuid!,
+                    transferMedia,
+                    transferTranslations,
+                });
+            } else {
+                await deleteExercise(props.currentExercise.id!);
+            }
+        } finally {
+            setIsProcessing(false);
         }
         props.onClose();
         navigate('../overview');
@@ -62,6 +79,13 @@ export function ExerciseDeleteDialog(props: {
         const id = exerciseId !== undefined ? exerciseId : replacementId;
 
         if (id !== null) {
+            if (id === props.currentExercise.id) {
+                setReplacementExercise(null);
+                setSameExerciseError(true);
+                return;
+            }
+
+            setSameExerciseError(false);
             try {
                 const exercise = await getExercise(id);
                 setReplacementExercise(exercise);
@@ -92,6 +116,12 @@ export function ExerciseDeleteDialog(props: {
             <NameAutocompleter
                 callback={(exercise: Exercise | null) => {
                     if (exercise !== null) {
+                        if (exercise.id === props.currentExercise.id) {
+                            setReplacementId(null);
+                            setReplacementExercise(null);
+                            setSameExerciseError(true);
+                            return;
+                        }
                         setReplacementId(exercise.id!);
                         loadCurrentReplacement(exercise.id!);
                     }
@@ -121,7 +151,11 @@ export function ExerciseDeleteDialog(props: {
                 fullWidth={true}
                 variant="standard"
             />
-            {replacementExercise === null && <>
+            {sameExerciseError && <>
+                <p style={{ color: 'red' }}><i>{t('exercises.replacementCannotBeSame')}</i></p>
+            </>}
+
+            {replacementExercise === null && !sameExerciseError && <>
                 <p><i>{t('exercises.noReplacementSelected')}</i></p>
             </>}
 
@@ -153,14 +187,38 @@ export function ExerciseDeleteDialog(props: {
                         <ClearIcon />
                     </IconButton>
                 </ListItem>
+
+                <Box sx={{ mt: 2 }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={transferMedia}
+                                onChange={(e) => setTransferMedia(e.target.checked)}
+                                disabled={isProcessing}
+                            />
+                        }
+                        label={t('exercises.transferMediaLabel')}
+                    />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={transferTranslations}
+                                onChange={(e) => setTransferTranslations(e.target.checked)}
+                                disabled={isProcessing}
+                            />
+                        }
+                        label={t('exercises.transferTranslationsLabel')}
+                    />
+                </Box>
             </>}
         </DialogContent>
         <DialogActions>
-            <Button onClick={() => props.onClose()}>{t('cancel')}</Button>
+            <Button onClick={() => props.onClose()} disabled={isProcessing}>{t('cancel')}</Button>
             <Button
                 data-testid="button-delete-translation"
                 size={"small"}
                 onClick={handleDeleteTranslation}
+                disabled={isProcessing}
                 variant="contained"
             >
                 {t('exercises.deleteTranslation')}
@@ -169,6 +227,7 @@ export function ExerciseDeleteDialog(props: {
                 data-testid="button-delete-all"
                 size={"small"}
                 onClick={() => handleDeleteBase()}
+                disabled={isProcessing}
                 variant="contained"
             >
                 {t('exercises.deleteExerciseFull')}
@@ -176,7 +235,8 @@ export function ExerciseDeleteDialog(props: {
             <Button
                 data-testid="button-delete-and-replace"
                 size={"small"}
-                disabled={replacementExercise === null}
+                disabled={replacementExercise === null || isProcessing}
+                loading={isProcessing}
                 onClick={() => handleDeleteBase(true)}
                 variant="contained"
             >

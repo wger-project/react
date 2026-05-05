@@ -1,5 +1,5 @@
-import i18n from "i18n";
-import { getAcceptLanguage, makeHeader, makeLink, makeUrl, WgerLink } from "utils/url";
+import i18n from "@/i18n";
+import { getAcceptLanguage, makeHeader, makeLink, makeUrl, WgerLink } from "@/utils/url";
 
 describe("test url utility", () => {
 

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getRoutineRepUnits, getRoutineWeightUnits } from "services";
-import { QueryKey, } from "utils/consts";
+import { getRoutineRepUnits, getRoutineWeightUnits } from "@/services";
+import { QueryKey, } from "@/utils/consts";
 
 
 export const useFetchRoutineWeighUnitsQuery = () => useQuery({

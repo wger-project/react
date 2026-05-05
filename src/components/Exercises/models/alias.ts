@@ -1,5 +1,5 @@
-import { ApiAliasType } from "types";
-import { Adapter } from "utils/Adapter";
+import { ApiAliasType } from "@/types";
+import { Adapter } from "@/utils/Adapter";
 
 export class Alias {
     constructor(

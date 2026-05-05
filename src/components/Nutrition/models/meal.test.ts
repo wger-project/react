@@ -1,5 +1,5 @@
-import { Meal } from "components/Nutrition/models/meal";
-import { TEST_MEAL_1 } from "tests/nutritionTestdata";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { TEST_MEAL_1 } from "@/tests/nutritionTestdata";
 
 
 describe('Test the meal model', () => {

@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { checkLanguage } from "services";
-import { LanguageCheckInput } from "services/languageCheck";
+import { checkLanguage } from "@/services";
+import { LanguageCheckInput } from "@/services/languageCheck";
 
 
 /*

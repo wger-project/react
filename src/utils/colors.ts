@@ -1,4 +1,4 @@
-import { LIST_OF_COLORS3, LIST_OF_COLORS5, LIST_OF_COLORS8 } from "utils/consts";
+import { LIST_OF_COLORS3, LIST_OF_COLORS5, LIST_OF_COLORS8 } from "@/utils/consts";
 
 export function* generateChartColors(nrOfItems: number) {
 

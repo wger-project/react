@@ -1,16 +1,17 @@
 import axios from "axios";
-import { getNutritionalDiaryEntries } from "services";
+import { getNutritionalDiaryEntries } from "@/services";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 describe("Nutritional plan diary service tests", () => {
 
     beforeEach(() => {
-        jest.resetAllMocks();
+        vi.resetAllMocks();
     });
 
     test('Correctly filters diary entries', async () => {
-        (axios.get as jest.Mock).mockImplementation(() => {
+        (axios.get as Mock).mockImplementation(() => {
             return Promise.resolve({
                 data: {
                     count: 2,

@@ -23,24 +23,25 @@ import {
     editRestConfig,
     editRirConfig,
     editWeightConfig
-} from "services";
+} from "@/services";
+import type { Mock } from 'vitest';
 import {
     addBaseConfig,
     AddBaseConfigParams,
     deleteBaseConfig,
     editBaseConfig,
     EditBaseConfigParams
-} from "services/base_config";
-import { ApiPath } from "utils/consts";
+} from "@/services/base_config";
+import { ApiPath } from "@/utils/consts";
 
-jest.mock("services/base_config", () => {
-    const originalModule = jest.requireActual("services/base_config");
+vi.mock("@/services/base_config", async () => {
+    const originalModule = await vi.importActual<typeof import("@/services/base_config")>("@/services/base_config");
     return {
         __esModule: true,
         ...originalModule, // Include all original exports
-        editBaseConfig: jest.fn(),
-        addBaseConfig: jest.fn(),
-        deleteBaseConfig: jest.fn(),
+        editBaseConfig: vi.fn(),
+        addBaseConfig: vi.fn(),
+        deleteBaseConfig: vi.fn(),
     };
 });
 
@@ -51,11 +52,11 @@ describe('Config Service - Edit Functions', () => {
 
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
 
-        (editBaseConfig as jest.Mock).mockResolvedValue({ data: mockEditData });
-        (addBaseConfig as jest.Mock).mockResolvedValue({ id: 2, value: 200 });
-        (deleteBaseConfig as jest.Mock).mockResolvedValue(undefined);
+        (editBaseConfig as Mock).mockResolvedValue({ data: mockEditData });
+        (addBaseConfig as Mock).mockResolvedValue({ id: 2, value: 200 });
+        (deleteBaseConfig as Mock).mockResolvedValue(undefined);
 
     });
 

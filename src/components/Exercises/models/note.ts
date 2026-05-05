@@ -1,4 +1,4 @@
-import { Adapter } from "utils/Adapter";
+import { Adapter } from "@/utils/Adapter";
 
 export class Note {
     constructor(

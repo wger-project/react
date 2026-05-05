@@ -1,10 +1,10 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { Slot } from 'components/WorkoutRoutines/models/Slot';
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
-import { SlotDetails } from 'components/WorkoutRoutines/widgets/SlotDetails';
+import { Slot } from '@/components/WorkoutRoutines/models/Slot';
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
+import { SlotDetails } from '@/components/WorkoutRoutines/widgets/SlotDetails';
 import React from 'react';
-import { testQueryClient } from "tests/queryClient";
+import { testQueryClient } from "@/tests/queryClient";
 
 describe('SlotDetails Component', () => {
 

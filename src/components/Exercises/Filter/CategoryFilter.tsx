@@ -12,7 +12,7 @@ import {
     Switch,
     Typography
 } from "@mui/material";
-import { Category } from "components/Exercises/models/category";
+import { Category } from "@/components/Exercises/models/category";
 import React, { useContext } from 'react';
 import { useTranslation } from "react-i18next";
 import { LoadingPlaceholder } from '../../Core/LoadingWidget/LoadingWidget';
@@ -59,7 +59,7 @@ const CategoryFilterList = () => {
                                     checked={selectedCategories.indexOf(category) !== -1}
                                     tabIndex={-1}
                                     disableRipple
-                                    inputProps={{ 'aria-labelledby': labelId }}
+                                    slotProps={{ input: { 'aria-labelledby': labelId } }}
                                 />
                             </ListItemIcon>
                             <ListItemText
@@ -95,7 +95,7 @@ export const CategoryFilter = () => {
     return (
         <div data-testid={"categories"}>
             <Paper>
-                <Typography gutterBottom variant="h6" m={2}>
+                <Typography component="h6" gutterBottom variant="h6" sx={{ m: 2 }}>
                     {t('category')}
                 </Typography>
                 <CategoryFilterList />

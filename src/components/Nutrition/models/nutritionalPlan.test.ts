@@ -1,16 +1,16 @@
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { TEST_MEAL_1, TEST_NUTRITIONAL_PLAN_1 } from "tests/nutritionTestdata";
+import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
+import { TEST_MEAL_1, TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("Test the nutritional plan model", () => {
 
     beforeAll(() => {
-        jest.setSystemTime(new Date('2023-07-01').getTime());
+        vi.setSystemTime(new Date('2023-07-01').getTime());
     });
 
     afterAll(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     test('correctly calculates the nutritional values logged for today', async () => {

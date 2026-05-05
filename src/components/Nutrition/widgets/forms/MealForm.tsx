@@ -1,8 +1,8 @@
 import { Button, Stack, TextField } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { Meal } from "components/Nutrition/models/meal";
-import { useAddMealQuery, useEditMealQuery } from "components/Nutrition/queries";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { useAddMealQuery, useEditMealQuery } from "@/components/Nutrition/queries";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React from 'react';

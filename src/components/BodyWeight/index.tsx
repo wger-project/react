@@ -1,12 +1,12 @@
 import { Box, Stack } from "@mui/material";
-import { useBodyWeightQuery } from "components/BodyWeight/queries";
-import { WeightTable } from "components/BodyWeight/Table";
-import { WeightChart } from "components/BodyWeight/WeightChart";
-import { AddBodyWeightEntryFab } from "components/BodyWeight/widgets/fab";
-import { FilterButtons, FilterType } from "components/BodyWeight/widgets/FilterButtons";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
-import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
+import { useBodyWeightQuery } from "@/components/BodyWeight/queries";
+import { WeightTable } from "@/components/BodyWeight/Table";
+import { WeightChart } from "@/components/BodyWeight/WeightChart";
+import { AddBodyWeightEntryFab } from "@/components/BodyWeight/widgets/fab";
+import { FilterButtons, FilterType } from "@/components/BodyWeight/widgets/FilterButtons";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
+import { OverviewEmpty } from "@/components/Core/Widgets/OverviewEmpty";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 

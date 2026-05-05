@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToLocale } from "utils/date";
+import { dateToLocale } from "@/utils/date";
 import { DayProps } from "./CalendarComponent";
 
 interface LogProps {

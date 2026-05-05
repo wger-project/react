@@ -3,25 +3,25 @@ import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from '@mui/icons-material/EditOff';
 import { Alert, AlertTitle, IconButton, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { Exercise } from "components/Exercises/models/exercise";
-import { useLanguageQuery } from "components/Exercises/queries";
-import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
-import { useDeleteSlotEntryQuery, useEditSlotEntryQuery } from "components/WorkoutRoutines/queries";
+import { NameAutocompleter } from "@/components/Exercises/Filter/NameAutcompleter";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { useLanguageQuery } from "@/components/Exercises/queries";
+import { BaseConfig } from "@/components/WorkoutRoutines/models/BaseConfig";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
+import { useDeleteSlotEntryQuery, useEditSlotEntryQuery } from "@/components/WorkoutRoutines/queries";
 import {
     ConfigDetailsRiRField,
     SlotBaseConfigValueField
-} from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
+} from "@/components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import {
     SlotEntryRepetitionUnitField,
     SlotEntryTypeField,
     SlotEntryWeightUnitField
-} from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
+} from "@/components/WorkoutRoutines/widgets/forms/SlotEntryForm";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName } from "services";
+import { getLanguageByShortName } from "@/services";
 
 /*
  * Converts a number to an alphabetic string, useful for counting

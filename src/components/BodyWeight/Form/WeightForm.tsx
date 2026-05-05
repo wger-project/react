@@ -1,9 +1,9 @@
 import { Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { WeightEntry } from "components/BodyWeight/model";
-import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "components/BodyWeight/queries";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { WeightEntry } from "@/components/BodyWeight/model";
+import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "@/components/BodyWeight/queries";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import { useState } from 'react';

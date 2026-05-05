@@ -1,12 +1,12 @@
-import { Category, CategoryAdapter, } from "components/Exercises/models/category";
-import { Equipment, EquipmentAdapter, } from "components/Exercises/models/equipment";
-import { ExerciseImage, ExerciseImageAdapter, } from "components/Exercises/models/image";
-import { Language } from "components/Exercises/models/language";
-import { Muscle, MuscleAdapter } from "components/Exercises/models/muscle";
-import { Translation, TranslationAdapter } from "components/Exercises/models/translation";
-import { ExerciseVideo, ExerciseVideoAdapter } from "components/Exercises/models/video";
-import { Adapter } from "utils/Adapter";
-import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { Category, CategoryAdapter, } from "@/components/Exercises/models/category";
+import { Equipment, EquipmentAdapter, } from "@/components/Exercises/models/equipment";
+import { ExerciseImage, ExerciseImageAdapter, } from "@/components/Exercises/models/image";
+import { Language } from "@/components/Exercises/models/language";
+import { Muscle, MuscleAdapter } from "@/components/Exercises/models/muscle";
+import { Translation, TranslationAdapter } from "@/components/Exercises/models/translation";
+import { ExerciseVideo, ExerciseVideoAdapter } from "@/components/Exercises/models/video";
+import { Adapter } from "@/utils/Adapter";
+import { ENGLISH_LANGUAGE_ID } from "@/utils/consts";
 
 export type ExerciseConstructorParams = {
     id: number | null;

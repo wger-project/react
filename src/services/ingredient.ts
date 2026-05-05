@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { Ingredient } from "components/Nutrition/models/Ingredient";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { memoize } from "lodash";
-import { ApiIngredientType, NutriScoreValue } from 'types';
-import { API_RESULTS_PAGE_SIZE, ApiPath, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
-import { fetchPaginated } from "utils/requests";
-import { makeHeader, makeUrl } from "utils/url";
-import { SearchLanguageFilter } from 'components/Core/Widgets/SearchLanguageFilter';
+import { ApiIngredientType, NutriScoreValue } from '@/types';
+import { API_RESULTS_PAGE_SIZE, ApiPath, LANGUAGE_SHORT_ENGLISH } from "@/utils/consts";
+import { fetchPaginated } from "@/utils/requests";
+import { makeHeader, makeUrl } from "@/utils/url";
+import { SearchLanguageFilter } from '@/components/Core/Widgets/SearchLanguageFilter';
 
 export type IngredientLanguageFilter = SearchLanguageFilter;
 

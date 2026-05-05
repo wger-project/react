@@ -1,4 +1,4 @@
-import { TEST_MEAL_ITEM_1, TEST_WEIGHT_UNIT_SLICE } from "tests/nutritionTestdata";
+import { TEST_MEAL_ITEM_1, TEST_WEIGHT_UNIT_SLICE } from "@/tests/nutritionTestdata";
 
 
 describe("Test the meal item model", () => {

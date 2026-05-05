@@ -1,18 +1,18 @@
 import { Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { MeasurementEntry } from "components/Measurements/models/Entry";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
     useAddMeasurementEntryQuery,
     useEditMeasurementEntryQuery,
     useMeasurementsQuery
-} from "components/Measurements/queries";
+} from "@/components/Measurements/queries";
 import { Form, Formik } from "formik";
 import { DateTime, Settings } from "luxon";
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { TIMEZONE } from "utils/consts";
+import { TIMEZONE } from "@/utils/consts";
 import * as yup from 'yup';
 
 Settings.defaultZone = TIMEZONE;

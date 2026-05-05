@@ -1,17 +1,17 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button, IconButton } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import { WeightForm } from "components/BodyWeight/Form/WeightForm";
-import { WeightEntry } from "components/BodyWeight/model";
-import { useBodyWeightQuery } from "components/BodyWeight/queries";
-import { WeightTableDashboard } from "components/BodyWeight/TableDashboard/TableDashboard";
-import { WeightChart } from "components/BodyWeight/WeightChart";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { WgerModal } from "components/Core/Modals/WgerModal";
-import { EmptyCard } from "components/Dashboard/EmptyCard";
+import { WeightForm } from "@/components/BodyWeight/Form/WeightForm";
+import { WeightEntry } from "@/components/BodyWeight/model";
+import { useBodyWeightQuery } from "@/components/BodyWeight/queries";
+import { WeightTableDashboard } from "@/components/BodyWeight/TableDashboard/TableDashboard";
+import { WeightChart } from "@/components/BodyWeight/WeightChart";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { WgerModal } from "@/components/Core/Modals/WgerModal";
+import { EmptyCard } from "@/components/Dashboard/EmptyCard";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { makeLink, WgerLink } from "utils/url";
+import { makeLink, WgerLink } from "@/utils/url";
 import { DashboardCard } from "./DashboardCard";
 
 export const WeightCard = () => {

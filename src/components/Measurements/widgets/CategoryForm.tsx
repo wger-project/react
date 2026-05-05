@@ -1,6 +1,6 @@
 import { Button, Stack, TextField } from "@mui/material";
-import { MeasurementCategory } from "components/Measurements/models/Category";
-import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "components/Measurements/queries";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "@/components/Measurements/queries";
 import { Form, Formik } from "formik";
 import React from 'react';
 import { useTranslation } from "react-i18next";

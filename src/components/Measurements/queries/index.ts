@@ -4,7 +4,7 @@ import {
     editMeasurementEntry,
     getMeasurementCategories,
     getMeasurementCategory
-} from "services";
+} from "@/services";
 import {
     addMeasurementCategory,
     AddMeasurementCategoryParams,
@@ -15,8 +15,8 @@ import {
     editMeasurementCategoryParams,
     editMeasurementParams,
     MeasurementQueryOptions
-} from "services/measurements";
-import { QUERY_MEASUREMENTS, QUERY_MEASUREMENTS_CATEGORIES, } from "utils/consts";
+} from "@/services/measurements";
+import { QUERY_MEASUREMENTS, QUERY_MEASUREMENTS_CATEGORIES, } from "@/utils/consts";
 
 
 export function useMeasurementsCategoryQuery(options?: MeasurementQueryOptions) {

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { Exercise, ExerciseAdapter } from "components/Exercises/models/exercise";
-import { makeHeader, makeUrl } from "utils/url";
+import { Exercise, ExerciseAdapter } from "@/components/Exercises/models/exercise";
+import { makeHeader, makeUrl } from "@/utils/url";
 import { ResponseType } from "./responseType";
 
 export const EXERCISE_INFO_PATH = 'exerciseinfo';
@@ -162,11 +162,29 @@ export const editExercise = async (id: number, data: EditExerciseProps): Promise
 /*
  * Delete an existing exercise base
  */
-export const deleteExercise = async (id: number, replacementUUID?: string): Promise<number> => {
-    const params = replacementUUID === undefined
-        ? { id: id }
-        // eslint-disable-next-line camelcase
-        : { id: id, query: { replaced_by: replacementUUID } };
+export type DeleteExerciseOptions = {
+    replacementUUID?: string;
+    transferMedia?: boolean;
+    transferTranslations?: boolean;
+};
+
+export const deleteExercise = async (
+    id: number,
+    options: DeleteExerciseOptions = {}
+): Promise<number> => {
+    let params: Parameters<typeof makeUrl>[1];
+    if (options.replacementUUID === undefined) {
+        params = { id };
+    } else {
+        const query: Record<string, string> = { "replaced_by": options.replacementUUID };
+        if (options.transferMedia) {
+            query["transfer_media"] = '1';
+        }
+        if (options.transferTranslations) {
+            query["transfer_translations"] = '1';
+        }
+        params = { id, query };
+    }
 
     const url = makeUrl(EXERCISE_PATH, params);
     const response = await axios.delete(

@@ -1,27 +1,26 @@
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
+import { NameAutocompleter } from "@/components/Exercises/Filter/NameAutcompleter";
 import React from 'react';
-import { searchExerciseTranslations } from "services";
-import { searchResponse } from "tests/exercises/searchResponse";
-import { Exercise } from "components/Exercises/models/exercise";
+import { searchExerciseTranslations } from "@/services";
+import { searchResponse } from "@/tests/exercises/searchResponse";
+import { Exercise } from "@/components/Exercises/models/exercise";
 import {
-    SEARCH_DEBOUNCE_MS,
     STORAGE_KEY_EXERCISE_EXACT_MATCH,
     STORAGE_KEY_EXERCISE_LANGUAGE
-} from "components/Exercises/Filter/NameAutcompleter";
+} from "@/components/Exercises/Filter/NameAutcompleter";
 
-const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
+import type { Mock } from 'vitest';
 
-jest.mock("services");
-const mockCallback = jest.fn();
+vi.mock("@/services");
+const mockCallback = vi.fn();
 
 describe("Test the NameAutocompleter component", () => {
 
     // Arrange
     beforeEach(() => {
         localStorage.clear();
-        (searchExerciseTranslations as jest.Mock).mockImplementation(() => Promise.resolve(searchResponse));
+        (searchExerciseTranslations as Mock).mockImplementation(() => Promise.resolve(searchResponse));
     });
 
     test('renders correct results', async () => {
@@ -44,12 +43,9 @@ describe("Test the NameAutocompleter component", () => {
         expect(screen.queryByText("Crunches am Seil")).not.toBeInTheDocument();
         expect(screen.queryByText("Brust")).not.toBeInTheDocument();
 
-        // Wait for debounce
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
+        // Wait for debounced search results
+        expect(await screen.findByText("Crunches an Negativbank")).toBeInTheDocument();
         expect(searchExerciseTranslations).toHaveBeenCalled();
-        expect(screen.getByText("Crunches an Negativbank")).toBeInTheDocument();
         expect(screen.getByText("Bauch")).toBeInTheDocument();
         expect(screen.getByText("Crunches am Seil")).toBeInTheDocument();
         expect(screen.getByText("Brust")).toBeInTheDocument();
@@ -65,10 +61,8 @@ describe("Test the NameAutocompleter component", () => {
         await user.click(autocomplete);
         await user.type(input, 'Cru');
 
-        // Wait for debounce
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
+        // Wait for debounced search to render an option
+        await screen.findByText("Crunches an Negativbank");
 
         // Select first result
         await user.click(input);
@@ -134,16 +128,12 @@ describe("Test the NameAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.type(input, 'test');
 
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
-
-        expect(searchExerciseTranslations).toHaveBeenCalledWith(
+        await waitFor(() => expect(searchExerciseTranslations).toHaveBeenCalledWith(
             'test',
             expect.any(String),
             expect.any(String),
             false
-        );
+        ));
     });
 
     test('language filter is read from localStorage on render', async () => {
@@ -157,16 +147,12 @@ describe("Test the NameAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.type(input, 'test');
 
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
-
-        expect(searchExerciseTranslations).toHaveBeenCalledWith(
+        await waitFor(() => expect(searchExerciseTranslations).toHaveBeenCalledWith(
             'test',
             expect.any(String),
             'all',
             false
-        );
+        ));
     });
 
     test('exact match calls searchExerciseTranslations with exactMatch=true', async () => {
@@ -183,18 +169,13 @@ describe("Test the NameAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.type(input, 'Bench Press');
 
-        // Wait for debounce
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
-
         // Assert - should be called with exactMatch=true
-        expect(searchExerciseTranslations).toHaveBeenCalledWith(
+        await waitFor(() => expect(searchExerciseTranslations).toHaveBeenCalledWith(
             'Bench Press',
             expect.any(String),
             expect.any(String),
             true
-        );
+        ));
     });
 
 });

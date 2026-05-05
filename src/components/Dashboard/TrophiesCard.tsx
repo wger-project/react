@@ -1,12 +1,12 @@
 import { Button, Card, CardContent, CardHeader, CardMedia, Tooltip, Typography, } from "@mui/material";
 import Box from "@mui/system/Box";
 import Stack from "@mui/system/Stack";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { UserTrophy } from "components/Trophies/models/userTrophy";
-import { useUserTrophiesQuery } from "components/Trophies/queries/trophies";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { UserTrophy } from "@/components/Trophies/models/userTrophy";
+import { useUserTrophiesQuery } from "@/components/Trophies/queries/trophies";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { makeLink, WgerLink } from "utils/url";
+import { makeLink, WgerLink } from "@/utils/url";
 import { DashboardCard } from "./DashboardCard";
 
 export const TrophiesCard = () => {

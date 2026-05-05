@@ -1,8 +1,8 @@
-import { IngredientImage } from "components/Nutrition/models/IngredientImage";
-import { IngredientImageThumbnails } from "components/Nutrition/models/IngredientImageThumbnails";
-import { NutritionWeightUnit, NutritionWeightUnitAdapter } from "components/Nutrition/models/weightUnit";
-import { ApiIngredientType, NutriScoreValue } from "types";
-import { Adapter } from "utils/Adapter";
+import { IngredientImage } from "@/components/Nutrition/models/IngredientImage";
+import { IngredientImageThumbnails } from "@/components/Nutrition/models/IngredientImageThumbnails";
+import { NutritionWeightUnit, NutritionWeightUnitAdapter } from "@/components/Nutrition/models/weightUnit";
+import { ApiIngredientType, NutriScoreValue } from "@/types";
+import { Adapter } from "@/utils/Adapter";
 
 export type IngredientConstructorParams = {
     id: number;

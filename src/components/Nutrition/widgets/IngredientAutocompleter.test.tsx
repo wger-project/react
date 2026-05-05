@@ -1,27 +1,25 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import {
     IngredientAutocompleter,
-    SEARCH_DEBOUNCE_MS,
     STORAGE_KEY_LANGUAGE_FILTER,
     STORAGE_KEY_NUTRISCORE_MAX,
     STORAGE_KEY_VEGAN,
     STORAGE_KEY_VEGETARIAN
-} from 'components/Nutrition/widgets/IngredientAutcompleter';
-import { searchIngredient } from 'services';
-import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_4 } from "tests/ingredientTestdata";
+} from '@/components/Nutrition/widgets/IngredientAutcompleter';
+import type { Mock } from 'vitest';
+import { searchIngredient } from '@/services';
+import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_4 } from "@/tests/ingredientTestdata";
 
-const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
-
-jest.mock("services");
+vi.mock("@/services");
 
 describe("Test the IngredientAutocompleter component", () => {
 
     // Arrange
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
     beforeEach(() => {
         localStorage.clear();
-        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
+        (searchIngredient as Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
     });
 
     test('renders correct results', async () => {
@@ -34,13 +32,8 @@ describe("Test the IngredientAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
         await user.type(input, 'Bag');
-
-        // Wait for debounce
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
-        expect(searchIngredient).toHaveBeenCalled();
-        expect(screen.getByText('0% fat Greek style yogurt')).toBeInTheDocument();
+        await waitFor(() => expect(searchIngredient).toHaveBeenCalled());
+        expect(await screen.findByText('0% fat Greek style yogurt')).toBeInTheDocument();
         expect(screen.getByText('1001 Nacht Haferbrei')).toBeInTheDocument();
     });
 
@@ -54,11 +47,10 @@ describe("Test the IngredientAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
         await user.type(input, 'Cru');
-
-        // Wait for debounce
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
+        // Wait for the option to actually be in the dropdown — not just for
+        // the search call. Otherwise ArrowDown+Enter fires before React has
+        // rendered the resolved results.
+        await screen.findByText('0% fat Greek style yogurt');
 
         // Select the first result
         await user.click(input);
@@ -86,7 +78,7 @@ describe("Test the IngredientAutocompleter component", () => {
     test('local storage settings are saved', async () => {
         // Arrange
         const user = userEvent.setup();
-        const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+        const setItemSpy = vi.spyOn(window.localStorage, 'setItem');
         render(<IngredientAutocompleter callback={mockCallback} />);
 
         // Act
@@ -111,7 +103,7 @@ describe("Test the IngredientAutocompleter component", () => {
     test('shows vegan chip only when ingredient is vegan, not both vegan and vegetarian', async () => {
         // Arrange
         const user = userEvent.setup();
-        (searchIngredient as jest.Mock).mockImplementation(() =>
+        (searchIngredient as Mock).mockImplementation(() =>
             Promise.resolve([TEST_INGREDIENT_2])
         );
 
@@ -121,19 +113,16 @@ describe("Test the IngredientAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
         await user.type(input, 'Haferbrei');
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
 
         // Assert - vegan ingredient should show "Vegan" but not "Vegetarian"
-        expect(screen.getByText('nutrition.filterVegan')).toBeInTheDocument();
+        expect(await screen.findByText('nutrition.filterVegan')).toBeInTheDocument();
         expect(screen.queryByText('nutrition.filterVegetarian')).not.toBeInTheDocument();
     });
 
     test('shows vegetarian chip when ingredient is only vegetarian', async () => {
         // Arrange
         const user = userEvent.setup();
-        (searchIngredient as jest.Mock).mockImplementation(() =>
+        (searchIngredient as Mock).mockImplementation(() =>
             Promise.resolve([TEST_INGREDIENT_1])
         );
 
@@ -143,19 +132,16 @@ describe("Test the IngredientAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
         await user.type(input, 'yogurt');
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
 
         // Assert - vegetarian-only ingredient should show "Vegetarian" but not "Vegan"
-        expect(screen.getByText('nutrition.filterVegetarian')).toBeInTheDocument();
+        expect(await screen.findByText('nutrition.filterVegetarian')).toBeInTheDocument();
         expect(screen.queryByText('nutrition.filterVegan')).not.toBeInTheDocument();
     });
 
     test('shows no dietary chips when ingredient has no dietary info', async () => {
         // Arrange
         const user = userEvent.setup();
-        (searchIngredient as jest.Mock).mockImplementation(() =>
+        (searchIngredient as Mock).mockImplementation(() =>
             Promise.resolve([TEST_INGREDIENT_4])
         );
 
@@ -165,9 +151,7 @@ describe("Test the IngredientAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
         await user.type(input, 'Cacao');
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
+        await waitFor(() => expect(searchIngredient).toHaveBeenCalled());
 
         // Assert - no dietary info, no chips
         expect(screen.queryByText('nutrition.filterVegan')).not.toBeInTheDocument();
@@ -210,7 +194,7 @@ describe("Test the IngredientAutocompleter component", () => {
     test('moving the slider persists the selected grade to local storage', async () => {
         // Arrange
         const user = userEvent.setup();
-        const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+        const setItemSpy = vi.spyOn(window.localStorage, 'setItem');
         render(<IngredientAutocompleter callback={mockCallback} />);
 
         // Act
@@ -229,7 +213,7 @@ describe("Test the IngredientAutocompleter component", () => {
         // Arrange
         const user = userEvent.setup();
         localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, 'a');
-        const removeItemSpy = jest.spyOn(Storage.prototype, 'removeItem');
+        const removeItemSpy = vi.spyOn(window.localStorage, 'removeItem');
         render(<IngredientAutocompleter callback={mockCallback} />);
 
         // Act
@@ -268,15 +252,12 @@ describe("Test the IngredientAutocompleter component", () => {
         // Act
         await user.click(autocomplete);
         await user.type(input, 'Yog');
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
 
         // Assert
-        expect(searchIngredient).toHaveBeenCalledWith(
+        await waitFor(() => expect(searchIngredient).toHaveBeenCalledWith(
             'Yog',
             expect.objectContaining({ nutriscoreMax: 'b' }),
-        );
+        ));
     });
 
     test('nutriscoreMax is omitted when the slider is at Off', async () => {
@@ -289,14 +270,11 @@ describe("Test the IngredientAutocompleter component", () => {
         // Act
         await user.click(autocomplete);
         await user.type(input, 'Yog');
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-        });
 
         // Assert
-        expect(searchIngredient).toHaveBeenCalledWith(
+        await waitFor(() => expect(searchIngredient).toHaveBeenCalledWith(
             'Yog',
             expect.objectContaining({ nutriscoreMax: undefined }),
-        );
+        ));
     });
 });

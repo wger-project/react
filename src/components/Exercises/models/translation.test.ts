@@ -1,4 +1,4 @@
-import { Translation, TranslationAdapter } from "components/Exercises/models/translation";
+import { Translation, TranslationAdapter } from "@/components/Exercises/models/translation";
 
 
 describe("Exercise translation model tests", () => {
