@@ -9,7 +9,7 @@ describe("Test WgerModal component", () => {
         const props: WgerModalProps = {
             title: "Test title",
             subtitle: "Test subtitle",
-            closeFn: jest.fn(),
+            closeFn: vi.fn(),
             isOpen: true,
             children: null
         };
@@ -29,7 +29,7 @@ describe("Test WgerModal component", () => {
         const props: WgerModalProps = {
             title: "Test title",
             subtitle: "Test subtitle",
-            closeFn: jest.fn(),
+            closeFn: vi.fn(),
             isOpen: false,
             children: null
         };

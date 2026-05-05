@@ -2,19 +2,20 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
 import { TemplateDetail } from "@/components/WorkoutRoutines/Detail/TemplateDetail";
 import React from "react";
-import { MemoryRouter, Route, Routes } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { getLanguages, getRoutine } from "@/services";
 import { testLanguages } from "@/tests/exerciseTestdata";
 import { getTestQueryClient } from "@/tests/queryClient";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("@/services");
+vi.mock("@/services");
 
 describe("Smoke tests the TemplateDetail component", () => {
 
     beforeEach(() => {
-        (getRoutine as jest.Mock).mockResolvedValue(testRoutine1);
-        (getLanguages as jest.Mock).mockResolvedValue(testLanguages);
+        (getRoutine as Mock).mockResolvedValue(testRoutine1);
+        (getLanguages as Mock).mockResolvedValue(testLanguages);
     });
 
     test('renders all public templates', async () => {

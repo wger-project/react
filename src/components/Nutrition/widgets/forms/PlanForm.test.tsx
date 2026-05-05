@@ -6,22 +6,23 @@ import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/compo
 import { PlanForm } from "@/components/Nutrition/widgets/forms/PlanForm";
 import React from 'react';
 import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
+import type { Mock } from 'vitest';
 
-jest.mock("@/services/weight");
-jest.mock("@/components/Nutrition/queries");
+vi.mock("@/services/weight");
+vi.mock("@/components/Nutrition/queries");
 
 describe("Test the PlanForm component", () => {
     const queryClient = new QueryClient();
-    let mutate = jest.fn();
+    let mutate = vi.fn();
 
     beforeEach(() => {
-        mutate = jest.fn();
+        mutate = vi.fn();
 
-        (useEditNutritionalPlanQuery as jest.Mock).mockImplementation(() => ({
+        (useEditNutritionalPlanQuery as Mock).mockImplementation(() => ({
             mutate: mutate
         }));
 
-        (useAddNutritionalPlanQuery as jest.Mock).mockImplementation(() => ({
+        (useAddNutritionalPlanQuery as Mock).mockImplementation(() => ({
             mutate: mutate
         }));
     });

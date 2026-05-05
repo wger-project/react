@@ -4,10 +4,11 @@ import { Equipment } from "@/components/Exercises/models/equipment";
 import { useEquipmentQuery } from "@/components/Exercises/queries";
 import React from 'react';
 import { ExerciseFiltersContext } from "./ExerciseFiltersContext";
+import type { Mock } from 'vitest';
 
 
-jest.mock("@/components/Exercises/queries");
-const mockedEquipmentQuery = useEquipmentQuery as jest.Mock;
+vi.mock("@/components/Exercises/queries");
+const mockedEquipmentQuery = useEquipmentQuery as Mock;
 
 describe("Test the CategoryFilter component", () => {
     beforeEach(() => {

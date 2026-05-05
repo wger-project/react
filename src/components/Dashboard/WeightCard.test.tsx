@@ -4,14 +4,15 @@ import { useBodyWeightQuery } from "@/components/BodyWeight/queries";
 import { WeightCard } from "@/components/Dashboard/WeightCard";
 import { testQueryClient } from "@/tests/queryClient";
 import { testWeightEntries } from "@/tests/weight/testData";
+import type { Mock } from 'vitest';
 
-jest.mock("@/components/BodyWeight/queries");
+vi.mock("@/components/BodyWeight/queries");
 
 describe("test the WeightCard component", () => {
 
     describe("Weights are available", () => {
         beforeEach(() => {
-            (useBodyWeightQuery as jest.Mock).mockImplementation(() => ({
+            (useBodyWeightQuery as Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: testWeightEntries
@@ -19,8 +20,8 @@ describe("test the WeightCard component", () => {
         });
 
         afterEach(() => {
-            jest.restoreAllMocks();
-            jest.useRealTimers();
+            vi.restoreAllMocks();
+            vi.useRealTimers();
         });
 
         test('renders the weights correctly', async () => {
@@ -43,7 +44,7 @@ describe("test the WeightCard component", () => {
     describe("No weight entries available", () => {
 
         beforeEach(() => {
-            (useBodyWeightQuery as jest.Mock).mockImplementation(() => ({
+            (useBodyWeightQuery as Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: null

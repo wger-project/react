@@ -8,20 +8,21 @@ import {
     STORAGE_KEY_VEGAN,
     STORAGE_KEY_VEGETARIAN
 } from '@/components/Nutrition/widgets/IngredientAutcompleter';
+import type { Mock } from 'vitest';
 import { searchIngredient } from '@/services';
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_4 } from "@/tests/ingredientTestdata";
 
 const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
-jest.mock("@/services");
+vi.mock("@/services");
 
 describe("Test the IngredientAutocompleter component", () => {
 
     // Arrange
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
     beforeEach(() => {
         localStorage.clear();
-        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
+        (searchIngredient as Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
     });
 
     test('renders correct results', async () => {
@@ -86,7 +87,7 @@ describe("Test the IngredientAutocompleter component", () => {
     test('local storage settings are saved', async () => {
         // Arrange
         const user = userEvent.setup();
-        const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+        const setItemSpy = vi.spyOn(window.localStorage, 'setItem');
         render(<IngredientAutocompleter callback={mockCallback} />);
 
         // Act
@@ -111,7 +112,7 @@ describe("Test the IngredientAutocompleter component", () => {
     test('shows vegan chip only when ingredient is vegan, not both vegan and vegetarian', async () => {
         // Arrange
         const user = userEvent.setup();
-        (searchIngredient as jest.Mock).mockImplementation(() =>
+        (searchIngredient as Mock).mockImplementation(() =>
             Promise.resolve([TEST_INGREDIENT_2])
         );
 
@@ -133,7 +134,7 @@ describe("Test the IngredientAutocompleter component", () => {
     test('shows vegetarian chip when ingredient is only vegetarian', async () => {
         // Arrange
         const user = userEvent.setup();
-        (searchIngredient as jest.Mock).mockImplementation(() =>
+        (searchIngredient as Mock).mockImplementation(() =>
             Promise.resolve([TEST_INGREDIENT_1])
         );
 
@@ -155,7 +156,7 @@ describe("Test the IngredientAutocompleter component", () => {
     test('shows no dietary chips when ingredient has no dietary info', async () => {
         // Arrange
         const user = userEvent.setup();
-        (searchIngredient as jest.Mock).mockImplementation(() =>
+        (searchIngredient as Mock).mockImplementation(() =>
             Promise.resolve([TEST_INGREDIENT_4])
         );
 
@@ -210,7 +211,7 @@ describe("Test the IngredientAutocompleter component", () => {
     test('moving the slider persists the selected grade to local storage', async () => {
         // Arrange
         const user = userEvent.setup();
-        const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+        const setItemSpy = vi.spyOn(window.localStorage, 'setItem');
         render(<IngredientAutocompleter callback={mockCallback} />);
 
         // Act
@@ -229,7 +230,7 @@ describe("Test the IngredientAutocompleter component", () => {
         // Arrange
         const user = userEvent.setup();
         localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, 'a');
-        const removeItemSpy = jest.spyOn(Storage.prototype, 'removeItem');
+        const removeItemSpy = vi.spyOn(window.localStorage, 'removeItem');
         render(<IngredientAutocompleter callback={mockCallback} />);
 
         // Act

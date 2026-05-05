@@ -3,33 +3,24 @@ import { render, screen } from '@testing-library/react';
 import { WorkoutLogs } from "@/components/WorkoutRoutines/Detail/WorkoutLogs";
 import { useRoutineDetailQuery, useRoutineLogData } from "@/components/WorkoutRoutines/queries";
 import React from 'react';
-import { MemoryRouter, Route, Routes } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { testRoutine1, testRoutineLogData } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("@/components/WorkoutRoutines/queries");
-
-const { ResizeObserver } = window;
+vi.mock("@/components/WorkoutRoutines/queries");
 
 const queryClient = new QueryClient();
 
 describe("Test the RoutineLogs component", () => {
 
     beforeEach(() => {
-        // @ts-ignore
-        delete window.ResizeObserver;
-        window.ResizeObserver = jest.fn().mockImplementation(() => ({
-            observe: jest.fn(),
-            unobserve: jest.fn(),
-            disconnect: jest.fn()
-        }));
-
-        (useRoutineLogData as jest.Mock).mockImplementation(() => ({
+        (useRoutineLogData as Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: testRoutineLogData
         }));
 
-        (useRoutineDetailQuery as jest.Mock).mockImplementation(() => ({
+        (useRoutineDetailQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: testRoutine1
@@ -37,8 +28,7 @@ describe("Test the RoutineLogs component", () => {
     });
 
     afterEach(() => {
-        window.ResizeObserver = ResizeObserver;
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     test('renders the log page for a routine', async () => {

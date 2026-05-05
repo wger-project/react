@@ -6,18 +6,19 @@ import { BrowserRouter } from "react-router-dom";
 import { addRoutine, editRoutine } from '@/services';
 import { testQueryClient } from "@/tests/queryClient";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
 
-jest.mock("@/services");
-const mockEditRoutine = editRoutine as jest.Mock;
-const mockAddRoutine = addRoutine as jest.Mock;
+vi.mock("@/services");
+const mockEditRoutine = editRoutine as Mock;
+const mockAddRoutine = addRoutine as Mock;
 
 describe('RoutineForm', () => {
     let user: ReturnType<typeof userEvent.setup>;
 
     beforeEach(() => {
         user = userEvent.setup();
-        jest.resetAllMocks();
+        vi.resetAllMocks();
         mockAddRoutine.mockResolvedValue(testRoutine1);
     });
 

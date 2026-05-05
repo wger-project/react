@@ -2,8 +2,9 @@ import axios from "axios";
 import { Alias } from "@/components/Exercises/models/alias";
 import { postAlias } from "@/services";
 import { deleteAlias } from "@/services/alias";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 
 describe("Exercise translation service API tests", () => {
@@ -19,7 +20,7 @@ describe("Exercise translation service API tests", () => {
             "alias": "Elbow dislocator",
 
         };
-        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.post as Mock).mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
         const result = await postAlias(
@@ -35,7 +36,7 @@ describe("Exercise translation service API tests", () => {
     test('DELETE an existing alias', async () => {
 
         // Arrange
-        (axios.delete as jest.Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
+        (axios.delete as Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act
         const result = await deleteAlias(100);

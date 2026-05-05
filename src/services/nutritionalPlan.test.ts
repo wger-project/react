@@ -1,8 +1,9 @@
 import axios from "axios";
 import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import { getNutritionalPlansSparse } from "@/services/nutritionalPlan";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 describe("Nutritional plan service tests", () => {
 
@@ -40,7 +41,7 @@ describe("Nutritional plan service tests", () => {
             ]
         };
 
-        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: planResponse }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: planResponse }));
 
         const result = await getNutritionalPlansSparse();
         expect(axios.get).toHaveBeenCalledTimes(1);

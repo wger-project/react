@@ -1,8 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { ExerciseOverview } from "@/components/Exercises/ExerciseOverview";
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import { getCategories, getEquipment, getExercises, getLanguages, getMuscles } from "@/services";
 import {
     testCategories,
@@ -15,8 +11,14 @@ import {
     testLanguages,
     testMuscles
 } from "@/tests/exerciseTestdata";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
-jest.mock("@/services");
+import type { Mock } from 'vitest';
+
+vi.mock("@/services");
 
 const queryClient = new QueryClient();
 
@@ -24,11 +26,11 @@ describe("Test the ExerciseOverview component", () => {
 
 
     beforeEach(() => {
-        (getLanguages as jest.Mock).mockImplementation(() => Promise.resolve(testLanguages));
-        (getCategories as jest.Mock).mockImplementation(() => Promise.resolve(testCategories));
-        (getMuscles as jest.Mock).mockImplementation(() => Promise.resolve(testMuscles));
-        (getEquipment as jest.Mock).mockImplementation(() => Promise.resolve(testEquipment));
-        (getExercises as jest.Mock).mockImplementation(() => Promise.resolve([
+        (getLanguages as Mock).mockImplementation(() => Promise.resolve(testLanguages));
+        (getCategories as Mock).mockImplementation(() => Promise.resolve(testCategories));
+        (getMuscles as Mock).mockImplementation(() => Promise.resolve(testMuscles));
+        (getEquipment as Mock).mockImplementation(() => Promise.resolve(testEquipment));
+        (getExercises as Mock).mockImplementation(() => Promise.resolve([
             testExerciseSquats,
             testExerciseBenchPress,
             testExerciseCurls,

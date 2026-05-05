@@ -6,8 +6,8 @@ import React from "react";
 import { editExercise } from "@/services";
 import { testMuscles } from "@/tests/exerciseTestdata";
 
-jest.mock("@/components/Exercises/queries");
-jest.mock("@/services/exercise");
+vi.mock("@/components/Exercises/queries");
+vi.mock("@/services/exercise");
 
 describe("Test the widget to live edit the muscles", () => {
 
@@ -29,7 +29,7 @@ describe("Test the widget to live edit the muscles", () => {
             <EditExerciseMuscle
                 exerciseId={100}
                 value={[1, 2]}
-                setValue={jest.fn()}
+                setValue={vi.fn()}
                 blocked={[]}
                 isMain
             />
@@ -55,7 +55,7 @@ describe("Test the widget to live edit the muscles", () => {
             <EditExerciseMuscle
                 exerciseId={1234}
                 value={[1, 2]}
-                setValue={jest.fn()}
+                setValue={vi.fn()}
                 blocked={[]}
                 isMain={false}
             />

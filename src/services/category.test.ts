@@ -1,8 +1,9 @@
 import axios from "axios";
 import { Category } from "@/components/Exercises/models/category";
 import { getCategories } from "@/services";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 describe("category service tests", () => {
 
@@ -30,7 +31,7 @@ describe("category service tests", () => {
         };
 
         // Act
-        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: response }));
         const result = await getCategories();
 
         // Assert

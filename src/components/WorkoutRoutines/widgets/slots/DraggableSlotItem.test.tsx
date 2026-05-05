@@ -8,8 +8,9 @@ import { MemoryRouter } from "react-router-dom";
 import { getLanguages } from "@/services";
 import { getTestQueryClient } from "@/tests/queryClient";
 import { testDayLegs } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("@/services");
+vi.mock("@/services");
 
 describe("DraggableSlotItem component", () => {
     const defaultProps = {
@@ -18,17 +19,17 @@ describe("DraggableSlotItem component", () => {
         routineId: 1,
         simpleMode: true,
         showAutocompleter: false,
-        onDelete: jest.fn(),
-        onDuplicate: jest.fn(),
-        onAddSuperset: jest.fn(),
+        onDelete: vi.fn(),
+        onDuplicate: vi.fn(),
+        onAddSuperset: vi.fn(),
         addSupersetIsPending: false,
-        onExerciseSelected: jest.fn(),
+        onExerciseSelected: vi.fn(),
     };
 
     const renderComponent = (props = {}) => render(
         <QueryClientProvider client={getTestQueryClient()}>
             <MemoryRouter>
-                <DragDropContext onDragEnd={jest.fn()}>
+                <DragDropContext onDragEnd={vi.fn()}>
                     <Droppable droppableId="test">
                         {(provided) => (
                             <div ref={provided.innerRef} {...provided.droppableProps}>
@@ -43,8 +44,8 @@ describe("DraggableSlotItem component", () => {
     );
 
     beforeEach(() => {
-        jest.clearAllMocks();
-        (getLanguages as jest.Mock).mockResolvedValue([]);
+        vi.clearAllMocks();
+        (getLanguages as Mock).mockResolvedValue([]);
     });
 
     test('renders SlotHeader with exercise label', () => {
@@ -58,7 +59,7 @@ describe("DraggableSlotItem component", () => {
     });
 
     test('delegates onDelete to SlotHeader', async () => {
-        const onDelete = jest.fn();
+        const onDelete = vi.fn();
         renderComponent({ onDelete });
 
         const deleteIcon = screen.getByTestId('DeleteIcon');

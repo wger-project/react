@@ -5,13 +5,14 @@ import { BrowserRouter } from "react-router-dom";
 import { getPublicTemplatesShallow } from "@/services";
 import { testQueryClient } from "@/tests/queryClient";
 import { testPublicTemplate1 } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("@/services");
+vi.mock("@/services");
 
 describe("Smoke tests the PublicTemplateOverview component", () => {
 
     beforeEach(() => {
-        (getPublicTemplatesShallow as jest.Mock).mockResolvedValue([testPublicTemplate1]);
+        (getPublicTemplatesShallow as Mock).mockResolvedValue([testPublicTemplate1]);
     });
 
     test('renders all public templates', async () => {

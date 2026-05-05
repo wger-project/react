@@ -2,15 +2,16 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import { NutritionDiaryOverview } from "@/components/Nutrition/components/NutritionDiaryOverview";
 import { useFetchNutritionalPlanDateQuery } from "@/components/Nutrition/queries";
-import { MemoryRouter, Route, Routes } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
+import type { Mock } from 'vitest';
 
-jest.mock("@/components/Nutrition/queries");
+vi.mock("@/components/Nutrition/queries");
 const queryClient = new QueryClient();
 describe("Test the NutritionDiaryOverview component", () => {
 
     beforeEach(() => {
-        (useFetchNutritionalPlanDateQuery as jest.Mock).mockImplementation(() => ({
+        (useFetchNutritionalPlanDateQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: TEST_NUTRITIONAL_PLAN_1

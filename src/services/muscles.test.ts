@@ -1,8 +1,9 @@
 import axios from "axios";
 import { Muscle } from "@/components/Exercises/models/muscle";
 import { getMuscles } from "@/services";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 describe("muscle service tests", () => {
 
@@ -32,7 +33,7 @@ describe("muscle service tests", () => {
             ]
         };
 
-        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: muscleResponse }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: muscleResponse }));
 
         const result = await getMuscles();
         expect(axios.get).toHaveBeenCalledTimes(1);

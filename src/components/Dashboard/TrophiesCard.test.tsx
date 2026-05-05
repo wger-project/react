@@ -4,14 +4,15 @@ import { TrophiesCard } from "@/components/Dashboard/TrophiesCard";
 import { useUserTrophiesQuery } from "@/components/Trophies/queries/trophies";
 import { testQueryClient } from "@/tests/queryClient";
 import { testUserTrophies } from "@/tests/trophies/trophiesTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("@/components/Trophies/queries/trophies");
+vi.mock("@/components/Trophies/queries/trophies");
 
 describe("test the TrophiesCard component", () => {
 
     describe("Trophies available", () => {
         beforeEach(() => {
-            (useUserTrophiesQuery as jest.Mock).mockImplementation(() => ({
+            (useUserTrophiesQuery as Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: testUserTrophies()
@@ -37,7 +38,7 @@ describe("test the TrophiesCard component", () => {
     describe("No trophies available", () => {
 
         beforeEach(() => {
-            (useUserTrophiesQuery as jest.Mock).mockImplementation(() => ({
+            (useUserTrophiesQuery as Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: null

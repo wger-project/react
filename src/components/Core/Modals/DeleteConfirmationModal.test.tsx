@@ -15,8 +15,8 @@ describe("Test the DeleteConfirmationModal component", () => {
             subtitle: "the subtitle",
             message: "deleting this will also delete this other thing",
             isOpen: true,
-            closeFn: jest.fn(),
-            deleteFn: jest.fn()
+            closeFn: vi.fn(),
+            deleteFn: vi.fn()
         };
     });
 

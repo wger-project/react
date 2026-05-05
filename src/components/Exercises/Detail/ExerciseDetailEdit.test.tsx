@@ -18,6 +18,7 @@ import {
     useMusclesQuery,
     usePostAliasQuery
 } from "@/components/Exercises/queries";
+import type { Mock } from 'vitest';
 import { usePermissionQuery } from "@/components/User/queries/permission";
 import { useProfileQuery } from "@/components/User/queries/profile";
 import { WgerPermissions } from "@/permissions";
@@ -36,12 +37,12 @@ import { Exercise } from "../models/exercise";
 import { ExerciseImage } from "../models/image";
 
 // It seems we run into a timeout when running the tests on GitHub actions
-jest.setTimeout(15000);
+vi.setConfig({ testTimeout: 15000 });
 
-jest.mock("@/services");
-jest.mock("@/components/User/queries/permission");
-jest.mock("@/components/User/queries/profile");
-jest.mock("@/components/Exercises/queries");
+vi.mock("@/services");
+vi.mock("@/components/User/queries/permission");
+vi.mock("@/components/User/queries/profile");
+vi.mock("@/components/Exercises/queries");
 
 const asPromiseHookResult = <T extends object>(value: T): T => {
     return Object.assign(Promise.resolve(value), value) as unknown as T;
@@ -49,62 +50,62 @@ const asPromiseHookResult = <T extends object>(value: T): T => {
 
 describe("Exercise translation edit tests", () => {
 
-    const editTranslationMutateMock: jest.Mock = jest.fn();
-    const addTranslationMutateMock: jest.Mock = jest.fn();
-    const postAliasMutateMock: jest.Mock = jest.fn();
-    const deleteAliasMutateMock: jest.Mock = jest.fn();
+    const editTranslationMutateMock: Mock = vi.fn();
+    const addTranslationMutateMock: Mock = vi.fn();
+    const postAliasMutateMock: Mock = vi.fn();
+    const deleteAliasMutateMock: Mock = vi.fn();
 
     beforeEach(() => {
-        jest.resetAllMocks();
+        vi.resetAllMocks();
 
         editTranslationMutateMock.mockResolvedValue(testExerciseSquats.translations[0]);
         addTranslationMutateMock.mockResolvedValue(testExerciseSquats.translations[1]);
         postAliasMutateMock.mockResolvedValue({ id: 123, alias: 'Foo' });
         deleteAliasMutateMock.mockResolvedValue(204);
 
-        (useExerciseQuery as jest.Mock).mockImplementation(() => ({
+        (useExerciseQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: testExerciseSquats
         }));
-        (useAddTranslationQuery as jest.Mock).mockImplementation(() => ({
+        (useAddTranslationQuery as Mock).mockImplementation(() => ({
             isPending: false,
             mutateAsync: addTranslationMutateMock
         }));
-        (useEditTranslationQuery as jest.Mock).mockImplementation(() => ({
+        (useEditTranslationQuery as Mock).mockImplementation(() => ({
             isPending: false,
             mutateAsync: editTranslationMutateMock
         }));
-        (editTranslation as jest.Mock).mockImplementation(() => Promise.resolve(testExerciseSquats.translations[1]));
-        (useProfileQuery as jest.Mock).mockImplementation(() => Promise.resolve(testProfileDataVerified));
+        (editTranslation as Mock).mockImplementation(() => Promise.resolve(testExerciseSquats.translations[1]));
+        (useProfileQuery as Mock).mockImplementation(() => Promise.resolve(testProfileDataVerified));
 
-        (useEditExerciseImageQuery as jest.Mock).mockImplementation(() => ({
+        (useEditExerciseImageQuery as Mock).mockImplementation(() => ({
             isError: false,
             isPending: false,
-            mutateAsync: jest.fn(),
+            mutateAsync: vi.fn(),
         }));
 
-        (useAddExerciseImageQuery as jest.Mock).mockImplementation(() => ({
+        (useAddExerciseImageQuery as Mock).mockImplementation(() => ({
             isError: false,
             isPending: false,
-            mutate: jest.fn(),
-            mutateAsync: jest.fn(),
+            mutate: vi.fn(),
+            mutateAsync: vi.fn(),
         }));
 
-        (useAddNoteQuery as jest.Mock).mockImplementation(() => ({
+        (useAddNoteQuery as Mock).mockImplementation(() => ({
             isPending: false,
-            mutate: jest.fn(),
-            mutateAsync: jest.fn(),
+            mutate: vi.fn(),
+            mutateAsync: vi.fn(),
         }));
-        (useEditNoteQuery as jest.Mock).mockImplementation(() => ({
+        (useEditNoteQuery as Mock).mockImplementation(() => ({
             isPending: false,
-            mutate: jest.fn(),
-            mutateAsync: jest.fn(),
+            mutate: vi.fn(),
+            mutateAsync: vi.fn(),
         }));
-        (useDeleteNoteQuery as jest.Mock).mockImplementation(() => ({
+        (useDeleteNoteQuery as Mock).mockImplementation(() => ({
             isPending: false,
-            mutate: jest.fn(),
-            mutateAsync: jest.fn(),
+            mutate: vi.fn(),
+            mutateAsync: vi.fn(),
         }));
 
         // @ts-ignore
@@ -118,24 +119,24 @@ describe("Exercise translation edit tests", () => {
         //     )
         // ));
 
-        (usePostAliasQuery as jest.Mock).mockImplementation(() => ({
+        (usePostAliasQuery as Mock).mockImplementation(() => ({
             isPending: false,
             mutateAsync: postAliasMutateMock,
         }));
-        (useDeleteAliasQuery as jest.Mock).mockImplementation(() => ({
+        (useDeleteAliasQuery as Mock).mockImplementation(() => ({
             isPending: false,
             mutateAsync: deleteAliasMutateMock,
         }));
-        (usePermissionQuery as jest.Mock).mockImplementation(() => Promise.resolve({ isSuccess: true, data: true }));
-        (useCategoriesQuery as jest.Mock).mockImplementation(() => Promise.resolve({
+        (usePermissionQuery as Mock).mockImplementation(() => Promise.resolve({ isSuccess: true, data: true }));
+        (useCategoriesQuery as Mock).mockImplementation(() => Promise.resolve({
             isSuccess: true,
             data: testCategories
         }));
-        (useEquipmentQuery as jest.Mock).mockImplementation(() => Promise.resolve({
+        (useEquipmentQuery as Mock).mockImplementation(() => Promise.resolve({
             isSuccess: true,
             data: testEquipment
         }));
-        (useMusclesQuery as jest.Mock).mockImplementation(() => Promise.resolve({
+        (useMusclesQuery as Mock).mockImplementation(() => Promise.resolve({
             isSuccess: true,
             data: testMuscles
         }));
@@ -339,70 +340,70 @@ describe("Exercise translation edit tests", () => {
 });
 
 describe("Exercise image tests", () => {
-    const editImageMutateMock: jest.Mock = jest.fn();
-    const addImageMutateMock: jest.Mock = jest.fn();
-    const deleteImageMutateMock: jest.Mock = jest.fn();
+    const editImageMutateMock: Mock = vi.fn();
+    const addImageMutateMock: Mock = vi.fn();
+    const deleteImageMutateMock: Mock = vi.fn();
 
     beforeEach(() => {
-        jest.resetAllMocks();
+        vi.resetAllMocks();
 
         editImageMutateMock.mockResolvedValue({});
         addImageMutateMock.mockResolvedValue({});
         deleteImageMutateMock.mockResolvedValue({});
 
-        (useAddTranslationQuery as jest.Mock).mockImplementation(() => ({
+        (useAddTranslationQuery as Mock).mockImplementation(() => ({
             isPending: false,
-            mutateAsync: jest.fn()
+            mutateAsync: vi.fn()
         }));
-        (useEditTranslationQuery as jest.Mock).mockImplementation(() => ({
+        (useEditTranslationQuery as Mock).mockImplementation(() => ({
             isPending: false,
-            mutateAsync: jest.fn()
+            mutateAsync: vi.fn()
         }));
 
-        (useEditExerciseImageQuery as jest.Mock).mockImplementation(() => ({
+        (useEditExerciseImageQuery as Mock).mockImplementation(() => ({
             isError: false,
             isPending: false,
             mutateAsync: editImageMutateMock
         }));
-        (useAddNoteQuery as jest.Mock).mockImplementation(() => ({
+        (useAddNoteQuery as Mock).mockImplementation(() => ({
             isPending: false,
-            mutate: jest.fn(),
-            mutateAsync: jest.fn(),
+            mutate: vi.fn(),
+            mutateAsync: vi.fn(),
         }));
-        (useEditNoteQuery as jest.Mock).mockImplementation(() => ({
+        (useEditNoteQuery as Mock).mockImplementation(() => ({
             isPending: false,
-            mutate: jest.fn(),
-            mutateAsync: jest.fn(),
+            mutate: vi.fn(),
+            mutateAsync: vi.fn(),
         }));
-        (useDeleteNoteQuery as jest.Mock).mockImplementation(() => ({
+        (useDeleteNoteQuery as Mock).mockImplementation(() => ({
             isPending: false,
-            mutate: jest.fn(),
-            mutateAsync: jest.fn(),
+            mutate: vi.fn(),
+            mutateAsync: vi.fn(),
         }));
-        (useAddExerciseImageQuery as jest.Mock).mockImplementation(() => asPromiseHookResult({
+        (useAddExerciseImageQuery as Mock).mockImplementation(() => asPromiseHookResult({
             isError: false,
             isPending: false,
             mutate: addImageMutateMock,
             mutateAsync: addImageMutateMock
         }));
-        (useDeleteExerciseImageQuery as jest.Mock).mockImplementation(() => asPromiseHookResult({
+        (useDeleteExerciseImageQuery as Mock).mockImplementation(() => asPromiseHookResult({
             isError: false,
             isPending: false,
             mutate: deleteImageMutateMock,
             mutateAsync: deleteImageMutateMock
         }));
 
-        (useMusclesQuery as jest.Mock).mockImplementation(() => asPromiseHookResult({
+        (useMusclesQuery as Mock).mockImplementation(() => asPromiseHookResult({
             isLoading: false,
             isSuccess: true,
             data: testMuscles
         }));
-        (useProfileQuery as jest.Mock).mockImplementation(() => asPromiseHookResult({
+        (useProfileQuery as Mock).mockImplementation(() => asPromiseHookResult({
             isLoading: false,
             isSuccess: true,
             data: testProfileDataVerified
         }));
-        (usePermissionQuery as jest.Mock).mockImplementation((permission: string) => {
+        (usePermissionQuery as Mock).mockImplementation((permission: string) => {
             const imagePermission =
                 permission === WgerPermissions.ADD_IMAGE
                 || permission === WgerPermissions.DELETE_IMAGE;
@@ -436,7 +437,7 @@ describe("Exercise image tests", () => {
             images: [image]
         });
 
-        (useExerciseQuery as jest.Mock).mockImplementation(() => ({
+        (useExerciseQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: exerciseWithImage,

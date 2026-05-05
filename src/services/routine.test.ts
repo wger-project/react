@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Day } from "@/components/WorkoutRoutines/models/Day";
 import { Routine } from "@/components/WorkoutRoutines/models/Routine";
 import { SetConfigData } from "@/components/WorkoutRoutines/models/SetConfigData";
@@ -16,22 +15,25 @@ import {
     testWeightUnit1,
     testWeightUnit2
 } from "@/tests/workoutRoutinesTestData";
+import axios from "axios";
 
-jest.mock("axios");
-jest.mock("@/services/workoutUnits");
-jest.mock("@/services/exercise");
+import type { Mock } from 'vitest';
+
+vi.mock("axios");
+vi.mock("@/services/workoutUnits");
+vi.mock("@/services/exercise");
 
 describe("workout routine service tests", () => {
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
 
     test('GET the routine data - shallow', async () => {
 
         // Arrange
-        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: responseApiWorkoutRoutine }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: responseApiWorkoutRoutine }));
 
         // Act
         const result = await getRoutinesShallow();
@@ -66,9 +68,9 @@ describe("workout routine service tests", () => {
     test('GET the routine logs', async () => {
 
         // Arrange
-        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
-        (getRoutineRepUnits as jest.Mock).mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
-        (getRoutineWeightUnits as jest.Mock).mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
+        (getRoutineRepUnits as Mock).mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
+        (getRoutineWeightUnits as Mock).mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
 
         // Act
         const result = await getRoutineLogs(1);
@@ -115,7 +117,7 @@ describe("workout routine service tests", () => {
 
     test('GET the routine day data', async () => {
         // Arrange
-        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: responseRoutineDayData }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: responseRoutineDayData }));
 
         // Act
         const result = await getRoutineDayDataAllIterations(1);

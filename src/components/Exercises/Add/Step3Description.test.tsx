@@ -5,23 +5,23 @@ import { Step3Description } from "@/components/Exercises/Add/Step3Description";
 import React from "react";
 import { testQueryClient } from "@/tests/queryClient";
 
-jest.mock("@/state/exerciseSubmissionReducer", () => {
-    const originalModule = jest.requireActual("@/state/exerciseSubmissionReducer");
+vi.mock("@/state/exerciseSubmissionReducer", async () => {
+    const originalModule = await vi.importActual<typeof import("@/state/exerciseSubmissionReducer")>("@/state/exerciseSubmissionReducer");
     return {
         __esModule: true,
         ...originalModule,
-        setDescriptionEn: jest.fn(),
-        setNotesEn: jest.fn(),
+        setDescriptionEn: vi.fn(),
+        setNotesEn: vi.fn(),
     };
 });
 
-const mockOnContinue = jest.fn();
-const mockOnBack = jest.fn();
+const mockOnContinue = vi.fn();
+const mockOnBack = vi.fn();
 
 describe("Test the add exercise step 3 component", () => {
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
 

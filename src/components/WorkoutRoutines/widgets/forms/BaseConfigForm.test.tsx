@@ -8,44 +8,50 @@ import React from 'react';
 import { testQueryClient } from "@/tests/queryClient";
 
 
-jest.mock('@/utils/consts', () => {
+vi.mock('@/utils/consts', () => {
     return {
         DEBOUNCE_ROUTINE_FORMS: '5'
     };
 });
 
 
-jest.mock('@/components/WorkoutRoutines/queries', () => ({
-    useEditWeightConfigQuery: jest.fn(() => ({ mutate: editMutation })),
-    useAddWeightConfigQuery: jest.fn(() => ({ mutate: addMutation })),
-    useDeleteWeightConfigQuery: jest.fn(() => ({ mutate: deleteMutation })),
-    useEditMaxWeightConfigQuery: jest.fn(() => ({ mutate: editMutation })),
-    useAddMaxWeightConfigQuery: jest.fn(() => ({ mutate: addMutation })),
-    useDeleteMaxWeightConfigQuery: jest.fn(() => ({ mutate: deleteMutation })),
-    useEditRepsConfigQuery: jest.fn(() => ({ mutate: editMutation })),
-    useAddRepsConfigQuery: jest.fn(() => ({ mutate: addMutation })),
-    useDeleteRepsConfigQuery: jest.fn(() => ({ mutate: deleteMutation })),
-    useEditMaxRepsConfigQuery: jest.fn(() => ({ mutate: editMutation })),
-    useAddMaxRepsConfigQuery: jest.fn(() => ({ mutate: addMutation })),
-    useDeleteMaxRepsConfigQuery: jest.fn(() => ({ mutate: deleteMutation })),
-    useEditNrOfSetsConfigQuery: jest.fn(() => ({ mutate: editMutation })),
-    useAddNrOfSetsConfigQuery: jest.fn(() => ({ mutate: addMutation })),
-    useDeleteNrOfSetsConfigQuery: jest.fn(() => ({ mutate: deleteMutation })),
-    useEditRestConfigQuery: jest.fn(() => ({ mutate: editMutation })),
-    useAddRestConfigQuery: jest.fn(() => ({ mutate: addMutation })),
-    useDeleteRestConfigQuery: jest.fn(() => ({ mutate: deleteMutation })),
-    useEditMaxRestConfigQuery: jest.fn(() => ({ mutate: editMutation })),
-    useAddMaxRestConfigQuery: jest.fn(() => ({ mutate: addMutation })),
-    useDeleteMaxRestConfigQuery: jest.fn(() => ({ mutate: deleteMutation })),
-    useEditRiRConfigQuery: jest.fn(() => ({ mutate: editMutation })),
-    useAddRiRConfigQuery: jest.fn(() => ({ mutate: addMutation })),
-    useDeleteRiRConfigQuery: jest.fn(() => ({ mutate: deleteMutation })),
+vi.mock('@/components/WorkoutRoutines/queries', () => ({
+    useEditWeightConfigQuery: vi.fn(() => ({ mutate: editMutation })),
+    useAddWeightConfigQuery: vi.fn(() => ({ mutate: addMutation })),
+    useDeleteWeightConfigQuery: vi.fn(() => ({ mutate: deleteMutation })),
+    useEditMaxWeightConfigQuery: vi.fn(() => ({ mutate: editMutation })),
+    useAddMaxWeightConfigQuery: vi.fn(() => ({ mutate: addMutation })),
+    useDeleteMaxWeightConfigQuery: vi.fn(() => ({ mutate: deleteMutation })),
+    useEditRepsConfigQuery: vi.fn(() => ({ mutate: editMutation })),
+    useAddRepsConfigQuery: vi.fn(() => ({ mutate: addMutation })),
+    useDeleteRepsConfigQuery: vi.fn(() => ({ mutate: deleteMutation })),
+    useEditMaxRepsConfigQuery: vi.fn(() => ({ mutate: editMutation })),
+    useAddMaxRepsConfigQuery: vi.fn(() => ({ mutate: addMutation })),
+    useDeleteMaxRepsConfigQuery: vi.fn(() => ({ mutate: deleteMutation })),
+    useEditNrOfSetsConfigQuery: vi.fn(() => ({ mutate: editMutation })),
+    useAddNrOfSetsConfigQuery: vi.fn(() => ({ mutate: addMutation })),
+    useDeleteNrOfSetsConfigQuery: vi.fn(() => ({ mutate: deleteMutation })),
+    useEditMaxNrOfSetsConfigQuery: vi.fn(() => ({ mutate: editMutation })),
+    useAddMaxNrOfSetsConfigQuery: vi.fn(() => ({ mutate: addMutation })),
+    useDeleteMaxNrOfSetsConfigQuery: vi.fn(() => ({ mutate: deleteMutation })),
+    useEditRestConfigQuery: vi.fn(() => ({ mutate: editMutation })),
+    useAddRestConfigQuery: vi.fn(() => ({ mutate: addMutation })),
+    useDeleteRestConfigQuery: vi.fn(() => ({ mutate: deleteMutation })),
+    useEditMaxRestConfigQuery: vi.fn(() => ({ mutate: editMutation })),
+    useAddMaxRestConfigQuery: vi.fn(() => ({ mutate: addMutation })),
+    useDeleteMaxRestConfigQuery: vi.fn(() => ({ mutate: deleteMutation })),
+    useEditRiRConfigQuery: vi.fn(() => ({ mutate: editMutation })),
+    useAddRiRConfigQuery: vi.fn(() => ({ mutate: addMutation })),
+    useDeleteRiRConfigQuery: vi.fn(() => ({ mutate: deleteMutation })),
+    useEditMaxRiRConfigQuery: vi.fn(() => ({ mutate: editMutation })),
+    useAddMaxRiRConfigQuery: vi.fn(() => ({ mutate: addMutation })),
+    useDeleteMaxRiRConfigQuery: vi.fn(() => ({ mutate: deleteMutation })),
 }));
 
 
-const editMutation = jest.fn();
-const addMutation = jest.fn();
-const deleteMutation = jest.fn();
+const editMutation = vi.fn();
+const addMutation = vi.fn();
+const deleteMutation = vi.fn();
 
 const DEBOUNCE_WAIT = 10;
 
@@ -54,11 +60,11 @@ describe('EntryDetailsField Component', () => {
     const slotEntryId = 2;
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     afterEach(() => {
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     const testConfigTypes = ['weight', 'max-weight', 'reps', 'max-reps', 'sets', 'rest', 'max-rest', 'rir'] as const;

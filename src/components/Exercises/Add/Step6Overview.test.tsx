@@ -8,26 +8,27 @@ import {
     useLanguageQuery,
     useMusclesQuery
 } from "@/components/Exercises/queries";
+import type { Mock } from 'vitest';
 import { useProfileQuery } from "@/components/User/queries/profile";
 import React from "react";
-import { MemoryRouter, Route, Routes } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { useExerciseSubmissionStateValue } from "@/state";
 import { testCategories, testEquipment, testLanguages, testMuscles } from "@/tests/exerciseTestdata";
 import { testProfileDataVerified } from "@/tests/userTestdata";
 
 
-jest.mock("@/components/Exercises/queries");
-jest.mock("@/components/User/queries/profile");
-jest.mock("@/state");
+vi.mock("@/components/Exercises/queries");
+vi.mock("@/components/User/queries/profile");
+vi.mock("@/state");
 
-const mockOnContinue = jest.fn();
-const mockedUseCategoriesQuery = useCategoriesQuery as jest.Mock;
-const mockedMuscleQuery = useMusclesQuery as jest.Mock;
-const mockedUseEquipmentQuery = useEquipmentQuery as jest.Mock;
-const mockedLanguageQuery = useLanguageQuery as jest.Mock;
-const mockedUseExerciseStateValue = useExerciseSubmissionStateValue as jest.Mock;
-const mockedUseProfileQuery = useProfileQuery as jest.Mock;
-const addFullExerciseMutation = useAddExerciseFullQuery as jest.Mock;
+const mockOnContinue = vi.fn();
+const mockedUseCategoriesQuery = useCategoriesQuery as Mock;
+const mockedMuscleQuery = useMusclesQuery as Mock;
+const mockedUseEquipmentQuery = useEquipmentQuery as Mock;
+const mockedLanguageQuery = useLanguageQuery as Mock;
+const mockedUseExerciseStateValue = useExerciseSubmissionStateValue as Mock;
+const mockedUseProfileQuery = useProfileQuery as Mock;
+const addFullExerciseMutation = useAddExerciseFullQuery as Mock;
 
 const queryClient = new QueryClient();
 

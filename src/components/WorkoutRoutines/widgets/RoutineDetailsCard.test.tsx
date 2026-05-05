@@ -3,17 +3,18 @@ import { render, screen } from '@testing-library/react';
 import { useRoutineDetailQuery } from "@/components/WorkoutRoutines/queries";
 import { RoutineDetailsCard } from "@/components/WorkoutRoutines/widgets/RoutineDetailsCard";
 import React from 'react';
-import { MemoryRouter, Route, Routes } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("@/components/WorkoutRoutines/queries");
+vi.mock("@/components/WorkoutRoutines/queries");
 
 const queryClient = new QueryClient();
 
 describe("Test the RoutineDetail component", () => {
 
     beforeEach(() => {
-        (useRoutineDetailQuery as jest.Mock).mockImplementation(() => ({
+        (useRoutineDetailQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: testRoutine1

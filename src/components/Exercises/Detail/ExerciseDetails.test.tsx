@@ -4,7 +4,7 @@ import { useLanguageQuery } from "@/components/Exercises/queries";
 import { usePermissionQuery } from "@/components/User/queries/permission";
 import { useProfileQuery } from "@/components/User/queries/profile";
 import React from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { getExercise, getExercisesForVariation, getLanguageByShortName, getLanguages } from "@/services";
 import {
     testExerciseCrunches,
@@ -13,37 +13,38 @@ import {
     testLanguageEnglish,
     testLanguages
 } from "@/tests/exerciseTestdata";
+import type { Mock } from 'vitest';
 import { testProfileDataVerified } from "@/tests/userTestdata";
 import { ExerciseDetails } from './ExerciseDetails';
 
-jest.mock("@/services");
-jest.mock("@/components/Exercises/queries");
-jest.mock("@/components/User/queries/profile");
-jest.mock("@/components/User/queries/permission");
+vi.mock("@/services");
+vi.mock("@/components/Exercises/queries");
+vi.mock("@/components/User/queries/profile");
+vi.mock("@/components/User/queries/permission");
 
 const queryClient = new QueryClient();
 
 describe("Render tests", () => {
 
     beforeEach(() => {
-        (getExercise as jest.Mock).mockImplementation(() => Promise.resolve(testExerciseSquats));
-        (getExercisesForVariation as jest.Mock).mockImplementation(() => Promise.resolve(
+        (getExercise as Mock).mockImplementation(() => Promise.resolve(testExerciseSquats));
+        (getExercisesForVariation as Mock).mockImplementation(() => Promise.resolve(
             [
                 testExerciseCurls,
                 testExerciseCrunches
             ]
         ));
-        (getLanguageByShortName as jest.Mock).mockImplementation(() => Promise.resolve(testLanguageEnglish));
-        (getLanguages as jest.Mock).mockImplementation(() => Promise.resolve(testLanguages));
-        (useProfileQuery as jest.Mock).mockImplementation(() => Promise.resolve({
+        (getLanguageByShortName as Mock).mockImplementation(() => Promise.resolve(testLanguageEnglish));
+        (getLanguages as Mock).mockImplementation(() => Promise.resolve(testLanguages));
+        (useProfileQuery as Mock).mockImplementation(() => Promise.resolve({
             isSuccess: true,
             data: testProfileDataVerified
         }));
-        (usePermissionQuery as jest.Mock).mockImplementation(() => ({
+        (usePermissionQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             data: true
         }));
-        (useLanguageQuery as jest.Mock).mockImplementation(() => ({
+        (useLanguageQuery as Mock).mockImplementation(() => ({
             isLoading: false,
             isSuccess: true,
             isError: false,

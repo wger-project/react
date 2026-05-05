@@ -5,22 +5,23 @@ import { Meal } from "@/components/Nutrition/models/meal";
 import { useAddMealQuery, useEditMealQuery } from "@/components/Nutrition/queries";
 import { MealForm } from "@/components/Nutrition/widgets/forms/MealForm";
 import { TEST_MEAL_1 } from "@/tests/nutritionTestdata";
+import type { Mock } from 'vitest';
 
-jest.mock('@/components/Nutrition/queries');
+vi.mock('@/components/Nutrition/queries');
 
 describe('Test the MealForm component', () => {
     const queryClient = new QueryClient();
-    let mutateAddMock = jest.fn();
-    let mutateEditMock = jest.fn();
-    let closeFnMock = jest.fn();
+    let mutateAddMock = vi.fn();
+    let mutateEditMock = vi.fn();
+    let closeFnMock = vi.fn();
 
     beforeEach(() => {
-        mutateAddMock = jest.fn();
-        mutateEditMock = jest.fn();
-        closeFnMock = jest.fn();
+        mutateAddMock = vi.fn();
+        mutateEditMock = vi.fn();
+        closeFnMock = vi.fn();
 
-        (useEditMealQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
-        (useAddMealQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        (useEditMealQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        (useAddMealQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
     });
 
     test('a new meal is correctly added', async () => {

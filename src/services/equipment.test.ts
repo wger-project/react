@@ -1,8 +1,9 @@
 import axios from "axios";
 import { Equipment } from "@/components/Exercises/models/equipment";
 import { getEquipment } from "@/services";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 
 describe("equipment service tests", () => {
@@ -32,7 +33,7 @@ describe("equipment service tests", () => {
 
 
         // Act
-        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: response }));
         const result = await getEquipment();
 
         // Assert

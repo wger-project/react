@@ -5,29 +5,16 @@ import { getWeights } from "@/services";
 import { testQueryClient } from "@/tests/queryClient";
 import { BodyWeight } from "./index";
 import { FilterType } from "./widgets/FilterButtons";
+import type { Mock } from 'vitest';
 
-const { ResizeObserver } = window;
-
-jest.mock("@/services");
-console.log = jest.fn();
-
+vi.mock("@/services");
+console.log = vi.fn();
 
 describe("Test BodyWeight component", () => {
 
     // See https://github.com/maslianok/react-resize-detector#testing-with-enzyme-and-jest
-    beforeEach(() => {
-        // @ts-ignore
-        delete window.ResizeObserver;
-        window.ResizeObserver = jest.fn().mockImplementation(() => ({
-            observe: jest.fn(),
-            unobserve: jest.fn(),
-            disconnect: jest.fn()
-        }));
-    });
-
     afterEach(() => {
-        window.ResizeObserver = ResizeObserver;
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     // Arrange
@@ -38,7 +25,7 @@ describe("Test BodyWeight component", () => {
 
     test('renders without crashing', async () => {
 
-        (getWeights as jest.Mock).mockImplementation(() => Promise.resolve(weightData));
+        (getWeights as Mock).mockImplementation(() => Promise.resolve(weightData));
 
         // Act
         render(
@@ -55,11 +42,10 @@ describe("Test BodyWeight component", () => {
         expect(await screen.findByText("90")).toBeInTheDocument();
     });
 
-
     test('changes filter and updates displayed data', async () => {
 
         // Mock the getWeights response based on the filter
-        (getWeights as jest.Mock).mockImplementation((filter: FilterType) => {
+        (getWeights as Mock).mockImplementation((filter: FilterType) => {
             if (filter === 'lastYear') {
                 return Promise.resolve(weightData);
             } else if (filter === 'lastMonth') {

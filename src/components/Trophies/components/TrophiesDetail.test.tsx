@@ -6,7 +6,7 @@ import { TrophiesDetail } from './TrophiesDetail';
 
 
 // Mock the trophies query hook
-jest.mock('@/components/Trophies/queries/trophies', () => ({
+vi.mock('@/components/Trophies/queries/trophies', () => ({
     useUserTrophyProgressionQuery: () => ({
         isLoading: false,
         data: testUserProgressionTrophies(),

@@ -13,7 +13,7 @@ describe("Test the RoutineDetailDropdown component", () => {
 
     beforeEach(() => {
         user = userEvent.setup();
-        jest.resetAllMocks();
+        vi.resetAllMocks();
     });
 
     test('Edit entry is enabled for routines', async () => {

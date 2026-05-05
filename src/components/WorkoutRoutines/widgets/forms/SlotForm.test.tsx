@@ -6,18 +6,19 @@ import { SlotForm } from "@/components/WorkoutRoutines/widgets/forms/SlotForm";
 import { editSlot } from "@/services";
 import { testQueryClient } from "@/tests/queryClient";
 import { testDayLegs } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
 
-jest.mock("@/services");
+vi.mock("@/services");
 
 let user: ReturnType<typeof userEvent.setup>;
-const mockEditSlot = editSlot as jest.Mock;
+const mockEditSlot = editSlot as Mock;
 
 describe('SlotForm', () => {
 
     beforeEach(() => {
         user = userEvent.setup();
-        jest.resetAllMocks();
+        vi.resetAllMocks();
     });
 
     test('correctly updates the slot entry on change', async () => {

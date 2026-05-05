@@ -5,8 +5,9 @@ import { MeasurementCategoryOverview } from "@/components/Measurements/Screens/M
 import React from 'react';
 import { BrowserRouter } from "react-router-dom";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("@/components/Measurements/queries");
+vi.mock("@/components/Measurements/queries");
 
 const queryClient = new QueryClient();
 
@@ -15,26 +16,16 @@ describe("Test the MeasurementCategoryOverview component", () => {
     const { ResizeObserver } = window;
 
     beforeEach(() => {
-        (useMeasurementsCategoryQuery as jest.Mock).mockImplementation(() => ({
+        (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: [TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2]
         }));
-
-        // @ts-ignore
-        delete window.ResizeObserver;
-        window.ResizeObserver = jest.fn().mockImplementation(() => ({
-            observe: jest.fn(),
-            unobserve: jest.fn(),
-            disconnect: jest.fn()
-        }));
     });
 
     afterEach(() => {
-        window.ResizeObserver = ResizeObserver;
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
-
 
     test('renders all measurement categories correctly', async () => {
 

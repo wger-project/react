@@ -6,20 +6,21 @@ import { SessionLogsForm } from '@/components/WorkoutRoutines/widgets/forms/Sess
 import { DateTime } from "luxon";
 import { testLanguages } from "@/tests/exerciseTestdata";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
 
-jest.mock("@/components/Exercises/queries");
-jest.mock("@/components/WorkoutRoutines/queries");
+vi.mock("@/components/Exercises/queries");
+vi.mock("@/components/WorkoutRoutines/queries");
 
 describe('SessionLogsForm', () => {
 
-    const mockUseLanguageQuery = useLanguageQuery as jest.Mock;
-    const mockAddLogsQuery = useAddRoutineLogsQuery as jest.Mock;
-    const mockRoutineDetailQuery = useRoutineDetailQuery as jest.Mock;
-    const mockMutateAsync = jest.fn();
+    const mockUseLanguageQuery = useLanguageQuery as Mock;
+    const mockAddLogsQuery = useAddRoutineLogsQuery as Mock;
+    const mockRoutineDetailQuery = useRoutineDetailQuery as Mock;
+    const mockMutateAsync = vi.fn();
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         mockRoutineDetailQuery.mockReturnValue({
             isLoading: false,
             data: testRoutine1,

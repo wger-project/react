@@ -4,44 +4,31 @@ import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from '@/components/W
 import { ExerciseLog } from "@/components/WorkoutRoutines/widgets/LogWidgets";
 import { testExerciseBenchPress } from "@/tests/exerciseTestdata";
 import { testWorkoutLogs } from "@/tests/workoutLogsRoutinesTestData";
+import type { Mock } from 'vitest';
 
-
-const { ResizeObserver } = window;
-
-jest.mock('@/components/WorkoutRoutines/queries', () => ({
-    useDeleteRoutineLogQuery: jest.fn(),
-    useEditRoutineLogQuery: jest.fn()
+vi.mock('@/components/WorkoutRoutines/queries', () => ({
+    useDeleteRoutineLogQuery: vi.fn(),
+    useEditRoutineLogQuery: vi.fn()
 }));
 
 describe('ExerciseLog', () => {
-    let mockDeleteMutate: jest.Mock;
-    let mockEditMutate: jest.Mock;
+    let mockDeleteMutate: Mock;
+    let mockEditMutate: Mock;
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
 
-        mockDeleteMutate = jest.fn();
-        mockEditMutate = jest.fn();
-
-        // @ts-ignore
-        delete window.ResizeObserver;
-        window.ResizeObserver = jest.fn().mockImplementation(() => ({
-            observe: jest.fn(),
-            unobserve: jest.fn(),
-            disconnect: jest.fn()
-        }));
-
-        (useDeleteRoutineLogQuery as jest.Mock).mockReturnValue({ mutate: mockDeleteMutate });
-        (useEditRoutineLogQuery as jest.Mock).mockReturnValue({ mutate: mockEditMutate });
+        mockDeleteMutate = vi.fn();
+        mockEditMutate = vi.fn();
+        (useDeleteRoutineLogQuery as Mock).mockReturnValue({ mutate: mockDeleteMutate });
+        (useEditRoutineLogQuery as Mock).mockReturnValue({ mutate: mockEditMutate });
     });
 
     afterEach(() => {
-        window.ResizeObserver = ResizeObserver;
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
     const mockRoutineId = 123;
     const user = userEvent.setup();
-
 
     test('renders the DataGrid table correctly', () => {
         render(

@@ -1,7 +1,8 @@
 import axios from "axios";
 import { getIngredient } from "@/services/ingredient";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 describe("Ingredient service tests", () => {
 
@@ -60,7 +61,7 @@ describe("Ingredient service tests", () => {
         };
 
         // Act
-        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: ingredientInfoResponse }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: ingredientInfoResponse }));
         const result = await getIngredient(1);
 
         // Assert

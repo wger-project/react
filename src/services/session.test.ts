@@ -2,18 +2,19 @@ import axios from "axios";
 import { getSessions } from "@/services";
 import * as exerciseService from "@/services/exercise";
 import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
-jest.mock("@/services/exercise");
+vi.mock("axios");
+vi.mock("@/services/exercise");
 
 describe("Session service tests", () => {
     beforeEach(() => {
-        jest.resetAllMocks();
+        vi.resetAllMocks();
     });
 
     test('Loads sessions with associated logs and exercises', async () => {
         // Arrange
-        (axios.get as jest.Mock).mockImplementationOnce(() => {
+        (axios.get as Mock).mockImplementationOnce(() => {
             return Promise.resolve({
                 data: {
                     count: 2,
@@ -65,7 +66,7 @@ describe("Session service tests", () => {
             });
         });
 
-        (axios.get as jest.Mock).mockImplementationOnce(() => {
+        (axios.get as Mock).mockImplementationOnce(() => {
             return Promise.resolve({
                 data: {
                     count: 1,
@@ -87,7 +88,7 @@ describe("Session service tests", () => {
             });
         });
 
-        (exerciseService.getExercise as jest.Mock).mockImplementation((id) => {
+        (exerciseService.getExercise as Mock).mockImplementation((id) => {
             if (id === 200) {
                 return Promise.resolve(testExerciseSquats);
             } else if (id === 201) {
@@ -127,7 +128,7 @@ describe("Session service tests", () => {
 
     // Keep the existing test
     test('Correctly filters sessions and log entries', async () => {
-        (axios.get as jest.Mock).mockImplementation(() => {
+        (axios.get as Mock).mockImplementation(() => {
             return Promise.resolve({
                 data: {
                     count: 2,

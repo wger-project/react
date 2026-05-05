@@ -11,17 +11,18 @@ import {
     STORAGE_KEY_EXERCISE_LANGUAGE
 } from "@/components/Exercises/Filter/NameAutcompleter";
 
+import type { Mock } from 'vitest';
 const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
-jest.mock("@/services");
-const mockCallback = jest.fn();
+vi.mock("@/services");
+const mockCallback = vi.fn();
 
 describe("Test the NameAutocompleter component", () => {
 
     // Arrange
     beforeEach(() => {
         localStorage.clear();
-        (searchExerciseTranslations as jest.Mock).mockImplementation(() => Promise.resolve(searchResponse));
+        (searchExerciseTranslations as Mock).mockImplementation(() => Promise.resolve(searchResponse));
     });
 
     test('renders correct results', async () => {

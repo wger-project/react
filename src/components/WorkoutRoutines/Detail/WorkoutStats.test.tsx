@@ -3,36 +3,26 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { WorkoutStats } from "@/components/WorkoutRoutines/Detail/WorkoutStats";
 import { RoutineStatsData } from "@/components/WorkoutRoutines/models/LogStats";
 import React from "react";
-import { MemoryRouter, Route, Routes } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { getLanguages, getMuscles, getRoutine, getRoutineStatisticsData } from "@/services";
 import { testLanguages, testMuscles } from "@/tests/exerciseTestdata";
 import { getTestQueryClient } from "@/tests/queryClient";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("@/services");
-
-const { ResizeObserver } = window;
+vi.mock("@/services");
 
 describe("Smoke tests the WorkoutStats component", () => {
 
     beforeEach(() => {
-        (getRoutineStatisticsData as jest.Mock).mockResolvedValue(new RoutineStatsData());
-        (getRoutine as jest.Mock).mockResolvedValue(testRoutine1);
-        (getLanguages as jest.Mock).mockResolvedValue(testLanguages);
-        (getMuscles as jest.Mock).mockResolvedValue(testMuscles);
-
-        // @ts-ignore
-        delete window.ResizeObserver;
-        window.ResizeObserver = jest.fn().mockImplementation(() => ({
-            observe: jest.fn(),
-            unobserve: jest.fn(),
-            disconnect: jest.fn()
-        }));
+        (getRoutineStatisticsData as Mock).mockResolvedValue(new RoutineStatsData());
+        (getRoutine as Mock).mockResolvedValue(testRoutine1);
+        (getLanguages as Mock).mockResolvedValue(testLanguages);
+        (getMuscles as Mock).mockResolvedValue(testMuscles);
     });
 
     afterEach(() => {
-        window.ResizeObserver = ResizeObserver;
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     test('renders the statistics page', async () => {

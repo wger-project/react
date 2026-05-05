@@ -7,11 +7,12 @@ import { MealItemForm } from "@/components/Nutrition/widgets/forms/MealItemForm"
 import { searchIngredient } from "@/services";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
 import { TEST_MEAL_ITEM_1 } from "@/tests/nutritionTestdata";
+import type { Mock } from 'vitest';
 
 const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
-jest.mock('@/components/Nutrition/queries');
-jest.mock('@/services');
+vi.mock('@/components/Nutrition/queries');
+vi.mock('@/services');
 
 async function fillInEntry(user: UserEvent) {
     const autocomplete = screen.getByTestId('autocomplete');
@@ -37,18 +38,18 @@ async function fillInEntry(user: UserEvent) {
 
 describe('Test the MealItemForm component', () => {
     const queryClient = new QueryClient();
-    let mutateAddMock = jest.fn();
-    let mutateEditMock = jest.fn();
-    let closeFnMock = jest.fn();
+    let mutateAddMock = vi.fn();
+    let mutateEditMock = vi.fn();
+    let closeFnMock = vi.fn();
 
     beforeEach(() => {
-        mutateAddMock = jest.fn();
-        mutateEditMock = jest.fn();
-        closeFnMock = jest.fn();
+        mutateAddMock = vi.fn();
+        mutateEditMock = vi.fn();
+        closeFnMock = vi.fn();
 
-        (useEditMealItemQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
-        (useAddMealItemQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
-        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
+        (useEditMealItemQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        (useAddMealItemQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        (searchIngredient as Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
     });
 
     test('A new entry should be added', async () => {

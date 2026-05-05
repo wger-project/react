@@ -4,7 +4,7 @@ import React from 'react';
 import { FilterButtons, FilterType } from './FilterButtons';
 
 describe('FilterButtons Component', () => {
-    const onFilterChange = jest.fn();
+    const onFilterChange = vi.fn();
 
     const renderComponent = (currentFilter: FilterType) => {
         render(

@@ -7,12 +7,13 @@ import { editDay } from "@/services";
 import { testQueryClient } from "@/tests/queryClient";
 import { testProfileDataVerified } from "@/tests/userTestdata";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
 
-jest.mock("@/services");
-jest.mock("@/components/User/queries/profile");
-const mockEditDay = editDay as jest.Mock;
-const mockUseProfileQuery = useProfileQuery as jest.Mock;
+vi.mock("@/services");
+vi.mock("@/components/User/queries/profile");
+const mockEditDay = editDay as Mock;
+const mockUseProfileQuery = useProfileQuery as Mock;
 
 
 describe('Tests for the DayForm', () => {
@@ -34,7 +35,7 @@ describe('Tests for the DayForm', () => {
                 <DayForm
                     day={testRoutine1.days[0]}
                     routineId={1}
-                    setSelectedDayIndex={jest.fn()}
+                    setSelectedDayIndex={vi.fn()}
                 />
             </QueryClientProvider>
         );

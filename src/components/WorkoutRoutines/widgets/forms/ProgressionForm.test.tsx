@@ -5,10 +5,11 @@ import { BaseConfig } from "@/components/WorkoutRoutines/models/BaseConfig";
 import { ProgressionForm } from "@/components/WorkoutRoutines/widgets/forms/ProgressionForm";
 import { processBaseConfigs } from "@/services";
 import { testQueryClient } from "@/tests/queryClient";
+import type { Mock } from 'vitest';
 
 
-jest.mock("@/services");
-const mockProcessBaseConfigs = processBaseConfigs as jest.Mock;
+vi.mock("@/services");
+const mockProcessBaseConfigs = processBaseConfigs as Mock;
 
 describe('Tests for the ProgressionForm', () => {
 

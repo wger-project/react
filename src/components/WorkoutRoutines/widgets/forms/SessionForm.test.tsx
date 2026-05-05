@@ -5,12 +5,13 @@ import { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery } from "@/
 import { DateTime } from 'luxon';
 import { BrowserRouter } from "react-router-dom";
 import { SessionForm } from './SessionForm';
+import type { Mock } from 'vitest';
 
 
-jest.mock("@/components/WorkoutRoutines/queries");
-const mockUseFindSessionQuery = useFindSessionQuery as jest.Mock;
-const mockUseAddSessionQuery = useAddSessionQuery as jest.Mock;
-const mockUseEditSessionQuery = useEditSessionQuery as jest.Mock;
+vi.mock("@/components/WorkoutRoutines/queries");
+const mockUseFindSessionQuery = useFindSessionQuery as Mock;
+const mockUseAddSessionQuery = useAddSessionQuery as Mock;
+const mockUseEditSessionQuery = useEditSessionQuery as Mock;
 
 describe('SessionForm', () => {
     const routineId = 1;

@@ -3,28 +3,29 @@ import userEvent from "@testing-library/user-event";
 import { ExerciseDeleteDialog } from "@/components/Exercises/Detail/Head/ExerciseDeleteDialog";
 import { SEARCH_DEBOUNCE_MS } from "@/components/Exercises/Filter/NameAutcompleter";
 import React from 'react';
-import { MemoryRouter, Routes } from "react-router";
+import { MemoryRouter, Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
 import { deleteExercise, deleteExerciseTranslation, getExercise, searchExerciseTranslations } from "@/services";
 import { searchResponse } from "@/tests/exercises/searchResponse";
 import { testExerciseBenchPress, testExerciseSquats, testLanguageGerman } from "@/tests/exerciseTestdata";
+import type { Mock } from 'vitest';
 
 const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
-jest.mock("@/services");
+vi.mock("@/services");
 
 describe("Test the ExerciseDeleteDialog component", () => {
 
-    const onCloseMock = jest.fn();
-    const onChangeLanguageMock = jest.fn();
+    const onCloseMock = vi.fn();
+    const onChangeLanguageMock = vi.fn();
 
     // Arrange
     beforeEach(() => {
-        jest.resetAllMocks();
+        vi.resetAllMocks();
 
-        (searchExerciseTranslations as jest.Mock).mockImplementation(() => Promise.resolve(searchResponse));
-        (getExercise as jest.Mock).mockImplementation(() => Promise.resolve(testExerciseBenchPress));
-        (deleteExercise as jest.Mock).mockImplementation(() => Promise.resolve(204));
+        (searchExerciseTranslations as Mock).mockImplementation(() => Promise.resolve(searchResponse));
+        (getExercise as Mock).mockImplementation(() => Promise.resolve(testExerciseBenchPress));
+        (deleteExercise as Mock).mockImplementation(() => Promise.resolve(204));
     });
 
     function renderWidget() {

@@ -3,8 +3,9 @@ import { Slot } from "@/components/WorkoutRoutines/models/Slot";
 import { addSlot, deleteSlot, editSlot } from "@/services/slot";
 import { ApiPath } from "@/utils/consts";
 import { makeHeader, makeUrl } from "@/utils/url";
+import type { Mock } from 'vitest';
 
-jest.mock('axios');
+vi.mock('axios');
 
 describe("Slot service tests", () => {
     const slotApiData = {
@@ -15,11 +16,11 @@ describe("Slot service tests", () => {
     };
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('Creates a new Slot', async () => {
-        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: { id: 123, ...slotApiData } }));
+        (axios.post as Mock).mockImplementation(() => Promise.resolve({ data: { id: 123, ...slotApiData } }));
         const slot = Slot.fromJson(slotApiData);
 
         const result = await addSlot(slot);
@@ -33,7 +34,7 @@ describe("Slot service tests", () => {
     });
 
     test('Update a Slot', async () => {
-        (axios.patch as jest.Mock).mockImplementation(() => Promise.resolve({
+        (axios.patch as Mock).mockImplementation(() => Promise.resolve({
             data: {
                 id: 123,
                 ...slotApiData,
@@ -56,7 +57,7 @@ describe("Slot service tests", () => {
 
 
     test('Delete a Slot', async () => {
-        (axios.delete as jest.Mock).mockImplementation(() => Promise.resolve({}));
+        (axios.delete as Mock).mockImplementation(() => Promise.resolve({}));
 
         await deleteSlot(1);
 

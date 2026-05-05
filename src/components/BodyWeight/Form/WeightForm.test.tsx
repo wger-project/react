@@ -7,15 +7,16 @@ import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } f
 import React from 'react';
 import { testQueryClient } from "@/tests/queryClient";
 import { testWeightEntries } from "@/tests/weight/testData";
+import type { Mock } from 'vitest';
 
-jest.mock("@/services");
-jest.mock("@/components/BodyWeight/queries");
+vi.mock("@/services");
+vi.mock("@/components/BodyWeight/queries");
 
 
 describe("Test WeightForm component", () => {
 
     beforeEach(() => {
-        (useBodyWeightQuery as jest.Mock).mockImplementation(() => ({ isSuccess: true, data: testWeightEntries }));
+        (useBodyWeightQuery as Mock).mockImplementation(() => ({ isSuccess: true, data: testWeightEntries }));
     });
 
 

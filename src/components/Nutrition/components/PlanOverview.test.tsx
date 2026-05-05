@@ -3,15 +3,16 @@ import { render, screen } from '@testing-library/react';
 import { PlansOverview } from "@/components/Nutrition/components/PlansOverview";
 import { useFetchNutritionalPlansQuery } from "@/components/Nutrition/queries";
 import { TEST_NUTRITIONAL_PLAN_1, TEST_NUTRITIONAL_PLAN_2 } from "@/tests/nutritionTestdata";
+import type { Mock } from 'vitest';
 
-jest.mock("@/components/Nutrition/queries");
+vi.mock("@/components/Nutrition/queries");
 
 const queryClient = new QueryClient();
 
 describe("Test the PlansOverview component", () => {
 
     beforeEach(() => {
-        (useFetchNutritionalPlansQuery as jest.Mock).mockImplementation(() => ({
+        (useFetchNutritionalPlansQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: [TEST_NUTRITIONAL_PLAN_1, TEST_NUTRITIONAL_PLAN_2]

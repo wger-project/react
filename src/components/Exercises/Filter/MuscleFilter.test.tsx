@@ -4,9 +4,10 @@ import { Muscle } from "@/components/Exercises/models/muscle";
 import { useMusclesQuery } from "@/components/Exercises/queries";
 import React from 'react';
 import { ExerciseFiltersContext } from './ExerciseFiltersContext';
+import type { Mock } from 'vitest';
 
-jest.mock("@/components/Exercises/queries");
-const mockedMuscleQuery = useMusclesQuery as jest.Mock;
+vi.mock("@/components/Exercises/queries");
+const mockedMuscleQuery = useMusclesQuery as Mock;
 
 describe("Test the CategoryFilter component", () => {
     beforeEach(() => {

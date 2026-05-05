@@ -1,3 +1,7 @@
+// @vitest-environment jsdom
+// (happy-dom has interaction quirks with MUI X DateTimePicker + Luxon that
+// prevent the create-mode form submission. The rest of the suite runs on
+// happy-dom for speed.)
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
@@ -7,18 +11,19 @@ import {
     useEditMeasurementEntryQuery,
     useMeasurementsQuery
 } from "@/components/Measurements/queries";
+import type { Mock } from 'vitest';
 import { EntryForm } from "@/components/Measurements/widgets/EntryForm";
 import i18n from "i18next";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_ENTRIES_1 } from "@/tests/measurementsTestData";
 
-jest.mock("@/services/weight");
+vi.mock("@/services/weight");
 
-jest.mock("@/components/Measurements/queries");
+vi.mock("@/components/Measurements/queries");
 
 
 describe("Test the EntryForm component", () => {
     const queryClient = new QueryClient();
-    let mutate = jest.fn();
+    let mutate = vi.fn();
 
     const renderComponent = (props: { entry?: MeasurementEntry, categoryId: number }) => {
         return render(
@@ -29,18 +34,18 @@ describe("Test the EntryForm component", () => {
     };
 
     beforeEach(() => {
-        (useMeasurementsQuery as jest.Mock).mockImplementation(() => ({
+        (useMeasurementsQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: TEST_MEASUREMENT_CATEGORY_1
         }));
 
-        mutate = jest.fn();
+        mutate = vi.fn();
 
-        (useEditMeasurementEntryQuery as jest.Mock).mockImplementation(() => ({
+        (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({
             mutate: mutate
         }));
-        (useAddMeasurementEntryQuery as jest.Mock).mockImplementation(() => ({
+        (useAddMeasurementEntryQuery as Mock).mockImplementation(() => ({
             mutate: mutate
         }));
     });
@@ -88,8 +93,8 @@ describe("Test the EntryForm component", () => {
     test('Creating a new entry', async () => {
         // Arrange
         const fakeNow = new Date(2023, 5, 18, 14, 30);
-        jest.useFakeTimers({ now: fakeNow.getTime() });
-        const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+        vi.useFakeTimers({ now: fakeNow.getTime(), shouldAdvanceTime: true });
+        const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
         // Act
         renderComponent({ categoryId: 11 });
@@ -112,7 +117,7 @@ describe("Test the EntryForm component", () => {
             value: 42.42,
         });
 
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     describe('Localization', () => {

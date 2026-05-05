@@ -30,9 +30,9 @@ describe("SlotHeader component", () => {
         index: 0,
         dragHandleProps: null,
         routineId: 1,
-        onDelete: jest.fn(),
-        onDuplicate: jest.fn(),
-        onAddSuperset: jest.fn(),
+        onDelete: vi.fn(),
+        onDuplicate: vi.fn(),
+        onAddSuperset: vi.fn(),
         addSupersetIsPending: false,
     };
 
@@ -43,7 +43,7 @@ describe("SlotHeader component", () => {
     );
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('renders exercise label for single-entry slot', () => {
@@ -72,7 +72,7 @@ describe("SlotHeader component", () => {
     });
 
     test('calls onDelete when delete button is clicked', async () => {
-        const onDelete = jest.fn();
+        const onDelete = vi.fn();
         renderComponent({ onDelete });
 
         const deleteIcon = screen.getByTestId('DeleteIcon');
@@ -82,7 +82,7 @@ describe("SlotHeader component", () => {
     });
 
     test('calls onAddSuperset when button is clicked', async () => {
-        const onAddSuperset = jest.fn();
+        const onAddSuperset = vi.fn();
         renderComponent({ onAddSuperset });
 
         await userEvent.click(screen.getByText('routines.addSuperset'));
