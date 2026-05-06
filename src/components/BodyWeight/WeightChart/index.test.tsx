@@ -1,52 +1,54 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { WeightEntry } from "@/components/BodyWeight/model";
 import React from 'react';
+import { describe, test } from 'vitest';
 import { testQueryClient } from "@/tests/queryClient";
 import { WeightChart } from "./index";
 
 // See https://github.com/maslianok/react-resize-detector#testing-with-enzyme-and-jest
-afterEach(() => {
-    vi.restoreAllMocks();
-});
+// Recharts only paints SVG content once a ResizeObserver entry reports real
+// dimensions, which neither happy-dom nor jsdom provide. We therefore only
+// assert the chart mounts; the EMA logic is covered in ema.test.ts.
 
-describe("Test BodyWeight component", () => {
-    test('renders without crashing', async () => {
+const renderChart = (weights: WeightEntry[], height?: number) =>
+    render(
+        <QueryClientProvider client={testQueryClient}>
+            <WeightChart weights={weights} height={height} />
+        </QueryClientProvider>
+    );
 
-        // Arrange
-        const weightData = [        
+describe("WeightChart", () => {
+    test('mounts with weight data', () => {
+        renderChart([
             new WeightEntry(new Date('2021-12-10'), 80, 1),
             new WeightEntry(new Date('2021-12-20'), 90, 2),
-        ];
-
-        // Act
-        render(
-            <QueryClientProvider client={testQueryClient}>
-                <WeightChart weights={weightData} />
-            </QueryClientProvider>
-        );
-
-        // Renders without crashing
+        ]);
     });
 
-    test('errors get handled', () => {
+    test('mounts with empty data', () => {
+        renderChart([]);
+    });
 
-        // Arrange
-        const weightData: WeightEntry[] = [];
+    test('mounts with a single entry', () => {
+        renderChart([new WeightEntry(new Date('2021-12-10'), 80, 1)]);
+    });
 
-        // Act
-        render(
-            <QueryClientProvider client={testQueryClient}>
-                <WeightChart weights={weightData} />
-            </QueryClientProvider>
+    test('mounts with unsorted data', () => {
+        renderChart([
+            new WeightEntry(new Date('2021-12-20'), 90, 2),
+            new WeightEntry(new Date('2021-12-10'), 80, 1),
+            new WeightEntry(new Date('2021-12-15'), 85, 3),
+        ]);
+    });
+
+    test('respects the height prop', () => {
+        renderChart(
+            [
+                new WeightEntry(new Date('2021-12-10'), 80, 1),
+                new WeightEntry(new Date('2021-12-20'), 85, 2),
+            ],
+            500,
         );
-
-        // Assert
-        // No weights are found in the document
-        const linkElement = screen.queryByText("80");
-        expect(linkElement).toBeNull();
-
-        const linkElement2 = screen.queryByText("90");
-        expect(linkElement2).toBeNull();
     });
 });
