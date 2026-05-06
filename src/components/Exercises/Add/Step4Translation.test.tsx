@@ -1,18 +1,31 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { useLanguageCheckQuery } from "@/components/Core/queries";
 import { Step4Translations } from "@/components/Exercises/Add/Step4Translations";
 import { useLanguageQuery } from "@/components/Exercises/queries";
+import {
+    setAlternativeNamesI18n,
+    setDescriptionI18n,
+    setLanguageId,
+    setNameI18n,
+    setNotesI18n,
+} from "@/state/exerciseSubmissionReducer";
 import React from "react";
 import { testLanguages } from "@/tests/exerciseTestdata";
-import type { Mock } from 'vitest';
+import type { Mock } from "vitest";
 
 // It seems we run into a timeout when running the tests on github actions
 vi.setConfig({ testTimeout: 30000 });
 
 vi.mock("@/components/Exercises/queries");
+vi.mock("@/components/Core/queries");
+
 vi.mock("@/state/exerciseSubmissionReducer", async () => {
-    const originalModule = await vi.importActual<typeof import("@/state/exerciseSubmissionReducer")>("@/state/exerciseSubmissionReducer");
+    const originalModule =
+        await vi.importActual<typeof import("@/state/exerciseSubmissionReducer")>(
+            "@/state/exerciseSubmissionReducer"
+        );
     return {
         __esModule: true,
         ...originalModule,
@@ -20,101 +33,135 @@ vi.mock("@/state/exerciseSubmissionReducer", async () => {
         setDescriptionI18n: vi.fn(),
         setAlternativeNamesI18n: vi.fn(),
         setLanguageId: vi.fn(),
-        setEquipment: vi.fn(),
+        setNotesI18n: vi.fn(),
     };
 });
 
 const mockedUseLanguageQuery = useLanguageQuery as Mock;
+const mockedUseLanguageCheckQuery = useLanguageCheckQuery as Mock;
 const mockOnContinue = vi.fn();
 const mockOnBack = vi.fn();
 const queryClient = new QueryClient();
+let mutateAsync: Mock;
+
+function renderStep() {
+    render(
+        <QueryClientProvider client={queryClient}>
+            <Step4Translations onContinue={mockOnContinue} onBack={mockOnBack} />
+        </QueryClientProvider>
+    );
+}
 
 describe("Test the add exercise step 4 component", () => {
-
     beforeEach(() => {
         mockedUseLanguageQuery.mockImplementation(() => ({
             isLoading: false,
-            data: testLanguages
+            data: testLanguages,
+        }));
+        mutateAsync = vi.fn().mockResolvedValue({ success: true, data: {} });
+        mockedUseLanguageCheckQuery.mockImplementation(() => ({
+            isPending: false,
+            mutateAsync,
         }));
     });
 
+    afterEach(() => {
+        vi.clearAllMocks();
+    });
 
     test("Renders without crashing", () => {
-        // Act
-        render(
-            <QueryClientProvider client={queryClient}>
-                <Step4Translations
-                    onContinue={mockOnContinue}
-                    onBack={mockOnBack}
-                />
-            </QueryClientProvider>
-        );
+        renderStep();
 
-        // Assert
+        // The translation switch is the entry point; the form fields stay hidden
         expect(screen.getByText("exercises.translateExerciseNow")).toBeInTheDocument();
         expect(screen.queryByText("name")).not.toBeInTheDocument();
         expect(screen.queryByText("exercises.alternativeNames")).not.toBeInTheDocument();
         expect(screen.queryByText("description")).not.toBeInTheDocument();
     });
 
-    test("Form elements are shown after clicking on the switch", async () => {
-        // Arrange
+    test("clicking 'goBack' calls onBack", async () => {
         const user = userEvent.setup();
+        renderStep();
 
-        // Act
-        render(
-            <QueryClientProvider client={queryClient}>
-                <Step4Translations
-                    onContinue={mockOnContinue}
-                    onBack={mockOnBack}
-                />
-            </QueryClientProvider>
-        );
-        const button = screen.getByRole('switch');
-        await user.click(button);
+        await user.click(screen.getByText("goBack"));
+        expect(mockOnBack).toHaveBeenCalled();
+    });
+
+    test("Form elements are shown after clicking on the switch", async () => {
+        const user = userEvent.setup();
+        renderStep();
+
+        await user.click(screen.getByRole("switch"));
 
         expect(screen.getByText("name")).toBeInTheDocument();
         expect(screen.getByText("exercises.alternativeNames")).toBeInTheDocument();
     });
 
-
-    test("Correctly saves the values to the provider", async () => {
-        // Arrange
+    test("with the toggle off: continue submits an empty translation, dispatches null language and skips the language check", async () => {
         const user = userEvent.setup();
-        // const text = 'Der Armvernichter ist eine ein alter chinesische Kraftübung, die...';
+        renderStep();
 
-        // Act
-        render(
-            <QueryClientProvider client={queryClient}>
-                <Step4Translations
-                    onContinue={mockOnContinue}
-                    onBack={mockOnBack}
-                />
-            </QueryClientProvider>
-        );
-        const button = screen.getByRole('switch');
-        await user.click(button);
+        await user.click(screen.getByText("continue"));
 
-        await user.click(screen.getByRole('combobox', { name: /language/i }));
+        await waitFor(() => {
+            expect(mockOnContinue).toHaveBeenCalled();
+        });
+        expect(setNameI18n).toHaveBeenCalledWith("");
+        expect(setDescriptionI18n).toHaveBeenCalledWith("");
+        expect(setAlternativeNamesI18n).toHaveBeenCalledWith([]);
+        expect(setNotesI18n).toHaveBeenCalledWith([]);
+        expect(setLanguageId).toHaveBeenCalledWith(null);
+        // No description is submitted, so there's no language check
+        expect(mutateAsync).not.toHaveBeenCalled();
+    });
+
+    test("with translation enabled and a valid description: triggers the language check and dispatches all values", async () => {
+        const VALID_DESCRIPTION =
+            "Eine ausreichend lange Beschreibung der Übung, die die yup-Mindestlänge erfüllt.";
+        const user = userEvent.setup();
+        renderStep();
+
+        // Enable the form
+        await user.click(screen.getByRole("switch"));
+
+        // Pick a language
+        await user.click(screen.getByRole("combobox", { name: /language/i }));
         await user.click(screen.getByText(/deutsch/i));
 
-        await user.type(screen.getByRole('textbox', { name: /name/i }), 'Arm Vernichter');
-        const aliases = screen.getByLabelText("exercises.alternativeNames");
+        // Fill the name
+        await user.type(screen.getByRole("textbox", { name: /name/i }), "Bankdrücken");
 
-        await user.type(aliases, 'Bizepsvergrößer');
-        await user.keyboard('{enter}');
-        await user.type(aliases, 'Arm Explosion');
-        await user.keyboard('{enter}');
+        // Fill the markdown description (uses the placeholder from t('useMarkdownHint'))
+        const description = screen.getByPlaceholderText("useMarkdownHint");
+        await user.type(description, VALID_DESCRIPTION);
 
-        // TODO: fix tests, see https://github.com/wger-project/react/issues/404
-        //await user.type(screen.getByRole('textbox', { name: /description/i }), text);
-        await user.click(screen.getByText('continue'));
+        await user.click(screen.getByText("continue"));
 
+        await waitFor(() => {
+            expect(mutateAsync).toHaveBeenCalled();
+        });
+        // languageId from the dropdown is forwarded to the language check
+        const [callArg] = (mutateAsync as Mock).mock.calls[0];
+        expect(callArg.languageId).toBe(testLanguages[0].id);
+        expect(callArg.input).toBe(VALID_DESCRIPTION);
 
-        // Assert
-        //expect(setLanguageId).toHaveBeenCalledWith(1);
-        //expect(setNameI18n).toHaveBeenCalledWith('Arm Vernichter');
-        //expect(setAlternativeNamesI18n).toHaveBeenCalledWith(['Bizepsvergrößer', 'Arm Explosion']);
-        //expect(setDescriptionI18n).toHaveBeenCalledWith(text);
+        await waitFor(() => {
+            expect(mockOnContinue).toHaveBeenCalled();
+        });
+        expect(setLanguageId).toHaveBeenCalledWith(testLanguages[0].id);
+        expect(setNameI18n).toHaveBeenCalledWith("Bankdrücken");
+        expect(setDescriptionI18n).toHaveBeenCalledWith(VALID_DESCRIPTION);
+    });
+
+    test("the language dropdown excludes English (the primary language is captured in step 3)", async () => {
+        const user = userEvent.setup();
+        renderStep();
+
+        await user.click(screen.getByRole("switch"));
+        await user.click(screen.getByRole("combobox", { name: /language/i }));
+
+        expect(screen.queryByRole("option", { name: /english/i })).not.toBeInTheDocument();
+        expect(screen.getByRole("option", { name: /deutsch/i })).toBeInTheDocument();
+        expect(screen.getByRole("option", { name: /french/i })).toBeInTheDocument();
     });
 });
