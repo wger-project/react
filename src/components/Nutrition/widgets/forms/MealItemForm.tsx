@@ -7,7 +7,7 @@ import {
     useDeleteMealItemQuery,
     useEditMealItemQuery,
 } from "@/components/Nutrition/queries";
-import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutcompleter";
+import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
 import { Form, Formik } from "formik";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";

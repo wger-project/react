@@ -19,7 +19,7 @@ import {
     TextField,
     Tooltip
 } from "@mui/material";
-import { NameAutocompleter } from "@/components/Exercises/widgets/Filter/NameAutcompleter";
+import { NameAutocompleter } from "@/components/Exercises/widgets/Filter/NameAutocompleter";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { Language } from "@/components/Exercises/models/language";
 import {

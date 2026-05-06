@@ -7,7 +7,7 @@ import {
     STORAGE_KEY_NUTRISCORE_MAX,
     STORAGE_KEY_VEGAN,
     STORAGE_KEY_VEGETARIAN
-} from '@/components/Nutrition/widgets/IngredientAutcompleter';
+} from '@/components/Nutrition/widgets/IngredientAutocompleter';
 import type { Mock } from 'vitest';
 import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_4 } from "@/tests/ingredientTestdata";

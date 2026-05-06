@@ -9,7 +9,7 @@ export { NotEnoughRights } from "./screens/Add/NotEnoughRights";
 export { ExerciseDetails } from "./screens/Detail/ExerciseDetails";
 export { ExerciseImageAvatar } from "./screens/Detail/ExerciseImageAvatar";
 export { ExerciseOverview } from "./screens/ExerciseOverview";
-export { NameAutocompleter } from "./widgets/Filter/NameAutcompleter";
+export { NameAutocompleter } from "./widgets/Filter/NameAutocompleter";
 
 // Models
 export { Alias, AliasAdapter } from "./models/alias";

@@ -2,7 +2,7 @@ import {
     NameAutocompleter,
     STORAGE_KEY_EXERCISE_EXACT_MATCH,
     STORAGE_KEY_EXERCISE_LANGUAGE
-} from "@/components/Exercises/widgets/Filter/NameAutcompleter";
+} from "@/components/Exercises/widgets/Filter/NameAutocompleter";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { searchExerciseTranslations } from "@/components/Exercises/api/exerciseTranslation";
 import { searchResponse } from "@/tests/exercises/searchResponse";

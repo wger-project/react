@@ -6,7 +6,7 @@ import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { Meal } from "@/components/Nutrition/models/meal";
 import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
 import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "@/components/Nutrition/queries";
-import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutcompleter";
+import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';

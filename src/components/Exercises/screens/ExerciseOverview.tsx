@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import { CategoryFilter, CategoryFilterDropdown } from "@/components/Exercises/widgets/Filter/CategoryFilter";
 import { EquipmentFilter, EquipmentFilterDropdown } from "@/components/Exercises/widgets/Filter/EquipmentFilter";
 import { MuscleFilter, MuscleFilterDropdown } from "@/components/Exercises/widgets/Filter/MuscleFilter";
-import { NameAutocompleter } from "@/components/Exercises/widgets/Filter/NameAutcompleter";
+import { NameAutocompleter } from "@/components/Exercises/widgets/Filter/NameAutocompleter";
 import { Category } from "@/components/Exercises/models/category";
 import { Equipment } from "@/components/Exercises/models/equipment";
 import { Exercise } from "@/components/Exercises/models/exercise";
