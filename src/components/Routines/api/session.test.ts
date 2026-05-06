@@ -1,5 +1,6 @@
 import axios from "axios";
-import { getSessions } from "@/components/Routines/api/session";
+import { addSession, editSession, getSessions, searchSession } from "@/components/Routines/api/session";
+import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import * as exerciseService from "@/components/Exercises/api/exercise";
 import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
 import type { Mock } from 'vitest';
@@ -154,5 +155,100 @@ describe("Session service tests", () => {
             expect.stringContaining('baz=1234'),
             expect.anything()
         );
+    });
+
+    test('searchSession returns the parsed session when count === 1', async () => {
+        const apiResponse = {
+            count: 1, next: null, previous: null,
+            results: [
+                {
+                    id: 24284, routine: 39764, day: 5,
+                    date: "2025-08-07",
+                    notes: "ok",
+                    impression: "3",
+                    time_start: "20:10:58", time_end: "23:28:21", // eslint-disable-line camelcase
+                },
+            ],
+        };
+        (axios.get as Mock).mockResolvedValue({ data: apiResponse });
+
+        const result = await searchSession({ routine: 39764, date: "2025-08-07" });
+
+        const url = (axios.get as Mock).mock.calls[0][0] as string;
+        expect(url).toContain("/api/v2/workoutsession/");
+        expect(url).toContain("routine=39764");
+        expect(url).toContain("date=2025-08-07");
+        expect(result).toBeInstanceOf(WorkoutSession);
+        expect(result?.id).toBe(24284);
+    });
+
+    test('searchSession returns null when count !== 1', async () => {
+        (axios.get as Mock).mockResolvedValue({
+            data: { count: 0, next: null, previous: null, results: [] },
+        });
+
+        const result = await searchSession({ routine: 1 });
+
+        expect(result).toBeNull();
+    });
+
+    test('searchSession returns null when count is greater than 1 (ambiguous)', async () => {
+        (axios.get as Mock).mockResolvedValue({
+            data: { count: 2, next: null, previous: null, results: [{}, {}] },
+        });
+
+        const result = await searchSession({ routine: 1 });
+
+        expect(result).toBeNull();
+    });
+
+    test('addSession POSTs the params and returns the parsed session', async () => {
+        (axios.post as Mock).mockResolvedValue({
+            data: {
+                id: 1, routine: 39764, day: 5, date: "2025-08-07",
+                notes: null, impression: "3",
+                time_start: null, time_end: null, // eslint-disable-line camelcase
+            },
+        });
+
+        const result = await addSession({
+            routine: 39764,
+            day: 5,
+            date: "2025-08-07",
+            impression: "3",
+        });
+
+        expect(axios.post).toHaveBeenCalledTimes(1);
+        const [url, body] = (axios.post as Mock).mock.calls[0];
+        expect(url).toMatch(/\/api\/v2\/workoutsession\/$/);
+        expect(body).toEqual({
+            routine: 39764,
+            day: 5,
+            date: "2025-08-07",
+            impression: "3",
+        });
+        expect(result).toBeInstanceOf(WorkoutSession);
+        expect(result.id).toBe(1);
+    });
+
+    test('editSession PATCHes /workoutsession/<id>/ with the params', async () => {
+        (axios.patch as Mock).mockResolvedValue({
+            data: {
+                id: 24284, routine: 39764, day: 5, date: "2025-08-07",
+                notes: "edited", impression: "3",
+                time_start: null, time_end: null, // eslint-disable-line camelcase
+            },
+        });
+
+        const result = await editSession({
+            id: 24284,
+            notes: "edited",
+        });
+
+        expect(axios.patch).toHaveBeenCalledTimes(1);
+        const [url, body] = (axios.patch as Mock).mock.calls[0];
+        expect(url).toMatch(/\/api\/v2\/workoutsession\/24284\/$/);
+        expect(body).toEqual({ id: 24284, notes: "edited" });
+        expect(result.notes).toBe("edited");
     });
 });

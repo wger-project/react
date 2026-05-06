@@ -1,7 +1,9 @@
 import {
     addTranslation,
     deleteExerciseTranslation,
-    editTranslation
+    editTranslation,
+    getExerciseTranslations,
+    searchExerciseTranslations,
 } from "@/components/Exercises/api/exerciseTranslation";
 import axios from "axios";
 import type { Mock } from 'vitest';
@@ -10,6 +12,11 @@ vi.mock("axios");
 
 
 describe("Exercise translation service API tests", () => {
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
 
 
     test('POST a new exercise translation', async () => {
@@ -99,5 +106,91 @@ describe("Exercise translation service API tests", () => {
             expect.anything()
         );
         expect(result).toEqual(204);
+    });
+
+    test('getExerciseTranslations queries the exercise endpoint with the given exercise id', async () => {
+        const apiResponse = {
+            count: 1,
+            next: null,
+            previous: null,
+            results: [
+                {
+                    id: 1,
+                    uuid: "u1",
+                    exercise: 100,
+                    aliases: [],
+                    name: "Squats",
+                    description: "Do a squat",
+                    notes: [],
+                    creation_date: "2022-06-23", // eslint-disable-line camelcase
+                    language: 2,
+                    license: 2,
+                    author_history: ["tester"], // eslint-disable-line camelcase
+                },
+            ],
+        };
+        (axios.get as Mock).mockResolvedValue({ data: apiResponse });
+
+        const result = await getExerciseTranslations(100);
+
+        const [url] = (axios.get as Mock).mock.calls[0];
+        expect(url).toContain("/api/v2/exercise/");
+        expect(url).toContain("exercise=100");
+        expect(result).toHaveLength(1);
+        expect(result[0].id).toBe(1);
+        expect(result[0].name).toBe("Squats");
+    });
+
+    test('searchExerciseTranslations builds the URL with name__search and language__code', async () => {
+        (axios.get as Mock).mockResolvedValue({
+            data: { count: 0, next: null, previous: null, results: [] },
+        });
+
+        await searchExerciseTranslations("squat", "de");
+
+        const url = (axios.get as Mock).mock.calls[0][0] as string;
+        expect(url).toContain("/api/v2/exerciseinfo/");
+        expect(url).toContain("name__search=squat");
+        expect(url).toMatch(/language__code=de(%2C|,)en/);
+        expect(url).toContain("limit=50");
+    });
+
+    test('searchExerciseTranslations with exactMatch uses name__exact', async () => {
+        (axios.get as Mock).mockResolvedValue({
+            data: { count: 0, next: null, previous: null, results: [] },
+        });
+
+        await searchExerciseTranslations("squat", "en", "current_english", true);
+
+        const url = (axios.get as Mock).mock.calls[0][0] as string;
+        expect(url).toContain("name__exact=squat");
+        expect(url).not.toContain("name__search");
+    });
+
+    test('searchExerciseTranslations with languageFilter "all" omits the language filter', async () => {
+        (axios.get as Mock).mockResolvedValue({
+            data: { count: 0, next: null, previous: null, results: [] },
+        });
+
+        await searchExerciseTranslations("squat", "de", "all");
+
+        const url = (axios.get as Mock).mock.calls[0][0] as string;
+        expect(url).not.toContain("language__code");
+    });
+
+    test('searchExerciseTranslations returns [] on network/parse errors', async () => {
+        (axios.get as Mock).mockRejectedValue(new Error("network"));
+
+        const result = await searchExerciseTranslations("squat");
+
+        expect(result).toEqual([]);
+    });
+
+    test('searchExerciseTranslations returns [] when results are missing or malformed', async () => {
+        (axios.get as Mock).mockResolvedValue({ data: { results: null } });
+
+        const result = await searchExerciseTranslations("squat");
+
+        expect(result).toEqual([]);
     });
 });
