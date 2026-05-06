@@ -5,7 +5,7 @@ import {
     OperationType,
     RuleRequirements,
     StepType
-} from "@/components/WorkoutRoutines/models/BaseConfig";
+} from "@/components/Routines/models/BaseConfig";
 import { ApiPath } from "@/utils/consts";
 import { makeHeader, makeUrl } from "@/utils/url";
 

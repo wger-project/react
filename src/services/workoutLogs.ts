@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Exercise } from "@/components/Exercises/models/exercise";
-import { WorkoutLog, WorkoutLogAdapter } from "@/components/WorkoutRoutines/models/WorkoutLog";
+import { WorkoutLog, WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
 import { getExercise } from "@/services/exercise";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/services/workoutUnits";
 import { API_MAX_PAGE_SIZE, ApiPath } from "@/utils/consts";

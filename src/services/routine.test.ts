@@ -1,8 +1,8 @@
-import { Day } from "@/components/WorkoutRoutines/models/Day";
-import { Routine } from "@/components/WorkoutRoutines/models/Routine";
-import { RoutineStatsData } from "@/components/WorkoutRoutines/models/LogStats";
-import { SetConfigData } from "@/components/WorkoutRoutines/models/SetConfigData";
-import { WorkoutLog } from "@/components/WorkoutRoutines/models/WorkoutLog";
+import { Day } from "@/components/Routines/models/Day";
+import { Routine } from "@/components/Routines/models/Routine";
+import { RoutineStatsData } from "@/components/Routines/models/LogStats";
+import { SetConfigData } from "@/components/Routines/models/SetConfigData";
+import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { getRoutinesShallow } from "@/services";
 import {
     addRoutine,

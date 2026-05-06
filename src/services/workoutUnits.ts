@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { RepetitionUnit, RepetitionUnitAdapter } from "@/components/WorkoutRoutines/models/RepetitionUnit";
-import { WeightUnit, WeightUnitAdapter } from "@/components/WorkoutRoutines/models/WeightUnit";
+import { RepetitionUnit, RepetitionUnitAdapter } from "@/components/Routines/models/RepetitionUnit";
+import { WeightUnit, WeightUnitAdapter } from "@/components/Routines/models/WeightUnit";
 import { ApiSettingRepUnitType, ApiSettingWeightUnitType } from '@/types';
 import { makeHeader, makeUrl } from "@/utils/url";
 import { ResponseType } from "./responseType";

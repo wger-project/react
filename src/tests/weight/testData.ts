@@ -1,4 +1,4 @@
-import { WeightEntry } from "@/components/BodyWeight/model";
+import { WeightEntry } from "@/components/Weight/model";
 
 export const testWeightEntry1 = new WeightEntry(new Date('2023-11-01'), 100, 1);
 export const testWeightEntry2 = new WeightEntry(new Date('2023-10-01'), 90, 2);

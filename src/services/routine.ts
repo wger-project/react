@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { Exercise } from "@/components/Exercises/models/exercise";
-import { Day } from "@/components/WorkoutRoutines/models/Day";
-import { RoutineStatsData, RoutineStatsDataAdapter } from "@/components/WorkoutRoutines/models/LogStats";
-import { Routine } from "@/components/WorkoutRoutines/models/Routine";
-import { RoutineDayData } from "@/components/WorkoutRoutines/models/RoutineDayData";
-import { RoutineLogData, RoutineLogDataAdapter } from "@/components/WorkoutRoutines/models/RoutineLogData";
+import { Day } from "@/components/Routines/models/Day";
+import { RoutineStatsData, RoutineStatsDataAdapter } from "@/components/Routines/models/LogStats";
+import { Routine } from "@/components/Routines/models/Routine";
+import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
+import { RoutineLogData, RoutineLogDataAdapter } from "@/components/Routines/models/RoutineLogData";
 import { getExercise } from "@/services/exercise";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/services/workoutUnits";
 import { ApiPath } from "@/utils/consts";

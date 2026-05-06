@@ -1,7 +1,7 @@
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Box, Card, CardContent, CardHeader, useMediaQuery, useTheme } from '@mui/material';
-import { WeightEntry } from "@/components/BodyWeight/model";
-import { useBodyWeightQuery } from "@/components/BodyWeight/queries";
+import { WeightEntry } from "@/components/Weight/model";
+import { useBodyWeightQuery } from "@/components/Weight/queries";
 import CalendarDayGrid from "@/components/Calendar/Components/CalendarDayGrid";
 import CalendarHeader from "@/components/Calendar/Components/CalendarHeader";
 import { CalendarMeasurement } from "@/components/Calendar/Helpers/CalendarMeasurement";
@@ -9,8 +9,8 @@ import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidge
 import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import { useNutritionDiaryQuery } from "@/components/Nutrition/queries";
-import { WorkoutSession } from "@/components/WorkoutRoutines/models/WorkoutSession";
-import { useSessionsQuery } from "@/components/WorkoutRoutines/queries";
+import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
+import { useSessionsQuery } from "@/components/Routines/queries";
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { dateToYYYYMMDD, isSameDay } from "@/utils/date";

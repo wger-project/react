@@ -1,6 +1,6 @@
 import axios from "axios";
-import { RepetitionUnit } from "@/components/WorkoutRoutines/models/RepetitionUnit";
-import { WeightUnit } from "@/components/WorkoutRoutines/models/WeightUnit";
+import { RepetitionUnit } from "@/components/Routines/models/RepetitionUnit";
+import { WeightUnit } from "@/components/Routines/models/WeightUnit";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/services/workoutUnits";
 import {
     responseEmptyUnitList,

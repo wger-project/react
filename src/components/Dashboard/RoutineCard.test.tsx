@@ -1,12 +1,12 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import { RoutineCard } from "@/components/Dashboard/RoutineCard";
-import { useActiveRoutineQuery } from "@/components/WorkoutRoutines/queries";
+import { useActiveRoutineQuery } from "@/components/Routines/queries";
 import { testQueryClient } from "@/tests/queryClient";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/components/WorkoutRoutines/queries");
+vi.mock("@/components/Routines/queries");
 vi.useFakeTimers();
 
 describe("test the RoutineCard component", () => {

@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { WeightEntry } from "@/components/BodyWeight/model";
+import { WeightEntry } from "@/components/Weight/model";
 import { ApiBodyWeightType } from '@/types';
 import { makeHeader, makeUrl } from "@/utils/url";
-import { FilterType } from '../components/BodyWeight/widgets/FilterButtons';
+import { FilterType } from '../components/Weight/widgets/FilterButtons';
 import { calculatePastDate } from '../utils/date';
 import { ResponseType } from "./responseType";
 

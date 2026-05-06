@@ -1,5 +1,5 @@
-import { WorkoutLog } from "@/components/WorkoutRoutines/models/WorkoutLog";
-import { WorkoutSession } from "@/components/WorkoutRoutines/models/WorkoutSession";
+import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
+import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { testExerciseSquats } from "@/tests/exerciseTestdata";
 import { testRepUnitRepetitions, testWeightUnitKg } from "@/tests/workoutRoutinesTestData";
 

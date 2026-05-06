@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { Exercise } from "@/components/Exercises/models/exercise";
-import { WorkoutLog, WorkoutLogAdapter } from "@/components/WorkoutRoutines/models/WorkoutLog";
+import { WorkoutLog, WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
 import {
     AddSessionParams,
     EditSessionParams,
     WorkoutSession,
     WorkoutSessionAdapter
-} from "@/components/WorkoutRoutines/models/WorkoutSession";
+} from "@/components/Routines/models/WorkoutSession";
 import { getExercise } from "@/services";
 import { API_MAX_PAGE_SIZE, ApiPath } from "@/utils/consts";
 import { fetchPaginated } from "@/utils/requests";

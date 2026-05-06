@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { Day } from "@/components/Routines/models/Day";
 import { addDay, deleteDay, editDay } from "@/services";
 import type { Mocked } from 'vitest';
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { Day } from "@/components/Routines/models/Day";
 import { ApiPath } from "@/utils/consts";
 import { makeHeader, makeUrl } from "@/utils/url";
 

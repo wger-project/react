@@ -1,0 +1,309 @@
+import HelpOutlineIcon from "@mui/icons-material/HelpOutlined";
+import { Button, FormControlLabel, IconButton, Menu, MenuItem, Stack, Switch } from "@mui/material";
+import Grid from '@mui/material/Grid';
+import Tooltip from "@mui/material/Tooltip";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { WgerTextField } from "@/components/Common/forms/WgerTextField";
+import { useProfileQuery } from "@/components/User/queries/profile";
+import {
+    DESCRIPTION_MAX_LENGTH,
+    MAX_WORKOUT_DURATION,
+    MIN_WORKOUT_DURATION,
+    NAME_MAX_LENGTH,
+    NAME_MIN_LENGTH,
+    Routine
+} from "@/components/Routines/models/Routine";
+import { useAddRoutineQuery, useEditRoutineQuery } from "@/components/Routines/queries/routines";
+import { SlotEntryRoundingField } from "@/components/Routines/widgets/forms/SlotEntryForm";
+import { Form, Formik } from "formik";
+import { DateTime } from "luxon";
+import React, { useState } from 'react';
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { makeLink, WgerLink } from "@/utils/url";
+import * as yup from 'yup';
+
+interface RoutineFormProps {
+    existingRoutine?: Routine,
+    isTemplate?: boolean,
+    isPublicTemplate?: boolean,
+    closeFn?: () => void,
+}
+
+export const RoutineForm = ({
+                                existingRoutine,
+                                isTemplate = false,
+                                isPublicTemplate = false,
+                                closeFn
+                            }: RoutineFormProps) => {
+
+    const [t, i18n] = useTranslation();
+    const addRoutineQuery = useAddRoutineQuery();
+    const editRoutineQuery = useEditRoutineQuery(existingRoutine?.id ?? -1);
+    const navigate = useNavigate();
+
+    const routine = existingRoutine
+        ? Routine.clone(existingRoutine)
+        : new Routine({
+            isTemplate: isTemplate,
+            isPublic: isPublicTemplate
+        });
+
+    /*
+     * Note: Controlling the state of the dates manually, otherwise some undebuggable errors
+     *       about missing properties occur deep within formik.
+     */
+    const [startDate, setStartDate] = useState<DateTime>(DateTime.fromJSDate(routine.start));
+    const [endDate, setEndDate] = useState<DateTime>(DateTime.fromJSDate(routine.end));
+
+    const duration = endDate.diff(startDate, ['weeks', 'days']);
+    const durationWeeks = Math.floor(duration.weeks);
+    const durationDays = Math.floor(duration.days);
+
+    const validationSchema = yup.object({
+        name: yup
+            .string()
+            .required()
+            .max(NAME_MAX_LENGTH, t('forms.maxLength', { chars: NAME_MAX_LENGTH }))
+            .min(NAME_MIN_LENGTH, t('forms.minLength', { chars: NAME_MIN_LENGTH })),
+        description: yup
+            .string()
+            .max(DESCRIPTION_MAX_LENGTH, t('forms.maxLength', { chars: DESCRIPTION_MAX_LENGTH })),
+        start: yup
+            .date()
+            .required(),
+        end: yup
+            .date()
+            .required()
+            .min(
+                yup.ref('start'),
+                t('forms.endBeforeStart')
+            )
+            .test(
+                'hasMinimumDuration',
+                t('routines.minLengthRoutine', { number: MIN_WORKOUT_DURATION }),
+                function (value) {
+                    const startDate = this.parent.start;
+                    if (startDate && value) {
+                        const startDateTime = DateTime.fromJSDate(startDate);
+                        const endDateTime = DateTime.fromJSDate(value);
+
+                        return endDateTime.diff(startDateTime, 'weeks').weeks >= MIN_WORKOUT_DURATION;
+                    }
+                    return true;
+                }
+            )
+            .test(
+                'hasMaximumDuration',
+                t('routines.maxLengthRoutine', { number: MAX_WORKOUT_DURATION }),
+                function (value) {
+                    const startDate = this.parent.start;
+                    if (startDate && value) {
+                        const startDateTime = DateTime.fromJSDate(startDate);
+                        const endDateTime = DateTime.fromJSDate(value);
+
+                        return endDateTime.diff(startDateTime, 'weeks').weeks <= MAX_WORKOUT_DURATION;
+                    }
+                    return true;
+                }
+            ),
+        fitInWeek: yup.boolean()
+    });
+
+
+    return (
+        (<Formik
+            initialValues={{
+                name: routine.name,
+                description: routine.description,
+                start: startDate,
+                end: endDate,
+                fitInWeek: routine.fitInWeek
+            }}
+
+            validationSchema={validationSchema}
+            onSubmit={async (values) => {
+                routine.name = values.name;
+                routine.description = values.description;
+                routine.fitInWeek = values.fitInWeek;
+                routine.start = values.start!.toJSDate();
+                routine.end = values.end!.toJSDate();
+
+                if (routine.id !== null) {
+                    editRoutineQuery.mutate(routine);
+                } else {
+                    const result = await addRoutineQuery.mutateAsync(routine);
+                    navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
+
+                    if (closeFn) {
+                        closeFn();
+                    }
+                }
+            }}
+        >
+            {formik => (
+                <Form>
+                    <Grid container spacing={2}>
+
+                        <Grid size={{ xs: 12 }}>
+                            <WgerTextField fieldName="name" title={t('name')} />
+                        </Grid>
+                        <Grid size={12}>
+                            <WgerTextField
+                                fieldName="description"
+                                title={t('description')}
+                                fieldProps={{ multiline: true, rows: 4 }}
+                            />
+                        </Grid>
+                        <Grid size={{ xs: 6 }}>
+                            <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                                <DatePicker
+                                    defaultValue={DateTime.now()}
+                                    label={t('start')}
+                                    value={startDate}
+                                    onChange={(newValue) => {
+                                        if (newValue) {
+                                            formik.setFieldValue('start', newValue);
+                                            setStartDate(newValue);
+                                        }
+                                    }}
+                                    slotProps={{
+                                        textField: {
+                                            variant: "standard",
+                                            fullWidth: true,
+                                            error: formik.touched.start && Boolean(formik.errors.start),
+                                            helperText: formik.touched.start && formik.errors.start ? String(formik.errors.start) : ''
+                                        }
+                                    }}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                        <Grid size={{ xs: 5 }}>
+                            <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                                <DatePicker
+                                    defaultValue={DateTime.now()}
+                                    label={t('end')}
+                                    value={endDate}
+                                    onChange={(newValue) => {
+                                        if (newValue) {
+                                            formik.setFieldValue('end', newValue);
+                                            setEndDate(newValue);
+                                        }
+                                    }}
+                                    slotProps={{
+                                        textField: {
+                                            variant: "standard",
+                                            fullWidth: true,
+                                            error: formik.touched.end && Boolean(formik.errors.end),
+                                            helperText: formik.touched.end && formik.errors.end ? String(formik.errors.end) : ''
+                                        }
+                                    }}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                        <Grid
+                            size={{ xs: 1 }}
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                textAlign: "center"
+                            }}
+                        >
+                            {durationDays === 0 ? t('durationWeeks', { number: durationWeeks }) : t('durationWeeksDays', {
+                                nrWeeks: durationWeeks,
+                                nrDays: durationDays
+                            })}
+                        </Grid>
+                        <Grid size={12}>
+                            <FormControlLabel
+                                control={
+                                    <Switch checked={formik.values.fitInWeek} {...formik.getFieldProps('fitInWeek')} />
+                                }
+                                label={t('routines.fitDaysInWeek')} />
+                            <Tooltip title={t('routines.fitDaysInWeekHelpText')}>
+                                <IconButton size="small">
+                                    <HelpOutlineIcon fontSize="inherit" />
+                                </IconButton>
+                            </Tooltip>
+                        </Grid>
+                        <Grid size={12}>
+                            <Button
+                                disabled={formik.isSubmitting}
+                                color="primary"
+                                variant="contained"
+                                type="submit"
+                                sx={{ mt: 2 }}>
+                                {t('save')}
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Form>
+            )}
+        </Formik>)
+    );
+};
+
+
+export const DefaultRoundingMenu = (props: { routineId: number }) => {
+    const userProfileQuery = useProfileQuery();
+    const { t } = useTranslation();
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    return (
+        <Stack direction={"row"}>
+            <Button
+                variant="text"
+                id="basic-button"
+                aria-controls={open ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={handleClick}
+            >
+                {t('routines.defaultRounding')}
+            </Button>
+            <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                }}
+            >
+
+                <MenuItem>
+                    <SlotEntryRoundingField
+                        routineId={props.routineId}
+                        rounding="weight"
+                        editProfile={true}
+                        initialValue={userProfileQuery.data!.weightRounding}
+                    />
+                </MenuItem>
+                <MenuItem>
+                    <SlotEntryRoundingField
+                        routineId={props.routineId}
+                        rounding="reps"
+                        editProfile={true}
+                        initialValue={userProfileQuery.data!.repetitionsRounding}
+                    />
+                </MenuItem>
+            </Menu>
+            <Tooltip title={t('routines.roundingHelp')}>
+                <IconButton onClick={() => {
+                }}>
+                    <HelpOutlineIcon fontSize="small" />
+                </IconButton>
+            </Tooltip>
+        </Stack>
+    );
+};

@@ -1,4 +1,4 @@
-import { WorkoutLog } from "@/components/WorkoutRoutines/models/WorkoutLog";
+import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { getExercise } from "@/services";
 import { getRoutineLogs } from "@/services/workoutLogs";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/services/workoutUnits";

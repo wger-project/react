@@ -1,15 +1,15 @@
-import { BaseConfig } from "@/components/WorkoutRoutines/models/BaseConfig";
-import { Day } from "@/components/WorkoutRoutines/models/Day";
-import { RepetitionUnit } from "@/components/WorkoutRoutines/models/RepetitionUnit";
-import { Routine } from "@/components/WorkoutRoutines/models/Routine";
-import { RoutineDayData } from "@/components/WorkoutRoutines/models/RoutineDayData";
-import { RoutineLogData } from "@/components/WorkoutRoutines/models/RoutineLogData";
-import { SetConfigData } from "@/components/WorkoutRoutines/models/SetConfigData";
-import { Slot } from "@/components/WorkoutRoutines/models/Slot";
-import { SlotData } from "@/components/WorkoutRoutines/models/SlotData";
-import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
-import { WeightUnit } from "@/components/WorkoutRoutines/models/WeightUnit";
-import { WorkoutSession } from "@/components/WorkoutRoutines/models/WorkoutSession";
+import { BaseConfig } from "@/components/Routines/models/BaseConfig";
+import { Day } from "@/components/Routines/models/Day";
+import { RepetitionUnit } from "@/components/Routines/models/RepetitionUnit";
+import { Routine } from "@/components/Routines/models/Routine";
+import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
+import { RoutineLogData } from "@/components/Routines/models/RoutineLogData";
+import { SetConfigData } from "@/components/Routines/models/SetConfigData";
+import { Slot } from "@/components/Routines/models/Slot";
+import { SlotData } from "@/components/Routines/models/SlotData";
+import { SlotEntry } from "@/components/Routines/models/SlotEntry";
+import { WeightUnit } from "@/components/Routines/models/WeightUnit";
+import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
 import { testWorkoutLogs } from "@/tests/workoutLogsRoutinesTestData";
 

@@ -1,12 +1,12 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { useBodyWeightQuery } from "@/components/BodyWeight/queries";
+import { useBodyWeightQuery } from "@/components/Weight/queries";
 import { WeightCard } from "@/components/Dashboard/WeightCard";
 import { testQueryClient } from "@/tests/queryClient";
 import { testWeightEntries } from "@/tests/weight/testData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/components/BodyWeight/queries");
+vi.mock("@/components/Weight/queries");
 
 describe("test the WeightCard component", () => {
 

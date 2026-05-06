@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BaseConfigAdapter } from "@/components/WorkoutRoutines/models/BaseConfig";
+import { BaseConfigAdapter } from "@/components/Routines/models/BaseConfig";
 import {
     addBaseConfig,
     AddBaseConfigParams,
