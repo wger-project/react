@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 import { Fab } from "@mui/material";
-import { WgerModal } from "@/components/Core/Modals/WgerModal";
+import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
 import { PlanForm } from "@/components/Nutrition/widgets/forms/PlanForm";

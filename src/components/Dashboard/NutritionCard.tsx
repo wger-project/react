@@ -1,5 +1,5 @@
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerModal } from "@/components/Core/Modals/WgerModal";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
 import {
     Meal,
@@ -11,10 +11,10 @@ import {
     useAddDiaryEntryQuery,
     useFetchLastNutritionalPlanQuery
 } from "@/components/Nutrition";
-import { SNACKBAR_AUTO_HIDE_DURATION } from "@/utils/consts";
-import { dateTimeToLocaleHHMM } from "@/utils/date";
-import { numberGramLocale } from "@/utils/numbers";
-import { makeLink, WgerLink } from "@/utils/url";
+import { SNACKBAR_AUTO_HIDE_DURATION } from "@/core/lib/consts";
+import { dateTimeToLocaleHHMM } from "@/core/lib/date";
+import { numberGramLocale } from "@/core/lib/numbers";
+import { makeLink, WgerLink } from "@/core/lib/url";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";

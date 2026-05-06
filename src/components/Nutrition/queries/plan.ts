@@ -8,8 +8,8 @@ import {
     getNutritionalPlanFull,
     getNutritionalPlansSparse
 } from "@/services/nutritionalPlan";
-import { QueryKey } from "@/utils/consts";
-import { dateToYYYYMMDD } from "@/utils/date";
+import { QueryKey } from "@/core/lib/consts";
+import { dateToYYYYMMDD } from "@/core/lib/date";
 
 export function useFetchNutritionalPlansQuery() {
     return useQuery({

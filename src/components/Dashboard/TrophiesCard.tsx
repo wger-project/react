@@ -1,6 +1,6 @@
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { UserTrophy, useUserTrophiesQuery } from "@/components/Trophies";
-import { makeLink, WgerLink } from "@/utils/url";
+import { makeLink, WgerLink } from "@/core/lib/url";
 import { Button, Card, CardContent, CardHeader, CardMedia, Tooltip, Typography, } from "@mui/material";
 import Box from "@mui/system/Box";
 import Stack from "@mui/system/Stack";

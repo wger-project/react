@@ -1,7 +1,7 @@
 import { Box, Divider, Stack, Typography, useTheme } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerContainerFullWidth } from "@/core/ui/Widgets/Container";
 import { useProfileQuery } from "@/components/User";
 import { RoutineTable } from "@/components/Routines/Detail/RoutineDetailsTable";
 import { useRoutineDetailQuery } from "@/components/Routines/queries";
@@ -12,7 +12,7 @@ import { RoutineDetailsCard } from "@/components/Routines/widgets/RoutineDetails
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { makeLink, WgerLink } from "@/utils/url";
+import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const RoutineEdit = () => {
 

@@ -1,11 +1,11 @@
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerContainerFullWidth } from "@/core/ui/Widgets/Container";
 import { getLanguageByShortName, Language, useLanguageQuery } from "@/components/Exercises";
 import { Slot } from "@/components/Routines/models/Slot";
 import { useRoutineDetailQuery } from "@/components/Routines/queries";
 import { ProgressionForm } from "@/components/Routines/widgets/forms/ProgressionForm";
 import { SlotEntryRoundingField } from "@/components/Routines/widgets/forms/SlotEntryForm";
-import { makeLink, WgerLink } from "@/utils/url";
+import { makeLink, WgerLink } from "@/core/lib/url";
 import { Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import React from "react";

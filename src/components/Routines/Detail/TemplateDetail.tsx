@@ -1,15 +1,15 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
-import { RenderLoadingQuery } from "@/components/Core/Widgets/RenderLoadingQuery";
+import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
+import { RenderLoadingQuery } from "@/core/ui/Widgets/RenderLoadingQuery";
 import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
 import { useRoutineDetailQuery } from "@/components/Routines/queries";
 import { DayDetailsCard } from "@/components/Routines/widgets/RoutineDetailsCard";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { dateToLocale } from "@/utils/date";
-import { makeLink, WgerLink } from "@/utils/url";
+import { dateToLocale } from "@/core/lib/date";
+import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const TemplateDetail = () => {
     const { t, i18n } = useTranslation();

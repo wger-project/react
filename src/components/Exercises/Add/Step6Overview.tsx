@@ -14,8 +14,8 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import ImageList from "@mui/material/ImageList";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { FormQueryErrors } from "@/components/Core/Widgets/FormError";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { StepProps } from "@/components/Exercises/Add/AddExerciseStepper";
 import {
     useAddExerciseFullQuery,
@@ -31,9 +31,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useExerciseSubmissionStateValue } from "@/state";
-import { ENGLISH_LANGUAGE_ID } from "@/utils/consts";
-import { MarkdownOptions } from "@/utils/markdown";
-import { makeLink, WgerLink } from "@/utils/url";
+import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
+import { MarkdownOptions } from "@/core/lib/markdown";
+import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const Step6Overview = ({ onBack }: StepProps) => {
     const [t, i18n] = useTranslation();

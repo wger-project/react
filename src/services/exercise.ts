@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Exercise, ExerciseAdapter } from "@/components/Exercises/models/exercise";
-import { makeHeader, makeUrl } from "@/utils/url";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ResponseType } from "./responseType";
 
 export const EXERCISE_INFO_PATH = 'exerciseinfo';

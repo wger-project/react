@@ -1,4 +1,4 @@
-import { generateChartColors } from "@/utils/colors";
+import { generateChartColors } from "@/core/lib/colors";
 
 describe("test the color utility", () => {
 

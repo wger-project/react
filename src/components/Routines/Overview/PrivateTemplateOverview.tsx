@@ -1,13 +1,13 @@
 import { List, Paper, } from "@mui/material";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
-import { OverviewEmpty } from "@/components/Core/Widgets/OverviewEmpty";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
+import { OverviewEmpty } from "@/core/ui/Widgets/OverviewEmpty";
 import { AddPrivateTemplateFab } from "@/components/Routines/Overview/Fab";
 import { RoutineList } from "@/components/Routines/Overview/RoutineOverview";
 import { usePrivateRoutinesShallowQuery } from "@/components/Routines/queries/routines";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { WgerLink } from "@/utils/url";
+import { WgerLink } from "@/core/lib/url";
 
 
 export const PrivateTemplateOverview = () => {

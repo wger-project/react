@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { makeHeader, makeUrl } from "@/utils/url";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 
 export const LANGUAGE_DETECTION = 'check-language';
 

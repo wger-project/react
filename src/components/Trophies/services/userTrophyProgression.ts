@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ApiUserTrophyType, UserTrophyProgression } from "@/components/Trophies/models/userTrophyProgression";
-import { ApiPath } from "@/utils/consts";
-import { makeHeader, makeUrl } from "@/utils/url";
+import { ApiPath } from "@/core/lib/consts";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 
 
 export const getUserTrophyProgression = async (): Promise<UserTrophyProgression[]> => {

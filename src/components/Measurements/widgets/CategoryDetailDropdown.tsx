@@ -1,14 +1,14 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import { Button, Menu, MenuItem } from "@mui/material";
-import { DeleteConfirmationModal } from "@/components/Core/Modals/DeleteConfirmationModal";
-import { WgerModal } from "@/components/Core/Modals/WgerModal";
+import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
+import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { useDeleteMeasurementCategoryQuery } from "@/components/Measurements/queries";
 import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { makeLink, WgerLink } from "@/utils/url";
+import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const CategoryDetailDropdown = (props: { category: MeasurementCategory }) => {
 

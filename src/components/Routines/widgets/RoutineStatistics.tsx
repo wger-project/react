@@ -1,6 +1,6 @@
 import { Exercise, Language, Muscle } from "@/components/Exercises";
 import { GroupedLogData, LogData, RoutineStatsData } from "@/components/Routines/models/LogStats";
-import { dateToLocale } from "@/utils/date";
+import { dateToLocale } from "@/core/lib/date";
 import { FormControl, MenuItem, Select } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import { SelectChangeEvent } from "@mui/material/Select";

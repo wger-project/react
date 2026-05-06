@@ -1,7 +1,7 @@
 import { Alert, AlertTitle, Box, Collapse, Snackbar } from "@mui/material";
 import { useState } from 'react';
-import { SNACKBAR_AUTO_HIDE_DURATION } from "@/utils/consts";
-import { collectValidationErrors } from "@/utils/forms";
+import { SNACKBAR_AUTO_HIDE_DURATION } from "@/core/lib/consts";
+import { collectValidationErrors } from "@/core/lib/forms";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FormQueryErrors = (props: { mutationQuery: any }) => {

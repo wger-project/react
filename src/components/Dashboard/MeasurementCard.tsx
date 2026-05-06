@@ -1,4 +1,4 @@
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { DashboardCard } from "@/components/Dashboard/DashboardCard";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
 import {
@@ -8,7 +8,7 @@ import {
     useMeasurementsCategoryQuery
 } from "@/components/Measurements";
 import i18n from "@/i18n";
-import { makeLink, WgerLink } from "@/utils/url";
+import { makeLink, WgerLink } from "@/core/lib/url";
 import "slick-carousel/slick/slick.css";
 import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";

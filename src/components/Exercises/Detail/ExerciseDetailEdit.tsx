@@ -1,6 +1,6 @@
-import { MarkdownEditor } from "@/components/Common/forms/MarkdownEditor";
-import { LoadingWidget } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { FormQueryErrorsSnackbar } from '@/components/Core/Widgets/FormError';
+import { MarkdownEditor } from "@/core/forms/MarkdownEditor";
+import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { FormQueryErrorsSnackbar } from '@/core/ui/Widgets/FormError';
 import { PaddingBox } from "@/components/Exercises/Detail/ExerciseDetails";
 import { EditExerciseCategory } from "@/components/Exercises/forms/Category";
 import { EditExerciseEquipment } from "@/components/Exercises/forms/Equipment";

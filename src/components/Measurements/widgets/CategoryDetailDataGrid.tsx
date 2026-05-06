@@ -1,9 +1,9 @@
-import { processTimeSeries } from "@/components/Core/utils/timeSeries";
+import { processTimeSeries } from "@/core/lib/timeSeries";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
-import { PAGINATION_OPTIONS } from "@/utils/consts";
-import { luxonDateTimeToLocale } from "@/utils/date";
+import { PAGINATION_OPTIONS } from "@/core/lib/consts";
+import { luxonDateTimeToLocale } from "@/core/lib/date";
 import CancelIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";

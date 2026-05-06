@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Category, CategoryAdapter } from "@/components/Exercises/models/category";
 import { ApiCategoryType } from '@/types';
-import { makeHeader, makeUrl } from "@/utils/url";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ResponseType } from "./responseType";
 
 export const CATEGORY_PATH = 'exercisecategory';

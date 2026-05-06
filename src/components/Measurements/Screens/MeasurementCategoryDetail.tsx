@@ -1,6 +1,6 @@
 import { Stack, } from "@mui/material";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { useMeasurementsQuery } from "@/components/Measurements/queries";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
 import { CategoryDetailDropdown } from "@/components/Measurements/widgets/CategoryDetailDropdown";

@@ -1,7 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useLanguageCheckQuery } from "@/components/Core/queries";
+import { useLanguageCheckQuery } from "@/core/queries";
 import { Step3Description } from "@/components/Exercises/Add/Step3Description";
 import {
     setDescriptionEn,
@@ -11,7 +11,7 @@ import React from "react";
 import { testQueryClient } from "@/tests/queryClient";
 import type { Mock } from "vitest";
 
-vi.mock("@/components/Core/queries");
+vi.mock("@/core/queries");
 
 vi.mock("@/state/exerciseSubmissionReducer", async () => {
     const originalModule =

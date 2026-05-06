@@ -18,12 +18,12 @@ import {
 import { WeightEntry } from "@/components/Weight/model";
 import { WeightEntryFab } from "@/components/Weight/Table/Fab/Fab";
 import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "@/components/Weight/queries";
-import { processTimeSeries } from "@/components/Core/utils/timeSeries";
+import { processTimeSeries } from "@/core/lib/timeSeries";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PAGINATION_OPTIONS } from "@/utils/consts";
-import { luxonDateTimeToLocale } from "@/utils/date";
+import { PAGINATION_OPTIONS } from "@/core/lib/consts";
+import { luxonDateTimeToLocale } from "@/core/lib/date";
 
 export interface WeightTableProps {
     weights: WeightEntry[];

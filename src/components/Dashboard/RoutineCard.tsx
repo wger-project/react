@@ -1,4 +1,4 @@
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
 import {
     getDayName,
@@ -7,8 +7,8 @@ import {
     SetConfigDataDetails,
     useActiveRoutineQuery
 } from "@/components/Routines";
-import { isSameDay } from "@/utils/date";
-import { makeLink, WgerLink } from "@/utils/url";
+import { isSameDay } from "@/core/lib/date";
+import { makeLink, WgerLink } from "@/core/lib/url";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TodayIcon from "@mui/icons-material/Today";

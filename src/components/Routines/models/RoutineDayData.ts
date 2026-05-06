@@ -1,6 +1,6 @@
 import { Day } from "@/components/Routines/models/Day";
 import { SlotData, SlotDataAdapter } from "@/components/Routines/models/SlotData";
-import { Adapter } from "@/utils/Adapter";
+import { Adapter } from "@/core/lib/Adapter";
 
 export class RoutineDayData {
 

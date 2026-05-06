@@ -8,7 +8,7 @@ import {
     EditBaseConfigParams,
     processBaseConfigs,
 } from "@/services/base_config";
-import { ApiPath } from "@/utils/consts";
+import { ApiPath } from "@/core/lib/consts";
 import type { Mock, Mocked } from 'vitest';
 
 vi.mock('axios');

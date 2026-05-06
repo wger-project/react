@@ -13,7 +13,7 @@ import { useProfileQuery } from "@/components/User";
 import { useExerciseSubmissionStateValue } from "@/state";
 import { testCategories, testEquipment, testLanguages, testMuscles } from "@/tests/exerciseTestdata";
 import { testProfileDataVerified } from "@/tests/userTestdata";
-import { ENGLISH_LANGUAGE_ID } from "@/utils/consts";
+import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";

@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AddSessionParams, EditSessionParams } from "@/components/Routines/models/WorkoutSession";
 import { addSession, editSession, getSessions, searchSession } from "@/services";
 import { SessionQueryOptions } from "@/services/session";
-import { QueryKey, } from "@/utils/consts";
+import { QueryKey, } from "@/core/lib/consts";
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

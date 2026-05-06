@@ -1,6 +1,6 @@
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Box, Button, Card, CardActions, CardMedia } from "@mui/material";
-import { FormQueryErrorsSnackbar } from "@/components/Core/Widgets/FormError";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { ExerciseVideo } from "@/components/Exercises/models/video";
 import { useProfileQuery } from "@/components/User";
 import React from "react";

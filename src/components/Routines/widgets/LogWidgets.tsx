@@ -16,7 +16,7 @@ import {
     GridRowModesModel,
     GridRowsProp
 } from "@mui/x-data-grid";
-import { FormQueryErrors } from "@/components/Core/Widgets/FormError";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Exercise } from "@/components/Exercises";
 import { RIR_VALUES_SELECT_LIST } from "@/components/Routines/models/BaseConfig";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
@@ -35,9 +35,9 @@ import {
     YAxis
 } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
-import { generateChartColors } from "@/utils/colors";
-import { PAGINATION_OPTIONS } from "@/utils/consts";
-import { dateToLocale, luxonDateTimeToLocale } from "@/utils/date";
+import { generateChartColors } from "@/core/lib/colors";
+import { PAGINATION_OPTIONS } from "@/core/lib/consts";
+import { dateToLocale, luxonDateTimeToLocale } from "@/core/lib/date";
 
 
 export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logEntries: WorkoutLog[] | undefined }) => {

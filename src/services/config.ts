@@ -5,7 +5,7 @@ import {
     editBaseConfig,
     EditBaseConfigParams
 } from "@/services/base_config";
-import { ApiPath } from "@/utils/consts";
+import { ApiPath } from "@/core/lib/consts";
 
 
 export const editWeightConfig = async (data: EditBaseConfigParams) => await editBaseConfig(data, ApiPath.WEIGHT_CONFIG);

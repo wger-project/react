@@ -1,12 +1,12 @@
 import { Stack, Typography } from "@mui/material";
-import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
+import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { SessionForm } from "@/components/Routines/widgets/forms/SessionForm";
 import { SessionLogsForm } from "@/components/Routines/widgets/forms/SessionLogsForm";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { makeLink, WgerLink } from "@/utils/url";
+import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const SessionAdd = () => {
     const params = useParams<{ routineId: string, dayId: string }>();

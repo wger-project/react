@@ -4,9 +4,9 @@ import { GroupedDiaryEntries } from "@/components/Nutrition/models/nutritionalPl
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { dateToLocale } from "@/utils/date";
-import { numberLocale } from "@/utils/numbers";
-import { makeLink, WgerLink } from "@/utils/url";
+import { dateToLocale } from "@/core/lib/date";
+import { numberLocale } from "@/core/lib/numbers";
+import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const DiaryOverview = (props: {
     planId: number,

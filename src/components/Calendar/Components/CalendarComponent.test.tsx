@@ -4,7 +4,7 @@ import { getMeasurementCategories, getNutritionalDiaryEntries, getSessions, getW
 import { TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2 } from "@/tests/nutritionDiaryTestdata";
 import { testQueryClient } from "@/tests/queryClient";
 import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
-import { dateToYYYYMMDD } from "@/utils/date";
+import { dateToYYYYMMDD } from "@/core/lib/date";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";

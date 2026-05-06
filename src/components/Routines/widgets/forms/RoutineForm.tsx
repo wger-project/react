@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import Tooltip from "@mui/material/Tooltip";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { WgerTextField } from "@/components/Common/forms/WgerTextField";
+import { WgerTextField } from "@/core/forms/WgerTextField";
 import { useProfileQuery } from "@/components/User";
 import {
     DESCRIPTION_MAX_LENGTH,
@@ -21,7 +21,7 @@ import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { makeLink, WgerLink } from "@/utils/url";
+import { makeLink, WgerLink } from "@/core/lib/url";
 import * as yup from 'yup';
 
 interface RoutineFormProps {

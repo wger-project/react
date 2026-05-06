@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Language, LanguageAdapter } from "@/components/Exercises/models/language";
 import { ApiLanguageType } from '@/types';
-import { makeHeader, makeUrl } from "@/utils/url";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ResponseType } from "./responseType";
 
 export const API_LANGUAGE_PATH = 'language';

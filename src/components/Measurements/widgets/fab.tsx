@@ -2,7 +2,7 @@ import React from "react";
 import { Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
-import { WgerModal } from "@/components/Core/Modals/WgerModal";
+import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
 import { EntryForm } from "@/components/Measurements/widgets/EntryForm";
 import { useParams } from "react-router-dom";

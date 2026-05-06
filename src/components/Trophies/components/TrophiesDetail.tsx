@@ -1,8 +1,8 @@
 import { Card, CardContent, CardMedia, LinearProgress, LinearProgressProps, Typography } from "@mui/material";
 import Box from "@mui/system/Box";
 import Grid from "@mui/system/Grid";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerContainerFullWidth } from "@/core/ui/Widgets/Container";
 import { UserTrophyProgression } from "@/components/Trophies/models/userTrophyProgression";
 import { useUserTrophyProgressionQuery } from "@/components/Trophies/queries/trophies";
 import React from "react";

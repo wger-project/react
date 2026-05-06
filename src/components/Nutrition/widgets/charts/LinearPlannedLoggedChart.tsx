@@ -1,7 +1,7 @@
 import { LinearProgress, Typography } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { numberGramLocale } from "@/utils/numbers";
+import { numberGramLocale } from "@/core/lib/numbers";
 
 export const LinearPlannedLoggedChart = (props: {
     percentage: number,

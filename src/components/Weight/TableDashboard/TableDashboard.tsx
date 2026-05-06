@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { WeightEntry } from "@/components/Weight/model";
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { dateTimeToLocale } from "@/utils/date";
+import { dateTimeToLocale } from "@/core/lib/date";
 
 
 const PREFIX = 'WeightTableDashboard';

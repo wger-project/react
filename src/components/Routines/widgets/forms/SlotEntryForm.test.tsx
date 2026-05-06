@@ -13,7 +13,7 @@ import { editProfile, editSlotEntry, getProfile, getRoutineRepUnits, getRoutineW
 import { getTestQueryClient } from "@/tests/queryClient";
 import { testProfileDataVerified } from "@/tests/userTestdata";
 import { testDayLegs, testRepetitionUnits, testWeightUnits } from "@/tests/workoutRoutinesTestData";
-import { DEBOUNCE_ROUTINE_FORMS } from "@/utils/consts";
+import { DEBOUNCE_ROUTINE_FORMS } from "@/core/lib/consts";
 
 
 vi.mock("@/services");

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { WgerModal, WgerModalProps } from "@/components/Core/Modals/WgerModal";
+import { WgerModal, WgerModalProps } from "@/core/ui/Modals/WgerModal";
 
 describe("Test WgerModal component", () => {
     test('Renders title and subtitle when openFn is true', () => {

@@ -13,8 +13,8 @@ import {
 } from "@mui/material";
 import LoadingButton from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
-import { WgerTextField } from "@/components/Common/forms/WgerTextField";
-import { DeleteConfirmationModal } from "@/components/Core/Modals/DeleteConfirmationModal";
+import { WgerTextField } from "@/core/forms/WgerTextField";
+import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
 import { Day, DayType } from "@/components/Routines/models/Day";
 import { useDeleteDayQuery, useEditDayQuery } from "@/components/Routines/queries";
 import { DayTypeSelect } from "@/components/Routines/widgets/forms/DayTypeSelect";

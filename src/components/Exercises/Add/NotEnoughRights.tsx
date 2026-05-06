@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useCanContributeExercises } from "@/components/User";
-import { MIN_ACCOUNT_AGE } from "@/utils/consts";
+import { MIN_ACCOUNT_AGE } from "@/core/lib/consts";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export const NotEnoughRights = () => {

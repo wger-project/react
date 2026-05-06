@@ -1,8 +1,8 @@
 import axios from "axios";
 import { Slot } from "@/components/Routines/models/Slot";
 import { addSlot, deleteSlot, editSlot } from "@/services/slot";
-import { ApiPath } from "@/utils/consts";
-import { makeHeader, makeUrl } from "@/utils/url";
+import { ApiPath } from "@/core/lib/consts";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 import type { Mock } from 'vitest';
 
 vi.mock('axios');

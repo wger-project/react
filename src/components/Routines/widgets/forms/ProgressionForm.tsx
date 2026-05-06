@@ -4,8 +4,8 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutlined";
 import { Box, Button, Divider, IconButton, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
-import { WgerTextField } from "@/components/Common/forms/WgerTextField";
-import { FormQueryErrors } from "@/components/Core/Widgets/FormError";
+import { WgerTextField } from "@/core/forms/WgerTextField";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import {
     BaseConfig,
     BaseConfigEntryForm,
@@ -20,7 +20,7 @@ import { FieldArray, Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AddBaseConfigParams, EditBaseConfigParams } from "@/services/base_config";
-import { ApiPath } from "@/utils/consts";
+import { ApiPath } from "@/core/lib/consts";
 import * as yup from "yup";
 
 export const ProgressionForm = (props: {

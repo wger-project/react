@@ -1,8 +1,8 @@
 import { Add } from "@mui/icons-material";
 import { Collapse, IconButton, Stack, Typography } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { useFetchNutritionalPlanQuery } from "@/components/Nutrition/queries";
 import { MacrosPieChart } from "@/components/Nutrition/widgets/charts/MacrosPieChart";
 import { NutritionDiaryChart } from "@/components/Nutrition/widgets/charts/NutritionDiaryChart";

@@ -7,7 +7,7 @@ import {
     testMuscleRectusAbdominis
 } from "@/tests/exerciseTestdata";
 import { testRoutine1, testRoutineDayData1 } from "@/tests/workoutRoutinesTestData";
-import { isSameDay } from "@/utils/date";
+import { isSameDay } from "@/core/lib/date";
 
 describe('Routine model tests', () => {
 

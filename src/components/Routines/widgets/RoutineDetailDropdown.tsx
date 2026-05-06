@@ -16,7 +16,7 @@ import { RoutineTemplateForm } from "@/components/Routines/widgets/forms/Routine
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { makeLink, WgerLink } from "@/utils/url";
+import { makeLink, WgerLink } from "@/core/lib/url";
 
 
 export enum DialogToOpen {

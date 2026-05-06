@@ -7,8 +7,8 @@ import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
 import { RoutineLogData, RoutineLogDataAdapter } from "@/components/Routines/models/RoutineLogData";
 import { getExercise } from "@/services/exercise";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/services/workoutUnits";
-import { ApiPath } from "@/utils/consts";
-import { makeHeader, makeUrl } from "@/utils/url";
+import { ApiPath } from "@/core/lib/consts";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ResponseType } from "./responseType";
 
 export const ROUTINE_API_STRUCTURE_PATH = 'structure';

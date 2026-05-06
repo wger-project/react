@@ -4,9 +4,9 @@ import { WeightTable } from "@/components/Weight/Table";
 import { WeightChart } from "@/components/Weight/WeightChart";
 import { AddBodyWeightEntryFab } from "@/components/Weight/widgets/fab";
 import { FilterButtons, FilterType } from "@/components/Weight/widgets/FilterButtons";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
-import { OverviewEmpty } from "@/components/Core/Widgets/OverviewEmpty";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
+import { OverviewEmpty } from "@/core/ui/Widgets/OverviewEmpty";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 

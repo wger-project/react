@@ -33,7 +33,7 @@ import {
     processBaseConfigs
 } from "@/services";
 import { AddBaseConfigParams, EditBaseConfigParams, ProcessBaseConfigsParams } from "@/services/base_config";
-import { QueryKey, } from "@/utils/consts";
+import { QueryKey, } from "@/core/lib/consts";
 
 
 export const useProcessConfigsQuery = (routineId: number) => {

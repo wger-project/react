@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Muscle, MuscleAdapter } from "@/components/Exercises/models/muscle";
 import { ApiMuscleType } from '@/types';
-import { makeHeader, makeUrl } from "@/utils/url";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ResponseType } from "./responseType";
 
 export const MUSCLES_PATH = 'muscle';

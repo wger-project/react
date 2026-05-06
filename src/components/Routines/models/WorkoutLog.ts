@@ -3,7 +3,7 @@
 import { Exercise } from "@/components/Exercises";
 import { RepetitionUnit } from "@/components/Routines/models/RepetitionUnit";
 import { WeightUnit } from "@/components/Routines/models/WeightUnit";
-import { Adapter } from "@/utils/Adapter";
+import { Adapter } from "@/core/lib/Adapter";
 
 export interface LogEntryForm {
     exercise: Exercise | null;

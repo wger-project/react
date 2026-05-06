@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Day } from "@/components/Routines/models/Day";
 import { addDay, deleteDay, editDay } from "@/services";
-import { QueryKey, } from "@/utils/consts";
+import { QueryKey, } from "@/core/lib/consts";
 
 
 export const useEditDayQuery = (routineId: number) => {

@@ -1,8 +1,8 @@
 import { Box, Stack, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { useBodyWeightQuery } from "@/components/Weight";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { useProfileQuery } from "@/components/User";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

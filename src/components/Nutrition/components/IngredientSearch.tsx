@@ -2,7 +2,7 @@ import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutcompleter";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { makeLink, WgerLink } from "@/utils/url";
+import { makeLink, WgerLink } from "@/core/lib/url";
 
 
 /*

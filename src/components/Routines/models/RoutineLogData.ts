@@ -1,6 +1,6 @@
 import { WorkoutLog, WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
 import { WorkoutSession, WorkoutSessionAdapter } from "@/components/Routines/models/WorkoutSession";
-import { Adapter } from "@/utils/Adapter";
+import { Adapter } from "@/core/lib/Adapter";
 
 export class RoutineLogData {
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ImageFormData } from "@/components/Exercises/models/exercise";
 import { ExerciseImage, ExerciseImageAdapter } from "@/components/Exercises/models/image";
-import { makeHeader, makeUrl } from "@/utils/url";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 
 export const IMAGE_PATH = 'exerciseimage';
 

@@ -2,10 +2,10 @@ import axios from 'axios';
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { ApiMeasurementCategoryType } from '@/types';
-import { API_MAX_PAGE_SIZE } from "@/utils/consts";
-import { dateToYYYYMMDD } from "@/utils/date";
-import { fetchPaginated } from '@/utils/requests';
-import { makeHeader, makeUrl } from "@/utils/url";
+import { API_MAX_PAGE_SIZE } from "@/core/lib/consts";
+import { dateToYYYYMMDD } from "@/core/lib/date";
+import { fetchPaginated } from '@/core/lib/requests';
+import { makeHeader, makeUrl } from "@/core/lib/url";
 
 export const API_MEASUREMENTS_CATEGORY_PATH = 'measurement-category';
 export const API_MEASUREMENTS_ENTRY_PATH = 'measurement';

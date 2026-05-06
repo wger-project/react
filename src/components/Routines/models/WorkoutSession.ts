@@ -1,8 +1,8 @@
 import { Day } from "@/components/Routines/models/Day";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import i18n from 'i18next';
-import { Adapter } from "@/utils/Adapter";
-import { dateTimeToHHMM, dateToYYYYMMDD, HHMMToDateTime } from "@/utils/date";
+import { Adapter } from "@/core/lib/Adapter";
+import { dateTimeToHHMM, dateToYYYYMMDD, HHMMToDateTime } from "@/core/lib/date";
 
 export const NOTES_MAX_LENGTH = 1000 as const;
 

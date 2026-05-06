@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { WeightEntry } from "@/components/Weight/model";
 import { ApiBodyWeightType } from '@/types';
-import { makeHeader, makeUrl } from "@/utils/url";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 import { FilterType } from '../components/Weight/widgets/FilterButtons';
-import { calculatePastDate } from '../utils/date';
+import { calculatePastDate } from '@/core/lib/date';
 import { ResponseType } from "./responseType";
 
 export const WEIGHT_PATH = 'weightentry';

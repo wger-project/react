@@ -16,7 +16,7 @@ import {
     editMeasurementParams,
     MeasurementQueryOptions
 } from "@/services/measurements";
-import { QUERY_MEASUREMENTS, QUERY_MEASUREMENTS_CATEGORIES, } from "@/utils/consts";
+import { QUERY_MEASUREMENTS, QUERY_MEASUREMENTS_CATEGORIES, } from "@/core/lib/consts";
 
 
 export function useMeasurementsCategoryQuery(options?: MeasurementQueryOptions) {

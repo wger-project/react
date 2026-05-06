@@ -15,7 +15,7 @@ import {
     TextField,
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { useExercisesQuery } from "@/components/Exercises/queries";
 import React, { useState } from "react";

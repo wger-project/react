@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { getIngredient, getIngredients, searchIngredient } from "@/services/ingredient";
-import { API_RESULTS_PAGE_SIZE } from "@/utils/consts";
+import { API_RESULTS_PAGE_SIZE } from "@/core/lib/consts";
 import type { Mock } from 'vitest';
 
 vi.mock("axios");

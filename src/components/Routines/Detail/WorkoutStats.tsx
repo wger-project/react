@@ -13,8 +13,8 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { SelectChangeEvent } from '@mui/material/Select';
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerContainerFullWidth } from "@/core/ui/Widgets/Container";
 import { getLanguageByShortName, useLanguageQuery, useMusclesQuery } from "@/components/Exercises";
 import { useRoutineDetailQuery } from "@/components/Routines/queries";
 import { useRoutineStatsQuery } from "@/components/Routines/queries/routines";
@@ -31,8 +31,8 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
-import { generateChartColors } from "@/utils/colors";
-import { makeLink, WgerLink } from "@/utils/url";
+import { generateChartColors } from "@/core/lib/colors";
+import { makeLink, WgerLink } from "@/core/lib/url";
 
 
 export const WorkoutStats = () => {

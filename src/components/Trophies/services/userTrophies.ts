@@ -1,8 +1,8 @@
 import axios from "axios";
 import { UserTrophy } from "@/components/Trophies/models/userTrophy";
-import { API_MAX_PAGE_SIZE, ApiPath } from "@/utils/consts";
-import { fetchPaginated } from "@/utils/requests";
-import { makeHeader, makeUrl } from "@/utils/url";
+import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
+import { fetchPaginated } from "@/core/lib/requests";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 
 
 export const getUserTrophies = async (): Promise<UserTrophy[]> => {

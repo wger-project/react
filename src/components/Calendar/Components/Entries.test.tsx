@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { WeightEntry } from '@/components/Weight';
 import React from 'react';
-import { dateToLocale } from "@/utils/date";
+import { dateToLocale } from "@/core/lib/date";
 import { DayProps } from './CalendarComponent';
 import Entries from './Entries';
 

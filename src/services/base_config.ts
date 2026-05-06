@@ -6,8 +6,8 @@ import {
     RuleRequirements,
     StepType
 } from "@/components/Routines/models/BaseConfig";
-import { ApiPath } from "@/utils/consts";
-import { makeHeader, makeUrl } from "@/utils/url";
+import { ApiPath } from "@/core/lib/consts";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 
 export interface AddBaseConfigParams {
     value: number;

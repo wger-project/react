@@ -5,8 +5,8 @@ import { Exercise } from "@/components/Exercises/models/exercise";
 import { Language } from "@/components/Exercises/models/language";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { ENGLISH_LANGUAGE_ID } from "@/utils/consts";
-import { makeLink, WgerLink } from "@/utils/url";
+import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
+import { makeLink, WgerLink } from "@/core/lib/url";
 
 type OverviewCardProps = {
     exercise: Exercise;

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SlotEntry } from "@/components/Routines/models/SlotEntry";
 import { deleteSlotEntry, editSlotEntry } from "@/services";
 import { addSlotEntry } from "@/services/slot_entry";
-import { QueryKey, } from "@/utils/consts";
+import { QueryKey, } from "@/core/lib/consts";
 
 
 export const useEditSlotEntryQuery = (routineId: number) => {

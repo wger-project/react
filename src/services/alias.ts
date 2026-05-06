@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Alias, AliasAdapter } from "@/components/Exercises/models/alias";
-import { makeHeader, makeUrl } from "@/utils/url";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 
 export const ALIAS_PATH = 'exercisealias';
 

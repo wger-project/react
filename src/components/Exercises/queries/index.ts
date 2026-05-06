@@ -1,4 +1,4 @@
-import { SearchLanguageFilter } from "@/components/Core/Widgets/SearchLanguageFilter";
+import { SearchLanguageFilter } from "@/core/ui/Widgets/SearchLanguageFilter";
 import { Note } from "@/components/Exercises/models/note";
 import {
     addNote,
@@ -27,7 +27,7 @@ import {
     PostExerciseImageParams
 } from "@/services/image";
 import { deleteExerciseVideo, postExerciseVideo, PostExerciseVideoParams } from "@/services/video";
-import { QueryKey } from "@/utils/consts";
+import { QueryKey } from "@/core/lib/consts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 

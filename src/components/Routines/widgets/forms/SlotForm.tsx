@@ -1,5 +1,5 @@
 import { TextField } from "@mui/material";
-import { LoadingProgressIcon } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LoadingProgressIcon } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { Slot } from "@/components/Routines/models/Slot";
 import { useEditSlotQuery } from "@/components/Routines/queries";
 import React, { useState } from "react";

@@ -14,8 +14,8 @@ import {
     Switch,
     Typography
 } from "@mui/material";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { LightTooltip } from "@/components/Core/Tooltips/LightToolTip";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { LightTooltip } from "@/core/ui/Tooltips/LightToolTip";
 import { Muscle } from "@/components/Exercises/models/muscle";
 import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
 import React, { useContext } from 'react';

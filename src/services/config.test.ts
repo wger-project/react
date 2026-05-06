@@ -32,7 +32,7 @@ import {
     editBaseConfig,
     EditBaseConfigParams
 } from "@/services/base_config";
-import { ApiPath } from "@/utils/consts";
+import { ApiPath } from "@/core/lib/consts";
 
 vi.mock("@/services/base_config", async () => {
     const originalModule = await vi.importActual<typeof import("@/services/base_config")>("@/services/base_config");

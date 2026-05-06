@@ -8,7 +8,7 @@ import {
     responseMealsForPlan,
 } from "@/tests/nutritionTestdata";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
-import { HHMMToDateTime } from "@/utils/date";
+import { HHMMToDateTime } from "@/core/lib/date";
 import type { Mock } from "vitest";
 
 vi.mock("axios");

@@ -15,7 +15,7 @@ import {
 import { Equipment } from "@/components/Exercises/models/equipment";
 import React, { useContext } from 'react';
 import { useTranslation } from "react-i18next";
-import { LoadingPlaceholder } from '../../Core/LoadingWidget/LoadingWidget';
+import { LoadingPlaceholder } from '@/core/ui/LoadingWidget/LoadingWidget';
 import { useEquipmentQuery } from '../queries';
 import { ExerciseFiltersContext } from './ExerciseFiltersContext';
 

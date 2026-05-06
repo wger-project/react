@@ -1,6 +1,6 @@
 import i18n from "@/i18n";
-import { Adapter } from "@/utils/Adapter";
-import { getTranslationKey } from "@/utils/strings";
+import { Adapter } from "@/core/lib/Adapter";
+import { getTranslationKey } from "@/core/lib/strings";
 
 
 export class Category {

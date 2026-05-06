@@ -1,11 +1,11 @@
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { useFetchNutritionalPlanDateQuery } from "@/components/Nutrition/queries";
 import { IngredientDetailTable } from "@/components/Nutrition/widgets/IngredientDetailTable";
 import {
     LoggedPlannedNutritionalValuesTable
 } from "@/components/Nutrition/widgets/LoggedPlannedNutritionalValuesTable";
-import { dateToLocale } from "@/utils/date";
+import { dateToLocale } from "@/core/lib/date";
 import { Stack, Typography } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";

@@ -1,4 +1,4 @@
-import { getTranslationKey, makeServerKey, truncateLongNames } from "@/utils/strings";
+import { getTranslationKey, makeServerKey, truncateLongNames } from "@/core/lib/strings";
 
 describe("slugify utilities", () => {
 

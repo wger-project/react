@@ -2,7 +2,7 @@ import axios from 'axios';
 import { RepetitionUnit, RepetitionUnitAdapter } from "@/components/Routines/models/RepetitionUnit";
 import { WeightUnit, WeightUnitAdapter } from "@/components/Routines/models/WeightUnit";
 import { ApiSettingRepUnitType, ApiSettingWeightUnitType } from '@/types';
-import { makeHeader, makeUrl } from "@/utils/url";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ResponseType } from "./responseType";
 
 export const API_SETTING_REP_UNIT_PATH = 'setting-repetitionunit';

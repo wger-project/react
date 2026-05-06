@@ -1,5 +1,5 @@
 import { MenuItem, TextField } from "@mui/material";
-import { LoadingProgressIcon } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LoadingProgressIcon } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { useEditProfileQuery, useProfileQuery } from "@/components/User";
 import { SlotEntry, SlotEntryType } from "@/components/Routines/models/SlotEntry";
 import {
@@ -10,7 +10,7 @@ import {
 import debounce from "lodash/debounce";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DEBOUNCE_ROUTINE_FORMS } from "@/utils/consts";
+import { DEBOUNCE_ROUTINE_FORMS } from "@/core/lib/consts";
 
 export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: number }) => {
     const { t } = useTranslation();

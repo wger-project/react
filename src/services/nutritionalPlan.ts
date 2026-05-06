@@ -4,7 +4,7 @@ import { getNutritionalDiaryEntries } from "@/services";
 import { getMealsForPlan } from "@/services/meal";
 import { ResponseType } from "@/services/responseType";
 import { ApiNutritionalPlanType } from '@/types';
-import { makeHeader, makeUrl } from "@/utils/url";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 
 export const API_NUTRITIONAL_PLAN_PATH = 'nutritionplan';
 

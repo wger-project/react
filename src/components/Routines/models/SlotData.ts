@@ -1,6 +1,6 @@
 import { Exercise } from "@/components/Exercises";
 import { SetConfigData, SetConfigDataAdapter } from "@/components/Routines/models/SetConfigData";
-import { Adapter } from "@/utils/Adapter";
+import { Adapter } from "@/core/lib/Adapter";
 
 export class SlotData {
 

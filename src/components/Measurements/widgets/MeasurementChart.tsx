@@ -3,7 +3,7 @@ import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import React from "react";
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { theme } from "@/theme";
-import { dateToLocale } from "@/utils/date";
+import { dateToLocale } from "@/core/lib/date";
 
 export interface TooltipProps {
     active?: boolean,

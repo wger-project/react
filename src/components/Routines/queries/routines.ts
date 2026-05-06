@@ -13,7 +13,7 @@ import {
     getRoutinesShallow,
     getRoutineStatisticsData
 } from "@/services";
-import { QueryKey, } from "@/utils/consts";
+import { QueryKey, } from "@/core/lib/consts";
 
 
 export function useRoutinesQuery() {

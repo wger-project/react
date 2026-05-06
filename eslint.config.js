@@ -91,15 +91,15 @@ export default tseslint.config(
     // Per-domain overrides: relax the rule for same-domain imports.
     ...domainOverrides,
     {
-        // The infrastructure layer (services/, state/, utils/, tests/, types.ts)
-        // sits BELOW the domains in the dependency graph. Importing from a
-        // domain barrel here creates circular dependencies (the barrel pulls in
-        // queries which depend on services). These files must use direct
-        // sub-paths.
+        // The infrastructure layer (services/, state/, core/lib, tests/,
+        // types.ts) sits BELOW the domains in the dependency graph. Importing
+        // from a domain barrel here creates circular dependencies (the barrel
+        // pulls in queries which depend on services). These files must use
+        // direct sub-paths.
         files: [
             'src/services/**',
             'src/state/**',
-            'src/utils/**',
+            'src/core/lib/**',
             'src/tests/**',
             'src/types.ts',
         ],

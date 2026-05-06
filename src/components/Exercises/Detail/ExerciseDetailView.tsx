@@ -11,7 +11,7 @@ import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
 import { useCanContributeExercises } from "@/components/User";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { dateTimeToLocale } from "@/utils/date";
+import { dateTimeToLocale } from "@/core/lib/date";
 
 
 const TranslateExerciseBanner = ({ setEditMode }: { setEditMode: (mode: boolean) => void }) => {

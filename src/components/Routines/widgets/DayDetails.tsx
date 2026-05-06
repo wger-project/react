@@ -20,7 +20,7 @@ import {
     useTheme,
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { LoadingPlaceholder, LoadingProgressIcon } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LoadingPlaceholder, LoadingProgressIcon } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { useProfileQuery } from "@/components/User";
 import { Day } from "@/components/Routines/models/Day";
 import { Slot } from "@/components/Routines/models/Slot";
@@ -38,7 +38,7 @@ import { DayForm } from "@/components/Routines/widgets/forms/DayForm";
 import { DraggableSlotItem } from "@/components/Routines/widgets/slots/DraggableSlotItem";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { SNACKBAR_AUTO_HIDE_DURATION, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/utils/consts";
+import { SNACKBAR_AUTO_HIDE_DURATION, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/core/lib/consts";
 
 
 export const DayDragAndDropGrid = (props: {

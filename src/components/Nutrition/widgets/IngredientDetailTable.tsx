@@ -4,7 +4,7 @@ import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalVal
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { useTranslation } from "react-i18next";
-import { numberGramLocale, numberLocale } from "@/utils/numbers";
+import { numberGramLocale, numberLocale } from "@/core/lib/numbers";
 
 const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
     const [t, i18n] = useTranslation();

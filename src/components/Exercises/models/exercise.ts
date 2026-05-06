@@ -5,8 +5,8 @@ import { Language } from "@/components/Exercises/models/language";
 import { Muscle, MuscleAdapter } from "@/components/Exercises/models/muscle";
 import { Translation, TranslationAdapter } from "@/components/Exercises/models/translation";
 import { ExerciseVideo, ExerciseVideoAdapter } from "@/components/Exercises/models/video";
-import { Adapter } from "@/utils/Adapter";
-import { ENGLISH_LANGUAGE_ID } from "@/utils/consts";
+import { Adapter } from "@/core/lib/Adapter";
+import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
 
 export type ExerciseConstructorParams = {
     id: number | null;

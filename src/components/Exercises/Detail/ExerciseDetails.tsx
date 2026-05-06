@@ -1,9 +1,9 @@
-import { LoadingWidget } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { ExerciseDetailEdit } from "@/components/Exercises/Detail/ExerciseDetailEdit";
 import { ExerciseDetailView } from "@/components/Exercises/Detail/ExerciseDetailView";
 import { getLanguageByShortName, Language } from "@/components/Exercises/models/language";
 import { useExerciseQuery, useExercisesForVariationQuery, useLanguageQuery, } from "@/components/Exercises/queries";
-import { ENGLISH_LANGUAGE_OBJ } from "@/utils/consts";
+import { ENGLISH_LANGUAGE_OBJ } from "@/core/lib/consts";
 import { Box, Container } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";

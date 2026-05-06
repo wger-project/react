@@ -2,17 +2,17 @@ import React from "react";
 import { Button, Card, CardActions, CardContent, CardHeader, IconButton, Stack, } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import { useTranslation } from "react-i18next";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
-import { OverviewEmpty } from "@/components/Core/Widgets/OverviewEmpty";
+import { OverviewEmpty } from "@/core/ui/Widgets/OverviewEmpty";
 import { AddMeasurementCategoryFab } from "@/components/Measurements/widgets/fab";
-import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
-import { makeLink, WgerLink } from "@/utils/url";
+import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
+import { makeLink, WgerLink } from "@/core/lib/url";
 import { Link } from "react-router-dom";
 import { EntryForm } from "@/components/Measurements/widgets/EntryForm";
-import { WgerModal } from "@/components/Core/Modals/WgerModal";
+import { WgerModal } from "@/core/ui/Modals/WgerModal";
 
 
 export const CategoryList = (props: { category: MeasurementCategory }) => {

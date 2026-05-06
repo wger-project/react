@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Day } from "@/components/Routines/models/Day";
-import { ApiPath } from "@/utils/consts";
-import { makeHeader, makeUrl } from "@/utils/url";
+import { ApiPath } from "@/core/lib/consts";
+import { makeHeader, makeUrl } from "@/core/lib/url";
 
 
 /*

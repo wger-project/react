@@ -11,7 +11,7 @@ import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToYYYYMMDD } from "@/utils/date";
+import { dateToYYYYMMDD } from "@/core/lib/date";
 import * as yup from "yup";
 
 const GRAM_UNIT_VALUE = 'g';

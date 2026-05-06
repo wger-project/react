@@ -20,7 +20,7 @@ import {
     Typography
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { StepProps } from "@/components/Exercises/Add/AddExerciseStepper";
 import { Exercise } from "@/components/Exercises/models/exercise";
 

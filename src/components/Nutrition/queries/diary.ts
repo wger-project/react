@@ -7,7 +7,7 @@ import {
     getNutritionalDiaryEntries
 } from "@/services";
 import { NutritionalDiaryEntriesOptions } from "@/services/nutritionalDiary";
-import { QueryKey } from "@/utils/consts";
+import { QueryKey } from "@/core/lib/consts";
 
 export const useNutritionDiaryQuery = (options?: NutritionalDiaryEntriesOptions) => useQuery({
     queryFn: () => getNutritionalDiaryEntries(options),

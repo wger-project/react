@@ -1,4 +1,4 @@
-import { Adapter } from "@/utils/Adapter";
+import { Adapter } from "@/core/lib/Adapter";
 
 export enum ImageStyle {
     LINE_ART = 1,

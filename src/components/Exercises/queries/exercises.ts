@@ -1,6 +1,6 @@
 import { addFullExercise, getExercise, getExercises, getExercisesForVariation } from "@/services";
 import { AddExerciseFullProps } from "@/services/exercise";
-import { QueryKey } from "@/utils/consts";
+import { QueryKey } from "@/core/lib/consts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 

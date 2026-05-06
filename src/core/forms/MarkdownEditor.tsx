@@ -2,7 +2,7 @@ import { Box, Button, ButtonGroup, Paper, TextField, Typography } from '@mui/mat
 import Markdown from 'markdown-to-jsx';
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { MarkdownOptions } from "@/utils/markdown";
+import { MarkdownOptions } from "@/core/lib/markdown";
 
 
 interface MarkdownEditorProps {

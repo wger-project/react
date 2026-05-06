@@ -17,7 +17,7 @@ import { useExercisesQuery } from "@/components/Exercises/queries";
 import React, { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { makeLink, WgerLink } from "@/utils/url";
+import { makeLink, WgerLink } from "@/core/lib/url";
 import { ExerciseFiltersContext } from './Filter/ExerciseFiltersContext';
 import { FilterDrawer } from './Filter/FilterDrawer';
 

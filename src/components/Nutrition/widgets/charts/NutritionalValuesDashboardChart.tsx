@@ -4,7 +4,7 @@ import { LinearPlannedLoggedChart } from "@/components/Nutrition/widgets/charts/
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { Cell, Pie, PieChart } from 'recharts';
-import { numberLocale } from "@/utils/numbers";
+import { numberLocale } from "@/core/lib/numbers";
 
 
 export const NutritionalValuesDashboardChart = (props: {

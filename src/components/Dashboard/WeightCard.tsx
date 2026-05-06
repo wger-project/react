@@ -1,8 +1,8 @@
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerModal } from "@/components/Core/Modals/WgerModal";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
 import { useBodyWeightQuery, WeightChart, WeightEntry, WeightForm, WeightTableDashboard } from "@/components/Weight";
-import { makeLink, WgerLink } from "@/utils/url";
+import { makeLink, WgerLink } from "@/core/lib/url";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button, IconButton } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";

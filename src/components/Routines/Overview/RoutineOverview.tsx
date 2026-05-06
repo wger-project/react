@@ -1,15 +1,15 @@
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Chip, Divider, List, ListItem, ListItemButton, ListItemText, Paper, } from "@mui/material";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
-import { OverviewEmpty } from "@/components/Core/Widgets/OverviewEmpty";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
+import { OverviewEmpty } from "@/core/ui/Widgets/OverviewEmpty";
 import { Routine } from "@/components/Routines/models/Routine";
 import { AddRoutineFab } from "@/components/Routines/Overview/Fab";
 import { useRoutinesShallowQuery } from "@/components/Routines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { dateToLocale } from "@/utils/date";
-import { makeLink, WgerLink } from "@/utils/url";
+import { dateToLocale } from "@/core/lib/date";
+import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const RoutineList = (props: {
     routine: Routine,

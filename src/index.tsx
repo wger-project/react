@@ -3,7 +3,7 @@ import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { LoadingWidget } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { IngredientSearch } from "@/components/Nutrition";
 import React, { Suspense } from 'react';
 import { createRoot } from "react-dom/client";

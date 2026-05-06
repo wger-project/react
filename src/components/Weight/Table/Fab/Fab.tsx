@@ -2,7 +2,7 @@ import React from 'react';
 import { Fab } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { WeightForm } from "@/components/Weight/Form/WeightForm";
-import { WgerModal } from "@/components/Core/Modals/WgerModal";
+import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { useTranslation } from "react-i18next";
 
 

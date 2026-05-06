@@ -1,12 +1,12 @@
-import { RenderLoadingQuery } from "@/components/Core/Widgets/RenderLoadingQuery";
+import { RenderLoadingQuery } from "@/core/ui/Widgets/RenderLoadingQuery";
 import { ExerciseImageAvatar, getLanguageByShortName, Language, useLanguageQuery } from "@/components/Exercises";
 import { getDayName } from "@/components/Routines/models/Day";
 import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
 import { SetConfigData } from "@/components/Routines/models/SetConfigData";
 import { SlotData } from "@/components/Routines/models/SlotData";
 import { useRoutineDetailQuery } from "@/components/Routines/queries";
-import { isSameDay } from "@/utils/date";
-import { makeLink, WgerLink } from "@/utils/url";
+import { isSameDay } from "@/core/lib/date";
+import { makeLink, WgerLink } from "@/core/lib/url";
 import { Addchart } from "@mui/icons-material";
 import TodayIcon from '@mui/icons-material/Today';
 import {

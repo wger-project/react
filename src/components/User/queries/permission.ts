@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { WgerPermissions } from "@/permissions";
 import { checkPermission } from "@/services/permission";
-import { QUERY_PERMISSION } from "@/utils/consts";
+import { QUERY_PERMISSION } from "@/core/lib/consts";
 
 export function usePermissionQuery(permission: WgerPermissions) {
     return useQuery({

@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
 import { useTranslation } from "react-i18next";
-import { numberGramLocale, numberLocale } from "@/utils/numbers";
+import { numberGramLocale, numberLocale } from "@/core/lib/numbers";
 
 export const LoggedPlannedNutritionalValuesTable = (props: {
     planned: NutritionalValues,

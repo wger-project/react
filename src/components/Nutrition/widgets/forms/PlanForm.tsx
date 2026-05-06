@@ -20,7 +20,7 @@ import i18n from "@/i18n";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToYYYYMMDD } from "@/utils/date";
+import { dateToYYYYMMDD } from "@/core/lib/date";
 import * as yup from 'yup';
 
 interface PlanFormProps {

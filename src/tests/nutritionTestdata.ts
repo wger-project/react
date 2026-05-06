@@ -26,7 +26,7 @@ import {
     TEST_DIARY_ENTRY_8,
     TEST_DIARY_ENTRY_9
 } from "@/tests/nutritionDiaryTestdata";
-import { HHMMToDateTime } from "@/utils/date";
+import { HHMMToDateTime } from "@/core/lib/date";
 
 export const TEST_WEIGHT_UNIT_SLICE = new NutritionWeightUnit(
     5432,

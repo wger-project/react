@@ -1,12 +1,12 @@
 import CalendarDayGrid from "@/components/Calendar/Components/CalendarDayGrid";
 import CalendarHeader from "@/components/Calendar/Components/CalendarHeader";
 import { CalendarMeasurement } from "@/components/Calendar/Helpers/CalendarMeasurement";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { useMeasurementsCategoryQuery } from "@/components/Measurements";
 import { DiaryEntry, useNutritionDiaryQuery } from "@/components/Nutrition";
 import { useSessionsQuery, WorkoutSession } from "@/components/Routines";
 import { useBodyWeightQuery, WeightEntry } from "@/components/Weight";
-import { dateToYYYYMMDD, isSameDay } from "@/utils/date";
+import { dateToYYYYMMDD, isSameDay } from "@/core/lib/date";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Box, Card, CardContent, CardHeader, useMediaQuery, useTheme } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';

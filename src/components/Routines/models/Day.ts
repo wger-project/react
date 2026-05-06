@@ -2,7 +2,7 @@
 
 import { Slot } from "@/components/Routines/models/Slot";
 import i18n from 'i18next';
-import { Adapter } from "@/utils/Adapter";
+import { Adapter } from "@/core/lib/Adapter";
 
 export type DayType = 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap';
 

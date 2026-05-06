@@ -20,7 +20,7 @@ import {
     Switch,
     TextField,
 } from "@mui/material";
-import { SearchLanguageFilter } from "@/components/Core/Widgets/SearchLanguageFilter";
+import { SearchLanguageFilter } from "@/core/ui/Widgets/SearchLanguageFilter";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { useSearchExerciseTranslationsQuery } from "@/components/Exercises/queries";
 import { SERVER_URL } from "@/config";
@@ -28,7 +28,7 @@ import debounce from "lodash/debounce";
 import * as React from "react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { LANGUAGE_SHORT_ENGLISH } from "@/utils/consts";
+import { LANGUAGE_SHORT_ENGLISH } from "@/core/lib/consts";
 
 
 export const STORAGE_KEY_EXERCISE_LANGUAGE = "wger.exerciseSearch.languageFilter";

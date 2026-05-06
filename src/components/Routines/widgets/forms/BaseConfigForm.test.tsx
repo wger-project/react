@@ -8,7 +8,7 @@ import React from 'react';
 import { testQueryClient } from "@/tests/queryClient";
 
 
-vi.mock('@/utils/consts', () => {
+vi.mock('@/core/lib/consts', () => {
     return {
         DEBOUNCE_ROUTINE_FORMS: '5'
     };

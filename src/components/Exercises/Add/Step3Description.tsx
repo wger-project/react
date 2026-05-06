@@ -1,16 +1,16 @@
 import { Box, Button, Stack } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { useLanguageCheckQuery } from "@/components/Core/queries";
+import { useLanguageCheckQuery } from "@/core/queries";
 import { StepProps } from "@/components/Exercises/Add/AddExerciseStepper";
 import { PaddingBox } from "@/components/Exercises/Detail/ExerciseDetails";
-import { MarkdownEditor } from "@/components/Common/forms/MarkdownEditor";
+import { MarkdownEditor } from "@/core/forms/MarkdownEditor";
 import { ExerciseNotes } from "@/components/Exercises/forms/ExerciseNotes";
 import { descriptionValidator, noteValidator } from "@/components/Exercises/forms/yupValidators";
 import { Form, Formik } from "formik";
 import { useTranslation } from "react-i18next";
 import { useExerciseSubmissionStateValue } from "@/state";
 import { setDescriptionEn, setNotesEn } from "@/state/exerciseSubmissionReducer";
-import { ENGLISH_LANGUAGE_ID } from "@/utils/consts";
+import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
 import * as yup from "yup";
 
 

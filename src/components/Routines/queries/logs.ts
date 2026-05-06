@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { addLogs, deleteLog, editLog, getRoutineLogs } from "@/services";
-import { QueryKey } from "@/utils/consts";
+import { QueryKey } from "@/core/lib/consts";
 
 export function useDeleteRoutineLogQuery(routineId: number) {
     const queryClient = useQueryClient();

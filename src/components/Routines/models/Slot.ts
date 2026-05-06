@@ -1,5 +1,5 @@
 import { SlotEntry } from "@/components/Routines/models/SlotEntry";
-import { Adapter } from "@/utils/Adapter";
+import { Adapter } from "@/core/lib/Adapter";
 
 export type SlotApiData = {
     id: number,

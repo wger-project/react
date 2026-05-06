@@ -1,6 +1,6 @@
 import { WeightEntry } from "@/components/Weight/model";
 import { calculateEMA, EMADataPoint } from "@/components/Weight/WeightChart/ema";
-import { dateToLocale } from "@/utils/date";
+import { dateToLocale } from "@/core/lib/date";
 import { Paper, Stack, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import {

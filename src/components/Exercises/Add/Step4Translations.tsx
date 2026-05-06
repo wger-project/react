@@ -11,9 +11,9 @@ import {
     Switch
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { MarkdownEditor } from "@/components/Common/forms/MarkdownEditor";
-import { LoadingWidget } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { useLanguageCheckQuery } from "@/components/Core/queries";
+import { MarkdownEditor } from "@/core/forms/MarkdownEditor";
+import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { useLanguageCheckQuery } from "@/core/queries";
 import { StepProps } from "@/components/Exercises/Add/AddExerciseStepper";
 import { PaddingBox } from "@/components/Exercises/Detail/ExerciseDetails";
 import { ExerciseAliases } from "@/components/Exercises/forms/ExerciseAliases";
@@ -37,7 +37,7 @@ import {
     setNameI18n,
     setNotesI18n
 } from "@/state/exerciseSubmissionReducer";
-import { ENGLISH_LANGUAGE_ID } from "@/utils/consts";
+import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
 import * as yup from "yup";
 
 export const Step4Translations = ({ onContinue, onBack }: StepProps) => {

@@ -4,15 +4,15 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Alert, IconButton, Menu, MenuItem, Snackbar } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import { DeleteConfirmationModal } from "@/components/Core/Modals/DeleteConfirmationModal";
-import { WgerModal } from "@/components/Core/Modals/WgerModal";
+import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
+import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { Meal } from "@/components/Nutrition/models/meal";
 import { useDeleteMealQuery } from "@/components/Nutrition/queries";
 import { useAddDiaryEntriesQuery } from "@/components/Nutrition/queries/diary";
 import { MealForm } from "@/components/Nutrition/widgets/forms/MealForm";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { SNACKBAR_AUTO_HIDE_DURATION } from "@/utils/consts";
+import { SNACKBAR_AUTO_HIDE_DURATION } from "@/core/lib/consts";
 
 
 export const MealDetailDropdown = (props: {

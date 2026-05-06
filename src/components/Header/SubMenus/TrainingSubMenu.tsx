@@ -2,7 +2,7 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
-import { makeLink, WgerLink } from "@/utils/url";
+import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const TrainingSubMenu = () => {
 

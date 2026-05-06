@@ -1,7 +1,7 @@
 import {
     DeleteConfirmationModal,
     DeleteConfirmationModalProps
-} from "@/components/Core/Modals/DeleteConfirmationModal";
+} from "@/core/ui/Modals/DeleteConfirmationModal";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 

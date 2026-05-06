@@ -1,8 +1,8 @@
 import { Alias, AliasAdapter } from "@/components/Exercises/models/alias";
 import { Note, NoteAdapter } from "@/components/Exercises/models/note";
 import slug from "slug";
-import { Adapter } from "@/utils/Adapter";
-import { truncateLongNames } from "@/utils/strings";
+import { Adapter } from "@/core/lib/Adapter";
+import { truncateLongNames } from "@/core/lib/strings";
 
 
 export type TranslationConstructorParams = {
