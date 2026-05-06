@@ -3,6 +3,13 @@ import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AddExerciseStepper } from "@/components/Exercises/screens/Add/AddExerciseStepper";
 
+vi.mock("@/components/Exercises/api/category");
+vi.mock("@/components/Exercises/api/equipment");
+vi.mock("@/components/Exercises/api/exercise");
+vi.mock("@/components/Exercises/api/language");
+vi.mock("@/components/Exercises/api/muscles");
+vi.mock("@/components/User/api/profile");
+
 describe("Test the add-exercise stepper component", () => {
 
 

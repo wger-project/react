@@ -7,6 +7,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
+vi.mock("@/components/Exercises/api/language");
 vi.mock("@/components/Routines/queries");
 
 const queryClient = new QueryClient();

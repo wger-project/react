@@ -6,6 +6,10 @@ import { SlotDetails } from '@/components/Routines/widgets/SlotDetails';
 import React from 'react';
 import { testQueryClient } from "@/tests/queryClient";
 
+vi.mock("@/components/Exercises/api/language");
+vi.mock("@/components/Routines/api/workoutUnits");
+vi.mock("@/components/User/api/profile");
+
 describe('SlotDetails Component', () => {
 
     const slotEntry = new SlotEntry(
