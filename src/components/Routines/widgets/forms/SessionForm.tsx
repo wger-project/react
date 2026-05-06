@@ -15,7 +15,7 @@ import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-picker
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { Form, Formik, FormikProps } from "formik";
 import { DateTime } from "luxon";
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from 'yup';
 
@@ -27,10 +27,17 @@ interface SessionFormProps {
     setSelectedDate: React.Dispatch<React.SetStateAction<DateTime>>
 }
 
+type SessionFormValues = {
+    notes: string | null;
+    date: Date;
+    start: DateTime<true> | DateTime<false> | null;
+    end: DateTime<true> | DateTime<false> | null;
+    impression: string;
+};
+
 export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, setSelectedDate }: SessionFormProps) => {
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let formik: FormikProps<any> | null;
+    const formikRef = useRef<FormikProps<SessionFormValues> | null>(null);
 
     const [t, i18n] = useTranslation();
     const [session, setSession] = React.useState<WorkoutSession | undefined>(initialSession);
@@ -70,8 +77,11 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
 
 
     useEffect(() => {
+        if (!formikRef.current) {
+            return;
+        }
         if (findSessionQuery.data) {
-            formik!.setValues({
+            formikRef.current.setValues({
                 notes: findSessionQuery.data.notes || '',
                 impression: findSessionQuery.data.impression || IMPRESSION_NEUTRAL,
                 date: findSessionQuery.data.date,
@@ -80,7 +90,7 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
             });
             setSession(findSessionQuery.data);
         } else if (findSessionQuery.isSuccess && !findSessionQuery.data) {
-            formik!.setValues({
+            formikRef.current.setValues({
                 notes: '',
                 impression: IMPRESSION_NEUTRAL,
                 date: initialSession?.date || DateTime.now().toJSDate(), //JS Date, not DateTime
@@ -103,9 +113,7 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
                 end: session !== undefined && session.timeEnd !== null ? DateTime.fromJSDate(session.timeEnd!) : null,
                 impression: session !== undefined ? session.impression : IMPRESSION_NEUTRAL,
             }}
-            innerRef={ref => {
-                formik = ref;
-            }}
+            innerRef={formikRef}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
                 const data = {
