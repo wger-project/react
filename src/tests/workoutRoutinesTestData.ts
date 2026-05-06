@@ -632,4 +632,49 @@ export const responseRoutineStats = {
     },
 };
 
+// Single slot entry envelope (POST/PATCH /slot-entry/ response)
+export const responseSlotEntry = {
+    id: 99,
+    slot: 1,
+    exercise: 345,
+    repetition_unit: 1,
+    repetition_rounding: 1,
+    weight_unit: 1,
+    weight_rounding: 1,
+    order: 1,
+    comment: "test",
+    type: "normal",
+    config: null,
+};
+
+// Paginated /setting-repetitionunit/ response
+export const responseRepetitionUnits = {
+    count: 2,
+    next: null,
+    previous: null,
+    results: [
+        { id: 1, name: "Repetitions" },
+        { id: 2, name: "Until failure" },
+    ],
+};
+
+// Paginated /setting-weightunit/ response
+export const responseWeightUnitsList = {
+    count: 2,
+    next: null,
+    previous: null,
+    results: [
+        { id: 1, name: "kg" },
+        { id: 2, name: "lb" },
+    ],
+};
+
+// Empty paginated unit list - shared by both endpoints
+export const responseEmptyUnitList = {
+    count: 0,
+    next: null,
+    previous: null,
+    results: [],
+};
+
 /* eslint-enable camelcase */

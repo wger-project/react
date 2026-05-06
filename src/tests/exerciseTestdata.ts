@@ -181,3 +181,10 @@ export const testExercises = [
     testExerciseSkullCrusher
 ];
 
+
+// API envelope for a single note as returned by /exercisecomment/
+export const responseNote = {
+    id: 42,
+    translation: 7,
+    comment: "keep your back straight",
+};
