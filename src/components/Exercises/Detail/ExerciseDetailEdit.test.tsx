@@ -15,8 +15,7 @@ import {
     useMusclesQuery,
     usePostAliasQuery
 } from "@/components/Exercises/queries";
-import { usePermissionQuery, useProfileQuery } from "@/components/User";
-import { WgerPermissions } from "@/permissions";
+import { usePermissionQuery, useProfileQuery, WgerPermissions } from "@/components/User";
 import { editTranslation } from "@/services";
 import {
     testCategories,

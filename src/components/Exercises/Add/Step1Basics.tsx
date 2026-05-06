@@ -12,8 +12,8 @@ import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseSubmissionStateValue } from "@/state";
-import * as exerciseReducer from "@/state/exerciseSubmissionReducer";
+import { useExerciseSubmissionStateValue } from "@/components/Exercises/Add/state";
+import * as exerciseReducer from "@/components/Exercises/Add/state/exerciseSubmissionReducer";
 import * as yup from "yup";
 
 export const Step1Basics = ({ onContinue }: StepProps) => {

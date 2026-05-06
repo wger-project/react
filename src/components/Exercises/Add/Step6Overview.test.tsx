@@ -10,7 +10,7 @@ import {
     useMusclesQuery,
 } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
-import { useExerciseSubmissionStateValue } from "@/state";
+import { useExerciseSubmissionStateValue } from "@/components/Exercises/Add/state";
 import { testCategories, testEquipment, testLanguages, testMuscles } from "@/tests/exerciseTestdata";
 import { testProfileDataVerified } from "@/tests/userTestdata";
 import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
@@ -23,7 +23,7 @@ import type { Mock } from "vitest";
 
 vi.mock("@/components/Exercises/queries");
 vi.mock("@/components/User/queries/profile");
-vi.mock("@/state");
+vi.mock("@/components/Exercises/Add/state");
 
 const mockOnContinue = vi.fn();
 const mockOnBack = vi.fn();

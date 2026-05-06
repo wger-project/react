@@ -1,7 +1,7 @@
 import { ImageFormData } from "@/components/Exercises/models/exercise";
 import React, { createContext, useContext, useReducer } from "react";
-import { exerciseSubmissionReducer } from "@/state/exerciseSubmissionReducer";
-import { SetExerciseSubmissionState } from "@/state/stateTypes";
+import { exerciseSubmissionReducer } from "@/components/Exercises/Add/state/exerciseSubmissionReducer";
+import { SetExerciseSubmissionState } from "@/components/Exercises/Add/state/stateTypes";
 
 export type ExerciseSubmissionAction = {
     type: SetExerciseSubmissionState,

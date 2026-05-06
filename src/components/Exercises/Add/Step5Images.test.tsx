@@ -1,12 +1,15 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import {
+    exerciseSubmissionInitialState,
+    ExerciseSubmissionStateContext
+} from "@/components/Exercises/Add/state/exerciseSubmissionState";
 import { Step5Images } from "@/components/Exercises/Add/Step5Images";
 import { ImageFormData } from "@/components/Exercises/models/exercise";
 import { ImageStyle } from "@/components/Exercises/models/image";
-import { ExerciseSubmissionStateContext, exerciseSubmissionInitialState } from "@/state/exerciseSubmissionState";
-import React from "react";
 import { testQueryClient } from "@/tests/queryClient";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import React from "react";
 
 const mockOnContinue = vi.fn();
 const mockOnBack = vi.fn();

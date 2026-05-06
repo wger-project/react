@@ -5,6 +5,7 @@
  * internal sub-paths.
  */
 export { type EditProfileParams, Profile } from "./models/profile";
+export { WgerPermissions } from "./permissions";
 
 // Query hooks
 export { useCanContributeExercises } from "./queries/contribute";

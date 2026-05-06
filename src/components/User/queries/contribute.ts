@@ -1,6 +1,6 @@
 import { useProfileQuery } from "@/components/User/queries/profile";
 import { usePermissionQuery } from "@/components/User/queries/permission";
-import { WgerPermissions } from "@/permissions";
+import { WgerPermissions } from "@/components/User/permissions";
 
 export function useCanContributeExercises() {
     const profileQuery = useProfileQuery();

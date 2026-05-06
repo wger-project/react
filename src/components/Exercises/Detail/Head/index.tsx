@@ -1,8 +1,7 @@
 import { ExerciseDeleteDialog } from "@/components/Exercises/Detail/Head/ExerciseDeleteDialog";
 import { Exercise } from '@/components/Exercises/models/exercise';
 import { Language } from '@/components/Exercises/models/language';
-import { usePermissionQuery, useProfileQuery } from "@/components/User";
-import { WgerPermissions } from "@/permissions";
+import { usePermissionQuery, useProfileQuery, WgerPermissions } from "@/components/User";
 import AddIcon from '@mui/icons-material/Add';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import RedoIcon from '@mui/icons-material/Redo';

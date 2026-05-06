@@ -1,6 +1,4 @@
-import { ImageFormData } from "@/components/Exercises/models/exercise";
-import { ImageStyle } from "@/components/Exercises/models/image";
-import { exerciseSubmissionInitialState, SetExerciseSubmissionState } from "@/state";
+import { exerciseSubmissionInitialState, SetExerciseSubmissionState } from "@/components/Exercises/Add/state";
 import {
     exerciseSubmissionReducer,
     reset,
@@ -20,8 +18,13 @@ import {
     setPrimaryMuscles,
     setSecondaryMuscles,
     setVariationId,
-} from "@/state/exerciseSubmissionReducer";
-import { ExerciseSubmissionAction, ExerciseSubmissionState } from "@/state/exerciseSubmissionState";
+} from "@/components/Exercises/Add/state/exerciseSubmissionReducer";
+import {
+    ExerciseSubmissionAction,
+    ExerciseSubmissionState
+} from "@/components/Exercises/Add/state/exerciseSubmissionState";
+import { ImageFormData } from "@/components/Exercises/models/exercise";
+import { ImageStyle } from "@/components/Exercises/models/image";
 
 const baseState: ExerciseSubmissionState = exerciseSubmissionInitialState;
 

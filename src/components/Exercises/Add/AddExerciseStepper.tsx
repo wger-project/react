@@ -7,7 +7,7 @@ import { Step5Images } from "@/components/Exercises/Add/Step5Images";
 import { Step6Overview } from "@/components/Exercises/Add/Step6Overview";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import * as exerciseState from "@/state";
+import * as exerciseState from "@/components/Exercises/Add/state";
 
 export type StepProps = {
     onContinue?: () => void;

@@ -5,7 +5,7 @@ import { Step2Variations } from "@/components/Exercises/Add/Step2Variations";
 
 import { useExercisesQuery } from "@/components/Exercises/queries";
 import React from "react";
-import { ExerciseSubmissionStateProvider } from "@/state";
+import { ExerciseSubmissionStateProvider } from "@/components/Exercises/Add/state";
 import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls } from "@/tests/exerciseTestdata";
 import type { Mock } from 'vitest';
 

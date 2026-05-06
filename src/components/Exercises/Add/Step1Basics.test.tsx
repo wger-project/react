@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { Step1Basics } from "@/components/Exercises/Add/Step1Basics";
 import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "@/components/Exercises/queries";
 import React from "react";
-import { ExerciseSubmissionStateProvider } from "@/state";
+import { ExerciseSubmissionStateProvider } from "@/components/Exercises/Add/state";
 import {
     setAlternativeNamesEn,
     setCategory,
@@ -12,7 +12,7 @@ import {
     setNameEn,
     setPrimaryMuscles,
     setSecondaryMuscles
-} from "@/state/exerciseSubmissionReducer";
+} from "@/components/Exercises/Add/state/exerciseSubmissionReducer";
 import type { Mock } from 'vitest';
 import { testCategories, testEquipment, testMuscles } from "@/tests/exerciseTestdata";
 
@@ -20,8 +20,8 @@ import { testCategories, testEquipment, testMuscles } from "@/tests/exerciseTest
 vi.setConfig({ testTimeout: 15000 });
 
 vi.mock("@/components/Exercises/queries");
-vi.mock("@/state/exerciseSubmissionReducer", async () => {
-    const originalModule = await vi.importActual<typeof import("@/state/exerciseSubmissionReducer")>("@/state/exerciseSubmissionReducer");
+vi.mock("@/components/Exercises/Add/state/exerciseSubmissionReducer", async () => {
+    const originalModule = await vi.importActual<typeof import("@/components/Exercises/Add/state/exerciseSubmissionReducer")>("@/components/Exercises/Add/state/exerciseSubmissionReducer");
     return {
         __esModule: true,
         ...originalModule,

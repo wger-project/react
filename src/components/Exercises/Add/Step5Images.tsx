@@ -18,8 +18,8 @@ import { ImageFormData } from "@/components/Exercises/models/exercise";
 import { ImageStyle } from "@/components/Exercises/models/image";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseSubmissionStateValue } from "@/state";
-import { setImages } from "@/state/exerciseSubmissionReducer";
+import { useExerciseSubmissionStateValue } from "@/components/Exercises/Add/state";
+import { setImages } from "@/components/Exercises/Add/state/exerciseSubmissionReducer";
 
 export const Step5Images = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();

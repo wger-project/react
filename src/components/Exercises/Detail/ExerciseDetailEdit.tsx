@@ -1,6 +1,3 @@
-import { MarkdownEditor } from "@/core/forms/MarkdownEditor";
-import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
-import { FormQueryErrorsSnackbar } from '@/core/ui/Widgets/FormError';
 import { PaddingBox } from "@/components/Exercises/Detail/ExerciseDetails";
 import { EditExerciseCategory } from "@/components/Exercises/forms/Category";
 import { EditExerciseEquipment } from "@/components/Exercises/forms/Equipment";
@@ -31,8 +28,10 @@ import {
     usePostAliasQuery
 } from "@/components/Exercises/queries";
 import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
-import { usePermissionQuery, useProfileQuery } from "@/components/User";
-import { WgerPermissions } from "@/permissions";
+import { usePermissionQuery, useProfileQuery, WgerPermissions } from "@/components/User";
+import { MarkdownEditor } from "@/core/forms/MarkdownEditor";
+import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { FormQueryErrorsSnackbar } from '@/core/ui/Widgets/FormError';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';

@@ -6,17 +6,17 @@ import { Step3Description } from "@/components/Exercises/Add/Step3Description";
 import {
     setDescriptionEn,
     setNotesEn,
-} from "@/state/exerciseSubmissionReducer";
+} from "@/components/Exercises/Add/state/exerciseSubmissionReducer";
 import React from "react";
 import { testQueryClient } from "@/tests/queryClient";
 import type { Mock } from "vitest";
 
 vi.mock("@/core/queries");
 
-vi.mock("@/state/exerciseSubmissionReducer", async () => {
+vi.mock("@/components/Exercises/Add/state/exerciseSubmissionReducer", async () => {
     const originalModule =
-        await vi.importActual<typeof import("@/state/exerciseSubmissionReducer")>(
-            "@/state/exerciseSubmissionReducer"
+        await vi.importActual<typeof import("@/components/Exercises/Add/state/exerciseSubmissionReducer")>(
+            "@/components/Exercises/Add/state/exerciseSubmissionReducer"
         );
     return {
         __esModule: true,

@@ -8,8 +8,8 @@ import { ExerciseNotes } from "@/components/Exercises/forms/ExerciseNotes";
 import { descriptionValidator, noteValidator } from "@/components/Exercises/forms/yupValidators";
 import { Form, Formik } from "formik";
 import { useTranslation } from "react-i18next";
-import { useExerciseSubmissionStateValue } from "@/state";
-import { setDescriptionEn, setNotesEn } from "@/state/exerciseSubmissionReducer";
+import { useExerciseSubmissionStateValue } from "@/components/Exercises/Add/state";
+import { setDescriptionEn, setNotesEn } from "@/components/Exercises/Add/state/exerciseSubmissionReducer";
 import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
 import * as yup from "yup";
 

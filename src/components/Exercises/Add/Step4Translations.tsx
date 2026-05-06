@@ -29,14 +29,14 @@ import { useLanguageQuery } from "@/components/Exercises/queries";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseSubmissionStateValue } from "@/state";
+import { useExerciseSubmissionStateValue } from "@/components/Exercises/Add/state";
 import {
     setAlternativeNamesI18n,
     setDescriptionI18n,
     setLanguageId,
     setNameI18n,
     setNotesI18n
-} from "@/state/exerciseSubmissionReducer";
+} from "@/components/Exercises/Add/state/exerciseSubmissionReducer";
 import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
 import * as yup from "yup";
 

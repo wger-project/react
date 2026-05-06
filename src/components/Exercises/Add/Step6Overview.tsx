@@ -30,7 +30,7 @@ import Markdown from 'markdown-to-jsx';
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useExerciseSubmissionStateValue } from "@/state";
+import { useExerciseSubmissionStateValue } from "@/components/Exercises/Add/state";
 import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
 import { MarkdownOptions } from "@/core/lib/markdown";
 import { makeLink, WgerLink } from "@/core/lib/url";

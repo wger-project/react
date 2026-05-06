@@ -27,8 +27,8 @@ import { Exercise } from "@/components/Exercises/models/exercise";
 import { useExercisesQuery } from "@/components/Exercises/queries";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseSubmissionStateValue } from "@/state";
-import { setNewBaseVariationId, setVariationId } from "@/state/exerciseSubmissionReducer";
+import { useExerciseSubmissionStateValue } from "@/components/Exercises/Add/state";
+import { setNewBaseVariationId, setVariationId } from "@/components/Exercises/Add/state/exerciseSubmissionReducer";
 
 /*
  * Groups a list of objects by a property
