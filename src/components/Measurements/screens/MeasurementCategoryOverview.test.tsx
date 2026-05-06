@@ -13,8 +13,6 @@ const queryClient = new QueryClient();
 
 describe("Test the MeasurementCategoryOverview component", () => {
 
-    const { ResizeObserver } = window;
-
     beforeEach(() => {
         (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
             isSuccess: true,

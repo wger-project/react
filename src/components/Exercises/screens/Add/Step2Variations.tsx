@@ -36,12 +36,9 @@ import { useTranslation } from "react-i18next";
 /*
  * Groups a list of objects by a property
  */
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function groupBy(list: any[], keyGetter: Function) {
-    const map = new Map();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    list.forEach((item: any) => {
+function groupBy<T, K>(list: T[], keyGetter: (item: T) => K): Map<K, T[]> {
+    const map = new Map<K, T[]>();
+    list.forEach((item) => {
         const key = keyGetter(item);
         const collection = map.get(key);
         if (!collection) {
@@ -139,7 +136,6 @@ const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
 export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
     const exercisesQuery = useExercisesQuery();
-    const [state, dispatch] = useExerciseSubmissionStateValue();
 
     const [searchTerm, setSearchTerms] = useState<string>('');
 
@@ -152,7 +148,7 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
             exercises = exercises.filter((base) => base.getTranslation().name.toLowerCase().includes(searchTerm.toLowerCase()));
         }
     }
-    groupedExercises = groupBy(exercises.filter(b => b.variationGroup !== null), (b: Exercise) => b.variationGroup);
+    groupedExercises = groupBy(exercises.filter(b => b.variationGroup !== null), (b: Exercise) => b.variationGroup!);
 
     return <>
         <Grid container>

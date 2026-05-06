@@ -65,10 +65,6 @@ class TrophyAdapter implements Adapter<Trophy> {
             isProgressive: item.is_progressive,
         });
     }
-
-    toJson(_: Trophy) {
-        return {};
-    }
 }
 
 

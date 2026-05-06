@@ -13,9 +13,6 @@ const queryClient = new QueryClient();
 
 describe("Test the MeasurementCategoryDetail component", () => {
 
-    // See https://github.com/maslianok/react-resize-detector#testing-with-enzyme-and-jest
-    const { ResizeObserver } = window;
-
     beforeEach(() => {
 
         (useMeasurementsQuery as Mock).mockImplementation(() => ({

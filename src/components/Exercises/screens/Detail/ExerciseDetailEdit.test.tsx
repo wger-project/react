@@ -282,7 +282,7 @@ describe("Exercise translation edit tests", () => {
         const user = userEvent.setup();
 
         // Act
-        const { container } = render(
+        render(
             <QueryClientProvider client={testQueryClient}>
                 <ExerciseDetailEdit
                     exerciseId={345}

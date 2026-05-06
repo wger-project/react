@@ -49,30 +49,6 @@ const ContributeExerciseBanner = () => {
     );
 };
 
-const NoResultsBanner = () => {
-    const [t] = useTranslation();
-
-    return (
-        <Box
-            sx={{
-                marginTop: 4,
-                padding: 4,
-                width: "100%",
-                backgroundColor: "#ebebeb",
-                textAlign: "center",
-            }}
-        >
-            <Typography gutterBottom variant="h4" component="div">
-                {t("noResults")}
-            </Typography>
-
-            <Typography gutterBottom variant="body1" component="div">
-                {t("noResultsDescription")}
-            </Typography>
-        </Box>
-    );
-};
-
 export const ExerciseOverviewList = () => {
     const exerciseQuery = useExercisesQuery();
     const [t, i18n] = useTranslation();

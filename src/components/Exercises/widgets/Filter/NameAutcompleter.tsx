@@ -37,10 +37,9 @@ export const SEARCH_DEBOUNCE_MS = 400;
 
 type NameAutocompleterProps = {
     callback: (exercise: Exercise | null) => void;
-    loadExercise?: boolean;
 };
 
-export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterProps) {
+export function NameAutocompleter({ callback }: NameAutocompleterProps) {
     const [value, setValue] = React.useState<Exercise | null>(null);
     const [t, i18n] = useTranslation();
     const [inputValue, setInputValue] = React.useState("");
@@ -80,8 +79,6 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
     }, [i18n.language, t]);
     const [options, setOptions] = React.useState<readonly Exercise[]>([]);
 
-
-    loadExercise = loadExercise === undefined ? false : loadExercise;
 
     const searchExerciseTranslations = useSearchExerciseTranslationsQuery();
 

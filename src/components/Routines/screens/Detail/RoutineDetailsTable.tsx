@@ -236,9 +236,6 @@ export const RoutineTable = (props: {
     function getComparisonIcon(loggedValue: number | null, plannedValue: number | null | undefined, maxPlannedValue: number | null | undefined, higherIsBetter?: boolean) {
 
         const comparison = compareValue(loggedValue, plannedValue, maxPlannedValue);
-        if (loggedValue === 105) {
-            console.log(loggedValue, plannedValue, maxPlannedValue, higherIsBetter, comparison);
-        }
 
         const fontSize = 17;
 

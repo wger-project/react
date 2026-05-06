@@ -186,7 +186,6 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
 
                                                 {exerciseIdToSwap === formik.values.logs[index].exercise!.id &&
                                                     <NameAutocompleter
-                                                        loadExercise={true}
                                                         callback={(searchResponse) => handleCallback(searchResponse, formik)}
                                                     />}
 

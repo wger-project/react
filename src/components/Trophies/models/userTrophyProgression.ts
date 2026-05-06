@@ -58,10 +58,6 @@ class UserTrophyAdapter implements Adapter<UserTrophyProgression> {
             progressDisplay: item.progress_display,
         });
     }
-
-    toJson(item: UserTrophyProgression) {
-        return {};
-    }
 }
 
 

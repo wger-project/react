@@ -30,8 +30,7 @@ function toAlphabetic(num: number) {
     return result;
 }
 
-const configTypes = ["weight", "max-weight", "reps", "max-reps", "max-sets", "sets", "rest", "max-rest", "rir"] as const;
-type ConfigType = typeof configTypes[number];
+type ConfigType = "weight" | "max-weight" | "reps" | "max-reps" | "max-sets" | "sets" | "rest" | "max-rest" | "rir";
 
 const getConfigComponent = (type: ConfigType, configs: BaseConfig[], routineId: number, slotEntryId: number) => {
     return configs.length > 0

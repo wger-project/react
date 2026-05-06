@@ -65,7 +65,6 @@
     "slick-carousel": "^1.8.1",
     "slug": "^11.0.1",
     "typescript": "^6.0.3",
-    "web-vitals": "^5.1.0",
     "yup": "^1.7.1"
   },
   "devDependencies": {

@@ -62,7 +62,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
     };
 
     const handleDeleteClick = (id: GridRowId) => async () => {
-        console.log('deleting entry', id);
         deleteEntryQuery.mutate(parseInt(id.toString()));
         setRows(rows.filter((row) => row.id !== id));
     };
@@ -96,10 +95,8 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
         return updatedRow;
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const onProcessRowUpdateError = (error: any) => {
-        console.log(error);
-        //setRows(rows.map((row) => (row.id === newRow.id ? newRow : row)));
+    const onProcessRowUpdateError = (error: unknown) => {
+        console.error(error);
     };
 
     const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
