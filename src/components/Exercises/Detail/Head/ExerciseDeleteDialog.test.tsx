@@ -1,26 +1,27 @@
-import { act, render, screen } from '@testing-library/react';
+import { ExerciseDeleteDialog } from "@/components/Exercises/Detail/Head/ExerciseDeleteDialog";
+import { deleteExercise, deleteExerciseTranslation, getExercise, searchExerciseTranslations } from "@/services";
+import { searchResponse } from "@/tests/exercises/searchResponse";
+import { testExerciseBenchPress, testExerciseSquats, testLanguageGerman } from "@/tests/exerciseTestdata";
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { ExerciseDeleteDialog } from "components/Exercises/Detail/Head/ExerciseDeleteDialog";
 import React from 'react';
-import { MemoryRouter, Routes } from "react-router";
-import { Route } from "react-router-dom";
-import { deleteExercise, deleteExerciseTranslation, getExercise, searchExerciseTranslations } from "services";
-import { searchResponse } from "tests/exercises/searchResponse";
-import { testExerciseBenchPress, testExerciseSquats, testLanguageGerman } from "tests/exerciseTestdata";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+import type { Mock } from 'vitest';
 
-jest.mock("services");
+vi.mock("@/services");
 
 describe("Test the ExerciseDeleteDialog component", () => {
 
-    const onCloseMock = jest.fn();
-    const onChangeLanguageMock = jest.fn();
+    const onCloseMock = vi.fn();
+    const onChangeLanguageMock = vi.fn();
 
     // Arrange
     beforeEach(() => {
-        jest.resetAllMocks();
+        vi.resetAllMocks();
 
-        (searchExerciseTranslations as jest.Mock).mockImplementation(() => Promise.resolve(searchResponse));
-        (getExercise as jest.Mock).mockImplementation(() => Promise.resolve(testExerciseBenchPress));
+        (searchExerciseTranslations as Mock).mockImplementation(() => Promise.resolve(searchResponse));
+        (getExercise as Mock).mockImplementation(() => Promise.resolve(testExerciseBenchPress));
+        (deleteExercise as Mock).mockImplementation(() => Promise.resolve(204));
     });
 
     function renderWidget() {
@@ -77,18 +78,15 @@ describe("Test the ExerciseDeleteDialog component", () => {
         renderWidget();
 
         const autocomplete = screen.getByTestId('autocomplete');
-        await user.click(autocomplete);
+        const input = within(autocomplete).getByRole('combobox');
 
         // Assert
         expect(searchExerciseTranslations).not.toHaveBeenCalled();
-        await user.type(autocomplete, 'Cru');
+        await user.type(input, 'Cru');
 
         expect(screen.getByText("exercises.noReplacementSelected")).toBeInTheDocument();
 
-        // There's a bounce period of 200ms between the input and the search
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, 250));
-        });
+        await waitFor(() => expect(searchExerciseTranslations).toHaveBeenCalled());
         await user.click(screen.getByTestId('autocompleter-result-998'));
         expect(getExercise).toHaveBeenCalledWith(998);
         expect(screen.queryByText("exercises.noReplacementSelected")).not.toBeInTheDocument();
@@ -96,8 +94,31 @@ describe("Test the ExerciseDeleteDialog component", () => {
         expect(screen.getByText("2 (abcdef-150a-4ac7-97ef-84643c6419bf)")).toBeInTheDocument();
 
         await user.click(screen.getByTestId('button-delete-and-replace'));
-        expect(deleteExercise).toHaveBeenCalledWith(345, "abcdef-150a-4ac7-97ef-84643c6419bf");
+        expect(deleteExercise).toHaveBeenCalledWith(345, {
+            replacementUUID: "abcdef-150a-4ac7-97ef-84643c6419bf",
+            transferMedia: true,
+            transferTranslations: true,
+        });
         expect(deleteExerciseTranslation).not.toHaveBeenCalled();
+    });
+
+    test('passes both transfer flags as false when both checkboxes are unchecked', async () => {
+        const user = userEvent.setup();
+        renderWidget();
+
+        await user.type(screen.getByRole('textbox'), '111');
+        await user.click(screen.getByText("exercises.noReplacementSelected"));
+
+        await user.click(screen.getByLabelText("exercises.transferMediaLabel"));
+        await user.click(screen.getByLabelText("exercises.transferTranslationsLabel"));
+
+        await user.click(screen.getByTestId('button-delete-and-replace'));
+
+        expect(deleteExercise).toHaveBeenCalledWith(345, {
+            replacementUUID: "abcdef-150a-4ac7-97ef-84643c6419bf",
+            transferMedia: false,
+            transferTranslations: false,
+        });
     });
 
     test('correctly sets a replacement manually setting the ID', async () => {
@@ -119,7 +140,11 @@ describe("Test the ExerciseDeleteDialog component", () => {
         expect(screen.getByText("2 (abcdef-150a-4ac7-97ef-84643c6419bf)")).toBeInTheDocument();
 
         await user.click(screen.getByTestId('button-delete-and-replace'));
-        expect(deleteExercise).toHaveBeenCalledWith(345, "abcdef-150a-4ac7-97ef-84643c6419bf");
+        expect(deleteExercise).toHaveBeenCalledWith(345, {
+            replacementUUID: "abcdef-150a-4ac7-97ef-84643c6419bf",
+            transferMedia: true,
+            transferTranslations: true,
+        });
         expect(deleteExerciseTranslation).not.toHaveBeenCalled();
     });
 });

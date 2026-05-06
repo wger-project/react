@@ -20,15 +20,15 @@ import {
     Typography
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { Exercise } from "components/Exercises/models/exercise";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { StepProps } from "@/components/Exercises/Add/AddExerciseStepper";
+import { Exercise } from "@/components/Exercises/models/exercise";
 
-import { useExercisesQuery } from "components/Exercises/queries";
+import { useExercisesQuery } from "@/components/Exercises/queries";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseSubmissionStateValue } from "state";
-import { setNewBaseVariationId, setVariationId } from "state/exerciseSubmissionReducer";
+import { useExerciseSubmissionStateValue } from "@/state";
+import { setNewBaseVariationId, setVariationId } from "@/state/exerciseSubmissionReducer";
 
 /*
  * Groups a list of objects by a property
@@ -161,8 +161,7 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
                 <Typography>{t('exercises.whatVariationsExist')}</Typography>
             </Grid>
             <Grid
-                display="flex"
-                justifyContent={"end"}
+                sx={{ display: "flex", justifyContent: "end" }}
                 size={{
                     xs: 12,
                     sm: 6
@@ -170,7 +169,6 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
                 <TextField
                     label={t('name')}
                     helperText={t('exercises.filterVariations')}
-                    // defaultValue={state.nameEn}
                     variant="standard"
                     onChange={(event) => setSearchTerms(event.target.value)}
                     slotProps={{
@@ -212,7 +210,7 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
         </Alert>
 
         <Grid container>
-            <Grid display="flex" justifyContent={"end"} size={12}>
+            <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
                 <Box sx={{ mb: 2 }}>
                     <div>
                         <Button

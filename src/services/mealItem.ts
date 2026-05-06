@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { MealItem } from "components/Nutrition/models/mealItem";
-import { ApiPath } from "utils/consts";
-import { makeHeader, makeUrl } from "utils/url";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
+import { ApiPath } from "@/utils/consts";
+import { makeHeader, makeUrl } from "@/utils/url";
 
 
 export const addMealItem = async (data: MealItem): Promise<MealItem> => {

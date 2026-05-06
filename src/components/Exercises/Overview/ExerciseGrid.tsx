@@ -1,11 +1,11 @@
 import Grid from '@mui/material/Grid';
-import { OverviewCard } from "components/Exercises/Detail/OverviewCard";
-import { Exercise } from "components/Exercises/models/exercise";
-import { Language } from "components/Exercises/models/language";
-import { useLanguageQuery } from "components/Exercises/queries";
+import { OverviewCard } from "@/components/Exercises/Detail/OverviewCard";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Language } from "@/components/Exercises/models/language";
+import { useLanguageQuery } from "@/components/Exercises/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName } from "services";
+import { getLanguageByShortName } from "@/services";
 
 type ExerciseGridProps = {
     exercises: Exercise[];

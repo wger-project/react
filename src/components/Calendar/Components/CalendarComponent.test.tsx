@@ -1,24 +1,25 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { WeightEntry } from "components/BodyWeight/model";
-import { MeasurementCategory } from "components/Measurements/models/Category";
-import { MeasurementEntry } from "components/Measurements/models/Entry";
+import { WeightEntry } from "@/components/BodyWeight/model";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import i18n from "i18next";
 import React from "react";
 import { I18nextProvider } from "react-i18next";
 import { BrowserRouter } from "react-router-dom";
-import { getMeasurementCategories, getNutritionalDiaryEntries, getSessions, getWeights } from "services";
-import { TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2 } from "tests/nutritionDiaryTestdata";
-import { testQueryClient } from "tests/queryClient";
-import { testWorkoutSession } from "tests/workoutLogsRoutinesTestData";
-import { dateToYYYYMMDD } from "utils/date";
+import { getMeasurementCategories, getNutritionalDiaryEntries, getSessions, getWeights } from "@/services";
+import { TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2 } from "@/tests/nutritionDiaryTestdata";
+import { testQueryClient } from "@/tests/queryClient";
+import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
+import { dateToYYYYMMDD } from "@/utils/date";
 import CalendarComponent from "./CalendarComponent";
+import type { Mock } from 'vitest';
 
-jest.mock('services');
+vi.mock('@/services');
 
 
-// TODO: using jest.useFakeTimers() and jest.setSystemTime(new Date('2024-12-01'));
+// TODO: using vi.useFakeTimers() and vi.setSystemTime(new Date('2024-12-01'));
 //       seems to break the test and they never complete. As a workaround the dates
 //       for the entries are set to the 1st and 2nd of the month, but that means
 //       that this test won't work on the 1st of every month since days in the future
@@ -32,18 +33,18 @@ describe('CalendarComponent', () => {
 
     beforeEach(() => {
 
-        (getWeights as jest.Mock).mockImplementation(() => Promise.resolve([
+        (getWeights as Mock).mockImplementation(() => Promise.resolve([
             new WeightEntry(
                 new Date(currentYear, currentMonth, 2, 12, 0),
                 70
             ),
         ]));
 
-        (getSessions as jest.Mock).mockImplementation(() => Promise.resolve(
+        (getSessions as Mock).mockImplementation(() => Promise.resolve(
             [testWorkoutSession]
         ));
 
-        (getMeasurementCategories as jest.Mock).mockImplementation(() => Promise.resolve([
+        (getMeasurementCategories as Mock).mockImplementation(() => Promise.resolve([
             new MeasurementCategory(
                 1,
                 "Body Fat",
@@ -52,7 +53,7 @@ describe('CalendarComponent', () => {
             ),
         ]));
 
-        (getNutritionalDiaryEntries as jest.Mock).mockImplementation(() => Promise.resolve([
+        (getNutritionalDiaryEntries as Mock).mockImplementation(() => Promise.resolve([
             TEST_DIARY_ENTRY_1,
             TEST_DIARY_ENTRY_2,
         ]));
@@ -61,7 +62,7 @@ describe('CalendarComponent', () => {
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     const renderComponent = () => {

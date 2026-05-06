@@ -1,6 +1,6 @@
 import { Button, Stack, TextField } from "@mui/material";
-import { MeasurementCategory } from "components/Measurements/models/Category";
-import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "components/Measurements/queries";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "@/components/Measurements/queries";
 import { Form, Formik } from "formik";
 import React from 'react';
 import { useTranslation } from "react-i18next";
@@ -75,7 +75,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             }
                             {...formik.getFieldProps('unit')}
                         />
-                        <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
+                        <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                                 {t('submit')}
                             </Button>

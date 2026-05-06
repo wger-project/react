@@ -1,13 +1,15 @@
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
+import { useFetchNutritionalPlanDateQuery } from "@/components/Nutrition/queries";
+import { IngredientDetailTable } from "@/components/Nutrition/widgets/IngredientDetailTable";
+import {
+    LoggedPlannedNutritionalValuesTable
+} from "@/components/Nutrition/widgets/LoggedPlannedNutritionalValuesTable";
+import { dateToLocale } from "@/utils/date";
 import { Stack, Typography } from "@mui/material";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
-import { useFetchNutritionalPlanDateQuery } from "components/Nutrition/queries";
-import { IngredientDetailTable } from "components/Nutrition/widgets/IngredientDetailTable";
-import { LoggedPlannedNutritionalValuesTable } from "components/Nutrition/widgets/LoggedPlannedNutritionalValuesTable";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { dateToLocale } from "utils/date";
 
 
 export const NutritionDiaryOverview = () => {

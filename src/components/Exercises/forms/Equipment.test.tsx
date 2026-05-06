@@ -1,27 +1,28 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { EditExerciseEquipment } from "components/Exercises/forms/Equipment";
-import { useEquipmentQuery } from "components/Exercises/queries";
-import { useProfileQuery } from "components/User/queries/profile";
+import { EditExerciseEquipment } from "@/components/Exercises/forms/Equipment";
+import { useEquipmentQuery } from "@/components/Exercises/queries";
+import { useProfileQuery } from "@/components/User/queries/profile";
 import React from "react";
-import { editExercise } from "services";
-import { testEquipment } from "tests/exerciseTestdata";
-import { testProfileDataVerified } from "tests/userTestdata";
+import { editExercise } from "@/services";
+import { testEquipment } from "@/tests/exerciseTestdata";
+import { testProfileDataVerified } from "@/tests/userTestdata";
+import type { Mock } from 'vitest';
 
-jest.mock("components/User/queries/profile");
-jest.mock("components/Exercises/queries");
-jest.mock("services");
+vi.mock("@/components/User/queries/profile");
+vi.mock("@/components/Exercises/queries");
+vi.mock("@/services");
 
 describe("Test the edit widget to live edit the equipment", () => {
 
     beforeEach(() => {
-        (useEquipmentQuery as jest.Mock).mockImplementation(() => (
+        (useEquipmentQuery as Mock).mockImplementation(() => (
             { isSuccess: true, data: testEquipment }
         ));
-        (useProfileQuery as jest.Mock).mockImplementation(() => (
+        (useProfileQuery as Mock).mockImplementation(() => (
             { isSuccess: true, data: testProfileDataVerified }
         ));
-        (editExercise as jest.Mock).mockImplementation(() => (100));
+        (editExercise as Mock).mockImplementation(() => (100));
     });
 
 

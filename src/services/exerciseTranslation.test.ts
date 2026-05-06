@@ -1,7 +1,8 @@
 import axios from "axios";
-import { addTranslation, deleteExerciseTranslation, editTranslation } from "services";
+import { addTranslation, deleteExerciseTranslation, editTranslation } from "@/services";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 
 describe("Exercise translation service API tests", () => {
@@ -25,14 +26,14 @@ describe("Exercise translation service API tests", () => {
                 "tester"
             ]
         };
-        (axios.post as jest.Mock).mockImplementation(() => Promise.resolve({ data: response }));
+        (axios.post as Mock).mockImplementation(() => Promise.resolve({ data: response }));
 
         // Act
         const result = await addTranslation({
             exerciseId: 100,
             languageId: 2,
             name: "Test exercise",
-            description: "Test description",
+            descriptionSource: "Test description",
             author: "Asimov"
         });
 
@@ -62,7 +63,7 @@ describe("Exercise translation service API tests", () => {
                 "tester"
             ]
         };
-        (axios.patch as jest.Mock).mockImplementation(() => Promise.resolve({ status: 200, data: response }));
+        (axios.patch as Mock).mockImplementation(() => Promise.resolve({ status: 200, data: response }));
 
         // Act
         const result = await editTranslation({
@@ -70,7 +71,7 @@ describe("Exercise translation service API tests", () => {
             exerciseId: 100,
             languageId: 2,
             name: "A new, cooler name!!!",
-            description: "A new, cooler description!!!",
+            descriptionSource: "A new, cooler description!!!",
             author: "Asimov"
         });
 
@@ -82,7 +83,7 @@ describe("Exercise translation service API tests", () => {
     test('DELETE an exercise translation', async () => {
 
         // Arrange
-        (axios.delete as jest.Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
+        (axios.delete as Mock).mockImplementation(() => Promise.resolve({ status: 204 }));
 
         // Act
         const result = await deleteExerciseTranslation(1234);

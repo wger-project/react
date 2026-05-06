@@ -1,9 +1,9 @@
 import { Autocomplete, TextField } from "@mui/material";
-import { useEquipmentQuery } from "components/Exercises/queries";
-import { useProfileQuery } from "components/User/queries/profile";
+import { useEquipmentQuery } from "@/components/Exercises/queries";
+import { useProfileQuery } from "@/components/User/queries/profile";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { editExercise } from "services";
+import { editExercise } from "@/services";
 
 export function EditExerciseEquipment(props: { exerciseId: number, initial: number[] }) {
     const { t } = useTranslation();

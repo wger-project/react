@@ -1,11 +1,11 @@
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutlined";
 import { Button, FormControlLabel, IconButton, Menu, MenuItem, Stack, Switch } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import Tooltip from "@mui/material/Tooltip";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { WgerTextField } from "components/Common/forms/WgerTextField";
-import { useProfileQuery } from "components/User/queries/profile";
+import { WgerTextField } from "@/components/Common/forms/WgerTextField";
+import { useProfileQuery } from "@/components/User/queries/profile";
 import {
     DESCRIPTION_MAX_LENGTH,
     MAX_WORKOUT_DURATION,
@@ -13,15 +13,15 @@ import {
     NAME_MAX_LENGTH,
     NAME_MIN_LENGTH,
     Routine
-} from "components/WorkoutRoutines/models/Routine";
-import { useAddRoutineQuery, useEditRoutineQuery } from "components/WorkoutRoutines/queries/routines";
-import { SlotEntryRoundingField } from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
+} from "@/components/WorkoutRoutines/models/Routine";
+import { useAddRoutineQuery, useEditRoutineQuery } from "@/components/WorkoutRoutines/queries/routines";
+import { SlotEntryRoundingField } from "@/components/WorkoutRoutines/widgets/forms/SlotEntryForm";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { makeLink, WgerLink } from "utils/url";
+import { makeLink, WgerLink } from "@/utils/url";
 import * as yup from 'yup';
 
 interface RoutineFormProps {

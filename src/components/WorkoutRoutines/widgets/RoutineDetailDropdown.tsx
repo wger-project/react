@@ -10,13 +10,13 @@ import {
     Menu,
     MenuItem
 } from "@mui/material";
-import { Routine } from "components/WorkoutRoutines/models/Routine";
-import { useDeleteRoutineQuery } from "components/WorkoutRoutines/queries";
-import { RoutineTemplateForm } from "components/WorkoutRoutines/widgets/forms/RoutineTemplateForm";
+import { Routine } from "@/components/WorkoutRoutines/models/Routine";
+import { useDeleteRoutineQuery } from "@/components/WorkoutRoutines/queries";
+import { RoutineTemplateForm } from "@/components/WorkoutRoutines/widgets/forms/RoutineTemplateForm";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { makeLink, WgerLink } from "utils/url";
+import { makeLink, WgerLink } from "@/utils/url";
 
 
 export enum DialogToOpen {

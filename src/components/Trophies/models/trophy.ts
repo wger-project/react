@@ -1,4 +1,4 @@
-import { Adapter } from "utils/Adapter";
+import { Adapter } from "@/utils/Adapter";
 
 export type trophyType = 'time' | 'volume' | 'count' | 'sequence' | 'date' | 'pr' | 'other';
 

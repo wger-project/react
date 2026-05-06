@@ -1,98 +1,194 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { WeightEntry } from "components/BodyWeight/model";
-import { ActionButton } from 'components/BodyWeight/Table/ActionButton/ActionButton';
-import { WeightEntryFab } from "components/BodyWeight/Table/Fab/Fab";
-import React, { useState } from 'react';
+import CancelIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import { Box } from "@mui/material";
+import {
+    DataGrid,
+    GridActionsCellItem,
+    GridColDef,
+    GridEventListener,
+    GridRowEditStopReasons,
+    GridRowId,
+    GridRowModel,
+    GridRowModes,
+    GridRowModesModel,
+    GridRowsProp,
+} from "@mui/x-data-grid";
+import { WeightEntry } from "@/components/BodyWeight/model";
+import { WeightEntryFab } from "@/components/BodyWeight/Table/Fab/Fab";
+import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "@/components/BodyWeight/queries";
+import { processTimeSeries } from "@/components/Core/utils/timeSeries";
+import { DateTime } from "luxon";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { dateTimeToLocale } from "utils/date";
-import { processWeight } from '../utils';
-
-
-const PREFIX = 'WeightTable';
-
-const classes = {
-    table: `${PREFIX}-table`
-};
-
-const Root = styled('div')(() => {
-    return {
-        [`&.${classes.table}`]: {
-            "& .MuiPaper-root": {
-                border: "1px solid #bababa",
-
-            }
-        },
-    };
-});
-
+import { PAGINATION_OPTIONS } from "@/utils/consts";
+import { luxonDateTimeToLocale } from "@/utils/date";
 
 export interface WeightTableProps {
     weights: WeightEntry[];
 }
 
+const buildRows = (weights: WeightEntry[]): GridRowsProp =>
+    processTimeSeries(weights, e => e.weight).map((row) => ({
+        id: row.entry.id,
+        date: row.entry.date,
+        weight: row.entry.weight,
+        change: +row.change.toFixed(2),
+        totalChange: +row.totalChange.toFixed(2),
+        days: +row.days.toFixed(1),
+    }));
+
 export const WeightTable = ({ weights }: WeightTableProps) => {
+    const [t] = useTranslation();
+    const rows = buildRows(weights);
+    const editEntryQuery = useEditWeightEntryQuery();
+    const deleteEntryQuery = useDeleteWeightEntryQuery();
+    const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
-    const availableResultsPerPage = [10, 50, 100];
-
-    const { t } = useTranslation();
-
-    const processedWeights = processWeight(weights);
-    const [rowsPerPage, setRowsPerPage] = useState(availableResultsPerPage[0]);
-    const [page, setPage] = useState(0);
-
-    const handleChangePage = (event: unknown, newPage: number) => {
-        setPage(newPage);
+    const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
+        if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+            event.defaultMuiPrevented = true;
+        }
     };
 
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+    const handleEditClick = (id: GridRowId) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
     };
+
+    const handleSaveClick = (id: GridRowId) => () => {
+        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    };
+
+    const handleDeleteClick = (id: GridRowId) => () => {
+        deleteEntryQuery.mutate(Number(id));
+    };
+
+    const handleCancelClick = (id: GridRowId) => () => {
+        setRowModesModel({
+            ...rowModesModel,
+            [id]: { mode: GridRowModes.View, ignoreModifications: true },
+        });
+    };
+
+    const processRowUpdate = (newRow: GridRowModel) => {
+        const date = newRow.date instanceof Date ? newRow.date : new Date(newRow.date);
+        editEntryQuery.mutate(new WeightEntry(date, Number(newRow.weight), Number(newRow.id)));
+        return newRow;
+    };
+
+    const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+        setRowModesModel(newRowModesModel);
+    };
+
+    const columns: GridColDef[] = [
+        {
+            field: 'date',
+            headerName: t('date'),
+            type: 'date',
+            width: 140,
+            editable: true,
+            valueFormatter: (value?: Date) => {
+                if (value == null) {
+                    return '';
+                }
+                return luxonDateTimeToLocale(DateTime.fromJSDate(value));
+            },
+        },
+        {
+            field: 'weight',
+            headerName: t('weight'),
+            type: 'number',
+            width: 100,
+            editable: true,
+        },
+        {
+            field: 'change',
+            headerName: t('difference'),
+            type: 'number',
+            width: 120,
+            editable: false,
+        },
+        {
+            field: 'totalChange',
+            headerName: t('totalChange'),
+            type: 'number',
+            width: 140,
+            editable: false,
+        },
+        {
+            field: 'days',
+            headerName: t('days'),
+            type: 'number',
+            width: 100,
+            editable: false,
+        },
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: t('actions'),
+            width: 100,
+            cellClassName: 'actions',
+            getActions: ({ id }) => {
+                const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+                if (isInEditMode) {
+                    return [
+                        <GridActionsCellItem
+                            icon={<SaveIcon />}
+                            label={t('save')}
+                            onClick={handleSaveClick(id)}
+                        />,
+                        <GridActionsCellItem
+                            icon={<CancelIcon />}
+                            label={t('cancel')}
+                            className="textPrimary"
+                            onClick={handleCancelClick(id)}
+                            color="inherit"
+                        />,
+                    ];
+                }
+
+                return [
+                    <GridActionsCellItem
+                        icon={<EditIcon />}
+                        label={t('edit')}
+                        className="textPrimary"
+                        onClick={handleEditClick(id)}
+                        color="inherit"
+                    />,
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label={t('delete')}
+                        onClick={handleDeleteClick(id)}
+                        color="inherit"
+                    />,
+                ];
+            },
+        },
+    ];
 
     return (
-        <Root className={classes.table}>
-            <TableContainer>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell align="center">{t('date')}</TableCell>
-                            <TableCell align="center">{t('weight')}</TableCell>
-                            <TableCell align="center">{t('difference')}</TableCell>
-                            <TableCell align="center">{t('days')}</TableCell>
-                            <TableCell align="center" />
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {processedWeights.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                            <TableRow
-                                key={row.entry.date.toISOString()}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row" align="center">
-                                    {dateTimeToLocale(row.entry.date)}
-                                </TableCell>
-                                <TableCell align="center">{row.entry.weight}</TableCell>
-                                <TableCell align="center">{+row.change.toFixed(2)}</TableCell>
-                                <TableCell align="center">{row.days.toFixed(1)}</TableCell>
-                                <TableCell align="center">
-                                    <ActionButton weight={row.entry} />
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-                <TablePagination
-                    rowsPerPageOptions={availableResultsPerPage}
-                    component="div"
-                    count={processedWeights.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+        <>
+            <Box sx={{ width: '100%' }}>
+                <DataGrid
+                    editMode="row"
+                    rows={rows}
+                    columns={columns}
+                    initialState={{
+                        pagination: {
+                            paginationModel: { pageSize: PAGINATION_OPTIONS.pageSize },
+                        },
+                    }}
+                    pageSizeOptions={PAGINATION_OPTIONS.pageSizeOptions}
+                    disableRowSelectionOnClick
+                    rowModesModel={rowModesModel}
+                    onRowModesModelChange={handleRowModesModelChange}
+                    onRowEditStop={handleRowEditStop}
+                    processRowUpdate={processRowUpdate}
                 />
-            </TableContainer>
+            </Box>
             <WeightEntryFab />
-        </Root>
+        </>
     );
 };

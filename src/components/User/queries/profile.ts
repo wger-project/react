@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { EditProfileParams } from "components/User/models/profile";
-import { editProfile, getProfile } from "services";
-import { QueryKey } from "utils/consts";
+import { EditProfileParams } from "@/components/User/models/profile";
+import { editProfile, getProfile } from "@/services";
+import { QueryKey } from "@/utils/consts";
 
 export function useProfileQuery() {
     return useQuery({

@@ -1,9 +1,9 @@
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Box, Button, Card, CardActions, CardMedia } from "@mui/material";
-import { FormQueryErrorsSnackbar } from "components/Core/Widgets/FormError";
-import { ExerciseImage } from "components/Exercises/models/image";
-import { useAddExerciseImageQuery, useDeleteExerciseImageQuery } from "components/Exercises/queries";
-import { useProfileQuery } from "components/User/queries/profile";
+import { FormQueryErrorsSnackbar } from "@/components/Core/Widgets/FormError";
+import { ExerciseImage } from "@/components/Exercises/models/image";
+import { useAddExerciseImageQuery, useDeleteExerciseImageQuery } from "@/components/Exercises/queries";
+import { useProfileQuery } from "@/components/User/queries/profile";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -11,9 +11,10 @@ type ImageCardProps = {
     exerciseId: number;
     image: ExerciseImage;
     canDelete: boolean
+    onEdit: (image: ExerciseImage) => void;
 };
 
-export const ImageEditCard = ({ exerciseId, image, canDelete }: ImageCardProps) => {
+export const ImageEditCard = ({ exerciseId, image, canDelete, onEdit }: ImageCardProps) => {
     const [t] = useTranslation();
     const deleteImageQuery = useDeleteExerciseImageQuery(exerciseId);
 
@@ -24,7 +25,7 @@ export const ImageEditCard = ({ exerciseId, image, canDelete }: ImageCardProps) 
             sx={{ height: 120 }}
             alt=""
         />
-        <CardActions>
+        <CardActions style={{ justifyContent: 'space-between' }}>
             {canDelete &&
                 <Button
                     color="primary"
@@ -32,6 +33,15 @@ export const ImageEditCard = ({ exerciseId, image, canDelete }: ImageCardProps) 
                 >
                     {t('delete')}
                 </Button>}
+            {canDelete &&
+                <Button
+                    color="primary"
+                    onClick={() => onEdit(image)}
+                    data-testid={`edit-image-${image.id}`}
+                >
+                    {t('edit')}
+                </Button>
+            }
         </CardActions>
     </Card>;
 };
@@ -73,10 +83,13 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
     return <>
         <Card>
             <CardMedia>
-                <Box sx={{ backgroundColor: "lightgray", height: 120 }}
-                     display="flex"
-                     alignItems="center"
-                     justifyContent="center">
+                <Box sx={{
+                    backgroundColor: "lightgray",
+                    height: 120,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center"
+                }}>
                     <AddCircleIcon sx={{ fontSize: 80, color: "gray" }} />
                 </Box>
             </CardMedia>

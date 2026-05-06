@@ -1,5 +1,5 @@
-import { Language } from "components/Exercises/models/language";
-import { MIN_ACCOUNT_AGE_TO_TRUST, TIME_ZONE } from "config";
+import { Language } from "@/components/Exercises/models/language";
+import { MIN_ACCOUNT_AGE_TO_TRUST, TIME_ZONE } from "@/config";
 
 export const ENGLISH_LANGUAGE_ID = 2;
 export const ENGLISH_LANGUAGE_CODE = 'en';
@@ -90,8 +90,6 @@ export enum ApiPath {
     MEAL_ITEM = 'mealitem',
     NUTRITIONAL_DIARY = 'nutritiondiary',
     INGREDIENTINFO_PATH = 'ingredientinfo',
-    INGREDIENT_SEARCH_PATH = 'ingredient/search',
-    INGREDIENT_WEIGHT_UNIT = 'ingredientweightunit',
 
     // Routines
     ROUTINE = 'routine',

@@ -1,17 +1,18 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { act, render, screen } from '@testing-library/react';
-import { PrivateTemplateOverview } from "components/WorkoutRoutines/Overview/PrivateTemplateOverview";
+import { render, screen, waitFor } from '@testing-library/react';
+import { PrivateTemplateOverview } from "@/components/WorkoutRoutines/Overview/PrivateTemplateOverview";
 import { BrowserRouter } from "react-router-dom";
-import { getPrivateTemplatesShallow } from "services";
-import { testQueryClient } from "tests/queryClient";
-import { testPrivateTemplate1 } from "tests/workoutRoutinesTestData";
+import { getPrivateTemplatesShallow } from "@/services";
+import { testQueryClient } from "@/tests/queryClient";
+import { testPrivateTemplate1 } from "@/tests/workoutRoutinesTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("services");
+vi.mock("@/services");
 
 describe("Smoke tests the PrivateTemplateOverview component", () => {
 
     beforeEach(() => {
-        (getPrivateTemplatesShallow as jest.Mock).mockResolvedValue([testPrivateTemplate1]);
+        (getPrivateTemplatesShallow as Mock).mockResolvedValue([testPrivateTemplate1]);
     });
 
     test('renders all private templates', async () => {
@@ -24,13 +25,9 @@ describe("Smoke tests the PrivateTemplateOverview component", () => {
                 </QueryClientProvider>
             </BrowserRouter>
         );
-        await act(async () => {
-            await new Promise((r) => setTimeout(r, 20));
-        });
-
         // Assert
-        expect(getPrivateTemplatesShallow).toHaveBeenCalledTimes(1);
-        expect(screen.getByText('private template 1')).toBeInTheDocument();
+        await waitFor(() => expect(getPrivateTemplatesShallow).toHaveBeenCalledTimes(1));
+        expect(await screen.findByText('private template 1')).toBeInTheDocument();
         expect(screen.getByText('routines.templates')).toBeInTheDocument();
     });
 });

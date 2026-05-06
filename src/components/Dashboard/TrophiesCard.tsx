@@ -1,12 +1,12 @@
 import { Button, Card, CardContent, CardHeader, CardMedia, Tooltip, Typography, } from "@mui/material";
 import Box from "@mui/system/Box";
 import Stack from "@mui/system/Stack";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { UserTrophy } from "components/Trophies/models/userTrophy";
-import { useUserTrophiesQuery } from "components/Trophies/queries/trophies";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { UserTrophy } from "@/components/Trophies/models/userTrophy";
+import { useUserTrophiesQuery } from "@/components/Trophies/queries/trophies";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { makeLink, WgerLink } from "utils/url";
+import { makeLink, WgerLink } from "@/utils/url";
 import { DashboardCard } from "./DashboardCard";
 
 export const TrophiesCard = () => {
@@ -24,7 +24,7 @@ export const TrophiesCard = () => {
 function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
     const { t, i18n } = useTranslation();
 
-    const tooltipWidget = (tooltip: string) => <Typography variant="body2" textAlign={'center'}>
+    const tooltipWidget = (tooltip: string) => <Typography variant="body2" sx={{ textAlign: 'center' }}>
         {tooltip}
     </Typography>;
 
@@ -53,7 +53,7 @@ function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
                                 title={userTrophy.trophy.name}
                             />
                             <CardContent>
-                                <Typography gutterBottom variant="body2" component="div" textAlign="center">
+                                <Typography gutterBottom variant="body2" component="div" sx={{ textAlign: "center" }}>
                                     {userTrophy.trophy.name}
                                 </Typography>
                             </CardContent>
@@ -75,7 +75,7 @@ export const EmptyTrophiesCardContent = () => {
                 sx={{ paddingBottom: 0 }}
             />
             <CardContent>
-                <Typography variant="h6" mr={3}>
+                <Typography variant="h6" sx={{ mr: 3 }}>
                     {t('nothingHereYet')}
                 </Typography>
             </CardContent>

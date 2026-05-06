@@ -1,12 +1,12 @@
-import { Category, CategoryAdapter, } from "components/Exercises/models/category";
-import { Equipment, EquipmentAdapter, } from "components/Exercises/models/equipment";
-import { ExerciseImage, ExerciseImageAdapter, } from "components/Exercises/models/image";
-import { Language } from "components/Exercises/models/language";
-import { Muscle, MuscleAdapter } from "components/Exercises/models/muscle";
-import { Translation, TranslationAdapter } from "components/Exercises/models/translation";
-import { ExerciseVideo, ExerciseVideoAdapter } from "components/Exercises/models/video";
-import { Adapter } from "utils/Adapter";
-import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { Category, CategoryAdapter, } from "@/components/Exercises/models/category";
+import { Equipment, EquipmentAdapter, } from "@/components/Exercises/models/equipment";
+import { ExerciseImage, ExerciseImageAdapter, } from "@/components/Exercises/models/image";
+import { Language } from "@/components/Exercises/models/language";
+import { Muscle, MuscleAdapter } from "@/components/Exercises/models/muscle";
+import { Translation, TranslationAdapter } from "@/components/Exercises/models/translation";
+import { ExerciseVideo, ExerciseVideoAdapter } from "@/components/Exercises/models/video";
+import { Adapter } from "@/utils/Adapter";
+import { ENGLISH_LANGUAGE_ID } from "@/utils/consts";
 
 export type ExerciseConstructorParams = {
     id: number | null;
@@ -16,7 +16,7 @@ export type ExerciseConstructorParams = {
     muscles?: Muscle[];
     musclesSecondary?: Muscle[];
     images?: ExerciseImage[];
-    variationId?: number | null;
+    variationGroup?: string | null;
     lastUpdateGlobal?: Date;
     translations?: Translation[];
     videos?: ExerciseVideo[];
@@ -26,7 +26,7 @@ export type ExerciseConstructorParams = {
 export class Exercise {
     id: number | null;
     uuid: string | null;
-    variationId: number | null;
+    variationGroup: string | null;
     category: Category;
     lastUpdateGlobal: Date;
 
@@ -42,7 +42,7 @@ export class Exercise {
         this.id = init.id;
         this.uuid = init.uuid;
         this.category = init.category;
-        this.variationId = init.variationId ?? null;
+        this.variationGroup = init.variationGroup ?? null;
         this.lastUpdateGlobal = init.lastUpdateGlobal ?? new Date();
 
         this.muscles = init.muscles ?? [];
@@ -120,7 +120,7 @@ export class ExerciseAdapter implements Adapter<Exercise> {
             musclesSecondary: item.muscles_secondary.map((m: any) => muscleAdapter.fromJson(m)),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             images: item.images.map((i: any) => imageAdapter.fromJson(i)),
-            variationId: item.variations,
+            variationGroup: item.variation_group,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             translations: item.translations.map((t: any) => translationAdapter.fromJson(t)),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -160,12 +160,12 @@ export class ExerciseAdapter implements Adapter<Exercise> {
 
 export type ImageFormData = {
     url: string;
-    file: File;
+    file?: File;    // When editing an existing image, this is undefined
     author: string;
     authorUrl: string;
     title: string,
     objectUrl: string,
     derivativeSourceUrl: string;
-    style: string;
+    style: number;
 };
 

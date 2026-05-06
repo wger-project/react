@@ -1,7 +1,7 @@
-import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
-import { WorkoutSession } from "components/WorkoutRoutines/models/WorkoutSession";
-import { testExerciseSquats } from "tests/exerciseTestdata";
-import { testRepUnitRepetitions, testWeightUnitKg } from "tests/workoutRoutinesTestData";
+import { WorkoutLog } from "@/components/WorkoutRoutines/models/WorkoutLog";
+import { WorkoutSession } from "@/components/WorkoutRoutines/models/WorkoutSession";
+import { testExerciseSquats } from "@/tests/exerciseTestdata";
+import { testRepUnitRepetitions, testWeightUnitKg } from "@/tests/workoutRoutinesTestData";
 
 const testWorkoutLog1 = new WorkoutLog({
     id: 5,

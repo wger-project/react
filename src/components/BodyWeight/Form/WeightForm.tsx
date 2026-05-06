@@ -1,9 +1,9 @@
 import { Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { WeightEntry } from "components/BodyWeight/model";
-import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "components/BodyWeight/queries";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
+import { WeightEntry } from "@/components/BodyWeight/model";
+import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "@/components/BodyWeight/queries";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import { useState } from 'react';
@@ -88,7 +88,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                                 }}
                             />
                         </LocalizationProvider>
-                        <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
+                        <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                                 {t('submit')}
                             </Button>

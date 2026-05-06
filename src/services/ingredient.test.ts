@@ -1,7 +1,8 @@
 import axios from "axios";
-import { getIngredient } from "services/ingredient";
+import { getIngredient } from "@/services/ingredient";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 describe("Ingredient service tests", () => {
 
@@ -23,6 +24,9 @@ describe("Ingredient service tests", () => {
             "fat_saturated": "6.000",
             "fiber": null,
             "sodium": "0.508",
+            "is_vegan": true,
+            "is_vegetarian": true,
+            "nutriscore": "a",
             "license": 5,
             "license_title": "감자깡",
             "license_object_url": "",
@@ -57,7 +61,7 @@ describe("Ingredient service tests", () => {
         };
 
         // Act
-        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: ingredientInfoResponse }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: ingredientInfoResponse }));
         const result = await getIngredient(1);
 
         // Assert
@@ -74,6 +78,9 @@ describe("Ingredient service tests", () => {
         expect(result.fatSaturated).toEqual(6);
         expect(result.fiber).toEqual(null);
         expect(result.sodium).toEqual(0.508);
+        expect(result.isVegan).toEqual(true);
+        expect(result.isVegetarian).toEqual(true);
+        expect(result.nutriscore).toEqual('a');
         expect(result.image?.url).toEqual('http://localhost:8000/media/ingredients/59197/b260b245-efe9-4c92-9d8f-d2c4406221dd.jpg');
     });
 });

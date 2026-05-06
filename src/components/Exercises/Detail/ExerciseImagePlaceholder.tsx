@@ -12,10 +12,13 @@ export const ExerciseImagePlaceholder = (props: {
     const iconColor = props.iconColor || "gray";
     const height = props.height || 200;
 
-    return <Box sx={{ backgroundColor: backgroundColor, height: height }}
-                display="flex"
-                alignItems="center"
-                justifyContent="center">
+    return <Box sx={{
+        backgroundColor: backgroundColor,
+        height: height,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+    }}>
         <PhotoIcon sx={{ fontSize: 80, color: iconColor }} />
     </Box>;
 };

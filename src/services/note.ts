@@ -1,6 +1,6 @@
 import axios from "axios";
-import { Note, NoteAdapter } from "components/Exercises/models/note";
-import { makeHeader, makeUrl } from "utils/url";
+import { Note, NoteAdapter } from "@/components/Exercises/models/note";
+import { makeHeader, makeUrl } from "@/utils/url";
 
 export const API_NOTE_PATH = 'exercisecomment';
 
@@ -34,6 +34,14 @@ export const editNote = async (note: Note): Promise<Note> => {
     );
 
     return adapter.fromJson(response.data);
+};
+
+/*
+ * Delete an existing note
+ */
+export const deleteNote = async (id: number): Promise<void> => {
+    const url = makeUrl(API_NOTE_PATH, { id: id });
+    await axios.delete(url, { headers: makeHeader() });
 };
 
 

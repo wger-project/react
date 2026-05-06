@@ -1,5 +1,5 @@
 import DeleteIcon from "@mui/icons-material/Delete";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutlined";
 import {
     Button,
     Dialog,
@@ -13,12 +13,12 @@ import {
 } from "@mui/material";
 import LoadingButton from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
-import { WgerTextField } from "components/Common/forms/WgerTextField";
-import { DeleteConfirmationModal } from "components/Core/Modals/DeleteConfirmationModal";
-import { Day, DayType } from "components/WorkoutRoutines/models/Day";
-import { useDeleteDayQuery, useEditDayQuery } from "components/WorkoutRoutines/queries";
-import { DayTypeSelect } from "components/WorkoutRoutines/widgets/forms/DayTypeSelect";
-import { DefaultRoundingMenu } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
+import { WgerTextField } from "@/components/Common/forms/WgerTextField";
+import { DeleteConfirmationModal } from "@/components/Core/Modals/DeleteConfirmationModal";
+import { Day, DayType } from "@/components/WorkoutRoutines/models/Day";
+import { useDeleteDayQuery, useEditDayQuery } from "@/components/WorkoutRoutines/queries";
+import { DayTypeSelect } from "@/components/WorkoutRoutines/widgets/forms/DayTypeSelect";
+import { DefaultRoundingMenu } from "@/components/WorkoutRoutines/widgets/forms/RoutineForm";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";

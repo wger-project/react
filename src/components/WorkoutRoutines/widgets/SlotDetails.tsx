@@ -3,25 +3,25 @@ import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from '@mui/icons-material/EditOff';
 import { Alert, AlertTitle, IconButton, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { Exercise } from "components/Exercises/models/exercise";
-import { useLanguageQuery } from "components/Exercises/queries";
-import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
-import { useDeleteSlotEntryQuery, useEditSlotEntryQuery } from "components/WorkoutRoutines/queries";
+import { NameAutocompleter } from "@/components/Exercises/Filter/NameAutcompleter";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { useLanguageQuery } from "@/components/Exercises/queries";
+import { BaseConfig } from "@/components/WorkoutRoutines/models/BaseConfig";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
+import { useDeleteSlotEntryQuery, useEditSlotEntryQuery } from "@/components/WorkoutRoutines/queries";
 import {
     ConfigDetailsRiRField,
     SlotBaseConfigValueField
-} from "components/WorkoutRoutines/widgets/forms/BaseConfigForm";
+} from "@/components/WorkoutRoutines/widgets/forms/BaseConfigForm";
 import {
     SlotEntryRepetitionUnitField,
     SlotEntryTypeField,
     SlotEntryWeightUnitField
-} from "components/WorkoutRoutines/widgets/forms/SlotEntryForm";
+} from "@/components/WorkoutRoutines/widgets/forms/SlotEntryForm";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName } from "services";
+import { getLanguageByShortName } from "@/services";
 
 /*
  * Converts a number to an alphabetic string, useful for counting
@@ -54,7 +54,7 @@ const getConfigComponent = (type: ConfigType, configs: BaseConfig[], routineId: 
         ;
 };
 
-export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: boolean }) => {
+export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: boolean, isGrouped?: boolean }) => {
     const { t } = useTranslation();
 
     return (<>
@@ -72,6 +72,7 @@ export const SlotDetails = (props: { slot: Slot, routineId: number, simpleMode: 
                 simpleMode={props.simpleMode}
                 index={index}
                 total={props.slot.entries.length}
+                isGrouped={props.isGrouped}
             />
         ))}
     </>);
@@ -82,7 +83,8 @@ export const SlotEntryDetails = (props: {
     routineId: number,
     simpleMode: boolean,
     index: number,
-    total: number
+    total: number,
+    isGrouped?: boolean,
 }) => {
     const { t, i18n } = useTranslation();
 
@@ -116,7 +118,8 @@ export const SlotEntryDetails = (props: {
             ? <React.Fragment>
                 <Grid
                     key={`sets-config-${props.slotEntry.id}`}
-                    size={{ xs: 12, sm: 2, }}>
+                    size={{ xs: 12, sm: 2 }}
+                    offset={props.isGrouped ? { sm: 4 } : undefined}>
                     {getConfigComponent('sets', props.slotEntry.nrOfSetsConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
                 <Grid
@@ -134,7 +137,8 @@ export const SlotEntryDetails = (props: {
             // Show all config details in advanced mode, also in a grid
             : <React.Fragment>
 
-                <Grid size={{ xs: 6, sm: 1 }}>
+                <Grid size={{ xs: 6, sm: 1 }}
+                      offset={props.isGrouped ? { sm: 4 } : undefined}>
                     {getConfigComponent('sets', props.slotEntry.nrOfSetsConfigs, props.routineId, props.slotEntry.id!)}
                 </Grid>
                 <Grid size={{ xs: 6, sm: 1 }}>
@@ -187,37 +191,36 @@ export const SlotEntryDetails = (props: {
 
     return (
         (<React.Fragment>
-            <Grid container paddingTop={1} spacing={1}>
-                <Grid size={{ xs: 3, sm: 1 }} alignContent={"center"}>
-                    {/*<IconButton size={"small"} onClick={toggleEditExercise} disabled={true}>*/}
-                    {/*    <DragHandle />*/}
-                    {/*</IconButton>*/}
-                    <IconButton size={"small"} onClick={toggleEditExercise} disabled={isPending}>
-                        {editExercise ? <EditOffIcon /> : <EditIcon />}
-                    </IconButton>
-                    <IconButton
-                        size={"small"}
-                        onClick={() => deleteSlotEntryQuery.mutate(props.slotEntry.id!)}
-                        disabled={isPending}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
-                </Grid>
+            <Grid container sx={{ paddingTop: 1 }} spacing={1}>
+                {!props.isGrouped && <>
+                    <Grid size={{ xs: 3, sm: 1 }} sx={{ alignContent: "center" }}>
+                        <IconButton size={"small"} onClick={toggleEditExercise} disabled={isPending}>
+                            {editExercise ? <EditOffIcon /> : <EditIcon />}
+                        </IconButton>
+                        <IconButton
+                            size={"small"}
+                            onClick={() => deleteSlotEntryQuery.mutate(props.slotEntry.id!)}
+                            disabled={isPending}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </Grid>
 
-                <Grid size={{ xs: 9, sm: 3 }} alignContent={"center"}>
-                    <Typography variant={"body1"}>
-                        {counter} {props.slotEntry.exercise?.getTranslation(language).name}
-                    </Typography>
-                </Grid>
+                    <Grid size={{ xs: 9, sm: 3 }} sx={{ alignContent: "center" }}>
+                        <Typography variant={"body1"}>
+                            {counter} {props.slotEntry.exercise?.getTranslation(language).name}
+                        </Typography>
+                    </Grid>
 
-                {editExercise
-                    && <React.Fragment>
-                        <Grid size={{ xs: 12, sm: 8 }}>
-                            <NameAutocompleter callback={handleExerciseChange} />
-                        </Grid>
-                        <Grid size={{ xs: 12, sm: 4 }} />
-                    </React.Fragment>
-                }
+                    {editExercise
+                        && <React.Fragment>
+                            <Grid size={{ xs: 12, sm: 8 }}>
+                                <NameAutocompleter callback={handleExerciseChange} />
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 4 }} />
+                        </React.Fragment>
+                    }
+                </>}
 
                 {props.slotEntry.hasProgressionRules
                     ? <Grid size={8}>

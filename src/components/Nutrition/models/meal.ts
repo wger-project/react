@@ -1,9 +1,9 @@
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { MealItem } from "components/Nutrition/models/mealItem";
-import { PSEUDO_MEAL_ID } from "components/Nutrition/models/nutritionalPlan";
-import { Adapter } from "utils/Adapter";
-import { dateTimeToHHMM, dateTimeToLocaleHHMM, HHMMToDateTime, isSameDay } from "utils/date";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
+import { PSEUDO_MEAL_ID } from "@/components/Nutrition/models/nutritionalPlan";
+import { Adapter } from "@/utils/Adapter";
+import { dateTimeToHHMM, dateTimeToLocaleHHMM, HHMMToDateTime, isSameDay } from "@/utils/date";
 
 export interface ApiMealType {
     id: number,

@@ -1,10 +1,10 @@
 import PhotoIcon from "@mui/icons-material/Photo";
 import { Avatar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { MealItem } from "components/Nutrition/models/mealItem";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { useTranslation } from "react-i18next";
-import { numberGramLocale, numberLocale } from "utils/numbers";
+import { numberGramLocale, numberLocale } from "@/utils/numbers";
 
 const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
     const [t, i18n] = useTranslation();

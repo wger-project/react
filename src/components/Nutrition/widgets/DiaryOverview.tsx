@@ -1,12 +1,12 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { GroupedDiaryEntries } from "components/Nutrition/models/nutritionalPlan";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
+import { GroupedDiaryEntries } from "@/components/Nutrition/models/nutritionalPlan";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { dateToLocale } from "utils/date";
-import { numberLocale } from "utils/numbers";
-import { makeLink, WgerLink } from "utils/url";
+import { dateToLocale } from "@/utils/date";
+import { numberLocale } from "@/utils/numbers";
+import { makeLink, WgerLink } from "@/utils/url";
 
 export const DiaryOverview = (props: {
     planId: number,

@@ -14,12 +14,12 @@ import {
     Typography
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { ExerciseDeleteDialog } from "components/Exercises/Detail/Head/ExerciseDeleteDialog";
-import { Exercise } from 'components/Exercises/models/exercise';
-import { Language } from 'components/Exercises/models/language';
-import { usePermissionQuery } from "components/User/queries/permission";
-import { useProfileQuery } from "components/User/queries/profile";
-import { WgerPermissions } from "permissions";
+import { ExerciseDeleteDialog } from "@/components/Exercises/Detail/Head/ExerciseDeleteDialog";
+import { Exercise } from '@/components/Exercises/models/exercise';
+import { Language } from '@/components/Exercises/models/language';
+import { usePermissionQuery } from "@/components/User/queries/permission";
+import { useProfileQuery } from "@/components/User/queries/profile";
+import { WgerPermissions } from "@/permissions";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
@@ -132,7 +132,7 @@ export const Head = ({
                         </div>
                     </div>
                     <div className={styles.header}>
-                        <Typography gutterBottom variant="h2" margin={0} sx={{ mt: 2 }}>
+                        <Typography gutterBottom variant="h2" sx={{ margin: 0, mt: 2 }}>
                             {exercise.getTranslation(language)?.name}
                         </Typography>
                         {!userIsAnonymous &&
@@ -155,7 +155,7 @@ export const Head = ({
                             </nav>
                         }
                     </div>
-                    <Stack direction="row" spacing={1} mt={2}>
+                    <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
                         <Chip
                             label={exercise.category.translatedName}
                             size="small" />

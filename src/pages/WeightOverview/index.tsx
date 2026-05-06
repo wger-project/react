@@ -1,4 +1,4 @@
-import { BodyWeight } from "components/BodyWeight";
+import { BodyWeight } from "@/components/BodyWeight";
 import React from 'react';
 
 export const WeightOverview = () => {

@@ -2,17 +2,17 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TodayIcon from "@mui/icons-material/Today";
 import { Button, Collapse, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { EmptyCard } from "components/Dashboard/EmptyCard";
-import { getDayName } from "components/WorkoutRoutines/models/Day";
-import { Routine } from "components/WorkoutRoutines/models/Routine";
-import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
-import { useActiveRoutineQuery } from "components/WorkoutRoutines/queries";
-import { SetConfigDataDetails } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { EmptyCard } from "@/components/Dashboard/EmptyCard";
+import { getDayName } from "@/components/WorkoutRoutines/models/Day";
+import { Routine } from "@/components/WorkoutRoutines/models/Routine";
+import { RoutineDayData } from "@/components/WorkoutRoutines/models/RoutineDayData";
+import { useActiveRoutineQuery } from "@/components/WorkoutRoutines/queries";
+import { SetConfigDataDetails } from "@/components/WorkoutRoutines/widgets/RoutineDetailsCard";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { isSameDay } from "utils/date";
-import { makeLink, WgerLink } from "utils/url";
+import { isSameDay } from "@/utils/date";
+import { makeLink, WgerLink } from "@/utils/url";
 import { DashboardCard } from "./DashboardCard";
 
 export const RoutineCard = () => {
@@ -44,7 +44,7 @@ const RoutineCardContent = (props: { routine: Routine }) => {
             }
         >
             <List>
-                {props.routine.dayDataCurrentIterationNoNulls.map((dayData) => (
+                {props.routine.dayDataCurrentIterationFiltered.map((dayData) => (
                     <DayListItem dayData={dayData} key={`dayDetails-${dayData.date.toISOString()}`} />
                 ))}
             </List>

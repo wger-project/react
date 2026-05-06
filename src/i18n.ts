@@ -1,8 +1,8 @@
-import { IS_PROD } from "config";
+import { IS_PROD } from "@/config";
 import i18n from "i18next";
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
-import common from "locales/en/translation.json";
+import common from "@/locales/en/translation.json";
 import { initReactI18next } from "react-i18next";
 
 export const resources = {
@@ -41,16 +41,27 @@ i18n
         },
 
         // During development the translation files are served from
-        // locales/<lang>/<ns>.json but when copied over to the django site
-        // (i.e.) production, the path is /static/react/locales/<lang>/<ns>.json
+        // locales/<lang>/<ns>.json. In production they are served by Django
+        // with hashed filenames (translation.<hash>.json); the Django template
+        // injects a `window.WGER_I18N_PATHS` mapping built from the staticfiles
+        // manifest so we can request the cache-busted URL directly.
         //
-        // To match the file name convention from weblate, we replace '-' with '_'
+        // To match the file name convention from weblate, we replace '-' with '_'.
         backend: {
             loadPath: (lng: string[], ns: string[]) => {
                 const lang = lng[0].replace('-', '_');
-                return IS_PROD
-                    ? `/static/node/@wger-project/react-components/build/locales/${lang}/${ns}.json`
-                    : `/locales/${lang}/${ns}.json`;
+
+                // Prod
+                if (IS_PROD) {
+                    const injected = (window as unknown as {
+                        WGER_I18N_PATHS?: Record<string, string>
+                    }).WGER_I18N_PATHS;
+                    return injected?.[lang]
+                        ?? `/static/node/@wger-project/react-components/build/locales/${lang}/${ns}.json`;
+                }
+
+                // Dev
+                return `/locales/${lang}/${ns}.json`;
             }
         },
 

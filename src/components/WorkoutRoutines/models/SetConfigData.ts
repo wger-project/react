@@ -1,7 +1,7 @@
-import { Exercise } from "components/Exercises/models/exercise";
-import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
-import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
-import { Adapter } from "utils/Adapter";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { RepetitionUnit } from "@/components/WorkoutRoutines/models/RepetitionUnit";
+import { WeightUnit } from "@/components/WorkoutRoutines/models/WeightUnit";
+import { Adapter } from "@/utils/Adapter";
 
 export type SetType = "normal" | "dropset" | "myo" | "partial" | "forced" | "tut" | "iso" | "jump";
 

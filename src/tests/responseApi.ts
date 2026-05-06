@@ -1,34 +1,36 @@
-import { Alias } from "components/Exercises/models/alias";
-import { Category } from "components/Exercises/models/category";
-import { Equipment } from "components/Exercises/models/equipment";
-import { Exercise } from "components/Exercises/models/exercise";
-import { ExerciseImage } from "components/Exercises/models/image";
-import { Muscle } from "components/Exercises/models/muscle";
-import { Note } from "components/Exercises/models/note";
-import { Translation } from "components/Exercises/models/translation";
-import { ExerciseVideo } from "components/Exercises/models/video";
+import { Alias } from "@/components/Exercises/models/alias";
+import { Category } from "@/components/Exercises/models/category";
+import { Equipment } from "@/components/Exercises/models/equipment";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { ExerciseImage } from "@/components/Exercises/models/image";
+import { Muscle } from "@/components/Exercises/models/muscle";
+import { Note } from "@/components/Exercises/models/note";
+import { Translation } from "@/components/Exercises/models/translation";
+import { ExerciseVideo } from "@/components/Exercises/models/video";
 
-const testExerciseTranslation1 = new Translation(
-    111,
-    '583281c7-2362-48e7-95d5-8fd6c455e0fb',
-    'Squats',
-    'Do a squat',
-    2,
-    [
-        new Note(133, 174, 'do the exercise correctly'),
+const testExerciseTranslation1 = new Translation({
+    id: 111,
+    uuid: '583281c7-2362-48e7-95d5-8fd6c455e0fb',
+    name: 'Squats',
+    description: 'Do a squat',
+    descriptionSource: 'Do a squat',
+    language: 2,
+    notes: [
+        new Note(133, 111, 'do the exercise correctly'),
     ],
-    [
+    aliases: [
         new Alias(1, '9a05bdba-e977-4fb1-8fca-2ff2c016c59d', 'test 123'),
         new Alias(2, 'de49093a-a9e9-4fe0-b4f9-6ce7e98c2c40', 'another name'),
-    ]
-);
-const testExerciseTranslation2 = new Translation(
-    9,
-    'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
-    'Kniebeuge',
-    'Kniebeuge machen',
-    1
-);
+    ],
+});
+const testExerciseTranslation2 = new Translation({
+    id: 9,
+    uuid: 'dae6f6ed-9408-4e62-a59a-1a33f4e8ab36',
+    name: 'Kniebeuge',
+    description: 'Kniebeuge machen',
+    descriptionSource: 'Kniebeuge machen',
+    language: 1,
+});
 const category = new Category(10, "Abs");
 const equipment1 = new Equipment(10, "Kettlebell");
 const equipment2 = new Equipment(1, "Test 123");
@@ -38,7 +40,13 @@ const image = new ExerciseImage(
     7,
     "2fe5f04b-5c9d-448c-a973-3fad6ddd4f74",
     "http://localhost:8000/media/exercise-images/9/2fe5f04b-5c9d-448c-a973-3fad6ddd4f74.jpg",
-    true
+    true, 
+    "image",
+    "Test user",
+    "https://author-url.com",
+    "https://object-url.com",
+    "https://derivative-source-url.com",
+    4
 );
 
 export const testApiExercise1 = new Exercise({
@@ -50,7 +58,7 @@ export const testApiExercise1 = new Exercise({
     muscles: [muscle1],
     musclesSecondary: [muscle2],
     images: [image],
-    variationId: 228,
+    variationGroup: '4e1bb2fc-3b0e-4a1a-bd3e-3728a0e6d8a7',
     translations: [
         testExerciseTranslation1,
         testExerciseTranslation2
@@ -129,7 +137,12 @@ export const responseApiExerciseInfo = {
             "image": "http://localhost:8000/media/exercise-images/9/2fe5f04b-5c9d-448c-a973-3fad6ddd4f74.jpg",
             "is_main": true,
             "status": "2",
-            "style": "4"
+            "style": 4,
+            "license_title": "image",
+            "license_object_url": "https://object-url.com",
+            "license_author": "Test user",
+            "license_author_url": "https://author-url.com",
+            "license_derivative_source_url": "https://derivative-source-url.com"
         }],
         "videos": [
             {
@@ -149,13 +162,14 @@ export const responseApiExerciseInfo = {
                 "license_author": null
             }
         ],
-        "variations": 228,
+        "variation_group": "4e1bb2fc-3b0e-4a1a-bd3e-3728a0e6d8a7",
         "translations": [
             {
                 "id": 111,
                 "uuid": "583281c7-2362-48e7-95d5-8fd6c455e0fb",
                 "name": "Squats",
                 "description": "Do a squat",
+                "description_source": "Do a squat",
                 "creation_date": "2022-10-22",
                 "language": 2,
                 "license": 2,
@@ -175,7 +189,7 @@ export const responseApiExerciseInfo = {
                 "notes": [
                     {
                         "id": 133,
-                        "exercise": 174,
+                        "translation": 111,
                         "comment": "do the exercise correctly"
                     }
                 ]
@@ -185,6 +199,7 @@ export const responseApiExerciseInfo = {
                 "uuid": "dae6f6ed-9408-4e62-a59a-1a33f4e8ab36",
                 "name": "Kniebeuge",
                 "description": "Kniebeuge machen",
+                "description_source": "Kniebeuge machen",
                 "creation_date": "2022-01-01",
                 "language": 1,
                 "license": 2,

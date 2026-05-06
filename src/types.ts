@@ -1,5 +1,5 @@
 import { AlertColor } from "@mui/material";
-import { ApiIngredientThumbnailType } from "components/Nutrition/models/IngredientImageThumbnails";
+import { ApiIngredientThumbnailType } from "@/components/Nutrition/models/IngredientImageThumbnails";
 
 export interface ApiBodyWeightType {
     id: number,
@@ -54,6 +54,9 @@ export interface ApiMeasurementCategoryType {
     unit: string
 }
 
+export const NUTRI_SCORES = ['a', 'b', 'c', 'd', 'e'] as const;
+export type NutriScoreValue = typeof NUTRI_SCORES[number];
+
 export interface ApiIngredientType {
     id: number,
     uuid: string,
@@ -74,8 +77,12 @@ export interface ApiIngredientType {
         url: string
     },
     license_author: string,
+    is_vegan: boolean | null,
+    is_vegetarian: boolean | null,
+    nutriscore: NutriScoreValue | null,
     image: ApiIngredientImageType | null,
     thumbnails: ApiIngredientThumbnailType | null,
+    weight_units: ApiIngredientWeightUnitType[],
 }
 
 export type ApiIngredientImageType = {
@@ -100,10 +107,9 @@ export type ApiIngredientImageType = {
 
 export type ApiIngredientWeightUnitType = {
     id: number,
-    amount: string,
     ingredient: number,
     gram: number,
-    unit: number
+    name: string,
 }
 
 export interface ApiNutritionalPlanType {

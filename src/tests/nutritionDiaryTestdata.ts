@@ -1,5 +1,5 @@
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_3, TEST_INGREDIENT_4 } from "tests/ingredientTestdata";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_3, TEST_INGREDIENT_4 } from "@/tests/ingredientTestdata";
 
 
 export const TEST_DIARY_ENTRY_1 = new DiaryEntry({

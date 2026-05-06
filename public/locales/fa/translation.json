@@ -123,5 +123,12 @@
     "alsoSearchEnglish": "همچنین اسامی را به انگلیسی هم جستجو کنید",
     "filters": "فیلتر ها",
     "private": "خصوصی",
-    "public": "عمومی"
+    "public": "عمومی",
+    "dashboard": {
+        "resetLayout": "تغییر به حالت اولیه"
+    },
+    "core": {
+        "exitEditMode": "خروج از حالت ویرایش",
+        "customize": "شخصی‌سازی"
+    }
 }

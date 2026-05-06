@@ -1,18 +1,18 @@
 import { Box, Divider, Stack, Typography, useTheme } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
-import { useProfileQuery } from "components/User/queries/profile";
-import { RoutineTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
-import { DayDetails, DayDragAndDropGrid } from "components/WorkoutRoutines/widgets/DayDetails";
-import { RoutineForm } from "components/WorkoutRoutines/widgets/forms/RoutineForm";
-import { RoutineTemplateForm } from "components/WorkoutRoutines/widgets/forms/RoutineTemplateForm";
-import { RoutineDetailsCard } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
+import { useProfileQuery } from "@/components/User/queries/profile";
+import { RoutineTable } from "@/components/WorkoutRoutines/Detail/RoutineDetailsTable";
+import { useRoutineDetailQuery } from "@/components/WorkoutRoutines/queries";
+import { DayDetails, DayDragAndDropGrid } from "@/components/WorkoutRoutines/widgets/DayDetails";
+import { RoutineForm } from "@/components/WorkoutRoutines/widgets/forms/RoutineForm";
+import { RoutineTemplateForm } from "@/components/WorkoutRoutines/widgets/forms/RoutineTemplateForm";
+import { RoutineDetailsCard } from "@/components/WorkoutRoutines/widgets/RoutineDetailsCard";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { makeLink, WgerLink } from "utils/url";
+import { makeLink, WgerLink } from "@/utils/url";
 
 export const RoutineEdit = () => {
 
@@ -50,12 +50,12 @@ export const RoutineEdit = () => {
                 <RoutineForm existingRoutine={routine} />
             </Grid>
             {routine.isTemplate && <Grid size={4}>
-                <Box height={20} />
+                <Box sx={{ height: 20 }} />
                 <RoutineTemplateForm routine={routine} />
             </Grid>}
 
             <Grid size={12}>
-                <Box height={20} />
+                <Box sx={{ height: 20 }} />
                 <DayDragAndDropGrid
                     routineId={routineId}
                     selectedDayIndex={selectedDayIndex}
@@ -77,7 +77,7 @@ export const RoutineEdit = () => {
 
 
         {routineQuery.data!.days.length > 0 && <Stack spacing={2} sx={{ mt: 2 }}>
-            <Box height={40} />
+            <Box sx={{ height: 40 }} />
             <Typography variant={"h4"}>
                 {t('routines.resultingRoutine')}
             </Typography>
@@ -85,7 +85,7 @@ export const RoutineEdit = () => {
 
             <Box>
                 <RoutineDetailsCard />
-                <Box height={20} />
+                <Box sx={{ height: 20 }} />
                 <RoutineTable routine={routineQuery.data!} />
             </Box>
         </Stack>}

@@ -1,10 +1,22 @@
 import axios from 'axios';
-import { Ingredient } from "components/Nutrition/models/Ingredient";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { memoize } from "lodash";
-import { ApiIngredientType } from 'types';
-import { API_RESULTS_PAGE_SIZE, ApiPath, LANGUAGE_SHORT_ENGLISH } from "utils/consts";
-import { fetchPaginated } from "utils/requests";
-import { makeHeader, makeUrl } from "utils/url";
+import { ApiIngredientType, NutriScoreValue } from '@/types';
+import { API_RESULTS_PAGE_SIZE, ApiPath, LANGUAGE_SHORT_ENGLISH } from "@/utils/consts";
+import { fetchPaginated } from "@/utils/requests";
+import { makeHeader, makeUrl } from "@/utils/url";
+import { SearchLanguageFilter } from '@/components/Core/Widgets/SearchLanguageFilter';
+
+export type IngredientLanguageFilter = SearchLanguageFilter;
+
+export interface IngredientSearchFilters {
+    languageCode: string;
+    languageFilter?: IngredientLanguageFilter;
+    isVegan?: boolean;
+    isVegetarian?: boolean;
+    /** Worst acceptable Nutri-Score grade; sent as `nutriscore__lte`. */
+    nutriscoreMax?: NutriScoreValue;
+}
 
 
 /*
@@ -43,28 +55,42 @@ export const getIngredients = async (ids: number[]): Promise<Ingredient[]> => {
 };
 
 
-export const searchIngredient = async (name: string, languageCode: string, searchEnglish: boolean = true): Promise<Ingredient[]> => {
-    // TODO: this currently only converts the results from the new API to the old format
-    //       but this should be properly converted.
-    //       See also https://github.com/wger-project/wger/pull/1724
+export const searchIngredient = async (
+    name: string,
+    filters: IngredientSearchFilters,
+): Promise<Ingredient[]> => {
+    const {
+        languageCode,
+        languageFilter = "current_english",
+        isVegan,
+        isVegetarian,
+        nutriscoreMax,
+    } = filters;
 
-
-    const languages = [languageCode];
-    if (languageCode !== LANGUAGE_SHORT_ENGLISH && searchEnglish) {
+    const languages = languageFilter === "all" ? null : [languageCode];
+    if (languages && languageFilter === "current_english" && languageCode !== LANGUAGE_SHORT_ENGLISH) {
         languages.push(LANGUAGE_SHORT_ENGLISH);
     }
 
-    const url = makeUrl(
-        ApiPath.INGREDIENTINFO_PATH,
-        {
-            query: {
-                'name__search': name,
-                'language__code': languages.join(','),
-                'limit': API_RESULTS_PAGE_SIZE,
-            }
-        }
-    );
+    const query: Record<string, string | number> = {
+        'name__search': name,
+        'limit': API_RESULTS_PAGE_SIZE,
+    };
+    if (languages) {
+        query['language__code'] = languages.join(',');
+    }
+    if (isVegan !== undefined) {
+        query['is_vegan'] = String(isVegan);
+    }
+    if (isVegetarian !== undefined) {
+        query['is_vegetarian'] = String(isVegetarian);
+    }
+    if (nutriscoreMax !== undefined) {
+        query['nutriscore__lte'] = nutriscoreMax;
+    }
 
-    const { data } = await axios.get(url);
+    const url = makeUrl(ApiPath.INGREDIENTINFO_PATH, { query });
+
+    const { data } = await axios.get(url, { headers: makeHeader() },);
     return data.results.map((entry: ApiIngredientType) => Ingredient.fromJson(entry));
 };

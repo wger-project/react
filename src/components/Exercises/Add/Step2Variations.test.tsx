@@ -1,20 +1,21 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Step2Variations } from "components/Exercises/Add/Step2Variations";
+import { Step2Variations } from "@/components/Exercises/Add/Step2Variations";
 
-import { useExercisesQuery } from "components/Exercises/queries";
+import { useExercisesQuery } from "@/components/Exercises/queries";
 import React from "react";
-import { ExerciseSubmissionStateProvider } from "state";
-import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls } from "tests/exerciseTestdata";
+import { ExerciseSubmissionStateProvider } from "@/state";
+import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls } from "@/tests/exerciseTestdata";
+import type { Mock } from 'vitest';
 
-jest.mock('components/Exercises/queries');
-
-
-const mockedUseExercisesQuery = useExercisesQuery as jest.Mock;
+vi.mock('@/components/Exercises/queries');
 
 
-const mockOnContinue = jest.fn();
+const mockedUseExercisesQuery = useExercisesQuery as Mock;
+
+
+const mockOnContinue = vi.fn();
 const queryClient = new QueryClient();
 
 describe("Test the add exercise step 2 component", () => {
@@ -33,7 +34,7 @@ describe("Test the add exercise step 2 component", () => {
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test("Renders without crashing", () => {

@@ -1,4 +1,4 @@
-import { Slot } from "components/WorkoutRoutines/models/Slot";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
 
 describe('Slot model tests', () => {
 

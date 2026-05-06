@@ -1,17 +1,28 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Note } from "@/components/Exercises/models/note";
 import {
+    addNote,
     addTranslation,
+    deleteAlias,
+    deleteNote,
+    editNote,
     editTranslation,
     getCategories,
     getEquipment,
     getLanguages,
     getMuscles,
+    postAlias,
     postExerciseImage,
-} from "services";
-import { AddTranslationParams, EditTranslationParams } from "services/exerciseTranslation";
-import { deleteExerciseImage, PostExerciseImageParams } from "services/image";
-import { deleteExerciseVideo, postExerciseVideo, PostExerciseVideoParams } from "services/video";
-import { QueryKey } from "utils/consts";
+} from "@/services";
+import { AddTranslationParams, EditTranslationParams } from "@/services/exerciseTranslation";
+import {
+    deleteExerciseImage,
+    patchExerciseImage,
+    PatchExerciseImageParams,
+    PostExerciseImageParams
+} from "@/services/image";
+import { deleteExerciseVideo, postExerciseVideo, PostExerciseVideoParams } from "@/services/video";
+import { QueryKey } from "@/utils/consts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export { useExercisesQuery, useExerciseQuery, useAddExerciseFullQuery } from "./exercises";
 
@@ -56,6 +67,53 @@ export function useAddExerciseImageQuery(exerciseId: number) {
 
     return useMutation({
         mutationFn: (data: PostExerciseImageParams) => postExerciseImage(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        },
+    });
+}
+
+export function useEditExerciseImageQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: PatchExerciseImageParams) => patchExerciseImage(data),
+        onSuccess: () => {
+            // Invalidate the cache so the UI shows the updated title/author immediately
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        }
+    });
+}
+
+/**
+ * A query hook to add a new alias to a translation. Invalidates the parent
+ * exercise queries on success so that newly added aliases are reflected in
+ * the cached exercise data.
+ */
+export function usePostAliasQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ translationId, alias }: { translationId: number; alias: string }) =>
+            postAlias(translationId, alias),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        },
+    });
+}
+
+/**
+ * A query hook to delete an existing alias. Invalidates the parent exercise
+ * queries on success.
+ */
+export function useDeleteAliasQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (aliasId: number) => deleteAlias(aliasId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
@@ -125,9 +183,38 @@ export function useLanguageQuery() {
     });
 }
 
-export function useNotesQuery(translationId: number) {
-    return useQuery({
-        queryKey: [QueryKey.LANGUAGES, translationId],
-        queryFn: getLanguages,
+export function useAddNoteQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (note: Note) => addNote(note),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        },
+    });
+}
+
+export function useEditNoteQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (note: Note) => editNote(note),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        },
+    });
+}
+
+export function useDeleteNoteQuery(exerciseId: number) {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (id: number) => deleteNote(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
+        },
     });
 }

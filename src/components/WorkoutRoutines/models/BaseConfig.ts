@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 
-import { Adapter } from "utils/Adapter";
+import { Adapter } from "@/utils/Adapter";
 
 export interface BaseConfigEntryForm {
     // This value is only used to change the conditional validation.

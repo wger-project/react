@@ -1,13 +1,13 @@
-import { DEFAULT_WORKOUT_DURATION, Routine } from "components/WorkoutRoutines/models/Routine";
+import { DEFAULT_WORKOUT_DURATION, Routine } from "@/components/WorkoutRoutines/models/Routine";
 import { DateTime } from "luxon";
 import {
     testMuscleBiggus,
     testMuscleDacttilaris,
     testMuscleDeltoid,
     testMuscleRectusAbdominis
-} from "tests/exerciseTestdata";
-import { testRoutine1, testRoutineDayData1 } from "tests/workoutRoutinesTestData";
-import { isSameDay } from "utils/date";
+} from "@/tests/exerciseTestdata";
+import { testRoutine1, testRoutineDayData1 } from "@/tests/workoutRoutinesTestData";
+import { isSameDay } from "@/utils/date";
 
 describe('Routine model tests', () => {
 
@@ -109,5 +109,22 @@ describe('Routine model tests', () => {
 
         // Assert
         expect(routine.dayDataCurrentIteration).toEqual(testRoutineDayData1);
+    });
+
+    test('correctly filters out null days', () => {
+
+        // Arrange
+        routine.dayData = [
+            ...testRoutineDayData1,
+            ...testRoutineDayData1,
+            ...testRoutineDayData1,
+        ];
+        routine.dayData[0].date = new Date('2026-01-01');
+        routine.dayData[1].date = new Date('2026-01-02');
+        routine.dayData[2].date = new Date('2026-01-03');
+
+        // Assert
+        expect(routine.dayDataCurrentIteration.length).toEqual(3);
+        expect(routine.dayDataCurrentIterationFiltered).toEqual(testRoutineDayData1);
     });
 });

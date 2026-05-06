@@ -5,14 +5,14 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Button, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, TextField } from "@mui/material";
-import { LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
+import { LoadingProgressIcon } from "@/components/Core/LoadingWidget/LoadingWidget";
 import {
     BaseConfig,
     OPERATION_REPLACE,
     REQUIREMENTS_VALUES,
     RequirementsType,
     RIR_VALUES_SELECT
-} from "components/WorkoutRoutines/models/BaseConfig";
+} from "@/components/WorkoutRoutines/models/BaseConfig";
 import {
     useAddMaxRepsConfigQuery,
     useAddMaxRestConfigQuery,
@@ -41,16 +41,16 @@ import {
     useEditRestConfigQuery,
     useEditRiRConfigQuery,
     useEditWeightConfigQuery
-} from "components/WorkoutRoutines/queries";
+} from "@/components/WorkoutRoutines/queries";
 import {
     useAddMaxNrOfSetsConfigQuery,
     useEditMaxNrOfSetsConfigQuery
-} from "components/WorkoutRoutines/queries/configs";
+} from "@/components/WorkoutRoutines/queries/configs";
 import { useFormikContext } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DEBOUNCE_ROUTINE_FORMS } from "utils/consts";
-import { errorsToString } from "utils/forms";
+import { DEBOUNCE_ROUTINE_FORMS } from "@/utils/consts";
+import { errorsToString } from "@/utils/forms";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const QUERY_MAP: { [key: string]: any } = {
@@ -218,10 +218,8 @@ export const SlotBaseConfigValueField = (props: {
     return (
         <TextField
             slotProps={{
-                input: { endAdornment: isPending && <LoadingProgressIcon /> }
-            }}
-            inputProps={{
-                "data-testid": `${props.type}-field`,
+                input: { endAdornment: isPending && <LoadingProgressIcon /> },
+                htmlInput: { "data-testid": `${props.type}-field` },
             }}
             label={title}
             value={value}

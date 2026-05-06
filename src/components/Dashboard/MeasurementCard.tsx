@@ -5,18 +5,18 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { DashboardCard } from "components/Dashboard/DashboardCard";
-import { EmptyCard } from "components/Dashboard/EmptyCard";
-import { MeasurementCategory } from "components/Measurements/models/Category";
-import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
-import { CategoryForm } from "components/Measurements/widgets/CategoryForm";
-import { MeasurementChart } from "components/Measurements/widgets/MeasurementChart";
-import i18n from "i18n";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { DashboardCard } from "@/components/Dashboard/DashboardCard";
+import { EmptyCard } from "@/components/Dashboard/EmptyCard";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
+import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
+import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
+import i18n from "@/i18n";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import Slider, { Settings } from "react-slick";
-import { makeLink, WgerLink } from "utils/url";
+import { makeLink, WgerLink } from "@/utils/url";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -39,6 +39,12 @@ export const MeasurementCard = () => {
 
 const MeasurementCardContent = (props: { categories: MeasurementCategory[] }) => {
     const { t } = useTranslation();
+
+    // TODO: is there a better solution for this?
+    // Workaround for react-slick import issue where it returns a module object
+    // instead of the component
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SlickSlider = (Slider as any).default ?? Slider;
 
     const settings: Settings = {
         dots: true,
@@ -64,9 +70,9 @@ const MeasurementCardContent = (props: { categories: MeasurementCategory[] }) =>
             }
         >
             <div className="slider-container">
-                <Slider {...settings}>
+                <SlickSlider {...settings}>
                     {props.categories.map(c => <MeasurementCardTableContent category={c} />)}
-                </Slider>
+                </SlickSlider>
             </div>
         </DashboardCard>
     </>);

@@ -1,8 +1,8 @@
 import { Autocomplete, TextField } from "@mui/material";
-import { useMusclesQuery } from "components/Exercises/queries";
+import { useMusclesQuery } from "@/components/Exercises/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { editExercise } from "services";
+import { editExercise } from "@/services";
 
 export function EditExerciseMuscle(props: {
     exerciseId: number,

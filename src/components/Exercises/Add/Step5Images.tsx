@@ -1,46 +1,38 @@
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CollectionsIcon from '@mui/icons-material/Collections';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import InfoIcon from '@mui/icons-material/Info';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import {
-    Alert,
     Box,
     Button,
     IconButton,
     ImageListItem,
     ImageListItemBar,
-    Modal,
     Stack,
     Typography
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import ImageList from '@mui/material/ImageList';
-import { LicenseAuthor } from "components/Common/forms/LicenseAuthor";
-import { LicenseAuthorUrl } from "components/Common/forms/LicenseAuthorUrl";
-import { LicenseDerivativeSourceUrl } from "components/Common/forms/LicenseDerivativeSourceUrl";
-import { LicenseObjectUrl } from "components/Common/forms/LicenseObjectUrl";
-import { LicenseTitle } from "components/Common/forms/LicenseTitle";
-import { StepProps } from "components/Exercises/Add/AddExerciseStepper";
-import { ImageStyleToggle } from "components/Exercises/forms/ImageStyle";
-import { ImageFormData } from "components/Exercises/models/exercise";
-import { ImageStyle } from "components/Exercises/models/image";
-import { useProfileQuery } from "components/User/queries/profile";
-import { Form, Formik } from "formik";
+import { StepProps } from "@/components/Exercises/Add/AddExerciseStepper";
+import { ImageFormModal } from "@/components/Exercises/forms/ImageModal";
+import { ImageFormData } from "@/components/Exercises/models/exercise";
+import { ImageStyle } from "@/components/Exercises/models/image";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useExerciseSubmissionStateValue } from "state";
-import { setImages } from "state/exerciseSubmissionReducer";
+import { useExerciseSubmissionStateValue } from "@/state";
+import { setImages } from "@/state/exerciseSubmissionReducer";
 
 export const Step5Images = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
-    const profileQuery = useProfileQuery();
 
     const [state, dispatch] = useExerciseSubmissionStateValue();
     const [localImages, setLocalImages] = useState<ImageFormData[]>(state.images);
-    const [popupImage, setPopupImage] = useState<ImageFormData | undefined>(undefined);
+    const [selectedImage, setSelectedImage] = useState<ImageFormData | null>(null);
 
-    const [openModal, setOpenModal] = React.useState(false);
-    const handleCloseModal = () => setOpenModal(false);
+    const [openModal, setOpenModal] = useState(false);
+    const handleCloseModal = () => {
+        setOpenModal(false);
+        setSelectedImage(null);
+    };
 
     useEffect(() => {
         dispatch(setImages(localImages));
@@ -50,43 +42,25 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
         if (!e.target.files?.length) {
             return;
         }
+
         const [uploadedFile] = e.target.files;
         const objectURL = URL.createObjectURL(uploadedFile);
 
-        setOpenModal(true);
-
-        setPopupImage({
+        setSelectedImage({
             url: objectURL,
             file: uploadedFile,
-
             author: "",
             authorUrl: "",
             title: "",
             derivativeSourceUrl: "",
             objectUrl: "",
-            style: ImageStyle.PHOTO.toString()
+            style: ImageStyle.PHOTO
         });
+        setOpenModal(true);
     };
 
-    const handleAddFullImage = (data: {
-        title: string,
-        objectUrl: string,
-        author: string,
-        authorUrl: string,
-        derivativeSourceUrl: string,
-        imageStyle: number
-    }) => {
-        setLocalImages(localImages.concat({
-            url: popupImage?.url!,
-            file: popupImage?.file!,
-
-            author: data.author,
-            authorUrl: data.authorUrl,
-            title: data.title,
-            derivativeSourceUrl: data.derivativeSourceUrl,
-            objectUrl: data.objectUrl,
-            style: data.imageStyle.toString()
-        }));
+    const handleAddFullImage = (data: ImageFormData) => {
+        setLocalImages(prevImages => prevImages.concat(data));
         handleCloseModal();
     };
 
@@ -99,94 +73,20 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
         onContinue!();
     };
 
-    const style = {
-        position: 'absolute' as const,
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 600,
-        bgcolor: 'background.paper',
-        //border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-    };
-
     return (
         (<div>
-            <Modal
+            <ImageFormModal
                 open={openModal}
                 onClose={handleCloseModal}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-
-                <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        {t('exercises.imageDetails')}
-                    </Typography>
-
-                    <Grid container spacing={2}>
-                        <Grid size={4}>
-                            {popupImage && <img
-                                style={{ width: "100%", }}
-                                src={popupImage.url}
-                                alt=""
-                                loading="lazy"
-                            />}
-                        </Grid>
-                        <Grid size={8}>
-                            <Formik
-                                initialValues={{
-                                    title: '',
-                                    objectUrl: '',
-                                    author: profileQuery.isSuccess ? profileQuery.data!.username : '',
-                                    authorUrl: '',
-                                    derivativeSourceUrl: '',
-                                    imageStyle: ImageStyle.PHOTO,
-                                }}
-                                onSubmit={values => {
-                                    console.log(values);
-                                    handleAddFullImage(values);
-                                }}
-                            >
-                                {formik => {
-                                    return (<Form>
-                                        <Stack spacing={2}>
-                                            <LicenseTitle fieldName={'title'} />
-                                            <LicenseObjectUrl fieldName={'objectUrl'} />
-                                            <LicenseAuthor fieldName={'author'} />
-                                            <LicenseAuthorUrl fieldName={'authorUrl'} />
-                                            <LicenseDerivativeSourceUrl fieldName={'derivativeSourceUrl'} />
-                                            <ImageStyleToggle fieldName={'imageStyle'} />
-                                            <Alert icon={<InfoIcon fontSize="inherit" />} severity="info">
-                                                By submitting this image, you agree to release it under the <a
-                                                href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank"
-                                                rel="noreferrer">CC
-                                                BY-SA 4.0</a> license. The image must be either your own work or the
-                                                author must have released in under
-                                                a license compatible with CC BY-SA 4.0.
-                                            </Alert>
-                                        </Stack>
-                                        <Stack direction="row" justifyContent="end"
-                                               sx={{ mt: 2 }}>
-
-                                            <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
-                                                {t('add')}
-                                            </Button>
-
-                                        </Stack>
-                                    </Form>);
-                                }}
-                            </Formik>
-                        </Grid>
-                    </Grid>
-                </Box>
-            </Modal>
+                image={selectedImage}
+                onSubmit={handleAddFullImage}
+                submitLabel={t('add')}
+            />
             <Typography>
                 {t("exercises.compatibleImagesCC")}
 
             </Typography>
-            <Stack direction={"row"} justifyContent="center">
+            <Stack direction={"row"} sx={{ justifyContent: "center" }}>
                 <div>
                     <label htmlFor="camera-input">
                         <CameraAltIcon fontSize="large" sx={{ m: 2 }} />
@@ -216,7 +116,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
             </Stack>
             <ImageList
                 cols={3}
-                style={{ maxHeight: "400px", }}>
+                style={{ maxHeight: "400px" }}>
                 {localImages.map(imageEntry => (
                     <ImageListItem key={imageEntry.url}>
                         <img
@@ -244,7 +144,7 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
                 {t("forms.supportedImageFormats")}
             </Typography>
             <Grid container>
-                <Grid display="flex" justifyContent={"end"} size={12}>
+                <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
                     <Box sx={{ mb: 2 }}>
                         <>
                             <Button

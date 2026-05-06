@@ -1,7 +1,7 @@
-import { ImageFormData } from "components/Exercises/models/exercise";
+import { ImageFormData } from "@/components/Exercises/models/exercise";
 import React, { createContext, useContext, useReducer } from "react";
-import { exerciseSubmissionReducer } from "state/exerciseSubmissionReducer";
-import { SetExerciseSubmissionState } from "state/stateTypes";
+import { exerciseSubmissionReducer } from "@/state/exerciseSubmissionReducer";
+import { SetExerciseSubmissionState } from "@/state/stateTypes";
 
 export type ExerciseSubmissionAction = {
     type: SetExerciseSubmissionState,
@@ -24,7 +24,7 @@ export type ExerciseSubmissionState = {
     muscles: number[];
     musclesSecondary: number[];
     equipment: number[];
-    variationId: number | null;
+    variationGroup: string | null;
     newVariationExerciseId: number | null;
 
     images: ImageFormData[];
@@ -34,7 +34,7 @@ export const exerciseSubmissionInitialState: ExerciseSubmissionState = {
     category: null,
     muscles: [],
     musclesSecondary: [],
-    variationId: null,
+    variationGroup: null,
     newVariationExerciseId: null,
     languageId: null,
     equipment: [],

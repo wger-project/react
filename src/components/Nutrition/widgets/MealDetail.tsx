@@ -17,15 +17,15 @@ import {
     useTheme
 } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import { Meal } from "components/Nutrition/models/meal";
-import { MealItem } from "components/Nutrition/models/mealItem";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
 import {
     NutritionalValuesPlannedLoggedChart
-} from "components/Nutrition/widgets/charts/NutritionalValuesPlannedLoggedChart";
-import { MealItemForm } from "components/Nutrition/widgets/forms/MealItemForm";
-import { NutritionDiaryEntryForm } from "components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
-import { IngredientDetailTable } from "components/Nutrition/widgets/IngredientDetailTable";
-import { MealDetailDropdown } from "components/Nutrition/widgets/MealDetailDropdown";
+} from "@/components/Nutrition/widgets/charts/NutritionalValuesPlannedLoggedChart";
+import { MealItemForm } from "@/components/Nutrition/widgets/forms/MealItemForm";
+import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
+import { IngredientDetailTable } from "@/components/Nutrition/widgets/IngredientDetailTable";
+import { MealDetailDropdown } from "@/components/Nutrition/widgets/MealDetailDropdown";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 

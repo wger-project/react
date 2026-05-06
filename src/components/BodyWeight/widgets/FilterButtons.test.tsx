@@ -4,7 +4,7 @@ import React from 'react';
 import { FilterButtons, FilterType } from './FilterButtons';
 
 describe('FilterButtons Component', () => {
-    const onFilterChange = jest.fn();
+    const onFilterChange = vi.fn();
 
     const renderComponent = (currentFilter: FilterType) => {
         render(
@@ -30,7 +30,7 @@ describe('FilterButtons Component', () => {
     test('applies primary color and contained variant to the active filter button', () => {
         renderComponent('lastMonth');
         const activeButton = screen.getByText('lastMonth');
-        expect(activeButton).toHaveClass('MuiButton-containedPrimary');
+        expect(activeButton).toHaveClass('MuiButton-contained', 'MuiButton-colorPrimary');
     });
 
     test('calls onFilterChange with correct value when a button is clicked', () => {

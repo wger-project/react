@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
+    "rootDir": "./src",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
     "target": "es2022",
     "lib": [
       "dom",
@@ -8,7 +13,8 @@
       "esnext"
     ],
     "types": [
-      "vite/client"
+      "vite/client",
+      "vitest/globals"
     ],
     "allowJs": true,
     "skipLibCheck": true,

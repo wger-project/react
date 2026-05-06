@@ -19,6 +19,7 @@
 /build
 
 # misc
+/.claude/
 .DS_Store
 .env.local
 .env.development.local
@@ -32,4 +33,3 @@ yarn-error.log*
 # Configuration for the application
 /.env.development
 /.env
-

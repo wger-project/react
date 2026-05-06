@@ -26,6 +26,7 @@ export { getLanguages, getLanguageByShortName } from './language';
 export { postExerciseImage } from './image';
 export { updateWeight, createWeight } from './weight';
 export { postAlias, deleteAlias } from './alias';
+export { addNote, editNote, deleteNote } from './note';
 export { postExerciseVideo, deleteExerciseVideo } from './video';
 
 export {
@@ -50,6 +51,7 @@ export {
 } from './measurements';
 
 export { searchIngredient, getIngredient } from './ingredient';
+export type { IngredientLanguageFilter } from './ingredient';
 
 export { addMealItem, editMealItem, deleteMealItem } from './mealItem';
 export { getMealsForPlan, addMeal, editMeal, deleteMeal } from './meal';
@@ -101,4 +103,4 @@ export { getProfile, editProfile } from './profile';
 
 export { processBaseConfigs } from './base_config';
 
-export { checkLanguage } from 'services/languageCheck';
+export { checkLanguage } from '@/services/languageCheck';

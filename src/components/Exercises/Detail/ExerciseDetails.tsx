@@ -1,15 +1,15 @@
 import { Box, Container } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
-import { ExerciseDetailEdit } from "components/Exercises/Detail/ExerciseDetailEdit";
-import { ExerciseDetailView } from "components/Exercises/Detail/ExerciseDetailView";
-import { Language } from "components/Exercises/models/language";
-import { useLanguageQuery } from "components/Exercises/queries";
+import { LoadingWidget } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { ExerciseDetailEdit } from "@/components/Exercises/Detail/ExerciseDetailEdit";
+import { ExerciseDetailView } from "@/components/Exercises/Detail/ExerciseDetailView";
+import { Language } from "@/components/Exercises/models/language";
+import { useLanguageQuery } from "@/components/Exercises/queries";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { getExercise, getExercisesForVariation, getLanguageByShortName, } from "services";
-import { ENGLISH_LANGUAGE_OBJ, QUERY_EXERCISE_DETAIL, QUERY_EXERCISE_VARIATIONS, } from "utils/consts";
+import { getExercise, getExercisesForVariation, getLanguageByShortName, } from "@/services";
+import { ENGLISH_LANGUAGE_OBJ, QUERY_EXERCISE_DETAIL, QUERY_EXERCISE_VARIATIONS, } from "@/utils/consts";
 import { Head } from "./Head";
 
 export const PaddingBox = () => {
@@ -39,8 +39,8 @@ export const ExerciseDetails = () => {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const variationsQuery = useQuery({
-        queryKey: [QUERY_EXERCISE_VARIATIONS, exerciseQuery.data?.variationId],
-        queryFn: () => getExercisesForVariation(exerciseQuery.data?.variationId),
+        queryKey: [QUERY_EXERCISE_VARIATIONS, exerciseQuery.data?.variationGroup],
+        queryFn: () => getExercisesForVariation(exerciseQuery.data?.variationGroup),
         enabled: exerciseQuery.isSuccess
     });
 

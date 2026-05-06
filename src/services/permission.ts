@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { makeHeader, makeUrl } from "utils/url";
+import { makeHeader, makeUrl } from "@/utils/url";
 
 export const PERMISSION_PATH = 'check-permission';
 

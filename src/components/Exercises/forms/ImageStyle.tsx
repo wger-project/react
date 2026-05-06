@@ -6,7 +6,7 @@ import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { Stack, Typography } from "@mui/material";
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { ImageStyle } from "components/Exercises/models/image";
+import { ImageStyle } from "@/components/Exercises/models/image";
 import { useField } from "formik";
 import * as React from 'react';
 import { useTranslation } from "react-i18next";
@@ -14,17 +14,21 @@ import { useTranslation } from "react-i18next";
 export function ImageStyleToggle(props: { fieldName: string }) {
     const [t] = useTranslation();
 
-    const [style, setStyle] = React.useState<number | null>(ImageStyle.PHOTO);
-
-    const [, , helpers] = useField(props.fieldName);
-
+    const [field, , helpers] = useField(props.fieldName);
+    const selectedStyle = (field.value !== undefined && field.value !== null && field.value !== '')
+        ? Number(field.value)
+        : undefined;
+    const [style, setStyle] = React.useState<number | undefined>(selectedStyle);
 
     const handleAlignment = (
         event: React.MouseEvent<HTMLElement>,
         newStyle: number | null,
     ) => {
-        setStyle(newStyle);
+        if (newStyle === null) {
+          return;
+        }
         helpers.setValue(newStyle);
+        setStyle(newStyle);
     };
 
     return (
@@ -36,35 +40,35 @@ export function ImageStyleToggle(props: { fieldName: string }) {
             aria-label="text alignment"
         >
             <ToggleButton value={ImageStyle.PHOTO}>
-                <Stack justifyContent="center" alignItems="center">
+                <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
                     <PhotoCameraIcon />
                     <Typography variant="caption">{t('exercises.imageStylePhoto')}</Typography>
                 </Stack>
             </ToggleButton>
 
             <ToggleButton value={ImageStyle.THREE_D}>
-                <Stack justifyContent="center" alignItems="center">
+                <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
                     <LandscapeIcon />
                     <Typography variant="caption">{t('exercises.imageStyle3D')}</Typography>
                 </Stack>
             </ToggleButton>
 
             <ToggleButton value={ImageStyle.LINE_ART}>
-                <Stack justifyContent="center" alignItems="center">
+                <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
                     <LandscapeOutlinedIcon />
                     <Typography variant="caption">{t('exercises.imageStyleLine')}</Typography>
                 </Stack>
             </ToggleButton>
 
             <ToggleButton value={ImageStyle.LOW_POLY}>
-                <Stack justifyContent="center" alignItems="center">
+                <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
                     <LandscapeTwoToneIcon />
                     <Typography variant="caption">{t('exercises.imageStyleLowPoly')}</Typography>
                 </Stack>
             </ToggleButton>
 
             <ToggleButton value={ImageStyle.OTHER}>
-                <Stack justifyContent="center" alignItems="center">
+                <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
                     <MoreHorizIcon />
                     <Typography variant="caption">{t('exercises.imageStyleOther')}</Typography>
                 </Stack>

@@ -1,7 +1,7 @@
 import { Card, CardMedia } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { ExerciseImage } from "components/Exercises/models/image";
-import { ExerciseVideo } from "components/Exercises/models/video";
+import { ExerciseImage } from "@/components/Exercises/models/image";
+import { ExerciseVideo } from "@/components/Exercises/models/video";
 import React from 'react';
 
 type SideGalleryProps = {

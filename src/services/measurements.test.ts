@@ -1,9 +1,10 @@
 import axios from "axios";
-import { MeasurementCategory } from "components/Measurements/models/Category";
-import { MeasurementEntry } from "components/Measurements/models/Entry";
-import { getMeasurementCategories, getMeasurementCategory } from "services/measurements";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
+import { getMeasurementCategories, getMeasurementCategory } from "@/services/measurements";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 describe('measurement service tests', () => {
     const measurementEntryResponse = {
@@ -42,9 +43,9 @@ describe('measurement service tests', () => {
 
 
     beforeEach(() => {
-        jest.resetAllMocks();
+        vi.resetAllMocks();
 
-        (axios.get as jest.Mock).mockImplementation((url: string) => {
+        (axios.get as Mock).mockImplementation((url: string) => {
             if (url.includes("measurement-category")) {
                 return Promise.resolve({ data: measurementOverviewResponse });
             } else if (url.includes("measurement/?category=1")) {
@@ -86,7 +87,7 @@ describe('measurement service tests', () => {
 
     test('GET measurement category', async () => {
 
-        (axios.get as jest.Mock).mockImplementation((url: string) => {
+        (axios.get as Mock).mockImplementation((url: string) => {
             if (url.includes("measurement-category/1")) {
                 return Promise.resolve({ data: measurementDetailResponse });
             } else if (url.includes("measurement/?category=1")) {

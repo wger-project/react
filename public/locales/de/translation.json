@@ -65,7 +65,8 @@
         "imageStyleLowPoly": "Niedrig-Poly",
         "imageStyleOther": "andere",
         "imageDetails": "Bilddetails",
-        "swapExercise": "Übungen tauschen"
+        "swapExercise": "Übungen tauschen",
+        "exactMatch": "Exakte Übereinstimmung"
     },
     "noResults": "Keine Ergebnisse",
     "noResultsDescription": "Keine Ergebnisse für diese Suche gefunden, bitte reduziere die Anzahl der Filter.",
@@ -171,7 +172,7 @@
         "maxLengthRoutine": "Die Routine darf maximal {{number}} Wochen lang sein",
         "resultingRoutine": "Resultierende Routine",
         "deleteDayConfirmation": "Dies löscht alle Sets, Übungen und Fortschrittsregeln",
-        "fitDaysInWeek": "Trainingstage pro Woche",
+        "fitDaysInWeek": "Fester Wochenrhythmus",
         "defaultRounding": "Standardrundung",
         "rounding": "Rundung (diese Übung)",
         "weightLogNotPlanned": "Speichere Log an einem Tag ohne geplantes Workout.",
@@ -297,6 +298,9 @@
         "useGoalsHelpTextLong": "So kannst du allgemeine Ziele für Energie, Eiweiß, Kohlenhydrate oder Fett für den Plan festlegen. Beachte, dass diese Werte Vorrang haben, wenn du einen detaillierten Mahlzeitenplan erstellst.",
         "addMealItem": "Zutat zu Mahlzeit hinzufügen",
         "searchIngredientName": "Suche nach Zutatenname",
+        "languageFilterCurrentOnly": "Nur in aktueller Sprache ({{lang}})",
+        "languageFilterCurrentAndEnglish": "Aktuelle Sprache ({{lang}}) & Englisch",
+        "languageFilterAll": "Alle Sprachen",
         "saturatedFat": "Gesättigte Fette",
         "valueTooMany": "zu viele",
         "logThisMealItem": "Diese Zutat unverändert in das Ernährungstagebuch eintragen",
@@ -353,5 +357,11 @@
     "core": {
         "exitEditMode": "Bearbeitungsmodus verlassen",
         "customize": "Anpassen"
-    }
+    },
+    "preview": "Vorschau",
+    "useMarkdownHint": "Sie können simples Markdown verwenden, um den Text zu formatieren: *kursiv*, **fett**, - Liste",
+    "trophies": {
+        "trophies": "Trophäen"
+    },
+    "totalChange": "Alle Änderungen"
 }

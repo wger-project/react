@@ -1,13 +1,13 @@
 import { FormControl, MenuItem, Select } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { Exercise } from "components/Exercises/models/exercise";
-import { Language } from "components/Exercises/models/language";
-import { Muscle } from "components/Exercises/models/muscle";
-import { GroupedLogData, LogData, RoutineStatsData } from "components/WorkoutRoutines/models/LogStats";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Language } from "@/components/Exercises/models/language";
+import { Muscle } from "@/components/Exercises/models/muscle";
+import { GroupedLogData, LogData, RoutineStatsData } from "@/components/WorkoutRoutines/models/LogStats";
 import i18n from 'i18next';
 import React from "react";
-import { dateToLocale } from "utils/date";
+import { dateToLocale } from "@/utils/date";
 
 export const enum StatType {
     Volume = "volume",

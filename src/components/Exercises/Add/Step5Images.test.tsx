@@ -1,12 +1,12 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
-import { Step5Images } from "components/Exercises/Add/Step5Images";
+import { Step5Images } from "@/components/Exercises/Add/Step5Images";
 import React from "react";
-import { testQueryClient } from "tests/queryClient";
+import { testQueryClient } from "@/tests/queryClient";
 
 
-const mockOnContinue = jest.fn();
-const mockOnBack = jest.fn();
+const mockOnContinue = vi.fn();
+const mockOnBack = vi.fn();
 
 describe("Test the add exercise step 5 component", () => {
 

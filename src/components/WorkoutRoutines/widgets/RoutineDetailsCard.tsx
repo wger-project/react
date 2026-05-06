@@ -15,21 +15,21 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import Tooltip from "@mui/material/Tooltip";
-import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
-import { ExerciseImageAvatar } from "components/Exercises/Detail/ExerciseImageAvatar";
-import { Language } from "components/Exercises/models/language";
-import { useLanguageQuery } from "components/Exercises/queries";
-import { getDayName } from "components/WorkoutRoutines/models/Day";
-import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
-import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
-import { SlotData } from "components/WorkoutRoutines/models/SlotData";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { RenderLoadingQuery } from "@/components/Core/Widgets/RenderLoadingQuery";
+import { ExerciseImageAvatar } from "@/components/Exercises/Detail/ExerciseImageAvatar";
+import { Language } from "@/components/Exercises/models/language";
+import { useLanguageQuery } from "@/components/Exercises/queries";
+import { getDayName } from "@/components/WorkoutRoutines/models/Day";
+import { RoutineDayData } from "@/components/WorkoutRoutines/models/RoutineDayData";
+import { SetConfigData } from "@/components/WorkoutRoutines/models/SetConfigData";
+import { SlotData } from "@/components/WorkoutRoutines/models/SlotData";
+import { useRoutineDetailQuery } from "@/components/WorkoutRoutines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { getLanguageByShortName } from "services";
-import { isSameDay } from "utils/date";
-import { makeLink, WgerLink } from "utils/url";
+import { getLanguageByShortName } from "@/services";
+import { isSameDay } from "@/utils/date";
+import { makeLink, WgerLink } from "@/utils/url";
 
 
 export const RoutineDetailsCard = () => {
@@ -53,7 +53,7 @@ export const RoutineDetailsCard = () => {
                     </Typography>
                 }
                 <Stack spacing={2} sx={{ mt: 2 }}>
-                    {routineQuery.data!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null).map((dayData, index) =>
+                    {routineQuery.data!.dayDataCurrentIterationFiltered.map((dayData, index) =>
                         <DayDetailsCard routineId={routineId} dayData={dayData} key={`dayDetails-${index}`} />
                     )}
                 </Stack>
@@ -83,9 +83,12 @@ export function SetConfigDataDetails(props: {
 
     return (
         <Grid container
-              alignItems="center"
-              justifyContent={"center"}
-              sx={{ height: props.rowHeight, marginBottom: props.marginBottom }}>
+              sx={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: props.rowHeight,
+                  marginBottom: props.marginBottom
+              }}>
             <Grid size={12}>
                 <Stack spacing={0}>
                     <Typography variant={"h6"}>
@@ -124,7 +127,7 @@ function SlotDataList(props: { slotData: SlotData }) {
                     flex: '0 0 50px',
                 }}
             >
-                <Stack divider={<Box height="10px" />}>
+                <Stack divider={<Box sx={{ height: "10px" }} />}>
                     {props.slotData.exercises.map((exercise, index) =>
                         <ExerciseImageAvatar
                             image={exercise.mainImage}
@@ -186,7 +189,7 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
                 <Stack>
                     {props.dayData.slots.map((slotData, index) => (
                         <div key={index}>
-                            <Box padding={1}>
+                            <Box sx={{ padding: 1 }}>
                                 <SlotDataList slotData={slotData} />
                             </Box>
                             <Divider />

@@ -1,5 +1,5 @@
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
 
 type NutritionalValuesConstructor = {
     energy?: number;
@@ -74,7 +74,7 @@ export class NutritionalValues {
 
         const weight = weightUnit === null
             ? amount
-            : amount * weightUnit.amount * weightUnit.grams;
+            : amount * weightUnit.grams;
 
         // divide by 100 because nutrition values are per 100g
         out.energy = ingredient.energy * weight / 100;

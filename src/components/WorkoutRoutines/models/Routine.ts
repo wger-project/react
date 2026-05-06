@@ -1,9 +1,9 @@
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
+import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { RoutineDayData } from "@/components/WorkoutRoutines/models/RoutineDayData";
 import i18n from 'i18next';
 import { DateTime } from "luxon";
-import { Adapter } from "utils/Adapter";
-import { dateToYYYYMMDD, isSameDay } from "utils/date";
+import { Adapter } from "@/utils/Adapter";
+import { dateToYYYYMMDD, isSameDay } from "@/utils/date";
 
 export const NAME_MIN_LENGTH = 3;
 export const NAME_MAX_LENGTH = 25;
@@ -62,12 +62,29 @@ export class Routine {
     }
 
     /*
-     * Filter out dayData entries with null days
+     * Filter out dayData entries with null days as well as duplicated days from
+     * the "fixed weekly schedule" toggle.
      */
-    get dayDataCurrentIterationNoNulls() {
-        return this.dayDataCurrentIteration
+    get dayDataCurrentIterationFiltered() {
+        const sorted = this.dayDataCurrentIteration
             .filter((dayData) => dayData.day !== null)
             .sort((a, b) => a.day!.order - b.day!.order);
+
+        // Filter out entries where the day is the same as the previous one. This is
+        // necessary because if the user has the "Fixed weekly schedule" option enabled,
+        // there would be multiple entries for the same day.
+        const unique: RoutineDayData[] = [];
+        for (const dd of sorted) {
+            if (unique.length === 0 || unique[unique.length - 1].day!.id !== dd.day!.id) {
+                unique.push(dd);
+            } else {
+                // If the day id is the same as the previous entry, replace it with the current one
+                // so the last occurrence is kept.
+                unique[unique.length - 1] = dd;
+            }
+        }
+
+        return unique;
     }
 
     get groupedDayDataByIteration() {

@@ -1,9 +1,9 @@
 import { Box, Stack, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { useBodyWeightQuery } from "components/BodyWeight/queries";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
-import { useProfileQuery } from "components/User/queries/profile";
+import { useBodyWeightQuery } from "@/components/BodyWeight/queries";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
+import { useProfileQuery } from "@/components/User/queries/profile";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Area, AreaChart, CartesianGrid, ReferenceDot, Tooltip, XAxis, YAxis, } from "recharts";
@@ -168,29 +168,31 @@ export const BmiCalculator = () => {
                             />}
 
                     </AreaChart>
-                    <Stack direction={"row"} justifyContent="center">
+                    <Stack direction={"row"} sx={{ justifyContent: "center" }}>
                         <Box
-                            height={20}
-                            width={20}
-                            sx={{ backgroundColor: getRangeColor('obese') }} />
+                            sx={{ height: 20, width: 20, backgroundColor: getRangeColor('obese') }} />
                         {t('bmi.obese')}
 
                         <Box
-                            height={20}
-                            width={20}
-                            sx={{ backgroundColor: getRangeColor('overweight'), marginLeft: 2 }} />
+                            sx={{
+                                height: 20,
+                                width: 20,
+                                backgroundColor: getRangeColor('overweight'),
+                                marginLeft: 2
+                            }} />
                         {t('bmi.overweight')}
 
                         <Box
-                            height={20}
-                            width={20}
-                            sx={{ backgroundColor: getRangeColor('normal'), marginLeft: 2 }} />
+                            sx={{ height: 20, width: 20, backgroundColor: getRangeColor('normal'), marginLeft: 2 }} />
                         {t('bmi.normal')}
 
                         <Box
-                            height={20}
-                            width={20}
-                            sx={{ backgroundColor: getRangeColor('underweight'), marginLeft: 2 }} />
+                            sx={{
+                                height: 20,
+                                width: 20,
+                                backgroundColor: getRangeColor('underweight'),
+                                marginLeft: 2
+                            }} />
                         {t('bmi.underweight')}
                     </Stack>
 

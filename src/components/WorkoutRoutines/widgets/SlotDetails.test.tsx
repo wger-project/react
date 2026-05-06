@@ -1,10 +1,10 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { Slot } from 'components/WorkoutRoutines/models/Slot';
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
-import { SlotDetails } from 'components/WorkoutRoutines/widgets/SlotDetails';
+import { Slot } from '@/components/WorkoutRoutines/models/Slot';
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
+import { SlotDetails } from '@/components/WorkoutRoutines/widgets/SlotDetails';
 import React from 'react';
-import { testQueryClient } from "tests/queryClient";
+import { testQueryClient } from "@/tests/queryClient";
 
 describe('SlotDetails Component', () => {
 
@@ -68,5 +68,22 @@ describe('SlotDetails Component', () => {
         expect(screen.getByTestId('max-reps-field')).toBeInTheDocument();
         expect(screen.getByTestId('rest-field')).toBeInTheDocument();
         expect(screen.getByTestId('max-rest-field')).toBeInTheDocument();
+    });
+
+    test('hides edit/delete icons and exercise name when isGrouped', () => {
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <SlotDetails slot={testSlot} routineId={1} simpleMode={true} isGrouped={true} />
+            </QueryClientProvider>
+        );
+
+        // Config fields should still render
+        expect(screen.getByTestId('sets-field')).toBeInTheDocument();
+        expect(screen.getByTestId('weight-field')).toBeInTheDocument();
+        expect(screen.getByTestId('reps-field')).toBeInTheDocument();
+
+        // Edit/delete icons and exercise name should be hidden
+        expect(screen.queryByTestId('EditIcon')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('DeleteOutlinedIcon')).not.toBeInTheDocument();
     });
 });

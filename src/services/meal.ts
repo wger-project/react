@@ -1,11 +1,10 @@
 import axios from 'axios';
-import { ApiMealType, Meal } from "components/Nutrition/models/meal";
-import { ApiMealItemType, MealItem } from "components/Nutrition/models/mealItem";
-import { getIngredients } from "services/ingredient";
-import { getWeightUnit } from "services/ingredientweightunit";
-import { ResponseType } from "services/responseType";
-import { ApiPath } from "utils/consts";
-import { makeHeader, makeUrl } from "utils/url";
+import { ApiMealType, Meal } from "@/components/Nutrition/models/meal";
+import { ApiMealItemType, MealItem } from "@/components/Nutrition/models/mealItem";
+import { getIngredients } from "@/services/ingredient";
+import { ResponseType } from "@/services/responseType";
+import { ApiPath } from "@/utils/consts";
+import { makeHeader, makeUrl } from "@/utils/url";
 
 
 export const addMeal = async (meal: Meal): Promise<Meal> => {
@@ -58,8 +57,10 @@ export const getMealsForPlan = async (planId: number): Promise<Meal[]> => {
         const ingredients = await getIngredients(ingredientIds);
 
         for (const item of items) {
-            item.weightUnit = await getWeightUnit(item.weightUnitId);
             item.ingredient = ingredients.find((ingredient) => ingredient.id === item.ingredientId)!;
+            item.weightUnit = item.weightUnitId !== null
+                ? item.ingredient?.weightUnits.find((u) => u.id === item.weightUnitId) ?? null
+                : null;
         }
         meal.items = items;
     }

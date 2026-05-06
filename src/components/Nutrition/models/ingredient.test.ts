@@ -1,5 +1,5 @@
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { INGREDIENT_API_RESPONSE } from "tests/api/ingredientInfoEndpoint";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { INGREDIENT_API_RESPONSE } from "@/tests/api/ingredientInfoEndpoint";
 
 
 describe('Test the ingredient model', () => {
@@ -23,6 +23,9 @@ describe('Test the ingredient model', () => {
         expect(ingredient.fatSaturated).toBe(0.6);
         expect(ingredient.fiber).toBe(0.8);
         expect(ingredient.sodium).toBe(0.356);
+        expect(ingredient.isVegan).toBe(false);
+        expect(ingredient.isVegetarian).toBe(false);
+        expect(ingredient.nutriscore).toBe('d');
 
         expect(ingredient.image!.url).toBe("http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg");
         expect(ingredient.image!.uuid).toBe("7f4120cd-a5c1-4a3a-b31b-974e62478222");
@@ -33,5 +36,13 @@ describe('Test the ingredient model', () => {
         expect(ingredient.thumbnails!.small!).toBe("http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.200x200_q85.jpg");
         expect(ingredient.thumbnails!.medium!).toBe("http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.400x400_q85.jpg");
         expect(ingredient.thumbnails!.large!).toBe("http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.800x800_q90.jpg");
+
+        expect(ingredient.weightUnits).toHaveLength(2);
+        expect(ingredient.weightUnits[0].id).toBe(11);
+        expect(ingredient.weightUnits[0].grams).toBe(30);
+        expect(ingredient.weightUnits[0].name).toBe("Stück");
+        expect(ingredient.weightUnits[1].id).toBe(12);
+        expect(ingredient.weightUnits[1].grams).toBe(240);
+        expect(ingredient.weightUnits[1].name).toBe("Packung");
     });
 });

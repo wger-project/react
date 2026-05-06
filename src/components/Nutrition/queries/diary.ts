@@ -1,13 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import {
     addNutritionalDiaryEntry,
     deleteNutritionalDiaryEntry,
     editNutritionalDiaryEntry,
     getNutritionalDiaryEntries
-} from "services";
-import { NutritionalDiaryEntriesOptions } from "services/nutritionalDiary";
-import { QueryKey } from "utils/consts";
+} from "@/services";
+import { NutritionalDiaryEntriesOptions } from "@/services/nutritionalDiary";
+import { QueryKey } from "@/utils/consts";
 
 export const useNutritionDiaryQuery = (options?: NutritionalDiaryEntriesOptions) => useQuery({
     queryFn: () => getNutritionalDiaryEntries(options),

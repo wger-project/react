@@ -1,7 +1,8 @@
 import axios from "axios";
-import { checkPermission } from "services/permission";
+import { checkPermission } from "@/services/permission";
+import type { Mock } from 'vitest';
 
-jest.mock("axios");
+vi.mock("axios");
 
 
 describe("Permission API tests", () => {
@@ -10,7 +11,7 @@ describe("Permission API tests", () => {
     test('Check an exising permission', async () => {
 
         // Arrange
-        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ data: { "result": true } }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: { "result": true } }));
 
         // Act
         const result = await checkPermission('exercises.delete_exercise');
@@ -22,7 +23,7 @@ describe("Permission API tests", () => {
 
     test('Check permission logged out user', async () => {
         // Arrange
-        (axios.get as jest.Mock).mockImplementation(() => Promise.resolve({ status: 400 }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ status: 400 }));
 
         // Act
         const result = await checkPermission('exercises.sus_scrofa');

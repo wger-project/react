@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from "axios";
-import { IS_PROD, VITE_API_KEY, VITE_API_SERVER } from "config";
-import i18n from "i18n";
+import { IS_PROD, VITE_API_KEY, VITE_API_SERVER } from "@/config";
+import i18n from "@/i18n";
 import slug from "slug";
 
 interface makeUrlInterface {
@@ -172,7 +172,7 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
 
         // Measurements
         case WgerLink.MEASUREMENT_OVERVIEW:
-            return `/${language}/measurement/overview`;
+            return `/${language}/measurement/`;
         case WgerLink.MEASUREMENT_DETAIL:
             return `/${language}/measurement/category/${params!.id}`;
 

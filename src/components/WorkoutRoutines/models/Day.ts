@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 
-import { Slot } from "components/WorkoutRoutines/models/Slot";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
 import i18n from 'i18next';
-import { Adapter } from "utils/Adapter";
+import { Adapter } from "@/utils/Adapter";
 
 export type DayType = 'custom' | 'enom' | 'amrap' | 'hiit' | 'tabata' | 'edt' | 'rft' | 'afap';
 

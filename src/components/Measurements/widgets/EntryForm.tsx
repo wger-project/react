@@ -1,19 +1,18 @@
 import { Button, Stack, TextField } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { MeasurementEntry } from "components/Measurements/models/Entry";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
     useAddMeasurementEntryQuery,
     useEditMeasurementEntryQuery,
     useMeasurementsQuery
-} from "components/Measurements/queries";
+} from "@/components/Measurements/queries";
 import { Form, Formik } from "formik";
 import { DateTime, Settings } from "luxon";
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { TIMEZONE } from "utils/consts";
-import { dateToYYYYMMDD } from "utils/date";
+import { TIMEZONE } from "@/utils/consts";
 import * as yup from 'yup';
 
 Settings.defaultZone = TIMEZONE;
@@ -87,31 +86,16 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                         {categoryQuery.isLoading
                             ? <LoadingPlaceholder />
                             : <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                                <DatePicker
-                                    format="yyyy-MM-dd"
+                                <DateTimePicker
                                     label={t('date')}
                                     value={dateValue}
+                                    slotProps={{ textField: { variant: 'outlined' } }}
                                     disableFuture={true}
-
                                     onChange={(newValue) => {
                                         if (newValue) {
                                             formik.setFieldValue('date', newValue.toJSDate());
                                         }
                                         setDateValue(newValue);
-                                    }}
-                                    shouldDisableDate={(date) => {
-                                        // Allow the date of the current weight entry, since we are editing it
-                                        if (entry && dateToYYYYMMDD(entry.date) === dateToYYYYMMDD(date.toJSDate())) {
-                                            return false;
-                                        }
-
-                                        // if date is in list of existing entries, disable it
-                                        if (date) {
-                                            return categoryQuery.data!.entries.some(entry => dateToYYYYMMDD(entry.date) === dateToYYYYMMDD(date.toJSDate()));
-                                        }
-
-                                        // all other dates are allowed
-                                        return false;
                                     }}
                                 />
                             </LocalizationProvider>}
@@ -126,7 +110,7 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                             {...formik.getFieldProps('notes')}
                         />
 
-                        <Stack direction="row" justifyContent="end" sx={{ mt: 2 }}>
+                        <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                                 {t('submit')}
                             </Button>

@@ -1,22 +1,23 @@
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, Container, Pagination, Stack, Typography, useMediaQuery } from "@mui/material";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import { Box, Button, Container, Pagination, Stack, Typography, useMediaQuery, IconButton } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { CategoryFilter, CategoryFilterDropdown } from "components/Exercises/Filter/CategoryFilter";
-import { EquipmentFilter, EquipmentFilterDropdown } from "components/Exercises/Filter/EquipmentFilter";
-import { MuscleFilter, MuscleFilterDropdown } from "components/Exercises/Filter/MuscleFilter";
-import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { Category } from "components/Exercises/models/category";
-import { Equipment } from "components/Exercises/models/equipment";
-import { Exercise } from "components/Exercises/models/exercise";
-import { Muscle } from "components/Exercises/models/muscle";
-import { ExerciseGrid } from "components/Exercises/Overview/ExerciseGrid";
-import { ExerciseGridSkeleton } from "components/Exercises/Overview/ExerciseGridLoadingSkeleton";
+import { CategoryFilter, CategoryFilterDropdown } from "@/components/Exercises/Filter/CategoryFilter";
+import { EquipmentFilter, EquipmentFilterDropdown } from "@/components/Exercises/Filter/EquipmentFilter";
+import { MuscleFilter, MuscleFilterDropdown } from "@/components/Exercises/Filter/MuscleFilter";
+import { NameAutocompleter } from "@/components/Exercises/Filter/NameAutcompleter";
+import { Category } from "@/components/Exercises/models/category";
+import { Equipment } from "@/components/Exercises/models/equipment";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Muscle } from "@/components/Exercises/models/muscle";
+import { ExerciseGrid } from "@/components/Exercises/Overview/ExerciseGrid";
+import { ExerciseGridSkeleton } from "@/components/Exercises/Overview/ExerciseGridLoadingSkeleton";
 
-import { useExercisesQuery } from "components/Exercises/queries";
+import { useExercisesQuery } from "@/components/Exercises/queries";
 import React, { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { makeLink, WgerLink } from "utils/url";
+import { makeLink, WgerLink } from "@/utils/url";
 import { ExerciseFiltersContext } from './Filter/ExerciseFiltersContext';
 import { FilterDrawer } from './Filter/FilterDrawer';
 
@@ -25,9 +26,9 @@ const ContributeExerciseBanner = () => {
 
     return (
         <Box
-            marginTop={4}
-            padding={4}
             sx={{
+                marginTop: 4,
+                padding: 4,
                 width: "100%",
                 backgroundColor: "#ebebeb",
                 textAlign: "center",
@@ -53,9 +54,9 @@ const NoResultsBanner = () => {
 
     return (
         <Box
-            marginTop={4}
-            padding={4}
             sx={{
+                marginTop: 4,
+                padding: 4,
                 width: "100%",
                 backgroundColor: "#ebebeb",
                 textAlign: "center",
@@ -80,6 +81,9 @@ export const ExerciseOverviewList = () => {
     const isMobile = useMediaQuery('(max-width:600px)');
 
     const [page, setPage] = React.useState(1);
+    const [showFilters, setShowFilters] = useState<boolean>(() => {
+        return localStorage.getItem("wger.exerciseSearch.showFilters") !== "false";
+    });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handlePageChange = (event: any, value: number) => {
         setPage(value);
@@ -145,7 +149,7 @@ export const ExerciseOverviewList = () => {
 
     return (
         (<Container maxWidth="lg">
-            <Grid container spacing={2} mt={2}>
+            <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid
                     size={{
                         xs: 10,
@@ -170,16 +174,14 @@ export const ExerciseOverviewList = () => {
                             </Button>
                         </Grid>
                         <Grid
-                            flexGrow={1}
+                            sx={{ flexGrow: 1 }}
                             size={{
                                 sm: 6
                             }}>
                             <NameAutocompleter callback={exerciseAdded} />
                         </Grid>
                         <Grid
-                            display="flex"
-                            justifyContent="center"
-                            alignItems="center"
+                            sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
                             size={{
                                 xs: 2,
                                 sm: 6
@@ -196,9 +198,23 @@ export const ExerciseOverviewList = () => {
                         <Grid
                             size={{
                                 xs: 12,
-                                sm: 3
+                                sm: showFilters ? 3 : 6
                             }}>
-                            <NameAutocompleter callback={exerciseAdded} />
+                            <Stack direction="row" alignItems="center" spacing={1} sx={{ width: '100%' }}>
+                                <Box sx={{ flexGrow: 1 }}>
+                                    <NameAutocompleter callback={exerciseAdded} />
+                                </Box>
+                                <IconButton
+                                    onClick={() => {
+                                        const newValue = !showFilters;
+                                        setShowFilters(newValue);
+                                        localStorage.setItem("wger.exerciseSearch.showFilters", String(newValue));
+                                    }}
+                                    title="Toggle filters"
+                                >
+                                    <FilterListIcon />
+                                </IconButton>
+                            </Stack>
                         </Grid>
                         <Grid
                             size={{
@@ -216,7 +232,7 @@ export const ExerciseOverviewList = () => {
                     </>
                 )}
 
-                {!isMobile && (
+                {!isMobile && showFilters && (
                     <Grid
                         size={{
                             xs: 12,
@@ -249,13 +265,13 @@ export const ExerciseOverviewList = () => {
                 <Grid
                     size={{
                         xs: 12,
-                        sm: 9
+                        sm: showFilters ? 9 : 12
                     }}>
                     {exerciseQuery.isLoading
                         ? <ExerciseGridSkeleton />
                         : <>
                             <ExerciseGrid exercises={paginatedExercises} />
-                            <Stack spacing={2} alignItems="center" sx={{ mt: 2 }}>
+                            <Stack spacing={2} sx={{ alignItems: "center", mt: 2 }}>
                                 <Pagination
                                     count={pageCount}
                                     color="primary"

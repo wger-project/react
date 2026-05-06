@@ -1,13 +1,13 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { useMeasurementsQuery } from "components/Measurements/queries";
-import { MeasurementCategoryDetail } from "components/Measurements/Screens/MeasurementCategoryDetail";
+import { useMeasurementsQuery } from "@/components/Measurements/queries";
+import { MeasurementCategoryDetail } from "@/components/Measurements/Screens/MeasurementCategoryDetail";
 import React from 'react';
-import { MemoryRouter, Route, Routes } from "react-router";
-import { TEST_MEASUREMENT_CATEGORY_1 } from "tests/measurementsTestData";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { TEST_MEASUREMENT_CATEGORY_1 } from "@/tests/measurementsTestData";
+import type { Mock } from 'vitest';
 
-jest.mock("components/Measurements/queries");
-
+vi.mock("@/components/Measurements/queries");
 
 const queryClient = new QueryClient();
 
@@ -18,26 +18,16 @@ describe("Test the MeasurementCategoryDetail component", () => {
 
     beforeEach(() => {
 
-        (useMeasurementsQuery as jest.Mock).mockImplementation(() => ({
+        (useMeasurementsQuery as Mock).mockImplementation(() => ({
             isSuccess: true,
             isLoading: false,
             data: TEST_MEASUREMENT_CATEGORY_1
         }));
-
-        // @ts-ignore
-        delete window.ResizeObserver;
-        window.ResizeObserver = jest.fn().mockImplementation(() => ({
-            observe: jest.fn(),
-            unobserve: jest.fn(),
-            disconnect: jest.fn()
-        }));
     });
 
     afterEach(() => {
-        window.ResizeObserver = ResizeObserver;
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
-
 
     test('renders the current category correctly', async () => {
 
@@ -59,7 +49,7 @@ describe("Test the MeasurementCategoryDetail component", () => {
         expect(screen.getByText('Biceps')).toBeInTheDocument();
 
         expect(screen.getByRole('gridcell', { name: /10cm/i })).toBeInTheDocument();
-        expect(screen.getByText(/Feb 1, 2023/i)).toBeInTheDocument();
+        expect(screen.getAllByText(/Feb 1, 2023/i).length).toBeGreaterThanOrEqual(1);
         expect(screen.getByText('test note')).toBeInTheDocument();
 
         expect(screen.getByRole('gridcell', { name: /20cm/i })).toBeInTheDocument();

@@ -1,17 +1,20 @@
-import { Autocomplete, Button, InputAdornment, Stack, TextField } from "@mui/material";
+import { Autocomplete, Button, InputAdornment, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { Meal } from "components/Nutrition/models/meal";
-import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "components/Nutrition/queries";
-import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
+import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "@/components/Nutrition/queries";
+import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutcompleter";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToYYYYMMDD } from "utils/date";
+import { dateToYYYYMMDD } from "@/utils/date";
 import * as yup from "yup";
+
+const GRAM_UNIT_VALUE = 'g';
 
 type NutritionDiaryEntryFormProps = {
     planId: number,
@@ -31,6 +34,10 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
     const editDiaryQuery = useEditDiaryEntryQuery(planId);
     const [dateValue, setDateValue] = useState<DateTime | null>(entry ? DateTime.fromJSDate(entry.datetime) : DateTime.now());
     const [selectedMeal, setSelectedMeal] = useState<number | null>(meal);
+
+    const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(entry?.weightUnit ?? null);
+    const [weightUnits, setWeightUnits] = useState<NutritionWeightUnit[]>(entry?.ingredient?.weightUnits ?? []);
+
     const validationSchema = yup.object({
         amount: yup
             .number()
@@ -47,6 +54,14 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
             .required(t('forms.fieldRequired')),
     });
 
+    const handleUnitChange = (value: string) => {
+        if (value === GRAM_UNIT_VALUE) {
+            setSelectedUnit(null);
+        } else {
+            const unit = weightUnits.find(u => u.id === Number(value));
+            setSelectedUnit(unit ?? null);
+        }
+    };
 
     return (
         (<Formik
@@ -68,7 +83,9 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         planId: planId,
                         amount: newAmount,
                         datetime: values.datetime,
-                        ingredientId: values.ingredient!
+                        ingredientId: values.ingredient!,
+                        weightUnitId: selectedUnit?.id ?? null,
+                        weightUnit: selectedUnit,
                     });
                     editDiaryQuery.mutate(newDiaryEntry);
                 } else {
@@ -79,6 +96,8 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         datetime: values.datetime,
                         ingredientId: values.ingredient!,
                         mealId: selectedMeal,
+                        weightUnitId: selectedUnit?.id ?? null,
+                        weightUnit: selectedUnit,
                     }));
                 }
 
@@ -95,6 +114,8 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                             callback={(value: Ingredient | null) => {
                                 formik.setFieldTouched('ingredient', true);
                                 formik.setFieldValue('ingredient', value?.id ?? null);
+                                setWeightUnits(value?.weightUnits ?? []);
+                                setSelectedUnit(null);
                             }}
                             />
                             {formik.touched.ingredient && formik.errors.ingredient && (
@@ -108,9 +129,29 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                             label={'amount'}
                             slotProps={{
                                 input: {
-                                    endAdornment: <InputAdornment position="end">
-                                        {t('nutrition.gramShort')}
-                                    </InputAdornment>
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            {weightUnits.length > 0 ? (
+                                                <Select
+                                                    variant="standard"
+                                                    disableUnderline
+                                                    value={selectedUnit?.id?.toString() ?? GRAM_UNIT_VALUE}
+                                                    onChange={(e) => handleUnitChange(e.target.value)}
+                                                >
+                                                    <MenuItem value={GRAM_UNIT_VALUE}>
+                                                        {t('nutrition.gramShort')}
+                                                    </MenuItem>
+                                                    {weightUnits.map(unit => (
+                                                        <MenuItem key={unit.id} value={unit.id.toString()}>
+                                                            {unit.name} ({unit.grams}g)
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            ) : (
+                                                t('nutrition.gramShort')
+                                            )}
+                                        </InputAdornment>
+                                    )
                                 }
                             }}
                             error={formik.touched.amount && Boolean(formik.errors.amount)}
@@ -155,7 +196,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                                 }}
                             />
                         </LocalizationProvider>
-                        <Stack direction="row" justifyContent="end" spacing={2}>
+                        <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
                             {closeFn !== undefined
                                 && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
                                     {t('close')}

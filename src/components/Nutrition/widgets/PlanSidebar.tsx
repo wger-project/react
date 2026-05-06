@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { LinearPlannedLoggedChart } from "components/Nutrition/widgets/charts/LinearPlannedLoggedChart";
+import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
+import { LinearPlannedLoggedChart } from "@/components/Nutrition/widgets/charts/LinearPlannedLoggedChart";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

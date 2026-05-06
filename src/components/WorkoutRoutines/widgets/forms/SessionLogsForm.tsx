@@ -3,20 +3,20 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { Alert, Button, IconButton, InputAdornment, MenuItem, Snackbar, TextField, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { WgerTextField } from "components/Common/forms/WgerTextField";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { Exercise } from "components/Exercises/models/exercise";
-import { useLanguageQuery } from "components/Exercises/queries";
-import { RIR_VALUES_SELECT } from "components/WorkoutRoutines/models/BaseConfig";
-import { LogEntryForm } from "components/WorkoutRoutines/models/WorkoutLog";
-import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
+import { WgerTextField } from "@/components/Common/forms/WgerTextField";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { NameAutocompleter } from "@/components/Exercises/Filter/NameAutcompleter";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { useLanguageQuery } from "@/components/Exercises/queries";
+import { RIR_VALUES_SELECT } from "@/components/WorkoutRoutines/models/BaseConfig";
+import { LogEntryForm } from "@/components/WorkoutRoutines/models/WorkoutLog";
+import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "@/components/WorkoutRoutines/queries";
 import { FieldArray, Form, Formik, FormikProps } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName } from "services";
-import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "utils/consts";
+import { getLanguageByShortName } from "@/services";
+import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "@/utils/consts";
 import * as yup from "yup";
 
 interface SessionLogsFormProps {
@@ -302,7 +302,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                         )}
                     </FieldArray>
                     <Grid container spacing={2}>
-                        <Grid size={12} display={"flex"} justifyContent={"end"}>
+                        <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
                             <Button
                                 color="primary"
                                 // disabled={!formik.isValid || formik.isSubmitting || !formik.dirty}

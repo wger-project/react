@@ -1,9 +1,9 @@
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from 'recharts';
-import { generateChartColors } from "utils/colors";
-import { numberLocale } from "utils/numbers";
+import { generateChartColors } from "@/utils/colors";
+import { numberLocale } from "@/utils/numbers";
 
 type NutritionDiaryChartProps = {
     showPlanned: boolean,

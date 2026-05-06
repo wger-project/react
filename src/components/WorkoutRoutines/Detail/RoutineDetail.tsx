@@ -1,17 +1,17 @@
 import { Box, Button, Chip, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
-import { RenderLoadingQuery } from "components/Core/Widgets/RenderLoadingQuery";
-import { MuscleOverview } from "components/Muscles/MuscleOverview";
-import { useRoutineDetailQuery } from "components/WorkoutRoutines/queries";
-import { RoutineDetailDropdown } from "components/WorkoutRoutines/widgets/RoutineDetailDropdown";
-import { DayDetailsCard } from "components/WorkoutRoutines/widgets/RoutineDetailsCard";
-import i18n from "i18n";
+import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
+import { RenderLoadingQuery } from "@/components/Core/Widgets/RenderLoadingQuery";
+import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
+import { useRoutineDetailQuery } from "@/components/WorkoutRoutines/queries";
+import { RoutineDetailDropdown } from "@/components/WorkoutRoutines/widgets/RoutineDetailDropdown";
+import { DayDetailsCard } from "@/components/WorkoutRoutines/widgets/RoutineDetailsCard";
+import i18n from "@/i18n";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { dateToLocale } from "utils/date";
-import { makeLink, WgerLink } from "utils/url";
+import { dateToLocale } from "@/utils/date";
+import { makeLink, WgerLink } from "@/utils/url";
 
 export const RoutineDetail = () => {
     const { t } = useTranslation();
@@ -51,7 +51,7 @@ export const RoutineDetail = () => {
                             href={makeLink(WgerLink.ROUTINE_COPY, i18n.language, { id: routineId })}
                             variant={"contained"}
                         >{t('routines.copyAndUseTemplate')}</Button>}
-                        {routine!.dayDataCurrentIterationNoNulls.map((dayData) =>
+                        {routine!.dayDataCurrentIterationFiltered.map((dayData) =>
                             <DayDetailsCard
                                 routineId={routineId}
                                 dayData={dayData}
@@ -63,7 +63,7 @@ export const RoutineDetail = () => {
                 }
                 sideBar={
                     <Stack>
-                        <Box height={40} />
+                        <Box sx={{ height: 40 }} />
                         <Grid container>
                             <Grid size={6}>
                                 <MuscleOverview

@@ -1,14 +1,14 @@
-import { Meal } from "components/Nutrition/models/meal";
-import { MealItem } from "components/Nutrition/models/mealItem";
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
+import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
+import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
 import {
     TEST_INGREDIENT_1,
     TEST_INGREDIENT_2,
     TEST_INGREDIENT_3,
     TEST_INGREDIENT_4,
     TEST_INGREDIENT_5
-} from "tests/ingredientTestdata";
+} from "@/tests/ingredientTestdata";
 import {
     TEST_DIARY_ENTRY_1,
     TEST_DIARY_ENTRY_10,
@@ -25,18 +25,16 @@ import {
     TEST_DIARY_ENTRY_7,
     TEST_DIARY_ENTRY_8,
     TEST_DIARY_ENTRY_9
-} from "tests/nutritionDiaryTestdata";
-import { HHMMToDateTime } from "utils/date";
+} from "@/tests/nutritionDiaryTestdata";
+import { HHMMToDateTime } from "@/utils/date";
 
 export const TEST_WEIGHT_UNIT_SLICE = new NutritionWeightUnit(
     5432,
-    1,
     50,
     'slice',
 );
 export const TEST_WEIGHT_UNIT_CUP = new NutritionWeightUnit(
     5544,
-    1,
     300,
     'Cup',
 );

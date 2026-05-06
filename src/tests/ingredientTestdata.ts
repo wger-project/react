@@ -1,4 +1,4 @@
-import { Ingredient } from "components/Nutrition/models/Ingredient";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 
 export const TEST_INGREDIENT_1 = new Ingredient({
     id: 101,
@@ -13,6 +13,8 @@ export const TEST_INGREDIENT_1 = new Ingredient({
     fatSaturated: 0.900,
     fiber: 0.500,
     sodium: 0.040,
+    isVegetarian: true,
+    nutriscore: 'a',
 });
 
 export const TEST_INGREDIENT_2 = new Ingredient({
@@ -28,6 +30,9 @@ export const TEST_INGREDIENT_2 = new Ingredient({
     fatSaturated: 1.000,
     fiber: 9.300,
     sodium: 0.008,
+    isVegan: true,
+    isVegetarian: true,
+    nutriscore: 'b',
 });
 
 export const TEST_INGREDIENT_3 = new Ingredient({
@@ -43,6 +48,9 @@ export const TEST_INGREDIENT_3 = new Ingredient({
     fatSaturated: 0.000,
     fiber: 0.000,
     sodium: 0.006,
+    isVegan: true,
+    isVegetarian: true,
+    nutriscore: 'c',
 });
 
 export const TEST_INGREDIENT_4 = new Ingredient({

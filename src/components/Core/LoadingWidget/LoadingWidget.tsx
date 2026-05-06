@@ -11,10 +11,9 @@ export const LoadingWidget = () => {
 };
 
 export const LoadingPlaceholder = () => <Box
-    sx={{ height: 200, alignItems: "center", mt: 2 }}
+    sx={{ height: 200, alignItems: "center", mt: 2, justifyContent: "center" }}
     component={Stack}
-    direction="column"
-    justifyContent="center">
+    direction="column">
     <CircularProgress />
 </Box>;
 

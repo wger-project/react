@@ -1,31 +1,32 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Step4Translations } from "components/Exercises/Add/Step4Translations";
-import { useLanguageQuery } from "components/Exercises/queries";
+import { Step4Translations } from "@/components/Exercises/Add/Step4Translations";
+import { useLanguageQuery } from "@/components/Exercises/queries";
 import React from "react";
-import { testLanguages } from "tests/exerciseTestdata";
+import { testLanguages } from "@/tests/exerciseTestdata";
+import type { Mock } from 'vitest';
 
 // It seems we run into a timeout when running the tests on github actions
-jest.setTimeout(30000);
+vi.setConfig({ testTimeout: 30000 });
 
-jest.mock("components/Exercises/queries");
-jest.mock("state/exerciseSubmissionReducer", () => {
-    const originalModule = jest.requireActual("state/exerciseSubmissionReducer");
+vi.mock("@/components/Exercises/queries");
+vi.mock("@/state/exerciseSubmissionReducer", async () => {
+    const originalModule = await vi.importActual<typeof import("@/state/exerciseSubmissionReducer")>("@/state/exerciseSubmissionReducer");
     return {
         __esModule: true,
         ...originalModule,
-        setNameI18n: jest.fn(),
-        setDescriptionI18n: jest.fn(),
-        setAlternativeNamesI18n: jest.fn(),
-        setLanguageId: jest.fn(),
-        setEquipment: jest.fn(),
+        setNameI18n: vi.fn(),
+        setDescriptionI18n: vi.fn(),
+        setAlternativeNamesI18n: vi.fn(),
+        setLanguageId: vi.fn(),
+        setEquipment: vi.fn(),
     };
 });
 
-const mockedUseLanguageQuery = useLanguageQuery as jest.Mock;
-const mockOnContinue = jest.fn();
-const mockOnBack = jest.fn();
+const mockedUseLanguageQuery = useLanguageQuery as Mock;
+const mockOnContinue = vi.fn();
+const mockOnBack = vi.fn();
 const queryClient = new QueryClient();
 
 describe("Test the add exercise step 4 component", () => {

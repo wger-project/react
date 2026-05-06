@@ -1,8 +1,8 @@
 import { Button, Stack, TextField } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { Meal } from "components/Nutrition/models/meal";
-import { useAddMealQuery, useEditMealQuery } from "components/Nutrition/queries";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { useAddMealQuery, useEditMealQuery } from "@/components/Nutrition/queries";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React from 'react';
@@ -83,7 +83,7 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
                                 onChange={(newValue) => formik.setFieldValue('time', newValue ? newValue.toJSDate() : null)}
                             />
                         </LocalizationProvider>
-                        <Stack direction="row" justifyContent="end" spacing={2}>
+                        <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
                             {closeFn !== undefined
                                 && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
                                     {t('close')}

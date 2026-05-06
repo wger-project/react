@@ -1,9 +1,10 @@
 import axios from "axios";
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { addDay, deleteDay, editDay } from "services";
+import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { addDay, deleteDay, editDay } from "@/services";
+import type { Mocked } from 'vitest';
 
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+vi.mock('axios');
+const mockedAxios = axios as Mocked<typeof axios>;
 
 describe('editDay', () => {
 
@@ -22,7 +23,7 @@ describe('editDay', () => {
 
     beforeEach(() => {
         // Reset mocks before each test
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('should update a day and return the updated day', async () => {
@@ -67,7 +68,7 @@ describe('addDay', () => {
     });
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('should create a new day and return the created day', async () => {
@@ -93,7 +94,7 @@ describe('deleteDay', () => {
     const mockDayId = 1;
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('should delete a day', async () => {

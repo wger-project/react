@@ -1,9 +1,8 @@
 import { DragDropContext, Draggable, DraggableStyle, Droppable, DropResult } from "@hello-pangea/dnd";
-import { SsidChart } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import {
     Alert,
     AlertTitle,
@@ -11,7 +10,6 @@ import {
     Button,
     ButtonGroup,
     FormControlLabel,
-    IconButton,
     Snackbar,
     SnackbarCloseReason,
     Stack,
@@ -19,16 +17,14 @@ import {
     Tab,
     Tabs,
     Typography,
-    useTheme
+    useTheme,
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { LoadingPlaceholder, LoadingProgressIcon } from "components/Core/LoadingWidget/LoadingWidget";
-import { NameAutocompleter } from "components/Exercises/Filter/NameAutcompleter";
-import { Exercise } from "components/Exercises/models/exercise";
-import { useProfileQuery } from "components/User/queries/profile";
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
+import { LoadingPlaceholder, LoadingProgressIcon } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { useProfileQuery } from "@/components/User/queries/profile";
+import { Day } from "@/components/WorkoutRoutines/models/Day";
+import { Slot } from "@/components/WorkoutRoutines/models/Slot";
+import { SlotEntry } from "@/components/WorkoutRoutines/models/SlotEntry";
 import {
     useAddDayQuery,
     useAddSlotEntryQuery,
@@ -37,15 +33,12 @@ import {
     useEditDayOrderQuery,
     useEditSlotsQuery,
     useRoutineDetailQuery
-} from "components/WorkoutRoutines/queries";
-import { DayForm } from "components/WorkoutRoutines/widgets/forms/DayForm";
-import { SlotForm } from "components/WorkoutRoutines/widgets/forms/SlotForm";
-import { SlotDetails } from "components/WorkoutRoutines/widgets/SlotDetails";
+} from "@/components/WorkoutRoutines/queries";
+import { DayForm } from "@/components/WorkoutRoutines/widgets/forms/DayForm";
+import { DraggableSlotItem } from "@/components/WorkoutRoutines/widgets/slots/DraggableSlotItem";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { SNACKBAR_AUTO_HIDE_DURATION, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "utils/consts";
-import { makeLink, WgerLink } from "utils/url";
+import { SNACKBAR_AUTO_HIDE_DURATION, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/utils/consts";
 
 
 export const DayDragAndDropGrid = (props: {
@@ -172,25 +165,10 @@ export const DayDragAndDropGrid = (props: {
 };
 
 
-export const DayDetails = (props: {
-    day: Day,
-    routineId: number,
-    setSelectedDayIndex: (day: number | null) => void
-}) => {
-    // TODO: refactor this component and split it up!
-
-    const [t, i18n] = useTranslation();
-    const deleteSlotQuery = useDeleteSlotQuery(props.routineId);
-    const addSlotEntryQuery = useAddSlotEntryQuery(props.routineId);
-    const addSlotQuery = useAddSlotQuery(props.routineId);
-    const editSlotOrderQuery = useEditSlotsQuery(props.routineId);
-    const userProfileQuery = useProfileQuery();
-    const theme = useTheme();
-
+const useSlotDeletion = (day: Day, routineId: number) => {
+    const deleteSlotQuery = useDeleteSlotQuery(routineId);
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [showAutocompleterForSlot, setShowAutocompleterForSlot] = useState<number | null>(null);
     const [slotToDelete, setSlotToDelete] = useState<Slot | null>(null);
-    const [simpleMode, setSimpleMode] = useState(true);
 
     const handleCloseSnackbar = (
         event: React.SyntheticEvent | Event,
@@ -203,7 +181,7 @@ export const DayDetails = (props: {
                 setSlotToDelete(null);
             } else if (reason !== 'clickaway') {
                 // Undo the deletion - re-add the slot using its sort value
-                props.day.slots = [...props.day.slots, slotToDelete].sort((a, b) => a.order - b.order);
+                day.slots = [...day.slots, slotToDelete].sort((a, b) => a.order - b.order);
                 setSlotToDelete(null);
             }
         }
@@ -212,17 +190,113 @@ export const DayDetails = (props: {
     };
 
     const handleDeleteSlot = (slotId: number) => {
-        const slotIndex = props.day.slots.findIndex(slot => slot.id === slotId);
+        const slotIndex = day.slots.findIndex(slot => slot.id === slotId);
 
         if (slotIndex !== -1) {
-            const updatedSlots = [...props.day.slots];
+            const updatedSlots = [...day.slots];
             const [deletedSlot] = updatedSlots.splice(slotIndex, 1);
-            props.day.slots = updatedSlots;
+            day.slots = updatedSlots;
 
             setSlotToDelete(deletedSlot);
             setOpenSnackbar(true);
         }
     };
+
+    return { openSnackbar, handleCloseSnackbar, handleDeleteSlot };
+};
+
+
+type SlotGroup = {
+    exerciseId: number | null,
+    exerciseName: string | null,
+    slots: { slot: Slot, originalIndex: number }[],
+};
+
+export const groupSlotsByExercise = (slots: Slot[]): SlotGroup[] => {
+    const groups: SlotGroup[] = [];
+
+    for (let i = 0; i < slots.length; i++) {
+        const slot = slots[i];
+        const primaryEntry = slot.entries.length === 1 ? slot.entries[0] : null;
+        const exerciseId = primaryEntry?.exerciseId ?? null;
+
+        const lastGroup = groups[groups.length - 1];
+        if (lastGroup && exerciseId !== null && lastGroup.exerciseId === exerciseId) {
+            lastGroup.slots.push({ slot, originalIndex: i });
+        } else {
+            groups.push({
+                exerciseId,
+                exerciseName: primaryEntry?.exercise?.getTranslation()?.name ?? null,
+                slots: [{ slot, originalIndex: i }],
+            });
+        }
+    }
+
+    return groups;
+};
+
+
+const SlotGroupContainer = (props: {
+    group: SlotGroup,
+    routineId: number,
+    onDuplicate: (slotId: number) => void,
+    children: React.ReactNode,
+}) => {
+    const theme = useTheme();
+    const [t] = useTranslation();
+
+    if (props.group.slots.length <= 1) {
+        return <>{props.children}</>;
+    }
+
+    const lastSlot = props.group.slots[props.group.slots.length - 1].slot;
+
+    return (
+        <Box sx={{
+            border: `1px solid ${theme.palette.grey[300]}`,
+            backgroundColor: "white",
+            marginBottom: 1,
+            padding: 1,
+        }}>
+            <Grid container sx={{ justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+                <Grid>
+                    <Typography variant={"h6"}>
+                        {props.group.exerciseName}
+                    </Typography>
+                </Grid>
+                <Grid>
+                    <ButtonGroup variant="outlined">
+                        <Button
+                            onClick={() => props.onDuplicate(lastSlot.id!)}
+                            size={"small"}
+                            startIcon={<ContentCopyIcon />}
+                        >
+                            {t('routines.addSet')}
+                        </Button>
+                    </ButtonGroup>
+                </Grid>
+            </Grid>
+            {props.children}
+        </Box>
+    );
+};
+
+
+export const DayDetails = (props: {
+    day: Day,
+    routineId: number,
+    setSelectedDayIndex: (day: number | null) => void
+}) => {
+    const { t } = useTranslation();
+    const addSlotEntryQuery = useAddSlotEntryQuery(props.routineId);
+    const addSlotQuery = useAddSlotQuery(props.routineId);
+    const editSlotOrderQuery = useEditSlotsQuery(props.routineId);
+    const userProfileQuery = useProfileQuery();
+
+    const [showAutocompleterForSlot, setShowAutocompleterForSlot] = useState<number | null>(null);
+    const [simpleMode, setSimpleMode] = useState(true);
+
+    const { openSnackbar, handleCloseSnackbar, handleDeleteSlot } = useSlotDeletion(props.day, props.routineId);
 
     const handleAddSlotEntry = (slotId: number) => {
         const slot = props.day.slots.find(s => s.id === slotId);
@@ -236,7 +310,41 @@ export const DayDetails = (props: {
         } else {
             setShowAutocompleterForSlot(slotId);
         }
-        return;
+    };
+
+    const handleDuplicateSlot = async (slotId: number) => {
+        const sourceIndex = props.day.slots.findIndex(s => s.id === slotId);
+        const sourceSlot = props.day.slots[sourceIndex];
+        if (!sourceSlot || sourceSlot.entries.length === 0) {
+            return;
+        }
+
+        // Use array index for ordering (1-based), insert after source
+        const insertOrder = sourceIndex + 2;
+
+        // First, bump the order of all slots after the source (wait for completion)
+        const slotsToUpdate = props.day.slots
+            .slice(sourceIndex + 1)
+            .map((s, i) => Slot.clone(s, { order: insertOrder + 1 + i }));
+        if (slotsToUpdate.length > 0) {
+            await editSlotOrderQuery.mutateAsync(slotsToUpdate);
+        }
+
+        // Then create the new slot at the correct position
+        const entry = sourceSlot.entries[0];
+        const newSlot = await addSlotQuery.mutateAsync(new Slot({
+            dayId: props.day.id!,
+            order: insertOrder,
+        }));
+
+        // Finally add the exercise entry
+        await addSlotEntryQuery.mutateAsync(new SlotEntry({
+            slotId: newSlot.id!,
+            exerciseId: entry.exerciseId,
+            type: 'normal',
+            order: 1,
+            weightUnitId: entry.weightUnitId,
+        }));
     };
 
     const handleAddSlot = () => addSlotQuery.mutate(new Slot({
@@ -244,13 +352,7 @@ export const DayDetails = (props: {
         order: props.day.slots.length + 1
     }));
 
-    /*
-     * Drag'n'drop
-     */
-    const grid = 8;
     const onDragEnd = (result: DropResult) => {
-
-        // Item was dropped outside the list
         if (!result.destination) {
             return;
         }
@@ -267,14 +369,6 @@ export const DayDetails = (props: {
         background: isDraggingOver ? "lightblue" : undefined,
     });
 
-    const getItemStyle = (isDragging: boolean, draggableStyle: DraggableStyle) => ({
-        border: isDragging ? `1px solid ${theme.palette.grey[900]}` : `1px solid ${theme.palette.grey[300]}`,
-        backgroundColor: "white",
-        marginBottom: grid,
-
-        ...draggableStyle
-    });
-
 
     return (<>
         <DayForm
@@ -284,15 +378,14 @@ export const DayDetails = (props: {
             setSelectedDayIndex={props.setSelectedDayIndex}
         />
 
-
         {(!props.day.isRest && props.day.slots.length > 0) && <>
-            <Box height={40} />
+            <Box sx={{ height: 40 }} />
             <FormControlLabel
                 control={<Switch checked={simpleMode} onChange={() => setSimpleMode(!simpleMode)} />}
                 label={t('routines.simpleMode')} />
         </>}
 
-        <Box height={20} />
+        <Box sx={{ height: 20 }} />
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="setDroppable" direction="vertical">
                 {(provided, snapshot) => (
@@ -301,105 +394,37 @@ export const DayDetails = (props: {
                         ref={provided.innerRef}
                         style={getListStyle(snapshot.isDraggingOver)}
                     >
-                        {props.day.slots.map((slot, index) => <React.Fragment key={`slot-${slot.id}-${index}`}>
-                            <Draggable key={slot.id} draggableId={slot.id!.toString()} index={index}>
-                                {(provided, snapshot) => (
-                                    <Grid container padding={1}
-                                          ref={provided.innerRef}
-                                          {...provided.draggableProps}
-
-                                          style={getItemStyle(
-                                              snapshot.isDragging,
-                                              provided.draggableProps.style ?? {}
-                                          )}
-                                    >
-                                        <Grid
-                                            sx={{
-                                                backgroundColor: theme.palette.common.white /*theme.palette.grey[200]*/,
-                                            }}
-                                            size={12}>
-                                            <Grid container justifyContent="space-between" alignItems="center">
-                                                <Grid>
-                                                    <Typography variant={"h6"}>
-                                                        <IconButton {...provided.dragHandleProps}>
-                                                            <DragIndicatorIcon />
-                                                        </IconButton>
-
-                                                        <IconButton onClick={() => handleDeleteSlot(slot.id!)}>
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                        {slot.entries.length > 1 ? t('routines.supersetNr', { number: index + 1 }) : t('routines.exerciseNr', { number: index + 1 })}
-                                                    </Typography>
-                                                </Grid>
-
-                                                <Grid>
-                                                    {slot.entries.length > 0 && <ButtonGroup variant="outlined">
-                                                        <Button
-                                                            onClick={() => handleAddSlotEntry(slot.id!)}
-                                                            size={"small"}
-                                                            disabled={addSlotEntryQuery.isPending}
-                                                            startIcon={addSlotEntryQuery.isPending ?
-                                                                <LoadingProgressIcon /> :
-                                                                <AddIcon />}
-                                                        >
-                                                            {t('routines.addSuperset')}
-                                                        </Button>
-
-                                                        {slot.entries.length > 0 &&
-                                                            <Button
-                                                                startIcon={<SsidChart />}
-                                                                component={Link}
-                                                                size={"small"}
-                                                                to={makeLink(WgerLink.ROUTINE_EDIT_PROGRESSION, i18n.language, {
-                                                                    id: props.routineId,
-                                                                    id2: slot.id!
-                                                                })}
-                                                            >
-                                                                {t('routines.editProgression')}
-                                                            </Button>
-                                                        }
-                                                    </ButtonGroup>}
-                                                </Grid>
-                                            </Grid>
-                                        </Grid>
-                                        {!simpleMode && <Grid size={12}>
-                                            <SlotForm
-                                                routineId={props.routineId}
-                                                slot={slot}
-                                                key={`slot-form-${slot.id}`} />
-                                            <Box height={10} />
-                                        </Grid>}
-                                        <Grid size={12}>
-                                            <SlotDetails
-                                                slot={slot}
-                                                routineId={props.routineId}
-                                                simpleMode={simpleMode}
-                                            />
-                                        </Grid>
-
-                                        {(showAutocompleterForSlot === slot.id || slot.entries.length === 0)
-                                            && <Grid size={12}>
-                                                <Box height={20} />
-                                                <NameAutocompleter
-                                                    callback={(exercise: Exercise | null) => {
-                                                        if (exercise === null) {
-                                                            return;
-                                                        }
-                                                        addSlotEntryQuery.mutate(new SlotEntry({
-                                                            slotId: slot.id!,
-                                                            exerciseId: exercise.id!,
-                                                            type: 'normal',
-                                                            order: slot.entries.length + 1,
-                                                            weightUnitId: userProfileQuery.data!.useMetric ? WEIGHT_UNIT_KG : WEIGHT_UNIT_LB,
-                                                        }));
-                                                        setShowAutocompleterForSlot(null);
-                                                    }}
-                                                />
-                                            </Grid>}
-                                    </Grid>
+                        {groupSlotsByExercise(props.day.slots).map((group) =>
+                            <SlotGroupContainer key={group.slots[0].slot.id} group={group} routineId={props.routineId}
+                                                onDuplicate={handleDuplicateSlot}>
+                                {group.slots.map(({ slot, originalIndex }, indexInGroup) =>
+                                    <DraggableSlotItem
+                                        key={slot.id}
+                                        slot={slot}
+                                        index={originalIndex}
+                                        routineId={props.routineId}
+                                        simpleMode={simpleMode}
+                                        showAutocompleter={showAutocompleterForSlot === slot.id || slot.entries.length === 0}
+                                        onDelete={handleDeleteSlot}
+                                        onDuplicate={handleDuplicateSlot}
+                                        onAddSuperset={handleAddSlotEntry}
+                                        addSupersetIsPending={addSlotEntryQuery.isPending}
+                                        groupSize={group.slots.length}
+                                        indexInGroup={indexInGroup}
+                                        onExerciseSelected={(exercise) => {
+                                            addSlotEntryQuery.mutate(new SlotEntry({
+                                                slotId: slot.id!,
+                                                exerciseId: exercise.id!,
+                                                type: 'normal',
+                                                order: slot.entries.length + 1,
+                                                weightUnitId: userProfileQuery.data!.useMetric ? WEIGHT_UNIT_KG : WEIGHT_UNIT_LB,
+                                            }));
+                                            setShowAutocompleterForSlot(null);
+                                        }}
+                                    />
                                 )}
-                            </Draggable>
-                        </React.Fragment>)}
+                            </SlotGroupContainer>
+                        )}
                         {provided.placeholder}
                     </div>
                 )}
@@ -437,5 +462,3 @@ export const DayDetails = (props: {
         </Button>}
     </>);
 };
-
-

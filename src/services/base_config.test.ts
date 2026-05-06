@@ -1,9 +1,10 @@
 import axios from "axios";
-import { BaseConfigAdapter } from "components/WorkoutRoutines/models/BaseConfig";
-import { editBaseConfig, EditBaseConfigParams } from "services/base_config";
+import { BaseConfigAdapter } from "@/components/WorkoutRoutines/models/BaseConfig";
+import { editBaseConfig, EditBaseConfigParams } from "@/services/base_config";
+import type { Mocked } from 'vitest';
 
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+vi.mock('axios');
+const mockedAxios = axios as Mocked<typeof axios>;
 
 describe('editBaseConfig', () => {
     const mockBaseConfigData = {
@@ -21,7 +22,7 @@ describe('editBaseConfig', () => {
     const mockUrl = '/api/baseconfig/';
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('should update a base config and return the updated config', async () => {

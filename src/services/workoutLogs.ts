@@ -1,11 +1,11 @@
 import axios from "axios";
-import { Exercise } from "components/Exercises/models/exercise";
-import { WorkoutLog, WorkoutLogAdapter } from "components/WorkoutRoutines/models/WorkoutLog";
-import { getExercise } from "services/exercise";
-import { getRoutineRepUnits, getRoutineWeightUnits } from "services/workoutUnits";
-import { API_MAX_PAGE_SIZE, ApiPath } from "utils/consts";
-import { fetchPaginated } from "utils/requests";
-import { makeHeader, makeUrl } from "utils/url";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { WorkoutLog, WorkoutLogAdapter } from "@/components/WorkoutRoutines/models/WorkoutLog";
+import { getExercise } from "@/services/exercise";
+import { getRoutineRepUnits, getRoutineWeightUnits } from "@/services/workoutUnits";
+import { API_MAX_PAGE_SIZE, ApiPath } from "@/utils/consts";
+import { fetchPaginated } from "@/utils/requests";
+import { makeHeader, makeUrl } from "@/utils/url";
 
 export const deleteLog = async (id: number): Promise<number> => {
     const response = await axios.delete<number>(makeUrl(ApiPath.WORKOUT_LOG, { id: id }), {

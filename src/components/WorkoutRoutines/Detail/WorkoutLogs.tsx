@@ -1,14 +1,14 @@
 import BarChartIcon from "@mui/icons-material/BarChart";
 import { Button, IconButton, Stack, Tooltip as MuiTooltip, Typography } from "@mui/material";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerFullWidth } from "components/Core/Widgets/Container";
-import { WorkoutLog } from "components/WorkoutRoutines/models/WorkoutLog";
-import { useRoutineDetailQuery, useRoutineLogData } from "components/WorkoutRoutines/queries";
-import { ExerciseLog } from "components/WorkoutRoutines/widgets/LogWidgets";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
+import { WorkoutLog } from "@/components/WorkoutRoutines/models/WorkoutLog";
+import { useRoutineDetailQuery, useRoutineLogData } from "@/components/WorkoutRoutines/queries";
+import { ExerciseLog } from "@/components/WorkoutRoutines/widgets/LogWidgets";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
-import { makeLink, WgerLink } from "utils/url";
+import { makeLink, WgerLink } from "@/utils/url";
 
 
 export const WorkoutLogs = () => {
@@ -59,9 +59,7 @@ export const WorkoutLogs = () => {
                 <React.Fragment key={index}>
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
-                        justifyContent="space-between"
-                        alignItems="center"
-                        sx={{ mt: 4 }}
+                        sx={{ justifyContent: "space-between", alignItems: "center", mt: 4 }}
                     >
                         <Typography variant={"h4"}>
                             {dayData.day!.name}

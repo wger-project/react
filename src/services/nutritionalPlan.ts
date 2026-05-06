@@ -1,11 +1,10 @@
 import axios from 'axios';
-import { NutritionalPlan, nutritionalPlanAdapter } from "components/Nutrition/models/nutritionalPlan";
-import { getNutritionalDiaryEntries } from "services";
-import { getIngredients } from "services/ingredient";
-import { getMealsForPlan } from "services/meal";
-import { ResponseType } from "services/responseType";
-import { ApiNutritionalPlanType } from 'types';
-import { makeHeader, makeUrl } from "utils/url";
+import { NutritionalPlan, nutritionalPlanAdapter } from "@/components/Nutrition/models/nutritionalPlan";
+import { getNutritionalDiaryEntries } from "@/services";
+import { getMealsForPlan } from "@/services/meal";
+import { ResponseType } from "@/services/responseType";
+import { ApiNutritionalPlanType } from '@/types';
+import { makeHeader, makeUrl } from "@/utils/url";
 
 export const API_NUTRITIONAL_PLAN_PATH = 'nutritionplan';
 
@@ -45,9 +44,6 @@ export const getNutritionalPlanFull = async (id: number | null, options?: Nutrit
         { headers: makeHeader() },
     );
 
-    // Collect the ingredient ids from the diary entries
-    const ingredientIds: number[] = [];
-
     const plan = nutritionalPlanAdapter.fromJson(receivedPlan);
     const responses = await Promise.all([
         getMealsForPlan(id),
@@ -56,17 +52,6 @@ export const getNutritionalPlanFull = async (id: number | null, options?: Nutrit
 
     plan.meals = responses[0];
     plan.diaryEntries = responses[1];
-
-    // Fetch and set the ingredients
-    plan.diaryEntries.forEach((entry) => {
-        if (!ingredientIds.includes(entry.ingredientId)) {
-            ingredientIds.push(entry.ingredientId);
-        }
-    });
-    const ingredients = await getIngredients(ingredientIds);
-    plan.diaryEntries.forEach((entry) => {
-        entry.ingredient = ingredients.find((ingredient) => ingredient.id === entry.ingredientId)!;
-    });
 
     plan.meals.forEach((meal) => {
         meal.diaryEntries = plan.diaryEntries.filter((entry) => entry.mealId === meal.id);

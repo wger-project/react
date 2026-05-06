@@ -15,10 +15,10 @@ export const OverviewEmpty = (props: { height?: string }) => {
             flexDirection: "column",
             justifyContent: "center",
         }}>
-            <Typography variant="h6" mr={3}>
+            <Typography variant="h6" sx={{ mr: 3 }}>
                 {t('nothingHereYet')}
             </Typography>
-            <Typography mr={3}>
+            <Typography sx={{ mr: 3 }}>
                 {t('nothingHereYetAction')}
             </Typography>
         </Box>

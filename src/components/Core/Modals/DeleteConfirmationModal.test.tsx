@@ -1,5 +1,8 @@
+import {
+    DeleteConfirmationModal,
+    DeleteConfirmationModalProps
+} from "@/components/Core/Modals/DeleteConfirmationModal";
 import { render, screen } from '@testing-library/react';
-import { DeleteConfirmationModal, DeleteConfirmationModalProps } from "components/Core/Modals/DeleteConfirmationModal";
 import userEvent from "@testing-library/user-event";
 
 describe("Test the DeleteConfirmationModal component", () => {
@@ -12,8 +15,8 @@ describe("Test the DeleteConfirmationModal component", () => {
             subtitle: "the subtitle",
             message: "deleting this will also delete this other thing",
             isOpen: true,
-            closeFn: jest.fn(),
-            deleteFn: jest.fn()
+            closeFn: vi.fn(),
+            deleteFn: vi.fn()
         };
     });
 

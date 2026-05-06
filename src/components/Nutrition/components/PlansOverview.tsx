@@ -1,15 +1,15 @@
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { Divider, List, ListItem, ListItemButton, ListItemText, Paper, Stack } from "@mui/material";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { WgerContainerRightSidebar } from "components/Core/Widgets/Container";
-import { OverviewEmpty } from "components/Core/Widgets/OverviewEmpty";
-import { NutritionalPlan } from "components/Nutrition/models/nutritionalPlan";
-import { useFetchNutritionalPlansQuery } from "components/Nutrition/queries";
-import { AddNutritionalPlanFab } from "components/Nutrition/widgets/Fab";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
+import { OverviewEmpty } from "@/components/Core/Widgets/OverviewEmpty";
+import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
+import { useFetchNutritionalPlansQuery } from "@/components/Nutrition/queries";
+import { AddNutritionalPlanFab } from "@/components/Nutrition/widgets/Fab";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { dateToLocale } from "utils/date";
-import { makeLink, WgerLink } from "utils/url";
+import { dateToLocale } from "@/utils/date";
+import { makeLink, WgerLink } from "@/utils/url";
 
 export const PlansOverview = () => {
     const plansQuery = useFetchNutritionalPlansQuery();
@@ -38,7 +38,7 @@ const PlanListItem = (props: { plan: NutritionalPlan }) => {
         <ListItem sx={{ p: 0 }}>
             <ListItemButton component="a" href={detailUrl}>
                 <ListItemText
-                    primary={props.plan.description !== '' ? props.plan.description : t('routines.routine')}
+                    primary={props.plan.description !== '' ? props.plan.description : t('nutrition.plan')}
                     secondary={
                         props.plan.end
                             ? `${dateToLocale(props.plan.start)} – ${dateToLocale(props.plan.end)}`
