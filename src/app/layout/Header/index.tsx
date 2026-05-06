@@ -1,8 +1,8 @@
 import { AppBar, Toolbar, Typography } from "@mui/material";
-import { BodyWeightSubMenu } from "@/components/Header/SubMenus/BodyWeightSubMenu";
-import { MeasurementsSubMenu } from "@/components/Header/SubMenus/MeasurementsSubMenu";
-import { NutritionSubMenu } from "@/components/Header/SubMenus/NutritionSubMenu";
-import { TrainingSubMenu } from "@/components/Header/SubMenus/TrainingSubMenu";
+import { BodyWeightSubMenu } from "@/app/layout/Header/SubMenus/BodyWeightSubMenu";
+import { MeasurementsSubMenu } from "@/app/layout/Header/SubMenus/MeasurementsSubMenu";
+import { NutritionSubMenu } from "@/app/layout/Header/SubMenus/NutritionSubMenu";
+import { TrainingSubMenu } from "@/app/layout/Header/SubMenus/TrainingSubMenu";
 import React from 'react';
 
 
