@@ -4,12 +4,12 @@
  * Other code may only import from `@/components/Exercises`, never from
  * internal sub-paths.
  */
-export { AddExerciseStepper } from "./Add/AddExerciseStepper";
-export { NotEnoughRights } from "./Add/NotEnoughRights";
-export { ExerciseDetails } from "./Detail/ExerciseDetails";
-export { ExerciseImageAvatar } from "./Detail/ExerciseImageAvatar";
-export { ExerciseOverview } from "./ExerciseOverview";
-export { NameAutocompleter } from "./Filter/NameAutcompleter";
+export { AddExerciseStepper } from "./screens/Add/AddExerciseStepper";
+export { NotEnoughRights } from "./screens/Add/NotEnoughRights";
+export { ExerciseDetails } from "./screens/Detail/ExerciseDetails";
+export { ExerciseImageAvatar } from "./screens/Detail/ExerciseImageAvatar";
+export { ExerciseOverview } from "./screens/ExerciseOverview";
+export { NameAutocompleter } from "./widgets/Filter/NameAutcompleter";
 
 // Models
 export { Alias, AliasAdapter } from "./models/alias";

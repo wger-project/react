@@ -4,8 +4,8 @@
  * Other code may only import from `@/components/Measurements`, never from
  * internal sub-paths.
  */
-export { MeasurementCategoryDetail } from "./Screens/MeasurementCategoryDetail";
-export { MeasurementCategoryOverview } from "./Screens/MeasurementCategoryOverview";
+export { MeasurementCategoryDetail } from "./screens/MeasurementCategoryDetail";
+export { MeasurementCategoryOverview } from "./screens/MeasurementCategoryOverview";
 
 // Models
 export { MeasurementCategory } from "./models/Category";

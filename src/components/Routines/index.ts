@@ -4,19 +4,19 @@
  * Other code may only import from `@/components/Routines`, never from
  * internal sub-paths.
  */
-export { RoutineAdd } from "./Detail/RoutineAdd";
-export { RoutineDetail } from "./Detail/RoutineDetail";
-export { RoutineDetailsTable } from "./Detail/RoutineDetailsTable";
-export { RoutineEdit } from "./Detail/RoutineEdit";
-export { SessionAdd } from "./Detail/SessionAdd";
-export { SlotProgressionEdit } from "./Detail/SlotProgressionEdit";
-export { TemplateDetail } from "./Detail/TemplateDetail";
-export { WorkoutLogs } from "./Detail/WorkoutLogs";
-export { WorkoutStats } from "./Detail/WorkoutStats";
+export { RoutineAdd } from "./screens/Detail/RoutineAdd";
+export { RoutineDetail } from "./screens/Detail/RoutineDetail";
+export { RoutineDetailsTable } from "./screens/Detail/RoutineDetailsTable";
+export { RoutineEdit } from "./screens/Detail/RoutineEdit";
+export { SessionAdd } from "./screens/Detail/SessionAdd";
+export { SlotProgressionEdit } from "./screens/Detail/SlotProgressionEdit";
+export { TemplateDetail } from "./screens/Detail/TemplateDetail";
+export { WorkoutLogs } from "./screens/Detail/WorkoutLogs";
+export { WorkoutStats } from "./screens/Detail/WorkoutStats";
 
-export { PrivateTemplateOverview } from "./Overview/PrivateTemplateOverview";
-export { PublicTemplateOverview } from "./Overview/PublicTemplateOverview";
-export { RoutineOverview } from "./Overview/RoutineOverview";
+export { PrivateTemplateOverview } from "./screens/Overview/PrivateTemplateOverview";
+export { PublicTemplateOverview } from "./screens/Overview/PublicTemplateOverview";
+export { RoutineOverview } from "./screens/Overview/RoutineOverview";
 
 // Models
 export {

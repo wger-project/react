@@ -4,11 +4,11 @@
  * Other code may only import from `@/components/Nutrition`, never from
  * internal sub-paths.
  */
-export { BmiCalculator } from "./components/BmiCalculator";
-export { IngredientSearch } from "./components/IngredientSearch";
-export { NutritionDiaryOverview } from "./components/NutritionDiaryOverview";
-export { PlanDetail } from "./components/PlanDetail";
-export { PlansOverview } from "./components/PlansOverview";
+export { BmiCalculator } from "./screens/BmiCalculator";
+export { IngredientSearch } from "./screens/IngredientSearch";
+export { NutritionDiaryOverview } from "./screens/NutritionDiaryOverview";
+export { PlanDetail } from "./screens/PlanDetail";
+export { PlansOverview } from "./screens/PlansOverview";
 
 // Models
 export { Ingredient } from "./models/Ingredient";

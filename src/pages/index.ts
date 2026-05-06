@@ -6,7 +6,7 @@ export { CaloriesCalculator } from './CaloriesCalculator';
 export { Equipments } from './Equipments';
 export { Ingredients } from './Ingredients';
 export { Login } from './Login';
-export { ExerciseDetails } from '../components/Exercises/Detail/ExerciseDetails';
+export { ExerciseDetails } from '@/components/Exercises';
 export { Preferences } from './Preferences';
 export { PublicTemplate } from './PublicTemplate';
 export { ApiPage } from './ApiPage';

@@ -4,7 +4,7 @@
  * Other code may only import from `@/components/Trophies`, never from
  * internal sub-paths.
  */
-export { TrophiesDetail } from "./components/TrophiesDetail";
+export { TrophiesDetail } from "./screens/TrophiesDetail";
 
 // Models
 export { Trophy } from "./models/trophy";

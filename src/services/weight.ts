@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { WeightEntry } from "@/components/Weight/model";
+import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import { ApiBodyWeightType } from '@/types';
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import { FilterType } from '../components/Weight/widgets/FilterButtons';
