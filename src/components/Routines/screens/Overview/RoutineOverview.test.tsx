@@ -3,12 +3,12 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { RoutineOverview } from "@/components/Routines/screens/Overview/RoutineOverview";
 import React from 'react';
 import { BrowserRouter } from "react-router-dom";
-import { getRoutinesShallow } from "@/services";
+import { getRoutinesShallow } from "@/components/Routines/api/routine";
 import { testQueryClient } from "@/tests/queryClient";
 import { TEST_ROUTINES } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
+vi.mock("@/components/Routines/api/routine");
 
 describe("Smoke tests the RoutineOverview component", () => {
 

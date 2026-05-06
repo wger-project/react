@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MealItem } from "@/components/Nutrition/models/mealItem";
-import { addMealItem, deleteMealItem, editMealItem } from "@/services/mealItem";
+import { addMealItem, deleteMealItem, editMealItem } from "@/components/Nutrition/api/mealItem";
 import { QueryKey } from "@/core/lib/consts";
 
 export const useAddMealItemQuery = (planId: number) => {

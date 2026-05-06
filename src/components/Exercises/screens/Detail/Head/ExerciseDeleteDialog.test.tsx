@@ -5,7 +5,7 @@ import {
     useFetchExerciseQuery,
     useSearchExerciseTranslationsQuery,
 } from "@/components/Exercises/queries";
-import { searchExerciseTranslations } from "@/services";
+import { searchExerciseTranslations } from "@/components/Exercises/api/exerciseTranslation";
 import { searchResponse } from "@/tests/exercises/searchResponse";
 import { testExerciseBenchPress, testExerciseSquats, testLanguageGerman } from "@/tests/exerciseTestdata";
 import { render, screen, waitFor, within } from '@testing-library/react';
@@ -14,7 +14,7 @@ import React from 'react';
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
+vi.mock("@/components/Exercises/api/exerciseTranslation");
 vi.mock("@/components/Exercises/queries");
 
 describe("Test the ExerciseDeleteDialog component", () => {

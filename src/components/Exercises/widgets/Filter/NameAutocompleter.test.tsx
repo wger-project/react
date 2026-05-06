@@ -4,7 +4,7 @@ import {
     STORAGE_KEY_EXERCISE_LANGUAGE
 } from "@/components/Exercises/widgets/Filter/NameAutcompleter";
 import { Exercise } from "@/components/Exercises/models/exercise";
-import { searchExerciseTranslations } from "@/services";
+import { searchExerciseTranslations } from "@/components/Exercises/api/exerciseTranslation";
 import { searchResponse } from "@/tests/exercises/searchResponse";
 import { testQueryClient } from "@/tests/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -14,7 +14,7 @@ import React from 'react';
 
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
+vi.mock("@/components/Exercises/api/exerciseTranslation");
 const mockCallback = vi.fn();
 
 function renderAutocompleter() {

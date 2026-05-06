@@ -1,4 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+    AddBaseConfigParams,
+    EditBaseConfigParams,
+    processBaseConfigs,
+    ProcessBaseConfigsParams
+} from "@/components/Routines/api/base_config";
 import {
     addMaxNrOfSetsConfig,
     addMaxRepetitionsConfig,
@@ -29,11 +34,10 @@ import {
     editRepetitionsConfig,
     editRestConfig,
     editRirConfig,
-    editWeightConfig,
-    processBaseConfigs
-} from "@/services";
-import { AddBaseConfigParams, EditBaseConfigParams, ProcessBaseConfigsParams } from "@/services/base_config";
+    editWeightConfig
+} from "@/components/Routines/api/config";
 import { QueryKey, } from "@/core/lib/consts";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 export const useProcessConfigsQuery = (routineId: number) => {

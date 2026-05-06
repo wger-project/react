@@ -4,13 +4,17 @@ import { WorkoutStats } from "@/components/Routines/screens/Detail/WorkoutStats"
 import { RoutineStatsData } from "@/components/Routines/models/LogStats";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { getLanguages, getMuscles, getRoutine, getRoutineStatisticsData } from "@/services";
+import { getLanguages } from "@/components/Exercises/api/language";
+import { getMuscles } from "@/components/Exercises/api/muscles";
+import { getRoutine, getRoutineStatisticsData } from "@/components/Routines/api/routine";
 import { testLanguages, testMuscles } from "@/tests/exerciseTestdata";
 import { getTestQueryClient } from "@/tests/queryClient";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
+vi.mock("@/components/Exercises/api/language");
+vi.mock("@/components/Exercises/api/muscles");
+vi.mock("@/components/Routines/api/routine");
 
 describe("Smoke tests the WorkoutStats component", () => {
 

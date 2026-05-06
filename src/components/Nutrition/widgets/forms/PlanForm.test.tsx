@@ -8,7 +8,7 @@ import React from 'react';
 import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services/weight");
+vi.mock("@/components/Weight/api/weight");
 vi.mock("@/components/Nutrition/queries");
 
 describe("Test the PlanForm component", () => {

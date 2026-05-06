@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getTrophies } from "@/components/Trophies/services/trophies";
-import { getUserTrophies, setTrophyAsNotified } from "@/components/Trophies/services/userTrophies";
-import { getUserTrophyProgression } from "@/components/Trophies/services/userTrophyProgression";
+import { getTrophies } from "@/components/Trophies/api/trophies";
+import { getUserTrophies, setTrophyAsNotified } from "@/components/Trophies/api/userTrophies";
+import { getUserTrophyProgression } from "@/components/Trophies/api/userTrophyProgression";
 import { QueryKey } from "@/core/lib/consts";
 
 export const useTrophiesQuery = () => useQuery({

@@ -3,13 +3,15 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { TemplateDetail } from "@/components/Routines/screens/Detail/TemplateDetail";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { getLanguages, getRoutine } from "@/services";
+import { getLanguages } from "@/components/Exercises/api/language";
+import { getRoutine } from "@/components/Routines/api/routine";
 import { testLanguages } from "@/tests/exerciseTestdata";
 import { getTestQueryClient } from "@/tests/queryClient";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
+vi.mock("@/components/Exercises/api/language");
+vi.mock("@/components/Routines/api/routine");
 
 describe("Smoke tests the TemplateDetail component", () => {
 

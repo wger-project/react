@@ -91,16 +91,22 @@ export default tseslint.config(
     // Per-domain overrides: relax the rule for same-domain imports.
     ...domainOverrides,
     {
-        // The infrastructure layer (services/, core/lib, tests/, types.ts)
-        // sits BELOW the domains in the dependency graph. Importing from a
-        // domain barrel here creates circular dependencies (the barrel pulls
-        // in queries which depend on services). These files must use direct
+        // The infrastructure layer (api/ files inside each domain, core/lib,
+        // tests/, types.ts) sits BELOW the consumer code. Importing from a
+        // domain barrel here would create circular dependencies (the barrel
+        // pulls in queries which depend on api). These files must use direct
         // sub-paths.
+        //
+        // Test files are also exempted — they legitimately mock internal
+        // modules across domains (e.g. a Calendar test that asserts on
+        // multiple domains' api functions).
         files: [
-            'src/services/**',
+            'src/components/*/api/**',
+            'src/core/api/**',
             'src/core/lib/**',
             'src/tests/**',
             'src/types.ts',
+            'src/**/*.test.{ts,tsx}',
         ],
         rules: {
             "no-restricted-imports": "off",

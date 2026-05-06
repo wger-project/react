@@ -16,7 +16,7 @@ import { EntryForm } from "@/components/Measurements/widgets/EntryForm";
 import i18n from "i18next";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_ENTRIES_1 } from "@/tests/measurementsTestData";
 
-vi.mock("@/services/weight");
+vi.mock("@/components/Weight/api/weight");
 
 vi.mock("@/components/Measurements/queries");
 

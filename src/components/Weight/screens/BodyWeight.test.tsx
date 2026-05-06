@@ -1,13 +1,13 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from '@testing-library/react';
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
-import { getWeights } from "@/services";
+import { getWeights } from "@/components/Weight/api/weight";
 import { testQueryClient } from "@/tests/queryClient";
 import { BodyWeight } from "./BodyWeight";
 import { FilterType } from "../widgets/FilterButtons";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
+vi.mock("@/components/Weight/api/weight");
 console.log = vi.fn();
 
 describe("Test BodyWeight component", () => {

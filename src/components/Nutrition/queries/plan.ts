@@ -7,7 +7,7 @@ import {
     getLastNutritionalPlan,
     getNutritionalPlanFull,
     getNutritionalPlansSparse
-} from "@/services/nutritionalPlan";
+} from "@/components/Nutrition/api/nutritionalPlan";
 import { QueryKey } from "@/core/lib/consts";
 import { dateToYYYYMMDD } from "@/core/lib/date";
 

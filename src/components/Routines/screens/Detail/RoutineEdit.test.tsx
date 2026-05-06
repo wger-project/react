@@ -3,14 +3,18 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { RoutineEdit } from "@/components/Routines/screens/Detail/RoutineEdit";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { getLanguages, getProfile, getRoutine } from "@/services";
+import { getLanguages } from "@/components/Exercises/api/language";
+import { getRoutine } from "@/components/Routines/api/routine";
+import { getProfile } from "@/components/User/api/profile";
 import { testLanguages } from "@/tests/exerciseTestdata";
 import { testQueryClient } from "@/tests/queryClient";
 import { testProfileDataVerified } from "@/tests/userTestdata";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
+vi.mock("@/components/Exercises/api/language");
+vi.mock("@/components/Routines/api/routine");
+vi.mock("@/components/User/api/profile");
 
 describe("Smoke tests the RoutineDetailsTable component", () => {
 

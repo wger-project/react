@@ -1,7 +1,6 @@
+import { checkLanguage, LanguageCheckInput } from "@/core/api/languageCheck";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import { checkLanguage } from "@/services";
-import { LanguageCheckInput } from "@/services/languageCheck";
 
 
 /*

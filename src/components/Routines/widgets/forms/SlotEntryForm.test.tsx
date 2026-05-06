@@ -9,14 +9,18 @@ import {
     SlotEntryWeightUnitField
 } from "@/components/Routines/widgets/forms/SlotEntryForm";
 import type { Mock } from 'vitest';
-import { editProfile, editSlotEntry, getProfile, getRoutineRepUnits, getRoutineWeightUnits } from "@/services";
+import { editSlotEntry } from "@/components/Routines/api/slot_entry";
+import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
+import { editProfile, getProfile } from "@/components/User/api/profile";
 import { getTestQueryClient } from "@/tests/queryClient";
 import { testProfileDataVerified } from "@/tests/userTestdata";
 import { testDayLegs, testRepetitionUnits, testWeightUnits } from "@/tests/workoutRoutinesTestData";
 import { DEBOUNCE_ROUTINE_FORMS } from "@/core/lib/consts";
 
 
-vi.mock("@/services");
+vi.mock("@/components/Routines/api/slot_entry");
+vi.mock("@/components/Routines/api/workoutUnits");
+vi.mock("@/components/User/api/profile");
 
 let user: ReturnType<typeof userEvent.setup>;
 const mockEditSlotEntry = editSlotEntry as Mock;

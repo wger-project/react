@@ -3,14 +3,18 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { SessionAdd } from "@/components/Routines/screens/Detail/SessionAdd";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { getLanguages, getRoutine, searchSession } from "@/services";
+import { getLanguages } from "@/components/Exercises/api/language";
+import { getRoutine } from "@/components/Routines/api/routine";
+import { searchSession } from "@/components/Routines/api/session";
 import { testLanguages } from "@/tests/exerciseTestdata";
 import { testQueryClient } from "@/tests/queryClient";
 import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
+vi.mock("@/components/Exercises/api/language");
+vi.mock("@/components/Routines/api/routine");
+vi.mock("@/components/Routines/api/session");
 
 describe("Smoke tests the SessionAdd component", () => {
 

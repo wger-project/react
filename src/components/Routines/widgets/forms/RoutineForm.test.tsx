@@ -3,13 +3,13 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RoutineForm } from "@/components/Routines/widgets/forms/RoutineForm";
 import { BrowserRouter } from "react-router-dom";
-import { addRoutine, editRoutine } from '@/services';
+import { addRoutine, editRoutine } from "@/components/Routines/api/routine";
 import { testQueryClient } from "@/tests/queryClient";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
 
-vi.mock("@/services");
+vi.mock("@/components/Routines/api/routine");
 const mockEditRoutine = editRoutine as Mock;
 const mockAddRoutine = addRoutine as Mock;
 

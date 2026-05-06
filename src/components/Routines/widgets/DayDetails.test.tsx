@@ -7,15 +7,24 @@ import { SlotEntry } from "@/components/Routines/models/SlotEntry";
 import { DayDetails, DayDragAndDropGrid, groupSlotsByExercise } from "@/components/Routines/widgets/DayDetails";
 import React from 'react';
 import { MemoryRouter } from "react-router-dom";
-import { addDay, addSlot, getLanguages, getProfile, getRoutine } from "@/services";
-import { addSlotEntry } from "@/services/slot_entry";
+import { getLanguages } from "@/components/Exercises/api/language";
+import { addDay } from "@/components/Routines/api/day";
+import { getRoutine } from "@/components/Routines/api/routine";
+import { addSlot } from "@/components/Routines/api/slot";
+import { getProfile } from "@/components/User/api/profile";
+import { addSlotEntry } from "@/components/Routines/api/slot_entry";
 import { getTestQueryClient } from "@/tests/queryClient";
 import { testProfileDataVerified } from "@/tests/userTestdata";
 import { testDayLegs, testRoutine1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
-vi.mock("@/services/slot_entry");
+vi.mock("@/components/Exercises/api/language");
+vi.mock("@/components/Routines/api/day");
+vi.mock("@/components/Routines/api/routine");
+vi.mock("@/components/Routines/api/slot");
+vi.mock("@/components/Routines/api/slot_entry");
+vi.mock("@/components/User/api/profile");
+vi.mock("@/components/Routines/api/slot_entry");
 
 const makeSlot = (id: number, exerciseId: number) => new Slot({
     id, dayId: 1, order: id, comment: '', config: null,

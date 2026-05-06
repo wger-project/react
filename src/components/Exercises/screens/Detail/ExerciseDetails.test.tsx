@@ -4,7 +4,7 @@ import {
     useLanguageQuery,
 } from "@/components/Exercises/queries";
 import { usePermissionQuery, useProfileQuery } from "@/components/User";
-import { getLanguages } from "@/services";
+import { getLanguages } from "@/components/Exercises/api/language";
 import {
     testExerciseCrunches,
     testExerciseCurls,
@@ -19,7 +19,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import type { Mock } from 'vitest';
 import { ExerciseDetails } from './ExerciseDetails';
 
-vi.mock("@/services");
+vi.mock("@/components/Exercises/api/language");
 vi.mock("@/components/Exercises/queries");
 vi.mock("@/components/User/queries/profile");
 vi.mock("@/components/User/queries/permission");

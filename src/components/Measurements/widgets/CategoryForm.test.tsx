@@ -7,7 +7,7 @@ import React from 'react';
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services/weight");
+vi.mock("@/components/Weight/api/weight");
 
 vi.mock("@/components/Measurements/queries");
 

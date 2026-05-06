@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Day } from "@/components/Routines/models/Day";
-import { addDay, deleteDay, editDay } from "@/services";
+import { addDay, deleteDay, editDay } from "@/components/Routines/api/day";
 import { QueryKey, } from "@/core/lib/consts";
 
 

@@ -1,22 +1,20 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-    deleteMeasurementEntry,
-    editMeasurementEntry,
-    getMeasurementCategories,
-    getMeasurementCategory
-} from "@/services";
 import {
     addMeasurementCategory,
     AddMeasurementCategoryParams,
     addMeasurementEntry,
     AddMeasurementParams,
     deleteMeasurementCategory,
+    deleteMeasurementEntry,
     editMeasurementCategory,
     editMeasurementCategoryParams,
+    editMeasurementEntry,
     editMeasurementParams,
+    getMeasurementCategories,
+    getMeasurementCategory,
     MeasurementQueryOptions
-} from "@/services/measurements";
+} from "@/components/Measurements/api/measurements";
 import { QUERY_MEASUREMENTS, QUERY_MEASUREMENTS_CATEGORIES, } from "@/core/lib/consts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
 export function useMeasurementsCategoryQuery(options?: MeasurementQueryOptions) {

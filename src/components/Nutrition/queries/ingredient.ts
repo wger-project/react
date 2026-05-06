@@ -1,5 +1,4 @@
-import { getIngredient, searchIngredient } from "@/services";
-import { IngredientSearchFilters } from "@/services/ingredient";
+import { getIngredient, IngredientSearchFilters, searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { QueryKey } from "@/core/lib/consts";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";

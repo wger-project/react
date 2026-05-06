@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
-import { createWeight, deleteWeight, getWeights, updateWeight, } from "@/services";
+import { createWeight, deleteWeight, getWeights, updateWeight } from "@/components/Weight/api/weight";
 import { QueryKey, } from "@/core/lib/consts";
 import { FilterType } from "../widgets/FilterButtons";
 

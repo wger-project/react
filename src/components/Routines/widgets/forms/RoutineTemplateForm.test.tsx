@@ -2,13 +2,13 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RoutineTemplateForm } from "@/components/Routines/widgets/forms/RoutineTemplateForm";
-import { editRoutine } from '@/services';
+import { editRoutine } from "@/components/Routines/api/routine";
 import { testQueryClient } from "@/tests/queryClient";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
 
-vi.mock("@/services");
+vi.mock("@/components/Routines/api/routine");
 const mockEditRoutine = editRoutine as Mock;
 
 describe('RoutineTemplateForm', () => {

@@ -3,13 +3,13 @@ import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { Slot } from "@/components/Routines/models/Slot";
 import { SlotForm } from "@/components/Routines/widgets/forms/SlotForm";
-import { editSlot } from "@/services";
+import { editSlot } from "@/components/Routines/api/slot";
 import { testQueryClient } from "@/tests/queryClient";
 import { testDayLegs } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
 
-vi.mock("@/services");
+vi.mock("@/components/Routines/api/slot");
 
 let user: ReturnType<typeof userEvent.setup>;
 const mockEditSlot = editSlot as Mock;

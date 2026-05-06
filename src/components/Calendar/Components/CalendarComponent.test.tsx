@@ -1,6 +1,9 @@
 import { MeasurementCategory, MeasurementEntry } from "@/components/Measurements";
 import { WeightEntry } from "@/components/Weight";
-import { getMeasurementCategories, getNutritionalDiaryEntries, getSessions, getWeights } from "@/services";
+import { getMeasurementCategories } from "@/components/Measurements/api/measurements";
+import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutritionalDiary";
+import { getSessions } from "@/components/Routines/api/session";
+import { getWeights } from "@/components/Weight/api/weight";
 import { TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2 } from "@/tests/nutritionDiaryTestdata";
 import { testQueryClient } from "@/tests/queryClient";
 import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
@@ -15,7 +18,10 @@ import { BrowserRouter } from "react-router-dom";
 import type { Mock } from 'vitest';
 import CalendarComponent from "./CalendarComponent";
 
-vi.mock('@/services');
+vi.mock("@/components/Measurements/api/measurements");
+vi.mock("@/components/Nutrition/api/nutritionalDiary");
+vi.mock("@/components/Routines/api/session");
+vi.mock("@/components/Weight/api/weight");
 
 
 // TODO: using vi.useFakeTimers() and vi.setSystemTime(new Date('2024-12-01'));

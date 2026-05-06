@@ -1,7 +1,7 @@
 import { useAddMealItemQuery, useEditMealItemQuery, useSearchIngredientQuery } from "@/components/Nutrition/queries";
 import { MealItemForm } from "@/components/Nutrition/widgets/forms/MealItemForm";
 import { SEARCH_DEBOUNCE_MS } from "@/components/Nutrition/widgets/IngredientAutcompleter";
-import { searchIngredient } from "@/services";
+import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
 import { TEST_MEAL_ITEM_1 } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -12,7 +12,7 @@ import type { Mock } from 'vitest';
 const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
 vi.mock('@/components/Nutrition/queries');
-vi.mock('@/services');
+vi.mock("@/components/Nutrition/api/ingredient");
 
 // Note: this helper still relies on a real-time sleep rather than waitFor.
 // The MUI Autocomplete flow with a prefilled value has subtle ordering

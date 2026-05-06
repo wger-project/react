@@ -5,7 +5,7 @@ import {
     useSearchIngredientQuery
 } from "@/components/Nutrition/queries";
 import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
-import { searchIngredient } from "@/services";
+import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
 import { TEST_DIARY_ENTRY_1 } from "@/tests/nutritionDiaryTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -15,7 +15,7 @@ import React from 'react';
 import type { Mock } from 'vitest';
 
 vi.mock('@/components/Nutrition/queries');
-vi.mock('@/services');
+vi.mock("@/components/Nutrition/api/ingredient");
 
 async function fillInEntry(user: UserEvent) {
     const autocomplete = screen.getByTestId('autocomplete');

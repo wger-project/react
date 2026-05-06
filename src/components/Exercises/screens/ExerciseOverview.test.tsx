@@ -1,5 +1,9 @@
 import { ExerciseOverview } from "@/components/Exercises/screens/ExerciseOverview";
-import { getCategories, getEquipment, getExercises, getLanguages, getMuscles } from "@/services";
+import { getCategories } from "@/components/Exercises/api/category";
+import { getEquipment } from "@/components/Exercises/api/equipment";
+import { getExercises } from "@/components/Exercises/api/exercise";
+import { getLanguages } from "@/components/Exercises/api/language";
+import { getMuscles } from "@/components/Exercises/api/muscles";
 import {
     testCategories,
     testEquipment,
@@ -18,7 +22,11 @@ import { BrowserRouter } from 'react-router-dom';
 
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
+vi.mock("@/components/Exercises/api/category");
+vi.mock("@/components/Exercises/api/equipment");
+vi.mock("@/components/Exercises/api/exercise");
+vi.mock("@/components/Exercises/api/language");
+vi.mock("@/components/Exercises/api/muscles");
 
 const queryClient = new QueryClient();
 

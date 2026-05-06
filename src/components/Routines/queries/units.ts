@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getRoutineRepUnits, getRoutineWeightUnits } from "@/services";
+import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
 import { QueryKey, } from "@/core/lib/consts";
 
 

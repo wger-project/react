@@ -3,14 +3,14 @@ import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { useProfileQuery } from "@/components/User";
 import { DayForm } from "@/components/Routines/widgets/forms/DayForm";
-import { editDay } from "@/services";
+import { editDay } from "@/components/Routines/api/day";
 import { testQueryClient } from "@/tests/queryClient";
 import { testProfileDataVerified } from "@/tests/userTestdata";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
 
-vi.mock("@/services");
+vi.mock("@/components/Routines/api/day");
 vi.mock("@/components/User/queries/profile");
 const mockEditDay = editDay as Mock;
 const mockUseProfileQuery = useProfileQuery as Mock;

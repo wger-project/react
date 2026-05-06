@@ -19,7 +19,7 @@ import { ConfigDetailsRequirementsField, ConfigType } from "@/components/Routine
 import { FieldArray, Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AddBaseConfigParams, EditBaseConfigParams } from "@/services/base_config";
+import { AddBaseConfigParams, EditBaseConfigParams } from "@/components/Routines/api/base_config";
 import { ApiPath } from "@/core/lib/consts";
 import * as yup from "yup";
 

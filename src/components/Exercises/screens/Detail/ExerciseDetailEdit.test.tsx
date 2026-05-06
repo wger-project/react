@@ -16,7 +16,7 @@ import {
     usePostAliasQuery
 } from "@/components/Exercises/queries";
 import { usePermissionQuery, useProfileQuery, WgerPermissions } from "@/components/User";
-import { editTranslation } from "@/services";
+import { editTranslation } from "@/components/Exercises/api/exerciseTranslation";
 import {
     testCategories,
     testEquipment,
@@ -37,7 +37,7 @@ import { ExerciseImage } from "../../models/image";
 // It seems we run into a timeout when running the tests on GitHub actions
 vi.setConfig({ testTimeout: 15000 });
 
-vi.mock("@/services");
+vi.mock("@/components/Exercises/api/exerciseTranslation");
 vi.mock("@/components/User/queries/permission");
 vi.mock("@/components/User/queries/profile");
 vi.mock("@/components/Exercises/queries");

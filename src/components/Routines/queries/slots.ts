@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Slot } from "@/components/Routines/models/Slot";
-import { addSlot, deleteSlot, editSlot } from "@/services";
+import { addSlot, deleteSlot, editSlot } from "@/components/Routines/api/slot";
 import { QueryKey, } from "@/core/lib/consts";
 
 

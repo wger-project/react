@@ -2,12 +2,12 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
 import { PrivateTemplateOverview } from "@/components/Routines/screens/Overview/PrivateTemplateOverview";
 import { BrowserRouter } from "react-router-dom";
-import { getPrivateTemplatesShallow } from "@/services";
+import { getPrivateTemplatesShallow } from "@/components/Routines/api/routine";
 import { testQueryClient } from "@/tests/queryClient";
 import { testPrivateTemplate1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
+vi.mock("@/components/Routines/api/routine");
 
 describe("Smoke tests the PrivateTemplateOverview component", () => {
 

@@ -5,12 +5,12 @@ import userEvent from "@testing-library/user-event";
 import { DraggableSlotItem } from "@/components/Routines/widgets/slots/DraggableSlotItem";
 import React from 'react';
 import { MemoryRouter } from "react-router-dom";
-import { getLanguages } from "@/services";
+import { getLanguages } from "@/components/Exercises/api/language";
 import { getTestQueryClient } from "@/tests/queryClient";
 import { testDayLegs } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/services");
+vi.mock("@/components/Exercises/api/language");
 
 describe("DraggableSlotItem component", () => {
     const defaultProps = {

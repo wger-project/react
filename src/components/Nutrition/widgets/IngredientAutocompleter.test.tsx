@@ -9,11 +9,11 @@ import {
     STORAGE_KEY_VEGETARIAN
 } from '@/components/Nutrition/widgets/IngredientAutcompleter';
 import type { Mock } from 'vitest';
-import { searchIngredient } from '@/services';
+import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_4 } from "@/tests/ingredientTestdata";
 import { testQueryClient } from "@/tests/queryClient";
 
-vi.mock("@/services");
+vi.mock("@/components/Nutrition/api/ingredient");
 
 const mockCallback = vi.fn();
 

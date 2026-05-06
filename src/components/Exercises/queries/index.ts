@@ -1,33 +1,34 @@
-import { SearchLanguageFilter } from "@/core/ui/Widgets/SearchLanguageFilter";
-import { Note } from "@/components/Exercises/models/note";
+import { deleteAlias, postAlias } from "@/components/Exercises/api/alias";
+import { getCategories } from "@/components/Exercises/api/category";
+import { getEquipment } from "@/components/Exercises/api/equipment";
 import {
-    addNote,
-    addTranslation,
-    deleteAlias,
     deleteExercise,
-    deleteExerciseTranslation,
-    deleteNote,
+    DeleteExerciseOptions,
     editExercise,
-    editNote,
+    EditExerciseProps
+} from "@/components/Exercises/api/exercise";
+import {
+    addTranslation,
+    AddTranslationParams,
+    deleteExerciseTranslation,
     editTranslation,
-    getCategories,
-    getEquipment,
-    getLanguages,
-    getMuscles,
-    postAlias,
-    postExerciseImage,
-    searchExerciseTranslations,
-} from "@/services";
-import { DeleteExerciseOptions, EditExerciseProps } from "@/services/exercise";
-import { AddTranslationParams, EditTranslationParams } from "@/services/exerciseTranslation";
+    EditTranslationParams,
+    searchExerciseTranslations
+} from "@/components/Exercises/api/exerciseTranslation";
 import {
     deleteExerciseImage,
     patchExerciseImage,
     PatchExerciseImageParams,
+    postExerciseImage,
     PostExerciseImageParams
-} from "@/services/image";
-import { deleteExerciseVideo, postExerciseVideo, PostExerciseVideoParams } from "@/services/video";
+} from "@/components/Exercises/api/image";
+import { getLanguages } from "@/components/Exercises/api/language";
+import { getMuscles } from "@/components/Exercises/api/muscles";
+import { addNote, deleteNote, editNote } from "@/components/Exercises/api/note";
+import { deleteExerciseVideo, postExerciseVideo, PostExerciseVideoParams } from "@/components/Exercises/api/video";
+import { Note } from "@/components/Exercises/models/note";
 import { QueryKey } from "@/core/lib/consts";
+import { SearchLanguageFilter } from "@/core/ui/Widgets/SearchLanguageFilter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 
