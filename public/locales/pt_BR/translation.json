@@ -224,7 +224,10 @@
         "replacementsInfoText": "Opcionalmente, você pode também selecionar um exercício que pode substituir esse (ex: porque foi substituído duas vezes, ou similar). Isso irá substituir o exercício em rotinas e também logs de treinos, ao invés de apenas excluí-lo. Essas mudanças irão também ser propagadas para qualquer instancia que sincroniza os exercícios a partir desse.",
         "deleteExerciseReplace": "Delete e substitua",
         "swapExercise": "Substituir exercício",
-        "exactMatch": "Correspondência exata"
+        "exactMatch": "Correspondência exata",
+        "replacementCannotBeSame": "O exercício substituto não pode ser o mesmo que está sendo excluído.",
+        "transferMediaLabel": "Transfira os meios de comunicação para o exercício de substituição",
+        "transferTranslationsLabel": "Transferir traduções para o idioma substituto (ignora idiomas já presentes)"
     },
     "notes": "Comentários",
     "value": "Valor",
