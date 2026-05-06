@@ -1,10 +1,10 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from '@testing-library/react';
 import { useMeasurementsQuery } from "@/components/Measurements/queries";
 import { MeasurementCategoryDetail } from "@/components/Measurements/Screens/MeasurementCategoryDetail";
+import { TEST_MEASUREMENT_CATEGORY_1 } from "@/tests/measurementsTestData";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { TEST_MEASUREMENT_CATEGORY_1 } from "@/tests/measurementsTestData";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Measurements/queries");
@@ -41,8 +41,6 @@ describe("Test the MeasurementCategoryDetail component", () => {
                 </MemoryRouter>
             </QueryClientProvider>
         );
-
-        screen.logTestingPlaygroundURL();
 
         // Assert
         expect(useMeasurementsQuery).toHaveBeenCalled();
