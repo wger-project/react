@@ -1,13 +1,17 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from '@testing-library/react';
-import userEvent, { UserEvent } from "@testing-library/user-event";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
-import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "@/components/Nutrition/queries";
+import {
+    useAddDiaryEntryQuery,
+    useEditDiaryEntryQuery,
+    useSearchIngredientQuery
+} from "@/components/Nutrition/queries";
 import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
-import React from 'react';
 import { searchIngredient } from "@/services";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
 import { TEST_DIARY_ENTRY_1 } from "@/tests/nutritionDiaryTestdata";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen, within } from '@testing-library/react';
+import userEvent, { UserEvent } from "@testing-library/user-event";
+import React from 'react';
 import type { Mock } from 'vitest';
 
 vi.mock('@/components/Nutrition/queries');
@@ -48,6 +52,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         (useEditDiaryEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
         (useAddDiaryEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
         (searchIngredient as Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
+        (useSearchIngredientQuery as Mock).mockImplementation(() => searchIngredient);
     });
 
 

@@ -19,6 +19,7 @@ import { FormQueryErrors } from "@/components/Core/Widgets/FormError";
 import { StepProps } from "@/components/Exercises/Add/AddExerciseStepper";
 import {
     useAddExerciseFullQuery,
+    useAddExerciseImageQuery,
     useCategoriesQuery,
     useEquipmentQuery,
     useLanguageQuery,
@@ -29,7 +30,6 @@ import Markdown from 'markdown-to-jsx';
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { postExerciseImage } from "@/services";
 import { useExerciseSubmissionStateValue } from "@/state";
 import { ENGLISH_LANGUAGE_ID } from "@/utils/consts";
 import { MarkdownOptions } from "@/utils/markdown";
@@ -47,6 +47,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
     const profileQuery = useProfileQuery();
 
     const addExerciseSubmissionMutation = useAddExerciseFullQuery();
+    const addImageMutation = useAddExerciseImageQuery();
 
     const submitExercise = async () => {
 
@@ -90,7 +91,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         // Post the images individually, it seems to be more reliable this way
         // and most problems were happening when creating the exercise itself
         for (const image of state.images) {
-            await postExerciseImage({
+            await addImageMutation.mutateAsync({
                 exerciseId: exerciseId,
                 image: image.file,
                 imageData: image,

@@ -68,11 +68,15 @@ export enum QueryKey {
     EXERCISES = 'exercises',
     EXERCISE_VARIATIONS = 'variations',
     EXERCISE_DETAIL = 'detail',
+    EXERCISE_TRANSLATION_SEARCH = 'exercise-translation-search',
     LANGUAGES = 'languages',
     CATEGORIES = 'categories',
     EQUIPMENT = 'equipment',
     MUSCLES = 'muscles',
     QUERY_NOTES = 'notes',
+
+    // Nutrition (search)
+    INGREDIENT_SEARCH = 'ingredient-search',
 
     // Trophies
     TROPHIES = 'trophies',

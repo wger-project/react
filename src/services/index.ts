@@ -22,7 +22,7 @@ export {
     searchExerciseTranslations,
     deleteExerciseTranslation
 } from './exerciseTranslation';
-export { getLanguages, getLanguageByShortName } from './language';
+export { getLanguages } from './language';
 export { postExerciseImage } from './image';
 export { updateWeight, createWeight } from './weight';
 export { postAlias, deleteAlias } from './alias';

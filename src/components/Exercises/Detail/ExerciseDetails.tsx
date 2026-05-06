@@ -1,15 +1,13 @@
-import { Box, Container } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
 import { LoadingWidget } from "@/components/Core/LoadingWidget/LoadingWidget";
 import { ExerciseDetailEdit } from "@/components/Exercises/Detail/ExerciseDetailEdit";
 import { ExerciseDetailView } from "@/components/Exercises/Detail/ExerciseDetailView";
-import { Language } from "@/components/Exercises/models/language";
-import { useLanguageQuery } from "@/components/Exercises/queries";
+import { getLanguageByShortName, Language } from "@/components/Exercises/models/language";
+import { useExerciseQuery, useExercisesForVariationQuery, useLanguageQuery, } from "@/components/Exercises/queries";
+import { ENGLISH_LANGUAGE_OBJ } from "@/utils/consts";
+import { Box, Container } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { getExercise, getExercisesForVariation, getLanguageByShortName, } from "@/services";
-import { ENGLISH_LANGUAGE_OBJ, QUERY_EXERCISE_DETAIL, QUERY_EXERCISE_VARIATIONS, } from "@/utils/consts";
 import { Head } from "./Head";
 
 export const PaddingBox = () => {
@@ -25,26 +23,10 @@ export const ExerciseDetails = () => {
 
     const params = useParams<{ exerciseId: string }>();
     const exerciseId = parseInt(params.exerciseId ?? '');
-    if (Number.isNaN(exerciseId)) {
-        return <p>Please pass an integer as the exercise id.</p>;
-    }
 
+    const exerciseQuery = useExerciseQuery(Number.isNaN(exerciseId) ? -1 : exerciseId);
+    const variationsQuery = useExercisesForVariationQuery(exerciseQuery.data?.variationGroup);
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const exerciseQuery = useQuery({
-        queryKey: [QUERY_EXERCISE_DETAIL, exerciseId],
-        queryFn: () => getExercise(exerciseId),
-        enabled: languageQuery.isSuccess,
-    });
-
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const variationsQuery = useQuery({
-        queryKey: [QUERY_EXERCISE_VARIATIONS, exerciseQuery.data?.variationGroup],
-        queryFn: () => getExercisesForVariation(exerciseQuery.data?.variationGroup),
-        enabled: exerciseQuery.isSuccess
-    });
-
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     React.useEffect(() => {
         if (languageQuery.data === undefined) {
             return;
@@ -57,6 +39,10 @@ export const ExerciseDetails = () => {
         );
         setLanguage(currentUserLanguage!);
     }, [languageQuery.data]);
+
+    if (Number.isNaN(exerciseId)) {
+        return <p>Please pass an integer as the exercise id.</p>;
+    }
 
     if (exerciseQuery.isError || languageQuery.isError || variationsQuery.isError) {
         navigate("/not-found");

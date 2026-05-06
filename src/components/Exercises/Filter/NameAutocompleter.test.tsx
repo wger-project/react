@@ -6,6 +6,8 @@ import {
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { searchExerciseTranslations } from "@/services";
 import { searchResponse } from "@/tests/exercises/searchResponse";
+import { testQueryClient } from "@/tests/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import React from 'react';
@@ -15,11 +17,20 @@ import type { Mock } from 'vitest';
 vi.mock("@/services");
 const mockCallback = vi.fn();
 
+function renderAutocompleter() {
+    render(
+        <QueryClientProvider client={testQueryClient}>
+            <NameAutocompleter callback={mockCallback} />
+        </QueryClientProvider>
+    );
+}
+
 describe("Test the NameAutocompleter component", () => {
 
     // Arrange
     beforeEach(() => {
         localStorage.clear();
+        testQueryClient.clear();
         (searchExerciseTranslations as Mock).mockImplementation(() => Promise.resolve(searchResponse));
     });
 
@@ -27,7 +38,7 @@ describe("Test the NameAutocompleter component", () => {
         const user = userEvent.setup();
 
         // Act
-        render(<NameAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
         const autocomplete = screen.getByTestId('autocomplete');
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
@@ -55,7 +66,7 @@ describe("Test the NameAutocompleter component", () => {
         const user = userEvent.setup();
 
         // Act
-        render(<NameAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
         const autocomplete = screen.getByTestId('autocomplete');
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
@@ -75,7 +86,7 @@ describe("Test the NameAutocompleter component", () => {
     test('TuneIcon button is rendered in search box', async () => {
 
         // Act
-        render(<NameAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
 
         // Assert - TuneIcon button should be present
         const filterButton = screen.getByLabelText('Toggle filters');
@@ -85,7 +96,7 @@ describe("Test the NameAutocompleter component", () => {
     test('filter popup opens when TuneIcon is clicked', async () => {
 
         // Act
-        render(<NameAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
         const filterButton = screen.getByLabelText('Toggle filters');
 
         // Assert - button exists and is clickable
@@ -108,7 +119,7 @@ describe("Test the NameAutocompleter component", () => {
         localStorage.setItem(STORAGE_KEY_EXERCISE_EXACT_MATCH, 'false');
 
         // Act
-        render(<NameAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
 
         // Directly set localStorage as if user toggled
         localStorage.setItem(STORAGE_KEY_EXERCISE_EXACT_MATCH, 'true');
@@ -121,7 +132,7 @@ describe("Test the NameAutocompleter component", () => {
         const user = userEvent.setup();
         localStorage.clear();
 
-        render(<NameAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
 
         // Type something to trigger the search
         const autocomplete = screen.getByTestId('autocomplete');
@@ -141,7 +152,7 @@ describe("Test the NameAutocompleter component", () => {
         localStorage.clear();
         localStorage.setItem(STORAGE_KEY_EXERCISE_LANGUAGE, 'all');
 
-        render(<NameAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
 
         const autocomplete = screen.getByTestId('autocomplete');
         const input = within(autocomplete).getByRole('combobox');
@@ -162,7 +173,7 @@ describe("Test the NameAutocompleter component", () => {
         localStorage.setItem(STORAGE_KEY_EXERCISE_EXACT_MATCH, 'true');
 
         // Act
-        render(<NameAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
 
         // Type in search box
         const autocomplete = screen.getByTestId('autocomplete');

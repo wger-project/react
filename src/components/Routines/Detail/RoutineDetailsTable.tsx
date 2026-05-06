@@ -1,6 +1,6 @@
 import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
 import { RenderLoadingQuery } from "@/components/Core/Widgets/RenderLoadingQuery";
-import { Language, useLanguageQuery } from "@/components/Exercises";
+import { getLanguageByShortName, Language, useLanguageQuery } from "@/components/Exercises";
 import { Day } from "@/components/Routines/models/Day";
 import { Routine } from "@/components/Routines/models/Routine";
 import { RoutineLogData } from "@/components/Routines/models/RoutineLogData";
@@ -8,7 +8,6 @@ import { SetConfigData } from "@/components/Routines/models/SetConfigData";
 import { SlotEntry } from "@/components/Routines/models/SlotEntry";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { useRoutineDetailQuery, useRoutineLogData } from "@/components/Routines/queries";
-import { getLanguageByShortName } from "@/services";
 import { makeLink, WgerLink } from "@/utils/url";
 import FlagCircleIcon from '@mui/icons-material/FlagCircle';
 import NorthEastIcon from "@mui/icons-material/NorthEast";

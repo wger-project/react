@@ -21,3 +21,18 @@ export class LanguageAdapter implements Adapter<Language> {
         );
     }
 }
+
+
+/*
+ * Searches the given list for the language with the matching short name.
+ *
+ * Pure synchronous lookup, accepts an already-loaded `availableLanguages`
+ * list. Pair with `useLanguageQuery()` to obtain it.
+ */
+export const getLanguageByShortName = (name: string, availableLanguages: Language[]): Language | undefined => {
+
+    // If the name is in the form of "en-US", remove the country code
+    const shortName = name.split('-')[0];
+
+    return availableLanguages.find(l => l.nameShort === shortName);
+};

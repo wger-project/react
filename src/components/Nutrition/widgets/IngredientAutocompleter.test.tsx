@@ -1,3 +1,4 @@
+import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import {
@@ -10,15 +11,26 @@ import {
 import type { Mock } from 'vitest';
 import { searchIngredient } from '@/services';
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2, TEST_INGREDIENT_4 } from "@/tests/ingredientTestdata";
+import { testQueryClient } from "@/tests/queryClient";
 
 vi.mock("@/services");
+
+const mockCallback = vi.fn();
+
+function renderAutocompleter() {
+    render(
+        <QueryClientProvider client={testQueryClient}>
+            <IngredientAutocompleter callback={mockCallback} />
+        </QueryClientProvider>
+    );
+}
 
 describe("Test the IngredientAutocompleter component", () => {
 
     // Arrange
-    const mockCallback = vi.fn();
     beforeEach(() => {
         localStorage.clear();
+        testQueryClient.clear();
         (searchIngredient as Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
     });
 
@@ -27,7 +39,7 @@ describe("Test the IngredientAutocompleter component", () => {
         const user = userEvent.setup();
 
         // Act
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
         const autocomplete = screen.getByTestId('autocomplete');
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
@@ -42,7 +54,7 @@ describe("Test the IngredientAutocompleter component", () => {
         const user = userEvent.setup();
 
         // Act
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
         const autocomplete = screen.getByTestId('autocomplete');
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
@@ -63,7 +75,7 @@ describe("Test the IngredientAutocompleter component", () => {
     test('filters are shown after clicking the toggle icon', async () => {
         const user = userEvent.setup();
 
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
 
         expect(screen.queryByText('nutrition.filterVegan')).not.toBeInTheDocument();
         expect(screen.queryByLabelText('language')).not.toBeInTheDocument();
@@ -79,7 +91,7 @@ describe("Test the IngredientAutocompleter component", () => {
         // Arrange
         const user = userEvent.setup();
         const setItemSpy = vi.spyOn(window.localStorage, 'setItem');
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
 
         // Act
         await user.click(screen.getByLabelText('Toggle filters'));
@@ -108,7 +120,7 @@ describe("Test the IngredientAutocompleter component", () => {
         );
 
         // Act
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
         const autocomplete = screen.getByTestId('autocomplete');
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
@@ -127,7 +139,7 @@ describe("Test the IngredientAutocompleter component", () => {
         );
 
         // Act
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
         const autocomplete = screen.getByTestId('autocomplete');
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
@@ -146,7 +158,7 @@ describe("Test the IngredientAutocompleter component", () => {
         );
 
         // Act
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
         const autocomplete = screen.getByTestId('autocomplete');
         const input = within(autocomplete).getByRole('combobox');
         await user.click(autocomplete);
@@ -164,7 +176,7 @@ describe("Test the IngredientAutocompleter component", () => {
         localStorage.setItem(STORAGE_KEY_VEGAN, 'true');
         localStorage.setItem(STORAGE_KEY_VEGETARIAN, 'true');
         localStorage.setItem(STORAGE_KEY_LANGUAGE_FILTER, 'all');
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
 
         // Act
         await user.click(screen.getByLabelText('Toggle filters'));
@@ -179,7 +191,7 @@ describe("Test the IngredientAutocompleter component", () => {
     test('nutriscore slider defaults to Off and is always visible in the popover', async () => {
         // Arrange
         const user = userEvent.setup();
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
 
         // Act
         await user.click(screen.getByLabelText('Toggle filters'));
@@ -195,7 +207,7 @@ describe("Test the IngredientAutocompleter component", () => {
         // Arrange
         const user = userEvent.setup();
         const setItemSpy = vi.spyOn(window.localStorage, 'setItem');
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
 
         // Act
         await user.click(screen.getByLabelText('Toggle filters'));
@@ -214,7 +226,7 @@ describe("Test the IngredientAutocompleter component", () => {
         const user = userEvent.setup();
         localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, 'a');
         const removeItemSpy = vi.spyOn(window.localStorage, 'removeItem');
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
 
         // Act
         await user.click(screen.getByLabelText('Toggle filters'));
@@ -232,7 +244,7 @@ describe("Test the IngredientAutocompleter component", () => {
         // Arrange
         const user = userEvent.setup();
         localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, 'b');
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
 
         // Act
         await user.click(screen.getByLabelText('Toggle filters'));
@@ -245,7 +257,7 @@ describe("Test the IngredientAutocompleter component", () => {
         // Arrange
         const user = userEvent.setup();
         localStorage.setItem(STORAGE_KEY_NUTRISCORE_MAX, 'b');
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
         const autocomplete = screen.getByTestId('autocomplete');
         const input = within(autocomplete).getByRole('combobox');
 
@@ -263,7 +275,7 @@ describe("Test the IngredientAutocompleter component", () => {
     test('nutriscoreMax is omitted when the slider is at Off', async () => {
         // Arrange
         const user = userEvent.setup();
-        render(<IngredientAutocompleter callback={mockCallback} />);
+        renderAutocompleter();
         const autocomplete = screen.getByTestId('autocomplete');
         const input = within(autocomplete).getByRole('combobox');
 

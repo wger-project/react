@@ -1,22 +1,26 @@
 import React, { useState } from "react";
 import { VariationSelect } from "@/components/Exercises/forms/VariationSelect";
+import { useEditExerciseQuery } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
-import { editExercise } from "@/services";
 
 export function EditExerciseVariation(props: { exerciseId: number, initial: string | null }) {
     const [selectedVariationId, setSelectedVariationId] = useState<string | null>(props.initial);
     const [selectedNewVariationExerciseId, setSelectedNewVariationExerciseId] = useState<number | null>(null);
     const profileQuery = useProfileQuery();
+    const editMutation = useEditExerciseQuery();
 
     const handleChangeVariationId = async (id: string | null) => {
         setSelectedVariationId(id);
         setSelectedNewVariationExerciseId(null);
 
-        await editExercise(props.exerciseId, {
-            // eslint-disable-next-line camelcase
-            variation_group: id,
-            // eslint-disable-next-line camelcase
-            license_author: profileQuery.data!.username
+        await editMutation.mutateAsync({
+            id: props.exerciseId,
+            data: {
+                // eslint-disable-next-line camelcase
+                variation_group: id,
+                // eslint-disable-next-line camelcase
+                license_author: profileQuery.data!.username
+            },
         });
     };
 
@@ -29,17 +33,23 @@ export function EditExerciseVariation(props: { exerciseId: number, initial: stri
             // Generate a new variation group UUID and assign both exercises to it
             const variationGroup = crypto.randomUUID();
             try {
-                await editExercise(props.exerciseId, {
-                    // eslint-disable-next-line camelcase
-                    variation_group: variationGroup,
-                    // eslint-disable-next-line camelcase
-                    license_author: profileQuery.data!.username
+                await editMutation.mutateAsync({
+                    id: props.exerciseId,
+                    data: {
+                        // eslint-disable-next-line camelcase
+                        variation_group: variationGroup,
+                        // eslint-disable-next-line camelcase
+                        license_author: profileQuery.data!.username
+                    },
                 });
-                await editExercise(id, {
-                    // eslint-disable-next-line camelcase
-                    variation_group: variationGroup,
-                    // eslint-disable-next-line camelcase
-                    license_author: profileQuery.data!.username
+                await editMutation.mutateAsync({
+                    id,
+                    data: {
+                        // eslint-disable-next-line camelcase
+                        variation_group: variationGroup,
+                        // eslint-disable-next-line camelcase
+                        license_author: profileQuery.data!.username
+                    },
                 });
                 setSelectedVariationId(variationGroup);
                 setSelectedNewVariationExerciseId(null);
@@ -50,11 +60,14 @@ export function EditExerciseVariation(props: { exerciseId: number, initial: stri
             }
         } else {
             try {
-                await editExercise(props.exerciseId, {
-                    // eslint-disable-next-line camelcase
-                    variation_group: null,
-                    // eslint-disable-next-line camelcase
-                    license_author: profileQuery.data!.username
+                await editMutation.mutateAsync({
+                    id: props.exerciseId,
+                    data: {
+                        // eslint-disable-next-line camelcase
+                        variation_group: null,
+                        // eslint-disable-next-line camelcase
+                        license_author: profileQuery.data!.username
+                    },
                 });
             } catch {
                 setSelectedVariationId(previousVariationId);

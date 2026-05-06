@@ -1,21 +1,24 @@
 import { Autocomplete, TextField } from "@mui/material";
-import { useEquipmentQuery } from "@/components/Exercises/queries";
+import { useEditExerciseQuery, useEquipmentQuery } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { editExercise } from "@/services";
 
 export function EditExerciseEquipment(props: { exerciseId: number, initial: number[] }) {
     const { t } = useTranslation();
     const [value, setValue] = React.useState<number[]>(props.initial);
     const equipmentQuery = useEquipmentQuery();
     const profileQuery = useProfileQuery();
+    const editMutation = useEditExerciseQuery();
 
     const handleOnChange = async (newValue: number[]) => {
         setValue(newValue);
 
-        // eslint-disable-next-line camelcase
-        await editExercise(props.exerciseId, { equipment: newValue, license_author: profileQuery.data!.username });
+        await editMutation.mutateAsync({
+            id: props.exerciseId,
+            // eslint-disable-next-line camelcase
+            data: { equipment: newValue, license_author: profileQuery.data!.username },
+        });
     };
 
     return equipmentQuery.isSuccess

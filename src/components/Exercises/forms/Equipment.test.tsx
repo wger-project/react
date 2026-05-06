@@ -1,28 +1,29 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EditExerciseEquipment } from "@/components/Exercises/forms/Equipment";
-import { useEquipmentQuery } from "@/components/Exercises/queries";
+import { useEditExerciseQuery, useEquipmentQuery } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
 import React from "react";
-import { editExercise } from "@/services";
 import { testEquipment } from "@/tests/exerciseTestdata";
 import { testProfileDataVerified } from "@/tests/userTestdata";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/User/queries/profile");
 vi.mock("@/components/Exercises/queries");
-vi.mock("@/services");
 
 describe("Test the edit widget to live edit the equipment", () => {
 
+    let editMutateMock: Mock;
+
     beforeEach(() => {
+        editMutateMock = vi.fn();
         (useEquipmentQuery as Mock).mockImplementation(() => (
             { isSuccess: true, data: testEquipment }
         ));
         (useProfileQuery as Mock).mockImplementation(() => (
             { isSuccess: true, data: testProfileDataVerified }
         ));
-        (editExercise as Mock).mockImplementation(() => (100));
+        (useEditExerciseQuery as Mock).mockImplementation(() => ({ mutateAsync: editMutateMock }));
     });
 
 
@@ -53,8 +54,11 @@ describe("Test the edit widget to live edit the equipment", () => {
         const rocks = await screen.findByText(/rocks/i);
         await user.click(rocks);
 
-        // eslint-disable-next-line camelcase
-        expect(editExercise).toHaveBeenCalledWith(100, { equipment: [1, 2, 42], license_author: "admin" });
+        expect(editMutateMock).toHaveBeenCalledWith({
+            id: 100,
+            // eslint-disable-next-line camelcase
+            data: { equipment: [1, 2, 42], license_author: "admin" },
+        });
     });
 
     test('Clicking on an existing equipment, removes it', async () => {
@@ -79,7 +83,10 @@ describe("Test the edit widget to live edit the equipment", () => {
         const rocks = screen.getByRole('option', { name: /dumbbell/i });
         await user.click(rocks);
 
-        // eslint-disable-next-line camelcase
-        expect(editExercise).toHaveBeenCalledWith(100, { equipment: [1], license_author: "admin" });
+        expect(editMutateMock).toHaveBeenCalledWith({
+            id: 100,
+            // eslint-disable-next-line camelcase
+            data: { equipment: [1], license_author: "admin" },
+        });
     });
 });

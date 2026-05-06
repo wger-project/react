@@ -22,11 +22,15 @@ import {
 import { NameAutocompleter } from "@/components/Exercises/Filter/NameAutcompleter";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { Language } from "@/components/Exercises/models/language";
+import {
+    useDeleteExerciseQuery,
+    useDeleteExerciseTranslationQuery,
+    useFetchExerciseQuery,
+} from "@/components/Exercises/queries";
 import { SERVER_URL } from "@/config";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { deleteExercise, deleteExerciseTranslation, getExercise } from "@/services";
 
 export function ExerciseDeleteDialog(props: {
     onClose: () => void,
@@ -44,6 +48,11 @@ export function ExerciseDeleteDialog(props: {
     const [t] = useTranslation();
     const navigate = useNavigate();
 
+    const exerciseId = props.currentExercise.id!;
+    const deleteExerciseMutation = useDeleteExerciseQuery(exerciseId);
+    const deleteTranslationMutation = useDeleteExerciseTranslationQuery(exerciseId);
+    const fetchExercise = useFetchExerciseQuery();
+
     const resetReplacement = () => {
         setReplacementExercise(null);
         setReplacementId(null);
@@ -51,7 +60,9 @@ export function ExerciseDeleteDialog(props: {
     };
 
     const handleDeleteTranslation = async () => {
-        await deleteExerciseTranslation(props.currentExercise.getTranslation(props.currentLanguage)!.id!);
+        await deleteTranslationMutation.mutateAsync(
+            props.currentExercise.getTranslation(props.currentLanguage)!.id!
+        );
         props.onClose();
         props.onChangeLanguage();
     };
@@ -60,13 +71,13 @@ export function ExerciseDeleteDialog(props: {
         setIsProcessing(true);
         try {
             if (handleReplacement) {
-                await deleteExercise(props.currentExercise.id!, {
+                await deleteExerciseMutation.mutateAsync({
                     replacementUUID: replacementExercise!.uuid!,
                     transferMedia,
                     transferTranslations,
                 });
             } else {
-                await deleteExercise(props.currentExercise.id!);
+                await deleteExerciseMutation.mutateAsync();
             }
         } finally {
             setIsProcessing(false);
@@ -87,7 +98,7 @@ export function ExerciseDeleteDialog(props: {
 
             setSameExerciseError(false);
             try {
-                const exercise = await getExercise(id);
+                const exercise = await fetchExercise(id);
                 setReplacementExercise(exercise);
             } catch {
                 setReplacementExercise(null);

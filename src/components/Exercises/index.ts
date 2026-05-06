@@ -17,7 +17,7 @@ export { Category, CategoryAdapter } from "./models/category";
 export { Equipment, EquipmentAdapter } from "./models/equipment";
 export { Exercise, ExerciseAdapter, type ImageFormData } from "./models/exercise";
 export { ExerciseImage, ExerciseImageAdapter, ImageStyle } from "./models/image";
-export { Language, LanguageAdapter } from "./models/language";
+export { getLanguageByShortName, Language, LanguageAdapter } from "./models/language";
 export { Muscle, MuscleAdapter } from "./models/muscle";
 export { Note, NoteAdapter } from "./models/note";
 export { Translation, TranslationAdapter } from "./models/translation";

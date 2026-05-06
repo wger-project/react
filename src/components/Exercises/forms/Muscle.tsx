@@ -1,8 +1,7 @@
 import { Autocomplete, TextField } from "@mui/material";
-import { useMusclesQuery } from "@/components/Exercises/queries";
+import { useEditExerciseQuery, useMusclesQuery } from "@/components/Exercises/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { editExercise } from "@/services";
 
 export function EditExerciseMuscle(props: {
     exerciseId: number,
@@ -13,11 +12,15 @@ export function EditExerciseMuscle(props: {
 }) {
     const { t } = useTranslation();
     const musclesQuery = useMusclesQuery();
+    const editMutation = useEditExerciseQuery();
 
     const handleOnChange = async (newValue: number[]) => {
         props.setValue(newValue);
-        // eslint-disable-next-line camelcase
-        await editExercise(props.exerciseId, props.isMain ? { muscles: newValue } : { muscles_secondary: newValue });
+        await editMutation.mutateAsync({
+            id: props.exerciseId,
+            // eslint-disable-next-line camelcase
+            data: props.isMain ? { muscles: newValue } : { muscles_secondary: newValue },
+        });
     };
 
     return musclesQuery.isSuccess

@@ -1,23 +1,26 @@
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { useCategoriesQuery } from "@/components/Exercises/queries";
+import { useCategoriesQuery, useEditExerciseQuery } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { editExercise } from "@/services";
 
 export function EditExerciseCategory(props: { exerciseId: number, initial: number }) {
     const { t } = useTranslation();
     const [value, setValue] = React.useState<string>(props.initial.toString());
     const categoryQuery = useCategoriesQuery();
     const profileQuery = useProfileQuery();
+    const editMutation = useEditExerciseQuery();
 
     const handleOnChange = async (e: SelectChangeEvent) => {
         setValue(e.target.value);
-        await editExercise(props.exerciseId, {
-            category: parseInt(e.target.value),
+        await editMutation.mutateAsync({
+            id: props.exerciseId,
+            data: {
+                category: parseInt(e.target.value),
 
-            // eslint-disable-next-line camelcase
-            license_author: profileQuery.data!.username
+                // eslint-disable-next-line camelcase
+                license_author: profileQuery.data!.username
+            },
         });
     };
 

@@ -15,7 +15,7 @@ import Grid from "@mui/material/Grid";
 import { SelectChangeEvent } from '@mui/material/Select';
 import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
-import { useLanguageQuery, useMusclesQuery } from "@/components/Exercises";
+import { getLanguageByShortName, useLanguageQuery, useMusclesQuery } from "@/components/Exercises";
 import { useRoutineDetailQuery } from "@/components/Routines/queries";
 import { useRoutineStatsQuery } from "@/components/Routines/queries/routines";
 import {
@@ -31,7 +31,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
-import { getLanguageByShortName } from "@/services";
 import { generateChartColors } from "@/utils/colors";
 import { makeLink, WgerLink } from "@/utils/url";
 

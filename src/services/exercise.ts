@@ -139,7 +139,7 @@ export const addFullExercise = async (data: AddExerciseFullProps): Promise<numbe
 /*
  * Update an existing exercise
  */
-type EditExerciseProps = {
+export type EditExerciseProps = {
     category?: number,
     equipment?: number[],
     muscles?: number[],

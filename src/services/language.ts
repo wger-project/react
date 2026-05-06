@@ -18,18 +18,3 @@ export const getLanguages = async (): Promise<Language[]> => {
     const adapter = new LanguageAdapter();
     return receivedLanguages.results.map(l => adapter.fromJson(l));
 };
-
-/*
- * Searches for the language with the given short name
- */
-export const getLanguageByShortName = (name: string, availableLanguages: Language[]): Language | undefined => {
-
-    // If the name is in the form of "en-US", remove the country code
-    const shortName = name.split('-')[0];
-
-    const language = availableLanguages.find(l => l.nameShort === shortName);
-    if (language) {
-        return language;
-    }
-    return undefined;
-};

@@ -54,7 +54,7 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
 
     const [t] = useTranslation();
     const profileQuery = useProfileQuery();
-    const addImageQuery = useAddExerciseImageQuery(exerciseId);
+    const addImageQuery = useAddExerciseImageQuery();
 
     const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files?.length) {

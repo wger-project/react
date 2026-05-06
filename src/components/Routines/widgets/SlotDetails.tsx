@@ -1,4 +1,4 @@
-import { Exercise, NameAutocompleter, useLanguageQuery } from "@/components/Exercises";
+import { Exercise, getLanguageByShortName, NameAutocompleter, useLanguageQuery } from "@/components/Exercises";
 import { BaseConfig } from "@/components/Routines/models/BaseConfig";
 import { Slot } from "@/components/Routines/models/Slot";
 import { SlotEntry } from "@/components/Routines/models/SlotEntry";
@@ -9,7 +9,6 @@ import {
     SlotEntryTypeField,
     SlotEntryWeightUnitField
 } from "@/components/Routines/widgets/forms/SlotEntryForm";
-import { getLanguageByShortName } from "@/services";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import EditOffIcon from '@mui/icons-material/EditOff';

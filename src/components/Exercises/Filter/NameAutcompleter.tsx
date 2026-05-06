@@ -22,12 +22,12 @@ import {
 } from "@mui/material";
 import { SearchLanguageFilter } from "@/components/Core/Widgets/SearchLanguageFilter";
 import { Exercise } from "@/components/Exercises/models/exercise";
+import { useSearchExerciseTranslationsQuery } from "@/components/Exercises/queries";
 import { SERVER_URL } from "@/config";
 import debounce from "lodash/debounce";
 import * as React from "react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { searchExerciseTranslations } from "@/services";
 import { LANGUAGE_SHORT_ENGLISH } from "@/utils/consts";
 
 
@@ -83,6 +83,8 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
 
     loadExercise = loadExercise === undefined ? false : loadExercise;
 
+    const searchExerciseTranslations = useSearchExerciseTranslationsQuery();
+
     const fetchName = React.useMemo(
         () =>
             debounce(
@@ -90,7 +92,7 @@ export function NameAutocompleter({ callback, loadExercise }: NameAutocompleterP
                     searchExerciseTranslations(request, i18n.language, languageFilter, exactMatch).then((res) => setOptions(res)),
                 SEARCH_DEBOUNCE_MS
             ),
-        [i18n.language, languageFilter, exactMatch]
+        [searchExerciseTranslations, i18n.language, languageFilter, exactMatch]
     );
 
     React.useEffect(() => {

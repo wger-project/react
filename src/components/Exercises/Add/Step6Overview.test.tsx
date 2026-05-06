@@ -3,13 +3,13 @@ import { ImageFormData } from "@/components/Exercises/models/exercise";
 import { ImageStyle } from "@/components/Exercises/models/image";
 import {
     useAddExerciseFullQuery,
+    useAddExerciseImageQuery,
     useCategoriesQuery,
     useEquipmentQuery,
     useLanguageQuery,
     useMusclesQuery,
 } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
-import { postExerciseImage } from "@/services";
 import { useExerciseSubmissionStateValue } from "@/state";
 import { testCategories, testEquipment, testLanguages, testMuscles } from "@/tests/exerciseTestdata";
 import { testProfileDataVerified } from "@/tests/userTestdata";
@@ -24,7 +24,6 @@ import type { Mock } from "vitest";
 vi.mock("@/components/Exercises/queries");
 vi.mock("@/components/User/queries/profile");
 vi.mock("@/state");
-vi.mock("@/services");
 
 const mockOnContinue = vi.fn();
 const mockOnBack = vi.fn();
@@ -35,6 +34,7 @@ const mockedLanguageQuery = useLanguageQuery as Mock;
 const mockedUseExerciseStateValue = useExerciseSubmissionStateValue as Mock;
 const mockedUseProfileQuery = useProfileQuery as Mock;
 const addFullExerciseMutation = useAddExerciseFullQuery as Mock;
+const addImageMutation = useAddExerciseImageQuery as Mock;
 
 const queryClient = new QueryClient();
 
@@ -88,6 +88,7 @@ describe("Test the add exercise step 6 component", () => {
             isPending: false,
             isError: false
         }));
+        addImageMutation.mockImplementation(() => ({ mutateAsync: vi.fn().mockResolvedValue({ id: 1 }) }));
 
         mockedUseExerciseStateValue.mockImplementation(() => [baseState]);
     });
@@ -207,7 +208,8 @@ describe("Test the add exercise step 6 component", () => {
         addFullExerciseMutation.mockImplementation(() => ({
             isIdle: true, isSuccess: false, isPending: false, isError: false, mutateAsync,
         }));
-        (postExerciseImage as Mock).mockResolvedValue({ id: 1 });
+        const addImageMutateAsync = vi.fn().mockResolvedValue({ id: 1 });
+        addImageMutation.mockImplementation(() => ({ mutateAsync: addImageMutateAsync }));
 
         mockedUseExerciseStateValue.mockImplementation(() => [
             { ...baseState, images: [image1, image2] },
@@ -219,15 +221,15 @@ describe("Test the add exercise step 6 component", () => {
         await user.click(screen.getByText("exercises.submitExercise"));
 
         await waitFor(() => {
-            expect(postExerciseImage).toHaveBeenCalledTimes(2);
+            expect(addImageMutateAsync).toHaveBeenCalledTimes(2);
         });
         // The exerciseId returned from the mutation is forwarded to each image upload
-        expect(postExerciseImage).toHaveBeenNthCalledWith(1, {
+        expect(addImageMutateAsync).toHaveBeenNthCalledWith(1, {
             exerciseId: 99,
             image: file1,
             imageData: image1,
         });
-        expect(postExerciseImage).toHaveBeenNthCalledWith(2, {
+        expect(addImageMutateAsync).toHaveBeenNthCalledWith(2, {
             exerciseId: 99,
             image: file2,
             imageData: image2,

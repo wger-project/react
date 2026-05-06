@@ -2,10 +2,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EditExerciseVariation } from "@/components/Exercises/forms/Variation";
-import { useExercisesQuery } from "@/components/Exercises/queries";
+import { useEditExerciseQuery, useExercisesQuery } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
 import React from "react";
-import { editExercise } from "@/services";
 import {
     testExerciseBenchPress,
     testExerciseCrunches,
@@ -18,7 +17,6 @@ import type { Mock } from "vitest";
 
 vi.mock("@/components/Exercises/queries");
 vi.mock("@/components/User/queries/profile");
-vi.mock("@/services");
 
 const queryClient = new QueryClient();
 const FIXED_UUID = "11111111-2222-3333-4444-555555555555";
@@ -41,7 +39,10 @@ function renderVariation(props: { exerciseId?: number; initial?: string | null }
 
 
 describe("EditExerciseVariation", () => {
+    let editMutateMock: Mock;
+
     beforeEach(() => {
+        editMutateMock = vi.fn().mockResolvedValue(200);
         (useExercisesQuery as Mock).mockImplementation(() => ({
             isLoading: false,
             isSuccess: true,
@@ -57,9 +58,9 @@ describe("EditExerciseVariation", () => {
             isSuccess: true,
             data: testProfileDataVerified,
         }));
-        (editExercise as Mock).mockResolvedValue(200);
+        (useEditExerciseQuery as Mock).mockImplementation(() => ({ mutateAsync: editMutateMock }));
 
-        // Stable UUID so we can assert on the value sent to editExercise
+        // Stable UUID so we can assert on the value sent to the mutation
         if (!globalThis.crypto) {
             (globalThis as { crypto?: Crypto }).crypto = {} as Crypto;
         }
@@ -71,22 +72,25 @@ describe("EditExerciseVariation", () => {
         vi.restoreAllMocks();
     });
 
-    test("clicking on an existing variation group calls editExercise with that group", async () => {
+    test("clicking on an existing variation group calls the edit mutation with that group", async () => {
         const user = userEvent.setup();
         renderVariation({ exerciseId: SQUATS_ID, initial: null });
 
         await user.click(screen.getByText("Skull crusher"));
 
         await waitFor(() => {
-            expect(editExercise).toHaveBeenCalledWith(SQUATS_ID, {
-                // eslint-disable-next-line camelcase
-                variation_group: SKULL_CRUSHER_GROUP,
-                // eslint-disable-next-line camelcase
-                license_author: testProfileDataVerified.username,
+            expect(editMutateMock).toHaveBeenCalledWith({
+                id: SQUATS_ID,
+                data: {
+                    // eslint-disable-next-line camelcase
+                    variation_group: SKULL_CRUSHER_GROUP,
+                    // eslint-disable-next-line camelcase
+                    license_author: testProfileDataVerified.username,
+                },
             });
         });
         // Only the current exercise is patched - no second call
-        expect(editExercise).toHaveBeenCalledTimes(1);
+        expect(editMutateMock).toHaveBeenCalledTimes(1);
     });
 
     test("clicking on the currently selected variation group clears it (sets variation_group to null)", async () => {
@@ -99,11 +103,14 @@ describe("EditExerciseVariation", () => {
         await user.click(screen.getByText("Skull crusher"));
 
         await waitFor(() => {
-            expect(editExercise).toHaveBeenCalledWith(SQUATS_ID, {
-                // eslint-disable-next-line camelcase
-                variation_group: null,
-                // eslint-disable-next-line camelcase
-                license_author: testProfileDataVerified.username,
+            expect(editMutateMock).toHaveBeenCalledWith({
+                id: SQUATS_ID,
+                data: {
+                    // eslint-disable-next-line camelcase
+                    variation_group: null,
+                    // eslint-disable-next-line camelcase
+                    license_author: testProfileDataVerified.username,
+                },
             });
         });
     });
@@ -115,29 +122,35 @@ describe("EditExerciseVariation", () => {
         await user.click(screen.getByText("Crunches"));
 
         await waitFor(() => {
-            expect(editExercise).toHaveBeenCalledTimes(2);
+            expect(editMutateMock).toHaveBeenCalledTimes(2);
         });
         // The current exercise is patched first ...
-        expect(editExercise).toHaveBeenNthCalledWith(1, SQUATS_ID, {
-            // eslint-disable-next-line camelcase
-            variation_group: FIXED_UUID,
-            // eslint-disable-next-line camelcase
-            license_author: testProfileDataVerified.username,
+        expect(editMutateMock).toHaveBeenNthCalledWith(1, {
+            id: SQUATS_ID,
+            data: {
+                // eslint-disable-next-line camelcase
+                variation_group: FIXED_UUID,
+                // eslint-disable-next-line camelcase
+                license_author: testProfileDataVerified.username,
+            },
         });
         // ... then the freshly picked exercise is added to the same UUID group.
-        expect(editExercise).toHaveBeenNthCalledWith(2, CRUNCHES_ID, {
-            // eslint-disable-next-line camelcase
-            variation_group: FIXED_UUID,
-            // eslint-disable-next-line camelcase
-            license_author: testProfileDataVerified.username,
+        expect(editMutateMock).toHaveBeenNthCalledWith(2, {
+            id: CRUNCHES_ID,
+            data: {
+                // eslint-disable-next-line camelcase
+                variation_group: FIXED_UUID,
+                // eslint-disable-next-line camelcase
+                license_author: testProfileDataVerified.username,
+            },
         });
     });
 
-    test("if the second editExercise call fails, the state is rolled back to the previous group", async () => {
+    test("if the second mutation call fails, the state is rolled back to the previous group", async () => {
         const user = userEvent.setup();
         // First call succeeds, second fails
-        (editExercise as Mock).mockReset();
-        (editExercise as Mock)
+        editMutateMock.mockReset();
+        editMutateMock
             .mockResolvedValueOnce(200)
             .mockRejectedValueOnce(new Error("network"));
 
@@ -151,7 +164,7 @@ describe("EditExerciseVariation", () => {
 
         // Both calls happen (first success, second fail)
         await waitFor(() => {
-            expect(editExercise).toHaveBeenCalledTimes(2);
+            expect(editMutateMock).toHaveBeenCalledTimes(2);
         });
 
         // After rollback the originally-selected variation group is restored:

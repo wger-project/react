@@ -25,12 +25,12 @@ import {
     Typography,
 } from "@mui/material";
 import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { useSearchIngredientQuery } from "@/components/Nutrition/queries";
 import { NutriScoreBadge } from "@/components/Nutrition/widgets/NutriScoreBadge";
 import debounce from "lodash/debounce";
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { searchIngredient } from "@/services";
 import { NUTRI_SCORES, NutriScoreValue } from "@/types";
 import { SearchLanguageFilter } from "@/components/Core/Widgets/SearchLanguageFilter";
 import { LANGUAGE_SHORT_ENGLISH } from "@/utils/consts";
@@ -132,6 +132,8 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
         return options;
     }, [i18n.language, t]);
 
+    const searchIngredient = useSearchIngredientQuery();
+
     const fetchName = useMemo(
         () =>
             debounce(
@@ -145,7 +147,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                     }).then((res) => setOptions(res)),
                 SEARCH_DEBOUNCE_MS
             ),
-        [i18n.language, languageFilter, filterVegan, filterVegetarian, nutriscoreMax]
+        [searchIngredient, i18n.language, languageFilter, filterVegan, filterVegetarian, nutriscoreMax]
     );
 
     useEffect(() => {

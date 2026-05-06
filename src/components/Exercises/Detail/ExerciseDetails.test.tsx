@@ -1,11 +1,14 @@
-import { useLanguageQuery } from "@/components/Exercises/queries";
+import {
+    useExerciseQuery,
+    useExercisesForVariationQuery,
+    useLanguageQuery,
+} from "@/components/Exercises/queries";
 import { usePermissionQuery, useProfileQuery } from "@/components/User";
-import { getExercise, getExercisesForVariation, getLanguageByShortName, getLanguages } from "@/services";
+import { getLanguages } from "@/services";
 import {
     testExerciseCrunches,
     testExerciseCurls,
     testExerciseSquats,
-    testLanguageEnglish,
     testLanguages
 } from "@/tests/exerciseTestdata";
 import { testProfileDataVerified } from "@/tests/userTestdata";
@@ -26,14 +29,18 @@ const queryClient = new QueryClient();
 describe("Render tests", () => {
 
     beforeEach(() => {
-        (getExercise as Mock).mockImplementation(() => Promise.resolve(testExerciseSquats));
-        (getExercisesForVariation as Mock).mockImplementation(() => Promise.resolve(
-            [
-                testExerciseCurls,
-                testExerciseCrunches
-            ]
-        ));
-        (getLanguageByShortName as Mock).mockImplementation(() => Promise.resolve(testLanguageEnglish));
+        (useExerciseQuery as Mock).mockImplementation(() => ({
+            isLoading: false,
+            isSuccess: true,
+            isError: false,
+            data: testExerciseSquats,
+        }));
+        (useExercisesForVariationQuery as Mock).mockImplementation(() => ({
+            isLoading: false,
+            isSuccess: true,
+            isError: false,
+            data: [testExerciseCurls, testExerciseCrunches],
+        }));
         (getLanguages as Mock).mockImplementation(() => Promise.resolve(testLanguages));
         (useProfileQuery as Mock).mockImplementation(() => Promise.resolve({
             isSuccess: true,
@@ -69,8 +76,8 @@ describe("Render tests", () => {
         expect(useLanguageQuery).toHaveBeenCalled();
         expect(usePermissionQuery).toHaveBeenCalled();
         expect(useProfileQuery).toHaveBeenCalled();
-        expect(getExercise).toHaveBeenCalled();
-        expect(getExercisesForVariation).toHaveBeenCalled();
+        expect(useExerciseQuery).toHaveBeenCalled();
+        expect(useExercisesForVariationQuery).toHaveBeenCalled();
         expect(screen.getByText("Squats")).toBeInTheDocument();
 
         expect(screen.getByText("Biggus musculus (Big muscle)")).toBeInTheDocument();

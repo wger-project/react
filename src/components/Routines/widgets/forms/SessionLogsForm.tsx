@@ -1,10 +1,9 @@
 import { WgerTextField } from "@/components/Common/forms/WgerTextField";
 import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { Exercise, NameAutocompleter, useLanguageQuery } from "@/components/Exercises";
+import { Exercise, getLanguageByShortName, NameAutocompleter, useLanguageQuery } from "@/components/Exercises";
 import { RIR_VALUES_SELECT } from "@/components/Routines/models/BaseConfig";
 import { LogEntryForm } from "@/components/Routines/models/WorkoutLog";
 import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "@/components/Routines/queries";
-import { getLanguageByShortName } from "@/services";
 import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "@/utils/consts";
 import { SwapHoriz } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
