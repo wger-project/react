@@ -1,16 +1,16 @@
-import { MenuItem, TextField } from "@mui/material";
-import { LoadingProgressIcon } from "@/core/ui/LoadingWidget/LoadingWidget";
-import { useEditProfileQuery, useProfileQuery } from "@/components/User";
 import { SlotEntry, SlotEntryType } from "@/components/Routines/models/SlotEntry";
 import {
     useEditSlotEntryQuery,
     useFetchRoutineRepUnitsQuery,
     useFetchRoutineWeighUnitsQuery
 } from "@/components/Routines/queries";
-import debounce from "lodash/debounce";
-import React, { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useEditProfileQuery, useProfileQuery } from "@/components/User";
 import { DEBOUNCE_ROUTINE_FORMS } from "@/core/lib/consts";
+import { LoadingProgressIcon } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { MenuItem, TextField } from "@mui/material";
+import debounce from "lodash/debounce";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: number }) => {
     const { t } = useTranslation();
@@ -176,22 +176,30 @@ export const SlotEntryRoundingField = (props: SlotEntryRoundingFieldProps) => {
 
     const [value, setValue] = useState<string | number | null>(props.initialValue === null ? '' : props.initialValue);
 
-    const debouncedSave = useCallback(
-        debounce((newValue: string) => {
-            const parsedValue = isNaN(Number(newValue)) ? null : parseFloat(newValue);
+    // Hold the latest save logic in a ref so the debounced wrapper always
+    // uses current props/queries instead of values captured on first render.
+    const saveRef = useRef<(newValue: string) => void>(() => {
+    });
+    saveRef.current = (newValue: string) => {
+        const parsedValue = isNaN(Number(newValue)) ? null : parseFloat(newValue);
 
-            const data = props.rounding === 'weight'
-                ? { weightRounding: parsedValue }
-                : { repetitionRounding: parsedValue };
+        const data = props.rounding === 'weight'
+            ? { weightRounding: parsedValue }
+            : { repetitionRounding: parsedValue };
 
-            if (props.editProfile) {
-                editProfileQuery.mutate(data);
-            } else {
-                editSlotEntryQuery.mutate(SlotEntry.clone(props.slotEntry, data));
-            }
-        }, DEBOUNCE_ROUTINE_FORMS),
+        if (props.editProfile) {
+            editProfileQuery.mutate(data);
+        } else {
+            editSlotEntryQuery.mutate(SlotEntry.clone(props.slotEntry, data));
+        }
+    };
+
+    const debouncedSave = useMemo(
+        () => debounce((newValue: string) => saveRef.current(newValue), DEBOUNCE_ROUTINE_FORMS),
         []
     );
+
+    useEffect(() => () => debouncedSave.cancel(), [debouncedSave]);
 
     const handleOnChange = (newValue: string) => {
         setValue(newValue);

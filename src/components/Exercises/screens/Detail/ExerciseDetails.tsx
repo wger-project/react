@@ -38,7 +38,7 @@ export const ExerciseDetails = () => {
             languageQuery.data!
         );
         setLanguage(currentUserLanguage!);
-    }, [languageQuery.data]);
+    }, [languageQuery.data, i18n.language]);
 
     if (Number.isNaN(exerciseId)) {
         return <p>Please pass an integer as the exercise id.</p>;

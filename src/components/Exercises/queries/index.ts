@@ -64,8 +64,8 @@ export function useEditExerciseQuery() {
 export function useDeleteExerciseQuery(exerciseId: number) {
     const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: (options?: DeleteExerciseOptions) => deleteExercise(exerciseId, options),
+    return useMutation<number, Error, DeleteExerciseOptions | void>({
+        mutationFn: (options) => deleteExercise(exerciseId, options || undefined),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISES] });
             queryClient.removeQueries({ queryKey: [QueryKey.EXERCISE_DETAIL, exerciseId] });
