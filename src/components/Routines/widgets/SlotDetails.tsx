@@ -1,27 +1,22 @@
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import EditIcon from "@mui/icons-material/Edit";
-import EditOffIcon from '@mui/icons-material/EditOff';
-import { Alert, AlertTitle, IconButton, Typography } from "@mui/material";
-import Grid from '@mui/material/Grid';
-import { NameAutocompleter } from "@/components/Exercises/Filter/NameAutcompleter";
-import { Exercise } from "@/components/Exercises/models/exercise";
-import { useLanguageQuery } from "@/components/Exercises/queries";
+import { Exercise, NameAutocompleter, useLanguageQuery } from "@/components/Exercises";
 import { BaseConfig } from "@/components/Routines/models/BaseConfig";
 import { Slot } from "@/components/Routines/models/Slot";
 import { SlotEntry } from "@/components/Routines/models/SlotEntry";
 import { useDeleteSlotEntryQuery, useEditSlotEntryQuery } from "@/components/Routines/queries";
-import {
-    ConfigDetailsRiRField,
-    SlotBaseConfigValueField
-} from "@/components/Routines/widgets/forms/BaseConfigForm";
+import { ConfigDetailsRiRField, SlotBaseConfigValueField } from "@/components/Routines/widgets/forms/BaseConfigForm";
 import {
     SlotEntryRepetitionUnitField,
     SlotEntryTypeField,
     SlotEntryWeightUnitField
 } from "@/components/Routines/widgets/forms/SlotEntryForm";
+import { getLanguageByShortName } from "@/services";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import EditIcon from "@mui/icons-material/Edit";
+import EditOffIcon from '@mui/icons-material/EditOff';
+import { Alert, AlertTitle, IconButton, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid';
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName } from "@/services";
 
 /*
  * Converts a number to an alphabetic string, useful for counting

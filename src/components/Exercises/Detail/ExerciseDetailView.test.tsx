@@ -1,13 +1,12 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from '@testing-library/react';
 import { ExerciseDetailView } from "@/components/Exercises/Detail/ExerciseDetailView";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { Language } from "@/components/Exercises/models/language";
-import { usePermissionQuery } from "@/components/User/queries/permission";
-import { useProfileQuery } from "@/components/User/queries/profile";
-import React from 'react';
+import { usePermissionQuery, useProfileQuery } from "@/components/User";
 import { testExerciseCrunches, testLanguageEnglish, testLanguageFrench } from "@/tests/exerciseTestdata";
 import { testProfileDataNotVerified, testProfileDataVerified } from "@/tests/userTestdata";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from '@testing-library/react';
+import React from 'react';
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/User/queries/profile");

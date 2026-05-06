@@ -1,19 +1,16 @@
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import { Box, Card, CardContent, CardHeader, useMediaQuery, useTheme } from '@mui/material';
-import { WeightEntry } from "@/components/Weight/model";
-import { useBodyWeightQuery } from "@/components/Weight/queries";
 import CalendarDayGrid from "@/components/Calendar/Components/CalendarDayGrid";
 import CalendarHeader from "@/components/Calendar/Components/CalendarHeader";
 import { CalendarMeasurement } from "@/components/Calendar/Helpers/CalendarMeasurement";
 import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
-import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
-import { useNutritionDiaryQuery } from "@/components/Nutrition/queries";
-import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
-import { useSessionsQuery } from "@/components/Routines/queries";
+import { useMeasurementsCategoryQuery } from "@/components/Measurements";
+import { DiaryEntry, useNutritionDiaryQuery } from "@/components/Nutrition";
+import { useSessionsQuery, WorkoutSession } from "@/components/Routines";
+import { useBodyWeightQuery, WeightEntry } from "@/components/Weight";
+import { dateToYYYYMMDD, isSameDay } from "@/utils/date";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { Box, Card, CardContent, CardHeader, useMediaQuery, useTheme } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToYYYYMMDD, isSameDay } from "@/utils/date";
 import Entries from './Entries';
 
 export interface DayProps {

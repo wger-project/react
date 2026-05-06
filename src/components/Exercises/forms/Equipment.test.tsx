@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EditExerciseEquipment } from "@/components/Exercises/forms/Equipment";
 import { useEquipmentQuery } from "@/components/Exercises/queries";
-import { useProfileQuery } from "@/components/User/queries/profile";
+import { useProfileQuery } from "@/components/User";
 import React from "react";
 import { editExercise } from "@/services";
 import { testEquipment } from "@/tests/exerciseTestdata";

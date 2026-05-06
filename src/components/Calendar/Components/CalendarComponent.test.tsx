@@ -1,20 +1,19 @@
-import { QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { WeightEntry } from "@/components/Weight/model";
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
-import { MeasurementEntry } from "@/components/Measurements/models/Entry";
-import i18n from "i18next";
-import React from "react";
-import { I18nextProvider } from "react-i18next";
-import { BrowserRouter } from "react-router-dom";
+import { MeasurementCategory, MeasurementEntry } from "@/components/Measurements";
+import { WeightEntry } from "@/components/Weight";
 import { getMeasurementCategories, getNutritionalDiaryEntries, getSessions, getWeights } from "@/services";
 import { TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2 } from "@/tests/nutritionDiaryTestdata";
 import { testQueryClient } from "@/tests/queryClient";
 import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
 import { dateToYYYYMMDD } from "@/utils/date";
-import CalendarComponent from "./CalendarComponent";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import i18n from "i18next";
+import React from "react";
+import { I18nextProvider } from "react-i18next";
+import { BrowserRouter } from "react-router-dom";
 import type { Mock } from 'vitest';
+import CalendarComponent from "./CalendarComponent";
 
 vi.mock('@/services');
 

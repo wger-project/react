@@ -1,14 +1,14 @@
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import userEvent from "@testing-library/user-event";
-import { NameAutocompleter } from "@/components/Exercises/Filter/NameAutcompleter";
-import React from 'react';
-import { searchExerciseTranslations } from "@/services";
-import { searchResponse } from "@/tests/exercises/searchResponse";
-import { Exercise } from "@/components/Exercises/models/exercise";
 import {
+    NameAutocompleter,
     STORAGE_KEY_EXERCISE_EXACT_MATCH,
     STORAGE_KEY_EXERCISE_LANGUAGE
 } from "@/components/Exercises/Filter/NameAutcompleter";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { searchExerciseTranslations } from "@/services";
+import { searchResponse } from "@/tests/exercises/searchResponse";
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from "@testing-library/user-event";
+import React from 'react';
 
 import type { Mock } from 'vitest';
 

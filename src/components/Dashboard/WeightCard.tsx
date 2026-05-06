@@ -1,17 +1,13 @@
-import AddIcon from "@mui/icons-material/Add";
-import { Box, Button, IconButton } from "@mui/material";
-import Tooltip from "@mui/material/Tooltip";
-import { WeightForm } from "@/components/Weight/Form/WeightForm";
-import { WeightEntry } from "@/components/Weight/model";
-import { useBodyWeightQuery } from "@/components/Weight/queries";
-import { WeightTableDashboard } from "@/components/Weight/TableDashboard/TableDashboard";
-import { WeightChart } from "@/components/Weight/WeightChart";
 import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
 import { WgerModal } from "@/components/Core/Modals/WgerModal";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
+import { useBodyWeightQuery, WeightChart, WeightEntry, WeightForm, WeightTableDashboard } from "@/components/Weight";
+import { makeLink, WgerLink } from "@/utils/url";
+import AddIcon from "@mui/icons-material/Add";
+import { Box, Button, IconButton } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { makeLink, WgerLink } from "@/utils/url";
 import { DashboardCard } from "./DashboardCard";
 
 export const WeightCard = () => {

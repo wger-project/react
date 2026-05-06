@@ -1,7 +1,7 @@
 import { Draggable, DraggableStyle } from "@hello-pangea/dnd";
 import { Box, useTheme } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { Exercise } from "@/components/Exercises/models/exercise";
+import { Exercise } from "@/components/Exercises";
 import { Slot } from "@/components/Routines/models/Slot";
 import { SlotDetails } from "@/components/Routines/widgets/SlotDetails";
 import { SlotExercisePicker } from "@/components/Routines/widgets/slots/SlotExercisePicker";

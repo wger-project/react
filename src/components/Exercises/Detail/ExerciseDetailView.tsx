@@ -8,7 +8,7 @@ import { Language } from "@/components/Exercises/models/language";
 import { Muscle } from "@/components/Exercises/models/muscle";
 import { Note } from "@/components/Exercises/models/note";
 import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
-import { useCanContributeExercises } from "@/components/User/queries/contribute";
+import { useCanContributeExercises } from "@/components/User";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { dateTimeToLocale } from "@/utils/date";

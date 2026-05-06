@@ -8,7 +8,7 @@ import {
     useLanguageQuery,
     useMusclesQuery,
 } from "@/components/Exercises/queries";
-import { useProfileQuery } from "@/components/User/queries/profile";
+import { useProfileQuery } from "@/components/User";
 import { postExerciseImage } from "@/services";
 import { useExerciseSubmissionStateValue } from "@/state";
 import { testCategories, testEquipment, testLanguages, testMuscles } from "@/tests/exerciseTestdata";

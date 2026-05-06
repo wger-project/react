@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { useLanguageQuery } from "@/components/Exercises/queries";
+import { useLanguageQuery } from "@/components/Exercises";
 import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "@/components/Routines/queries";
 import { SessionLogsForm } from '@/components/Routines/widgets/forms/SessionLogsForm';
 import { DateTime } from "luxon";

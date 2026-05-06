@@ -1,10 +1,5 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from '@testing-library/react';
 import { useLanguageQuery } from "@/components/Exercises/queries";
-import { usePermissionQuery } from "@/components/User/queries/permission";
-import { useProfileQuery } from "@/components/User/queries/profile";
-import React from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { usePermissionQuery, useProfileQuery } from "@/components/User";
 import { getExercise, getExercisesForVariation, getLanguageByShortName, getLanguages } from "@/services";
 import {
     testExerciseCrunches,
@@ -13,8 +8,12 @@ import {
     testLanguageEnglish,
     testLanguages
 } from "@/tests/exerciseTestdata";
-import type { Mock } from 'vitest';
 import { testProfileDataVerified } from "@/tests/userTestdata";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen } from '@testing-library/react';
+import React from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import type { Mock } from 'vitest';
 import { ExerciseDetails } from './ExerciseDetails';
 
 vi.mock("@/services");

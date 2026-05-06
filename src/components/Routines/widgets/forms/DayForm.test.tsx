@@ -1,7 +1,7 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { useProfileQuery } from "@/components/User/queries/profile";
+import { useProfileQuery } from "@/components/User";
 import { DayForm } from "@/components/Routines/widgets/forms/DayForm";
 import { editDay } from "@/services";
 import { testQueryClient } from "@/tests/queryClient";

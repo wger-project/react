@@ -1,18 +1,20 @@
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { EmptyCard } from "@/components/Dashboard/EmptyCard";
+import {
+    getDayName,
+    Routine,
+    RoutineDayData,
+    SetConfigDataDetails,
+    useActiveRoutineQuery
+} from "@/components/Routines";
+import { isSameDay } from "@/utils/date";
+import { makeLink, WgerLink } from "@/utils/url";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TodayIcon from "@mui/icons-material/Today";
 import { Button, Collapse, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { EmptyCard } from "@/components/Dashboard/EmptyCard";
-import { getDayName } from "@/components/Routines/models/Day";
-import { Routine } from "@/components/Routines/models/Routine";
-import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
-import { useActiveRoutineQuery } from "@/components/Routines/queries";
-import { SetConfigDataDetails } from "@/components/Routines/widgets/RoutineDetailsCard";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { isSameDay } from "@/utils/date";
-import { makeLink, WgerLink } from "@/utils/url";
 import { DashboardCard } from "./DashboardCard";
 
 export const RoutineCard = () => {

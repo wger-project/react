@@ -1,24 +1,22 @@
 import { ConfigurableDashboard } from "@/components/Dashboard/ConfigurableDashboard";
-import { ExerciseOverview } from "@/components/Exercises/ExerciseOverview";
-import { MeasurementCategoryDetail } from "@/components/Measurements/Screens/MeasurementCategoryDetail";
-import { MeasurementCategoryOverview } from "@/components/Measurements/Screens/MeasurementCategoryOverview";
-import { BmiCalculator } from "@/components/Nutrition/components/BmiCalculator";
-import { NutritionDiaryOverview } from "@/components/Nutrition/components/NutritionDiaryOverview";
-import { PlanDetail } from "@/components/Nutrition/components/PlanDetail";
-import { PlansOverview } from "@/components/Nutrition/components/PlansOverview";
-import { TrophiesDetail } from "@/components/Trophies/components/TrophiesDetail";
-import { RoutineAdd } from "@/components/Routines/Detail/RoutineAdd";
-import { RoutineDetail } from "@/components/Routines/Detail/RoutineDetail";
-import { RoutineDetailsTable } from "@/components/Routines/Detail/RoutineDetailsTable";
-import { RoutineEdit } from "@/components/Routines/Detail/RoutineEdit";
-import { SessionAdd } from "@/components/Routines/Detail/SessionAdd";
-import { SlotProgressionEdit } from "@/components/Routines/Detail/SlotProgressionEdit";
-import { TemplateDetail } from "@/components/Routines/Detail/TemplateDetail";
-import { WorkoutLogs } from "@/components/Routines/Detail/WorkoutLogs";
-import { WorkoutStats } from "@/components/Routines/Detail/WorkoutStats";
-import { PrivateTemplateOverview } from "@/components/Routines/Overview/PrivateTemplateOverview";
-import { PublicTemplateOverview } from "@/components/Routines/Overview/PublicTemplateOverview";
-import { RoutineOverview } from "@/components/Routines/Overview/RoutineOverview";
+import { ExerciseOverview } from "@/components/Exercises";
+import { MeasurementCategoryDetail, MeasurementCategoryOverview } from "@/components/Measurements";
+import { BmiCalculator, NutritionDiaryOverview, PlanDetail, PlansOverview } from "@/components/Nutrition";
+import {
+    PrivateTemplateOverview,
+    PublicTemplateOverview,
+    RoutineAdd,
+    RoutineDetail,
+    RoutineDetailsTable,
+    RoutineEdit,
+    RoutineOverview,
+    SessionAdd,
+    SlotProgressionEdit,
+    TemplateDetail,
+    WorkoutLogs,
+    WorkoutStats
+} from "@/components/Routines";
+import { TrophiesDetail } from "@/components/Trophies";
 import {
     About,
     AddExercise,

@@ -17,7 +17,7 @@ import {
     GridRowsProp
 } from "@mui/x-data-grid";
 import { FormQueryErrors } from "@/components/Core/Widgets/FormError";
-import { Exercise } from "@/components/Exercises/models/exercise";
+import { Exercise } from "@/components/Exercises";
 import { RIR_VALUES_SELECT_LIST } from "@/components/Routines/models/BaseConfig";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "@/components/Routines/queries";

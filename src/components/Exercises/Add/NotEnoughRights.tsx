@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useCanContributeExercises } from "@/components/User/queries/contribute";
+import { useCanContributeExercises } from "@/components/User";
 import { MIN_ACCOUNT_AGE } from "@/utils/consts";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 

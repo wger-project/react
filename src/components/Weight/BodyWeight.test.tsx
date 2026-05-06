@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { WeightEntry } from "@/components/Weight/model";
 import { getWeights } from "@/services";
 import { testQueryClient } from "@/tests/queryClient";
-import { BodyWeight } from "./index";
+import { BodyWeight } from "./BodyWeight";
 import { FilterType } from "./widgets/FilterButtons";
 import type { Mock } from 'vitest';
 

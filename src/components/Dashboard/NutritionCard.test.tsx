@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import { NutritionCard } from "@/components/Dashboard/NutritionCard";
-import { useFetchLastNutritionalPlanQuery } from "@/components/Nutrition/queries";
+import { useFetchLastNutritionalPlanQuery } from "@/components/Nutrition";
 import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 import type { Mock } from 'vitest';
 

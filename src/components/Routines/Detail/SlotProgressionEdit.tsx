@@ -1,18 +1,17 @@
-import { Typography } from "@mui/material";
-import Grid from '@mui/material/Grid';
 import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
-import { Language } from "@/components/Exercises/models/language";
-import { useLanguageQuery } from "@/components/Exercises/queries";
+import { Language, useLanguageQuery } from "@/components/Exercises";
 import { Slot } from "@/components/Routines/models/Slot";
 import { useRoutineDetailQuery } from "@/components/Routines/queries";
 import { ProgressionForm } from "@/components/Routines/widgets/forms/ProgressionForm";
 import { SlotEntryRoundingField } from "@/components/Routines/widgets/forms/SlotEntryForm";
+import { getLanguageByShortName } from "@/services";
+import { makeLink, WgerLink } from "@/utils/url";
+import { Typography } from "@mui/material";
+import Grid from '@mui/material/Grid';
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { getLanguageByShortName } from "@/services";
-import { makeLink, WgerLink } from "@/utils/url";
 
 export const SlotProgressionEdit = () => {
 

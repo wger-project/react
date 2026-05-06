@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { VariationSelect } from "@/components/Exercises/forms/VariationSelect";
-import { useProfileQuery } from "@/components/User/queries/profile";
+import { useProfileQuery } from "@/components/User";
 import { editExercise } from "@/services";
 
 export function EditExerciseVariation(props: { exerciseId: number, initial: string | null }) {

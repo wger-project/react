@@ -1,7 +1,6 @@
+import { AddExerciseStepper, NotEnoughRights } from "@/components/Exercises";
+import { useCanContributeExercises } from "@/components/User";
 import React from 'react';
-import { AddExerciseStepper } from "@/components/Exercises/Add/AddExerciseStepper";
-import { useCanContributeExercises } from "@/components/User/queries/contribute";
-import { NotEnoughRights } from "@/components/Exercises/Add/NotEnoughRights";
 
 export const AddExercise = () => {
     const contributeQuery = useCanContributeExercises();

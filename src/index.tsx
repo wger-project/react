@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { LoadingWidget } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { IngredientSearch } from "@/components/Nutrition/components/IngredientSearch";
+import { IngredientSearch } from "@/components/Nutrition";
 import React, { Suspense } from 'react';
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router } from 'react-router-dom';

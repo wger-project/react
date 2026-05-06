@@ -5,7 +5,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WgerTextField } from "@/components/Common/forms/WgerTextField";
-import { useProfileQuery } from "@/components/User/queries/profile";
+import { useProfileQuery } from "@/components/User";
 import {
     DESCRIPTION_MAX_LENGTH,
     MAX_WORKOUT_DURATION,

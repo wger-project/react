@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { LoadingPlaceholder, LoadingProgressIcon } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { useProfileQuery } from "@/components/User/queries/profile";
+import { useProfileQuery } from "@/components/User";
 import { Day } from "@/components/Routines/models/Day";
 import { Slot } from "@/components/Routines/models/Slot";
 import { SlotEntry } from "@/components/Routines/models/SlotEntry";

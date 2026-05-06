@@ -1,9 +1,3 @@
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
-import { Alert, Box, Button, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
-import Grid from '@mui/material/Grid';
 import { MarkdownEditor } from "@/components/Common/forms/MarkdownEditor";
 import { LoadingWidget } from "@/components/Core/LoadingWidget/LoadingWidget";
 import { FormQueryErrorsSnackbar } from '@/components/Core/Widgets/FormError';
@@ -37,10 +31,15 @@ import {
     usePostAliasQuery
 } from "@/components/Exercises/queries";
 import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
-import { usePermissionQuery } from "@/components/User/queries/permission";
-import { useProfileQuery } from "@/components/User/queries/profile";
-import { Form, Formik } from "formik";
+import { usePermissionQuery, useProfileQuery } from "@/components/User";
 import { WgerPermissions } from "@/permissions";
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
+import { Alert, Box, Button, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid';
+import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";

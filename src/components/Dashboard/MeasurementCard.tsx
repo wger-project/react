@@ -1,3 +1,15 @@
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { DashboardCard } from "@/components/Dashboard/DashboardCard";
+import { EmptyCard } from "@/components/Dashboard/EmptyCard";
+import {
+    CategoryForm,
+    MeasurementCategory,
+    MeasurementChart,
+    useMeasurementsCategoryQuery
+} from "@/components/Measurements";
+import i18n from "@/i18n";
+import { makeLink, WgerLink } from "@/utils/url";
+import "slick-carousel/slick/slick.css";
 import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -5,19 +17,9 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { DashboardCard } from "@/components/Dashboard/DashboardCard";
-import { EmptyCard } from "@/components/Dashboard/EmptyCard";
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
-import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
-import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
-import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
-import i18n from "@/i18n";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import Slider, { Settings } from "react-slick";
-import { makeLink, WgerLink } from "@/utils/url";
-import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 

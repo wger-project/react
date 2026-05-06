@@ -1,6 +1,4 @@
-import { Exercise } from "@/components/Exercises/models/exercise";
-import { Language } from "@/components/Exercises/models/language";
-import { Muscle } from "@/components/Exercises/models/muscle";
+import { Exercise, Language, Muscle } from "@/components/Exercises";
 import { GroupedLogData, LogData, RoutineStatsData } from "@/components/Routines/models/LogStats";
 import {
     formatStatsData,

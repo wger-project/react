@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import { MeasurementCard } from "@/components/Dashboard/MeasurementCard";
-import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
+import { useMeasurementsCategoryQuery } from "@/components/Measurements";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
 import type { Mock } from 'vitest';
 

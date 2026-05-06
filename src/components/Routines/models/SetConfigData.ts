@@ -1,4 +1,4 @@
-import { Exercise } from "@/components/Exercises/models/exercise";
+import { Exercise } from "@/components/Exercises";
 import { RepetitionUnit } from "@/components/Routines/models/RepetitionUnit";
 import { WeightUnit } from "@/components/Routines/models/WeightUnit";
 import { Adapter } from "@/utils/Adapter";

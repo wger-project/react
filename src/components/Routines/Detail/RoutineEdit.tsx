@@ -2,7 +2,7 @@ import { Box, Divider, Stack, Typography, useTheme } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
-import { useProfileQuery } from "@/components/User/queries/profile";
+import { useProfileQuery } from "@/components/User";
 import { RoutineTable } from "@/components/Routines/Detail/RoutineDetailsTable";
 import { useRoutineDetailQuery } from "@/components/Routines/queries";
 import { DayDetails, DayDragAndDropGrid } from "@/components/Routines/widgets/DayDetails";

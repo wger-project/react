@@ -1,6 +1,6 @@
 import { MenuItem, TextField } from "@mui/material";
 import { LoadingProgressIcon } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { useEditProfileQuery, useProfileQuery } from "@/components/User/queries/profile";
+import { useEditProfileQuery, useProfileQuery } from "@/components/User";
 import { SlotEntry, SlotEntryType } from "@/components/Routines/models/SlotEntry";
 import {
     useEditSlotEntryQuery,

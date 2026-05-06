@@ -1,7 +1,6 @@
+import { Exercise, NameAutocompleter } from "@/components/Exercises";
 import { Box } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { NameAutocompleter } from "@/components/Exercises/Filter/NameAutcompleter";
-import { Exercise } from "@/components/Exercises/models/exercise";
 
 
 export const SlotExercisePicker = (props: {

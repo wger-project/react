@@ -24,7 +24,7 @@ import {
     useLanguageQuery,
     useMusclesQuery
 } from "@/components/Exercises/queries";
-import { useProfileQuery } from "@/components/User/queries/profile";
+import { useProfileQuery } from "@/components/User";
 import Markdown from 'markdown-to-jsx';
 import React from "react";
 import { useTranslation } from "react-i18next";

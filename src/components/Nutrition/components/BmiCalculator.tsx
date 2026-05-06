@@ -1,9 +1,9 @@
 import { Box, Stack, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { useBodyWeightQuery } from "@/components/Weight/queries";
+import { useBodyWeightQuery } from "@/components/Weight";
 import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/components/Core/Widgets/Container";
-import { useProfileQuery } from "@/components/User/queries/profile";
+import { useProfileQuery } from "@/components/User";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Area, AreaChart, CartesianGrid, ReferenceDot, Tooltip, XAxis, YAxis, } from "recharts";

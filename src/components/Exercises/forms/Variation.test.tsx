@@ -3,7 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EditExerciseVariation } from "@/components/Exercises/forms/Variation";
 import { useExercisesQuery } from "@/components/Exercises/queries";
-import { useProfileQuery } from "@/components/User/queries/profile";
+import { useProfileQuery } from "@/components/User";
 import React from "react";
 import { editExercise } from "@/services";
 import {

@@ -15,7 +15,7 @@ import Grid from "@mui/material/Grid";
 import { SelectChangeEvent } from '@mui/material/Select';
 import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
-import { useLanguageQuery, useMusclesQuery } from "@/components/Exercises/queries";
+import { useLanguageQuery, useMusclesQuery } from "@/components/Exercises";
 import { useRoutineDetailQuery } from "@/components/Routines/queries";
 import { useRoutineStatsQuery } from "@/components/Routines/queries/routines";
 import {

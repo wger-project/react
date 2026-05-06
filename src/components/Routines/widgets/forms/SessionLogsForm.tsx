@@ -1,22 +1,20 @@
+import { WgerTextField } from "@/components/Common/forms/WgerTextField";
+import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
+import { Exercise, NameAutocompleter, useLanguageQuery } from "@/components/Exercises";
+import { RIR_VALUES_SELECT } from "@/components/Routines/models/BaseConfig";
+import { LogEntryForm } from "@/components/Routines/models/WorkoutLog";
+import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "@/components/Routines/queries";
+import { getLanguageByShortName } from "@/services";
+import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "@/utils/consts";
 import { SwapHoriz } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { Alert, Button, IconButton, InputAdornment, MenuItem, Snackbar, TextField, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { WgerTextField } from "@/components/Common/forms/WgerTextField";
-import { LoadingPlaceholder } from "@/components/Core/LoadingWidget/LoadingWidget";
-import { NameAutocompleter } from "@/components/Exercises/Filter/NameAutcompleter";
-import { Exercise } from "@/components/Exercises/models/exercise";
-import { useLanguageQuery } from "@/components/Exercises/queries";
-import { RIR_VALUES_SELECT } from "@/components/Routines/models/BaseConfig";
-import { LogEntryForm } from "@/components/Routines/models/WorkoutLog";
-import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "@/components/Routines/queries";
 import { FieldArray, Form, Formik, FormikProps } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { getLanguageByShortName } from "@/services";
-import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "@/utils/consts";
 import * as yup from "yup";
 
 interface SessionLogsFormProps {

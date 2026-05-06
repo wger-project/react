@@ -3,7 +3,7 @@ import { Box, Button, Card, CardActions, CardMedia } from "@mui/material";
 import { FormQueryErrorsSnackbar } from "@/components/Core/Widgets/FormError";
 import { ExerciseImage } from "@/components/Exercises/models/image";
 import { useAddExerciseImageQuery, useDeleteExerciseImageQuery } from "@/components/Exercises/queries";
-import { useProfileQuery } from "@/components/User/queries/profile";
+import { useProfileQuery } from "@/components/User";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

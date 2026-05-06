@@ -1,3 +1,13 @@
+import { RenderLoadingQuery } from "@/components/Core/Widgets/RenderLoadingQuery";
+import { ExerciseImageAvatar, Language, useLanguageQuery } from "@/components/Exercises";
+import { getDayName } from "@/components/Routines/models/Day";
+import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
+import { SetConfigData } from "@/components/Routines/models/SetConfigData";
+import { SlotData } from "@/components/Routines/models/SlotData";
+import { useRoutineDetailQuery } from "@/components/Routines/queries";
+import { getLanguageByShortName } from "@/services";
+import { isSameDay } from "@/utils/date";
+import { makeLink, WgerLink } from "@/utils/url";
 import { Addchart } from "@mui/icons-material";
 import TodayIcon from '@mui/icons-material/Today';
 import {
@@ -15,21 +25,9 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import Tooltip from "@mui/material/Tooltip";
-import { RenderLoadingQuery } from "@/components/Core/Widgets/RenderLoadingQuery";
-import { ExerciseImageAvatar } from "@/components/Exercises/Detail/ExerciseImageAvatar";
-import { Language } from "@/components/Exercises/models/language";
-import { useLanguageQuery } from "@/components/Exercises/queries";
-import { getDayName } from "@/components/Routines/models/Day";
-import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
-import { SetConfigData } from "@/components/Routines/models/SetConfigData";
-import { SlotData } from "@/components/Routines/models/SlotData";
-import { useRoutineDetailQuery } from "@/components/Routines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { getLanguageByShortName } from "@/services";
-import { isSameDay } from "@/utils/date";
-import { makeLink, WgerLink } from "@/utils/url";
 
 
 export const RoutineDetailsCard = () => {

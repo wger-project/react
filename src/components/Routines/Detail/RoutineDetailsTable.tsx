@@ -1,3 +1,15 @@
+import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
+import { RenderLoadingQuery } from "@/components/Core/Widgets/RenderLoadingQuery";
+import { Language, useLanguageQuery } from "@/components/Exercises";
+import { Day } from "@/components/Routines/models/Day";
+import { Routine } from "@/components/Routines/models/Routine";
+import { RoutineLogData } from "@/components/Routines/models/RoutineLogData";
+import { SetConfigData } from "@/components/Routines/models/SetConfigData";
+import { SlotEntry } from "@/components/Routines/models/SlotEntry";
+import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
+import { useRoutineDetailQuery, useRoutineLogData } from "@/components/Routines/queries";
+import { getLanguageByShortName } from "@/services";
+import { makeLink, WgerLink } from "@/utils/url";
 import FlagCircleIcon from '@mui/icons-material/FlagCircle';
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
@@ -16,22 +28,9 @@ import {
     useTheme
 } from "@mui/material";
 import { styled } from '@mui/material/styles';
-import { WgerContainerFullWidth } from "@/components/Core/Widgets/Container";
-import { RenderLoadingQuery } from "@/components/Core/Widgets/RenderLoadingQuery";
-import { Language } from "@/components/Exercises/models/language";
-import { useLanguageQuery } from "@/components/Exercises/queries";
-import { Day } from "@/components/Routines/models/Day";
-import { Routine } from "@/components/Routines/models/Routine";
-import { RoutineLogData } from "@/components/Routines/models/RoutineLogData";
-import { SetConfigData } from "@/components/Routines/models/SetConfigData";
-import { SlotEntry } from "@/components/Routines/models/SlotEntry";
-import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
-import { useRoutineDetailQuery, useRoutineLogData } from "@/components/Routines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { getLanguageByShortName } from "@/services";
-import { makeLink, WgerLink } from "@/utils/url";
 
 
 const PREFIX = 'RoutineDetailsTable';
