@@ -449,3 +449,187 @@ export const responseRoutineDayData = [
         ]
     }
 ];
+
+
+/* eslint-disable camelcase */
+
+// Single routine envelope as returned by GET /routine/<id>/
+export const responseSingleRoutineDetail = {
+    id: 1,
+    name: "My first routine!",
+    description: "Well rounded full body routine",
+    created: "2022-01-01T12:34:30+01:00",
+    start: "2024-03-01",
+    end: "2024-04-30",
+    fit_in_week: false,
+    is_template: false,
+    is_public: false,
+};
+
+// Mixed list with one template entry, used to verify that getRoutinesShallow
+// filters templates out.
+export const responseRoutinesShallowWithTemplate = {
+    count: 3,
+    next: null,
+    previous: null,
+    results: [
+        ...responseApiWorkoutRoutine.results,
+        {
+            id: 99,
+            name: "A template",
+            description: "",
+            created: "2024-01-01T12:34:30+01:00",
+            start: "2024-01-01",
+            end: "2024-04-01",
+            fit_in_week: false,
+            is_template: true,
+            is_public: false,
+        },
+    ],
+};
+
+// Empty paginated response, useful for the "no active routine" branch.
+export const responseEmptyRoutineList = {
+    count: 0,
+    next: null,
+    previous: null,
+    results: [],
+};
+
+export const responsePrivateTemplate = {
+    count: 1,
+    next: null,
+    previous: null,
+    results: [
+        {
+            id: 11,
+            name: "My private template",
+            description: "",
+            created: "2024-06-01T00:00:00+00:00",
+            start: "2024-06-01",
+            end: "2024-07-01",
+            fit_in_week: false,
+            is_template: true,
+            is_public: false,
+        },
+    ],
+};
+
+export const responsePublicTemplate = {
+    count: 1,
+    next: null,
+    previous: null,
+    results: [
+        {
+            id: 22,
+            name: "Community template",
+            description: "",
+            created: "2024-06-01T00:00:00+00:00",
+            start: "2024-06-01",
+            end: "2024-07-01",
+            fit_in_week: false,
+            is_template: true,
+            is_public: true,
+        },
+    ],
+};
+
+// Single Routine envelope returned by POST/PATCH /routine/.
+export const responseAddRoutine = {
+    id: 77,
+    name: "New plan",
+    description: "desc",
+    created: "2024-08-01T00:00:00+00:00",
+    start: "2024-08-01",
+    end: "2024-09-01",
+    fit_in_week: true,
+    is_template: false,
+    is_public: false,
+};
+
+export const responseEditRoutine = {
+    id: 42,
+    name: "Edited",
+    description: "updated description",
+    created: "2024-01-01T00:00:00+00:00",
+    start: "2024-08-01",
+    end: "2024-09-01",
+    fit_in_week: false,
+    is_template: false,
+    is_public: false,
+};
+
+// /routine/<id>/structure/ — the day list with empty slots.
+export const responseRoutineStructure = {
+    days: [
+        {
+            id: 100,
+            order: 1,
+            name: "Push day",
+            description: "",
+            is_rest: false,
+            need_logs_to_advance: false,
+            type: "custom",
+            config: null,
+            slots: [],
+        },
+        {
+            id: 101,
+            order: 2,
+            name: "Pull day",
+            description: "",
+            is_rest: false,
+            need_logs_to_advance: false,
+            type: "custom",
+            config: null,
+            slots: [],
+        },
+    ],
+};
+
+// /routine/<id>/logs/ — sessions with their attached logs.
+export const responseRoutineLogData = [
+    {
+        session: {
+            id: 1,
+            day: 5,
+            routine: 1,
+            date: "2024-08-01",
+            notes: "felt good",
+            impression: "3",
+            time_start: "10:00",
+            time_end: "11:00",
+        },
+        logs: [],
+    },
+];
+
+// /routine/<id>/stats/ — fully populated GroupedLogData with one set entry.
+export const responseRoutineStats = {
+    volume: {
+        mesocycle: { exercises: {}, muscle: {}, upper_body: "0", lower_body: "0", total: "0" },
+        iteration: {},
+        weekly: {},
+        daily: {},
+    },
+    intensity: {
+        mesocycle: { exercises: {}, muscle: {}, upper_body: "0", lower_body: "0", total: "0" },
+        iteration: {},
+        weekly: {},
+        daily: {},
+    },
+    sets: {
+        mesocycle: {
+            exercises: { 9: "5" },
+            muscle: { 1: "5" },
+            upper_body: "5",
+            lower_body: "0",
+            total: "5",
+        },
+        iteration: {},
+        weekly: {},
+        daily: {},
+    },
+};
+
+/* eslint-enable camelcase */
