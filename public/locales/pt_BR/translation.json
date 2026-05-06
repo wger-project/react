@@ -371,5 +371,9 @@
     },
     "totalChange": "Variação total",
     "preview": "Pré-visualização",
-    "useMarkdownHint": "Você pode usar Markdown básico para formatar o texto: *itálico*, **negrito**, - lista"
+    "useMarkdownHint": "Você pode usar Markdown básico para formatar o texto: *itálico*, **negrito**, - lista",
+    "currentTrend": "Tendência atual",
+    "mean": "Significar",
+    "trend": "Tendência",
+    "variance": "Variância"
 }
