@@ -12,7 +12,7 @@ import { addDay } from "@/components/Routines/api/day";
 import { getRoutine } from "@/components/Routines/api/routine";
 import { addSlot } from "@/components/Routines/api/slot";
 import { getProfile } from "@/components/User/api/profile";
-import { addSlotEntry } from "@/components/Routines/api/slot_entry";
+import { addSlotEntry } from "@/components/Routines/api/slotEntry";
 import { getTestQueryClient } from "@/tests/queryClient";
 import { testProfileDataVerified } from "@/tests/userTestdata";
 import { testDayLegs, testRoutine1 } from "@/tests/workoutRoutinesTestData";
@@ -22,9 +22,9 @@ vi.mock("@/components/Exercises/api/language");
 vi.mock("@/components/Routines/api/day");
 vi.mock("@/components/Routines/api/routine");
 vi.mock("@/components/Routines/api/slot");
-vi.mock("@/components/Routines/api/slot_entry");
+vi.mock("@/components/Routines/api/slotEntry");
 vi.mock("@/components/User/api/profile");
-vi.mock("@/components/Routines/api/slot_entry");
+vi.mock("@/components/Routines/api/slotEntry");
 
 const makeSlot = (id: number, exerciseId: number) => new Slot({
     id, dayId: 1, order: id, comment: '', config: null,

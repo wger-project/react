@@ -1,6 +1,6 @@
 import axios from "axios";
 import { SlotEntry } from "@/components/Routines/models/SlotEntry";
-import { addSlotEntry, deleteSlotEntry, editSlotEntry } from "@/components/Routines/api/slot_entry";
+import { addSlotEntry, deleteSlotEntry, editSlotEntry } from "@/components/Routines/api/slotEntry";
 import { responseSlotEntry } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from "vitest";
 

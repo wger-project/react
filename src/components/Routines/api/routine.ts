@@ -20,8 +20,6 @@ export const ROUTINE_API_ALL_ITERATION_DISPLAY = 'date-sequence-display';
 /*
  * Processes a routine with all sub-objects
  */
-const exerciseMap: { [id: number]: Exercise } = {};
-
 export const processRoutine = async (id: number): Promise<Routine> => {
 
     const response = await axios.get(
@@ -54,6 +52,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     }
     const exercisePromises = Array.from(exerciseIds).map(id => getExercise(id));
     const exercises = await Promise.all(exercisePromises);
+    const exerciseMap: { [id: number]: Exercise } = {};
     exercises.forEach(exercise => {
         exerciseMap[exercise.id!] = exercise;
     });

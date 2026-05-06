@@ -4,7 +4,7 @@ import {
     deleteBaseConfig,
     editBaseConfig,
     EditBaseConfigParams
-} from "@/components/Routines/api/base_config";
+} from "@/components/Routines/api/baseConfig";
 import {
     addMaxRepetitionsConfig,
     addMaxRestConfig,
@@ -34,8 +34,8 @@ import {
 import { ApiPath } from "@/core/lib/consts";
 import type { Mock } from 'vitest';
 
-vi.mock("@/components/Routines/api/base_config", async () => {
-    const originalModule = await vi.importActual<typeof import("@/components/Routines/api/base_config")>("@/components/Routines/api/base_config");
+vi.mock("@/components/Routines/api/baseConfig", async () => {
+    const originalModule = await vi.importActual<typeof import("@/components/Routines/api/baseConfig")>("@/components/Routines/api/baseConfig");
     return {
         __esModule: true,
         ...originalModule, // Include all original exports

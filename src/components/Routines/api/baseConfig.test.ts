@@ -7,7 +7,7 @@ import {
     editBaseConfig,
     EditBaseConfigParams,
     processBaseConfigs,
-} from "@/components/Routines/api/base_config";
+} from "@/components/Routines/api/baseConfig";
 import { ApiPath } from "@/core/lib/consts";
 import type { Mock, Mocked } from 'vitest';
 

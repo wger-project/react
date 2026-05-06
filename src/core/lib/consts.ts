@@ -15,20 +15,6 @@ export const WEIGHT_UNIT_KG = 1;
 export const WEIGHT_UNIT_LB = 2;
 
 
-export const QUERY_EXERCISES = 'exercises';
-export const QUERY_EXERCISE_VARIATIONS = 'variations';
-export const QUERY_EXERCISE_DETAIL = 'detail';
-export const QUERY_LANGUAGES = 'languages';
-export const QUERY_CATEGORIES = 'categories';
-export const QUERY_EQUIPMENT = 'equipment';
-export const QUERY_MUSCLES = 'muscles';
-export const QUERY_NOTES = 'notes';
-
-export const QUERY_PERMISSION = 'permission';
-
-export const QUERY_MEASUREMENTS = 'measurements';
-export const QUERY_MEASUREMENTS_CATEGORIES = 'measurements-categories';
-
 /*
  * Keys used for the queries
  *
@@ -62,7 +48,8 @@ export enum QueryKey {
     BODY_WEIGHT = 'body-weight',
 
     // Profile
-    QUERY_PROFILE = 'profile',
+    PROFILE = 'profile',
+    PERMISSION = 'permission',
 
     // Exercises
     EXERCISES = 'exercises',
@@ -73,7 +60,10 @@ export enum QueryKey {
     CATEGORIES = 'categories',
     EQUIPMENT = 'equipment',
     MUSCLES = 'muscles',
-    QUERY_NOTES = 'notes',
+
+    // Measurements
+    MEASUREMENTS = 'measurements',
+    MEASUREMENTS_CATEGORIES = 'measurements-categories',
 
     // Nutrition (search)
     INGREDIENT_SEARCH = 'ingredient-search',

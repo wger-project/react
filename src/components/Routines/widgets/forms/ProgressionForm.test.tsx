@@ -3,12 +3,12 @@ import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { BaseConfig } from "@/components/Routines/models/BaseConfig";
 import { ProgressionForm } from "@/components/Routines/widgets/forms/ProgressionForm";
-import { processBaseConfigs } from "@/components/Routines/api/base_config";
+import { processBaseConfigs } from "@/components/Routines/api/baseConfig";
 import { testQueryClient } from "@/tests/queryClient";
 import type { Mock } from 'vitest';
 
 
-vi.mock("@/components/Routines/api/base_config");
+vi.mock("@/components/Routines/api/baseConfig");
 const mockProcessBaseConfigs = processBaseConfigs as Mock;
 
 describe('Tests for the ProgressionForm', () => {

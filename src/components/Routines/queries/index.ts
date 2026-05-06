@@ -49,7 +49,7 @@ export {
     useDeleteSlotEntryQuery,
     useEditSlotEntryQuery,
     useAddSlotEntryQuery,
-} from "./slot_entries";
+} from "./slotEntries";
 export {
     useFetchRoutineWeighUnitsQuery,
     useFetchRoutineRepUnitsQuery

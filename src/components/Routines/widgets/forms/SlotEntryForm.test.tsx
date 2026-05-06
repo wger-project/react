@@ -9,7 +9,7 @@ import {
     SlotEntryWeightUnitField
 } from "@/components/Routines/widgets/forms/SlotEntryForm";
 import type { Mock } from 'vitest';
-import { editSlotEntry } from "@/components/Routines/api/slot_entry";
+import { editSlotEntry } from "@/components/Routines/api/slotEntry";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
 import { editProfile, getProfile } from "@/components/User/api/profile";
 import { getTestQueryClient } from "@/tests/queryClient";
@@ -18,7 +18,7 @@ import { testDayLegs, testRepetitionUnits, testWeightUnits } from "@/tests/worko
 import { DEBOUNCE_ROUTINE_FORMS } from "@/core/lib/consts";
 
 
-vi.mock("@/components/Routines/api/slot_entry");
+vi.mock("@/components/Routines/api/slotEntry");
 vi.mock("@/components/Routines/api/workoutUnits");
 vi.mock("@/components/User/api/profile");
 

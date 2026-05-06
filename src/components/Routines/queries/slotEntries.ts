@@ -1,4 +1,4 @@
-import { addSlotEntry, deleteSlotEntry, editSlotEntry } from "@/components/Routines/api/slot_entry";
+import { addSlotEntry, deleteSlotEntry, editSlotEntry } from "@/components/Routines/api/slotEntry";
 import { SlotEntry } from "@/components/Routines/models/SlotEntry";
 import { QueryKey, } from "@/core/lib/consts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

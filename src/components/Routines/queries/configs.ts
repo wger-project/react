@@ -3,7 +3,7 @@ import {
     EditBaseConfigParams,
     processBaseConfigs,
     ProcessBaseConfigsParams
-} from "@/components/Routines/api/base_config";
+} from "@/components/Routines/api/baseConfig";
 import {
     addMaxNrOfSetsConfig,
     addMaxRepetitionsConfig,
