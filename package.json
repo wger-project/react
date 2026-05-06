@@ -106,6 +106,7 @@
     "test:watch": "LANG=de_de vitest",
     "test:coverage": "LANG=de_de vitest run --coverage",
     "i18n": "i18next",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint src",
     "lint:quiet": "eslint --quiet src",
     "lint:fix": "eslint --fix src"

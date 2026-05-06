@@ -21,7 +21,7 @@ describe('Test the user UserTrophy model', () => {
             "earned_at": "2025-12-19T13:48:07.519497+01:00",
             progress: 100.0,
             "is_notified": false
-        };
+        } as const;
 
         // Act
         const userTrophy = UserTrophy.fromJson(apiResponse);

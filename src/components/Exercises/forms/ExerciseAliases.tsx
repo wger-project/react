@@ -48,7 +48,13 @@ export function ExerciseAliases(props: { fieldName: string }) {
         value={field.value || []}
         options={[]}
         getOptionLabel={(opt) => (typeof opt === "string" ? opt : opt.alias)}
-        isOptionEqualToValue={(option, value) => option.alias === value.alias && (option.id === value.id || option.id === undefined || value.id === undefined)}
+        isOptionEqualToValue={(option, value) => {
+            const optionAlias = typeof option === "string" ? option : option.alias;
+            const valueAlias = typeof value === "string" ? value : value.alias;
+            const optionId = typeof option === "string" ? undefined : option.id;
+            const valueId = typeof value === "string" ? undefined : value.id;
+            return optionAlias === valueAlias && (optionId === valueId || optionId === undefined || valueId === undefined);
+        }}
         onChange={(_, newValue) => {
             helpers.setValue(normalize(newValue));
         }}

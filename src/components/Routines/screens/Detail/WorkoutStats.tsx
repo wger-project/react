@@ -213,7 +213,7 @@ export const WorkoutStats = () => {
                             <XAxis dataKey="category" type="category" allowDuplicatedCategory={false} />
                             <YAxis dataKey="value" />
                             <Tooltip
-                                formatter={(value: number) => Number.isInteger(value) ? value.toFixed(0) : value.toFixed(2)} />
+                                formatter={(value) => typeof value === 'number' ? (Number.isInteger(value) ? value.toFixed(0) : value.toFixed(2)) : String(value ?? '')} />
                             <Legend
                                 layout={"vertical"}
                                 verticalAlign="middle"

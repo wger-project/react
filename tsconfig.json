@@ -14,7 +14,8 @@
     ],
     "types": [
       "vite/client",
-      "vitest/globals"
+      "vitest/globals",
+      "node"
     ],
     "allowJs": true,
     "skipLibCheck": true,

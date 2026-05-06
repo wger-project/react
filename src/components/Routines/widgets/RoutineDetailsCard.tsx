@@ -115,9 +115,7 @@ function SlotDataList(props: { slotData: SlotData }) {
     return (
         <Grid
             container
-            alignItems="flex-start"
-            columnGap={1}
-            wrap="nowrap"
+            sx={{ alignItems: 'flex-start', columnGap: 1, flexWrap: 'nowrap' }}
         >
             <Grid
                 sx={{

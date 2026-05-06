@@ -81,7 +81,7 @@ export const patchExerciseImage = async (data: PatchExerciseImageParams): Promis
     formData.append('license_author', data.imageData.author);
     formData.append('license_author_url', data.imageData.authorUrl);
     formData.append('license_derivative_source_url', data.imageData.derivativeSourceUrl);
-    formData.append('style', data.imageData.style);
+    formData.append('style', String(data.imageData.style));
     
     try {
         const response = await axios.patch(url, formData, { headers });

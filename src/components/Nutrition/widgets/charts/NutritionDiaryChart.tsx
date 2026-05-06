@@ -1,9 +1,9 @@
 import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
+import { generateChartColors } from "@/core/lib/colors";
+import { numberLocale } from "@/core/lib/numbers";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from 'recharts';
-import { generateChartColors } from "@/core/lib/colors";
-import { numberLocale } from "@/core/lib/numbers";
 
 type NutritionDiaryChartProps = {
     showPlanned: boolean,
@@ -69,7 +69,8 @@ export const NutritionDiaryChart = ({ showPlanned, planned, today, avg7Days }: N
                 orientation="left"
                 unit={t('nutrition.gramShort')}
             />
-            <Tooltip formatter={(value: number) => numberLocale(value, i18n.language)} />
+            <Tooltip
+                formatter={(value) => typeof value === 'number' ? numberLocale(value, i18n.language) : String(value ?? '')} />
             <Legend />
             {showPlanned &&
                 <Bar

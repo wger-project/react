@@ -1,4 +1,6 @@
-export const INGREDIENT_API_RESPONSE = {
+import { ApiIngredientType } from "@/types";
+
+export const INGREDIENT_API_RESPONSE = ({
     "count": 1,
     "next": null,
     "previous": null,
@@ -85,4 +87,4 @@ export const INGREDIENT_API_RESPONSE = {
             }
         }
     ]
-};
+} as unknown as { count: number; next: null; previous: null; results: ApiIngredientType[] });

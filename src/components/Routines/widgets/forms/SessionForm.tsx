@@ -1,9 +1,3 @@
-import { SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
-import { Button, ButtonGroup, Typography } from "@mui/material";
-import Grid from '@mui/material/Grid';
-import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { WgerTextField } from "@/core/forms/WgerTextField";
 import {
     IMPRESSION_BAD,
     IMPRESSION_GOOD,
@@ -12,11 +6,17 @@ import {
     WorkoutSession
 } from "@/components/Routines/models/WorkoutSession";
 import { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery } from "@/components/Routines/queries";
+import { WgerTextField } from "@/core/forms/WgerTextField";
+import { dateTimeToHHMM, dateToYYYYMMDD } from "@/core/lib/date";
+import { SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
+import { Button, ButtonGroup, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid';
+import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { Form, Formik, FormikProps } from "formik";
 import { DateTime } from "luxon";
 import React, { useEffect } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateTimeToHHMM, dateToYYYYMMDD } from "@/core/lib/date";
 import * as yup from 'yup';
 
 interface SessionFormProps {
@@ -103,7 +103,9 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
                 end: session !== undefined && session.timeEnd !== null ? DateTime.fromJSDate(session.timeEnd!) : null,
                 impression: session !== undefined ? session.impression : IMPRESSION_NEUTRAL,
             }}
-            innerRef={ref => formik = ref}
+            innerRef={ref => {
+                formik = ref;
+            }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
                 const data = {

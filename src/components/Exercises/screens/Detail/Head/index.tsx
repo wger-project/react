@@ -117,8 +117,10 @@ export const Head = ({
                                     anchorEl={anchorMenuEl}
                                     open={openLanguageMenu}
                                     onClose={handleMenuClose}
-                                    MenuListProps={{
-                                        'aria-labelledby': 'basic-button',
+                                    slotProps={{
+                                        list: {
+                                            'aria-labelledby': 'basic-button',
+                                        },
                                     }}
                                     sx={{ padding: 20 }}
                                 >

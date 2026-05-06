@@ -200,7 +200,7 @@ export const ExerciseOverviewList = () => {
                                 xs: 12,
                                 sm: showFilters ? 3 : 6
                             }}>
-                            <Stack direction="row" alignItems="center" spacing={1} sx={{ width: '100%' }}>
+                            <Stack direction="row" spacing={1} sx={{ width: '100%', alignItems: 'center' }}>
                                 <Box sx={{ flexGrow: 1 }}>
                                     <NameAutocompleter callback={exerciseAdded} />
                                 </Box>

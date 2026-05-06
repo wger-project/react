@@ -57,52 +57,52 @@ function groupBy(list: any[], keyGetter: Function) {
 const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
     const MAX_EXERCISE_IMAGES = 4;
     const MAX_EXERCISE_NAMES = 5;
-    const variationId = exercises[0].variationId;
+    const variationGroup = exercises[0].variationGroup;
     const exerciseId = exercises[0].id;
 
     const [state, dispatch] = useExerciseSubmissionStateValue();
     const [showMore, setShowMore] = useState<boolean>(false);
 
-    const [stateVariationId, setStateVariationId] = useState<number | null>(state.variationId);
+    const [stateVariationGroup, setStateVariationGroup] = useState<string | null>(state.variationGroup);
     const [stateNewVariationId, setStateNewVariationId] = useState<number | null>(state.newVariationExerciseId);
 
     useEffect(() => {
-        dispatch(setVariationId(stateVariationId));
-    }, [dispatch, stateVariationId]);
+        dispatch(setVariationId(stateVariationGroup));
+    }, [dispatch, stateVariationGroup]);
 
     useEffect(() => {
         dispatch(setNewBaseVariationId(stateNewVariationId));
     }, [dispatch, stateNewVariationId]);
 
 
-    const handleToggle = (variationId: number | null, newVariationId: number | null) => () => {
+    const handleToggle = (variationGroup: string | null, newVariationId: number | null) => () => {
 
-        if (variationId !== null) {
+        if (variationGroup !== null) {
             newVariationId = null;
-            if (variationId === state.variationId) {
-                variationId = null;
+            if (variationGroup === state.variationGroup) {
+                variationGroup = null;
             }
         } else {
-            variationId = null;
+            variationGroup = null;
             if (newVariationId === state.newVariationExerciseId) {
                 newVariationId = null;
             }
         }
 
-        setStateVariationId(variationId);
+        setStateVariationGroup(variationGroup);
         setStateNewVariationId(newVariationId);
     };
 
     let isChecked;
-    if (variationId === null) {
+    if (variationGroup === null) {
         isChecked = state.newVariationExerciseId === exerciseId;
     } else {
-        isChecked = variationId === state.variationId;
+        isChecked = variationGroup === state.variationGroup;
     }
 
     return (
         <ListItem disableGutters>
-            <ListItemButton onClick={handleToggle(variationId, exerciseId)}>
+            <ListItemButton onClick={handleToggle(variationGroup, exerciseId)}>
                 <ListItemIcon>
                     <AvatarGroup max={MAX_EXERCISE_IMAGES} spacing={"small"}>
                         {exercises.map((base) =>
@@ -118,7 +118,7 @@ const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
                     )} />
 
                 <Switch
-                    key={`variation-${variationId}`}
+                    key={`variation-${variationGroup}`}
                     edge="start"
                     checked={isChecked}
                     tabIndex={-1}
@@ -143,16 +143,16 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
 
     const [searchTerm, setSearchTerms] = useState<string>('');
 
-    // Group exercises by variationId
+    // Group exercises by variationGroup
     let exercises: Exercise[] = [];
-    let groupedExercises = new Map<number, Exercise[]>();
+    let groupedExercises = new Map<string, Exercise[]>();
     if (exercisesQuery.isSuccess) {
         exercises = exercisesQuery.data;
         if (searchTerm !== '') {
             exercises = exercises.filter((base) => base.getTranslation().name.toLowerCase().includes(searchTerm.toLowerCase()));
         }
     }
-    groupedExercises = groupBy(exercises.filter(b => b.variationId !== null), (b: Exercise) => b.variationId);
+    groupedExercises = groupBy(exercises.filter(b => b.variationGroup !== null), (b: Exercise) => b.variationGroup);
 
     return <>
         <Grid container>
@@ -191,16 +191,16 @@ export const Step2Variations = ({ onContinue, onBack }: StepProps) => {
             ? <LoadingPlaceholder />
             : <Paper elevation={2} sx={{ mt: 2 }}>
                 <List style={{ height: "400px", overflowY: "scroll" }}>
-                    {exercises.filter(b => b.variationId === null).map(exercise =>
+                    {exercises.filter(b => b.variationGroup === null).map(exercise =>
                         <ExerciseInfoListItem
                             exercises={[exercise]}
                             key={'exercise-' + exercise.id}
                         />
                     )}
-                    {[...groupedExercises.keys()].map(variationId =>
+                    {[...groupedExercises.keys()].map(variationGroup =>
                         <ExerciseInfoListItem
-                            exercises={groupedExercises.get(variationId)!}
-                            key={'variation-' + variationId}
+                            exercises={groupedExercises.get(variationGroup)!}
+                            key={'variation-' + variationGroup}
                         />
                     )}
                 </List>

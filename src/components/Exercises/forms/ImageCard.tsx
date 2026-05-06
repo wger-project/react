@@ -1,7 +1,7 @@
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Box, Button, Card, CardActions, CardMedia } from "@mui/material";
 import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
-import { ExerciseImage } from "@/components/Exercises/models/image";
+import { ExerciseImage, ImageStyle } from "@/components/Exercises/models/image";
 import { useAddExerciseImageQuery, useDeleteExerciseImageQuery } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
 import React from "react";
@@ -74,7 +74,7 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
                     title: '',
                     objectUrl: '',
                     derivativeSourceUrl: '',
-                    style: ''
+                    style: ImageStyle.PHOTO
                 },
             });
         }

@@ -22,7 +22,11 @@ jobs:
           node-version: 24
           cache: 'npm'
 
+      - name: Install dependencies
+        run: npm ci
+
       - name: Lint the code
-        run: |
-          npm ci
-          npm run lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npm run typecheck

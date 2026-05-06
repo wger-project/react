@@ -19,7 +19,6 @@ describe("Test the PlanDetail component", () => {
             data: TEST_NUTRITIONAL_PLAN_1
         }));
 
-        // @ts-expect-error
         vi.setSystemTime(new Date('2023-07-01').getTime());
     });
 

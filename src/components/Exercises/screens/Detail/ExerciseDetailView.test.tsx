@@ -21,7 +21,7 @@ describe("Contribute banner tests", () => {
             <ExerciseDetailView
                 exercise={exercise}
                 language={language}
-                setEditMode={vi.fn}
+                setEditMode={vi.fn()}
                 variations={[]}
             />
         </QueryClientProvider>

@@ -91,6 +91,9 @@ export const Step6Overview = ({ onBack }: StepProps) => {
         // Post the images individually, it seems to be more reliable this way
         // and most problems were happening when creating the exercise itself
         for (const image of state.images) {
+            if (!image.file) {
+                continue;
+            }
             await addImageMutation.mutateAsync({
                 exerciseId: exerciseId,
                 image: image.file,

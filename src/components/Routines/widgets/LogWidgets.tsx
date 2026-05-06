@@ -30,7 +30,7 @@ import {
     Scatter,
     ScatterChart,
     Tooltip,
-    TooltipProps,
+    TooltipContentProps,
     XAxis,
     YAxis
 } from "recharts";
@@ -165,8 +165,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
                 if (isInEditMode) {
                     return [
                         <GridActionsCellItem
-                            icon={<SaveIcon />}
-                            sx={{ color: 'primary.main' }}
+                            icon={<SaveIcon sx={{ color: 'primary.main' }} />}
                             label={t('save')}
                             onClick={handleSaveClick(id)}
                         />,
@@ -252,7 +251,7 @@ const formatData = (data: WorkoutLog[]) =>
         };
     });
 
-const ExerciseLogTooltip = ({ active, payload }: TooltipProps<ValueType, NameType>) => {
+const ExerciseLogTooltip = ({ active, payload }: TooltipContentProps<ValueType, NameType>) => {
     if (active) {
         // TODO: translate rir
         let rir = '';
@@ -322,7 +321,7 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
                     }
                 )}
 
-                <Tooltip content={<ExerciseLogTooltip />} />
+                <Tooltip content={ExerciseLogTooltip} />
                 <CartesianGrid strokeDasharray="3 3" />
                 <Legend />
             </ScatterChart>

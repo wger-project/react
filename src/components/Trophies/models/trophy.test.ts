@@ -15,7 +15,7 @@ describe('Test the trophy model', () => {
             "is_hidden": false,
             "is_progressive": false,
             order: 1
-        };
+        } as const;
 
         // Act
         const trophy = Trophy.fromJson(apiResponse);

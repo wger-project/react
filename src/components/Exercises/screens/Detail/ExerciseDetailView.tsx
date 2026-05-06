@@ -75,7 +75,7 @@ export const ExerciseDetailView = ({
             {isNewTranslation
                 && contributeQuery.canContribute
                 && <Grid
-                    order={{ xs: 2, sm: 1 }}
+                    sx={{ order: { xs: 2, sm: 1 } }}
                     size={{
                         xs: 12,
                         sm: 7,
@@ -85,7 +85,7 @@ export const ExerciseDetailView = ({
                 </Grid>
             }
             <Grid
-                order={{ xs: 2, sm: 1 }}
+                sx={{ order: { xs: 2, sm: 1 } }}
                 size={{
                     xs: 12,
                     sm: 7,
@@ -116,7 +116,7 @@ export const ExerciseDetailView = ({
                 <Typography variant="h5">{t("exercises.muscles")}</Typography>
                 <Grid container>
                     <Grid
-                        order={{ xs: 1 }}
+                        sx={{ order: { xs: 1 } }}
                         size={{
                             xs: 6,
                             md: 3
@@ -128,7 +128,7 @@ export const ExerciseDetailView = ({
                         />
                     </Grid>
                     <Grid
-                        order={{ xs: 2, md: 3 }}
+                        sx={{ order: { xs: 2, md: 3 } }}
                         size={{
                             xs: 6,
                             md: 3
@@ -147,7 +147,7 @@ export const ExerciseDetailView = ({
                     </Grid>
 
                     <Grid
-                        order={{ xs: 3, md: 2 }}
+                        sx={{ order: { xs: 3, md: 2 } }}
                         size={{
                             xs: 6,
                             md: 3
@@ -161,7 +161,7 @@ export const ExerciseDetailView = ({
 
 
                     <Grid
-                        order={{ xs: 4 }}
+                        sx={{ order: { xs: 4 } }}
                         size={{
                             xs: 6,
                             md: 3
@@ -184,7 +184,7 @@ export const ExerciseDetailView = ({
                 <PaddingBox />
             </Grid>
             <Grid
-                order={{ xs: 1, sm: 2 }}
+                sx={{ order: { xs: 1, sm: 2 } }}
                 size={{
                     xs: 12,
                     sm: 5,
@@ -228,7 +228,7 @@ export const ExerciseDetailView = ({
             </Grid>
 
 
-            <Grid order={{ xs: 3 }} size={12}>
+            <Grid sx={{ order: { xs: 3 } }} size={12}>
 
                 <PaddingBox />
 
@@ -250,7 +250,7 @@ export const ExerciseDetailView = ({
                     )}
                 </Grid>
             </Grid>
-            <Grid order={{ xs: 4, }} sx={{ mt: 3 }} size={12}>
+            <Grid sx={{ order: { xs: 4 }, mt: 3 }} size={12}>
 
                 <Divider />
                 <Typography
