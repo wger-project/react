@@ -196,3 +196,120 @@ export const TEST_NUTRITIONAL_PLAN_2 = new NutritionalPlan({
     description: 'Bulking till we puke',
 });
 TEST_NUTRITIONAL_PLAN_2.meals = [TEST_MEAL_4, TEST_MEAL_5];
+
+
+/* eslint-disable camelcase */
+
+// API envelope for a single meal (POST/PATCH /meal/ response).
+export const responseMealDetail = {
+    id: 78,
+    plan: 123,
+    order: 2,
+    time: '12:30',
+    name: 'Second breakfast',
+};
+
+// Paginated meal list returned by GET /meal/?plan=<id>
+export const responseMealsForPlan = {
+    count: 1,
+    next: null,
+    previous: null,
+    results: [responseMealDetail],
+};
+
+// Paginated mealitem list returned by GET /mealitem/?meal=<id>
+export const responseMealItemsForMeal = {
+    count: 2,
+    next: null,
+    previous: null,
+    results: [
+        {
+            id: 42,
+            meal: 78,
+            ingredient: 101,
+            weight_unit: null,
+            order: 3,
+            amount: '120.00',
+        },
+        {
+            id: 43,
+            meal: 78,
+            ingredient: 102,
+            weight_unit: null,
+            order: 1,
+            amount: '220.00',
+        },
+    ],
+};
+
+// Single mealitem envelope (POST/PATCH /mealitem/ response)
+export const responseMealItemDetail = {
+    id: 42,
+    meal: 78,
+    ingredient: 101,
+    weight_unit: null,
+    order: 3,
+    amount: '120.00',
+};
+
+// Single nutritional plan envelope (POST/PATCH /nutritionplan/ response)
+export const responseNutritionalPlanDetail = {
+    id: 101,
+    creation_date: '2023-01-01',
+    start: '2023-01-01',
+    end: '2023-12-31',
+    description: 'Summer body!!!',
+    only_logging: false,
+    goal_energy: 2200,
+    goal_protein: 150,
+    goal_carbohydrates: 250,
+    goal_fiber: 30,
+    goal_fat: 70,
+};
+
+// Empty plan list (count = 0) for the "no plans" branch in getLastNutritionalPlan
+export const responseEmptyPlanList = {
+    count: 0,
+    next: null,
+    previous: null,
+    results: [],
+};
+
+// Single-item plan list returned when a plan exists
+export const responseSinglePlanList = {
+    count: 1,
+    next: null,
+    previous: null,
+    results: [responseNutritionalPlanDetail],
+};
+
+// Paginated diary list (typically wrapped via fetchPaginated)
+export const responseDiaryEntries = {
+    count: 1,
+    next: null,
+    previous: null,
+    results: [
+        {
+            id: 9,
+            plan: 101,
+            meal: 78,
+            ingredient: 101,
+            weight_unit: null,
+            amount: '150.00',
+            datetime: '2024-08-01T08:00:00Z',
+        },
+    ],
+};
+
+// Single diary entry envelope (POST/PATCH /nutritiondiary/ response)
+export const responseDiaryEntryDetail = {
+    id: 9,
+    plan: 101,
+    meal: 78,
+    ingredient: 101,
+    weight_unit: null,
+    amount: '150.00',
+    datetime: '2024-08-01T08:00:00Z',
+};
+
+/* eslint-enable camelcase */
