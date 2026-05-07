@@ -364,5 +364,9 @@
     },
     "preview": "Vista previa",
     "useMarkdownHint": "Puedes usar Markdown básico para dar formato al texto: *cursiva*, **negrita**, - lista",
-    "totalChange": "Cambio total"
+    "totalChange": "Cambio total",
+    "currentTrend": "Tendencia actual",
+    "mean": "Medio",
+    "trend": "Tendencia",
+    "variance": "Variación"
 }
