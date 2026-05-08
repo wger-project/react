@@ -11,7 +11,7 @@ export const DESCRIPTION_MAX_LENGTH = 1000;
 
 // Durations in weeks
 export const MIN_WORKOUT_DURATION = 1;
-export const MAX_WORKOUT_DURATION = 16;
+export const MAX_WORKOUT_DURATION = 17;
 export const DEFAULT_WORKOUT_DURATION = 12;
 
 
