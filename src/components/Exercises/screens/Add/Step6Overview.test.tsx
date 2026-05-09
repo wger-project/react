@@ -201,6 +201,7 @@ describe("Test the add exercise step 6 component", () => {
             derivativeSourceUrl: "",
             objectUrl: "",
             style: ImageStyle.PHOTO,
+            isAi: false,
         };
         const image2: ImageFormData = { ...image1, url: "blob://2", file: file2, title: "img two" };
 

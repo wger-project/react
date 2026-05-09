@@ -23,6 +23,7 @@ const initialImage: ImageFormData = {
     derivativeSourceUrl: "",
     objectUrl: "",
     style: ImageStyle.PHOTO,
+    isAi: false,
 };
 
 function renderStep(initialImages: ImageFormData[] = []) {

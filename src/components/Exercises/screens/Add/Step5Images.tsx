@@ -54,7 +54,8 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
             title: "",
             derivativeSourceUrl: "",
             objectUrl: "",
-            style: ImageStyle.PHOTO
+            style: ImageStyle.PHOTO,
+            isAi: false,
         });
         setOpenModal(true);
     };

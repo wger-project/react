@@ -37,6 +37,7 @@ const sampleImage: ImageFormData = {
     derivativeSourceUrl: "",
     objectUrl: "",
     style: ImageStyle.PHOTO,
+    isAi: false,
 };
 
 

@@ -74,7 +74,8 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
                     title: '',
                     objectUrl: '',
                     derivativeSourceUrl: '',
-                    style: ImageStyle.PHOTO
+                    style: ImageStyle.PHOTO,
+                    isAi: false,
                 },
             });
         }

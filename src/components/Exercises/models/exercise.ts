@@ -167,5 +167,6 @@ export type ImageFormData = {
     objectUrl: string,
     derivativeSourceUrl: string;
     style: number;
+    isAi: boolean;
 };
 

@@ -118,6 +118,7 @@
     "imageStyleLowPoly": "Low-Poly",
     "imageStyleOther": "Other",
     "imageDetails": "Image details",
+    "imageIsAiGenerated": "Image was generated with AI",
     "swapExercise": "Swap exercise"
   },
   "nutrition": {

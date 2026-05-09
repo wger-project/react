@@ -136,6 +136,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
             objectUrl: image.objectUrl || '',
             derivativeSourceUrl: image.derivativeSourceUrl || '',
             style: image.style || ImageStyle.PHOTO,
+            isAi: image.isAi,
         });
         setEditingImageId(image.id);
         setOpenModal(true);

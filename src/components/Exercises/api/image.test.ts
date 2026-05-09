@@ -59,6 +59,7 @@ describe("Image service API tests", () => {
                     objectUrl: "",
                     derivativeSourceUrl: "",
                     style: ImageStyle.THREE_D,
+                    isAi: false,
                 }
             }
         );
@@ -119,6 +120,7 @@ describe("Image service API tests", () => {
                 authorUrl: "https://author",
                 derivativeSourceUrl: "https://deriv",
                 style: ImageStyle.PHOTO,
+                isAi: false,
             },
         });
 
@@ -170,6 +172,7 @@ describe("Image service API tests", () => {
                 authorUrl: "",
                 derivativeSourceUrl: "",
                 style: ImageStyle.PHOTO,
+                isAi: false,
             },
         });
 
@@ -213,6 +216,7 @@ describe("Image service API tests", () => {
                 authorUrl: "",
                 derivativeSourceUrl: "",
                 style: ImageStyle.PHOTO,
+                isAi: false,
             },
         });
 
@@ -236,7 +240,7 @@ describe("Image service API tests", () => {
                 imageData: {
                     url: "x", file: new File([], "x"), title: "", objectUrl: "",
                     author: "", authorUrl: "", derivativeSourceUrl: "",
-                    style: ImageStyle.PHOTO,
+                    style: ImageStyle.PHOTO, isAi: false,
                 },
             })
         ).rejects.toThrow("boom");

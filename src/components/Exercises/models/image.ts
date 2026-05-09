@@ -21,7 +21,8 @@ export class ExerciseImage {
         public authorUrl?: string,
         public objectUrl?: string,
         public derivativeSourceUrl?: string,
-        public style?: number
+        public style?: number,
+        public isAi: boolean = false,
     ) {}
 }
 
@@ -39,6 +40,7 @@ export class ExerciseImageAdapter implements Adapter<ExerciseImage> {
             item.license_object_url,
             item.license_derivative_source_url,
             item.style,
+            item.is_ai_generated ?? false,
         );
     }
 

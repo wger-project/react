@@ -36,6 +36,8 @@ export const postExerciseImage = async (data: PostExerciseImageParams): Promise<
             // eslint-disable-next-line camelcase
             license_derivative_source_url: data.imageData.derivativeSourceUrl,
             style: data.imageData.style,
+            // eslint-disable-next-line camelcase
+            is_ai_generated: data.imageData.isAi,
         },
         { headers: headers }
     );
@@ -82,6 +84,7 @@ export const patchExerciseImage = async (data: PatchExerciseImageParams): Promis
     formData.append('license_author_url', data.imageData.authorUrl);
     formData.append('license_derivative_source_url', data.imageData.derivativeSourceUrl);
     formData.append('style', String(data.imageData.style));
+    formData.append('is_ai_generated', String(data.imageData.isAi));
     
     try {
         const response = await axios.patch(url, formData, { headers });

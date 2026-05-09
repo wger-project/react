@@ -6,7 +6,7 @@ import { LicenseDerivativeSourceUrl } from "@/core/forms/LicenseDerivativeSource
 import { LicenseObjectUrl } from "@/core/forms/LicenseObjectUrl";
 import { LicenseTitle } from "@/core/forms/LicenseTitle";
 import { Form, Formik } from "formik";
-import { ImageStyleToggle } from "./ImageStyle";
+import { ImageIsAiCheckbox, ImageStyleToggle } from "./ImageStyle";
 import { useTranslation } from "react-i18next";
 import { ImageFormData } from "../models/exercise";
 
@@ -78,7 +78,8 @@ export const ImageFormModal = ({
                                         <LicenseAuthorUrl fieldName={'authorUrl'} />
                                         <LicenseDerivativeSourceUrl fieldName={'derivativeSourceUrl'} />
                                         <ImageStyleToggle fieldName={'style'} />
-                                        
+                                        <ImageIsAiCheckbox fieldName={'isAi'} />
+
                                         <Alert icon={<InfoIcon fontSize="inherit" />} severity="info">
                                             By submitting this image, you agree to release it under the <a
                                             href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank"
