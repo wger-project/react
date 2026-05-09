@@ -1,5 +1,4 @@
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import CollectionsIcon from '@mui/icons-material/Collections';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import {
     Box,
@@ -16,53 +15,37 @@ import { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper
 import { ImageFormModal } from "@/components/Exercises/forms/ImageModal";
 import { ImageFormData } from "@/components/Exercises/models/exercise";
 import { ImageStyle } from "@/components/Exercises/models/image";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useExerciseSubmissionStateValue } from "@/components/Exercises/screens/Add/state";
 import { setImages } from "@/components/Exercises/screens/Add/state/exerciseSubmissionReducer";
+
+const emptyImageFormData = (): ImageFormData => ({
+    url: '',
+    file: undefined,
+    author: '',
+    authorUrl: '',
+    title: '',
+    derivativeSourceUrl: '',
+    objectUrl: '',
+    style: ImageStyle.PHOTO,
+    isAi: false,
+});
 
 export const Step5Images = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
 
     const [state, dispatch] = useExerciseSubmissionStateValue();
     const [localImages, setLocalImages] = useState<ImageFormData[]>(state.images);
-    const [selectedImage, setSelectedImage] = useState<ImageFormData | null>(null);
-
     const [openModal, setOpenModal] = useState(false);
-    const handleCloseModal = () => {
-        setOpenModal(false);
-        setSelectedImage(null);
-    };
 
     useEffect(() => {
         dispatch(setImages(localImages));
     }, [dispatch, localImages]);
 
-    const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files?.length) {
-            return;
-        }
-
-        const [uploadedFile] = e.target.files;
-        const objectURL = URL.createObjectURL(uploadedFile);
-
-        setSelectedImage({
-            url: objectURL,
-            file: uploadedFile,
-            author: "",
-            authorUrl: "",
-            title: "",
-            derivativeSourceUrl: "",
-            objectUrl: "",
-            style: ImageStyle.PHOTO,
-            isAi: false,
-        });
-        setOpenModal(true);
-    };
-
     const handleAddFullImage = (data: ImageFormData) => {
         setLocalImages(prevImages => prevImages.concat(data));
-        handleCloseModal();
+        setOpenModal(false);
     };
 
     const handleDeleteImage = (imageURL: string) => {
@@ -78,8 +61,8 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
         (<div>
             <ImageFormModal
                 open={openModal}
-                onClose={handleCloseModal}
-                image={selectedImage}
+                onClose={() => setOpenModal(false)}
+                image={openModal ? emptyImageFormData() : null}
                 onSubmit={handleAddFullImage}
                 submitLabel={t('add')}
             />
@@ -88,32 +71,14 @@ export const Step5Images = ({ onContinue, onBack }: StepProps) => {
 
             </Typography>
             <Stack direction={"row"} sx={{ justifyContent: "center" }}>
-                <div>
-                    <label htmlFor="camera-input">
-                        <CameraAltIcon fontSize="large" sx={{ m: 2 }} />
-                    </label>
-                    <input
-                        style={{ display: "none" }}
-                        id="camera-input"
-                        type="file"
-                        accept="image/*"
-                        capture="environment"
-                        onChange={handleFileInputChange}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="image-input">
-                        <CollectionsIcon fontSize="large" sx={{ m: 2 }} />
-                    </label>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        name="image-file"
-                        id="image-input"
-                        style={{ display: "none" }}
-                        onChange={handleFileInputChange}
-                    />
-                </div>
+                <Button
+                    variant="outlined"
+                    startIcon={<AddPhotoAlternateIcon />}
+                    onClick={() => setOpenModal(true)}
+                    sx={{ m: 2 }}
+                >
+                    {t('exercises.addImage')}
+                </Button>
             </Stack>
             <ImageList
                 cols={3}

@@ -119,6 +119,8 @@
     "imageStyleOther": "Other",
     "imageDetails": "Image details",
     "imageIsAiGenerated": "Image was generated with AI",
+    "dropOrClickImage": "Drop an image here or click to select",
+    "addImage": "Add image",
     "swapExercise": "Swap exercise"
   },
   "nutrition": {

@@ -51,39 +51,24 @@ type AddImageCardProps = {
     exerciseId: number;
 };
 
+const emptyImageFormData = (): ImageFormData => ({
+    url: '',
+    file: undefined,
+    author: '',
+    authorUrl: '',
+    title: '',
+    objectUrl: '',
+    derivativeSourceUrl: '',
+    style: ImageStyle.PHOTO,
+    isAi: false,
+});
+
 export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
 
     const [t] = useTranslation();
     const addImageQuery = useAddExerciseImageQuery();
 
-    const [selectedImage, setSelectedImage] = useState<ImageFormData | null>(null);
     const [openModal, setOpenModal] = useState(false);
-
-    const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files?.length) {
-            return;
-        }
-        const [uploadedFile] = e.target.files;
-        setSelectedImage({
-            url: URL.createObjectURL(uploadedFile),
-            file: uploadedFile,
-            author: '',
-            authorUrl: '',
-            title: '',
-            objectUrl: '',
-            derivativeSourceUrl: '',
-            style: ImageStyle.PHOTO,
-            isAi: false,
-        });
-        setOpenModal(true);
-        // Reset the input so picking the same file twice still triggers onChange
-        e.target.value = '';
-    };
-
-    const handleCloseModal = () => {
-        setOpenModal(false);
-        setSelectedImage(null);
-    };
 
     const handleSubmit = (values: ImageFormData) => {
         if (!values.file) {
@@ -94,7 +79,7 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
             image: values.file,
             imageData: values,
         });
-        handleCloseModal();
+        setOpenModal(false);
     };
 
     return <>
@@ -111,23 +96,15 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
                 </Box>
             </CardMedia>
             <CardActions>
-                <Button component="label">
+                <Button onClick={() => setOpenModal(true)}>
                     {t('add')}
-                    <input
-                        style={{ display: "none" }}
-                        id="camera-input"
-                        type="file"
-                        accept="image/*"
-                        capture="environment"
-                        onChange={handleFileInputChange}
-                    />
                 </Button>
             </CardActions>
         </Card>
         <ImageFormModal
             open={openModal}
-            onClose={handleCloseModal}
-            image={selectedImage}
+            onClose={() => setOpenModal(false)}
+            image={openModal ? emptyImageFormData() : null}
             onSubmit={handleSubmit}
             submitLabel={t('add')}
         />

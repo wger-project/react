@@ -96,35 +96,14 @@ describe("Test the add exercise step 5 component", () => {
         expect(matching).toBeDefined();
     });
 
-    test("uploading a file opens the image modal with the upload's title field", async () => {
+    test("clicking 'Add image' opens the image modal", async () => {
         const user = userEvent.setup();
         renderStep();
 
-        // Both inputs (camera + gallery) are display:none. We grab them by id.
-        const fileInput = document.getElementById("image-input") as HTMLInputElement;
-        expect(fileInput).not.toBeNull();
-
-        const file = new File([new Uint8Array([4, 5, 6])], "new.png", { type: "image/png" });
-        await user.upload(fileInput, file);
-
-        // The modal title is rendered when an image is selected
-        expect(await screen.findByText("exercises.imageDetails")).toBeInTheDocument();
-    });
-
-    test("file input with no file selected does nothing", async () => {
-        renderStep();
-
-        const fileInput = document.getElementById("image-input") as HTMLInputElement;
-
-        // Manually fire a change event with no files (`userEvent.upload` requires a file).
-        // Reset target.files to empty to exercise the early-return branch.
-        Object.defineProperty(fileInput, "files", {
-            value: [],
-            configurable: true,
-        });
-        fileInput.dispatchEvent(new Event("change", { bubbles: true }));
-
-        // The modal heading should not appear
         expect(screen.queryByText("exercises.imageDetails")).not.toBeInTheDocument();
+
+        await user.click(screen.getByText("exercises.addImage"));
+
+        expect(await screen.findByText("exercises.imageDetails")).toBeInTheDocument();
     });
 });
