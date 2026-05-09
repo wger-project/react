@@ -1,10 +1,11 @@
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Box, Button, Card, CardActions, CardMedia } from "@mui/material";
 import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
+import { ImageFormModal } from "@/components/Exercises/forms/ImageModal";
+import { ImageFormData } from "@/components/Exercises/models/exercise";
 import { ExerciseImage, ImageStyle } from "@/components/Exercises/models/image";
 import { useAddExerciseImageQuery, useDeleteExerciseImageQuery } from "@/components/Exercises/queries";
-import { useProfileQuery } from "@/components/User";
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type ImageCardProps = {
@@ -53,32 +54,47 @@ type AddImageCardProps = {
 export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
 
     const [t] = useTranslation();
-    const profileQuery = useProfileQuery();
     const addImageQuery = useAddExerciseImageQuery();
 
-    const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const [selectedImage, setSelectedImage] = useState<ImageFormData | null>(null);
+    const [openModal, setOpenModal] = useState(false);
+
+    const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files?.length) {
             return;
         }
         const [uploadedFile] = e.target.files;
-        if (profileQuery.isSuccess) {
+        setSelectedImage({
+            url: URL.createObjectURL(uploadedFile),
+            file: uploadedFile,
+            author: '',
+            authorUrl: '',
+            title: '',
+            objectUrl: '',
+            derivativeSourceUrl: '',
+            style: ImageStyle.PHOTO,
+            isAi: false,
+        });
+        setOpenModal(true);
+        // Reset the input so picking the same file twice still triggers onChange
+        e.target.value = '';
+    };
 
-            addImageQuery.mutate({
-                exerciseId: exerciseId,
-                image: uploadedFile,
-                imageData: {
-                    url: '',
-                    file: uploadedFile,
-                    author: '',
-                    authorUrl: '',
-                    title: '',
-                    objectUrl: '',
-                    derivativeSourceUrl: '',
-                    style: ImageStyle.PHOTO,
-                    isAi: false,
-                },
-            });
+    const handleCloseModal = () => {
+        setOpenModal(false);
+        setSelectedImage(null);
+    };
+
+    const handleSubmit = (values: ImageFormData) => {
+        if (!values.file) {
+            return;
         }
+        addImageQuery.mutate({
+            exerciseId: exerciseId,
+            image: values.file,
+            imageData: values,
+        });
+        handleCloseModal();
     };
 
     return <>
@@ -108,6 +124,13 @@ export const AddImageCard = ({ exerciseId }: AddImageCardProps) => {
                 </Button>
             </CardActions>
         </Card>
+        <ImageFormModal
+            open={openModal}
+            onClose={handleCloseModal}
+            image={selectedImage}
+            onSubmit={handleSubmit}
+            submitLabel={t('add')}
+        />
         {addImageQuery.isError &&
             <FormQueryErrorsSnackbar mutationQuery={addImageQuery} />
         }
