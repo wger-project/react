@@ -90,6 +90,7 @@ export const getMeasurementCategory = async (id: number): Promise<MeasurementCat
 export interface AddMeasurementCategoryParams {
     name: string;
     unit: string;
+    is_dynamic: boolean;
 }
 
 export const addMeasurementCategory = async (data: AddMeasurementCategoryParams): Promise<MeasurementCategory> => {
@@ -97,7 +98,8 @@ export const addMeasurementCategory = async (data: AddMeasurementCategoryParams)
         makeUrl(API_MEASUREMENTS_CATEGORY_PATH,),
         {
             name: data.name,
-            unit: data.unit
+            unit: data.unit,
+            is_dynamic: data.is_dynamic
         },
         { headers: makeHeader() }
     );
@@ -109,6 +111,7 @@ export interface editMeasurementCategoryParams {
     id: number,
     name: string;
     unit: string;
+    is_dynamic: boolean;
 }
 
 export const editMeasurementCategory = async (data: editMeasurementCategoryParams): Promise<MeasurementCategory> => {
@@ -116,7 +119,8 @@ export const editMeasurementCategory = async (data: editMeasurementCategoryParam
         makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: data.id }),
         {
             name: data.name,
-            unit: data.unit
+            unit: data.unit,
+            is_dynamic: data.is_dynamic
         },
         { headers: makeHeader() }
     );

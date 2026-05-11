@@ -2,6 +2,8 @@ import { processTimeSeries } from "@/core/lib/timeSeries";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
+import { useBodyWeightQuery } from "@/components/Weight";
+import { useProfileQuery } from "@/components/User";
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
 import { luxonDateTimeToLocale } from "@/core/lib/date";
 import CancelIcon from "@mui/icons-material/Close";
@@ -25,9 +27,37 @@ import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp =>
-    processTimeSeries(entries, e => e.value).map((row) => ({
-        id: row.entry.id,
+export const CategoryDetailDataGrid = (props: { category: MeasurementCategory }) => {
+    const [t] = useTranslation();
+    const weightQuery = useBodyWeightQuery('');
+    const profileQuery = useProfileQuery();
+
+    let entries = [...props.category.entries];
+    if (props.category.is_dynamic) {
+        switch (props.category.name) {
+            case "BMI": {
+                const height = profileQuery.data?.height;
+                const weights = weightQuery.data || [];
+
+                if (height && height > 0) {
+                    const hMeters = height / 100;
+                    entries = weights.map(w => new MeasurementEntry(
+                        null,
+                        props.category.id,
+                        new Date(w.date),
+                        +(w.weight / (hMeters ** 2)).toFixed(2),
+                        "Auto-generated"
+                    ));
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    const data: GridRowsProp = processTimeSeries(entries, e => e.value).map((row) => ({
+        id: row.entry.id ?? row.entry.date.getTime(),
         date: row.entry.date,
         value: row.entry.value,
         notes: row.entry.notes,
@@ -36,16 +66,9 @@ const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp =>
         days: +row.days.toFixed(1),
     }));
 
-
-export const CategoryDetailDataGrid = (props: { category: MeasurementCategory }) => {
-
-    const [t] = useTranslation();
-    const data: GridRowsProp = convertEntriesToObj(props.category.entries);
     const updateEntryQuery = useEditMeasurementEntryQuery();
     const deleteEntryQuery = useDeleteMeasurementsQuery();
-    const [rows, setRows] = useState(data);
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -63,7 +86,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
 
     const handleDeleteClick = (id: GridRowId) => async () => {
         deleteEntryQuery.mutate(parseInt(id.toString()));
-        setRows(rows.filter((row) => row.id !== id));
     };
 
     const handleCancelClick = (id: GridRowId) => () => {
@@ -71,17 +93,9 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             ...rowModesModel,
             [id]: { mode: GridRowModes.View, ignoreModifications: true },
         });
-
-        const editedRow = rows.find((row) => row.id === id);
-        //if (editedRow!.isNew) {
-        if (editedRow?.id === null) {
-            setRows(rows.filter((row) => row.id !== id));
-        }
     };
 
-
     const processRowUpdate = async (newRow: GridRowModel) => {
-
         updateEntryQuery.mutate({
             id: newRow.id,
             categoryId: newRow.category,
@@ -89,18 +103,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             value: newRow.value,
             notes: newRow.notes
         });
-
-        const updatedRow = { ...newRow, isNew: false };
-        setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-        return updatedRow;
-    };
-
-    const onProcessRowUpdateError = (error: unknown) => {
-        console.error(error);
-    };
-
-    const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
-        setRowModesModel(newRowModesModel);
+        return { ...newRow, isNew: false };
     };
 
     const columns: GridColDef[] = [
@@ -108,26 +111,16 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             field: 'value',
             headerName: t('value'),
             width: 80,
-            editable: true,
-            valueFormatter: (value?: number) => {
-                if (value == null) {
-                    return '';
-                }
-                return value + props.category.unit;
-            },
+            editable: !props.category.is_dynamic,
+            valueFormatter: (value?: number) => value != null ? value + props.category.unit : '',
         },
         {
             field: 'date',
             headerName: t('date'),
             type: 'date',
             width: 120,
-            editable: true,
-            valueFormatter: (value?: Date) => {
-                if (value == null) {
-                    return '';
-                }
-                return luxonDateTimeToLocale(DateTime.fromJSDate(value));
-            },
+            editable: !props.category.is_dynamic,
+            valueFormatter: (value?: Date) => value != null ? luxonDateTimeToLocale(DateTime.fromJSDate(value)) : '',
         },
         {
             field: 'change',
@@ -155,9 +148,12 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             headerName: t('notes'),
             type: 'string',
             flex: 1,
-            editable: true,
+            editable: !props.category.is_dynamic,
         },
-        {
+    ];
+
+    if (!props.category.is_dynamic) {
+        columns.push({
             field: 'actions',
             type: 'actions',
             headerName: t('actions'),
@@ -165,7 +161,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             cellClassName: 'actions',
             getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
                 if (isInEditMode) {
                     return [
                         <GridActionsCellItem
@@ -176,18 +171,15 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                         <GridActionsCellItem
                             icon={<CancelIcon />}
                             label="Cancel"
-                            className="textPrimary"
                             onClick={handleCancelClick(id)}
                             color="inherit"
                         />,
                     ];
                 }
-
                 return [
                     <GridActionsCellItem
                         icon={<EditIcon />}
                         label="Edit"
-                        className="textPrimary"
                         onClick={handleEditClick(id)}
                         color="inherit"
                     />,
@@ -199,29 +191,30 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                     />,
                 ];
             },
-        },
-    ];
+        });
+    }
 
-
-    return <Box sx={{ width: '100%' }}>
-        <DataGrid
-            editMode="row"
-            rows={data}
-            columns={columns}
-            initialState={{
-                pagination: {
-                    paginationModel: {
-                        pageSize: PAGINATION_OPTIONS.pageSize,
+    return (
+        <Box sx={{ width: '100%' }}>
+            <DataGrid
+                editMode="row"
+                rows={data}
+                columns={columns}
+                initialState={{
+                    pagination: {
+                        paginationModel: {
+                            pageSize: PAGINATION_OPTIONS.pageSize,
+                        },
                     },
-                },
-            }}
-            pageSizeOptions={PAGINATION_OPTIONS.pageSizeOptions}
-            disableRowSelectionOnClick
-            rowModesModel={rowModesModel}
-            onRowModesModelChange={handleRowModesModelChange}
-            onRowEditStop={handleRowEditStop}
-            processRowUpdate={processRowUpdate}
-            onProcessRowUpdateError={onProcessRowUpdateError}
-        />
-    </Box>;
+                }}
+                pageSizeOptions={PAGINATION_OPTIONS.pageSizeOptions}
+                disableRowSelectionOnClick
+                rowModesModel={rowModesModel}
+                onRowModesModelChange={setRowModesModel}
+                onRowEditStop={handleRowEditStop}
+                processRowUpdate={processRowUpdate}
+                onProcessRowUpdateError={(error) => console.error(error)}
+            />
+        </Box>
+    );
 };

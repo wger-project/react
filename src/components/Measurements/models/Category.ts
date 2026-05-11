@@ -9,6 +9,7 @@ export class MeasurementCategory {
         public id: number,
         public name: string,
         public unit: string,
+        public is_dynamic: boolean = false,
         entries?: MeasurementEntry[]
     ) {
         if (entries) {
@@ -26,14 +27,14 @@ export class MeasurementCategory {
     }
 }
 
-
 class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any) {
         return new MeasurementCategory(
             item.id,
             item.name,
-            item.unit
+            item.unit,
+            item.is_dynamic ?? false // Map from snake_case backend property
         );
     }
 
@@ -42,6 +43,7 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             id: item.id,
             name: item.name,
             unit: item.unit,
+            is_dynamic: item.is_dynamic // Map to snake_case for backend
         };
     }
 }
