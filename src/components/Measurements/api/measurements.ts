@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { ApiMeasurementCategoryType } from '@/types';
@@ -14,6 +15,26 @@ export type MeasurementQueryOptions = {
     filtersetQueryCategories?: object,
     filtersetQueryEntries?: object,
 }
+
+export interface DynamicCategory {
+    id: number;
+    name: string;
+    unit: string;
+    is_dynamic: boolean;
+}
+
+export const getDynamicCategories = async (): Promise<DynamicCategory[]> => {
+    const url = makeUrl(`${API_MEASUREMENTS_CATEGORY_PATH}/dynamic`);
+    const response = await axios.get(url, { headers: makeHeader() });
+    return response.data;
+};
+
+export const useDynamicCategoriesQuery = () => {
+    return useQuery({
+        queryKey: [API_MEASUREMENTS_CATEGORY_PATH, 'dynamic'],
+        queryFn: getDynamicCategories
+    });
+};
 
 export const getMeasurementCategories = async (options?: MeasurementQueryOptions): Promise<MeasurementCategory[]> => {
     const { filtersetQueryCategories = {}, filtersetQueryEntries = {} } = options || {};
@@ -44,10 +65,10 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
         });
 
         // Collect all pages of entries
-        for await (const page of fetchPaginated(url, makeHeader())) {
-            for (const entries of page) {
-                out.push(MeasurementEntry.fromJson(entries));
-            }
+            for await (const page of fetchPaginated(url, makeHeader())) {
+                for (const entries of page) {
+                    out.push(MeasurementEntry.fromJson(entries));
+                }
         }
         return out;
     });
@@ -95,11 +116,11 @@ export interface AddMeasurementCategoryParams {
 
 export const addMeasurementCategory = async (data: AddMeasurementCategoryParams): Promise<MeasurementCategory> => {
     const response = await axios.post(
-        makeUrl(API_MEASUREMENTS_CATEGORY_PATH,),
+        makeUrl(API_MEASUREMENTS_CATEGORY_PATH),
         {
             name: data.name,
             unit: data.unit,
-            is_dynamic: data.is_dynamic
+            is_dynamic: data.is_dynamic // eslint-disable-line camelcase
         },
         { headers: makeHeader() }
     );
@@ -120,7 +141,7 @@ export const editMeasurementCategory = async (data: editMeasurementCategoryParam
         {
             name: data.name,
             unit: data.unit,
-            is_dynamic: data.is_dynamic
+            is_dynamic: data.is_dynamic // eslint-disable-line camelcase
         },
         { headers: makeHeader() }
     );

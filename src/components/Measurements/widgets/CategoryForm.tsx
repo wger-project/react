@@ -1,6 +1,6 @@
-import { Button, Stack, TextField, FormControlLabel, Switch, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Button, Stack, TextField, FormControl, InputLabel, MenuItem, Select, CircularProgress, FormControlLabel, Switch } from "@mui/material";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
-import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "@/components/Measurements/queries";
+import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery, useDynamicCategoriesQuery } from "@/components/Measurements/queries";
 import { Form, Formik } from "formik";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -12,12 +12,17 @@ interface CategoryFormProps {
 }
 
 export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
-
     const [t] = useTranslation();
-    const useAddCategoryQuery = useAddMeasurementCategoryQuery();
-    const useEditCategoryQuery = useEditMeasurementCategoryQuery(category?.id || 0);
+    const addCategoryQuery = useAddMeasurementCategoryQuery();
+    const editCategoryQuery = useEditMeasurementCategoryQuery(category?.id || 0);
+    
+    // Fetch dynamic options from the backend
+    const dynamicQuery = useDynamicCategoriesQuery();
 
-    const [preset, setPreset] = useState(category?.is_dynamic && category.name === 'BMI' ? 'bmi' : 'custom');
+    // Track if we are using a preset to disable manual editing
+    const [preset, setPreset] = useState<number | string>(
+        category?.is_dynamic ? category.id : 'custom'
+    );
 
     const validationSchema = yup.object({
         name: yup
@@ -40,21 +45,18 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-                // Edit existing weight entry
                 if (category) {
-                    useEditCategoryQuery.mutate({ ...values, id: category.id });
+                    editCategoryQuery.mutate({ ...values, id: category.id });
                 } else {
-                    useAddCategoryQuery.mutate(values);
+                    addCategoryQuery.mutate(values);
                 }
-
-                if (closeFn) {
-                    closeFn();
-                }
+                if (closeFn) closeFn();
             }}
         >
             {formik => (
                 <Form>
                     <Stack spacing={2}>
+                        {/* Only show template picker for new categories */}
                         {!category && (
                             <FormControl fullWidth>
                                 <InputLabel id="template-select-label">Template</InputLabel>
@@ -62,23 +64,32 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                                     labelId="template-select-label"
                                     value={preset}
                                     label="Template"
+                                    disabled={dynamicQuery.isLoading}
                                     onChange={(e) => {
                                         const val = e.target.value;
                                         setPreset(val);
                                         
-                                        if (val === 'bmi') {
-                                            formik.setFieldValue('name', 'BMI');
-                                            formik.setFieldValue('unit', 'kg/m²');
-                                            formik.setFieldValue('is_dynamic', true);
+                                        if (val === 'custom') {
+                                            formik.setValues({ name: '', unit: '', is_dynamic: false });
                                         } else {
-                                            formik.setFieldValue('name', '');
-                                            formik.setFieldValue('unit', '');
-                                            formik.setFieldValue('is_dynamic', false);
+                                            const selected = dynamicQuery.data?.find(d => d.id === val);
+                                            if (selected) {
+                                                formik.setValues({
+                                                    name: selected.name,
+                                                    unit: selected.unit,
+                                                    is_dynamic: true
+                                                });
+                                            }
                                         }
                                     }}
                                 >
-                                    <MenuItem value="custom">Custom</MenuItem>
-                                    <MenuItem value="bmi">BMI (Auto-populate)</MenuItem>
+                                    <MenuItem value="custom">Custom (Manual)</MenuItem>
+                                    {dynamicQuery.isLoading && <MenuItem disabled><CircularProgress size={20} /></MenuItem>}
+                                    {dynamicQuery.data?.map(cat => (
+                                        <MenuItem key={cat.id} value={cat.id}>
+                                            {cat.name} (Auto)
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         )}
@@ -87,7 +98,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             fullWidth
                             id="name"
                             label={t('name')}
-                            disabled={preset === 'bmi'}
+                            disabled={preset !== 'custom'}
                             error={formik.touched.name && Boolean(formik.errors.name)}
                             helperText={formik.touched.name && formik.errors.name}
                             {...formik.getFieldProps('name')}
@@ -96,13 +107,9 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             fullWidth
                             id="unit"
                             label={t('unit')}
-                            disabled={preset === 'bmi'}
+                            disabled={preset !== 'custom'}
                             error={formik.touched.unit && Boolean(formik.errors.unit)}
-                            helperText={
-                                formik.touched.unit && formik.errors.unit
-                                    ? formik.errors.unit
-                                    : t('measurements.unitFormHelpText')
-                            }
+                            helperText={formik.touched.unit && formik.errors.unit}
                             {...formik.getFieldProps('unit')}
                         />
                         
@@ -110,15 +117,15 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             control={
                                 <Switch
                                     checked={formik.values.is_dynamic}
-                                    disabled={preset === 'bmi'}
+                                    disabled={preset !== 'custom'}
                                     onChange={(e) => formik.setFieldValue('is_dynamic', e.target.checked)}
                                 />
                             }
-                            label="Is Dynamic (Auto-calculated)"
+                            label="Is Dynamic"
                         />
 
                         <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
-                            <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
+                            <Button color="primary" variant="contained" type="submit">
                                 {t('submit')}
                             </Button>
                         </Stack>
