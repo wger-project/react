@@ -1,5 +1,5 @@
 import { Button, Stack, TextField, MenuItem, CircularProgress } from "@mui/material";
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementCategory, DYNAMIC_TYPE_DEFAULTS } from "@/components/Measurements/models/Category";
 import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery, useDynamicCategoriesQuery } from "@/components/Measurements/queries";
 import { Form, Formik } from "formik";
 import React from 'react';
@@ -55,62 +55,80 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                 if (closeFn) closeFn();
             }}
         >
-            {formik => (
-                <Form>
-                    <Stack spacing={2}>
-                        <TextField
-                            fullWidth
-                            id="name"
-                            label={t('name')}
-                            error={formik.touched.name && Boolean(formik.errors.name)}
-                            helperText={formik.touched.name && formik.errors.name}
-                            {...formik.getFieldProps('name')}
-                        />
-                        
-                        <TextField
-                            fullWidth
-                            id="unit"
-                            label={t('unit')}
-                            error={formik.touched.unit && Boolean(formik.errors.unit)}
-                            helperText={formik.touched.unit && formik.errors.unit}
-                            {...formik.getFieldProps('unit')}
-                        />
+            {formik => {
+                // extract the props so we can override onChange
+                const dynamicTypeProps = formik.getFieldProps('dynamic_type');
 
-                        <TextField
-                            select
-                            fullWidth
-                            id="dynamic_type"
-                            label="Calculation Type"
-                            disabled={dynamicQuery.isLoading}
-                            error={formik.touched.dynamic_type && Boolean(formik.errors.dynamic_type)}
-                            helperText={formik.touched.dynamic_type ? String(formik.errors.dynamic_type) : undefined}
-                            {...formik.getFieldProps('dynamic_type')}
-                        >
-                            {dynamicQuery.isLoading && (
-                                <MenuItem disabled value="loading">
-                                    <CircularProgress size={20} sx={{ mr: 1 }} /> Loading types...
-                                </MenuItem>
-                            )}
-                            {/* Force TS to accept the new shape temporarily */}
-                            {!dynamicQuery.isLoading && (dynamicQuery.data as unknown as DynamicTypeOption[])?.map(type => (
-                                <MenuItem key={type.value} value={type.value}>
-                                    {type.label}
-                                </MenuItem>
-                            ))}
-                            {/* Fallback to ensure MUI Select always has a valid matching child option */}
-                            {!dynamicQuery.isLoading && (!dynamicQuery.data || dynamicQuery.data.length === 0) && (
-                                <MenuItem value="NONE">Standard (Manual Entry)</MenuItem>
-                            )}
-                        </TextField>
+                return (
+                    <Form>
+                        <Stack spacing={2}>
+                            <TextField
+                                fullWidth
+                                id="name"
+                                label={t('name')}
+                                error={formik.touched.name && Boolean(formik.errors.name)}
+                                helperText={formik.touched.name && formik.errors.name}
+                                {...formik.getFieldProps('name')}
+                            />
+                            
+                            <TextField
+                                fullWidth
+                                id="unit"
+                                label={t('unit')}
+                                error={formik.touched.unit && Boolean(formik.errors.unit)}
+                                helperText={formik.touched.unit && formik.errors.unit}
+                                {...formik.getFieldProps('unit')}
+                            />
 
-                        <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
-                            <Button color="primary" variant="contained" type="submit">
-                                {t('submit')}
-                            </Button>
+                            <TextField
+                                select
+                                fullWidth
+                                id="dynamic_type"
+                                label="Calculation Type"
+                                disabled={dynamicQuery.isLoading}
+                                error={formik.touched.dynamic_type && Boolean(formik.errors.dynamic_type)}
+                                {...dynamicTypeProps}
+                                onChange={(e) => {
+                                    dynamicTypeProps.onChange(e);
+
+                                    // check dynamic type default units
+                                    const selectedVal = e.target.value;
+                                    const defaults = DYNAMIC_TYPE_DEFAULTS[selectedVal];
+
+                                    if (defaults) {
+                                        formik.setFieldValue('unit', defaults.unit);
+                                        
+                                        // auto-fill the name only if the user hasn't typed anything yet
+                                        if (!formik.values.name) {
+                                            formik.setFieldValue('name', defaults.name);
+                                        }
+                                    }
+                                }}
+                            >
+                                {dynamicQuery.isLoading && (
+                                    <MenuItem disabled value="loading">
+                                        <CircularProgress size={20} sx={{ mr: 1 }} /> Loading types...
+                                    </MenuItem>
+                                )}
+                                {!dynamicQuery.isLoading && (dynamicQuery.data as unknown as DynamicTypeOption[])?.map(type => (
+                                    <MenuItem key={type.value} value={type.value}>
+                                        {type.label}
+                                    </MenuItem>
+                                ))}
+                                {!dynamicQuery.isLoading && (!dynamicQuery.data || dynamicQuery.data.length === 0) && (
+                                    <MenuItem value="NONE">Standard (Manual Entry)</MenuItem>
+                                )}
+                            </TextField>
+
+                            <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
+                                <Button color="primary" variant="contained" type="submit">
+                                    {t('submit')}
+                                </Button>
+                            </Stack>
                         </Stack>
-                    </Stack>
-                </Form>
-            )}
+                    </Form>
+                );
+            }}
         </Formik>
     );
 };

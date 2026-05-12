@@ -34,10 +34,11 @@ export const CategoryList = (props: { category: MeasurementCategory }) => {
                         {t("seeDetails")}
                     </Link>
                 </Button>
-
-                <IconButton onClick={handleOpenModal}>
-                    <AddIcon />
-                </IconButton>
+                {props.category.dynamic_type === 'NONE' && (
+                    <IconButton onClick={handleOpenModal}>
+                        <AddIcon />
+                    </IconButton>
+                )}
             </CardActions>
         </Card>
         <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>

@@ -1,7 +1,12 @@
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { Adapter } from "@/core/lib/Adapter";
 
-export type DynamicMeasurementType = 'NONE' | 'BMI' | 'SQUAT_1RM';
+export type DynamicMeasurementType = 'NONE' | 'BMI'; // add future types when more dynamic types added to Measurement category in Django
+
+export const DYNAMIC_TYPE_DEFAULTS: Record<string, { name: string, unit: string }> = {
+    'BMI': { name: 'BMI', unit: 'kg/m²' },
+    // add future types here
+};
 
 export class MeasurementCategory {
 
