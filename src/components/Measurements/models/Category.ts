@@ -1,6 +1,8 @@
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { Adapter } from "@/core/lib/Adapter";
 
+export type DynamicMeasurementType = 'NONE' | 'BMI' | 'SQUAT_1RM';
+
 export class MeasurementCategory {
 
     entries: MeasurementEntry[] = [];
@@ -9,7 +11,7 @@ export class MeasurementCategory {
         public id: number,
         public name: string,
         public unit: string,
-        public is_dynamic: boolean = false,
+        public dynamic_type: DynamicMeasurementType = 'NONE',
         entries?: MeasurementEntry[]
     ) {
         if (entries) {
@@ -34,7 +36,7 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             item.id,
             item.name,
             item.unit,
-            item.is_dynamic ?? false // Map from snake_case backend property
+            item.dynamic_type
         );
     }
 
@@ -43,7 +45,7 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             id: item.id,
             name: item.name,
             unit: item.unit,
-            is_dynamic: item.is_dynamic // Map to snake_case for backend
+            dynamic_type: item.dynamic_type
         };
     }
 }

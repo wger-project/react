@@ -38,6 +38,6 @@ export const MeasurementCategoryDetail = () => {
                 <CategoryDetailDataGrid category={categoryQuery.data} />
             </Stack>
         }
-        fab={!categoryQuery.data.is_dynamic ? <AddMeasurementEntryFab /> : undefined}
+        fab={categoryQuery.data.dynamic_type.includes('NONE') ? <AddMeasurementEntryFab /> : undefined}
     />;
 };
