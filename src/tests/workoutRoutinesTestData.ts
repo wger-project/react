@@ -451,8 +451,6 @@ export const responseRoutineDayData = [
 ];
 
 
-/* eslint-disable camelcase */
-
 // Single routine envelope as returned by GET /routine/<id>/
 export const responseSingleRoutineDetail = {
     id: 1,
@@ -677,4 +675,4 @@ export const responseEmptyUnitList = {
     results: [],
 };
 
-/* eslint-enable camelcase */
+ 

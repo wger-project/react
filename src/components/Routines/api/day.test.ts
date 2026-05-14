@@ -1,6 +1,6 @@
-import axios from "axios";
-import { Day } from "@/components/Routines/models/Day";
 import { addDay, deleteDay, editDay } from "@/components/Routines/api/day";
+import { Day } from "@/components/Routines/models/Day";
+import axios from "axios";
 import type { Mocked } from 'vitest';
 
 vi.mock('axios');
@@ -14,7 +14,7 @@ describe('editDay', () => {
         name: 'Test Day',
         description: 'A test day',
         order: 1,
-        // eslint-disable-next-line camelcase
+
         is_rest: false,
     };
 
@@ -52,9 +52,9 @@ describe('addDay', () => {
         name: 'Test Day',
         description: 'A test day',
         order: 1,
-        // eslint-disable-next-line camelcase
+
         is_rest: false,
-        // eslint-disable-next-line camelcase
+
         need_logs_to_advance: false,
     };
 

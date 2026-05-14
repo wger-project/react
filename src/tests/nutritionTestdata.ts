@@ -2,6 +2,7 @@ import { Meal } from "@/components/Nutrition/models/meal";
 import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
+import { HHMMToDateTime } from "@/core/lib/date";
 import {
     TEST_INGREDIENT_1,
     TEST_INGREDIENT_2,
@@ -26,7 +27,6 @@ import {
     TEST_DIARY_ENTRY_8,
     TEST_DIARY_ENTRY_9
 } from "@/tests/nutritionDiaryTestdata";
-import { HHMMToDateTime } from "@/core/lib/date";
 
 export const TEST_WEIGHT_UNIT_SLICE = new NutritionWeightUnit(
     5432,
@@ -198,8 +198,6 @@ export const TEST_NUTRITIONAL_PLAN_2 = new NutritionalPlan({
 TEST_NUTRITIONAL_PLAN_2.meals = [TEST_MEAL_4, TEST_MEAL_5];
 
 
-/* eslint-disable camelcase */
-
 // API envelope for a single meal (POST/PATCH /meal/ response).
 export const responseMealDetail = {
     id: 78,
@@ -312,4 +310,4 @@ export const responseDiaryEntryDetail = {
     datetime: '2024-08-01T08:00:00Z',
 };
 
-/* eslint-enable camelcase */
+ 

@@ -68,7 +68,7 @@ describe("Exercise service API tests", () => {
                 category: 3,
                 equipment: [1, 2],
                 muscles: [3, 4],
-                // eslint-disable-next-line camelcase
+
                 muscles_secondary: [9]
             }
         );
@@ -174,22 +174,22 @@ describe("Exercise service API tests", () => {
             category: 3,
             equipment: [1, 2],
             muscles: [3, 4],
-            // eslint-disable-next-line camelcase
+
             muscles_secondary: [9],
-            // eslint-disable-next-line camelcase
+
             license_author: "alice",
-            // eslint-disable-next-line camelcase
+
             variation_group: "group-uuid",
-            // eslint-disable-next-line camelcase
+
             variations_connect_to: 42,
         });
         expect(payload.translations).toHaveLength(1);
         expect(payload.translations[0]).toMatchObject({
             name: "Squats",
-            // eslint-disable-next-line camelcase
+
             description_source: "Do a squat",
             language: 2,
-            // eslint-disable-next-line camelcase
+
             license_author: "alice",
             aliases: [{ alias: "Knee bender" }],
             comments: [{ comment: "keep back straight" }],
@@ -213,11 +213,11 @@ describe("Exercise service API tests", () => {
 
         const [, payload] = (axios.post as Mock).mock.calls[0];
         expect(payload).toMatchObject({
-            // eslint-disable-next-line camelcase
+
             license_author: "",
-            // eslint-disable-next-line camelcase
+
             variation_group: null,
-            // eslint-disable-next-line camelcase
+
             variations_connect_to: null,
         });
         // Aliases and comments default to empty arrays

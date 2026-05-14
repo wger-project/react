@@ -97,14 +97,14 @@ describe("Image service API tests", () => {
             uuid: "004bb79f-36bf-4c48-8c00-d863d724717c",
             exercise: 101,
             image: "https://wger.de/media/img.jpg",
-            is_main: true, // eslint-disable-line camelcase
+            is_main: true,
             status: "1",
             style: ImageStyle.PHOTO,
-            license_title: "updated title", // eslint-disable-line camelcase
-            license_object_url: "https://obj", // eslint-disable-line camelcase
-            license_author: "author", // eslint-disable-line camelcase
-            license_author_url: "https://author", // eslint-disable-line camelcase
-            license_derivative_source_url: "https://deriv", // eslint-disable-line camelcase
+            license_title: "updated title",
+            license_object_url: "https://obj",
+            license_author: "author",
+            license_author_url: "https://author",
+            license_derivative_source_url: "https://deriv",
         };
         (axios.patch as Mock).mockResolvedValue({ data: apiResponse });
 
@@ -147,14 +147,14 @@ describe("Image service API tests", () => {
             uuid: "004bb79f-36bf-4c48-8c00-d863d724717c",
             exercise: 101,
             image: "https://wger.de/media/img.jpg",
-            is_main: true, // eslint-disable-line camelcase
+            is_main: true,
             status: "1",
             style: ImageStyle.PHOTO,
-            license_title: "t", // eslint-disable-line camelcase
-            license_object_url: "", // eslint-disable-line camelcase
-            license_author: "a", // eslint-disable-line camelcase
-            license_author_url: "", // eslint-disable-line camelcase
-            license_derivative_source_url: "", // eslint-disable-line camelcase
+            license_title: "t",
+            license_object_url: "",
+            license_author: "a",
+            license_author_url: "",
+            license_derivative_source_url: "",
         };
         (axios.patch as Mock).mockResolvedValue({ data: apiResponse });
 
@@ -192,14 +192,14 @@ describe("Image service API tests", () => {
                 uuid: "u",
                 exercise: 101,
                 image: "x",
-                is_main: true, // eslint-disable-line camelcase
+                is_main: true,
                 status: "1",
                 style: ImageStyle.PHOTO,
                 license_title: "",
                 license_object_url: "",
                 license_author: "",
                 license_author_url: "",
-                license_derivative_source_url: "", // eslint-disable-line camelcase
+                license_derivative_source_url: "",
             },
         });
 

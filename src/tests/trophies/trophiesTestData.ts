@@ -80,8 +80,6 @@ export const testUserTrophies = () => {
 };
 
 
-/* eslint-disable camelcase */
-
 // Raw API trophy entries (snake_case) used by paginated /trophy/ responses.
 const trophyApiBeginner = {
     id: 123,
@@ -170,4 +168,4 @@ export const responseUserTrophyProgression = [
     },
 ];
 
-/* eslint-enable camelcase */
+ 

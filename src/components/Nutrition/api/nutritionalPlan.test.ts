@@ -1,5 +1,5 @@
-import axios from "axios";
-import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
+import { getMealsForPlan } from "@/components/Nutrition/api/meal";
+import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutritionalDiary";
 import {
     addNutritionalPlan,
     deleteNutritionalPlan,
@@ -8,13 +8,13 @@ import {
     getNutritionalPlanFull,
     getNutritionalPlansSparse,
 } from "@/components/Nutrition/api/nutritionalPlan";
-import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutritionalDiary";
-import { getMealsForPlan } from "@/components/Nutrition/api/meal";
+import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import {
     responseEmptyPlanList,
     responseNutritionalPlanDetail,
     responseSinglePlanList,
 } from "@/tests/nutritionTestdata";
+import axios from "axios";
 import type { Mock } from 'vitest';
 
 vi.mock("axios");
@@ -196,9 +196,9 @@ describe("Nutritional plan service tests", () => {
             description: "summer body",
             start: "2024-06-01",
             end: "2024-08-31",
-            // eslint-disable-next-line camelcase
+
             only_logging: false,
-            // eslint-disable-next-line camelcase
+
             goal_energy: 2200,
         });
         expect(body).not.toHaveProperty("id");

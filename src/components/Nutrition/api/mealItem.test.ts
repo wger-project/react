@@ -1,7 +1,7 @@
-import axios from "axios";
-import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { addMealItem, deleteMealItem, editMealItem } from "@/components/Nutrition/api/mealItem";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { responseMealItemDetail } from "@/tests/nutritionTestdata";
+import axios from "axios";
 import type { Mock } from "vitest";
 
 vi.mock("axios");
@@ -23,7 +23,7 @@ describe("mealItem service tests", () => {
         expect(body).toMatchObject({
             meal: 78,
             ingredient: 101,
-            // eslint-disable-next-line camelcase
+
             weight_unit: null,
             amount: "120",
             order: 3,

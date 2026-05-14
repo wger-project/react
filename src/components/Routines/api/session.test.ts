@@ -166,7 +166,7 @@ describe("Session service tests", () => {
                     date: "2025-08-07",
                     notes: "ok",
                     impression: "3",
-                    time_start: "20:10:58", time_end: "23:28:21", // eslint-disable-line camelcase
+                    time_start: "20:10:58", time_end: "23:28:21",  
                 },
             ],
         };
@@ -207,7 +207,7 @@ describe("Session service tests", () => {
             data: {
                 id: 1, routine: 39764, day: 5, date: "2025-08-07",
                 notes: null, impression: "3",
-                time_start: null, time_end: null, // eslint-disable-line camelcase
+                time_start: null, time_end: null,  
             },
         });
 
@@ -236,7 +236,7 @@ describe("Session service tests", () => {
             data: {
                 id: 24284, routine: 39764, day: 5, date: "2025-08-07",
                 notes: "edited", impression: "3",
-                time_start: null, time_end: null, // eslint-disable-line camelcase
+                time_start: null, time_end: null,  
             },
         });
 

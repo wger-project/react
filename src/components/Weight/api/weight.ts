@@ -1,10 +1,10 @@
-import axios from 'axios';
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
-import { ApiBodyWeightType } from '@/types';
-import { makeHeader, makeUrl } from "@/core/lib/url";
-import { FilterType } from '../widgets/FilterButtons';
-import { calculatePastDate } from '@/core/lib/date';
 import { ResponseType } from "@/core/api/responseType";
+import { calculatePastDate } from '@/core/lib/date';
+import { makeHeader, makeUrl } from "@/core/lib/url";
+import { ApiBodyWeightType } from '@/types';
+import axios from 'axios';
+import { FilterType } from '../widgets/FilterButtons';
 
 export const WEIGHT_PATH = 'weightentry';
 
@@ -13,10 +13,10 @@ export const WEIGHT_PATH = 'weightentry';
  */
 export const getWeights = async (filter: FilterType = ''): Promise<WeightEntry[]> => {
 
-    // eslint-disable-next-line camelcase
+
     const date__gte = calculatePastDate(filter);
 
-    // eslint-disable-next-line camelcase
+
     const url = makeUrl(WEIGHT_PATH, { query: { ordering: '-date', limit: 900, ...(date__gte && { date__gte }) } });
     const { data: receivedWeights } = await axios.get<ResponseType<ApiBodyWeightType>>(url, {
         headers: makeHeader(),

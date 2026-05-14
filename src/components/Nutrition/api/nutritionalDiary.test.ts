@@ -1,14 +1,14 @@
-import axios from "axios";
-import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { getIngredients } from "@/components/Nutrition/api/ingredient";
 import {
     addNutritionalDiaryEntry,
     deleteNutritionalDiaryEntry,
     editNutritionalDiaryEntry,
     getNutritionalDiaryEntries,
 } from "@/components/Nutrition/api/nutritionalDiary";
-import { getIngredients } from "@/components/Nutrition/api/ingredient";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import { TEST_INGREDIENT_1 } from "@/tests/ingredientTestdata";
 import { responseDiaryEntries, responseDiaryEntryDetail } from "@/tests/nutritionTestdata";
+import axios from "axios";
 import type { Mock } from 'vitest';
 
 vi.mock("axios");
@@ -92,7 +92,7 @@ describe("Nutritional diary service tests", () => {
             plan: 101,
             meal: 78,
             ingredient: 101,
-            // eslint-disable-next-line camelcase
+
             weight_unit: null,
             amount: "150",
             datetime: "2024-08-01T08:00:00.000Z",

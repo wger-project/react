@@ -1,11 +1,11 @@
-import axios from 'axios';
 import { Ingredient } from "@/components/Nutrition/models/Ingredient";
-import { memoize } from "lodash";
-import { ApiIngredientType, NutriScoreValue } from '@/types';
 import { API_RESULTS_PAGE_SIZE, ApiPath, LANGUAGE_SHORT_ENGLISH } from "@/core/lib/consts";
 import { fetchPaginated } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import { SearchLanguageFilter } from '@/core/ui/Widgets/SearchLanguageFilter';
+import { ApiIngredientType, NutriScoreValue } from '@/types';
+import axios from 'axios';
+import { memoize } from "lodash";
 
 export type IngredientLanguageFilter = SearchLanguageFilter;
 
@@ -40,7 +40,7 @@ export const getIngredients = async (ids: number[]): Promise<Ingredient[]> => {
         return [];
     }
 
-    // eslint-disable-next-line camelcase
+
     const url = makeUrl(ApiPath.INGREDIENTINFO_PATH, { query: { id__in: ids.join(',') } });
     const out: Ingredient[] = [];
 

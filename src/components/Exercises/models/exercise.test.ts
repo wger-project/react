@@ -58,7 +58,7 @@ describe("Exercise base model tests", () => {
             category: 2,
             equipment: [1, 42],
             muscles: [1, 4],
-            // eslint-disable-next-line camelcase
+
             muscles_secondary: [],
             images: [],
         });

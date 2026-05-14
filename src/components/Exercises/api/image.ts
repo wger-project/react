@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { ImageFormData } from "@/components/Exercises/models/exercise";
 import { ExerciseImage, ExerciseImageAdapter } from "@/components/Exercises/models/image";
 import { makeHeader, makeUrl } from "@/core/lib/url";
+import axios from 'axios';
 
 export const IMAGE_PATH = 'exerciseimage';
 
@@ -25,18 +25,18 @@ export const postExerciseImage = async (data: PostExerciseImageParams): Promise<
         {
             exercise: data.exerciseId,
             image: data.image,
-            // eslint-disable-next-line camelcase
+
             license_title: data.imageData.title,
-            // eslint-disable-next-line camelcase
+
             license_object_url: data.imageData.objectUrl,
-            // eslint-disable-next-line camelcase
+
             license_author: data.imageData.author,
-            // eslint-disable-next-line camelcase
+
             license_author_url: data.imageData.authorUrl,
-            // eslint-disable-next-line camelcase
+
             license_derivative_source_url: data.imageData.derivativeSourceUrl,
             style: data.imageData.style,
-            // eslint-disable-next-line camelcase
+
             is_ai_generated: data.imageData.isAi,
         },
         { headers: headers }
@@ -68,9 +68,9 @@ export const patchExerciseImage = async (data: PatchExerciseImageParams): Promis
     const url = makeUrl(IMAGE_PATH, { id: data.imageId });
     const headers = makeHeader();
     headers['Content-Type'] = 'multipart/form-data';
-    
+
     const formData = new FormData();
-    
+
     // ONLY append if the file exists AND has content (size > 0)
     // If we are editing existing metadata, we don't send the 'image' key at all
     if (data.image && data.image.size > 0) {
@@ -85,13 +85,13 @@ export const patchExerciseImage = async (data: PatchExerciseImageParams): Promis
     formData.append('license_derivative_source_url', data.imageData.derivativeSourceUrl);
     formData.append('style', String(data.imageData.style));
     formData.append('is_ai_generated', String(data.imageData.isAi));
-    
+
     try {
         const response = await axios.patch(url, formData, { headers });
         return new ExerciseImageAdapter().fromJson(response.data);
     } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error(error.response?.status, error.response?.data);
+            console.error(error.response?.status, error.response?.data);
         }
         throw error;
     }

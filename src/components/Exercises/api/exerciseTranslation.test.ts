@@ -122,10 +122,10 @@ describe("Exercise translation service API tests", () => {
                     name: "Squats",
                     description: "Do a squat",
                     notes: [],
-                    creation_date: "2022-06-23", // eslint-disable-line camelcase
+                    creation_date: "2022-06-23",  
                     language: 2,
                     license: 2,
-                    author_history: ["tester"], // eslint-disable-line camelcase
+                    author_history: ["tester"],  
                 },
             ],
         };

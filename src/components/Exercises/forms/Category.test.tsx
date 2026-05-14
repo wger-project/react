@@ -1,11 +1,11 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { EditExerciseCategory } from "@/components/Exercises/forms/Category";
 import { useCategoriesQuery, useEditExerciseQuery } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
-import React from "react";
 import { testCategories } from "@/tests/exerciseTestdata";
 import { testProfileDataVerified } from "@/tests/userTestdata";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import React from "react";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/User/queries/profile");
@@ -45,7 +45,7 @@ describe("Test the edit widget to live edit the category", () => {
 
         expect(editMutateMock).toHaveBeenCalledWith({
             id: 100,
-            // eslint-disable-next-line camelcase
+
             data: { category: 3, license_author: "admin" },
         });
     });

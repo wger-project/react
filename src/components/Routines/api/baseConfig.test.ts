@@ -1,5 +1,3 @@
-import axios from "axios";
-import { BaseConfigAdapter } from "@/components/Routines/models/BaseConfig";
 import {
     addBaseConfig,
     AddBaseConfigParams,
@@ -8,7 +6,9 @@ import {
     EditBaseConfigParams,
     processBaseConfigs,
 } from "@/components/Routines/api/baseConfig";
+import { BaseConfigAdapter } from "@/components/Routines/models/BaseConfig";
 import { ApiPath } from "@/core/lib/consts";
+import axios from "axios";
 import type { Mock, Mocked } from 'vitest';
 
 vi.mock('axios');
@@ -18,7 +18,7 @@ describe('editBaseConfig', () => {
     const mockBaseConfigData = {
         id: 1,
         value: 100,
-        // eslint-disable-next-line camelcase
+
         slot_entry: 1,
     };
 
@@ -59,7 +59,7 @@ describe('editBaseConfig', () => {
 describe('addBaseConfig', () => {
     const apiPath = ApiPath.WEIGHT_CONFIG;
     const params: AddBaseConfigParams = {
-        // eslint-disable-next-line camelcase
+
         slot_entry: 7,
         value: 100,
         iteration: 1,
@@ -70,7 +70,7 @@ describe('addBaseConfig', () => {
     });
 
     test('POSTs the params and returns the parsed config', async () => {
-        const apiResponse = { id: 99, value: 100, slot_entry: 7 }; // eslint-disable-line camelcase
+        const apiResponse = { id: 99, value: 100, slot_entry: 7 };
         mockedAxios.post.mockResolvedValue({ data: apiResponse });
 
         const result = await addBaseConfig(params, apiPath);
@@ -113,8 +113,8 @@ describe('processBaseConfigs', () => {
         await processBaseConfigs({
             values: {
                 toAdd: [
-                    { slot_entry: 1, value: 100 }, // eslint-disable-line camelcase
-                    { slot_entry: 1, value: 110 }, // eslint-disable-line camelcase
+                    { slot_entry: 1, value: 100 },
+                    { slot_entry: 1, value: 110 },
                 ],
                 toEdit: [{ id: 5, value: 90 }],
                 toDelete: [42],
@@ -131,7 +131,7 @@ describe('processBaseConfigs', () => {
     test('runs both buckets when both are passed', async () => {
         await processBaseConfigs({
             values: {
-                toAdd: [{ slot_entry: 1, value: 100 }], // eslint-disable-line camelcase
+                toAdd: [{ slot_entry: 1, value: 100 }],
                 toEdit: [],
                 toDelete: [],
                 apiPath: ApiPath.WEIGHT_CONFIG,

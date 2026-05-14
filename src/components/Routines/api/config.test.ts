@@ -47,7 +47,7 @@ vi.mock("@/components/Routines/api/baseConfig", async () => {
 
 describe('Config Service - Edit Functions', () => {
     const mockEditData: EditBaseConfigParams = { id: 1, value: 10 };
-    // eslint-disable-next-line camelcase
+
     const mockAddData: AddBaseConfigParams = { value: 10, slot_entry: 1 };
 
 

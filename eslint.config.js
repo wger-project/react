@@ -126,6 +126,8 @@ export default tseslint.config(
         rules: {
             "no-restricted-imports": "off",
             "no-console": "off",
+            // API adapters and test fixtures mirror the backend's snake_case field names
+            "camelcase": "off",
         }
     },
     {

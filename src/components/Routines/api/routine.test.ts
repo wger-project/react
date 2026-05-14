@@ -295,7 +295,7 @@ describe("workout routine service tests", () => {
             description: 'desc',
             start: '2024-08-01',
             end: '2024-09-01',
-            // eslint-disable-next-line camelcase
+
             fit_in_week: true,
         });
         expect(result).toBeInstanceOf(Routine);

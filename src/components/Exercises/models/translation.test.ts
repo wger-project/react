@@ -34,7 +34,7 @@ describe("Exercise translation model tests", () => {
             notes: [],
             aliases: [],
             description_source: '',
-            // eslint-disable-next-line camelcase
+
             author_history: ['author1', 'author2', 'author3']
         })).toStrictEqual(e1);
     });

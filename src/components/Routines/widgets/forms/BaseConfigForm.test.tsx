@@ -1,11 +1,11 @@
-import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from "@testing-library/user-event";
 import { BaseConfig, OPERATION_REPLACE } from '@/components/Routines/models/BaseConfig';
 
 import { SlotBaseConfigValueField } from '@/components/Routines/widgets/forms/BaseConfigForm';
-import React from 'react';
 import { testQueryClient } from "@/tests/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from "@testing-library/user-event";
+import React from 'react';
 
 
 vi.mock('@/core/lib/consts', () => {
@@ -96,7 +96,7 @@ describe('EntryDetailsField Component', () => {
                 expect(addMutation).toHaveBeenCalledTimes(0);
                 expect(editMutation).toHaveBeenCalledWith({
                     id: mockConfig.id,
-                    // eslint-disable-next-line camelcase
+
                     slot_entry: slotEntryId,
                     value: 52,
                 });
@@ -116,7 +116,7 @@ describe('EntryDetailsField Component', () => {
 
                 await waitFor(() => expect(addMutation).toHaveBeenCalledTimes(1));
                 expect(addMutation).toHaveBeenCalledWith({
-                    // eslint-disable-next-line camelcase
+
                     slot_entry: 2,
                     value: 8,
                     iteration: 1,

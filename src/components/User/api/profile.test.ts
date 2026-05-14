@@ -1,7 +1,7 @@
-import axios from "axios";
-import { Profile } from "@/components/User/models/profile";
 import { editProfile, getProfile } from "@/components/User/api/profile";
+import { Profile } from "@/components/User/models/profile";
 import { testProfileApiResponse, testProfileDataVerified } from "@/tests/userTestdata";
+import axios from "axios";
 import type { Mock } from 'vitest';
 
 vi.mock("axios");
@@ -56,9 +56,9 @@ describe("Profile API tests", () => {
         expect(body).toEqual({
             email: "new@example.com",
             height: 175,
-            // eslint-disable-next-line camelcase
+
             weight_rounding: 2.5,
-            // eslint-disable-next-line camelcase
+
             repetition_rounding: 1,
         });
         expect(result).toBeInstanceOf(Profile);
@@ -84,7 +84,7 @@ describe("Profile API tests", () => {
         });
 
         const [, body] = (axios.post as Mock).mock.calls[0];
-        // eslint-disable-next-line camelcase
+
         expect(body).toEqual({ weight_rounding: null, repetition_rounding: null });
     });
 });

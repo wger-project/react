@@ -167,18 +167,18 @@ describe("workout logs service tests", () => {
             iteration: 1,
             date: "2024-08-01T08:00:00.000Z",
             exercise: 100,
-            slot_entry: 2, // eslint-disable-line camelcase
+            slot_entry: 2,
             routine: 1,
-            repetitions_unit: 1, // eslint-disable-line camelcase
+            repetitions_unit: 1,
             repetitions: "10.00",
-            repetitions_target: "10.00", // eslint-disable-line camelcase
-            weight_unit: 1, // eslint-disable-line camelcase
+            repetitions_target: "10.00",
+            weight_unit: 1,
             weight: "20.00",
-            weight_target: "20.00", // eslint-disable-line camelcase
+            weight_target: "20.00",
             rir: "1.0",
-            rir_target: null, // eslint-disable-line camelcase
+            rir_target: null,
             rest: 90,
-            rest_target: null, // eslint-disable-line camelcase
+            rest_target: null,
         };
         (axios.patch as Mock).mockResolvedValue({ data: apiResponse });
 
@@ -207,10 +207,10 @@ describe("workout logs service tests", () => {
         expect(body).toMatchObject({
             id: 5,
             exercise: 100,
-            // eslint-disable-next-line camelcase
+
             slot_entry: 2,
             routine: 1,
-            // eslint-disable-next-line camelcase
+
             repetitions_unit: 1,
         });
         expect(result).toBeInstanceOf(WorkoutLog);
@@ -236,7 +236,7 @@ describe("workout logs service tests", () => {
                 rir_target: null,
                 rest: null,
                 rest_target: null
-            },  
+            },
             {
                 id: 2,
                 iteration: 1,
@@ -254,7 +254,7 @@ describe("workout logs service tests", () => {
                 rir_target: null,
                 rest: null,
                 rest_target: null
-            },  
+            },
         ];
         (axios.post as Mock)
             .mockResolvedValueOnce({ data: responses[0] })
