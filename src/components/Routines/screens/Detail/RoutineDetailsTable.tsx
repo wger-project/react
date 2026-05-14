@@ -271,8 +271,8 @@ export const RoutineTable = (props: {
                 return <React.Fragment key={iteration}>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }} />
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
-                        {logs.map((log, index) =>
-                            <Stack key={index}>
+                        {logs.map((log) =>
+                            <Stack key={log.id}>
                                 <span>
                                     {log.repetitions ?? '-/-'}
                                     {getComparisonIcon(log.repetitions, setConfig?.repetitions, setConfig?.maxRepetitions)}
@@ -281,8 +281,8 @@ export const RoutineTable = (props: {
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
-                        {logs.map((log, index) =>
-                            <Stack key={index}>
+                        {logs.map((log) =>
+                            <Stack key={log.id}>
                                 <span>
                                     {log.weight ?? '-/-'}
                                     {getComparisonIcon(log.weight, setConfig?.weight, setConfig?.maxWeight)}
@@ -291,8 +291,8 @@ export const RoutineTable = (props: {
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
-                        {logs.map((log, index) =>
-                            <Stack key={index}>
+                        {logs.map((log) =>
+                            <Stack key={log.id}>
                                 <span>
                                     {log.restTime ?? '-/-'}
                                     {getComparisonIcon(log.restTime, setConfig?.restTime, setConfig?.maxRestTime)}
@@ -301,8 +301,8 @@ export const RoutineTable = (props: {
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
-                        {logs.map((log, index) =>
-                            <Stack key={index}>
+                        {logs.map((log) =>
+                            <Stack key={log.id}>
                                 <span>
                                     {log.rir ?? '-/-'}
                                     {getComparisonIcon(log.rir, setConfig?.rir, setConfig?.maxRir, false)}
@@ -330,10 +330,10 @@ export const RoutineTable = (props: {
                                    colSpan={5 * iterations.length} />
                     </TableRow>
 
-                    {day.slots.map((slot, slotIndex) => {
-                        return <React.Fragment key={slotIndex}>
-                            {slot.entries.map((slotEntry, configIndex) => {
-                                return <React.Fragment key={configIndex}>
+                    {day.slots.map((slot) => {
+                        return <React.Fragment key={slot.id}>
+                            {slot.entries.map((slotEntry) => {
+                                return <React.Fragment key={slotEntry.id}>
                                     {getTableRowPlanned(slotEntry, day)}
                                     {showLogs && getTableRowLogged(slotEntry, day)}
                                 </React.Fragment>;

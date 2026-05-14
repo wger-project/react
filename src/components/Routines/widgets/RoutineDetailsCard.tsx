@@ -50,8 +50,8 @@ export const RoutineDetailsCard = () => {
                     </Typography>
                 }
                 <Stack spacing={2} sx={{ mt: 2 }}>
-                    {routineQuery.data!.dayDataCurrentIterationFiltered.map((dayData, index) =>
-                        <DayDetailsCard routineId={routineId} dayData={dayData} key={`dayDetails-${index}`} />
+                    {routineQuery.data!.dayDataCurrentIterationFiltered.map((dayData) =>
+                        <DayDetailsCard routineId={routineId} dayData={dayData} key={dayData.day!.id} />
                     )}
                 </Stack>
             </>}
@@ -123,12 +123,12 @@ function SlotDataList(props: { slotData: SlotData }) {
                 }}
             >
                 <Stack divider={<Box sx={{ height: "10px" }} />}>
-                    {props.slotData.exercises.map((exercise, index) =>
+                    {props.slotData.exercises.map((exercise) =>
                         <ExerciseImageAvatar
                             image={exercise.mainImage}
                             iconSize={40}
                             avatarSize={50}
-                            key={index}
+                            key={exercise.id}
                         />
                     )}
                 </Stack>

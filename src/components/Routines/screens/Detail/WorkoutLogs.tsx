@@ -55,8 +55,8 @@ export const WorkoutLogs = () => {
                 {t('routines.logsFilterNote')}
             </Typography>
 
-            {routineQuery.data!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null && !dayData.day.isRest).map((dayData, index) =>
-                <React.Fragment key={index}>
+            {routineQuery.data!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null && !dayData.day.isRest).map((dayData) =>
+                <React.Fragment key={dayData.day!.id}>
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
                         sx={{ justifyContent: "space-between", alignItems: "center", mt: 4 }}
