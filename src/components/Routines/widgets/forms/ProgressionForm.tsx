@@ -486,7 +486,7 @@ export const ProgressionForm = (props: {
                                 </Button>
                             </Grid>
                             <Grid size={12}>
-                                <Box sx={{ height: 20 }}></Box>
+                                <Box sx={{ height: 20 }} />
                             </Grid>
                         </Grid>
                     </Form>

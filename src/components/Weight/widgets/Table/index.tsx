@@ -135,11 +135,13 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                 if (isInEditMode) {
                     return [
                         <GridActionsCellItem
+                            key="save"
                             icon={<SaveIcon />}
                             label={t('save')}
                             onClick={handleSaveClick(id)}
                         />,
                         <GridActionsCellItem
+                            key="cancel"
                             icon={<CancelIcon />}
                             label={t('cancel')}
                             className="textPrimary"
@@ -151,6 +153,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
 
                 return [
                     <GridActionsCellItem
+                        key="edit"
                         icon={<EditIcon />}
                         label={t('edit')}
                         className="textPrimary"
@@ -158,6 +161,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                         color="inherit"
                     />,
                     <GridActionsCellItem
+                        key="delete"
                         icon={<DeleteIcon />}
                         label={t('delete')}
                         onClick={handleDeleteClick(id)}

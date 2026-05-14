@@ -177,7 +177,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                     <Grid container key={index} spacing={1} sx={{ mt: 2 }}>
 
                                         {/* Only show the exercise name the first time it appears */}
-                                        {(index === 0 || (index > 0 && formik.values.logs[index - 1].exercise!.id != formik.values.logs[index].exercise!.id)) && <>
+                                        {(index === 0 || (index > 0 && formik.values.logs[index - 1].exercise!.id !== formik.values.logs[index].exercise!.id)) && <>
                                             <Grid size={12}>
                                                 {exerciseIdToSwap !== formik.values.logs[index].exercise!.id &&
                                                     <Typography variant="h6">

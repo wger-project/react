@@ -169,11 +169,13 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                 if (isInEditMode) {
                     return [
                         <GridActionsCellItem
+                            key="save"
                             icon={<SaveIcon />}
                             label="Save"
                             onClick={handleSaveClick(id)}
                         />,
                         <GridActionsCellItem
+                            key="cancel"
                             icon={<CancelIcon />}
                             label="Cancel"
                             className="textPrimary"
@@ -185,6 +187,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
 
                 return [
                     <GridActionsCellItem
+                        key="edit"
                         icon={<EditIcon />}
                         label="Edit"
                         className="textPrimary"
@@ -192,6 +195,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                         color="inherit"
                     />,
                     <GridActionsCellItem
+                        key="delete"
                         icon={<DeleteIcon />}
                         label="Delete"
                         onClick={handleDeleteClick(id)}

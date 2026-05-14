@@ -78,7 +78,7 @@ export const WgerRoutes = () => {
                 <Route path="measurement">
                     <Route index element={<MeasurementCategoryOverview />} />
                     <Route path="overview" element={<MeasurementCategoryOverview />} />
-                    <Route path="category/:categoryId" element={<MeasurementCategoryDetail />}></Route>
+                    <Route path="category/:categoryId" element={<MeasurementCategoryDetail />} />
                 </Route>
                 <Route path="exercise">
                     <Route index element={<ExerciseOverview />} />

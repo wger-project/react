@@ -31,7 +31,6 @@ export const MuscleOverview = ({ primaryMuscles, secondaryMuscles, isFront }: Ov
                 width: "200px",
                 backgroundImage: backgroundUrl,
                 backgroundRepeat: "no-repeat"
-            }}>
-        </div>
+            }} />
     );
 };

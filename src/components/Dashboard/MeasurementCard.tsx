@@ -73,7 +73,7 @@ const MeasurementCardContent = (props: { categories: MeasurementCategory[] }) =>
         >
             <div className="slider-container">
                 <SlickSlider {...settings}>
-                    {props.categories.map(c => <MeasurementCardTableContent category={c} />)}
+                    {props.categories.map(c => <MeasurementCardTableContent key={c.id} category={c} />)}
                 </SlickSlider>
             </div>
         </DashboardCard>

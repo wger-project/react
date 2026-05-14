@@ -240,7 +240,7 @@ export function makeHeader(token?: string) {
     }
 
     const csrfCookie = getCookie(DJANGO_CSRF_COOKIE);
-    if (IS_PROD && csrfCookie != undefined) {
+    if (IS_PROD && csrfCookie != null) {
         out['X-CSRFToken'] = csrfCookie;
     }
     return out;

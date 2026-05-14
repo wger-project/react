@@ -130,7 +130,7 @@ export class ExerciseAdapter implements Adapter<Exercise> {
         });
 
         if (!exercise.translations.some(t => t.language === ENGLISH_LANGUAGE_ID)) {
-            console.info(`No english translation found for exercise base ${exercise.uuid}!`);
+            console.warn(`No english translation found for exercise base ${exercise.uuid}!`);
         }
 
         if (exercise.translations.length === 0) {

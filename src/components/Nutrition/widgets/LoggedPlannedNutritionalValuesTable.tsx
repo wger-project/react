@@ -104,9 +104,9 @@ export const LoggedPlannedNutritionalValuesTable = (props: {
 
                 <TableRow>
                     <TableCell>{t('nutrition.others')}</TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
+                    <TableCell />
+                    <TableCell />
+                    <TableCell />
                 </TableRow>
                 <TableRow>
                     <TableCell>{t('nutrition.fibres')}</TableCell>

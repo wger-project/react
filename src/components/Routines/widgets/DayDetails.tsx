@@ -301,7 +301,7 @@ export const DayDetails = (props: {
     const handleAddSlotEntry = (slotId: number) => {
         const slot = props.day.slots.find(s => s.id === slotId);
         if (slot === undefined) {
-            console.info(`Could not find slot with id ${slotId} to add config`);
+            console.warn(`Could not find slot with id ${slotId} to add config`);
             return;
         }
 

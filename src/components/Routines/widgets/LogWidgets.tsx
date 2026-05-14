@@ -165,11 +165,13 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
                 if (isInEditMode) {
                     return [
                         <GridActionsCellItem
+                            key="save"
                             icon={<SaveIcon sx={{ color: 'primary.main' }} />}
                             label={t('save')}
                             onClick={handleSaveClick(id)}
                         />,
                         <GridActionsCellItem
+                            key="cancel"
                             icon={<CancelIcon />}
                             label={t('cancel')}
                             className="textPrimary"
@@ -181,6 +183,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
 
                 return [
                     <GridActionsCellItem
+                        key="edit"
                         icon={<EditIcon />}
                         label={t('edit')}
                         className="textPrimary"
@@ -188,6 +191,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
                         color="inherit"
                     />,
                     <GridActionsCellItem
+                        key="delete"
                         icon={<DeleteIcon />}
                         label={t('delete')}
                         onClick={handleDeleteClick(id)}

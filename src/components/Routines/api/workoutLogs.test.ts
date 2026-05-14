@@ -236,7 +236,7 @@ describe("workout logs service tests", () => {
                 rir_target: null,
                 rest: null,
                 rest_target: null
-            }, // eslint-disable-line camelcase
+            },  
             {
                 id: 2,
                 iteration: 1,
@@ -254,7 +254,7 @@ describe("workout logs service tests", () => {
                 rir_target: null,
                 rest: null,
                 rest_target: null
-            }, // eslint-disable-line camelcase
+            },  
         ];
         (axios.post as Mock)
             .mockResolvedValueOnce({ data: responses[0] })

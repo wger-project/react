@@ -52,8 +52,8 @@ export const IngredientDetailTable = (props: {
         <Table>
             <TableHead>
                 <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
+                    <TableCell />
+                    <TableCell />
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.energy')}</TableCell>
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.protein')}</TableCell>
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.carbohydrates')}</TableCell>

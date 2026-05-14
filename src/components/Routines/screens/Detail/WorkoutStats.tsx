@@ -122,7 +122,7 @@ export const WorkoutStats = () => {
                 <Table size={"small"}>
                     <TableHead>
                         <TableRow>
-                            <TableCell></TableCell>
+                            <TableCell />
                             {statsData.headers.map(header => <TableCell
                                 key={header}
                                 sx={{ textAlign: 'right', }}

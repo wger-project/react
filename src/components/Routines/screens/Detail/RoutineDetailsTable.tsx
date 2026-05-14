@@ -1,5 +1,3 @@
-import { WgerContainerFullWidth } from "@/core/ui/Widgets/Container";
-import { RenderLoadingQuery } from "@/core/ui/Widgets/RenderLoadingQuery";
 import { getLanguageByShortName, Language, useLanguageQuery } from "@/components/Exercises";
 import { Day } from "@/components/Routines/models/Day";
 import { Routine } from "@/components/Routines/models/Routine";
@@ -9,6 +7,8 @@ import { SlotEntry } from "@/components/Routines/models/SlotEntry";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { useRoutineDetailQuery, useRoutineLogData } from "@/components/Routines/queries";
 import { makeLink, WgerLink } from "@/core/lib/url";
+import { WgerContainerFullWidth } from "@/core/ui/Widgets/Container";
+import { RenderLoadingQuery } from "@/core/ui/Widgets/RenderLoadingQuery";
 import FlagCircleIcon from '@mui/icons-material/FlagCircle';
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
@@ -159,7 +159,7 @@ export const RoutineTable = (props: {
             {iterations.map((iteration) => {
 
                 const out = iteration === 1
-                    ? <TableCell className={classes.stickyColumn}></TableCell>
+                    ? <TableCell className={classes.stickyColumn} />
                     : null;
 
                 return <React.Fragment key={`header-${iteration}`}>
@@ -178,7 +178,7 @@ export const RoutineTable = (props: {
         return <TableRow>
             {iterations.map((iteration) => {
                 const placeholder = iteration === 1
-                    ? <TableCell className={classes.stickyColumn}></TableCell>
+                    ? <TableCell className={classes.stickyColumn} />
                     : null;
 
                 return <React.Fragment key={`header-iteration-${iteration}`}>
@@ -269,8 +269,7 @@ export const RoutineTable = (props: {
                 const logs = iterationLogs.filter((log) => log.slotEntryId === slotEntry.id);
 
                 return <React.Fragment key={iteration}>
-                    <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
-                    </TableCell>
+                    <TableCell align={'center'} sx={{ verticalAlign: "top" }} />
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log, index) =>
                             <Stack key={index}>
@@ -327,8 +326,8 @@ export const RoutineTable = (props: {
                         >
                             <b>{day.displayName}</b>
                         </TableCell>
-                        <TableCell sx={{ backgroundColor: theme.palette.action.hover }} colSpan={5 * iterations.length}>
-                        </TableCell>
+                        <TableCell sx={{ backgroundColor: theme.palette.action.hover }}
+                                   colSpan={5 * iterations.length} />
                     </TableRow>
 
                     {day.slots.map((slot, slotIndex) => {

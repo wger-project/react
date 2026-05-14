@@ -4,7 +4,6 @@ import tseslint from 'typescript-eslint';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import importPlugin from 'eslint-plugin-import';
-// import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
 
 // Domains with a public surface (`index.ts`). Other code must import via the
 // domain root, never via internal sub-paths.
@@ -51,11 +50,27 @@ export default tseslint.config(
             'react': reactPlugin,
             'react-hooks': reactHooksPlugin,
             'import': importPlugin,
-            //'jsx-a11y': jsxA11yPlugin
         },
         rules: {
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'warn',
+
+            // React rules
+            'react/jsx-key': 'error',
+            'react/jsx-no-target-blank': 'error',
+            'react/no-unstable-nested-components': 'error',
+            'react/no-array-index-key': 'warn',
+            'react/jsx-no-duplicate-props': 'error',
+            'react/no-children-prop': 'error',
+            'react/void-dom-elements-no-children': 'error',
+            'react/no-unescaped-entities': 'error',
+            'react/self-closing-comp': 'error',
+
+            // Core JS hygiene.
+            'eqeqeq': ['error', 'smart'],
+            'no-var': 'error',
+            'prefer-const': 'error',
+            'no-console': ['warn', {allow: ['warn', 'error']}],
         },
         settings: {
             react: {
@@ -110,6 +125,7 @@ export default tseslint.config(
         ],
         rules: {
             "no-restricted-imports": "off",
+            "no-console": "off",
         }
     },
     {

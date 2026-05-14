@@ -134,7 +134,7 @@ export const ExerciseDetailView = ({
                             md: 3
                         }}>
                         <div>
-                            <div style={{ ...muscleLegendStyle, backgroundColor: '#fc0000' }}></div>
+                            <div style={{ ...muscleLegendStyle, backgroundColor: '#fc0000' }} />
                             <b style={{ marginLeft: 8, verticalAlign: 'middle' }}>
                                 {t("exercises.primaryMuscles")}
                             </b>
@@ -167,7 +167,7 @@ export const ExerciseDetailView = ({
                             md: 3
                         }}>
                         <div>
-                            <div style={{ ...muscleLegendStyle, backgroundColor: '#f57900' }}></div>
+                            <div style={{ ...muscleLegendStyle, backgroundColor: '#f57900' }} />
                             <b style={{ marginLeft: 8, verticalAlign: 'middle' }}>
                                 {t("exercises.secondaryMuscles")}
                             </b>
@@ -257,7 +257,7 @@ export const ExerciseDetailView = ({
                     variant="caption"
                     sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
                 >
-                    <i className="fa-brands fa-creative-commons" style={{ fontSize: 20 }}></i>
+                    <i className="fa-brands fa-creative-commons" style={{ fontSize: 20 }} />
                     The content on this page is available under the
                     <a href="https://creativecommons.org/licenses/by-sa/4.0/deed">
                         CC BY-SA 4 License

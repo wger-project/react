@@ -105,7 +105,7 @@ const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
                         {exercises.map((base) =>
                             base.mainImage
                                 ? <Avatar key={base.id} src={base.mainImage.url} />
-                                : <Avatar key={base.id} children={<PhotoIcon />} />
+                                : <Avatar key={base.id}><PhotoIcon /></Avatar>
                         )}
                     </AvatarGroup>
                 </ListItemIcon>

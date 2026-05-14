@@ -37,8 +37,7 @@ export const WgerModal: FunctionComponent<WgerModalProps> = ({ title, subtitle, 
                 <CardContent>
                     {children}
                 </CardContent>
-                <CardActions>
-                </CardActions>
+                <CardActions />
             </Card>
         </Modal>
 
