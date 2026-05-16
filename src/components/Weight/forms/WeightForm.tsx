@@ -31,6 +31,9 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
     const validationSchema = yup.object({
         weight: yup
             .number()
+            .transform((_, value) => {
+                return parseLocaleNumber(value);
+            })
             .min(30, 'Min weight is 30 kg')
             .max(300, 'Max weight is 300 kg')
             .required('Weight field is required'),
@@ -49,15 +52,17 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
             validationSchema={validationSchema}
             onSubmit={async (values) => {
 
+                const normalizedWeight = parseLocaleNumber(values.weight);
+
                 // Edit existing weight entry
                 if (weightEntry) {
-                    weightEntry.weight = values.weight;
+                    weightEntry.weight = normalizedWeight;
                     weightEntry.date = values.date;
                     editWeightQuery.mutate(weightEntry);
 
                     // Create a new weight entry
                 } else {
-                    weightEntry = new WeightEntry(values.date, values.weight);
+                    weightEntry = new WeightEntry(values.date, normalizedWeight);
                     addWeightQuery.mutate(weightEntry);
                 }
 
