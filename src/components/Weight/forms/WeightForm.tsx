@@ -15,6 +15,10 @@ interface WeightFormProps {
     closeFn?: () => void,
 }
 
+const parseLocaleNumber = (numString: string) => {
+    return Number(numString.replace(/,/, '.'));
+};
+
 export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
     const weightEntriesQuery = useBodyWeightQuery();
