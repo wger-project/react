@@ -15,8 +15,11 @@ interface WeightFormProps {
     closeFn?: () => void,
 }
 
-const parseLocaleNumber = (numString: string) => {
-    return Number(numString.replace(/,/, '.'));
+const parseLocaleNumber = (numString: string | number) => {
+    if (typeof(numString) === 'string'){
+        return Number(numString.replace(/,/, '.'));
+    }
+    return numString;
 };
 
 export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
