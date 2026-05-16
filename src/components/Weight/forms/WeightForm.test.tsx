@@ -84,8 +84,8 @@ describe("Test WeightForm component", () => {
         const submitButton = screen.getByRole('button', { name: 'submit' });
 
         // Act
-        user.type(dateInput, '2022-02-28');
-        user.type(weightInput, '80');
+        await user.type(dateInput, '2022-02-28');
+        await user.type(weightInput, '80');
 
         // Assert
         expect(dateInput).toBeInTheDocument();
