@@ -39,6 +39,10 @@ const buildRows = (weights: WeightEntry[]): GridRowsProp =>
         days: +row.days.toFixed(1),
     }));
 
+const parseLocaleNumber = (numString: string) => {
+    return Number(numString.replace(/,/, '.'));
+};
+
 export const WeightTable = ({ weights }: WeightTableProps) => {
     const [t] = useTranslation();
     const rows = buildRows(weights);
@@ -73,7 +77,8 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
 
     const processRowUpdate = (newRow: GridRowModel) => {
         const date = newRow.date instanceof Date ? newRow.date : new Date(newRow.date);
-        editEntryQuery.mutate(new WeightEntry(date, Number(newRow.weight), Number(newRow.id)));
+        const sanitizedWeight = parseLocaleNumber(newRow.weight);
+        editEntryQuery.mutate(new WeightEntry(date, sanitizedWeight, Number(newRow.id)));
         return newRow;
     };
 
@@ -98,9 +103,17 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
         {
             field: 'weight',
             headerName: t('weight'),
-            type: 'number',
+            type: 'string',
             width: 100,
             editable: true,
+            headerAlign: 'right',
+            align: 'right',
+            valueFormatter: (value?: string) => {
+                if (typeof(value) === 'string'){
+                    return parseLocaleNumber(value);
+                }
+                return value;
+            },
         },
         {
             field: 'change',
