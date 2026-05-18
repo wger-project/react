@@ -9,6 +9,7 @@ import {
     editMeasurementCategoryParams,
     editMeasurementEntry,
     editMeasurementParams,
+    getDynamicCategories,
     getMeasurementCategories,
     getMeasurementCategory,
     MeasurementQueryOptions
@@ -21,6 +22,13 @@ export function useMeasurementsCategoryQuery(options?: MeasurementQueryOptions) 
     return useQuery({
         queryKey: [QueryKey.MEASUREMENTS_CATEGORIES, JSON.stringify(options || {})],
         queryFn: () => getMeasurementCategories(options)
+    });
+}
+
+export function useDynamicCategoriesQuery() {
+    return useQuery({
+        queryKey: [QueryKey.MEASUREMENTS_CATEGORIES, 'dynamic'],
+        queryFn: getDynamicCategories
     });
 }
 

@@ -1,6 +1,6 @@
-import { Button, Stack, TextField } from "@mui/material";
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
-import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "@/components/Measurements/queries";
+import { Button, Stack, TextField, MenuItem, CircularProgress } from "@mui/material";
+import { MeasurementCategory, DYNAMIC_TYPE_DEFAULTS } from "@/components/Measurements/models/Category";
+import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery, useDynamicCategoriesQuery } from "@/components/Measurements/queries";
 import { Form, Formik } from "formik";
 import React from 'react';
 import { useTranslation } from "react-i18next";
@@ -11,11 +11,18 @@ interface CategoryFormProps {
     closeFn?: () => void,
 }
 
-export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
+interface DynamicTypeOption {
+    value: string;
+    label: string;
+}
 
+export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     const [t] = useTranslation();
-    const useAddCategoryQuery = useAddMeasurementCategoryQuery();
-    const useEditCategoryQuery = useEditMeasurementCategoryQuery(category?.id || 0);
+    const addCategoryQuery = useAddMeasurementCategoryQuery();
+    const editCategoryQuery = useEditMeasurementCategoryQuery(category?.id || 0);
+
+    const dynamicQuery = useDynamicCategoriesQuery();
+
     const validationSchema = yup.object({
         name: yup
             .string()
@@ -25,64 +32,103 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
         unit: yup
             .string()
             .required(t('forms.fieldRequired'))
-            .max(5, t('forms.maxLength', { chars: '5' }))
+            .max(5, t('forms.maxLength', { chars: '5' })),
+        dynamic_type: yup
+            .string()
+            .required(t('forms.fieldRequired'))
     });
-
 
     return (
         <Formik
             initialValues={{
                 name: category ? category.name : "",
                 unit: category ? category.unit : "",
+                dynamic_type: category ? category.dynamic_type : 'NONE',
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-
-                // Edit existing weight entry
                 if (category) {
-                    useEditCategoryQuery.mutate({ ...values, id: category.id });
+                    editCategoryQuery.mutate({ ...values, id: category.id });
                 } else {
-                    useAddCategoryQuery.mutate(values);
+                    addCategoryQuery.mutate(values);
                 }
-
-                // if closeFn is defined, close the modal (this form does not have to
-                // be displayed in a modal)
-                if (closeFn) {
-                    closeFn();
-                }
+                if (closeFn) closeFn();
             }}
         >
-            {formik => (
-                <Form>
-                    <Stack spacing={2}>
-                        <TextField
-                            fullWidth
-                            id="name"
-                            label={t('name')}
-                            error={formik.touched.name && Boolean(formik.touched.name)}
-                            helperText={formik.touched.name && formik.errors.name}
-                            {...formik.getFieldProps('name')}
-                        />
-                        <TextField
-                            fullWidth
-                            id="unit"
-                            label={t('unit')}
-                            error={formik.touched.unit && Boolean(formik.errors.unit)}
-                            helperText={
-                                formik.touched.unit && formik.errors.unit
-                                    ? formik.errors.unit
-                                    : t('measurements.unitFormHelpText')
-                            }
-                            {...formik.getFieldProps('unit')}
-                        />
-                        <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
-                            <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
-                                {t('submit')}
-                            </Button>
+            {formik => {
+                // extract the props so we can override onChange
+                const dynamicTypeProps = formik.getFieldProps('dynamic_type');
+
+                return (
+                    <Form>
+                        <Stack spacing={2}>
+                            <TextField
+                                fullWidth
+                                id="name"
+                                label={t('name')}
+                                error={formik.touched.name && Boolean(formik.errors.name)}
+                                helperText={formik.touched.name && formik.errors.name}
+                                {...formik.getFieldProps('name')}
+                            />
+                            
+                            <TextField
+                                fullWidth
+                                id="unit"
+                                label={t('unit')}
+                                error={formik.touched.unit && Boolean(formik.errors.unit)}
+                                helperText={formik.touched.unit && formik.errors.unit}
+                                {...formik.getFieldProps('unit')}
+                            />
+
+                            <TextField
+                                select
+                                fullWidth
+                                id="dynamic_type"
+                                label="Calculation Type"
+                                disabled={dynamicQuery.isLoading}
+                                error={formik.touched.dynamic_type && Boolean(formik.errors.dynamic_type)}
+                                {...dynamicTypeProps}
+                                onChange={(e) => {
+                                    dynamicTypeProps.onChange(e);
+
+                                    // check dynamic type default units
+                                    const selectedVal = e.target.value;
+                                    const defaults = DYNAMIC_TYPE_DEFAULTS[selectedVal];
+
+                                    if (defaults) {
+                                        formik.setFieldValue('unit', defaults.unit);
+                                        
+                                        // auto-fill the name only if the user hasn't typed anything yet
+                                        if (!formik.values.name) {
+                                            formik.setFieldValue('name', defaults.name);
+                                        }
+                                    }
+                                }}
+                            >
+                                {dynamicQuery.isLoading && (
+                                    <MenuItem disabled value="loading">
+                                        <CircularProgress size={20} sx={{ mr: 1 }} /> Loading types...
+                                    </MenuItem>
+                                )}
+                                {!dynamicQuery.isLoading && (dynamicQuery.data as unknown as DynamicTypeOption[])?.map(type => (
+                                    <MenuItem key={type.value} value={type.value}>
+                                        {type.label}
+                                    </MenuItem>
+                                ))}
+                                {!dynamicQuery.isLoading && (!dynamicQuery.data || dynamicQuery.data.length === 0) && (
+                                    <MenuItem value="NONE">Standard (Manual Entry)</MenuItem>
+                                )}
+                            </TextField>
+
+                            <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
+                                <Button color="primary" variant="contained" type="submit">
+                                    {t('submit')}
+                                </Button>
+                            </Stack>
                         </Stack>
-                    </Stack>
-                </Form>
-            )}
+                    </Form>
+                );
+            }}
         </Formik>
     );
 };

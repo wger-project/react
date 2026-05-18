@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { useQuery } from '@tanstack/react-query';
+import { MeasurementCategory, DynamicMeasurementType } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { ApiMeasurementCategoryType } from '@/types';
 import { API_MAX_PAGE_SIZE } from "@/core/lib/consts";
@@ -14,6 +15,26 @@ export type MeasurementQueryOptions = {
     filtersetQueryCategories?: object,
     filtersetQueryEntries?: object,
 }
+
+export interface DynamicCategory {
+    id: number;
+    name: string;
+    unit: string;
+    dynamic_type: DynamicMeasurementType;
+}
+
+export const getDynamicCategories = async (): Promise<DynamicCategory[]> => {
+    const url = makeUrl(`${API_MEASUREMENTS_CATEGORY_PATH}/dynamic-types`);
+    const response = await axios.get(url, { headers: makeHeader() });
+    return response.data;
+};
+
+export const useDynamicCategoriesQuery = () => {
+    return useQuery({
+        queryKey: [API_MEASUREMENTS_CATEGORY_PATH, 'dynamic'],
+        queryFn: getDynamicCategories
+    });
+};
 
 export const getMeasurementCategories = async (options?: MeasurementQueryOptions): Promise<MeasurementCategory[]> => {
     const { filtersetQueryCategories = {}, filtersetQueryEntries = {} } = options || {};
@@ -44,10 +65,10 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
         });
 
         // Collect all pages of entries
-        for await (const page of fetchPaginated(url, makeHeader())) {
-            for (const entries of page) {
-                out.push(MeasurementEntry.fromJson(entries));
-            }
+            for await (const page of fetchPaginated(url, makeHeader())) {
+                for (const entries of page) {
+                    out.push(MeasurementEntry.fromJson(entries));
+                }
         }
         return out;
     });
@@ -90,14 +111,16 @@ export const getMeasurementCategory = async (id: number): Promise<MeasurementCat
 export interface AddMeasurementCategoryParams {
     name: string;
     unit: string;
+    dynamic_type: DynamicMeasurementType;
 }
 
 export const addMeasurementCategory = async (data: AddMeasurementCategoryParams): Promise<MeasurementCategory> => {
     const response = await axios.post(
-        makeUrl(API_MEASUREMENTS_CATEGORY_PATH,),
+        makeUrl(API_MEASUREMENTS_CATEGORY_PATH),
         {
             name: data.name,
-            unit: data.unit
+            unit: data.unit,
+            dynamic_type: data.dynamic_type // eslint-disable-line camelcase
         },
         { headers: makeHeader() }
     );
@@ -109,6 +132,7 @@ export interface editMeasurementCategoryParams {
     id: number,
     name: string;
     unit: string;
+    dynamic_type: DynamicMeasurementType;
 }
 
 export const editMeasurementCategory = async (data: editMeasurementCategoryParams): Promise<MeasurementCategory> => {
@@ -116,7 +140,8 @@ export const editMeasurementCategory = async (data: editMeasurementCategoryParam
         makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: data.id }),
         {
             name: data.name,
-            unit: data.unit
+            unit: data.unit,
+            dynamic_type: data.dynamic_type // eslint-disable-line camelcase
         },
         { headers: makeHeader() }
     );
