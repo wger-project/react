@@ -79,11 +79,7 @@ export const INGREDIENT_API_RESPONSE = ({
             },
             "thumbnails": {
                 "small": "http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.200x200_q85.jpg",
-                "small_cropped": "http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.200x200_q85_crop-smart.jpg",
-                "medium": "http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.400x400_q85.jpg",
-                "medium_cropped": "http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.400x400_q85_crop-smart.jpg",
-                "large": "http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.800x800_q90.jpg",
-                "large_cropped": "http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.800x800_q90_crop-smart.jpg"
+                "medium": "http://localhost:8000/media/ingredients/59197/7f4120cd-a5c1-4a3a-b31b-974e62478222.jpg.400x400_q85.jpg"
             }
         }
     ]
