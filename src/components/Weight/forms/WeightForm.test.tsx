@@ -84,8 +84,8 @@ describe("Test WeightForm component", () => {
         const submitButton = screen.getByRole('button', { name: 'submit' });
 
         // Act
-        user.type(dateInput, '2022-02-28');
-        user.type(weightInput, '80');
+        await user.type(dateInput, '2022-02-28');
+        await user.type(weightInput, '80');
 
         // Assert
         expect(dateInput).toBeInTheDocument();
@@ -97,4 +97,21 @@ describe("Test WeightForm component", () => {
         });
     });
 
+    test('Creating a new weight entry using a comma decimal separator', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <WeightForm />
+            </QueryClientProvider>
+        );
+
+        const weightInput = await screen.findByLabelText('weight');
+
+        // Act
+        await user.type(weightInput, "69,1");
+        await user.tab();
+        expect(screen.queryByText(/weight must be a `number` type/i)).not.toBeInTheDocument();
+    });
 });
