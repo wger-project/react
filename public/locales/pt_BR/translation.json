@@ -175,7 +175,7 @@
     "language": "Linguagem",
     "noResultsDescription": "Não foram encontrados resultados para essa consulta, considere a possibilidade de reduzir o número de filtros.",
     "exercises": {
-        "notEnoughRights": "Apenas é possível contribuir com exercícios se sua conta tiver mais de {{days}} dias e você tiver verificado seu e-mail",
+        "notEnoughRights": "Você só pode contribuir com exercícios se sua conta tiver mais de {{days}} dias e seu e-mail tiver sido verificado",
         "notEnoughRightsHeader": "Você não pode contribuir com exercícios",
         "translateExerciseNow": "Traduza este exercício agora",
         "alternativeNames": "Nomes alternativos",
@@ -227,7 +227,10 @@
         "exactMatch": "Correspondência exata",
         "replacementCannotBeSame": "O exercício substituto não pode ser o mesmo que está sendo excluído.",
         "transferMediaLabel": "Transfira os meios de comunicação para o exercício de substituição",
-        "transferTranslationsLabel": "Transferir traduções para o idioma substituto (ignora idiomas já presentes)"
+        "transferTranslationsLabel": "Transferir traduções para o idioma substituto (ignora idiomas já presentes)",
+        "imageIsAiGenerated": "A imagem foi gerada com IA",
+        "dropOrClickImage": "Arraste e solte uma imagem aqui ou clique para selecionar",
+        "addImage": "Adicionar imagem"
     },
     "notes": "Comentários",
     "value": "Valor",
