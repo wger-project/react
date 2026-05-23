@@ -57,7 +57,14 @@
         "imageStyleOther": "Altro",
         "imageDetails": "Dettagli immagine",
         "imageStyleLine": "Linea",
-        "swapExercise": "Esercizio di scambio"
+        "swapExercise": "Esercizio di scambio",
+        "replacementCannotBeSame": "Il sostituto non può essere lo stesso esercizio che si sta eliminando.",
+        "transferMediaLabel": "Trasferisci i contenuti all’esercizio sostitutivo",
+        "transferTranslationsLabel": "Trasferisci le traduzioni all’esercizio sostitutivo (salta le lingue già presenti)",
+        "exactMatch": "Corrispondenza esatta",
+        "imageIsAiGenerated": "L’immagine è stata generata con l’IA",
+        "dropOrClickImage": "Trascina un’immagine qui o clicca per selezionarne una",
+        "addImage": "Aggiungi immagine"
     },
     "noResults": "Nessun risultato",
     "noResultsDescription": "Nessun risultato trovato. Prova a ridurre i termini di ricerca.",
@@ -174,7 +181,16 @@
         "searchIngredientName": "Cerca per nome dell'ingrediente",
         "sodium": "Sodio",
         "pseudoMealTitle": "Altri registri",
-        "goalFiber": "Obiettivo fibre"
+        "goalFiber": "Obiettivo fibre",
+        "languageFilterCurrentOnly": "Solo nella lingua corrente ({{lang}})",
+        "languageFilterCurrentAndEnglish": "Lingua corrente ({{lang}}) e inglese",
+        "languageFilterAll": "Tutte le lingue",
+        "filterVegan": "Vegano",
+        "filterVegetarian": "Vegetariano",
+        "filterNutriscore": "Filtro Nutri-Score",
+        "filterNutriscoreOff": "Disattivato",
+        "filterNutriscoreNoFilter": "Nessun filtro",
+        "filterNutriscoreOrBetter": "{{grade}} o meglio"
     },
     "images": "Immagini",
     "downloadAsPdf": "Scarica come PDF",
@@ -224,7 +240,7 @@
         "deleteDayConfirmation": "Questo rimuoverà tutti i set, gli esercizi e le regole di progressione",
         "routineHasNoDays": "La routine non ha giorni",
         "setHasNoExercises": "Questo set non ha esercizi",
-        "fitDaysInWeek": "Giorni in forma nella settimana",
+        "fitDaysInWeek": "Pianificazione settimanale fissa",
         "fitDaysInWeekHelpText": "Questa impostazione controlla la programmazione dei giorni della tua routine su più settimane. Se abilitata, i giorni si ripeteranno in un ciclo settimanale. Ad esempio, una routine con allenamenti il lunedì, mercoledì e venerdì continuerà con questo schema il lunedì, mercoledì e venerdì successivi. Se disabilitata, i giorni si susseguiranno in sequenza, indipendentemente dall'inizio di una nuova settimana. Questa opzione è utile per le routine che non seguono un programma settimanale rigido.",
         "needsLogsToAdvance": "Ha bisogno di registri per avanzare",
         "needsLogsToAdvanceHelpText": "Se selezioni questa opzione, la routine passerà al giorno successivo programmato solo se hai registrato un allenamento per il giorno corrente. Se questa opzione non è selezionata, la routine passerà automaticamente al giorno successivo, indipendentemente dal fatto che tu abbia registrato o meno un allenamento.",
@@ -262,8 +278,9 @@
             "myo": "Serie MYO",
             "forced": "Forzato",
             "tut": "Tempo sotto tensione",
-            "iso": "Isometrico",
-            "jump": "Salto"
+            "iso": "Tenuta isometrica",
+            "jump": "Salto",
+            "warmup": "Riscaldamento"
         },
         "sets": "Serie",
         "reps": "Ripetizioni",
@@ -293,7 +310,19 @@
         "step": "Fase",
         "repeat": "Impostazione di ripetizione",
         "markAsTemplate": "Gestisci template",
-        "resultingRoutine": "Risultato routine"
+        "resultingRoutine": "Risultato routine",
+        "addSet": "Aggiungi serie",
+        "setNr": "Serie {{number}}",
+        "day": {
+            "custom": "Personalizzato",
+            "enom": "Ogni minuto, al minuto (emom)",
+            "amrap": "Più round possibili (amrap)",
+            "hiit": "Allenamento a intervalli ad alta intensità (hiit)",
+            "tabata": "Tabata",
+            "edt": "Allenamento a densità crescente",
+            "rft": "Round a tempo",
+            "afap": "Il più veloce possibile"
+        }
     },
     "measurements": {
         "deleteInfo": "Ciò eliminerà la categoria e tutte le sue voci",
@@ -336,10 +365,22 @@
     "private": "Privato",
     "public": "Pubblico",
     "core": {
-        "customize": "Personalizza"
+        "customize": "Personalizza",
+        "exitEditMode": "Esci dalla modalità modifica"
     },
     "dashboard": {
-        "resetLayout": "Ripristina la disposizione predefinita"
+        "resetLayout": "Ripristina la disposizione predefinita",
+        "customizeDashboard": "Personalizza dashboard",
+        "dragWidgetsHelp": "Trascina i widget per riposizionarli o ridimensionali usando l’angolo in basso a destra."
     },
-    "preview": "Anteprima"
+    "preview": "Anteprima",
+    "useMarkdownHint": "Puoi usare il Markdown di base per formattare il testo: *corsivo*, **grassetto**, - elenco",
+    "trophies": {
+        "trophies": "Trofei"
+    },
+    "currentTrend": "Tendenza attuale",
+    "mean": "Media",
+    "trend": "Tendenza",
+    "variance": "Varianza",
+    "totalChange": "Variazione totale"
 }
