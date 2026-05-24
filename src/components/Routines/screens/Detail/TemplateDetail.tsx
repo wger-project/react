@@ -8,7 +8,7 @@ import { DayDetailsCard } from "@/components/Routines/widgets/RoutineDetailsCard
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { dateToLocale } from "@/core/lib/date";
+import { formatNaiveDate } from "@/core/lib/date";
 import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const TemplateDetail = () => {
@@ -34,7 +34,7 @@ export const TemplateDetail = () => {
                 mainContent={
                     <Stack spacing={2}>
                         <Typography variant={"subtitle1"}>
-                            {dateToLocale(routine!.start)} - {dateToLocale(routine!.end)} ({routine!.durationText})
+                            {formatNaiveDate(routine!.start, i18n.language)} - {formatNaiveDate(routine!.end, i18n.language)} ({routine!.durationText})
                         </Typography>
 
                         {routine!.description !== ''

@@ -82,6 +82,73 @@ export function dateToLocale(dateTime: Date | null, locale?: string, options?: I
     return dateTime.toLocaleString(locale ? [locale] : [], options);
 }
 
+/**
+ * Formats a naive "YYYY-MM-DD" date string, standard ISO-8601 datetime string,
+ * or standard JS Date object into a localized date format without applying local
+ * browser timezone translation (i.e. timezone-agnostic).
+ *
+ * @param date - The naive date string or Date object
+ * @param locale - Optional locale for formatting (defaults to active i18n language or 'en-US')
+ * @returns The formatted date string, or an empty string if the input is invalid
+ */
+export function formatNaiveDate(date: string | Date | null | undefined, locale?: string): string {
+    if (!date) {
+        return '';
+    }
+
+    const resolvedLocale = locale ?? i18n.language ?? 'en-US';
+    let utcDate: Date;
+
+    if (date instanceof Date) {
+        if (isNaN(date.getTime())) {
+            return '';
+        }
+        utcDate = date;
+    } else if (typeof date === 'string') {
+        const trimmed = date.trim();
+        // ISO-8601 regex strictly matching YYYY-MM-DD with optional time and timezone components
+        const isoRegex = /^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(Z|[+-]\d{2}:?\d{2})?)?$/;
+        const match = trimmed.match(isoRegex);
+
+        if (!match) {
+            return ''; // Strictly reject non-conforming formats
+        }
+
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10) - 1; // JS months are 0-indexed
+        const day = parseInt(match[3], 10);
+
+        const hasTime = !!match[4];
+
+        if (!hasTime) {
+            utcDate = new Date(Date.UTC(year, month, day));
+            // Strict validation: Ensure JavaScript didn't silently roll the date over
+            if (
+                utcDate.getUTCFullYear() !== year ||
+                utcDate.getUTCMonth() !== month ||
+                utcDate.getUTCDate() !== day
+            ) {
+                return '';
+            }
+        } else {
+            utcDate = new Date(trimmed);
+            if (isNaN(utcDate.getTime())) {
+                return '';
+            }
+        }
+    } else {
+        return '';
+    }
+
+    // Format explicitly using the UTC timezone and consistent fields
+    return utcDate.toLocaleDateString(resolvedLocale, {
+        timeZone: 'UTC',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+}
+
 /*
  * Converts a date object to a non localized string in the format HH:MM
  */
