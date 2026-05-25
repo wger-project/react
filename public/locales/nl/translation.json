@@ -349,5 +349,9 @@
     "durationWeeks": "{{number}} weken",
     "durationWeeksDays": "{{nrWeeks}} weken, {{nrDays}} dagen",
     "undo": "Ongedaan maken",
-    "successfullyDeleted": "Succesvol verwijderd"
+    "successfullyDeleted": "Succesvol verwijderd",
+    "trophies": {
+        "trophies": "Trofeeën"
+    },
+    "preview": "Voor­vertoning"
 }
