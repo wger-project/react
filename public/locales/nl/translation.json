@@ -141,7 +141,9 @@
         "valueRemaining": "resterend",
         "difference": "Verschil",
         "planDeleteInfo": "Hierdoor worden ook alle voedingsdagboekvermeldingen verwijderd",
-        "valueTooMany": "teveel"
+        "valueTooMany": "teveel",
+        "filterVegan": "Veganistisch",
+        "filterVegetarian": "Vegetarisch"
     },
     "bmi": {
         "overweight": "Overgewicht",
@@ -269,7 +271,8 @@
             "forced": "Geforceerd",
             "tut": "Tijd onder spanning",
             "iso": "Isometrische greep",
-            "jump": "Spring"
+            "jump": "Spring",
+            "warmup": "Opwarming"
         },
         "day": {
             "custom": "Aangepast",
