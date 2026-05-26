@@ -39,7 +39,8 @@ describe('measurement service tests', () => {
             {
                 "id": 1,
                 "name": "Weight",
-                "unit": "kg"
+                "unit": "kg",
+                "dynamic_type": "NONE"
             }
         ]
     };
@@ -47,7 +48,8 @@ describe('measurement service tests', () => {
     const measurementDetailResponse = {
         "id": 1,
         "name": "Weight",
-        "unit": "kg"
+        "unit": "kg",
+        "dynamic_type": "NONE"
     };
 
 
@@ -88,7 +90,7 @@ describe('measurement service tests', () => {
         expect(axios.get).toHaveBeenCalledTimes(2);
 
         expect(result).toStrictEqual([
-            new MeasurementCategory(1, "Weight", "kg", [
+            new MeasurementCategory(1, "Weight", "kg", "NONE", [
                 new MeasurementEntry(1, 1, new Date("2021-01-01"), 80, "")
             ])
         ]);
@@ -108,38 +110,38 @@ describe('measurement service tests', () => {
         expect(axios.get).toHaveBeenCalledTimes(2);
 
         expect(result).toStrictEqual(
-            new MeasurementCategory(1, "Weight", "kg", [
+            new MeasurementCategory(1, "Weight", "kg", "NONE", [
                 new MeasurementEntry(1, 1, new Date("2021-01-01"), 80, "")
             ])
         );
     });
 
-    test('addMeasurementCategory POSTs name + unit and returns the parsed category', async () => {
+    test('addMeasurementCategory POSTs name + unit + dynamic_type and returns the parsed category', async () => {
         (axios.post as Mock).mockResolvedValue({
-            data: { id: 9, name: "Body fat", unit: "%" },
+            data: { id: 9, name: "Body fat", unit: "%", dynamic_type: "NONE" },
         });
 
-        const result = await addMeasurementCategory({ name: "Body fat", unit: "%" });
+        const result = await addMeasurementCategory({ name: "Body fat", unit: "%", dynamic_type: "NONE" });
 
         expect(axios.post).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.post as Mock).mock.calls[0];
         expect(url).toMatch(/\/api\/v2\/measurement-category\/$/);
-        expect(body).toEqual({ name: "Body fat", unit: "%" });
+        expect(body).toEqual({ name: "Body fat", unit: "%", dynamic_type: "NONE" });
         expect(result).toBeInstanceOf(MeasurementCategory);
         expect(result.id).toBe(9);
     });
 
     test('editMeasurementCategory PATCHes /measurement-category/<id>/', async () => {
         (axios.patch as Mock).mockResolvedValue({
-            data: { id: 9, name: "Renamed", unit: "%" },
+            data: { id: 9, name: "Renamed", unit: "%", dynamic_type: "NONE" },
         });
 
-        const result = await editMeasurementCategory({ id: 9, name: "Renamed", unit: "%" });
+        const result = await editMeasurementCategory({ id: 9, name: "Renamed", unit: "%", dynamic_type: "NONE" });
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.patch as Mock).mock.calls[0];
         expect(url).toMatch(/\/api\/v2\/measurement-category\/9\/$/);
-        expect(body).toEqual({ name: "Renamed", unit: "%" });
+        expect(body).toEqual({ name: "Renamed", unit: "%", dynamic_type: "NONE" });
         expect(result.name).toBe("Renamed");
     });
 

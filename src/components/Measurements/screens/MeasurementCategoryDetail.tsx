@@ -23,15 +23,21 @@ export const MeasurementCategoryDetail = () => {
         return <LoadingPlaceholder />;
     }
 
+    // Safety check: if the query failed or returned nothing
+    if (categoryQuery.isError || !categoryQuery.data) {
+        return <p>Error loading category data. Check if category {categoryId} exists.</p>;
+    }
+
+    // Now it is safe to access .name
     return <WgerContainerRightSidebar
-        title={categoryQuery.data!.name}
-        optionsMenu={<CategoryDetailDropdown category={categoryQuery.data!} />}
+        title={categoryQuery.data.name}
+        optionsMenu={<CategoryDetailDropdown category={categoryQuery.data} />}
         mainContent={
             <Stack spacing={2}>
-                <MeasurementChart category={categoryQuery.data!} />
-                <CategoryDetailDataGrid category={categoryQuery.data!} />
+                <MeasurementChart category={categoryQuery.data} />
+                <CategoryDetailDataGrid category={categoryQuery.data} />
             </Stack>
         }
-        fab={<AddMeasurementEntryFab />}
+        fab={categoryQuery.data.dynamic_type.includes('NONE') ? <AddMeasurementEntryFab /> : undefined}
     />;
 };

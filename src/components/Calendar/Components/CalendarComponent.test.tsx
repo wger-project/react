@@ -54,6 +54,7 @@ describe('CalendarComponent', () => {
                 1,
                 "Body Fat",
                 "%",
+                "NONE",
                 [new MeasurementEntry(1, 1, new Date(currentYear, currentMonth, 1, 12, 0), 20, "Normal")]
             ),
         ]));

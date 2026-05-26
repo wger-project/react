@@ -1,6 +1,13 @@
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { Adapter } from "@/core/lib/Adapter";
 
+export type DynamicMeasurementType = 'NONE' | 'BMI'; // add future types when more dynamic types added to Measurement category in Django
+
+export const DYNAMIC_TYPE_DEFAULTS: Record<string, { name: string, unit: string }> = {
+    'BMI': { name: 'BMI', unit: 'kg/m²' },
+    // add future types here
+};
+
 export class MeasurementCategory {
 
     entries: MeasurementEntry[] = [];
@@ -9,6 +16,7 @@ export class MeasurementCategory {
         public id: number,
         public name: string,
         public unit: string,
+        public dynamic_type: DynamicMeasurementType = 'NONE',
         entries?: MeasurementEntry[]
     ) {
         if (entries) {
@@ -26,14 +34,14 @@ export class MeasurementCategory {
     }
 }
 
-
 class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any) {
         return new MeasurementCategory(
             item.id,
             item.name,
-            item.unit
+            item.unit,
+            item.dynamic_type
         );
     }
 
@@ -42,6 +50,7 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             id: item.id,
             name: item.name,
             unit: item.unit,
+            dynamic_type: item.dynamic_type
         };
     }
 }

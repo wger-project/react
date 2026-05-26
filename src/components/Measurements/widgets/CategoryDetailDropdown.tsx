@@ -65,7 +65,7 @@ export const CategoryDetailDropdown = (props: { category: MeasurementCategory })
                     },
                 }}
             >
-                <MenuItem onClick={handleEdit}>{t("edit")}</MenuItem>
+                {props.category.dynamic_type === 'NONE' && <MenuItem onClick={handleEdit}>{t("edit")}</MenuItem>}
                 <MenuItem onClick={handleDelete}>{t("delete")}</MenuItem>
             </Menu>
 

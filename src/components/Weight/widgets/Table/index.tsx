@@ -15,6 +15,7 @@ import {
     GridRowModesModel,
     GridRowsProp,
 } from "@mui/x-data-grid";
+import { useProfileQuery } from "@/components/User";
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import { WeightEntryFab } from "@/components/Weight/widgets/Table/Fab/Fab";
 import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "@/components/Weight/queries";
@@ -29,19 +30,32 @@ export interface WeightTableProps {
     weights: WeightEntry[];
 }
 
-const buildRows = (weights: WeightEntry[]): GridRowsProp =>
+const buildRows = (weights: WeightEntry[], height?: number, isMetric: boolean = true): GridRowsProp =>
     processTimeSeries(weights, e => e.weight).map((row) => ({
         id: row.entry.id,
         date: row.entry.date,
         weight: row.entry.weight,
+        bmi: calculateBMI(row.entry.weight, height, isMetric),
         change: +row.change.toFixed(2),
         totalChange: +row.totalChange.toFixed(2),
         days: +row.days.toFixed(1),
     }));
 
+export const calculateBMI = (weight: number, height?: number, isMetric: boolean = true): number | null => {
+    if (!height || height <= 0) return null;
+    
+    const weightInKg = isMetric ? weight : weight * 0.453592;
+    const heightInMeters = height / 100;
+    
+    return +(weightInKg / (heightInMeters ** 2)).toFixed(2);
+};
+
 export const WeightTable = ({ weights }: WeightTableProps) => {
     const [t] = useTranslation();
-    const rows = buildRows(weights);
+    const profileQuery = useProfileQuery();
+    const height = profileQuery.data?.height;
+    const isMetric = profileQuery.data?.useMetric ?? true;
+    const rows = buildRows(weights, height, isMetric);
     const editEntryQuery = useEditWeightEntryQuery();
     const deleteEntryQuery = useDeleteWeightEntryQuery();
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -101,6 +115,13 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             type: 'number',
             width: 100,
             editable: true,
+        },
+        {
+            field: 'bmi',
+            headerName: 'BMI',
+            type: 'number',
+            width: 140,
+            editable: false,
         },
         {
             field: 'change',

@@ -28,6 +28,7 @@ export const TEST_MEASUREMENT_CATEGORY_1 = new MeasurementCategory(
     1,
     "Biceps",
     "cm",
+    "NONE",
     TEST_MEASUREMENT_ENTRIES_1,
 );
 
@@ -36,5 +37,6 @@ export const TEST_MEASUREMENT_CATEGORY_2 = new MeasurementCategory(
     2,
     "Body fat",
     "%",
+    "NONE",
     TEST_MEASUREMENT_ENTRIES_2
 );
