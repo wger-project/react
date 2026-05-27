@@ -198,10 +198,18 @@ export const TEST_NUTRITIONAL_PLAN_2 = new NutritionalPlan({
 TEST_NUTRITIONAL_PLAN_2.meals = [TEST_MEAL_4, TEST_MEAL_5];
 
 
+// Recognisable test-marker UUIDs for the API response envelopes below
+export const RESPONSE_PLAN_UUID = 'aaaaaaaa-0000-0000-0000-000000000101';
+export const RESPONSE_PLAN_UUID_2 = 'aaaaaaaa-0000-0000-0000-000000000123';
+export const RESPONSE_MEAL_UUID = 'bbbbbbbb-0000-0000-0000-000000000078';
+export const RESPONSE_MEAL_ITEM_UUID = 'cccccccc-0000-0000-0000-000000000042';
+export const RESPONSE_MEAL_ITEM_UUID_2 = 'cccccccc-0000-0000-0000-000000000043';
+export const RESPONSE_DIARY_UUID = 'dddddddd-0000-0000-0000-000000000009';
+
 // API envelope for a single meal (POST/PATCH /meal/ response).
 export const responseMealDetail = {
-    id: 78,
-    plan: 123,
+    id: RESPONSE_MEAL_UUID,
+    plan: RESPONSE_PLAN_UUID_2,
     order: 2,
     time: '12:30',
     name: 'Second breakfast',
@@ -222,16 +230,16 @@ export const responseMealItemsForMeal = {
     previous: null,
     results: [
         {
-            id: 42,
-            meal: 78,
+            id: RESPONSE_MEAL_ITEM_UUID,
+            meal: RESPONSE_MEAL_UUID,
             ingredient: 101,
             weight_unit: null,
             order: 3,
             amount: '120.00',
         },
         {
-            id: 43,
-            meal: 78,
+            id: RESPONSE_MEAL_ITEM_UUID_2,
+            meal: RESPONSE_MEAL_UUID,
             ingredient: 102,
             weight_unit: null,
             order: 1,
@@ -242,8 +250,8 @@ export const responseMealItemsForMeal = {
 
 // Single mealitem envelope (POST/PATCH /mealitem/ response)
 export const responseMealItemDetail = {
-    id: 42,
-    meal: 78,
+    id: RESPONSE_MEAL_ITEM_UUID,
+    meal: RESPONSE_MEAL_UUID,
     ingredient: 101,
     weight_unit: null,
     order: 3,
@@ -252,7 +260,7 @@ export const responseMealItemDetail = {
 
 // Single nutritional plan envelope (POST/PATCH /nutritionplan/ response)
 export const responseNutritionalPlanDetail = {
-    id: 101,
+    id: RESPONSE_PLAN_UUID,
     creation_date: '2023-01-01',
     start: '2023-01-01',
     end: '2023-12-31',
@@ -288,9 +296,9 @@ export const responseDiaryEntries = {
     previous: null,
     results: [
         {
-            id: 9,
-            plan: 101,
-            meal: 78,
+            id: RESPONSE_DIARY_UUID,
+            plan: RESPONSE_PLAN_UUID,
+            meal: RESPONSE_MEAL_UUID,
             ingredient: 101,
             weight_unit: null,
             amount: '150.00',
@@ -301,9 +309,9 @@ export const responseDiaryEntries = {
 
 // Single diary entry envelope (POST/PATCH /nutritiondiary/ response)
 export const responseDiaryEntryDetail = {
-    id: 9,
-    plan: 101,
-    meal: 78,
+    id: RESPONSE_DIARY_UUID,
+    plan: RESPONSE_PLAN_UUID,
+    meal: RESPONSE_MEAL_UUID,
     ingredient: 101,
     weight_unit: null,
     amount: '150.00',

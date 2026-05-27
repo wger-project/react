@@ -139,7 +139,11 @@ describe("Test the nutritional plan model", () => {
     });
 
     test('7-day average returns zero values when no entries exist', () => {
-        const plan = new NutritionalPlan({ id: 1, creationDate: new Date(), description: 'test' });
+        const plan = new NutritionalPlan({
+            id: 'aaaaaaaa-0000-0000-0000-000000000001',
+            creationDate: new Date(),
+            description: 'test'
+        });
         const values = plan.loggedNutritionalValues7DayAvg;
 
         expect(values.energy).toBe(0);
@@ -151,7 +155,11 @@ describe("Test the nutritional plan model", () => {
     test('7-day average divides total by 7 without rounding', () => {
         // INGREDIENT_3: energy=60, protein=0.89, carbs=14, sugar=11.78, sodium=0.006 per 100g
         // ENTRY_3: 200g → energy=120; ENTRY_4: 20g → energy=12; total=132, avg=132/7≈18.857
-        const plan = new NutritionalPlan({ id: 1, creationDate: new Date(), description: 'test' });
+        const plan = new NutritionalPlan({
+            id: 'aaaaaaaa-0000-0000-0000-000000000001',
+            creationDate: new Date(),
+            description: 'test'
+        });
         plan.diaryEntries = [TEST_DIARY_ENTRY_3, TEST_DIARY_ENTRY_4];
 
         const values = plan.loggedNutritionalValues7DayAvg;
