@@ -1,17 +1,17 @@
 import { Autocomplete, Button, InputAdornment, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { Meal } from "components/Nutrition/models/meal";
-import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
-import { useAddDiaryEntryQuery, useEditDiaryEntryQuery, useFetchWeightUnitsQuery } from "components/Nutrition/queries";
-import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
+import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "@/components/Nutrition/queries";
+import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToYYYYMMDD } from "utils/date";
+import { dateToYYYYMMDD } from "@/core/lib/date";
 import * as yup from "yup";
 
 const GRAM_UNIT_VALUE = 'g';
@@ -36,10 +36,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
     const [selectedMeal, setSelectedMeal] = useState<string | null>(meal);
 
     const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(entry?.weightUnit ?? null);
-    const [ingredientId, setIngredientId] = useState<number | null>(entry?.ingredientId ?? null);
-
-    const weightUnitsQuery = useFetchWeightUnitsQuery(ingredientId);
-    const weightUnits = weightUnitsQuery.data ?? [];
+    const [weightUnits, setWeightUnits] = useState<NutritionWeightUnit[]>(entry?.ingredient?.weightUnits ?? []);
 
     const validationSchema = yup.object({
         amount: yup
@@ -117,7 +114,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                             callback={(value: Ingredient | null) => {
                                 formik.setFieldTouched('ingredient', true);
                                 formik.setFieldValue('ingredient', value?.id ?? null);
-                                setIngredientId(value?.id ?? null);
+                                setWeightUnits(value?.weightUnits ?? []);
                                 setSelectedUnit(null);
                             }}
                             />

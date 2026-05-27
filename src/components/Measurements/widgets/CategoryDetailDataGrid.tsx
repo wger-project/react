@@ -1,3 +1,9 @@
+import { processTimeSeries } from "@/core/lib/timeSeries";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
+import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
+import { PAGINATION_OPTIONS } from "@/core/lib/consts";
+import { luxonDateTimeToLocale } from "@/core/lib/date";
 import CancelIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
@@ -15,26 +21,20 @@ import {
     GridRowModesModel,
     GridRowsProp,
 } from "@mui/x-data-grid";
-import { MeasurementCategory } from "components/Measurements/models/Category";
-import { MeasurementEntry } from "components/Measurements/models/Entry";
-import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "components/Measurements/queries";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PAGINATION_OPTIONS } from "utils/consts";
-import { luxonDateTimeToLocale } from "utils/date";
 
-const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp => {
-    return entries.map((entry) => {
-        return {
-            id: entry.id,
-            category: entry.category,
-            date: entry.date,
-            value: entry.value,
-            notes: entry.notes
-        };
-    });
-};
+const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp =>
+    processTimeSeries(entries, e => e.value).map((row) => ({
+        id: row.entry.id,
+        date: row.entry.date,
+        value: row.entry.value,
+        notes: row.entry.notes,
+        change: +row.change.toFixed(2),
+        totalChange: +row.totalChange.toFixed(2),
+        days: +row.days.toFixed(1),
+    }));
 
 
 export const CategoryDetailDataGrid = (props: { category: MeasurementCategory }) => {
@@ -62,7 +62,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
     };
 
     const handleDeleteClick = (id: GridRowId) => async () => {
-        console.log('deleting entry', id);
         deleteEntryQuery.mutate(id.toString());
         setRows(rows.filter((row) => row.id !== id));
     };
@@ -96,10 +95,8 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
         return updatedRow;
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const onProcessRowUpdateError = (error: any) => {
-        console.log(error);
-        //setRows(rows.map((row) => (row.id === newRow.id ? newRow : row)));
+    const onProcessRowUpdateError = (error: unknown) => {
+        console.error(error);
     };
 
     const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
@@ -133,6 +130,27 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             },
         },
         {
+            field: 'change',
+            headerName: t('difference'),
+            type: 'number',
+            width: 120,
+            editable: false,
+        },
+        {
+            field: 'totalChange',
+            headerName: t('totalChange'),
+            type: 'number',
+            width: 140,
+            editable: false,
+        },
+        {
+            field: 'days',
+            headerName: t('days'),
+            type: 'number',
+            width: 100,
+            editable: false,
+        },
+        {
             field: 'notes',
             headerName: t('notes'),
             type: 'string',
@@ -151,11 +169,13 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                 if (isInEditMode) {
                     return [
                         <GridActionsCellItem
+                            key="save"
                             icon={<SaveIcon />}
                             label="Save"
                             onClick={handleSaveClick(id)}
                         />,
                         <GridActionsCellItem
+                            key="cancel"
                             icon={<CancelIcon />}
                             label="Cancel"
                             className="textPrimary"
@@ -167,6 +187,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
 
                 return [
                     <GridActionsCellItem
+                        key="edit"
                         icon={<EditIcon />}
                         label="Edit"
                         className="textPrimary"
@@ -174,6 +195,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                         color="inherit"
                     />,
                     <GridActionsCellItem
+                        key="delete"
                         icon={<DeleteIcon />}
                         label="Delete"
                         onClick={handleDeleteClick(id)}

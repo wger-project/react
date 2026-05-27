@@ -1,12 +1,12 @@
-import { Category, CategoryAdapter, } from "components/Exercises/models/category";
-import { Equipment, EquipmentAdapter, } from "components/Exercises/models/equipment";
-import { ExerciseImage, ExerciseImageAdapter, } from "components/Exercises/models/image";
-import { Language } from "components/Exercises/models/language";
-import { Muscle, MuscleAdapter } from "components/Exercises/models/muscle";
-import { Translation, TranslationAdapter } from "components/Exercises/models/translation";
-import { ExerciseVideo, ExerciseVideoAdapter } from "components/Exercises/models/video";
-import { Adapter } from "utils/Adapter";
-import { ENGLISH_LANGUAGE_ID } from "utils/consts";
+import { Category, CategoryAdapter, } from "@/components/Exercises/models/category";
+import { Equipment, EquipmentAdapter, } from "@/components/Exercises/models/equipment";
+import { ExerciseImage, ExerciseImageAdapter, } from "@/components/Exercises/models/image";
+import { Language } from "@/components/Exercises/models/language";
+import { Muscle, MuscleAdapter } from "@/components/Exercises/models/muscle";
+import { Translation, TranslationAdapter } from "@/components/Exercises/models/translation";
+import { ExerciseVideo, ExerciseVideoAdapter } from "@/components/Exercises/models/video";
+import { Adapter } from "@/core/lib/Adapter";
+import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
 
 export type ExerciseConstructorParams = {
     id: number | null;
@@ -130,7 +130,7 @@ export class ExerciseAdapter implements Adapter<Exercise> {
         });
 
         if (!exercise.translations.some(t => t.language === ENGLISH_LANGUAGE_ID)) {
-            console.info(`No english translation found for exercise base ${exercise.uuid}!`);
+            console.warn(`No english translation found for exercise base ${exercise.uuid}!`);
         }
 
         if (exercise.translations.length === 0) {
@@ -167,5 +167,6 @@ export type ImageFormData = {
     objectUrl: string,
     derivativeSourceUrl: string;
     style: number;
+    isAi: boolean;
 };
 

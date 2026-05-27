@@ -3,10 +3,10 @@ import LandscapeOutlinedIcon from '@mui/icons-material/LandscapeOutlined';
 import LandscapeTwoToneIcon from '@mui/icons-material/LandscapeTwoTone';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
-import { Stack, Typography } from "@mui/material";
+import { Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { ImageStyle } from "components/Exercises/models/image";
+import { ImageStyle } from "@/components/Exercises/models/image";
 import { useField } from "formik";
 import * as React from 'react';
 import { useTranslation } from "react-i18next";
@@ -74,5 +74,24 @@ export function ImageStyleToggle(props: { fieldName: string }) {
                 </Stack>
             </ToggleButton>
         </ToggleButtonGroup>
+    );
+}
+
+export function ImageIsAiCheckbox(props: { fieldName: string }) {
+    const [t] = useTranslation();
+    const [field, , helpers] = useField<boolean>(props.fieldName);
+
+    return (
+        <FormControlLabel
+            control={
+                <Checkbox
+                    name={props.fieldName}
+                    checked={!!field.value}
+                    onChange={(e) => helpers.setValue(e.target.checked)}
+                    data-testid="image-is-ai-checkbox"
+                />
+            }
+            label={t('exercises.imageIsAiGenerated')}
+        />
     );
 }

@@ -1,19 +1,16 @@
+import CalendarDayGrid from "@/components/Calendar/Components/CalendarDayGrid";
+import CalendarHeader from "@/components/Calendar/Components/CalendarHeader";
+import { CalendarMeasurement } from "@/components/Calendar/Helpers/CalendarMeasurement";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { useMeasurementsCategoryQuery } from "@/components/Measurements";
+import { DiaryEntry, useNutritionDiaryQuery } from "@/components/Nutrition";
+import { useSessionsQuery, WorkoutSession } from "@/components/Routines";
+import { useBodyWeightQuery, WeightEntry } from "@/components/Weight";
+import { dateToYYYYMMDD, isSameDay } from "@/core/lib/date";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Box, Card, CardContent, CardHeader, useMediaQuery, useTheme } from '@mui/material';
-import { WeightEntry } from "components/BodyWeight/model";
-import { useBodyWeightQuery } from "components/BodyWeight/queries";
-import CalendarDayGrid from "components/Calendar/Components/CalendarDayGrid";
-import CalendarHeader from "components/Calendar/Components/CalendarHeader";
-import { CalendarMeasurement } from "components/Calendar/Helpers/CalendarMeasurement";
-import { LoadingPlaceholder } from "components/Core/LoadingWidget/LoadingWidget";
-import { useMeasurementsCategoryQuery } from "components/Measurements/queries";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { useNutritionDiaryQuery } from "components/Nutrition/queries";
-import { WorkoutSession } from "components/WorkoutRoutines/models/WorkoutSession";
-import { useSessionsQuery } from "components/WorkoutRoutines/queries";
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToYYYYMMDD, isSameDay } from "utils/date";
 import Entries from './Entries';
 
 export interface DayProps {
@@ -65,21 +62,30 @@ const CalendarComponent = (props: { showBorder?: boolean }) => {
     const isLoading = weightsQuery.isLoading || sessionQuery.isLoading || measurementQuery.isLoading || nutritionDiaryQuery.isLoading;
     const isSuccess = weightsQuery.isSuccess && sessionQuery.isSuccess && measurementQuery.isSuccess && nutritionDiaryQuery.isSuccess;
 
-    const categories = measurementQuery.data;
-    const measurements = categories?.flatMap(category =>
-        category.entries.map(entry => new CalendarMeasurement(category.name, category.unit, entry.value, entry.date))
-    ) ?? [];
+    const defaultDay: DayProps = {
+        date: currentDate,
+        weightEntry: undefined,
+        workoutSession: undefined,
+        measurements: [],
+        nutritionLogs: []
+    };
 
-    const getDaysInMonth = (year: number, month: number): DayProps[] => {
+    const days = useMemo(() => {
+        const year = currentYear;
+        const month = currentMonth;
         const date = new Date(year, month, 1);
-        const days: DayProps[] = [];
+        const result: DayProps[] = [];
+
+        const measurements = measurementQuery.data?.flatMap(category =>
+            category.entries.map(entry => new CalendarMeasurement(category.name, category.unit, entry.value, entry.date))
+        ) ?? [];
 
         const firstDayOfMonth = new Date(year, month, 1);
         let dayOfWeek = firstDayOfMonth.getDay();
         dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
 
         for (let i = 0; i < dayOfWeek; i++) {
-            days.push({
+            result.push({
                 date: new Date(year, month, -dayOfWeek + i + 1),
                 weightEntry: undefined,
                 measurements: [],
@@ -89,7 +95,7 @@ const CalendarComponent = (props: { showBorder?: boolean }) => {
         }
 
         while (date.getMonth() === month) {
-            days.push({
+            result.push({
                 date: new Date(date),
                 weightEntry: weightsQuery.data?.find(w => isSameDay(w.date, date)),
                 measurements: measurements.filter(m => isSameDay(m.date, date)) || [],
@@ -104,7 +110,7 @@ const CalendarComponent = (props: { showBorder?: boolean }) => {
         const remainingDays = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
 
         for (let i = 1; i <= remainingDays; i++) {
-            days.push({
+            result.push({
                 date: new Date(year, month + 1, i),
                 weightEntry: undefined,
                 workoutSession: undefined,
@@ -113,21 +119,8 @@ const CalendarComponent = (props: { showBorder?: boolean }) => {
             });
         }
 
-        return days;
-    };
-
-    const defaultDay: DayProps = {
-        date: currentDate,
-        weightEntry: undefined,
-        workoutSession: undefined,
-        measurements: [],
-        nutritionLogs: []
-    };
-
-    const days = useMemo(() =>
-            getDaysInMonth(currentYear, currentMonth),
-        [currentYear, currentMonth, weightsQuery.data, sessionQuery.data, measurementQuery.data, nutritionDiaryQuery.data]
-    );
+        return result;
+    }, [currentYear, currentMonth, weightsQuery.data, sessionQuery.data, measurementQuery.data, nutritionDiaryQuery.data]);
     const [selectedDay, setSelectedDay] = useState<DayProps>(days.find(day => isSameDay(day.date, currentDate)) || defaultDay);
 
     const theme = useTheme();

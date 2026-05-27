@@ -1,5 +1,5 @@
-import { ApiTrophyType, Trophy } from "components/Trophies/models/trophy";
-import { Adapter } from "utils/Adapter";
+import { ApiTrophyType, Trophy } from "@/components/Trophies/models/trophy";
+import { Adapter } from "@/core/lib/Adapter";
 
 export interface ApiUserTrophyType {
     trophy: ApiTrophyType,
@@ -57,10 +57,6 @@ class UserTrophyAdapter implements Adapter<UserTrophyProgression> {
             targetValue: item.target_value,
             progressDisplay: item.progress_display,
         });
-    }
-
-    toJson(item: UserTrophyProgression) {
-        return {};
     }
 }
 

@@ -1,24 +1,34 @@
+import { useAddMealItemQuery, useEditMealItemQuery, useSearchIngredientQuery } from "@/components/Nutrition/queries";
+import { MealItemForm } from "@/components/Nutrition/widgets/forms/MealItemForm";
+import { SEARCH_DEBOUNCE_MS } from "@/components/Nutrition/widgets/IngredientAutocompleter";
+import { searchIngredient } from "@/components/Nutrition/api/ingredient";
+import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
+import { TEST_MEAL_ITEM_1 } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
-import { useAddMealItemQuery, useEditMealItemQuery, useFetchWeightUnitsQuery } from "components/Nutrition/queries";
-import { MealItemForm } from "components/Nutrition/widgets/forms/MealItemForm";
-import { searchIngredient } from "services";
-import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "tests/ingredientTestdata";
-import { TEST_MEAL_ITEM_1 } from "tests/nutritionTestdata";
+import type { Mock } from 'vitest';
 
-jest.mock('components/Nutrition/queries');
-jest.mock('services');
+const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
+vi.mock('@/components/Nutrition/queries');
+vi.mock("@/components/Nutrition/api/ingredient");
+
+// Note: this helper still relies on a real-time sleep rather than waitFor.
+// The MUI Autocomplete flow with a prefilled value has subtle ordering
+// requirements between the typed search, the dropdown render, and ArrowDown+
+// Enter — replacing the sleep with waitFor on searchIngredient changes the
+// outcome of "An existing entry should be updated" (display value differs).
+// Worth revisiting if/when the test expectations are modernized.
 async function fillInEntry(user: UserEvent) {
     const autocomplete = screen.getByTestId('autocomplete');
     const input = within(autocomplete).getByRole('combobox');
     await user.click(autocomplete);
     await user.type(input, 'Bagu');
 
-    // There's a bounce period of 200ms between the input and the search
+    // Wait for debounce
     await act(async () => {
-        await new Promise((r) => setTimeout(r, 250));
+        await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
     });
 
     // Select the first result
@@ -34,19 +44,19 @@ async function fillInEntry(user: UserEvent) {
 
 describe('Test the MealItemForm component', () => {
     const queryClient = new QueryClient();
-    let mutateAddMock = jest.fn();
-    let mutateEditMock = jest.fn();
-    let closeFnMock = jest.fn();
+    let mutateAddMock = vi.fn();
+    let mutateEditMock = vi.fn();
+    let closeFnMock = vi.fn();
 
     beforeEach(() => {
-        mutateAddMock = jest.fn();
-        mutateEditMock = jest.fn();
-        closeFnMock = jest.fn();
+        mutateAddMock = vi.fn();
+        mutateEditMock = vi.fn();
+        closeFnMock = vi.fn();
 
-        (useEditMealItemQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
-        (useAddMealItemQuery as jest.Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
-        (useFetchWeightUnitsQuery as jest.Mock).mockImplementation(() => ({ data: [] }));
-        (searchIngredient as jest.Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
+        (useEditMealItemQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        (useAddMealItemQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        (searchIngredient as Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
+        (useSearchIngredientQuery as Mock).mockImplementation(() => searchIngredient);
     });
 
     test('A new entry should be added', async () => {

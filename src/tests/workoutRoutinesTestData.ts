@@ -1,17 +1,17 @@
-import { BaseConfig } from "components/WorkoutRoutines/models/BaseConfig";
-import { Day } from "components/WorkoutRoutines/models/Day";
-import { RepetitionUnit } from "components/WorkoutRoutines/models/RepetitionUnit";
-import { Routine } from "components/WorkoutRoutines/models/Routine";
-import { RoutineDayData } from "components/WorkoutRoutines/models/RoutineDayData";
-import { RoutineLogData } from "components/WorkoutRoutines/models/RoutineLogData";
-import { SetConfigData } from "components/WorkoutRoutines/models/SetConfigData";
-import { Slot } from "components/WorkoutRoutines/models/Slot";
-import { SlotData } from "components/WorkoutRoutines/models/SlotData";
-import { SlotEntry } from "components/WorkoutRoutines/models/SlotEntry";
-import { WeightUnit } from "components/WorkoutRoutines/models/WeightUnit";
-import { WorkoutSession } from "components/WorkoutRoutines/models/WorkoutSession";
-import { testExerciseBenchPress, testExerciseSquats } from "tests/exerciseTestdata";
-import { testWorkoutLogs } from "tests/workoutLogsRoutinesTestData";
+import { BaseConfig } from "@/components/Routines/models/BaseConfig";
+import { Day } from "@/components/Routines/models/Day";
+import { RepetitionUnit } from "@/components/Routines/models/RepetitionUnit";
+import { Routine } from "@/components/Routines/models/Routine";
+import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
+import { RoutineLogData } from "@/components/Routines/models/RoutineLogData";
+import { SetConfigData } from "@/components/Routines/models/SetConfigData";
+import { Slot } from "@/components/Routines/models/Slot";
+import { SlotData } from "@/components/Routines/models/SlotData";
+import { SlotEntry } from "@/components/Routines/models/SlotEntry";
+import { WeightUnit } from "@/components/Routines/models/WeightUnit";
+import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
+import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
+import { testWorkoutLogs } from "@/tests/workoutLogsRoutinesTestData";
 
 export const testWeightUnitKg = new WeightUnit(1, "kg");
 export const testWeightUnitLb = new WeightUnit(2, "lb");
@@ -449,3 +449,230 @@ export const responseRoutineDayData = [
         ]
     }
 ];
+
+
+// Single routine envelope as returned by GET /routine/<id>/
+export const responseSingleRoutineDetail = {
+    id: 1,
+    name: "My first routine!",
+    description: "Well rounded full body routine",
+    created: "2022-01-01T12:34:30+01:00",
+    start: "2024-03-01",
+    end: "2024-04-30",
+    fit_in_week: false,
+    is_template: false,
+    is_public: false,
+};
+
+// Mixed list with one template entry, used to verify that getRoutinesShallow
+// filters templates out.
+export const responseRoutinesShallowWithTemplate = {
+    count: 3,
+    next: null,
+    previous: null,
+    results: [
+        ...responseApiWorkoutRoutine.results,
+        {
+            id: 99,
+            name: "A template",
+            description: "",
+            created: "2024-01-01T12:34:30+01:00",
+            start: "2024-01-01",
+            end: "2024-04-01",
+            fit_in_week: false,
+            is_template: true,
+            is_public: false,
+        },
+    ],
+};
+
+// Empty paginated response, useful for the "no active routine" branch.
+export const responseEmptyRoutineList = {
+    count: 0,
+    next: null,
+    previous: null,
+    results: [],
+};
+
+export const responsePrivateTemplate = {
+    count: 1,
+    next: null,
+    previous: null,
+    results: [
+        {
+            id: 11,
+            name: "My private template",
+            description: "",
+            created: "2024-06-01T00:00:00+00:00",
+            start: "2024-06-01",
+            end: "2024-07-01",
+            fit_in_week: false,
+            is_template: true,
+            is_public: false,
+        },
+    ],
+};
+
+export const responsePublicTemplate = {
+    count: 1,
+    next: null,
+    previous: null,
+    results: [
+        {
+            id: 22,
+            name: "Community template",
+            description: "",
+            created: "2024-06-01T00:00:00+00:00",
+            start: "2024-06-01",
+            end: "2024-07-01",
+            fit_in_week: false,
+            is_template: true,
+            is_public: true,
+        },
+    ],
+};
+
+// Single Routine envelope returned by POST/PATCH /routine/.
+export const responseAddRoutine = {
+    id: 77,
+    name: "New plan",
+    description: "desc",
+    created: "2024-08-01T00:00:00+00:00",
+    start: "2024-08-01",
+    end: "2024-09-01",
+    fit_in_week: true,
+    is_template: false,
+    is_public: false,
+};
+
+export const responseEditRoutine = {
+    id: 42,
+    name: "Edited",
+    description: "updated description",
+    created: "2024-01-01T00:00:00+00:00",
+    start: "2024-08-01",
+    end: "2024-09-01",
+    fit_in_week: false,
+    is_template: false,
+    is_public: false,
+};
+
+// /routine/<id>/structure/ — the day list with empty slots.
+export const responseRoutineStructure = {
+    days: [
+        {
+            id: 100,
+            order: 1,
+            name: "Push day",
+            description: "",
+            is_rest: false,
+            need_logs_to_advance: false,
+            type: "custom",
+            config: null,
+            slots: [],
+        },
+        {
+            id: 101,
+            order: 2,
+            name: "Pull day",
+            description: "",
+            is_rest: false,
+            need_logs_to_advance: false,
+            type: "custom",
+            config: null,
+            slots: [],
+        },
+    ],
+};
+
+// /routine/<id>/logs/ — sessions with their attached logs.
+export const responseRoutineLogData = [
+    {
+        session: {
+            id: 1,
+            day: 5,
+            routine: 1,
+            date: "2024-08-01",
+            notes: "felt good",
+            impression: "3",
+            time_start: "10:00",
+            time_end: "11:00",
+        },
+        logs: [],
+    },
+];
+
+// /routine/<id>/stats/ — fully populated GroupedLogData with one set entry.
+export const responseRoutineStats = {
+    volume: {
+        mesocycle: { exercises: {}, muscle: {}, upper_body: "0", lower_body: "0", total: "0" },
+        iteration: {},
+        weekly: {},
+        daily: {},
+    },
+    intensity: {
+        mesocycle: { exercises: {}, muscle: {}, upper_body: "0", lower_body: "0", total: "0" },
+        iteration: {},
+        weekly: {},
+        daily: {},
+    },
+    sets: {
+        mesocycle: {
+            exercises: { 9: "5" },
+            muscle: { 1: "5" },
+            upper_body: "5",
+            lower_body: "0",
+            total: "5",
+        },
+        iteration: {},
+        weekly: {},
+        daily: {},
+    },
+};
+
+// Single slot entry envelope (POST/PATCH /slot-entry/ response)
+export const responseSlotEntry = {
+    id: 99,
+    slot: 1,
+    exercise: 345,
+    repetition_unit: 1,
+    repetition_rounding: 1,
+    weight_unit: 1,
+    weight_rounding: 1,
+    order: 1,
+    comment: "test",
+    type: "normal",
+    config: null,
+};
+
+// Paginated /setting-repetitionunit/ response
+export const responseRepetitionUnits = {
+    count: 2,
+    next: null,
+    previous: null,
+    results: [
+        { id: 1, name: "Repetitions" },
+        { id: 2, name: "Until failure" },
+    ],
+};
+
+// Paginated /setting-weightunit/ response
+export const responseWeightUnitsList = {
+    count: 2,
+    next: null,
+    previous: null,
+    results: [
+        { id: 1, name: "kg" },
+        { id: 2, name: "lb" },
+    ],
+};
+
+// Empty paginated unit list - shared by both endpoints
+export const responseEmptyUnitList = {
+    count: 0,
+    next: null,
+    previous: null,
+    results: [],
+};
+
+ 

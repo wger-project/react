@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

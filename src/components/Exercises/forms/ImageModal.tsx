@@ -1,12 +1,13 @@
 import { Alert, Box, Button, Grid, Modal, Stack, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
-import { LicenseAuthor } from "components/Common/forms/LicenseAuthor";
-import { LicenseAuthorUrl } from "components/Common/forms/LicenseAuthorUrl";
-import { LicenseDerivativeSourceUrl } from "components/Common/forms/LicenseDerivativeSourceUrl";
-import { LicenseObjectUrl } from "components/Common/forms/LicenseObjectUrl";
-import { LicenseTitle } from "components/Common/forms/LicenseTitle";
+import { LicenseAuthor } from "@/core/forms/LicenseAuthor";
+import { LicenseAuthorUrl } from "@/core/forms/LicenseAuthorUrl";
+import { LicenseDerivativeSourceUrl } from "@/core/forms/LicenseDerivativeSourceUrl";
+import { LicenseObjectUrl } from "@/core/forms/LicenseObjectUrl";
+import { LicenseTitle } from "@/core/forms/LicenseTitle";
 import { Form, Formik } from "formik";
-import { ImageStyleToggle } from "./ImageStyle";
+import { ImageDropZone } from "./ImageDropZone";
+import { ImageIsAiCheckbox, ImageStyleToggle } from "./ImageStyle";
 import { useTranslation } from "react-i18next";
 import { ImageFormData } from "../models/exercise";
 
@@ -54,23 +55,19 @@ export const ImageFormModal = ({
                     {t('exercises.imageDetails')}
                 </Typography>
 
-                <Grid container spacing={2}>
-                    <Grid size={4}>
-                        <img
-                            style={{ width: "100%", borderRadius: '4px' }}
-                            src={image.url}
-                            alt="Preview"
-                        />
-                    </Grid>
-                    <Grid size={8}>
-                        <Formik
-                            // Important: initialValues now come from the 'image' prop
-                            initialValues={image}
-                            enableReinitialize={true} // Allows form to update if 'image' prop changes
-                            onSubmit={onSubmit}
-                        >
-                            {({ submitForm }) => (
-                                <Form>
+                <Formik
+                    // Important: initialValues now come from the 'image' prop
+                    initialValues={image}
+                    enableReinitialize={true} // Allows form to update if 'image' prop changes
+                    onSubmit={onSubmit}
+                >
+                    {({ values, submitForm }) => (
+                        <Form>
+                            <Grid container spacing={2}>
+                                <Grid size={4}>
+                                    <ImageDropZone />
+                                </Grid>
+                                <Grid size={8}>
                                     <Stack spacing={2}>
                                         <LicenseTitle fieldName={'title'} />
                                         <LicenseObjectUrl fieldName={'objectUrl'} />
@@ -78,7 +75,8 @@ export const ImageFormModal = ({
                                         <LicenseAuthorUrl fieldName={'authorUrl'} />
                                         <LicenseDerivativeSourceUrl fieldName={'derivativeSourceUrl'} />
                                         <ImageStyleToggle fieldName={'style'} />
-                                        
+                                        <ImageIsAiCheckbox fieldName={'isAi'} />
+
                                         <Alert icon={<InfoIcon fontSize="inherit" />} severity="info">
                                             By submitting this image, you agree to release it under the <a
                                             href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank"
@@ -88,21 +86,22 @@ export const ImageFormModal = ({
                                             a license compatible with CC BY-SA 4.0.
                                         </Alert>
                                     </Stack>
+                                </Grid>
+                            </Grid>
 
-                                    <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
-                                        <Button 
-                                            variant="contained" 
-                                            onClick={submitForm}
-                                            data-testid="submit-edit-image-form"
-                                        >
-                                            {submitLabel}
-                                        </Button>
-                                    </Stack>
-                                </Form>
-                            )}
-                        </Formik>
-                    </Grid>
-                </Grid>
+                            <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
+                                <Button
+                                    variant="contained"
+                                    onClick={submitForm}
+                                    disabled={!values.url}
+                                    data-testid="submit-edit-image-form"
+                                >
+                                    {submitLabel}
+                                </Button>
+                            </Stack>
+                        </Form>
+                    )}
+                </Formik>
             </Box>
         </Modal>
     );

@@ -1,5 +1,5 @@
-import { trophyType } from "components/Trophies/models/trophy";
-import { UserTrophyProgression } from "components/Trophies/models/userTrophyProgression";
+import { trophyType } from "@/components/Trophies/models/trophy";
+import { UserTrophyProgression } from "@/components/Trophies/models/userTrophyProgression";
 
 
 describe('Test the UserTrophyProgression model', () => {

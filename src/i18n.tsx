@@ -48,5 +48,5 @@ const DummyComponent = () => {
     t("server.lb");
     t("server.none__bodyweight_exercise_");
 
-    return (<p></p>);
+    return (<p />);
 };

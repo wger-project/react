@@ -1,9 +1,9 @@
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
-import i18n from "i18n";
-import { Adapter } from "utils/Adapter";
-import { numberGramLocale } from "utils/numbers";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
+import i18n from "@/i18n";
+import { Adapter } from "@/core/lib/Adapter";
+import { numberGramLocale } from "@/core/lib/numbers";
 
 export interface ApiNutritionDiaryType {
     id: string,
@@ -72,7 +72,6 @@ export class DiaryEntry {
         if (this.ingredient) {
             return NutritionalValues.fromIngredient(this.ingredient, this.amount, this.weightUnit);
         }
-        console.log('Diary entry has no ingredient, returning empty NutritionalValues object');
         return new NutritionalValues();
     }
 

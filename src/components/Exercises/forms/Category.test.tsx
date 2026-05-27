@@ -1,29 +1,29 @@
+import { EditExerciseCategory } from "@/components/Exercises/forms/Category";
+import { useCategoriesQuery, useEditExerciseQuery } from "@/components/Exercises/queries";
+import { useProfileQuery } from "@/components/User";
+import { testCategories } from "@/tests/exerciseTestdata";
+import { testProfileDataVerified } from "@/tests/userTestdata";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { EditExerciseCategory } from "components/Exercises/forms/Category";
-import { useCategoriesQuery } from "components/Exercises/queries";
-import { useProfileQuery } from "components/User/queries/profile";
 import React from "react";
-import { editExercise } from "services";
-import { testCategories } from "tests/exerciseTestdata";
-import { testProfileDataVerified } from "tests/userTestdata";
+import type { Mock } from 'vitest';
 
-jest.mock("components/User/queries/profile");
-jest.mock("components/Exercises/queries");
-jest.mock("services");
+vi.mock("@/components/User/queries/profile");
+vi.mock("@/components/Exercises/queries");
 
 describe("Test the edit widget to live edit the category", () => {
 
     test('Clicking on a category immediately fires the request', async () => {
 
         // Arrange
-        (useCategoriesQuery as jest.Mock).mockImplementation(() => (
+        const editMutateMock = vi.fn();
+        (useCategoriesQuery as Mock).mockImplementation(() => (
             { isSuccess: true, data: testCategories }
         ));
-        (useProfileQuery as jest.Mock).mockImplementation(() => (
+        (useProfileQuery as Mock).mockImplementation(() => (
             { isSuccess: true, data: testProfileDataVerified }
         ));
-        (editExercise as jest.Mock).mockImplementation(() => (100));
+        (useEditExerciseQuery as Mock).mockImplementation(() => ({ mutateAsync: editMutateMock }));
         const user = userEvent.setup();
 
         // Act
@@ -43,7 +43,10 @@ describe("Test the edit widget to live edit the category", () => {
         const chest = await screen.findByText(/chest/i);
         await user.click(chest);
 
-        // eslint-disable-next-line camelcase
-        expect(editExercise).toHaveBeenCalledWith(100, { category: 3, license_author: "admin" });
+        expect(editMutateMock).toHaveBeenCalledWith({
+            id: 100,
+
+            data: { category: 3, license_author: "admin" },
+        });
     });
 });

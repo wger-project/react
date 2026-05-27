@@ -65,7 +65,14 @@
     "imageStyleLowPoly": "Niedrig-Poly",
     "imageStyleOther": "andere",
     "imageDetails": "Bilddetails",
-    "swapExercise": "Übungen tauschen"
+    "swapExercise": "Übungen tauschen",
+    "exactMatch": "Exakte Übereinstimmung",
+    "replacementCannotBeSame": "Der Ersatz kann nicht dieselbe Übung sein, die gelöscht wird.",
+    "transferMediaLabel": "Übertrage Medien auf die Ersatzübung",
+    "transferTranslationsLabel": "Übertrage Übersetzungen auf den Ersatz (überspringt Sprachen, die bereits vorhanden sind)",
+    "imageIsAiGenerated": "Bild wurde mit KI generiert",
+    "dropOrClickImage": "Ziehe ein Bild hierher oder klicke, um auszuwählen",
+    "addImage": "Bild hinzufügen"
   },
   "noResults": "Keine Ergebnisse",
   "noResultsDescription": "Keine Ergebnisse für diese Suche gefunden, bitte reduziere die Anzahl der Filter.",
@@ -206,7 +213,8 @@
       "dropSet": "Absteigender Satz",
       "tut": "Zeit unter Spannung",
       "iso": "Isometrischer Halt",
-      "jump": "Sprung"
+      "jump": "Sprung",
+      "warmup": "Aufwärmen"
     },
     "impressionBad": "Schlecht",
     "newDay": "Neuer Tag",
@@ -228,7 +236,9 @@
       "rft": "Runden auf Zeit",
       "afap": "So schnell wie möglich",
       "tabata": "Tabata"
-    }
+    },
+    "addSet": "Satz hinzufügen",
+    "setNr": "Satz {{number}}"
   },
   "name": "Name",
   "cancel": "Abbrechen",
@@ -305,7 +315,13 @@
     "logThisMealItem": "Diese Zutat unverändert in das Ernährungstagebuch eintragen",
     "onlyLoggingHelpText": "Nur Kalorien verfolgen. Markiere das Kästchen, wenn du nur deine Kalorien protokollieren möchtest und keinen detaillierten Ernährungsplan mit spezifischen Mahlzeiten einrichten willst",
     "goalFiber": "Ballaststoffziel",
-    "logThisMeal": "Dieses Gericht unverändert in das Ernährungstagebuch eintragen"
+    "logThisMeal": "Dieses Gericht unverändert in das Ernährungstagebuch eintragen",
+    "filterVegan": "Vegan",
+    "filterVegetarian": "Vegetarisch",
+    "filterNutriscore": "Nährwertfilter",
+    "filterNutriscoreOff": "Aus",
+    "filterNutriscoreNoFilter": "Kein Filter",
+    "filterNutriscoreOrBetter": "{{grade}} oder besser"
   },
   "downloadAsPdf": "Download als PDF",
   "total": "Gesamt",
@@ -356,5 +372,15 @@
   "core": {
     "exitEditMode": "Bearbeitungsmodus verlassen",
     "customize": "Anpassen"
-  }
+  },
+  "preview": "Vorschau",
+  "useMarkdownHint": "Sie können simples Markdown verwenden, um den Text zu formatieren: *kursiv*, **fett**, - Liste",
+  "trophies": {
+    "trophies": "Trophäen"
+  },
+  "totalChange": "Alle Änderungen",
+  "currentTrend": "Aktueller Trend",
+  "mean": "Mittelwert",
+  "trend": "Trend",
+  "variance": "Varianz"
 }

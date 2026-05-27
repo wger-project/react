@@ -1,5 +1,5 @@
-import { MeasurementCategory } from "components/Measurements/models/Category";
-import { MeasurementEntry } from "components/Measurements/models/Entry";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 
 // Recognisable test-marker UUIDs matching the Django fixtures convention
 const CATEGORY_1 = 'cccccccc-cccc-cccc-cccc-000000000001';

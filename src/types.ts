@@ -1,5 +1,4 @@
-import { AlertColor } from "@mui/material";
-import { ApiIngredientThumbnailType } from "components/Nutrition/models/IngredientImageThumbnails";
+import { ApiIngredientThumbnailType } from "@/components/Nutrition/models/IngredientImageThumbnails";
 
 export interface ApiBodyWeightType {
     id: number,
@@ -82,6 +81,7 @@ export interface ApiIngredientType {
     nutriscore: NutriScoreValue | null,
     image: ApiIngredientImageType | null,
     thumbnails: ApiIngredientThumbnailType | null,
+    weight_units: ApiIngredientWeightUnitType[],
 }
 
 export type ApiIngredientImageType = {
@@ -137,13 +137,4 @@ export interface ApiMeasurementEntryType {
 export interface ApiEquipmentType {
     id: number,
     name: string,
-}
-
-export interface Notification {
-    notify: boolean;
-    message: string;
-    severity: AlertColor | undefined;
-    title: string;
-    type: "other" | "delete" | undefined;
-    undo?: boolean;
 }

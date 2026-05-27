@@ -1,10 +1,10 @@
 import PhotoIcon from "@mui/icons-material/Photo";
 import { Avatar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
-import { DiaryEntry } from "components/Nutrition/models/diaryEntry";
-import { MealItem } from "components/Nutrition/models/mealItem";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { useTranslation } from "react-i18next";
-import { numberGramLocale, numberLocale } from "utils/numbers";
+import { numberGramLocale, numberLocale } from "@/core/lib/numbers";
 
 const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
     const [t, i18n] = useTranslation();
@@ -52,8 +52,8 @@ export const IngredientDetailTable = (props: {
         <Table>
             <TableHead>
                 <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
+                    <TableCell />
+                    <TableCell />
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.energy')}</TableCell>
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.protein')}</TableCell>
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.carbohydrates')}</TableCell>

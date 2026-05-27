@@ -1,14 +1,13 @@
 import { Button, InputAdornment, MenuItem, Select, Stack, TextField } from "@mui/material";
-import { Ingredient } from "components/Nutrition/models/Ingredient";
-import { MealItem } from "components/Nutrition/models/mealItem";
-import { NutritionWeightUnit } from "components/Nutrition/models/weightUnit";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
+import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
 import {
     useAddMealItemQuery,
     useDeleteMealItemQuery,
     useEditMealItemQuery,
-    useFetchWeightUnitsQuery
-} from "components/Nutrition/queries";
-import { IngredientAutocompleter } from "components/Nutrition/widgets/IngredientAutcompleter";
+} from "@/components/Nutrition/queries";
+import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
 import { Form, Formik } from "formik";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -28,10 +27,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
     const deleteMealItemQuery = useDeleteMealItemQuery(planId);
 
     const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(item?.weightUnit ?? null);
-    const [ingredientId, setIngredientId] = useState<number | null>(item?.ingredientId ?? null);
-
-    const weightUnitsQuery = useFetchWeightUnitsQuery(ingredientId);
-    const weightUnits = weightUnitsQuery.data ?? [];
+    const [weightUnits, setWeightUnits] = useState<NutritionWeightUnit[]>(item?.ingredient?.weightUnits ?? []);
 
     const handleDelete = () => {
         if (item) {
@@ -107,7 +103,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                         <IngredientAutocompleter
                             callback={(value: Ingredient | null) => {
                                 formik.setFieldValue('ingredient', value ? value.id : null);
-                                setIngredientId(value?.id ?? null);
+                                setWeightUnits(value?.weightUnits ?? []);
                                 setSelectedUnit(null);
                             }}
                             initialIngredient={item ? item.ingredient : null}

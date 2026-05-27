@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToLocale } from "utils/date";
+import { dateToLocale } from "@/core/lib/date";
 import { DayProps } from "./CalendarComponent";
 
 interface LogProps {
@@ -123,8 +123,8 @@ const Entries: React.FC<LogProps> = ({ selectedDay, showBorder }) => {
                         </ListItem>
                         <Collapse in={openSession} timeout="auto" unmountOnExit>
                             <List sx={{ pl: 4, pt: 0 }}>
-                                {selectedDay.workoutSession.logs.map((log, key) => (
-                                    <ListItem key={key} dense>
+                                {selectedDay.workoutSession.logs.map((log) => (
+                                    <ListItem key={log.id} dense>
                                         <ListItemText
                                             primary={log.exerciseObj?.getTranslation().name}
                                             secondary={`${log.repetitions} × ${log.weight} `}
@@ -148,8 +148,8 @@ const Entries: React.FC<LogProps> = ({ selectedDay, showBorder }) => {
                         </ListItem>
                         <Collapse in={openNutritionDiary} timeout="auto" unmountOnExit>
                             <List sx={{ pl: 4, pt: 0 }}>
-                                {selectedDay.nutritionLogs.map((log, key) => (
-                                    <ListItem key={key} dense>
+                                {selectedDay.nutritionLogs.map((log) => (
+                                    <ListItem key={log.id} dense>
                                         <ListItemText
                                             primary={log.ingredient?.name}
                                             secondary={`${log.amount} ${t('nutrition.gramShort')}`}

@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { NUTRI_SCORES, NutriScoreValue } from "types";
+import { NUTRI_SCORES, NutriScoreValue } from "@/types";
 
 const NUTRISCORE_COLORS: Record<NutriScoreValue, string> = {
     a: '#0d8949',

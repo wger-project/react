@@ -1,5 +1,5 @@
-import { MeasurementEntry } from "components/Measurements/models/Entry";
-import { Adapter } from "utils/Adapter";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
+import { Adapter } from "@/core/lib/Adapter";
 
 export class MeasurementCategory {
 

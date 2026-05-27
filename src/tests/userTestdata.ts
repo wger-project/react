@@ -1,4 +1,4 @@
-import { Profile } from "components/User/models/profile";
+import { Profile } from "@/components/User/models/profile";
 
 export const testProfileDataVerified = new Profile({
     username: 'admin',
@@ -27,17 +27,17 @@ export const testProfileDataNotVerified = new Profile({
 export const testProfileApiResponse = {
     username: 'admin',
     email: 'root@example.com',
-    // eslint-disable-next-line camelcase
+
     email_verified: true,
-    // eslint-disable-next-line camelcase
+
     date_joined: "2022-04-27 17:52:38.867000+00:00",
-    // eslint-disable-next-line camelcase
+
     is_trustworthy: true,
-    // eslint-disable-next-line camelcase
+
     weight_unit: 'kg',
     height: 180,
-    // eslint-disable-next-line camelcase
+
     weight_rounding: null,
-    // eslint-disable-next-line camelcase
+
     repetitions_rounding: null,
 };

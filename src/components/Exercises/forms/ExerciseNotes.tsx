@@ -36,14 +36,16 @@ export function ExerciseNotes(props: { fieldName: string }) {
                 onChange={event => setNewNoteValue(event.target.value)}
                 error={meta.touched && Boolean(meta.error)}
                 helperText={meta.touched && meta.error ? meta.error : t('exercises.notesHelpText')}
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton onClick={addEntry}>
-                                <AddIcon />
-                            </IconButton>
-                        </InputAdornment>
-                    ),
+                slotProps={{
+                    input: {
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton onClick={addEntry}>
+                                    <AddIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    },
                 }}
             />
         </Grid>
@@ -56,14 +58,16 @@ export function ExerciseNotes(props: { fieldName: string }) {
                 sx={{ mt: 2 }}
                 variant="standard"
                 error={meta.touched && Boolean(meta.error)}
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton onClick={() => deleteAtIndex(index)}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </InputAdornment>
-                    ),
+                slotProps={{
+                    input: {
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton onClick={() => deleteAtIndex(index)}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    },
                 }}
 
             />

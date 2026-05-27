@@ -1,4 +1,4 @@
-import { NutritionalValues } from "components/Nutrition/helpers/nutritionalValues";
+import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
 
 describe('NutritionalValues', () => {
     test('should add nutritional values correctly', () => {

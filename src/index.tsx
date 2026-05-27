@@ -3,18 +3,17 @@ import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { LoadingWidget } from "components/Core/LoadingWidget/LoadingWidget";
-import { IngredientSearch } from "components/Nutrition/components/IngredientSearch";
+import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { IngredientSearch } from "@/components/Nutrition";
 import React, { Suspense } from 'react';
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router } from 'react-router-dom';
-import { WgerRoutes } from "routes";
-import { makeTheme, theme } from 'theme';
+import { WgerRoutes } from "@/routes";
+import { makeTheme, theme } from '@/theme';
 
 import App from './App';
 import './i18n';
 import './index.css';
-import reportWebVitals from './reportWebVitals';
 
 
 const queryClient = new QueryClient({
@@ -132,7 +131,3 @@ if (ingredientSearchBox) {
     );
 }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

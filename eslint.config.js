@@ -4,7 +4,42 @@ import tseslint from 'typescript-eslint';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import importPlugin from 'eslint-plugin-import';
-// import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
+
+// Domains with a public surface (`index.ts`). Other code must import via the
+// domain root, never via internal sub-paths.
+const DOMAINS = [
+    'Exercises',
+    'Routines',
+    'Weight',
+    'Nutrition',
+    'Measurements',
+    'Trophies',
+    'User',
+];
+
+const restrictAllDomains = {
+    "patterns": [{
+        "group": DOMAINS.map(d => `@/components/${d}/*`),
+        "message": "Import via the domain root (e.g. '@/components/Exercises'), not internal sub-paths.",
+    }]
+};
+
+// Per-domain override: files inside `components/<Domain>/` may import their
+// OWN internals via absolute paths (though relative paths are preferred).
+// Cross-domain absolute internals remain forbidden.
+const domainOverrides = DOMAINS.map(domain => ({
+    files: [`src/components/${domain}/**/*.{ts,tsx}`],
+    rules: {
+        "no-restricted-imports": ["error", {
+            "patterns": [{
+                "group": DOMAINS
+                    .filter(d => d !== domain)
+                    .map(d => `@/components/${d}/*`),
+                "message": `Import other domains via their public surface (e.g. '@/components/${DOMAINS[0]}'), not internal sub-paths.`,
+            }]
+        }],
+    }
+}));
 
 export default tseslint.config(
     eslint.configs.recommended,
@@ -15,11 +50,27 @@ export default tseslint.config(
             'react': reactPlugin,
             'react-hooks': reactHooksPlugin,
             'import': importPlugin,
-            //'jsx-a11y': jsxA11yPlugin
         },
         rules: {
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'warn',
+
+            // React rules
+            'react/jsx-key': 'error',
+            'react/jsx-no-target-blank': 'error',
+            'react/no-unstable-nested-components': 'error',
+            'react/no-array-index-key': 'warn',
+            'react/jsx-no-duplicate-props': 'error',
+            'react/no-children-prop': 'error',
+            'react/void-dom-elements-no-children': 'error',
+            'react/no-unescaped-entities': 'error',
+            'react/self-closing-comp': 'error',
+
+            // Core JS hygiene.
+            'eqeqeq': ['error', 'smart'],
+            'no-var': 'error',
+            'prefer-const': 'error',
+            'no-console': ['warn', {allow: ['warn', 'error']}],
         },
         settings: {
             react: {
@@ -45,7 +96,38 @@ export default tseslint.config(
                     "minimumDescriptionLength": 10
                 }
             ],
-
+            // Auto-fixable: consolidates multiple imports from the same module.
+            "import/no-duplicates": ["error"],
+            // Domain boundary: consumers must import via the public surface
+            // (index.ts), not internal sub-paths.
+            "no-restricted-imports": ["error", restrictAllDomains],
+        }
+    },
+    // Per-domain overrides: relax the rule for same-domain imports.
+    ...domainOverrides,
+    {
+        // The infrastructure layer (api/ files inside each domain, core/lib,
+        // tests/, types.ts) sits BELOW the consumer code. Importing from a
+        // domain barrel here would create circular dependencies (the barrel
+        // pulls in queries which depend on api). These files must use direct
+        // sub-paths.
+        //
+        // Test files are also exempted — they legitimately mock internal
+        // modules across domains (e.g. a Calendar test that asserts on
+        // multiple domains' api functions).
+        files: [
+            'src/components/*/api/**',
+            'src/core/api/**',
+            'src/core/lib/**',
+            'src/tests/**',
+            'src/types.ts',
+            'src/**/*.test.{ts,tsx}',
+        ],
+        rules: {
+            "no-restricted-imports": "off",
+            "no-console": "off",
+            // API adapters and test fixtures mirror the backend's snake_case field names
+            "camelcase": "off",
         }
     },
     {

@@ -1,24 +1,22 @@
-import { ConfigurableDashboard } from "components/Dashboard/ConfigurableDashboard";
-import { ExerciseOverview } from "components/Exercises/ExerciseOverview";
-import { MeasurementCategoryDetail } from "components/Measurements/Screens/MeasurementCategoryDetail";
-import { MeasurementCategoryOverview } from "components/Measurements/Screens/MeasurementCategoryOverview";
-import { BmiCalculator } from "components/Nutrition/components/BmiCalculator";
-import { NutritionDiaryOverview } from "components/Nutrition/components/NutritionDiaryOverview";
-import { PlanDetail } from "components/Nutrition/components/PlanDetail";
-import { PlansOverview } from "components/Nutrition/components/PlansOverview";
-import { TrophiesDetail } from "components/Trophies/components/TrophiesDetail";
-import { RoutineAdd } from "components/WorkoutRoutines/Detail/RoutineAdd";
-import { RoutineDetail } from "components/WorkoutRoutines/Detail/RoutineDetail";
-import { RoutineDetailsTable } from "components/WorkoutRoutines/Detail/RoutineDetailsTable";
-import { RoutineEdit } from "components/WorkoutRoutines/Detail/RoutineEdit";
-import { SessionAdd } from "components/WorkoutRoutines/Detail/SessionAdd";
-import { SlotProgressionEdit } from "components/WorkoutRoutines/Detail/SlotProgressionEdit";
-import { TemplateDetail } from "components/WorkoutRoutines/Detail/TemplateDetail";
-import { WorkoutLogs } from "components/WorkoutRoutines/Detail/WorkoutLogs";
-import { WorkoutStats } from "components/WorkoutRoutines/Detail/WorkoutStats";
-import { PrivateTemplateOverview } from "components/WorkoutRoutines/Overview/PrivateTemplateOverview";
-import { PublicTemplateOverview } from "components/WorkoutRoutines/Overview/PublicTemplateOverview";
-import { RoutineOverview } from "components/WorkoutRoutines/Overview/RoutineOverview";
+import { ConfigurableDashboard } from "@/components/Dashboard/ConfigurableDashboard";
+import { ExerciseOverview } from "@/components/Exercises";
+import { MeasurementCategoryDetail, MeasurementCategoryOverview } from "@/components/Measurements";
+import { BmiCalculator, NutritionDiaryOverview, PlanDetail, PlansOverview } from "@/components/Nutrition";
+import {
+    PrivateTemplateOverview,
+    PublicTemplateOverview,
+    RoutineAdd,
+    RoutineDetail,
+    RoutineDetailsTable,
+    RoutineEdit,
+    RoutineOverview,
+    SessionAdd,
+    SlotProgressionEdit,
+    TemplateDetail,
+    WorkoutLogs,
+    WorkoutStats
+} from "@/components/Routines";
+import { TrophiesDetail } from "@/components/Trophies";
 import {
     About,
     AddExercise,
@@ -31,8 +29,8 @@ import {
     Login,
     Preferences,
     WeightOverview,
-} from "pages";
-import { ExerciseDetailPage } from "pages/ExerciseDetails";
+} from "@/pages";
+import { ExerciseDetailPage } from "@/pages/ExerciseDetails";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
@@ -80,7 +78,7 @@ export const WgerRoutes = () => {
                 <Route path="measurement">
                     <Route index element={<MeasurementCategoryOverview />} />
                     <Route path="overview" element={<MeasurementCategoryOverview />} />
-                    <Route path="category/:categoryId" element={<MeasurementCategoryDetail />}></Route>
+                    <Route path="category/:categoryId" element={<MeasurementCategoryDetail />} />
                 </Route>
                 <Route path="exercise">
                     <Route index element={<ExerciseOverview />} />

@@ -1,4 +1,4 @@
-import { Adapter } from "utils/Adapter";
+import { Adapter } from "@/core/lib/Adapter";
 
 export type trophyType = 'time' | 'volume' | 'count' | 'sequence' | 'date' | 'pr' | 'other';
 
@@ -64,10 +64,6 @@ class TrophyAdapter implements Adapter<Trophy> {
             isHidden: item.is_hidden,
             isProgressive: item.is_progressive,
         });
-    }
-
-    toJson(_: Trophy) {
-        return {};
     }
 }
 

@@ -1,27 +1,25 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-    deleteMeasurementEntry,
-    editMeasurementEntry,
-    getMeasurementCategories,
-    getMeasurementCategory
-} from "services";
 import {
     addMeasurementCategory,
     AddMeasurementCategoryParams,
     addMeasurementEntry,
     AddMeasurementParams,
     deleteMeasurementCategory,
+    deleteMeasurementEntry,
     editMeasurementCategory,
     editMeasurementCategoryParams,
+    editMeasurementEntry,
     editMeasurementParams,
+    getMeasurementCategories,
+    getMeasurementCategory,
     MeasurementQueryOptions
-} from "services/measurements";
-import { QUERY_MEASUREMENTS, QUERY_MEASUREMENTS_CATEGORIES, } from "utils/consts";
+} from "@/components/Measurements/api/measurements";
+import { QueryKey } from "@/core/lib/consts";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
 export function useMeasurementsCategoryQuery(options?: MeasurementQueryOptions) {
     return useQuery({
-        queryKey: [QUERY_MEASUREMENTS_CATEGORIES, JSON.stringify(options || {})],
+        queryKey: [QueryKey.MEASUREMENTS_CATEGORIES, JSON.stringify(options || {})],
         queryFn: () => getMeasurementCategories(options)
     });
 }
@@ -32,7 +30,7 @@ export const useAddMeasurementCategoryQuery = () => {
     return useMutation({
         mutationFn: (data: AddMeasurementCategoryParams) => addMeasurementCategory(data),
         onSuccess: () => queryClient.invalidateQueries({
-            queryKey: [QUERY_MEASUREMENTS_CATEGORIES,]
+            queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
         })
     });
 };
@@ -44,10 +42,10 @@ export const useEditMeasurementCategoryQuery = (id: string) => {
         mutationFn: (data: editMeasurementCategoryParams) => editMeasurementCategory(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: [QUERY_MEASUREMENTS, id]
+                queryKey: [QueryKey.MEASUREMENTS, id]
             });
             queryClient.invalidateQueries({
-                queryKey: [QUERY_MEASUREMENTS_CATEGORIES,]
+                queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
             });
         }
     });
@@ -60,10 +58,10 @@ export const useDeleteMeasurementCategoryQuery = (id: string) => {
         mutationFn: (id: string) => deleteMeasurementCategory(id),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: [QUERY_MEASUREMENTS, id]
+                queryKey: [QueryKey.MEASUREMENTS, id]
             });
             queryClient.invalidateQueries({
-                queryKey: [QUERY_MEASUREMENTS_CATEGORIES,]
+                queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
             });
         }
     });
@@ -72,7 +70,7 @@ export const useDeleteMeasurementCategoryQuery = (id: string) => {
 
 export function useMeasurementsQuery(id: string) {
     return useQuery({
-        queryKey: [QUERY_MEASUREMENTS, id],
+        queryKey: [QueryKey.MEASUREMENTS, id],
         queryFn: () => getMeasurementCategory(id)
     });
 }
@@ -84,10 +82,10 @@ export const useAddMeasurementEntryQuery = () => {
         mutationFn: (data: AddMeasurementParams) => addMeasurementEntry(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: [QUERY_MEASUREMENTS,]
+                queryKey: [QueryKey.MEASUREMENTS,]
             });
             queryClient.invalidateQueries({
-                queryKey: [QUERY_MEASUREMENTS_CATEGORIES,]
+                queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
             });
         }
     });
@@ -100,10 +98,10 @@ export const useEditMeasurementEntryQuery = () => {
         mutationFn: (data: editMeasurementParams) => editMeasurementEntry(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: [QUERY_MEASUREMENTS,]
+                queryKey: [QueryKey.MEASUREMENTS,]
             });
             queryClient.invalidateQueries({
-                queryKey: [QUERY_MEASUREMENTS_CATEGORIES,]
+                queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
             });
         }
     });
@@ -115,7 +113,7 @@ export const useDeleteMeasurementsQuery = (/*id: number*/) => {
     return useMutation({
         mutationFn: (id: string) => deleteMeasurementEntry(id),
         onSuccess: () => queryClient.invalidateQueries({
-            queryKey: [QUERY_MEASUREMENTS,]
+            queryKey: [QueryKey.MEASUREMENTS,]
         })
     });
 };

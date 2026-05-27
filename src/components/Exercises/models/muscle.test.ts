@@ -1,4 +1,4 @@
-import { Muscle } from "components/Exercises/models/muscle";
+import { Muscle } from "@/components/Exercises/models/muscle";
 
 
 describe("Muscle model tests", () => {

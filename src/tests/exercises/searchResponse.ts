@@ -1,6 +1,6 @@
-import { Category } from "components/Exercises/models/category";
-import { Exercise } from "components/Exercises/models/exercise";
-import { Translation } from "components/Exercises/models/translation";
+import { Category } from "@/components/Exercises/models/category";
+import { Exercise } from "@/components/Exercises/models/exercise";
+import { Translation } from "@/components/Exercises/models/translation";
 
 export const searchResponse: Exercise[] = [
     new Exercise({

@@ -17,6 +17,4 @@ export { useEditMealQuery, useAddMealQuery, useDeleteMealQuery } from './meal';
 
 export { useEditMealItemQuery, useAddMealItemQuery, useDeleteMealItemQuery } from './mealItem';
 
-export { useFetchIngredientQuery } from './ingredient' ;
-
-export { useFetchWeightUnitsQuery } from './weightUnit';
+export { useFetchIngredientQuery, useSearchIngredientQuery } from './ingredient';

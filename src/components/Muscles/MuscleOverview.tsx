@@ -1,5 +1,5 @@
-import { Muscle } from "components/Exercises/models/muscle";
-import { PUBLIC_URL } from "config";
+import { Muscle } from "@/components/Exercises";
+import { PUBLIC_URL } from "@/config";
 import React from "react";
 
 type OverviewCardProps = {
@@ -31,7 +31,6 @@ export const MuscleOverview = ({ primaryMuscles, secondaryMuscles, isFront }: Ov
                 width: "200px",
                 backgroundImage: backgroundUrl,
                 backgroundRepeat: "no-repeat"
-            }}>
-        </div>
+            }} />
     );
 };
