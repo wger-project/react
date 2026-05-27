@@ -43,7 +43,7 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
             .required(t('forms.fieldRequired')),
         notes: yup
             .string()
-            .max(500, t('forms.maxLength', { value: '500' })),
+            .max(100, t('forms.maxLength', { value: '100' })),
     });
 
 

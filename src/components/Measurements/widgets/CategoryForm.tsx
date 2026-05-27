@@ -1,6 +1,6 @@
-import { Button, Stack, TextField } from "@mui/material";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "@/components/Measurements/queries";
+import { Button, Stack, TextField } from "@mui/material";
 import { Form, Formik } from "formik";
 import React from 'react';
 import { useTranslation } from "react-i18next";
@@ -16,16 +16,18 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     const [t] = useTranslation();
     const useAddCategoryQuery = useAddMeasurementCategoryQuery();
     const useEditCategoryQuery = useEditMeasurementCategoryQuery(category?.id || 0);
+    // Match the backend column limits. We do NOT enforce a minimum length:
+    // many users have legitimate 1-2 char names (e.g. CJK abbreviations
+    // like 体重 / 体脂), and the backend allows them.
     const validationSchema = yup.object({
         name: yup
             .string()
             .required(t('forms.fieldRequired'))
-            .max(20, t('forms.maxLength', { chars: '20' }))
-            .min(3, t('forms.minLength', { chars: '3' })),
+            .max(100, t('forms.maxLength', { chars: '100' })),
         unit: yup
             .string()
             .required(t('forms.fieldRequired'))
-            .max(5, t('forms.maxLength', { chars: '5' }))
+            .max(30, t('forms.maxLength', { chars: '30' }))
     });
 
 
