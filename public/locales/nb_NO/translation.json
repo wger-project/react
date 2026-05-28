@@ -58,5 +58,7 @@
     },
     "trophies": {
         "trophies": "Trofeer"
-    }
+    },
+    "preview": "Forhåndsvisning",
+    "useMarkdownHint": "Du kan bruke enkel Markdown for formatering: *kursiv*, **fet**, - liste"
 }
