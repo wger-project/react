@@ -58,7 +58,14 @@
         "imageDetails": "Détail des images",
         "imageStyleOther": "Autre",
         "imageStyleLowPoly": "Low-Poly",
-        "swapExercise": "Changer d'exercice"
+        "swapExercise": "Changer d'exercice",
+        "replacementCannotBeSame": "L'exercice de remplacement ne peut pas être celui qui est supprimé.",
+        "transferMediaLabel": "Transférer les médias à l'exercice de remplacement",
+        "transferTranslationsLabel": "Transférer les traductions vers le remplacement (ignore les langues déjà présentes)",
+        "exactMatch": "Correspondance exacte",
+        "imageIsAiGenerated": "L'image a été générée par IA",
+        "dropOrClickImage": "Déposez une image ici ou cliquez pour la sélectionner",
+        "addImage": "Ajouter une image"
     },
     "server": {
         "arms": "Bras",
@@ -295,7 +302,10 @@
         "pseudoMealTitle": "Autres journaux",
         "ofWhichSaturated": "dont saturé",
         "planDeleteInfo": "Cela supprimera également toutes les entrées du journal nutritionnel",
-        "logThisMealItem": "Enregistrez cet ingrédient tel quel dans le journal nutritionnel"
+        "logThisMealItem": "Enregistrez cet ingrédient tel quel dans le journal nutritionnel",
+        "languageFilterCurrentOnly": "Uniquement dans la langue actuelle ({{lang}})",
+        "languageFilterAll": "Toutes les langues",
+        "filterVegetarian": "Végétarien"
     },
     "nothingHereYet": "Rien ici pour le moment …",
     "total": "Total",
@@ -359,5 +369,12 @@
     },
     "trophies": {
         "trophies": "Trophées"
-    }
+    },
+    "preview": "Aperçu",
+    "useMarkdownHint": "Tu peux utiliser du Markdown de base pour formater le texte : *italique*, **gras**, - liste",
+    "currentTrend": "Tendance actuelle",
+    "mean": "Moyenne",
+    "trend": "Tendance",
+    "variance": "Variance",
+    "totalChange": "Variation totale"
 }
