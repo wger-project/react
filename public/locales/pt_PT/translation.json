@@ -330,5 +330,18 @@
     "entries": "Registos",
     "no_entries_for_day": "Sem registos neste dia",
     "private": "Privado",
-    "public": "Público"
+    "public": "Público",
+    "dashboard": {
+        "customizeDashboard": "Personalizar painel",
+        "dragWidgetsHelp": "Arraste os widgets para reposicioná-los ou redimensioná-los usando o canto inferior direito.",
+        "resetLayout": "Restaurar o layout padrão"
+    },
+    "core": {
+        "customize": "Personalizar",
+        "exitEditMode": "Sair do modo edição"
+    },
+    "trophies": {
+        "trophies": "Troféus"
+    },
+    "preview": "pré-visualizar"
 }
