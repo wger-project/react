@@ -83,7 +83,7 @@
     "@types/react-slick": "^0.23.13",
     "@types/slug": "^5.0.9",
     "@vitest/coverage-v8": "^4.1.5",
-    "eslint": "^9.39.4",
+    "eslint": "^10.4.1",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.0",
