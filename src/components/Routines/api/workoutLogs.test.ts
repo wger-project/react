@@ -1,4 +1,4 @@
-import { getExercise } from "@/components/Exercises/api/exercise";
+import { getExercisesByIds } from "@/components/Exercises/api/exercise";
 import { addLogs, deleteLog, editLog, getRoutineLogs } from "@/components/Routines/api/workoutLogs";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
@@ -42,7 +42,7 @@ describe("workout logs service tests", () => {
                 routineId: 1,
                 date: new Date("2023-05-10"),
                 iteration: 1,
-                exerciseId: 100,
+                exerciseId: 345,
                 slotEntryId: 2,
 
                 repetitionsUnit: testRepUnit1,
@@ -64,7 +64,7 @@ describe("workout logs service tests", () => {
                 routineId: 1,
                 date: new Date("2023-05-13"),
                 iteration: 1,
-                exerciseId: 100,
+                exerciseId: 345,
                 slotEntryId: 2,
 
                 repetitionsUnit: testRepUnit1,
@@ -90,7 +90,8 @@ describe("workout logs service tests", () => {
         (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
         (getRoutineRepUnits as Mock).mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
         (getRoutineWeightUnits as Mock).mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
-        (getExercise as Mock).mockImplementation(() => Promise.resolve(testExerciseSquats));
+        // The logs reference the Squats exercise (id 345), so the bulk fetch returns it
+        (getExercisesByIds as Mock).mockResolvedValue([testExerciseSquats]);
 
         // Act
         const result = await getRoutineLogs(1, { loadExercises: true });
@@ -104,7 +105,7 @@ describe("workout logs service tests", () => {
                 date: new Date("2023-05-10"),
                 iteration: 1,
                 exercise: testExerciseSquats,
-                exerciseId: 100,
+                exerciseId: 345,
                 slotEntryId: 2,
                 sessionId: null,
 
@@ -129,7 +130,7 @@ describe("workout logs service tests", () => {
                 iteration: 1,
                 slotEntryId: 2,
                 exercise: testExerciseSquats,
-                exerciseId: 100,
+                exerciseId: 345,
                 sessionId: null,
 
                 repetitionsUnit: testRepUnit1,
@@ -146,6 +147,19 @@ describe("workout logs service tests", () => {
                 rirTarget: 1,
             }),
         ]);
+    });
+
+    test('GET the routine logs tolerates a stale exercise', async () => {
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
+        (getRoutineRepUnits as Mock).mockResolvedValue([testRepUnit1, testRepUnit2]);
+        (getRoutineWeightUnits as Mock).mockResolvedValue([testWeightUnit1, testWeightUnit2]);
+        // The referenced exercise no longer exists -> the bulk fetch returns nothing
+        (getExercisesByIds as Mock).mockResolvedValue([]);
+
+        const result = await getRoutineLogs(1, { loadExercises: true });
+
+        expect(result).toHaveLength(2);
+        expect(result.every(log => log.exerciseObj === undefined)).toBe(true);
     });
 
     test('deleteLog DELETEs /workoutlog/<id>/ and returns the response status', async () => {

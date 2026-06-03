@@ -1,7 +1,8 @@
-import axios from 'axios';
 import { Exercise, ExerciseAdapter } from "@/components/Exercises/models/exercise";
-import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ResponseType } from "@/core/api/responseType";
+import { fetchPaginated } from "@/core/lib/requests";
+import { makeHeader, makeUrl } from "@/core/lib/url";
+import axios from 'axios';
 
 export const EXERCISE_INFO_PATH = 'exerciseinfo';
 export const EXERCISE_PATH = 'exercise';
@@ -53,6 +54,29 @@ export const getExercise = async (id: number): Promise<Exercise> => {
     });
 
     return adapter.fromJson(response.data);
+};
+
+
+/*
+ * Fetch several exercises by ID in a single request.
+ *
+ * Unknown or stale IDs are simply absent from the result instead of making the
+ * whole call fail, which keeps a routine, log or plan loadable.
+ */
+export const getExercisesByIds = async (ids: number[]): Promise<Exercise[]> => {
+
+    // An empty id__in would be ignored by the API and return everything, so bail out early
+    if (ids.length === 0) {
+        return [];
+    }
+
+    const url = makeUrl(EXERCISE_INFO_PATH, { query: { id__in: ids.join(',') } });
+    const out: Exercise[] = [];
+    for await (const page of fetchPaginated(url, makeHeader())) {
+        out.push(...processExerciseApiData({ results: page }));
+    }
+
+    return out;
 };
 
 

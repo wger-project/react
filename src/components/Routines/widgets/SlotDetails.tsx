@@ -201,7 +201,9 @@ export const SlotEntryDetails = (props: {
 
                     <Grid size={{ xs: 9, sm: 3 }} sx={{ alignContent: "center" }}>
                         <Typography variant={"body1"}>
-                            {counter} {props.slotEntry.exercise?.getTranslation(language).name}
+                            {counter} {props.slotEntry.exercise
+                            ? props.slotEntry.exercise.getTranslation(language).name
+                            : t('routines.exerciseNotAvailable')}
                         </Typography>
                     </Grid>
 

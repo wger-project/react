@@ -1,15 +1,15 @@
-import axios from 'axios';
+import { getExercisesByIds } from "@/components/Exercises/api/exercise";
 import { Exercise } from "@/components/Exercises/models/exercise";
+import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
 import { Day } from "@/components/Routines/models/Day";
 import { RoutineStatsData, RoutineStatsDataAdapter } from "@/components/Routines/models/LogStats";
 import { Routine } from "@/components/Routines/models/Routine";
 import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
 import { RoutineLogData, RoutineLogDataAdapter } from "@/components/Routines/models/RoutineLogData";
-import { getExercise } from "@/components/Exercises/api/exercise";
-import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
+import { ResponseType } from "@/core/api/responseType";
 import { ApiPath } from "@/core/lib/consts";
 import { makeHeader, makeUrl } from "@/core/lib/url";
-import { ResponseType } from "@/core/api/responseType";
+import axios from 'axios';
 
 export const ROUTINE_API_STRUCTURE_PATH = 'structure';
 export const ROUTINE_API_LOGS_PATH = 'logs';
@@ -50,8 +50,7 @@ export const processRoutine = async (id: number): Promise<Routine> => {
             }
         }
     }
-    const exercisePromises = Array.from(exerciseIds).map(id => getExercise(id));
-    const exercises = await Promise.all(exercisePromises);
+    const exercises = await getExercisesByIds(Array.from(exerciseIds));
     const exerciseMap: { [id: number]: Exercise } = {};
     exercises.forEach(exercise => {
         exerciseMap[exercise.id!] = exercise;
@@ -72,7 +71,12 @@ export const processRoutine = async (id: number): Promise<Routine> => {
             }
 
             for (const exerciseId of slotData.exerciseIds) {
-                slotData.exercises?.push(exerciseMap[exerciseId]);
+                // Skip exercises that could not be loaded so the array stays free of
+                // undefined holes that the UI would choke on
+                const exercise = exerciseMap[exerciseId];
+                if (exercise !== undefined) {
+                    slotData.exercises?.push(exercise);
+                }
             }
         }
     }

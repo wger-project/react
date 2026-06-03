@@ -1,15 +1,16 @@
+import { IngredientSearch } from "@/components/Nutrition";
+import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { WgerRoutes } from "@/routes";
+import { makeTheme, theme } from '@/theme';
 import createCache from '@emotion/cache';
 import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
-import { IngredientSearch } from "@/components/Nutrition";
+import axios from 'axios';
 import React, { Suspense } from 'react';
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router } from 'react-router-dom';
-import { WgerRoutes } from "@/routes";
-import { makeTheme, theme } from '@/theme';
 
 import App from './App';
 import './i18n';
@@ -22,7 +23,15 @@ const queryClient = new QueryClient({
 
     defaultOptions: {
         queries: {
-            retry: 3,
+            // Don't retry client errors (e.g. a 404 for a deleted/stale resource), they
+            // won't succeed on a retry and only delay surfacing the result
+            retry: (failureCount, error) => {
+                const status = axios.isAxiosError(error) ? error.response?.status : undefined;
+                if (status !== undefined && status >= 400 && status < 500) {
+                    return false;
+                }
+                return failureCount < 3;
+            },
             staleTime: 1000 * 60 * 5,
             refetchOnMount: true,
             refetchOnWindowFocus: true,

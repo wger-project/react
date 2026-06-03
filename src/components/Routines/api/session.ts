@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { getExercisesByIds } from "@/components/Exercises/api/exercise";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { WorkoutLog, WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
 import {
@@ -7,10 +7,10 @@ import {
     WorkoutSession,
     WorkoutSessionAdapter
 } from "@/components/Routines/models/WorkoutSession";
-import { getExercise } from "@/components/Exercises/api/exercise";
 import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
 import { fetchPaginated } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
+import axios from 'axios';
 
 export type SessionQueryOptions = {
     filtersetQuerySessions?: object,
@@ -39,7 +39,6 @@ export const getSessions = async (options?: SessionQueryOptions): Promise<Workou
     const logAdapter = new WorkoutLogAdapter();
     const result: WorkoutSession[] = [];
     const logs: WorkoutLog[] = [];
-    const exercises: Record<number, Exercise> = {};
 
     // Fetch all logs first
     for await (const logPage of fetchPaginated(
@@ -54,12 +53,15 @@ export const getSessions = async (options?: SessionQueryOptions): Promise<Workou
         }
     }
 
-    // Fetch all exercises and associate them with logs if it's not known
-    for (const log of logs) {
-        if (!exercises[log.exerciseId]) {
-            exercises[log.exerciseId] = await getExercise(log.exerciseId);
+    const exerciseIds = [...new Set(logs.map(log => log.exerciseId))];
+    if (exerciseIds.length > 0) {
+        const exercises: Record<number, Exercise> = {};
+        for (const exercise of await getExercisesByIds(exerciseIds)) {
+            exercises[exercise.id!] = exercise;
         }
-        log.exerciseObj = exercises[log.exerciseId];
+        for (const log of logs) {
+            log.exerciseObj = exercises[log.exerciseId];
+        }
     }
 
     for await (const sessionPage of fetchPaginated(

@@ -30,7 +30,7 @@ describe("Session service tests", () => {
                             "iteration": 1,
                             "slot_entry": 316691,
                             "next_log": null,
-                            "exercise": 200,
+                            "exercise": 345,
                             "repetitions_unit": 1,
                             "repetitions": "2.00",
                             "repetitions_target": "1.00",
@@ -50,7 +50,7 @@ describe("Session service tests", () => {
                             "iteration": 1,
                             "slot_entry": 316693,
                             "next_log": null,
-                            "exercise": 201,
+                            "exercise": 2,
                             "repetitions_unit": 1,
                             "repetitions": "2.00",
                             "repetitions_target": "3.00",
@@ -89,13 +89,7 @@ describe("Session service tests", () => {
             });
         });
 
-        (exerciseService.getExercise as Mock).mockImplementation((id) => {
-            if (id === 200) {
-                return Promise.resolve(testExerciseSquats);
-            } else if (id === 201) {
-                return Promise.resolve(testExerciseBenchPress);
-            }
-        });
+        (exerciseService.getExercisesByIds as Mock).mockResolvedValue([testExerciseSquats, testExerciseBenchPress]);
 
         // Act
         const sessions = await getSessions();
@@ -104,15 +98,14 @@ describe("Session service tests", () => {
         expect(sessions).toHaveLength(1);
         expect(sessions[0].id).toBe(24284);
         expect(sessions[0].logs).toHaveLength(2);
-        expect(sessions[0].logs[0].exerciseId).toBe(200);
+        expect(sessions[0].logs[0].exerciseId).toBe(345);
         expect(sessions[0].logs[0].exerciseObj).toBeDefined();
         expect(sessions[0].logs[0].exerciseObj?.getTranslation().name).toBe('Squats');
-        expect(sessions[0].logs[1].exerciseId).toBe(201);
+        expect(sessions[0].logs[1].exerciseId).toBe(2);
         expect(sessions[0].logs[1].exerciseObj).toBeDefined();
         expect(sessions[0].logs[1].exerciseObj?.getTranslation().name).toBe('Benchpress');
 
-        expect(exerciseService.getExercise).toHaveBeenCalledWith(200);
-        expect(exerciseService.getExercise).toHaveBeenCalledWith(201);
+        expect(exerciseService.getExercisesByIds).toHaveBeenCalledWith([345, 2]);
 
         // Check that API calls were made correctly
         expect(axios.get).toHaveBeenNthCalledWith(

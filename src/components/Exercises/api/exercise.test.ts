@@ -4,6 +4,7 @@ import {
     editExercise,
     getExercise,
     getExercises,
+    getExercisesByIds,
     getExercisesForVariation,
     processExerciseApiData
 } from "@/components/Exercises/api/exercise";
@@ -43,6 +44,26 @@ describe("Exercise service API tests", () => {
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
         expect(result).toEqual(testApiExercise1);
+    });
+
+    test('getExercisesByIds returns [] for an empty id list without calling the API', async () => {
+        const result = await getExercisesByIds([]);
+
+        expect(result).toEqual([]);
+        expect(axios.get).not.toHaveBeenCalled();
+    });
+
+    test('getExercisesByIds queries by id__in and parses the results', async () => {
+        // next: null so the paginated fetch stops after the first page
+        (axios.get as Mock).mockResolvedValue({ data: { ...responseApiExerciseInfo, next: null } });
+
+        const result = await getExercisesByIds([345, 999]);
+
+        const url = (axios.get as Mock).mock.calls[0][0] as string;
+        expect(url).toContain("/api/v2/exerciseinfo/");
+        expect(url).toContain("id__in=345");
+        // A requested id that no longer exists is simply absent from the result
+        expect(result).toEqual([testApiExercise1]);
     });
 
     test('EDIT an existing exercise', async () => {
