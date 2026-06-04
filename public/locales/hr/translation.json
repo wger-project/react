@@ -59,7 +59,13 @@
         "imageStyleOther": "Drugo",
         "imageDetails": "Detalji slike",
         "swapExercise": "Zamijeni vježbu",
-        "exactMatch": "Točno podudaranje"
+        "exactMatch": "Točno podudaranje",
+        "replacementCannotBeSame": "Zamjenska vježba ne može biti ista kao vježba koja se briše.",
+        "transferMediaLabel": "Prenesi medije na zamjensku vježbu",
+        "transferTranslationsLabel": "Prenesi prijevode na zamjensku vježbu (jezici koji su već prisutni se ptreskaču)",
+        "imageIsAiGenerated": "Slika je stvorena pomoću umjetne inteligencije",
+        "dropOrClickImage": "Povuci i ispusti sliku ovdje ili klikni za biranje",
+        "addImage": "Dodaj sliku"
     },
     "noResults": "Nema rezultata",
     "noResultsDescription": "Za ovaj upit nisu pronađeni rezultati. Smanji broja filtara.",
@@ -373,5 +379,9 @@
     },
     "preview": "Pregledaj",
     "useMarkdownHint": "Za formatiranje teksta se može koristiti osnovni Markdown: *kurziv*, **podebljano**, - popis",
-    "totalChange": "Ukupna promjena"
+    "totalChange": "Ukupna promjena",
+    "currentTrend": "Trenutačni trend",
+    "mean": "Srednja vrijednost",
+    "trend": "Trend",
+    "variance": "Varijacija"
 }
