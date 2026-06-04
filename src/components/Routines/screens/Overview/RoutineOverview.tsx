@@ -8,7 +8,7 @@ import { AddRoutineFab } from "@/components/Routines/screens/Overview/Fab";
 import { useRoutinesShallowQuery } from "@/components/Routines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { dateToLocale } from "@/core/lib/date";
+import { formatNaiveDate } from "@/core/lib/date";
 import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const RoutineList = (props: {
@@ -42,7 +42,7 @@ export const RoutineList = (props: {
             <ListItemButton component="a" href={detailUrl}>
                 <ListItemText
                     primary={<>{primaryText} {chipTemplate} {chipVisibility}</>}
-                    secondary={`${props.routine.durationText} (${dateToLocale(props.routine.start)} - ${dateToLocale(props.routine.end)})`}
+                    secondary={`${props.routine.durationText} (${formatNaiveDate(props.routine.start, i18n.language)} - ${formatNaiveDate(props.routine.end, i18n.language)})`}
                 />
                 <ChevronRightIcon />
             </ListItemButton>
