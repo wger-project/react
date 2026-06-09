@@ -9,7 +9,14 @@
     "submit": "Send",
     "weight": "Vekt",
     "exercises": {
-        "replacements": "Erstatninger"
+        "replacements": "Erstatninger",
+        "muscles": "Muskler",
+        "notes": "Notater",
+        "equipment": "Utstyr",
+        "description": "Beskrivelse",
+        "deleteExerciseReplace": "Slett og erstatt",
+        "exercises": "Øvelser",
+        "changeExerciseLanguage": "Endre denne øvelsens språk"
     },
     "licenses": {
         "authors": "Forfatter",
@@ -60,5 +67,7 @@
         "trophies": "Trofeer"
     },
     "preview": "Forhåndsvisning",
-    "useMarkdownHint": "Du kan bruke enkel Markdown for formatering: *kursiv*, **fet**, - liste"
+    "useMarkdownHint": "Du kan bruke enkel Markdown for formatering: *kursiv*, **fet**, - liste",
+    "public": "Offentlig",
+    "private": "Privat"
 }
