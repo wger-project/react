@@ -13,7 +13,7 @@
         "searchExerciseName": "Rechercher par nom d'exercice",
         "alsoKnownAs": "Aussi connu sous :",
         "notes": "Notes",
-        "description": "Déscription",
+        "description": "Description",
         "noEquipment": "Sans équipement",
         "missingExercise": "Un certain exercice manque ?",
         "missingExerciseDescription": "Aidez la communauté en y contribuant !",
@@ -229,7 +229,8 @@
             "iso": "Maintien isométrique",
             "jump": "Saut",
             "partial": "Partielle",
-            "forced": "Forcée"
+            "forced": "Forcée",
+            "warmup": "Échauffement"
         },
         "publicTemplateHelpText": "Les modèles publics sont disponibles pour tous les utilisateurs.",
         "workoutSession": "Séance d'entraînement",
@@ -244,7 +245,9 @@
             "edt": "Entraînement à densité croissante",
             "rft": "Rounds for time",
             "afap": "Aussi vite que possible"
-        }
+        },
+        "addSet": "Ajouter une série",
+        "setNr": "Série {{number}}"
     },
     "value": "Valeur",
     "deleteConfirmation": "Êtes-vous certain de vouloir supprimer \"{{name}}\" ?",
@@ -305,7 +308,13 @@
         "logThisMealItem": "Enregistrez cet ingrédient tel quel dans le journal nutritionnel",
         "languageFilterCurrentOnly": "Uniquement dans la langue actuelle ({{lang}})",
         "languageFilterAll": "Toutes les langues",
-        "filterVegetarian": "Végétarien"
+        "filterVegetarian": "Végétarien",
+        "languageFilterCurrentAndEnglish": "Langue courante ({{lang}}) & Anglais",
+        "filterVegan": "Végan",
+        "filterNutriscore": "Filtre Nutri-Score",
+        "filterNutriscoreOff": "Off",
+        "filterNutriscoreNoFilter": "Pas de filtre",
+        "filterNutriscoreOrBetter": "{{grade}} ou mieux"
     },
     "nothingHereYet": "Rien ici pour le moment …",
     "total": "Total",
