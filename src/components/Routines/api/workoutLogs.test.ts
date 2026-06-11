@@ -38,7 +38,7 @@ describe("workout logs service tests", () => {
         expect(axios.get).toHaveBeenCalledTimes(1);
         expect(result).toStrictEqual([
             new WorkoutLog({
-                id: 2,
+                id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000002',
                 routineId: 1,
                 date: new Date("2023-05-10"),
                 iteration: 1,
@@ -60,7 +60,7 @@ describe("workout logs service tests", () => {
             }),
 
             new WorkoutLog({
-                id: 1,
+                id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000001',
                 routineId: 1,
                 date: new Date("2023-05-13"),
                 iteration: 1,
@@ -99,7 +99,7 @@ describe("workout logs service tests", () => {
         expect(axios.get).toHaveBeenCalledTimes(1);
         expect(result).toStrictEqual([
             new WorkoutLog({
-                id: 2,
+                id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000002',
                 routineId: 1,
                 date: new Date("2023-05-10"),
                 iteration: 1,
@@ -123,7 +123,7 @@ describe("workout logs service tests", () => {
             }),
 
             new WorkoutLog({
-                id: 1,
+                id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000001',
                 routineId: 1,
                 date: new Date("2023-05-13"),
                 iteration: 1,
@@ -149,21 +149,23 @@ describe("workout logs service tests", () => {
     });
 
     test('deleteLog DELETEs /workoutlog/<id>/ and returns the response status', async () => {
+        const LOG_UUID = 'aaaaaaaa-aaaa-aaaa-aaaa-000000000007';
         (axios.delete as Mock).mockResolvedValue({ status: 204 });
 
-        const result = await deleteLog(7);
+        const result = await deleteLog(LOG_UUID);
 
         expect(axios.delete).toHaveBeenCalledTimes(1);
         expect(axios.delete).toHaveBeenCalledWith(
-            expect.stringMatching(/\/api\/v2\/workoutlog\/7\/$/),
+            expect.stringMatching(new RegExp(`/api/v2/workoutlog/${LOG_UUID}/$`)),
             expect.anything()
         );
         expect(result).toBe(204);
     });
 
     test('editLog PATCHes /workoutlog/<id>/ with the snake_case body and returns the parsed log', async () => {
+        const LOG_UUID = 'aaaaaaaa-aaaa-aaaa-aaaa-000000000005';
         const apiResponse = {
-            id: 5,
+            id: LOG_UUID,
             iteration: 1,
             date: "2024-08-01T08:00:00.000Z",
             exercise: 100,
@@ -183,7 +185,7 @@ describe("workout logs service tests", () => {
         (axios.patch as Mock).mockResolvedValue({ data: apiResponse });
 
         const log = new WorkoutLog({
-            id: 5,
+            id: LOG_UUID,
             routineId: 1,
             slotEntryId: 2,
             exerciseId: 100,
@@ -203,9 +205,9 @@ describe("workout logs service tests", () => {
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.patch as Mock).mock.calls[0];
-        expect(url).toMatch(/\/api\/v2\/workoutlog\/5\/$/);
+        expect(url).toMatch(new RegExp(`/api/v2/workoutlog/${LOG_UUID}/$`));
         expect(body).toMatchObject({
-            id: 5,
+            id: LOG_UUID,
             exercise: 100,
 
             slot_entry: 2,
@@ -214,13 +216,15 @@ describe("workout logs service tests", () => {
             repetitions_unit: 1,
         });
         expect(result).toBeInstanceOf(WorkoutLog);
-        expect(result.id).toBe(5);
+        expect(result.id).toBe(LOG_UUID);
     });
 
     test('addLogs POSTs each entry sequentially and collects the parsed responses', async () => {
+        const LOG_UUID_1 = 'aaaaaaaa-aaaa-aaaa-aaaa-000000000001';
+        const LOG_UUID_2 = 'aaaaaaaa-aaaa-aaaa-aaaa-000000000002';
         const responses = [
             {
-                id: 1,
+                id: LOG_UUID_1,
                 iteration: 1,
                 date: "2024-08-01T00:00:00Z",
                 exercise: 100,
@@ -238,7 +242,7 @@ describe("workout logs service tests", () => {
                 rest_target: null
             },
             {
-                id: 2,
+                id: LOG_UUID_2,
                 iteration: 1,
                 date: "2024-08-02T00:00:00Z",
                 exercise: 100,
@@ -270,7 +274,7 @@ describe("workout logs service tests", () => {
         expect(url).toMatch(/\/api\/v2\/workoutlog\/$/);
         expect(result).toHaveLength(2);
         expect(result[0]).toBeInstanceOf(WorkoutLog);
-        expect(result.map(l => l.id)).toEqual([1, 2]);
+        expect(result.map(l => l.id)).toEqual([LOG_UUID_1, LOG_UUID_2]);
     });
 
     test('addLogs returns [] when given an empty list (no requests fire)', async () => {

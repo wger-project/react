@@ -1,14 +1,16 @@
-import axios from "axios";
-import { Meal } from "@/components/Nutrition/models/meal";
-import { addMeal, deleteMeal, editMeal, getMealsForPlan } from "@/components/Nutrition/api/meal";
 import { getIngredients } from "@/components/Nutrition/api/ingredient";
+import { addMeal, deleteMeal, editMeal, getMealsForPlan } from "@/components/Nutrition/api/meal";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { HHMMToDateTime } from "@/core/lib/date";
+import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
 import {
+    RESPONSE_MEAL_UUID,
+    RESPONSE_PLAN_UUID_2,
     responseMealDetail,
     responseMealItemsForMeal,
     responseMealsForPlan,
 } from "@/tests/nutritionTestdata";
-import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
-import { HHMMToDateTime } from "@/core/lib/date";
+import axios from "axios";
 import type { Mock } from "vitest";
 
 vi.mock("axios");
@@ -20,7 +22,12 @@ describe("meal service tests", () => {
     });
 
     test("addMeal POSTs the serialized meal and returns the parsed Meal", async () => {
-        const meal = new Meal({ planId: 123, order: 2, time: HHMMToDateTime("12:30"), name: "Second breakfast" });
+        const meal = new Meal({
+            planId: RESPONSE_PLAN_UUID_2,
+            order: 2,
+            time: HHMMToDateTime("12:30"),
+            name: "Second breakfast"
+        });
         (axios.post as Mock).mockResolvedValue({ data: responseMealDetail });
 
         const result = await addMeal(meal);
@@ -28,34 +35,40 @@ describe("meal service tests", () => {
         expect(axios.post).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.post as Mock).mock.calls[0];
         expect(url).toMatch(/\/api\/v2\/meal\/$/);
-        expect(body).toMatchObject({ plan: 123, name: "Second breakfast", order: 2, time: "12:30" });
+        expect(body).toMatchObject({ plan: RESPONSE_PLAN_UUID_2, name: "Second breakfast", order: 2, time: "12:30" });
         // toJson omits the id field when it's null - verify
         expect(body).not.toHaveProperty("id");
         expect(result).toBeInstanceOf(Meal);
-        expect(result.id).toBe(78);
+        expect(result.id).toBe(RESPONSE_MEAL_UUID);
     });
 
     test("editMeal PATCHes /meal/<id>/ and returns the parsed Meal", async () => {
-        const meal = new Meal({ id: 78, planId: 123, order: 2, time: HHMMToDateTime("12:30"), name: "renamed" });
+        const meal = new Meal({
+            id: RESPONSE_MEAL_UUID,
+            planId: RESPONSE_PLAN_UUID_2,
+            order: 2,
+            time: HHMMToDateTime("12:30"),
+            name: "renamed"
+        });
         (axios.patch as Mock).mockResolvedValue({ data: { ...responseMealDetail, name: "renamed" } });
 
         const result = await editMeal(meal);
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.patch as Mock).mock.calls[0];
-        expect(url).toMatch(/\/api\/v2\/meal\/78\/$/);
-        expect(body).toMatchObject({ id: 78, name: "renamed" });
+        expect(url).toMatch(new RegExp(`/api/v2/meal/${RESPONSE_MEAL_UUID}/$`));
+        expect(body).toMatchObject({ id: RESPONSE_MEAL_UUID, name: "renamed" });
         expect(result.name).toBe("renamed");
     });
 
     test("deleteMeal DELETEs /meal/<id>/", async () => {
         (axios.delete as Mock).mockResolvedValue({ status: 204 });
 
-        await deleteMeal(78);
+        await deleteMeal(RESPONSE_MEAL_UUID);
 
         expect(axios.delete).toHaveBeenCalledTimes(1);
         expect(axios.delete).toHaveBeenCalledWith(
-            expect.stringMatching(/\/api\/v2\/meal\/78\/$/),
+            expect.stringMatching(new RegExp(`/api/v2/meal/${RESPONSE_MEAL_UUID}/$`)),
             expect.anything()
         );
     });
@@ -70,12 +83,12 @@ describe("meal service tests", () => {
         });
         (getIngredients as Mock).mockResolvedValue([TEST_INGREDIENT_1, TEST_INGREDIENT_2]);
 
-        const result = await getMealsForPlan(123);
+        const result = await getMealsForPlan(RESPONSE_PLAN_UUID_2);
 
         // The list call filters by plan, the item call filters by meal
         const calledUrls = (axios.get as Mock).mock.calls.map(([u]) => u as string);
-        expect(calledUrls.some(u => u.includes("/meal/?plan=123"))).toBe(true);
-        expect(calledUrls.some(u => u.includes("/mealitem/?meal=78"))).toBe(true);
+        expect(calledUrls.some(u => u.includes(`/meal/?plan=${RESPONSE_PLAN_UUID_2}`))).toBe(true);
+        expect(calledUrls.some(u => u.includes(`/mealitem/?meal=${RESPONSE_MEAL_UUID}`))).toBe(true);
 
         // getIngredients is called once per meal with the deduped ingredient ids
         expect(getIngredients).toHaveBeenCalledWith([101, 102]);
@@ -95,7 +108,7 @@ describe("meal service tests", () => {
             data: { count: 0, next: null, previous: null, results: [] },
         });
 
-        const result = await getMealsForPlan(123);
+        const result = await getMealsForPlan(RESPONSE_PLAN_UUID_2);
 
         expect(result).toEqual([]);
         // No item calls, no ingredient lookups

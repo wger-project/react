@@ -205,7 +205,7 @@ export const testRoutineDayData1 = [
 export const testRoutineLogData = [
     new RoutineLogData(
         new WorkoutSession({
-            id: 111,
+            id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000111',
             dayId: 2,
             routineId: 1,
             date: new Date('2024-07-01'),
@@ -308,7 +308,7 @@ export const responseRoutineLogs = {
     "previous": null,
     "results": [
         {
-            "id": 2,
+            "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000002",
             "iteration": 1,
             "date": "2023-05-10",
             "exercise": 100,
@@ -327,7 +327,7 @@ export const responseRoutineLogs = {
             "rir_target": null
         },
         {
-            "id": 1,
+            "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000001",
             "iteration": 1,
             "date": "2023-05-13",
             "exercise": 100,

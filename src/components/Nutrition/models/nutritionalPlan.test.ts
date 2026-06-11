@@ -1,4 +1,4 @@
-import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
+import { NutritionalPlan, PSEUDO_MEAL_ID } from "@/components/Nutrition/models/nutritionalPlan";
 import { TEST_DIARY_ENTRY_3, TEST_DIARY_ENTRY_4 } from "@/tests/nutritionDiaryTestdata";
 import { TEST_MEAL_1, TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 
@@ -139,7 +139,11 @@ describe("Test the nutritional plan model", () => {
     });
 
     test('7-day average returns zero values when no entries exist', () => {
-        const plan = new NutritionalPlan({ id: 1, creationDate: new Date(), description: 'test' });
+        const plan = new NutritionalPlan({
+            id: 'aaaaaaaa-0000-0000-0000-000000000001',
+            creationDate: new Date(),
+            description: 'test'
+        });
         const values = plan.loggedNutritionalValues7DayAvg;
 
         expect(values.energy).toBe(0);
@@ -151,7 +155,11 @@ describe("Test the nutritional plan model", () => {
     test('7-day average divides total by 7 without rounding', () => {
         // INGREDIENT_3: energy=60, protein=0.89, carbs=14, sugar=11.78, sodium=0.006 per 100g
         // ENTRY_3: 200g → energy=120; ENTRY_4: 20g → energy=12; total=132, avg=132/7≈18.857
-        const plan = new NutritionalPlan({ id: 1, creationDate: new Date(), description: 'test' });
+        const plan = new NutritionalPlan({
+            id: 'aaaaaaaa-0000-0000-0000-000000000001',
+            creationDate: new Date(),
+            description: 'test'
+        });
         plan.diaryEntries = [TEST_DIARY_ENTRY_3, TEST_DIARY_ENTRY_4];
 
         const values = plan.loggedNutritionalValues7DayAvg;
@@ -169,7 +177,7 @@ describe("Test the nutritional plan model", () => {
         const meal = TEST_NUTRITIONAL_PLAN_1.pseudoMealOthers('the name');
 
         // Assert
-        expect(meal.id).toBe(-1);
+        expect(meal.id).toBe(PSEUDO_MEAL_ID);
         expect(meal.name).toBe('the name');
         expect(meal.diaryEntries.length).toBe(2);
     });
@@ -178,7 +186,7 @@ describe("Test the nutritional plan model", () => {
 
         // Act
         const plan = new NutritionalPlan({
-            id: 1,
+            id: '00000000-0000-0000-0000-000000000001',
             creationDate: new Date(),
             description: 'test 1',
         });

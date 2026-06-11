@@ -15,6 +15,12 @@ import type { Mock } from 'vitest';
 
 vi.mock("axios");
 
+// Recognisable test-marker UUIDs matching the Django fixtures convention
+const CATEGORY_UUID = 'cccccccc-cccc-cccc-cccc-000000000001';
+const CATEGORY_UUID_2 = 'cccccccc-cccc-cccc-cccc-000000000009';
+const ENTRY_UUID = 'dddddddd-dddd-dddd-dddd-000000000001';
+const ENTRY_UUID_2 = 'dddddddd-dddd-dddd-dddd-000000000005';
+
 describe('measurement service tests', () => {
     const measurementEntryResponse = {
         count: 2,
@@ -22,8 +28,8 @@ describe('measurement service tests', () => {
         previous: null,
         results: [
             {
-                "id": 1,
-                "category": 1,
+                "id": ENTRY_UUID,
+                "category": CATEGORY_UUID,
                 "value": 80,
                 "date": "2021-01-01",
                 "notes": ""
@@ -37,7 +43,7 @@ describe('measurement service tests', () => {
         previous: null,
         results: [
             {
-                "id": 1,
+                "id": CATEGORY_UUID,
                 "name": "Weight",
                 "unit": "kg"
             }
@@ -45,7 +51,7 @@ describe('measurement service tests', () => {
     };
 
     const measurementDetailResponse = {
-        "id": 1,
+        "id": CATEGORY_UUID,
         "name": "Weight",
         "unit": "kg"
     };
@@ -57,7 +63,7 @@ describe('measurement service tests', () => {
         (axios.get as Mock).mockImplementation((url: string) => {
             if (url.includes("measurement-category")) {
                 return Promise.resolve({ data: measurementOverviewResponse });
-            } else if (url.includes("measurement/?category=1")) {
+            } else if (url.includes(`measurement/?category=${CATEGORY_UUID}`)) {
                 return Promise.resolve({ data: measurementEntryResponse });
             }
         });
@@ -88,8 +94,8 @@ describe('measurement service tests', () => {
         expect(axios.get).toHaveBeenCalledTimes(2);
 
         expect(result).toStrictEqual([
-            new MeasurementCategory(1, "Weight", "kg", [
-                new MeasurementEntry(1, 1, new Date("2021-01-01"), 80, "")
+            new MeasurementCategory(CATEGORY_UUID, "Weight", "kg", [
+                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, new Date("2021-01-01"), 80, "")
             ])
         ]);
     });
@@ -97,26 +103,26 @@ describe('measurement service tests', () => {
     test('GET measurement category', async () => {
 
         (axios.get as Mock).mockImplementation((url: string) => {
-            if (url.includes("measurement-category/1")) {
+            if (url.includes(`measurement-category/${CATEGORY_UUID}`)) {
                 return Promise.resolve({ data: measurementDetailResponse });
-            } else if (url.includes("measurement/?category=1")) {
+            } else if (url.includes(`measurement/?category=${CATEGORY_UUID}`)) {
                 return Promise.resolve({ data: measurementEntryResponse });
             }
         });
 
-        const result = await getMeasurementCategory(1);
+        const result = await getMeasurementCategory(CATEGORY_UUID);
         expect(axios.get).toHaveBeenCalledTimes(2);
 
         expect(result).toStrictEqual(
-            new MeasurementCategory(1, "Weight", "kg", [
-                new MeasurementEntry(1, 1, new Date("2021-01-01"), 80, "")
+            new MeasurementCategory(CATEGORY_UUID, "Weight", "kg", [
+                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, new Date("2021-01-01"), 80, "")
             ])
         );
     });
 
     test('addMeasurementCategory POSTs name + unit and returns the parsed category', async () => {
         (axios.post as Mock).mockResolvedValue({
-            data: { id: 9, name: "Body fat", unit: "%" },
+            data: { id: CATEGORY_UUID_2, name: "Body fat", unit: "%" },
         });
 
         const result = await addMeasurementCategory({ name: "Body fat", unit: "%" });
@@ -126,19 +132,19 @@ describe('measurement service tests', () => {
         expect(url).toMatch(/\/api\/v2\/measurement-category\/$/);
         expect(body).toEqual({ name: "Body fat", unit: "%" });
         expect(result).toBeInstanceOf(MeasurementCategory);
-        expect(result.id).toBe(9);
+        expect(result.id).toBe(CATEGORY_UUID_2);
     });
 
     test('editMeasurementCategory PATCHes /measurement-category/<id>/', async () => {
         (axios.patch as Mock).mockResolvedValue({
-            data: { id: 9, name: "Renamed", unit: "%" },
+            data: { id: CATEGORY_UUID_2, name: "Renamed", unit: "%" },
         });
 
-        const result = await editMeasurementCategory({ id: 9, name: "Renamed", unit: "%" });
+        const result = await editMeasurementCategory({ id: CATEGORY_UUID_2, name: "Renamed", unit: "%" });
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.patch as Mock).mock.calls[0];
-        expect(url).toMatch(/\/api\/v2\/measurement-category\/9\/$/);
+        expect(url).toMatch(new RegExp(`/api/v2/measurement-category/${CATEGORY_UUID_2}/$`));
         expect(body).toEqual({ name: "Renamed", unit: "%" });
         expect(result.name).toBe("Renamed");
     });
@@ -146,21 +152,21 @@ describe('measurement service tests', () => {
     test('deleteMeasurementCategory DELETEs /measurement-category/<id>/', async () => {
         (axios.delete as Mock).mockResolvedValue({ status: 204 });
 
-        await deleteMeasurementCategory(9);
+        await deleteMeasurementCategory(CATEGORY_UUID_2);
 
         expect(axios.delete).toHaveBeenCalledWith(
-            expect.stringMatching(/\/api\/v2\/measurement-category\/9\/$/),
+            expect.stringMatching(new RegExp(`/api/v2/measurement-category/${CATEGORY_UUID_2}/$`)),
             expect.anything()
         );
     });
 
     test('addMeasurementEntry POSTs the entry with serialized date', async () => {
         (axios.post as Mock).mockResolvedValue({
-            data: { id: 5, category: 1, value: 80.5, date: "2024-08-01", notes: "" },
+            data: { id: ENTRY_UUID_2, category: CATEGORY_UUID, value: 80.5, date: "2024-08-01", notes: "" },
         });
 
         const result = await addMeasurementEntry({
-            categoryId: 1,
+            categoryId: CATEGORY_UUID,
             date: new Date("2024-08-01T12:34:00Z"),
             value: 80.5,
             notes: "",
@@ -170,24 +176,24 @@ describe('measurement service tests', () => {
         const [url, body] = (axios.post as Mock).mock.calls[0];
         expect(url).toMatch(/\/api\/v2\/measurement\/$/);
         expect(body).toMatchObject({
-            category: 1,
+            category: CATEGORY_UUID,
             value: 80.5,
             notes: "",
         });
         // Date is YYYY-MM-DD
         expect(body.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
         expect(result).toBeInstanceOf(MeasurementEntry);
-        expect(result.id).toBe(5);
+        expect(result.id).toBe(ENTRY_UUID_2);
     });
 
     test('editMeasurementEntry PATCHes /measurement/<id>/ with date/value/notes only', async () => {
         (axios.patch as Mock).mockResolvedValue({
-            data: { id: 5, category: 1, value: 81, date: "2024-08-02", notes: "edited" },
+            data: { id: ENTRY_UUID_2, category: CATEGORY_UUID, value: 81, date: "2024-08-02", notes: "edited" },
         });
 
         const result = await editMeasurementEntry({
-            id: 5,
-            categoryId: 1,
+            id: ENTRY_UUID_2,
+            categoryId: CATEGORY_UUID,
             date: new Date("2024-08-02T00:00:00Z"),
             value: 81,
             notes: "edited",
@@ -195,7 +201,7 @@ describe('measurement service tests', () => {
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.patch as Mock).mock.calls[0];
-        expect(url).toMatch(/\/api\/v2\/measurement\/5\/$/);
+        expect(url).toMatch(new RegExp(`/api/v2/measurement/${ENTRY_UUID_2}/$`));
         // Note: 'category' is NOT sent on edit (categoryId is part of the params but ignored in body)
         expect(body).not.toHaveProperty("category");
         expect(body).toMatchObject({ value: 81, notes: "edited" });
@@ -206,10 +212,10 @@ describe('measurement service tests', () => {
     test('deleteMeasurementEntry DELETEs /measurement/<id>/', async () => {
         (axios.delete as Mock).mockResolvedValue({ status: 204 });
 
-        await deleteMeasurementEntry(5);
+        await deleteMeasurementEntry(ENTRY_UUID_2);
 
         expect(axios.delete).toHaveBeenCalledWith(
-            expect.stringMatching(/\/api\/v2\/measurement\/5\/$/),
+            expect.stringMatching(new RegExp(`/api/v2/measurement/${ENTRY_UUID_2}/$`)),
             expect.anything()
         );
     });

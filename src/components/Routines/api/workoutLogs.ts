@@ -7,7 +7,7 @@ import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
 import { fetchPaginated } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 
-export const deleteLog = async (id: number): Promise<number> => {
+export const deleteLog = async (id: string): Promise<number> => {
     const response = await axios.delete<number>(makeUrl(ApiPath.WORKOUT_LOG, { id: id }), {
         headers: makeHeader(),
     });

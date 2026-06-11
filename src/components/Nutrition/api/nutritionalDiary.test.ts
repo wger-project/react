@@ -7,7 +7,13 @@ import {
 } from "@/components/Nutrition/api/nutritionalDiary";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import { TEST_INGREDIENT_1 } from "@/tests/ingredientTestdata";
-import { responseDiaryEntries, responseDiaryEntryDetail } from "@/tests/nutritionTestdata";
+import {
+    RESPONSE_DIARY_UUID,
+    RESPONSE_MEAL_UUID,
+    RESPONSE_PLAN_UUID,
+    responseDiaryEntries,
+    responseDiaryEntryDetail,
+} from "@/tests/nutritionTestdata";
 import axios from "axios";
 import type { Mock } from 'vitest';
 
@@ -55,7 +61,7 @@ describe("Nutritional diary service tests", () => {
             count: 2,
             results: [
                 responseDiaryEntries.results[0],
-                { ...responseDiaryEntries.results[0], id: 10 },
+                { ...responseDiaryEntries.results[0], id: 'dddddddd-0000-0000-0000-000000000010' },
             ],
         };
         (axios.get as Mock).mockResolvedValue({ data: dupedEntries });
@@ -74,8 +80,8 @@ describe("Nutritional diary service tests", () => {
 
     test('addNutritionalDiaryEntry POSTs the serialized entry', async () => {
         const entry = new DiaryEntry({
-            planId: 101,
-            mealId: 78,
+            planId: RESPONSE_PLAN_UUID,
+            mealId: RESPONSE_MEAL_UUID,
             ingredientId: 101,
             weightUnitId: null,
             amount: 150,
@@ -89,8 +95,8 @@ describe("Nutritional diary service tests", () => {
         const [url, body] = (axios.post as Mock).mock.calls[0];
         expect(url).toMatch(/\/api\/v2\/nutritiondiary\/$/);
         expect(body).toMatchObject({
-            plan: 101,
-            meal: 78,
+            plan: RESPONSE_PLAN_UUID,
+            meal: RESPONSE_MEAL_UUID,
             ingredient: 101,
 
             weight_unit: null,
@@ -98,14 +104,14 @@ describe("Nutritional diary service tests", () => {
             datetime: "2024-08-01T08:00:00.000Z",
         });
         expect(result).toBeInstanceOf(DiaryEntry);
-        expect(result.id).toBe(9);
+        expect(result.id).toBe(RESPONSE_DIARY_UUID);
     });
 
     test('editNutritionalDiaryEntry PATCHes /nutritiondiary/<id>/', async () => {
         const entry = new DiaryEntry({
-            id: 9,
-            planId: 101,
-            mealId: 78,
+            id: RESPONSE_DIARY_UUID,
+            planId: RESPONSE_PLAN_UUID,
+            mealId: RESPONSE_MEAL_UUID,
             ingredientId: 101,
             weightUnitId: null,
             amount: 99,
@@ -119,7 +125,7 @@ describe("Nutritional diary service tests", () => {
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.patch as Mock).mock.calls[0];
-        expect(url).toMatch(/\/api\/v2\/nutritiondiary\/9\/$/);
+        expect(url).toMatch(new RegExp(`/api/v2/nutritiondiary/${RESPONSE_DIARY_UUID}/$`));
         expect(body).toMatchObject({ amount: "99" });
         expect(result.amount).toBe(99);
     });
@@ -127,10 +133,10 @@ describe("Nutritional diary service tests", () => {
     test('deleteNutritionalDiaryEntry DELETEs /nutritiondiary/<id>/', async () => {
         (axios.delete as Mock).mockResolvedValue({ status: 204 });
 
-        await deleteNutritionalDiaryEntry(9);
+        await deleteNutritionalDiaryEntry(RESPONSE_DIARY_UUID);
 
         expect(axios.delete).toHaveBeenCalledWith(
-            expect.stringMatching(/\/api\/v2\/nutritiondiary\/9\/$/),
+            expect.stringMatching(new RegExp(`/api/v2/nutritiondiary/${RESPONSE_DIARY_UUID}/$`)),
             expect.anything()
         );
     });

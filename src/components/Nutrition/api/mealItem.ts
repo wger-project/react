@@ -24,7 +24,7 @@ export const editMealItem = async (mealItem: MealItem): Promise<MealItem> => {
     return MealItem.fromJson(response.data);
 };
 
-export const deleteMealItem = async (id: number): Promise<void> => {
+export const deleteMealItem = async (id: string): Promise<void> => {
     await axios.delete(
         makeUrl(ApiPath.MEAL_ITEM, { id: id }),
         { headers: makeHeader() },

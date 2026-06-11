@@ -66,7 +66,8 @@ describe('Test the MealItemForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <MealItemForm mealId={123} planId={987} closeFn={closeFnMock} />
+                <MealItemForm mealId="bbbbbbbb-0000-0000-0000-000000000123"
+                              planId="aaaaaaaa-0000-0000-0000-000000000987" closeFn={closeFnMock} />
             </QueryClientProvider>
         );
         await fillInEntry(user);
@@ -78,7 +79,7 @@ describe('Test the MealItemForm component', () => {
         expect(closeFnMock).toHaveBeenCalled();
         expect(mutateAddMock).toHaveBeenCalledWith(
             expect.objectContaining({
-                mealId: 123,
+                mealId: 'bbbbbbbb-0000-0000-0000-000000000123',
                 amount: 120,
                 ingredientId: 101,
                 weightUnitId: null,
@@ -92,7 +93,8 @@ describe('Test the MealItemForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <MealItemForm planId={987} item={TEST_MEAL_ITEM_1} closeFn={closeFnMock} />
+                <MealItemForm planId="aaaaaaaa-0000-0000-0000-000000000987" item={TEST_MEAL_ITEM_1}
+                              closeFn={closeFnMock} />
             </QueryClientProvider>
         );
         await fillInEntry(user);
@@ -104,8 +106,8 @@ describe('Test the MealItemForm component', () => {
         expect(closeFnMock).toHaveBeenCalled();
         expect(mutateEditMock).toHaveBeenCalledWith(
             expect.objectContaining({
-                id: 42,
-                mealId: 1001,
+                id: 'cccccccc-0000-0000-0000-000000000042',
+                mealId: 'bbbbbbbb-0000-0000-0000-000000001001',
                 amount: 120,
                 order: 3,
                 ingredientId: 101,

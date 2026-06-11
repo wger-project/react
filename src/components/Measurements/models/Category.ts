@@ -6,7 +6,7 @@ export class MeasurementCategory {
     entries: MeasurementEntry[] = [];
 
     constructor(
-        public id: number,
+        public id: string,
         public name: string,
         public unit: string,
         entries?: MeasurementEntry[]
