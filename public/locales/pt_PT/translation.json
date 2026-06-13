@@ -93,7 +93,14 @@
         "imageStyleLowPoly": "Roldana baixa",
         "imageStyleOther": "Outro",
         "imageDetails": "Detalhes da imagem",
-        "swapExercise": "Trocar exercício"
+        "swapExercise": "Trocar exercício",
+        "replacementCannotBeSame": "O exercício substituto não pode ser o mesmo que está a ser eliminado.",
+        "transferMediaLabel": "Transferir os meios para o exercício de substituição",
+        "transferTranslationsLabel": "Transferir traduções para a substituição (ignora os idiomas já presentes)",
+        "exactMatch": "Correspondência exata",
+        "imageIsAiGenerated": "A imagem foi gerada por IA",
+        "dropOrClickImage": "Arraste uma imagem para aqui ou clique para selecionar",
+        "addImage": "Adicionar imagem"
     },
     "nutrition": {
         "plans": "Planos alimentares",
@@ -145,7 +152,16 @@
         "logThisMeal": "Regista esta refeição tal como está no diário alimentar",
         "logThisMealItem": "Regista este ingrediente tal como está no diário alimentar",
         "valueRemaining": "restam",
-        "valueTooMany": "demasiadas"
+        "valueTooMany": "demasiadas",
+        "languageFilterCurrentOnly": "Apenas no idioma atual ({{lang}})",
+        "languageFilterCurrentAndEnglish": "Idioma atual ({{lang}}) e Inglês",
+        "languageFilterAll": "Todas as idiomas",
+        "filterVegan": "Vegano",
+        "filterVegetarian": "Vegetariano",
+        "filterNutriscore": "Filtro Nutri-Score",
+        "filterNutriscoreOff": "Desligado",
+        "filterNutriscoreNoFilter": "Sem filtro",
+        "filterNutriscoreOrBetter": "{{grade}} ou melhor"
     },
     "bmi": {
         "calculator": "Calculadora de IMC",
@@ -215,7 +231,7 @@
         "deleteDayConfirmation": "Isto vai apagar todas as séries, exercícios e regras de progressão",
         "routineHasNoDays": "A rotina não tem dias",
         "setHasNoExercises": "Esta série não tem exercícios",
-        "fitDaysInWeek": "Ajustar dias por semana",
+        "fitDaysInWeek": "Horário semanal fixo",
         "fitDaysInWeekHelpText": "Esta opção define como os dias de treino são distribuídos nas semanas. Se estiver ativa, os dias repetem-se semanalmente (ex: seg, qua, sex). Se estiver desligada, os dias seguem em sequência, mesmo que mudem de semana.",
         "needsLogsToAdvance": "Precisa de registos para avançar",
         "needsLogsToAdvanceHelpText": "Se ativares isto, só avanças para o próximo treino se registares o atual. Caso contrário, avança automaticamente.",
@@ -277,9 +293,21 @@
             "myo": "MYO",
             "partial": "Parcial",
             "forced": "Forçado",
-            "tut": "TUT",
-            "iso": "ISO",
-            "jump": "Salto"
+            "tut": "Tempo sob tensão",
+            "iso": "Contração isométrica",
+            "jump": "Salto",
+            "warmup": "Aquecimento"
+        },
+        "addSet": "Adicionar conjunto",
+        "setNr": "Conjunto {{number}}",
+        "day": {
+            "custom": "Personalizado",
+            "enom": "A cada minuto, em ponto",
+            "amrap": "O maior número de séries possível",
+            "hiit": "Treino de intervalos de alta intensidade",
+            "tabata": "Tabata",
+            "edt": "Treino de densidade crescente",
+            "rft": "Séries contra o relógio"
         }
     },
     "measurements": {
@@ -343,5 +371,11 @@
     "trophies": {
         "trophies": "Troféus"
     },
-    "preview": "pré-visualizar"
+    "preview": "pré-visualizar",
+    "useMarkdownHint": "Pode utilizar Markdown básico para formatar o texto: *itálico*, **negrito**, - lista",
+    "currentTrend": "Tendência atual",
+    "mean": "Média",
+    "trend": "Tendência",
+    "variance": "Variação",
+    "totalChange": "Variação total"
 }
