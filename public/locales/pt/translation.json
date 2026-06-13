@@ -85,7 +85,13 @@
         "imageStyleOther": "Outro",
         "imageDetails": "Detalhes da Imagem",
         "swapExercise": "Trocar exercício",
-        "addImage": "Adicionar imagem"
+        "addImage": "Adicionar imagem",
+        "replacementCannotBeSame": "O exercício substituto não pode ser o mesmo que está a ser eliminado.",
+        "transferMediaLabel": "Transferir os mídia para o exercício de substituição",
+        "transferTranslationsLabel": "Transferir traduções para a substituição (ignora os idiomas já presentes)",
+        "exactMatch": "Correspondência exata",
+        "imageIsAiGenerated": "A imagem foi gerada por IA",
+        "dropOrClickImage": "Arraste uma imagem para aqui ou clique para selecionar"
     },
     "noResults": "Sem resultados",
     "noResultsDescription": "Nenhum resultado encontrado para essa consulta, considere reduzir o número de filtros.",
@@ -392,5 +398,9 @@
     "public": "Público",
     "totalChange": "Variação total",
     "preview": "Ensaio",
-    "useMarkdownHint": "Podes usar markdown básico para formatar o texto: *itálico*, **negrigo**, - lista"
+    "useMarkdownHint": "Podes usar markdown básico para formatar o texto: *itálico*, **negrigo**, - lista",
+    "mean": "Mediano",
+    "trend": "Tendência",
+    "variance": "Variação",
+    "currentTrend": "Tendência atual"
 }
