@@ -95,7 +95,7 @@ export const SlotProgressionEdit = () => {
                             routineId={routineId}
                             iterations={iterations}
                             forceInteger={true}
-                            cycleLength={routine.cycleLength}
+                            isWeeklyCycle={routine.isWeeklyCycle}
                         />
                         <ProgressionForm
                             type="weight"
@@ -104,7 +104,7 @@ export const SlotProgressionEdit = () => {
                             slotEntryId={slotEntry.id!}
                             routineId={routineId}
                             iterations={iterations}
-                            cycleLength={routine.cycleLength}
+                            isWeeklyCycle={routine.isWeeklyCycle}
                         />
                         <ProgressionForm
                             type="reps"
@@ -113,7 +113,7 @@ export const SlotProgressionEdit = () => {
                             slotEntryId={slotEntry.id!}
                             routineId={routineId}
                             iterations={iterations}
-                            cycleLength={routine.cycleLength}
+                            isWeeklyCycle={routine.isWeeklyCycle}
                         />
                         <ProgressionForm
                             type="rir"
@@ -122,7 +122,7 @@ export const SlotProgressionEdit = () => {
                             slotEntryId={slotEntry.id!}
                             routineId={routineId}
                             iterations={iterations}
-                            cycleLength={routine.cycleLength}
+                            isWeeklyCycle={routine.isWeeklyCycle}
                         />
                         <ProgressionForm
                             type="rest"
@@ -131,7 +131,7 @@ export const SlotProgressionEdit = () => {
                             slotEntryId={slotEntry.id!}
                             routineId={routineId}
                             iterations={iterations}
-                            cycleLength={routine.cycleLength}
+                            isWeeklyCycle={routine.isWeeklyCycle}
                         />
                     </Grid>
                 </React.Fragment>

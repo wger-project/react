@@ -31,7 +31,7 @@ export const ProgressionForm = (props: {
     routineId: number,
     iterations: number[],
     forceInteger?: boolean;
-    cycleLength: number;
+    isWeeklyCycle: boolean;
 }) => {
     const { t } = useTranslation();
     const [iterationsToDelete, setIterationsToDelete] = useState<number[]>([]);
@@ -355,7 +355,7 @@ export const ProgressionForm = (props: {
                                                     justifyContent: 'space-around',
                                                     alignItems: 'center'
                                                 }}>
-                                                    {props.cycleLength === 7 ? t('routines.weekNr', { number: log.iteration }) : t('routines.workoutNr', { number: log.iteration })}
+                                                    {props.isWeeklyCycle ? t('routines.weekNr', { number: log.iteration }) : t('routines.workoutNr', { number: log.iteration })}
                                                     {log.edited
                                                         ? <IconButton
                                                             // Allow deleting the first element if it's not the only one

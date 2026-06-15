@@ -64,7 +64,7 @@ describe('Tests for the ProgressionForm', () => {
                     slotEntryId={10}
                     routineId={1}
                     iterations={[1, 2]}
-                    cycleLength={7}
+                    isWeeklyCycle={true}
                 />
             </QueryClientProvider>
         );
