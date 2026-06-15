@@ -133,28 +133,28 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
                                                 {...params}
                                                 variant="standard"
                                                 label={t("exercises.secondaryMuscles")}
-                                                value={formik.getFieldProps("muscles").value}
+                                                value={formik.getFieldProps("musclesSecondary").value}
                                             />
                                         )}
                                     />
+                                    <Grid container>
+                                        <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
+                                            <MuscleOverview
+                                                primaryMuscles={primaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                                secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                                isFront={true}
+                                            />
+                                        </Grid>
+                                        <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
+                                            <MuscleOverview
+                                                primaryMuscles={primaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                                secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                                isFront={false}
+                                            />
+                                        </Grid>
+                                    </Grid>
                                 </>
                             }
-                            <Grid container>
-                                <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
-                                    <MuscleOverview
-                                        primaryMuscles={primaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
-                                        secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
-                                        isFront={true}
-                                    />
-                                </Grid>
-                                <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
-                                    <MuscleOverview
-                                        primaryMuscles={primaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
-                                        secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
-                                        isFront={false}
-                                    />
-                                </Grid>
-                            </Grid>
                         </Stack>
                         <Grid container>
                             <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
