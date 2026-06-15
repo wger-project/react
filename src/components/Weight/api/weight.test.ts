@@ -47,7 +47,7 @@ describe("weight service tests", () => {
 
         // Arrange
         const weightEntry = new WeightEntry(new Date('2021-12-10'), 80, 1);
-        const weightResponse = { id: 1, weight: 80, date: '2021-12-10' };
+        const weightResponse = { data: { id: 1, weight: 80, date: '2021-12-10' } };
 
         // Act
         (axios.patch as Mock).mockImplementation(() => Promise.resolve(weightResponse));

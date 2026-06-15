@@ -43,7 +43,7 @@ export const updateWeight = async (entry: WeightEntry): Promise<WeightEntry> => 
         headers: makeHeader(),
     });
 
-    return WeightEntry.fromJson(response);
+    return WeightEntry.fromJson(response.data);
 };
 
 /*
