@@ -134,7 +134,9 @@ if (ingredientSearchBox) {
     root.render(
         <Suspense fallback={<LoadingWidget />}>
             <ThemeProvider theme={theme}>
-                <IngredientSearch />
+                <QueryClientProvider client={queryClient}>
+                    <IngredientSearch />
+                </QueryClientProvider>
             </ThemeProvider>
         </Suspense>
     );
