@@ -52,13 +52,12 @@ const renderComponentShadowDom = (divId: string) => {
     const shadowRoot = document.createElement('div');
     const styleElement = document.createElement('style');
 
-    const djangoReactStyle = document.getElementById('react-css');
+    const djangoReactStyle = document.getElementById('react-css') as HTMLLinkElement | null;
     if (djangoReactStyle) {
         const djangoStyleElement = document.createElement('link');
         djangoStyleElement.setAttribute('rel', 'stylesheet');
-        // @ts-ignore
         djangoStyleElement.setAttribute('href', djangoReactStyle.href);
-        shadow.appendChild(djangoReactStyle);
+        shadow.appendChild(djangoStyleElement);
     }
 
     shadow.appendChild(shadowRoot);
