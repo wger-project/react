@@ -1,11 +1,10 @@
+import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/components/Nutrition/queries";
+import { PlanForm } from "@/components/Nutrition/widgets/forms/PlanForm";
+import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-
-import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/components/Nutrition/queries";
-import { PlanForm } from "@/components/Nutrition/widgets/forms/PlanForm";
 import React from 'react';
-import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Weight/api/weight");
@@ -62,6 +61,9 @@ describe("Test the PlanForm component", () => {
         expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
                 id: 101,
                 description: "a better name",
+                // the existing plan's dates must be preserved when only the description changes
+                start: TEST_NUTRITIONAL_PLAN_1.start,
+                end: TEST_NUTRITIONAL_PLAN_1.end,
                 goalCarbohydrates: null,
                 goalFiber: null,
                 goalEnergy: null,

@@ -88,8 +88,8 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             initialValues={{
                 description: plan ? plan.description : t('nutrition.plan'),
 
-                start: dateToYYYYMMDD(new Date()),
-                end: null,
+                start: plan ? dateToYYYYMMDD(plan.start) : dateToYYYYMMDD(new Date()),
+                end: plan && plan.end !== null ? dateToYYYYMMDD(plan.end) : null,
 
                 onlyLogging: plan ? plan.onlyLogging : true,
                 goalEnergy: plan ? plan.goalEnergy : null,
