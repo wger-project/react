@@ -35,7 +35,7 @@ export const useAddMeasurementCategoryQuery = () => {
     });
 };
 
-export const useEditMeasurementCategoryQuery = (id: number) => {
+export const useEditMeasurementCategoryQuery = (id: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
@@ -51,11 +51,11 @@ export const useEditMeasurementCategoryQuery = (id: number) => {
     });
 };
 
-export const useDeleteMeasurementCategoryQuery = (id: number) => {
+export const useDeleteMeasurementCategoryQuery = (id: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (id: number) => deleteMeasurementCategory(id),
+        mutationFn: (id: string) => deleteMeasurementCategory(id),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.MEASUREMENTS, id]
@@ -68,7 +68,7 @@ export const useDeleteMeasurementCategoryQuery = (id: number) => {
 };
 
 
-export function useMeasurementsQuery(id: number) {
+export function useMeasurementsQuery(id: string) {
     return useQuery({
         queryKey: [QueryKey.MEASUREMENTS, id],
         queryFn: () => getMeasurementCategory(id)
@@ -111,7 +111,7 @@ export const useDeleteMeasurementsQuery = (/*id: number*/) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (id: number) => deleteMeasurementEntry(id),
+        mutationFn: (id: string) => deleteMeasurementEntry(id),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.MEASUREMENTS,]
         })

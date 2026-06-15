@@ -31,7 +31,7 @@ describe('Test the MealForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <MealForm planId={987} closeFn={closeFnMock} />
+                <MealForm planId="aaaaaaaa-0000-0000-0000-000000000987" closeFn={closeFnMock} />
             </QueryClientProvider>
         );
 
@@ -47,7 +47,7 @@ describe('Test the MealForm component', () => {
         expect(closeFnMock).toHaveBeenCalled();
         expect(mutateAddMock).toHaveBeenCalledWith(new Meal({
             name: '2nd breakfast',
-            planId: 987,
+            planId: 'aaaaaaaa-0000-0000-0000-000000000987',
             time: expect.any(Date),
         }));
     });
@@ -59,7 +59,7 @@ describe('Test the MealForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <MealForm planId={987} meal={TEST_MEAL_1} closeFn={closeFnMock} />
+                <MealForm planId="aaaaaaaa-0000-0000-0000-000000000987" meal={TEST_MEAL_1} closeFn={closeFnMock} />
             </QueryClientProvider>
         );
 
@@ -75,10 +75,10 @@ describe('Test the MealForm component', () => {
         expect(closeFnMock).toHaveBeenCalled();
         expect(mutateEditMock).toHaveBeenCalledWith(
             expect.objectContaining({
-                id: 78,
+                id: 'bbbbbbbb-0000-0000-0000-000000000078',
                 name: '2nd breakfast',
                 order: 2,
-                planId: 123,
+                planId: 'aaaaaaaa-0000-0000-0000-000000000123',
                 time: TEST_MEAL_1.time
             })
         );

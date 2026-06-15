@@ -43,7 +43,7 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
     const [session, setSession] = React.useState<WorkoutSession | undefined>(initialSession);
 
     const addSessionQuery = useAddSessionQuery();
-    const editSessionQuery = useEditSessionQuery(session?.id || 0);
+    const editSessionQuery = useEditSessionQuery(session?.id || '');
     const findSessionQuery = useFindSessionQuery(
         routineId,
         {

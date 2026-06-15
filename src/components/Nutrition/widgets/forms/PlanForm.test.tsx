@@ -59,7 +59,7 @@ describe("Test the PlanForm component", () => {
         // Assert
         await user.click(screen.getByRole('button', { name: 'submit' }));
         expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
-                id: 101,
+                id: 'aaaaaaaa-0000-0000-0000-000000000101',
                 description: "a better name",
                 // the existing plan's dates must be preserved when only the description changes
                 start: TEST_NUTRITIONAL_PLAN_1.start,

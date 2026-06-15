@@ -513,6 +513,12 @@ ij_json_spaces_within_braces = false
 ij_json_spaces_within_brackets = false
 ij_json_wrap_long_lines = false
 
+# Weblate writes translation files with 4-space indent. Match that to avoid
+# whole-file reformat diffs when an editor saves them.
+[public/locales/**/*.json]
+indent_size = 4
+tab_width = 4
+
 [{*.htm,*.html,*.ng,*.sht,*.shtm,*.shtml}]
 ij_continuation_indent_size = 4
 ij_html_add_new_line_before_tags = body, div, p, form, h1, h2, h3

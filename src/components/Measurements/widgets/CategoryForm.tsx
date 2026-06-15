@@ -15,7 +15,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
 
     const [t] = useTranslation();
     const useAddCategoryQuery = useAddMeasurementCategoryQuery();
-    const useEditCategoryQuery = useEditMeasurementCategoryQuery(category?.id || 0);
+    const useEditCategoryQuery = useEditMeasurementCategoryQuery(category?.id || '');
     // Match the backend column limits. We do NOT enforce a minimum length:
     // many users have legitimate 1-2 char names (e.g. CJK abbreviations
     // like 体重 / 体脂), and the backend allows them.

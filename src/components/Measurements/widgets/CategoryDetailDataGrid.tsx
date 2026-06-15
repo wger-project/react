@@ -61,7 +61,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
     };
 
     const handleDeleteClick = (id: GridRowId) => async () => {
-        deleteEntryQuery.mutate(parseInt(id.toString()));
+        deleteEntryQuery.mutate(id.toString());
     };
 
     const handleCancelClick = (id: GridRowId) => () => {
