@@ -97,7 +97,8 @@
             "tabata": "Tabata"
         },
         "addSet": "Adicionar série",
-        "setNr": "Série {{number}}"
+        "setNr": "Série {{number}}",
+        "exerciseNotAvailable": "Erro ao carregar exercício"
     },
     "server": {
         "glutes": "Glúteos",
