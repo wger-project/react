@@ -67,7 +67,7 @@ export function SetConfigDataDetails(props: {
     showExercise: boolean,
 }) {
 
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const languageQuery = useLanguageQuery();
 
     let language: Language | undefined = undefined;
@@ -89,7 +89,9 @@ export function SetConfigDataDetails(props: {
             <Grid size={12}>
                 <Stack spacing={0}>
                     <Typography variant={"h6"}>
-                        {props.showExercise ? props.setConfigData.exercise?.getTranslation(language).name : ''}
+                        {props.showExercise && (props.setConfigData.exercise
+                            ? props.setConfigData.exercise.getTranslation(language).name
+                            : t('routines.exerciseNotAvailable'))}
                     </Typography>
                     <div>
                         {props.setConfigData.textRepr}

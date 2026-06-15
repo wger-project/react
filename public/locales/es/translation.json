@@ -64,7 +64,11 @@
         "swapExercise": "Cambiar ejercicio",
         "replacementCannotBeSame": "El reemplazo no puede ser el mismo ejercicio que se está eliminando.",
         "transferMediaLabel": "Transferir archivos multimedia al ejercicio de reemplazo",
-        "exactMatch": "Coincidencia exacta"
+        "exactMatch": "Coincidencia exacta",
+        "imageIsAiGenerated": "La imagen fue generada con IA",
+        "dropOrClickImage": "Suelte una imagen aquí o haga clic para seleccionar",
+        "addImage": "Agregar imagen",
+        "transferTranslationsLabel": "Transferir las traducciones al sustituto (omite los idiomas ya presentes)"
     },
     "loading": "Cargando...",
     "images": "Imágenes",
@@ -207,7 +211,8 @@
             "forced": "Forzado",
             "type": "Tipo",
             "jump": "Salto",
-            "iso": "Aguante isométrico"
+            "iso": "Aguante isométrico",
+            "warmup": "Calentamiento"
         },
         "roundingHelp": "Establezca el redondeo predeterminado para obtener peso y repeticiones (esto es especialmente útil cuando se usan incrementos porcentuales en la progresión). Esto se aplicará a todos los conjuntos nuevos, pero se puede cambiar individualmente en el formulario de progresión. Deja vacío para deshabilitar el redondeo.",
         "maxLengthRoutine": "La rutina debe tener como mucho {{number}} semanas",
@@ -234,7 +239,9 @@
             "edt": "Entrenamiento de densidad creciente",
             "rft": "Rondas por tiempo",
             "afap": "Tan rápido como sea posible"
-        }
+        },
+        "addSet": "Añadir serie",
+        "setNr": "Serie {{number}}"
     },
     "actions": "Acciones",
     "value": "Valor",
@@ -302,7 +309,11 @@
         "languageFilterCurrentAndEnglish": "Idioma actual ({{lang}}) e Inglés",
         "languageFilterAll": "Todos los idiomas",
         "filterVegan": "Vegana",
-        "filterVegetarian": "Vegetariana"
+        "filterVegetarian": "Vegetariana",
+        "filterNutriscore": "Filtro Nutri-Score",
+        "filterNutriscoreOff": "Apagado",
+        "filterNutriscoreNoFilter": "Sin filtrado",
+        "filterNutriscoreOrBetter": "{{grade}} o mejor"
     },
     "downloadAsPdf": "Descargar como un PDF",
     "total": "Total",

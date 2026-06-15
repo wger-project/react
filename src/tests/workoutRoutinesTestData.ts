@@ -311,7 +311,7 @@ export const responseRoutineLogs = {
             "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000002",
             "iteration": 1,
             "date": "2023-05-10",
-            "exercise": 100,
+            "exercise": 345,
             "routine": 1,
             "slot_entry": 2,
 
@@ -330,7 +330,7 @@ export const responseRoutineLogs = {
             "id": "aaaaaaaa-aaaa-aaaa-aaaa-000000000001",
             "iteration": 1,
             "date": "2023-05-13",
-            "exercise": 100,
+            "exercise": 345,
             "routine": 1,
             "slot_entry": 2,
 

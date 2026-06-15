@@ -13,7 +13,7 @@
         "searchExerciseName": "Rechercher par nom d'exercice",
         "alsoKnownAs": "Aussi connu sous :",
         "notes": "Notes",
-        "description": "Déscription",
+        "description": "Description",
         "noEquipment": "Sans équipement",
         "missingExercise": "Un certain exercice manque ?",
         "missingExerciseDescription": "Aidez la communauté en y contribuant !",
@@ -58,7 +58,14 @@
         "imageDetails": "Détail des images",
         "imageStyleOther": "Autre",
         "imageStyleLowPoly": "Low-Poly",
-        "swapExercise": "Changer d'exercice"
+        "swapExercise": "Changer d'exercice",
+        "replacementCannotBeSame": "L'exercice de remplacement ne peut pas être celui qui est supprimé.",
+        "transferMediaLabel": "Transférer les médias à l'exercice de remplacement",
+        "transferTranslationsLabel": "Transférer les traductions vers le remplacement (ignore les langues déjà présentes)",
+        "exactMatch": "Correspondance exacte",
+        "imageIsAiGenerated": "L'image a été générée par IA",
+        "dropOrClickImage": "Déposez une image ici ou cliquez pour la sélectionner",
+        "addImage": "Ajouter une image"
     },
     "server": {
         "arms": "Bras",
@@ -171,7 +178,7 @@
         "resultingRoutine": "Routine résultante",
         "routineHasNoDays": "La routine n'a pas de jours",
         "setHasNoExercises": "Cette série ne contient aucun exercice",
-        "fitDaysInWeek": "Jours en forme dans la semaine",
+        "fitDaysInWeek": "Emploi du temps hebdomadaire fixe",
         "needsLogsToAdvance": "Nécessite des journaux pour avancer",
         "needsLogsToAdvanceHelpText": "Si vous sélectionnez cette option, la routine passera au jour suivant uniquement si vous avez enregistré une séance d'entraînement pour la journée en cours. Si cette option n'est pas sélectionnée, la routine passera automatiquement au jour suivant, que vous ayez enregistré une séance d'entraînement ou non.",
         "fitDaysInWeekHelpText": "Ce paramètre contrôle la répartition des jours de votre routine sur plusieurs semaines. Si cette option est activée, les jours se répètent selon un cycle hebdomadaire. Par exemple, une routine avec des entraînements le lundi, le mercredi et le vendredi se répète les lundi, mercredi et vendredi suivants. Si elle est désactivée, les jours se succèdent sans tenir compte du début d'une nouvelle semaine. Ceci est utile pour les routines qui ne suivent pas un planning hebdomadaire strict.",
@@ -222,7 +229,8 @@
             "iso": "Maintien isométrique",
             "jump": "Saut",
             "partial": "Partielle",
-            "forced": "Forcée"
+            "forced": "Forcée",
+            "warmup": "Échauffement"
         },
         "publicTemplateHelpText": "Les modèles publics sont disponibles pour tous les utilisateurs.",
         "workoutSession": "Séance d'entraînement",
@@ -237,7 +245,9 @@
             "edt": "Entraînement à densité croissante",
             "rft": "Rounds for time",
             "afap": "Aussi vite que possible"
-        }
+        },
+        "addSet": "Ajouter une série",
+        "setNr": "Série {{number}}"
     },
     "value": "Valeur",
     "deleteConfirmation": "Êtes-vous certain de vouloir supprimer \"{{name}}\" ?",
@@ -295,7 +305,16 @@
         "pseudoMealTitle": "Autres journaux",
         "ofWhichSaturated": "dont saturé",
         "planDeleteInfo": "Cela supprimera également toutes les entrées du journal nutritionnel",
-        "logThisMealItem": "Enregistrez cet ingrédient tel quel dans le journal nutritionnel"
+        "logThisMealItem": "Enregistrez cet ingrédient tel quel dans le journal nutritionnel",
+        "languageFilterCurrentOnly": "Uniquement dans la langue actuelle ({{lang}})",
+        "languageFilterAll": "Toutes les langues",
+        "filterVegetarian": "Végétarien",
+        "languageFilterCurrentAndEnglish": "Langue courante ({{lang}}) & Anglais",
+        "filterVegan": "Végan",
+        "filterNutriscore": "Filtre Nutri-Score",
+        "filterNutriscoreOff": "Off",
+        "filterNutriscoreNoFilter": "Pas de filtre",
+        "filterNutriscoreOrBetter": "{{grade}} ou mieux"
     },
     "nothingHereYet": "Rien ici pour le moment …",
     "total": "Total",
@@ -359,5 +378,12 @@
     },
     "trophies": {
         "trophies": "Trophées"
-    }
+    },
+    "preview": "Aperçu",
+    "useMarkdownHint": "Tu peux utiliser du Markdown de base pour formater le texte : *italique*, **gras**, - liste",
+    "currentTrend": "Tendance actuelle",
+    "mean": "Moyenne",
+    "trend": "Tendance",
+    "variance": "Variance",
+    "totalChange": "Variation totale"
 }

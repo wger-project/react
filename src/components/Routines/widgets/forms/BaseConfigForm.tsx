@@ -44,6 +44,7 @@ import {
 } from "@/components/Routines/queries";
 import {
     useAddMaxNrOfSetsConfigQuery,
+    useDeleteMaxNrOfSetsConfigQuery,
     useEditMaxNrOfSetsConfigQuery
 } from "@/components/Routines/queries/configs";
 import { useFormikContext } from "formik";
@@ -82,7 +83,7 @@ export const QUERY_MAP: { [key: string]: any } = {
     'max-sets': {
         edit: useEditMaxNrOfSetsConfigQuery,
         add: useAddMaxNrOfSetsConfigQuery,
-        delete: useAddMaxRepsConfigQuery
+        delete: useDeleteMaxNrOfSetsConfigQuery
     },
     'rest': {
         edit: useEditRestConfigQuery,

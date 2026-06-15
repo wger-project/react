@@ -185,7 +185,9 @@ export const RoutineTable = (props: {
                     {placeholder}
                     <TableCell colSpan={5}>
                         <Typography variant={'h6'}>
-                            {t('routines.weekNr', { number: iteration })}
+                            {props.routine.isWeeklyCycle
+                                ? t('routines.weekNr', { number: iteration })
+                                : t('routines.iterationNr', { number: iteration })}
                         </Typography>
                     </TableCell>
                 </React.Fragment>;

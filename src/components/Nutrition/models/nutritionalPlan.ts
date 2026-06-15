@@ -247,9 +247,10 @@ export class NutritionalPlanAdapter implements Adapter<NutritionalPlan> {
             goal_protein: item.goalProtein,
             goal_carbohydrates: item.goalCarbohydrates,
             goal_fiber: item.goalFiber,
-            goal_sodium: item.goalSodium,
             goal_fat: item.goalFat,
-            goal_fats_saturated: item.goalFatsSaturated,
+            // goal_sodium and goal_fats_saturated are intentionally omitted: this frontend
+            // has no UI for them and reads them as null, so sending them would wipe values
+            // set elsewhere (e.g. the mobile app). PATCH leaves omitted fields untouched.
         };
     }
 }

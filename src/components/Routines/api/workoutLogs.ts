@@ -1,11 +1,11 @@
-import axios from "axios";
+import { getExercisesByIds } from "@/components/Exercises/api/exercise";
 import { Exercise } from "@/components/Exercises/models/exercise";
-import { WorkoutLog, WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
-import { getExercise } from "@/components/Exercises/api/exercise";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
+import { WorkoutLog, WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
 import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
 import { fetchPaginated } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
+import axios from "axios";
 
 export const deleteLog = async (id: string): Promise<number> => {
     const response = await axios.delete<number>(makeUrl(ApiPath.WORKOUT_LOG, { id: id }), {
@@ -59,8 +59,6 @@ export const getRoutineLogs = async (id: number, options?
     const repUnits = unitResponses[0];
     const weightUnits = unitResponses[1];
 
-    const exercises: Map<number, Exercise> = new Map();
-
     const out: WorkoutLog[] = [];
     for await (const page of fetchPaginated(url)) {
         for (const logData of page) {
@@ -73,15 +71,21 @@ export const getRoutineLogs = async (id: number, options?
                 log.weightUnitObj = weightUnits.find(e => e.id === log.weightUnitId) ?? null;
             }
 
-            // Load the base object
-            if (loadExercises) {
-                if (exercises.get(log.exerciseId) === undefined) {
-                    exercises.set(log.exerciseId, await getExercise(log.exerciseId));
-                }
-                log.exerciseObj = exercises.get(log.exerciseId)!;
-            }
-
             out.push(log);
+        }
+    }
+
+    // Load the referenced exercises
+    if (loadExercises) {
+        const exerciseIds = [...new Set(out.map(log => log.exerciseId))];
+        if (exerciseIds.length > 0) {
+            const exercises = new Map<number, Exercise>();
+            for (const exercise of await getExercisesByIds(exerciseIds)) {
+                exercises.set(exercise.id!, exercise);
+            }
+            for (const log of out) {
+                log.exerciseObj = exercises.get(log.exerciseId);
+            }
         }
     }
 

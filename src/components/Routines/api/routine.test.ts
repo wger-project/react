@@ -1,4 +1,5 @@
-import { getExercise } from "@/components/Exercises/api/exercise";
+import { getExercisesByIds } from "@/components/Exercises/api/exercise";
+import { Exercise } from "@/components/Exercises/models/exercise";
 import {
     addRoutine,
     deleteRoutine,
@@ -118,7 +119,7 @@ describe("workout routine service tests", () => {
                 routineId: 1,
                 date: new Date("2023-05-10"),
                 iteration: 1,
-                exerciseId: 100,
+                exerciseId: 345,
                 slotEntryId: 2,
                 repetitionsUnitId: 1,
                 repetitions: 12,
@@ -135,7 +136,7 @@ describe("workout routine service tests", () => {
                 routineId: 1,
                 date: new Date("2023-05-13"),
                 iteration: 1,
-                exerciseId: 100,
+                exerciseId: 345,
                 slotEntryId: 2,
                 repetitionsUnitId: 1,
                 repetitions: 10,
@@ -380,9 +381,7 @@ describe("workout routine service tests", () => {
         (getRoutineRepUnits as Mock).mockResolvedValue([testRepUnit1, testRepUnit2]);
         (getRoutineWeightUnits as Mock).mockResolvedValue([testWeightUnit1, testWeightUnit2]);
         // The dayData fixture references exercise ids 9 and 12 - return a stub for each.
-        (getExercise as Mock).mockImplementation((id: number) =>
-            Promise.resolve(id === 9 ? testExerciseBenchPress : testExerciseCurls)
-        );
+        (getExercisesByIds as Mock).mockResolvedValue([testExerciseBenchPress, testExerciseCurls]);
 
         const result = await getRoutine(1);
 
@@ -399,6 +398,41 @@ describe("workout routine service tests", () => {
         // Unit lookups happened too
         expect(getRoutineRepUnits).toHaveBeenCalled();
         expect(getRoutineWeightUnits).toHaveBeenCalled();
+    });
+
+    test('getRoutine tolerates missing exercises and still loads the routine', async () => {
+        (axios.get as Mock).mockImplementation((url: string) => {
+            if (url.includes("date-sequence-display")) {
+                return Promise.resolve({ data: responseRoutineDayData });
+            }
+            if (url.includes("structure")) {
+                return Promise.resolve({ data: responseRoutineStructure });
+            }
+            return Promise.resolve({ data: responseSingleRoutineDetail });
+        });
+        (getRoutineRepUnits as Mock).mockResolvedValue([testRepUnit1, testRepUnit2]);
+        (getRoutineWeightUnits as Mock).mockResolvedValue([testWeightUnit1, testWeightUnit2]);
+        // The routine references exercises 9 and 12; only 9 still exists (12 is stale/deleted)
+        const benchPress9 = new Exercise({ ...testExerciseBenchPress, id: 9 });
+        (getExercisesByIds as Mock).mockResolvedValue([benchPress9]);
+
+        const result = await getRoutine(1);
+
+        // The whole routine still loads instead of failing because of the missing exercise
+        expect(result).toBeInstanceOf(Routine);
+        expect(result.dayData.length).toBe(responseRoutineDayData.length);
+
+        const setConfigs = result.dayData.flatMap(d => d.slots).flatMap(s => s.setConfigs);
+        const loaded = setConfigs.filter(sc => sc.exerciseId === 9);
+        const missing = setConfigs.filter(sc => sc.exerciseId === 12);
+        expect(loaded.length).toBeGreaterThan(0);
+        expect(loaded.every(sc => sc.exercise === benchPress9)).toBe(true);
+        expect(missing.length).toBeGreaterThan(0);
+        expect(missing.every(sc => sc.exercise === undefined)).toBe(true);
+
+        // The missing exercise must not leak into the array the UI iterates as a non-null Exercise
+        const slotExercises = result.dayData.flatMap(d => d.slots).flatMap(s => s.exercises);
+        expect(slotExercises).not.toContain(undefined);
     });
 
     test('getRoutineStatisticsData hits the stats endpoint and returns RoutineStatsData', async () => {

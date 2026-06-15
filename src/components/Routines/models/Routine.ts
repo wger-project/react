@@ -137,6 +137,14 @@ export class Routine {
         return this.dayDataCurrentIteration.length;
     }
 
+    /*
+     * Whether one iteration of the routine spans a full calendar week, in which
+     * case iterations can be labelled as weeks.
+     */
+    get isWeeklyCycle() {
+        return this.cycleLength === 7;
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static fromJson(json: any): Routine {
         return routineAdapter.fromJson(json);

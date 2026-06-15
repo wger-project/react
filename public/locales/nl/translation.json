@@ -85,7 +85,8 @@
         "compatibleImagesCC": "Afbeeldingen moeten compatibel zijn met de CC BY SA-licentie. Als je twijfelt, upload dan alleen foto's die je zelf hebt gemaakt.",
         "checkInformationBeforeSubmitting": "Controleer of de ingevoerde informatie correct is voordat u de oefening verzendt",
         "deleteExerciseBody": "Wil je de oefening “{{naam}}” verwijderen? Je kunt de huidige {{taal}} vertaling verwijderen of de volledige oefening met alle vertalingen, afbeeldingen, enz.",
-        "swapExercise": "Wissel oefening"
+        "swapExercise": "Wissel oefening",
+        "replacementCannotBeSame": "De vervangende oefening mag niet dezelfde zijn als de oefening die wordt verwijderd."
     },
     "filters": "Filters",
     "nothingHereYet": "Nog niets ingevuld...",
@@ -143,7 +144,8 @@
         "planDeleteInfo": "Hierdoor worden ook alle voedingsdagboekvermeldingen verwijderd",
         "valueTooMany": "teveel",
         "filterVegan": "Veganistisch",
-        "filterVegetarian": "Vegetarisch"
+        "filterVegetarian": "Vegetarisch",
+        "languageFilterAll": "Alle talen"
     },
     "bmi": {
         "overweight": "Overgewicht",
@@ -283,7 +285,9 @@
             "edt": "Oplopende dichtheidstraining",
             "rft": "Rondes voor tijd",
             "afap": "Zo snel mogelijk"
-        }
+        },
+        "addSet": "Set toe­voegen",
+        "setNr": "Set {{number}}"
     },
     "measurements": {
         "measurements": "Metingen",
@@ -356,5 +360,11 @@
     "trophies": {
         "trophies": "Trofeeën"
     },
-    "preview": "Voor­vertoning"
+    "preview": "Voor­vertoning",
+    "useMarkdownHint": "U kunt eenvoudige Markdown gebruiken om de tekst op te maken: *cursief*, **vet**, - lijst",
+    "currentTrend": "Huidige trend",
+    "mean": "Gemiddelde",
+    "trend": "Trend",
+    "variance": "Variantie",
+    "totalChange": "Totale verandering"
 }
