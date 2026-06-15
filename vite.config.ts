@@ -1,6 +1,6 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
-import eslintPlugin from 'vite-plugin-eslint';
+import eslintPlugin from '@nabla/vite-plugin-eslint';
 
 export default defineConfig(({ mode }) => {
     const isTest = mode === 'test' || process.env.VITEST;
@@ -28,10 +28,10 @@ export default defineConfig(({ mode }) => {
                 jsxImportSource: '@emotion/react',
             }),
             // The eslint plugin adds noise to test output and isn't needed during tests.
+            // @nabla lints every file Vite processes; shouldLint restricts it to our
+            // own src/ js/jsx/ts/tsx (the old plugin's `include` glob), skipping deps.
             ...(isTest ? [] : [eslintPlugin({
-                cache: false,
-                include: ['./src/**/*.js', './src/**/*.jsx', './src/**/*.ts', './src/**/*.tsx'],
-                exclude: [],
+                shouldLint: path => /\/src\/.*\.[jt]sx?(\?|$)/.test(path),
             })]),
         ],
         test: {
@@ -44,6 +44,16 @@ export default defineConfig(({ mode }) => {
             pool: 'threads',
             maxWorkers: '50%',
             minWorkers: 1,
+
+            server: {
+                deps: {
+                    // @mui/material@9.1+ imports react-transition-group/TransitionGroupContext
+                    // (a pseudo-directory resolved via its package.json "module" field). Loaded
+                    // externally via native ESM, that directory import fails; inlining @mui/material
+                    // routes it through Vite's resolver, which honors the "module" field.
+                    inline: ['@mui/material'],
+                },
+            },
 
             coverage: {
                 provider: 'v8',
