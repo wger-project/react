@@ -43,7 +43,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
     const data: GridRowsProp = convertEntriesToObj(props.category.entries);
     const updateEntryQuery = useEditMeasurementEntryQuery();
     const deleteEntryQuery = useDeleteMeasurementsQuery();
-    const [rows, setRows] = useState(data);
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
 
@@ -63,7 +62,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
 
     const handleDeleteClick = (id: GridRowId) => async () => {
         deleteEntryQuery.mutate(parseInt(id.toString()));
-        setRows(rows.filter((row) => row.id !== id));
     };
 
     const handleCancelClick = (id: GridRowId) => () => {
@@ -71,12 +69,6 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             ...rowModesModel,
             [id]: { mode: GridRowModes.View, ignoreModifications: true },
         });
-
-        const editedRow = rows.find((row) => row.id === id);
-        //if (editedRow!.isNew) {
-        if (editedRow?.id === null) {
-            setRows(rows.filter((row) => row.id !== id));
-        }
     };
 
 
@@ -84,15 +76,13 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
 
         updateEntryQuery.mutate({
             id: newRow.id,
-            categoryId: newRow.category,
+            categoryId: props.category.id,
             date: newRow.date,
             value: newRow.value,
             notes: newRow.notes
         });
 
-        const updatedRow = { ...newRow, isNew: false };
-        setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-        return updatedRow;
+        return { ...newRow, isNew: false };
     };
 
     const onProcessRowUpdateError = (error: unknown) => {
