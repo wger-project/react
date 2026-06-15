@@ -12,9 +12,9 @@ export function truncateLongNames(name: string, maxLength = MAX_LENGTH): string 
 export function makeServerKey(name: string): string {
     return name.toLowerCase()
         .replace(/\s/g, '_')
-        .replace('(', '_')
-        .replace(')', '_')
-        .replace('-', '_');
+        .replace(/\(/g, '_')
+        .replace(/\)/g, '_')
+        .replace(/-/g, '_');
 }
 
 // Returns the key used for the translation of the given exercise data
