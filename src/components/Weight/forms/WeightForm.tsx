@@ -69,7 +69,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                             fullWidth
                             id="weight"
                             label={t('weight')}
-                            error={formik.touched.weight && Boolean(formik.touched.weight)}
+                            error={formik.touched.weight && Boolean(formik.errors.weight)}
                             helperText={formik.touched.weight && formik.errors.weight}
                             {...formik.getFieldProps('weight')}
                         />

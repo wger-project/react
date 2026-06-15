@@ -97,4 +97,27 @@ describe("Test WeightForm component", () => {
         });
     });
 
+    test('The weight field error state follows validity, not just touched', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <WeightForm weightEntry={new WeightEntry(new Date('2022-02-28'), 80, 1)} />
+            </QueryClientProvider>
+        );
+        const weightInput = await screen.findByLabelText('weight');
+
+        // Act + Assert: an invalid value marks the touched field as error
+        await user.clear(weightInput);
+        await user.type(weightInput, '10'); // below the min of 30 kg
+        await user.tab();
+        await waitFor(() => expect(weightInput).toHaveAttribute('aria-invalid', 'true'));
+
+        // Act + Assert: correcting it to a valid value must clear the error state
+        await user.clear(weightInput);
+        await user.type(weightInput, '80');
+        await waitFor(() => expect(weightInput).not.toHaveAttribute('aria-invalid', 'true'));
+    });
+
 });
