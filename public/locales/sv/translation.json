@@ -161,5 +161,14 @@
     "durationWeeks": "{{number}} veckor",
     "durationWeeksDays": "{{nrWeeks}} veckor, {{nrDays}} dagar",
     "downloadAsPdf": "Ladda ned som PDF",
-    "comment": "Kommentar"
+    "comment": "Kommentar",
+    "dashboard": {
+        "customizeDashboard": "Modifiera dashboard",
+        "dragWidgetsHelp": "Dra widgets för att flytta dem eller ändra storlek genom att dra det nedre högra hörnet.",
+        "resetLayout": "Återställ till standardlayout"
+    },
+    "core": {
+        "exitEditMode": "Avsluta redigeraläge",
+        "customize": "Modifiera"
+    }
 }
