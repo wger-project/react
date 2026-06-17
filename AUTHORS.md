@@ -2,25 +2,32 @@
 
 Thank you all for contributing to the project, you are true heroes! 🫶
 
-*Generated on 2026-04-10*
+*Generated on 2026-06-17*
 
 ---
 
 ## Contributors
 
 - Roland Geider - [https://github.com/rolandgeider](https://github.com/rolandgeider)
+- Arijan Ralph - [https://github.com/CodingKnight2](https://github.com/CodingKnight2)
+- Sachini Sahasra - [https://github.com/Sahasra0108](https://github.com/Sahasra0108)
+- kiranannadatha8 - [https://github.com/kiranannadatha8](https://github.com/kiranannadatha8)
+- Kudzai Bosha - [https://github.com/KudziBosh](https://github.com/KudziBosh)
+- vonab65821
+- Sarthak - [https://github.com/sg172003](https://github.com/sg172003)
 - samir-saidi - [https://github.com/samir-saidi](https://github.com/samir-saidi)
 - Luca van der Wijngaart - [https://github.com/lvdwijngaart](https://github.com/lvdwijngaart)
 - Teodor Olteanu - [https://github.com/StickSy](https://github.com/StickSy)
 - sputnik-mac - [https://github.com/sputnik-mac](https://github.com/sputnik-mac)
-- Sam - [https://github.com/stuckvgn](https://github.com/stuckvgn)
+- Sam - [https://github.com/samtuckerdavis](https://github.com/samtuckerdavis)
 - Viktor Nedanovski - [https://github.com/VikecN](https://github.com/VikecN)
+- Seth Leavitt - [https://github.com/seth-leavitt](https://github.com/seth-leavitt)
+- Mannai
 - Afzal Momin - [https://github.com/afzal09](https://github.com/afzal09)
 - Madhav Agarwal - [https://github.com/gmrmad1](https://github.com/gmrmad1)
 - filipcuper - [https://github.com/FilipCuper](https://github.com/FilipCuper)
 - Daniil Radchenko - [https://github.com/DaniilRad](https://github.com/DaniilRad)
 - john
-- filipcuper - [https://github.com/FilipCuper](https://github.com/FilipCuper)
 - Tyde Hashimoto - [https://github.com/TDotH](https://github.com/TDotH)
 - Simin Cheng
 - Ziqi Lin
@@ -41,7 +48,6 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - svetozar12 - [https://github.com/svetozar12](https://github.com/svetozar12)
 - Tomáš Terpitko
 - Chris Ulicny - [https://github.com/ChrisUlicny](https://github.com/ChrisUlicny)
-- ChrisUlicny - [https://github.com/ChrisUlicny](https://github.com/ChrisUlicny)
 - Tsz Hong CHAN - [https://github.com/tomyan112](https://github.com/tomyan112)
 - Dieter Plaetinck - [https://github.com/Dieterbe](https://github.com/Dieterbe)
 - StijnKing - [https://github.com/StijnKing](https://github.com/StijnKing)
@@ -60,13 +66,14 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - João Goulart - [https://github.com/usehalter](https://github.com/usehalter)
 - G. Buendía - [https://github.com/gbuendia](https://github.com/gbuendia)
 - Allan Nordhøy - [https://github.com/comradekingu](https://github.com/comradekingu)
+- HackingAll - [https://github.com/HackingAllYT](https://github.com/HackingAllYT)
 
 ## Translators
 
 ### Arabic
 
 - Hesham sraj
-- Anonymous - [https://github.com/weblate](https://github.com/weblate)
+- Anonymous
 
 ### Catalan
 
@@ -77,6 +84,7 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 
 ### Chinese (Simplified Han script)
 
+- Yichao19 - [https://github.com/Yichao19](https://github.com/Yichao19)
 - youkarin - [https://github.com/yukarin4869](https://github.com/yukarin4869)
 - KW Lam - [https://github.com/loksonlkw](https://github.com/loksonlkw)
 - Wen QI - [https://github.com/kevinwenyu](https://github.com/kevinwenyu)
@@ -93,10 +101,13 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 
 ### Chinese (Traditional Han script)
 
+- Dora Chiu - [https://github.com/DoraC7](https://github.com/DoraC7)
+- Afra - [https://github.com/Afra0704](https://github.com/Afra0704)
+- BlaireWang - [https://github.com/Blaire0228](https://github.com/Blaire0228)
+- Peter Dave Hello - [https://github.com/PeterDaveHello](https://github.com/PeterDaveHello)
 - Lairdev - [https://github.com/lairwaves-dev](https://github.com/lairwaves-dev)
 - Chia Wen Tsai - [https://github.com/cjwind](https://github.com/cjwind)
 - Paulkit - [https://github.com/Paulkit](https://github.com/Paulkit)
-- Peter Dave Hello - [https://github.com/PeterDaveHello](https://github.com/PeterDaveHello)
 - Wen QI - [https://github.com/kevinwenyu](https://github.com/kevinwenyu)
 - davidhung - [https://github.com/david3951445](https://github.com/david3951445)
 
@@ -113,7 +124,8 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 
 ### Czech
 
-- Whiskers - [https://github.com/ShinoYumi](https://github.com/ShinoYumi)
+- greeenos - [https://github.com/greeenos](https://github.com/greeenos)
+- Whiskers - [https://github.com/iamanro](https://github.com/iamanro)
 - Jakub “Jandys” Jandak - [https://github.com/Jandys](https://github.com/Jandys)
 - Fjuro - [https://github.com/Fjuro](https://github.com/Fjuro)
 
@@ -122,6 +134,7 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - Floris C
 - Christijan Mulder
 - Christijan - [https://github.com/ChrispyM](https://github.com/ChrispyM)
+- Philip Goto - [https://github.com/flipflop97](https://github.com/flipflop97)
 
 ### English
 
@@ -151,15 +164,22 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - Sharnobile - [https://github.com/Sharnobile](https://github.com/Sharnobile)
 - Hugo CUVILLIER - [https://github.com/SkyDonald](https://github.com/SkyDonald)
 - Roland Geider - [https://github.com/rolandgeider](https://github.com/rolandgeider)
+- Zarrokea - [https://github.com/Zarrokea](https://github.com/Zarrokea)
+- Louis-Maxime C - [https://github.com/Lumenol](https://github.com/Lumenol)
+
+### Galician
+
+- HackingAll - [https://github.com/HackingAllYT](https://github.com/HackingAllYT)
 
 ### German
 
+- Emil
 - Roland Geider - [https://github.com/rolandgeider](https://github.com/rolandgeider)
 - Elias Lang - [https://github.com/elias170105](https://github.com/elias170105)
 - Richard Mrosk - [https://github.com/EtheriousNight](https://github.com/EtheriousNight)
 - Panoloo - [https://github.com/Panoloo](https://github.com/Panoloo)
 - BlinderUhu - [https://github.com/BlinderUhu](https://github.com/BlinderUhu)
-- Anonymous - [https://github.com/weblate](https://github.com/weblate)
+- Anonymous
 - Sam Imboden - [https://github.com/FakeApate](https://github.com/FakeApate)
 - kvnrmnn - [https://github.com/rmnn92](https://github.com/rmnn92)
 - Tobias Lechner - [https://github.com/Lxchnxr](https://github.com/Lxchnxr)
@@ -169,22 +189,28 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - Axel Steinbrecher
 - Christoph Suesser - [https://github.com/TheFitzZZ](https://github.com/TheFitzZZ)
 - KneeClass03 - [https://github.com/KneeClass03](https://github.com/KneeClass03)
+- Madleen - [https://github.com/madleenxsophie](https://github.com/madleenxsophie)
+- Hosted Weblate user 150360
 
 ### Greek
 
 - Antonis-geo
+- Dudeatron - [https://github.com/Dudeatron](https://github.com/Dudeatron)
 
 ### Hebrew
 
+- vonab65821
 - Omer I.S - [https://github.com/omeritzics](https://github.com/omeritzics)
 
 ### Hindi
 
+- keshav mahawar
 - shwetank gupta - [https://github.com/shwetankg07](https://github.com/shwetankg07)
 - Madhav Agarwal - [https://github.com/gmrmad1](https://github.com/gmrmad1)
 
 ### Italian
 
+- Mirco Pasquale - [https://github.com/mircopsq](https://github.com/mircopsq)
 - Mattia Papaccioli - [https://github.com/sbOogway](https://github.com/sbOogway)
 - Luca Galli - [https://github.com/Lvcaa](https://github.com/Lvcaa)
 - Federico - [https://github.com/FedericoVaga](https://github.com/FedericoVaga)
@@ -200,6 +226,7 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - Roland Geider - [https://github.com/rolandgeider](https://github.com/rolandgeider)
 - DT
 - MARCO ACORTE - [https://github.com/marco-acorte](https://github.com/marco-acorte)
+- Dario Coltri - [https://github.com/casacoltri](https://github.com/casacoltri)
 
 ### Korean
 
@@ -211,8 +238,11 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 
 ### Norwegian Bokmål
 
+- sontor1 - [https://github.com/sontor1](https://github.com/sontor1)
 - Morten R. Bjørklund
 - Roland Geider - [https://github.com/rolandgeider](https://github.com/rolandgeider)
+- Para - [https://github.com/bablecopherye](https://github.com/bablecopherye)
+- Heis - [https://github.com/Heis](https://github.com/Heis)
 
 ### Persian
 
@@ -233,6 +263,7 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - Patryk - [https://github.com/byakurau](https://github.com/byakurau)
 - Michał Homza - [https://github.com/HagiaHaya](https://github.com/HagiaHaya)
 - Dawid Panyło
+- Artur Lewandowski - [https://github.com/Lewan24](https://github.com/Lewan24)
 
 ### Portuguese
 
@@ -242,7 +273,7 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - Luiz Felipe Guidorizzi de Oliveira - [https://github.com/EvilMonark](https://github.com/EvilMonark)
 - Diogo Rolo - [https://github.com/diogorolo](https://github.com/diogorolo)
 - Jean - [https://github.com/jeanknox](https://github.com/jeanknox)
-- Wilton Rodrigues
+- Wilton Rodrigues - [https://github.com/FinTech-crypto](https://github.com/FinTech-crypto)
 - Gabriel Barcelos - [https://github.com/gpigatto](https://github.com/gpigatto)
 - Lucas Mezêncio - [https://github.com/lucasmezencio](https://github.com/lucasmezencio)
 - Vinícius Costa - [https://github.com/viniciusccosta](https://github.com/viniciusccosta)
@@ -253,14 +284,14 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - Eduardo Menges Mattje - [https://github.com/EduMenges](https://github.com/EduMenges)
 - ssantos - [https://github.com/SantosSi](https://github.com/SantosSi)
 - João Goulart - [https://github.com/usehalter](https://github.com/usehalter)
+- Pedro Remedios - [https://github.com/premedios](https://github.com/premedios)
 
 ### Portuguese (Brazil)
 
-- Ricardo Lima - [https://github.com/rhrlima](https://github.com/rhrlima)
 - Edson Wolf - [https://github.com/edsonblwolf](https://github.com/edsonblwolf)
+- Ricardo Lima - [https://github.com/rhrlima](https://github.com/rhrlima)
 - Ddelaqua - [https://github.com/ddelaqua](https://github.com/ddelaqua)
 - niduss - [https://github.com/nidusscorp](https://github.com/nidusscorp)
-- Diego Menezes
 - Marina Aranha - [https://github.com/mariaranha](https://github.com/mariaranha)
 - faciolihenrique - [https://github.com/faciolihenrique](https://github.com/faciolihenrique)
 - Jênisson Alves de Andrade
@@ -275,6 +306,8 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 
 - FilipeAb - [https://github.com/FilipeAb](https://github.com/FilipeAb)
 - Ninguém Mesmo
+- Pedro Remedios - [https://github.com/premedios](https://github.com/premedios)
+- Mateus Volpato - [https://github.com/mvolpato96](https://github.com/mvolpato96)
 
 ### Romanian
 
@@ -303,6 +336,7 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 ### Serbian
 
 - Mladen Trišić - [https://github.com/mtrisic](https://github.com/mtrisic)
+- Dudeatron - [https://github.com/Dudeatron](https://github.com/Dudeatron)
 
 ### Slovak
 
@@ -315,6 +349,8 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 
 ### Spanish
 
+- Alan M - [https://github.com/AlunM](https://github.com/AlunM)
+- Tiago Natale - [https://github.com/Blu777](https://github.com/Blu777)
 - David Peñas - [https://github.com/davidpgomez](https://github.com/davidpgomez)
 - MarcMeRu11 - [https://github.com/marcmeru11](https://github.com/marcmeru11)
 - v7mbz
@@ -329,21 +365,22 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - Jorge Estrada - [https://github.com/Jorgelig](https://github.com/Jorgelig)
 - Roland Geider - [https://github.com/rolandgeider](https://github.com/rolandgeider)
 - guillem - [https://github.com/gbuendia](https://github.com/gbuendia)
+- Rodrigo Jurado Villalobos
 
 ### Swedish
 
 - Petter Tollemark
 - wonnock - [https://github.com/emgust](https://github.com/emgust)
-- Markus Kauppinen
+- Markus Kauppinen - [https://github.com/kauppinenomarkus-dotcom](https://github.com/kauppinenomarkus-dotcom)
 - tradfursten - [https://github.com/tradfursten](https://github.com/tradfursten)
 - PNS11 - [https://github.com/cess11](https://github.com/cess11)
 - Kevin Gregard - [https://github.com/Kladdiskakan](https://github.com/Kladdiskakan)
+- Dudeatron - [https://github.com/Dudeatron](https://github.com/Dudeatron)
 
 ### Tamil
 
 - saraswathi - [https://github.com/saraswathirajkumar18](https://github.com/saraswathirajkumar18)
 - தமிழ்நேரம் - [https://github.com/TamilNeram](https://github.com/TamilNeram)
-- தமிழ்நேரம்
 - Justin Benito - [https://github.com/JustinBenito](https://github.com/JustinBenito)
 
 ### Thai
@@ -356,18 +393,15 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - Oğuz Ersen - [https://github.com/oersen](https://github.com/oersen)
 - Cem Avcı - [https://github.com/cem256](https://github.com/cem256)
 - Yunus AK - [https://github.com/akyunus](https://github.com/akyunus)
-- Oğuz Ersen
 - Roland Geider - [https://github.com/rolandgeider](https://github.com/rolandgeider)
+- Samet Gürtuna - [https://github.com/sametgurtuna](https://github.com/sametgurtuna)
+- Dudeatron - [https://github.com/Dudeatron](https://github.com/Dudeatron)
 
 ### Ukrainian
 
-- Максим Горпиніч
 - Максим Горпиніч - [https://github.com/Maksim2005UA](https://github.com/Maksim2005UA)
 - Максим Горпиніч - [https://github.com/Maksim2005UA2](https://github.com/Maksim2005UA2)
-- Максим Горпиніч
-- Максим Горпиніч
 - Dan - [https://github.com/Kefir2105](https://github.com/Kefir2105)
-- Dan
 - Tymofii Lytvynenko
 - Artem - [https://github.com/defaultpage](https://github.com/defaultpage)
 
