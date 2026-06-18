@@ -22,7 +22,8 @@ import {
 } from "@mui/material";
 import { SearchLanguageFilter } from "@/core/ui/Widgets/SearchLanguageFilter";
 import { Exercise } from "@/components/Exercises/models/exercise";
-import { useSearchExerciseTranslationsQuery } from "@/components/Exercises/queries";
+import { getLanguageByShortName } from "@/components/Exercises/models/language";
+import { useLanguageQuery, useSearchExerciseTranslationsQuery } from "@/components/Exercises/queries";
 import { SERVER_URL } from "@/config";
 import debounce from "lodash/debounce";
 import * as React from "react";
@@ -42,6 +43,10 @@ type NameAutocompleterProps = {
 export function NameAutocompleter({ callback }: NameAutocompleterProps) {
     const [value, setValue] = React.useState<Exercise | null>(null);
     const [t, i18n] = useTranslation();
+    const languageQuery = useLanguageQuery();
+    const language = languageQuery.isSuccess
+        ? getLanguageByShortName(i18n.language, languageQuery.data)
+        : undefined;
     const [inputValue, setInputValue] = React.useState("");
     const defaultLanguageFilter: SearchLanguageFilter = i18n.language === LANGUAGE_SHORT_ENGLISH
         ? "current"
@@ -109,7 +114,7 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
         <>
             <Autocomplete
                 id="exercise-name-autocomplete"
-                getOptionLabel={(option) => option.getTranslation().name}
+                getOptionLabel={(option) => option.getTranslation(language).name}
                 data-testid="autocomplete"
                 filterOptions={(x) => x}
                 options={options}
@@ -171,7 +176,7 @@ export function NameAutocompleter({ callback }: NameAutocompleterProps) {
                     />
                 )}
                 renderOption={(props, option, state) => {
-                    const translation = option.getTranslation();
+                    const translation = option.getTranslation(language);
                     const mainImage = option.mainImage;
 
                     return (

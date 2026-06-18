@@ -39,6 +39,7 @@ describe("Language service tests", () => {
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
+        expect((axios.get as Mock).mock.calls[0][0]).toContain("limit=999");
         expect(result).toStrictEqual([
             new Language(1, "de", "Deutsch"),
             new Language(2, "en", "English"),

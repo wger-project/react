@@ -1,10 +1,12 @@
+import { searchExerciseTranslations } from "@/components/Exercises/api/exerciseTranslation";
+import { Exercise } from "@/components/Exercises/models/exercise";
 import {
     NameAutocompleter,
     STORAGE_KEY_EXERCISE_EXACT_MATCH,
     STORAGE_KEY_EXERCISE_LANGUAGE
 } from "@/components/Exercises/widgets/Filter/NameAutocompleter";
-import { Exercise } from "@/components/Exercises/models/exercise";
-import { searchExerciseTranslations } from "@/components/Exercises/api/exerciseTranslation";
+import { useLanguageQuery, useSearchExerciseTranslationsQuery } from "@/components/Exercises/queries";
+import { testLanguages } from "@/tests/exerciseTestdata";
 import { searchResponse } from "@/tests/exercises/searchResponse";
 import { testQueryClient } from "@/tests/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -15,6 +17,11 @@ import React from 'react';
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Exercises/api/exerciseTranslation");
+vi.mock("@/components/Exercises/queries");
+
+const mockedSearchExerciseTranslations = searchExerciseTranslations as Mock;
+const mockedUseLanguageQuery = useLanguageQuery as Mock;
+const mockedUseSearchExerciseTranslationsQuery = useSearchExerciseTranslationsQuery as Mock;
 const mockCallback = vi.fn();
 
 function renderAutocompleter() {
@@ -31,7 +38,9 @@ describe("Test the NameAutocompleter component", () => {
     beforeEach(() => {
         localStorage.clear();
         testQueryClient.clear();
-        (searchExerciseTranslations as Mock).mockImplementation(() => Promise.resolve(searchResponse));
+        mockedSearchExerciseTranslations.mockImplementation(() => Promise.resolve(searchResponse));
+        mockedUseSearchExerciseTranslationsQuery.mockImplementation(() => mockedSearchExerciseTranslations);
+        mockedUseLanguageQuery.mockImplementation(() => ({ isSuccess: true, data: testLanguages }));
     });
 
     test('renders correct results', async () => {
