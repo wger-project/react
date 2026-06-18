@@ -322,7 +322,9 @@
             "edt": "Allenamento a densità crescente",
             "rft": "Round a tempo",
             "afap": "Il più veloce possibile"
-        }
+        },
+        "iterationNr": "Iterazione {{numero}}",
+        "exerciseNotAvailable": "Errore durante il caricamento dell'esercizio"
     },
     "measurements": {
         "deleteInfo": "Ciò eliminerà la categoria e tutte le sue voci",
