@@ -247,7 +247,9 @@
             "afap": "Aussi vite que possible"
         },
         "addSet": "Ajouter une série",
-        "setNr": "Série {{number}}"
+        "setNr": "Série {{number}}",
+        "iterationNr": "Itération {{number}}",
+        "exerciseNotAvailable": "Erreur lors du chargement de l'exercice"
     },
     "value": "Valeur",
     "deleteConfirmation": "Êtes-vous certain de vouloir supprimer \"{{name}}\" ?",

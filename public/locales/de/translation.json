@@ -238,7 +238,9 @@
             "tabata": "Tabata"
         },
         "addSet": "Satz hinzufügen",
-        "setNr": "Satz {{number}}"
+        "setNr": "Satz {{number}}",
+        "iterationNr": "Iteration {{number}}",
+        "exerciseNotAvailable": "Fehler beim Laden der Übung"
     },
     "name": "Name",
     "cancel": "Abbrechen",

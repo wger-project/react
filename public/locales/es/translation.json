@@ -241,7 +241,9 @@
             "afap": "Tan rápido como sea posible"
         },
         "addSet": "Añadir serie",
-        "setNr": "Serie {{number}}"
+        "setNr": "Serie {{number}}",
+        "iterationNr": "Iteración {{number}}",
+        "exerciseNotAvailable": "Error al cargar el ejercicio"
     },
     "actions": "Acciones",
     "value": "Valor",
