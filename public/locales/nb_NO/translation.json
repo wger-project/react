@@ -16,7 +16,9 @@
         "description": "Beskrivelse",
         "deleteExerciseReplace": "Slett og erstatt",
         "exercises": "Øvelser",
-        "changeExerciseLanguage": "Endre denne øvelsens språk"
+        "changeExerciseLanguage": "Endre denne øvelsens språk",
+        "replacementsInfoText": "Du kan eventuelt også velge en øvelse som skal erstatte denne (f.eks. fordi den ble sendt inn to ganger, eller lignende). Dette vil erstatte øvelsen i rutiner så vel som treningslogger, i stedet for bare å slette den. Disse endringene vil også forplante seg til alle instanser som synkroniserer øvelsene fra denne.",
+        "replacementsSearch": "Søk etter en øvelse, eller kopier og lim inn en kjent ID i feltet, og klikk på «last inn»-knappen."
     },
     "licenses": {
         "authors": "Forfatter",
@@ -69,5 +71,10 @@
     "preview": "Forhåndsvisning",
     "useMarkdownHint": "Du kan bruke enkel Markdown for formatering: *kursiv*, **fet**, - liste",
     "public": "Offentlig",
-    "private": "Privat"
+    "private": "Privat",
+    "currentTrend": "Nåværende trend",
+    "mean": "Gjennomsnitt",
+    "trend": "Trend",
+    "variance": "Varians",
+    "totalChange": "Total endring"
 }
