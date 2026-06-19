@@ -32,13 +32,13 @@ export function processExerciseApiData(data: any): Exercise[] {
  * Fetch all exercise bases
  */
 export const getExercises = async (): Promise<Exercise[]> => {
-    const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 900 } });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const response = await axios.get<ResponseType<any>>(url, {
-        headers: makeHeader(),
-    });
+    const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 300 } });
+    const out: Exercise[] = [];
+    for await (const page of fetchPaginated(url, makeHeader())) {
+        out.push(...processExerciseApiData({ results: page }));
+    }
 
-    return processExerciseApiData(response.data);
+    return out;
 };
 
 
