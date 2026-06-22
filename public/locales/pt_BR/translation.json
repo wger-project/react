@@ -98,7 +98,8 @@
         },
         "addSet": "Adicionar série",
         "setNr": "Série {{number}}",
-        "exerciseNotAvailable": "Erro ao carregar exercício"
+        "exerciseNotAvailable": "Erro ao carregar exercício",
+        "iterationNr": "Iteração {{number}}"
     },
     "server": {
         "glutes": "Glúteos",
