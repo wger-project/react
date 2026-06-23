@@ -244,7 +244,9 @@
         "operation": "Operacija",
         "volume": "Ukupna težina",
         "addSet": "Dodaj seriju",
-        "setNr": "Serija {{number}}"
+        "setNr": "Serija {{number}}",
+        "iterationNr": "{{number}}. ponavljanje",
+        "exerciseNotAvailable": "Greška prilikom učitavanja vježbe"
     },
     "preferences": "Postavke",
     "notes": "Bilješke",
