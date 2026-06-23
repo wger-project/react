@@ -1,13 +1,19 @@
-import { ExerciseDeleteDialog } from "@/components/Exercises/screens/Detail/Head/ExerciseDeleteDialog";
+import { searchExerciseTranslations } from "@/components/Exercises/api/exerciseTranslation";
 import {
     useDeleteExerciseQuery,
     useDeleteExerciseTranslationQuery,
     useFetchExerciseQuery,
+    useLanguageQuery,
     useSearchExerciseTranslationsQuery,
 } from "@/components/Exercises/queries";
-import { searchExerciseTranslations } from "@/components/Exercises/api/exerciseTranslation";
+import { ExerciseDeleteDialog } from "@/components/Exercises/screens/Detail/Head/ExerciseDeleteDialog";
 import { searchResponse } from "@/tests/exercises/searchResponse";
-import { testExerciseBenchPress, testExerciseSquats, testLanguageGerman } from "@/tests/exerciseTestdata";
+import {
+    testExerciseBenchPress,
+    testExerciseSquats,
+    testLanguageGerman,
+    testLanguages
+} from "@/tests/exerciseTestdata";
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import React from 'react';
@@ -40,6 +46,7 @@ describe("Test the ExerciseDeleteDialog component", () => {
         (useDeleteExerciseTranslationQuery as Mock).mockImplementation(() => ({ mutateAsync: deleteTranslationMock }));
         (useFetchExerciseQuery as Mock).mockImplementation(() => fetchExerciseMock);
         (useSearchExerciseTranslationsQuery as Mock).mockImplementation(() => searchExerciseTranslations);
+        (useLanguageQuery as Mock).mockImplementation(() => ({ isSuccess: true, data: testLanguages }));
     });
 
     function renderWidget() {
