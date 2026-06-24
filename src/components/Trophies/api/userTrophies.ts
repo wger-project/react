@@ -9,7 +9,7 @@ export const getUserTrophies = async (): Promise<UserTrophy[]> => {
 
     const url = makeUrl(
         ApiPath.API_USER_TROPHIES_PATH,
-        { query: { limit: API_MAX_PAGE_SIZE } }
+        { query: { limit: API_MAX_PAGE_SIZE, "trophy__is_hidden": false } }
     );
     const out: UserTrophy[] = [];
 

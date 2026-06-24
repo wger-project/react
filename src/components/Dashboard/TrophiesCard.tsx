@@ -23,6 +23,9 @@ export const TrophiesCard = () => {
 function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
     const { t, i18n } = useTranslation();
 
+    // PR trophies have their own treatment and are kept out of this widget
+    const trophies = props.trophies.filter((userTrophy) => userTrophy.trophy.type !== 'pr');
+
     const tooltipWidget = (tooltip: string) => <Typography variant="body2" sx={{ textAlign: 'center' }}>
         {tooltip}
     </Typography>;
@@ -43,7 +46,7 @@ function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
     >
         <Box sx={{ overflowX: 'auto', width: '100%' }}>
             <Stack direction="row" spacing={3} sx={{ display: 'flex' }}>
-                {props.trophies.map((userTrophy) => (
+                {trophies.map((userTrophy) => (
                     <Tooltip title={tooltipWidget(userTrophy.trophy.description)} arrow key={userTrophy.trophy.uuid}>
                         <Card sx={{ width: 80, flex: '0 0 auto', boxShadow: 'none' }}>
                             <CardMedia
