@@ -15,16 +15,16 @@ export const TrophiesCard = () => {
         return <LoadingPlaceholder />;
     }
 
-    return trophiesQuery.data !== null
-        ? <TrophiesCardContent trophies={trophiesQuery.data!} />
+    // PR trophies have their own treatment and are kept out of this widget
+    const trophies = (trophiesQuery.data ?? []).filter((userTrophy) => userTrophy.trophy.type !== 'pr');
+
+    return trophies.length > 0
+        ? <TrophiesCardContent trophies={trophies} />
         : <EmptyTrophiesCardContent />;
 };
 
 function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
     const { t, i18n } = useTranslation();
-
-    // PR trophies have their own treatment and are kept out of this widget
-    const trophies = props.trophies.filter((userTrophy) => userTrophy.trophy.type !== 'pr');
 
     const tooltipWidget = (tooltip: string) => <Typography variant="body2" sx={{ textAlign: 'center' }}>
         {tooltip}
@@ -46,7 +46,7 @@ function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
     >
         <Box sx={{ overflowX: 'auto', width: '100%' }}>
             <Stack direction="row" spacing={3} sx={{ display: 'flex' }}>
-                {trophies.map((userTrophy) => (
+                {props.trophies.map((userTrophy) => (
                     <Tooltip title={tooltipWidget(userTrophy.trophy.description)} arrow key={userTrophy.trophy.uuid}>
                         <Card sx={{ width: 80, flex: '0 0 auto', boxShadow: 'none' }}>
                             <CardMedia

@@ -41,7 +41,7 @@ describe("test the TrophiesCard component", () => {
             (useUserTrophiesQuery as Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
-                data: null
+                data: []
             }));
         });
 
