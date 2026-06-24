@@ -262,7 +262,7 @@
     "deleteConfirmation": "Stvarno želiš izbrisati „{{name}}”?",
     "nutrition": {
         "percentEnergy": "Postotak energije",
-        "fibres": "Balastne tvari",
+        "fibres": "Vlakna",
         "saturatedFat": "Zasićena mast",
         "loggedToday": "Zapisano danas",
         "goalsTitle": "Ciljevi",
@@ -309,7 +309,7 @@
         "gramShort": "g",
         "searchIngredientName": "Traži prema imenu sastojka",
         "sodium": "Natrij",
-        "pseudoMealTitle": "Drugi dnevnici",
+        "pseudoMealTitle": "Drugi zapisi",
         "goalFiber": "Cilj za vlakna",
         "languageFilterCurrentOnly": "Samo u trenutačnom jeziku ({{lang}})",
         "languageFilterCurrentAndEnglish": "Trenutačni jezik ({{lang}}) i engleski",
