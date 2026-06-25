@@ -127,12 +127,6 @@ export function ExerciseDeleteDialog(props: {
             <NameAutocompleter
                 callback={(exercise: Exercise | null) => {
                     if (exercise !== null) {
-                        if (exercise.id === props.currentExercise.id) {
-                            setReplacementId(null);
-                            setReplacementExercise(null);
-                            setSameExerciseError(true);
-                            return;
-                        }
                         setReplacementId(exercise.id!);
                         loadCurrentReplacement(exercise.id!);
                     }

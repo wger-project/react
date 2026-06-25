@@ -173,4 +173,22 @@ describe("Test the ExerciseDeleteDialog component", () => {
         });
         expect(deleteTranslationMock).not.toHaveBeenCalled();
     });
+
+    test('rejects the exercise being deleted as its own replacement', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        renderWidget();
+
+        // testExerciseSquats (the current exercise) has id 345
+        await user.type(screen.getByRole('textbox'), '345');
+        await user.click(screen.getByText("exercises.noReplacementSelected"));
+
+        // Assert
+        expect(screen.getByText("exercises.replacementCannotBeSame")).toBeInTheDocument();
+        expect(fetchExerciseMock).not.toHaveBeenCalled();
+        expect(screen.getByTestId('button-delete-and-replace')).toBeDisabled();
+    });
 });
