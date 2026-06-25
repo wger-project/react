@@ -7,7 +7,7 @@
     "submit": "إرسال",
     "edit": "تعديل",
     "delete": "حذف",
-    "deleteConfirmation": "هل أنت متأكد أنك تريد حذف \"{{name}}\"؟",
+    "deleteConfirmation": "أمتأكد من حذف \"{{name}}\"؟",
     "add": "إضافة",
     "close": "إغلاق",
     "difference": "الفرق",
@@ -89,7 +89,14 @@
         "imageStyleLowPoly": "Low-Poly",
         "imageStyleOther": "أخرى",
         "imageDetails": "تفاصيل الصورة",
-        "swapExercise": "تبديل التمرين"
+        "swapExercise": "تبديل التمرين",
+        "replacementCannotBeSame": "لا يمكن أن يكون الاستبدال هو نفس التمرين المحذوف.",
+        "transferMediaLabel": "نقل الوسائط إلى التمرين المستبدل",
+        "transferTranslationsLabel": "نقل الترجمات إلى البديل (تخطي اللغات الموجودة بالفعل)",
+        "exactMatch": "التطابق",
+        "imageIsAiGenerated": "صورة بالذكاء الاصطناعي",
+        "dropOrClickImage": "ضع صورة أو اضغط للاختيار",
+        "addImage": "اضف صورة"
     },
     "nutrition": {
         "plans": "الخطط الغذائية",
@@ -339,7 +346,7 @@
         "customize": "تخصيص",
         "exitEditMode": "الخروج من وضع التعديل"
     },
-    "editName": "تعديل{{name}}",
+    "editName": "تعديل {{name}}",
     "dashboard": {
         "customizeDashboard": "تخصيص الواجهة",
         "dragWidgetsHelp": "اسحب البطاقات لتعديل موضعها أو تغيير حجمها باستخدام الزاوية السفلية اليمنى.",
@@ -358,5 +365,12 @@
     "durationWeeks": "{{number}} اسابيع",
     "durationWeeksDays": "{{nrWeeks}} اسابيع, {{nrDays}} ايام",
     "undo": "تراجع",
-    "successfullyDeleted": "تم الحذف بنجاح"
+    "successfullyDeleted": "تم الحذف بنجاح",
+    "preview": "عرض مبدئي",
+    "useMarkdownHint": "يمكنك استخدام ملف نصي لتنسيق النص: *مائل*، **غامق**، - قائمة",
+    "currentTrend": "الترند الحالي",
+    "mean": "المتوسط",
+    "trend": "ترند",
+    "variance": "التباين",
+    "totalChange": "التغيير الكلي"
 }
