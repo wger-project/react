@@ -82,6 +82,30 @@ export function dateToLocale(dateTime: Date | null, locale?: string, options?: I
     return dateTime.toLocaleString(locale ? [locale] : [], options);
 }
 
+/**
+ * Formats a standard JS Date object into a localized date format without applying
+ * local browser timezone translation (i.e. timezone-agnostic).
+ *
+ * @param date - The JS Date object representing a naive date
+ * @param locale - Optional locale for formatting (defaults to active i18n language or 'en-US')
+ * @returns The formatted date string, or an empty string if the input is invalid
+ */
+export function formatNaiveDate(date: Date | null | undefined, locale?: string): string {
+    if (!date || isNaN(date.getTime())) {
+        return '';
+    }
+
+    const resolvedLocale = locale ?? i18n.language ?? 'en-US';
+
+    // Format explicitly using the UTC timezone and consistent fields
+    return date.toLocaleDateString(resolvedLocale, {
+        timeZone: 'UTC',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+}
+
 /*
  * Converts a date object to a non localized string in the format HH:MM
  */

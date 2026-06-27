@@ -1,4 +1,4 @@
-import { calculatePastDate, dateTimeToHHMM, dateToYYYYMMDD } from "@/core/lib/date";
+import { calculatePastDate, dateTimeToHHMM, dateToYYYYMMDD, formatNaiveDate } from "@/core/lib/date";
 
 describe("test date utility", () => {
 
@@ -52,5 +52,33 @@ describe('calculatePastDate', () => {
     it('should return the correct date for lastYear filter', () => {
         const result = calculatePastDate('lastYear', new Date('2023-02-14'));
         expect(result).toStrictEqual('2022-02-14');
+    });
+});
+
+describe('formatNaiveDate - Timezone-Agnostic Validation', () => {
+    it('should format standard JS Date objects timezone-agnostically', () => {
+        // E.g. date parsed in UTC representing "2026-05-12"
+        const dateObject = new Date('2026-05-12T00:00:00Z');
+        
+        const formattedUS = formatNaiveDate(dateObject, 'en-US');
+        expect(formattedUS).toBe('05/12/2026');
+
+        const formattedIT = formatNaiveDate(dateObject, 'it-IT');
+        expect(formattedIT).toBe('12/05/2026');
+    });
+
+    it('should correctly format month boundaries without falling back to previous/next month', () => {
+        // First day of month
+        expect(formatNaiveDate(new Date('2026-01-01T00:00:00Z'), 'en-US')).toBe('01/01/2026');
+        // Last day of month
+        expect(formatNaiveDate(new Date('2026-12-31T00:00:00Z'), 'en-US')).toBe('12/31/2026');
+        // Leap year date
+        expect(formatNaiveDate(new Date('2024-02-29T00:00:00Z'), 'en-US')).toBe('02/29/2024');
+    });
+
+    it('should return an empty string for invalid dates, null, or undefined', () => {
+        expect(formatNaiveDate(null)).toBe('');
+        expect(formatNaiveDate(undefined)).toBe('');
+        expect(formatNaiveDate(new Date('invalid-date'))).toBe('');
     });
 });

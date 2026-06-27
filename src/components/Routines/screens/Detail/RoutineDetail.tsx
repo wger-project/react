@@ -10,11 +10,11 @@ import i18n from "@/i18n";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { dateToLocale } from "@/core/lib/date";
+import { formatNaiveDate } from "@/core/lib/date";
 import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const RoutineDetail = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const params = useParams<{ routineId: string }>();
     const routineId = parseInt(params.routineId ?? '');
     if (Number.isNaN(routineId)) {
@@ -25,7 +25,7 @@ export const RoutineDetail = () => {
     const routineQuery = useRoutineDetailQuery(routineId);
 
     const routine = routineQuery.data;
-    const subtitle = routine !== undefined ? `${dateToLocale(routine!.start)} - ${dateToLocale(routine!.end)} (${routine?.durationText})` : '';
+    const subtitle = routine !== undefined ? `${formatNaiveDate(routine!.start, i18n.language)} - ${formatNaiveDate(routine!.end, i18n.language)} (${routine?.durationText})` : '';
     const chip = routine?.isTemplate
         ? <Chip color="info" size="small" label={t('routines.template')} />
         : null;
