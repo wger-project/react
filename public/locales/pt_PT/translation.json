@@ -307,8 +307,11 @@
             "hiit": "Treino de intervalos de alta intensidade",
             "tabata": "Tabata",
             "edt": "Treino de densidade crescente",
-            "rft": "Séries contra o relógio"
-        }
+            "rft": "Séries contra o relógio",
+            "afap": "O mais rápido possível"
+        },
+        "iterationNr": "Iteração {{number}}",
+        "exerciseNotAvailable": "Erro ao carregar exercício"
     },
     "measurements": {
         "measurements": "Medições",
