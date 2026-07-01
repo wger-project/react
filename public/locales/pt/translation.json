@@ -264,7 +264,9 @@
             "afap": "O mais rápido possível"
         },
         "addSet": "Adicionar uma série",
-        "setNr": "Série {{number}}"
+        "setNr": "Série {{number}}",
+        "iterationNr": "Iteração {{number}}",
+        "exerciseNotAvailable": "Erro ao carregar exercício"
     },
     "measurements": {
         "measurements": "Medidas",
