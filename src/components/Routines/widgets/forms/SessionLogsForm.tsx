@@ -250,7 +250,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
 
                                                         },
                                                      htmlInput:{
-                                                           inputMode: 'numeric'
+                                                           inputMode: 'decimal'
                                                        }
                                                     }
                                                 }}
