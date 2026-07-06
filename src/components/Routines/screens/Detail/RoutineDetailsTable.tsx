@@ -259,6 +259,24 @@ export const RoutineTable = (props: {
 
     }
 
+    function renderLoggedValueWithIcon(
+        value: React.ReactNode,
+        icon: React.ReactNode,
+    ) {
+        return (
+            <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+                spacing={0.25}
+                sx={{ whiteSpace: 'nowrap' }}
+            >
+                <span>{value}</span>
+                {icon}
+            </Stack>
+        );
+    }
+
     function getTableRowLogged(slotEntry: SlotEntry, day: Day) {
         return <TableRow>
             <TableCell sx={{ verticalAlign: "top", backgroundColor: "white" }} className={classes.stickyColumn}>
@@ -275,40 +293,40 @@ export const RoutineTable = (props: {
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <span>
-                                    {log.repetitions ?? '-/-'}
-                                    {getComparisonIcon(log.repetitions, setConfig?.repetitions, setConfig?.maxRepetitions)}
-                                </span>
+                                {renderLoggedValueWithIcon(
+                                    log.repetitions ?? '-/-',
+                                    getComparisonIcon(log.repetitions, setConfig?.repetitions, setConfig?.maxRepetitions),
+                                )}
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <span>
-                                    {log.weight ?? '-/-'}
-                                    {getComparisonIcon(log.weight, setConfig?.weight, setConfig?.maxWeight)}
-                                </span>
+                                {renderLoggedValueWithIcon(
+                                    log.weight ?? '-/-',
+                                    getComparisonIcon(log.weight, setConfig?.weight, setConfig?.maxWeight),
+                                )}
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <span>
-                                    {log.restTime ?? '-/-'}
-                                    {getComparisonIcon(log.restTime, setConfig?.restTime, setConfig?.maxRestTime)}
-                                </span>
+                                {renderLoggedValueWithIcon(
+                                    log.restTime ?? '-/-',
+                                    getComparisonIcon(log.restTime, setConfig?.restTime, setConfig?.maxRestTime),
+                                )}
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <span>
-                                    {log.rir ?? '-/-'}
-                                    {getComparisonIcon(log.rir, setConfig?.rir, setConfig?.maxRir, false)}
-                                </span>
+                                {renderLoggedValueWithIcon(
+                                    log.rir ?? '-/-',
+                                    getComparisonIcon(log.rir, setConfig?.rir, setConfig?.maxRir, false),
+                                )}
                             </Stack>
                         )}
                     </TableCell>
