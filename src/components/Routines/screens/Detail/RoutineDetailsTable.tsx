@@ -13,6 +13,7 @@ import FlagCircleIcon from '@mui/icons-material/FlagCircle';
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
 import {
+    Box,
     Container,
     FormControlLabel,
     Stack,
@@ -275,40 +276,40 @@ export const RoutineTable = (props: {
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <span>
+                                <Box component="span" sx={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                     {log.repetitions ?? '-/-'}
                                     {getComparisonIcon(log.repetitions, setConfig?.repetitions, setConfig?.maxRepetitions)}
-                                </span>
+                                </Box>
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <span>
+                                <Box component="span" sx={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                     {log.weight ?? '-/-'}
                                     {getComparisonIcon(log.weight, setConfig?.weight, setConfig?.maxWeight)}
-                                </span>
+                                </Box>
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <span>
+                                <Box component="span" sx={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                     {log.restTime ?? '-/-'}
                                     {getComparisonIcon(log.restTime, setConfig?.restTime, setConfig?.maxRestTime)}
-                                </span>
+                                </Box>
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <span>
+                                <Box component="span" sx={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                     {log.rir ?? '-/-'}
                                     {getComparisonIcon(log.rir, setConfig?.rir, setConfig?.maxRir, false)}
-                                </span>
+                                </Box>
                             </Stack>
                         )}
                     </TableCell>
