@@ -100,16 +100,16 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                                 />
                             </LocalizationProvider>}
 
-                        <TextField
+                       <TextField
                             fullWidth
-                            id="notes"
-                            label={t('notes')}
-                            multiline
-                            error={formik.touched.notes && Boolean(formik.errors.notes)}
-                            helperText={formik.touched.notes && formik.errors.notes}
-                            {...formik.getFieldProps('notes')}
-                        />
-
+                            id="value"
+                            type={"number"}
+                           label={t('value')}
+                           error={formik.touched.value && Boolean(formik.errors.value)}
+                           helperText={formik.touched.value && formik.errors.value}
+                           inputProps={{ inputMode: 'decimal' }}
+                           {...formik.getFieldProps('value')}
+                   />
                         <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                                 {t('submit')}

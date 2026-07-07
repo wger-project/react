@@ -113,8 +113,8 @@ export const BmiCalculator = () => {
                             <TextField
                                 label={t('weight')}
                                 slotProps={{
-                                    input: { endAdornment: <Typography>{t('server.kg')}</Typography> }
-                                        htmlInput: { inputMode: 'decimal' }
+                                    input: { endAdornment: <Typography>{t('server.kg')}</Typography> },
+                                    htmlInput: { inputMode: 'decimal' }
                                 }}
                                 fullWidth
                                 type="number"
