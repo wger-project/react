@@ -247,11 +247,10 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                                                         </Typography>
                                                                         : null}
                                                                 </InputAdornment>
-
                                                         },
-                                                     htmlInput:{
-                                                           inputMode: 'decimal'
-                                                       }
+                                                        htmlInput: {
+                                                            inputMode: 'decimal'
+                                                        }
                                                     }
                                                 }}
                                             />
@@ -270,11 +269,10 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                                                     </Typography>
                                                                 </InputAdornment>
                                                         },
-                                                         htmlInput: {
-                                                                inputMode: 'decimal'
-                                                           }
-                                                                          
-                                                      }
+                                                        htmlInput: {
+                                                            inputMode: 'decimal'
+                                                        }
+                                                    }
                                                 }}
                                             />
                                         </Grid>

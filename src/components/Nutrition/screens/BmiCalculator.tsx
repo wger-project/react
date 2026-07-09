@@ -98,17 +98,18 @@ export const BmiCalculator = () => {
                 <Stack spacing={2}>
                     <Grid container spacing={2}>
                         <Grid size={{ xs: 12, sm: 6 }}>
- <TextField
-    label={t('height')}
-    fullWidth
-    slotProps={{
-        input: { endAdornment: <Typography>{t('cm')}</Typography> },
-        htmlInput: { inputMode: 'decimal' }
-    }}
-    type="number"
-    value={height ?? ""}
-    onChange={(e) => setHeight(parseFloat(e.target.value))}
-/></Grid>
+                            <TextField
+                                label={t('height')}
+                                fullWidth
+                                slotProps={{
+                                    input: { endAdornment: <Typography>{t('cm')}</Typography> },
+                                    htmlInput: { inputMode: 'decimal' }
+                                }}
+                                type="number"
+                                value={height ?? ""}
+                                onChange={(e) => setHeight(parseFloat(e.target.value))}
+                            />
+                        </Grid>
                         <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                                 label={t('weight')}
