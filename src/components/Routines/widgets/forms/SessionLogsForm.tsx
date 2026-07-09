@@ -247,7 +247,9 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                                                         </Typography>
                                                                         : null}
                                                                 </InputAdornment>
-
+                                                        },
+                                                        htmlInput: {
+                                                            inputMode: 'decimal'
                                                         }
                                                     }
                                                 }}
@@ -266,6 +268,9 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                                                         {formik.values.logs[index].weightUnit?.name}
                                                                     </Typography>
                                                                 </InputAdornment>
+                                                        },
+                                                        htmlInput: {
+                                                            inputMode: 'decimal'
                                                         }
                                                     }
                                                 }}

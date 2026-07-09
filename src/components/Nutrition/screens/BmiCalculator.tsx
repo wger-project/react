@@ -102,7 +102,8 @@ export const BmiCalculator = () => {
                                 label={t('height')}
                                 fullWidth
                                 slotProps={{
-                                    input: { endAdornment: <Typography>{t('cm')}</Typography> }
+                                    input: { endAdornment: <Typography>{t('cm')}</Typography> },
+                                    htmlInput: { inputMode: 'decimal' }
                                 }}
                                 type="number"
                                 value={height ?? ""}
@@ -113,7 +114,8 @@ export const BmiCalculator = () => {
                             <TextField
                                 label={t('weight')}
                                 slotProps={{
-                                    input: { endAdornment: <Typography>{t('server.kg')}</Typography> }
+                                    input: { endAdornment: <Typography>{t('server.kg')}</Typography> },
+                                    htmlInput: { inputMode: 'decimal' }
                                 }}
                                 fullWidth
                                 type="number"

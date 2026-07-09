@@ -81,6 +81,7 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                             label={t('value')}
                             error={formik.touched.value && Boolean(formik.errors.value)}
                             helperText={formik.touched.value && formik.errors.value}
+                            slotProps={{ htmlInput: { inputMode: 'decimal' } }}
                             {...formik.getFieldProps('value')}
                         />
                         {categoryQuery.isLoading
@@ -109,7 +110,6 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                             helperText={formik.touched.notes && formik.errors.notes}
                             {...formik.getFieldProps('notes')}
                         />
-
                         <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                                 {t('submit')}
