@@ -1,1 +1,6 @@
-{}
+{
+    "dashboard": {
+        "customizeDashboard": "Felület testreszabása",
+        "dragWidgetsHelp": "Húzd a widgeteket az áthelyezésükhöz, vagy méretezd át őket a jobb alsó sarkuknál fogva."
+    }
+}
