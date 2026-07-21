@@ -170,7 +170,7 @@ const CalendarComponent = (props: { showBorder?: boolean }) => {
             display: 'flex',
             gap: 2,
             flexDirection: { xs: 'column', md: 'row' },
-            // height: { xs: 'auto', md: 'calc(100vh - 130px)' },
+            height: { xs: 'auto', md: showBorder ? 'calc(100vh - 130px)' : 'auto' },
             width: '100%',
         }}>
             <Card sx={{
