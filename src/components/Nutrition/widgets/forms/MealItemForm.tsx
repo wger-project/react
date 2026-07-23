@@ -137,7 +137,8 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                                             )}
                                         </InputAdornment>
                                     )
-                                }
+                                },
+                                htmlInput: { inputMode: 'decimal' }
                             }}
                             error={formik.touched.amount && Boolean(formik.errors.amount)}
                             helperText={formik.touched.amount && formik.errors.amount}

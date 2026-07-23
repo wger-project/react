@@ -386,6 +386,7 @@ export const ProgressionForm = (props: {
                                                             fieldName={`entries.${index}.value`}
                                                             title={t('min')}
                                                             fullwidth={true}
+                                                            fieldProps={{ slotProps: { htmlInput: { inputMode: 'decimal' } } }}
                                                         />}
                                                 </Grid>
                                                 <Grid size={2}>
@@ -393,6 +394,7 @@ export const ProgressionForm = (props: {
                                                         fieldName={`entries.${index}.valueMax`}
                                                         title={t('max')}
                                                         fullwidth={true}
+                                                        fieldProps={{ slotProps: { htmlInput: { inputMode: 'decimal' } } }}
                                                     />
                                                     }
 

@@ -220,7 +220,7 @@ export const SlotBaseConfigValueField = (props: {
         <TextField
             slotProps={{
                 input: { endAdornment: isPending && <LoadingProgressIcon /> },
-                htmlInput: { "data-testid": `${props.type}-field` },
+                htmlInput: { "data-testid": `${props.type}-field`, inputMode: isInt ? 'numeric' : 'decimal' },
             }}
             label={title}
             value={value}

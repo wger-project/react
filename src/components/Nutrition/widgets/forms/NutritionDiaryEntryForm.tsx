@@ -152,7 +152,8 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                                             )}
                                         </InputAdornment>
                                     )
-                                }
+                                },
+                                htmlInput: { inputMode: 'decimal' }
                             }}
                             error={formik.touched.amount && Boolean(formik.errors.amount)}
                             helperText={formik.touched.amount && formik.errors.amount}

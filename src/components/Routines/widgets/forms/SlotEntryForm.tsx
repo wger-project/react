@@ -214,6 +214,7 @@ export const SlotEntryRoundingField = (props: SlotEntryRoundingFieldProps) => {
             value={value}
             disabled={editSlotEntryQuery.isPending || editProfileQuery.isPending}
             onChange={e => handleOnChange(e.target.value)}
+            slotProps={{ htmlInput: { inputMode: 'decimal' } }}
         />
     );
 };

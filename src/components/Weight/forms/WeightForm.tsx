@@ -71,6 +71,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                             label={t('weight')}
                             error={formik.touched.weight && Boolean(formik.errors.weight)}
                             helperText={formik.touched.weight && formik.errors.weight}
+                            slotProps={{ htmlInput: { inputMode: 'decimal' } }}
                             {...formik.getFieldProps('weight')}
                         />
 

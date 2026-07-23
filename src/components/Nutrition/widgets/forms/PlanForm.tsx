@@ -261,7 +261,8 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                     input: {
                                         endAdornment: <InputAdornment
                                             position="end">{t('nutrition.kcal')}</InputAdornment>
-                                    }
+                                    },
+                                    htmlInput: { inputMode: 'decimal' }
                                 }}
                             />
                             <Grid container spacing={1}>
@@ -283,7 +284,8 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                                 endAdornment: <InputAdornment position="end">
                                                     {t('nutrition.gramShort')}
                                                 </InputAdornment>
-                                            }
+                                            },
+                                            htmlInput: { inputMode: 'decimal' }
                                         }}
                                     />
                                 </Grid>
@@ -305,7 +307,8 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                                 endAdornment:
                                                     <InputAdornment
                                                         position="end">{t('nutrition.gramShort')}</InputAdornment>
-                                            }
+                                            },
+                                            htmlInput: { inputMode: 'decimal' }
                                         }}
                                     />
                                 </Grid>
@@ -327,7 +330,8 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                                 endAdornment:
                                                     <InputAdornment
                                                         position="end">{t('nutrition.gramShort')}</InputAdornment>
-                                            }
+                                            },
+                                            htmlInput: { inputMode: 'decimal' }
                                         }}
                                     />
                                 </Grid>
@@ -349,7 +353,8 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                                 endAdornment: <InputAdornment position="end">
                                                     {t('nutrition.gramShort')}
                                                 </InputAdornment>
-                                            }
+                                            },
+                                            htmlInput: { inputMode: 'decimal' }
                                         }}
                                     />
                                 </Grid>
