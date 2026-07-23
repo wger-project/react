@@ -1,9 +1,10 @@
 // @ts-check
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import reactPlugin from 'eslint-plugin-react';
+import reactPlugin from '@eslint-react/eslint-plugin';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import importPlugin from 'eslint-plugin-import';
+import stylisticPlugin from '@stylistic/eslint-plugin';
+import importPlugin from 'eslint-plugin-import-x';
 
 // Domains with a public surface (`index.ts`). Other code must import via the
 // domain root, never via internal sub-paths.
@@ -47,24 +48,24 @@ export default tseslint.config(
     {
         files: ['**/*.{js,jsx,ts,tsx}'],
         plugins: {
-            'react': reactPlugin,
+            '@eslint-react': reactPlugin,
             'react-hooks': reactHooksPlugin,
-            'import': importPlugin,
+            '@stylistic': stylisticPlugin,
+            'import-x': importPlugin,
         },
         rules: {
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'warn',
 
-            // React rules
-            'react/jsx-key': 'error',
-            'react/jsx-no-target-blank': 'error',
-            'react/no-unstable-nested-components': 'error',
-            'react/no-array-index-key': 'warn',
-            'react/jsx-no-duplicate-props': 'error',
-            'react/no-children-prop': 'error',
-            'react/void-dom-elements-no-children': 'error',
-            'react/no-unescaped-entities': 'error',
-            'react/self-closing-comp': 'error',
+            // React rules. Duplicate JSX props need no rule here: tsc already
+            // rejects them (TS17001).
+            '@eslint-react/no-missing-key': 'error',
+            '@eslint-react/dom-no-unsafe-target-blank': 'error',
+            '@eslint-react/no-nested-component-definitions': 'error',
+            '@eslint-react/no-array-index-key': 'warn',
+            '@eslint-react/jsx-no-children-prop': 'error',
+            '@eslint-react/dom-no-void-elements-with-children': 'error',
+            '@stylistic/jsx-self-closing-comp': 'error',
 
             // Core JS hygiene.
             'eqeqeq': ['error', 'smart'],
@@ -72,11 +73,6 @@ export default tseslint.config(
             'prefer-const': 'error',
             'no-console': ['warn', {allow: ['warn', 'error']}],
         },
-        settings: {
-            react: {
-                version: 'detect'
-            }
-        }
     },
 
     {
@@ -97,7 +93,7 @@ export default tseslint.config(
                 }
             ],
             // Auto-fixable: consolidates multiple imports from the same module.
-            "import/no-duplicates": ["error"],
+            "import-x/no-duplicates": ["error"],
             // Domain boundary: consumers must import via the public surface
             // (index.ts), not internal sub-paths.
             "no-restricted-imports": ["error", restrictAllDomains],

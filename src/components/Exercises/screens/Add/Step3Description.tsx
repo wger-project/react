@@ -32,7 +32,7 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
             }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setFieldError }) => {
-                let canContinue = false;
+                let canContinue: boolean;
 
                 const validationResult = await languageCheckQuery.mutateAsync({
                     input: values.description,

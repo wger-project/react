@@ -36,14 +36,13 @@ export const deleteMeal = async (id: string): Promise<void> => {
 
 export const getMealsForPlan = async (planId: string): Promise<Meal[]> => {
 
-    let ingredientIds: number[] = [];
     const { data: receivedMeals } = await axios.get<ResponseType<ApiMealType>>(
         makeUrl(ApiPath.MEAL, { query: { plan: planId } }),
         { headers: makeHeader() },
     );
     const meals = receivedMeals.results.map((meal) => Meal.fromJson(meal));
     for (const meal of meals) {
-        ingredientIds = [];
+        const ingredientIds: number[] = [];
 
         const { data: receivedMealItems } = await axios.get<ResponseType<ApiMealItemType>>(
             makeUrl(ApiPath.MEAL_ITEM, { query: { meal: meal.id } }),

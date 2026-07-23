@@ -6,12 +6,11 @@ describe("Test WgerModal component", () => {
     test('Renders title and subtitle when openFn is true', () => {
 
         // Arrange
-        const props: WgerModalProps = {
+        const props: Omit<WgerModalProps, 'children'> = {
             title: "Test title",
             subtitle: "Test subtitle",
             closeFn: vi.fn(),
             isOpen: true,
-            children: null
         };
 
         // Act
@@ -26,12 +25,11 @@ describe("Test WgerModal component", () => {
     test('Doesnt render anything when isOpen is false', () => {
 
         // Arrange
-        const props: WgerModalProps = {
+        const props: Omit<WgerModalProps, 'children'> = {
             title: "Test title",
             subtitle: "Test subtitle",
             closeFn: vi.fn(),
             isOpen: false,
-            children: null
         };
 
         // Act

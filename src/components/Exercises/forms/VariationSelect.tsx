@@ -143,11 +143,10 @@ export function VariationSelect({
     const [searchTerm, setSearchTerms] = useState<string>('');
 
     // Group exercises by variationId
-    let allExercises: Exercise[] = [];
     let exercises: Exercise[] = [];
     let groupedExercises = new Map<string, Exercise[]>();
     if (exercisesQuery.isSuccess) {
-        allExercises = exercisesQuery.data;
+        let allExercises: Exercise[] = exercisesQuery.data;
 
         if (searchTerm !== '') {
             allExercises = allExercises.filter((base) => base.getTranslation().name.toLowerCase().includes(searchTerm.toLowerCase()));

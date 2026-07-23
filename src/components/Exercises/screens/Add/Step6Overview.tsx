@@ -27,7 +27,7 @@ import {
 } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
 import Markdown from 'markdown-to-jsx';
-import React from "react";
+import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useExerciseSubmissionStateValue } from "@/components/Exercises/screens/Add/state";
@@ -137,7 +137,8 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.notes')}</TableCell>
-                            <TableCell>{state.notesEn.map(note => <>{note}<br /></>)}</TableCell>
+                            <TableCell>{state.notesEn.map(note => <Fragment
+                                key={note}>{note}<br /></Fragment>)}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('category')}</TableCell>
@@ -213,7 +214,8 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
                                 <TableRow>
                                     <TableCell>{t('exercises.notes')}</TableCell>
-                                    <TableCell>{state.notesI18n.map(note => <>{note}<br /></>)}</TableCell>
+                                    <TableCell>{state.notesI18n.map(note => <Fragment
+                                        key={note}>{note}<br /></Fragment>)}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
