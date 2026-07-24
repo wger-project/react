@@ -1,5 +1,4 @@
 import { Adapter } from "@/core/lib/Adapter";
-import { yyyymmddToDate } from "@/core/lib/date";
 
 export class MeasurementEntry {
 
@@ -29,11 +28,8 @@ class MeasurementEntryAdapter implements Adapter<MeasurementEntry> {
         return new MeasurementEntry(
             item.id,
             item.category,
-            // The server field is a DateTimeField, but both this app and the API
-            // treat it as a calendar date (we send YYYY-MM-DD, the server returns
-            // it at midnight server time). Only parse the date part: new Date()
-            // on the full datetime would shift the day in timezones behind UTC.
-            yyyymmddToDate(item.date.split('T')[0]),
+            // full ISO datetime from the server, parsing is timezone-safe
+            new Date(item.date),
             item.value,
             item.notes
         );

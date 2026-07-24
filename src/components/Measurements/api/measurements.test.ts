@@ -1,6 +1,3 @@
-import axios from "axios";
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
-import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
     addMeasurementCategory,
     addMeasurementEntry,
@@ -11,8 +8,10 @@ import {
     getMeasurementCategories,
     getMeasurementCategory,
 } from "@/components/Measurements/api/measurements";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
+import axios from "axios";
 import type { Mock } from 'vitest';
-import { yyyymmddToDate } from "@/core/lib/date";
 
 vi.mock("axios");
 
@@ -32,7 +31,7 @@ describe('measurement service tests', () => {
                 "id": ENTRY_UUID,
                 "category": CATEGORY_UUID,
                 "value": 80,
-                "date": "2021-01-01",
+                "date": "2021-01-01T08:00:00+01:00",
                 "notes": ""
             }
         ]
@@ -96,7 +95,7 @@ describe('measurement service tests', () => {
 
         expect(result).toStrictEqual([
             new MeasurementCategory(CATEGORY_UUID, "Weight", "kg", [
-                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, yyyymmddToDate("2021-01-01"), 80, "")
+                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, new Date("2021-01-01T08:00:00+01:00"), 80, "")
             ])
         ]);
     });
@@ -116,7 +115,7 @@ describe('measurement service tests', () => {
 
         expect(result).toStrictEqual(
             new MeasurementCategory(CATEGORY_UUID, "Weight", "kg", [
-                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, yyyymmddToDate("2021-01-01"), 80, "")
+                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, new Date("2021-01-01T08:00:00+01:00"), 80, "")
             ])
         );
     });
@@ -163,7 +162,7 @@ describe('measurement service tests', () => {
 
     test('addMeasurementEntry POSTs the entry with serialized date', async () => {
         (axios.post as Mock).mockResolvedValue({
-            data: { id: ENTRY_UUID_2, category: CATEGORY_UUID, value: 80.5, date: "2024-08-01", notes: "" },
+            data: { id: ENTRY_UUID_2, category: CATEGORY_UUID, value: 80.5, date: "2024-08-01T12:34:00Z", notes: "" },
         });
 
         const result = await addMeasurementEntry({
@@ -181,15 +180,21 @@ describe('measurement service tests', () => {
             value: 80.5,
             notes: "",
         });
-        // Date is YYYY-MM-DD
-        expect(body.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        // the full timestamp is sent, the server field is a datetime
+        expect(body.date).toBe("2024-08-01T12:34:00.000Z");
         expect(result).toBeInstanceOf(MeasurementEntry);
         expect(result.id).toBe(ENTRY_UUID_2);
     });
 
     test('editMeasurementEntry PATCHes /measurement/<id>/ with date/value/notes only', async () => {
         (axios.patch as Mock).mockResolvedValue({
-            data: { id: ENTRY_UUID_2, category: CATEGORY_UUID, value: 81, date: "2024-08-02", notes: "edited" },
+            data: {
+                id: ENTRY_UUID_2,
+                category: CATEGORY_UUID,
+                value: 81,
+                date: "2024-08-02T00:00:00Z",
+                notes: "edited"
+            },
         });
 
         const result = await editMeasurementEntry({
@@ -206,7 +211,7 @@ describe('measurement service tests', () => {
         // Note: 'category' is NOT sent on edit (categoryId is part of the params but ignored in body)
         expect(body).not.toHaveProperty("category");
         expect(body).toMatchObject({ value: 81, notes: "edited" });
-        expect(body.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(body.date).toBe("2024-08-02T00:00:00.000Z");
         expect(result.value).toBe(81);
     });
 

@@ -85,14 +85,14 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
         {
             field: 'date',
             headerName: t('date'),
-            type: 'date',
-            width: 140,
+            type: 'dateTime',
+            width: 160,
             editable: true,
             valueFormatter: (value?: Date) => {
                 if (value == null) {
                     return '';
                 }
-                return luxonDateTimeToLocale(DateTime.fromJSDate(value));
+                return luxonDateTimeToLocale(DateTime.fromJSDate(value), undefined, DateTime.DATETIME_SHORT);
             },
         },
         {

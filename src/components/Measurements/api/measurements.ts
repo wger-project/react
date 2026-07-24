@@ -3,7 +3,6 @@ import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { ApiMeasurementCategoryType } from '@/types';
 import { API_MAX_PAGE_SIZE } from "@/core/lib/consts";
-import { dateToYYYYMMDD } from "@/core/lib/date";
 import { fetchPaginated } from '@/core/lib/requests';
 import { makeHeader, makeUrl } from "@/core/lib/url";
 
@@ -145,7 +144,8 @@ export const editMeasurementEntry = async (data: editMeasurementParams): Promise
     const response = await axios.patch(
         makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: data.id }),
         {
-            date: dateToYYYYMMDD(data.date),
+            // the server field is a datetime, send the full timestamp
+            date: data.date.toISOString(),
             value: data.value,
             notes: data.notes
         },
@@ -168,7 +168,8 @@ export const addMeasurementEntry = async (data: AddMeasurementParams): Promise<M
         makeUrl(API_MEASUREMENTS_ENTRY_PATH),
         {
             category: data.categoryId,
-            date: dateToYYYYMMDD(data.date),
+            // the server field is a datetime, send the full timestamp
+            date: data.date.toISOString(),
             value: data.value,
             notes: data.notes
         },
