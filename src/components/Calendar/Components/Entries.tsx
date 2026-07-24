@@ -17,24 +17,26 @@ import { DayProps } from "./CalendarComponent";
 
 interface LogProps {
     selectedDay: DayProps;
-    showBorder?: boolean;
+    isStandalone?: boolean;
 }
 
-const Entries: React.FC<LogProps> = ({ selectedDay, showBorder }) => {
+const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
     const [t] = useTranslation();
 
     const [openMeasurements, setOpenMeasurements] = React.useState(false);
     const [openSession, setOpenSession] = React.useState(false);
     const [openNutritionDiary, setOpenNutritionDiary] = React.useState(false);
 
-    showBorder = showBorder ?? true;
+    isStandalone = isStandalone ?? true;
 
     return (
         <Card
             sx={{
-                boxShadow: showBorder ? undefined : 'none',
+                boxShadow: isStandalone ? undefined : 'none',
                 width: { xs: 'auto', md: '45%' },
                 height: { xs: '60%', md: '100%' },
+                display: 'flex',
+                flexDirection: 'column',
                 // m: { xs: 0, sm: 1, md: 2 },
                 // p: { xs: 1, sm: 1.5, md: 2 }
 
@@ -49,7 +51,9 @@ const Entries: React.FC<LogProps> = ({ selectedDay, showBorder }) => {
             />
             <CardContent sx={{
                 flex: 1,
-                height: '100%',
+                // flex items don't shrink below their content size without this,
+                // so the internal scrollbar would never appear
+                minHeight: 0,
                 overflow: 'auto',
                 display: 'flex',
                 flexDirection: 'column',

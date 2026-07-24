@@ -22,7 +22,7 @@ export interface DayProps {
 }
 
 
-const CalendarComponent = (props: { showBorder?: boolean }) => {
+const CalendarComponent = (props: { isStandalone?: boolean }) => {
     const [t] = useTranslation();
 
     const currentDate = new Date();
@@ -32,7 +32,7 @@ const CalendarComponent = (props: { showBorder?: boolean }) => {
     const startOfMonth = new Date(currentYear, currentMonth, 1);
     const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
 
-    const showBorder = props.showBorder ?? true;
+    const isStandalone = props.isStandalone ?? true;
 
 
     const weightsQuery = useBodyWeightQuery();
@@ -170,11 +170,14 @@ const CalendarComponent = (props: { showBorder?: boolean }) => {
             display: 'flex',
             gap: 2,
             flexDirection: { xs: 'column', md: 'row' },
-            // height: { xs: 'auto', md: 'calc(100vh - 130px)' },
+            // the 130px account for the app bar and the page's vertical margins; capping
+            // the height makes the entries panel scroll internally instead of the page.
+            // Embedded in the dashboard the height stays content-driven
+            height: { xs: 'auto', md: isStandalone ? 'calc(100vh - 130px)' : 'auto' },
             width: '100%',
         }}>
             <Card sx={{
-                boxShadow: showBorder ? undefined : 'none',
+                boxShadow: isStandalone ? undefined : 'none',
                 width: { xs: 'auto', md: '65%' },
                 height: { xs: 'auto', md: '100%' },
                 // m: { xs: 0, sm: 1, md: 2 },
@@ -238,7 +241,7 @@ const CalendarComponent = (props: { showBorder?: boolean }) => {
                     <LoadingPlaceholder />
                 </Card>}
 
-            {isSuccess && <Entries selectedDay={selectedDay} showBorder={showBorder} />}
+            {isSuccess && <Entries selectedDay={selectedDay} isStandalone={isStandalone} />}
         </Box>
     );
 };
