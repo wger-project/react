@@ -19,8 +19,7 @@ jobs:
         # Run the full suite behind UTC, at UTC and ahead of UTC so that
         # timezone-dependent date handling bugs can't slip through
         timezone: [ 'America/Toronto', 'UTC', 'Asia/Kolkata' ]
-    name:
-      CI job (timezone: ${{ matrix.timezone }})
+    name: "CI job (timezone: ${{ matrix.timezone }})"
     steps:
       - uses: actions/checkout@v7
 
