@@ -9,13 +9,10 @@ import {
     useMeasurementsQuery
 } from "@/components/Measurements/queries";
 import { Form, Formik } from "formik";
-import { DateTime, Settings } from "luxon";
+import { DateTime } from "luxon";
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { TIMEZONE } from "@/core/lib/consts";
 import * as yup from 'yup';
-
-Settings.defaultZone = TIMEZONE;
 
 interface EntryFormProps {
     entry?: MeasurementEntry,

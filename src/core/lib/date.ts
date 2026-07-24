@@ -21,6 +21,18 @@ export function dateToYYYYMMDD(date: Date): string {
     return `${year}-${month}-${day}`;
 }
 
+/*
+ * Util function that parses a YYYY-MM-DD string (as returned by Django DateFields)
+ * to a Date at local midnight.
+ *
+ * Note that new Date("YYYY-MM-DD") must not be used for these strings: the spec
+ * parses them as UTC midnight, which is the previous day in timezones behind UTC.
+ */
+export function yyyymmddToDate(dateStr: string): Date {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day);
+}
+
 
 /*
  * Returns the localized time from a date object

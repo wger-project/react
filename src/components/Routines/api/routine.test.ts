@@ -44,6 +44,7 @@ import {
 import axios from "axios";
 
 import type { Mock } from 'vitest';
+import { yyyymmddToDate } from "@/core/lib/date";
 
 vi.mock("axios");
 vi.mock("@/components/Routines/api/workoutUnits");
@@ -72,8 +73,8 @@ describe("workout routine service tests", () => {
                 name: 'My first routine!',
                 description: 'Well rounded full body routine',
                 created: new Date("2022-01-01T12:34:30+01:00"),
-                start: new Date("2024-03-01T00:00:00.000Z"),
-                end: new Date("2024-04-30T00:00:00.000Z"),
+                start: yyyymmddToDate("2024-03-01"),
+                end: yyyymmddToDate("2024-04-30"),
                 fitInWeek: false,
             }),
             new Routine({
@@ -81,8 +82,8 @@ describe("workout routine service tests", () => {
                 name: 'Beach body',
                 description: 'Train only arms and chest, no legs!!!',
                 created: new Date("2023-01-01T17:22:22+02:00"),
-                start: new Date("2024-03-01T00:00:00.000Z"),
-                end: new Date("2024-04-30T00:00:00.000Z"),
+                start: yyyymmddToDate("2024-03-01"),
+                end: yyyymmddToDate("2024-04-30"),
                 fitInWeek: false,
             }),
         ]);
@@ -162,7 +163,7 @@ describe("workout routine service tests", () => {
         expect(axios.get).toHaveBeenCalledTimes(1);
 
         expect(result[0].iteration).toStrictEqual(42);
-        expect(result[0].date).toStrictEqual(new Date('2024-04-01'));
+        expect(result[0].date).toStrictEqual(yyyymmddToDate('2024-04-01'));
         expect(result[0].label).toStrictEqual('first label');
         expect(result[0].day).toStrictEqual(
             new Day({
@@ -279,8 +280,8 @@ describe("workout routine service tests", () => {
         const routine = new Routine({
             name: 'New plan',
             description: 'desc',
-            start: new Date('2024-08-01'),
-            end: new Date('2024-09-01'),
+            start: yyyymmddToDate('2024-08-01'),
+            end: yyyymmddToDate('2024-09-01'),
             fitInWeek: true,
         });
         (axios.post as Mock).mockResolvedValue({ data: responseAddRoutine });
@@ -308,8 +309,8 @@ describe("workout routine service tests", () => {
             id: 42,
             name: 'Edited',
             description: 'updated description',
-            start: new Date('2024-08-01'),
-            end: new Date('2024-09-01'),
+            start: yyyymmddToDate('2024-08-01'),
+            end: yyyymmddToDate('2024-09-01'),
         });
         (axios.patch as Mock).mockResolvedValue({ data: responseEditRoutine });
 

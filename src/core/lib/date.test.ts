@@ -1,4 +1,4 @@
-import { calculatePastDate, dateTimeToHHMM, dateToYYYYMMDD } from "@/core/lib/date";
+import { calculatePastDate, dateTimeToHHMM, dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
 
 describe("test date utility", () => {
 
@@ -16,6 +16,32 @@ describe("test date utility", () => {
         const result = dateToYYYYMMDD(new Date('January 17, 2022 03:24:00'));
         expect(result).toStrictEqual('2022-01-17');
     });
+
+    test('convert date at local midnight', () => {
+        const result = dateToYYYYMMDD(new Date(2022, 0, 1));
+        expect(result).toStrictEqual('2022-01-01');
+    });
+});
+
+describe("test yyyymmddToDate", () => {
+
+    test('parses to local midnight', () => {
+        const result = yyyymmddToDate('2023-05-01');
+        expect(result).toStrictEqual(new Date(2023, 4, 1));
+    });
+
+    // These must hold in every timezone, otherwise dates drift by one day
+    // on each load / save cycle
+    test('roundtrip string -> date -> string', () => {
+        expect(dateToYYYYMMDD(yyyymmddToDate('2025-05-01'))).toStrictEqual('2025-05-01');
+        expect(dateToYYYYMMDD(yyyymmddToDate('2024-12-31'))).toStrictEqual('2024-12-31');
+        expect(dateToYYYYMMDD(yyyymmddToDate('2024-02-29'))).toStrictEqual('2024-02-29');
+    });
+
+    test('roundtrip date -> string -> date', () => {
+        const date = new Date(2025, 6, 24);
+        expect(yyyymmddToDate(dateToYYYYMMDD(date))).toStrictEqual(date);
+    });
 });
 
 describe("test time utility", () => {
@@ -31,26 +57,26 @@ describe("test time utility", () => {
 describe('calculatePastDate', () => {
 
     it('should return undefined for empty string filter', () => {
-        expect(calculatePastDate('', new Date('2023-08-14'))).toBeUndefined();
+        expect(calculatePastDate('', yyyymmddToDate('2023-08-14'))).toBeUndefined();
     });
 
     it('should return the correct date for lastWeek filter', () => {
-        const result = calculatePastDate('lastWeek', new Date('2023-02-14'));
+        const result = calculatePastDate('lastWeek', yyyymmddToDate('2023-02-14'));
         expect(result).toStrictEqual('2023-02-07');
     });
 
     it('should return the correct date for lastMonth filter', () => {
-        const result = calculatePastDate('lastMonth', new Date('2023-02-14'));
+        const result = calculatePastDate('lastMonth', yyyymmddToDate('2023-02-14'));
         expect(result).toStrictEqual('2023-01-14');
     });
 
     it('should return the correct date for lastHalfYear filter', () => {
-        const result = calculatePastDate('lastHalfYear', new Date('2023-08-14'));
+        const result = calculatePastDate('lastHalfYear', yyyymmddToDate('2023-08-14'));
         expect(result).toStrictEqual('2023-02-14');
     });
 
     it('should return the correct date for lastYear filter', () => {
-        const result = calculatePastDate('lastYear', new Date('2023-02-14'));
+        const result = calculatePastDate('lastYear', yyyymmddToDate('2023-02-14'));
         expect(result).toStrictEqual('2022-02-14');
     });
 });

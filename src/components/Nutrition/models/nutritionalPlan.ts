@@ -3,7 +3,7 @@ import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import { Meal } from "@/components/Nutrition/models/meal";
 import { ApiNutritionalPlanType } from "@/types";
 import { Adapter } from "@/core/lib/Adapter";
-import { dateToYYYYMMDD, isSameDay } from "@/core/lib/date";
+import { dateToYYYYMMDD, isSameDay, yyyymmddToDate } from "@/core/lib/date";
 
 /* eslint-disable camelcase */
 
@@ -142,7 +142,9 @@ export class NutritionalPlan {
     get groupDiaryEntries(): Map<string, GroupedDiaryEntries> {
 
         return this.diaryEntries.reduce((map, entry) => {
-            const dateKey = entry.datetime.toISOString().split('T')[0]; // Use ISO string format as the key
+            // Group by the local calendar day: toISOString would group by the UTC
+            // day, moving e.g. late-night entries to another date
+            const dateKey = dateToYYYYMMDD(entry.datetime);
             const entriesForDay = map.get(dateKey) || { entries: [], nutritionalValues: new NutritionalValues() };
             entriesForDay.entries.push(entry);
             entriesForDay.nutritionalValues.add(entry.nutritionalValues);
@@ -220,9 +222,9 @@ export class NutritionalPlanAdapter implements Adapter<NutritionalPlan> {
     fromJson(item: ApiNutritionalPlanType) {
         return new NutritionalPlan({
             id: item.id,
-            creationDate: new Date(item.creation_date),
-            start: new Date(item.start),
-            end: item.end !== null ? new Date(item.end) : null,
+            creationDate: yyyymmddToDate(item.creation_date),
+            start: yyyymmddToDate(item.start),
+            end: item.end !== null ? yyyymmddToDate(item.end) : null,
             description: item.description,
             onlyLogging: item.only_logging,
             goalEnergy: item.goal_energy,

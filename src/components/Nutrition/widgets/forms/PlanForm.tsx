@@ -20,7 +20,7 @@ import i18n from "@/i18n";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToYYYYMMDD } from "@/core/lib/date";
+import { dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
 import * as yup from 'yup';
 
 interface PlanFormProps {
@@ -117,8 +117,11 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
 
                 const newPlan = new NutritionalPlan({
 
-                    start: new Date(values.start),
-                    end: values.end ? new Date(values.end) : null,
+                    // the values are YYYY-MM-DD strings, parse them as local dates:
+                    // new Date() would interpret them as UTC midnight and shift the
+                    // day in timezones behind UTC
+                    start: yyyymmddToDate(values.start),
+                    end: values.end ? yyyymmddToDate(values.end) : null,
 
                     description: values.description,
                     onlyLogging: values.onlyLogging,
@@ -172,7 +175,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         }}
                                         onChange={(newValue) => {
                                             if (newValue) {
-                                                formik.setFieldValue('start', newValue.toJSDate());
+                                                formik.setFieldValue('start', dateToYYYYMMDD(newValue.toJSDate()));
                                             }
                                             setStartDateValue(newValue);
                                         }}
@@ -197,7 +200,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                         }}
                                         onChange={(newValue) => {
                                             if (newValue) {
-                                                formik.setFieldValue('end', newValue.toJSDate());
+                                                formik.setFieldValue('end', dateToYYYYMMDD(newValue.toJSDate()));
                                             }
                                             setEndDateValue(newValue);
                                         }}

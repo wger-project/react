@@ -3,7 +3,7 @@ import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
 import i18n from 'i18next';
 import { DateTime } from "luxon";
 import { Adapter } from "@/core/lib/Adapter";
-import { dateToYYYYMMDD, isSameDay } from "@/core/lib/date";
+import { dateToYYYYMMDD, isSameDay, yyyymmddToDate } from "@/core/lib/date";
 
 export const NAME_MIN_LENGTH = 3;
 export const NAME_MAX_LENGTH = 25;
@@ -217,8 +217,8 @@ class RoutineAdapter implements Adapter<Routine> {
             name: item.name,
             description: item.description,
             created: new Date(item.created),
-            start: new Date(item.start),
-            end: new Date(item.end),
+            start: yyyymmddToDate(item.start),
+            end: yyyymmddToDate(item.end),
             fitInWeek: item.fit_in_week,
             isTemplate: item.is_template,
             isPublic: item.is_public,

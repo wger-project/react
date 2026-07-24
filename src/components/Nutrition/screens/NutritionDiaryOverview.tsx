@@ -5,7 +5,7 @@ import { IngredientDetailTable } from "@/components/Nutrition/widgets/Ingredient
 import {
     LoggedPlannedNutritionalValuesTable
 } from "@/components/Nutrition/widgets/LoggedPlannedNutritionalValuesTable";
-import { dateToLocale } from "@/core/lib/date";
+import { dateToLocale, yyyymmddToDate } from "@/core/lib/date";
 import { Stack, Typography } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -21,7 +21,7 @@ export const NutritionDiaryOverview = () => {
         return <p>Please pass a UUID as the nutritional plan id.</p>;
     }
 
-    const date = new Date(params.date!);
+    const date = yyyymmddToDate(params.date!);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const planQuery = useFetchNutritionalPlanDateQuery(planId, params.date!);
 

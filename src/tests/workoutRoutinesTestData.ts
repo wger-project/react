@@ -10,6 +10,7 @@ import { SlotData } from "@/components/Routines/models/SlotData";
 import { SlotEntry } from "@/components/Routines/models/SlotEntry";
 import { WeightUnit } from "@/components/Routines/models/WeightUnit";
 import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
+import { yyyymmddToDate } from "@/core/lib/date";
 import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
 import { testWorkoutLogs } from "@/tests/workoutLogsRoutinesTestData";
 
@@ -162,7 +163,7 @@ const testRestDay = new Day({
 export const testRoutineDayData1 = [
     new RoutineDayData(
         1,
-        new Date('2024-05-05'),
+        yyyymmddToDate('2024-05-05'),
         '',
         testDayLegs,
         [
@@ -208,7 +209,7 @@ export const testRoutineLogData = [
             id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000111',
             dayId: 2,
             routineId: 1,
-            date: new Date('2024-07-01'),
+            date: yyyymmddToDate('2024-07-01'),
             notes: 'everything was great today!',
             impression: '1',
             timeStart: new Date('2024-12-01 12:30'),
@@ -223,8 +224,8 @@ export const testRoutine1 = new Routine({
     name: 'Test routine 1',
     description: 'Full body routine',
     created: new Date('2024-01-01'),
-    start: new Date('2024-05-01'),
-    end: new Date('2024-06-01'),
+    start: yyyymmddToDate('2024-05-01'),
+    end: yyyymmddToDate('2024-06-01'),
     fitInWeek: false,
     isTemplate: false,
     isPublic: false,
@@ -237,8 +238,8 @@ export const testRoutine2 = new Routine({
     name: '',
     description: 'The routine description',
     created: new Date('2024-02-01'),
-    start: new Date('2024-02-01'),
-    end: new Date('2024-03-01'),
+    start: yyyymmddToDate('2024-02-01'),
+    end: yyyymmddToDate('2024-03-01'),
     fitInWeek: false,
     isTemplate: false,
     isPublic: false,
@@ -249,8 +250,8 @@ export const testPublicTemplate1 = new Routine({
     name: 'public template 1',
     description: 'lorem ipsum',
     created: new Date('2025-01-01'),
-    start: new Date('2025-01-10'),
-    end: new Date('2025-02-01'),
+    start: yyyymmddToDate('2025-01-10'),
+    end: yyyymmddToDate('2025-02-01'),
     fitInWeek: false,
     isTemplate: true,
     isPublic: true,
@@ -261,8 +262,8 @@ export const testPrivateTemplate1 = new Routine({
     name: 'private template 1',
     description: 'lorem ipsum',
     created: new Date('2025-01-01'),
-    start: new Date('2025-01-10'),
-    end: new Date('2025-02-01'),
+    start: yyyymmddToDate('2025-01-10'),
+    end: yyyymmddToDate('2025-02-01'),
     fitInWeek: false,
     isTemplate: true,
     isPublic: false,

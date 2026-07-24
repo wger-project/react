@@ -18,6 +18,7 @@ import {
 } from "@/tests/nutritionTestdata";
 import axios from "axios";
 import type { Mock } from 'vitest';
+import { yyyymmddToDate } from "@/core/lib/date";
 
 vi.mock("axios");
 vi.mock("@/components/Nutrition/api/meal");
@@ -83,23 +84,23 @@ describe("Nutritional plan service tests", () => {
         expect(result).toStrictEqual([
             new NutritionalPlan({
                 id: PLAN_UUID_A,
-                creationDate: new Date('2023-05-26'),
-                start: new Date('2023-06-01'),
-                end: new Date('2023-06-30'),
+                creationDate: yyyymmddToDate('2023-05-26'),
+                start: yyyymmddToDate('2023-06-01'),
+                end: yyyymmddToDate('2023-06-30'),
                 description: 'first plan',
                 onlyLogging: true
             }),
             new NutritionalPlan({
                 id: PLAN_UUID_B,
-                creationDate: new Date('2022-06-01'),
+                creationDate: yyyymmddToDate('2022-06-01'),
                 description: '',
                 onlyLogging: false
             }),
             new NutritionalPlan({
                 id: PLAN_UUID_C,
-                creationDate: new Date('2023-08-01'),
-                start: new Date('2023-08-01'),
-                end: new Date('2023-08-31'),
+                creationDate: yyyymmddToDate('2023-08-01'),
+                start: yyyymmddToDate('2023-08-01'),
+                end: yyyymmddToDate('2023-08-31'),
                 description: '',
                 onlyLogging: false
             }),
@@ -187,8 +188,8 @@ describe("Nutritional plan service tests", () => {
     test('addNutritionalPlan POSTs the serialized plan and returns the parsed plan', async () => {
         const plan = new NutritionalPlan({
             description: "summer body",
-            start: new Date("2024-06-01"),
-            end: new Date("2024-08-31"),
+            start: yyyymmddToDate("2024-06-01"),
+            end: yyyymmddToDate("2024-08-31"),
             onlyLogging: false,
             goalEnergy: 2200,
         });
@@ -217,8 +218,8 @@ describe("Nutritional plan service tests", () => {
         const plan = new NutritionalPlan({
             id: RESPONSE_PLAN_UUID,
             description: "edited",
-            start: new Date("2024-06-01"),
-            end: new Date("2024-08-31"),
+            start: yyyymmddToDate("2024-06-01"),
+            end: yyyymmddToDate("2024-08-31"),
         });
         (axios.patch as Mock).mockResolvedValue({
             data: { ...responseNutritionalPlanDetail, description: "edited" },

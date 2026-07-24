@@ -12,6 +12,7 @@ import {
     getMeasurementCategory,
 } from "@/components/Measurements/api/measurements";
 import type { Mock } from 'vitest';
+import { yyyymmddToDate } from "@/core/lib/date";
 
 vi.mock("axios");
 
@@ -95,7 +96,7 @@ describe('measurement service tests', () => {
 
         expect(result).toStrictEqual([
             new MeasurementCategory(CATEGORY_UUID, "Weight", "kg", [
-                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, new Date("2021-01-01"), 80, "")
+                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, yyyymmddToDate("2021-01-01"), 80, "")
             ])
         ]);
     });
@@ -115,7 +116,7 @@ describe('measurement service tests', () => {
 
         expect(result).toStrictEqual(
             new MeasurementCategory(CATEGORY_UUID, "Weight", "kg", [
-                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, new Date("2021-01-01"), 80, "")
+                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, yyyymmddToDate("2021-01-01"), 80, "")
             ])
         );
     });

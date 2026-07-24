@@ -69,7 +69,7 @@ describe('SessionLogsForm', () => {
         render(<SessionLogsForm
             dayId={5}
             routineId={1}
-            selectedDate={DateTime.fromISO('2024-05-05T12:00:00.000Z')}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
         />);
 
         const weightElements = screen.getAllByRole('textbox').filter(input => (input as HTMLInputElement).value === '20');
@@ -100,7 +100,7 @@ describe('SessionLogsForm', () => {
         render(<SessionLogsForm
             dayId={5}
             routineId={1}
-            selectedDate={DateTime.fromISO('2024-05-05T12:00:00.000Z')}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
         />);
         await user.click(screen.getByTestId('AddIcon'));
         await user.click(screen.getByRole('button', { name: /submit/i }));
