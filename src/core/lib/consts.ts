@@ -1,5 +1,5 @@
 import { Language } from "@/components/Exercises/models/language";
-import { MIN_ACCOUNT_AGE_TO_TRUST, TIME_ZONE } from "@/config";
+import { MIN_ACCOUNT_AGE_TO_TRUST } from "@/config";
 
 export const ENGLISH_LANGUAGE_ID = 2;
 export const ENGLISH_LANGUAGE_CODE = 'en';
@@ -156,9 +156,6 @@ export const PAGINATION_OPTIONS = {
     pageSizeOptions: [5, 10, 25, 50, 100],
     pageSize: 10,
 };
-
-
-export const TIMEZONE = TIME_ZONE || 'Europe/Berlin';
 
 export const LANGUAGE_SHORT_ENGLISH = 'en';
 

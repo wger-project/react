@@ -13,6 +13,13 @@ export function isSameDay(date1: Date, date2: Date): boolean {
 
 /*
  * Util function that converts a date to a YYYY-MM-DD string
+ *
+ * This is built from the local date components on purpose: the shorter
+ * date.toISOString().split('T')[0] first converts to UTC, so for dates like
+ * "local midnight" it returns the previous day for every timezone ahead of UTC
+ * (and the counterpart yyyymmddToDate would shift behind UTC). Since these
+ * strings represent calendar dates the user picked (Django DateFields), the
+ * local calendar day is the correct one.
  */
 export function dateToYYYYMMDD(date: Date): string {
     const year = date.getFullYear();

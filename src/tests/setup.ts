@@ -22,7 +22,6 @@ vi.mock('@/config', () => {
         IS_PROD: false,
         PUBLIC_URL: '',
         SERVER_URL: 'https://example.com',
-        TIME_ZONE: 'UTC',
         MIN_ACCOUNT_AGE_TO_TRUST: 21,
         VITE_API_SERVER: 'https://example.com',
         VITE_API_KEY: '122333444455555666666',
