@@ -14,6 +14,13 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Run the full suite behind UTC, at UTC and ahead of UTC so that
+        # timezone-dependent date handling bugs can't slip through
+        timezone: [ 'America/Toronto', 'UTC', 'Asia/Kolkata' ]
+    name:
+      CI job (timezone: ${{ matrix.timezone }})
     steps:
       - uses: actions/checkout@v7
 
@@ -36,8 +43,12 @@ jobs:
 
       - name: Run tests with coverage
         run: npm run test:coverage
+        env:
+          TZ: ${{ matrix.timezone }}
 
       - name: Coveralls
+        # coverage is identical in all timezones, upload it only once
+        if: matrix.timezone == 'UTC'
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -2,7 +2,7 @@ import { Day } from "@/components/Routines/models/Day";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import i18n from 'i18next';
 import { Adapter } from "@/core/lib/Adapter";
-import { dateTimeToHHMM, dateToYYYYMMDD, HHMMToDateTime } from "@/core/lib/date";
+import { dateTimeToHHMM, dateToYYYYMMDD, HHMMToDateTime, yyyymmddToDate } from "@/core/lib/date";
 
 export const NOTES_MAX_LENGTH = 1000 as const;
 
@@ -99,7 +99,7 @@ export class WorkoutSessionAdapter implements Adapter<WorkoutSession> {
         id: item.id,
         dayId: item.day!,
         routineId: item.routine!,
-        date: new Date(item.date!),
+        date: yyyymmddToDate(item.date!),
         notes: item.notes !== undefined ? item.notes : null,
         impression: item.impression!,
         timeStart: item.time_start !== undefined ? HHMMToDateTime(item.time_start) : null,

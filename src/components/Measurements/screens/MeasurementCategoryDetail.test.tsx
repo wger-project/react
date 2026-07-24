@@ -44,11 +44,12 @@ describe("Test the MeasurementCategoryDetail component", () => {
         expect(screen.getByText('Biceps')).toBeInTheDocument();
 
         expect(screen.getByRole('gridcell', { name: /10cm/i })).toBeInTheDocument();
-        expect(screen.getAllByText(/Feb 1, 2023/i).length).toBeGreaterThanOrEqual(1);
+        // the entries now show date and time
+        expect(screen.getAllByText(/2\/1\/2023, 8:00 AM/i).length).toBeGreaterThanOrEqual(1);
         expect(screen.getByText('test note')).toBeInTheDocument();
 
         expect(screen.getByRole('gridcell', { name: /20cm/i })).toBeInTheDocument();
-        expect(screen.getByText(/Feb 2, 2023/i)).toBeInTheDocument();
+        expect(screen.getByText(/2\/2\/2023, 7:45 AM/i)).toBeInTheDocument();
         expect(screen.getByText('important note')).toBeInTheDocument();
     });
 });

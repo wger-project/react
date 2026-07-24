@@ -7,7 +7,7 @@ import {
     testMuscleRectusAbdominis
 } from "@/tests/exerciseTestdata";
 import { testRoutine1, testRoutineDayData1 } from "@/tests/workoutRoutinesTestData";
-import { isSameDay } from "@/core/lib/date";
+import { isSameDay, yyyymmddToDate } from "@/core/lib/date";
 
 describe('Routine model tests', () => {
 
@@ -101,8 +101,8 @@ describe('Routine model tests', () => {
     test('correctly calculates the iteration for a date', () => {
 
         // Assert
-        expect(routine.getIteration(new Date('2024-01-01'))).toEqual(null);
-        expect(routine.getIteration(new Date('2024-05-05'))).toEqual(1);
+        expect(routine.getIteration(yyyymmddToDate('2024-01-01'))).toEqual(null);
+        expect(routine.getIteration(yyyymmddToDate('2024-05-05'))).toEqual(1);
     });
 
     test('correctly returns the DayData for an iteration', () => {

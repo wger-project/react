@@ -9,7 +9,6 @@ import {
     getNutritionalPlansSparse
 } from "@/components/Nutrition/api/nutritionalPlan";
 import { QueryKey } from "@/core/lib/consts";
-import { dateToYYYYMMDD } from "@/core/lib/date";
 
 export function useFetchNutritionalPlansQuery() {
     return useQuery({
@@ -40,7 +39,10 @@ export function useFetchNutritionalPlanQuery(planId: string) {
 export function useFetchNutritionalPlanDateQuery(planId: string | null, dateStr: string, enabled = true) {
     return useQuery({
         queryKey: [QueryKey.NUTRITIONAL_PLAN, planId, dateStr],
-        queryFn: () => getNutritionalPlanFull(planId, { filtersetQueryLogs: { "datetime__eq": dateToYYYYMMDD(new Date(dateStr)) } }),
+        // dateStr already is a YYYY-MM-DD string (from the URL), pass it through
+        // as-is: round-tripping it through new Date() would parse it as UTC
+        // midnight and shift the day in timezones behind UTC
+        queryFn: () => getNutritionalPlanFull(planId, { filtersetQueryLogs: { "datetime__eq": dateStr } }),
         enabled: enabled,
     });
 }

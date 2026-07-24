@@ -1,6 +1,7 @@
 import { NutritionalPlan, PSEUDO_MEAL_ID } from "@/components/Nutrition/models/nutritionalPlan";
 import { TEST_DIARY_ENTRY_3, TEST_DIARY_ENTRY_4 } from "@/tests/nutritionDiaryTestdata";
 import { TEST_MEAL_1, TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
+import { yyyymmddToDate } from "@/core/lib/date";
 
 
 vi.useFakeTimers();
@@ -8,7 +9,8 @@ vi.useFakeTimers();
 describe("Test the nutritional plan model", () => {
 
     beforeAll(() => {
-        vi.setSystemTime(new Date('2023-07-01').getTime());
+        // local midnight, so that "today" is July 1st in every timezone
+        vi.setSystemTime(yyyymmddToDate('2023-07-01').getTime());
     });
 
     afterAll(() => {
@@ -34,7 +36,7 @@ describe("Test the nutritional plan model", () => {
     test('correctly calculates the nutritional values logged on a specific date', async () => {
 
         // Act
-        const values = TEST_NUTRITIONAL_PLAN_1.loggedNutritionalValuesDate(new Date('2023-07-07'));
+        const values = TEST_NUTRITIONAL_PLAN_1.loggedNutritionalValuesDate(yyyymmddToDate('2023-07-07'));
 
         // Assert
         expect(values.energy).toBeCloseTo(48, 2);

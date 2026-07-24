@@ -28,6 +28,7 @@ class MeasurementEntryAdapter implements Adapter<MeasurementEntry> {
         return new MeasurementEntry(
             item.id,
             item.category,
+            // full ISO datetime from the server, parsing is timezone-safe
             new Date(item.date),
             item.value,
             item.notes

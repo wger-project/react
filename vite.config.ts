@@ -39,11 +39,35 @@ export default defineConfig(({ mode }) => {
             globals: true,
             setupFiles: './src/tests/setup.ts',
             testTimeout: 15000,
-            include: ['src/**/*.{test,spec}.{ts,tsx}'],
             css: false,
             pool: 'threads',
             maxWorkers: '50%',
             minWorkers: 1,
+
+            // Note: `include` lives in the projects (extends merges arrays, a
+            // root-level include would make both projects run everything)
+            projects: [
+                {
+                    extends: true,
+                    test: {
+                        name: 'default',
+                        include: ['src/**/*.{test,spec}.{ts,tsx}'],
+                        exclude: ['src/core/lib/date.test.ts'],
+                    },
+                },
+                {
+                    extends: true,
+                    test: {
+                        name: 'timezones',
+                        // These tests re-run themselves under several TZ values.
+                        // They need child processes: assigning process.env.TZ at
+                        // runtime only resets the cached timezone on a process
+                        // main thread, worker threads keep the old one.
+                        include: ['src/core/lib/date.test.ts'],
+                        pool: 'forks',
+                    },
+                },
+            ],
 
             server: {
                 deps: {

@@ -2,7 +2,7 @@ import { Meal } from "@/components/Nutrition/models/meal";
 import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
-import { HHMMToDateTime } from "@/core/lib/date";
+import { HHMMToDateTime, yyyymmddToDate } from "@/core/lib/date";
 import {
     TEST_INGREDIENT_1,
     TEST_INGREDIENT_2,
@@ -162,7 +162,7 @@ TEST_MEAL_5.items = [TEST_MEAL_ITEM_8];
 
 export const TEST_NUTRITIONAL_PLAN_1 = new NutritionalPlan({
     id: 'aaaaaaaa-0000-0000-0000-000000000101',
-    creationDate: new Date('2023-01-01'),
+    creationDate: yyyymmddToDate('2023-01-01'),
     description: 'Summer body!!!',
 });
 TEST_NUTRITIONAL_PLAN_1.meals = [
@@ -192,7 +192,7 @@ TEST_NUTRITIONAL_PLAN_1.diaryEntries = [
 
 export const TEST_NUTRITIONAL_PLAN_2 = new NutritionalPlan({
     id: 'aaaaaaaa-0000-0000-0000-000000000222',
-    creationDate: new Date('2023-08-01'),
+    creationDate: yyyymmddToDate('2023-08-01'),
     description: 'Bulking till we puke',
 });
 TEST_NUTRITIONAL_PLAN_2.meals = [TEST_MEAL_4, TEST_MEAL_5];
