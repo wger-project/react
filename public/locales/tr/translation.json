@@ -327,7 +327,9 @@
         "volume": "Ses seviyesi",
         "backToRoutine": "Rutine geri dön",
         "alsoShowLogs": "Günlükleri de göster",
-        "duplicate": "Rutini kopyala"
+        "duplicate": "Rutini kopyala",
+        "iterationNr": "Yineleme {{number}}",
+        "exerciseNotAvailable": "Egzersiz yüklenirken hata oluştu"
     },
     "timeOfDay": "Günün saati",
     "notes": "Notlar",
