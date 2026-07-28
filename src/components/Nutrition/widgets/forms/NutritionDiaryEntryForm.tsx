@@ -5,7 +5,11 @@ import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { Meal } from "@/components/Nutrition/models/meal";
 import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
-import { useAddDiaryEntryQuery, useEditDiaryEntryQuery } from "@/components/Nutrition/queries";
+import {
+    useAddDiaryEntryQuery,
+    useDeleteDiaryEntryQuery,
+    useEditDiaryEntryQuery
+} from "@/components/Nutrition/queries";
 import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
@@ -32,8 +36,9 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
     const [t, i18n] = useTranslation();
     const addDiaryQuery = useAddDiaryEntryQuery(planId);
     const editDiaryQuery = useEditDiaryEntryQuery(planId);
+    const deleteDiaryQuery = useDeleteDiaryEntryQuery(planId);
     const [dateValue, setDateValue] = useState<DateTime | null>(entry ? DateTime.fromJSDate(entry.datetime) : DateTime.now());
-    const [selectedMeal, setSelectedMeal] = useState<string | null>(meal);
+    const [selectedMeal, setSelectedMeal] = useState<string | null>(meal ?? entry?.mealId ?? null);
 
     const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(entry?.ingredient ?? null);
     const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(entry?.weightUnit ?? null);
@@ -55,6 +60,16 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
             .required(t('forms.fieldRequired')),
     });
 
+    const handleDelete = () => {
+        if (entry) {
+            deleteDiaryQuery.mutate(entry.id!);
+        }
+
+        if (closeFn) {
+            closeFn();
+        }
+    };
+
     const handleUnitChange = (value: string) => {
         if (value === GRAM_UNIT_VALUE) {
             setSelectedUnit(null);
@@ -67,9 +82,9 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
     return (
         (<Formik
             initialValues={{
-                datetime: new Date(),
-                amount: 0,
-                ingredient: null,
+                datetime: entry ? entry.datetime : new Date(),
+                amount: entry ? entry.amount : 0,
+                ingredient: entry ? entry.ingredientId : null,
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
@@ -120,6 +135,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                                 setWeightUnits(value?.weightUnits ?? []);
                                 setSelectedUnit(null);
                             }}
+                            initialIngredient={entry ? entry.ingredient : null}
                             />
                             {formik.touched.ingredient && formik.errors.ingredient && (
                             <div style={{ color: 'crimson', fontSize: '0.7rem', marginLeft: '12px' }}>
@@ -201,6 +217,11 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                             />
                         </LocalizationProvider>
                         <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
+                            {(closeFn !== undefined && entry !== undefined)
+                                && <Button color="error" variant="outlined" onClick={handleDelete}>
+                                    {t('delete')}
+                                </Button>}
+
                             {closeFn !== undefined
                                 && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
                                     {t('close')}

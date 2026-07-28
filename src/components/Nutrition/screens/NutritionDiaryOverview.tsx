@@ -41,7 +41,8 @@ export const NutritionDiaryOverview = () => {
                     <IngredientDetailTable
                         values={planQuery.data!.loggedNutritionalValuesDate(date)}
                         items={planQuery.data!.loggedEntriesDate(date)}
-                        showSum={true} />
+                        showSum={true}
+                        planId={planId} />
 
                 </Stack>
             </>}

@@ -116,6 +116,7 @@ export const MealDetail = (props: { meal: Meal, planId: string, onlyLogging: boo
                     showSum={props.meal.isRealMeal}
                     items={props.meal.diaryEntriesToday}
                     values={props.meal.loggedNutritionalValuesToday}
+                    planId={props.planId}
                 />
 
             </Collapse>
