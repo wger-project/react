@@ -35,6 +35,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
     const [dateValue, setDateValue] = useState<DateTime | null>(entry ? DateTime.fromJSDate(entry.datetime) : DateTime.now());
     const [selectedMeal, setSelectedMeal] = useState<string | null>(meal);
 
+    const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(entry?.ingredient ?? null);
     const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(entry?.weightUnit ?? null);
     const [weightUnits, setWeightUnits] = useState<NutritionWeightUnit[]>(entry?.ingredient?.weightUnits ?? []);
 
@@ -84,6 +85,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         amount: newAmount,
                         datetime: values.datetime,
                         ingredientId: values.ingredient!,
+                        ingredient: selectedIngredient,
                         weightUnitId: selectedUnit?.id ?? null,
                         weightUnit: selectedUnit,
                     });
@@ -114,6 +116,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                             callback={(value: Ingredient | null) => {
                                 formik.setFieldTouched('ingredient', true);
                                 formik.setFieldValue('ingredient', value?.id ?? null);
+                                setSelectedIngredient(value);
                                 setWeightUnits(value?.weightUnits ?? []);
                                 setSelectedUnit(null);
                             }}

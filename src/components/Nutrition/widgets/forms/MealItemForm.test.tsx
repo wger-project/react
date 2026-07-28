@@ -1,9 +1,11 @@
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { useAddMealItemQuery, useEditMealItemQuery, useSearchIngredientQuery } from "@/components/Nutrition/queries";
 import { MealItemForm } from "@/components/Nutrition/widgets/forms/MealItemForm";
 import { SEARCH_DEBOUNCE_MS } from "@/components/Nutrition/widgets/IngredientAutocompleter";
 import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
-import { TEST_MEAL_ITEM_1 } from "@/tests/nutritionTestdata";
+import { TEST_MEAL_ITEM_1, TEST_WEIGHT_UNIT_SLICE } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
@@ -110,8 +112,48 @@ describe('Test the MealItemForm component', () => {
                 mealId: 'bbbbbbbb-0000-0000-0000-000000001001',
                 amount: 120,
                 order: 3,
+                // The newly selected ingredient ("1001 Nacht Haferbrei"), not the
+                // item's original one
+                ingredientId: 102,
+                ingredient: TEST_INGREDIENT_2,
+                weightUnitId: null,
+            })
+        );
+    });
+    test('Resetting the unit back to gram should clear the weight unit', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        const ingredientWithUnits = new Ingredient({ ...TEST_INGREDIENT_1, weightUnits: [TEST_WEIGHT_UNIT_SLICE] });
+        const item = new MealItem({
+            id: 'cccccccc-0000-0000-0000-000000000042',
+            mealId: 'bbbbbbbb-0000-0000-0000-000000001001',
+            amount: 2,
+            order: 3,
+            ingredientId: ingredientWithUnits.id,
+            ingredient: ingredientWithUnits,
+            weightUnit: TEST_WEIGHT_UNIT_SLICE,
+        });
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MealItemForm planId="aaaaaaaa-0000-0000-0000-000000000987" item={item} closeFn={closeFnMock} />
+            </QueryClientProvider>
+        );
+        await user.click(screen.getByText('slice (50g)'));
+        await user.click(await screen.findByRole('option', { name: 'nutrition.gramShort' }));
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        expect(mutateAddMock).not.toHaveBeenCalled();
+        expect(closeFnMock).toHaveBeenCalled();
+        expect(mutateEditMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: 'cccccccc-0000-0000-0000-000000000042',
+                amount: 2,
                 ingredientId: 101,
                 weightUnitId: null,
+                weightUnit: null,
             })
         );
     });

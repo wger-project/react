@@ -76,8 +76,11 @@ export class DiaryEntry {
     }
 
     static clone(other: DiaryEntry, overrides?: Partial<DiaryEntryConstructorParams>): DiaryEntry {
-        const ingredient = overrides?.ingredient ?? other.ingredient;
-        const weightUnit = overrides?.weightUnit ?? other.weightUnit;
+        // Nullable overrides need an explicit undefined check: with ?? an
+        // explicit null (e.g. resetting the weight unit back to gram) would be
+        // treated as "not passed" and the old value would win
+        const ingredient = overrides?.ingredient !== undefined ? overrides.ingredient : other.ingredient;
+        const weightUnit = overrides?.weightUnit !== undefined ? overrides.weightUnit : other.weightUnit;
 
         return new DiaryEntry({
             id: overrides?.id ?? (other.id ?? undefined),
@@ -87,7 +90,9 @@ export class DiaryEntry {
             datetime: overrides?.datetime ?? other.datetime,
             ingredientId: ingredient ? ingredient.id : (overrides?.ingredientId ?? other.ingredientId),
             ingredient,
-            weightUnitId: weightUnit ? weightUnit.id : (overrides?.weightUnitId ?? other.weightUnitId),
+            weightUnitId: weightUnit
+                ? weightUnit.id
+                : (overrides?.weightUnitId !== undefined ? overrides.weightUnitId : other.weightUnitId),
             weightUnit,
         });
     }

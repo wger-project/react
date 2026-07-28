@@ -26,6 +26,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
     const editMealItemQuery = useEditMealItemQuery(planId);
     const deleteMealItemQuery = useDeleteMealItemQuery(planId);
 
+    const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(item?.ingredient ?? null);
     const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(item?.weightUnit ?? null);
     const [weightUnits, setWeightUnits] = useState<NutritionWeightUnit[]>(item?.ingredient?.weightUnits ?? []);
 
@@ -76,6 +77,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                     const newMealItem = MealItem.clone(item, {
                         amount: newAmount,
                         ingredientId: values.ingredient,
+                        ingredient: selectedIngredient,
                         weightUnitId: selectedUnit?.id ?? null,
                         weightUnit: selectedUnit,
                     });
@@ -103,6 +105,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                         <IngredientAutocompleter
                             callback={(value: Ingredient | null) => {
                                 formik.setFieldValue('ingredient', value ? value.id : null);
+                                setSelectedIngredient(value);
                                 setWeightUnits(value?.weightUnits ?? []);
                                 setSelectedUnit(null);
                             }}
