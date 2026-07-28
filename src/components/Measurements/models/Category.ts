@@ -6,7 +6,7 @@ export class MeasurementCategory {
     entries: MeasurementEntry[] = [];
 
     constructor(
-        public id: string,
+        public id: string | null,
         public name: string,
         public unit: string,
         entries?: MeasurementEntry[]
@@ -14,6 +14,15 @@ export class MeasurementCategory {
         if (entries) {
             this.entries = entries;
         }
+    }
+
+    static clone(other: MeasurementCategory, overrides?: Partial<Pick<MeasurementCategory, 'id' | 'name' | 'unit'>>): MeasurementCategory {
+        return new MeasurementCategory(
+            overrides?.id ?? other.id,
+            overrides?.name ?? other.name,
+            overrides?.unit ?? other.unit,
+            other.entries,
+        );
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,7 +48,7 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
 
     toJson(item: MeasurementCategory) {
         return {
-            id: item.id,
+            ...(item.id != null ? { id: item.id } : {}),
             name: item.name,
             unit: item.unit,
         };

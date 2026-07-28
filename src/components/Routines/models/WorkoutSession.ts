@@ -10,22 +10,8 @@ export const IMPRESSION_BAD = '1' as const;
 export const IMPRESSION_NEUTRAL = '2' as const;
 export const IMPRESSION_GOOD = '3' as const;
 
-export interface AddSessionParams {
-    day: number;
-    routine: number;
-    date: string;
-    notes?: string;
-    impression?: string;
-    timeStart?: string;
-    timeEnd?: string;
-}
-
-export interface EditSessionParams extends Partial<AddSessionParams> {
-    id: string,
-}
-
 interface WorkoutSessionParams {
-    id: string;
+    id: string | null;
     dayId: number;
     routineId: number;
     date: Date;
@@ -39,7 +25,7 @@ interface WorkoutSessionParams {
 
 export class WorkoutSession {
 
-    id: string;
+    id: string | null;
     dayId: number;
     routineId: number;
     date: Date;
@@ -79,6 +65,10 @@ export class WorkoutSession {
         }
     }
 
+    toJson() {
+        return new WorkoutSessionAdapter().toJson(this);
+    }
+
     get textRepresentation(): string {
         const time = this.timeStart && this.timeEnd ? `${this.timeStart.toLocaleTimeString([], {
             hour: '2-digit',
@@ -110,7 +100,7 @@ export class WorkoutSessionAdapter implements Adapter<WorkoutSession> {
 
 
     toJson = (item: WorkoutSession) => ({
-        id: item.id,
+        ...(item.id != null ? { id: item.id } : {}),
         day: item.dayId,
         date: dateToYYYYMMDD(item.date),
         routine: item.routineId,

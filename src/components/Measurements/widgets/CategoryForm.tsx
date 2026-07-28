@@ -40,11 +40,11 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
             validationSchema={validationSchema}
             onSubmit={async (values) => {
 
-                // Edit existing weight entry
+                // Edit existing category
                 if (category) {
-                    useEditCategoryQuery.mutate({ ...values, id: category.id });
+                    useEditCategoryQuery.mutate(MeasurementCategory.clone(category, values));
                 } else {
-                    useAddCategoryQuery.mutate(values);
+                    useAddCategoryQuery.mutate(new MeasurementCategory(null, values.name, values.unit));
                 }
 
                 // if closeFn is defined, close the modal (this form does not have to

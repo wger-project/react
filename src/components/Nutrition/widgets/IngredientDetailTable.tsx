@@ -12,7 +12,6 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry, planId?: strin
     const [t, i18n] = useTranslation();
     const [expandForm, setExpandForm] = useState(false);
 
-    // Diary entries become editable when the plan id is available
     const isEditable = props.planId !== undefined && props.item instanceof DiaryEntry;
     const handleToggleForm = () => {
         if (isEditable) {

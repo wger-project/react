@@ -7,7 +7,7 @@ import {
 } from "@/components/Routines/models/WorkoutSession";
 import { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery } from "@/components/Routines/queries";
 import { WgerTextField } from "@/core/forms/WgerTextField";
-import { dateTimeToHHMM, dateToYYYYMMDD } from "@/core/lib/date";
+import { dateToYYYYMMDD } from "@/core/lib/date";
 import { SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
 import { Button, ButtonGroup, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
@@ -116,28 +116,21 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
             innerRef={formikRef}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-                const data = {
-                    day: dayId,
-                    routine: routineId,
-                    date: dateToYYYYMMDD(selectedDate.toJSDate()),
-                    notes: values.notes!,
+                const draft = new WorkoutSession({
+                    id: session?.id ?? null,
+                    dayId: dayId,
+                    routineId: routineId,
+                    date: selectedDate.toJSDate(),
+                    notes: values.notes,
                     impression: values.impression,
-                    // eslint-disable-next-line camelcase
-                    time_start: values.start ? dateTimeToHHMM(values.start.toJSDate()) : null,
-                    // eslint-disable-next-line camelcase
-                    time_end: values.end ? dateTimeToHHMM(values.end.toJSDate()) : null
-                };
+                    timeStart: values.start ? values.start.toJSDate() : null,
+                    timeEnd: values.end ? values.end.toJSDate() : null,
+                });
 
                 if (session !== undefined) {
-                    // @ts-ignore String vs string
-                    await editSessionQuery.mutateAsync({
-                        ...data,
-                        id: session.id
-                    });
+                    await editSessionQuery.mutateAsync(draft);
                 } else {
-                    // @ts-ignore String vs string
-                    await addSessionQuery.mutateAsync(data);
-                    // navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: routineId }));
+                    await addSessionQuery.mutateAsync(draft);
                 }
             }}
         >

@@ -1,12 +1,7 @@
 import { getExercisesByIds } from "@/components/Exercises/api/exercise";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { WorkoutLog, WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
-import {
-    AddSessionParams,
-    EditSessionParams,
-    WorkoutSession,
-    WorkoutSessionAdapter
-} from "@/components/Routines/models/WorkoutSession";
+import { WorkoutSession, WorkoutSessionAdapter } from "@/components/Routines/models/WorkoutSession";
 import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
 import { fetchPaginated } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
@@ -80,20 +75,20 @@ export const getSessions = async (options?: SessionQueryOptions): Promise<Workou
     return result;
 };
 
-export const addSession = async (data: AddSessionParams): Promise<WorkoutSession> => {
+export const addSession = async (session: WorkoutSession): Promise<WorkoutSession> => {
     const response = await axios.post(
         makeUrl(ApiPath.SESSION,),
-        data,
+        session.toJson(),
         { headers: makeHeader() }
     );
 
     return new WorkoutSessionAdapter().fromJson(response.data);
 };
 
-export const editSession = async (data: EditSessionParams): Promise<WorkoutSession> => {
+export const editSession = async (session: WorkoutSession): Promise<WorkoutSession> => {
     const response = await axios.patch(
-        makeUrl(ApiPath.SESSION, { id: data.id }),
-        data,
+        makeUrl(ApiPath.SESSION, { id: session.id! }),
+        session.toJson(),
         { headers: makeHeader() }
     );
 

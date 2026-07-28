@@ -74,13 +74,14 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
 
     const processRowUpdate = async (newRow: GridRowModel) => {
 
-        updateEntryQuery.mutate({
-            id: newRow.id,
-            categoryId: props.category.id,
-            date: newRow.date,
-            value: newRow.value,
-            notes: newRow.notes
-        });
+        const date = newRow.date instanceof Date ? newRow.date : new Date(newRow.date);
+        updateEntryQuery.mutate(new MeasurementEntry(
+            newRow.id,
+            props.category.id!,
+            date,
+            newRow.value,
+            newRow.notes,
+        ));
 
         return { ...newRow, isNew: false };
     };

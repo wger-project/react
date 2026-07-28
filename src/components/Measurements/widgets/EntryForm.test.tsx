@@ -82,12 +82,7 @@ describe("Test the EntryForm component", () => {
         // Assert
         expect(submitButton).toBeInTheDocument();
         await user.click(submitButton);
-        expect(mutate).toHaveBeenCalledWith({
-            date: expect.anything(),
-            id: 'dddddddd-dddd-dddd-dddd-000000000001',
-            notes: "test note",
-            value: 25,
-        });
+        expect(mutate).toHaveBeenCalledWith(MeasurementEntry.clone(entry, { value: 25 }));
     });
 
     test('Creating a new entry', async () => {
@@ -110,12 +105,13 @@ describe("Test the EntryForm component", () => {
         // Assert
         expect(submitButton).toBeInTheDocument();
         await user.click(submitButton);
-        expect(mutate).toHaveBeenCalledWith({
-            categoryId: 'cccccccc-cccc-cccc-cccc-000000000011',
-            date: fakeNow,
-            notes: 'The Shiba Inu is a breed of hunting dog from Japan.',
-            value: 42.42,
-        });
+        expect(mutate).toHaveBeenCalledWith(new MeasurementEntry(
+            null,
+            'cccccccc-cccc-cccc-cccc-000000000011',
+            fakeNow,
+            42.42,
+            'The Shiba Inu is a breed of hunting dog from Japan.',
+        ));
 
         vi.useRealTimers();
     });

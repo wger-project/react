@@ -11,6 +11,16 @@ export class MeasurementEntry {
     ) {
     }
 
+    static clone(other: MeasurementEntry, overrides?: Partial<Pick<MeasurementEntry, 'id' | 'category' | 'date' | 'value' | 'notes'>>): MeasurementEntry {
+        return new MeasurementEntry(
+            overrides?.id ?? other.id,
+            overrides?.category ?? other.category,
+            overrides?.date ?? other.date,
+            overrides?.value ?? other.value,
+            overrides?.notes ?? other.notes,
+        );
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static fromJson(json: any): MeasurementEntry {
         return adapter.fromJson(json);
@@ -37,9 +47,10 @@ class MeasurementEntryAdapter implements Adapter<MeasurementEntry> {
 
     toJson(item: MeasurementEntry) {
         return {
-            id: item.id,
+            ...(item.id != null ? { id: item.id } : {}),
             category: item.category,
-            date: item.date,
+            // the server field is a datetime, send the full timestamp
+            date: item.date.toISOString(),
             value: item.value,
             notes: item.notes
         };

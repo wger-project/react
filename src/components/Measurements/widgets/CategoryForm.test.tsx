@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "@/components/Measurements/queries";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
 import React from 'react';
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
@@ -64,11 +65,10 @@ describe("Test the CategoryForm component", () => {
 
         // Assert
         await user.click(submitButton);
-        expect(mutate).toHaveBeenCalledWith({
-            id: 'cccccccc-cccc-cccc-cccc-000000000002',
-            name: "a better name",
-            unit: 'K/m2',
-        });
+        expect(mutate).toHaveBeenCalledWith(MeasurementCategory.clone(
+            TEST_MEASUREMENT_CATEGORY_2,
+            { name: "a better name", unit: 'K/m2' }
+        ));
     });
 
     test('Creating a new category', async () => {
@@ -89,9 +89,6 @@ describe("Test the CategoryForm component", () => {
 
         // Assert
         await user.click(submitButton);
-        expect(mutate).toHaveBeenCalledWith({
-            name: 'calves',
-            unit: 'cm'
-        });
+        expect(mutate).toHaveBeenCalledWith(new MeasurementCategory(null, 'calves', 'cm'));
     });
 });

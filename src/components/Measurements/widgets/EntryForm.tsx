@@ -54,11 +54,11 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
             validationSchema={validationSchema}
             onSubmit={async (values) => {
 
-                // Edit existing weight entry
+                // Edit existing entry
                 if (entry) {
-                    useEditEntryQuery.mutate({ ...values, id: entry.id! });
+                    useEditEntryQuery.mutate(MeasurementEntry.clone(entry, values));
                 } else {
-                    useAddEntryQuery.mutate({ ...values, categoryId: categoryId });
+                    useAddEntryQuery.mutate(new MeasurementEntry(null, categoryId, values.date, values.value, values.notes));
                 }
 
                 // if closeFn is defined, close the modal (this form does not have to

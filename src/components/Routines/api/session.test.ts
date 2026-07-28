@@ -201,7 +201,7 @@ describe("Session service tests", () => {
         expect(result).toBeNull();
     });
 
-    test('addSession POSTs the params and returns the parsed session', async () => {
+    test('addSession POSTs the serialized session and returns the parsed session', async () => {
         (axios.post as Mock).mockResolvedValue({
             data: {
                 id: SESSION_UUID_2, routine: 39764, day: 5, date: "2025-08-07",
@@ -210,12 +210,16 @@ describe("Session service tests", () => {
             },
         });
 
-        const result = await addSession({
-            routine: 39764,
-            day: 5,
-            date: "2025-08-07",
+        const result = await addSession(new WorkoutSession({
+            id: null,
+            routineId: 39764,
+            dayId: 5,
+            date: new Date(2025, 7, 7),
+            notes: null,
             impression: "3",
-        });
+            timeStart: null,
+            timeEnd: null,
+        }));
 
         expect(axios.post).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.post as Mock).mock.calls[0];
@@ -224,13 +228,16 @@ describe("Session service tests", () => {
             routine: 39764,
             day: 5,
             date: "2025-08-07",
+            notes: null,
             impression: "3",
+            time_start: null,
+            time_end: null,
         });
         expect(result).toBeInstanceOf(WorkoutSession);
         expect(result.id).toBe(SESSION_UUID_2);
     });
 
-    test('editSession PATCHes /workoutsession/<id>/ with the params', async () => {
+    test('editSession PATCHes /workoutsession/<id>/ with the serialized session', async () => {
         (axios.patch as Mock).mockResolvedValue({
             data: {
                 id: SESSION_UUID, routine: 39764, day: 5, date: "2025-08-07",
@@ -239,15 +246,30 @@ describe("Session service tests", () => {
             },
         });
 
-        const result = await editSession({
+        const result = await editSession(new WorkoutSession({
             id: SESSION_UUID,
+            routineId: 39764,
+            dayId: 5,
+            date: new Date(2025, 7, 7),
             notes: "edited",
-        });
+            impression: "3",
+            timeStart: null,
+            timeEnd: null,
+        }));
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.patch as Mock).mock.calls[0];
         expect(url).toMatch(new RegExp(`/api/v2/workoutsession/${SESSION_UUID}/$`));
-        expect(body).toEqual({ id: SESSION_UUID, notes: "edited" });
+        expect(body).toEqual({
+            id: SESSION_UUID,
+            routine: 39764,
+            day: 5,
+            date: "2025-08-07",
+            notes: "edited",
+            impression: "3",
+            time_start: null,
+            time_end: null,
+        });
         expect(result.notes).toBe("edited");
     });
 });

@@ -30,7 +30,7 @@ export const CategoryList = (props: { category: MeasurementCategory }) => {
             </CardContent>
             <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
                 <Button size="small">
-                    <Link to={makeLink(WgerLink.MEASUREMENT_DETAIL, i18n.language, { id: props.category.id })}>
+                    <Link to={makeLink(WgerLink.MEASUREMENT_DETAIL, i18n.language, { id: props.category.id! })}>
                         {t("seeDetails")}
                     </Link>
                 </Button>
@@ -41,7 +41,7 @@ export const CategoryList = (props: { category: MeasurementCategory }) => {
             </CardActions>
         </Card>
         <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
-            <EntryForm closeFn={handleCloseModal} categoryId={props.category.id} />
+            <EntryForm closeFn={handleCloseModal} categoryId={props.category.id!} />
         </WgerModal>
     </>;
 };

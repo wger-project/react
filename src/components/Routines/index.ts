@@ -39,8 +39,6 @@ export { SlotEntry } from "./models/SlotEntry";
 export { WeightUnit, WeightUnitAdapter } from "./models/WeightUnit";
 export { WorkoutLog, WorkoutLogAdapter } from "./models/WorkoutLog";
 export {
-    type AddSessionParams,
-    type EditSessionParams,
     WorkoutSession,
     WorkoutSessionAdapter,
 } from "./models/WorkoutSession";

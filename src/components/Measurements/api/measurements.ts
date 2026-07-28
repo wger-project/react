@@ -86,37 +86,20 @@ export const getMeasurementCategory = async (id: string): Promise<MeasurementCat
     return category;
 };
 
-export interface AddMeasurementCategoryParams {
-    name: string;
-    unit: string;
-}
-
-export const addMeasurementCategory = async (data: AddMeasurementCategoryParams): Promise<MeasurementCategory> => {
+export const addMeasurementCategory = async (category: MeasurementCategory): Promise<MeasurementCategory> => {
     const response = await axios.post(
         makeUrl(API_MEASUREMENTS_CATEGORY_PATH,),
-        {
-            name: data.name,
-            unit: data.unit
-        },
+        category.toJson(),
         { headers: makeHeader() }
     );
 
     return MeasurementCategory.fromJson(response.data);
 };
 
-export interface editMeasurementCategoryParams {
-    id: string,
-    name: string;
-    unit: string;
-}
-
-export const editMeasurementCategory = async (data: editMeasurementCategoryParams): Promise<MeasurementCategory> => {
+export const editMeasurementCategory = async (category: MeasurementCategory): Promise<MeasurementCategory> => {
     const response = await axios.patch(
-        makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: data.id }),
-        {
-            name: data.name,
-            unit: data.unit
-        },
+        makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: category.id! }),
+        category.toJson(),
         { headers: makeHeader() }
     );
 
@@ -132,47 +115,21 @@ export const deleteMeasurementEntry = async (id: string): Promise<void> => {
     await axios.delete(makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: id }), { headers: makeHeader() });
 };
 
-export interface editMeasurementParams {
-    id: string,
-    categoryId?: string,
-    date: Date;
-    value: number;
-    notes: string;
-}
-
-export const editMeasurementEntry = async (data: editMeasurementParams): Promise<MeasurementEntry> => {
+export const editMeasurementEntry = async (entry: MeasurementEntry): Promise<MeasurementEntry> => {
     const response = await axios.patch(
-        makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: data.id }),
-        {
-            // the server field is a datetime, send the full timestamp
-            date: data.date.toISOString(),
-            value: data.value,
-            notes: data.notes
-        },
+        makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: entry.id! }),
+        entry.toJson(),
         { headers: makeHeader() }
     );
 
     return MeasurementEntry.fromJson(response.data);
 };
 
-export interface AddMeasurementParams {
-    categoryId: string;
-    date: Date;
-    value: number;
-    notes: string;
-}
-
-export const addMeasurementEntry = async (data: AddMeasurementParams): Promise<MeasurementEntry> => {
+export const addMeasurementEntry = async (entry: MeasurementEntry): Promise<MeasurementEntry> => {
 
     const response = await axios.post(
         makeUrl(API_MEASUREMENTS_ENTRY_PATH),
-        {
-            category: data.categoryId,
-            // the server field is a datetime, send the full timestamp
-            date: data.date.toISOString(),
-            value: data.value,
-            notes: data.notes
-        },
+        entry.toJson(),
         { headers: makeHeader() }
     );
 

@@ -1,18 +1,16 @@
 import {
     addMeasurementCategory,
-    AddMeasurementCategoryParams,
     addMeasurementEntry,
-    AddMeasurementParams,
     deleteMeasurementCategory,
     deleteMeasurementEntry,
     editMeasurementCategory,
-    editMeasurementCategoryParams,
     editMeasurementEntry,
-    editMeasurementParams,
     getMeasurementCategories,
     getMeasurementCategory,
     MeasurementQueryOptions
 } from "@/components/Measurements/api/measurements";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { QueryKey } from "@/core/lib/consts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -28,7 +26,7 @@ export const useAddMeasurementCategoryQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: AddMeasurementCategoryParams) => addMeasurementCategory(data),
+        mutationFn: (category: MeasurementCategory) => addMeasurementCategory(category),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
         })
@@ -39,7 +37,7 @@ export const useEditMeasurementCategoryQuery = (id: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: editMeasurementCategoryParams) => editMeasurementCategory(data),
+        mutationFn: (category: MeasurementCategory) => editMeasurementCategory(category),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.MEASUREMENTS, id]
@@ -79,7 +77,7 @@ export const useAddMeasurementEntryQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: AddMeasurementParams) => addMeasurementEntry(data),
+        mutationFn: (entry: MeasurementEntry) => addMeasurementEntry(entry),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.MEASUREMENTS,]
@@ -95,7 +93,7 @@ export const useEditMeasurementEntryQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: editMeasurementParams) => editMeasurementEntry(data),
+        mutationFn: (entry: MeasurementEntry) => editMeasurementEntry(entry),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.MEASUREMENTS,]

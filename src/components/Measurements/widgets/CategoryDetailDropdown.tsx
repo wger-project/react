@@ -12,7 +12,7 @@ import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const CategoryDetailDropdown = (props: { category: MeasurementCategory }) => {
 
-    const deleteCategoryQuery = useDeleteMeasurementCategoryQuery(props.category.id);
+    const deleteCategoryQuery = useDeleteMeasurementCategoryQuery(props.category.id!);
     const navigate = useNavigate();
 
     const [t] = useTranslation();
@@ -39,7 +39,7 @@ export const CategoryDetailDropdown = (props: { category: MeasurementCategory })
     };
 
     const performDelete = () => {
-        deleteCategoryQuery.mutate(props.category.id);
+        deleteCategoryQuery.mutate(props.category.id!);
         navigate((makeLink(WgerLink.MEASUREMENT_OVERVIEW)));
     };
 

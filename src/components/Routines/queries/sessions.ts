@@ -5,7 +5,7 @@ import {
     searchSession,
     SessionQueryOptions
 } from "@/components/Routines/api/session";
-import { AddSessionParams, EditSessionParams } from "@/components/Routines/models/WorkoutSession";
+import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { QueryKey, } from "@/core/lib/consts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -20,7 +20,7 @@ export const useAddSessionQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: AddSessionParams) => addSession(data),
+        mutationFn: (session: WorkoutSession) => addSession(session),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW] }),
     });
 };
@@ -35,7 +35,7 @@ export const useEditSessionQuery = (id: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: EditSessionParams) => editSession(data),
+        mutationFn: (session: WorkoutSession) => editSession(session),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, id] });

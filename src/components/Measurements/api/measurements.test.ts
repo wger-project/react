@@ -125,7 +125,7 @@ describe('measurement service tests', () => {
             data: { id: CATEGORY_UUID_2, name: "Body fat", unit: "%" },
         });
 
-        const result = await addMeasurementCategory({ name: "Body fat", unit: "%" });
+        const result = await addMeasurementCategory(new MeasurementCategory(null, "Body fat", "%"));
 
         expect(axios.post).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.post as Mock).mock.calls[0];
@@ -140,12 +140,12 @@ describe('measurement service tests', () => {
             data: { id: CATEGORY_UUID_2, name: "Renamed", unit: "%" },
         });
 
-        const result = await editMeasurementCategory({ id: CATEGORY_UUID_2, name: "Renamed", unit: "%" });
+        const result = await editMeasurementCategory(new MeasurementCategory(CATEGORY_UUID_2, "Renamed", "%"));
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.patch as Mock).mock.calls[0];
         expect(url).toMatch(new RegExp(`/api/v2/measurement-category/${CATEGORY_UUID_2}/$`));
-        expect(body).toEqual({ name: "Renamed", unit: "%" });
+        expect(body).toEqual({ id: CATEGORY_UUID_2, name: "Renamed", unit: "%" });
         expect(result.name).toBe("Renamed");
     });
 
@@ -165,12 +165,13 @@ describe('measurement service tests', () => {
             data: { id: ENTRY_UUID_2, category: CATEGORY_UUID, value: 80.5, date: "2024-08-01T12:34:00Z", notes: "" },
         });
 
-        const result = await addMeasurementEntry({
-            categoryId: CATEGORY_UUID,
-            date: new Date("2024-08-01T12:34:00Z"),
-            value: 80.5,
-            notes: "",
-        });
+        const result = await addMeasurementEntry(new MeasurementEntry(
+            null,
+            CATEGORY_UUID,
+            new Date("2024-08-01T12:34:00Z"),
+            80.5,
+            "",
+        ));
 
         expect(axios.post).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.post as Mock).mock.calls[0];
@@ -186,7 +187,7 @@ describe('measurement service tests', () => {
         expect(result.id).toBe(ENTRY_UUID_2);
     });
 
-    test('editMeasurementEntry PATCHes /measurement/<id>/ with date/value/notes only', async () => {
+    test('editMeasurementEntry PATCHes /measurement/<id>/', async () => {
         (axios.patch as Mock).mockResolvedValue({
             data: {
                 id: ENTRY_UUID_2,
@@ -197,20 +198,18 @@ describe('measurement service tests', () => {
             },
         });
 
-        const result = await editMeasurementEntry({
-            id: ENTRY_UUID_2,
-            categoryId: CATEGORY_UUID,
-            date: new Date("2024-08-02T00:00:00Z"),
-            value: 81,
-            notes: "edited",
-        });
+        const result = await editMeasurementEntry(new MeasurementEntry(
+            ENTRY_UUID_2,
+            CATEGORY_UUID,
+            new Date("2024-08-02T00:00:00Z"),
+            81,
+            "edited",
+        ));
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.patch as Mock).mock.calls[0];
         expect(url).toMatch(new RegExp(`/api/v2/measurement/${ENTRY_UUID_2}/$`));
-        // Note: 'category' is NOT sent on edit (categoryId is part of the params but ignored in body)
-        expect(body).not.toHaveProperty("category");
-        expect(body).toMatchObject({ value: 81, notes: "edited" });
+        expect(body).toMatchObject({ category: CATEGORY_UUID, value: 81, notes: "edited" });
         expect(body.date).toBe("2024-08-02T00:00:00.000Z");
         expect(result.value).toBe(81);
     });
