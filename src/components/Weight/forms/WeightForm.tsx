@@ -47,14 +47,14 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
                 // Edit existing weight entry
                 if (weightEntry) {
-                    weightEntry.weight = values.weight;
-                    weightEntry.date = values.date;
-                    editWeightQuery.mutate(weightEntry);
+                    editWeightQuery.mutate(WeightEntry.clone(
+                        weightEntry,
+                        { weight: values.weight, date: values.date }
+                    ));
 
                     // Create a new weight entry
                 } else {
-                    weightEntry = new WeightEntry(values.date, values.weight);
-                    addWeightQuery.mutate(weightEntry);
+                    addWeightQuery.mutate(new WeightEntry(values.date, values.weight));
                 }
 
                 if (closeFn) {

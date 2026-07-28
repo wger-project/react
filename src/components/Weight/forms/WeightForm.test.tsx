@@ -46,6 +46,9 @@ describe("Test WeightForm component", () => {
     test('Editing an existing entry', async () => {
 
         // Arrange
+        const user = userEvent.setup();
+        const mutateEditMock = vi.fn();
+        (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
         const weightEntry = new WeightEntry(
             new Date('2022-02-28'),
             80,
@@ -58,14 +61,23 @@ describe("Test WeightForm component", () => {
                 <WeightForm weightEntry={weightEntry} />
             </QueryClientProvider>
         );
+        const weightInput = await screen.findByLabelText('weight');
+        await user.clear(weightInput);
+        await user.type(weightInput, '82');
         const submitButton = screen.getByRole('button', { name: 'submit' });
-
-        // Assert
-        expect(submitButton).toBeInTheDocument();
         fireEvent.click(submitButton);
+
+        // Assert - the form submits a clone with the new values...
         await waitFor(() => {
-            expect(useEditWeightEntryQuery).toHaveBeenCalled();
+            expect(mutateEditMock).toHaveBeenCalled();
         });
+        const submitted = mutateEditMock.mock.calls[0][0] as WeightEntry;
+        expect(submitted).not.toBe(weightEntry);
+        expect(Number(submitted.weight)).toBe(82);
+        expect(submitted.id).toBe(1);
+
+        // ...and does not mutate the passed-in entry (it comes from the query cache)
+        expect(weightEntry.weight).toBe(80);
     });
 
     test('Creating a new weight entry', async () => {

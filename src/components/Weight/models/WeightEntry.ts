@@ -9,6 +9,14 @@ export class WeightEntry {
     ) {
     }
 
+    static clone(other: WeightEntry, overrides?: Partial<Pick<WeightEntry, 'date' | 'weight' | 'id'>>): WeightEntry {
+        return new WeightEntry(
+            overrides?.date ?? other.date,
+            overrides?.weight ?? other.weight,
+            overrides?.id ?? other.id,
+        );
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static fromJson(json: any) {
         return adapter.fromJson(json);
