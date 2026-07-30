@@ -31,12 +31,21 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
     const [dateValue, setDateValue] = useState<DateTime | null>(weightEntry ? DateTime.fromJSDate(weightEntry.date) : DateTime.now);
     const [t, i18n] = useTranslation();
 
+    // 30 - 300 kg and the same range expressed in lb
     const validationSchema = yup.object({
+        unit: yup.string().oneOf(['kg', 'lb']),
         weight: yup
             .number()
-            .min(30, 'Min weight is 30 kg')
-            .max(300, 'Max weight is 300 kg')
-            .required('Weight field is required'),
+            .required(t('forms.fieldRequired'))
+            .when('unit', {
+                is: 'lb',
+                then: schema => schema
+                    .min(66, t('forms.minValue', { value: `66 ${t('server.lb')}` }))
+                    .max(661, t('forms.maxValue', { value: `661 ${t('server.lb')}` })),
+                otherwise: schema => schema
+                    .min(30, t('forms.minValue', { value: `30 ${t('server.kg')}` }))
+                    .max(300, t('forms.maxValue', { value: `300 ${t('server.kg')}` })),
+            }),
     });
 
     if (categoryQuery.isLoading) {

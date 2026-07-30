@@ -145,4 +145,41 @@ describe("Test WeightForm component", () => {
         await waitFor(() => expect(weightInput).not.toHaveAttribute('aria-invalid', 'true'));
     });
 
+    test('The validation limits follow the selected unit', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        const mutateAddMock = vi.fn();
+        (useAddWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <WeightForm />
+            </QueryClientProvider>
+        );
+        const weightInput = await screen.findByLabelText('weight');
+
+        // Act + Assert: 320 is over the 300 kg maximum...
+        await user.clear(weightInput);
+        await user.type(weightInput, '320');
+        await user.tab();
+        await waitFor(() => expect(weightInput).toHaveAttribute('aria-invalid', 'true'));
+
+        // ...but a perfectly fine weight in lb
+        await user.click(screen.getByRole('button', { name: 'server.lb' }));
+        await waitFor(() => expect(weightInput).not.toHaveAttribute('aria-invalid', 'true'));
+
+        // ...and can be submitted with the lb unit stamped
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        await waitFor(() => expect(mutateAddMock).toHaveBeenCalled());
+        const submitted = mutateAddMock.mock.calls[0][0] as WeightEntry;
+        expect(submitted.unit).toBe('lb');
+        expect(Number(submitted.weight)).toBe(320);
+
+        // Act + Assert: 35 lb is below the lb minimum of 66
+        await user.clear(weightInput);
+        await user.type(weightInput, '35');
+        await user.tab();
+        await waitFor(() => expect(weightInput).toHaveAttribute('aria-invalid', 'true'));
+    });
+
 });
