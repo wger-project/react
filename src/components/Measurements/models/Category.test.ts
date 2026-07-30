@@ -1,4 +1,4 @@
-import { MeasurementCategory, metricTypeFromApi } from "./Category";
+import { isSummedPerDay, MeasurementCategory, metricTypeFromApi } from "./Category";
 
 describe('MeasurementCategory', () => {
 
@@ -45,5 +45,17 @@ describe('MeasurementCategory', () => {
         expect(metricTypeFromApi('brain_waves')).toBe('custom');
         expect(metricTypeFromApi(undefined)).toBe('custom');
         expect(metricTypeFromApi('heart_rate')).toBe('heart_rate');
+    });
+
+    test('only cumulative metric types are summed per day', () => {
+        expect(isSummedPerDay('steps')).toBe(true);
+        expect(isSummedPerDay('distance')).toBe(true);
+        expect(isSummedPerDay('energy')).toBe(true);
+        expect(isSummedPerDay('sleep')).toBe(true);
+
+        expect(isSummedPerDay('custom')).toBe(false);
+        expect(isSummedPerDay('body_weight')).toBe(false);
+        expect(isSummedPerDay('heart_rate')).toBe(false);
+        expect(isSummedPerDay('blood_pressure')).toBe(false);
     });
 });

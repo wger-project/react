@@ -24,6 +24,14 @@ export function metricTypeFromApi(value: unknown): MetricType {
     return METRIC_TYPES.includes(value as MetricType) ? value as MetricType : 'custom';
 }
 
+/**
+ * Metric types whose individual samples aren't meaningful on their own:
+ * they are summed per day and charted as bars instead of a line
+ */
+export function isSummedPerDay(type: MetricType): boolean {
+    return type === 'steps' || type === 'distance' || type === 'energy' || type === 'sleep';
+}
+
 export class MeasurementCategory {
 
     entries: MeasurementEntry[] = [];

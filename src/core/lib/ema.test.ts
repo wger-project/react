@@ -1,13 +1,15 @@
 import { describe, expect, test } from 'vitest';
 import { calculateEMA } from './ema';
 
+const byWeight = (p: { weight: number }) => p.weight;
+
 describe('calculateEMA', () => {
     test('returns an empty array for empty input', () => {
-        expect(calculateEMA([])).toEqual([]);
+        expect(calculateEMA([], byWeight)).toEqual([]);
     });
 
     test('first point ema equals the first weight', () => {
-        const result = calculateEMA([{ date: 1, weight: 80 }]);
+        const result = calculateEMA([{ date: 1, weight: 80 }], byWeight);
         expect(result).toEqual([{ date: 1, weight: 80, ema: 80 }]);
     });
 
@@ -16,7 +18,7 @@ describe('calculateEMA', () => {
             { date: 1, weight: 100 },
             { date: 2, weight: 100 },
             { date: 3, weight: 100 },
-        ]);
+        ], byWeight);
         expect(result.map(p => p.ema)).toEqual([100, 100, 100]);
     });
 
@@ -25,7 +27,7 @@ describe('calculateEMA', () => {
         const s = 2 / (period + 1);
         const weights = [{ date: 1, weight: 80 }, { date: 2, weight: 90 }];
 
-        const result = calculateEMA(weights, period);
+        const result = calculateEMA(weights, byWeight, period);
 
         expect(result[1].ema).toBeCloseTo(90 * s + 80 * (1 - s), 10);
     });
@@ -33,6 +35,7 @@ describe('calculateEMA', () => {
     test('honors a custom period', () => {
         const result = calculateEMA(
             [{ date: 1, weight: 80 }, { date: 2, weight: 90 }],
+            byWeight,
             2,
         );
         // s = 2/3, ema[1] = 90 * 2/3 + 80 * 1/3 = 86.666...
@@ -43,7 +46,7 @@ describe('calculateEMA', () => {
         const result = calculateEMA([
             { date: 1, weight: 80, label: 'a' },
             { date: 2, weight: 82, label: 'b' },
-        ]);
+        ], byWeight);
         expect(result[0].label).toBe('a');
         expect(result[1].label).toBe('b');
     });

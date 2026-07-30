@@ -1,6 +1,6 @@
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
-import { calculateEMA, EMADataPoint } from "@/components/Weight/widgets/WeightChart/ema";
 import { dateToLocale } from "@/core/lib/date";
+import { calculateEMA } from "@/core/lib/ema";
 import { WeightUnit } from "@/core/lib/weightUnit";
 import { Paper, Stack, Typography, useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -18,6 +18,12 @@ import {
 } from 'recharts';
 
 const NR_OF_WEIGHTS_CHART_DOT = 30;
+
+interface EMADataPoint {
+    date: number;
+    weight: number;
+    ema: number;
+}
 
 export interface WeightChartProps {
     weights: WeightEntry[],
@@ -109,7 +115,7 @@ export const WeightChart = ({ weights, unit, height = 300 }: WeightChartProps) =
 
     const weightData = buildWeightData(weights, unit);
 
-    const emaData = calculateEMA(weightData, 10);
+    const emaData = calculateEMA(weightData, p => p.weight, 10);
 
     const meanWeight = weightData.length > 0
         ? weightData.reduce((sum, w) => sum + w.weight, 0) / weightData.length
