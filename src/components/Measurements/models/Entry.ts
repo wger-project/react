@@ -7,8 +7,14 @@ export class MeasurementEntry {
         public category: string,
         public date: Date,
         public value: number,
-        public notes: string
+        public notes: string,
+        public source: string = 'user',
     ) {
+    }
+
+    /** Entries synced from a health app are managed by the source app */
+    get isEditable(): boolean {
+        return this.source === 'user';
     }
 
     static clone(other: MeasurementEntry, overrides?: Partial<Pick<MeasurementEntry, 'id' | 'category' | 'date' | 'value' | 'notes'>>): MeasurementEntry {
@@ -18,6 +24,7 @@ export class MeasurementEntry {
             overrides?.date ?? other.date,
             overrides?.value ?? other.value,
             overrides?.notes ?? other.notes,
+            other.source,
         );
     }
 
@@ -41,7 +48,8 @@ class MeasurementEntryAdapter implements Adapter<MeasurementEntry> {
             // full ISO datetime from the server, parsing is timezone-safe
             new Date(item.date),
             item.value,
-            item.notes
+            item.notes,
+            item.source,
         );
     }
 

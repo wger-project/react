@@ -1,8 +1,9 @@
 import CancelIcon from "@mui/icons-material/Close";
+import CloudSyncIcon from "@mui/icons-material/CloudSync";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import {
     DataGrid,
     GridActionsCellItem,
@@ -19,6 +20,7 @@ import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import { WeightEntryFab } from "@/components/Weight/widgets/Table/Fab/Fab";
 import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "@/components/Weight/queries";
 import { processTimeSeries } from "@/core/lib/timeSeries";
+import { WeightUnit } from "@/core/lib/weightUnit";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -27,21 +29,23 @@ import { luxonDateTimeToLocale } from "@/core/lib/date";
 
 export interface WeightTableProps {
     weights: WeightEntry[];
+    unit: WeightUnit;
 }
 
-const buildRows = (weights: WeightEntry[]): GridRowsProp =>
-    processTimeSeries(weights, e => e.weight).map((row) => ({
+const buildRows = (weights: WeightEntry[], unit: WeightUnit): GridRowsProp =>
+    processTimeSeries(weights, e => e.valueIn(unit)).map((row) => ({
         id: row.entry.id,
         date: row.entry.date,
-        weight: row.entry.weight,
+        weight: row.entry.valueIn(unit),
+        isEditable: row.entry.isEditable,
         change: +row.change.toFixed(2),
         totalChange: +row.totalChange.toFixed(2),
         days: +row.days.toFixed(1),
     }));
 
-export const WeightTable = ({ weights }: WeightTableProps) => {
+export const WeightTable = ({ weights, unit }: WeightTableProps) => {
     const [t] = useTranslation();
-    const rows = buildRows(weights);
+    const rows = buildRows(weights, unit);
     const editEntryQuery = useEditWeightEntryQuery();
     const deleteEntryQuery = useDeleteWeightEntryQuery();
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -74,7 +78,8 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
     const processRowUpdate = (newRow: GridRowModel) => {
         const date = newRow.date instanceof Date ? newRow.date : new Date(newRow.date);
         const entry = weights.find(w => w.id === newRow.id)!;
-        editEntryQuery.mutate(WeightEntry.clone(entry, { date, weight: Number(newRow.weight) }));
+        // the edited value was displayed in the display unit, store it as such
+        editEntryQuery.mutate(WeightEntry.clone(entry, { date, weight: Number(newRow.weight), unit: unit }));
         return newRow;
     };
 
@@ -98,7 +103,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
         },
         {
             field: 'weight',
-            headerName: t('weight'),
+            headerName: `${t('weight')} (${t(`server.${unit}`)})`,
             type: 'number',
             width: 100,
             editable: true,
@@ -130,7 +135,19 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
             headerName: t('actions'),
             width: 100,
             cellClassName: 'actions',
-            getActions: ({ id }) => {
+            getActions: ({ id, row }) => {
+                // synced entries are managed by the source app, offer no actions
+                if (!row.isEditable) {
+                    return [
+                        <GridActionsCellItem
+                            key="synced"
+                            icon={<Tooltip title={t('syncedEntryInfo')}><CloudSyncIcon /></Tooltip>}
+                            label={t('syncedEntryInfo')}
+                            color="inherit"
+                        />,
+                    ];
+                }
+
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
                 if (isInEditMode) {
@@ -187,6 +204,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
                     }}
                     pageSizeOptions={PAGINATION_OPTIONS.pageSizeOptions}
                     disableRowSelectionOnClick
+                    isCellEditable={(params) => params.row.isEditable}
                     rowModesModel={rowModesModel}
                     onRowModesModelChange={handleRowModesModelChange}
                     onRowEditStop={handleRowEditStop}

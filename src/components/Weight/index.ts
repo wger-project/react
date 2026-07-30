@@ -9,5 +9,5 @@ export { WeightForm } from "./forms/WeightForm";
 export { WeightTableDashboard } from "./widgets/TableDashboard/TableDashboard";
 export { WeightChart } from "./widgets/WeightChart";
 export { WeightEntry } from "./models/WeightEntry";
-export { useBodyWeightQuery } from "./queries";
+export { useBodyWeightQuery, useDisplayWeightUnit } from "./queries";
 export type { FilterType } from "./widgets/FilterButtons";

@@ -4,7 +4,7 @@ import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import React from 'react';
 import { describe, test } from 'vitest';
 import { testQueryClient } from "@/tests/queryClient";
-import { WeightChart } from "./index";
+import { buildWeightData, WeightChart } from "./index";
 
 // See https://github.com/maslianok/react-resize-detector#testing-with-enzyme-and-jest
 // Recharts only paints SVG content once a ResizeObserver entry reports real
@@ -14,7 +14,7 @@ import { WeightChart } from "./index";
 const renderChart = (weights: WeightEntry[], height?: number) =>
     render(
         <QueryClientProvider client={testQueryClient}>
-            <WeightChart weights={weights} height={height} />
+            <WeightChart weights={weights} unit="kg" height={height} />
         </QueryClientProvider>
     );
 
@@ -50,5 +50,17 @@ describe("WeightChart", () => {
             ],
             500,
         );
+    });
+});
+
+describe("buildWeightData", () => {
+    test('converts mixed units to the display unit before plotting', () => {
+        const weights = [
+            new WeightEntry(new Date('2021-12-20'), 90, 'd-2', '', 'lb'),
+            new WeightEntry(new Date('2021-12-10'), 80, 'd-1', '', 'kg'),
+        ];
+
+        expect(buildWeightData(weights, 'kg').map(d => d.weight)).toStrictEqual([80, 40.82]);
+        expect(buildWeightData(weights, 'lb').map(d => d.weight)).toStrictEqual([176.37, 90]);
     });
 });

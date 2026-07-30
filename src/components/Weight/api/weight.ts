@@ -7,6 +7,7 @@ import {
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import { ResponseType } from "@/core/api/responseType";
 import { calculatePastDate } from '@/core/lib/date';
+import { WeightUnit } from "@/core/lib/weightUnit";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ApiMeasurementCategoryType, ApiMeasurementEntryType } from '@/types';
 import axios from 'axios';
@@ -30,13 +31,15 @@ export const getBodyWeightCategory = async (): Promise<MeasurementCategory> => {
 
 /*
  * Fetch weight entries based on filter value
+ *
+ * Entries without their own unit in extra_data fall back to the category unit
  */
-export const getWeights = async (categoryId: string, filter: FilterType = ''): Promise<WeightEntry[]> => {
+export const getWeights = async (category: MeasurementCategory, filter: FilterType = ''): Promise<WeightEntry[]> => {
     const date__gte = calculatePastDate(filter);
 
     const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
         query: {
-            category: categoryId,
+            category: category.id!,
             ordering: '-date',
             limit: 900,
             ...(date__gte && { date__gte })
@@ -46,7 +49,8 @@ export const getWeights = async (categoryId: string, filter: FilterType = ''): P
         headers: makeHeader(),
     });
 
-    return data.results.map(entry => WeightEntry.fromJson(entry));
+    const fallbackUnit: WeightUnit = category.unit === 'lb' ? 'lb' : 'kg';
+    return data.results.map(entry => WeightEntry.fromJson(entry, fallbackUnit));
 };
 
 /*
@@ -68,7 +72,7 @@ export const updateWeight = async (entry: WeightEntry): Promise<WeightEntry> => 
         headers: makeHeader(),
     });
 
-    return WeightEntry.fromJson(response.data);
+    return WeightEntry.fromJson(response.data, entry.unit);
 };
 
 /*
@@ -81,5 +85,5 @@ export const createWeight = async (entry: WeightEntry, categoryId: string): Prom
         { headers: makeHeader() },
     );
 
-    return WeightEntry.fromJson(response.data);
+    return WeightEntry.fromJson(response.data, entry.unit);
 };

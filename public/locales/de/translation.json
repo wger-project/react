@@ -119,6 +119,7 @@
     },
     "submit": "Abschicken",
     "weight": "Gewicht",
+    "syncedEntryInfo": "Dieser Eintrag wurde aus einer Health-App synchronisiert und kann nur dort geändert werden",
     "workout": "Training",
     "images": "Bilder",
     "description": "Beschreibung",

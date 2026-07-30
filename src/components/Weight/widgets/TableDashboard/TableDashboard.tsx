@@ -4,6 +4,7 @@ import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { dateTimeToLocale } from "@/core/lib/date";
+import { WeightUnit } from "@/core/lib/weightUnit";
 
 
 const PREFIX = 'WeightTableDashboard';
@@ -26,9 +27,10 @@ const Root = styled('div')(() => {
 
 export interface WeightTableProps {
     weights: WeightEntry[];
+    unit: WeightUnit;
 }
 
-export const WeightTableDashboard = ({ weights }: WeightTableProps) => {
+export const WeightTableDashboard = ({ weights, unit }: WeightTableProps) => {
     const [t] = useTranslation();
 
     const WEIGHT_ENTRIES_TO_SHOW = 5;
@@ -42,14 +44,14 @@ export const WeightTableDashboard = ({ weights }: WeightTableProps) => {
                     <TableHead>
                         <TableRow>
                             <TableCell>{t('date')}</TableCell>
-                            <TableCell>{t('weight')}</TableCell>
+                            <TableCell>{`${t('weight')} (${t(`server.${unit}`)})`}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {filteredWeight.map((row) => (
                             <TableRow key={row.date.toISOString()}>
                                 <TableCell>{dateTimeToLocale(row.date)}</TableCell>
-                                <TableCell>{row.weight}</TableCell>
+                                <TableCell>{row.valueIn(unit)}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

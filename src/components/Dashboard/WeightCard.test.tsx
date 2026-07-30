@@ -1,6 +1,6 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { useBodyWeightQuery } from "@/components/Weight";
+import { useBodyWeightQuery, useDisplayWeightUnit } from "@/components/Weight";
 import { WeightCard } from "@/components/Dashboard/WeightCard";
 import { testQueryClient } from "@/tests/queryClient";
 import { testWeightEntries } from "@/tests/weight/testData";
@@ -17,6 +17,7 @@ describe("test the WeightCard component", () => {
                 isLoading: false,
                 data: testWeightEntries
             }));
+            (useDisplayWeightUnit as Mock).mockReturnValue('kg');
         });
 
         afterEach(() => {

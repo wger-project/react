@@ -5,10 +5,11 @@ import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "@/comp
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
 import { luxonDateTimeToLocale } from "@/core/lib/date";
 import CancelIcon from "@mui/icons-material/Close";
+import CloudSyncIcon from "@mui/icons-material/CloudSync";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import {
     DataGrid,
     GridActionsCellItem,
@@ -31,6 +32,7 @@ const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp =>
         date: row.entry.date,
         value: row.entry.value,
         notes: row.entry.notes,
+        isEditable: row.entry.isEditable,
         change: +row.change.toFixed(2),
         totalChange: +row.totalChange.toFixed(2),
         days: +row.days.toFixed(1),
@@ -154,7 +156,19 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             headerName: t('actions'),
             width: 100,
             cellClassName: 'actions',
-            getActions: ({ id }) => {
+            getActions: ({ id, row }) => {
+                // synced entries are managed by the source app, offer no actions
+                if (!row.isEditable) {
+                    return [
+                        <GridActionsCellItem
+                            key="synced"
+                            icon={<Tooltip title={t('syncedEntryInfo')}><CloudSyncIcon /></Tooltip>}
+                            label={t('syncedEntryInfo')}
+                            color="inherit"
+                        />,
+                    ];
+                }
+
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
                 if (isInEditMode) {
@@ -212,6 +226,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             }}
             pageSizeOptions={PAGINATION_OPTIONS.pageSizeOptions}
             disableRowSelectionOnClick
+            isCellEditable={(params) => params.row.isEditable}
             rowModesModel={rowModesModel}
             onRowModesModelChange={handleRowModesModelChange}
             onRowEditStop={handleRowEditStop}

@@ -127,7 +127,9 @@ export interface ApiMeasurementEntryType {
     category: string,
     date: Date,
     value: number,
-    notes: string
+    notes: string,
+    source: string,
+    extra_data: { unit?: string },
 }
 
 export interface ApiEquipmentType {

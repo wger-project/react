@@ -6,6 +6,7 @@ import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import {
     useAddWeightEntryQuery,
     useBodyWeightCategoryQuery,
+    useDisplayWeightUnit,
     useEditWeightEntryQuery
 } from "@/components/Weight/queries";
 import React from 'react';
@@ -27,6 +28,7 @@ describe("Test WeightForm component", () => {
         }));
         (useAddWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
         (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
+        (useDisplayWeightUnit as Mock).mockReturnValue('kg');
     });
 
 

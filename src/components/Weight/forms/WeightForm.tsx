@@ -1,12 +1,14 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import {
     useAddWeightEntryQuery,
     useBodyWeightCategoryQuery,
+    useDisplayWeightUnit,
     useEditWeightEntryQuery
 } from "@/components/Weight/queries";
+import { WeightUnit } from "@/core/lib/weightUnit";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
@@ -24,6 +26,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
     const categoryQuery = useBodyWeightCategoryQuery();
     const addWeightQuery = useAddWeightEntryQuery();
     const editWeightQuery = useEditWeightEntryQuery();
+    const displayUnit = useDisplayWeightUnit();
 
     const [dateValue, setDateValue] = useState<DateTime | null>(weightEntry ? DateTime.fromJSDate(weightEntry.date) : DateTime.now);
     const [t, i18n] = useTranslation();
@@ -43,7 +46,9 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
     return (
         (<Formik
             initialValues={{
+                // when editing, show the value in the unit it was entered in
                 weight: weightEntry ? weightEntry.weight : 0,
+                unit: weightEntry ? weightEntry.unit : displayUnit,
                 date: weightEntry ? weightEntry.date : new Date(),
             }}
             validationSchema={validationSchema}
@@ -53,12 +58,12 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                 if (weightEntry) {
                     editWeightQuery.mutate(WeightEntry.clone(
                         weightEntry,
-                        { weight: values.weight, date: values.date }
+                        { weight: values.weight, date: values.date, unit: values.unit }
                     ));
 
                     // Create a new weight entry
                 } else {
-                    addWeightQuery.mutate(new WeightEntry(values.date, values.weight));
+                    addWeightQuery.mutate(new WeightEntry(values.date, values.weight, undefined, '', values.unit));
                 }
 
                 if (closeFn) {
@@ -69,15 +74,29 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
             {formik => (
                 <Form>
                     <Stack spacing={2}>
-                        <TextField
-                            fullWidth
-                            id="weight"
-                            label={t('weight')}
-                            error={formik.touched.weight && Boolean(formik.errors.weight)}
-                            helperText={formik.touched.weight && formik.errors.weight}
-                            slotProps={{ htmlInput: { inputMode: 'decimal' } }}
-                            {...formik.getFieldProps('weight')}
-                        />
+                        <Stack direction="row" spacing={2}>
+                            <TextField
+                                fullWidth
+                                id="weight"
+                                label={t('weight')}
+                                error={formik.touched.weight && Boolean(formik.errors.weight)}
+                                helperText={formik.touched.weight && formik.errors.weight}
+                                slotProps={{ htmlInput: { inputMode: 'decimal' } }}
+                                {...formik.getFieldProps('weight')}
+                            />
+                            <ToggleButtonGroup
+                                exclusive
+                                value={formik.values.unit}
+                                onChange={(_, newUnit: WeightUnit | null) => {
+                                    if (newUnit) {
+                                        formik.setFieldValue('unit', newUnit);
+                                    }
+                                }}
+                            >
+                                <ToggleButton value="kg">{t('server.kg')}</ToggleButton>
+                                <ToggleButton value="lb">{t('server.lb')}</ToggleButton>
+                            </ToggleButtonGroup>
+                        </Stack>
 
                         <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                             <DateTimePicker

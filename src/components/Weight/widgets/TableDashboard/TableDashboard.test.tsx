@@ -12,7 +12,7 @@ describe("Body weight test", () => {
         ];
 
         // since I used context api to provide state, also need it here
-        render(<WeightTableDashboard weights={weightsData} />);
+        render(<WeightTableDashboard weights={weightsData} unit="kg" />);
 
         // Both weights are found in th document
         const weightRow = await screen.findByText('80');
@@ -20,5 +20,18 @@ describe("Body weight test", () => {
 
         const weightRow2 = await screen.findByText("90");
         expect(weightRow2).toBeInTheDocument();
+    });
+
+    test('converts entries stored in other units to the display unit', async () => {
+
+        const weightsData: WeightEntry[] = [
+            new WeightEntry(new Date('2021/12/10'), 80, 'd-1', '', 'kg'),
+            new WeightEntry(new Date('2021/12/20'), 90, 'd-2', '', 'lb'),
+        ];
+
+        render(<WeightTableDashboard weights={weightsData} unit="kg" />);
+
+        expect(await screen.findByText('80')).toBeInTheDocument();
+        expect(await screen.findByText('40.82')).toBeInTheDocument();
     });
 });

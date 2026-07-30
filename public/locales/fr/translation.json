@@ -5,6 +5,7 @@
     "days": "Jours",
     "edit": "Modifier",
     "weight": "Poids",
+    "syncedEntryInfo": "Cette entrée a été synchronisée depuis une application de santé et ne peut être modifiée que dans celle-ci",
     "submit": "Envoyer",
     "add": "Ajouter",
     "close": "Fermer",

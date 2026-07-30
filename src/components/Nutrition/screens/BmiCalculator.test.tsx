@@ -8,7 +8,7 @@ import { testQueryClient } from "@/tests/queryClient";
 vi.mock('@/components/Weight/queries', () => ({
     useBodyWeightQuery: () => ({
         isLoading: false,
-        data: [{ weight: 55, date: new Date() }], // Provide mock weight data
+        data: [{ weight: 55, unit: 'kg', valueIn: () => 55, date: new Date() }], // Provide mock weight data
     }),
 }));
 

@@ -3,12 +3,15 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import { getBodyWeightCategory, getWeights } from "@/components/Weight/api/weight";
 import { testQueryClient } from "@/tests/queryClient";
-import { testBodyWeightCategory, TEST_BODY_WEIGHT_CATEGORY_UUID } from "@/tests/weight/testData";
+import { testBodyWeightCategory } from "@/tests/weight/testData";
 import { BodyWeight } from "./BodyWeight";
 import { FilterType } from "../widgets/FilterButtons";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Weight/api/weight");
+vi.mock('@/components/User/queries/profile', () => ({
+    useProfileQuery: () => ({ isLoading: false, data: { useMetric: true } }),
+}));
 console.log = vi.fn();
 
 describe("Test BodyWeight component", () => {
@@ -43,7 +46,7 @@ describe("Test BodyWeight component", () => {
         // Assert - both weights are found in the document
         expect(await screen.findByText("80")).toBeInTheDocument();
         expect(await screen.findByText("90")).toBeInTheDocument();
-        expect(getWeights).toHaveBeenCalledWith(TEST_BODY_WEIGHT_CATEGORY_UUID, 'lastYear');
+        expect(getWeights).toHaveBeenCalledWith(testBodyWeightCategory, 'lastYear');
     });
 
     test('changes filter and updates displayed data', async () => {
@@ -74,7 +77,7 @@ describe("Test BodyWeight component", () => {
 
         // Expect getWeights to be called with 'lastMonth'
         await waitFor(() => {
-            expect(getWeights).toHaveBeenCalledWith(TEST_BODY_WEIGHT_CATEGORY_UUID, 'lastMonth');
+            expect(getWeights).toHaveBeenCalledWith(testBodyWeightCategory, 'lastMonth');
         });
 
         // Check that entries for last year are no longer in the document

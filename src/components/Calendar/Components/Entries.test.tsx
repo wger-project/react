@@ -6,6 +6,9 @@ import { dateToLocale } from "@/core/lib/date";
 import { DayProps } from './CalendarComponent';
 import Entries from './Entries';
 
+vi.mock('@/components/User/queries/profile', () => ({
+    useProfileQuery: () => ({ isLoading: false, data: { useMetric: true } }),
+}));
 
 describe('Entries Component', () => {
     const mockDate = new Date('2025-4-25');
@@ -39,7 +42,7 @@ describe('Entries Component', () => {
         render(<Entries selectedDay={propsWithWeight} />);
 
         expect(screen.getByText('weight')).toBeInTheDocument();
-        expect(screen.getByText('75.5')).toBeInTheDocument();
+        expect(screen.getByText('75.5 server.kg')).toBeInTheDocument();
     });
 
     test('Shows measurement directly, if theres only one entry', () => {

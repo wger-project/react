@@ -7,7 +7,9 @@ import {
     getWeights,
     updateWeight
 } from "@/components/Weight/api/weight";
+import { useProfileQuery } from "@/components/User";
 import { QueryKey, } from "@/core/lib/consts";
+import { WeightUnit } from "@/core/lib/weightUnit";
 import { FilterType } from "../widgets/FilterButtons";
 
 /*
@@ -23,6 +25,16 @@ export function useBodyWeightCategoryQuery() {
     return useQuery(bodyWeightCategoryQueryOptions);
 }
 
+/*
+ * The unit weight values are displayed in — the user's profile weight unit.
+ * Entries keep the unit they were entered in, only the presentation converts.
+ */
+export function useDisplayWeightUnit(): WeightUnit {
+    const profileQuery = useProfileQuery();
+
+    return profileQuery.data?.useMetric === false ? 'lb' : 'kg';
+}
+
 export function useBodyWeightQuery(filter: FilterType = 'lastWeek') {
     const queryClient = useQueryClient();
 
@@ -30,7 +42,7 @@ export function useBodyWeightQuery(filter: FilterType = 'lastWeek') {
         queryKey: [QueryKey.BODY_WEIGHT, filter],
         queryFn: async () => {
             const category = await queryClient.ensureQueryData(bodyWeightCategoryQueryOptions);
-            return getWeights(category.id!, filter);
+            return getWeights(category, filter);
         },
     });
 }

@@ -29,16 +29,12 @@ export const BmiCalculator = () => {
     const [height, setHeight] = useState<number | null>();
     const [weight, setWeight] = useState<number | null>();
 
-    // Set default weight from last weight entry
+    // Set default weight from last weight entry, the BMI is always computed in kg
     useEffect(() => {
         if (weightQuery.data && weightQuery.data.length > 0) {
-            const lastWeightEntry = weightQuery.data[0];
-            const weightInKg = profileQuery.data?.useMetric
-                ? lastWeightEntry.weight
-                : lastWeightEntry.weight * 0.453592; // Convert lb to kg
-            setWeight(weightInKg);
+            setWeight(weightQuery.data[0].valueIn('kg'));
         }
-    }, [weightQuery.data, profileQuery.data]);
+    }, [weightQuery.data]);
 
     useEffect(() => {
         if (profileQuery.data?.height) {

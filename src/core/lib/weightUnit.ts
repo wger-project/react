@@ -1,0 +1,17 @@
+export type WeightUnit = 'kg' | 'lb';
+
+export const KG_PER_LB = 0.45359237;
+
+/*
+ * Converts a body weight value between kg and lb, quantized to 2 decimal
+ * places like the server. Free-text units of custom measurement categories
+ * are never converted, they are plain labels.
+ */
+export function convertWeight(value: number, from: WeightUnit, to: WeightUnit): number {
+    if (from === to) {
+        return value;
+    }
+    const converted = from === 'lb' ? value * KG_PER_LB : value / KG_PER_LB;
+
+    return Math.round(converted * 100) / 100;
+}

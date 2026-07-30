@@ -1,5 +1,5 @@
 import { Box, Stack } from "@mui/material";
-import { useBodyWeightQuery } from "@/components/Weight/queries";
+import { useBodyWeightQuery, useDisplayWeightUnit } from "@/components/Weight/queries";
 import { WeightTable } from "@/components/Weight/widgets/Table";
 import { WeightChart } from "@/components/Weight/widgets/WeightChart";
 import { AddBodyWeightEntryFab } from "@/components/Weight/widgets/fab";
@@ -15,6 +15,7 @@ export const BodyWeight = () => {
     const [t] = useTranslation();
     const [filter, setFilter] = useState<FilterType>('lastYear');
     const weightyQuery = useBodyWeightQuery(filter);
+    const displayUnit = useDisplayWeightUnit();
     const handleFilterChange = (newFilter: FilterType) => {
         setFilter(newFilter);
     };
@@ -29,9 +30,9 @@ export const BodyWeight = () => {
             <FilterButtons currentFilter={filter} onFilterChange={handleFilterChange} />
             {weightyQuery.data!.length === 0 && <OverviewEmpty />}
             {weightyQuery.data!.length !== 0 && <>
-                <WeightChart weights={weightyQuery.data!} />
+                <WeightChart weights={weightyQuery.data!} unit={displayUnit} />
                 <Box sx={{ mt: 4 }} />
-                <WeightTable weights={weightyQuery.data!} />
+                <WeightTable weights={weightyQuery.data!} unit={displayUnit} />
             </>}
         </Stack>
         }

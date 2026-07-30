@@ -9,7 +9,7 @@ const renderTable = (weights: WeightEntry[]) =>
     render(
         <BrowserRouter>
             <QueryClientProvider client={testQueryClient}>
-                <WeightTable weights={weights} />
+                <WeightTable weights={weights} unit="kg" />
             </QueryClientProvider>
         </BrowserRouter>
     );
@@ -60,5 +60,38 @@ describe("Body weight table", () => {
         await screen.findByText('80');
         expect(screen.getByRole('menuitem', { name: /edit/i })).toBeInTheDocument();
         expect(screen.getByRole('menuitem', { name: /delete/i })).toBeInTheDocument();
+    });
+
+    test('converts mixed units to the display unit, including aggregations', async () => {
+        // 90 lb = 40.82 kg, entered a day after the 80 kg entry
+        const weights: WeightEntry[] = [
+            new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1, '', 'kg'),
+            new WeightEntry(new Date('2021/12/11'), 90, ENTRY_UUID_2, '', 'lb'),
+        ];
+
+        renderTable(weights);
+        await screen.findByText('80');
+
+        // the DataGrid formats numbers with the runner's locale, normalize the decimal separator
+        const cellText = (row: HTMLElement, field: string) =>
+            row.querySelector(`[data-field="${field}"]`)!.textContent!.replace(',', '.');
+
+        const lbRow = document.querySelector(`[data-id="${ENTRY_UUID_2}"]`) as HTMLElement;
+        expect(cellText(lbRow, 'weight')).toBe('40.82');
+        // change and totalChange are computed on the converted values
+        expect(cellText(lbRow, 'totalChange')).toBe('-39.18');
+    });
+
+    test('entries synced from a health app offer no edit or delete actions', async () => {
+        const weights: WeightEntry[] = [
+            new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1, '', 'kg', 'apple'),
+        ];
+
+        renderTable(weights);
+        await screen.findByText('80');
+
+        expect(screen.queryByRole('menuitem', { name: /edit/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('menuitem', { name: /delete/i })).not.toBeInTheDocument();
+        expect(screen.getByRole('menuitem', { name: 'syncedEntryInfo' })).toBeInTheDocument();
     });
 });

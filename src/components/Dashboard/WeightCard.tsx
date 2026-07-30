@@ -1,7 +1,14 @@
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
-import { useBodyWeightQuery, WeightChart, WeightEntry, WeightForm, WeightTableDashboard } from "@/components/Weight";
+import {
+    useBodyWeightQuery,
+    useDisplayWeightUnit,
+    WeightChart,
+    WeightEntry,
+    WeightForm,
+    WeightTableDashboard
+} from "@/components/Weight";
 import { makeLink, WgerLink } from "@/core/lib/url";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button, IconButton } from "@mui/material";
@@ -29,6 +36,7 @@ export const WeightCardContent = (props: { entries: WeightEntry[] }) => {
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
     const [t, i18n] = useTranslation();
+    const displayUnit = useDisplayWeightUnit();
 
     return (
         <>
@@ -48,9 +56,9 @@ export const WeightCardContent = (props: { entries: WeightEntry[] }) => {
                     </>
                 }
             >
-                <WeightChart weights={props.entries} height={200} />
+                <WeightChart weights={props.entries} unit={displayUnit} height={200} />
                 <Box sx={{ mt: 2 }}>
-                    <WeightTableDashboard weights={props.entries} />
+                    <WeightTableDashboard weights={props.entries} unit={displayUnit} />
                 </Box>
             </DashboardCard>
 

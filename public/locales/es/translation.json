@@ -11,6 +11,7 @@
     "nutritionalPlan": "Plan nutricional",
     "submit": "Enviar",
     "weight": "Peso",
+    "syncedEntryInfo": "Esta entrada se ha sincronizado desde una aplicación de salud y solo puede modificarse allí",
     "workout": "Entrenamiento",
     "exercises": {
         "secondaryMuscles": "Músculos secundarios",

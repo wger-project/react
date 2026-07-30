@@ -23,6 +23,9 @@ vi.mock("@/components/Measurements/api/measurements");
 vi.mock("@/components/Nutrition/api/nutritionalDiary");
 vi.mock("@/components/Routines/api/session");
 vi.mock("@/components/Weight/api/weight");
+vi.mock('@/components/User/queries/profile', () => ({
+    useProfileQuery: () => ({ isLoading: false, data: { useMetric: true } }),
+}));
 
 
 // TODO: using vi.useFakeTimers() and vi.setSystemTime(new Date('2024-12-01'));
@@ -144,6 +147,6 @@ describe('CalendarComponent', () => {
         await user.click(day);
 
         // Assert
-        expect(screen.getByText('70.0')).toBeInTheDocument();
+        expect(screen.getByText('70.0 server.kg')).toBeInTheDocument();
     });
 });
