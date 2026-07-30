@@ -88,7 +88,7 @@ describe("weight service tests", () => {
         );
         expect(result).toStrictEqual([
             new WeightEntry(new Date('2021-12-10'), 80, ENTRY_UUID, '', 'kg', 'user'),
-            new WeightEntry(new Date('2021-12-20'), 90, ENTRY_UUID_2, '', 'lb', 'apple'),
+            new WeightEntry(new Date('2021-12-20'), 90, ENTRY_UUID_2, '', 'lb', 'apple', { unit: 'lb' }),
         ]);
     });
 
@@ -157,7 +157,9 @@ describe("weight service tests", () => {
         expect(axios.post).toHaveBeenCalledTimes(1);
         const [, body] = (axios.post as Mock).mock.calls[0];
         expect(body).toMatchObject({ category: CATEGORY_UUID, value: 80, extra_data: { unit: 'lb' } });
-        expect(result).toStrictEqual(new WeightEntry(new Date('2021-12-10'), 80, ENTRY_UUID, '', 'lb'));
+        expect(result).toStrictEqual(
+            new WeightEntry(new Date('2021-12-10'), 80, ENTRY_UUID, '', 'lb', 'user', { unit: 'lb' })
+        );
     });
 
 });

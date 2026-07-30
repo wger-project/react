@@ -17,6 +17,7 @@ export class WeightEntry {
         public notes: string = '',
         public unit: WeightUnit = 'kg',
         public source: string = 'user',
+        public extraData: Record<string, unknown> = {},
     ) {
     }
 
@@ -33,6 +34,7 @@ export class WeightEntry {
             overrides?.notes ?? other.notes,
             overrides?.unit ?? other.unit,
             other.source,
+            other.extraData,
         );
     }
 
@@ -60,6 +62,7 @@ class WeightAdapter implements Adapter<WeightEntry> {
             item.notes ?? '',
             item.extra_data?.unit ?? fallbackUnit,
             item.source ?? 'user',
+            item.extra_data ?? {},
         );
     }
 
@@ -68,8 +71,10 @@ class WeightAdapter implements Adapter<WeightEntry> {
             date: item.date.toISOString(),
             value: item.weight,
             notes: item.notes,
+            // The server replaces extra_data as a whole on update, so send
+            // every stored key back and only override the unit
             // eslint-disable-next-line camelcase
-            extra_data: { unit: item.unit },
+            extra_data: { ...item.extraData, unit: item.unit },
         };
     }
 }
