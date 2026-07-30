@@ -9,6 +9,7 @@ import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/Nu
 import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
 import { TEST_DIARY_ENTRY_1 } from "@/tests/nutritionDiaryTestdata";
+import { TEST_MEAL_1, TEST_MEAL_2 } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from '@testing-library/react';
 import userEvent, { UserEvent } from "@testing-library/user-event";
@@ -177,6 +178,28 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                 mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
                 datetime: TEST_DIARY_ENTRY_1.datetime,
             })
+        );
+    });
+
+    test('Editing shows the entry\'s meal preselected when meals are passed', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123" entry={TEST_DIARY_ENTRY_1}
+                                         meals={[TEST_MEAL_1, TEST_MEAL_2]} closeFn={closeFnMock} />
+            </QueryClientProvider>
+        );
+
+        // Assert - the meal the entry belongs to is selected, not an empty field
+        expect(screen.getByDisplayValue('Second breakfast')).toBeInTheDocument();
+
+        // Submitting keeps that meal
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(mutateEditMock).toHaveBeenCalledWith(
+            expect.objectContaining({ mealId: 'bbbbbbbb-0000-0000-0000-000000000078' })
         );
     });
 

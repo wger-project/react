@@ -2,13 +2,14 @@ import PhotoIcon from "@mui/icons-material/Photo";
 import { Avatar, Collapse, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { Meal } from "@/components/Nutrition/models/meal";
 import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { numberGramLocale, numberLocale } from "@/core/lib/numbers";
 
-const IngredientTableRow = (props: { item: MealItem | DiaryEntry, planId?: string }) => {
+const IngredientTableRow = (props: { item: MealItem | DiaryEntry, planId?: string, meals?: Meal[] }) => {
     const [t, i18n] = useTranslation();
     const [expandForm, setExpandForm] = useState(false);
 
@@ -57,6 +58,7 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry, planId?: strin
                     <NutritionDiaryEntryForm
                         planId={props.planId!}
                         entry={props.item as DiaryEntry}
+                        meals={props.meals}
                         closeFn={() => setExpandForm(false)}
                     />
                 </Collapse>
@@ -70,7 +72,9 @@ export const IngredientDetailTable = (props: {
     values: NutritionalValues,
     showSum: boolean,
     // When given, diary entry rows can be expanded to an edit form
-    planId?: string
+    planId?: string,
+    // When given, the edit form lets the user move the entry to another meal
+    meals?: Meal[]
 }) => {
     const [t, i18n] = useTranslation();
 
@@ -88,7 +92,7 @@ export const IngredientDetailTable = (props: {
             </TableHead>
             <TableBody>
                 {props.items.map((item) => (
-                    <IngredientTableRow item={item} planId={props.planId} key={item.id} />
+                    <IngredientTableRow item={item} planId={props.planId} meals={props.meals} key={item.id} />
                 ))}
                 {props.showSum && <TableRow>
                     <TableCell sx={{ paddingX: 1 }}> </TableCell>
