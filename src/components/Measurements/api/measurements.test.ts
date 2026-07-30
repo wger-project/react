@@ -100,6 +100,39 @@ describe('measurement service tests', () => {
         ]);
     });
 
+    test('GET measurement categories hides the official body weight category', async () => {
+
+        (axios.get as Mock).mockImplementation((url: string) => {
+            if (url.includes("measurement-category")) {
+                return Promise.resolve({
+                    data: {
+                        count: 2,
+                        next: null,
+                        previous: null,
+                        results: [
+                            { id: CATEGORY_UUID, name: "Weight", unit: "kg" },
+                            {
+                                id: CATEGORY_UUID_2,
+                                name: "Body weight",
+                                unit: "kg",
+                                metric_type: "body_weight",
+                                is_official: true
+                            },
+                        ]
+                    }
+                });
+            } else if (url.includes(`measurement/?category=${CATEGORY_UUID}`)) {
+                return Promise.resolve({ data: measurementEntryResponse });
+            }
+        });
+
+        const result = await getMeasurementCategories();
+
+        expect(result.map(c => c.id)).toStrictEqual([CATEGORY_UUID]);
+        // no entries are loaded for the hidden category
+        expect(axios.get).toHaveBeenCalledTimes(2);
+    });
+
     test('GET measurement category', async () => {
 
         (axios.get as Mock).mockImplementation((url: string) => {

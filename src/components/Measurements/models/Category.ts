@@ -1,6 +1,9 @@
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { Adapter } from "@/core/lib/Adapter";
 
+/** Server-side MetricType value marking a category as holding body weight data */
+export const METRIC_TYPE_BODY_WEIGHT = 'body_weight';
+
 export class MeasurementCategory {
 
     entries: MeasurementEntry[] = [];
@@ -9,7 +12,9 @@ export class MeasurementCategory {
         public id: string | null,
         public name: string,
         public unit: string,
-        entries?: MeasurementEntry[]
+        entries?: MeasurementEntry[],
+        public metricType: string = 'custom',
+        public isOfficial: boolean = false,
     ) {
         if (entries) {
             this.entries = entries;
@@ -22,6 +27,8 @@ export class MeasurementCategory {
             overrides?.name ?? other.name,
             overrides?.unit ?? other.unit,
             other.entries,
+            other.metricType,
+            other.isOfficial,
         );
     }
 
@@ -42,7 +49,10 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
         return new MeasurementCategory(
             item.id,
             item.name,
-            item.unit
+            item.unit,
+            undefined,
+            item.metric_type,
+            item.is_official,
         );
     }
 

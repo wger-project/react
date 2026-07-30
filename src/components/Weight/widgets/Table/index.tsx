@@ -61,7 +61,7 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
     };
 
     const handleDeleteClick = (id: GridRowId) => () => {
-        deleteEntryQuery.mutate(Number(id));
+        deleteEntryQuery.mutate(String(id));
     };
 
     const handleCancelClick = (id: GridRowId) => () => {
@@ -73,7 +73,8 @@ export const WeightTable = ({ weights }: WeightTableProps) => {
 
     const processRowUpdate = (newRow: GridRowModel) => {
         const date = newRow.date instanceof Date ? newRow.date : new Date(newRow.date);
-        editEntryQuery.mutate(new WeightEntry(date, Number(newRow.weight), Number(newRow.id)));
+        const entry = weights.find(w => w.id === newRow.id)!;
+        editEntryQuery.mutate(WeightEntry.clone(entry, { date, weight: Number(newRow.weight) }));
         return newRow;
     };
 

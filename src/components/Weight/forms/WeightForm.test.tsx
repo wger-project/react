@@ -3,19 +3,30 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import userEvent from "@testing-library/user-event";
 import { WeightForm } from "@/components/Weight/forms/WeightForm";
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
-import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "@/components/Weight/queries";
+import {
+    useAddWeightEntryQuery,
+    useBodyWeightCategoryQuery,
+    useEditWeightEntryQuery
+} from "@/components/Weight/queries";
 import React from 'react';
 import { testQueryClient } from "@/tests/queryClient";
-import { testWeightEntries } from "@/tests/weight/testData";
+import { testBodyWeightCategory } from "@/tests/weight/testData";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Weight/queries");
 
+const ENTRY_UUID = 'dddddddd-dddd-dddd-dddd-000000000001';
 
 describe("Test WeightForm component", () => {
 
     beforeEach(() => {
-        (useBodyWeightQuery as Mock).mockImplementation(() => ({ isSuccess: true, data: testWeightEntries }));
+        (useBodyWeightCategoryQuery as Mock).mockImplementation(() => ({
+            isSuccess: true,
+            isLoading: false,
+            data: testBodyWeightCategory
+        }));
+        (useAddWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
+        (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
     });
 
 
@@ -25,7 +36,7 @@ describe("Test WeightForm component", () => {
         const weightEntry = new WeightEntry(
             new Date('2021-12-10 17:00'),
             80,
-            1,
+            ENTRY_UUID,
         );
 
         // Act
@@ -52,7 +63,7 @@ describe("Test WeightForm component", () => {
         const weightEntry = new WeightEntry(
             new Date('2022-02-28'),
             80,
-            1
+            ENTRY_UUID
         );
 
         // Act
@@ -74,7 +85,7 @@ describe("Test WeightForm component", () => {
         const submitted = mutateEditMock.mock.calls[0][0] as WeightEntry;
         expect(submitted).not.toBe(weightEntry);
         expect(Number(submitted.weight)).toBe(82);
-        expect(submitted.id).toBe(1);
+        expect(submitted.id).toBe(ENTRY_UUID);
 
         // ...and does not mutate the passed-in entry (it comes from the query cache)
         expect(weightEntry.weight).toBe(80);
@@ -115,7 +126,7 @@ describe("Test WeightForm component", () => {
         const user = userEvent.setup();
         render(
             <QueryClientProvider client={testQueryClient}>
-                <WeightForm weightEntry={new WeightEntry(new Date('2022-02-28'), 80, 1)} />
+                <WeightForm weightEntry={new WeightEntry(new Date('2022-02-28'), 80, ENTRY_UUID)} />
             </QueryClientProvider>
         );
         const weightInput = await screen.findByLabelText('weight');

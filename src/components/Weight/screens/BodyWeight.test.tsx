@@ -1,8 +1,9 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
-import { getWeights } from "@/components/Weight/api/weight";
+import { getBodyWeightCategory, getWeights } from "@/components/Weight/api/weight";
 import { testQueryClient } from "@/tests/queryClient";
+import { testBodyWeightCategory, TEST_BODY_WEIGHT_CATEGORY_UUID } from "@/tests/weight/testData";
 import { BodyWeight } from "./BodyWeight";
 import { FilterType } from "../widgets/FilterButtons";
 import type { Mock } from 'vitest';
@@ -12,6 +13,11 @@ console.log = vi.fn();
 
 describe("Test BodyWeight component", () => {
 
+    beforeEach(() => {
+        testQueryClient.clear();
+        (getBodyWeightCategory as Mock).mockImplementation(() => Promise.resolve(testBodyWeightCategory));
+    });
+
     // See https://github.com/maslianok/react-resize-detector#testing-with-enzyme-and-jest
     afterEach(() => {
         vi.restoreAllMocks();
@@ -19,8 +25,8 @@ describe("Test BodyWeight component", () => {
 
     // Arrange
     const weightData = [
-        new WeightEntry(new Date('2021-12-10'), 80, 1),
-        new WeightEntry(new Date('2021-12-20'), 90, 2),
+        new WeightEntry(new Date('2021-12-10'), 80, 'dddddddd-dddd-dddd-dddd-000000000001'),
+        new WeightEntry(new Date('2021-12-20'), 90, 'dddddddd-dddd-dddd-dddd-000000000002'),
     ];
 
     test('renders without crashing', async () => {
@@ -34,18 +40,16 @@ describe("Test BodyWeight component", () => {
             </QueryClientProvider>
         );
 
-        // Assert
-        expect(getWeights).toHaveBeenCalledTimes(1);
-
-        // Both weights are found in the document
+        // Assert - both weights are found in the document
         expect(await screen.findByText("80")).toBeInTheDocument();
         expect(await screen.findByText("90")).toBeInTheDocument();
+        expect(getWeights).toHaveBeenCalledWith(TEST_BODY_WEIGHT_CATEGORY_UUID, 'lastYear');
     });
 
     test('changes filter and updates displayed data', async () => {
 
         // Mock the getWeights response based on the filter
-        (getWeights as Mock).mockImplementation((filter: FilterType) => {
+        (getWeights as Mock).mockImplementation((categoryId: string, filter: FilterType) => {
             if (filter === 'lastYear') {
                 return Promise.resolve(weightData);
             } else if (filter === 'lastMonth') {
@@ -69,7 +73,9 @@ describe("Test BodyWeight component", () => {
         fireEvent.click(filterButton);
 
         // Expect getWeights to be called with 'lastMonth'
-        expect(getWeights).toHaveBeenCalledWith('lastMonth');
+        await waitFor(() => {
+            expect(getWeights).toHaveBeenCalledWith(TEST_BODY_WEIGHT_CATEGORY_UUID, 'lastMonth');
+        });
 
         // Check that entries for last year are no longer in the document
         expect(screen.queryByText("80")).not.toBeInTheDocument();

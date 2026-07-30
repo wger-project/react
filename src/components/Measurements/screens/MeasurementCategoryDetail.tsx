@@ -25,7 +25,10 @@ export const MeasurementCategoryDetail = () => {
 
     return <WgerContainerRightSidebar
         title={categoryQuery.data!.name}
-        optionsMenu={<CategoryDetailDropdown category={categoryQuery.data!} />}
+        // official categories may neither be renamed nor deleted
+        optionsMenu={categoryQuery.data!.isOfficial
+            ? undefined
+            : <CategoryDetailDropdown category={categoryQuery.data!} />}
         mainContent={
             <Stack spacing={2}>
                 <MeasurementChart category={categoryQuery.data!} />

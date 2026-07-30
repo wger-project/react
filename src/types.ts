@@ -1,11 +1,5 @@
 import { ApiIngredientThumbnailType } from "@/components/Nutrition/models/IngredientImageThumbnails";
 
-export interface ApiBodyWeightType {
-    id: number,
-    date: string,
-    weight: string,
-}
-
 export interface ApiMuscleType {
     id: number,
     name: string,
@@ -50,7 +44,9 @@ export interface ApiAliasType {
 export interface ApiMeasurementCategoryType {
     id: string,
     name: string,
-    unit: string
+    unit: string,
+    metric_type: string,
+    is_official: boolean,
 }
 
 export const NUTRI_SCORES = ['a', 'b', 'c', 'd', 'e'] as const;

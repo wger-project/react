@@ -2,7 +2,11 @@ import { Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
-import { useAddWeightEntryQuery, useBodyWeightQuery, useEditWeightEntryQuery } from "@/components/Weight/queries";
+import {
+    useAddWeightEntryQuery,
+    useBodyWeightCategoryQuery,
+    useEditWeightEntryQuery
+} from "@/components/Weight/queries";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
@@ -17,7 +21,7 @@ interface WeightFormProps {
 
 export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
-    const weightEntriesQuery = useBodyWeightQuery();
+    const categoryQuery = useBodyWeightCategoryQuery();
     const addWeightQuery = useAddWeightEntryQuery();
     const editWeightQuery = useEditWeightEntryQuery();
 
@@ -32,7 +36,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
             .required('Weight field is required'),
     });
 
-    if (weightEntriesQuery.isLoading) {
+    if (categoryQuery.isLoading) {
         return <LoadingPlaceholder />;
     }
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementCategory, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { ApiMeasurementCategoryType } from '@/types';
 import { API_MAX_PAGE_SIZE } from "@/core/lib/consts";
@@ -17,7 +17,7 @@ export type MeasurementQueryOptions = {
 export const getMeasurementCategories = async (options?: MeasurementQueryOptions): Promise<MeasurementCategory[]> => {
     const { filtersetQueryCategories = {}, filtersetQueryEntries = {} } = options || {};
 
-    const categories: MeasurementCategory[] = [];
+    let categories: MeasurementCategory[] = [];
     const categoryUrl = makeUrl(API_MEASUREMENTS_CATEGORY_PATH, {
         query: {
             limit: API_MAX_PAGE_SIZE,
@@ -30,6 +30,10 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
             categories.push(MeasurementCategory.fromJson(catData));
         }
     }
+
+    // The official body weight category is managed via the body weight screens,
+    // don't surface it between the regular measurement categories
+    categories = categories.filter(c => !(c.isOfficial && c.metricType === METRIC_TYPE_BODY_WEIGHT));
 
     // Load entries for each category
     const entryResponses = categories.map(async (category) => {

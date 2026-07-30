@@ -21,8 +21,8 @@ const renderChart = (weights: WeightEntry[], height?: number) =>
 describe("WeightChart", () => {
     test('mounts with weight data', () => {
         renderChart([
-            new WeightEntry(new Date('2021-12-10'), 80, 1),
-            new WeightEntry(new Date('2021-12-20'), 90, 2),
+            new WeightEntry(new Date('2021-12-10'), 80, 'd-1'),
+            new WeightEntry(new Date('2021-12-20'), 90, 'd-2'),
         ]);
     });
 
@@ -31,22 +31,22 @@ describe("WeightChart", () => {
     });
 
     test('mounts with a single entry', () => {
-        renderChart([new WeightEntry(new Date('2021-12-10'), 80, 1)]);
+        renderChart([new WeightEntry(new Date('2021-12-10'), 80, 'd-1')]);
     });
 
     test('mounts with unsorted data', () => {
         renderChart([
-            new WeightEntry(new Date('2021-12-20'), 90, 2),
-            new WeightEntry(new Date('2021-12-10'), 80, 1),
-            new WeightEntry(new Date('2021-12-15'), 85, 3),
+            new WeightEntry(new Date('2021-12-20'), 90, 'd-2'),
+            new WeightEntry(new Date('2021-12-10'), 80, 'd-1'),
+            new WeightEntry(new Date('2021-12-15'), 85, 'd-3'),
         ]);
     });
 
     test('respects the height prop', () => {
         renderChart(
             [
-                new WeightEntry(new Date('2021-12-10'), 80, 1),
-                new WeightEntry(new Date('2021-12-20'), 85, 2),
+                new WeightEntry(new Date('2021-12-10'), 80, 'd-1'),
+                new WeightEntry(new Date('2021-12-20'), 85, 'd-2'),
             ],
             500,
         );

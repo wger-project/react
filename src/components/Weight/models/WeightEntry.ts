@@ -1,19 +1,25 @@
 import { Adapter } from "@/core/lib/Adapter";
 
+/**
+ * A body weight entry, stored on the server as a measurement in the user's
+ * official body weight category. The id is the measurement's UUID.
+ */
 export class WeightEntry {
 
     constructor(
         public date: Date,
         public weight: number,
-        public id?: number,
+        public id?: string,
+        public notes: string = '',
     ) {
     }
 
-    static clone(other: WeightEntry, overrides?: Partial<Pick<WeightEntry, 'date' | 'weight' | 'id'>>): WeightEntry {
+    static clone(other: WeightEntry, overrides?: Partial<Pick<WeightEntry, 'date' | 'weight' | 'id' | 'notes'>>): WeightEntry {
         return new WeightEntry(
             overrides?.date ?? other.date,
             overrides?.weight ?? other.weight,
             overrides?.id ?? other.id,
+            overrides?.notes ?? other.notes,
         );
     }
 
@@ -32,15 +38,17 @@ class WeightAdapter implements Adapter<WeightEntry> {
     fromJson(item: any): WeightEntry {
         return new WeightEntry(
             new Date(item.date),
-            parseFloat(item.weight),
+            parseFloat(item.value),
             item.id,
+            item.notes ?? '',
         );
     }
 
     toJson(item: WeightEntry) {
         return {
             date: item.date.toISOString(),
-            weight: item.weight,
+            value: item.weight,
+            notes: item.notes,
         };
     }
 }

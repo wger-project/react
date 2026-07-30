@@ -14,11 +14,15 @@ const renderTable = (weights: WeightEntry[]) =>
         </BrowserRouter>
     );
 
+const ENTRY_UUID_1 = 'dddddddd-dddd-dddd-dddd-000000000001';
+const ENTRY_UUID_2 = 'dddddddd-dddd-dddd-dddd-000000000002';
+const ENTRY_UUID_3 = 'dddddddd-dddd-dddd-dddd-000000000003';
+
 describe("Body weight table", () => {
     test('renders rows for all weight entries', async () => {
         const weights: WeightEntry[] = [
-            new WeightEntry(new Date('2021/12/10'), 80, 1),
-            new WeightEntry(new Date('2021/12/20'), 90, 2),
+            new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1),
+            new WeightEntry(new Date('2021/12/20'), 90, ENTRY_UUID_2),
         ];
 
         renderTable(weights);
@@ -29,19 +33,20 @@ describe("Body weight table", () => {
 
     test('displays total change column correctly', async () => {
         const weights: WeightEntry[] = [
-            new WeightEntry(new Date('2021/12/10'), 80, 1),
-            new WeightEntry(new Date('2021/12/20'), 90, 2),
-            new WeightEntry(new Date('2021/12/25'), 85, 3),
+            new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1),
+            new WeightEntry(new Date('2021/12/20'), 90, ENTRY_UUID_2),
+            new WeightEntry(new Date('2021/12/25'), 85, ENTRY_UUID_3),
         ];
 
         renderTable(weights);
         await screen.findByText('80');
 
         // DataGrid rows are sorted newest-first: 85 (total +5), 90 (+10), 80 (0)
+        const rowIds: Record<string, string> = { '80': ENTRY_UUID_1, '90': ENTRY_UUID_2, '85': ENTRY_UUID_3 };
         const expectedTotals: Record<string, string> = { '85': '5', '90': '10', '80': '0' };
 
         for (const [weight, totalChange] of Object.entries(expectedTotals)) {
-            const row = document.querySelector(`[data-id="${weight === '80' ? 1 : weight === '90' ? 2 : 3}"]`) as HTMLElement;
+            const row = document.querySelector(`[data-id="${rowIds[weight]}"]`) as HTMLElement;
             expect(row).not.toBeNull();
             const cell = row.querySelector('[data-field="totalChange"]') as HTMLElement;
             expect(cell.textContent).toBe(totalChange);
@@ -49,7 +54,7 @@ describe("Body weight table", () => {
     });
 
     test('shows inline edit and delete actions per row', async () => {
-        const weights: WeightEntry[] = [new WeightEntry(new Date('2021/12/10'), 80, 1)];
+        const weights: WeightEntry[] = [new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1)];
         renderTable(weights);
 
         await screen.findByText('80');

@@ -46,6 +46,7 @@ export enum QueryKey {
 
     // Body weight
     BODY_WEIGHT = 'body-weight',
+    BODY_WEIGHT_CATEGORY = 'body-weight-category',
 
     // Profile
     PROFILE = 'profile',
