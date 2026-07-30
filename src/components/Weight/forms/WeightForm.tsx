@@ -8,6 +8,7 @@ import {
     useDisplayWeightUnit,
     useEditWeightEntryQuery
 } from "@/components/Weight/queries";
+import { useProfileQuery } from "@/components/User";
 import { WeightUnit } from "@/core/lib/weightUnit";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { Form, Formik } from "formik";
@@ -24,6 +25,7 @@ interface WeightFormProps {
 export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
     const categoryQuery = useBodyWeightCategoryQuery();
+    const profileQuery = useProfileQuery();
     const addWeightQuery = useAddWeightEntryQuery();
     const editWeightQuery = useEditWeightEntryQuery();
     const displayUnit = useDisplayWeightUnit();
@@ -48,7 +50,9 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
             }),
     });
 
-    if (categoryQuery.isLoading) {
+    // Also wait for the profile: Formik freezes the initial values, and the
+    // unit default falls back to kg while the profile has not loaded yet
+    if (categoryQuery.isLoading || profileQuery.isLoading) {
         return <LoadingPlaceholder />;
     }
 
