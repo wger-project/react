@@ -139,6 +139,37 @@ describe("Body weight table", () => {
         expect(submitted.unit).toBe('kg');
     });
 
+    test('implausible inline edits are rejected and the row stays editable', async () => {
+        const user = userEvent.setup();
+        const mutateEditMock = vi.fn();
+        (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        const weights: WeightEntry[] = [
+            new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1, '', 'kg'),
+        ];
+
+        renderTable(weights);
+        await screen.findByText('80');
+        await user.click(screen.getByRole('menuitem', { name: /edit/i }));
+
+        const weightInput = screen.getByRole('spinbutton');
+        await user.clear(weightInput);
+        await user.type(weightInput, '5000');
+        await user.click(screen.getByRole('menuitem', { name: /save/i }));
+
+        // nothing is saved, the error shows up and the cell stays editable
+        expect(mutateEditMock).not.toHaveBeenCalled();
+        expect(await screen.findByText('forms.maxValue')).toBeInTheDocument();
+        expect(screen.getByRole('spinbutton')).toBeInTheDocument();
+
+        // correcting the value saves normally
+        await user.clear(weightInput);
+        await user.type(weightInput, '90');
+        await user.click(screen.getByRole('menuitem', { name: /save/i }));
+        expect(mutateEditMock).toHaveBeenCalled();
+        const submitted = mutateEditMock.mock.calls[0][0] as WeightEntry;
+        expect(Number(submitted.weight)).toBe(90);
+    });
+
     test('entries synced from a health app offer no edit or delete actions', async () => {
         const weights: WeightEntry[] = [
             new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1, '', 'kg', 'apple'),

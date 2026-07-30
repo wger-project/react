@@ -9,7 +9,7 @@ import {
     useEditWeightEntryQuery
 } from "@/components/Weight/queries";
 import { useProfileQuery } from "@/components/User";
-import { WeightUnit } from "@/core/lib/weightUnit";
+import { weightBounds, WeightUnit } from "@/core/lib/weightUnit";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
@@ -33,7 +33,8 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
     const [dateValue, setDateValue] = useState<DateTime | null>(weightEntry ? DateTime.fromJSDate(weightEntry.date) : DateTime.now);
     const [t, i18n] = useTranslation();
 
-    // 30 - 300 kg and the same range expressed in lb
+    const lb = weightBounds('lb');
+    const kg = weightBounds('kg');
     const validationSchema = yup.object({
         unit: yup.string().oneOf(['kg', 'lb']),
         weight: yup
@@ -42,11 +43,11 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
             .when('unit', {
                 is: 'lb',
                 then: schema => schema
-                    .min(66, t('forms.minValue', { value: `66 ${t('server.lb')}` }))
-                    .max(661, t('forms.maxValue', { value: `661 ${t('server.lb')}` })),
+                    .min(lb.min, t('forms.minValue', { value: `${lb.min} ${t('server.lb')}` }))
+                    .max(lb.max, t('forms.maxValue', { value: `${lb.max} ${t('server.lb')}` })),
                 otherwise: schema => schema
-                    .min(30, t('forms.minValue', { value: `30 ${t('server.kg')}` }))
-                    .max(300, t('forms.maxValue', { value: `300 ${t('server.kg')}` })),
+                    .min(kg.min, t('forms.minValue', { value: `${kg.min} ${t('server.kg')}` }))
+                    .max(kg.max, t('forms.maxValue', { value: `${kg.max} ${t('server.kg')}` })),
             }),
     });
 

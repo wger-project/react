@@ -3,7 +3,7 @@ import CloudSyncIcon from "@mui/icons-material/CloudSync";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { Box, Tooltip } from "@mui/material";
+import { Box, Snackbar, Tooltip } from "@mui/material";
 import {
     DataGrid,
     GridActionsCellItem,
@@ -20,7 +20,7 @@ import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import { WeightEntryFab } from "@/components/Weight/widgets/Table/Fab/Fab";
 import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "@/components/Weight/queries";
 import { processTimeSeries } from "@/core/lib/timeSeries";
-import { WeightUnit } from "@/core/lib/weightUnit";
+import { weightBounds, WeightUnit } from "@/core/lib/weightUnit";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -49,6 +49,7 @@ export const WeightTable = ({ weights, unit }: WeightTableProps) => {
     const editEntryQuery = useEditWeightEntryQuery();
     const deleteEntryQuery = useDeleteWeightEntryQuery();
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+    const [editError, setEditError] = useState<string | null>(null);
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -86,9 +87,23 @@ export const WeightTable = ({ weights, unit }: WeightTableProps) => {
         if (Number(newRow.weight) === Number(oldRow.weight)) {
             editEntryQuery.mutate(WeightEntry.clone(entry, { date }));
         } else {
-            editEntryQuery.mutate(WeightEntry.clone(entry, { date, weight: Number(newRow.weight), unit: unit }));
+            // the typed value is in the display unit the column header shows;
+            // throwing keeps the row in edit mode so it can be corrected
+            const weight = Number(newRow.weight);
+            const { min, max } = weightBounds(unit);
+            if (weight < min) {
+                throw new Error(t('forms.minValue', { value: `${min} ${t(`server.${unit}`)}` }));
+            }
+            if (weight > max) {
+                throw new Error(t('forms.maxValue', { value: `${max} ${t(`server.${unit}`)}` }));
+            }
+            editEntryQuery.mutate(WeightEntry.clone(entry, { date, weight, unit: unit }));
         }
         return newRow;
+    };
+
+    const onProcessRowUpdateError = (error: unknown) => {
+        setEditError(error instanceof Error ? error.message : String(error));
     };
 
     const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
@@ -222,8 +237,15 @@ export const WeightTable = ({ weights, unit }: WeightTableProps) => {
                     onRowModesModelChange={handleRowModesModelChange}
                     onRowEditStop={handleRowEditStop}
                     processRowUpdate={processRowUpdate}
+                    onProcessRowUpdateError={onProcessRowUpdateError}
                 />
             </Box>
+            <Snackbar
+                open={editError !== null}
+                autoHideDuration={4000}
+                onClose={() => setEditError(null)}
+                message={editError}
+            />
             <WeightEntryFab />
         </>
     );

@@ -15,3 +15,11 @@ export function convertWeight(value: number, from: WeightUnit, to: WeightUnit): 
 
     return Math.round(converted * 100) / 100;
 }
+
+/*
+ * Plausibility bounds for body weight entries in the given unit:
+ * 30 - 300 kg, or the same range expressed in lb
+ */
+export function weightBounds(unit: WeightUnit): { min: number, max: number } {
+    return unit === 'lb' ? { min: 66, max: 661 } : { min: 30, max: 300 };
+}
