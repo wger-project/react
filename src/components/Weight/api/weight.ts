@@ -26,6 +26,12 @@ export const getBodyWeightCategory = async (): Promise<MeasurementCategory> => {
         headers: makeHeader(),
     });
 
+    // The server guarantees the category exists; still fail with a clear
+    // message instead of a TypeError should that ever break
+    if (data.results.length === 0) {
+        throw new Error('No official body weight category found');
+    }
+
     return MeasurementCategory.fromJson(data.results[0]);
 };
 

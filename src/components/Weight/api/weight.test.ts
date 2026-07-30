@@ -16,6 +16,15 @@ describe("weight service tests", () => {
         vi.clearAllMocks();
     });
 
+    test('an empty category response raises a clear error', async () => {
+
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({
+            data: { count: 0, next: null, previous: null, results: [] }
+        }));
+
+        await expect(getBodyWeightCategory()).rejects.toThrow('No official body weight category');
+    });
+
     test('GET the official body weight category', async () => {
 
         const categoryResponse = {
