@@ -75,11 +75,19 @@ export const WeightTable = ({ weights, unit }: WeightTableProps) => {
         });
     };
 
-    const processRowUpdate = (newRow: GridRowModel) => {
+    const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
         const date = newRow.date instanceof Date ? newRow.date : new Date(newRow.date);
         const entry = weights.find(w => w.id === newRow.id)!;
-        // the edited value was displayed in the display unit, store it as such
-        editEntryQuery.mutate(WeightEntry.clone(entry, { date, weight: Number(newRow.weight), unit: unit }));
+
+        // The grid shows the value converted to the display unit. Re-saving
+        // that conversion would silently overwrite the entry's stored value
+        // and unit, so both only change when the weight cell was edited: the
+        // typed value is then stamped with the display unit the column shows
+        if (Number(newRow.weight) === Number(oldRow.weight)) {
+            editEntryQuery.mutate(WeightEntry.clone(entry, { date }));
+        } else {
+            editEntryQuery.mutate(WeightEntry.clone(entry, { date, weight: Number(newRow.weight), unit: unit }));
+        }
         return newRow;
     };
 

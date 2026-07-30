@@ -1,9 +1,14 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
+import userEvent from "@testing-library/user-event";
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
+import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "@/components/Weight/queries";
 import { BrowserRouter } from "react-router-dom";
 import { testQueryClient } from "@/tests/queryClient";
+import type { Mock } from 'vitest';
 import { WeightTable } from './index';
+
+vi.mock("@/components/Weight/queries");
 
 const renderTable = (weights: WeightEntry[]) =>
     render(
@@ -19,6 +24,12 @@ const ENTRY_UUID_2 = 'dddddddd-dddd-dddd-dddd-000000000002';
 const ENTRY_UUID_3 = 'dddddddd-dddd-dddd-dddd-000000000003';
 
 describe("Body weight table", () => {
+
+    beforeEach(() => {
+        (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
+        (useDeleteWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
+    });
+
     test('renders rows for all weight entries', async () => {
         const weights: WeightEntry[] = [
             new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1),
@@ -80,6 +91,52 @@ describe("Body weight table", () => {
         expect(cellText(lbRow, 'weight')).toBe('40.82');
         // change and totalChange are computed on the converted values
         expect(cellText(lbRow, 'totalChange')).toBe('-39.18');
+    });
+
+    test('saving a row without editing the weight keeps the stored value and unit', async () => {
+        const user = userEvent.setup();
+        const mutateEditMock = vi.fn();
+        (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        // stored as 90 lb, displayed as 40.82 kg
+        const weights: WeightEntry[] = [
+            new WeightEntry(new Date('2021/12/10'), 90, ENTRY_UUID_1, '', 'lb'),
+        ];
+
+        renderTable(weights);
+        await screen.findByText(/40[.,]82/);
+        await user.click(screen.getByRole('menuitem', { name: /edit/i }));
+        await user.click(screen.getByRole('menuitem', { name: /save/i }));
+
+        // the displayed conversion must not be written back to the entry
+        expect(mutateEditMock).toHaveBeenCalled();
+        const submitted = mutateEditMock.mock.calls[0][0] as WeightEntry;
+        expect(Number(submitted.weight)).toBe(90);
+        expect(submitted.unit).toBe('lb');
+    });
+
+    test('editing the weight cell stamps the display unit', async () => {
+        const user = userEvent.setup();
+        const mutateEditMock = vi.fn();
+        (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        const weights: WeightEntry[] = [
+            new WeightEntry(new Date('2021/12/10'), 90, ENTRY_UUID_1, '', 'lb'),
+        ];
+
+        renderTable(weights);
+        await screen.findByText(/40[.,]82/);
+        await user.click(screen.getByRole('menuitem', { name: /edit/i }));
+
+        // the weight cell is a number input while the row is in edit mode;
+        // the typed value is in the unit the column header shows (kg)
+        const weightInput = screen.getByRole('spinbutton');
+        await user.clear(weightInput);
+        await user.type(weightInput, '41');
+        await user.click(screen.getByRole('menuitem', { name: /save/i }));
+
+        expect(mutateEditMock).toHaveBeenCalled();
+        const submitted = mutateEditMock.mock.calls[0][0] as WeightEntry;
+        expect(Number(submitted.weight)).toBe(41);
+        expect(submitted.unit).toBe('kg');
     });
 
     test('entries synced from a health app offer no edit or delete actions', async () => {
