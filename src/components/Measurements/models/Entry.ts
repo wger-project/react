@@ -9,6 +9,7 @@ export class MeasurementEntry {
         public value: number,
         public notes: string,
         public source: string = 'user',
+        public extraData: Record<string, unknown> = {},
     ) {
     }
 
@@ -25,6 +26,7 @@ export class MeasurementEntry {
             overrides?.value ?? other.value,
             overrides?.notes ?? other.notes,
             other.source,
+            other.extraData,
         );
     }
 
@@ -50,6 +52,7 @@ class MeasurementEntryAdapter implements Adapter<MeasurementEntry> {
             item.value,
             item.notes,
             item.source,
+            item.extra_data ?? {},
         );
     }
 
@@ -60,7 +63,11 @@ class MeasurementEntryAdapter implements Adapter<MeasurementEntry> {
             // the server field is a datetime, send the full timestamp
             date: item.date.toISOString(),
             value: item.value,
-            notes: item.notes
+            notes: item.notes,
+            // The server replaces extra_data as a whole on update, so send
+            // every stored key back
+            // eslint-disable-next-line camelcase
+            extra_data: item.extraData,
         };
     }
 }

@@ -1,8 +1,28 @@
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { Adapter } from "@/core/lib/Adapter";
 
+/** Semantic category types, the values mirror the Django MetricType choices */
+export const METRIC_TYPES = [
+    'custom',
+    'body_weight',
+    'body_fat',
+    'height',
+    'blood_pressure',
+    'heart_rate',
+    'steps',
+    'distance',
+    'energy',
+    'sleep',
+] as const;
+export type MetricType = typeof METRIC_TYPES[number];
+
 /** Server-side MetricType value marking a category as holding body weight data */
-export const METRIC_TYPE_BODY_WEIGHT = 'body_weight';
+export const METRIC_TYPE_BODY_WEIGHT: MetricType = 'body_weight';
+
+/** Narrows a server value to a known metric type, unknown values fall back to 'custom' */
+export function metricTypeFromApi(value: unknown): MetricType {
+    return METRIC_TYPES.includes(value as MetricType) ? value as MetricType : 'custom';
+}
 
 export class MeasurementCategory {
 
@@ -13,8 +33,10 @@ export class MeasurementCategory {
         public name: string,
         public unit: string,
         entries?: MeasurementEntry[],
-        public metricType: string = 'custom',
+        public metricType: MetricType = 'custom',
         public isOfficial: boolean = false,
+        public parentId: string | null = null,
+        public order: number = 0,
     ) {
         if (entries) {
             this.entries = entries;
@@ -29,6 +51,8 @@ export class MeasurementCategory {
             other.entries,
             other.metricType,
             other.isOfficial,
+            other.parentId,
+            other.order,
         );
     }
 
@@ -51,8 +75,10 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             item.name,
             item.unit,
             undefined,
-            item.metric_type,
+            metricTypeFromApi(item.metric_type),
             item.is_official,
+            item.parent ?? null,
+            item.order ?? 0,
         );
     }
 
@@ -61,6 +87,10 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             ...(item.id != null ? { id: item.id } : {}),
             name: item.name,
             unit: item.unit,
+            // eslint-disable-next-line camelcase
+            metric_type: item.metricType,
+            parent: item.parentId,
+            order: item.order,
         };
     }
 }

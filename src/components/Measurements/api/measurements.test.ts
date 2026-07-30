@@ -153,7 +153,7 @@ describe('measurement service tests', () => {
         );
     });
 
-    test('addMeasurementCategory POSTs name + unit and returns the parsed category', async () => {
+    test('addMeasurementCategory POSTs the category and returns the parsed result', async () => {
         (axios.post as Mock).mockResolvedValue({
             data: { id: CATEGORY_UUID_2, name: "Body fat", unit: "%" },
         });
@@ -163,7 +163,8 @@ describe('measurement service tests', () => {
         expect(axios.post).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.post as Mock).mock.calls[0];
         expect(url).toMatch(/\/api\/v2\/measurement-category\/$/);
-        expect(body).toEqual({ name: "Body fat", unit: "%" });
+
+        expect(body).toEqual({ name: "Body fat", unit: "%", metric_type: "custom", parent: null, order: 0 });
         expect(result).toBeInstanceOf(MeasurementCategory);
         expect(result.id).toBe(CATEGORY_UUID_2);
     });
@@ -178,7 +179,15 @@ describe('measurement service tests', () => {
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.patch as Mock).mock.calls[0];
         expect(url).toMatch(new RegExp(`/api/v2/measurement-category/${CATEGORY_UUID_2}/$`));
-        expect(body).toEqual({ id: CATEGORY_UUID_2, name: "Renamed", unit: "%" });
+
+        expect(body).toEqual({
+            id: CATEGORY_UUID_2,
+            name: "Renamed",
+            unit: "%",
+            metric_type: "custom",
+            parent: null,
+            order: 0
+        });
         expect(result.name).toBe("Renamed");
     });
 

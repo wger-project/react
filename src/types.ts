@@ -47,6 +47,8 @@ export interface ApiMeasurementCategoryType {
     unit: string,
     metric_type: string,
     is_official: boolean,
+    parent: string | null,
+    order: number,
 }
 
 export const NUTRI_SCORES = ['a', 'b', 'c', 'd', 'e'] as const;
