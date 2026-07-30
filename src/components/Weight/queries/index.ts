@@ -26,7 +26,7 @@ export function useBodyWeightCategoryQuery() {
 }
 
 /*
- * The unit weight values are displayed in — the user's profile weight unit.
+ * The unit weight values are displayed in: the user's profile weight unit.
  * Entries keep the unit they were entered in, only the presentation converts.
  */
 export function useDisplayWeightUnit(): WeightUnit {

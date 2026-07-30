@@ -26,7 +26,7 @@ export interface WeightChartProps {
 }
 
 /*
- * Chart data points in the display unit — entries may be stored in mixed
+ * Chart data points in the display unit; entries may be stored in mixed
  * units, so every value is converted before anything is derived from it
  */
 export const buildWeightData = (weights: WeightEntry[], unit: WeightUnit) =>

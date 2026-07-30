@@ -5,7 +5,7 @@ import { convertWeight, WeightUnit } from "@/core/lib/weightUnit";
  * A body weight entry, stored on the server as a measurement in the user's
  * official body weight category. The id is the measurement's UUID.
  *
- * The weight is stored in the unit it was entered in — read it through
+ * The weight is stored in the unit it was entered in: read it through
  * valueIn(), never directly.
  */
 export class WeightEntry {
@@ -55,12 +55,17 @@ export class WeightEntry {
 class WeightAdapter implements Adapter<WeightEntry> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson(item: any, fallbackUnit: WeightUnit = 'kg'): WeightEntry {
+        // narrow the server value instead of trusting the cast, an unexpected
+        // unit would otherwise silently convert wrongly
+        const serverUnit = item.extra_data?.unit;
+        const unit: WeightUnit = serverUnit === 'kg' || serverUnit === 'lb' ? serverUnit : fallbackUnit;
+
         return new WeightEntry(
             new Date(item.date),
             parseFloat(item.value),
             item.id,
             item.notes ?? '',
-            item.extra_data?.unit ?? fallbackUnit,
+            unit,
             item.source ?? 'user',
             item.extra_data ?? {},
         );

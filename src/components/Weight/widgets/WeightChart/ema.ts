@@ -9,7 +9,7 @@ export interface EMADataPoint extends WeightDataPoint {
 
 /**
  * Exponentially weighted moving average over a chronologically ordered series.
- * Smoothing factor is 2 / (period + 1) — e.g. period=10 gives ~0.18.
+ * Smoothing factor is 2 / (period + 1), e.g. period=10 gives ~0.18.
  */
 export const calculateEMA = <T extends WeightDataPoint>(
     weights: T[],

@@ -125,11 +125,12 @@ export interface ApiNutritionalPlanType {
 export interface ApiMeasurementEntryType {
     id: string,
     category: string,
-    date: Date,
+    date: string,
     value: number,
     notes: string,
     source: string,
-    extra_data: { unit?: string },
+    external_id: string | null,
+    extra_data: { unit?: string, [key: string]: unknown },
 }
 
 export interface ApiEquipmentType {

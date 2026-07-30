@@ -33,6 +33,17 @@ describe('WeightEntry', () => {
         });
     });
 
+    test('an unexpected unit from the server falls back to the category unit', () => {
+        const entry = WeightEntry.fromJson({
+            id: 'd-1',
+            date: '2023-01-01T12:00:00Z',
+            value: '80',
+            extra_data: { unit: 'stone' },
+        }, 'lb');
+
+        expect(entry.unit).toBe('lb');
+    });
+
     test('only entries created by the user are editable', () => {
         expect(new WeightEntry(new Date(), 80).isEditable).toBe(true);
         expect(new WeightEntry(new Date(), 80, 'd-1', '', 'kg', 'apple').isEditable).toBe(false);

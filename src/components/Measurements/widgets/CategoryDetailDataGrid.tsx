@@ -165,6 +165,11 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                             icon={<Tooltip title={t('syncedEntryInfo')}><CloudSyncIcon /></Tooltip>}
                             label={t('syncedEntryInfo')}
                             color="inherit"
+                            // a badge, not a button: disabled drops the click
+                            // affordance, the style keeps hover events flowing
+                            // so the tooltip still works
+                            disabled
+                            style={{ pointerEvents: 'auto', cursor: 'default' }}
                         />,
                     ];
                 }
