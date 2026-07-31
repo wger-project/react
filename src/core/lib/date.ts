@@ -1,4 +1,4 @@
-import { FilterType } from "@/components/Weight/widgets/FilterButtons";
+import { FilterType } from "@/components/Weight/api/weight";
 import i18n from 'i18next';
 import { DateTime, DateTimeFormatOptions } from "luxon";
 

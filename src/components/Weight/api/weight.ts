@@ -10,7 +10,8 @@ import { calculatePastDate } from '@/core/lib/date';
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ApiMeasurementCategoryType, ApiMeasurementEntryType } from '@/types';
 import axios from 'axios';
-import { FilterType } from '../widgets/FilterButtons';
+
+export type FilterType = 'lastYear' | 'lastHalfYear' | 'lastMonth' | 'lastWeek' | '';
 
 /*
  * Fetch the user's official body weight category

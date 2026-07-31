@@ -3,6 +3,7 @@ import { MeasurementEntry } from "@/components/Measurements";
 import {
     createWeight,
     deleteWeight,
+    FilterType,
     getBodyWeightCategory,
     getWeights,
     updateWeight
@@ -10,7 +11,6 @@ import {
 import { useProfileQuery } from "@/components/User";
 import { QueryKey, } from "@/core/lib/consts";
 import { WeightUnit } from "@/core/lib/weightUnit";
-import { FilterType } from "../widgets/FilterButtons";
 
 /*
  * The official body weight category basically never changes, resolve it once
