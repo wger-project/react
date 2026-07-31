@@ -335,6 +335,7 @@
     },
     "measurements": {
         "measurements": "Measurements",
+        "reorderCategories": "Reorder categories",
         "unitFormHelpText": "The unit in which the category will be measured, such as cm or %",
         "deleteInfo": "This will delete the category as well as all its entries",
         "deleteInfoGroup": "This will delete the group as well as all its components and their entries",

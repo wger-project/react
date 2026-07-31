@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, Card, CardActions, CardContent, CardHeader, IconButton, Stack, } from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardHeader, IconButton, Stack, Tooltip, } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
+import SortIcon from '@mui/icons-material/Sort';
 import { useTranslation } from "react-i18next";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
@@ -11,6 +12,7 @@ import { AddMeasurementCategoryFab } from "@/components/Measurements/widgets/fab
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { makeLink, WgerLink } from "@/core/lib/url";
 import { Link } from "react-router-dom";
+import { CategoryReorderList } from "@/components/Measurements/widgets/CategoryReorderList";
 import { EntryForm, GroupEntryForm } from "@/components/Measurements/widgets/EntryForm";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 
@@ -51,16 +53,32 @@ export const CategoryList = (props: { category: MeasurementCategory }) => {
 export const MeasurementCategoryOverview = () => {
     const categoryQuery = useMeasurementsCategoryQuery();
     const [t] = useTranslation();
+    const [openReorderModal, setOpenReorderModal] = React.useState(false);
 
     return categoryQuery.isLoading
         ? <LoadingPlaceholder />
-        : <WgerContainerRightSidebar
-            title={t("measurements.measurements")}
-            mainContent={<Stack spacing={2}>
-                {categoryQuery.data!.length === 0 && <OverviewEmpty />}
-                {categoryQuery.data!.map(c => <CategoryList category={c} key={c.id} />)}
-            </Stack>
-            }
-            fab={<AddMeasurementCategoryFab />}
-        />;
+        : <>
+            <WgerContainerRightSidebar
+                title={t("measurements.measurements")}
+                optionsMenu={
+                    <Tooltip title={t('measurements.reorderCategories')}>
+                        <IconButton onClick={() => setOpenReorderModal(true)}>
+                            <SortIcon />
+                        </IconButton>
+                    </Tooltip>
+                }
+                mainContent={<Stack spacing={2}>
+                    {categoryQuery.data!.length === 0 && <OverviewEmpty />}
+                    {categoryQuery.data!.map(c => <CategoryList category={c} key={c.id} />)}
+                </Stack>
+                }
+                fab={<AddMeasurementCategoryFab />}
+            />
+            <WgerModal
+                title={t('measurements.reorderCategories')}
+                isOpen={openReorderModal}
+                closeFn={() => setOpenReorderModal(false)}>
+                <CategoryReorderList categories={categoryQuery.data!} />
+            </WgerModal>
+        </>;
 };

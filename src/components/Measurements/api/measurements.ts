@@ -116,6 +116,14 @@ export const editMeasurementCategory = async (category: MeasurementCategory): Pr
     return MeasurementCategory.fromJson(response.data);
 };
 
+export const updateMeasurementCategoryOrder = async (id: string, order: number): Promise<void> => {
+    await axios.patch(
+        makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: id }),
+        { order: order },
+        { headers: makeHeader() }
+    );
+};
+
 export const deleteMeasurementCategory = async (id: string): Promise<void> => {
     await axios.delete(makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: id }), { headers: makeHeader() });
 };

@@ -7,7 +7,8 @@ import {
     editMeasurementEntry,
     getMeasurementCategories,
     getMeasurementCategory,
-    MeasurementQueryOptions
+    MeasurementQueryOptions,
+    updateMeasurementCategoryOrder
 } from "@/components/Measurements/api/measurements";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
@@ -65,6 +66,20 @@ export const useDeleteMeasurementCategoryQuery = (id: string) => {
     });
 };
 
+
+/** Persists a new top-level category order, the position in the list becomes the order value */
+export const useReorderMeasurementCategoriesQuery = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (categories: MeasurementCategory[]) => Promise.all(
+            categories.map((category, index) => updateMeasurementCategoryOrder(category.id!, index))
+        ),
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
+        })
+    });
+};
 
 export function useMeasurementsQuery(id: string) {
     return useQuery({

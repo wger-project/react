@@ -253,6 +253,7 @@
     "seeDetails": "Ver los detalles",
     "measurements": {
         "measurements": "Mediciones",
+        "reorderCategories": "Reordenar categorías",
         "unitFormHelpText": "La unidad en la que se medirá la categoría, como cm o %",
         "deleteInfo": "Esto eliminará la categoría así como todas sus entradas",
         "deleteInfoGroup": "Esto eliminará el grupo así como todos sus componentes y sus entradas",

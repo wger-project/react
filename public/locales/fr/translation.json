@@ -336,6 +336,7 @@
     "filters": "Filtres",
     "measurements": {
         "measurements": "Mesures",
+        "reorderCategories": "Réorganiser les catégories",
         "unitFormHelpText": "L'unité dans laquelle la catégorie sera mesurée, telle que cm ou %",
         "deleteInfo": "Ceci supprimera la catégorie ainsi que toutes ses entrées",
         "deleteInfoGroup": "Ceci supprimera le groupe ainsi que tous ses composants et leurs entrées",
