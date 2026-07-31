@@ -354,7 +354,10 @@
             "distance": "Distance",
             "energy": "Energy",
             "sleep": "Sleep"
-        }
+        },
+        "indicatorRaw": "raw",
+        "indicatorAvg": "avg",
+        "indicatorTrend": "trend"
     },
     "server": {
         "abs": "Abs",

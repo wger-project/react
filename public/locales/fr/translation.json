@@ -355,7 +355,10 @@
             "distance": "Distance",
             "energy": "Énergie",
             "sleep": "Sommeil"
-        }
+        },
+        "indicatorRaw": "brut",
+        "indicatorAvg": "moy",
+        "indicatorTrend": "tendance"
     },
     "downloadAsPdf": "Télécharger en PDF",
     "calendar": "Calendrier",

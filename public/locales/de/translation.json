@@ -270,7 +270,10 @@
             "distance": "Distanz",
             "energy": "Energie",
             "sleep": "Schlaf"
-        }
+        },
+        "indicatorRaw": "raw",
+        "indicatorAvg": "Durchschn.",
+        "indicatorTrend": "Trend"
     },
     "timeOfDay": "Uhrzeit",
     "notes": "Notizen",

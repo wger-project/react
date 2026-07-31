@@ -272,7 +272,10 @@
             "distance": "Distancia",
             "energy": "Energía",
             "sleep": "Sueño"
-        }
+        },
+        "indicatorRaw": "Bruto",
+        "indicatorAvg": "medio",
+        "indicatorTrend": "tendencia"
     },
     "deleteConfirmation": "¿Estás seguro de que quieres borrar \"{{name}}\"?",
     "nutrition": {
