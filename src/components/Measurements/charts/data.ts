@@ -249,6 +249,27 @@ export const groupComponentSeries = (group: MeasurementCategory): ChartSeries[] 
         label: child.name,
     }));
 
+/**
+ * How the readings of a group are charted.
+ *
+ * Two components are one reading with a low and a high end, so they are drawn
+ * as a bar spanning it. Anything else stays one line per component: more than
+ * two components cannot be a range, and neither can readings that are not
+ * paired, which happens once the date of one half is edited apart from the
+ * other. Without that fallback the card would go blank while there is data.
+ */
+export type GroupChart =
+    | { kind: 'range', points: ChartPoint[] }
+    | { kind: 'components', series: ChartSeries[] };
+
+export const groupChart = (group: MeasurementCategory): GroupChart => {
+    const ranges = group.children.length === 2 ? groupRangeEntries(group) : [];
+
+    return ranges.length > 0
+        ? { kind: 'range', points: ranges }
+        : { kind: 'components', series: groupComponentSeries(group) };
+};
+
 /** Difference between the first and the last point, null for an empty series */
 export const overallChange = (points: ChartPoint[]): number | null =>
     points.length === 0 ? null : points[points.length - 1].value - points[0].value;

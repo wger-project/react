@@ -5,6 +5,7 @@ import {
     chartPointsFor,
     downsample,
     fillMissingDays,
+    groupChart,
     groupComponentSeries,
     groupRangeEntries,
     moving7dAverage,
@@ -283,6 +284,29 @@ describe('groups', () => {
         expect(series.map(s => s.label)).toEqual(['Systolic', 'Diastolic']);
         expect(series.map(s => s.role)).toEqual(['component', 'component']);
         expect(series[0].points.map(p => p.value)).toEqual([120]);
+    });
+
+    test('two components are charted as ranges', () => {
+        const chart = groupChart(bloodPressure([[day(1), 120, 80]]));
+
+        expect(chart.kind).toBe('range');
+    });
+
+    test('a group whose readings are all unpaired falls back to component lines', () => {
+        const chart = groupChart(bloodPressure([[day(1), 120, null], [day(2), 125, null]]));
+
+        expect(chart.kind).toBe('components');
+    });
+
+    test('three components cannot be a range', () => {
+        const group = bloodPressure([[day(1), 120, 80]]);
+        const third = new MeasurementCategory('c-map', 'Mean', 'mmHg', [], 'custom', false, 'g-1', 2);
+        third.entries = [new MeasurementEntry(null, 'c-map', day(1), 93, '')];
+        group.children = [...group.children, third];
+
+        const chart = groupChart(group);
+
+        expect(chart.kind).toBe('components');
     });
 });
 
