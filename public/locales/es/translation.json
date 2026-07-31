@@ -11,7 +11,7 @@
     "nutritionalPlan": "Plan nutricional",
     "submit": "Enviar",
     "weight": "Peso",
-    "syncedEntryInfo": "Esta entrada se ha sincronizado desde una aplicación de salud y solo puede modificarse allí",
+    "syncedEntryInfo": "Esta entrada se sincronizó desde una aplicación de salud y solo se puede cambiar allí",
     "workout": "Entrenamiento",
     "exercises": {
         "secondaryMuscles": "Músculos secundarios",
@@ -255,6 +255,7 @@
         "measurements": "Mediciones",
         "unitFormHelpText": "La unidad en la que se medirá la categoría, como cm o %",
         "deleteInfo": "Esto eliminará la categoría así como todas sus entradas",
+        "deleteInfoGroup": "Esto eliminará el grupo así como todos sus componentes y sus entradas",
         "metricType": "Tipo de métrica",
         "partOfGroup": "Parte del grupo",
         "noGroup": "Sin grupo",

@@ -1,7 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import { MeasurementCard } from "@/components/Dashboard/MeasurementCard";
-import { useMeasurementsCategoryQuery } from "@/components/Measurements";
+import { MeasurementCategory, useMeasurementsCategoryQuery } from "@/components/Measurements";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
 import type { Mock } from 'vitest';
 
@@ -41,6 +42,46 @@ describe("smoke test the MeasurementCard component", () => {
             expect(screen.getAllByText('22 %').length).toBeGreaterThan(0);
             expect(screen.getAllByText('33 %').length).toBeGreaterThan(0);
             expect(screen.getAllByText('44 %').length).toBeGreaterThan(0);
+        });
+    });
+
+
+    describe("Multi-value group", () => {
+
+        beforeEach(() => {
+            const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg');
+            const systolic = new MeasurementCategory('c-sys', 'Systolic', 'mmHg', undefined, 'blood_pressure', false, 'g-1');
+            systolic.entries = [
+                // sorted by date descending, like the server delivers them
+                new MeasurementEntry('d-2', 'c-sys', new Date(2023, 1, 2, 8), 125, ''),
+                new MeasurementEntry('d-1', 'c-sys', new Date(2023, 1, 1, 8), 120, ''),
+            ];
+            const diastolic = new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', undefined, 'blood_pressure', false, 'g-1');
+            group.children = [systolic, diastolic];
+
+            (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
+                isSuccess: true,
+                isLoading: false,
+                data: [group]
+            }));
+        });
+
+        test('lists the latest reading of each component', async () => {
+
+            // Act
+            render(
+                <QueryClientProvider client={queryClient}>
+                    <MeasurementCard />
+                </QueryClientProvider>
+            );
+
+            // Assert
+            expect(screen.getAllByText('Blood pressure').length).toBeGreaterThan(0);
+            expect(screen.getAllByText('Systolic').length).toBeGreaterThan(0);
+            expect(screen.getAllByText('125 mmHg').length).toBeGreaterThan(0);
+            // no reading yet for the diastolic component
+            expect(screen.getAllByText('—').length).toBeGreaterThan(0);
+            expect(screen.queryByText('120 mmHg')).toBeNull();
         });
     });
 

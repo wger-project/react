@@ -92,17 +92,30 @@ const MeasurementCardTableContent = (props: { category: MeasurementCategory }) =
         <Table size="small">
             <TableHead>
                 <TableRow>
-                    <TableCell>{t('date')}</TableCell>
+                    <TableCell>{props.category.isGroup ? t('name') : t('date')}</TableCell>
                     <TableCell>{t('value')}</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
-                {[...props.category.entries].slice(0, 5).map(entry => (
-                    <TableRow key={`measurement-entry-${entry.id}`}>
-                        <TableCell>{entry.date.toLocaleDateString()}</TableCell>
-                        <TableCell>{entry.value} {props.category.unit}</TableCell>
-                    </TableRow>
-                ))}
+                {props.category.isGroup
+                    // group parents hold no entries themselves, list the
+                    // latest reading of each component instead
+                    ? props.category.children.map(child => {
+                        // entries arrive sorted by date descending
+                        const latest = child.entries[0];
+                        return <TableRow key={`measurement-child-${child.id}`}>
+                            <TableCell>{child.name}</TableCell>
+                            <TableCell>
+                                {latest !== undefined ? `${latest.value} ${child.unit || props.category.unit}` : '—'}
+                            </TableCell>
+                        </TableRow>;
+                    })
+                    : [...props.category.entries].slice(0, 5).map(entry => (
+                        <TableRow key={`measurement-entry-${entry.id}`}>
+                            <TableCell>{entry.date.toLocaleDateString()}</TableCell>
+                            <TableCell>{entry.value} {props.category.unit}</TableCell>
+                        </TableRow>
+                    ))}
             </TableBody>
         </Table>
     </>);

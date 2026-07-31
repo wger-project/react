@@ -75,7 +75,7 @@ export const CategoryDetailDropdown = (props: { category: MeasurementCategory })
 
             <DeleteConfirmationModal
                 title={t('deleteConfirmation', { name: props.category.name })}
-                message={t('measurements.deleteInfo')}
+                message={t(props.category.isGroup ? 'measurements.deleteInfoGroup' : 'measurements.deleteInfo')}
                 isOpen={openDeleteModal}
                 closeFn={handleCloseDeleteModal}
                 deleteFn={performDelete}

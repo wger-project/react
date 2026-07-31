@@ -251,6 +251,7 @@
     "success": "Geschafft!",
     "measurements": {
         "deleteInfo": "Dies wird die Kategorie sowie alle seine Einträge löschen",
+        "deleteInfoGroup": "Dies wird die Gruppe sowie alle ihre Komponenten und deren Einträge löschen",
         "unitFormHelpText": "Die Einheit, in der die Kategorie gemessen wird, wie cm oder %",
         "measurements": "Messungen",
         "metricType": "Metrik-Typ",

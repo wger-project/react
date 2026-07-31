@@ -337,6 +337,7 @@
         "measurements": "Measurements",
         "unitFormHelpText": "The unit in which the category will be measured, such as cm or %",
         "deleteInfo": "This will delete the category as well as all its entries",
+        "deleteInfoGroup": "This will delete the group as well as all its components and their entries",
         "metricType": "Metric Type",
         "partOfGroup": "Part of group",
         "noGroup": "No group",
