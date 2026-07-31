@@ -250,6 +250,41 @@ export const groupComponentSeries = (group: MeasurementCategory): ChartSeries[] 
     }));
 
 /**
+ * The values of a category with the average and trend derived from them.
+ *
+ * The points are condensed before anything is derived: a trend line over raw
+ * samples follows the swings within a single day instead of the trend across
+ * weeks, and the average would be as dense as the values it summarises. The
+ * average itself is computed over every point and only condensed afterwards,
+ * so it stays a 7-day average rather than an average of bucket means.
+ */
+export const measurementSeries = (
+    entries: MeasurementEntry[],
+    targetUnit: string,
+    categoryUnit: string,
+): ChartSeries[] => {
+    const points = chartPointsFor(entries, targetUnit, categoryUnit);
+    const condensed = downsample(points);
+    const raw: ChartSeries = { points: condensed, role: 'raw' };
+
+    // A single reading has nothing to average or trend, and recharts draws a
+    // dot for a one-point series even where the dots are turned off
+    if (points.length < 2) {
+        return [raw];
+    }
+
+    return [
+        raw,
+        { points: downsample(moving7dAverage(points)), role: 'average' },
+        { points: smoothedTrendline(condensed), role: 'trend' },
+    ];
+};
+
+/** The points of the series with the given role, empty when there is none */
+export const pointsOfRole = (series: ChartSeries[], role: ChartSeries['role']): ChartPoint[] =>
+    series.find(s => s.role === role)?.points ?? [];
+
+/**
  * How the readings of a group are charted.
  *
  * Two components are one reading with a low and a high end, so they are drawn

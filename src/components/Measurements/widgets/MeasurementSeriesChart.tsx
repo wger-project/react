@@ -1,17 +1,32 @@
 import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import { componentPalette, seriesColor } from "@/components/Measurements/charts/colors";
+import { pointsOfRole } from "@/components/Measurements/charts/data";
 import { dotRadius, useChartWidth } from "@/components/Measurements/charts/density";
 import { dateTick, spansYears, valueWithUnit } from "@/components/Measurements/charts/format";
-import { ChartSeries, ChartSeriesRole, hasRange } from "@/components/Measurements/charts/series";
+import { ChartPoint, ChartSeries, ChartSeriesRole, hasRange } from "@/components/Measurements/charts/series";
 import { ChartEmptyState } from "@/components/Measurements/widgets/ChartEmptyState";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Area, CartesianGrid, ComposedChart, Line, Tooltip, XAxis, YAxis } from "recharts";
+import {
+    Area,
+    CartesianGrid,
+    ComposedChart,
+    Line,
+    ReferenceLine,
+    Tooltip,
+    useXAxisScale,
+    useYAxisScale,
+    XAxis,
+    YAxis
+} from "recharts";
 import { dateToLocale } from "@/core/lib/date";
 import { numberDecimalLocale } from "@/core/lib/numbers";
 
 /** Opacity of the band drawn around a series of ranged points */
 const BAND_OPACITY = 0.15;
+
+/** Point count above which the connectors to the trend stop being readable */
+const MAX_VARIANCE_LINES = 30;
 
 interface TooltipProps {
     active?: boolean;
@@ -118,12 +133,67 @@ export const bandData = (series: ChartSeries): { date: number, range: [number, n
 };
 
 /**
+ * How far each measured value sits from the trend, as a dashed connector.
+ *
+ * Only readable while the values are few enough to tell apart, and only
+ * meaningful where a value and the trend share a date, which they do because
+ * the trend is derived from those very points.
+ */
+const VarianceLines = (props: { raw: ChartPoint[], trend: ChartPoint[] }) => {
+    const xScale = useXAxisScale();
+    const yScale = useYAxisScale();
+    const theme = useTheme();
+
+    if (!xScale || !yScale || props.raw.length > MAX_VARIANCE_LINES) {
+        return null;
+    }
+
+    const trendByDate = new Map(props.trend.map(point => [point.date, point.value]));
+
+    return <g>
+        {props.raw.map(point => {
+            const trend = trendByDate.get(point.date);
+            if (trend === undefined) {
+                return null;
+            }
+
+            const x = xScale(point.date) as number;
+
+            return <line
+                key={point.date}
+                x1={x}
+                y1={yScale(point.value) as number}
+                x2={x}
+                y2={yScale(trend) as number}
+                stroke={point.value > trend ? theme.palette.error.main : theme.palette.success.main}
+                strokeWidth={1}
+                strokeDasharray="2,2"
+                opacity={0.5} />;
+        })}
+    </g>;
+};
+
+export interface MeasurementSeriesChartProps {
+    series: ChartSeries[];
+    unit: string;
+    height?: number;
+
+    /**
+     * Extras the body weight screens had before they moved onto this chart:
+     * the mean of the values as a reference line with the current trend, and
+     * a connector from every value to the trend. Off everywhere else.
+     */
+    showMean?: boolean;
+    showVariance?: boolean;
+}
+
+/**
  * Renders a list of series into one chart, styled by the role of each series.
  *
  * Points that summarise a range get a band around their line, which is what
  * shows the spread of a daily aggregate or of a condensed series.
  */
-export const MeasurementSeriesChart = (props: { series: ChartSeries[], unit: string, height?: number }) => {
+export const MeasurementSeriesChart = (props: MeasurementSeriesChartProps) => {
     const theme = useTheme();
     const [t, i18n] = useTranslation();
     const [chartRef, chartWidth] = useChartWidth();
@@ -155,7 +225,27 @@ export const MeasurementSeriesChart = (props: { series: ChartSeries[], unit: str
 
     const withYear = spansYears(props.series.flatMap(s => s.points));
 
+    const rawPoints = pointsOfRole(props.series, 'raw');
+    const trendPoints = pointsOfRole(props.series, 'trend');
+    const mean = rawPoints.length === 0
+        ? null
+        : rawPoints.reduce((sum, point) => sum + point.value, 0) / rawPoints.length;
+    const currentTrend = trendPoints.at(-1)?.value ?? null;
+
     return <Box ref={chartRef} sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+        {props.showMean && mean !== null && <Stack
+            direction="row"
+            spacing={2}
+            sx={{ alignSelf: 'flex-end', px: 1 }}>
+            <Typography variant="caption" color="text.secondary">
+                {t('mean')}: {valueWithUnit(mean, props.unit, i18n.language)}
+            </Typography>
+            {currentTrend !== null && <Typography
+                variant="caption"
+                sx={{ color: theme.palette.primary.main, fontWeight: 'bold' }}>
+                {t('currentTrend')}: {valueWithUnit(currentTrend, props.unit, i18n.language)}
+            </Typography>}
+        </Stack>}
         <ComposedChart responsive width="90%" height={props.height ?? 200}>
             <CartesianGrid
                 stroke="#ccc"
@@ -172,6 +262,19 @@ export const MeasurementSeriesChart = (props: { series: ChartSeries[], unit: str
                 width="auto"
                 tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
             <Tooltip content={<CustomTooltip unit={props.unit} />} />
+
+            {props.showMean && mean !== null && <ReferenceLine
+                y={mean}
+                stroke={theme.palette.text.secondary}
+                strokeDasharray="5 5"
+                strokeWidth={1.5} />}
+            {props.showMean && currentTrend !== null && <ReferenceLine
+                y={currentTrend}
+                stroke={theme.palette.primary.main}
+                strokeDasharray="3 3"
+                strokeWidth={1}
+                ifOverflow="extendDomain" />}
+            {props.showVariance && <VarianceLines raw={rawPoints} trend={trendPoints} />}
 
             {/* the bands go in first so the lines paint on top of them */}
             {resolved.map(({ series, color, name, key }) => {
