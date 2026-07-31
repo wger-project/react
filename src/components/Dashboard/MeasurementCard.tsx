@@ -3,13 +3,18 @@ import { DashboardCard } from "@/components/Dashboard/DashboardCard";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
 import {
     CategoryForm,
+    componentColor,
+    componentPalette,
+    groupChart,
     MeasurementCategory,
     MeasurementChart,
-    useMeasurementsCategoryQuery
+    useMeasurementsCategoryQuery,
+    valueWithUnit
 } from "@/components/Measurements";
 import i18n from "@/i18n";
 import { makeLink, WgerLink } from "@/core/lib/url";
 import "slick-carousel/slick/slick.css";
+import { Box, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -84,6 +89,12 @@ const MeasurementCardContent = (props: { categories: MeasurementCategory[] }) =>
 const MeasurementCardTableContent = (props: { category: MeasurementCategory }) => {
     const { t } = useTranslation();
 
+    // The dot ties a component row to its line in the chart above. A range is
+    // a single bar, where the ends speak for themselves.
+    const showComponentColors = props.category.isGroup
+        && groupChart(props.category).kind === 'components';
+    const palette = componentPalette(props.category.children.length);
+
     return (<>
         <Typography variant="h6" gutterBottom>
             {props.category.name}
@@ -100,20 +111,40 @@ const MeasurementCardTableContent = (props: { category: MeasurementCategory }) =
                 {props.category.isGroup
                     // group parents hold no entries themselves, list the
                     // latest reading of each component instead
-                    ? props.category.children.map(child => {
+                    ? props.category.children.map((child, index) => {
                         // entries arrive sorted by date descending
                         const latest = child.entries[0];
+                        const unit = child.unit || props.category.unit;
+
                         return <TableRow key={`measurement-child-${child.id}`}>
-                            <TableCell>{child.name}</TableCell>
                             <TableCell>
-                                {latest !== undefined ? `${latest.value} ${child.unit || props.category.unit}` : '—'}
+                                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                                    {showComponentColors && <Box sx={{
+                                        backgroundColor: componentColor(palette, index),
+                                        borderRadius: '50%',
+                                        height: 12,
+                                        width: 12,
+                                    }} />}
+                                    <span>{child.name}</span>
+                                </Stack>
+                            </TableCell>
+                            <TableCell>
+                                {latest !== undefined
+                                    ? valueWithUnit(latest.valueIn(unit, unit), unit, i18n.language)
+                                    : '—'}
                             </TableCell>
                         </TableRow>;
                     })
                     : [...props.category.entries].slice(0, 5).map(entry => (
                         <TableRow key={`measurement-entry-${entry.id}`}>
                             <TableCell>{entry.date.toLocaleDateString()}</TableCell>
-                            <TableCell>{entry.value} {props.category.unit}</TableCell>
+                            <TableCell>
+                                {valueWithUnit(
+                                    entry.valueIn(props.category.unit, props.category.unit),
+                                    props.category.unit,
+                                    i18n.language,
+                                )}
+                            </TableCell>
                         </TableRow>
                     ))}
             </TableBody>

@@ -275,7 +275,8 @@
         },
         "indicatorRaw": "Bruto",
         "indicatorAvg": "medio",
-        "indicatorTrend": "tendencia"
+        "indicatorTrend": "tendencia",
+        "overallChangeWeight": "Cambio general"
     },
     "deleteConfirmation": "¿Estás seguro de que quieres borrar \"{{name}}\"?",
     "nutrition": {

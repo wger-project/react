@@ -358,7 +358,8 @@
         "indicatorRaw": "raw",
         "indicatorAvg": "avg",
         "indicatorTrend": "trend",
-        "noDataAvailable": "No data available"
+        "noDataAvailable": "No data available",
+        "overallChangeWeight": "Overall change"
     },
     "server": {
         "abs": "Abs",

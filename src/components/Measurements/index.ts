@@ -17,6 +17,11 @@ export { API_MEASUREMENTS_CATEGORY_PATH, API_MEASUREMENTS_ENTRY_PATH } from "./a
 // Query hooks
 export { useMeasurementsCategoryQuery } from "./queries";
 
+// Charts
+export { componentColor, componentPalette } from "./charts/colors";
+export { groupChart } from "./charts/data";
+export { valueWithUnit } from "./charts/format";
+
 // Widgets
 export { CategoryForm } from "./widgets/CategoryForm";
 export { MeasurementChart } from "./widgets/MeasurementChart";

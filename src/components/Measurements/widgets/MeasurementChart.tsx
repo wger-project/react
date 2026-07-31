@@ -1,4 +1,4 @@
-import { Box, Paper } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { isSummedPerDay, MeasurementCategory } from "@/components/Measurements/models/Category";
 import {
     aggregatePerDay,
@@ -7,6 +7,7 @@ import {
     fillMissingDays,
     groupChart,
     moving7dAverage,
+    overallChange,
     smoothedTrendline
 } from "@/components/Measurements/charts/data";
 import { MAX_BAR_WIDTH } from "@/components/Measurements/charts/density";
@@ -166,22 +167,37 @@ const MeasurementRangeBarChart = (props: { points: ChartPoint[], unit: string })
  * average itself is computed over every point and only condensed afterwards,
  * so it stays a 7-day average rather than an average of bucket means.
  */
-const measurementSeries = (category: MeasurementCategory): ChartSeries[] => {
-    const points = chartPointsFor(category.entries, category.unit, category.unit);
+const MeasurementLineChart = (props: { category: MeasurementCategory }) => {
+    const [t, i18n] = useTranslation();
+
+    const points = chartPointsFor(props.category.entries, props.category.unit, props.category.unit);
     const condensed = downsample(points);
     const raw: ChartSeries = { points: condensed, role: 'raw' };
 
     // A single reading has nothing to average or trend, and recharts draws a
     // dot for a one-point series even where the dots are turned off
-    if (points.length < 2) {
-        return [raw];
-    }
+    const average = points.length < 2 ? [] : downsample(moving7dAverage(points));
+    const series: ChartSeries[] = points.length < 2
+        ? [raw]
+        : [
+            raw,
+            { points: average, role: 'average' },
+            { points: smoothedTrendline(condensed), role: 'trend' },
+        ];
 
-    return [
-        raw,
-        { points: downsample(moving7dAverage(points)), role: 'average' },
-        { points: smoothedTrendline(condensed), role: 'trend' },
-    ];
+    // Read off the average rather than the values: the first and last reading
+    // are two arbitrary moments of a densely sampled metric
+    const change = overallChange(average);
+
+    return <>
+        <MeasurementSeriesChart series={series} unit={props.category.unit} />
+        {change !== null && <Typography variant="caption" sx={{ textAlign: 'center' }}>
+            {t('measurements.overallChangeWeight')}
+            {' '}
+            {change > 0 ? '+' : change < 0 ? '-' : ''}
+            {valueWithUnit(Math.abs(change), props.category.unit, i18n.language)}
+        </Typography>}
+    </>;
 };
 
 export const MeasurementChart = (props: { category: MeasurementCategory }) => {
@@ -195,7 +211,5 @@ export const MeasurementChart = (props: { category: MeasurementCategory }) => {
 
     return isSummedPerDay(props.category.metricType)
         ? <MeasurementBarChart category={props.category} />
-        : <MeasurementSeriesChart
-            series={measurementSeries(props.category)}
-            unit={props.category.unit} />;
+        : <MeasurementLineChart category={props.category} />;
 };

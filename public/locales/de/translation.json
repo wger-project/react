@@ -273,7 +273,8 @@
         },
         "indicatorRaw": "raw",
         "indicatorAvg": "Durchschn.",
-        "indicatorTrend": "Trend"
+        "indicatorTrend": "Trend",
+        "overallChangeWeight": "Allgemeine Veränderung"
     },
     "timeOfDay": "Uhrzeit",
     "notes": "Notizen",

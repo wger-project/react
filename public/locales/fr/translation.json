@@ -358,7 +358,8 @@
         },
         "indicatorRaw": "brut",
         "indicatorAvg": "moy",
-        "indicatorTrend": "tendance"
+        "indicatorTrend": "tendance",
+        "overallChangeWeight": "Changement global"
     },
     "downloadAsPdf": "Télécharger en PDF",
     "calendar": "Calendrier",

@@ -1,4 +1,5 @@
 import { processTimeSeries } from "@/core/lib/timeSeries";
+import { valueWithUnit } from "@/components/Measurements/charts/format";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
@@ -41,7 +42,7 @@ const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp =>
 
 export const CategoryDetailDataGrid = (props: { category: MeasurementCategory }) => {
 
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
     const data: GridRowsProp = convertEntriesToObj(props.category.entries);
     const updateEntryQuery = useEditMeasurementEntryQuery();
     const deleteEntryQuery = useDeleteMeasurementsQuery();
@@ -102,14 +103,12 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
         {
             field: 'value',
             headerName: t('value'),
-            width: 80,
+            // wide enough for a grouped number plus its unit
+            width: 120,
             editable: true,
-            valueFormatter: (value?: number) => {
-                if (value == null) {
-                    return '';
-                }
-                return value + props.category.unit;
-            },
+            valueFormatter: (value?: number) => value == null
+                ? ''
+                : valueWithUnit(value, props.category.unit, i18n.language),
         },
         {
             field: 'date',

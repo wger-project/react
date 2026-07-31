@@ -1,5 +1,5 @@
 import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
-import { Theme } from "@mui/material/styles";
+import { componentPalette, seriesColor } from "@/components/Measurements/charts/colors";
 import { dotRadius, useChartWidth } from "@/components/Measurements/charts/density";
 import { dateTick, spansYears, valueWithUnit } from "@/components/Measurements/charts/format";
 import { ChartSeries, ChartSeriesRole, hasRange } from "@/components/Measurements/charts/series";
@@ -7,7 +7,6 @@ import { ChartEmptyState } from "@/components/Measurements/widgets/ChartEmptySta
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Area, CartesianGrid, ComposedChart, Line, Tooltip, XAxis, YAxis } from "recharts";
-import { generateChartColors } from "@/core/lib/colors";
 import { dateToLocale } from "@/core/lib/date";
 
 /** Opacity of the band drawn around a series of ranged points */
@@ -37,23 +36,6 @@ const CustomTooltip = ({ active, payload, label, unit }: TooltipProps) => {
             ))}
         </Paper>
     );
-};
-
-/**
- * Colour of a series. Components are coloured by their position so a legend
- * entry and its line match; the other roles have a fixed colour each.
- */
-const seriesColor = (theme: Theme, role: ChartSeriesRole, componentIndex: number, palette: string[]): string => {
-    switch (role) {
-        case 'raw':
-            return theme.palette.primary.main;
-        case 'average':
-            return theme.palette.info.main;
-        case 'trend':
-            return theme.palette.secondary.main;
-        case 'component':
-            return palette[componentIndex % palette.length];
-    }
 };
 
 /** How a series is drawn follows from its role, never from the series itself */
@@ -118,7 +100,7 @@ export const MeasurementSeriesChart = (props: { series: ChartSeries[], unit: str
         component: '',
     };
 
-    const palette = [...generateChartColors(props.series.filter(s => s.role === 'component').length)];
+    const palette = componentPalette(props.series.filter(s => s.role === 'component').length);
     let componentIndex = 0;
     const resolved = props.series.map(series => ({
         series: series,
