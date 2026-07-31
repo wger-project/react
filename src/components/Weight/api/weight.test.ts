@@ -1,6 +1,5 @@
 import axios from "axios";
-import { WeightEntry } from "@/components/Weight/models/WeightEntry";
-import { testBodyWeightCategory } from "@/tests/weight/testData";
+import { testBodyWeightCategory, makeWeightEntry } from "@/tests/weight/testData";
 import { createWeight, deleteWeight, getBodyWeightCategory, getWeights, updateWeight } from "./weight";
 import type { Mock } from 'vitest';
 
@@ -87,8 +86,9 @@ describe("weight service tests", () => {
             expect.anything()
         );
         expect(result).toStrictEqual([
-            new WeightEntry(new Date('2021-12-10'), 80, ENTRY_UUID, '', 'kg', 'user'),
-            new WeightEntry(new Date('2021-12-20'), 90, ENTRY_UUID_2, '', 'lb', 'apple', { unit: 'lb' }),
+            // no unit of its own: the category unit applies when the value is read
+            makeWeightEntry(new Date('2021-12-10'), 80, { id: ENTRY_UUID, source: 'user' }),
+            makeWeightEntry(new Date('2021-12-20'), 90, { id: ENTRY_UUID_2, unit: 'lb', source: 'apple' }),
         ]);
     });
 
@@ -111,14 +111,15 @@ describe("weight service tests", () => {
     test('PATCH weight entry', async () => {
 
         // Arrange
-        const weightEntry = new WeightEntry(new Date('2021-12-10'), 80, ENTRY_UUID);
+        const weightEntry = makeWeightEntry(new Date('2021-12-10'), 80, { id: ENTRY_UUID, unit: 'kg' });
         const weightResponse = {
             data: {
                 id: ENTRY_UUID,
                 category: CATEGORY_UUID,
                 value: 80,
                 date: '2021-12-10',
-                notes: ''
+                notes: '',
+                extra_data: { unit: 'kg' }
             }
         };
 
@@ -131,13 +132,13 @@ describe("weight service tests", () => {
         const [url, body] = (axios.patch as Mock).mock.calls[0];
         expect(url).toContain(`measurement/${ENTRY_UUID}`);
         expect(body).toMatchObject({ value: 80, extra_data: { unit: 'kg' } });
-        expect(result).toStrictEqual(new WeightEntry(new Date('2021-12-10'), 80, ENTRY_UUID));
+        expect(result).toStrictEqual(makeWeightEntry(new Date('2021-12-10'), 80, { id: ENTRY_UUID, unit: 'kg' }));
     });
 
     test('POST a new weight entry', async () => {
 
         // Arrange
-        const weightEntry = new WeightEntry(new Date('2021-12-10'), 80, undefined, '', 'lb');
+        const weightEntry = makeWeightEntry(new Date('2021-12-10'), 80, { unit: 'lb' });
         const weightResponse = {
             data: {
                 id: ENTRY_UUID,
@@ -151,14 +152,14 @@ describe("weight service tests", () => {
 
         // Act
         (axios.post as Mock).mockImplementation(() => Promise.resolve(weightResponse));
-        const result = await createWeight(weightEntry, CATEGORY_UUID);
+        const result = await createWeight(weightEntry);
 
         // Assert
         expect(axios.post).toHaveBeenCalledTimes(1);
         const [, body] = (axios.post as Mock).mock.calls[0];
         expect(body).toMatchObject({ category: CATEGORY_UUID, value: 80, extra_data: { unit: 'lb' } });
         expect(result).toStrictEqual(
-            new WeightEntry(new Date('2021-12-10'), 80, ENTRY_UUID, '', 'lb', 'user', { unit: 'lb' })
+            makeWeightEntry(new Date('2021-12-10'), 80, { id: ENTRY_UUID, unit: 'lb' })
         );
     });
 

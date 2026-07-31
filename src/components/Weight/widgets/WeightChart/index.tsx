@@ -1,4 +1,4 @@
-import { WeightEntry } from "@/components/Weight/models/WeightEntry";
+import { MeasurementEntry } from "@/components/Measurements";
 import { dateToLocale } from "@/core/lib/date";
 import { calculateEMA } from "@/core/lib/ema";
 import { WeightUnit } from "@/core/lib/weightUnit";
@@ -26,8 +26,9 @@ interface EMADataPoint {
 }
 
 export interface WeightChartProps {
-    weights: WeightEntry[],
+    weights: MeasurementEntry[],
     unit: WeightUnit,
+    categoryUnit: string,
     height?: number,
 }
 
@@ -35,12 +36,12 @@ export interface WeightChartProps {
  * Chart data points in the display unit; entries may be stored in mixed
  * units, so every value is converted before anything is derived from it
  */
-export const buildWeightData = (weights: WeightEntry[], unit: WeightUnit) =>
+export const buildWeightData = (weights: MeasurementEntry[], unit: WeightUnit, categoryUnit: string) =>
     [...weights]
         .sort((a, b) => a.date.getTime() - b.date.getTime())
         .map(weight => ({
             date: weight.date.getTime(),
-            weight: weight.valueIn(unit),
+            weight: weight.valueIn(unit, categoryUnit),
         }));
 
 export interface TooltipProps {
@@ -109,11 +110,11 @@ const VarianceLines = ({ emaData }: { emaData: EMADataPoint[] }) => {
     );
 };
 
-export const WeightChart = ({ weights, unit, height = 300 }: WeightChartProps) => {
+export const WeightChart = ({ weights, unit, categoryUnit, height = 300 }: WeightChartProps) => {
     const theme = useTheme();
     const [t] = useTranslation();
 
-    const weightData = buildWeightData(weights, unit);
+    const weightData = buildWeightData(weights, unit, categoryUnit);
 
     const emaData = calculateEMA(weightData, p => p.weight, 10);
 

@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { WeightEntry } from "@/components/Weight/models/WeightEntry";
+import { MeasurementEntry } from "@/components/Measurements";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { dateTimeToLocale } from "@/core/lib/date";
@@ -26,11 +26,12 @@ const Root = styled('div')(() => {
 
 
 export interface WeightTableProps {
-    weights: WeightEntry[];
+    weights: MeasurementEntry[];
     unit: WeightUnit;
+    categoryUnit: string;
 }
 
-export const WeightTableDashboard = ({ weights, unit }: WeightTableProps) => {
+export const WeightTableDashboard = ({ weights, unit, categoryUnit }: WeightTableProps) => {
     const [t] = useTranslation();
 
     const WEIGHT_ENTRIES_TO_SHOW = 5;
@@ -51,7 +52,7 @@ export const WeightTableDashboard = ({ weights, unit }: WeightTableProps) => {
                         {filteredWeight.map((row) => (
                             <TableRow key={row.date.toISOString()}>
                                 <TableCell>{dateTimeToLocale(row.date)}</TableCell>
-                                <TableCell>{row.valueIn(unit)}</TableCell>
+                                <TableCell>{row.valueIn(unit, categoryUnit)}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

@@ -1,7 +1,8 @@
 import { Button, Stack, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { WeightEntry } from "@/components/Weight/models/WeightEntry";
+import { MeasurementEntry } from "@/components/Measurements";
+import { extraDataInUnit, weightUnitOf } from "@/components/Weight/models/bodyWeight";
 import {
     useAddWeightEntryQuery,
     useBodyWeightCategoryQuery,
@@ -18,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import * as yup from 'yup';
 
 interface WeightFormProps {
-    weightEntry?: WeightEntry,
+    weightEntry?: MeasurementEntry,
     closeFn?: () => void,
 }
 
@@ -57,12 +58,14 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
         return <LoadingPlaceholder />;
     }
 
+    const category = categoryQuery.data!;
+
     return (
         (<Formik
             initialValues={{
                 // when editing, show the value in the unit it was entered in
-                weight: weightEntry ? weightEntry.weight : 0,
-                unit: weightEntry ? weightEntry.unit : displayUnit,
+                weight: weightEntry ? weightEntry.value : 0,
+                unit: weightEntry ? weightUnitOf(weightEntry, category.unit) : displayUnit,
                 date: weightEntry ? weightEntry.date : new Date(),
             }}
             validationSchema={validationSchema}
@@ -70,14 +73,23 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
                 // Edit existing weight entry
                 if (weightEntry) {
-                    editWeightQuery.mutate(WeightEntry.clone(
-                        weightEntry,
-                        { weight: values.weight, date: values.date, unit: values.unit }
-                    ));
+                    editWeightQuery.mutate(MeasurementEntry.clone(weightEntry, {
+                        value: values.weight,
+                        date: values.date,
+                        extraData: extraDataInUnit(weightEntry, values.unit),
+                    }));
 
                     // Create a new weight entry
                 } else {
-                    addWeightQuery.mutate(new WeightEntry(values.date, values.weight, undefined, '', values.unit));
+                    addWeightQuery.mutate(new MeasurementEntry(
+                        null,
+                        category.id!,
+                        values.date,
+                        values.weight,
+                        '',
+                        'user',
+                        { unit: values.unit },
+                    ));
                 }
 
                 if (closeFn) {

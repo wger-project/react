@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { useDisplayWeightUnit } from "@/components/Weight";
+import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Weight";
 import { dateToLocale } from "@/core/lib/date";
 import { DayProps } from "./CalendarComponent";
 
@@ -24,6 +24,8 @@ interface LogProps {
 const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
     const [t] = useTranslation();
     const displayWeightUnit = useDisplayWeightUnit();
+    // Entries without their own unit fall back to the one of the category
+    const categoryUnit = useBodyWeightCategoryQuery().data?.unit ?? 'kg';
 
     const [openMeasurements, setOpenMeasurements] = React.useState(false);
     const [openSession, setOpenSession] = React.useState(false);
@@ -67,7 +69,7 @@ const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
                         <ListItem>
                             <ListItemText
                                 primary={t("weight")}
-                                secondary={`${selectedDay.weightEntry.valueIn(displayWeightUnit).toFixed(1)} ${t(`server.${displayWeightUnit}`)}`}
+                                secondary={`${selectedDay.weightEntry.valueIn(displayWeightUnit, categoryUnit).toFixed(1)} ${t(`server.${displayWeightUnit}`)}`}
                                 sx={{ pl: 2 }}
                             />
                         </ListItem>}

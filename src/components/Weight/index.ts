@@ -8,6 +8,6 @@ export { BodyWeight } from "./screens/BodyWeight";
 export { WeightForm } from "./forms/WeightForm";
 export { WeightTableDashboard } from "./widgets/TableDashboard/TableDashboard";
 export { WeightChart } from "./widgets/WeightChart";
-export { WeightEntry } from "./models/WeightEntry";
-export { useBodyWeightQuery, useDisplayWeightUnit } from "./queries";
+export { extraDataInUnit, weightUnitOf } from "./models/bodyWeight";
+export { useBodyWeightCategoryQuery, useBodyWeightQuery, useDisplayWeightUnit } from "./queries";
 export type { FilterType } from "./widgets/FilterButtons";

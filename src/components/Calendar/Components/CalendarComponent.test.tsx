@@ -1,12 +1,11 @@
 import { MeasurementCategory, MeasurementEntry } from "@/components/Measurements";
-import { WeightEntry } from "@/components/Weight";
 import { getMeasurementCategories } from "@/components/Measurements/api/measurements";
 import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutritionalDiary";
 import { getSessions } from "@/components/Routines/api/session";
 import { getBodyWeightCategory, getWeights } from "@/components/Weight/api/weight";
 import { TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2 } from "@/tests/nutritionDiaryTestdata";
 import { testQueryClient } from "@/tests/queryClient";
-import { testBodyWeightCategory } from "@/tests/weight/testData";
+import { testBodyWeightCategory, makeWeightEntry } from "@/tests/weight/testData";
 import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
 import { dateToYYYYMMDD } from "@/core/lib/date";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -44,10 +43,7 @@ describe('CalendarComponent', () => {
 
         (getBodyWeightCategory as Mock).mockImplementation(() => Promise.resolve(testBodyWeightCategory));
         (getWeights as Mock).mockImplementation(() => Promise.resolve([
-            new WeightEntry(
-                new Date(currentYear, currentMonth, 2, 12, 0),
-                70
-            ),
+            makeWeightEntry(new Date(currentYear, currentMonth, 2, 12, 0), 70),
         ]));
 
         (getSessions as Mock).mockImplementation(() => Promise.resolve(

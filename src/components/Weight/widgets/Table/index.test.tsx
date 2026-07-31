@@ -1,7 +1,8 @@
+import { MeasurementEntry } from "@/components/Measurements";
+import { makeWeightEntry } from "@/tests/weight/testData";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
-import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "@/components/Weight/queries";
 import { BrowserRouter } from "react-router-dom";
 import { testQueryClient } from "@/tests/queryClient";
@@ -10,11 +11,11 @@ import { WeightTable } from './index';
 
 vi.mock("@/components/Weight/queries");
 
-const renderTable = (weights: WeightEntry[]) =>
+const renderTable = (weights: MeasurementEntry[]) =>
     render(
         <BrowserRouter>
             <QueryClientProvider client={testQueryClient}>
-                <WeightTable weights={weights} unit="kg" />
+                <WeightTable weights={weights} unit="kg" categoryUnit="kg" />
             </QueryClientProvider>
         </BrowserRouter>
     );
@@ -31,9 +32,9 @@ describe("Body weight table", () => {
     });
 
     test('renders rows for all weight entries', async () => {
-        const weights: WeightEntry[] = [
-            new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1),
-            new WeightEntry(new Date('2021/12/20'), 90, ENTRY_UUID_2),
+        const weights: MeasurementEntry[] = [
+            makeWeightEntry(new Date('2021/12/10'), 80, { id: ENTRY_UUID_1 }),
+            makeWeightEntry(new Date('2021/12/20'), 90, { id: ENTRY_UUID_2 }),
         ];
 
         renderTable(weights);
@@ -43,10 +44,10 @@ describe("Body weight table", () => {
     });
 
     test('displays total change column correctly', async () => {
-        const weights: WeightEntry[] = [
-            new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1),
-            new WeightEntry(new Date('2021/12/20'), 90, ENTRY_UUID_2),
-            new WeightEntry(new Date('2021/12/25'), 85, ENTRY_UUID_3),
+        const weights: MeasurementEntry[] = [
+            makeWeightEntry(new Date('2021/12/10'), 80, { id: ENTRY_UUID_1 }),
+            makeWeightEntry(new Date('2021/12/20'), 90, { id: ENTRY_UUID_2 }),
+            makeWeightEntry(new Date('2021/12/25'), 85, { id: ENTRY_UUID_3 }),
         ];
 
         renderTable(weights);
@@ -65,7 +66,7 @@ describe("Body weight table", () => {
     });
 
     test('shows inline edit and delete actions per row', async () => {
-        const weights: WeightEntry[] = [new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1)];
+        const weights: MeasurementEntry[] = [makeWeightEntry(new Date('2021/12/10'), 80, { id: ENTRY_UUID_1 })];
         renderTable(weights);
 
         await screen.findByText('80');
@@ -75,9 +76,9 @@ describe("Body weight table", () => {
 
     test('converts mixed units to the display unit, including aggregations', async () => {
         // 90 lb = 40.82 kg, entered a day after the 80 kg entry
-        const weights: WeightEntry[] = [
-            new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1, '', 'kg'),
-            new WeightEntry(new Date('2021/12/11'), 90, ENTRY_UUID_2, '', 'lb'),
+        const weights: MeasurementEntry[] = [
+            makeWeightEntry(new Date('2021/12/10'), 80, { id: ENTRY_UUID_1, unit: 'kg' }),
+            makeWeightEntry(new Date('2021/12/11'), 90, { id: ENTRY_UUID_2, unit: 'lb' }),
         ];
 
         renderTable(weights);
@@ -98,8 +99,8 @@ describe("Body weight table", () => {
         const mutateEditMock = vi.fn();
         (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
         // stored as 90 lb, displayed as 40.82 kg
-        const weights: WeightEntry[] = [
-            new WeightEntry(new Date('2021/12/10'), 90, ENTRY_UUID_1, '', 'lb'),
+        const weights: MeasurementEntry[] = [
+            makeWeightEntry(new Date('2021/12/10'), 90, { id: ENTRY_UUID_1, unit: 'lb' }),
         ];
 
         renderTable(weights);
@@ -109,17 +110,17 @@ describe("Body weight table", () => {
 
         // the displayed conversion must not be written back to the entry
         expect(mutateEditMock).toHaveBeenCalled();
-        const submitted = mutateEditMock.mock.calls[0][0] as WeightEntry;
-        expect(Number(submitted.weight)).toBe(90);
-        expect(submitted.unit).toBe('lb');
+        const submitted = mutateEditMock.mock.calls[0][0] as MeasurementEntry;
+        expect(Number(submitted.value)).toBe(90);
+        expect(submitted.extraData.unit).toBe('lb');
     });
 
     test('editing the weight cell stamps the display unit', async () => {
         const user = userEvent.setup();
         const mutateEditMock = vi.fn();
         (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
-        const weights: WeightEntry[] = [
-            new WeightEntry(new Date('2021/12/10'), 90, ENTRY_UUID_1, '', 'lb'),
+        const weights: MeasurementEntry[] = [
+            makeWeightEntry(new Date('2021/12/10'), 90, { id: ENTRY_UUID_1, unit: 'lb' }),
         ];
 
         renderTable(weights);
@@ -134,17 +135,17 @@ describe("Body weight table", () => {
         await user.click(screen.getByRole('menuitem', { name: /save/i }));
 
         expect(mutateEditMock).toHaveBeenCalled();
-        const submitted = mutateEditMock.mock.calls[0][0] as WeightEntry;
-        expect(Number(submitted.weight)).toBe(41);
-        expect(submitted.unit).toBe('kg');
+        const submitted = mutateEditMock.mock.calls[0][0] as MeasurementEntry;
+        expect(Number(submitted.value)).toBe(41);
+        expect(submitted.extraData.unit).toBe('kg');
     });
 
     test('implausible inline edits are rejected and the row stays editable', async () => {
         const user = userEvent.setup();
         const mutateEditMock = vi.fn();
         (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
-        const weights: WeightEntry[] = [
-            new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1, '', 'kg'),
+        const weights: MeasurementEntry[] = [
+            makeWeightEntry(new Date('2021/12/10'), 80, { id: ENTRY_UUID_1, unit: 'kg' }),
         ];
 
         renderTable(weights);
@@ -166,13 +167,13 @@ describe("Body weight table", () => {
         await user.type(weightInput, '90');
         await user.click(screen.getByRole('menuitem', { name: /save/i }));
         expect(mutateEditMock).toHaveBeenCalled();
-        const submitted = mutateEditMock.mock.calls[0][0] as WeightEntry;
-        expect(Number(submitted.weight)).toBe(90);
+        const submitted = mutateEditMock.mock.calls[0][0] as MeasurementEntry;
+        expect(Number(submitted.value)).toBe(90);
     });
 
     test('entries synced from a health app offer no edit or delete actions', async () => {
-        const weights: WeightEntry[] = [
-            new WeightEntry(new Date('2021/12/10'), 80, ENTRY_UUID_1, '', 'kg', 'apple'),
+        const weights: MeasurementEntry[] = [
+            makeWeightEntry(new Date('2021/12/10'), 80, { id: ENTRY_UUID_1, unit: 'kg', source: 'apple' }),
         ];
 
         renderTable(weights);

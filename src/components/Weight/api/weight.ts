@@ -2,12 +2,11 @@ import {
     API_MEASUREMENTS_CATEGORY_PATH,
     API_MEASUREMENTS_ENTRY_PATH,
     MeasurementCategory,
+    MeasurementEntry,
     METRIC_TYPE_BODY_WEIGHT
 } from "@/components/Measurements";
-import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import { ResponseType } from "@/core/api/responseType";
 import { calculatePastDate } from '@/core/lib/date';
-import { WeightUnit } from "@/core/lib/weightUnit";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ApiMeasurementCategoryType, ApiMeasurementEntryType } from '@/types';
 import axios from 'axios';
@@ -37,10 +36,8 @@ export const getBodyWeightCategory = async (): Promise<MeasurementCategory> => {
 
 /*
  * Fetch weight entries based on filter value
- *
- * Entries without their own unit in extra_data fall back to the category unit
  */
-export const getWeights = async (category: MeasurementCategory, filter: FilterType = ''): Promise<WeightEntry[]> => {
+export const getWeights = async (category: MeasurementCategory, filter: FilterType = ''): Promise<MeasurementEntry[]> => {
     const date__gte = calculatePastDate(filter);
 
     const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
@@ -55,8 +52,7 @@ export const getWeights = async (category: MeasurementCategory, filter: FilterTy
         headers: makeHeader(),
     });
 
-    const fallbackUnit: WeightUnit = category.unit === 'lb' ? 'lb' : 'kg';
-    return data.results.map(entry => WeightEntry.fromJson(entry, fallbackUnit));
+    return data.results.map(entry => MeasurementEntry.fromJson(entry));
 };
 
 /*
@@ -73,23 +69,23 @@ export const deleteWeight = async (id: string): Promise<number> => {
 /*
  * Update a weight entry
  */
-export const updateWeight = async (entry: WeightEntry): Promise<WeightEntry> => {
-    const response = await axios.patch(makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: entry.id }), entry.toJson(), {
+export const updateWeight = async (entry: MeasurementEntry): Promise<MeasurementEntry> => {
+    const response = await axios.patch(makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: entry.id! }), entry.toJson(), {
         headers: makeHeader(),
     });
 
-    return WeightEntry.fromJson(response.data, entry.unit);
+    return MeasurementEntry.fromJson(response.data);
 };
 
 /*
  * Add a new weight entry to the official body weight category
  */
-export const createWeight = async (entry: WeightEntry, categoryId: string): Promise<WeightEntry> => {
+export const createWeight = async (entry: MeasurementEntry): Promise<MeasurementEntry> => {
     const response = await axios.post(
         makeUrl(API_MEASUREMENTS_ENTRY_PATH),
-        { ...entry.toJson(), category: categoryId },
+        entry.toJson(),
         { headers: makeHeader() },
     );
 
-    return WeightEntry.fromJson(response.data, entry.unit);
+    return MeasurementEntry.fromJson(response.data);
 };

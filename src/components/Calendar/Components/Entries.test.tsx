@@ -1,6 +1,9 @@
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { WeightEntry } from '@/components/Weight';
+import { MeasurementEntry } from "@/components/Measurements";
+import { testQueryClient } from "@/tests/queryClient";
+import { makeWeightEntry } from "@/tests/weight/testData";
 import React from 'react';
 import { dateToLocale } from "@/core/lib/date";
 import { DayProps } from './CalendarComponent';
@@ -13,10 +16,7 @@ vi.mock('@/components/User/queries/profile', () => ({
 describe('Entries Component', () => {
     const mockDate = new Date('2025-4-25');
 
-    const mockWeightEntry: WeightEntry = new WeightEntry(
-        mockDate,
-        75.5
-    );
+    const mockWeightEntry: MeasurementEntry = makeWeightEntry(mockDate, 75.5);
 
     const defaultProps: DayProps = {
         date: mockDate,
@@ -27,7 +27,11 @@ describe('Entries Component', () => {
     };
 
     test('Correctly shows date and title', () => {
-        render(<Entries selectedDay={defaultProps} />);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={defaultProps} />
+            </QueryClientProvider>
+        );
 
         expect(screen.getByText(/entries/i)).toBeInTheDocument();
         expect(screen.getByText(dateToLocale(mockDate), { exact: false })).toBeInTheDocument();
@@ -39,7 +43,11 @@ describe('Entries Component', () => {
             weightEntry: mockWeightEntry
         };
 
-        render(<Entries selectedDay={propsWithWeight} />);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithWeight} />
+            </QueryClientProvider>
+        );
 
         expect(screen.getByText('weight')).toBeInTheDocument();
         expect(screen.getByText('75.5 server.kg')).toBeInTheDocument();
@@ -53,7 +61,11 @@ describe('Entries Component', () => {
             ]
         };
 
-        render(<Entries selectedDay={propsWithOneMeasurement} />);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithOneMeasurement} />
+            </QueryClientProvider>
+        );
 
         expect(screen.getByText('measurements.measurements')).toBeInTheDocument();
         expect(screen.getByText('Chest size: 95 cm')).toBeInTheDocument();
@@ -68,7 +80,11 @@ describe('Entries Component', () => {
             ]
         };
 
-        render(<Entries selectedDay={propsWithMultipleMeasurements} />);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithMultipleMeasurements} />
+            </QueryClientProvider>
+        );
 
         // Initially only the header is visible
         expect(screen.getByText('measurements.measurements')).toBeInTheDocument();

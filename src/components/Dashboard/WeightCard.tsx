@@ -1,11 +1,12 @@
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
+import { MeasurementEntry } from "@/components/Measurements";
 import {
+    useBodyWeightCategoryQuery,
     useBodyWeightQuery,
     useDisplayWeightUnit,
     WeightChart,
-    WeightEntry,
     WeightForm,
     WeightTableDashboard
 } from "@/components/Weight";
@@ -31,12 +32,16 @@ export const WeightCard = () => {
         <EmptyCard title={t("weight")} modalContent={<WeightForm />} />
     );
 };
-export const WeightCardContent = (props: { entries: WeightEntry[] }) => {
+export const WeightCardContent = (props: { entries: MeasurementEntry[] }) => {
     const [openModal, setOpenModal] = React.useState(false);
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
     const [t, i18n] = useTranslation();
     const displayUnit = useDisplayWeightUnit();
+    const categoryQuery = useBodyWeightCategoryQuery();
+
+    // Entries without their own unit fall back to the one of the category
+    const categoryUnit = categoryQuery.data?.unit ?? 'kg';
 
     return (
         <>
@@ -56,9 +61,16 @@ export const WeightCardContent = (props: { entries: WeightEntry[] }) => {
                     </>
                 }
             >
-                <WeightChart weights={props.entries} unit={displayUnit} height={200} />
+                <WeightChart
+                    weights={props.entries}
+                    unit={displayUnit}
+                    categoryUnit={categoryUnit}
+                    height={200} />
                 <Box sx={{ mt: 2 }}>
-                    <WeightTableDashboard weights={props.entries} unit={displayUnit} />
+                    <WeightTableDashboard
+                        weights={props.entries}
+                        unit={displayUnit}
+                        categoryUnit={categoryUnit} />
                 </Box>
             </DashboardCard>
 

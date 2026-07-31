@@ -54,7 +54,7 @@ export class MeasurementEntry {
             : value;
     }
 
-    static clone(other: MeasurementEntry, overrides?: Partial<Pick<MeasurementEntry, 'id' | 'category' | 'date' | 'value' | 'notes'>>): MeasurementEntry {
+    static clone(other: MeasurementEntry, overrides?: Partial<Pick<MeasurementEntry, 'id' | 'category' | 'date' | 'value' | 'notes' | 'extraData'>>): MeasurementEntry {
         return new MeasurementEntry(
             overrides?.id ?? other.id,
             overrides?.category ?? other.category,
@@ -62,7 +62,7 @@ export class MeasurementEntry {
             overrides?.value ?? other.value,
             overrides?.notes ?? other.notes,
             other.source,
-            other.extraData,
+            overrides?.extraData ?? other.extraData,
         );
     }
 

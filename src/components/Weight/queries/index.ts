@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { WeightEntry } from "@/components/Weight/models/WeightEntry";
+import { MeasurementEntry } from "@/components/Measurements";
 import {
     createWeight,
     deleteWeight,
@@ -63,10 +63,7 @@ export const useAddWeightEntryQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (weightEntry: WeightEntry) => {
-            const category = await queryClient.ensureQueryData(bodyWeightCategoryQueryOptions);
-            return createWeight(weightEntry, category.id!);
-        },
+        mutationFn: (weightEntry: MeasurementEntry) => createWeight(weightEntry),
         onSuccess: () => queryClient.invalidateQueries({
             queryKey: [QueryKey.BODY_WEIGHT,]
         })
@@ -77,7 +74,7 @@ export const useEditWeightEntryQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: WeightEntry) => updateWeight(data),
+        mutationFn: (data: MeasurementEntry) => updateWeight(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.BODY_WEIGHT,]

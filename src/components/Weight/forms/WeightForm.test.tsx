@@ -1,9 +1,9 @@
+import { MeasurementEntry } from "@/components/Measurements";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { useProfileQuery } from "@/components/User";
 import { WeightForm } from "@/components/Weight/forms/WeightForm";
-import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import {
     useAddWeightEntryQuery,
     useBodyWeightCategoryQuery,
@@ -12,7 +12,7 @@ import {
 } from "@/components/Weight/queries";
 import React from 'react';
 import { testQueryClient } from "@/tests/queryClient";
-import { testBodyWeightCategory } from "@/tests/weight/testData";
+import { testBodyWeightCategory, makeWeightEntry } from "@/tests/weight/testData";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Weight/queries");
@@ -54,11 +54,7 @@ describe("Test WeightForm component", () => {
     test('Passing an existing entry renders its values in the form', () => {
 
         // Arrange
-        const weightEntry = new WeightEntry(
-            new Date('2021-12-10 17:00'),
-            80,
-            ENTRY_UUID,
-        );
+        const weightEntry = makeWeightEntry(new Date('2021-12-10 17:00'), 80, { id: ENTRY_UUID });
 
         // Act
         render(
@@ -81,11 +77,7 @@ describe("Test WeightForm component", () => {
         const user = userEvent.setup();
         const mutateEditMock = vi.fn();
         (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
-        const weightEntry = new WeightEntry(
-            new Date('2022-02-28'),
-            80,
-            ENTRY_UUID
-        );
+        const weightEntry = makeWeightEntry(new Date('2022-02-28'), 80, { id: ENTRY_UUID });
 
         // Act
         render(
@@ -103,13 +95,13 @@ describe("Test WeightForm component", () => {
         await waitFor(() => {
             expect(mutateEditMock).toHaveBeenCalled();
         });
-        const submitted = mutateEditMock.mock.calls[0][0] as WeightEntry;
+        const submitted = mutateEditMock.mock.calls[0][0] as MeasurementEntry;
         expect(submitted).not.toBe(weightEntry);
-        expect(Number(submitted.weight)).toBe(82);
+        expect(Number(submitted.value)).toBe(82);
         expect(submitted.id).toBe(ENTRY_UUID);
 
         // ...and does not mutate the passed-in entry (it comes from the query cache)
-        expect(weightEntry.weight).toBe(80);
+        expect(weightEntry.value).toBe(80);
     });
 
     test('Creating a new weight entry', async () => {
@@ -147,7 +139,7 @@ describe("Test WeightForm component", () => {
         const user = userEvent.setup();
         render(
             <QueryClientProvider client={testQueryClient}>
-                <WeightForm weightEntry={new WeightEntry(new Date('2022-02-28'), 80, ENTRY_UUID)} />
+                <WeightForm weightEntry={makeWeightEntry(new Date('2022-02-28'), 80, { id: ENTRY_UUID })} />
             </QueryClientProvider>
         );
         const weightInput = await screen.findByLabelText('weight');
@@ -190,9 +182,9 @@ describe("Test WeightForm component", () => {
         // ...and can be submitted with the lb unit stamped
         await user.click(screen.getByRole('button', { name: 'submit' }));
         await waitFor(() => expect(mutateAddMock).toHaveBeenCalled());
-        const submitted = mutateAddMock.mock.calls[0][0] as WeightEntry;
-        expect(submitted.unit).toBe('lb');
-        expect(Number(submitted.weight)).toBe(320);
+        const submitted = mutateAddMock.mock.calls[0][0] as MeasurementEntry;
+        expect(submitted.extraData.unit).toBe('lb');
+        expect(Number(submitted.value)).toBe(320);
 
         // Act + Assert: 35 lb is below the lb minimum of 66
         await user.clear(weightInput);

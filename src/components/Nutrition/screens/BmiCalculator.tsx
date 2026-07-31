@@ -1,6 +1,6 @@
 import { Box, Stack, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { useBodyWeightQuery } from "@/components/Weight";
+import { useBodyWeightCategoryQuery, useBodyWeightQuery } from "@/components/Weight";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { useProfileQuery } from "@/components/User";
@@ -24,7 +24,10 @@ export const BmiCalculator = () => {
     const [t] = useTranslation();
 
     const weightQuery = useBodyWeightQuery();
+    const categoryQuery = useBodyWeightCategoryQuery();
     const profileQuery = useProfileQuery();
+    // Entries without their own unit fall back to the one of the category
+    const categoryUnit = categoryQuery.data?.unit ?? 'kg';
 
     const [height, setHeight] = useState<number | null>();
     const [weight, setWeight] = useState<number | null>();
@@ -32,9 +35,9 @@ export const BmiCalculator = () => {
     // Set default weight from last weight entry, the BMI is always computed in kg
     useEffect(() => {
         if (weightQuery.data && weightQuery.data.length > 0) {
-            setWeight(weightQuery.data[0].valueIn('kg'));
+            setWeight(weightQuery.data[0].valueIn('kg', categoryUnit));
         }
-    }, [weightQuery.data]);
+    }, [weightQuery.data, categoryUnit]);
 
     useEffect(() => {
         if (profileQuery.data?.height) {

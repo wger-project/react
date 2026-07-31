@@ -10,6 +10,7 @@ vi.mock('@/components/Weight/queries', () => ({
         isLoading: false,
         data: [{ weight: 55, unit: 'kg', valueIn: () => 55, date: new Date() }], // Provide mock weight data
     }),
+    useBodyWeightCategoryQuery: () => ({ isLoading: false, data: { unit: 'kg' } }),
 }));
 
 vi.mock('@/components/User/queries/profile', () => ({

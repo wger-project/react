@@ -16,7 +16,8 @@ import {
     GridRowModesModel,
     GridRowsProp,
 } from "@mui/x-data-grid";
-import { WeightEntry } from "@/components/Weight/models/WeightEntry";
+import { MeasurementEntry } from "@/components/Measurements";
+import { extraDataInUnit } from "@/components/Weight/models/bodyWeight";
 import { WeightEntryFab } from "@/components/Weight/widgets/Table/Fab/Fab";
 import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "@/components/Weight/queries";
 import { processTimeSeries } from "@/core/lib/timeSeries";
@@ -28,24 +29,25 @@ import { PAGINATION_OPTIONS } from "@/core/lib/consts";
 import { luxonDateTimeToLocale } from "@/core/lib/date";
 
 export interface WeightTableProps {
-    weights: WeightEntry[];
+    weights: MeasurementEntry[];
     unit: WeightUnit;
+    categoryUnit: string;
 }
 
-const buildRows = (weights: WeightEntry[], unit: WeightUnit): GridRowsProp =>
-    processTimeSeries(weights, e => e.valueIn(unit)).map((row) => ({
+const buildRows = (weights: MeasurementEntry[], unit: WeightUnit, categoryUnit: string): GridRowsProp =>
+    processTimeSeries(weights, e => e.valueIn(unit, categoryUnit)).map((row) => ({
         id: row.entry.id,
         date: row.entry.date,
-        weight: row.entry.valueIn(unit),
+        weight: row.entry.valueIn(unit, categoryUnit),
         isEditable: row.entry.isEditable,
         change: +row.change.toFixed(2),
         totalChange: +row.totalChange.toFixed(2),
         days: +row.days.toFixed(1),
     }));
 
-export const WeightTable = ({ weights, unit }: WeightTableProps) => {
+export const WeightTable = ({ weights, unit, categoryUnit }: WeightTableProps) => {
     const [t] = useTranslation();
-    const rows = buildRows(weights, unit);
+    const rows = buildRows(weights, unit, categoryUnit);
     const editEntryQuery = useEditWeightEntryQuery();
     const deleteEntryQuery = useDeleteWeightEntryQuery();
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -85,7 +87,7 @@ export const WeightTable = ({ weights, unit }: WeightTableProps) => {
         // and unit, so both only change when the weight cell was edited: the
         // typed value is then stamped with the display unit the column shows
         if (Number(newRow.weight) === Number(oldRow.weight)) {
-            editEntryQuery.mutate(WeightEntry.clone(entry, { date }));
+            editEntryQuery.mutate(MeasurementEntry.clone(entry, { date: date }));
         } else {
             // the typed value is in the display unit the column header shows;
             // throwing keeps the row in edit mode so it can be corrected
@@ -97,7 +99,11 @@ export const WeightTable = ({ weights, unit }: WeightTableProps) => {
             if (weight > max) {
                 throw new Error(t('forms.maxValue', { value: `${max} ${t(`server.${unit}`)}` }));
             }
-            editEntryQuery.mutate(WeightEntry.clone(entry, { date, weight, unit: unit }));
+            editEntryQuery.mutate(MeasurementEntry.clone(entry, {
+                date: date,
+                value: weight,
+                extraData: extraDataInUnit(entry, unit),
+            }));
         }
         return newRow;
     };

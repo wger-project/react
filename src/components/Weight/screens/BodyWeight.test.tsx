@@ -1,9 +1,8 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { WeightEntry } from "@/components/Weight/models/WeightEntry";
 import { getBodyWeightCategory, getWeights } from "@/components/Weight/api/weight";
 import { testQueryClient } from "@/tests/queryClient";
-import { testBodyWeightCategory } from "@/tests/weight/testData";
+import { testBodyWeightCategory, makeWeightEntry } from "@/tests/weight/testData";
 import { BodyWeight } from "./BodyWeight";
 import { FilterType } from "../widgets/FilterButtons";
 import type { Mock } from 'vitest';
@@ -28,8 +27,8 @@ describe("Test BodyWeight component", () => {
 
     // Arrange
     const weightData = [
-        new WeightEntry(new Date('2021-12-10'), 80, 'dddddddd-dddd-dddd-dddd-000000000001'),
-        new WeightEntry(new Date('2021-12-20'), 90, 'dddddddd-dddd-dddd-dddd-000000000002'),
+        makeWeightEntry(new Date('2021-12-10'), 80, { id: 'dddddddd-dddd-dddd-dddd-000000000001' }),
+        makeWeightEntry(new Date('2021-12-20'), 90, { id: 'dddddddd-dddd-dddd-dddd-000000000002' }),
     ];
 
     test('renders without crashing', async () => {
