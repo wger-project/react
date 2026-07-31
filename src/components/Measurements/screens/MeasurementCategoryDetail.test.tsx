@@ -7,6 +7,10 @@ import React from 'react';
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import type { Mock } from 'vitest';
 
+vi.mock('@/components/Nutrition/queries/plan', () => ({
+    useNutritionPlanPeriods: () => [],
+}));
+
 vi.mock("@/components/Measurements/queries");
 
 const queryClient = new QueryClient();

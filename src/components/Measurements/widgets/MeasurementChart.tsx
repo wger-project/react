@@ -9,7 +9,13 @@ import {
 } from "@/components/Measurements/charts/data";
 import { MAX_BAR_WIDTH } from "@/components/Measurements/charts/density";
 import { dateTick, spansYears, valueWithUnit } from "@/components/Measurements/charts/format";
-import { ChartPoint } from "@/components/Measurements/charts/series";
+import {
+    ChartRange,
+    cutoffFor,
+    DEFAULT_CHART_RANGE,
+    pointsSince
+} from "@/components/Measurements/charts/range";
+import { ChartPoint, PlanPeriod } from "@/components/Measurements/charts/series";
 import { ChartEmptyState } from "@/components/Measurements/widgets/ChartEmptyState";
 import { MeasurementSeriesChart } from "@/components/Measurements/widgets/MeasurementSeriesChart";
 import { OverallChange } from "@/components/Measurements/widgets/OverallChange";
@@ -48,14 +54,14 @@ const CustomTooltip = ({ active, payload, label, category }: TooltipProps) => {
     return null;
 };
 
-const MeasurementBarChart = (props: { category: MeasurementCategory }) => {
+const MeasurementBarChart = (props: { category: MeasurementCategory, cutoff: Date | null }) => {
     const [, i18n] = useTranslation();
 
     // Bars need a band axis (recharts miscomputes bar heights on a numeric
     // time axis), so make the bands time-proportional by filling in the
     // missing days instead
     const points = chartPointsFor(props.category.entries, props.category.unit, props.category.unit);
-    const data = fillMissingDays(aggregatePerDay(points));
+    const data = fillMissingDays(aggregatePerDay(pointsSince(points, props.cutoff)));
 
     if (data.length === 0) {
         return <ChartEmptyState />;
@@ -156,22 +162,36 @@ const MeasurementRangeBarChart = (props: { points: ChartPoint[], unit: string })
     </Box>;
 };
 
-const MeasurementLineChart = (props: { category: MeasurementCategory }) => {
+const MeasurementLineChart = (props: {
+    category: MeasurementCategory,
+    cutoff: Date | null,
+    planPeriods?: PlanPeriod[],
+}) => {
     const series = measurementSeries(
         props.category.entries,
         props.category.unit,
         props.category.unit,
+        props.cutoff,
     );
 
     return <>
-        <MeasurementSeriesChart series={series} unit={props.category.unit} />
+        <MeasurementSeriesChart
+            series={series}
+            unit={props.category.unit}
+            planPeriods={props.planPeriods} />
         <OverallChange series={series} unit={props.category.unit} />
     </>;
 };
 
-export const MeasurementChart = (props: { category: MeasurementCategory }) => {
+export const MeasurementChart = (props: {
+    category: MeasurementCategory,
+    range?: ChartRange,
+    planPeriods?: PlanPeriod[],
+}) => {
+    const cutoff = cutoffFor(props.range ?? DEFAULT_CHART_RANGE);
+
     if (props.category.isGroup) {
-        const chart = groupChart(props.category);
+        const chart = groupChart(props.category, cutoff);
 
         return chart.kind === 'range'
             ? <MeasurementRangeBarChart points={chart.points} unit={props.category.unit} />
@@ -179,6 +199,9 @@ export const MeasurementChart = (props: { category: MeasurementCategory }) => {
     }
 
     return isSummedPerDay(props.category.metricType)
-        ? <MeasurementBarChart category={props.category} />
-        : <MeasurementLineChart category={props.category} />;
+        ? <MeasurementBarChart category={props.category} cutoff={cutoff} />
+        : <MeasurementLineChart
+            category={props.category}
+            cutoff={cutoff}
+            planPeriods={props.planPeriods} />;
 };

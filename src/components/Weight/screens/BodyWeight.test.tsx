@@ -4,10 +4,12 @@ import { getBodyWeightCategory, getWeights } from "@/components/Weight/api/weigh
 import { testQueryClient } from "@/tests/queryClient";
 import { testBodyWeightCategory, makeWeightEntry } from "@/tests/weight/testData";
 import { BodyWeight } from "./BodyWeight";
-import { FilterType } from "../widgets/FilterButtons";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Weight/api/weight");
+vi.mock('@/components/Nutrition/queries/plan', () => ({
+    useNutritionPlanPeriods: () => [],
+}));
 vi.mock('@/components/User/queries/profile', () => ({
     useProfileQuery: () => ({ isLoading: false, data: { useMetric: true } }),
 }));
@@ -45,20 +47,13 @@ describe("Test BodyWeight component", () => {
         // Assert - both weights are found in the document
         expect(await screen.findByText("80")).toBeInTheDocument();
         expect(await screen.findByText("90")).toBeInTheDocument();
-        expect(getWeights).toHaveBeenCalledWith(testBodyWeightCategory, 'lastYear');
+        // every entry is fetched, the range is cut client-side
+        expect(getWeights).toHaveBeenCalledWith(testBodyWeightCategory, '');
     });
 
-    test('changes filter and updates displayed data', async () => {
+    test('picking a chart range does not refetch, and keeps every entry listed', async () => {
 
-        // Mock the getWeights response based on the filter
-        (getWeights as Mock).mockImplementation((categoryId: string, filter: FilterType) => {
-            if (filter === 'lastYear') {
-                return Promise.resolve(weightData);
-            } else if (filter === 'lastMonth') {
-                return Promise.resolve([]);
-            }
-            return Promise.resolve([]);
-        });
+        (getWeights as Mock).mockImplementation(() => Promise.resolve(weightData));
 
         render(
             <QueryClientProvider client={testQueryClient}>
@@ -66,21 +61,16 @@ describe("Test BodyWeight component", () => {
             </QueryClientProvider>
         );
 
-        // Initially should display data for last year
         expect(await screen.findByText("80")).toBeInTheDocument();
-        expect(await screen.findByText("90")).toBeInTheDocument();
+        const fetches = (getWeights as Mock).mock.calls.length;
 
-        // Change filter to 'lastMonth'
-        const filterButton = screen.getByRole('button', { name: /lastMonth/i });
-        fireEvent.click(filterButton);
+        fireEvent.click(screen.getByRole('button', { name: 'measurements.chartRangeAll' }));
 
-        // Expect getWeights to be called with 'lastMonth'
+        // the range only decides how far back the chart goes: the entries are
+        // already there, and the table lists them whatever the range is
         await waitFor(() => {
-            expect(getWeights).toHaveBeenCalledWith(testBodyWeightCategory, 'lastMonth');
+            expect(screen.getByText("80")).toBeInTheDocument();
         });
-
-        // Check that entries for last year are no longer in the document
-        expect(screen.queryByText("80")).not.toBeInTheDocument();
-        expect(screen.queryByText("90")).not.toBeInTheDocument();
+        expect((getWeights as Mock).mock.calls.length).toBe(fetches);
     });
 });

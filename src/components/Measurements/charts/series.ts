@@ -43,3 +43,14 @@ export interface ChartSeries {
 /** Whether the point carries a range that can be drawn as a band */
 export const hasRange = (point: ChartPoint): boolean =>
     point.min !== undefined && point.max !== undefined;
+
+/**
+ * A nutrition plan period shown for context: shaded as a vertical band in the
+ * chart, and named in the tooltip of the points it contains.
+ */
+export interface PlanPeriod {
+    start: number;
+    /** An open-ended plan runs up to now */
+    end: number;
+    name: string;
+}

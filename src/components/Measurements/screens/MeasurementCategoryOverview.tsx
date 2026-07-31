@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { ChartRange, DEFAULT_CHART_RANGE } from "@/components/Measurements/charts/range";
+import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
 import { OverviewEmpty } from "@/core/ui/Widgets/OverviewEmpty";
 import { AddMeasurementCategoryFab } from "@/components/Measurements/widgets/fab";
@@ -17,7 +19,7 @@ import { EntryForm, GroupEntryForm } from "@/components/Measurements/widgets/Ent
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 
 
-export const CategoryList = (props: { category: MeasurementCategory }) => {
+export const CategoryList = (props: { category: MeasurementCategory, range: ChartRange }) => {
 
     const [t, i18n] = useTranslation();
     const [openModal, setOpenModal] = React.useState(false);
@@ -28,7 +30,7 @@ export const CategoryList = (props: { category: MeasurementCategory }) => {
         <Card>
             <CardHeader title={props.category.name} subheader={props.category.unit} />
             <CardContent>
-                <MeasurementChart category={props.category} />
+                <MeasurementChart category={props.category} range={props.range} />
             </CardContent>
             <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
                 <Button size="small">
@@ -54,6 +56,9 @@ export const MeasurementCategoryOverview = () => {
     const categoryQuery = useMeasurementsCategoryQuery();
     const [t] = useTranslation();
     const [openReorderModal, setOpenReorderModal] = React.useState(false);
+    // One range for all cards: picking it per card would put a row of
+    // buttons on every one of them
+    const [range, setRange] = React.useState<ChartRange>(DEFAULT_CHART_RANGE);
 
     return categoryQuery.isLoading
         ? <LoadingPlaceholder />
@@ -69,7 +74,10 @@ export const MeasurementCategoryOverview = () => {
                 }
                 mainContent={<Stack spacing={2}>
                     {categoryQuery.data!.length === 0 && <OverviewEmpty />}
-                    {categoryQuery.data!.map(c => <CategoryList category={c} key={c.id} />)}
+                    {categoryQuery.data!.length > 0
+                        && <ChartRangeSelector value={range} onChange={setRange} />}
+                    {categoryQuery.data!.map(c =>
+                        <CategoryList category={c} key={c.id} range={range} />)}
                 </Stack>
                 }
                 fab={<AddMeasurementCategoryFab />}

@@ -1,6 +1,7 @@
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
-import { ChartPoint, ChartSeries } from "@/components/Measurements/charts/series";
+import { pointsSince } from "@/components/Measurements/charts/range";
+import { ChartPoint, ChartSeries, PlanPeriod } from "@/components/Measurements/charts/series";
 import { calculateEMA } from "@/core/lib/ema";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -210,7 +211,10 @@ export const fillMissingDays = (points: ChartPoint[]): ChartPoint[] => {
  * shared timestamp, which is how both the importer and the group form write
  * them; an unpaired half-reading is skipped, it has no range.
  */
-export const groupRangeEntries = (group: MeasurementCategory): ChartPoint[] => {
+export const groupRangeEntries = (
+    group: MeasurementCategory,
+    cutoff: Date | null = null,
+): ChartPoint[] => {
     const byDate = new Map<number, number[]>();
     for (const child of group.children) {
         for (const entry of child.entries) {
@@ -225,7 +229,7 @@ export const groupRangeEntries = (group: MeasurementCategory): ChartPoint[] => {
         }
     }
 
-    return [...byDate.entries()]
+    const ranges = [...byDate.entries()]
         .filter(([, values]) => values.length > 1)
         .map(([date, values]) => ({
             date: date,
@@ -236,15 +240,20 @@ export const groupRangeEntries = (group: MeasurementCategory): ChartPoint[] => {
             max: Math.max(...values),
         }))
         .sort((a, b) => a.date - b.date);
+
+    return pointsSince(ranges, cutoff);
 };
 
 /**
  * One series per component of a multi-value group, in the children's in-group
  * order and named after them
  */
-export const groupComponentSeries = (group: MeasurementCategory): ChartSeries[] =>
+export const groupComponentSeries = (
+    group: MeasurementCategory,
+    cutoff: Date | null = null,
+): ChartSeries[] =>
     group.children.map(child => ({
-        points: chartPointsFor(child.entries, child.unit, child.unit),
+        points: pointsSince(chartPointsFor(child.entries, child.unit, child.unit), cutoff),
         role: 'component' as const,
         label: child.name,
     }));
@@ -262,8 +271,15 @@ export const measurementSeries = (
     entries: MeasurementEntry[],
     targetUnit: string,
     categoryUnit: string,
+    cutoff: Date | null = null,
 ): ChartSeries[] => {
-    const points = chartPointsFor(entries, targetUnit, categoryUnit);
+    const all = chartPointsFor(entries, targetUnit, categoryUnit);
+    // The average is computed over the full history and only then cut, so the
+    // first points of the range average the days before it instead of
+    // starting over at the cutoff
+    const average = pointsSince(moving7dAverage(all), cutoff);
+    const points = pointsSince(all, cutoff);
+
     const condensed = downsample(points);
     const raw: ChartSeries = { points: condensed, role: 'raw' };
 
@@ -275,7 +291,7 @@ export const measurementSeries = (
 
     return [
         raw,
-        { points: downsample(moving7dAverage(points)), role: 'average' },
+        { points: downsample(average), role: 'average' },
         { points: smoothedTrendline(condensed), role: 'trend' },
     ];
 };
@@ -297,13 +313,39 @@ export type GroupChart =
     | { kind: 'range', points: ChartPoint[] }
     | { kind: 'components', series: ChartSeries[] };
 
-export const groupChart = (group: MeasurementCategory): GroupChart => {
-    const ranges = group.children.length === 2 ? groupRangeEntries(group) : [];
+export const groupChart = (group: MeasurementCategory, cutoff: Date | null = null): GroupChart => {
+    const ranges = group.children.length === 2 ? groupRangeEntries(group, cutoff) : [];
 
     return ranges.length > 0
         ? { kind: 'range', points: ranges }
-        : { kind: 'components', series: groupComponentSeries(group) };
+        : { kind: 'components', series: groupComponentSeries(group, cutoff) };
 };
+
+/**
+ * The parts of the periods that overlap the span the chart covers, clamped to
+ * it. Periods entirely outside it are dropped, so a band never draws past the
+ * axes.
+ */
+export const clampPeriods = (periods: PlanPeriod[], points: ChartPoint[]): PlanPeriod[] => {
+    if (points.length === 0) {
+        return [];
+    }
+
+    const first = points[0].date;
+    const last = points[points.length - 1].date;
+
+    return periods
+        .filter(period => period.start < last && period.end > first)
+        .map(period => ({
+            ...period,
+            start: Math.max(period.start, first),
+            end: Math.min(period.end, last),
+        }));
+};
+
+/** Names of the plans whose period contains the given date */
+export const planNamesAt = (periods: PlanPeriod[], date: number): string[] =>
+    periods.filter(period => date >= period.start && date <= period.end).map(period => period.name);
 
 /** Difference between the first and the last point, null for an empty series */
 export const overallChange = (points: ChartPoint[]): number | null =>

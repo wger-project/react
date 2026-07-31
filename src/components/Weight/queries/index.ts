@@ -18,7 +18,10 @@ import { FilterType } from "../widgets/FilterButtons";
  */
 const bodyWeightCategoryQueryOptions = {
     queryKey: [QueryKey.BODY_WEIGHT_CATEGORY],
-    queryFn: getBodyWeightCategory,
+    // Called through, not captured: this module sits in an import cycle
+    // between the weight, measurement and nutrition domains, where a binding
+    // read while the modules initialise can still be undefined
+    queryFn: () => getBodyWeightCategory(),
 };
 
 export function useBodyWeightCategoryQuery() {

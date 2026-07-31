@@ -359,7 +359,10 @@
         "indicatorAvg": "avg",
         "indicatorTrend": "trend",
         "noDataAvailable": "No data available",
-        "overallChangeWeight": "Overall change"
+        "overallChangeWeight": "Overall change",
+        "chartRangeAll": "All",
+        "chartRangeLastYear": "1 year",
+        "chartRangeLast3Months": "3 months"
     },
     "server": {
         "abs": "Abs",

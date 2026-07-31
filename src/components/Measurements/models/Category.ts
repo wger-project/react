@@ -34,6 +34,15 @@ export function isSummedPerDay(type: MetricType): boolean {
 }
 
 /**
+ * Metric types whose charts show nutrition plan periods for context. Custom
+ * categories are typically hand-kept body measurements (waist, biceps), so
+ * they qualify; the typed health metrics do not.
+ */
+export function correlatesWithNutrition(type: MetricType): boolean {
+    return type === 'body_weight' || type === 'body_fat' || type === 'custom';
+}
+
+/**
  * Metric types reserved for the official categories the server manages:
  * users cannot create categories of these types
  */

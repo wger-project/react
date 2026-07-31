@@ -274,7 +274,10 @@
         "indicatorRaw": "raw",
         "indicatorAvg": "Durchschn.",
         "indicatorTrend": "Trend",
-        "overallChangeWeight": "Allgemeine Veränderung"
+        "overallChangeWeight": "Allgemeine Veränderung",
+        "chartRangeAll": "Gesamt",
+        "chartRangeLastYear": "1 Jahr",
+        "chartRangeLast3Months": "3 Monate"
     },
     "timeOfDay": "Uhrzeit",
     "notes": "Notizen",

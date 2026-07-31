@@ -1,9 +1,15 @@
 import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import { componentPalette, seriesColor } from "@/components/Measurements/charts/colors";
-import { pointsOfRole } from "@/components/Measurements/charts/data";
+import { clampPeriods, planNamesAt, pointsOfRole } from "@/components/Measurements/charts/data";
 import { dotRadius, useChartWidth } from "@/components/Measurements/charts/density";
 import { dateTick, spansYears, valueWithUnit } from "@/components/Measurements/charts/format";
-import { ChartPoint, ChartSeries, ChartSeriesRole, hasRange } from "@/components/Measurements/charts/series";
+import {
+    ChartPoint,
+    ChartSeries,
+    ChartSeriesRole,
+    hasRange,
+    PlanPeriod
+} from "@/components/Measurements/charts/series";
 import { ChartEmptyState } from "@/components/Measurements/widgets/ChartEmptyState";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -12,6 +18,7 @@ import {
     CartesianGrid,
     ComposedChart,
     Line,
+    ReferenceArea,
     ReferenceLine,
     Tooltip,
     useXAxisScale,
@@ -25,6 +32,9 @@ import { numberDecimalLocale } from "@/core/lib/numbers";
 /** Opacity of the band drawn around a series of ranged points */
 const BAND_OPACITY = 0.15;
 
+/** Opacity of a shaded nutrition plan period */
+const PLAN_BAND_OPACITY = 0.15;
+
 /** Point count above which the connectors to the trend stop being readable */
 const MAX_VARIANCE_LINES = 30;
 
@@ -34,6 +44,7 @@ interface TooltipProps {
     payload?: any;
     label?: string;
     unit: string;
+    planPeriods: PlanPeriod[];
 }
 
 /**
@@ -56,7 +67,11 @@ const tooltipRows = (
     for (const item of payload) {
         const row: TooltipRow = rows.get(item.name) ?? { name: item.name };
         if (Array.isArray(item.value)) {
-            row.range = item.value as [number, number];
+            const [low, high] = item.value as [number, number];
+            // A bucket holding a single value has no spread worth quoting
+            if (low !== high) {
+                row.range = [low, high];
+            }
         } else {
             row.value = item.value;
         }
@@ -66,12 +81,16 @@ const tooltipRows = (
     return [...rows.values()];
 };
 
-const CustomTooltip = ({ active, payload, label, unit }: TooltipProps) => {
+const CustomTooltip = ({ active, payload, label, unit, planPeriods }: TooltipProps) => {
     const [, i18n] = useTranslation();
 
     if (!active || !payload?.length) {
         return null;
     }
+
+    // The plan belongs to the touched date, not to a series, so it goes below
+    // the value rows instead of onto every one of them
+    const plans = planNamesAt(planPeriods, Number(label));
 
     return (
         <Paper style={{ padding: 8 }}>
@@ -84,6 +103,7 @@ const CustomTooltip = ({ active, payload, label, unit }: TooltipProps) => {
                         + `–${valueWithUnit(row.range[1], unit, i18n.language)})`}
                 </p>
             ))}
+            {plans.map(name => <p key={name}><em>{name}</em></p>)}
         </Paper>
     );
 };
@@ -185,6 +205,9 @@ export interface MeasurementSeriesChartProps {
      */
     showMean?: boolean;
     showVariance?: boolean;
+
+    /** Nutrition plan periods shaded for context, see PlanPeriod */
+    planPeriods?: PlanPeriod[];
 }
 
 /**
@@ -225,6 +248,9 @@ export const MeasurementSeriesChart = (props: MeasurementSeriesChartProps) => {
 
     const withYear = spansYears(props.series.flatMap(s => s.points));
 
+    // Clamped to the span of the data so a band never draws past the axes
+    const periods = clampPeriods(props.planPeriods ?? [], props.series.flatMap(s => s.points));
+
     const rawPoints = pointsOfRole(props.series, 'raw');
     const trendPoints = pointsOfRole(props.series, 'trend');
     const mean = rawPoints.length === 0
@@ -261,7 +287,7 @@ export const MeasurementSeriesChart = (props: MeasurementSeriesChartProps) => {
                 domain={['auto', 'auto']}
                 width="auto"
                 tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
-            <Tooltip content={<CustomTooltip unit={props.unit} />} />
+            <Tooltip content={<CustomTooltip unit={props.unit} planPeriods={periods} />} />
 
             {props.showMean && mean !== null && <ReferenceLine
                 y={mean}
@@ -275,6 +301,14 @@ export const MeasurementSeriesChart = (props: MeasurementSeriesChartProps) => {
                 strokeWidth={1}
                 ifOverflow="extendDomain" />}
             {props.showVariance && <VarianceLines raw={rawPoints} trend={trendPoints} />}
+
+            {periods.map(period => <ReferenceArea
+                key={`${period.start}-${period.name}`}
+                x1={period.start}
+                x2={period.end}
+                fill={theme.palette.primary.main}
+                fillOpacity={PLAN_BAND_OPACITY}
+                ifOverflow="hidden" />)}
 
             {/* the bands go in first so the lines paint on top of them */}
             {resolved.map(({ series, color, name, key }) => {
@@ -315,6 +349,15 @@ export const MeasurementSeriesChart = (props: MeasurementSeriesChartProps) => {
                     <Box sx={{ backgroundColor: color, height: 12, width: 12 }} />
                     <Typography variant="caption">{name}</Typography>
                 </Stack>)}
+            {periods.length > 0 && <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
+                <Box sx={{
+                    backgroundColor: theme.palette.primary.main,
+                    height: 12,
+                    opacity: PLAN_BAND_OPACITY,
+                    width: 12,
+                }} />
+                <Typography variant="caption">{t('nutrition.plan')}</Typography>
+            </Stack>}
         </Stack>
     </Box>;
 };

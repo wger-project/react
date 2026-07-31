@@ -359,7 +359,10 @@
         "indicatorRaw": "brut",
         "indicatorAvg": "moy",
         "indicatorTrend": "tendance",
-        "overallChangeWeight": "Changement global"
+        "overallChangeWeight": "Changement global",
+        "chartRangeAll": "Tout",
+        "chartRangeLastYear": "1 an",
+        "chartRangeLast3Months": "3 mois"
     },
     "downloadAsPdf": "Télécharger en PDF",
     "calendar": "Calendrier",

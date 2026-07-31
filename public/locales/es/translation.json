@@ -276,7 +276,10 @@
         "indicatorRaw": "Bruto",
         "indicatorAvg": "medio",
         "indicatorTrend": "tendencia",
-        "overallChangeWeight": "Cambio general"
+        "overallChangeWeight": "Cambio general",
+        "chartRangeAll": "Todo",
+        "chartRangeLastYear": "1 año",
+        "chartRangeLast3Months": "3 meses"
     },
     "deleteConfirmation": "¿Estás seguro de que quieres borrar \"{{name}}\"?",
     "nutrition": {
