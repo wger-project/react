@@ -9,6 +9,7 @@ import {
     moving7dAverage,
     smoothedTrendline
 } from "@/components/Measurements/charts/data";
+import { MAX_BAR_WIDTH } from "@/components/Measurements/charts/density";
 import { ChartSeries } from "@/components/Measurements/charts/series";
 import { MeasurementSeriesChart } from "@/components/Measurements/widgets/MeasurementSeriesChart";
 import React from "react";
@@ -48,7 +49,13 @@ const MeasurementBarChart = (props: { category: MeasurementCategory }) => {
     const data = fillMissingDays(aggregatePerDay(points));
 
     return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
-        <BarChart data={data} responsive width="90%" height={200}>
+        {/*
+          * Bar width follows from how many bars share the width: recharts
+          * sizes them to the band, the gap (taken off both sides, so a bar
+          * keeps 70% of its band) holds neighbours apart, and the maximum
+          * keeps a handful of bars from becoming blocks
+          */}
+        <BarChart data={data} responsive width="90%" height={200} barCategoryGap="15%">
             <CartesianGrid
                 stroke="#ccc"
                 strokeDasharray="5 5"
@@ -62,7 +69,7 @@ const MeasurementBarChart = (props: { category: MeasurementCategory }) => {
             <Bar
                 dataKey="value"
                 fill={theme.palette.secondary.main}
-                maxBarSize={20} />
+                maxBarSize={MAX_BAR_WIDTH} />
         </BarChart>
     </Box>;
 };

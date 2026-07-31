@@ -1,14 +1,12 @@
 import { Box, Paper, useTheme } from "@mui/material";
 import { Theme } from "@mui/material/styles";
+import { dotRadius, useChartWidth } from "@/components/Measurements/charts/density";
 import { ChartSeries, ChartSeriesRole, hasRange } from "@/components/Measurements/charts/series";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Area, CartesianGrid, ComposedChart, Legend, Line, Tooltip, XAxis, YAxis } from "recharts";
 import { generateChartColors } from "@/core/lib/colors";
 import { dateToLocale } from "@/core/lib/date";
-
-/** Point count above which the dots of the measured values are dropped */
-const MAX_DOTS = 30;
 
 /** Opacity of the band drawn around a series of ranged points */
 const BAND_OPACITY = 0.15;
@@ -55,15 +53,15 @@ const seriesColor = (theme: Theme, role: ChartSeriesRole, componentIndex: number
 };
 
 /** How a series is drawn follows from its role, never from the series itself */
-const lineProps = (role: ChartSeriesRole, color: string, showDots: boolean) => {
+const lineProps = (role: ChartSeriesRole, color: string, radius: number) => {
     switch (role) {
         case 'raw':
             // Dots only: a line would assert that something was measured
             // between two readings
             return {
                 stroke: 'transparent',
-                dot: showDots ? { fill: color, r: 3 } : false as const,
-                activeDot: { fill: color, r: 5 },
+                dot: { fill: color, r: radius },
+                activeDot: { fill: color, r: radius + 2 },
             };
         case 'average':
             return { type: 'linear' as const, stroke: color, strokeWidth: 1, dot: false as const };
@@ -74,7 +72,8 @@ const lineProps = (role: ChartSeriesRole, color: string, showDots: boolean) => {
                 type: 'linear' as const,
                 stroke: color,
                 strokeWidth: 2,
-                dot: showDots ? { fill: color, r: 3 } : false as const,
+                dot: { fill: color, r: radius },
+                activeDot: { fill: color, r: radius + 2 },
             };
     }
 };
@@ -106,6 +105,7 @@ export const bandData = (series: ChartSeries): { date: number, range: [number, n
 export const MeasurementSeriesChart = (props: { series: ChartSeries[], unit: string, height?: number }) => {
     const theme = useTheme();
     const [t] = useTranslation();
+    const [chartRef, chartWidth] = useChartWidth();
 
     const roleLabels: Record<ChartSeriesRole, string> = {
         raw: t('measurements.indicatorRaw'),
@@ -124,11 +124,12 @@ export const MeasurementSeriesChart = (props: { series: ChartSeries[], unit: str
         key: `${series.role}-${series.label ?? ''}`,
     }));
 
+    // The densest series decides the mark size: all of them share the width
     const maxPoints = Math.max(0, ...props.series.map(s => s.points.length));
-    const showDots = maxPoints <= MAX_DOTS;
+    const radius = dotRadius(chartWidth, maxPoints);
     const showLegend = props.series.some(s => s.label !== undefined);
 
-    return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+    return <Box ref={chartRef} sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
         <ComposedChart responsive width="90%" height={props.height ?? 200}>
             <CartesianGrid
                 stroke="#ccc"
@@ -167,7 +168,7 @@ export const MeasurementSeriesChart = (props: { series: ChartSeries[], unit: str
                     data={series.points}
                     dataKey="value"
                     name={name}
-                    {...lineProps(series.role, color, showDots)} />)}
+                    {...lineProps(series.role, color, radius)} />)}
         </ComposedChart>
     </Box>;
 };
