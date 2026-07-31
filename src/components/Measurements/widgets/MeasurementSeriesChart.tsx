@@ -8,6 +8,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Area, CartesianGrid, ComposedChart, Line, Tooltip, XAxis, YAxis } from "recharts";
 import { dateToLocale } from "@/core/lib/date";
+import { numberDecimalLocale } from "@/core/lib/numbers";
 
 /** Opacity of the band drawn around a series of ranged points */
 const BAND_OPACITY = 0.15;
@@ -20,6 +21,36 @@ interface TooltipProps {
     unit: string;
 }
 
+/**
+ * One tooltip line per series. A band carries the same name as the line it
+ * belongs to, so its bounds join that line instead of appearing as a row of
+ * their own — where an array value would read as four numbers, not two.
+ */
+interface TooltipRow {
+    name: string;
+    value?: number;
+    range?: [number, number];
+}
+
+const tooltipRows = (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload: any[],
+): TooltipRow[] => {
+    const rows = new Map<string, TooltipRow>();
+
+    for (const item of payload) {
+        const row: TooltipRow = rows.get(item.name) ?? { name: item.name };
+        if (Array.isArray(item.value)) {
+            row.range = item.value as [number, number];
+        } else {
+            row.value = item.value;
+        }
+        rows.set(item.name, row);
+    }
+
+    return [...rows.values()];
+};
+
 const CustomTooltip = ({ active, payload, label, unit }: TooltipProps) => {
     const [, i18n] = useTranslation();
 
@@ -30,9 +61,13 @@ const CustomTooltip = ({ active, payload, label, unit }: TooltipProps) => {
     return (
         <Paper style={{ padding: 8 }}>
             <p><strong>{dateToLocale(new Date(Number(label)))}</strong></p>
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {payload.map((item: any) => (
-                <p key={item.name}>{item.name}: {valueWithUnit(item.value, unit, i18n.language)}</p>
+            {tooltipRows(payload).map(row => (
+                <p key={row.name}>
+                    {row.name}
+                    {row.value !== undefined && `: ${valueWithUnit(row.value, unit, i18n.language)}`}
+                    {row.range !== undefined && ` (${numberDecimalLocale(row.range[0], i18n.language)}`
+                        + `–${valueWithUnit(row.range[1], unit, i18n.language)})`}
+                </p>
             ))}
         </Paper>
     );
@@ -139,20 +174,22 @@ export const MeasurementSeriesChart = (props: { series: ChartSeries[], unit: str
             <Tooltip content={<CustomTooltip unit={props.unit} />} />
 
             {/* the bands go in first so the lines paint on top of them */}
-            {resolved.map(({ series, color, key }) => {
+            {resolved.map(({ series, color, name, key }) => {
                 const band = bandData(series);
 
                 return band.length === 0
                     ? null
+                    // the band shares the name of its line, which is what
+                    // folds its bounds into that line's tooltip row
                     : <Area
                         key={`band-${key}`}
                         data={band}
                         dataKey="range"
+                        name={name}
                         stroke="none"
                         fill={color}
                         fillOpacity={BAND_OPACITY}
-                        legendType="none"
-                        tooltipType="none" />;
+                        legendType="none" />;
             })}
 
             {resolved.map(({ series, color, name, key }) =>
