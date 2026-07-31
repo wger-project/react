@@ -67,6 +67,11 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
             byId.get(category.parentId)?.children.push(category);
         }
     }
+    // For children, order is the position within the group (systolic before
+    // diastolic); the chart colours the components by that position
+    for (const category of categories) {
+        category.children.sort((a, b) => a.order - b.order);
+    }
 
     return categories.filter(c => c.parentId === null);
 };
@@ -88,6 +93,7 @@ export const getMeasurementCategory = async (id: string): Promise<MeasurementCat
             category.children.push(MeasurementCategory.fromJson(childData));
         }
     }
+    category.children.sort((a, b) => a.order - b.order);
 
     await Promise.all([category, ...category.children].map(async (cat) => {
         cat.entries = await loadEntries(cat.id!);

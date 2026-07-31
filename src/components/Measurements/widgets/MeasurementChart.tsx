@@ -1,6 +1,6 @@
 import { Box, Paper } from "@mui/material";
 import { isSummedPerDay, MeasurementCategory } from "@/components/Measurements/models/Category";
-import { MeasurementEntry } from "@/components/Measurements/models/Entry";
+import { aggregatePerDay, chartPointsFor, fillMissingDays } from "@/components/Measurements/charts/data";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
@@ -38,47 +38,12 @@ const CustomTooltip = ({ active, payload, label, category }: TooltipProps) => {
     return null;
 };
 
-/**
- * Sums entries per local calendar day, for metric types where individual
- * samples aren't meaningful on their own (steps, distance, energy, sleep)
- */
-export const aggregatePerDay = (entries: MeasurementEntry[]): { date: number, value: number }[] => {
-    const sums = new Map<number, number>();
-    for (const entry of entries) {
-        const day = new Date(entry.date.getFullYear(), entry.date.getMonth(), entry.date.getDate()).getTime();
-        sums.set(day, (sums.get(day) ?? 0) + entry.value);
-    }
-
-    return [...sums.entries()]
-        .map(([date, value]) => ({ date: date, value: value }))
-        .sort((a, b) => a.date - b.date);
-};
-
-/**
- * Fills gaps in a per-day series with zero-value days so a band axis keeps
- * the spacing between bars proportional to time
- */
-export const fillMissingDays = (data: { date: number, value: number }[]): { date: number, value: number }[] => {
-    if (data.length === 0) {
-        return [];
-    }
-
-    const byDay = new Map(data.map(d => [d.date, d.value]));
-    const last = data[data.length - 1].date;
-    const out = [];
-    // aggregatePerDay emits local-midnight timestamps; stepping via setDate
-    // stays on local midnight across DST changes
-    for (const day = new Date(data[0].date); day.getTime() <= last; day.setDate(day.getDate() + 1)) {
-        out.push({ date: day.getTime(), value: byDay.get(day.getTime()) ?? 0 });
-    }
-    return out;
-};
-
 const MeasurementBarChart = (props: { category: MeasurementCategory }) => {
     // Bars need a band axis (recharts miscomputes bar heights on a numeric
     // time axis), so make the bands time-proportional by filling in the
     // missing days instead
-    const data = fillMissingDays(aggregatePerDay(props.category.entries));
+    const points = chartPointsFor(props.category.entries, props.category.unit, props.category.unit);
+    const data = fillMissingDays(aggregatePerDay(points));
 
     return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
         <BarChart data={data} responsive width="90%" height={200}>
@@ -103,15 +68,8 @@ const MeasurementBarChart = (props: { category: MeasurementCategory }) => {
 const MeasurementLineChart = (props: { category: MeasurementCategory }) => {
     const NR_OF_ENTRIES_CHART_DOT = 30;
 
-    // map the list of entries to an array of objects with the date and value
-    const entryData = [...props.category.entries].sort((a, b) => a.date.getTime() - b.date.getTime()).map(entry => {
-        return {
-            date: entry.date.getTime(),
-            value: entry.value,
-            entry: entry
-        };
-    });
-    const emaData = calculateEMA(entryData, p => p.value);
+    const points = chartPointsFor(props.category.entries, props.category.unit, props.category.unit);
+    const emaData = calculateEMA(points, p => p.value);
 
     return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
         <LineChart data={emaData} responsive width="90%" height={200}>
@@ -176,13 +134,8 @@ const MeasurementGroupChart = (props: { category: MeasurementCategory }) => {
             />
             <Legend />
             {props.category.children.map(child => {
-                const data = [...child.entries]
-                    .sort((a, b) => a.date.getTime() - b.date.getTime())
-                    .map(entry => ({
-                        date: entry.date.getTime(),
-                        value: entry.value,
-                        unit: child.unit,
-                    }));
+                const data = chartPointsFor(child.entries, child.unit, child.unit)
+                    .map(point => ({ ...point, unit: child.unit }));
 
                 return <Line
                     key={child.id}

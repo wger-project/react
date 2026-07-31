@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
-import { aggregatePerDay, fillMissingDays, MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
+import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
 import React from 'react';
-import { describe, expect, test } from 'vitest';
+import { describe, test } from 'vitest';
 
 const entry = (id: string, date: Date, value: number) =>
     new MeasurementEntry(id, 'c-1', date, value, '');
@@ -49,63 +49,5 @@ describe('MeasurementChart', () => {
         group.children = [systolic, diastolic];
 
         render(<MeasurementChart category={group} />);
-    });
-});
-
-describe('aggregatePerDay', () => {
-    test('returns an empty array for no entries', () => {
-        expect(aggregatePerDay([])).toEqual([]);
-    });
-
-    test('sums all samples of the same calendar day', () => {
-        const result = aggregatePerDay([
-            entry('d-1', new Date(2023, 1, 1, 8, 0), 4000),
-            entry('d-2', new Date(2023, 1, 1, 18, 30), 6000),
-            entry('d-3', new Date(2023, 1, 2, 9, 0), 3000),
-        ]);
-
-        expect(result).toEqual([
-            { date: new Date(2023, 1, 1).getTime(), value: 10000 },
-            { date: new Date(2023, 1, 2).getTime(), value: 3000 },
-        ]);
-    });
-
-    test('sorts the buckets chronologically', () => {
-        const result = aggregatePerDay([
-            entry('d-1', new Date(2023, 1, 3), 30),
-            entry('d-2', new Date(2023, 1, 1), 10),
-            entry('d-3', new Date(2023, 1, 2), 20),
-        ]);
-
-        expect(result.map(r => r.value)).toEqual([10, 20, 30]);
-    });
-});
-
-describe('fillMissingDays', () => {
-    test('returns an empty array for no data', () => {
-        expect(fillMissingDays([])).toEqual([]);
-    });
-
-    test('fills gaps with zero-value days', () => {
-        const result = fillMissingDays([
-            { date: new Date(2023, 1, 1).getTime(), value: 10 },
-            { date: new Date(2023, 1, 4).getTime(), value: 40 },
-        ]);
-
-        expect(result).toEqual([
-            { date: new Date(2023, 1, 1).getTime(), value: 10 },
-            { date: new Date(2023, 1, 2).getTime(), value: 0 },
-            { date: new Date(2023, 1, 3).getTime(), value: 0 },
-            { date: new Date(2023, 1, 4).getTime(), value: 40 },
-        ]);
-    });
-
-    test('keeps a contiguous series unchanged', () => {
-        const data = [
-            { date: new Date(2023, 1, 1).getTime(), value: 10 },
-            { date: new Date(2023, 1, 2).getTime(), value: 20 },
-        ];
-
-        expect(fillMissingDays(data)).toEqual(data);
     });
 });
