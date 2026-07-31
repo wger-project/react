@@ -1,5 +1,5 @@
 import { Adapter } from "@/core/lib/Adapter";
-import { convertWeight, WeightUnit } from "@/core/lib/weightUnit";
+import { convertWeight, isWeightUnit, WeightUnit } from "@/core/lib/weightUnit";
 
 /**
  * A body weight entry, stored on the server as a measurement in the user's
@@ -58,7 +58,7 @@ class WeightAdapter implements Adapter<WeightEntry> {
         // narrow the server value instead of trusting the cast, an unexpected
         // unit would otherwise silently convert wrongly
         const serverUnit = item.extra_data?.unit;
-        const unit: WeightUnit = serverUnit === 'kg' || serverUnit === 'lb' ? serverUnit : fallbackUnit;
+        const unit: WeightUnit = isWeightUnit(serverUnit) ? serverUnit : fallbackUnit;
 
         return new WeightEntry(
             new Date(item.date),

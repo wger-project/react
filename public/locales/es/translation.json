@@ -267,6 +267,7 @@
             "height": "Altura",
             "blood_pressure": "Presión arterial",
             "heart_rate": "Frecuencia cardíaca",
+            "resting_heart_rate": "Frecuencia cardíaca en reposo",
             "steps": "Pasos",
             "distance": "Distancia",
             "energy": "Energía",

@@ -350,6 +350,7 @@
             "height": "Taille",
             "blood_pressure": "Pression artérielle",
             "heart_rate": "Fréquence cardiaque",
+            "resting_heart_rate": "Fréquence cardiaque au repos",
             "steps": "Pas",
             "distance": "Distance",
             "energy": "Énergie",

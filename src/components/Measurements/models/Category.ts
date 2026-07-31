@@ -9,6 +9,7 @@ export const METRIC_TYPES = [
     'height',
     'blood_pressure',
     'heart_rate',
+    'resting_heart_rate',
     'steps',
     'distance',
     'energy',

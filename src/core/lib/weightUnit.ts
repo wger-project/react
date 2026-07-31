@@ -3,6 +3,14 @@ export type WeightUnit = 'kg' | 'lb';
 export const KG_PER_LB = 0.45359237;
 
 /*
+ * Narrows a stored or server-provided unit. Everything else is a free-text
+ * category label, which is never converted.
+ */
+export function isWeightUnit(value: unknown): value is WeightUnit {
+    return value === 'kg' || value === 'lb';
+}
+
+/*
  * Converts a body weight value between kg and lb, quantized to 2 decimal
  * places like the server. Free-text units of custom measurement categories
  * are never converted, they are plain labels.

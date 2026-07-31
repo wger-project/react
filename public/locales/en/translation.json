@@ -349,6 +349,7 @@
             "height": "Height",
             "blood_pressure": "Blood pressure",
             "heart_rate": "Heart rate",
+            "resting_heart_rate": "Resting heart rate",
             "steps": "Steps",
             "distance": "Distance",
             "energy": "Energy",
