@@ -11,7 +11,7 @@ import { AddMeasurementCategoryFab } from "@/components/Measurements/widgets/fab
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { makeLink, WgerLink } from "@/core/lib/url";
 import { Link } from "react-router-dom";
-import { EntryForm } from "@/components/Measurements/widgets/EntryForm";
+import { EntryForm, GroupEntryForm } from "@/components/Measurements/widgets/EntryForm";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 
 
@@ -41,7 +41,9 @@ export const CategoryList = (props: { category: MeasurementCategory }) => {
             </CardActions>
         </Card>
         <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
-            <EntryForm closeFn={handleCloseModal} categoryId={props.category.id!} />
+            {props.category.isGroup
+                ? <GroupEntryForm closeFn={handleCloseModal} group={props.category} />
+                : <EntryForm closeFn={handleCloseModal} categoryId={props.category.id!} />}
         </WgerModal>
     </>;
 };

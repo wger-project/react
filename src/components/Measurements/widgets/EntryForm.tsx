@@ -2,8 +2,10 @@ import { Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
+    useAddGroupEntriesQuery,
     useAddMeasurementEntryQuery,
     useEditMeasurementEntryQuery,
     useMeasurementsQuery
@@ -107,6 +109,106 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                             helperText={formik.touched.notes && formik.errors.notes}
                             {...formik.getFieldProps('notes')}
                         />
+                        <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
+                            <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
+                                {t('submit')}
+                            </Button>
+                        </Stack>
+                    </Stack>
+                </Form>
+            )}
+        </Formik>)
+    );
+};
+
+interface GroupEntryFormProps {
+    group: MeasurementCategory,
+    closeFn?: () => void,
+}
+
+/**
+ * Adds one reading for every component of a multi-value group (e.g. systolic
+ * and diastolic blood pressure): date and time are shared, one value field
+ * per child category
+ */
+export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
+
+    const [t, i18n] = useTranslation();
+    const addGroupEntriesQuery = useAddGroupEntriesQuery();
+
+    const [dateValue, setDateValue] = React.useState<DateTime | null>(DateTime.now());
+
+    const validationSchema = yup.object({
+        date: yup
+            .date()
+            .required(t('forms.fieldRequired')),
+        values: yup.object(Object.fromEntries(group.children.map(child => [
+            child.id!,
+            yup
+                .number()
+                .required(t('forms.fieldRequired'))
+                .min(0, t('forms.minValue', { value: '0' }))
+                .max(1000, t('forms.maxValue', { value: '1000' })),
+        ]))),
+    });
+
+    return (
+        (<Formik
+            initialValues={{
+                date: new Date(),
+                values: Object.fromEntries(group.children.map(child => [child.id!, ''])),
+            }}
+            validationSchema={validationSchema}
+            onSubmit={async (values) => {
+                addGroupEntriesQuery.mutate(group.children.map(child => new MeasurementEntry(
+                    null,
+                    child.id!,
+                    values.date,
+                    Number(values.values[child.id!]),
+                    '',
+                )));
+
+                if (closeFn) {
+                    closeFn();
+                }
+            }}
+        >
+            {formik => (
+                <Form>
+                    <Stack spacing={2}>
+                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                            <DateTimePicker
+                                label={t('date')}
+                                value={dateValue}
+                                slotProps={{ textField: { variant: 'outlined' } }}
+                                disableFuture={true}
+                                onChange={(newValue) => {
+                                    if (newValue) {
+                                        formik.setFieldValue('date', newValue.toJSDate());
+                                    }
+                                    setDateValue(newValue);
+                                }}
+                            />
+                        </LocalizationProvider>
+                        {group.children.map(child =>
+                            <TextField
+                                key={child.id}
+                                fullWidth
+                                id={`values.${child.id}`}
+                                type={"number"}
+                                label={`${child.name} (${child.unit || group.unit})`}
+                                error={
+                                    Boolean(formik.touched.values?.[child.id!])
+                                    && Boolean(formik.errors.values?.[child.id!])
+                                }
+                                helperText={
+                                    formik.touched.values?.[child.id!]
+                                    && formik.errors.values?.[child.id!]
+                                }
+                                slotProps={{ htmlInput: { inputMode: 'decimal' } }}
+                                {...formik.getFieldProps(`values.${child.id}`)}
+                            />
+                        )}
                         <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                                 {t('submit')}

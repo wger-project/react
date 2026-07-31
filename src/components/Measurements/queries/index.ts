@@ -89,6 +89,23 @@ export const useAddMeasurementEntryQuery = () => {
     });
 };
 
+/** Adds one entry per component of a multi-value group, e.g. blood pressure */
+export const useAddGroupEntriesQuery = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (entries: MeasurementEntry[]) => Promise.all(entries.map(entry => addMeasurementEntry(entry))),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.MEASUREMENTS,]
+            });
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
+            });
+        }
+    });
+};
+
 export const useEditMeasurementEntryQuery = () => {
     const queryClient = useQueryClient();
 

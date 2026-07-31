@@ -138,19 +138,97 @@ describe('measurement service tests', () => {
         (axios.get as Mock).mockImplementation((url: string) => {
             if (url.includes(`measurement-category/${CATEGORY_UUID}`)) {
                 return Promise.resolve({ data: measurementDetailResponse });
+            } else if (url.includes(`parent=${CATEGORY_UUID}`)) {
+                return Promise.resolve({ data: { count: 0, next: null, previous: null, results: [] } });
             } else if (url.includes(`measurement/?category=${CATEGORY_UUID}`)) {
                 return Promise.resolve({ data: measurementEntryResponse });
             }
         });
 
         const result = await getMeasurementCategory(CATEGORY_UUID);
-        expect(axios.get).toHaveBeenCalledTimes(2);
+        expect(axios.get).toHaveBeenCalledTimes(3);
 
         expect(result).toStrictEqual(
             new MeasurementCategory(CATEGORY_UUID, "Weight", "kg", [
                 new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, new Date("2021-01-01T08:00:00+01:00"), 80, "")
             ])
         );
+    });
+
+    test('GET measurement category loads the children of a group', async () => {
+
+        (axios.get as Mock).mockImplementation((url: string) => {
+            if (url.includes(`measurement-category/${CATEGORY_UUID}`)) {
+                return Promise.resolve({
+                    data: { id: CATEGORY_UUID, name: "Blood pressure", unit: "mmHg" }
+                });
+            } else if (url.includes(`parent=${CATEGORY_UUID}`)) {
+                return Promise.resolve({
+                    data: {
+                        count: 1,
+                        next: null,
+                        previous: null,
+                        results: [{
+                            id: CATEGORY_UUID_2,
+                            name: "Systolic",
+                            unit: "mmHg",
+                            parent: CATEGORY_UUID
+                        }],
+                    }
+                });
+            } else if (url.includes(`measurement/?category=${CATEGORY_UUID_2}`)) {
+                return Promise.resolve({
+                    data: {
+                        count: 1,
+                        next: null,
+                        previous: null,
+                        results: [{
+                            id: ENTRY_UUID_2,
+                            category: CATEGORY_UUID_2,
+                            value: 120,
+                            date: "2021-01-01T08:00:00+01:00",
+                            notes: ""
+                        }],
+                    }
+                });
+            } else if (url.includes(`measurement/?category=${CATEGORY_UUID}`)) {
+                return Promise.resolve({ data: { count: 0, next: null, previous: null, results: [] } });
+            }
+        });
+
+        const result = await getMeasurementCategory(CATEGORY_UUID);
+
+        expect(result.isGroup).toBe(true);
+        expect(result.entries).toStrictEqual([]);
+        expect(result.children.map(c => c.id)).toStrictEqual([CATEGORY_UUID_2]);
+        expect(result.children[0].entries.map(e => e.value)).toStrictEqual([120]);
+    });
+
+    test('GET measurement categories attaches children to their group', async () => {
+
+        (axios.get as Mock).mockImplementation((url: string) => {
+            if (url.includes("measurement-category")) {
+                return Promise.resolve({
+                    data: {
+                        count: 2,
+                        next: null,
+                        previous: null,
+                        results: [
+                            { id: CATEGORY_UUID, name: "Blood pressure", unit: "mmHg" },
+                            { id: CATEGORY_UUID_2, name: "Systolic", unit: "mmHg", parent: CATEGORY_UUID },
+                        ]
+                    }
+                });
+            }
+            return Promise.resolve({ data: { count: 0, next: null, previous: null, results: [] } });
+        });
+
+        const result = await getMeasurementCategories();
+
+        // only the group parent is top-level, the child hangs below it
+        expect(result.map(c => c.id)).toStrictEqual([CATEGORY_UUID]);
+        expect(result[0].isGroup).toBe(true);
+        expect(result[0].children.map(c => c.id)).toStrictEqual([CATEGORY_UUID_2]);
     });
 
     test('addMeasurementCategory POSTs the category and returns the parsed result', async () => {

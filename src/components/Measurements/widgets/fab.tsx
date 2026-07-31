@@ -3,9 +3,9 @@ import { Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
-import { EntryForm } from "@/components/Measurements/widgets/EntryForm";
-import { useParams } from "react-router-dom";
+import { EntryForm, GroupEntryForm } from "@/components/Measurements/widgets/EntryForm";
 
 export const AddMeasurementCategoryFab = () => {
     const [t] = useTranslation();
@@ -35,14 +35,11 @@ export const AddMeasurementCategoryFab = () => {
     );
 };
 
-export const AddMeasurementEntryFab = () => {
+export const AddMeasurementEntryFab = ({ category }: { category: MeasurementCategory }) => {
     const [t] = useTranslation();
     const [openModal, setOpenModal] = React.useState(false);
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
-
-    const params = useParams<{ categoryId: string }>();
-    const categoryId = params.categoryId!;
 
 
     return (<>
@@ -59,7 +56,9 @@ export const AddMeasurementEntryFab = () => {
             <AddIcon />
         </Fab>
         <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
-            <EntryForm closeFn={handleCloseModal} categoryId={categoryId} />
+            {category.isGroup
+                ? <GroupEntryForm closeFn={handleCloseModal} group={category} />
+                : <EntryForm closeFn={handleCloseModal} categoryId={category.id!} />}
         </WgerModal>
     </>);
 };

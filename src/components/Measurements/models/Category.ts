@@ -44,6 +44,13 @@ export class MeasurementCategory {
 
     entries: MeasurementEntry[] = [];
 
+    /**
+     * Child categories (components) of a multi-value group such as blood
+     * pressure. Populated by the API layer for display, never persisted
+     * directly; only leaf categories carry entries.
+     */
+    children: MeasurementCategory[] = [];
+
     constructor(
         public id: string | null,
         public name: string,
@@ -59,8 +66,12 @@ export class MeasurementCategory {
         }
     }
 
+    get isGroup(): boolean {
+        return this.children.length > 0;
+    }
+
     static clone(other: MeasurementCategory, overrides?: Partial<Pick<MeasurementCategory, 'id' | 'name' | 'unit' | 'metricType' | 'parentId'>>): MeasurementCategory {
-        return new MeasurementCategory(
+        const category = new MeasurementCategory(
             overrides?.id ?? other.id,
             overrides?.name ?? other.name,
             overrides?.unit ?? other.unit,
@@ -72,6 +83,8 @@ export class MeasurementCategory {
             overrides !== undefined && 'parentId' in overrides ? overrides.parentId ?? null : other.parentId,
             other.order,
         );
+        category.children = other.children;
+        return category;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

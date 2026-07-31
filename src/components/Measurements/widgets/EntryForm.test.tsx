@@ -7,12 +7,14 @@ import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
+    useAddGroupEntriesQuery,
     useAddMeasurementEntryQuery,
     useEditMeasurementEntryQuery,
     useMeasurementsQuery
 } from "@/components/Measurements/queries";
 import type { Mock } from 'vitest';
-import { EntryForm } from "@/components/Measurements/widgets/EntryForm";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { EntryForm, GroupEntryForm } from "@/components/Measurements/widgets/EntryForm";
 import i18n from "i18next";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_ENTRIES_1 } from "@/tests/measurementsTestData";
 
@@ -143,5 +145,66 @@ describe("Test the EntryForm component", () => {
             // expect(picker?.textContent).toContain('08:00');
             expect(picker?.textContent).not.toContain('AM');
         });
+    });
+});
+
+describe("Test the GroupEntryForm component", () => {
+    const queryClient = new QueryClient();
+    let mutate = vi.fn();
+
+    const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg');
+    group.children = [
+        new MeasurementCategory('c-sys', 'Systolic', 'mmHg', undefined, 'blood_pressure', false, 'g-1'),
+        new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', undefined, 'blood_pressure', false, 'g-1'),
+    ];
+
+    beforeEach(() => {
+        mutate = vi.fn();
+        (useAddGroupEntriesQuery as Mock).mockImplementation(() => ({
+            mutate: mutate
+        }));
+    });
+
+    test('renders one value field per child', () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <GroupEntryForm group={group} />
+            </QueryClientProvider>
+        );
+
+        expect(screen.getByLabelText('Systolic (mmHg)')).toBeInTheDocument();
+        expect(screen.getByLabelText('Diastolic (mmHg)')).toBeInTheDocument();
+    });
+
+    test('submits one entry per child with a shared date', async () => {
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <GroupEntryForm group={group} />
+            </QueryClientProvider>
+        );
+
+        await user.type(screen.getByLabelText('Systolic (mmHg)'), '120');
+        await user.type(screen.getByLabelText('Diastolic (mmHg)'), '80');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        expect(mutate).toHaveBeenCalledTimes(1);
+        const entries = mutate.mock.calls[0][0] as MeasurementEntry[];
+        expect(entries.map(e => [e.category, e.value])).toStrictEqual([['c-sys', 120], ['c-dia', 80]]);
+        expect(entries[0].date).toStrictEqual(entries[1].date);
+    });
+
+    test('does not submit while a value is missing', async () => {
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <GroupEntryForm group={group} />
+            </QueryClientProvider>
+        );
+
+        await user.type(screen.getByLabelText('Systolic (mmHg)'), '120');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        expect(mutate).not.toHaveBeenCalled();
     });
 });

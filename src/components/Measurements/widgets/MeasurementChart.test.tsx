@@ -34,6 +34,22 @@ describe('MeasurementChart', () => {
         render(<MeasurementChart category={new MeasurementCategory('c-1', 'Biceps', 'cm')} />);
         render(<MeasurementChart category={new MeasurementCategory('c-2', 'Steps', 'steps', [], 'steps')} />);
     });
+
+    test('mounts a combined chart for a group', () => {
+        const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg');
+        const systolic = new MeasurementCategory('c-sys', 'Systolic', 'mmHg', [], 'blood_pressure', false, 'g-1');
+        systolic.entries = [
+            new MeasurementEntry('d-1', 'c-sys', new Date(2023, 1, 1, 8), 120, ''),
+            new MeasurementEntry('d-2', 'c-sys', new Date(2023, 1, 2, 8), 125, ''),
+        ];
+        const diastolic = new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', [], 'blood_pressure', false, 'g-1');
+        diastolic.entries = [
+            new MeasurementEntry('d-3', 'c-dia', new Date(2023, 1, 1, 8), 80, ''),
+        ];
+        group.children = [systolic, diastolic];
+
+        render(<MeasurementChart category={group} />);
+    });
 });
 
 describe('aggregatePerDay', () => {

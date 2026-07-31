@@ -3,8 +3,9 @@ import { isSummedPerDay, MeasurementCategory } from "@/components/Measurements/m
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Bar, BarChart, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { theme } from "@/theme";
+import { generateChartColors } from "@/core/lib/colors";
 import { dateToLocale } from "@/core/lib/date";
 import { calculateEMA } from "@/core/lib/ema";
 
@@ -89,7 +90,7 @@ const MeasurementBarChart = (props: { category: MeasurementCategory }) => {
                 dataKey="date"
                 tickFormatter={timeStr => dateToLocale(new Date(timeStr))!}
             />
-            <YAxis type="number" domain={[0, 'auto']} width={90} unit={props.category.unit} />
+            <YAxis type="number" domain={[0, 'auto']} width="auto" unit={props.category.unit} />
             <Tooltip content={(<CustomTooltip category={props.category} />)} />
             <Bar
                 dataKey="value"
@@ -142,13 +143,66 @@ const MeasurementLineChart = (props: { category: MeasurementCategory }) => {
                 tickFormatter={timeStr => dateToLocale(new Date(timeStr))!}
                 tickCount={10}
             />
-            <YAxis domain={['auto', 'auto']} unit={props.category.unit} />
+            <YAxis domain={['auto', 'auto']} width="auto" unit={props.category.unit} />
             {<Tooltip content={(<CustomTooltip category={props.category} />)} />}
         </LineChart>
     </Box>;
 };
 
+/**
+ * Renders all components of a multi-value group (e.g. systolic and diastolic
+ * blood pressure) as series of one combined chart
+ */
+const MeasurementGroupChart = (props: { category: MeasurementCategory }) => {
+    const colorGenerator = generateChartColors(props.category.children.length);
+
+    return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+        <LineChart responsive width="90%" height={200}>
+            <CartesianGrid
+                stroke="#ccc"
+                strokeDasharray="5 5" />
+            <XAxis
+                dataKey="date"
+                type={'number'}
+                domain={['dataMin', 'dataMax']}
+                tickFormatter={timeStr => dateToLocale(new Date(timeStr))!}
+                tickCount={10}
+            />
+            <YAxis domain={['auto', 'auto']} width="auto" unit={props.category.unit} />
+            <Tooltip
+                labelFormatter={label => dateToLocale(new Date(label as number))!}
+                formatter={(value, name, item) =>
+                    `${value} ${item.payload.unit || props.category.unit}`}
+            />
+            <Legend />
+            {props.category.children.map(child => {
+                const data = [...child.entries]
+                    .sort((a, b) => a.date.getTime() - b.date.getTime())
+                    .map(entry => ({
+                        date: entry.date.getTime(),
+                        value: entry.value,
+                        unit: child.unit,
+                    }));
+
+                return <Line
+                    key={child.id}
+                    type="monotone"
+                    data={data}
+                    dataKey="value"
+                    name={child.name}
+                    stroke={colorGenerator.next().value!}
+                    strokeWidth={2}
+                    dot={false} />;
+            })}
+        </LineChart>
+    </Box>;
+};
+
 export const MeasurementChart = (props: { category: MeasurementCategory }) => {
+    if (props.category.isGroup) {
+        return <MeasurementGroupChart category={props.category} />;
+    }
+
     return isSummedPerDay(props.category.metricType)
         ? <MeasurementBarChart category={props.category} />
         : <MeasurementLineChart category={props.category} />;

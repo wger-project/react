@@ -1,4 +1,4 @@
-import { Stack, } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { useMeasurementsQuery } from "@/components/Measurements/queries";
@@ -32,9 +32,15 @@ export const MeasurementCategoryDetail = () => {
         mainContent={
             <Stack spacing={2}>
                 <MeasurementChart category={categoryQuery.data!} />
-                <CategoryDetailDataGrid category={categoryQuery.data!} />
+                {categoryQuery.data!.isGroup
+                    ? categoryQuery.data!.children.map(child =>
+                        <React.Fragment key={child.id}>
+                            <Typography variant="h5">{child.name}</Typography>
+                            <CategoryDetailDataGrid category={child} />
+                        </React.Fragment>)
+                    : <CategoryDetailDataGrid category={categoryQuery.data!} />}
             </Stack>
         }
-        fab={<AddMeasurementEntryFab />}
+        fab={<AddMeasurementEntryFab category={categoryQuery.data!} />}
     />;
 };

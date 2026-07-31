@@ -14,6 +14,25 @@ export type MeasurementQueryOptions = {
     filtersetQueryEntries?: object,
 }
 
+const loadEntries = async (categoryId: string, filtersetQuery: object = {}): Promise<MeasurementEntry[]> => {
+    const out: MeasurementEntry[] = [];
+    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
+        query: {
+            category: categoryId,
+            limit: API_MAX_PAGE_SIZE,
+            ...filtersetQuery,
+        }
+    });
+
+    // Collect all pages of entries
+    for await (const page of fetchPaginated(url, makeHeader())) {
+        for (const entryData of page) {
+            out.push(MeasurementEntry.fromJson(entryData));
+        }
+    }
+    return out;
+};
+
 export const getMeasurementCategories = async (options?: MeasurementQueryOptions): Promise<MeasurementCategory[]> => {
     const { filtersetQueryCategories = {}, filtersetQueryEntries = {} } = options || {};
 
@@ -36,36 +55,20 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
     categories = categories.filter(c => !(c.isOfficial && c.metricType === METRIC_TYPE_BODY_WEIGHT));
 
     // Load entries for each category
-    const entryResponses = categories.map(async (category) => {
-        const out: MeasurementEntry[] = [];
-        const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
-            query: {
-                category: category.id,
-                limit: API_MAX_PAGE_SIZE,
-                ...filtersetQueryEntries,
-            }
-        });
+    await Promise.all(categories.map(async (category) => {
+        category.entries = await loadEntries(category.id!, filtersetQueryEntries);
+    }));
 
-        // Collect all pages of entries
-        for await (const page of fetchPaginated(url, makeHeader())) {
-            for (const entries of page) {
-                out.push(MeasurementEntry.fromJson(entries));
-            }
+    // Multi-value groups: attach the children to their parent, only the
+    // top-level categories are returned
+    const byId = new Map(categories.map(c => [c.id, c]));
+    for (const category of categories) {
+        if (category.parentId !== null) {
+            byId.get(category.parentId)?.children.push(category);
         }
-        return out;
-    });
-    const settingsResponses = await Promise.all(entryResponses);
+    }
 
-    // Save entries to each category
-    let categoryId: string;
-    settingsResponses.forEach((entries) => {
-        if (entries.length > 0) {
-            categoryId = entries[0].category;
-            categories.findLast(c => c.id === categoryId)!.entries = entries;
-        }
-    });
-
-    return categories;
+    return categories.filter(c => c.parentId === null);
 };
 
 export const getMeasurementCategory = async (id: string): Promise<MeasurementCategory> => {
@@ -75,17 +78,20 @@ export const getMeasurementCategory = async (id: string): Promise<MeasurementCat
     );
 
     const category = MeasurementCategory.fromJson(receivedCategories);
-    const measurements: MeasurementEntry[] = [];
-    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: { category: category.id } });
 
-    // Collect all pages of entries
-    for await (const page of fetchPaginated(url, makeHeader())) {
-        for (const entries of page) {
-            measurements.push(MeasurementEntry.fromJson(entries));
+    // Children of a multi-value group; empty for plain categories
+    const childrenUrl = makeUrl(API_MEASUREMENTS_CATEGORY_PATH, {
+        query: { parent: id, limit: API_MAX_PAGE_SIZE }
+    });
+    for await (const page of fetchPaginated(childrenUrl, makeHeader())) {
+        for (const childData of page) {
+            category.children.push(MeasurementCategory.fromJson(childData));
         }
     }
 
-    category.entries = measurements;
+    await Promise.all([category, ...category.children].map(async (cat) => {
+        cat.entries = await loadEntries(cat.id!);
+    }));
 
     return category;
 };
