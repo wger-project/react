@@ -13,6 +13,14 @@ export function numberLocale(num: number, locale: string) {
 }
 
 /*
+ * Formats a number, localised, with up to two fraction digits: as many as the
+ * server stores, and few enough to hide the artefacts of summing floats
+ */
+export function numberDecimalLocale(num: number, locale: string) {
+    return num.toLocaleString(locale, { maximumFractionDigits: 2 });
+}
+
+/*
  * Formats a number with a unit, localised, no fraction digits
  *
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat

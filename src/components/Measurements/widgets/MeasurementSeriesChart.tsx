@@ -1,10 +1,12 @@
-import { Box, Paper, useTheme } from "@mui/material";
+import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import { Theme } from "@mui/material/styles";
 import { dotRadius, useChartWidth } from "@/components/Measurements/charts/density";
+import { dateTick, spansYears, valueWithUnit } from "@/components/Measurements/charts/format";
 import { ChartSeries, ChartSeriesRole, hasRange } from "@/components/Measurements/charts/series";
+import { ChartEmptyState } from "@/components/Measurements/widgets/ChartEmptyState";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Area, CartesianGrid, ComposedChart, Legend, Line, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, CartesianGrid, ComposedChart, Line, Tooltip, XAxis, YAxis } from "recharts";
 import { generateChartColors } from "@/core/lib/colors";
 import { dateToLocale } from "@/core/lib/date";
 
@@ -20,6 +22,8 @@ interface TooltipProps {
 }
 
 const CustomTooltip = ({ active, payload, label, unit }: TooltipProps) => {
+    const [, i18n] = useTranslation();
+
     if (!active || !payload?.length) {
         return null;
     }
@@ -29,7 +33,7 @@ const CustomTooltip = ({ active, payload, label, unit }: TooltipProps) => {
             <p><strong>{dateToLocale(new Date(Number(label)))}</strong></p>
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {payload.map((item: any) => (
-                <p key={item.name}>{item.name}: {item.value.toFixed(1)} {unit}</p>
+                <p key={item.name}>{item.name}: {valueWithUnit(item.value, unit, i18n.language)}</p>
             ))}
         </Paper>
     );
@@ -104,7 +108,7 @@ export const bandData = (series: ChartSeries): { date: number, range: [number, n
  */
 export const MeasurementSeriesChart = (props: { series: ChartSeries[], unit: string, height?: number }) => {
     const theme = useTheme();
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
     const [chartRef, chartWidth] = useChartWidth();
 
     const roleLabels: Record<ChartSeriesRole, string> = {
@@ -127,7 +131,12 @@ export const MeasurementSeriesChart = (props: { series: ChartSeries[], unit: str
     // The densest series decides the mark size: all of them share the width
     const maxPoints = Math.max(0, ...props.series.map(s => s.points.length));
     const radius = dotRadius(chartWidth, maxPoints);
-    const showLegend = props.series.some(s => s.label !== undefined);
+
+    if (maxPoints === 0) {
+        return <ChartEmptyState height={props.height} />;
+    }
+
+    const withYear = spansYears(props.series.flatMap(s => s.points));
 
     return <Box ref={chartRef} sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
         <ComposedChart responsive width="90%" height={props.height ?? 200}>
@@ -138,12 +147,14 @@ export const MeasurementSeriesChart = (props: { series: ChartSeries[], unit: str
                 dataKey="date"
                 type={'number'}
                 domain={['dataMin', 'dataMax']}
-                tickFormatter={timeStr => dateToLocale(new Date(timeStr))!}
+                tickFormatter={dateTick(withYear)}
                 tickCount={10}
             />
-            <YAxis domain={['auto', 'auto']} width="auto" unit={props.unit} />
+            <YAxis
+                domain={['auto', 'auto']}
+                width="auto"
+                tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
             <Tooltip content={<CustomTooltip unit={props.unit} />} />
-            {showLegend && <Legend />}
 
             {/* the bands go in first so the lines paint on top of them */}
             {resolved.map(({ series, color, key }) => {
@@ -170,5 +181,18 @@ export const MeasurementSeriesChart = (props: { series: ChartSeries[], unit: str
                     name={name}
                     {...lineProps(series.role, color, radius)} />)}
         </ComposedChart>
+
+        {/*
+          * The legend is drawn outside the chart: recharts takes its swatch
+          * colour from the line's stroke, and the measured values have no
+          * stroke of their own, only dots
+          */}
+        <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap', justifyContent: 'center' }}>
+            {resolved.map(({ color, name, key }) =>
+                <Stack key={`legend-${key}`} direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
+                    <Box sx={{ backgroundColor: color, height: 12, width: 12 }} />
+                    <Typography variant="caption">{name}</Typography>
+                </Stack>)}
+        </Stack>
     </Box>;
 };

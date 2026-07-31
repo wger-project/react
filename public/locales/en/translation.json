@@ -357,7 +357,8 @@
         },
         "indicatorRaw": "raw",
         "indicatorAvg": "avg",
-        "indicatorTrend": "trend"
+        "indicatorTrend": "trend",
+        "noDataAvailable": "No data available"
     },
     "server": {
         "abs": "Abs",

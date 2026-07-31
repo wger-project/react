@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { MeasurementCard } from "@/components/Dashboard/MeasurementCard";
 import { MeasurementCategory, useMeasurementsCategoryQuery } from "@/components/Measurements";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
@@ -78,10 +78,14 @@ describe("smoke test the MeasurementCard component", () => {
             // Assert
             expect(screen.getAllByText('Blood pressure').length).toBeGreaterThan(0);
             expect(screen.getAllByText('Systolic').length).toBeGreaterThan(0);
-            expect(screen.getAllByText('125 mmHg').length).toBeGreaterThan(0);
+
+            // scoped to the table, the values also appear on the chart's axis
+            const table = within(screen.getByRole('table'));
+            expect(table.getByText('125 mmHg')).toBeInTheDocument();
             // no reading yet for the diastolic component
-            expect(screen.getAllByText('—').length).toBeGreaterThan(0);
-            expect(screen.queryByText('120 mmHg')).toBeNull();
+            expect(table.getByText('—')).toBeInTheDocument();
+            // only the latest reading is listed
+            expect(table.queryByText('120 mmHg')).toBeNull();
         });
     });
 
