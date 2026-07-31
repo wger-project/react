@@ -47,6 +47,15 @@ describe('MeasurementCategory', () => {
         expect(metricTypeFromApi('heart_rate')).toBe('heart_rate');
     });
 
+    test('clone treats a null parentId override as "remove from group"', () => {
+        const category = new MeasurementCategory('c-1', 'Systolic', 'mmHg', undefined, 'blood_pressure', false, 'c-parent', 1);
+
+        expect(MeasurementCategory.clone(category).parentId).toBe('c-parent');
+        expect(MeasurementCategory.clone(category, { name: 'x' }).parentId).toBe('c-parent');
+        expect(MeasurementCategory.clone(category, { parentId: null }).parentId).toBeNull();
+        expect(MeasurementCategory.clone(category, { parentId: 'c-other' }).parentId).toBe('c-other');
+    });
+
     test('only cumulative metric types are summed per day', () => {
         expect(isSummedPerDay('steps')).toBe(true);
         expect(isSummedPerDay('distance')).toBe(true);

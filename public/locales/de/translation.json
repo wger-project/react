@@ -252,7 +252,22 @@
     "measurements": {
         "deleteInfo": "Dies wird die Kategorie sowie alle seine Einträge löschen",
         "unitFormHelpText": "Die Einheit, in der die Kategorie gemessen wird, wie cm oder %",
-        "measurements": "Messungen"
+        "measurements": "Messungen",
+        "metricType": "Metrik-Typ",
+        "partOfGroup": "Teil der Gruppe",
+        "noGroup": "Keine Gruppe",
+        "metricTypes": {
+            "custom": "Benutzerdefiniert",
+            "body_weight": "Körpergewicht",
+            "body_fat": "Körperfett",
+            "height": "Körpergröße",
+            "blood_pressure": "Blutdruck",
+            "heart_rate": "Herzfrequenz",
+            "steps": "Schritte",
+            "distance": "Distanz",
+            "energy": "Energie",
+            "sleep": "Schlaf"
+        }
     },
     "timeOfDay": "Uhrzeit",
     "notes": "Notizen",

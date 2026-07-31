@@ -337,7 +337,22 @@
     "measurements": {
         "measurements": "Mesures",
         "unitFormHelpText": "L'unité dans laquelle la catégorie sera mesurée, telle que cm ou %",
-        "deleteInfo": "Ceci supprimera la catégorie ainsi que toutes ses entrées"
+        "deleteInfo": "Ceci supprimera la catégorie ainsi que toutes ses entrées",
+        "metricType": "Type de métrique",
+        "partOfGroup": "Fait partie du groupe",
+        "noGroup": "Aucun groupe",
+        "metricTypes": {
+            "custom": "Personnalisé",
+            "body_weight": "Poids corporel",
+            "body_fat": "Graisse corporelle",
+            "height": "Taille",
+            "blood_pressure": "Pression artérielle",
+            "heart_rate": "Fréquence cardiaque",
+            "steps": "Pas",
+            "distance": "Distance",
+            "energy": "Énergie",
+            "sleep": "Sommeil"
+        }
     },
     "downloadAsPdf": "Télécharger en PDF",
     "calendar": "Calendrier",

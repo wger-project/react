@@ -32,6 +32,14 @@ export function isSummedPerDay(type: MetricType): boolean {
     return type === 'steps' || type === 'distance' || type === 'energy' || type === 'sleep';
 }
 
+/**
+ * Metric types reserved for the official categories the server manages:
+ * users cannot create categories of these types
+ */
+export function isOfficialMetricType(type: MetricType): boolean {
+    return type === METRIC_TYPE_BODY_WEIGHT;
+}
+
 export class MeasurementCategory {
 
     entries: MeasurementEntry[] = [];
@@ -51,15 +59,17 @@ export class MeasurementCategory {
         }
     }
 
-    static clone(other: MeasurementCategory, overrides?: Partial<Pick<MeasurementCategory, 'id' | 'name' | 'unit'>>): MeasurementCategory {
+    static clone(other: MeasurementCategory, overrides?: Partial<Pick<MeasurementCategory, 'id' | 'name' | 'unit' | 'metricType' | 'parentId'>>): MeasurementCategory {
         return new MeasurementCategory(
             overrides?.id ?? other.id,
             overrides?.name ?? other.name,
             overrides?.unit ?? other.unit,
             other.entries,
-            other.metricType,
+            overrides?.metricType ?? other.metricType,
             other.isOfficial,
-            other.parentId,
+            // null is a meaningful override here (remove from group), so the
+            // usual ?? fallback doesn't work
+            overrides !== undefined && 'parentId' in overrides ? overrides.parentId ?? null : other.parentId,
             other.order,
         );
     }

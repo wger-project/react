@@ -254,7 +254,22 @@
     "measurements": {
         "measurements": "Mediciones",
         "unitFormHelpText": "La unidad en la que se medirá la categoría, como cm o %",
-        "deleteInfo": "Esto eliminará la categoría así como todas sus entradas"
+        "deleteInfo": "Esto eliminará la categoría así como todas sus entradas",
+        "metricType": "Tipo de métrica",
+        "partOfGroup": "Parte del grupo",
+        "noGroup": "Sin grupo",
+        "metricTypes": {
+            "custom": "Personalizado",
+            "body_weight": "Peso corporal",
+            "body_fat": "Grasa corporal",
+            "height": "Altura",
+            "blood_pressure": "Presión arterial",
+            "heart_rate": "Frecuencia cardíaca",
+            "steps": "Pasos",
+            "distance": "Distancia",
+            "energy": "Energía",
+            "sleep": "Sueño"
+        }
     },
     "deleteConfirmation": "¿Estás seguro de que quieres borrar \"{{name}}\"?",
     "nutrition": {
