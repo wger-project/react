@@ -30,11 +30,13 @@ import {
     responsePrivateTemplate,
     responsePublicTemplate,
     responseRoutineDayData,
+    responseRoutineDayDataIterationGap,
     responseRoutineLogData,
     responseRoutineLogs,
     responseRoutinesShallowWithTemplate,
     responseRoutineStats,
     responseRoutineStructure,
+    responseRoutineStructureIterationGap,
     responseSingleRoutineDetail,
     testRepUnit1,
     testRepUnit2,
@@ -434,6 +436,32 @@ describe("workout routine service tests", () => {
         // The missing exercise must not leak into the array the UI iterates as a non-null Exercise
         const slotExercises = result.dayData.flatMap(d => d.slots).flatMap(s => s.exercises);
         expect(slotExercises).not.toContain(undefined);
+    });
+
+    test('loads the exercises of days that never reach a first iteration', async () => {
+        (axios.get as Mock).mockImplementation((url: string) => {
+            if (url.includes("date-sequence-display")) {
+                return Promise.resolve({ data: responseRoutineDayDataIterationGap });
+            }
+            if (url.includes("structure")) {
+                return Promise.resolve({ data: responseRoutineStructureIterationGap });
+            }
+            return Promise.resolve({ data: responseSingleRoutineDetail });
+        });
+        (getRoutineRepUnits as Mock).mockResolvedValue([testRepUnit1, testRepUnit2]);
+        (getRoutineWeightUnits as Mock).mockResolvedValue([testWeightUnit1, testWeightUnit2]);
+
+        // Behave like the API and only hand back what was actually requested
+        const catalogue = [testExerciseBenchPress, testExerciseCurls];
+        (getExercisesByIds as Mock).mockImplementation((ids: number[]) =>
+            Promise.resolve(catalogue.filter(exercise => ids.includes(exercise.id!)))
+        );
+
+        const result = await getRoutine(1);
+
+        // The pull day only exists in the structure, its exercise must be requested anyway
+        expect(getExercisesByIds).toHaveBeenCalledWith([2, 3]);
+        expect(result.days[1].slots[0].entries[0].exercise).toBe(testExerciseCurls);
     });
 
     test('getRoutineStatisticsData hits the stats endpoint and returns RoutineStatsData', async () => {
