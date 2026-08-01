@@ -264,6 +264,8 @@
             "body_fat": "Körperfett",
             "height": "Körpergröße",
             "blood_pressure": "Blutdruck",
+            "blood_pressure_systolic": "Systolisch",
+            "blood_pressure_diastolic": "Diastolisch",
             "heart_rate": "Herzfrequenz",
             "resting_heart_rate": "Ruhepuls",
             "steps": "Schritte",

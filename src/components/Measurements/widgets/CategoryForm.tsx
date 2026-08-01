@@ -1,4 +1,6 @@
 import {
+    isComponentMetricType,
+    isGroupMetricType,
     isOfficialMetricType,
     MeasurementCategory,
     METRIC_TYPES,
@@ -27,18 +29,23 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     const useEditCategoryQuery = useEditMeasurementCategoryQuery(category?.id || '');
     const categoryQuery = useMeasurementsCategoryQuery();
 
-    // Official metric types are reserved for the server-managed categories
-    const metricTypeChoices = METRIC_TYPES.filter(m => !isOfficialMetricType(m) || m === category?.metricType);
+    // Official metric types are reserved for the server-managed categories,
+    // components are a structural type: they only exist as the children of
+    // their group, which the server creates them with
+    const metricTypeChoices = METRIC_TYPES.filter(m =>
+        (!isOfficialMetricType(m) && !isComponentMetricType(m)) || m === category?.metricType);
 
     // Multi-value groups, e.g. blood pressure. Mirrors the server rules: only
-    // top-level, entry-free categories can be parents, and a category that
-    // already has children cannot be nested. The current parent always stays
+    // top-level, entry-free categories can be parents, a category that already
+    // has children cannot be nested, a typed category stays top-level, and a
+    // group takes only its own components. The current parent always stays
     // selectable so editing something else doesn't silently drop it.
     const categories = categoryQuery.data ?? [];
     const hasChildren = category?.id != null && categories.some(c => c.parentId === category.id);
     const parentCandidates = categories.filter(c =>
         c.parentId === null
         && c.id !== category?.id
+        && !isGroupMetricType(c.metricType)
         && (c.entries.length === 0 || c.id === category?.parentId)
     );
     // Match the backend column limits. We do NOT enforce a minimum length:
@@ -134,7 +141,8 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                                 </MenuItem>
                             )}
                         </TextField>
-                        {!hasChildren && parentCandidates.length > 0 &&
+                        {!hasChildren && formik.values.metricType === 'custom'
+                            && parentCandidates.length > 0 &&
                             <TextField
                                 select
                                 fullWidth

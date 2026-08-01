@@ -105,7 +105,7 @@ describe("Test the CategoryForm component", () => {
         expect(mutate).toHaveBeenCalledWith(new MeasurementCategory(null, 'calves', 'cm'));
     });
 
-    test('The body weight metric type is not offered', async () => {
+    test('The body weight and component metric types are not offered', async () => {
         // Arrange
         const user = userEvent.setup();
 
@@ -120,9 +120,11 @@ describe("Test the CategoryForm component", () => {
         // Assert
         expect(screen.getByRole('option', { name: 'measurements.metricTypes.steps' })).toBeInTheDocument();
         expect(screen.queryByRole('option', { name: 'measurements.metricTypes.body_weight' })).toBeNull();
+        expect(screen.queryByRole('option', { name: 'measurements.metricTypes.blood_pressure_systolic' })).toBeNull();
+        expect(screen.queryByRole('option', { name: 'measurements.metricTypes.blood_pressure_diastolic' })).toBeNull();
     });
 
-    test('Creating a category with a metric type and group', async () => {
+    test('Creating a category inside a group', async () => {
         // Arrange
         const user = userEvent.setup();
 
@@ -132,11 +134,8 @@ describe("Test the CategoryForm component", () => {
                 <CategoryForm />
             </QueryClientProvider>
         );
-        await user.type(await screen.findByLabelText('name'), 'Systolic');
+        await user.type(await screen.findByLabelText('name'), 'Something');
         await user.type(await screen.findByLabelText('unit'), 'mmHg');
-
-        await user.click(screen.getByRole('combobox', { name: 'measurements.metricType' }));
-        await user.click(screen.getByRole('option', { name: 'measurements.metricTypes.blood_pressure' }));
 
         await user.click(screen.getByRole('combobox', { name: 'measurements.partOfGroup' }));
         await user.click(screen.getByRole('option', { name: 'Blood pressure' }));
@@ -146,13 +145,47 @@ describe("Test the CategoryForm component", () => {
         // Assert
         expect(mutate).toHaveBeenCalledWith(new MeasurementCategory(
             null,
-            'Systolic',
+            'Something',
             'mmHg',
             undefined,
-            'blood_pressure',
+            'custom',
             false,
             TEST_GROUP_CATEGORY.id,
         ));
+    });
+
+    test('A typed category cannot be put into a group', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm />
+            </QueryClientProvider>
+        );
+        await user.click(screen.getByRole('combobox', { name: 'measurements.metricType' }));
+        await user.click(screen.getByRole('option', { name: 'measurements.metricTypes.steps' }));
+
+        // Assert - the group selector is gone, a typed category stays top-level
+        expect(screen.queryByRole('combobox', { name: 'measurements.partOfGroup' })).toBeNull();
+    });
+
+    test('A group is not offered as a parent, it only holds its own components', async () => {
+        // Arrange
+        (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
+            data: [MeasurementCategory.clone(TEST_GROUP_CATEGORY, { metricType: 'blood_pressure' })]
+        }));
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm />
+            </QueryClientProvider>
+        );
+
+        // Assert - no eligible parent left, so the selector is not rendered
+        expect(screen.queryByRole('combobox', { name: 'measurements.partOfGroup' })).toBeNull();
     });
 
     test('Only entry-free top-level categories are offered as parents', async () => {

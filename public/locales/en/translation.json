@@ -348,6 +348,8 @@
             "body_fat": "Body fat",
             "height": "Height",
             "blood_pressure": "Blood pressure",
+            "blood_pressure_systolic": "Systolic",
+            "blood_pressure_diastolic": "Diastolic",
             "heart_rate": "Heart rate",
             "resting_heart_rate": "Resting heart rate",
             "steps": "Steps",

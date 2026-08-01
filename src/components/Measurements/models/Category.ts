@@ -8,6 +8,8 @@ export const METRIC_TYPES = [
     'body_fat',
     'height',
     'blood_pressure',
+    'blood_pressure_systolic',
+    'blood_pressure_diastolic',
     'heart_rate',
     'resting_heart_rate',
     'steps',
@@ -48,6 +50,32 @@ export function correlatesWithNutrition(type: MetricType): boolean {
  */
 export function isOfficialMetricType(type: MetricType): boolean {
     return type === METRIC_TYPE_BODY_WEIGHT;
+}
+
+/**
+ * The components of the multi-value metric types, in group order. Mirrors
+ * GROUP_COMPONENTS on the server, which is what creates these categories.
+ */
+export const GROUP_COMPONENTS: Partial<Record<MetricType, MetricType[]>> = {
+    // eslint-disable-next-line camelcase
+    blood_pressure: ['blood_pressure_systolic', 'blood_pressure_diastolic'],
+};
+
+/**
+ * A container type whose readings live in its components, e.g. blood pressure.
+ * A group category never carries entries of its own.
+ */
+export function isGroupMetricType(type: MetricType): boolean {
+    return type in GROUP_COMPONENTS;
+}
+
+/**
+ * One component of a group, e.g. systolic. Components exist only as the
+ * children of their group, which the server creates them with, so they are
+ * never offered when creating a category.
+ */
+export function isComponentMetricType(type: MetricType): boolean {
+    return Object.values(GROUP_COMPONENTS).some(components => components.includes(type));
 }
 
 export class MeasurementCategory {

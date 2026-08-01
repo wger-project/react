@@ -349,6 +349,8 @@
             "body_fat": "Graisse corporelle",
             "height": "Taille",
             "blood_pressure": "Pression artérielle",
+            "blood_pressure_systolic": "Systolique",
+            "blood_pressure_diastolic": "Diastolique",
             "heart_rate": "Fréquence cardiaque",
             "resting_heart_rate": "Fréquence cardiaque au repos",
             "steps": "Pas",
