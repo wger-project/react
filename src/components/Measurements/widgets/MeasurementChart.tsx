@@ -5,8 +5,10 @@ import {
     chartPointsFor,
     fillMissingDays,
     groupChart,
-    measurementSeries
+    measurementSeries,
+    StackedPoint
 } from "@/components/Measurements/charts/data";
+import { componentColor, componentPalette } from "@/components/Measurements/charts/colors";
 import { MAX_BAR_WIDTH } from "@/components/Measurements/charts/density";
 import { dateTick, spansYears, valueWithUnit } from "@/components/Measurements/charts/format";
 import {
@@ -162,6 +164,86 @@ const MeasurementRangeBarChart = (props: { points: ChartPoint[], unit: string })
     </Box>;
 };
 
+interface StackedTooltipProps {
+    active?: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload?: any;
+    label?: string;
+    unit: string;
+}
+
+/** The whole bar with its parts: a single segment says little without the night it belongs to */
+const StackedTooltip = ({ active, payload, label, unit }: StackedTooltipProps) => {
+    const [, i18n] = useTranslation();
+
+    if (!active || !payload?.length) {
+        return null;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const parts = payload.filter((entry: any) => entry.value > 0);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const total = parts.reduce((sum: number, entry: any) => sum + entry.value, 0);
+
+    return (
+        <Paper style={{ padding: 8 }}>
+            <p><strong>{dateToLocale(new Date(Number(label)))}</strong></p>
+            <p>{valueWithUnit(total, unit, i18n.language)}</p>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {parts.map((entry: any) => <p key={entry.dataKey}>
+                {entry.dataKey}: {numberDecimalLocale(entry.value, i18n.language)}
+            </p>)}
+        </Paper>
+    );
+};
+
+/**
+ * Stacked bar chart for a group whose components are parts of one whole, e.g.
+ * the sleep stages of a night.
+ *
+ * One bar per day, split into a segment per component in the components' own
+ * order, so the bar's height is the night and its segments are how it was
+ * spent. Colours come from the component palette by position, which is what
+ * ties a segment to the row naming it.
+ */
+const MeasurementStackedBarChart = (props: {
+    points: StackedPoint[],
+    labels: string[],
+    unit: string,
+}) => {
+    const [, i18n] = useTranslation();
+    const palette = componentPalette(props.labels.length);
+    const data = props.points.map(point => ({
+        date: point.date,
+        ...Object.fromEntries(props.labels.map((label, index) => [label, point.values[index]])),
+    }));
+
+    return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+        <BarChart data={data} responsive width="90%" height={200} barCategoryGap="15%">
+            <CartesianGrid
+                stroke="#ccc"
+                strokeDasharray="5 5"
+                vertical={false} />
+            <XAxis
+                dataKey="date"
+                tickFormatter={dateTick(spansYears(props.points))}
+            />
+            <YAxis
+                type="number"
+                domain={[0, 'auto']}
+                width="auto"
+                tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
+            <Tooltip content={<StackedTooltip unit={props.unit} />} />
+            {props.labels.map((label, index) => <Bar
+                key={label}
+                dataKey={label}
+                stackId="components"
+                fill={componentColor(palette, index)}
+                maxBarSize={MAX_BAR_WIDTH} />)}
+        </BarChart>
+    </Box>;
+};
+
 const MeasurementLineChart = (props: {
     category: MeasurementCategory,
     cutoff: Date | null,
@@ -193,9 +275,17 @@ export const MeasurementChart = (props: {
     if (props.category.isGroup) {
         const chart = groupChart(props.category, cutoff);
 
-        return chart.kind === 'range'
-            ? <MeasurementRangeBarChart points={chart.points} unit={props.category.unit} />
-            : <MeasurementSeriesChart series={chart.series} unit={props.category.unit} />;
+        switch (chart.kind) {
+            case 'stacked':
+                return <MeasurementStackedBarChart
+                    points={chart.points}
+                    labels={chart.labels}
+                    unit={props.category.unit} />;
+            case 'range':
+                return <MeasurementRangeBarChart points={chart.points} unit={props.category.unit} />;
+            case 'components':
+                return <MeasurementSeriesChart series={chart.series} unit={props.category.unit} />;
+        }
     }
 
     return isSummedPerDay(props.category.metricType)

@@ -1,9 +1,8 @@
-import { ChartPoint } from "@/components/Measurements/charts/series";
 import { dateToLocale } from "@/core/lib/date";
 import { numberDecimalLocale } from "@/core/lib/numbers";
 
 /** Whether the points fall into more than one calendar year */
-export const spansYears = (points: ChartPoint[]): boolean => {
+export const spansYears = (points: { date: number }[]): boolean => {
     if (points.length === 0) {
         return false;
     }

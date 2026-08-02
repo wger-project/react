@@ -1,4 +1,4 @@
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementCategory, MetricType } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
     aggregatePerDay,
@@ -8,9 +8,11 @@ import {
     groupChart,
     groupComponentSeries,
     groupRangeEntries,
+    groupStackedEntries,
     moving7dAverage,
     overallChange,
-    smoothedTrendline
+    smoothedTrendline,
+    stackableComponents
 } from "@/components/Measurements/charts/data";
 import { ChartPoint } from "@/components/Measurements/charts/series";
 import { describe, expect, test } from 'vitest';
@@ -307,6 +309,68 @@ describe('groups', () => {
         const chart = groupChart(group);
 
         expect(chart.kind).toBe('components');
+    });
+});
+
+describe('sleep group', () => {
+    /** A sleep group: the total plus two stages, all on the same night */
+    const sleep = (withStages: boolean = true) => {
+        const group = new MeasurementCategory('g-s', 'Sleep', 'min', [], 'sleep');
+        const child = (
+            id: string,
+            name: string,
+            type: MetricType,
+            order: number,
+            value: number | null,
+        ) => {
+            const category = new MeasurementCategory(id, name, 'min', [], type, false, 'g-s', order);
+            category.entries = value === null
+                ? []
+                : [new MeasurementEntry(`e-${id}`, id, day(2), value, '')];
+            return category;
+        };
+
+        group.children = [
+            child('total', 'Total sleep', 'sleep_total', 0, 480),
+            child('deep', 'Deep sleep', 'sleep_deep', 1, withStages ? 90 : null),
+            child('rem', 'REM sleep', 'sleep_rem', 2, withStages ? 60 : null),
+        ];
+        return group;
+    };
+
+    test('the roll-up component is left out of the stack', () => {
+        // Total sleep covers the stages, so stacking it would count the night
+        // twice
+        expect(stackableComponents(sleep()).map(c => c.metricType))
+            .toEqual(['sleep_deep', 'sleep_rem']);
+    });
+
+    test('stacked entries carry one value per component and day', () => {
+        const stacked = groupStackedEntries(stackableComponents(sleep()));
+
+        expect(stacked).toStrictEqual([{ date: day(2).getTime(), values: [90, 60] }]);
+    });
+
+    test('several entries of one day add up within their component', () => {
+        // A nap next to the night: the bar shows the day, not the segment
+        const group = sleep();
+        const deep = group.children[1];
+        deep.entries = [...deep.entries, new MeasurementEntry('e-nap', 'deep', day(2, 14), 20, '')];
+
+        expect(groupStackedEntries(stackableComponents(group))[0].values).toEqual([110, 60]);
+    });
+
+    test('a summed group stacks its components', () => {
+        const chart = groupChart(sleep());
+
+        expect(chart.kind).toBe('stacked');
+        expect(chart.kind === 'stacked' && chart.labels).toEqual(['Deep sleep', 'REM sleep']);
+    });
+
+    test('without stage data the group falls back to component lines', () => {
+        // Only the total reported, so there is nothing to stack. Falling
+        // through keeps the chart from going blank while data exists
+        expect(groupChart(sleep(false)).kind).toBe('components');
     });
 });
 

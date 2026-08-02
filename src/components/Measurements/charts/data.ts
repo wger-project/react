@@ -1,4 +1,8 @@
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import {
+    isGroupTotalMetricType,
+    isSummedPerDay,
+    MeasurementCategory
+} from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { pointsSince } from "@/components/Measurements/charts/range";
 import { ChartPoint, ChartSeries, PlanPeriod } from "@/components/Measurements/charts/series";
@@ -301,19 +305,76 @@ export const pointsOfRole = (series: ChartSeries[], role: ChartSeries['role']): 
     series.find(s => s.role === role)?.points ?? [];
 
 /**
+ * The components of a group that stack into one whole, i.e. everything but a
+ * roll-up component (see isGroupTotalMetricType)
+ */
+export const stackableComponents = (group: MeasurementCategory): MeasurementCategory[] =>
+    group.children.filter(child => !isGroupTotalMetricType(child.metricType));
+
+/** One stacked bar: a day, and what each component contributed to it */
+export interface StackedPoint {
+    date: number;
+    /** Runs parallel to the labels of the chart, a 0 where nothing was reported */
+    values: number[];
+}
+
+/**
+ * One stacked bar per day for the given components, stacked in the order they
+ * are given.
+ *
+ * Only days that any component reported are returned. Values are read through
+ * the unit helper, like everywhere else, so a component holding mixed units
+ * still stacks correctly.
+ */
+export const groupStackedEntries = (
+    components: MeasurementCategory[],
+    cutoff: Date | null = null,
+): StackedPoint[] => {
+    const byDay = new Map<number, number[]>();
+    components.forEach((child, index) => {
+        for (const entry of child.entries) {
+            if (cutoff !== null && entry.date < cutoff) {
+                continue;
+            }
+            const date = entry.date;
+            const day = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+            const values = byDay.get(day) ?? new Array<number>(components.length).fill(0);
+            // A component can hold several entries for one day (a nap next to
+            // the night), and the bar shows the day, so they add up
+            values[index] += entry.valueIn(child.unit, child.unit);
+            byDay.set(day, values);
+        }
+    });
+
+    return [...byDay.entries()]
+        .map(([date, values]) => ({ date: date, values: values }))
+        .sort((a, b) => a.date - b.date);
+};
+
+/**
  * How the readings of a group are charted.
  *
- * Two components are one reading with a low and a high end, so they are drawn
- * as a bar spanning it. Anything else stays one line per component: more than
- * two components cannot be a range, and neither can readings that are not
- * paired, which happens once the date of one half is edited apart from the
- * other. Without that fallback the card would go blank while there is data.
+ * Components that are parts of one whole (the sleep stages) stack into one bar
+ * per day. Two components that are the ends of a reading are drawn as a bar
+ * spanning it. Anything else stays one line per component: more than two
+ * components cannot be a range, and neither can readings that are not paired,
+ * which happens once the date of one half is edited apart from the other.
+ * Without that fallback the card would go blank while there is data.
  */
 export type GroupChart =
+    | { kind: 'stacked', points: StackedPoint[], labels: string[] }
     | { kind: 'range', points: ChartPoint[] }
     | { kind: 'components', series: ChartSeries[] };
 
 export const groupChart = (group: MeasurementCategory, cutoff: Date | null = null): GroupChart => {
+    if (isSummedPerDay(group.metricType)) {
+        const components = stackableComponents(group);
+        const stacked = groupStackedEntries(components, cutoff);
+        if (stacked.length > 0) {
+            return { kind: 'stacked', points: stacked, labels: components.map(c => c.name) };
+        }
+    }
+
     const ranges = group.children.length === 2 ? groupRangeEntries(group, cutoff) : [];
 
     return ranges.length > 0

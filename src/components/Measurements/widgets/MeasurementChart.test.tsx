@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementCategory, MetricType } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
 import React from 'react';
@@ -47,6 +47,22 @@ describe('MeasurementChart', () => {
             new MeasurementEntry('d-3', 'c-dia', new Date(2023, 1, 1, 8), 80, ''),
         ];
         group.children = [systolic, diastolic];
+
+        render(<MeasurementChart category={group} />);
+    });
+
+    test('mounts a stacked chart for a sleep group', () => {
+        const group = new MeasurementCategory('g-s', 'Sleep', 'min', [], 'sleep');
+        const stage = (id: string, name: string, type: MetricType, value: number) => {
+            const category = new MeasurementCategory(id, name, 'min', [], type, false, 'g-s');
+            category.entries = [new MeasurementEntry(`d-${id}`, id, new Date(2023, 1, 2), value, '')];
+            return category;
+        };
+        group.children = [
+            stage('total', 'Total sleep', 'sleep_total', 480),
+            stage('deep', 'Deep sleep', 'sleep_deep', 90),
+            stage('rem', 'REM sleep', 'sleep_rem', 60),
+        ];
 
         render(<MeasurementChart category={group} />);
     });

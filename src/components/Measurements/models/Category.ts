@@ -96,6 +96,15 @@ export function isComponentMetricType(type: MetricType): boolean {
     return Object.values(GROUP_COMPONENTS).some(components => components.includes(type));
 }
 
+/**
+ * The component that rolls its siblings up instead of being one part next to
+ * them. Total sleep already covers the stages beside it, so a stacked chart
+ * has to leave it out or it counts every night twice.
+ */
+export function isGroupTotalMetricType(type: MetricType): boolean {
+    return type === 'sleep_total';
+}
+
 export class MeasurementCategory {
 
     entries: MeasurementEntry[] = [];
