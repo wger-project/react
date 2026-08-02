@@ -273,7 +273,12 @@
             "steps": "Pasos",
             "distance": "Distancia",
             "energy": "Energía",
-            "sleep": "Sueño"
+            "sleep": "Sueño",
+            "sleep_total": "Sueño total",
+            "sleep_light": "Sueño ligero",
+            "sleep_deep": "Sueño profundo",
+            "sleep_rem": "Sueño REM",
+            "sleep_awake": "Despierto"
         },
         "indicatorRaw": "Bruto",
         "indicatorAvg": "medio",

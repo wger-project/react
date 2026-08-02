@@ -271,7 +271,12 @@
             "steps": "Schritte",
             "distance": "Distanz",
             "energy": "Energie",
-            "sleep": "Schlaf"
+            "sleep": "Schlaf",
+            "sleep_total": "Gesamtschlaf",
+            "sleep_light": "Leichtschlaf",
+            "sleep_deep": "Tiefschlaf",
+            "sleep_rem": "REM-Schlaf",
+            "sleep_awake": "Wach"
         },
         "indicatorRaw": "raw",
         "indicatorAvg": "Durchschn.",

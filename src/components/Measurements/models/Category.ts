@@ -16,6 +16,11 @@ export const METRIC_TYPES = [
     'distance',
     'energy',
     'sleep',
+    'sleep_total',
+    'sleep_light',
+    'sleep_deep',
+    'sleep_rem',
+    'sleep_awake',
 ] as const;
 export type MetricType = typeof METRIC_TYPES[number];
 
@@ -32,7 +37,15 @@ export function metricTypeFromApi(value: unknown): MetricType {
  * they are summed per day and charted as bars instead of a line
  */
 export function isSummedPerDay(type: MetricType): boolean {
-    return type === 'steps' || type === 'distance' || type === 'energy' || type === 'sleep';
+    return type === 'steps'
+        || type === 'distance'
+        || type === 'energy'
+        || type === 'sleep'
+        || type === 'sleep_total'
+        || type === 'sleep_light'
+        || type === 'sleep_deep'
+        || type === 'sleep_rem'
+        || type === 'sleep_awake';
 }
 
 /**
@@ -59,6 +72,11 @@ export function isOfficialMetricType(type: MetricType): boolean {
 export const GROUP_COMPONENTS: Partial<Record<MetricType, MetricType[]>> = {
     // eslint-disable-next-line camelcase
     blood_pressure: ['blood_pressure_systolic', 'blood_pressure_diastolic'],
+    // The total is a component of its own because a group carries no
+    // measurements. It is not the sum of the three stages next to it: platforms
+    // also report sleep without a stage breakdown, which counts towards the
+    // total and has no stage category to live in
+    sleep: ['sleep_total', 'sleep_light', 'sleep_deep', 'sleep_rem', 'sleep_awake'],
 };
 
 /**

@@ -356,7 +356,12 @@
             "steps": "Pas",
             "distance": "Distance",
             "energy": "Énergie",
-            "sleep": "Sommeil"
+            "sleep": "Sommeil",
+            "sleep_total": "Sommeil total",
+            "sleep_light": "Sommeil léger",
+            "sleep_deep": "Sommeil profond",
+            "sleep_rem": "Sommeil paradoxal",
+            "sleep_awake": "Éveillé"
         },
         "indicatorRaw": "brut",
         "indicatorAvg": "moy",

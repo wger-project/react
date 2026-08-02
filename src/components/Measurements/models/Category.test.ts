@@ -1,4 +1,10 @@
-import { isSummedPerDay, MeasurementCategory, metricTypeFromApi } from "./Category";
+import {
+    isComponentMetricType,
+    isGroupMetricType,
+    isSummedPerDay,
+    MeasurementCategory,
+    metricTypeFromApi
+} from "./Category";
 
 describe('MeasurementCategory', () => {
 
@@ -61,10 +67,23 @@ describe('MeasurementCategory', () => {
         expect(isSummedPerDay('distance')).toBe(true);
         expect(isSummedPerDay('energy')).toBe(true);
         expect(isSummedPerDay('sleep')).toBe(true);
+        expect(isSummedPerDay('sleep_total')).toBe(true);
+        expect(isSummedPerDay('sleep_deep')).toBe(true);
 
         expect(isSummedPerDay('custom')).toBe(false);
         expect(isSummedPerDay('body_weight')).toBe(false);
         expect(isSummedPerDay('heart_rate')).toBe(false);
         expect(isSummedPerDay('blood_pressure')).toBe(false);
+    });
+
+    test('sleep is a group of stage components', () => {
+        expect(isGroupMetricType('sleep')).toBe(true);
+        expect(isComponentMetricType('sleep_total')).toBe(true);
+        expect(isComponentMetricType('sleep_awake')).toBe(true);
+
+        // The group itself is never a component, and a leaf is neither
+        expect(isComponentMetricType('sleep')).toBe(false);
+        expect(isGroupMetricType('sleep_deep')).toBe(false);
+        expect(isGroupMetricType('heart_rate')).toBe(false);
     });
 });
