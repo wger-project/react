@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
-import { ChartRange, DEFAULT_CHART_RANGE } from "@/components/Measurements/charts/range";
+import { ChartRange, DEFAULT_CHART_RANGE, entryFilterFor } from "@/components/Measurements/charts/range";
 import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
 import { OverviewEmpty } from "@/core/ui/Widgets/OverviewEmpty";
@@ -53,12 +53,16 @@ export const CategoryList = (props: { category: MeasurementCategory, range: Char
 };
 
 export const MeasurementCategoryOverview = () => {
-    const categoryQuery = useMeasurementsCategoryQuery();
     const [t] = useTranslation();
     const [openReorderModal, setOpenReorderModal] = React.useState(false);
     // One range for all cards: picking it per card would put a row of
     // buttons on every one of them
     const [range, setRange] = React.useState<ChartRange>(DEFAULT_CHART_RANGE);
+    // Fetch what the range shows, rather than the whole history: this page
+    // charts three months by default, and a synced account holds years
+    const categoryQuery = useMeasurementsCategoryQuery({
+        filtersetQueryEntries: entryFilterFor(range),
+    });
 
     return categoryQuery.isLoading
         ? <LoadingPlaceholder />

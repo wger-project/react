@@ -76,7 +76,10 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
     return categories.filter(c => c.parentId === null);
 };
 
-export const getMeasurementCategory = async (id: string): Promise<MeasurementCategory> => {
+export const getMeasurementCategory = async (
+    id: string,
+    filtersetQueryEntries: object = {},
+): Promise<MeasurementCategory> => {
     const { data: receivedCategories } = await axios.get<ApiMeasurementCategoryType>(
         makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: id }),
         { headers: makeHeader() },
@@ -96,7 +99,7 @@ export const getMeasurementCategory = async (id: string): Promise<MeasurementCat
     category.children.sort((a, b) => a.order - b.order);
 
     await Promise.all([category, ...category.children].map(async (cat) => {
-        cat.entries = await loadEntries(cat.id!);
+        cat.entries = await loadEntries(cat.id!, filtersetQueryEntries);
     }));
 
     return category;

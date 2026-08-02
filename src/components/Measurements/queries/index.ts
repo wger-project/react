@@ -13,13 +13,16 @@ import {
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { QueryKey } from "@/core/lib/consts";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
 export function useMeasurementsCategoryQuery(options?: MeasurementQueryOptions) {
     return useQuery({
         queryKey: [QueryKey.MEASUREMENTS_CATEGORIES, JSON.stringify(options || {})],
-        queryFn: () => getMeasurementCategories(options)
+        queryFn: () => getMeasurementCategories(options),
+        // Widening the range refetches, and the charts would otherwise drop
+        // back to the loading placeholder while the longer history arrives
+        placeholderData: keepPreviousData,
     });
 }
 
@@ -81,10 +84,11 @@ export const useReorderMeasurementCategoriesQuery = () => {
     });
 };
 
-export function useMeasurementsQuery(id: string) {
+export function useMeasurementsQuery(id: string, filtersetQueryEntries: object = {}) {
     return useQuery({
-        queryKey: [QueryKey.MEASUREMENTS, id],
-        queryFn: () => getMeasurementCategory(id)
+        queryKey: [QueryKey.MEASUREMENTS, id, JSON.stringify(filtersetQueryEntries)],
+        queryFn: () => getMeasurementCategory(id, filtersetQueryEntries),
+        placeholderData: keepPreviousData,
     });
 }
 

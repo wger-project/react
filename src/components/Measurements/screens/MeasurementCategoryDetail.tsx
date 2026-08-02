@@ -6,7 +6,7 @@ import { useMeasurementsQuery } from "@/components/Measurements/queries";
 import { useNutritionPlanPeriods } from "@/components/Nutrition";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
 import { CategoryDetailDropdown } from "@/components/Measurements/widgets/CategoryDetailDropdown";
-import { ChartRange, DEFAULT_CHART_RANGE } from "@/components/Measurements/charts/range";
+import { ChartRange, DEFAULT_CHART_RANGE, entryFilterFor } from "@/components/Measurements/charts/range";
 import { AddMeasurementEntryFab } from "@/components/Measurements/widgets/fab";
 import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
@@ -21,9 +21,11 @@ export const MeasurementCategoryDetail = () => {
     }
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const categoryQuery = useMeasurementsQuery(categoryId);
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [range, setRange] = React.useState<ChartRange>(DEFAULT_CHART_RANGE);
+    // Fetch what the range shows, rather than the whole history. The grid
+    // below lists the same entries, so it follows the range too
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const categoryQuery = useMeasurementsQuery(categoryId, entryFilterFor(range));
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const planPeriods = useNutritionPlanPeriods(
         correlatesWithNutrition(categoryQuery.data?.metricType ?? 'custom'),
