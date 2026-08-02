@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MeasurementCategory, MetricType } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
@@ -49,6 +49,30 @@ describe('MeasurementChart', () => {
         group.children = [systolic, diastolic];
 
         render(<MeasurementChart category={group} />);
+    });
+
+    test('draws a heatmap when the category asks for one', () => {
+        const category = new MeasurementCategory('c-1', 'Steps', 'steps', [
+            entry('d-1', new Date(2023, 1, 1), 4000),
+        ], 'steps', false, null, 0, 'heatmap');
+
+        render(<MeasurementChart category={category} range="all" />);
+
+        // Unlike the recharts charts, the grid is plain elements and does
+        // render in jsdom
+        expect(screen.getByRole('img')).toBeInTheDocument();
+    });
+
+    test('keeps the derived chart when the pick does not fit the metric type', () => {
+        // Bars are not offered for a sample type, and a pick that does not fit
+        // falls back to the derived chart instead of being drawn anyway
+        const category = new MeasurementCategory('c-1', 'Biceps', 'cm', [
+            entry('d-1', new Date(2023, 1, 1), 30),
+        ], 'custom', false, null, 0, 'bar');
+
+        render(<MeasurementChart category={category} range="all" />);
+
+        expect(screen.queryByRole('img')).not.toBeInTheDocument();
     });
 
     test('mounts a stacked chart for a sleep group', () => {

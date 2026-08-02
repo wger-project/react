@@ -1,4 +1,5 @@
 import {
+    availableChartTypes,
     categoryDisplayName,
     isComponentMetricType,
     isGroupMetricType,
@@ -6,7 +7,8 @@ import {
     limitsFor,
     MEASUREMENT_SCHEMA_MAX_VALUE,
     MeasurementCategory,
-    metricTypeFromApi
+    metricTypeFromApi,
+    resolveChartType
 } from "./Category";
 
 describe('MeasurementCategory', () => {
@@ -45,6 +47,7 @@ describe('MeasurementCategory', () => {
             unit: 'steps',
 
             metric_type: 'steps',
+            chart_type: null,
             parent: null,
             order: 2,
         });
@@ -105,6 +108,72 @@ describe('MeasurementCategory', () => {
         expect(isComponentMetricType('sleep')).toBe(false);
         expect(isGroupMetricType('sleep_deep')).toBe(false);
         expect(isGroupMetricType('heart_rate')).toBe(false);
+    });
+
+    describe('chart type', () => {
+
+        test('fromJson reads the null the server sends as no override', () => {
+            const category = MeasurementCategory.fromJson({
+                id: 'c-1',
+                name: 'Steps',
+                unit: 'steps',
+                metric_type: 'steps',
+                chart_type: null,
+            });
+
+            expect(category.chartType).toBe('auto');
+        });
+
+        test('fromJson falls back to auto for a type this release does not know', () => {
+            const category = MeasurementCategory.fromJson({
+                id: 'c-1', name: 'Steps', unit: 'steps', chart_type: 'sunburst',
+            });
+
+            expect(category.chartType).toBe('auto');
+        });
+
+        test('toJson sends no override as null', () => {
+            const category = new MeasurementCategory('c-1', 'Steps', 'steps');
+
+            expect(category.toJson().chart_type).toBeNull();
+        });
+
+        test('toJson sends the picked type', () => {
+            const category = new MeasurementCategory(
+                'c-1', 'Steps', 'steps', undefined, 'steps', false, null, 0, 'heatmap',
+            );
+
+            expect(category.toJson().chart_type).toBe('heatmap');
+        });
+
+        test('clone carries the chart type over and can override it', () => {
+            const category = new MeasurementCategory(
+                'c-1', 'Steps', 'steps', undefined, 'steps', false, null, 0, 'heatmap',
+            );
+
+            expect(MeasurementCategory.clone(category).chartType).toBe('heatmap');
+            expect(MeasurementCategory.clone(category, { chartType: 'auto' }).chartType)
+                .toBe('auto');
+        });
+
+        test('the offered types follow the metric type', () => {
+            expect(availableChartTypes('steps')).toEqual(['bar', 'heatmap']);
+            expect(availableChartTypes('custom')).toEqual(['line', 'heatmap']);
+
+            // a group is drawn by what its components are to each other
+            expect(availableChartTypes('blood_pressure')).toEqual([]);
+        });
+
+        test('a type that does not fit falls back to the derived chart', () => {
+            expect(resolveChartType('custom', 'bar')).toBe('line');
+            expect(resolveChartType('steps', 'line')).toBe('bar');
+            expect(resolveChartType('custom', 'auto')).toBe('line');
+        });
+
+        test('a type that fits is kept', () => {
+            expect(resolveChartType('custom', 'heatmap')).toBe('heatmap');
+            expect(resolveChartType('steps', 'bar')).toBe('bar');
+        });
     });
 
     describe('categoryDisplayName', () => {

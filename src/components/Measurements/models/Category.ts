@@ -30,6 +30,28 @@ export type MetricType = typeof METRIC_TYPES[number];
 export const METRIC_TYPE_BODY_WEIGHT: MetricType = 'body_weight';
 
 /**
+ * The chart a category is drawn as.
+ *
+ * The values mirror the Django ChartType choices, where the override is a
+ * nullable column: 'auto' is that null, i.e. "derive the chart from the metric
+ * type", which is what every category does unless the user picked something
+ * else. Only the shapes that are a matter of taste are offered; a floating bar
+ * (two components) and a stacked bar (a summed group) follow from what the
+ * group is and are not choices.
+ */
+export const CHART_TYPES = ['auto', 'line', 'bar', 'heatmap'] as const;
+export type ChartType = typeof CHART_TYPES[number];
+
+/**
+ * Narrows a server value to a known chart type. Null is the server's "no
+ * override"; an unrecognised value is one added after this release, and
+ * falling back to 'auto' is what keeps such a category readable here.
+ */
+export function chartTypeFromApi(value: unknown): ChartType {
+    return CHART_TYPES.includes(value as ChartType) ? value as ChartType : 'auto';
+}
+
+/**
  * Name to show the user for a category.
  *
  * A typed category is created by the server or by the health importer and
@@ -65,6 +87,45 @@ export function isSummedPerDay(type: MetricType): boolean {
         || type === 'sleep_deep'
         || type === 'sleep_rem'
         || type === 'sleep_awake';
+}
+
+/**
+ * The chart a category of this metric type is drawn as when the user picked
+ * none.
+ *
+ * Summed types are one value per day and are drawn as that day's bar,
+ * everything else is a series of samples and gets the line chart. A group has
+ * no default here: its chart follows from what its components are to each
+ * other, see groupChart.
+ */
+export function defaultChartType(type: MetricType): ChartType {
+    return isSummedPerDay(type) ? 'bar' : 'line';
+}
+
+/**
+ * The chart types a category of this metric type may be drawn as, i.e. what
+ * the picker offers on top of 'auto'.
+ *
+ * The heatmap is the one alternative that fits every leaf type: it answers how
+ * regularly rather than how much, and it is the only chart of the set where a
+ * missing day is visible instead of being spanned by a line. A group is left
+ * out, its chart is structural rather than a preference.
+ */
+export function availableChartTypes(type: MetricType): ChartType[] {
+    return isGroupMetricType(type) ? [] : [defaultChartType(type), 'heatmap'];
+}
+
+/**
+ * The chart a category of this metric type is drawn as, given what the user
+ * picked.
+ *
+ * A pick that does not fit the type falls back to the derived default instead
+ * of being refused: the server stores the string without judging it, so this is
+ * also what keeps a category configured on another client from showing nothing
+ * here.
+ */
+export function resolveChartType(type: MetricType, picked: ChartType): ChartType {
+    return availableChartTypes(type).includes(picked) ? picked : defaultChartType(type);
 }
 
 /**
@@ -212,6 +273,8 @@ export class MeasurementCategory {
         public isOfficial: boolean = false,
         public parentId: string | null = null,
         public order: number = 0,
+        /** Chart the user picked, 'auto' (the server's null) for the derived one */
+        public chartType: ChartType = 'auto',
     ) {
         if (entries) {
             this.entries = entries;
@@ -222,7 +285,7 @@ export class MeasurementCategory {
         return this.children.length > 0;
     }
 
-    static clone(other: MeasurementCategory, overrides?: Partial<Pick<MeasurementCategory, 'id' | 'name' | 'unit' | 'metricType' | 'parentId'>>): MeasurementCategory {
+    static clone(other: MeasurementCategory, overrides?: Partial<Pick<MeasurementCategory, 'id' | 'name' | 'unit' | 'metricType' | 'parentId' | 'chartType'>>): MeasurementCategory {
         const category = new MeasurementCategory(
             overrides?.id ?? other.id,
             overrides?.name ?? other.name,
@@ -234,6 +297,7 @@ export class MeasurementCategory {
             // usual ?? fallback doesn't work
             overrides !== undefined && 'parentId' in overrides ? overrides.parentId ?? null : other.parentId,
             other.order,
+            overrides?.chartType ?? other.chartType,
         );
         category.children = other.children;
         return category;
@@ -262,6 +326,7 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             item.is_official,
             item.parent ?? null,
             item.order ?? 0,
+            chartTypeFromApi(item.chart_type),
         );
     }
 
@@ -272,6 +337,10 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             unit: item.unit,
             // eslint-disable-next-line camelcase
             metric_type: item.metricType,
+            // The column is nullable, and null is what makes the server derive
+            // the chart from the metric type
+            // eslint-disable-next-line camelcase
+            chart_type: item.chartType === 'auto' ? null : item.chartType,
             parent: item.parentId,
             order: item.order,
         };

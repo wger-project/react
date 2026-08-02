@@ -1,4 +1,6 @@
 import {
+    availableChartTypes,
+    ChartType,
     isComponentMetricType,
     isGroupMetricType,
     isOfficialMetricType,
@@ -21,6 +23,10 @@ interface CategoryFormProps {
     category?: MeasurementCategory,
     closeFn?: () => void,
 }
+
+/** What the chart type picker offers: no override, plus what the type allows */
+const chartTypeChoices = (metricType: MetricType): ChartType[] =>
+    ['auto', ...availableChartTypes(metricType)];
 
 export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
 
@@ -69,6 +75,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                 name: category ? category.name : "",
                 unit: category ? category.unit : "",
                 metricType: category ? category.metricType : 'custom' as MetricType,
+                chartType: category ? category.chartType : 'auto' as ChartType,
                 // the empty string stands in for "no group", MUI selects
                 // don't accept null values
                 parentId: category?.parentId ?? "",
@@ -83,6 +90,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                         name: values.name,
                         unit: values.unit,
                         metricType: values.metricType,
+                        chartType: values.chartType,
                         parentId: parentId,
                     }));
                 } else {
@@ -94,6 +102,8 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                         values.metricType,
                         false,
                         parentId,
+                        0,
+                        values.chartType,
                     ));
                 }
 
@@ -134,6 +144,17 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             label={t('measurements.metricType')}
                             disabled={category?.isOfficial}
                             {...formik.getFieldProps('metricType')}
+                            onChange={event => {
+                                const metricType = event.target.value as MetricType;
+                                formik.setFieldValue('metricType', metricType);
+                                // Bars are no choice for a sample type and a
+                                // line is none for a summed one, so a pick that
+                                // the new type cannot be drawn as goes back to
+                                // being derived
+                                if (!chartTypeChoices(metricType).includes(formik.values.chartType)) {
+                                    formik.setFieldValue('chartType', 'auto');
+                                }
+                            }}
                         >
                             {metricTypeChoices.map(metricType =>
                                 <MenuItem key={metricType} value={metricType}>
@@ -141,6 +162,27 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                                 </MenuItem>
                             )}
                         </TextField>
+                        {/*
+                          * Only the shapes that are a matter of taste are
+                          * offered, and only those the metric type can be drawn
+                          * as; a group gets no picker, its chart follows from
+                          * what its components are
+                          */}
+                        {availableChartTypes(formik.values.metricType).length > 0 &&
+                            <TextField
+                                select
+                                fullWidth
+                                id="chartType"
+                                label={t('measurements.chartType')}
+                                {...formik.getFieldProps('chartType')}
+                            >
+                                {chartTypeChoices(formik.values.metricType).map(chartType =>
+                                    <MenuItem key={chartType} value={chartType}>
+                                        {t(`measurements.chartTypes.${chartType}`)}
+                                    </MenuItem>
+                                )}
+                            </TextField>
+                        }
                         {!hasChildren && formik.values.metricType === 'custom'
                             && parentCandidates.length > 0 &&
                             <TextField

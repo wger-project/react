@@ -340,6 +340,13 @@
         "deleteInfo": "This will delete the category as well as all its entries",
         "deleteInfoGroup": "This will delete the group as well as all its components and their entries",
         "metricType": "Metric Type",
+        "chartType": "Chart type",
+        "chartTypes": {
+            "auto": "Automatic",
+            "line": "Line",
+            "bar": "Bars",
+            "heatmap": "Heatmap"
+        },
         "partOfGroup": "Part of group",
         "noGroup": "No group",
         "metricTypes": {

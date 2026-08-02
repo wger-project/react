@@ -341,6 +341,13 @@
         "deleteInfo": "Ceci supprimera la catégorie ainsi que toutes ses entrées",
         "deleteInfoGroup": "Ceci supprimera le groupe ainsi que tous ses composants et leurs entrées",
         "metricType": "Type de métrique",
+        "chartType": "Type de graphique",
+        "chartTypes": {
+            "auto": "Automatique",
+            "line": "Ligne",
+            "bar": "Barres",
+            "heatmap": "Carte thermique"
+        },
         "partOfGroup": "Fait partie du groupe",
         "noGroup": "Aucun groupe",
         "metricTypes": {

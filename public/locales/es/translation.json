@@ -258,6 +258,13 @@
         "deleteInfo": "Esto eliminará la categoría así como todas sus entradas",
         "deleteInfoGroup": "Esto eliminará el grupo así como todos sus componentes y sus entradas",
         "metricType": "Tipo de métrica",
+        "chartType": "Tipo de gráfico",
+        "chartTypes": {
+            "auto": "Automático",
+            "line": "Línea",
+            "bar": "Barras",
+            "heatmap": "Mapa de calor"
+        },
         "partOfGroup": "Parte del grupo",
         "noGroup": "Sin grupo",
         "metricTypes": {

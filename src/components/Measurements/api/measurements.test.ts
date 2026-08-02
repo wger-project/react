@@ -242,7 +242,14 @@ describe('measurement service tests', () => {
         const [url, body] = (axios.post as Mock).mock.calls[0];
         expect(url).toMatch(/\/api\/v2\/measurement-category\/$/);
 
-        expect(body).toEqual({ name: "Body fat", unit: "%", metric_type: "custom", parent: null, order: 0 });
+        expect(body).toEqual({
+            name: "Body fat",
+            unit: "%",
+            metric_type: "custom",
+            chart_type: null,
+            parent: null,
+            order: 0
+        });
         expect(result).toBeInstanceOf(MeasurementCategory);
         expect(result.id).toBe(CATEGORY_UUID_2);
     });
@@ -263,6 +270,7 @@ describe('measurement service tests', () => {
             name: "Renamed",
             unit: "%",
             metric_type: "custom",
+            chart_type: null,
             parent: null,
             order: 0
         });

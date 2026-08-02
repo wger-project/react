@@ -256,6 +256,13 @@
         "unitFormHelpText": "Die Einheit, in der die Kategorie gemessen wird, wie cm oder %",
         "measurements": "Messungen",
         "metricType": "Metrik-Typ",
+        "chartType": "Diagrammtyp",
+        "chartTypes": {
+            "auto": "Automatisch",
+            "line": "Linie",
+            "bar": "Balken",
+            "heatmap": "Heatmap"
+        },
         "partOfGroup": "Teil der Gruppe",
         "noGroup": "Keine Gruppe",
         "metricTypes": {
