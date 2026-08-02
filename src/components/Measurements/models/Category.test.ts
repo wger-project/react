@@ -2,6 +2,8 @@ import {
     isComponentMetricType,
     isGroupMetricType,
     isSummedPerDay,
+    limitsFor,
+    MEASUREMENT_SCHEMA_MAX_VALUE,
     MeasurementCategory,
     metricTypeFromApi
 } from "./Category";
@@ -74,6 +76,23 @@ describe('MeasurementCategory', () => {
         expect(isSummedPerDay('body_weight')).toBe(false);
         expect(isSummedPerDay('heart_rate')).toBe(false);
         expect(isSummedPerDay('blood_pressure')).toBe(false);
+    });
+
+    test('value limits are per unit for body weight only', () => {
+        expect(limitsFor('body_weight', 'kg').max).toBe(350);
+        expect(limitsFor('body_weight', 'lb').max).toBe(770);
+
+        // every other type has one unit, so the argument changes nothing
+        expect(limitsFor('heart_rate', 'bpm').max).toBe(limitsFor('heart_rate').max);
+    });
+
+    test('value limits of the components differ from each other', () => {
+        expect(limitsFor('blood_pressure_systolic').max).toBe(250);
+        expect(limitsFor('blood_pressure_diastolic').max).toBe(150);
+    });
+
+    test('an untyped category is only bounded by the column itself', () => {
+        expect(limitsFor('custom')).toEqual({ min: 0, max: MEASUREMENT_SCHEMA_MAX_VALUE });
     });
 
     test('sleep is a group of stage components', () => {

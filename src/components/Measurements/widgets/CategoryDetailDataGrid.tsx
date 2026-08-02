@@ -1,6 +1,6 @@
 import { processTimeSeries } from "@/core/lib/timeSeries";
 import { valueWithUnit } from "@/components/Measurements/charts/format";
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { limitsFor, MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
@@ -16,6 +16,7 @@ import {
     GridActionsCellItem,
     GridColDef,
     GridEventListener,
+    GridPreProcessEditCellProps,
     GridRowEditStopReasons,
     GridRowId,
     GridRowModel,
@@ -109,6 +110,14 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             valueFormatter: (value?: number) => value == null
                 ? ''
                 : valueWithUnit(value, props.category.unit, i18n.language),
+            // A value outside the bounds of the metric type is refused by the
+            // API, so the row cannot be saved with one either
+            preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
+                const value = Number(params.props.value);
+                const { min, max } = limitsFor(props.category.metricType, props.category.unit);
+
+                return { ...params.props, error: isNaN(value) || value < min || value > max };
+            },
         },
         {
             field: 'date',

@@ -2,7 +2,7 @@ import { Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { limitsFor, MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
     useAddGroupEntriesQuery,
@@ -31,12 +31,19 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
 
     const [dateValue, setDateValue] = React.useState<DateTime | null>(entry ? DateTime.fromJSDate(entry.date) : DateTime.now());
 
+    // The bounds follow the metric type of the category, and for body weight
+    // the unit the entry itself is in
+    const category = categoryQuery.data;
+    const limits = limitsFor(
+        category?.metricType ?? 'custom',
+        entry && category ? entry.unitOrFallback(category.unit) : category?.unit,
+    );
     const validationSchema = yup.object({
         value: yup
             .number()
             .required(t('forms.fieldRequired'))
-            .min(0, t('forms.minValue', { value: '0' }))
-            .max(1000, t('forms.maxValue', { value: '1000' })),
+            .min(limits.min, t('forms.minValue', { value: String(limits.min) }))
+            .max(limits.max, t('forms.maxValue', { value: String(limits.max) })),
         date: yup
             .date()
             .required(t('forms.fieldRequired')),
@@ -142,14 +149,20 @@ export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
         date: yup
             .date()
             .required(t('forms.fieldRequired')),
-        values: yup.object(Object.fromEntries(group.children.map(child => [
-            child.id!,
-            yup
-                .number()
-                .required(t('forms.fieldRequired'))
-                .min(0, t('forms.minValue', { value: '0' }))
-                .max(1000, t('forms.maxValue', { value: '1000' })),
-        ]))),
+        // Each component is bounded by its own type: systolic and diastolic
+        // do not share a range
+        values: yup.object(Object.fromEntries(group.children.map(child => {
+            const limits = limitsFor(child.metricType, child.unit);
+
+            return [
+                child.id!,
+                yup
+                    .number()
+                    .required(t('forms.fieldRequired'))
+                    .min(limits.min, t('forms.minValue', { value: String(limits.min) }))
+                    .max(limits.max, t('forms.maxValue', { value: String(limits.max) })),
+            ];
+        }))),
     });
 
     return (

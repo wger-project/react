@@ -8,7 +8,12 @@ export { MeasurementCategoryDetail } from "./screens/MeasurementCategoryDetail";
 export { MeasurementCategoryOverview } from "./screens/MeasurementCategoryOverview";
 
 // Models
-export { correlatesWithNutrition, MeasurementCategory, METRIC_TYPE_BODY_WEIGHT } from "./models/Category";
+export {
+    correlatesWithNutrition,
+    limitsFor,
+    MeasurementCategory,
+    METRIC_TYPE_BODY_WEIGHT
+} from "./models/Category";
 export { MeasurementEntry } from "./models/Entry";
 
 // API endpoints

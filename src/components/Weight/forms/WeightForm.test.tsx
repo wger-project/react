@@ -169,9 +169,9 @@ describe("Test WeightForm component", () => {
         );
         const weightInput = await screen.findByLabelText('weight');
 
-        // Act + Assert: 320 is over the 300 kg maximum...
+        // Act + Assert: 400 is over the kg maximum...
         await user.clear(weightInput);
-        await user.type(weightInput, '320');
+        await user.type(weightInput, '400');
         await user.tab();
         await waitFor(() => expect(weightInput).toHaveAttribute('aria-invalid', 'true'));
 
@@ -184,9 +184,9 @@ describe("Test WeightForm component", () => {
         await waitFor(() => expect(mutateAddMock).toHaveBeenCalled());
         const submitted = mutateAddMock.mock.calls[0][0] as MeasurementEntry;
         expect(submitted.extraData.unit).toBe('lb');
-        expect(Number(submitted.value)).toBe(320);
+        expect(Number(submitted.value)).toBe(400);
 
-        // Act + Assert: 35 lb is below the lb minimum of 66
+        // Act + Assert: 35 lb is below the lb minimum
         await user.clear(weightInput);
         await user.type(weightInput, '35');
         await user.tab();

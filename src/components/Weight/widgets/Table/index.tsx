@@ -16,12 +16,12 @@ import {
     GridRowModesModel,
     GridRowsProp,
 } from "@mui/x-data-grid";
-import { MeasurementEntry } from "@/components/Measurements";
+import { limitsFor, MeasurementEntry, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements";
 import { extraDataInUnit } from "@/components/Weight/models/bodyWeight";
 import { WeightEntryFab } from "@/components/Weight/widgets/Table/Fab/Fab";
 import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "@/components/Weight/queries";
 import { processTimeSeries } from "@/core/lib/timeSeries";
-import { weightBounds, WeightUnit } from "@/core/lib/weightUnit";
+import { WeightUnit } from "@/core/lib/weightUnit";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -92,7 +92,7 @@ export const WeightTable = ({ weights, unit, categoryUnit }: WeightTableProps) =
             // the typed value is in the display unit the column header shows;
             // throwing keeps the row in edit mode so it can be corrected
             const weight = Number(newRow.weight);
-            const { min, max } = weightBounds(unit);
+            const { min, max } = limitsFor(METRIC_TYPE_BODY_WEIGHT, unit);
             if (weight < min) {
                 throw new Error(t('forms.minValue', { value: `${min} ${t(`server.${unit}`)}` }));
             }

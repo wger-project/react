@@ -1,7 +1,7 @@
 import { Button, Stack, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { MeasurementEntry } from "@/components/Measurements";
+import { limitsFor, MeasurementEntry, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements";
 import { extraDataInUnit, weightUnitOf } from "@/components/Weight/models/bodyWeight";
 import {
     useAddWeightEntryQuery,
@@ -10,7 +10,7 @@ import {
     useEditWeightEntryQuery
 } from "@/components/Weight/queries";
 import { useProfileQuery } from "@/components/User";
-import { weightBounds, WeightUnit } from "@/core/lib/weightUnit";
+import { WeightUnit } from "@/core/lib/weightUnit";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
@@ -34,8 +34,8 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
     const [dateValue, setDateValue] = useState<DateTime | null>(weightEntry ? DateTime.fromJSDate(weightEntry.date) : DateTime.now);
     const [t, i18n] = useTranslation();
 
-    const lb = weightBounds('lb');
-    const kg = weightBounds('kg');
+    const lb = limitsFor(METRIC_TYPE_BODY_WEIGHT, 'lb');
+    const kg = limitsFor(METRIC_TYPE_BODY_WEIGHT, 'kg');
     const validationSchema = yup.object({
         unit: yup.string().oneOf(['kg', 'lb']),
         weight: yup
