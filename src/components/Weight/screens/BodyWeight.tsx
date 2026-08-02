@@ -1,5 +1,10 @@
 import { Box, Stack } from "@mui/material";
-import { ChartRange, ChartRangeSelector, DEFAULT_CHART_RANGE } from "@/components/Measurements";
+import {
+    ChartRange,
+    ChartRangeSelector,
+    DEFAULT_CHART_RANGE,
+    entryFilterFor
+} from "@/components/Measurements";
 import { useNutritionPlanPeriods } from "@/components/Nutrition";
 import {
     useBodyWeightCategoryQuery,
@@ -19,9 +24,11 @@ import { useTranslation } from "react-i18next";
 export const BodyWeight = () => {
     const [t] = useTranslation();
     const [range, setRange] = useState<ChartRange>(DEFAULT_CHART_RANGE);
-    // The range is cut client-side, so the average can be computed over the
-    // full history before it is applied; the table lists every entry
-    const weightyQuery = useBodyWeightQuery('');
+    // Fetch what the range shows, rather than the whole history. The filter
+    // reaches a week further back than the chart draws, so the moving average
+    // of the first days in range still averages the days before them. The
+    // table below lists the same entries, so it follows the range too
+    const weightyQuery = useBodyWeightQuery(entryFilterFor(range));
     const categoryQuery = useBodyWeightCategoryQuery();
     const displayUnit = useDisplayWeightUnit();
     const planPeriods = useNutritionPlanPeriods();

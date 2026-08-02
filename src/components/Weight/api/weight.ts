@@ -1,17 +1,15 @@
 import {
     API_MEASUREMENTS_CATEGORY_PATH,
     API_MEASUREMENTS_ENTRY_PATH,
+    getMeasurementEntries,
     MeasurementCategory,
     MeasurementEntry,
     METRIC_TYPE_BODY_WEIGHT
 } from "@/components/Measurements";
 import { ResponseType } from "@/core/api/responseType";
-import { calculatePastDate } from '@/core/lib/date';
 import { makeHeader, makeUrl } from "@/core/lib/url";
-import { ApiMeasurementCategoryType, ApiMeasurementEntryType } from '@/types';
+import { ApiMeasurementCategoryType } from '@/types';
 import axios from 'axios';
-
-export type FilterType = 'lastYear' | 'lastHalfYear' | 'lastMonth' | 'lastWeek' | '';
 
 /*
  * Fetch the user's official body weight category
@@ -36,25 +34,20 @@ export const getBodyWeightCategory = async (): Promise<MeasurementCategory> => {
 };
 
 /*
- * Fetch weight entries based on filter value
+ * Fetch the body weight entries the filter selects, newest first
+ *
+ * Body weight is measurement data, so this reads through the measurement
+ * loader: it collects every page instead of stopping after the first, which is
+ * what a history fed by the health sync (~365 entries a year) needs.
  */
-export const getWeights = async (category: MeasurementCategory, filter: FilterType = ''): Promise<MeasurementEntry[]> => {
-    const date__gte = calculatePastDate(filter);
-
-    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
-        query: {
-            category: category.id!,
-            ordering: '-date',
-            limit: 900,
-            ...(date__gte && { date__gte })
-        }
-    });
-    const { data } = await axios.get<ResponseType<ApiMeasurementEntryType>>(url, {
-        headers: makeHeader(),
-    });
-
-    return data.results.map(entry => MeasurementEntry.fromJson(entry));
-};
+export const getWeights = async (
+    category: MeasurementCategory,
+    filtersetQueryEntries: object = {},
+): Promise<MeasurementEntry[]> => getMeasurementEntries(category.id!, {
+    // Consumers read the newest entry off the front (BMI, dashboard)
+    ordering: '-date',
+    ...filtersetQueryEntries,
+});
 
 /*
  * Delete a weight entry

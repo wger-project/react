@@ -92,6 +92,51 @@ describe("weight service tests", () => {
         ]);
     });
 
+    test('GET weight entries collects every page', async () => {
+
+        const page = (id: string, value: number, next: string | null) => ({
+            count: 2,
+            next: next,
+            previous: null,
+            results: [
+                {
+                    id: id,
+                    category: CATEGORY_UUID,
+                    value: value,
+                    date: '2021-12-10',
+                    notes: '',
+                    source: 'user',
+                    extra_data: {}
+                },
+            ]
+        });
+
+        (axios.get as Mock)
+            .mockImplementationOnce(() => Promise.resolve({
+                data: page(ENTRY_UUID, 80, 'http://server/api/v2/measurement/?offset=1')
+            }))
+            .mockImplementationOnce(() => Promise.resolve({ data: page(ENTRY_UUID_2, 90, null) }));
+
+        const result = await getWeights(testBodyWeightCategory);
+
+        expect(axios.get).toHaveBeenCalledTimes(2);
+        expect(result.map(entry => entry.id)).toStrictEqual([ENTRY_UUID, ENTRY_UUID_2]);
+    });
+
+    test('GET weight entries passes the filterset on', async () => {
+
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({
+            data: { count: 0, next: null, previous: null, results: [] }
+        }));
+
+        await getWeights(testBodyWeightCategory, { "date__gte": '2021-01-01T00:00:00.000Z' });
+
+        expect(axios.get).toHaveBeenCalledWith(
+            expect.stringContaining('date__gte=2021-01-01'),
+            expect.anything()
+        );
+    });
+
     test('DELETE weight entry', async () => {
 
         // Arrange

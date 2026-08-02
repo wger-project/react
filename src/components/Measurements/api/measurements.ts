@@ -14,7 +14,8 @@ export type MeasurementQueryOptions = {
     filtersetQueryEntries?: object,
 }
 
-const loadEntries = async (categoryId: string, filtersetQuery: object = {}): Promise<MeasurementEntry[]> => {
+/** Every entry of a category, over all pages */
+export const getMeasurementEntries = async (categoryId: string, filtersetQuery: object = {}): Promise<MeasurementEntry[]> => {
     const out: MeasurementEntry[] = [];
     const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
         query: {
@@ -56,7 +57,7 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
 
     // Load entries for each category
     await Promise.all(categories.map(async (category) => {
-        category.entries = await loadEntries(category.id!, filtersetQueryEntries);
+        category.entries = await getMeasurementEntries(category.id!, filtersetQueryEntries);
     }));
 
     // Multi-value groups: attach the children to their parent, only the
@@ -99,7 +100,7 @@ export const getMeasurementCategory = async (
     category.children.sort((a, b) => a.order - b.order);
 
     await Promise.all([category, ...category.children].map(async (cat) => {
-        cat.entries = await loadEntries(cat.id!, filtersetQueryEntries);
+        cat.entries = await getMeasurementEntries(cat.id!, filtersetQueryEntries);
     }));
 
     return category;

@@ -1,4 +1,3 @@
-import { FilterType } from "@/components/Weight/api/weight";
 import i18n from 'i18next';
 import { DateTime, DateTimeFormatOptions } from "luxon";
 
@@ -133,35 +132,4 @@ export function HHMMToDateTime(time: string | null) {
     dateTime.setMinutes(parseInt(minute));
 
     return dateTime;
-}
-
-/*
- * Util function that calculates a date in the past based on a string filter
- * and returns it as a YYYY-MM-DD string for API queries.
- *
- * @param filter - A string representing the desired time period (e.g., 'lastWeek', 'lastMonth')
- * @param currentDate - (Optional) The current date to base calculations on. Defaults to `new Date()`.
- *                      This parameter allows for testing or custom date bases.
- * @returns - Date string in the format YYYY-MM-DD or undefined for no filtering
- */
-export function calculatePastDate(filter: FilterType, currentDate: Date = new Date()): string | undefined {
-
-    // Dictionary for filters
-    const filterMap: Record<FilterType, (() => void) | undefined> = {
-        lastWeek: () => currentDate.setDate(currentDate.getDate() - 7),
-        lastMonth: () => currentDate.setMonth(currentDate.getMonth() - 1),
-        lastHalfYear: () => currentDate.setMonth(currentDate.getMonth() - 6),
-        lastYear: () => currentDate.setFullYear(currentDate.getFullYear() - 1),
-        '': undefined
-    };
-
-    // Execute the corresponding function for the filter
-    const applyFilter = filterMap[filter];
-    if (applyFilter) {
-        applyFilter();
-    } else {
-        return undefined;
-    }
-
-    return dateToYYYYMMDD(currentDate);
 }

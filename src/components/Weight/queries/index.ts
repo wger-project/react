@@ -1,9 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MeasurementEntry } from "@/components/Measurements";
 import {
     createWeight,
     deleteWeight,
-    FilterType,
     getBodyWeightCategory,
     getWeights,
     updateWeight
@@ -38,15 +37,25 @@ export function useDisplayWeightUnit(): WeightUnit {
     return profileQuery.data?.useMetric === false ? 'lb' : 'kg';
 }
 
-export function useBodyWeightQuery(filter: FilterType = 'lastWeek') {
+/**
+ * Body weight entries, newest first.
+ *
+ * The filterset is the one the measurement queries take (`entryFilterFor` for
+ * a chart range, explicit date bounds otherwise), so a screen fetches what it
+ * shows instead of the whole history.
+ */
+export function useBodyWeightQuery(filtersetQueryEntries: object = {}) {
     const queryClient = useQueryClient();
 
     return useQuery({
-        queryKey: [QueryKey.BODY_WEIGHT, filter],
+        queryKey: [QueryKey.BODY_WEIGHT, JSON.stringify(filtersetQueryEntries)],
         queryFn: async () => {
             const category = await queryClient.ensureQueryData(bodyWeightCategoryQueryOptions);
-            return getWeights(category, filter);
+            return getWeights(category, filtersetQueryEntries);
         },
+        // Widening the range refetches, and the chart would otherwise drop
+        // back to the loading placeholder while the longer history arrives
+        placeholderData: keepPreviousData,
     });
 }
 

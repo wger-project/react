@@ -17,7 +17,11 @@ export {
 export { MeasurementEntry } from "./models/Entry";
 
 // API endpoints
-export { API_MEASUREMENTS_CATEGORY_PATH, API_MEASUREMENTS_ENTRY_PATH } from "./api/measurements";
+export {
+    API_MEASUREMENTS_CATEGORY_PATH,
+    API_MEASUREMENTS_ENTRY_PATH,
+    getMeasurementEntries
+} from "./api/measurements";
 
 // Query hooks
 export { useMeasurementsCategoryQuery } from "./queries";
@@ -26,7 +30,7 @@ export { useMeasurementsCategoryQuery } from "./queries";
 export { componentColor, componentPalette } from "./charts/colors";
 export { groupChart, measurementSeries } from "./charts/data";
 export { valueWithUnit } from "./charts/format";
-export { CHART_RANGES, cutoffFor, DEFAULT_CHART_RANGE } from "./charts/range";
+export { CHART_RANGES, cutoffFor, DEFAULT_CHART_RANGE, entryFilterFor } from "./charts/range";
 export type { ChartRange } from "./charts/range";
 export type { PlanPeriod } from "./charts/series";
 

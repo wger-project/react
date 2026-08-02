@@ -19,7 +19,10 @@ import { useTranslation } from "react-i18next";
  */
 export const PlanWeightChart = (props: { plan: NutritionalPlan }) => {
     const [t] = useTranslation();
-    const weightQuery = useBodyWeightQuery('');
+    // The chart starts at the plan, so nothing before it has to be fetched.
+    // The upper end stays a client-side filter, because the plan's last day
+    // counts in full and a date bound would cut it at midnight
+    const weightQuery = useBodyWeightQuery({ "date__gte": props.plan.start.toISOString() });
     const categoryQuery = useBodyWeightCategoryQuery();
     const displayUnit = useDisplayWeightUnit();
 

@@ -1,5 +1,6 @@
 import { Box, Stack, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import { entryFilterFor } from "@/components/Measurements";
 import { useBodyWeightCategoryQuery, useBodyWeightQuery } from "@/components/Weight";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
@@ -23,7 +24,9 @@ const getRangeColor = (name: string) => {
 export const BmiCalculator = () => {
     const [t] = useTranslation();
 
-    const weightQuery = useBodyWeightQuery();
+    // Only the most recent entry is used to prefill the field; a year back is
+    // generous for that and keeps the query bounded
+    const weightQuery = useBodyWeightQuery(entryFilterFor('lastYear'));
     const categoryQuery = useBodyWeightCategoryQuery();
     const profileQuery = useProfileQuery();
     // Entries without their own unit fall back to the one of the category

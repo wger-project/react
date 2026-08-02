@@ -35,7 +35,12 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
     const isStandalone = props.isStandalone ?? true;
 
 
-    const weightsQuery = useBodyWeightQuery();
+    // The calendar shows one month, so body weight is read for the same window
+    // as everything else on it
+    const weightsQuery = useBodyWeightQuery({
+        "date__gte": dateToYYYYMMDD(startOfMonth),
+        "date__lte": dateToYYYYMMDD(endOfMonth),
+    });
     const sessionQuery = useSessionsQuery({
         filtersetQuerySessions: {
             "date__gte": dateToYYYYMMDD(startOfMonth),

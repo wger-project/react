@@ -10,4 +10,3 @@ export { WeightTableDashboard } from "./widgets/TableDashboard/TableDashboard";
 export { WeightChart } from "./widgets/WeightChart";
 export { extraDataInUnit, weightUnitOf } from "./models/bodyWeight";
 export { useBodyWeightCategoryQuery, useBodyWeightQuery, useDisplayWeightUnit } from "./queries";
-export type { FilterType } from "./api/weight";

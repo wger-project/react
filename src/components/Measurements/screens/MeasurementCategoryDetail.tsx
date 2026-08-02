@@ -1,7 +1,7 @@
 import { Stack, Typography } from "@mui/material";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
-import { correlatesWithNutrition } from "@/components/Measurements/models/Category";
+import { correlatesWithNutrition, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements/models/Category";
 import { useMeasurementsQuery } from "@/components/Measurements/queries";
 import { useNutritionPlanPeriods } from "@/components/Nutrition";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
@@ -10,8 +10,10 @@ import { ChartRange, DEFAULT_CHART_RANGE, entryFilterFor } from "@/components/Me
 import { AddMeasurementEntryFab } from "@/components/Measurements/widgets/fab";
 import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
+import { makeLink, WgerLink } from "@/core/lib/url";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Navigate, useParams } from "react-router-dom";
 
 export const MeasurementCategoryDetail = () => {
     const params = useParams<{ categoryId: string }>();
@@ -30,9 +32,18 @@ export const MeasurementCategoryDetail = () => {
     const planPeriods = useNutritionPlanPeriods(
         correlatesWithNutrition(categoryQuery.data?.metricType ?? 'custom'),
     );
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [, i18n] = useTranslation();
 
     if (categoryQuery.isLoading) {
         return <LoadingPlaceholder />;
+    }
+
+    // Body weight is presented on its own screens, which read and write it
+    // through their own query cache. Rendering it here as well would show a
+    // second view of the same rows and leave the other one stale after an edit
+    if (categoryQuery.data!.isOfficial && categoryQuery.data!.metricType === METRIC_TYPE_BODY_WEIGHT) {
+        return <Navigate to={makeLink(WgerLink.WEIGHT_OVERVIEW, i18n.language)} replace />;
     }
 
     return <WgerContainerRightSidebar

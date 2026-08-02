@@ -1,7 +1,7 @@
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
-import { MeasurementEntry } from "@/components/Measurements";
+import { entryFilterFor, MeasurementEntry } from "@/components/Measurements";
 import {
     useBodyWeightCategoryQuery,
     useBodyWeightQuery,
@@ -20,7 +20,7 @@ import { DashboardCard } from "./DashboardCard";
 
 export const WeightCard = () => {
     const [t] = useTranslation();
-    const weightyQuery = useBodyWeightQuery("lastYear");
+    const weightyQuery = useBodyWeightQuery(entryFilterFor('lastYear'));
 
     if (weightyQuery.isLoading) {
         return <LoadingPlaceholder />;
