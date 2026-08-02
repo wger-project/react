@@ -2,7 +2,7 @@ import { processTimeSeries } from "@/core/lib/timeSeries";
 import { valueWithUnit } from "@/components/Measurements/charts/format";
 import { limitsFor, MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
-import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
+import { useDeleteMeasurementEntryQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
 import { luxonDateTimeToLocale } from "@/core/lib/date";
 import CancelIcon from "@mui/icons-material/Close";
@@ -46,7 +46,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
     const [t, i18n] = useTranslation();
     const data: GridRowsProp = convertEntriesToObj(props.category.entries);
     const updateEntryQuery = useEditMeasurementEntryQuery();
-    const deleteEntryQuery = useDeleteMeasurementsQuery();
+    const deleteEntryQuery = useDeleteMeasurementEntryQuery();
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
 

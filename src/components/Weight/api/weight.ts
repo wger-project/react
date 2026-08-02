@@ -1,6 +1,5 @@
 import {
     API_MEASUREMENTS_CATEGORY_PATH,
-    API_MEASUREMENTS_ENTRY_PATH,
     getMeasurementEntries,
     MeasurementCategory,
     MeasurementEntry,
@@ -49,37 +48,6 @@ export const getWeights = async (
     ...filtersetQueryEntries,
 });
 
-/*
- * Delete a weight entry
- */
-export const deleteWeight = async (id: string): Promise<number> => {
-    const response = await axios.delete<number>(makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: id }), {
-        headers: makeHeader(),
-    });
-
-    return response.status;
-};
-
-/*
- * Update a weight entry
- */
-export const updateWeight = async (entry: MeasurementEntry): Promise<MeasurementEntry> => {
-    const response = await axios.patch(makeUrl(API_MEASUREMENTS_ENTRY_PATH, { id: entry.id! }), entry.toJson(), {
-        headers: makeHeader(),
-    });
-
-    return MeasurementEntry.fromJson(response.data);
-};
-
-/*
- * Add a new weight entry to the official body weight category
- */
-export const createWeight = async (entry: MeasurementEntry): Promise<MeasurementEntry> => {
-    const response = await axios.post(
-        makeUrl(API_MEASUREMENTS_ENTRY_PATH),
-        entry.toJson(),
-        { headers: makeHeader() },
-    );
-
-    return MeasurementEntry.fromJson(response.data);
-};
+// Writing a body weight entry is writing a measurement entry: the create,
+// update and delete calls of `api/measurements.ts` are used unchanged, there
+// is nothing body-weight-specific about them.

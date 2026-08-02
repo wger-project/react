@@ -16,10 +16,15 @@ import {
     GridRowModesModel,
     GridRowsProp,
 } from "@mui/x-data-grid";
-import { limitsFor, MeasurementEntry, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements";
+import {
+    limitsFor,
+    MeasurementEntry,
+    METRIC_TYPE_BODY_WEIGHT,
+    useDeleteMeasurementEntryQuery,
+    useEditMeasurementEntryQuery
+} from "@/components/Measurements";
 import { extraDataInUnit } from "@/components/Weight/models/bodyWeight";
 import { WeightEntryFab } from "@/components/Weight/widgets/Table/Fab/Fab";
-import { useDeleteWeightEntryQuery, useEditWeightEntryQuery } from "@/components/Weight/queries";
 import { processTimeSeries } from "@/core/lib/timeSeries";
 import { WeightUnit } from "@/core/lib/weightUnit";
 import { DateTime } from "luxon";
@@ -48,8 +53,8 @@ const buildRows = (weights: MeasurementEntry[], unit: WeightUnit, categoryUnit: 
 export const WeightTable = ({ weights, unit, categoryUnit }: WeightTableProps) => {
     const [t] = useTranslation();
     const rows = buildRows(weights, unit, categoryUnit);
-    const editEntryQuery = useEditWeightEntryQuery();
-    const deleteEntryQuery = useDeleteWeightEntryQuery();
+    const editEntryQuery = useEditMeasurementEntryQuery();
+    const deleteEntryQuery = useDeleteMeasurementEntryQuery();
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
     const [editError, setEditError] = useState<string | null>(null);
 

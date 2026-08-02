@@ -1,14 +1,15 @@
 import { Button, Stack, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { limitsFor, MeasurementEntry, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements";
-import { extraDataInUnit, weightUnitOf } from "@/components/Weight/models/bodyWeight";
 import {
-    useAddWeightEntryQuery,
-    useBodyWeightCategoryQuery,
-    useDisplayWeightUnit,
-    useEditWeightEntryQuery
-} from "@/components/Weight/queries";
+    limitsFor,
+    MeasurementEntry,
+    METRIC_TYPE_BODY_WEIGHT,
+    useAddMeasurementEntryQuery,
+    useEditMeasurementEntryQuery
+} from "@/components/Measurements";
+import { extraDataInUnit, weightUnitOf } from "@/components/Weight/models/bodyWeight";
+import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Weight/queries";
 import { useProfileQuery } from "@/components/User";
 import { WeightUnit } from "@/core/lib/weightUnit";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
@@ -27,8 +28,8 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
     const categoryQuery = useBodyWeightCategoryQuery();
     const profileQuery = useProfileQuery();
-    const addWeightQuery = useAddWeightEntryQuery();
-    const editWeightQuery = useEditWeightEntryQuery();
+    const addWeightQuery = useAddMeasurementEntryQuery();
+    const editWeightQuery = useEditMeasurementEntryQuery();
     const displayUnit = useDisplayWeightUnit();
 
     const [dateValue, setDateValue] = useState<DateTime | null>(weightEntry ? DateTime.fromJSDate(weightEntry.date) : DateTime.now);

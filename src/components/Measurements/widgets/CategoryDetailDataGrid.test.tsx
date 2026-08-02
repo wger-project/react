@@ -2,7 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from '@testing-library/react';
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
-import { useDeleteMeasurementsQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
+import { useDeleteMeasurementEntryQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
 import React from 'react';
 import { testQueryClient } from "@/tests/queryClient";
@@ -18,7 +18,7 @@ describe('CategoryDetailDataGrid', () => {
 
     beforeEach(() => {
         (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
-        (useDeleteMeasurementsQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
+        (useDeleteMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
     });
 
     test('entries synced from a health app offer no edit or delete actions', async () => {

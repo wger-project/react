@@ -141,13 +141,19 @@ export const useEditMeasurementEntryQuery = () => {
     });
 };
 
-export const useDeleteMeasurementsQuery = (/*id: number*/) => {
+export const useDeleteMeasurementEntryQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: (id: string) => deleteMeasurementEntry(id),
-        onSuccess: () => queryClient.invalidateQueries({
-            queryKey: [QueryKey.MEASUREMENTS,]
-        })
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.MEASUREMENTS,]
+            });
+            // The category lists carry the entries as well, like on add and edit
+            queryClient.invalidateQueries({
+                queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
+            });
+        }
     });
 };

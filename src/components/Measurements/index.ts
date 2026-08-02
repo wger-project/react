@@ -24,7 +24,12 @@ export {
 } from "./api/measurements";
 
 // Query hooks
-export { useMeasurementsCategoryQuery } from "./queries";
+export {
+    useAddMeasurementEntryQuery,
+    useDeleteMeasurementEntryQuery,
+    useEditMeasurementEntryQuery,
+    useMeasurementsCategoryQuery
+} from "./queries";
 
 // Charts
 export { componentColor, componentPalette } from "./charts/colors";

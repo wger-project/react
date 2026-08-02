@@ -1,22 +1,26 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { MeasurementEntry } from "@/components/Measurements";
-import {
-    createWeight,
-    deleteWeight,
-    getBodyWeightCategory,
-    getWeights,
-    updateWeight
-} from "@/components/Weight/api/weight";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getBodyWeightCategory, getWeights } from "@/components/Weight/api/weight";
 import { useProfileQuery } from "@/components/User";
 import { QueryKey, } from "@/core/lib/consts";
 import { WeightUnit } from "@/core/lib/weightUnit";
+
+/**
+ * Cache key of the official body weight category, standing in for its id.
+ *
+ * Body weight rows are measurement rows, so the queries below live under the
+ * measurement keys: an entry written through the measurement mutations
+ * invalidates the weight views and the other way round. The id itself cannot
+ * be the key, because it is only known once the category query resolved, and a
+ * query key has to exist before that.
+ */
+const OFFICIAL_BODY_WEIGHT = 'official-body-weight';
 
 /*
  * The official body weight category basically never changes, resolve it once
  * per session (ensureQueryData returns the cached result on later calls)
  */
 const bodyWeightCategoryQueryOptions = {
-    queryKey: [QueryKey.BODY_WEIGHT_CATEGORY],
+    queryKey: [QueryKey.MEASUREMENTS_CATEGORIES, OFFICIAL_BODY_WEIGHT],
     // Called through, not captured: this module sits in an import cycle
     // between the weight, measurement and nutrition domains, where a binding
     // read while the modules initialise can still be undefined
@@ -43,12 +47,15 @@ export function useDisplayWeightUnit(): WeightUnit {
  * The filterset is the one the measurement queries take (`entryFilterFor` for
  * a chart range, explicit date bounds otherwise), so a screen fetches what it
  * shows instead of the whole history.
+ *
+ * Writes go through the measurement entry mutations, which invalidate this key
+ * along with every other view of the same rows.
  */
 export function useBodyWeightQuery(filtersetQueryEntries: object = {}) {
     const queryClient = useQueryClient();
 
     return useQuery({
-        queryKey: [QueryKey.BODY_WEIGHT, JSON.stringify(filtersetQueryEntries)],
+        queryKey: [QueryKey.MEASUREMENTS, OFFICIAL_BODY_WEIGHT, JSON.stringify(filtersetQueryEntries)],
         queryFn: async () => {
             const category = await queryClient.ensureQueryData(bodyWeightCategoryQueryOptions);
             return getWeights(category, filtersetQueryEntries);
@@ -58,39 +65,3 @@ export function useBodyWeightQuery(filtersetQueryEntries: object = {}) {
         placeholderData: keepPreviousData,
     });
 }
-
-export const useDeleteWeightEntryQuery = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: (id: string) => deleteWeight(id),
-        onSuccess: () => queryClient.invalidateQueries({
-            queryKey: [QueryKey.BODY_WEIGHT]
-        })
-    });
-};
-
-
-export const useAddWeightEntryQuery = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: (weightEntry: MeasurementEntry) => createWeight(weightEntry),
-        onSuccess: () => queryClient.invalidateQueries({
-            queryKey: [QueryKey.BODY_WEIGHT,]
-        })
-    });
-};
-
-export const useEditWeightEntryQuery = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: (data: MeasurementEntry) => updateWeight(data),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [QueryKey.BODY_WEIGHT,]
-            });
-        }
-    });
-};

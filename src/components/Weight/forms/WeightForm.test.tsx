@@ -4,18 +4,15 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import userEvent from "@testing-library/user-event";
 import { useProfileQuery } from "@/components/User";
 import { WeightForm } from "@/components/Weight/forms/WeightForm";
-import {
-    useAddWeightEntryQuery,
-    useBodyWeightCategoryQuery,
-    useDisplayWeightUnit,
-    useEditWeightEntryQuery
-} from "@/components/Weight/queries";
+import { useAddMeasurementEntryQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
+import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Weight/queries";
 import React from 'react';
 import { testQueryClient } from "@/tests/queryClient";
 import { testBodyWeightCategory, makeWeightEntry } from "@/tests/weight/testData";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Weight/queries");
+vi.mock("@/components/Measurements/queries");
 vi.mock("@/components/User/queries/profile");
 
 const ENTRY_UUID = 'dddddddd-dddd-dddd-dddd-000000000001';
@@ -28,8 +25,8 @@ describe("Test WeightForm component", () => {
             isLoading: false,
             data: testBodyWeightCategory
         }));
-        (useAddWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
-        (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
+        (useAddMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
+        (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
         (useDisplayWeightUnit as Mock).mockReturnValue('kg');
         (useProfileQuery as Mock).mockImplementation(() => ({ isLoading: false }));
     });
@@ -76,7 +73,7 @@ describe("Test WeightForm component", () => {
         // Arrange
         const user = userEvent.setup();
         const mutateEditMock = vi.fn();
-        (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
         const weightEntry = makeWeightEntry(new Date('2022-02-28'), 80, { id: ENTRY_UUID });
 
         // Act
@@ -129,7 +126,7 @@ describe("Test WeightForm component", () => {
         expect(submitButton).toBeInTheDocument();
         await user.click(submitButton);
         await waitFor(() => {
-            expect(useAddWeightEntryQuery).toHaveBeenCalled();
+            expect(useAddMeasurementEntryQuery).toHaveBeenCalled();
         });
     });
 
@@ -161,7 +158,7 @@ describe("Test WeightForm component", () => {
         // Arrange
         const user = userEvent.setup();
         const mutateAddMock = vi.fn();
-        (useAddWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        (useAddMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
         render(
             <QueryClientProvider client={testQueryClient}>
                 <WeightForm />
