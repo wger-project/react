@@ -231,4 +231,46 @@ describe("Test the CategoryForm component", () => {
         // Assert
         expect(screen.queryByRole('combobox', { name: 'measurements.partOfGroup' })).toBeNull();
     });
+
+    test('A category with children gets no chart type picker', () => {
+
+        // Arrange: its chart follows from what its components are to each
+        // other, which is what groupChart decides; a pick would have no effect
+        const child = new MeasurementCategory(
+            'cccccccc-cccc-cccc-cccc-000000000044',
+            'Systolic',
+            'mmHg',
+            undefined,
+            'blood_pressure',
+            false,
+            TEST_GROUP_CATEGORY.id,
+        );
+        (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
+            data: [TEST_GROUP_CATEGORY, child]
+        }));
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={TEST_GROUP_CATEGORY} />
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.queryByRole('combobox', { name: 'measurements.chartType' })).toBeNull();
+    });
+
+    test('A leaf category gets the chart type picker', () => {
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={TEST_MEASUREMENT_CATEGORY_1} />
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.getByRole('combobox', { name: 'measurements.chartType' }))
+            .toBeInTheDocument();
+    });
 });

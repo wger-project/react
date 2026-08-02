@@ -165,10 +165,12 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                         {/*
                           * Only the shapes that are a matter of taste are
                           * offered, and only those the metric type can be drawn
-                          * as; a group gets no picker, its chart follows from
-                          * what its components are
+                          * as. A group gets no picker at all, its chart follows
+                          * from what its components are to each other; a
+                          * category with children is one whatever its metric
+                          * type says, which is also how the charts decide
                           */}
-                        {availableChartTypes(formik.values.metricType).length > 0 &&
+                        {!hasChildren && availableChartTypes(formik.values.metricType).length > 0 &&
                             <TextField
                                 select
                                 fullWidth
