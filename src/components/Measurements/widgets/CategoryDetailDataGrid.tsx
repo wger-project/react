@@ -10,13 +10,12 @@ import CloudSyncIcon from "@mui/icons-material/CloudSync";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { Box, Tooltip } from "@mui/material";
+import { Box, Snackbar, Tooltip } from "@mui/material";
 import {
     DataGrid,
     GridActionsCellItem,
     GridColDef,
     GridEventListener,
-    GridPreProcessEditCellProps,
     GridRowEditStopReasons,
     GridRowId,
     GridRowModel,
@@ -28,11 +27,14 @@ import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp =>
-    processTimeSeries(entries, e => e.value).map((row) => ({
+// Values are read through the unit helper, never off the raw column: a
+// category can hold entries in mixed units, and the change columns are
+// computed from the converted values
+const buildRows = (entries: MeasurementEntry[], unit: string, categoryUnit: string): GridRowsProp =>
+    processTimeSeries(entries, e => e.valueIn(unit, categoryUnit)).map((row) => ({
         id: row.entry.id,
         date: row.entry.date,
-        value: row.entry.value,
+        value: row.entry.valueIn(unit, categoryUnit),
         notes: row.entry.notes,
         isEditable: row.entry.isEditable,
         change: +row.change.toFixed(2),
@@ -41,13 +43,26 @@ const convertEntriesToObj = (entries: MeasurementEntry[]): GridRowsProp =>
     }));
 
 
-export const CategoryDetailDataGrid = (props: { category: MeasurementCategory }) => {
+export const CategoryDetailDataGrid = (props: {
+    category: MeasurementCategory,
+    /** Rows to show, the category's own entries by default */
+    entries?: MeasurementEntry[],
+    /**
+     * Unit the values are shown and edited in, the category's own by default.
+     * Body weight is shown in the profile unit, since its entries can be
+     * stored in either; an edited value is then stamped with it.
+     */
+    displayUnit?: string,
+}) => {
 
     const [t, i18n] = useTranslation();
-    const data: GridRowsProp = convertEntriesToObj(props.category.entries);
+    const entries = props.entries ?? props.category.entries;
+    const unit = props.displayUnit ?? props.category.unit;
+    const data: GridRowsProp = buildRows(entries, unit, props.category.unit);
     const updateEntryQuery = useEditMeasurementEntryQuery();
     const deleteEntryQuery = useDeleteMeasurementEntryQuery();
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+    const [editError, setEditError] = useState<string | null>(null);
 
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
@@ -76,24 +91,52 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
     };
 
 
-    const processRowUpdate = async (newRow: GridRowModel) => {
+    const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
 
         const date = newRow.date instanceof Date ? newRow.date : new Date(newRow.date);
-        const entry = props.category.entries.find(e => e.id === newRow.id);
+        const entry = entries.find(e => e.id === newRow.id);
         if (entry === undefined) {
             throw new Error(`unknown entry id ${newRow.id}`);
         }
+
+        // The grid shows the value converted into the display unit. Re-saving
+        // that conversion would silently overwrite the entry's stored value and
+        // unit, so both only change when the value cell was edited
+        if (Number(newRow.value) === Number(oldRow.value)) {
+            updateEntryQuery.mutate(MeasurementEntry.clone(entry, {
+                date: date,
+                notes: newRow.notes,
+            }));
+
+            return { ...newRow, isNew: false };
+        }
+
+        // A value outside the bounds of the metric type is refused by the API,
+        // so the row is not saved with one either; throwing keeps it in edit
+        // mode so it can be corrected
+        const value = Number(newRow.value);
+        const { min, max } = limitsFor(props.category.metricType, unit);
+        if (isNaN(value) || value < min) {
+            throw new Error(t('forms.minValue', { value: `${min} ${unit}` }));
+        }
+        if (value > max) {
+            throw new Error(t('forms.maxValue', { value: `${max} ${unit}` }));
+        }
+
         updateEntryQuery.mutate(MeasurementEntry.clone(entry, {
             date: date,
-            value: newRow.value,
+            value: value,
             notes: newRow.notes,
+            // The typed value is in the unit the grid shows, which for body
+            // weight is not necessarily the one it was stored in
+            ...(props.displayUnit ? { extraData: entry.extraDataInUnit(unit) } : {}),
         }));
 
         return { ...newRow, isNew: false };
     };
 
     const onProcessRowUpdateError = (error: unknown) => {
-        console.error(error);
+        setEditError(error instanceof Error ? error.message : String(error));
     };
 
     const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
@@ -104,20 +147,13 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
         {
             field: 'value',
             headerName: t('value'),
+            type: 'number',
             // wide enough for a grouped number plus its unit
             width: 120,
             editable: true,
             valueFormatter: (value?: number) => value == null
                 ? ''
-                : valueWithUnit(value, props.category.unit, i18n.language),
-            // A value outside the bounds of the metric type is refused by the
-            // API, so the row cannot be saved with one either
-            preProcessEditCellProps: (params: GridPreProcessEditCellProps) => {
-                const value = Number(params.props.value);
-                const { min, max } = limitsFor(props.category.metricType, props.category.unit);
-
-                return { ...params.props, error: isNaN(value) || value < min || value > max };
-            },
+                : valueWithUnit(value, unit, i18n.language),
         },
         {
             field: 'date',
@@ -191,13 +227,13 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                         <GridActionsCellItem
                             key="save"
                             icon={<SaveIcon />}
-                            label="Save"
+                            label={t('save')}
                             onClick={handleSaveClick(id)}
                         />,
                         <GridActionsCellItem
                             key="cancel"
                             icon={<CancelIcon />}
-                            label="Cancel"
+                            label={t('cancel')}
                             className="textPrimary"
                             onClick={handleCancelClick(id)}
                             color="inherit"
@@ -209,7 +245,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                     <GridActionsCellItem
                         key="edit"
                         icon={<EditIcon />}
-                        label="Edit"
+                        label={t('edit')}
                         className="textPrimary"
                         onClick={handleEditClick(id)}
                         color="inherit"
@@ -217,7 +253,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
                     <GridActionsCellItem
                         key="delete"
                         icon={<DeleteIcon />}
-                        label="Delete"
+                        label={t('delete')}
                         onClick={handleDeleteClick(id)}
                         color="inherit"
                     />,
@@ -227,7 +263,7 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
     ];
 
 
-    return <Box sx={{ width: '100%' }}>
+    return <><Box sx={{ width: '100%' }}>
         <DataGrid
             editMode="row"
             rows={data}
@@ -248,5 +284,12 @@ export const CategoryDetailDataGrid = (props: { category: MeasurementCategory })
             processRowUpdate={processRowUpdate}
             onProcessRowUpdateError={onProcessRowUpdateError}
         />
-    </Box>;
+    </Box>
+        <Snackbar
+            open={editError !== null}
+            autoHideDuration={4000}
+            onClose={() => setEditError(null)}
+            message={editError}
+        />
+    </>;
 };

@@ -8,7 +8,7 @@ import {
     useAddMeasurementEntryQuery,
     useEditMeasurementEntryQuery
 } from "@/components/Measurements";
-import { extraDataInUnit, weightUnitOf } from "@/components/Weight/models/bodyWeight";
+import { weightUnitOf } from "@/components/Weight/models/bodyWeight";
 import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Weight/queries";
 import { useProfileQuery } from "@/components/User";
 import { WeightUnit } from "@/core/lib/weightUnit";
@@ -77,7 +77,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                     editWeightQuery.mutate(MeasurementEntry.clone(weightEntry, {
                         value: values.weight,
                         date: values.date,
-                        extraData: extraDataInUnit(weightEntry, values.unit),
+                        extraData: weightEntry.extraDataInUnit(values.unit),
                     }));
 
                     // Create a new weight entry

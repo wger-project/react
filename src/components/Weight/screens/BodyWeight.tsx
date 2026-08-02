@@ -1,5 +1,6 @@
 import { Box, Stack } from "@mui/material";
 import {
+    CategoryDetailDataGrid,
     ChartRange,
     ChartRangeSelector,
     DEFAULT_CHART_RANGE,
@@ -11,7 +12,6 @@ import {
     useBodyWeightQuery,
     useDisplayWeightUnit
 } from "@/components/Weight/queries";
-import { WeightTable } from "@/components/Weight/widgets/Table";
 import { WeightChart } from "@/components/Weight/widgets/WeightChart";
 import { AddBodyWeightEntryFab } from "@/components/Weight/widgets/fab";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
@@ -53,10 +53,12 @@ export const BodyWeight = () => {
                     range={range}
                     planPeriods={planPeriods} />
                 <Box sx={{ mt: 4 }} />
-                <WeightTable
-                    weights={weightyQuery.data!}
-                    unit={displayUnit}
-                    categoryUnit={categoryUnit} />
+                {/* The entries are read by their own query here, the official
+                    category is fetched without them */}
+                <CategoryDetailDataGrid
+                    category={categoryQuery.data!}
+                    entries={weightyQuery.data!}
+                    displayUnit={displayUnit} />
             </>}
         </Stack>
         }

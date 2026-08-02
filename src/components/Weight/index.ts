@@ -8,5 +8,5 @@ export { BodyWeight } from "./screens/BodyWeight";
 export { WeightForm } from "./forms/WeightForm";
 export { WeightTableDashboard } from "./widgets/TableDashboard/TableDashboard";
 export { WeightChart } from "./widgets/WeightChart";
-export { extraDataInUnit, weightUnitOf } from "./models/bodyWeight";
+export { weightUnitOf } from "./models/bodyWeight";
 export { useBodyWeightCategoryQuery, useBodyWeightQuery, useDisplayWeightUnit } from "./queries";

@@ -38,6 +38,16 @@ export class MeasurementEntry {
     }
 
     /**
+     * The entry's extra_data with the unit its value is in.
+     *
+     * The server replaces extra_data as a whole on update, so the keys we do
+     * not know about have to travel back with it.
+     */
+    extraDataInUnit(unit: string): Record<string, unknown> {
+        return { ...this.extraData, unit: unit };
+    }
+
+    /**
      * A number stored in extra_data next to the value, such as the bounds of a
      * daily aggregate. They are written in the value's unit, so they have to
      * follow it through the same conversion.

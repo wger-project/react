@@ -45,9 +45,10 @@ describe("Test BodyWeight component", () => {
             </QueryClientProvider>
         );
 
-        // Assert - both weights are found in the document
-        expect(await screen.findByText("80")).toBeInTheDocument();
-        expect(await screen.findByText("90")).toBeInTheDocument();
+        // Assert - both weights are found in the document, in the unit the
+        // grid shows them in
+        expect(await screen.findByText("80 kg")).toBeInTheDocument();
+        expect(await screen.findByText("90 kg")).toBeInTheDocument();
         // only the entries the range shows are fetched
         expect(getWeights).toHaveBeenCalledWith(
             testBodyWeightCategory,
@@ -65,7 +66,7 @@ describe("Test BodyWeight component", () => {
             </QueryClientProvider>
         );
 
-        expect(await screen.findByText("80")).toBeInTheDocument();
+        expect(await screen.findByText("80 kg")).toBeInTheDocument();
 
         fireEvent.click(screen.getByRole('button', { name: 'measurements.chartRangeAll' }));
 
@@ -74,6 +75,6 @@ describe("Test BodyWeight component", () => {
             expect(getWeights).toHaveBeenLastCalledWith(testBodyWeightCategory, {});
         });
         // the entries stay on screen while the wider range is loading
-        expect(screen.getByText("80")).toBeInTheDocument();
+        expect(screen.getByText("80 kg")).toBeInTheDocument();
     });
 });

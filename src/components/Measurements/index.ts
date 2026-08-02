@@ -40,6 +40,7 @@ export type { ChartRange } from "./charts/range";
 export type { PlanPeriod } from "./charts/series";
 
 // Widgets
+export { CategoryDetailDataGrid } from "./widgets/CategoryDetailDataGrid";
 export { CategoryForm } from "./widgets/CategoryForm";
 export { ChartRangeSelector } from "./widgets/ChartRangeSelector";
 export { MeasurementChart } from "./widgets/MeasurementChart";
