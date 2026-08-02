@@ -1,4 +1,4 @@
-import { MeasurementEntry } from "@/components/Measurements";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { isWeightUnit, WeightUnit } from "@/core/lib/weightUnit";
 
 /**

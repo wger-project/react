@@ -1,15 +1,14 @@
 import { Button, Stack, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { limitsFor, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements/models/Category";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
-    limitsFor,
-    MeasurementEntry,
-    METRIC_TYPE_BODY_WEIGHT,
     useAddMeasurementEntryQuery,
     useEditMeasurementEntryQuery
-} from "@/components/Measurements";
-import { weightUnitOf } from "@/components/Weight/models/bodyWeight";
-import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Weight/queries";
+} from "@/components/Measurements/queries";
+import { weightUnitOf } from "@/components/Measurements/models/bodyWeight";
+import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Measurements/queries/bodyWeight";
 import { useProfileQuery } from "@/components/User";
 import { WeightUnit } from "@/core/lib/weightUnit";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";

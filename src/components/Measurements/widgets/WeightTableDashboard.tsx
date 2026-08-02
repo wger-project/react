@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { MeasurementEntry } from "@/components/Measurements";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import { dateTimeToLocale } from "@/core/lib/date";

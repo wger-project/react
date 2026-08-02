@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { describe, expect, test } from 'vitest';
 import { testQueryClient } from "@/tests/queryClient";
-import { WeightChart } from "./index";
+import { WeightChart } from "./WeightChart";
 
 // See https://github.com/maslianok/react-resize-detector#testing-with-enzyme-and-jest
 // Recharts only paints SVG content once a ResizeObserver entry reports real

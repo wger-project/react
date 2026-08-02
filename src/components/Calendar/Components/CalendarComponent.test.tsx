@@ -2,7 +2,7 @@ import { MeasurementCategory, MeasurementEntry } from "@/components/Measurements
 import { getMeasurementCategories } from "@/components/Measurements/api/measurements";
 import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutritionalDiary";
 import { getSessions } from "@/components/Routines/api/session";
-import { getBodyWeightCategory, getWeights } from "@/components/Weight/api/weight";
+import { getBodyWeightCategory, getWeights } from "@/components/Measurements/api/bodyWeight";
 import { TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2 } from "@/tests/nutritionDiaryTestdata";
 import { testQueryClient } from "@/tests/queryClient";
 import { testBodyWeightCategory, makeWeightEntry } from "@/tests/weight/testData";
@@ -21,7 +21,7 @@ import CalendarComponent from "./CalendarComponent";
 vi.mock("@/components/Measurements/api/measurements");
 vi.mock("@/components/Nutrition/api/nutritionalDiary");
 vi.mock("@/components/Routines/api/session");
-vi.mock("@/components/Weight/api/weight");
+vi.mock("@/components/Measurements/api/bodyWeight");
 vi.mock('@/components/User/queries/profile', () => ({
     useProfileQuery: () => ({ isLoading: false, data: { useMetric: true } }),
 }));

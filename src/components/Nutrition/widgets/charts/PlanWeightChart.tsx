@@ -5,7 +5,7 @@ import {
     useBodyWeightQuery,
     useDisplayWeightUnit,
     WeightChart
-} from "@/components/Weight";
+} from "@/components/Measurements";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

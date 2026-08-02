@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Weight";
+import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Measurements";
 import { dateToLocale } from "@/core/lib/date";
 import { DayProps } from "./CalendarComponent";
 

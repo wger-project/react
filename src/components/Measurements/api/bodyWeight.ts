@@ -1,10 +1,9 @@
 import {
     API_MEASUREMENTS_CATEGORY_PATH,
-    getMeasurementEntries,
-    MeasurementCategory,
-    MeasurementEntry,
-    METRIC_TYPE_BODY_WEIGHT
-} from "@/components/Measurements";
+    getMeasurementEntries
+} from "@/components/Measurements/api/measurements";
+import { MeasurementCategory, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements/models/Category";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { ResponseType } from "@/core/api/responseType";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ApiMeasurementCategoryType } from '@/types';

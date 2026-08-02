@@ -1,13 +1,13 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { DEFAULT_CHART_RANGE, entryFilterFor } from "@/components/Measurements";
-import { getBodyWeightCategory, getWeights } from "@/components/Weight/api/weight";
+import { getBodyWeightCategory, getWeights } from "@/components/Measurements/api/bodyWeight";
 import { testQueryClient } from "@/tests/queryClient";
 import { testBodyWeightCategory, makeWeightEntry } from "@/tests/weight/testData";
 import { BodyWeight } from "./BodyWeight";
 import type { Mock } from 'vitest';
 
-vi.mock("@/components/Weight/api/weight");
+vi.mock("@/components/Measurements/api/bodyWeight");
 vi.mock('@/components/Nutrition/queries/plan', () => ({
     useNutritionPlanPeriods: () => [],
 }));

@@ -1,19 +1,15 @@
 import { Box, Stack } from "@mui/material";
-import {
-    CategoryDetailDataGrid,
-    ChartRange,
-    ChartRangeSelector,
-    DEFAULT_CHART_RANGE,
-    entryFilterFor
-} from "@/components/Measurements";
+import { ChartRange, DEFAULT_CHART_RANGE, entryFilterFor } from "@/components/Measurements/charts/range";
+import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
+import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { useNutritionPlanPeriods } from "@/components/Nutrition";
 import {
     useBodyWeightCategoryQuery,
     useBodyWeightQuery,
     useDisplayWeightUnit
-} from "@/components/Weight/queries";
-import { WeightChart } from "@/components/Weight/widgets/WeightChart";
-import { AddBodyWeightEntryFab } from "@/components/Weight/widgets/fab";
+} from "@/components/Measurements/queries/bodyWeight";
+import { WeightChart } from "@/components/Measurements/widgets/WeightChart";
+import { AddBodyWeightEntryFab } from "@/components/Measurements/widgets/fab";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { OverviewEmpty } from "@/core/ui/Widgets/OverviewEmpty";

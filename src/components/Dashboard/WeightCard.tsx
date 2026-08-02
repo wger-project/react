@@ -1,15 +1,16 @@
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
-import { entryFilterFor, MeasurementEntry } from "@/components/Measurements";
 import {
+    entryFilterFor,
+    MeasurementEntry,
     useBodyWeightCategoryQuery,
     useBodyWeightQuery,
     useDisplayWeightUnit,
     WeightChart,
     WeightForm,
     WeightTableDashboard
-} from "@/components/Weight";
+} from "@/components/Measurements";
 import { makeLink, WgerLink } from "@/core/lib/url";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button, IconButton } from "@mui/material";

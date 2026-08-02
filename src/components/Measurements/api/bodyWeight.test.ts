@@ -1,6 +1,6 @@
 import axios from "axios";
 import { testBodyWeightCategory, makeWeightEntry } from "@/tests/weight/testData";
-import { getBodyWeightCategory, getWeights } from "./weight";
+import { getBodyWeightCategory, getWeights } from "./bodyWeight";
 import type { Mock } from 'vitest';
 
 vi.mock("axios");

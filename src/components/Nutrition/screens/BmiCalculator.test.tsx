@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { testQueryClient } from "@/tests/queryClient";
 
 // Mock the necessary React Query hooks
-vi.mock('@/components/Weight/queries', () => ({
+vi.mock('@/components/Measurements/queries/bodyWeight', () => ({
     useBodyWeightQuery: () => ({
         isLoading: false,
         data: [{ weight: 55, unit: 'kg', valueIn: () => 55, date: new Date() }], // Provide mock weight data

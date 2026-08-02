@@ -1,7 +1,10 @@
 import { Box, Stack, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { entryFilterFor } from "@/components/Measurements";
-import { useBodyWeightCategoryQuery, useBodyWeightQuery } from "@/components/Weight";
+import {
+    entryFilterFor,
+    useBodyWeightCategoryQuery,
+    useBodyWeightQuery
+} from "@/components/Measurements";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { useProfileQuery } from "@/components/User";

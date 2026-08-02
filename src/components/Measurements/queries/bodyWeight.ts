@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getBodyWeightCategory, getWeights } from "@/components/Weight/api/weight";
+import { getBodyWeightCategory, getWeights } from "@/components/Measurements/api/bodyWeight";
 import { useProfileQuery } from "@/components/User";
 import { QueryKey, } from "@/core/lib/consts";
 import { WeightUnit } from "@/core/lib/weightUnit";

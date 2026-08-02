@@ -18,7 +18,7 @@ import { EntryForm, GroupEntryForm } from "@/components/Measurements/widgets/Ent
 import i18n from "i18next";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_ENTRIES_1 } from "@/tests/measurementsTestData";
 
-vi.mock("@/components/Weight/api/weight");
+vi.mock("@/components/Measurements/api/bodyWeight");
 
 vi.mock("@/components/Measurements/queries");
 

@@ -1,13 +1,13 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from '@testing-library/react';
-import { getBodyWeightCategory, getWeights } from "@/components/Weight/api/weight";
-import { useBodyWeightQuery } from "@/components/Weight/queries";
+import { getBodyWeightCategory, getWeights } from "@/components/Measurements/api/bodyWeight";
+import { useBodyWeightQuery } from "@/components/Measurements/queries/bodyWeight";
 import { QueryKey } from "@/core/lib/consts";
 import { testBodyWeightCategory } from "@/tests/weight/testData";
 import React from "react";
 import type { Mock } from 'vitest';
 
-vi.mock("@/components/Weight/api/weight");
+vi.mock("@/components/Measurements/api/bodyWeight");
 
 describe("body weight queries", () => {
 

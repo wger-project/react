@@ -2,7 +2,7 @@ import { MeasurementEntry } from "@/components/Measurements";
 import { makeWeightEntry } from "@/tests/weight/testData";
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { WeightTableDashboard } from '@/components/Weight/widgets/TableDashboard/TableDashboard';
+import { WeightTableDashboard } from '@/components/Measurements/widgets/WeightTableDashboard';
 
 describe("Body weight test", () => {
     test('renders without crashing', async () => {

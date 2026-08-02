@@ -7,7 +7,7 @@ import userEvent from "@testing-library/user-event";
 import React from 'react';
 import type { Mock } from 'vitest';
 
-vi.mock("@/components/Weight/api/weight");
+vi.mock("@/components/Measurements/api/bodyWeight");
 vi.mock("@/components/Nutrition/queries");
 
 describe("Test the PlanForm component", () => {

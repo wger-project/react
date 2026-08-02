@@ -1,13 +1,9 @@
-import {
-    ChartRange,
-    cutoffFor,
-    DEFAULT_CHART_RANGE,
-    MeasurementEntry,
-    measurementSeries,
-    MeasurementSeriesChart,
-    OverallChange,
-    PlanPeriod
-} from "@/components/Measurements";
+import { measurementSeries } from "@/components/Measurements/charts/data";
+import { ChartRange, cutoffFor, DEFAULT_CHART_RANGE } from "@/components/Measurements/charts/range";
+import { PlanPeriod } from "@/components/Measurements/charts/series";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
+import { MeasurementSeriesChart } from "@/components/Measurements/widgets/MeasurementSeriesChart";
+import { OverallChange } from "@/components/Measurements/widgets/OverallChange";
 import { WeightUnit } from "@/core/lib/weightUnit";
 import React from "react";
 import { useTranslation } from "react-i18next";
