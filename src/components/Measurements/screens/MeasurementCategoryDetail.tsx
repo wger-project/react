@@ -1,7 +1,11 @@
 import { Stack, Typography } from "@mui/material";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
-import { correlatesWithNutrition, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements/models/Category";
+import {
+    categoryDisplayName,
+    correlatesWithNutrition,
+    METRIC_TYPE_BODY_WEIGHT
+} from "@/components/Measurements/models/Category";
 import { useMeasurementsQuery } from "@/components/Measurements/queries";
 import { useNutritionPlanPeriods } from "@/components/Nutrition";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
@@ -33,7 +37,7 @@ export const MeasurementCategoryDetail = () => {
         correlatesWithNutrition(categoryQuery.data?.metricType ?? 'custom'),
     );
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [, i18n] = useTranslation();
+    const [t, i18n] = useTranslation();
 
     if (categoryQuery.isLoading) {
         return <LoadingPlaceholder />;
@@ -47,7 +51,7 @@ export const MeasurementCategoryDetail = () => {
     }
 
     return <WgerContainerRightSidebar
-        title={categoryQuery.data!.name}
+        title={categoryDisplayName(categoryQuery.data!, t)}
         // official categories may neither be renamed nor deleted
         optionsMenu={categoryQuery.data!.isOfficial
             ? undefined
@@ -62,7 +66,7 @@ export const MeasurementCategoryDetail = () => {
                 {categoryQuery.data!.isGroup
                     ? categoryQuery.data!.children.map(child =>
                         <React.Fragment key={child.id}>
-                            <Typography variant="h5">{child.name}</Typography>
+                            <Typography variant="h5">{categoryDisplayName(child, t)}</Typography>
                             <CategoryDetailDataGrid category={child} />
                         </React.Fragment>)
                     : <CategoryDetailDataGrid category={categoryQuery.data!} />}

@@ -1,4 +1,5 @@
 import {
+    categoryDisplayName,
     isComponentMetricType,
     isGroupMetricType,
     isSummedPerDay,
@@ -104,5 +105,26 @@ describe('MeasurementCategory', () => {
         expect(isComponentMetricType('sleep')).toBe(false);
         expect(isGroupMetricType('sleep_deep')).toBe(false);
         expect(isGroupMetricType('heart_rate')).toBe(false);
+    });
+
+    describe('categoryDisplayName', () => {
+
+        // the tests' t() returns the key it is given
+        const t = ((key: string) => key) as never;
+
+        test('a typed category is named after its metric type', () => {
+            const category = new MeasurementCategory(
+                'c-1', 'Blutdruck', 'mmHg', undefined, 'blood_pressure_systolic',
+            );
+
+            expect(categoryDisplayName(category, t))
+                .toBe('measurements.metricTypes.blood_pressure_systolic');
+        });
+
+        test('a free-form category keeps the name the user gave it', () => {
+            const category = new MeasurementCategory('c-1', 'Bizeps', 'cm');
+
+            expect(categoryDisplayName(category, t)).toBe('Bizeps');
+        });
     });
 });

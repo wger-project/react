@@ -3,6 +3,7 @@ import CalendarHeader from "@/components/Calendar/Components/CalendarHeader";
 import { CalendarMeasurement } from "@/components/Calendar/Helpers/CalendarMeasurement";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import {
+    categoryDisplayName,
     MeasurementEntry,
     useBodyWeightQuery,
     useMeasurementsCategoryQuery
@@ -85,7 +86,12 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
         const result: DayProps[] = [];
 
         const measurements = measurementQuery.data?.flatMap(category =>
-            category.entries.map(entry => new CalendarMeasurement(category.name, category.unit, entry.value, entry.date))
+            category.entries.map(entry => new CalendarMeasurement(
+                categoryDisplayName(category, t),
+                category.unit,
+                entry.value,
+                entry.date,
+            ))
         ) ?? [];
 
         const firstDayOfMonth = new Date(year, month, 1);
@@ -128,7 +134,7 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
         }
 
         return result;
-    }, [currentYear, currentMonth, weightsQuery.data, sessionQuery.data, measurementQuery.data, nutritionDiaryQuery.data]);
+    }, [currentYear, currentMonth, weightsQuery.data, sessionQuery.data, measurementQuery.data, nutritionDiaryQuery.data, t]);
     const [selectedDay, setSelectedDay] = useState<DayProps>(days.find(day => isSameDay(day.date, currentDate)) || defaultDay);
 
     const theme = useTheme();

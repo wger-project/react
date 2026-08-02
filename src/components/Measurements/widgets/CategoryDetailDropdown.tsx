@@ -2,7 +2,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Button, Menu, MenuItem } from "@mui/material";
 import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { categoryDisplayName, MeasurementCategory } from "@/components/Measurements/models/Category";
 import { useDeleteMeasurementCategoryQuery } from "@/components/Measurements/queries";
 import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
 import React from "react";
@@ -74,7 +74,7 @@ export const CategoryDetailDropdown = (props: { category: MeasurementCategory })
             </WgerModal>
 
             <DeleteConfirmationModal
-                title={t('deleteConfirmation', { name: props.category.name })}
+                title={t('deleteConfirmation', { name: categoryDisplayName(props.category, t) })}
                 message={t(props.category.isGroup ? 'measurements.deleteInfoGroup' : 'measurements.deleteInfo')}
                 isOpen={openDeleteModal}
                 closeFn={handleCloseDeleteModal}

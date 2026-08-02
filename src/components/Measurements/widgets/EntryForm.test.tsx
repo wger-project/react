@@ -152,10 +152,10 @@ describe("Test the GroupEntryForm component", () => {
     const queryClient = new QueryClient();
     let mutate = vi.fn();
 
-    const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg');
+    const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg', undefined, 'blood_pressure');
     group.children = [
-        new MeasurementCategory('c-sys', 'Systolic', 'mmHg', undefined, 'blood_pressure', false, 'g-1'),
-        new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', undefined, 'blood_pressure', false, 'g-1'),
+        new MeasurementCategory('c-sys', 'Systolic', 'mmHg', undefined, 'blood_pressure_systolic', false, 'g-1'),
+        new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', undefined, 'blood_pressure_diastolic', false, 'g-1'),
     ];
 
     beforeEach(() => {
@@ -172,8 +172,8 @@ describe("Test the GroupEntryForm component", () => {
             </QueryClientProvider>
         );
 
-        expect(screen.getByLabelText('Systolic (mmHg)')).toBeInTheDocument();
-        expect(screen.getByLabelText('Diastolic (mmHg)')).toBeInTheDocument();
+        expect(screen.getByLabelText('measurements.metricTypes.blood_pressure_systolic (mmHg)')).toBeInTheDocument();
+        expect(screen.getByLabelText('measurements.metricTypes.blood_pressure_diastolic (mmHg)')).toBeInTheDocument();
     });
 
     test('submits one entry per child with a shared date', async () => {
@@ -184,8 +184,8 @@ describe("Test the GroupEntryForm component", () => {
             </QueryClientProvider>
         );
 
-        await user.type(screen.getByLabelText('Systolic (mmHg)'), '120');
-        await user.type(screen.getByLabelText('Diastolic (mmHg)'), '80');
+        await user.type(screen.getByLabelText('measurements.metricTypes.blood_pressure_systolic (mmHg)'), '120');
+        await user.type(screen.getByLabelText('measurements.metricTypes.blood_pressure_diastolic (mmHg)'), '80');
         await user.click(screen.getByRole('button', { name: 'submit' }));
 
         expect(mutate).toHaveBeenCalledTimes(1);
@@ -202,7 +202,7 @@ describe("Test the GroupEntryForm component", () => {
             </QueryClientProvider>
         );
 
-        await user.type(screen.getByLabelText('Systolic (mmHg)'), '120');
+        await user.type(screen.getByLabelText('measurements.metricTypes.blood_pressure_systolic (mmHg)'), '120');
         await user.click(screen.getByRole('button', { name: 'submit' }));
 
         expect(mutate).not.toHaveBeenCalled();

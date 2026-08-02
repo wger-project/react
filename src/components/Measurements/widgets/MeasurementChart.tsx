@@ -1,5 +1,9 @@
 import { Box, Paper } from "@mui/material";
-import { isSummedPerDay, MeasurementCategory } from "@/components/Measurements/models/Category";
+import {
+    categoryDisplayName,
+    isSummedPerDay,
+    MeasurementCategory
+} from "@/components/Measurements/models/Category";
 import {
     aggregatePerDay,
     chartPointsFor,
@@ -270,10 +274,12 @@ export const MeasurementChart = (props: {
     range?: ChartRange,
     planPeriods?: PlanPeriod[],
 }) => {
+    const [t] = useTranslation();
     const cutoff = cutoffFor(props.range ?? DEFAULT_CHART_RANGE);
 
     if (props.category.isGroup) {
-        const chart = groupChart(props.category, cutoff);
+        // The components are labelled by their metric type, like everywhere else
+        const chart = groupChart(props.category, cutoff, c => categoryDisplayName(c, t));
 
         switch (chart.kind) {
             case 'stacked':

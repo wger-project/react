@@ -1,4 +1,5 @@
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
+import { TFunction } from "i18next";
 import { Adapter } from "@/core/lib/Adapter";
 import { isWeightUnit, WeightUnit } from "@/core/lib/weightUnit";
 
@@ -27,6 +28,23 @@ export type MetricType = typeof METRIC_TYPES[number];
 
 /** Server-side MetricType value marking a category as holding body weight data */
 export const METRIC_TYPE_BODY_WEIGHT: MetricType = 'body_weight';
+
+/**
+ * Name to show the user for a category.
+ *
+ * A typed category is created by the server or by the health importer and
+ * carries an English name ("Systolic", "Deep sleep"), while its metric type
+ * already has a translated label. Only a free-form category holds a name the
+ * user picked themselves.
+ */
+export function categoryDisplayName(
+    category: { name: string, metricType: MetricType },
+    t: TFunction,
+): string {
+    return category.metricType === 'custom'
+        ? category.name
+        : t(`measurements.metricTypes.${category.metricType}`);
+}
 
 /** Narrows a server value to a known metric type, unknown values fall back to 'custom' */
 export function metricTypeFromApi(value: unknown): MetricType {

@@ -14,6 +14,7 @@ export { MeasurementCategoryOverview } from "./screens/MeasurementCategoryOvervi
 
 // Models
 export {
+    categoryDisplayName,
     correlatesWithNutrition,
     limitsFor,
     MeasurementCategory,

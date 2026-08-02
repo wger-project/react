@@ -2,8 +2,9 @@ import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import React, { useState } from "react";
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { categoryDisplayName, MeasurementCategory } from "@/components/Measurements/models/Category";
 import { useReorderMeasurementCategoriesQuery } from "@/components/Measurements/queries";
+import { useTranslation } from "react-i18next";
 
 /**
  * Drag-and-drop reordering of the top-level measurement categories.
@@ -12,6 +13,7 @@ import { useReorderMeasurementCategoriesQuery } from "@/components/Measurements/
  * order and follow their parent.
  */
 export const CategoryReorderList = (props: { categories: MeasurementCategory[] }) => {
+    const [t] = useTranslation();
 
     // The list is kept locally so a drop is reflected immediately, the new
     // order is persisted per drop like in the flutter app
@@ -46,7 +48,9 @@ export const CategoryReorderList = (props: { categories: MeasurementCategory[] }
                                     <ListItemIcon>
                                         <DragHandleIcon />
                                     </ListItemIcon>
-                                    <ListItemText primary={category.name} secondary={category.unit} />
+                                    <ListItemText
+                                        primary={categoryDisplayName(category, t)}
+                                        secondary={category.unit} />
                                 </ListItem>
                             )}
                         </Draggable>

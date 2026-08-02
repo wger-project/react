@@ -255,11 +255,12 @@ export const groupRangeEntries = (
 export const groupComponentSeries = (
     group: MeasurementCategory,
     cutoff: Date | null = null,
+    labelOf: (category: MeasurementCategory) => string = category => category.name,
 ): ChartSeries[] =>
     group.children.map(child => ({
         points: pointsSince(chartPointsFor(child.entries, child.unit, child.unit), cutoff),
         role: 'component' as const,
-        label: child.name,
+        label: labelOf(child),
     }));
 
 /**
@@ -366,12 +367,16 @@ export type GroupChart =
     | { kind: 'range', points: ChartPoint[] }
     | { kind: 'components', series: ChartSeries[] };
 
-export const groupChart = (group: MeasurementCategory, cutoff: Date | null = null): GroupChart => {
+export const groupChart = (
+    group: MeasurementCategory,
+    cutoff: Date | null = null,
+    labelOf: (category: MeasurementCategory) => string = category => category.name,
+): GroupChart => {
     if (isSummedPerDay(group.metricType)) {
         const components = stackableComponents(group);
         const stacked = groupStackedEntries(components, cutoff);
         if (stacked.length > 0) {
-            return { kind: 'stacked', points: stacked, labels: components.map(c => c.name) };
+            return { kind: 'stacked', points: stacked, labels: components.map(labelOf) };
         }
     }
 
@@ -379,7 +384,7 @@ export const groupChart = (group: MeasurementCategory, cutoff: Date | null = nul
 
     return ranges.length > 0
         ? { kind: 'range', points: ranges }
-        : { kind: 'components', series: groupComponentSeries(group, cutoff) };
+        : { kind: 'components', series: groupComponentSeries(group, cutoff, labelOf) };
 };
 
 /**

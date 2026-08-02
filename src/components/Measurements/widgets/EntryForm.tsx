@@ -2,7 +2,11 @@ import { Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
-import { limitsFor, MeasurementCategory } from "@/components/Measurements/models/Category";
+import {
+    categoryDisplayName,
+    limitsFor,
+    MeasurementCategory
+} from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
     useAddGroupEntriesQuery,
@@ -209,7 +213,7 @@ export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
                                 fullWidth
                                 id={`values.${child.id}`}
                                 type={"number"}
-                                label={`${child.name} (${child.unit || group.unit})`}
+                                label={`${categoryDisplayName(child, t)} (${child.unit || group.unit})`}
                                 error={
                                     Boolean(formik.touched.values?.[child.id!])
                                     && Boolean(formik.errors.values?.[child.id!])
