@@ -1,6 +1,7 @@
 import { processTimeSeries } from "@/core/lib/timeSeries";
 import { valueWithUnit } from "@/components/Measurements/charts/format";
 import { limitsFor, MeasurementCategory } from "@/components/Measurements/models/Category";
+import { collectValidationErrors } from "@/core/lib/forms";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { useDeleteMeasurementEntryQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
@@ -91,7 +92,7 @@ export const CategoryDetailDataGrid = (props: {
     };
 
 
-    const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
+    const processRowUpdate = async (newRow: GridRowModel, oldRow: GridRowModel) => {
 
         const date = newRow.date instanceof Date ? newRow.date : new Date(newRow.date);
         const entry = entries.find(e => e.id === newRow.id);
@@ -103,7 +104,7 @@ export const CategoryDetailDataGrid = (props: {
         // that conversion would silently overwrite the entry's stored value and
         // unit, so both only change when the value cell was edited
         if (Number(newRow.value) === Number(oldRow.value)) {
-            updateEntryQuery.mutate(MeasurementEntry.clone(entry, {
+            await updateEntryQuery.mutateAsync(MeasurementEntry.clone(entry, {
                 date: date,
                 notes: newRow.notes,
             }));
@@ -123,7 +124,7 @@ export const CategoryDetailDataGrid = (props: {
             throw new Error(t('forms.maxValue', { value: `${max} ${unit}` }));
         }
 
-        updateEntryQuery.mutate(MeasurementEntry.clone(entry, {
+        await updateEntryQuery.mutateAsync(MeasurementEntry.clone(entry, {
             date: date,
             value: value,
             notes: newRow.notes,
@@ -135,7 +136,16 @@ export const CategoryDetailDataGrid = (props: {
         return { ...newRow, isNew: false };
     };
 
+    // Both the checks above and a write the server refused end up here, and the
+    // grid puts the row back to what it was
     const onProcessRowUpdateError = (error: unknown) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const response = (error as any)?.response?.data;
+        const validationErrors = collectValidationErrors(response);
+        if (validationErrors.length > 0) {
+            setEditError(validationErrors.join(', '));
+            return;
+        }
         setEditError(error instanceof Error ? error.message : String(error));
     };
 

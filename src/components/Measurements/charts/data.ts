@@ -253,9 +253,7 @@ export interface HeatmapGrid {
     maxValue: number;
 }
 
-// Days are shifted through the Date constructor rather than by adding
-// milliseconds: a day is not always 24 hours long, and an hour lost to a time
-// change would put the date in the neighbouring cell
+// Calendar arithmetic, not milliseconds: a DST day is 23 or 25 hours long
 const dayOf = (date: Date): Date => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 const shiftDays = (date: Date, days: number): Date =>
     new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);

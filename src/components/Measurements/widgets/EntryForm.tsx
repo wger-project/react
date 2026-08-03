@@ -8,6 +8,7 @@ import {
     MeasurementCategory
 } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import {
     useAddGroupEntriesQuery,
     useAddMeasurementEntryQuery,
@@ -66,18 +67,18 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
+                // The form closes only once the server took the entry, so a
+                // rejected write is shown instead of disappearing with it
+                const options = { onSuccess: () => closeFn?.() };
 
                 // Edit existing entry
                 if (entry) {
-                    useEditEntryQuery.mutate(MeasurementEntry.clone(entry, values));
+                    useEditEntryQuery.mutate(MeasurementEntry.clone(entry, values), options);
                 } else {
-                    useAddEntryQuery.mutate(new MeasurementEntry(null, categoryId, values.date, values.value, values.notes));
-                }
-
-                // if closeFn is defined, close the modal (this form does not have to
-                // be displayed in a modal)
-                if (closeFn) {
-                    closeFn();
+                    useAddEntryQuery.mutate(
+                        new MeasurementEntry(null, categoryId, values.date, values.value, values.notes),
+                        options
+                    );
                 }
             }}
         >
@@ -120,6 +121,7 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                             helperText={formik.touched.notes && formik.errors.notes}
                             {...formik.getFieldProps('notes')}
                         />
+                        <FormQueryErrors mutationQuery={entry ? useEditEntryQuery : useAddEntryQuery} />
                         <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                                 {t('submit')}
@@ -177,17 +179,16 @@ export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
-                addGroupEntriesQuery.mutate(group.children.map(child => new MeasurementEntry(
-                    null,
-                    child.id!,
-                    values.date,
-                    Number(values.values[child.id!]),
-                    '',
-                )));
-
-                if (closeFn) {
-                    closeFn();
-                }
+                addGroupEntriesQuery.mutate(
+                    group.children.map(child => new MeasurementEntry(
+                        null,
+                        child.id!,
+                        values.date,
+                        Number(values.values[child.id!]),
+                        '',
+                    )),
+                    { onSuccess: () => closeFn?.() }
+                );
             }}
         >
             {formik => (
@@ -226,6 +227,7 @@ export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
                                 {...formik.getFieldProps(`values.${child.id}`)}
                             />
                         )}
+                        <FormQueryErrors mutationQuery={addGroupEntriesQuery} />
                         <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                                 {t('submit')}

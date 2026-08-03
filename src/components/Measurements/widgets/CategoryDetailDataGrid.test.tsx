@@ -1,13 +1,13 @@
-import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from '@testing-library/react';
-import userEvent from "@testing-library/user-event";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { useDeleteMeasurementEntryQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
-import React from 'react';
 import { testQueryClient } from "@/tests/queryClient";
 import { makeWeightEntry, testBodyWeightCategory } from "@/tests/weight/testData";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { render, screen, within } from '@testing-library/react';
+import userEvent from "@testing-library/user-event";
+import React from 'react';
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Measurements/queries");
@@ -19,8 +19,14 @@ const SYNCED_ENTRY_UUID = 'dddddddd-dddd-dddd-dddd-000000000002';
 describe('CategoryDetailDataGrid', () => {
 
     beforeEach(() => {
-        (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
-        (useDeleteMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: vi.fn() }));
+        (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({
+            mutate: vi.fn(),
+            mutateAsync: vi.fn().mockResolvedValue(undefined)
+        }));
+        (useDeleteMeasurementEntryQuery as Mock).mockImplementation(() => ({
+            mutate: vi.fn(),
+            mutateAsync: vi.fn().mockResolvedValue(undefined)
+        }));
     });
 
     test('entries synced from a health app offer no edit or delete actions', async () => {
@@ -92,7 +98,10 @@ describe('CategoryDetailDataGrid', () => {
         test('saving a row without editing the value keeps the stored value and unit', async () => {
             const user = userEvent.setup();
             const mutateEditMock = vi.fn();
-            (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+            (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({
+                mutate: mutateEditMock,
+                mutateAsync: mutateEditMock
+            }));
             // stored as 90 lb, displayed as 40.82 kg
             renderGrid([makeWeightEntry(new Date('2021/12/10'), 90, { id: ENTRY_UUID_1, unit: 'lb' })]);
 
@@ -110,7 +119,10 @@ describe('CategoryDetailDataGrid', () => {
         test('editing the value cell stamps the display unit', async () => {
             const user = userEvent.setup();
             const mutateEditMock = vi.fn();
-            (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+            (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({
+                mutate: mutateEditMock,
+                mutateAsync: mutateEditMock
+            }));
             renderGrid([makeWeightEntry(new Date('2021/12/10'), 90, { id: ENTRY_UUID_1, unit: 'lb' })]);
 
             await screen.findByText(/40[.,]82/);
@@ -132,7 +144,10 @@ describe('CategoryDetailDataGrid', () => {
         test('implausible inline edits are rejected and the row stays editable', async () => {
             const user = userEvent.setup();
             const mutateEditMock = vi.fn();
-            (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+            (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({
+                mutate: mutateEditMock,
+                mutateAsync: mutateEditMock
+            }));
             renderGrid([makeWeightEntry(new Date('2021/12/10'), 80, { id: ENTRY_UUID_1, unit: 'kg' })]);
 
             await screen.findByText('80 kg');
@@ -155,6 +170,30 @@ describe('CategoryDetailDataGrid', () => {
             expect(mutateEditMock).toHaveBeenCalled();
             const submitted = mutateEditMock.mock.calls[0][0] as MeasurementEntry;
             expect(Number(submitted.value)).toBe(90);
+        });
+
+        test('an edit the server refuses is shown instead of being kept', async () => {
+            const user = userEvent.setup();
+            const mutateEditMock = vi.fn().mockRejectedValue({
+                response: { data: { value: ['Value must be between 20 and 350'] } },
+            });
+            (useEditMeasurementEntryQuery as Mock).mockImplementation(
+                () => ({ mutate: vi.fn(), mutateAsync: mutateEditMock })
+            );
+            renderGrid([makeWeightEntry(new Date('2021/12/10'), 80, { id: ENTRY_UUID_1, unit: 'kg' })]);
+
+            await screen.findByText('80 kg');
+            await user.click(screen.getByRole('menuitem', { name: /edit/i }));
+
+            const valueInput = screen.getByRole('spinbutton');
+            await user.clear(valueInput);
+            await user.type(valueInput, '90');
+            await user.click(screen.getByRole('menuitem', { name: /save/i }));
+
+            expect(mutateEditMock).toHaveBeenCalled();
+            expect(
+                await screen.findByText('value: Value must be between 20 and 350')
+            ).toBeInTheDocument();
         });
     });
 });

@@ -3,6 +3,7 @@ import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { limitsFor, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import {
     useAddMeasurementEntryQuery,
     useEditMeasurementEntryQuery
@@ -70,6 +71,9 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
             }}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
+                // The form closes only once the server took the entry, so a
+                // rejected write is shown instead of disappearing with it
+                const options = { onSuccess: () => closeFn?.() };
 
                 // Edit existing weight entry
                 if (weightEntry) {
@@ -77,7 +81,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                         value: values.weight,
                         date: values.date,
                         extraData: weightEntry.extraDataInUnit(values.unit),
-                    }));
+                    }), options);
 
                     // Create a new weight entry
                 } else {
@@ -89,11 +93,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                         '',
                         'user',
                         { unit: values.unit },
-                    ));
-                }
-
-                if (closeFn) {
-                    closeFn();
+                    ), options);
                 }
             }}
         >
@@ -138,6 +138,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                                 }}
                             />
                         </LocalizationProvider>
+                        <FormQueryErrors mutationQuery={weightEntry ? editWeightQuery : addWeightQuery} />
                         <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                                 {t('submit')}

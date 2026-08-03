@@ -81,7 +81,7 @@ describe("Test the CategoryForm component", () => {
         expect(mutate).toHaveBeenCalledWith(MeasurementCategory.clone(
             TEST_MEASUREMENT_CATEGORY_2,
             { name: "a better name", unit: 'K/m2' }
-        ));
+        ), expect.anything());
     });
 
     test('Creating a new category', async () => {
@@ -102,7 +102,7 @@ describe("Test the CategoryForm component", () => {
 
         // Assert
         await user.click(submitButton);
-        expect(mutate).toHaveBeenCalledWith(new MeasurementCategory(null, 'calves', 'cm'));
+        expect(mutate).toHaveBeenCalledWith(new MeasurementCategory(null, 'calves', 'cm'), expect.anything());
     });
 
     test('The body weight and component metric types are not offered', async () => {
@@ -151,7 +151,7 @@ describe("Test the CategoryForm component", () => {
             'custom',
             false,
             TEST_GROUP_CATEGORY.id,
-        ));
+        ), expect.anything());
     });
 
     test('A typed category cannot be put into a group', async () => {
@@ -232,6 +232,33 @@ describe("Test the CategoryForm component", () => {
         expect(screen.queryByRole('combobox', { name: 'measurements.partOfGroup' })).toBeNull();
     });
 
+    test('A rejected write keeps the form open and is shown', async () => {
+
+        // Arrange: the mutation reports the failure, as react-query does
+        const user = userEvent.setup();
+        const closeFn = vi.fn();
+        (useAddMeasurementCategoryQuery as Mock).mockImplementation(() => ({
+            mutate: mutate,
+            isError: true,
+            error: { message: 'Request failed', response: { data: { name: ['Already exists'] } } },
+        }));
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm closeFn={closeFn} />
+            </QueryClientProvider>
+        );
+        await user.type(await screen.findByLabelText('name'), 'calves');
+        await user.type(await screen.findByLabelText('unit'), 'cm');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert: the form only closes from the success callback, which a
+        // failed mutation never runs
+        expect(closeFn).not.toHaveBeenCalled();
+        expect(screen.getByText('name: Already exists')).toBeInTheDocument();
+    });
+
     test('A category with children gets no chart type picker', () => {
 
         // Arrange: its chart follows from what its components are to each
@@ -283,7 +310,7 @@ describe("Test the CategoryForm component", () => {
         expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
             metricType: 'steps',
             chartType: 'auto',
-        }));
+        }), expect.anything());
     });
 
     test('A leaf category gets the chart type picker', () => {

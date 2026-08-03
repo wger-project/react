@@ -14,6 +14,7 @@ import {
     useMeasurementsCategoryQuery
 } from "@/components/Measurements/queries";
 import { Button, MenuItem, Stack, TextField } from "@mui/material";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Form, Formik } from "formik";
 import React from 'react';
 import { useTranslation } from "react-i18next";
@@ -83,6 +84,9 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
             validationSchema={validationSchema}
             onSubmit={async (values) => {
                 const parentId = values.parentId === "" ? null : values.parentId;
+                // The form closes only once the server took the category, so a
+                // rejected write is shown instead of disappearing with it
+                const options = { onSuccess: () => closeFn?.() };
 
                 // Edit existing category
                 if (category) {
@@ -92,7 +96,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                         metricType: values.metricType,
                         chartType: values.chartType,
                         parentId: parentId,
-                    }));
+                    }), options);
                 } else {
                     useAddCategoryQuery.mutate(new MeasurementCategory(
                         null,
@@ -104,13 +108,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                         parentId,
                         0,
                         values.chartType,
-                    ));
-                }
-
-                // if closeFn is defined, close the modal (this form does not have to
-                // be displayed in a modal)
-                if (closeFn) {
-                    closeFn();
+                    ), options);
                 }
             }}
         >
@@ -202,6 +200,8 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                                 )}
                             </TextField>
                         }
+                        <FormQueryErrors
+                            mutationQuery={category ? useEditCategoryQuery : useAddCategoryQuery} />
                         <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
                                 {t('submit')}

@@ -84,7 +84,7 @@ describe("Test the EntryForm component", () => {
         // Assert
         expect(submitButton).toBeInTheDocument();
         await user.click(submitButton);
-        expect(mutate).toHaveBeenCalledWith(MeasurementEntry.clone(entry, { value: 25 }));
+        expect(mutate).toHaveBeenCalledWith(MeasurementEntry.clone(entry, { value: 25 }), expect.anything());
     });
 
     test('Creating a new entry', async () => {
@@ -113,7 +113,7 @@ describe("Test the EntryForm component", () => {
             fakeNow,
             42.42,
             'The Shiba Inu is a breed of hunting dog from Japan.',
-        ));
+        ), expect.anything());
 
         vi.useRealTimers();
     });
