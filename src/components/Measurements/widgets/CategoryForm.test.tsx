@@ -260,6 +260,32 @@ describe("Test the CategoryForm component", () => {
         expect(screen.queryByRole('combobox', { name: 'measurements.chartType' })).toBeNull();
     });
 
+    test('Changing the metric type drops a chart type it cannot use', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        const category = MeasurementCategory.clone(TEST_MEASUREMENT_CATEGORY_1, {
+            chartType: 'line',
+        });
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={category} />
+            </QueryClientProvider>
+        );
+        await user.click(screen.getByRole('combobox', { name: 'measurements.metricType' }));
+        await user.click(screen.getByRole('option', { name: 'measurements.metricTypes.steps' }));
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert: steps are drawn as bars or as a heatmap, never as a line, so
+        // the picker falls back to automatic and that is what has to be saved
+        expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
+            metricType: 'steps',
+            chartType: 'auto',
+        }));
+    });
+
     test('A leaf category gets the chart type picker', () => {
 
         // Act
