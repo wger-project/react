@@ -23,6 +23,26 @@ const TEST_GROUP_CATEGORY = new MeasurementCategory(
     'mmHg',
 );
 
+/**
+ * The same category the way the API layer hands it over once it has a
+ * component: top-level, with the child attached to it. The children are never
+ * rows of their own in that list.
+ */
+const groupWithComponent = (childId: string): MeasurementCategory => {
+    const group = MeasurementCategory.clone(TEST_GROUP_CATEGORY);
+    group.children = [new MeasurementCategory(
+        childId,
+        'Systolic',
+        'mmHg',
+        undefined,
+        'blood_pressure',
+        false,
+        TEST_GROUP_CATEGORY.id,
+    )];
+
+    return group;
+};
+
 describe("Test the CategoryForm component", () => {
     const queryClient = new QueryClient();
     let mutate = vi.fn();
@@ -207,24 +227,22 @@ describe("Test the CategoryForm component", () => {
     });
 
     test('The group dropdown is hidden for a category with children', () => {
-        // Arrange
-        const child = new MeasurementCategory(
-            'cccccccc-cccc-cccc-cccc-000000000043',
-            'Systolic',
-            'mmHg',
-            undefined,
-            'blood_pressure',
-            false,
-            TEST_GROUP_CATEGORY.id,
+        // Arrange: an eligible parent exists, so the dropdown is only absent
+        // because the edited category is a group itself
+        const group = groupWithComponent('cccccccc-cccc-cccc-cccc-000000000043');
+        const candidate = new MeasurementCategory(
+            'cccccccc-cccc-cccc-cccc-000000000045',
+            'Waist',
+            'cm',
         );
         (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
-            data: [TEST_GROUP_CATEGORY, child]
+            data: [group, candidate]
         }));
 
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <CategoryForm category={TEST_GROUP_CATEGORY} />
+                <CategoryForm category={group} />
             </QueryClientProvider>
         );
 
@@ -263,23 +281,15 @@ describe("Test the CategoryForm component", () => {
 
         // Arrange: its chart follows from what its components are to each
         // other, which is what groupChart decides; a pick would have no effect
-        const child = new MeasurementCategory(
-            'cccccccc-cccc-cccc-cccc-000000000044',
-            'Systolic',
-            'mmHg',
-            undefined,
-            'blood_pressure',
-            false,
-            TEST_GROUP_CATEGORY.id,
-        );
+        const group = groupWithComponent('cccccccc-cccc-cccc-cccc-000000000044');
         (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
-            data: [TEST_GROUP_CATEGORY, child]
+            data: [group]
         }));
 
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <CategoryForm category={TEST_GROUP_CATEGORY} />
+                <CategoryForm category={group} />
             </QueryClientProvider>
         );
 

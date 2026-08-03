@@ -51,7 +51,10 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     // group takes only its own components. The current parent always stays
     // selectable so editing something else doesn't silently drop it.
     const categories = categoryQuery.data ?? [];
-    const hasChildren = category?.id != null && categories.some(c => c.parentId === category.id);
+    // Asked of the category itself, which carries its components: the query
+    // returns the top-level ones only, so looking for a row whose parent is
+    // this one never finds anything
+    const hasChildren = category?.isGroup ?? false;
     const parentCandidates = categories.filter(c =>
         c.parentId === null
         && c.id !== category?.id
