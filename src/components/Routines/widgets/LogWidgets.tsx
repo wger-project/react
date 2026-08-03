@@ -52,6 +52,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
         repetitions: logEntry.repetitions,
         weight: logEntry.weight,
         rir: logEntry.rir,
+        notes: logEntry.notes,
         entry: logEntry
     }));
 
@@ -98,6 +99,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
             log.repetitions = newRow.repetitions;
             log.weight = newRow.weight;
             log.rir = newRow.rir;
+            log.notes = newRow.notes;
 
             editLogQuery.mutate(log);
         }
@@ -152,6 +154,14 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             getOptionLabel: (value: any) => value.label,
             valueOptions: RIR_VALUES_SELECT_LIST,
+        },
+        {
+            field: 'notes',
+            type: 'string',
+            flex: 2,
+            disableColumnMenu: true,
+            editable: true,
+            headerName: t('notes'),
         },
         {
             field: 'actions',
