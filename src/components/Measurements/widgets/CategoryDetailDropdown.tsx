@@ -1,6 +1,7 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import { Button, Menu, MenuItem } from "@mui/material";
 import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { categoryDisplayName, MeasurementCategory } from "@/components/Measurements/models/Category";
 import { useDeleteMeasurementCategoryQuery } from "@/components/Measurements/queries";
@@ -52,6 +53,7 @@ export const CategoryDetailDropdown = (props: { category: MeasurementCategory })
 
     return (
         <div>
+            <FormQueryErrorsSnackbar mutationQuery={deleteCategoryQuery} />
             <Button onClick={handleClick}>
                 <MenuIcon />
             </Button>

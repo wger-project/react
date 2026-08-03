@@ -1,9 +1,10 @@
+import { categoryDisplayName, MeasurementCategory } from "@/components/Measurements/models/Category";
+import { useReorderMeasurementCategoriesQuery } from "@/components/Measurements/queries";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { DragDropContext, Draggable, Droppable, DropResult } from "@hello-pangea/dnd";
 import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import React, { useState } from "react";
-import { categoryDisplayName, MeasurementCategory } from "@/components/Measurements/models/Category";
-import { useReorderMeasurementCategoriesQuery } from "@/components/Measurements/queries";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -29,11 +30,15 @@ export const CategoryReorderList = (props: { categories: MeasurementCategory[] }
         const [moved] = reordered.splice(result.source.index, 1);
         reordered.splice(result.destination.index, 0, moved);
 
+        // Shown in the new order right away, and put  back where it was if the
+        // server refuses: a silent revert on the next load looks like a bug
+        const previous = categories;
         setCategories(reordered);
-        reorderQuery.mutate(reordered);
+        reorderQuery.mutate(reordered, { onError: () => setCategories(previous) });
     };
 
     return <DragDropContext onDragEnd={onDragEnd}>
+        <FormQueryErrorsSnackbar mutationQuery={reorderQuery} />
         <Droppable droppableId="categoryReorderDroppable">
             {(provided) => (
                 <List ref={provided.innerRef} {...provided.droppableProps}>

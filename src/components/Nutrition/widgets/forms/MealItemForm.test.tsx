@@ -1,10 +1,11 @@
+import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { useAddMealItemQuery, useEditMealItemQuery, useSearchIngredientQuery } from "@/components/Nutrition/queries";
 import { MealItemForm } from "@/components/Nutrition/widgets/forms/MealItemForm";
 import { SEARCH_DEBOUNCE_MS } from "@/components/Nutrition/widgets/IngredientAutocompleter";
-import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
+import { mutateMock } from "@/tests/mutationMock";
 import { TEST_MEAL_ITEM_1, TEST_WEIGHT_UNIT_SLICE } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, render, screen, within } from "@testing-library/react";
@@ -46,13 +47,13 @@ async function fillInEntry(user: UserEvent) {
 
 describe('Test the MealItemForm component', () => {
     const queryClient = new QueryClient();
-    let mutateAddMock = vi.fn();
-    let mutateEditMock = vi.fn();
+    let mutateAddMock = mutateMock();
+    let mutateEditMock = mutateMock();
     let closeFnMock = vi.fn();
 
     beforeEach(() => {
-        mutateAddMock = vi.fn();
-        mutateEditMock = vi.fn();
+        mutateAddMock = mutateMock();
+        mutateEditMock = mutateMock();
         closeFnMock = vi.fn();
 
         (useEditMealItemQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
@@ -86,7 +87,7 @@ describe('Test the MealItemForm component', () => {
                 ingredientId: 101,
                 weightUnitId: null,
             })
-        );
+            , expect.anything());
     });
     test('An existing entry should be updated', async () => {
         // Arrange
@@ -118,7 +119,7 @@ describe('Test the MealItemForm component', () => {
                 ingredient: TEST_INGREDIENT_2,
                 weightUnitId: null,
             })
-        );
+            , expect.anything());
     });
     test('Resetting the unit back to gram should clear the weight unit', async () => {
         // Arrange
@@ -155,6 +156,6 @@ describe('Test the MealItemForm component', () => {
                 weightUnitId: null,
                 weightUnit: null,
             })
-        );
+            , expect.anything());
     });
 });

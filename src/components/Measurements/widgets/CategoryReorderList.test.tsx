@@ -59,7 +59,8 @@ describe("Test the CategoryReorderList component", () => {
 
         // Assert
         await waitFor(() => expect(mutateMock).toHaveBeenCalledWith(
-            [TEST_MEASUREMENT_CATEGORY_2, TEST_MEASUREMENT_CATEGORY_1]
+            [TEST_MEASUREMENT_CATEGORY_2, TEST_MEASUREMENT_CATEGORY_1],
+            expect.anything()
         ));
     });
 });

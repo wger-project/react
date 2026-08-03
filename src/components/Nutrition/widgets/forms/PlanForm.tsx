@@ -13,6 +13,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 
 import { ENERGY_FACTOR } from "@/components/Nutrition/helpers/nutritionalValues";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/components/Nutrition/queries";
 import { Form, Formik } from "formik";
@@ -133,16 +134,15 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                 });
 
 
+                // The dialog closes only once the server took the plan, so a
+                // rejected write is shown instead of disappearing with it
+                const options = { onSuccess: () => closeFn?.() };
+
                 if (plan) {
                     newPlan.id = plan.id!;
-                    editPlanQuery.mutate(newPlan);
+                    editPlanQuery.mutate(newPlan, options);
                 } else {
-                    addPlanQuery.mutate(newPlan);
-                }
-
-                // if closeFn is defined, close the modal (this form does not have to be displayed in one)
-                if (closeFn) {
-                    closeFn();
+                    addPlanQuery.mutate(newPlan, options);
                 }
             }}
         >
@@ -364,6 +364,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                             </Grid>
                         </>}
 
+                        <FormQueryErrors mutationQuery={plan ? editPlanQuery : addPlanQuery} />
                         <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary"
                                     variant="contained"

@@ -7,6 +7,7 @@ import {
 import { useEditProfileQuery, useProfileQuery } from "@/components/User";
 import { DEBOUNCE_ROUTINE_FORMS } from "@/core/lib/consts";
 import { LoadingProgressIcon } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { MenuItem, TextField } from "@mui/material";
 import debounce from "lodash/debounce";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -61,6 +62,7 @@ export const SlotEntryTypeField = (props: { slotEntry: SlotEntry, routineId: num
 
 
     return <>
+        <FormQueryErrorsSnackbar mutationQuery={editQuery} />
         <TextField
             fullWidth
             select
@@ -206,7 +208,9 @@ export const SlotEntryRoundingField = (props: SlotEntryRoundingFieldProps) => {
         debouncedSave(newValue);
     };
 
-    return (
+    return (<>
+        <FormQueryErrorsSnackbar mutationQuery={editSlotEntryQuery} />
+        <FormQueryErrorsSnackbar mutationQuery={editProfileQuery} />
         <TextField
             fullWidth
             label={props.rounding === 'weight' ? t('weight') : t('routines.reps')}
@@ -216,5 +220,5 @@ export const SlotEntryRoundingField = (props: SlotEntryRoundingFieldProps) => {
             onChange={e => handleOnChange(e.target.value)}
             slotProps={{ htmlInput: { inputMode: 'decimal' } }}
         />
-    );
+    </>);
 };

@@ -1,5 +1,6 @@
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/components/Nutrition/queries";
 import { PlanForm } from "@/components/Nutrition/widgets/forms/PlanForm";
+import { mutateMock } from "@/tests/mutationMock";
 import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
@@ -12,10 +13,10 @@ vi.mock("@/components/Nutrition/queries");
 
 describe("Test the PlanForm component", () => {
     const queryClient = new QueryClient();
-    let mutate = vi.fn();
+    let mutate = mutateMock();
 
     beforeEach(() => {
-        mutate = vi.fn();
+        mutate = mutateMock();
 
         (useEditNutritionalPlanQuery as Mock).mockImplementation(() => ({
             mutate: mutate
@@ -71,7 +72,7 @@ describe("Test the PlanForm component", () => {
                 goalProtein: null,
                 onlyLogging: false,
             })
-        );
+            , expect.anything());
     });
 
     test('Creating a new plan', async () => {
@@ -99,6 +100,6 @@ describe("Test the PlanForm component", () => {
                 goalProtein: null,
                 goalFiber: null,
             })
-        );
+            , expect.anything());
     });
 });

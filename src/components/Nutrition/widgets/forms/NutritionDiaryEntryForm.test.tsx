@@ -1,3 +1,4 @@
+import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import {
     useAddDiaryEntryQuery,
@@ -6,8 +7,8 @@ import {
     useSearchIngredientQuery
 } from "@/components/Nutrition/queries";
 import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
-import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
+import { mutateMock } from "@/tests/mutationMock";
 import { TEST_DIARY_ENTRY_1 } from "@/tests/nutritionDiaryTestdata";
 import { TEST_MEAL_1, TEST_MEAL_2 } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -45,15 +46,15 @@ async function fillInEntry(user: UserEvent) {
 
 describe('Test the NutritionDiaryEntryForm component', () => {
     const queryClient = new QueryClient();
-    let mutateAddMock = vi.fn();
-    let mutateEditMock = vi.fn();
-    let mutateDeleteMock = vi.fn();
+    let mutateAddMock = mutateMock();
+    let mutateEditMock = mutateMock();
+    let mutateDeleteMock = mutateMock();
     let closeFnMock = vi.fn();
 
     beforeEach(() => {
-        mutateAddMock = vi.fn();
-        mutateEditMock = vi.fn();
-        mutateDeleteMock = vi.fn();
+        mutateAddMock = mutateMock();
+        mutateEditMock = mutateMock();
+        mutateDeleteMock = mutateMock();
         closeFnMock = vi.fn();
 
         (useEditDiaryEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
@@ -90,7 +91,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                 mealId: null,
                 weightUnitId: null,
             })
-        );
+            , expect.anything());
     });
     test('A new entry should be added - passing meal ID', async () => {
         // Arrange
@@ -120,7 +121,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                 weightUnitId: null,
 
             })
-        );
+            , expect.anything());
     });
 
     test('An existing diary entry should be edited', async () => {
@@ -148,7 +149,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                 // The newly selected ingredient, not the entry's original one
                 ingredientId: 102,
             })
-        );
+            , expect.anything());
     });
 
     test('The form is prefilled with the entry data when editing', async () => {
@@ -178,7 +179,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                 mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
                 datetime: TEST_DIARY_ENTRY_1.datetime,
             })
-        );
+            , expect.anything());
     });
 
     test('Editing shows the entry\'s meal preselected when meals are passed', async () => {
@@ -200,7 +201,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         await user.click(screen.getByRole('button', { name: 'submit' }));
         expect(mutateEditMock).toHaveBeenCalledWith(
             expect.objectContaining({ mealId: 'bbbbbbbb-0000-0000-0000-000000000078' })
-        );
+            , expect.anything());
     });
 
     test('An existing diary entry should be deleted', async () => {
@@ -220,7 +221,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(mutateAddMock).not.toHaveBeenCalled();
         expect(mutateEditMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
-        expect(mutateDeleteMock).toHaveBeenCalledWith('dddddddd-0000-0000-0000-000000000042');
+        expect(mutateDeleteMock).toHaveBeenCalledWith('dddddddd-0000-0000-0000-000000000042', expect.anything());
     });
 
     test('An existing diary entry should be edited - passing a meal Id', async () => {
@@ -250,6 +251,6 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                 ingredientId: 102,
                 weightUnitId: null,
             })
-        );
+            , expect.anything());
     });
 });

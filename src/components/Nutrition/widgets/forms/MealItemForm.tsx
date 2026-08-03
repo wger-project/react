@@ -8,6 +8,7 @@ import {
     useEditMealItemQuery,
 } from "@/components/Nutrition/queries";
 import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Form, Formik } from "formik";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -30,14 +31,16 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
     const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(item?.weightUnit ?? null);
     const [weightUnits, setWeightUnits] = useState<NutritionWeightUnit[]>(item?.ingredient?.weightUnits ?? []);
 
+    // The dialog closes only once the server took the change, so a rejected
+    // write is shown instead of disappearing with it
+    const closeOnSuccess = { onSuccess: () => closeFn?.() };
+
     const handleDelete = () => {
         if (item) {
-            deleteMealItemQuery.mutate(item.id!);
+            deleteMealItemQuery.mutate(item.id!, closeOnSuccess);
+            return;
         }
-
-        if (closeFn) {
-            closeFn();
-        }
+        closeFn?.();
     };
 
     const validationSchema = yup.object({
@@ -81,7 +84,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                         weightUnitId: selectedUnit?.id ?? null,
                         weightUnit: selectedUnit,
                     });
-                    editMealItemQuery.mutate(newMealItem);
+                    editMealItemQuery.mutate(newMealItem, closeOnSuccess);
                 } else {
                     // Add
                     addMealItemQuery.mutate(new MealItem({
@@ -91,11 +94,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                         weightUnitId: selectedUnit?.id ?? null,
                         weightUnit: selectedUnit,
                         order: 1,
-                    }));
-                }
-
-                if (closeFn) {
-                    closeFn();
+                    }), closeOnSuccess);
                 }
             }}
         >
@@ -148,6 +147,8 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                             {...formik.getFieldProps('amount')}
                         />
 
+                        <FormQueryErrors mutationQuery={item ? editMealItemQuery : addMealItemQuery} />
+                        <FormQueryErrors mutationQuery={deleteMealItemQuery} />
                         <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
                             {(closeFn !== undefined && item !== undefined)
                                 && <Button color="error" variant="outlined" onClick={handleDelete}>

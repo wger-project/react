@@ -3,6 +3,7 @@ import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { Meal } from "@/components/Nutrition/models/meal";
 import { useAddMealQuery, useEditMealQuery } from "@/components/Nutrition/queries";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React from 'react';
@@ -45,10 +46,14 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
                     values.time = values.time.toJSDate();
                 }
 
+                // The dialog closes only once the server took the meal, so a
+                // rejected write is shown instead of disappearing with it
+                const options = { onSuccess: () => closeFn?.() };
+
                 if (meal) {
                     // Edit
                     const newMeal = Meal.clone(meal, { name: values.name, time: values.time });
-                    editMealQuery.mutate(newMeal);
+                    editMealQuery.mutate(newMeal, options);
 
                 } else {
                     // Add
@@ -56,11 +61,7 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
                         planId: planId,
                         name: values.name,
                         time: values.time,
-                    }));
-                }
-
-                if (closeFn) {
-                    closeFn();
+                    }), options);
                 }
             }}
         >
@@ -83,6 +84,7 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
                                 onChange={(newValue) => formik.setFieldValue('time', newValue ? newValue.toJSDate() : null)}
                             />
                         </LocalizationProvider>
+                        <FormQueryErrors mutationQuery={meal ? editMealQuery : addMealQuery} />
                         <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
                             {closeFn !== undefined
                                 && <Button color="primary" variant="outlined" onClick={() => closeFn()}>

@@ -14,6 +14,7 @@ import {
 import LoadingButton from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
 import { WgerTextField } from "@/core/forms/WgerTextField";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
 import { Day, DayType } from "@/components/Routines/models/Day";
 import { useDeleteDayQuery, useEditDayQuery } from "@/components/Routines/queries";
@@ -115,6 +116,8 @@ export const DayForm = (props: {
         >
             {(formik) => (
                 <Form>
+                    <FormQueryErrorsSnackbar mutationQuery={editDayQuery} />
+                    <FormQueryErrorsSnackbar mutationQuery={deleteDayQuery} />
                     <Grid container spacing={2}>
                         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                             <WgerTextField
