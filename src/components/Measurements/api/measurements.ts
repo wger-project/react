@@ -9,16 +9,21 @@ import { makeHeader, makeUrl } from "@/core/lib/url";
 export const API_MEASUREMENTS_CATEGORY_PATH = 'measurement-category';
 export const API_MEASUREMENTS_ENTRY_PATH = 'measurement';
 
+/**
+ * How much of each category's history a caller needs.
+ *
+ * 'all' is the history the entry filterset asks for. 'probe' fetches a single
+ * entry per category, for callers that only ask whether a category holds
+ * entries at all: the lists come back truncated, so `entries.length === 0` is
+ * the only thing they may be read for. 'none' skips the entries, and with them
+ * one request per category, for callers that need the categories themselves.
+ */
+export type EntryLoading = 'all' | 'probe' | 'none';
+
 export type MeasurementQueryOptions = {
     filtersetQueryCategories?: object,
     filtersetQueryEntries?: object,
-    /**
-     * Fetch a single entry per category instead of its history, for callers
-     * that only ask whether a category holds entries at all. The lists come
-     * back truncated, so `entries.length === 0` is the only thing they may be
-     * read for.
-     */
-    probeEntries?: boolean,
+    entries?: EntryLoading,
 }
 
 /** Every entry of a category, over all pages */
@@ -56,7 +61,11 @@ const probeMeasurementEntries = async (categoryId: string): Promise<MeasurementE
 };
 
 export const getMeasurementCategories = async (options?: MeasurementQueryOptions): Promise<MeasurementCategory[]> => {
-    const { filtersetQueryCategories = {}, filtersetQueryEntries = {}, probeEntries } = options || {};
+    const {
+        filtersetQueryCategories = {},
+        filtersetQueryEntries = {},
+        entries = 'all',
+    } = options || {};
 
     let categories: MeasurementCategory[] = [];
     const categoryUrl = makeUrl(API_MEASUREMENTS_CATEGORY_PATH, {
@@ -77,11 +86,13 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
     categories = categories.filter(c => !(c.isOfficial && c.metricType === METRIC_TYPE_BODY_WEIGHT));
 
     // Load entries for each category
-    await Promise.all(categories.map(async (category) => {
-        category.entries = probeEntries
-            ? await probeMeasurementEntries(category.id!)
-            : await getMeasurementEntries(category.id!, filtersetQueryEntries);
-    }));
+    if (entries !== 'none') {
+        await Promise.all(categories.map(async (category) => {
+            category.entries = entries === 'probe'
+                ? await probeMeasurementEntries(category.id!)
+                : await getMeasurementEntries(category.id!, filtersetQueryEntries);
+        }));
+    }
 
     // Multi-value groups: attach the children to their parent, only the
     // top-level categories are returned

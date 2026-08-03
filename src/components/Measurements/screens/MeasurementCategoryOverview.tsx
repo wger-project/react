@@ -84,7 +84,7 @@ export const MeasurementCategoryOverview = () => {
                         <CategoryList category={c} key={c.id} range={range} />)}
                 </Stack>
                 }
-                fab={<AddMeasurementCategoryFab />}
+                fab={<AddMeasurementCategoryFab isLoading={categoryQuery.isFetching} />}
             />
             <WgerModal
                 title={t('measurements.reorderCategories')}

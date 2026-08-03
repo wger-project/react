@@ -100,9 +100,17 @@ describe('measurement service tests', () => {
         ]);
     });
 
-    test('probeEntries asks for a single entry per category', async () => {
+    test("entries 'none' reads the categories without a request per category", async () => {
 
-        const result = await getMeasurementCategories({ probeEntries: true });
+        const result = await getMeasurementCategories({ entries: 'none' });
+
+        expect(axios.get).toHaveBeenCalledTimes(1);
+        expect(result[0].entries).toHaveLength(0);
+    });
+
+    test("entries 'probe' asks for a single entry per category", async () => {
+
+        const result = await getMeasurementCategories({ entries: 'probe' });
 
         expect(axios.get).toHaveBeenNthCalledWith(2,
             expect.stringContaining('limit=1'),
@@ -111,10 +119,10 @@ describe('measurement service tests', () => {
         expect(result[0].entries).toHaveLength(1);
     });
 
-    test('probeEntries ignores the entry filterset, it fetches no history', async () => {
+    test("entries 'probe' ignores the entry filterset, it fetches no history", async () => {
 
         await getMeasurementCategories({
-            probeEntries: true,
+            entries: 'probe',
             filtersetQueryEntries: { foo: "bar" },
         });
 

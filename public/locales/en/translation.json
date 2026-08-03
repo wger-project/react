@@ -376,7 +376,10 @@
         "overallChangeWeight": "Overall change",
         "chartRangeAll": "All",
         "chartRangeLastYear": "1 year",
-        "chartRangeLast3Months": "3 months"
+        "chartRangeLast3Months": "3 months",
+        "customMeasurement": "Custom measurement",
+        "metricAlreadyTracked": "Already tracked",
+        "categoryFormHelpText": "Measurement category, such as 'biceps' or 'body fat'"
     },
     "server": {
         "abs": "Abs",

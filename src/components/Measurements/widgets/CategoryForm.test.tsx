@@ -125,9 +125,9 @@ describe("Test the CategoryForm component", () => {
         expect(mutate).toHaveBeenCalledWith(new MeasurementCategory(null, 'calves', 'cm'), expect.anything());
     });
 
-    test('The body weight and component metric types are not offered', async () => {
-        // Arrange
-        const user = userEvent.setup();
+    test('The metric type is not offered', () => {
+        // It is picked when the category is created and immutable from then
+        // on, the server refuses a change
 
         // Act
         render(
@@ -135,13 +135,28 @@ describe("Test the CategoryForm component", () => {
                 <CategoryForm />
             </QueryClientProvider>
         );
-        await user.click(screen.getByRole('combobox', { name: 'measurements.metricType' }));
 
         // Assert
-        expect(screen.getByRole('option', { name: 'measurements.metricTypes.steps' })).toBeInTheDocument();
-        expect(screen.queryByRole('option', { name: 'measurements.metricTypes.body_weight' })).toBeNull();
-        expect(screen.queryByRole('option', { name: 'measurements.metricTypes.blood_pressure_systolic' })).toBeNull();
-        expect(screen.queryByRole('option', { name: 'measurements.metricTypes.blood_pressure_diastolic' })).toBeNull();
+        expect(screen.queryByRole('combobox', { name: 'measurements.metricType' })).toBeNull();
+    });
+
+    test('A typed category has neither a name nor a unit field', () => {
+        // Arrange: both come from the metric type, which is also what is shown
+        const typed = MeasurementCategory.clone(TEST_MEASUREMENT_CATEGORY_1, {
+            metricType: 'heart_rate',
+        });
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={typed} />
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.queryByLabelText('name')).toBeNull();
+        expect(screen.queryByLabelText('unit')).toBeNull();
+        expect(screen.getByRole('combobox', { name: 'measurements.chartType' })).toBeInTheDocument();
     });
 
     test('Creating a category inside a group', async () => {
@@ -174,18 +189,18 @@ describe("Test the CategoryForm component", () => {
         ), expect.anything());
     });
 
-    test('A typed category cannot be put into a group', async () => {
+    test('A typed category cannot be put into a group', () => {
         // Arrange
-        const user = userEvent.setup();
+        const typed = MeasurementCategory.clone(TEST_MEASUREMENT_CATEGORY_1, {
+            metricType: 'steps',
+        });
 
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <CategoryForm />
+                <CategoryForm category={typed} />
             </QueryClientProvider>
         );
-        await user.click(screen.getByRole('combobox', { name: 'measurements.metricType' }));
-        await user.click(screen.getByRole('option', { name: 'measurements.metricTypes.steps' }));
 
         // Assert - the group selector is gone, a typed category stays top-level
         expect(screen.queryByRole('combobox', { name: 'measurements.partOfGroup' })).toBeNull();
@@ -295,32 +310,6 @@ describe("Test the CategoryForm component", () => {
 
         // Assert
         expect(screen.queryByRole('combobox', { name: 'measurements.chartType' })).toBeNull();
-    });
-
-    test('Changing the metric type drops a chart type it cannot use', async () => {
-
-        // Arrange
-        const user = userEvent.setup();
-        const category = MeasurementCategory.clone(TEST_MEASUREMENT_CATEGORY_1, {
-            chartType: 'line',
-        });
-
-        // Act
-        render(
-            <QueryClientProvider client={queryClient}>
-                <CategoryForm category={category} />
-            </QueryClientProvider>
-        );
-        await user.click(screen.getByRole('combobox', { name: 'measurements.metricType' }));
-        await user.click(screen.getByRole('option', { name: 'measurements.metricTypes.steps' }));
-        await user.click(screen.getByRole('button', { name: 'submit' }));
-
-        // Assert: steps are drawn as bars or as a heatmap, never as a line, so
-        // the picker falls back to automatic and that is what has to be saved
-        expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
-            metricType: 'steps',
-            chartType: 'auto',
-        }), expect.anything());
     });
 
     test('A leaf category gets the chart type picker', () => {

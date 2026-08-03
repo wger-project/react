@@ -46,6 +46,33 @@ describe("Test the MeasurementCategoryOverview component", () => {
         expect(screen.getByText('Body fat')).toBeInTheDocument();
     });
 
+    test('the add button waits while the categories are read again', async () => {
+
+        // Arrange: a new category invalidates the query, and reading the
+        // histories again takes long enough that the button has to say so
+        (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
+            isSuccess: true,
+            isLoading: false,
+            isFetching: true,
+            data: [TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2]
+        }));
+
+        // Act
+        render(
+            <BrowserRouter>
+                <QueryClientProvider client={queryClient}>
+                    <MeasurementCategoryOverview />
+                </QueryClientProvider>
+            </BrowserRouter>
+        );
+
+        // Assert
+        const fab = screen.getByLabelText('add');
+        expect(fab).toBeDisabled();
+        expect(fab.querySelector('[data-testid="AddIcon"]')).toBeNull();
+        expect(fab.querySelector('.MuiCircularProgress-root')).toBeInTheDocument();
+    });
+
     test('opens the reorder modal', async () => {
 
         // Arrange

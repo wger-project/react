@@ -291,7 +291,10 @@
         "overallChangeWeight": "Allgemeine Veränderung",
         "chartRangeAll": "Gesamt",
         "chartRangeLastYear": "1 Jahr",
-        "chartRangeLast3Months": "3 Monate"
+        "chartRangeLast3Months": "3 Monate",
+        "customMeasurement": "Eigene Messung",
+        "metricAlreadyTracked": "Wird bereits aufgezeichnet",
+        "categoryFormHelpText": "Messkategorie, z. B. „Bizeps“ oder „Körperfett“"
     },
     "timeOfDay": "Uhrzeit",
     "notes": "Notizen",

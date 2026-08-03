@@ -293,7 +293,10 @@
         "overallChangeWeight": "Cambio general",
         "chartRangeAll": "Todo",
         "chartRangeLastYear": "1 año",
-        "chartRangeLast3Months": "3 meses"
+        "chartRangeLast3Months": "3 meses",
+        "customMeasurement": "Medición personalizada",
+        "metricAlreadyTracked": "Ya se está registrando",
+        "categoryFormHelpText": "Categoría de medición, como \"bíceps\" o \"grasa corporal\""
     },
     "deleteConfirmation": "¿Estás seguro de que quieres borrar \"{{name}}\"?",
     "nutrition": {

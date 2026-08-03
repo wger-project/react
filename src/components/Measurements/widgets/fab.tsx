@@ -1,14 +1,19 @@
 import React from "react";
-import { Fab } from "@mui/material";
+import { CircularProgress, Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
-import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
+import { NewCategoryPicker } from "@/components/Measurements/widgets/MetricPicker";
 import { EntryForm, GroupEntryForm } from "@/components/Measurements/widgets/EntryForm";
 import { WeightForm } from "@/components/Measurements/widgets/WeightForm";
 
-export const AddMeasurementCategoryFab = () => {
+/**
+ * @param isLoading whether the overview is (re)reading its categories. A new
+ * category invalidates that query, and reading the histories again takes long
+ * enough that the button has to say so instead of looking idle.
+ */
+export const AddMeasurementCategoryFab = ({ isLoading = false }: { isLoading?: boolean }) => {
     const [t] = useTranslation();
     const [openModal, setOpenModal] = React.useState(false);
     const handleOpenModal = () => setOpenModal(true);
@@ -20,6 +25,7 @@ export const AddMeasurementCategoryFab = () => {
             <Fab
                 color="secondary"
                 aria-label="add"
+                disabled={isLoading}
                 onClick={handleOpenModal}
                 sx={{
                     position: 'fixed',
@@ -27,10 +33,10 @@ export const AddMeasurementCategoryFab = () => {
                     right: (theme) => `max(${theme.spacing(2)}, calc((100vw - ${theme.breakpoints.values.lg}px) / 2 + ${theme.spacing(2)}))`,
                     zIndex: 9,
                 }}>
-                <AddIcon />
+                {isLoading ? <CircularProgress size={24} color="inherit" /> : <AddIcon />}
             </Fab>
             <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
-                <CategoryForm closeFn={handleCloseModal} />
+                <NewCategoryPicker closeFn={handleCloseModal} />
             </WgerModal>
         </div>
     );

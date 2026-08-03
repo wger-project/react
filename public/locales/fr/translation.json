@@ -376,7 +376,10 @@
         "overallChangeWeight": "Changement global",
         "chartRangeAll": "Tout",
         "chartRangeLastYear": "1 an",
-        "chartRangeLast3Months": "3 mois"
+        "chartRangeLast3Months": "3 mois",
+        "customMeasurement": "Mesure personnalisée",
+        "metricAlreadyTracked": "Déjà suivi",
+        "categoryFormHelpText": "Catégorie de mesure, comme « biceps » ou « graisse corporelle »"
     },
     "downloadAsPdf": "Télécharger en PDF",
     "calendar": "Calendrier",

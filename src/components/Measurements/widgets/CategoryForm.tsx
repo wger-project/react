@@ -1,11 +1,8 @@
 import {
     availableChartTypes,
     ChartType,
-    isComponentMetricType,
     isGroupMetricType,
-    isOfficialMetricType,
     MeasurementCategory,
-    METRIC_TYPES,
     MetricType
 } from "@/components/Measurements/models/Category";
 import {
@@ -37,13 +34,11 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     // The categories are read only to offer the groups this one can join, and
     // of their entries only whether there are any at all, so a single entry
     // per category is fetched instead of every one of them
-    const categoryQuery = useMeasurementsCategoryQuery({ probeEntries: true });
+    const categoryQuery = useMeasurementsCategoryQuery({ entries: 'probe' });
 
-    // Official metric types are reserved for the server-managed categories,
-    // components are a structural type: they only exist as the children of
-    // their group, which the server creates them with
-    const metricTypeChoices = METRIC_TYPES.filter(m =>
-        (!isOfficialMetricType(m) && !isComponentMetricType(m)) || m === category?.metricType);
+    // Name and unit belong to the user only for a free-form category. A typed
+    // one takes both from its metric type, which is also what is shown for it
+    const isCustom = (category?.metricType ?? 'custom') === 'custom';
 
     // Multi-value groups, e.g. blood pressure. Mirrors the server rules: only
     // top-level, entry-free categories can be parents, a category that already
@@ -121,15 +116,15 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
             {formik => (
                 <Form>
                     <Stack spacing={2}>
-                        <TextField
+                        {isCustom && <TextField
                             fullWidth
                             id="name"
                             label={t('name')}
                             error={formik.touched.name && Boolean(formik.touched.name)}
                             helperText={formik.touched.name && formik.errors.name}
                             {...formik.getFieldProps('name')}
-                        />
-                        <TextField
+                        />}
+                        {isCustom && <TextField
                             fullWidth
                             id="unit"
                             label={t('unit')}
@@ -140,32 +135,12 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                                     : t('measurements.unitFormHelpText')
                             }
                             {...formik.getFieldProps('unit')}
-                        />
-                        <TextField
-                            select
-                            fullWidth
-                            id="metricType"
-                            label={t('measurements.metricType')}
-                            disabled={category?.isOfficial}
-                            {...formik.getFieldProps('metricType')}
-                            onChange={event => {
-                                const metricType = event.target.value as MetricType;
-                                formik.setFieldValue('metricType', metricType);
-                                // Bars are no choice for a sample type and a
-                                // line is none for a summed one, so a pick that
-                                // the new type cannot be drawn as goes back to
-                                // being derived
-                                if (!chartTypeChoices(metricType).includes(formik.values.chartType)) {
-                                    formik.setFieldValue('chartType', 'auto');
-                                }
-                            }}
-                        >
-                            {metricTypeChoices.map(metricType =>
-                                <MenuItem key={metricType} value={metricType}>
-                                    {t(`measurements.metricTypes.${metricType}`)}
-                                </MenuItem>
-                            )}
-                        </TextField>
+                        />}
+                        {/* The metric type is picked when the category is
+                          * created (see NewCategoryPicker) and fixed from then
+                          * on: the key of a typed category is derived from it,
+                          * and the server refuses a change
+                          */}
                         {/*
                           * Only the shapes that are a matter of taste are
                           * offered, and only those the metric type can be drawn

@@ -1,7 +1,7 @@
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
-import { TFunction } from "i18next";
 import { Adapter } from "@/core/lib/Adapter";
 import { isWeightUnit, WeightUnit } from "@/core/lib/weightUnit";
+import { TFunction } from "i18next";
 
 /** Semantic category types, the values mirror the Django MetricType choices */
 export const METRIC_TYPES = [
@@ -165,6 +165,51 @@ export const GROUP_COMPONENTS: Partial<Record<MetricType, MetricType[]>> = {
  */
 export function isGroupMetricType(type: MetricType): boolean {
     return type in GROUP_COMPONENTS;
+}
+
+/**
+ * The types a user can pick when creating a category. Body weight is the
+ * server's, a component comes with its group, and a free-form category is not
+ * picked but described.
+ */
+export function isPickableMetricType(type: MetricType): boolean {
+    return type !== 'custom' && !isOfficialMetricType(type) && !isComponentMetricType(type);
+}
+
+/* eslint-disable camelcase */
+/**
+ * Name and unit a category of this type is created under. Users see the
+ * translated label instead, this is what ends up in the database.
+ *
+ * The server and the flutter health importer create their categories under the
+ * same values, so whoever gets there first, the row looks the same. The unit is
+ * also the one METRIC_LIMITS below is expressed in.
+ */
+const METRIC_DEFAULTS: Partial<Record<MetricType, { name: string, unit: string }>> = {
+    body_weight: { name: 'Weight', unit: 'kg' },
+    body_fat: { name: 'Body fat', unit: '%' },
+    height: { name: 'Height', unit: 'cm' },
+    blood_pressure: { name: 'Blood pressure', unit: 'mmHg' },
+    blood_pressure_systolic: { name: 'Systolic', unit: 'mmHg' },
+    blood_pressure_diastolic: { name: 'Diastolic', unit: 'mmHg' },
+    heart_rate: { name: 'Heart rate', unit: 'bpm' },
+    resting_heart_rate: { name: 'Resting heart rate', unit: 'bpm' },
+    steps: { name: 'Steps', unit: 'count' },
+    distance: { name: 'Distance', unit: 'km' },
+    energy: { name: 'Energy', unit: 'kcal' },
+    sleep: { name: 'Sleep', unit: 'min' },
+    sleep_total: { name: 'Total sleep', unit: 'min' },
+    sleep_light: { name: 'Light sleep', unit: 'min' },
+    sleep_deep: { name: 'Deep sleep', unit: 'min' },
+    sleep_rem: { name: 'REM sleep', unit: 'min' },
+    sleep_awake: { name: 'Awake', unit: 'min' },
+};
+
+/* eslint-enable camelcase */
+
+/** Empty for a free-form category, whose name and unit the user gives it */
+export function defaultsForMetricType(type: MetricType): { name: string, unit: string } {
+    return METRIC_DEFAULTS[type] ?? { name: '', unit: '' };
 }
 
 /**
