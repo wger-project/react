@@ -1,11 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { useLanguageQuery } from "@/components/Exercises";
-import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "@/components/Routines/queries";
+import { useAddRoutineLogsQuery, useRoutineDetailQuery, useRoutineLogQuery } from "@/components/Routines/queries";
 import { SessionLogsForm } from '@/components/Routines/widgets/forms/SessionLogsForm';
 import { DateTime } from "luxon";
 import { testLanguages } from "@/tests/exerciseTestdata";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
+import { testWorkoutLogs } from "@/tests/workoutLogsRoutinesTestData";
+import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import type { Mock } from 'vitest';
 
 
@@ -17,6 +19,7 @@ describe('SessionLogsForm', () => {
     const mockUseLanguageQuery = useLanguageQuery as Mock;
     const mockAddLogsQuery = useAddRoutineLogsQuery as Mock;
     const mockRoutineDetailQuery = useRoutineDetailQuery as Mock;
+    const mockRoutineLogQuery = useRoutineLogQuery as Mock;
     const mockMutateAsync = vi.fn();
 
     beforeEach(() => {
@@ -33,6 +36,10 @@ describe('SessionLogsForm', () => {
         mockUseLanguageQuery.mockReturnValue({
             isLoading: false,
             data: testLanguages,
+        });
+        mockRoutineLogQuery.mockReturnValue({
+            isSuccess: false,
+            data: [],
         });
     });
 
@@ -123,5 +130,54 @@ describe('SessionLogsForm', () => {
 
         // Assert
         expect(screen.queryByText('Squats')).not.toBeInTheDocument();
+    });
+
+    test('renders notes field for each log entry', async () => {
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.now()}
+        />);
+
+        const notesFields = screen.getAllByRole('textbox', { name: /notes/i });
+        expect(notesFields.length).toBeGreaterThan(0);
+    });
+
+    test('shows last-session note as helper text when previous log has notes', async () => {
+        const logWithNote = new WorkoutLog({
+            ...testWorkoutLogs[0],
+            exerciseId: 345,
+            notes: 'Felt great last time',
+        });
+        mockRoutineLogQuery.mockReturnValue({
+            isSuccess: true,
+            data: [logWithNote],
+        });
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.now()}
+        />);
+
+        expect(screen.getAllByText(/Felt great last time/).length).toBeGreaterThan(0);
+    });
+
+    test('submits notes value with log entry', async () => {
+        const user = userEvent.setup();
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+        />);
+
+        const notesField = screen.getAllByRole('textbox', { name: /notes/i })[0];
+        await user.click(notesField);
+        await user.type(notesField, 'Good session');
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        expect(mockMutateAsync).toHaveBeenCalled();
+        expect(mockMutateAsync.mock.calls[0][0][0]).toMatchObject({ notes: 'Good session' });
     });
 });
