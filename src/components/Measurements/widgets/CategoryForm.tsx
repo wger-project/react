@@ -34,7 +34,10 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     const [t] = useTranslation();
     const useAddCategoryQuery = useAddMeasurementCategoryQuery();
     const useEditCategoryQuery = useEditMeasurementCategoryQuery(category?.id || '');
-    const categoryQuery = useMeasurementsCategoryQuery();
+    // The categories are read only to offer the groups this one can join, and
+    // of their entries only whether there are any at all, so a single entry
+    // per category is fetched instead of every one of them
+    const categoryQuery = useMeasurementsCategoryQuery({ probeEntries: true });
 
     // Official metric types are reserved for the server-managed categories,
     // components are a structural type: they only exist as the children of

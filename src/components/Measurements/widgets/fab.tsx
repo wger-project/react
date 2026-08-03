@@ -59,7 +59,7 @@ export const AddMeasurementEntryFab = ({ category }: { category: MeasurementCate
         <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
             {category.isGroup
                 ? <GroupEntryForm closeFn={handleCloseModal} group={category} />
-                : <EntryForm closeFn={handleCloseModal} categoryId={category.id!} />}
+                : <EntryForm closeFn={handleCloseModal} category={category} />}
         </WgerModal>
     </>);
 };

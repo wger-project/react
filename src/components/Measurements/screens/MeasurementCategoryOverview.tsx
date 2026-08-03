@@ -47,7 +47,7 @@ export const CategoryList = (props: { category: MeasurementCategory, range: Char
         <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
             {props.category.isGroup
                 ? <GroupEntryForm closeFn={handleCloseModal} group={props.category} />
-                : <EntryForm closeFn={handleCloseModal} categoryId={props.category.id!} />}
+                : <EntryForm closeFn={handleCloseModal} category={props.category} />}
         </WgerModal>
     </>;
 };

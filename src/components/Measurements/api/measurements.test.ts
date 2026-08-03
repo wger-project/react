@@ -100,6 +100,30 @@ describe('measurement service tests', () => {
         ]);
     });
 
+    test('probeEntries asks for a single entry per category', async () => {
+
+        const result = await getMeasurementCategories({ probeEntries: true });
+
+        expect(axios.get).toHaveBeenNthCalledWith(2,
+            expect.stringContaining('limit=1'),
+            expect.anything()
+        );
+        expect(result[0].entries).toHaveLength(1);
+    });
+
+    test('probeEntries ignores the entry filterset, it fetches no history', async () => {
+
+        await getMeasurementCategories({
+            probeEntries: true,
+            filtersetQueryEntries: { foo: "bar" },
+        });
+
+        expect(axios.get).toHaveBeenNthCalledWith(2,
+            expect.not.stringContaining('foo=bar'),
+            expect.anything()
+        );
+    });
+
     test('GET measurement categories hides the official body weight category', async () => {
 
         (axios.get as Mock).mockImplementation((url: string) => {

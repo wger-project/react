@@ -1,7 +1,6 @@
 import { Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import {
     categoryDisplayName,
     limitsFor,
@@ -12,8 +11,7 @@ import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import {
     useAddGroupEntriesQuery,
     useAddMeasurementEntryQuery,
-    useEditMeasurementEntryQuery,
-    useMeasurementsQuery
+    useEditMeasurementEntryQuery
 } from "@/components/Measurements/queries";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
@@ -24,24 +22,29 @@ import * as yup from 'yup';
 interface EntryFormProps {
     entry?: MeasurementEntry,
     closeFn?: () => void,
-    categoryId: string,
+    /**
+     * The category the entry goes into. Taken as an object rather than an id
+     * because the form needs no more than its metric type and unit: fetching
+     * it would pull in the whole history for those two fields, and until it
+     * arrived the value would be bounded by the custom fallback range instead
+     * of the metric's own.
+     */
+    category: MeasurementCategory,
 }
 
-export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
+export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
 
     const [t, i18n] = useTranslation();
     const useAddEntryQuery = useAddMeasurementEntryQuery();
     const useEditEntryQuery = useEditMeasurementEntryQuery();
-    const categoryQuery = useMeasurementsQuery(categoryId);
 
     const [dateValue, setDateValue] = React.useState<DateTime | null>(entry ? DateTime.fromJSDate(entry.date) : DateTime.now());
 
     // The bounds follow the metric type of the category, and for body weight
     // the unit the entry itself is in
-    const category = categoryQuery.data;
     const limits = limitsFor(
-        category?.metricType ?? 'custom',
-        entry && category ? entry.unitOrFallback(category.unit) : category?.unit,
+        category.metricType,
+        entry ? entry.unitOrFallback(category.unit) : category.unit,
     );
     const validationSchema = yup.object({
         value: yup
@@ -76,7 +79,7 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                     useEditEntryQuery.mutate(MeasurementEntry.clone(entry, values), options);
                 } else {
                     useAddEntryQuery.mutate(
-                        new MeasurementEntry(null, categoryId, values.date, values.value, values.notes),
+                        new MeasurementEntry(null, category.id!, values.date, values.value, values.notes),
                         options
                     );
                 }
@@ -95,22 +98,20 @@ export const EntryForm = ({ entry, closeFn, categoryId }: EntryFormProps) => {
                             slotProps={{ htmlInput: { inputMode: 'decimal' } }}
                             {...formik.getFieldProps('value')}
                         />
-                        {categoryQuery.isLoading
-                            ? <LoadingPlaceholder />
-                            : <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                                <DateTimePicker
-                                    label={t('date')}
-                                    value={dateValue}
-                                    slotProps={{ textField: { variant: 'outlined' } }}
-                                    disableFuture={true}
-                                    onChange={(newValue) => {
-                                        if (newValue) {
-                                            formik.setFieldValue('date', newValue.toJSDate());
-                                        }
-                                        setDateValue(newValue);
-                                    }}
-                                />
-                            </LocalizationProvider>}
+                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                            <DateTimePicker
+                                label={t('date')}
+                                value={dateValue}
+                                slotProps={{ textField: { variant: 'outlined' } }}
+                                disableFuture={true}
+                                onChange={(newValue) => {
+                                    if (newValue) {
+                                        formik.setFieldValue('date', newValue.toJSDate());
+                                    }
+                                    setDateValue(newValue);
+                                }}
+                            />
+                        </LocalizationProvider>
 
                         <TextField
                             fullWidth

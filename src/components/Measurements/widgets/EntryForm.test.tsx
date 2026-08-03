@@ -9,8 +9,7 @@ import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
     useAddGroupEntriesQuery,
     useAddMeasurementEntryQuery,
-    useEditMeasurementEntryQuery,
-    useMeasurementsQuery
+    useEditMeasurementEntryQuery
 } from "@/components/Measurements/queries";
 import type { Mock } from 'vitest';
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
@@ -27,7 +26,7 @@ describe("Test the EntryForm component", () => {
     const queryClient = new QueryClient();
     let mutate = vi.fn();
 
-    const renderComponent = (props: { entry?: MeasurementEntry, categoryId: string }) => {
+    const renderComponent = (props: { entry?: MeasurementEntry, category: MeasurementCategory }) => {
         return render(
             <QueryClientProvider client={queryClient}>
                 <EntryForm {...props} />
@@ -36,12 +35,6 @@ describe("Test the EntryForm component", () => {
     };
 
     beforeEach(() => {
-        (useMeasurementsQuery as Mock).mockImplementation(() => ({
-            isSuccess: true,
-            isLoading: false,
-            data: TEST_MEASUREMENT_CATEGORY_1
-        }));
-
         mutate = vi.fn();
 
         (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({
@@ -58,7 +51,7 @@ describe("Test the EntryForm component", () => {
         const entry = TEST_MEASUREMENT_ENTRIES_1[0];
 
         // Act
-        renderComponent({ entry, categoryId: 'cccccccc-cccc-cccc-cccc-000000000001' });
+        renderComponent({ entry, category: TEST_MEASUREMENT_CATEGORY_1 });
 
         // Assert
         expect(screen.getByDisplayValue('10')).toBeInTheDocument();
@@ -76,7 +69,7 @@ describe("Test the EntryForm component", () => {
         const user = userEvent.setup();
 
         // Act
-        renderComponent({ entry, categoryId: 'cccccccc-cccc-cccc-cccc-000000000001' });
+        renderComponent({ entry, category: TEST_MEASUREMENT_CATEGORY_1 });
         const submitButton = screen.getByRole('button', { name: 'submit' });
         await user.clear(screen.getByLabelText('value'));
         await user.type(screen.getByLabelText('value'), '25');
@@ -94,7 +87,7 @@ describe("Test the EntryForm component", () => {
         const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
         // Act
-        renderComponent({ categoryId: 'cccccccc-cccc-cccc-cccc-000000000011' });
+        renderComponent({ category: TEST_MEASUREMENT_CATEGORY_1 });
         const valueInput = await screen.findByLabelText('value');
         const notesInput = await screen.findByLabelText('notes');
         const submitButton = screen.getByRole('button', { name: 'submit' });
@@ -109,7 +102,7 @@ describe("Test the EntryForm component", () => {
         await user.click(submitButton);
         expect(mutate).toHaveBeenCalledWith(new MeasurementEntry(
             null,
-            'cccccccc-cccc-cccc-cccc-000000000011',
+            TEST_MEASUREMENT_CATEGORY_1.id!,
             fakeNow,
             42.42,
             'The Shiba Inu is a breed of hunting dog from Japan.',
@@ -127,7 +120,7 @@ describe("Test the EntryForm component", () => {
             i18n.changeLanguage('en');
             const entry = TEST_MEASUREMENT_ENTRIES_1[0];
 
-            const { container } = renderComponent({ entry, categoryId: 'cccccccc-cccc-cccc-cccc-000000000001' });
+            const { container } = renderComponent({ entry, category: TEST_MEASUREMENT_CATEGORY_1 });
 
             const picker = container.querySelector('.MuiPickersInputBase-root');
             expect(picker?.textContent).toContain('02/01/2023');
@@ -138,7 +131,7 @@ describe("Test the EntryForm component", () => {
             i18n.changeLanguage('de');
             const entry = TEST_MEASUREMENT_ENTRIES_1[0];
 
-            const { container } = renderComponent({ entry, categoryId: 'cccccccc-cccc-cccc-cccc-000000000001' });
+            const { container } = renderComponent({ entry, category: TEST_MEASUREMENT_CATEGORY_1 });
 
             const picker = container.querySelector('.MuiPickersInputBase-root');
             expect(picker?.textContent).toContain('01.02.2023');

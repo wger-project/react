@@ -5,6 +5,7 @@ import {
     CategoryForm,
     componentColor,
     componentPalette,
+    entryFilterFor,
     groupChart,
     MeasurementCategory,
     MeasurementChart,
@@ -30,7 +31,14 @@ import "slick-carousel/slick/slick-theme.css";
 
 export const MeasurementCard = () => {
     const { t } = useTranslation();
-    const categoryQuery = useMeasurementsCategoryQuery();
+    // A year, like the body weight card next to it: the chart below covers
+    // three months, the table under it wants the latest entries of a category
+    // that may be measured only every few months. Fetching the full history
+    // instead is what a synced account pays for, the sleep stages alone write
+    // five entries a night
+    const categoryQuery = useMeasurementsCategoryQuery({
+        filtersetQueryEntries: entryFilterFor('lastYear'),
+    });
 
     if (categoryQuery.isLoading) {
         return <LoadingPlaceholder />;

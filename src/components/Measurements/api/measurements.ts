@@ -12,6 +12,13 @@ export const API_MEASUREMENTS_ENTRY_PATH = 'measurement';
 export type MeasurementQueryOptions = {
     filtersetQueryCategories?: object,
     filtersetQueryEntries?: object,
+    /**
+     * Fetch a single entry per category instead of its history, for callers
+     * that only ask whether a category holds entries at all. The lists come
+     * back truncated, so `entries.length === 0` is the only thing they may be
+     * read for.
+     */
+    probeEntries?: boolean,
 }
 
 /** Every entry of a category, over all pages */
@@ -34,8 +41,22 @@ export const getMeasurementEntries = async (categoryId: string, filtersetQuery: 
     return out;
 };
 
+/**
+ * The first entry of a category, or none: enough to tell an empty category
+ * from a filled one without reading a history that can run into thousands of
+ * rows (the sleep stages alone write five entries a night).
+ */
+const probeMeasurementEntries = async (categoryId: string): Promise<MeasurementEntry[]> => {
+    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
+        query: { category: categoryId, limit: 1 }
+    });
+    const { data } = await axios.get(url, { headers: makeHeader() });
+
+    return data.results.map((entryData: unknown) => MeasurementEntry.fromJson(entryData));
+};
+
 export const getMeasurementCategories = async (options?: MeasurementQueryOptions): Promise<MeasurementCategory[]> => {
-    const { filtersetQueryCategories = {}, filtersetQueryEntries = {} } = options || {};
+    const { filtersetQueryCategories = {}, filtersetQueryEntries = {}, probeEntries } = options || {};
 
     let categories: MeasurementCategory[] = [];
     const categoryUrl = makeUrl(API_MEASUREMENTS_CATEGORY_PATH, {
@@ -57,7 +78,9 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
 
     // Load entries for each category
     await Promise.all(categories.map(async (category) => {
-        category.entries = await getMeasurementEntries(category.id!, filtersetQueryEntries);
+        category.entries = probeEntries
+            ? await probeMeasurementEntries(category.id!)
+            : await getMeasurementEntries(category.id!, filtersetQueryEntries);
     }));
 
     // Multi-value groups: attach the children to their parent, only the
