@@ -3,7 +3,7 @@ import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { Exercise, getLanguageByShortName, NameAutocompleter, useLanguageQuery } from "@/components/Exercises";
 import { RIR_VALUES_SELECT } from "@/components/Routines/models/BaseConfig";
 import { LogEntryForm } from "@/components/Routines/models/WorkoutLog";
-import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "@/components/Routines/queries";
+import { useAddRoutineLogsQuery, useRoutineDetailQuery, useRoutineLogQuery } from "@/components/Routines/queries";
 import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "@/core/lib/consts";
 import { SwapHoriz } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
@@ -28,6 +28,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const routineQuery = useRoutineDetailQuery(routineId);
     const addLogsQuery = useAddRoutineLogsQuery(routineId);
+    const logsQuery = useRoutineLogQuery(routineId);
     const languageQuery = useLanguageQuery();
     const handleSnackbarClose = () => setSnackbarOpen(false);
     const [exerciseIdToSwap, setExerciseIdToSwap] = useState<number | null>(null);
@@ -38,6 +39,17 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
             i18n.language,
             languageQuery.data!
         );
+    }
+
+    // Build a map of exerciseId → most recent note from previous logs
+    const lastNoteByExercise = new Map<number, string>();
+    if (logsQuery.isSuccess) {
+        const sorted = [...logsQuery.data].sort((a, b) => b.date.getTime() - a.date.getTime());
+        for (const log of sorted) {
+            if (log.notes && !lastNoteByExercise.has(log.exerciseId)) {
+                lastNoteByExercise.set(log.exerciseId, log.notes);
+            }
+        }
     }
 
     if (routineQuery.isLoading) {
@@ -86,6 +98,8 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                     weight: l.weight !== '' ? l.weight : null,
                     // eslint-disable-next-line camelcase
                     weight_target: l.weightTarget !== '' ? l.weightTarget : null,
+
+                    notes: l.notes !== '' ? l.notes : null,
                 }
             ));
 
@@ -149,7 +163,8 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                         repetitions: !hasNoIterationData && config.repetitions !== null ? config.repetitions : '',
                         repetitionsTarget: !hasNoIterationData && config.repetitions !== null ? config.repetitions : '',
                         weight: !hasNoIterationData && config.weight !== null ? config.weight : '',
-                        weightTarget: !hasNoIterationData && config.weight !== null ? config.weight : ''
+                        weightTarget: !hasNoIterationData && config.weight !== null ? config.weight : '',
+                        notes: ''
                     });
                 }
             }
@@ -291,6 +306,18 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                                     </MenuItem>
                                                 ))}
                                             </TextField>
+                                        </Grid>
+                                        <Grid size={11}>
+                                            <TextField
+                                                fullWidth
+                                                label={t('notes')}
+                                                variant="standard"
+                                                multiline
+                                                helperText={lastNoteByExercise.get(formik.values.logs[index].exercise?.id ?? 0)
+                                                    ? `${t('routines.lastSession')}: ${lastNoteByExercise.get(formik.values.logs[index].exercise?.id ?? 0)}`
+                                                    : undefined}
+                                                {...formik.getFieldProps(`logs.${index}.notes`)}
+                                            />
                                         </Grid>
                                         <Grid size={1}>
                                             <IconButton size={"small"} onClick={() => remove(index)}>
