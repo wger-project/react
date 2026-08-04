@@ -2,7 +2,13 @@ import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import { componentPalette, seriesColor } from "@/components/Measurements/charts/colors";
 import { clampPeriods, planNamesAt, pointsOfRole } from "@/components/Measurements/charts/data";
 import { dotRadius, useChartWidth } from "@/components/Measurements/charts/density";
-import { dateTick, spansYears, valueWithUnit } from "@/components/Measurements/charts/format";
+import {
+    dateTick,
+    durationAxis,
+    spansYears,
+    valueOnly,
+    valueWithUnit
+} from "@/components/Measurements/charts/format";
 import {
     ChartPoint,
     ChartSeries,
@@ -27,7 +33,6 @@ import {
     YAxis
 } from "recharts";
 import { dateToLocale } from "@/core/lib/date";
-import { numberDecimalLocale } from "@/core/lib/numbers";
 
 /** Opacity of the band drawn around a series of ranged points */
 const BAND_OPACITY = 0.15;
@@ -99,7 +104,7 @@ const CustomTooltip = ({ active, payload, label, unit, planPeriods }: TooltipPro
                 <p key={row.name}>
                     {row.name}
                     {row.value !== undefined && `: ${valueWithUnit(row.value, unit, i18n.language)}`}
-                    {row.range !== undefined && ` (${numberDecimalLocale(row.range[0], i18n.language)}`
+                    {row.range !== undefined && ` (${valueOnly(row.range[0], unit, i18n.language)}`
                         + `–${valueWithUnit(row.range[1], unit, i18n.language)})`}
                 </p>
             ))}
@@ -258,6 +263,13 @@ export const MeasurementSeriesChart = (props: MeasurementSeriesChartProps) => {
         : rawPoints.reduce((sum, point) => sum + point.value, 0) / rawPoints.length;
     const currentTrend = trendPoints.at(-1)?.value ?? null;
 
+    // The bounds of a band reach past the line they wrap, so the axis follows
+    // every value that is drawn, not just the plotted ones
+    const drawn = props.series.flatMap(s => s.points).flatMap(
+        point => [point.value, point.min, point.max].filter(value => value !== undefined),
+    );
+    const axis = durationAxis(props.unit, Math.min(...drawn), Math.max(...drawn));
+
     return <Box ref={chartRef} sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
         {props.showMean && mean !== null && <Stack
             direction="row"
@@ -284,7 +296,8 @@ export const MeasurementSeriesChart = (props: MeasurementSeriesChartProps) => {
                 tickCount={10}
             />
             <YAxis
-                domain={['auto', 'auto']}
+                domain={axis?.domain ?? ['auto', 'auto']}
+                ticks={axis?.ticks}
                 width="auto"
                 tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
             <Tooltip content={<CustomTooltip unit={props.unit} planPeriods={periods} />} />

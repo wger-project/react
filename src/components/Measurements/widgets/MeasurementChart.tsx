@@ -19,7 +19,13 @@ import {
 } from "@/components/Measurements/charts/data";
 import { componentColor, componentPalette } from "@/components/Measurements/charts/colors";
 import { MAX_BAR_WIDTH } from "@/components/Measurements/charts/density";
-import { dateTick, spansYears, valueWithUnit } from "@/components/Measurements/charts/format";
+import {
+    dateTick,
+    durationAxis,
+    spansYears,
+    valueOnly,
+    valueWithUnit
+} from "@/components/Measurements/charts/format";
 import {
     ChartRange,
     cutoffFor,
@@ -35,7 +41,6 @@ import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
 import { theme } from "@/theme";
 import { dateToLocale } from "@/core/lib/date";
-import { numberDecimalLocale } from "@/core/lib/numbers";
 
 export interface TooltipProps {
     active?: boolean,
@@ -78,6 +83,8 @@ const MeasurementBarChart = (props: { category: MeasurementCategory, cutoff: Dat
         return <ChartEmptyState />;
     }
 
+    const axis = durationAxis(props.category.unit, 0, Math.max(...data.map(point => point.value)));
+
     return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
         {/*
           * Bar width follows from how many bars share the width: recharts
@@ -96,7 +103,8 @@ const MeasurementBarChart = (props: { category: MeasurementCategory, cutoff: Dat
             />
             <YAxis
                 type="number"
-                domain={[0, 'auto']}
+                domain={axis?.domain ?? [0, 'auto']}
+                ticks={axis?.ticks}
                 width="auto"
                 tickFormatter={value => valueWithUnit(value, props.category.unit, i18n.language)} />
             <Tooltip content={(<CustomTooltip category={props.category} />)} />
@@ -130,7 +138,7 @@ const RangeTooltip = ({ active, payload, label, unit }: RangeTooltipProps) => {
             <p><strong>{dateToLocale(new Date(Number(label)))}</strong></p>
             {/* a range is quoted as high over low, the way a blood pressure reading is written */}
             <p>
-                {numberDecimalLocale(high, i18n.language)}/
+                {valueOnly(high, unit, i18n.language)}/
                 {valueWithUnit(low, unit, i18n.language)}
             </p>
         </Paper>
@@ -148,6 +156,11 @@ const RangeTooltip = ({ active, payload, label, unit }: RangeTooltipProps) => {
 const MeasurementRangeBarChart = (props: { points: ChartPoint[], unit: string }) => {
     const [, i18n] = useTranslation();
     const data = props.points.map(point => ({ date: point.date, range: [point.min!, point.max!] }));
+    const axis = durationAxis(
+        props.unit,
+        Math.min(...props.points.map(point => point.min!)),
+        Math.max(...props.points.map(point => point.max!)),
+    );
 
     return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
         <BarChart data={data} responsive width="90%" height={200} barCategoryGap="15%">
@@ -161,7 +174,8 @@ const MeasurementRangeBarChart = (props: { points: ChartPoint[], unit: string })
             />
             <YAxis
                 type="number"
-                domain={['auto', 'auto']}
+                domain={axis?.domain ?? ['auto', 'auto']}
+                ticks={axis?.ticks}
                 width="auto"
                 tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
             <Tooltip content={<RangeTooltip unit={props.unit} />} />
@@ -200,7 +214,7 @@ const StackedTooltip = ({ active, payload, label, unit }: StackedTooltipProps) =
             <p>{valueWithUnit(total, unit, i18n.language)}</p>
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {parts.map((entry: any) => <p key={entry.dataKey}>
-                {entry.dataKey}: {numberDecimalLocale(entry.value, i18n.language)}
+                {entry.dataKey}: {valueOnly(entry.value, unit, i18n.language)}
             </p>)}
         </Paper>
     );
@@ -226,6 +240,12 @@ const MeasurementStackedBarChart = (props: {
         date: point.date,
         ...Object.fromEntries(props.labels.map((label, index) => [label, point.values[index]])),
     }));
+    // The bar is as tall as its segments together, so that is what the axis
+    // has to cover
+    const totals = props.points.map(
+        point => point.values.reduce((sum: number, value) => sum + (value ?? 0), 0),
+    );
+    const axis = durationAxis(props.unit, 0, Math.max(...totals));
 
     return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
         <BarChart data={data} responsive width="90%" height={200} barCategoryGap="15%">
@@ -239,7 +259,8 @@ const MeasurementStackedBarChart = (props: {
             />
             <YAxis
                 type="number"
-                domain={[0, 'auto']}
+                domain={axis?.domain ?? [0, 'auto']}
+                ticks={axis?.ticks}
                 width="auto"
                 tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
             <Tooltip content={<StackedTooltip unit={props.unit} />} />

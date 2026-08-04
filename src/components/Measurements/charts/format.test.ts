@@ -1,4 +1,11 @@
-import { dateTick, spansYears, valueWithUnit } from "@/components/Measurements/charts/format";
+import {
+    dateTick,
+    durationAxis,
+    hoursAndMinutes,
+    spansYears,
+    valueOnly,
+    valueWithUnit
+} from "@/components/Measurements/charts/format";
 import { ChartPoint } from "@/components/Measurements/charts/series";
 import { describe, expect, test } from 'vitest';
 
@@ -41,5 +48,66 @@ describe('valueWithUnit', () => {
 
     test('formats the number for the locale', () => {
         expect(valueWithUnit(1234.5, 'kcal', 'de')).toBe('1.234,5 kcal');
+    });
+
+    test('shows a value stored in minutes as hours and minutes', () => {
+        expect(valueWithUnit(452, 'min', 'de')).toBe('7:32 h');
+    });
+});
+
+describe('hoursAndMinutes', () => {
+    test('splits the minutes into hours and minutes', () => {
+        expect(hoursAndMinutes(452, 'en')).toBe('7:32');
+    });
+
+    test('pads the minutes so the values line up', () => {
+        expect(hoursAndMinutes(425, 'en')).toBe('7:05');
+    });
+
+    test('keeps a duration below an hour in the same shape', () => {
+        expect(hoursAndMinutes(45, 'en')).toBe('0:45');
+    });
+
+    test('rounds to whole minutes', () => {
+        expect(hoursAndMinutes(59.6, 'en')).toBe('1:00');
+    });
+
+    test('keeps the sign of a negative change', () => {
+        expect(hoursAndMinutes(-95, 'en')).toBe('-1:35');
+    });
+});
+
+describe('durationAxis', () => {
+    test('leaves the ticks to the library for every other unit', () => {
+        expect(durationAxis('kg', 60, 100)).toBeUndefined();
+    });
+
+    test('puts every tick on a whole hour', () => {
+        expect(durationAxis('min', 0, 300)?.ticks).toEqual([0, 60, 120, 180, 240, 300]);
+    });
+
+    test('widens the step until the ticks are few enough', () => {
+        expect(durationAxis('min', 0, 540)?.ticks).toEqual([0, 120, 240, 360, 480, 600]);
+    });
+
+    test('keeps the domain from cutting the values it was derived from', () => {
+        const axis = durationAxis('min', 0, 540);
+
+        expect(axis?.domain[1]).toBeGreaterThanOrEqual(540);
+        expect(axis?.domain[1]).toBe(axis?.ticks[axis.ticks.length - 1]);
+    });
+
+    test('starts at the hour below the data instead of at zero', () => {
+        expect(durationAxis('min', 385, 460)?.domain[0]).toBe(360);
+    });
+});
+
+describe('valueOnly', () => {
+    test('leaves the unit off', () => {
+        expect(valueOnly(42, 'cm', 'en')).toBe('42');
+    });
+
+    test('reads a duration as hours and minutes', () => {
+        expect(valueOnly(452, 'min', 'en')).toBe('7:32');
     });
 });
