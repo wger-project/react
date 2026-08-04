@@ -144,7 +144,7 @@ function SlotDataList(props: { slotData: SlotData }) {
                     return <SetConfigDataDetails
                         setConfigData={setConfig}
                         marginBottom="1em"
-                        key={index}
+                        key={`set-config-${setConfig.slotEntryId}-${setConfig.exerciseId}`}
                         showExercise={showExercise}
                     />;
                 })}
@@ -184,8 +184,8 @@ export const DayDetailsCard = (props: { dayData: RoutineDayData, routineId: numb
             />
             {props.dayData.slots.length > 0 && <CardContent sx={{ padding: 0, marginBottom: 0 }}>
                 <Stack>
-                    {props.dayData.slots.map((slotData, index) => (
-                        <div key={index}>
+                    {props.dayData.slots.map((slotData) => (
+                        <div key={`slot-${slotData.setConfigs.map(({ slotEntryId }) => slotEntryId).join("-")}`}>
                             <Box sx={{ padding: 1 }}>
                                 <SlotDataList slotData={slotData} />
                             </Box>

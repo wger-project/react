@@ -106,7 +106,6 @@ describe("Exercise translation edit tests", () => {
             mutateAsync: vi.fn(),
         }));
 
-        // @ts-ignore
         // addTranslation.mockImplementation(() => Promise.resolve(
         //     new Translation(
         //         300,

@@ -25,7 +25,7 @@ export interface DayProps {
 const CalendarComponent = (props: { isStandalone?: boolean }) => {
     const [t] = useTranslation();
 
-    const currentDate = new Date();
+    const currentDate = useMemo(() => new Date(), []);
     const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
     const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
 
@@ -133,7 +133,7 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
                 setSelectedDay(todayWithData);
             }
         }
-    }, [isSuccess]);
+    }, [currentDate, days, isSuccess]);
 
 
     useEffect(() => {

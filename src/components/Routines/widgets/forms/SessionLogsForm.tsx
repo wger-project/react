@@ -139,6 +139,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                 for (let i = 0; i < config.nrOfSets; i++) {
 
                     initialValues.logs.push({
+                        clientKey: `${dayData.iteration}-${config.slotEntryId}-${config.exerciseId}-${i}`,
                         exercise: config.exercise!,
                         repetitionsUnit: config.repetitionsUnit!,
                         weightUnit: config.weightUnit!,
@@ -174,7 +175,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                         {({ insert, remove }) => (<>
 
                                 {formik.values.logs.map((log, index) => (
-                                    <Grid container key={index} spacing={1} sx={{ mt: 2 }}>
+                                    <Grid container key={log.clientKey} spacing={1} sx={{ mt: 2 }}>
 
                                         {/* Only show the exercise name the first time it appears */}
                                         {(index === 0 || (index > 0 && formik.values.logs[index - 1].exercise!.id !== formik.values.logs[index].exercise!.id)) && <>

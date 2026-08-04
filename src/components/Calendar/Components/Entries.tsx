@@ -93,8 +93,8 @@ const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
                         </ListItem>
                         <Collapse in={openMeasurements} timeout="auto" unmountOnExit>
                             <List sx={{ pl: 4, pt: 0 }}>
-                                {selectedDay.measurements.map((measurement, key) => (
-                                    <ListItem key={key} dense>
+                                {selectedDay.measurements.map((measurement) => (
+                                    <ListItem key={`${measurement.date.toISOString()}-${measurement.name}-${measurement.unit}`} dense>
                                         <ListItemText
                                             primary={measurement.name}
                                             secondary={`${measurement.value} ${measurement.unit}`}

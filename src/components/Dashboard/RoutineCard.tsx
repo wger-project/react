@@ -76,12 +76,12 @@ const DayListItem = (props: { dayData: RoutineDayData }) => {
             </ListItemButton>
 
             <Collapse in={expandView} timeout="auto" unmountOnExit>
-                {props.dayData.slots.map((slotData, index) => (
-                    <div key={index}>
-                        {slotData.setConfigs.map((setConfigData, index) => (
+                {props.dayData.slots.map((slotData) => (
+                    <div key={`slot-${slotData.setConfigs.map(({ slotEntryId }) => slotEntryId).join("-")}`}>
+                        {slotData.setConfigs.map((setConfigData) => (
                             <SetConfigDataDetails
                                 setConfigData={setConfigData}
-                                key={index}
+                                key={`set-config-${setConfigData.slotEntryId}-${setConfigData.exerciseId}`}
                                 rowHeight={"70px"}
                                 showExercise={true}
                             />

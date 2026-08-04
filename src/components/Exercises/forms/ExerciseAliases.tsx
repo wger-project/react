@@ -68,7 +68,7 @@ export function ExerciseAliases(props: { fieldName: string }) {
                         newVal.splice(index, 1);
                         helpers.setValue(newVal);
                     }}
-                    key={option.id ?? `${option.alias}-${index}`}
+                    key={option.id ?? option.alias}
                 />
             ));
 
