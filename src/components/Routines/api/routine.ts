@@ -41,12 +41,16 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     const dayStructure = responses[3];
 
 
-    // Collect all unique exercise IDs and load the data in bulk
+    // Collect all unique exercise IDs and load the data in bulk.
+    //
+    // The structure is the source of truth here: a day whose first iteration falls
+    // past the routine's end date has no entry in the day data, but its slots are
+    // still edited and displayed.
     const exerciseIds = new Set<number>();
-    for (const dayData of dayDataAllIterations.filter(d => d.day !== null && d.iteration === 1)) {
-        for (const slotData of dayData.slots) {
-            for (const setData of slotData.setConfigs) {
-                exerciseIds.add(setData.exerciseId);
+    for (const day of dayStructure) {
+        for (const slot of day.slots) {
+            for (const slotEntry of slot.entries) {
+                exerciseIds.add(slotEntry.exerciseId);
             }
         }
     }

@@ -586,6 +586,120 @@ export const responseRoutineStructure = {
     ],
 };
 
+// A routine whose first cycle is cut short by the end date: the pull day is part
+// of the structure, but never reaches a first iteration in the day sequence.
+export const responseRoutineStructureIterationGap = {
+    days: [
+        {
+            id: 100,
+            order: 1,
+            name: "Push day",
+            description: "",
+            is_rest: false,
+            need_logs_to_advance: false,
+            type: "custom",
+            config: null,
+            slots: [{
+                id: 10,
+                day: 100,
+                order: 1,
+                comment: "",
+                config: null,
+                entries: [{
+                    id: 1000,
+                    slot: 10,
+                    exercise: 2,
+                    repetition_unit: 1,
+                    repetition_rounding: "1.00",
+                    weight_unit: 1,
+                    weight_rounding: "1.25",
+                    order: 1,
+                    comment: "",
+                    type: "normal",
+                    config: null,
+                }],
+            }],
+        },
+        {
+            id: 101,
+            order: 2,
+            name: "Pull day",
+            description: "",
+            is_rest: false,
+            need_logs_to_advance: false,
+            type: "custom",
+            config: null,
+            slots: [{
+                id: 11,
+                day: 101,
+                order: 1,
+                comment: "",
+                config: null,
+                entries: [{
+                    id: 1001,
+                    slot: 11,
+                    exercise: 3,
+                    repetition_unit: 1,
+                    repetition_rounding: "1.00",
+                    weight_unit: 1,
+                    weight_rounding: "1.25",
+                    order: 1,
+                    comment: "",
+                    type: "normal",
+                    config: null,
+                }],
+            }],
+        },
+    ],
+};
+
+// The matching day sequence, containing only the push day
+export const responseRoutineDayDataIterationGap = [
+    {
+        iteration: 1,
+        date: "2024-04-01",
+        label: null,
+        day: {
+            id: 100,
+            order: 1,
+            name: "Push day",
+            type: "custom",
+            description: "",
+            is_rest: false,
+            last_day_in_week: false,
+            need_logs_to_advance: false,
+            config: null,
+        },
+        slots: [{
+            comment: "",
+            is_superset: false,
+            exercises: [2],
+            sets: [{
+                exercise: 2,
+                slot_entry_id: 1000,
+                type: "normal",
+                sets: 3,
+                max_sets: null,
+                weight: "100.00",
+                max_weight: null,
+                weight_unit: 1,
+                weight_rounding: "1.25",
+                repetitions: "10.00",
+                max_repetitions: null,
+                repetitions_unit: 1,
+                repetitions_rounding: "1.00",
+                rir: null,
+                max_rir: null,
+                rpe: null,
+                rest: null,
+                max_rest: null,
+                text_repr: "3 Sets, 10 × 100 kg",
+                comment: "",
+            }],
+        }],
+    },
+];
+
 // /routine/<id>/logs/ — sessions with their attached logs.
 export const responseRoutineLogData = [
     {
