@@ -4,6 +4,7 @@ import {
     aggregatePerDay,
     averagePerDay,
     buildHeatmapGrid,
+    buildHistogram,
     chartPointsFor,
     downsample,
     fillMissingDays,
@@ -14,6 +15,7 @@ import {
     groupRangeEntries,
     groupStackedEntries,
     moving7dAverage,
+    niceBinWidth,
     overallChange,
     smoothedTrendline,
     stackableComponents,
@@ -309,6 +311,80 @@ describe('weeklyDeltas', () => {
         );
 
         expect(result.map(r => r.value)).toEqual([-1]);
+    });
+});
+
+describe('niceBinWidth', () => {
+    test('rounds the span split into ~20 bins up to 1, 2 or 5 times a power of ten', () => {
+        // span 14.6 / 20 = 0.73 -> 1, not an edge like 59.3-61.3
+        expect(niceBinWidth(59.3, 73.9)).toBe(1);
+        // span 30000 / 20 = 1500 -> 2000
+        expect(niceBinWidth(0, 30000)).toBe(2000);
+        // span 9 / 20 = 0.45 -> 0.5
+        expect(niceBinWidth(1, 10)).toBe(0.5);
+    });
+
+    test('a span of nothing still has a width', () => {
+        expect(niceBinWidth(80, 80)).toBe(1);
+    });
+});
+
+describe('buildHistogram', () => {
+    test('aligns the bin edges to round multiples of the width', () => {
+        const result = buildHistogram([point(day(1), 79.7), point(day(2), 82.3)], 0.5);
+
+        expect(result.firstEdge).toBe(79.5);
+        expect(result.firstEdge + result.counts.length * result.binWidth).toBe(82.5);
+    });
+
+    test('keeps empty bins between the occupied ones, a gap is information', () => {
+        const result = buildHistogram(
+            [point(day(1), 60), point(day(2), 61), point(day(3), 65)],
+            2,
+        );
+
+        expect(result.counts).toEqual([2, 0, 1]);
+    });
+
+    test('takes the median of the values, odd and even', () => {
+        const odd = buildHistogram(
+            [point(day(1), 60), point(day(2), 62), point(day(3), 70)],
+            2,
+        );
+        expect(odd.median).toBe(62);
+
+        const even = buildHistogram(
+            [point(day(1), 60), point(day(2), 63), point(day(3), 65), point(day(4), 70)],
+            2,
+        );
+        expect(even.median).toBe(64);
+    });
+
+    test('the latest value follows the dates, not the array order', () => {
+        const result = buildHistogram(
+            [point(day(3), 70), point(day(5), 60), point(day(1), 65)],
+            5,
+        );
+
+        expect(result.latest).toBe(60);
+    });
+
+    test('derives a width from the span when the type brings none', () => {
+        const result = buildHistogram([point(day(1), 59.3), point(day(2), 73.9)]);
+
+        expect(result.binWidth).toBe(1);
+    });
+
+    test('doubles the width until an outlier no longer stretches it into hundreds of bins', () => {
+        // 20 to 350 at 0.5 kg would be 661 bins; doubling keeps the edges round
+        const result = buildHistogram(
+            [point(day(1), 20), point(day(2), 80), point(day(3), 350)],
+            0.5,
+        );
+
+        expect(result.binWidth).toBe(4);
+        expect(result.counts.length).toBeLessThanOrEqual(100);
+        expect(result.counts.reduce((sum, count) => sum + count, 0)).toBe(3);
     });
 });
 

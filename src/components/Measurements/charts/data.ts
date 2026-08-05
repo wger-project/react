@@ -308,6 +308,99 @@ export const weeklyDeltas = (
     }));
 };
 
+/**
+ * Fewest values a distribution says anything about: below this a histogram is
+ * noise with gaps, and the chart falls back to the derived default. Same
+ * principle as a group whose readings are all unpaired falling back to lines:
+ * never an empty or misleading card.
+ */
+export const DISTRIBUTION_MIN_VALUES = 15;
+
+/**
+ * Widest a histogram gets, in bins. A single outlier (a lb reading stored into
+ * a kg category) would otherwise stretch a fixed-width histogram into hundreds
+ * of near-empty bins.
+ */
+const DISTRIBUTION_MAX_BINS = 100;
+
+/**
+ * A bin width for values nothing is known about: the span split into
+ * targetBins, rounded up to 1, 2 or 5 times a power of ten so the edges land
+ * on round numbers. For the typed metrics the maintained widths in binWidthFor
+ * are used instead.
+ */
+export const niceBinWidth = (min: number, max: number, targetBins: number = 20): number => {
+    const span = max - min;
+    if (span <= 0) {
+        return 1;
+    }
+
+    const raw = span / targetBins;
+    const magnitude = Math.pow(10, Math.floor(Math.log10(raw)));
+    const normalized = raw / magnitude;
+
+    return (normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 5 ? 5 : 10) * magnitude;
+};
+
+/**
+ * A distribution: the values of a period binned by size instead of plotted
+ * over time, which is what shows the spread and the outliers.
+ */
+export interface Histogram {
+    /**
+     * Lower edge of the first bin, a multiple of binWidth so the edges land on
+     * round numbers (60-62, not 59.3-61.3)
+     */
+    firstEdge: number;
+    binWidth: number;
+    /**
+     * How many values each bin holds. Bins between the occupied ones are
+     * present with a zero: a gap in the distribution is worth seeing.
+     */
+    counts: number[];
+    /** Median of the binned values */
+    median: number;
+    /** The newest value, i.e. where in the distribution the user is today */
+    latest: number;
+}
+
+/**
+ * Bins the points into a histogram of binWidth-wide bins aligned to round
+ * boundaries; without a width (free-form categories) one is derived from the
+ * span, see niceBinWidth.
+ *
+ * What one value stands for (a reading, a daily total) is the caller's
+ * decision, the same split as for the heatmap: the summed types distribute
+ * their days, the sample types every reading.
+ */
+export const buildHistogram = (points: ChartPoint[], binWidth?: number): Histogram => {
+    const values = points.map(point => point.value).sort((a, b) => a - b);
+    const minValue = values[0];
+    const maxValue = values[values.length - 1];
+
+    let width = binWidth ?? niceBinWidth(minValue, maxValue);
+    // Doubling keeps the edges round, unlike recomputing a fitted width
+    while (Math.floor(maxValue / width) - Math.floor(minValue / width) >= DISTRIBUTION_MAX_BINS) {
+        width *= 2;
+    }
+
+    const firstBin = Math.floor(minValue / width);
+    const counts = new Array<number>(Math.floor(maxValue / width) - firstBin + 1).fill(0);
+    for (const value of values) {
+        counts[Math.floor(value / width) - firstBin]++;
+    }
+
+    const middle = Math.floor(values.length / 2);
+
+    return {
+        firstEdge: firstBin * width,
+        binWidth: width,
+        counts: counts,
+        median: values.length % 2 === 1 ? values[middle] : (values[middle - 1] + values[middle]) / 2,
+        latest: points.reduce((a, b) => b.date > a.date ? b : a).value,
+    };
+};
+
 /** The day in column week, row weekday (0 = Monday), as a local-midnight timestamp */
 export const heatmapDayAt = (grid: HeatmapGrid, week: number, weekday: number): number =>
     shiftDays(new Date(grid.start), week * DAYS_PER_WEEK + weekday).getTime();

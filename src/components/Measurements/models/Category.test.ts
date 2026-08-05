@@ -1,5 +1,6 @@
 import {
     availableChartTypes,
+    binWidthFor,
     categoryDisplayName,
     isComponentMetricType,
     isGroupMetricType,
@@ -157,8 +158,10 @@ describe('MeasurementCategory', () => {
         });
 
         test('the offered types follow the metric type', () => {
-            expect(availableChartTypes('steps')).toEqual(['bar', 'heatmap', 'delta']);
-            expect(availableChartTypes('custom')).toEqual(['line', 'heatmap', 'delta']);
+            expect(availableChartTypes('steps'))
+                .toEqual(['bar', 'heatmap', 'delta', 'distribution']);
+            expect(availableChartTypes('custom'))
+                .toEqual(['line', 'heatmap', 'delta', 'distribution']);
 
             // a group is drawn by what its components are to each other
             expect(availableChartTypes('blood_pressure')).toEqual([]);
@@ -174,6 +177,26 @@ describe('MeasurementCategory', () => {
             expect(resolveChartType('custom', 'heatmap')).toBe('heatmap');
             expect(resolveChartType('steps', 'bar')).toBe('bar');
             expect(resolveChartType('body_weight', 'delta')).toBe('delta');
+            expect(resolveChartType('resting_heart_rate', 'distribution')).toBe('distribution');
+        });
+    });
+
+    describe('binWidthFor', () => {
+
+        test('body weight follows the unit, like its limits do', () => {
+            expect(binWidthFor('body_weight', 'kg')).toBe(0.5);
+            expect(binWidthFor('body_weight', 'lb')).toBe(1);
+        });
+
+        test('the typed metrics carry a fixed width', () => {
+            expect(binWidthFor('resting_heart_rate')).toBe(1);
+            expect(binWidthFor('steps')).toBe(1000);
+            expect(binWidthFor('sleep_total')).toBe(30);
+        });
+
+        test('free-form categories and groups have none, theirs follows the data', () => {
+            expect(binWidthFor('custom')).toBeUndefined();
+            expect(binWidthFor('blood_pressure')).toBeUndefined();
         });
     });
 

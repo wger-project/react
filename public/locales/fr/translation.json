@@ -347,8 +347,17 @@
             "line": "Ligne",
             "bar": "Barres",
             "heatmap": "Carte thermique",
-            "delta": "Variation"
+            "delta": "Variation",
+            "distribution": "Répartition"
         },
+        "distributionMedian": "Médiane",
+        "distributionLatest": "Actuel",
+        "distributionEntryCount_one": "1 entrée",
+        "distributionEntryCount_other": "{{count}} entrées",
+        "distributionEntryCount_many": "{{count}} entrées",
+        "distributionDayCount_one": "1 jour",
+        "distributionDayCount_other": "{{count}} jours",
+        "distributionDayCount_many": "{{count}} jours",
         "partOfGroup": "Fait partie du groupe",
         "noGroup": "Aucun groupe",
         "metricTypes": {

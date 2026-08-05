@@ -346,8 +346,15 @@
             "line": "Line",
             "bar": "Bars",
             "heatmap": "Heatmap",
-            "delta": "Change"
+            "delta": "Change",
+            "distribution": "Distribution"
         },
+        "distributionMedian": "Median",
+        "distributionLatest": "Latest",
+        "distributionEntryCount_one": "1 entry",
+        "distributionEntryCount_other": "{{count}} entries",
+        "distributionDayCount_one": "1 day",
+        "distributionDayCount_other": "{{count}} days",
         "partOfGroup": "Part of group",
         "noGroup": "No group",
         "metricTypes": {

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MeasurementCategory, MetricType } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
@@ -84,6 +84,101 @@ describe('MeasurementChart', () => {
         render(<MeasurementChart category={category} range="all" />);
 
         expect(screen.queryByText(/overallChangeWeight/)).not.toBeInTheDocument();
+    });
+
+    test('draws a distribution histogram when the category asks for one', () => {
+        const category = new MeasurementCategory(
+            'c-1', 'Biceps', 'cm',
+            Array.from(
+                { length: 20 },
+                (_, i) => entry(`d-${i}`, new Date(2026, 0, 1 + i), 30 + i % 3),
+            ),
+            'custom', false, null, 0, 'distribution',
+        );
+
+        render(<MeasurementChart category={category} range="all" />);
+
+        // Plain elements like the heatmap, so the bars render in jsdom
+        const chart = screen.getByRole('img', { name: 'measurements.chartTypes.distribution' });
+        expect(screen.getByText(/distributionMedian/)).toBeInTheDocument();
+
+        // Hovering a bin swaps the read-out to that bin's range and count
+        fireEvent.mouseEnter(chart.firstChild!.firstChild as Element);
+        expect(screen.getByText(/distributionEntryCount/)).toBeInTheDocument();
+    });
+
+    test('a summed distribution counts days and reads out as days', () => {
+        const category = new MeasurementCategory(
+            'c-1', 'Steps', 'steps',
+            Array.from(
+                { length: 20 },
+                (_, i) => entry(`d-${i}`, new Date(2026, 0, 1 + i), 4000 + 100 * (i % 5)),
+            ),
+            'steps', false, null, 0, 'distribution',
+        );
+
+        render(<MeasurementChart category={category} range="all" />);
+
+        const chart = screen.getByRole('img', { name: 'measurements.chartTypes.distribution' });
+        fireEvent.mouseEnter(chart.firstChild!.firstChild as Element);
+        expect(screen.getByText(/distributionDayCount/)).toBeInTheDocument();
+    });
+
+    test('a selection from before the data changed is dropped, not read out of range', () => {
+        // 20 distinct values spread over 20 bins, then the same category
+        // shrunk to a single bin while the last bin is still hovered
+        const wide = new MeasurementCategory(
+            'c-1', 'Biceps', 'cm',
+            Array.from({ length: 20 }, (_, i) => entry(`d-${i}`, new Date(2026, 0, 1 + i), 30 + i)),
+            'custom', false, null, 0, 'distribution',
+        );
+        const narrow = new MeasurementCategory(
+            'c-1', 'Biceps', 'cm',
+            Array.from({ length: 20 }, (_, i) => entry(`d-${i}`, new Date(2026, 0, 1 + i), 30)),
+            'custom', false, null, 0, 'distribution',
+        );
+
+        const { rerender } = render(<MeasurementChart category={wide} range="all" />);
+        const chart = screen.getByRole('img', { name: 'measurements.chartTypes.distribution' });
+        fireEvent.mouseEnter(chart.firstChild!.lastChild as Element);
+        expect(screen.getByText(/distributionEntryCount/)).toBeInTheDocument();
+
+        rerender(<MeasurementChart category={narrow} range="all" />);
+
+        expect(screen.queryByText(/distributionEntryCount/)).not.toBeInTheDocument();
+        expect(screen.getByText(/distributionMedian/)).toBeInTheDocument();
+    });
+
+    test('too few values fall back to the derived chart instead of a noise histogram', () => {
+        const category = new MeasurementCategory('c-1', 'Biceps', 'cm', [
+            entry('d-1', new Date(2026, 0, 5), 30),
+            entry('d-2', new Date(2026, 0, 12), 31),
+        ], 'custom', false, null, 0, 'distribution');
+
+        render(<MeasurementChart category={category} range="all" />);
+
+        expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    });
+
+    test('a summed distribution measures its days, not its samples', () => {
+        // 30 samples on 4 days are 4 daily totals: not enough for a
+        // histogram, whatever the sample count says
+        const category = new MeasurementCategory(
+            'c-1', 'Steps', 'steps',
+            Array.from(
+                { length: 30 },
+                (_, i) => entry(
+                    `d-${i}`,
+                    new Date(2026, 0, 1 + (i % 4), 8 + Math.floor(i / 4)),
+                    500,
+                ),
+            ),
+            'steps', false, null, 0, 'distribution',
+        );
+
+        render(<MeasurementChart category={category} range="all" />);
+
+        expect(screen.queryByRole('img')).not.toBeInTheDocument();
     });
 
     test('keeps the derived chart when the pick does not fit the metric type', () => {

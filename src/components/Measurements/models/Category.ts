@@ -39,7 +39,7 @@ export const METRIC_TYPE_BODY_WEIGHT: MetricType = 'body_weight';
  * (two components) and a stacked bar (a summed group) follow from what the
  * group is and are not choices.
  */
-export const CHART_TYPES = ['auto', 'line', 'bar', 'heatmap', 'delta'] as const;
+export const CHART_TYPES = ['auto', 'line', 'bar', 'heatmap', 'delta', 'distribution'] as const;
 export type ChartType = typeof CHART_TYPES[number];
 
 /**
@@ -106,14 +106,17 @@ export function defaultChartType(type: MetricType): ChartType {
  * The chart types a category of this metric type may be drawn as, i.e. what
  * the picker offers on top of 'auto'.
  *
- * The two alternatives fit every leaf type: the heatmap answers how regularly
+ * The alternatives fit every leaf type: the heatmap answers how regularly
  * rather than how much, and is the only chart of the set where a missing day is
  * visible instead of being spanned by a line; the delta chart answers which way
- * it is going, which a line only implies. A group is left out, its chart is
- * structural rather than a preference.
+ * it is going, which a line only implies; the distribution answers what is
+ * normal and what is an outlier, which no chart over time shows. A group is
+ * left out, its chart is structural rather than a preference.
  */
 export function availableChartTypes(type: MetricType): ChartType[] {
-    return isGroupMetricType(type) ? [] : [defaultChartType(type), 'heatmap', 'delta'];
+    return isGroupMetricType(type)
+        ? []
+        : [defaultChartType(type), 'heatmap', 'delta', 'distribution'];
 }
 
 /**
@@ -279,6 +282,54 @@ export function limitsFor(type: MetricType, unit?: string): MetricLimits {
     }
 
     return METRIC_LIMITS[type] ?? { min: 0, max: MEASUREMENT_SCHEMA_MAX_VALUE };
+}
+
+/**
+ * Width of one distribution-histogram bin per metric type, in the unit the
+ * type is stored in.
+ *
+ * Fixed per type rather than computed (Freedman-Diaconis and friends): a
+ * computed width changes with every range switch, which makes two looks at the
+ * same category incomparable, and it lands on edges like 0.73 kg where a
+ * maintained table lands on round ones.
+ *
+ * MUST stay identical to MetricType.binWidth in flutter, or the same category
+ * bins differently per client.
+ */
+/* eslint-disable camelcase */
+const BIN_WIDTHS: Partial<Record<MetricType, number>> = {
+    body_fat: 0.5,
+    height: 1,
+    blood_pressure_systolic: 5,
+    blood_pressure_diastolic: 5,
+    heart_rate: 2,
+    resting_heart_rate: 1,
+    steps: 1000,
+    distance: 1,
+    energy: 100,
+    sleep_total: 30,
+    sleep_light: 15,
+    sleep_deep: 15,
+    sleep_rem: 15,
+    sleep_awake: 15,
+};
+/* eslint-enable camelcase */
+
+/** Body weight bins follow the unit, like its limits do */
+const BODY_WEIGHT_BIN_WIDTHS: Record<WeightUnit, number> = { kg: 0.5, lb: 1 };
+
+/**
+ * Width of one histogram bin for a category of this metric type, undefined for
+ * the types nothing is known about (free-form categories, and the groups,
+ * which are never drawn as a distribution): their width is derived from the
+ * data instead.
+ */
+export function binWidthFor(type: MetricType, unit?: string): number | undefined {
+    if (type === METRIC_TYPE_BODY_WEIGHT) {
+        return BODY_WEIGHT_BIN_WIDTHS[isWeightUnit(unit) ? unit : 'kg'];
+    }
+
+    return BIN_WIDTHS[type];
 }
 
 /**

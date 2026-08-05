@@ -264,8 +264,17 @@
             "line": "Línea",
             "bar": "Barras",
             "heatmap": "Mapa de calor",
-            "delta": "Variación"
+            "delta": "Variación",
+            "distribution": "Distribución"
         },
+        "distributionMedian": "Mediana",
+        "distributionLatest": "Actual",
+        "distributionEntryCount_one": "1 entrada",
+        "distributionEntryCount_other": "{{count}} entradas",
+        "distributionEntryCount_many": "{{count}} entradas",
+        "distributionDayCount_one": "1 día",
+        "distributionDayCount_other": "{{count}} días",
+        "distributionDayCount_many": "{{count}} días",
         "partOfGroup": "Parte del grupo",
         "noGroup": "Sin grupo",
         "metricTypes": {

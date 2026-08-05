@@ -262,8 +262,15 @@
             "line": "Linie",
             "bar": "Balken",
             "heatmap": "Heatmap",
-            "delta": "Veränderung"
+            "delta": "Veränderung",
+            "distribution": "Verteilung"
         },
+        "distributionMedian": "Median",
+        "distributionLatest": "Aktuell",
+        "distributionEntryCount_one": "1 Eintrag",
+        "distributionEntryCount_other": "{{count}} Einträge",
+        "distributionDayCount_one": "1 Tag",
+        "distributionDayCount_other": "{{count}} Tage",
         "partOfGroup": "Teil der Gruppe",
         "noGroup": "Keine Gruppe",
         "metricTypes": {
