@@ -1,5 +1,5 @@
 import { processTimeSeries } from "@/core/lib/timeSeries";
-import { valueWithUnit } from "@/components/Measurements/charts/format";
+import { valueOnly, valueWithUnit } from "@/components/Measurements/charts/format";
 import { limitsFor, MeasurementCategory } from "@/components/Measurements/models/Category";
 import { collectValidationErrors } from "@/core/lib/forms";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
@@ -184,6 +184,10 @@ export const CategoryDetailDataGrid = (props: {
             type: 'number',
             width: 120,
             editable: false,
+            // a duration delta reads h:mm like the value it changes
+            valueFormatter: (value?: number) => value == null
+                ? ''
+                : valueOnly(value, unit, i18n.language),
         },
         {
             field: 'totalChange',
@@ -191,6 +195,9 @@ export const CategoryDetailDataGrid = (props: {
             type: 'number',
             width: 140,
             editable: false,
+            valueFormatter: (value?: number) => value == null
+                ? ''
+                : valueOnly(value, unit, i18n.language),
         },
         {
             field: 'days',

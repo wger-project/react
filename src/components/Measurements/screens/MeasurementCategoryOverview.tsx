@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
 import { categoryDisplayName, MeasurementCategory } from "@/components/Measurements/models/Category";
+import { unitLabel } from "@/components/Measurements/charts/format";
 import { ChartRange, DEFAULT_CHART_RANGE, entryFilterFor } from "@/components/Measurements/charts/range";
 import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
@@ -28,7 +29,7 @@ export const CategoryList = (props: { category: MeasurementCategory, range: Char
 
     return <>
         <Card>
-            <CardHeader title={categoryDisplayName(props.category, t)} subheader={props.category.unit} />
+            <CardHeader title={categoryDisplayName(props.category, t)} subheader={unitLabel(props.category.unit)} />
             <CardContent>
                 <MeasurementChart category={props.category} range={props.range} />
             </CardContent>

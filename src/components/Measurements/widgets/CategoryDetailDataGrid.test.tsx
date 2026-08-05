@@ -58,6 +58,31 @@ describe('CategoryDetailDataGrid', () => {
         expect(within(syncedRow).getByRole('menuitem', { name: 'syncedEntryInfo' })).toBeInTheDocument();
     });
 
+    test('a duration reads h:mm, in the value and in the change columns', async () => {
+        const category = new MeasurementCategory(
+            CATEGORY_UUID,
+            'Total sleep',
+            'min',
+            [
+                new MeasurementEntry(USER_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 1), 480, '', 'user'),
+                new MeasurementEntry(SYNCED_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 2), 437, '', 'apple'),
+            ],
+        );
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <CategoryDetailDataGrid category={category} />
+            </QueryClientProvider>
+        );
+        await screen.findByText('8:00 h');
+
+        const laterRow = document.querySelector(`[data-id="${SYNCED_ENTRY_UUID}"]`) as HTMLElement;
+        const cell = (field: string) => laterRow.querySelector(`[data-field="${field}"]`)!.textContent;
+        expect(cell('value')).toBe('7:17 h');
+        expect(cell('change')).toBe('-0:43');
+        expect(cell('totalChange')).toBe('-0:43');
+    });
+
     /*
      * Body weight is the one category whose entries can be stored in a unit
      * other than the one they are shown in
