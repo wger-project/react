@@ -1,3 +1,4 @@
+import { AVERAGE_WINDOWS } from "@/components/Measurements/models/Category";
 import { ChartPoint } from "@/components/Measurements/charts/series";
 
 /**
@@ -6,7 +7,7 @@ import { ChartPoint } from "@/components/Measurements/charts/series";
  * The default is the shortest one: a chart is only readable if the span it
  * covers is, and the recent values are what tracking progress is about.
  */
-export const CHART_RANGES = ['last3Months', 'lastYear', 'all'] as const;
+export const CHART_RANGES = ['lastMonth', 'last3Months', 'lastYear', 'all'] as const;
 export type ChartRange = typeof CHART_RANGES[number];
 
 export const DEFAULT_CHART_RANGE: ChartRange = 'last3Months';
@@ -14,6 +15,7 @@ export const DEFAULT_CHART_RANGE: ChartRange = 'last3Months';
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const DAYS: Record<ChartRange, number | null> = {
+    lastMonth: 30,
     last3Months: 90,
     lastYear: 365,
     all: null,
@@ -29,9 +31,12 @@ export const cutoffFor = (range: ChartRange, now: Date = new Date()): Date | nul
 /**
  * Days fetched beyond the cutoff, so the moving average of the first days in
  * range averages the days before them instead of starting over at the cutoff.
- * Matches AVERAGE_WINDOW_DAYS in charts/data.
+ *
+ * The largest window a category can be set to, rather than its own: this ends
+ * up in a query key, so deriving it from the setting would refetch whenever
+ * the setting changes.
  */
-const AVERAGE_LEAD_DAYS = 7;
+const AVERAGE_LEAD_DAYS = Math.max(...AVERAGE_WINDOWS);
 
 /**
  * Oldest entry to fetch for a range, null for the full history.

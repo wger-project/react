@@ -307,8 +307,10 @@
         "indicatorTrend": "Trend",
         "overallChangeWeight": "Allgemeine Veränderung",
         "chartRangeAll": "Gesamt",
-        "chartRangeLastYear": "1 Jahr",
-        "chartRangeLast3Months": "3 Monate",
+        "chartRangeMonths_one": "1 Monat",
+        "chartRangeMonths_other": "{{count}} Monate",
+        "chartRangeYears_one": "1 Jahr",
+        "chartRangeYears_other": "{{count}} Jahre",
         "customMeasurement": "Eigene Messung",
         "metricAlreadyTracked": "Wird bereits aufgezeichnet",
         "categoryFormHelpText": "Messkategorie, z. B. „Bizeps“ oder „Körperfett“"
