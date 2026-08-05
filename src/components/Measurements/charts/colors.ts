@@ -13,6 +13,14 @@ export const componentColor = (palette: string[], index: number): string =>
     palette[index % palette.length];
 
 /**
+ * Colour of a change bar, by which way it points. Theme colours rather than
+ * green and red: which direction is the good one depends on the goal (losing
+ * weight, building muscle), and the chart should not assert one.
+ */
+export const deltaColor = (theme: Theme, delta: number): string =>
+    delta < 0 ? theme.palette.info.main : theme.palette.secondary.main;
+
+/**
  * Colour of a series. Components are coloured by their position, the other
  * roles have a fixed colour each.
  */

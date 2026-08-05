@@ -15,9 +15,11 @@ import {
     groupChart,
     heatmapDayAt,
     measurementSeries,
-    StackedPoint
+    moving7dAverage,
+    StackedPoint,
+    weeklyDeltas
 } from "@/components/Measurements/charts/data";
-import { componentColor, componentPalette } from "@/components/Measurements/charts/colors";
+import { componentColor, componentPalette, deltaColor } from "@/components/Measurements/charts/colors";
 import { MAX_BAR_WIDTH } from "@/components/Measurements/charts/density";
 import {
     dateTick,
@@ -38,7 +40,7 @@ import { MeasurementSeriesChart } from "@/components/Measurements/widgets/Measur
 import { OverallChange } from "@/components/Measurements/widgets/OverallChange";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, Tooltip, XAxis, YAxis } from "recharts";
 import { theme } from "@/theme";
 import { dateToLocale } from "@/core/lib/date";
 
@@ -274,6 +276,80 @@ const MeasurementStackedBarChart = (props: {
     </Box>;
 };
 
+interface DeltaTooltipProps {
+    active?: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload?: any;
+    label?: string;
+    unit: string;
+}
+
+const DeltaTooltip = ({ active, payload, label, unit }: DeltaTooltipProps) => {
+    const [, i18n] = useTranslation();
+
+    if (!active || !payload?.length) {
+        return null;
+    }
+
+    const value = payload[0].value as number;
+
+    return (
+        <Paper style={{ padding: 8 }}>
+            <p><strong>{dateToLocale(new Date(Number(label)))}</strong></p>
+            {/* the plus is ours, only the minus comes out of the number format */}
+            <p>{value > 0 ? '+' : ''}{valueWithUnit(value, unit, i18n.language)}</p>
+        </Paper>
+    );
+};
+
+/**
+ * Week-over-week change: one bar per calendar week, hanging off a zero line
+ * and coloured by its direction. Answers "is it going the right way" more
+ * directly than the trend line does.
+ */
+const MeasurementDeltaBarChart = (props: { points: ChartPoint[], unit: string }) => {
+    const [t, i18n] = useTranslation();
+
+    if (props.points.length === 0) {
+        return <ChartEmptyState />;
+    }
+
+    const values = props.points.map(point => point.value);
+    const axis = durationAxis(props.unit, Math.min(0, ...values), Math.max(0, ...values));
+
+    return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+        <BarChart
+            data={props.points}
+            responsive
+            width="90%"
+            height={200}
+            barCategoryGap="15%"
+            aria-label={t('measurements.chartTypes.delta')}>
+            <CartesianGrid
+                stroke="#ccc"
+                strokeDasharray="5 5"
+                vertical={false} />
+            <XAxis
+                dataKey="date"
+                tickFormatter={dateTick(spansYears(props.points))}
+            />
+            <YAxis
+                type="number"
+                domain={axis?.domain ?? ['auto', 'auto']}
+                ticks={axis?.ticks}
+                width="auto"
+                tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
+            <Tooltip content={<DeltaTooltip unit={props.unit} />} />
+            {/* without the baseline a chart of only decreases reads as a normal one pointing down */}
+            <ReferenceLine y={0} stroke={theme.palette.text.primary} />
+            <Bar dataKey="value" maxBarSize={MAX_BAR_WIDTH}>
+                {props.points.map(point =>
+                    <Cell key={point.date} fill={deltaColor(theme, point.value)} />)}
+            </Bar>
+        </BarChart>
+    </Box>;
+};
+
 /** Widest a heatmap cell gets, and the room its weekday labels need */
 const MAX_HEATMAP_CELL = 22;
 const WEEKDAY_LABEL_WIDTH = 30;
@@ -462,7 +538,25 @@ export const MeasurementChart = (props: {
 
     // A pick that does not fit the metric type falls back to the derived chart,
     // which is also what a category configured on another client gets here
-    if (resolveChartType(props.category.metricType, props.category.chartType) === 'heatmap') {
+    const resolved = resolveChartType(props.category.metricType, props.category.chartType);
+
+    if (resolved === 'delta') {
+        const all = chartPointsFor(props.category.entries, props.category.unit, props.category.unit);
+
+        return <>
+            <MeasurementDeltaBarChart
+                // Not condensed: a week is already the bucket, and the deltas
+                // are what the chart draws rather than the values behind them
+                points={weeklyDeltas(pointsSince(all, cutoff), summed)}
+                unit={props.category.unit} />
+            {/* the one-number version of the bars above; a summed metric has no level to change */}
+            {!summed && <OverallChange
+                series={[{ points: pointsSince(moving7dAverage(all), cutoff), role: 'average' }]}
+                unit={props.category.unit} />}
+        </>;
+    }
+
+    if (resolved === 'heatmap') {
         // The cells are days, so how a day's readings become one value has to
         // be decided here: the summed types are a daily total, the sample types
         // are repeated readings of the same thing and average. The points are

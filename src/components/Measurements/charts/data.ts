@@ -264,6 +264,50 @@ const daysBetween = (from: Date, to: Date): number => Math.round(
         - Date.UTC(from.getFullYear(), from.getMonth(), from.getDate())) / DAY_MS
 );
 
+/**
+ * The level a week is summarised at: its total for the summed metric types, its
+ * average for the sample ones, whose readings repeat the same measurement.
+ */
+const weekLevel = (values: number[], summed: boolean): number => {
+    const total = values.reduce((sum, value) => sum + value, 0);
+
+    return summed ? total : total / values.length;
+};
+
+/**
+ * Week-over-week change: one point per calendar week against the last week
+ * with readings, summarised (see weekLevel) before subtracting so no single
+ * reading decides a bar. The running week of a summed metric is left out,
+ * its total is still growing and would read as a drop until Sunday.
+ */
+export const weeklyDeltas = (
+    points: ChartPoint[],
+    summed: boolean = false,
+    today: Date = new Date(),
+): ChartPoint[] => {
+    const byWeek = new Map<number, number[]>();
+    for (const point of points) {
+        const week = mondayOf(new Date(point.date)).getTime();
+        const values = byWeek.get(week);
+        if (values === undefined) {
+            byWeek.set(week, [point.value]);
+        } else {
+            values.push(point.value);
+        }
+    }
+
+    if (summed) {
+        byWeek.delete(mondayOf(today).getTime());
+    }
+
+    const weeks = [...byWeek.keys()].sort((a, b) => a - b);
+
+    return weeks.slice(1).map((week, index) => ({
+        date: week,
+        value: weekLevel(byWeek.get(week)!, summed) - weekLevel(byWeek.get(weeks[index])!, summed),
+    }));
+};
+
 /** The day in column week, row weekday (0 = Monday), as a local-midnight timestamp */
 export const heatmapDayAt = (grid: HeatmapGrid, week: number, weekday: number): number =>
     shiftDays(new Date(grid.start), week * DAYS_PER_WEEK + weekday).getTime();

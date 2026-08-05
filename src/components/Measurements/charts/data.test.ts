@@ -16,7 +16,8 @@ import {
     moving7dAverage,
     overallChange,
     smoothedTrendline,
-    stackableComponents
+    stackableComponents,
+    weeklyDeltas
 } from "@/components/Measurements/charts/data";
 import { ChartPoint } from "@/components/Measurements/charts/series";
 import { describe, expect, test } from 'vitest';
@@ -234,6 +235,80 @@ describe('averagePerDay', () => {
         const result = averagePerDay([point(day(3), 30), point(day(1), 10), point(day(2), 20)]);
 
         expect(result.map(r => r.value)).toEqual([10, 20, 30]);
+    });
+});
+
+describe('weeklyDeltas', () => {
+    // 5 January 2026 is a Monday
+    const week = (index: number, dayOfWeek: number = 0) => new Date(2026, 0, 5 + 7 * index + dayOfWeek);
+
+    test('returns an empty array for no points', () => {
+        expect(weeklyDeltas([])).toEqual([]);
+    });
+
+    test('has no bar for a single week, which has nothing to compare against', () => {
+        expect(weeklyDeltas([point(week(0), 80), point(week(0, 2), 81)])).toEqual([]);
+    });
+
+    test('subtracts the previous week, dated on the week it belongs to', () => {
+        const result = weeklyDeltas([point(week(0), 80), point(week(1), 79), point(week(2), 79.5)]);
+
+        expect(result.map(r => r.date)).toEqual([week(1).getTime(), week(2).getTime()]);
+        expect(result.map(r => r.value)).toEqual([-1, 0.5]);
+    });
+
+    test('compares the weeks by their average, not by single readings', () => {
+        // the low reading is an outlier within its week and must not decide the bar
+        const result = weeklyDeltas([
+            point(week(0), 80), point(week(0, 3), 82),
+            point(week(1), 75), point(week(1, 3), 87),
+        ]);
+
+        expect(result.map(r => r.value)).toEqual([0]);
+    });
+
+    test('sums the weeks of a metric that is read as a total', () => {
+        const result = weeklyDeltas([
+            point(week(0), 3000), point(week(0, 1), 4000),
+            point(week(1), 9000),
+        ], true);
+
+        expect(result.map(r => r.value)).toEqual([2000]);
+    });
+
+    test('takes the week after a gap against the last week that has readings', () => {
+        // one bar on the week that was measured, holding the whole change, so
+        // the bars still add up to the change across the range
+        const result = weeklyDeltas([point(week(0), 80), point(week(3), 77)]);
+
+        expect(result).toEqual([{ date: week(3).getTime(), value: -3 }]);
+    });
+
+    test('sorts unordered input by week first', () => {
+        const result = weeklyDeltas([point(week(1), 79), point(week(0), 80)]);
+
+        expect(result.map(r => r.value)).toEqual([-1]);
+    });
+
+    test('leaves the running week out of a summed metric', () => {
+        // its total is still growing and would read as a drop until Sunday
+        const result = weeklyDeltas(
+            [point(week(0), 7000), point(week(1), 3000)],
+            true,
+            week(1, 2),
+        );
+
+        expect(result).toEqual([]);
+    });
+
+    test('keeps the running week of an averaged metric', () => {
+        const result = weeklyDeltas(
+            [point(week(0), 80), point(week(1), 79)],
+            false,
+            week(1, 2),
+        );
+
+        expect(result.map(r => r.value)).toEqual([-1]);
     });
 });
 

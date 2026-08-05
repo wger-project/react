@@ -345,7 +345,8 @@
             "auto": "Automatic",
             "line": "Line",
             "bar": "Bars",
-            "heatmap": "Heatmap"
+            "heatmap": "Heatmap",
+            "delta": "Change"
         },
         "partOfGroup": "Part of group",
         "noGroup": "No group",

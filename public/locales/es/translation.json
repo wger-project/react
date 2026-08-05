@@ -263,7 +263,8 @@
             "auto": "Automático",
             "line": "Línea",
             "bar": "Barras",
-            "heatmap": "Mapa de calor"
+            "heatmap": "Mapa de calor",
+            "delta": "Variación"
         },
         "partOfGroup": "Parte del grupo",
         "noGroup": "Sin grupo",

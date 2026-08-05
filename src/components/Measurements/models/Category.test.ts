@@ -157,8 +157,8 @@ describe('MeasurementCategory', () => {
         });
 
         test('the offered types follow the metric type', () => {
-            expect(availableChartTypes('steps')).toEqual(['bar', 'heatmap']);
-            expect(availableChartTypes('custom')).toEqual(['line', 'heatmap']);
+            expect(availableChartTypes('steps')).toEqual(['bar', 'heatmap', 'delta']);
+            expect(availableChartTypes('custom')).toEqual(['line', 'heatmap', 'delta']);
 
             // a group is drawn by what its components are to each other
             expect(availableChartTypes('blood_pressure')).toEqual([]);
@@ -173,6 +173,7 @@ describe('MeasurementCategory', () => {
         test('a type that fits is kept', () => {
             expect(resolveChartType('custom', 'heatmap')).toBe('heatmap');
             expect(resolveChartType('steps', 'bar')).toBe('bar');
+            expect(resolveChartType('body_weight', 'delta')).toBe('delta');
         });
     });
 

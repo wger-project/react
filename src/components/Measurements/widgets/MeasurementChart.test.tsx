@@ -63,6 +63,29 @@ describe('MeasurementChart', () => {
         expect(screen.getByRole('img')).toBeInTheDocument();
     });
 
+    test('mounts a change chart with the overall change under it', () => {
+        // 5 January 2026 is a Monday
+        const category = new MeasurementCategory('c-1', 'Biceps', 'cm', [
+            entry('d-1', new Date(2026, 0, 5), 30),
+            entry('d-2', new Date(2026, 0, 12), 31),
+        ], 'custom', false, null, 0, 'delta');
+
+        render(<MeasurementChart category={category} range="all" />);
+
+        expect(screen.getByText(/overallChangeWeight/)).toBeInTheDocument();
+    });
+
+    test('a summed metric has no level to change, so no overall change', () => {
+        const category = new MeasurementCategory('c-1', 'Steps', 'steps', [
+            entry('d-1', new Date(2026, 0, 5), 4000),
+            entry('d-2', new Date(2026, 0, 12), 6000),
+        ], 'steps', false, null, 0, 'delta');
+
+        render(<MeasurementChart category={category} range="all" />);
+
+        expect(screen.queryByText(/overallChangeWeight/)).not.toBeInTheDocument();
+    });
+
     test('keeps the derived chart when the pick does not fit the metric type', () => {
         // Bars are not offered for a sample type, and a pick that does not fit
         // falls back to the derived chart instead of being drawn anyway

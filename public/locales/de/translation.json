@@ -261,7 +261,8 @@
             "auto": "Automatisch",
             "line": "Linie",
             "bar": "Balken",
-            "heatmap": "Heatmap"
+            "heatmap": "Heatmap",
+            "delta": "Veränderung"
         },
         "partOfGroup": "Teil der Gruppe",
         "noGroup": "Keine Gruppe",

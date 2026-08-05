@@ -346,7 +346,8 @@
             "auto": "Automatique",
             "line": "Ligne",
             "bar": "Barres",
-            "heatmap": "Carte thermique"
+            "heatmap": "Carte thermique",
+            "delta": "Variation"
         },
         "partOfGroup": "Fait partie du groupe",
         "noGroup": "Aucun groupe",

@@ -39,7 +39,7 @@ export const METRIC_TYPE_BODY_WEIGHT: MetricType = 'body_weight';
  * (two components) and a stacked bar (a summed group) follow from what the
  * group is and are not choices.
  */
-export const CHART_TYPES = ['auto', 'line', 'bar', 'heatmap'] as const;
+export const CHART_TYPES = ['auto', 'line', 'bar', 'heatmap', 'delta'] as const;
 export type ChartType = typeof CHART_TYPES[number];
 
 /**
@@ -106,13 +106,14 @@ export function defaultChartType(type: MetricType): ChartType {
  * The chart types a category of this metric type may be drawn as, i.e. what
  * the picker offers on top of 'auto'.
  *
- * The heatmap is the one alternative that fits every leaf type: it answers how
- * regularly rather than how much, and it is the only chart of the set where a
- * missing day is visible instead of being spanned by a line. A group is left
- * out, its chart is structural rather than a preference.
+ * The two alternatives fit every leaf type: the heatmap answers how regularly
+ * rather than how much, and is the only chart of the set where a missing day is
+ * visible instead of being spanned by a line; the delta chart answers which way
+ * it is going, which a line only implies. A group is left out, its chart is
+ * structural rather than a preference.
  */
 export function availableChartTypes(type: MetricType): ChartType[] {
-    return isGroupMetricType(type) ? [] : [defaultChartType(type), 'heatmap'];
+    return isGroupMetricType(type) ? [] : [defaultChartType(type), 'heatmap', 'delta'];
 }
 
 /**
