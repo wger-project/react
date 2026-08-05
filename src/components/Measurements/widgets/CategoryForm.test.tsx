@@ -6,7 +6,7 @@ import {
     useEditMeasurementCategoryQuery,
     useMeasurementsCategoryQuery
 } from "@/components/Measurements/queries";
-import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementCategory, TrendCharacter } from "@/components/Measurements/models/Category";
 import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
 import React from 'react';
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
@@ -324,5 +324,120 @@ describe("Test the CategoryForm component", () => {
         // Assert
         expect(screen.getByRole('combobox', { name: 'measurements.chartType' }))
             .toBeInTheDocument();
+    });
+
+    test('A leaf category gets the line chart settings', () => {
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={TEST_MEASUREMENT_CATEGORY_1} />
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.getByRole('combobox', { name: 'measurements.chartTrend' }))
+            .toBeInTheDocument();
+        expect(screen.getByRole('combobox', { name: 'measurements.chartAverageWindow' }))
+            .toBeInTheDocument();
+    });
+
+    test('A summed type has no line to configure', () => {
+        // Its chart is one bar per day, which has neither a trend nor an average
+        const steps = new MeasurementCategory(
+            'cccccccc-cccc-cccc-cccc-000000000045', 'Steps', 'steps', undefined, 'steps',
+        );
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={steps} />
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.queryByRole('combobox', { name: 'measurements.chartTrend' })).toBeNull();
+        expect(screen.queryByRole('combobox', { name: 'measurements.chartAverageWindow' }))
+            .toBeNull();
+    });
+
+    test('The line settings are disabled for a chart without a line', () => {
+        // Kept rather than hidden: switching the chart type back applies them
+        // again, and a field that vanishes takes the reason with it
+        const category = MeasurementCategory.clone(
+            TEST_MEASUREMENT_CATEGORY_1, { chartType: 'delta' },
+        );
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={category} />
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.getByRole('combobox', { name: 'measurements.chartTrend' }))
+            .toHaveAttribute('aria-disabled', 'true');
+        expect(screen.getByRole('combobox', { name: 'measurements.chartAverageWindow' }))
+            .toHaveAttribute('aria-disabled', 'true');
+    });
+
+    test('Picking a trend keeps the settings of another client', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        const category = MeasurementCategory.clone(TEST_MEASUREMENT_CATEGORY_1);
+        category.chartConfig = { goal_line: 75 };
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={category} />
+            </QueryClientProvider>
+        );
+        await user.click(screen.getByRole('combobox', { name: 'measurements.chartTrend' }));
+        await user.click(screen.getByRole('option', { name: 'measurements.trends.reactive' }));
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        expect(mutate.mock.calls[0][0].chartConfig)
+            .toEqual({ goal_line: 75, trend: 'reactive' });
+    });
+
+    test('A rename keeps a setting this release does not know', async () => {
+        // 'glacial' reads as the default here, and writing that default back
+        // would drop it. Only a setting the user changed is written.
+        const user = userEvent.setup();
+        const category = MeasurementCategory.clone(TEST_MEASUREMENT_CATEGORY_1);
+        category.chartConfig = { trend: 'glacial' as TrendCharacter };
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={category} />
+            </QueryClientProvider>
+        );
+        const nameInput = await screen.findByLabelText('name');
+        await user.clear(nameInput);
+        await user.type(nameInput, 'a better name');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        expect(mutate.mock.calls[0][0].chartConfig).toEqual({ trend: 'glacial' });
+    });
+
+    test('An untouched category keeps its empty configuration', async () => {
+        // Renaming a category must not fill its config with the defaults
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={TEST_MEASUREMENT_CATEGORY_1} />
+            </QueryClientProvider>
+        );
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        expect(mutate.mock.calls[0][0].chartConfig).toEqual({});
     });
 });

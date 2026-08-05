@@ -48,6 +48,7 @@ export const PlanWeightChart = (props: { plan: NutritionalPlan }) => {
             weights={entries}
             unit={displayUnit}
             categoryUnit={categoryQuery.data.unit}
+            chartConfig={categoryQuery.data.chartConfig}
             range="all"
             height={200} />
     </>;

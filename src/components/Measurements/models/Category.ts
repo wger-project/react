@@ -43,6 +43,58 @@ export const CHART_TYPES = ['auto', 'line', 'bar', 'heatmap', 'delta', 'distribu
 export type ChartType = typeof CHART_TYPES[number];
 
 /**
+ * How closely the trend line follows the values, as the EMA period it maps to.
+ *
+ * Stored as the character rather than the number, so the periods stay tunable
+ * without touching what users configured.
+ */
+export const TREND_CHARACTERS = ['reactive', 'balanced', 'sluggish'] as const;
+export type TrendCharacter = typeof TREND_CHARACTERS[number];
+
+const TREND_EMA_PERIODS: Record<TrendCharacter, number> = {
+    reactive: 5,
+    balanced: 10,
+    sluggish: 20,
+};
+
+/** Windows the moving average may be computed over, in days */
+export const AVERAGE_WINDOWS = [7, 14, 30];
+
+/** Taste-level chart settings, see chart_config on the server */
+export interface ChartConfig {
+    trend?: TrendCharacter;
+    average_window?: number;
+
+    /** Keys another client wrote, kept so a write from here does not drop them */
+    [key: string]: unknown;
+}
+
+/** Falls back to 'balanced', which is the unconfigured chart */
+export function trendOf(config: ChartConfig): TrendCharacter {
+    return TREND_CHARACTERS.includes(config.trend as TrendCharacter)
+        ? config.trend as TrendCharacter
+        : 'balanced';
+}
+
+/** The EMA period the trend line of this configuration is smoothed with */
+export function trendPeriodOf(config: ChartConfig): number {
+    return TREND_EMA_PERIODS[trendOf(config)];
+}
+
+/**
+ * Window the moving average covers, in days. Anything the picker does not
+ * offer falls back to the first window, the same rule an unfitting chart type
+ * follows.
+ */
+export function averageWindowOf(config: ChartConfig): number {
+    const window = config.average_window;
+
+    return typeof window === 'number' && AVERAGE_WINDOWS.includes(window)
+        ? window
+        : AVERAGE_WINDOWS[0];
+}
+
+/**
  * Narrows a server value to a known chart type. Null is the server's "no
  * override"; an unrecognised value is one added after this release, and
  * falling back to 'auto' is what keeps such a category readable here.
@@ -372,6 +424,8 @@ export class MeasurementCategory {
         public order: number = 0,
         /** Chart the user picked, 'auto' (the server's null) for the derived one */
         public chartType: ChartType = 'auto',
+        /** Taste-level chart settings, read through trendOf and averageWindowOf */
+        public chartConfig: ChartConfig = {},
     ) {
         if (entries) {
             this.entries = entries;
@@ -395,6 +449,7 @@ export class MeasurementCategory {
             overrides !== undefined && 'parentId' in overrides ? overrides.parentId ?? null : other.parentId,
             other.order,
             overrides?.chartType ?? other.chartType,
+            other.chartConfig,
         );
         category.children = other.children;
         return category;
@@ -403,6 +458,16 @@ export class MeasurementCategory {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static fromJson(json: any): MeasurementCategory {
         return adapter.fromJson(json);
+    }
+
+    /**
+     * A copy with one chart setting changed, keeping the keys this release
+     * does not know: a write replaces the whole object.
+     */
+    withChartSetting(key: string, value: unknown): MeasurementCategory {
+        const category = MeasurementCategory.clone(this);
+        category.chartConfig = { ...this.chartConfig, [key]: value };
+        return category;
     }
 
     toJson() {
@@ -424,6 +489,10 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             item.parent ?? null,
             item.order ?? 0,
             chartTypeFromApi(item.chart_type),
+            // Anything that is not an object is not a configuration
+            typeof item.chart_config === 'object' && item.chart_config !== null
+                ? item.chart_config
+                : {},
         );
     }
 
@@ -438,6 +507,8 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             // the chart from the metric type
             // eslint-disable-next-line camelcase
             chart_type: item.chartType === 'auto' ? null : item.chartType,
+            // eslint-disable-next-line camelcase
+            chart_config: item.chartConfig,
             parent: item.parentId,
             order: item.order,
         };

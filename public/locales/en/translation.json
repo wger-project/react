@@ -349,6 +349,15 @@
             "delta": "Change",
             "distribution": "Distribution"
         },
+        "chartTrend": "Trend line",
+        "trends": {
+            "reactive": "Reactive",
+            "balanced": "Balanced",
+            "sluggish": "Smooth"
+        },
+        "chartAverageWindow": "Average over",
+        "chartAverageWindowDays_one": "1 day",
+        "chartAverageWindowDays_other": "{{count}} days",
         "distributionMedian": "Median",
         "distributionLatest": "Latest",
         "distributionEntryCount_one": "1 entry",

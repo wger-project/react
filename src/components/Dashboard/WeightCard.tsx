@@ -66,6 +66,7 @@ export const WeightCardContent = (props: { entries: MeasurementEntry[] }) => {
                     weights={props.entries}
                     unit={displayUnit}
                     categoryUnit={categoryUnit}
+                    chartConfig={categoryQuery.data?.chartConfig}
                     height={200} />
                 <Box sx={{ mt: 2 }}>
                     <WeightTableDashboard

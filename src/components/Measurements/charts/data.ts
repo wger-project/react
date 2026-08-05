@@ -1,7 +1,10 @@
 import {
+    averageWindowOf,
+    ChartConfig,
     isGroupTotalMetricType,
     isSummedPerDay,
-    MeasurementCategory
+    MeasurementCategory,
+    trendPeriodOf
 } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { pointsSince } from "@/components/Measurements/charts/range";
@@ -10,8 +13,8 @@ import { calculateEMA } from "@/core/lib/ema";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-/** Length of the moving average window */
-const AVERAGE_WINDOW_DAYS = 7;
+/** Length of the moving average window for a category that configured none */
+const DEFAULT_AVERAGE_WINDOW_DAYS = 7;
 
 /** Point count above which a series is condensed, see downsample */
 export const MAX_CHART_POINTS = 200;
@@ -50,13 +53,16 @@ export const chartPointsFor = (
     });
 
 /**
- * For each point, the average of all points in the 7 days preceding it.
+ * For each point, the average of all points in the given days preceding it.
  *
  * The window total is carried along instead of re-summing the window for every
  * point: with densely sampled metrics the window holds thousands of values,
  * and re-adding them each time makes this quadratic.
  */
-export const moving7dAverage = (points: ChartPoint[]): ChartPoint[] => {
+export const movingAverage = (
+    points: ChartPoint[],
+    days: number = DEFAULT_AVERAGE_WINDOW_DAYS,
+): ChartPoint[] => {
     const sorted = [...points].sort((a, b) => a.date - b.date);
     const out: ChartPoint[] = [];
     let start = 0;
@@ -67,7 +73,7 @@ export const moving7dAverage = (points: ChartPoint[]): ChartPoint[] => {
 
         // Users log measurements days or minutes apart, so the start of the
         // window has to be advanced by date, not by a fixed number of points
-        const windowStart = sorted[end].date - AVERAGE_WINDOW_DAYS * DAY_MS;
+        const windowStart = sorted[end].date - days * DAY_MS;
         while (start < end && sorted[start].date < windowStart) {
             sum -= sorted[start].value;
             start++;
@@ -555,12 +561,13 @@ export const measurementSeries = (
     targetUnit: string,
     categoryUnit: string,
     cutoff: Date | null = null,
+    config: ChartConfig = {},
 ): ChartSeries[] => {
     const all = chartPointsFor(entries, targetUnit, categoryUnit);
     // The average is computed over the full history and only then cut, so the
     // first points of the range average the days before it instead of
     // starting over at the cutoff
-    const average = pointsSince(moving7dAverage(all), cutoff);
+    const average = pointsSince(movingAverage(all, averageWindowOf(config)), cutoff);
     const points = pointsSince(all, cutoff);
 
     const condensed = downsample(points);
@@ -575,7 +582,7 @@ export const measurementSeries = (
     return [
         raw,
         { points: downsample(average), role: 'average' },
-        { points: smoothedTrendline(condensed), role: 'trend' },
+        { points: smoothedTrendline(condensed, trendPeriodOf(config)), role: 'trend' },
     ];
 };
 

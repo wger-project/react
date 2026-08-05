@@ -265,6 +265,15 @@
             "delta": "Veränderung",
             "distribution": "Verteilung"
         },
+        "chartTrend": "Trendlinie",
+        "trends": {
+            "reactive": "Reaktiv",
+            "balanced": "Ausgewogen",
+            "sluggish": "Geglättet"
+        },
+        "chartAverageWindow": "Durchschnitt über",
+        "chartAverageWindowDays_one": "1 Tag",
+        "chartAverageWindowDays_other": "{{count}} Tage",
         "distributionMedian": "Median",
         "distributionLatest": "Aktuell",
         "distributionEntryCount_one": "1 Eintrag",

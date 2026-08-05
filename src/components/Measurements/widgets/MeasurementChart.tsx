@@ -1,5 +1,6 @@
 import { alpha, Box, Paper, Typography } from "@mui/material";
 import {
+    averageWindowOf,
     binWidthFor,
     categoryDisplayName,
     isSummedPerDay,
@@ -18,7 +19,7 @@ import {
     groupChart,
     heatmapDayAt,
     measurementSeries,
-    moving7dAverage,
+    movingAverage,
     StackedPoint,
     weeklyDeltas
 } from "@/components/Measurements/charts/data";
@@ -638,6 +639,7 @@ const MeasurementLineChart = (props: {
         props.category.unit,
         props.category.unit,
         props.cutoff,
+        props.category.chartConfig,
     );
 
     return <>
@@ -691,7 +693,13 @@ export const MeasurementChart = (props: {
                 unit={props.category.unit} />
             {/* the one-number version of the bars above; a summed metric has no level to change */}
             {!summed && <OverallChange
-                series={[{ points: pointsSince(moving7dAverage(all), cutoff), role: 'average' }]}
+                series={[{
+                    points: pointsSince(
+                        movingAverage(all, averageWindowOf(props.category.chartConfig)),
+                        cutoff,
+                    ),
+                    role: 'average',
+                }]}
                 unit={props.category.unit} />}
         </>;
     }

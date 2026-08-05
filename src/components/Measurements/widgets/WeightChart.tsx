@@ -1,6 +1,7 @@
 import { measurementSeries } from "@/components/Measurements/charts/data";
 import { ChartRange, cutoffFor, DEFAULT_CHART_RANGE } from "@/components/Measurements/charts/range";
 import { PlanPeriod } from "@/components/Measurements/charts/series";
+import { ChartConfig } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { MeasurementSeriesChart } from "@/components/Measurements/widgets/MeasurementSeriesChart";
 import { OverallChange } from "@/components/Measurements/widgets/OverallChange";
@@ -15,6 +16,8 @@ export interface WeightChartProps {
     range?: ChartRange,
     planPeriods?: PlanPeriod[],
     height?: number,
+    /** Chart settings of the body weight category */
+    chartConfig?: ChartConfig,
 }
 
 /**
@@ -23,7 +26,8 @@ export interface WeightChartProps {
  * screens showed before body weight became a measurement.
  */
 export const WeightChart = (
-    { weights, unit, categoryUnit, range, planPeriods, height = 300 }: WeightChartProps,
+    { weights, unit, categoryUnit, range, planPeriods, height = 300, chartConfig = {} }:
+    WeightChartProps,
 ) => {
     const [t] = useTranslation();
 
@@ -34,6 +38,7 @@ export const WeightChart = (
         unit,
         categoryUnit,
         cutoffFor(range ?? DEFAULT_CHART_RANGE),
+        chartConfig,
     );
 
     return <>

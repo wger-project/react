@@ -267,6 +267,16 @@
             "delta": "Variación",
             "distribution": "Distribución"
         },
+        "chartTrend": "Línea de tendencia",
+        "trends": {
+            "reactive": "Reactiva",
+            "balanced": "Equilibrada",
+            "sluggish": "Suavizada"
+        },
+        "chartAverageWindow": "Promedio de",
+        "chartAverageWindowDays_one": "1 día",
+        "chartAverageWindowDays_other": "{{count}} días",
+        "chartAverageWindowDays_many": "{{count}} días",
         "distributionMedian": "Mediana",
         "distributionLatest": "Actual",
         "distributionEntryCount_one": "1 entrada",

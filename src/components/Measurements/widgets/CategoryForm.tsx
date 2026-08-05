@@ -1,9 +1,15 @@
 import {
     availableChartTypes,
+    AVERAGE_WINDOWS,
+    averageWindowOf,
     ChartType,
     isGroupMetricType,
     MeasurementCategory,
-    MetricType
+    MetricType,
+    resolveChartType,
+    TREND_CHARACTERS,
+    TrendCharacter,
+    trendOf
 } from "@/components/Measurements/models/Category";
 import {
     useAddMeasurementCategoryQuery,
@@ -25,6 +31,18 @@ interface CategoryFormProps {
 /** What the chart type picker offers: no override, plus what the type allows */
 const chartTypeChoices = (metricType: MetricType): ChartType[] =>
     ['auto', ...availableChartTypes(metricType)];
+
+/**
+ * Whether the category can be drawn as a line at all, which is what the trend
+ * and the average settings belong to. A summed type is drawn as bars whatever
+ * is picked, and a group by what its components are.
+ */
+const canDrawLine = (metricType: MetricType, hasChildren: boolean): boolean =>
+    !hasChildren && availableChartTypes(metricType).includes('line');
+
+/** Whether it is drawn as one right now, i.e. whether those settings apply */
+const drawsLine = (values: { metricType: MetricType, chartType: ChartType }): boolean =>
+    resolveChartType(values.metricType, values.chartType) === 'line';
 
 export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
 
@@ -71,6 +89,11 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     });
 
 
+    // What the two chart settings were seeded with, which is also what decides
+    // whether the user changed them
+    const seededTrend = trendOf(category?.chartConfig ?? {});
+    const seededWindow = averageWindowOf(category?.chartConfig ?? {});
+
     return (
         <Formik
             initialValues={{
@@ -78,6 +101,8 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                 unit: category ? category.unit : "",
                 metricType: category ? category.metricType : 'custom' as MetricType,
                 chartType: category ? category.chartType : 'auto' as ChartType,
+                trend: seededTrend,
+                averageWindow: seededWindow,
                 // the empty string stands in for "no group", MUI selects
                 // don't accept null values
                 parentId: category?.parentId ?? "",
@@ -85,21 +110,42 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
             validationSchema={validationSchema}
             onSubmit={async (values) => {
                 const parentId = values.parentId === "" ? null : values.parentId;
+
+                /**
+                 * Applies the chart settings the user actually changed.
+                 *
+                 * Only a changed one is written, so renaming a category leaves
+                 * its configuration exactly as it was: a value another client
+                 * wrote and this one does not know reads as the default here,
+                 * and writing that default back would drop it.
+                 */
+                const withSettings = (target: MeasurementCategory): MeasurementCategory => {
+                    let out = target;
+                    if (values.trend !== seededTrend) {
+                        out = out.withChartSetting('trend', values.trend);
+                    }
+                    if (values.averageWindow !== seededWindow) {
+                        out = out.withChartSetting('average_window', values.averageWindow);
+                    }
+
+                    return out;
+                };
+
                 // The form closes only once the server took the category, so a
                 // rejected write is shown instead of disappearing with it
                 const options = { onSuccess: () => closeFn?.() };
 
                 // Edit existing category
                 if (category) {
-                    useEditCategoryQuery.mutate(MeasurementCategory.clone(category, {
+                    useEditCategoryQuery.mutate(withSettings(MeasurementCategory.clone(category, {
                         name: values.name,
                         unit: values.unit,
                         metricType: values.metricType,
                         chartType: values.chartType,
                         parentId: parentId,
-                    }), options);
+                    })), options);
                 } else {
-                    useAddCategoryQuery.mutate(new MeasurementCategory(
+                    useAddCategoryQuery.mutate(withSettings(new MeasurementCategory(
                         null,
                         values.name,
                         values.unit,
@@ -109,7 +155,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                         parentId,
                         0,
                         values.chartType,
-                    ), options);
+                    )), options);
                 }
             }}
         >
@@ -164,6 +210,42 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                                 )}
                             </TextField>
                         }
+                        {/* The trend line and the moving average are parts of
+                          * the line chart: a category that can never be drawn
+                          * as one is not offered them at all, and one that is
+                          * currently drawn as something else keeps its
+                          * settings but cannot change them
+                          */}
+                        {canDrawLine(formik.values.metricType, hasChildren) && <>
+                            <TextField
+                                select
+                                fullWidth
+                                id="trend"
+                                label={t('measurements.chartTrend')}
+                                disabled={!drawsLine(formik.values)}
+                                {...formik.getFieldProps('trend')}
+                            >
+                                {TREND_CHARACTERS.map((trend: TrendCharacter) =>
+                                    <MenuItem key={trend} value={trend}>
+                                        {t(`measurements.trends.${trend}`)}
+                                    </MenuItem>
+                                )}
+                            </TextField>
+                            <TextField
+                                select
+                                fullWidth
+                                id="averageWindow"
+                                label={t('measurements.chartAverageWindow')}
+                                disabled={!drawsLine(formik.values)}
+                                {...formik.getFieldProps('averageWindow')}
+                            >
+                                {AVERAGE_WINDOWS.map(days =>
+                                    <MenuItem key={days} value={days}>
+                                        {t('measurements.chartAverageWindowDays', { count: days })}
+                                    </MenuItem>
+                                )}
+                            </TextField>
+                        </>}
                         {!hasChildren && formik.values.metricType === 'custom'
                             && parentCandidates.length > 0 &&
                             <TextField

@@ -279,6 +279,7 @@ describe('measurement service tests', () => {
             unit: "%",
             metric_type: "custom",
             chart_type: null,
+            chart_config: {},
             parent: null,
             order: 0
         });
@@ -303,6 +304,7 @@ describe('measurement service tests', () => {
             unit: "%",
             metric_type: "custom",
             chart_type: null,
+            chart_config: {},
             parent: null,
             order: 0
         });

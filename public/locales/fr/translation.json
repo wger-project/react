@@ -350,6 +350,16 @@
             "delta": "Variation",
             "distribution": "Répartition"
         },
+        "chartTrend": "Courbe de tendance",
+        "trends": {
+            "reactive": "Réactive",
+            "balanced": "Équilibrée",
+            "sluggish": "Lissée"
+        },
+        "chartAverageWindow": "Moyenne sur",
+        "chartAverageWindowDays_one": "1 jour",
+        "chartAverageWindowDays_other": "{{count}} jours",
+        "chartAverageWindowDays_many": "{{count}} jours",
         "distributionMedian": "Médiane",
         "distributionLatest": "Actuel",
         "distributionEntryCount_one": "1 entrée",

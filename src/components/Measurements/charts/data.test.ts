@@ -14,7 +14,7 @@ import {
     groupComponentSeries,
     groupRangeEntries,
     groupStackedEntries,
-    moving7dAverage,
+    movingAverage,
     niceBinWidth,
     overallChange,
     smoothedTrendline,
@@ -73,13 +73,13 @@ describe('chartPointsFor', () => {
     });
 });
 
-describe('moving7dAverage', () => {
+describe('movingAverage', () => {
     test('returns an empty series unchanged', () => {
-        expect(moving7dAverage([])).toEqual([]);
+        expect(movingAverage([])).toEqual([]);
     });
 
     test('averages over the 7 days preceding each point', () => {
-        const result = moving7dAverage([
+        const result = movingAverage([
             point(day(1), 10),
             point(day(2), 20),
             point(day(3), 30),
@@ -89,7 +89,7 @@ describe('moving7dAverage', () => {
     });
 
     test('drops points that fell out of the window', () => {
-        const result = moving7dAverage([
+        const result = movingAverage([
             point(day(1), 10),
             point(day(20), 30),
             point(day(21), 50),
@@ -100,13 +100,21 @@ describe('moving7dAverage', () => {
     });
 
     test('sorts the input before averaging', () => {
-        const result = moving7dAverage([point(day(2), 20), point(day(1), 10)]);
+        const result = movingAverage([point(day(2), 20), point(day(1), 10)]);
 
         expect(result.map(p => p.value)).toEqual([10, 15]);
     });
 
+    test('a wider window reaches further back', () => {
+        const points = [point(day(1), 10), point(day(12), 20)];
+
+        // the first point is outside 7 days but inside 14
+        expect(movingAverage(points, 7).map(p => p.value)).toEqual([10, 20]);
+        expect(movingAverage(points, 14).map(p => p.value)).toEqual([10, 15]);
+    });
+
     test('carries no range, an average has no spread of its own', () => {
-        const result = moving7dAverage([{ date: day(1).getTime(), value: 10, min: 5, max: 15 }]);
+        const result = movingAverage([{ date: day(1).getTime(), value: 10, min: 5, max: 15 }]);
 
         expect(result[0]).toStrictEqual({ date: day(1).getTime(), value: 10 });
     });

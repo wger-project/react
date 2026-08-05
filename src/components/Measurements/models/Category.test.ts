@@ -1,5 +1,6 @@
 import {
     availableChartTypes,
+    averageWindowOf,
     binWidthFor,
     categoryDisplayName,
     isComponentMetricType,
@@ -9,7 +10,10 @@ import {
     MEASUREMENT_SCHEMA_MAX_VALUE,
     MeasurementCategory,
     metricTypeFromApi,
-    resolveChartType
+    resolveChartType,
+    TrendCharacter,
+    trendOf,
+    trendPeriodOf
 } from "./Category";
 
 describe('MeasurementCategory', () => {
@@ -49,6 +53,7 @@ describe('MeasurementCategory', () => {
 
             metric_type: 'steps',
             chart_type: null,
+            chart_config: {},
             parent: null,
             order: 2,
         });
@@ -178,6 +183,48 @@ describe('MeasurementCategory', () => {
             expect(resolveChartType('steps', 'bar')).toBe('bar');
             expect(resolveChartType('body_weight', 'delta')).toBe('delta');
             expect(resolveChartType('resting_heart_rate', 'distribution')).toBe('distribution');
+        });
+    });
+
+    describe('chart config', () => {
+
+        test('an unconfigured category gets the defaults', () => {
+            expect(trendOf({})).toBe('balanced');
+            expect(averageWindowOf({})).toBe(7);
+        });
+
+        test('reads what was configured', () => {
+            expect(trendOf({ trend: 'sluggish' })).toBe('sluggish');
+            expect(averageWindowOf({ average_window: 30 })).toBe(30);
+        });
+
+        test('a value this release does not know falls back to the default', () => {
+            expect(trendOf({ trend: 'glacial' as TrendCharacter })).toBe('balanced');
+            expect(averageWindowOf({ average_window: 21 })).toBe(7);
+            expect(averageWindowOf({ average_window: 'a fortnight' as unknown as number })).toBe(7);
+        });
+
+        test('the trend character maps to the EMA period the chart uses', () => {
+            expect(trendPeriodOf({ trend: 'reactive' }))
+                .toBeLessThan(trendPeriodOf({ trend: 'balanced' }));
+            expect(trendPeriodOf({ trend: 'sluggish' }))
+                .toBeGreaterThan(trendPeriodOf({ trend: 'balanced' }));
+        });
+
+        test('a setting is changed without dropping the keys of another client', () => {
+            const category = new MeasurementCategory('c-1', 'Biceps', 'cm');
+            category.chartConfig = { goal_line: 75 };
+
+            expect(category.withChartSetting('trend', 'reactive').chartConfig)
+                .toEqual({ goal_line: 75, trend: 'reactive' });
+        });
+
+        test('fromJson ignores a configuration that is not an object', () => {
+            const category = MeasurementCategory.fromJson({
+                id: 'c-1', name: 'Steps', unit: 'steps', chart_config: null,
+            });
+
+            expect(category.chartConfig).toEqual({});
         });
     });
 
