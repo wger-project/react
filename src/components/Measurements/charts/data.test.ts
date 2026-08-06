@@ -1,4 +1,9 @@
-import { MeasurementCategory, MetricType } from "@/components/Measurements/models/Category";
+import { MeasurementBucket } from "@/components/Measurements/models/Bucket";
+import {
+    isSummedPerDay,
+    MeasurementCategory,
+    MetricType
+} from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
     aggregatePerDay,
@@ -12,6 +17,7 @@ import {
     HEATMAP_MAX_WEEKS,
     groupChart,
     groupComponentSeries,
+    groupComponentPoints,
     groupRangeEntries,
     groupStackedEntries,
     movingAverage,
@@ -337,58 +343,79 @@ describe('niceBinWidth', () => {
     });
 });
 
+/**
+ * The points the aggregated read returns for a group, one bucket per entry
+ * unless the metric is summed per day, which the query condenses to days.
+ */
+const groupPoints = (group: MeasurementCategory) => groupComponentPoints(
+    group,
+    group.children.flatMap(child => {
+        const summed = isSummedPerDay(child.metricType);
+        const byStart = new Map<number, MeasurementEntry[]>();
+        for (const entry of child.entries) {
+            const date = entry.date;
+            const start = summed
+                ? new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+                : date.getTime();
+            byStart.set(start, [...(byStart.get(start) ?? []), entry]);
+        }
+
+        return [...byStart.entries()].map(([start, entries]) => new MeasurementBucket(
+            child.id!,
+            new Date(start),
+            null,
+            entries.length,
+            entries.reduce((sum, e) => sum + e.value, 0),
+            Math.min(...entries.map(e => e.value)),
+            Math.max(...entries.map(e => e.value)),
+        ));
+    }),
+);
+
 describe('buildHistogram', () => {
+    const counted = (...values: number[]) => values.map(value => ({ value: value, count: 1 }));
+
     test('aligns the bin edges to round multiples of the width', () => {
-        const result = buildHistogram([point(day(1), 79.7), point(day(2), 82.3)], 0.5);
+        const result = buildHistogram(counted(79.7, 82.3), 0, 0.5);
 
         expect(result.firstEdge).toBe(79.5);
         expect(result.firstEdge + result.counts.length * result.binWidth).toBe(82.5);
     });
 
     test('keeps empty bins between the occupied ones, a gap is information', () => {
-        const result = buildHistogram(
-            [point(day(1), 60), point(day(2), 61), point(day(3), 65)],
-            2,
-        );
+        const result = buildHistogram(counted(60, 61, 65), 0, 2);
 
         expect(result.counts).toEqual([2, 0, 1]);
     });
 
-    test('takes the median of the values, odd and even', () => {
-        const odd = buildHistogram(
-            [point(day(1), 60), point(day(2), 62), point(day(3), 70)],
-            2,
-        );
-        expect(odd.median).toBe(62);
+    test('counts a value as often as it occurred', () => {
+        // What the aggregated read hands over: a year of readings arrives as
+        // the distinct values it covers, with their counts
+        const result = buildHistogram([{ value: 60, count: 30 }, { value: 61, count: 5 }], 61, 1);
 
-        const even = buildHistogram(
-            [point(day(1), 60), point(day(2), 63), point(day(3), 65), point(day(4), 70)],
-            2,
-        );
-        expect(even.median).toBe(64);
+        expect(result.counts).toEqual([30, 5]);
     });
 
-    test('the latest value follows the dates, not the array order', () => {
-        const result = buildHistogram(
-            [point(day(3), 70), point(day(5), 60), point(day(1), 65)],
-            5,
-        );
+    test('takes the median of the values, odd and even', () => {
+        expect(buildHistogram(counted(60, 62, 70), 70, 2).median).toBe(62);
+        expect(buildHistogram(counted(60, 63, 65, 70), 70, 2).median).toBe(64);
+    });
 
-        expect(result.latest).toBe(60);
+    test('the median weighs the counts, not the distinct values', () => {
+        // Thirty readings at 60 and one at 90: the middle reading is a 60,
+        // which an unweighted median over the two values would miss
+        const result = buildHistogram([{ value: 60, count: 30 }, { value: 90, count: 1 }], 90, 10);
+
+        expect(result.median).toBe(60);
     });
 
     test('derives a width from the span when the type brings none', () => {
-        const result = buildHistogram([point(day(1), 59.3), point(day(2), 73.9)]);
-
-        expect(result.binWidth).toBe(1);
+        expect(buildHistogram(counted(59.3, 73.9), 0).binWidth).toBe(1);
     });
 
     test('doubles the width until an outlier no longer stretches it into hundreds of bins', () => {
         // 20 to 350 at 0.5 kg would be 661 bins; doubling keeps the edges round
-        const result = buildHistogram(
-            [point(day(1), 20), point(day(2), 80), point(day(3), 350)],
-            0.5,
-        );
+        const result = buildHistogram(counted(20, 80, 350), 350, 0.5);
 
         expect(result.binWidth).toBe(4);
         expect(result.counts.length).toBeLessThanOrEqual(100);
@@ -522,19 +549,19 @@ describe('groups', () => {
     };
 
     test('pairs the components of a reading into one range', () => {
-        const result = groupRangeEntries(bloodPressure([[day(1), 120, 80]]));
+        const result = groupRangeEntries(groupPoints(bloodPressure([[day(1), 120, 80]])));
 
         expect(result).toStrictEqual([{ date: day(1).getTime(), value: 100, min: 80, max: 120 }]);
     });
 
     test('skips a half reading, it has no range', () => {
-        const result = groupRangeEntries(bloodPressure([[day(1), 120, 80], [day(2), 125, null]]));
+        const result = groupRangeEntries(groupPoints(bloodPressure([[day(1), 120, 80], [day(2), 125, null]])));
 
         expect(result.map(r => r.date)).toEqual([day(1).getTime()]);
     });
 
     test('sorts the readings chronologically', () => {
-        const result = groupRangeEntries(bloodPressure([[day(3), 130, 90], [day(1), 120, 80]]));
+        const result = groupRangeEntries(groupPoints(bloodPressure([[day(3), 130, 90], [day(1), 120, 80]])));
 
         expect(result.map(r => r.max)).toEqual([120, 130]);
     });
@@ -542,11 +569,11 @@ describe('groups', () => {
     test('reads the low and high end from the values, not from the component order', () => {
         const group = bloodPressure([[day(1), 80, 120]]);
 
-        expect(groupRangeEntries(group)[0]).toMatchObject({ min: 80, max: 120 });
+        expect(groupRangeEntries(groupPoints(group))[0]).toMatchObject({ min: 80, max: 120 });
     });
 
     test('builds one named component series per child', () => {
-        const series = groupComponentSeries(bloodPressure([[day(1), 120, 80]]));
+        const series = groupComponentSeries(bloodPressure([[day(1), 120, 80]]), groupPoints(bloodPressure([[day(1), 120, 80]])));
 
         expect(series.map(s => s.label)).toEqual(['Systolic', 'Diastolic']);
         expect(series.map(s => s.role)).toEqual(['component', 'component']);
@@ -554,13 +581,13 @@ describe('groups', () => {
     });
 
     test('two components are charted as ranges', () => {
-        const chart = groupChart(bloodPressure([[day(1), 120, 80]]));
+        const chart = groupChart(bloodPressure([[day(1), 120, 80]]), groupPoints(bloodPressure([[day(1), 120, 80]])));
 
         expect(chart.kind).toBe('range');
     });
 
     test('a group whose readings are all unpaired falls back to component lines', () => {
-        const chart = groupChart(bloodPressure([[day(1), 120, null], [day(2), 125, null]]));
+        const chart = groupChart(bloodPressure([[day(1), 120, null], [day(2), 125, null]]), groupPoints(bloodPressure([[day(1), 120, null], [day(2), 125, null]])));
 
         expect(chart.kind).toBe('components');
     });
@@ -571,7 +598,7 @@ describe('groups', () => {
         third.entries = [new MeasurementEntry(null, 'c-map', day(1), 93, '')];
         group.children = [...group.children, third];
 
-        const chart = groupChart(group);
+        const chart = groupChart(group, groupPoints(group));
 
         expect(chart.kind).toBe('components');
     });
@@ -611,7 +638,8 @@ describe('sleep group', () => {
     });
 
     test('stacked entries carry one value per component and day', () => {
-        const stacked = groupStackedEntries(stackableComponents(sleep()));
+        const group = sleep();
+        const stacked = groupStackedEntries(stackableComponents(group), groupPoints(group));
 
         expect(stacked).toStrictEqual([{ date: day(2).getTime(), values: [90, 60] }]);
     });
@@ -622,11 +650,12 @@ describe('sleep group', () => {
         const deep = group.children[1];
         deep.entries = [...deep.entries, new MeasurementEntry('e-nap', 'deep', day(2, 14), 20, '')];
 
-        expect(groupStackedEntries(stackableComponents(group))[0].values).toEqual([110, 60]);
+        expect(groupStackedEntries(stackableComponents(group), groupPoints(group))[0].values)
+            .toEqual([110, 60]);
     });
 
     test('a summed group stacks its components', () => {
-        const chart = groupChart(sleep());
+        const chart = groupChart(sleep(), groupPoints(sleep()));
 
         expect(chart.kind).toBe('stacked');
         expect(chart.kind === 'stacked' && chart.labels).toEqual(['Deep sleep', 'REM sleep']);
@@ -635,7 +664,7 @@ describe('sleep group', () => {
     test('without stage data the group falls back to component lines', () => {
         // Only the total reported, so there is nothing to stack. Falling
         // through keeps the chart from going blank while data exists
-        expect(groupChart(sleep(false)).kind).toBe('components');
+        expect(groupChart(sleep(false), groupPoints(sleep(false))).kind).toBe('components');
     });
 });
 

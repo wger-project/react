@@ -5,8 +5,11 @@ import {
     deleteMeasurementEntry,
     editMeasurementCategory,
     editMeasurementEntry,
+    BucketLevel,
+    getMeasurementBuckets,
     getMeasurementCategories,
     getMeasurementCategory,
+    getMeasurementValueCounts,
     MeasurementQueryOptions,
     updateMeasurementCategoryOrder
 } from "@/components/Measurements/api/measurements";
@@ -15,6 +18,12 @@ import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { QueryKey } from "@/core/lib/consts";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+
+/** The condensed reads behind the charts, which every write invalidates */
+const invalidateChartReads = (queryClient: ReturnType<typeof useQueryClient>) => {
+    queryClient.invalidateQueries({ queryKey: [QueryKey.MEASUREMENT_BUCKETS,] });
+    queryClient.invalidateQueries({ queryKey: [QueryKey.MEASUREMENT_VALUE_COUNTS,] });
+};
 
 export function useMeasurementsCategoryQuery(options?: MeasurementQueryOptions) {
     return useQuery({
@@ -31,9 +40,10 @@ export const useAddMeasurementCategoryQuery = () => {
 
     return useMutation({
         mutationFn: (category: MeasurementCategory) => addMeasurementCategory(category),
-        onSuccess: () => queryClient.invalidateQueries({
-            queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
-        })
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,] });
+            invalidateChartReads(queryClient);
+        }
     });
 };
 
@@ -49,6 +59,7 @@ export const useEditMeasurementCategoryQuery = (id: string) => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
             });
+            invalidateChartReads(queryClient);
         }
     });
 };
@@ -65,6 +76,7 @@ export const useDeleteMeasurementCategoryQuery = (id: string) => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
             });
+            invalidateChartReads(queryClient);
         }
     });
 };
@@ -78,9 +90,10 @@ export const useReorderMeasurementCategoriesQuery = () => {
         mutationFn: (categories: MeasurementCategory[]) => Promise.all(
             categories.map((category, index) => updateMeasurementCategoryOrder(category.id!, index))
         ),
-        onSuccess: () => queryClient.invalidateQueries({
-            queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
-        })
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,] });
+            invalidateChartReads(queryClient);
+        }
     });
 };
 
@@ -104,6 +117,7 @@ export const useAddMeasurementEntryQuery = () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
             });
+            invalidateChartReads(queryClient);
         }
     });
 };
@@ -121,6 +135,7 @@ export const useAddGroupEntriesQuery = () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
             });
+            invalidateChartReads(queryClient);
         }
     });
 };
@@ -137,6 +152,7 @@ export const useEditMeasurementEntryQuery = () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
             });
+            invalidateChartReads(queryClient);
         }
     });
 };
@@ -154,6 +170,57 @@ export const useDeleteMeasurementEntryQuery = () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
             });
+            invalidateChartReads(queryClient);
         }
     });
 };
+
+
+/**
+ * The chart points of one or more categories, condensed by the server.
+ *
+ * Kept apart from the category queries, which hand over the entries
+ * themselves: a chart shows a few hundred points, and a watch-fed metric holds
+ * tens of thousands a year. A group passes its components in one call, so they
+ * share the calendar unit and their readings still meet on the same bucket.
+ */
+export function useMeasurementBucketsQuery(
+    categoryIds: string[],
+    level: BucketLevel,
+    filtersetQuery: object = {},
+    enabled: boolean = true,
+) {
+    return useQuery({
+        queryKey: [
+            QueryKey.MEASUREMENT_BUCKETS,
+            categoryIds.join(','),
+            level,
+            JSON.stringify(filtersetQuery),
+        ],
+        queryFn: () => getMeasurementBuckets(categoryIds, level, filtersetQuery),
+        enabled: enabled && categoryIds.length > 0,
+        // Picking another range refetches, and the chart would otherwise drop
+        // back to the loading placeholder while the new one arrives
+        placeholderData: keepPreviousData,
+    });
+}
+
+/** How often each value occurred, which is what the histogram bins */
+export function useMeasurementValueCountsQuery(
+    categoryId: string,
+    summedPerDay: boolean,
+    filtersetQuery: object = {},
+    enabled: boolean = true,
+) {
+    return useQuery({
+        queryKey: [
+            QueryKey.MEASUREMENT_VALUE_COUNTS,
+            categoryId,
+            summedPerDay,
+            JSON.stringify(filtersetQuery),
+        ],
+        queryFn: () => getMeasurementValueCounts(categoryId, summedPerDay, filtersetQuery),
+        enabled: enabled,
+        placeholderData: keepPreviousData,
+    });
+}

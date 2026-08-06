@@ -1,4 +1,4 @@
-import { measurementSeries } from "@/components/Measurements/charts/data";
+import { chartPointsFor, measurementSeries } from "@/components/Measurements/charts/data";
 import { ChartRange, cutoffFor, DEFAULT_CHART_RANGE } from "@/components/Measurements/charts/range";
 import { PlanPeriod } from "@/components/Measurements/charts/series";
 import { ChartConfig } from "@/components/Measurements/models/Category";
@@ -34,9 +34,7 @@ export const WeightChart = (
     // Entries can be stored in mixed units, so every value is converted
     // before anything is derived from it
     const series = measurementSeries(
-        weights,
-        unit,
-        categoryUnit,
+        chartPointsFor(weights, unit, categoryUnit),
         cutoffFor(range ?? DEFAULT_CHART_RANGE),
         chartConfig,
     );

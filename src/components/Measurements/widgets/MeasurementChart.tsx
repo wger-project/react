@@ -3,6 +3,7 @@ import {
     averageWindowOf,
     binWidthFor,
     categoryDisplayName,
+    ChartConfig,
     isSummedPerDay,
     MeasurementCategory,
     resolveChartType
@@ -11,18 +12,26 @@ import {
     aggregatePerDay,
     averagePerDay,
     buildHeatmapGrid,
+    chartQueryFor,
     buildHistogram,
-    chartPointsFor,
+    chartPointsForBuckets,
     DAYS_PER_WEEK,
     DISTRIBUTION_MIN_VALUES,
     fillMissingDays,
     groupChart,
+    groupComponentPoints,
     heatmapDayAt,
     measurementSeries,
     movingAverage,
     StackedPoint,
+    ValueCount,
+    valueHistogram,
     weeklyDeltas
 } from "@/components/Measurements/charts/data";
+import {
+    useMeasurementBucketsQuery,
+    useMeasurementValueCountsQuery
+} from "@/components/Measurements/queries";
 import { componentColor, componentPalette, deltaColor } from "@/components/Measurements/charts/colors";
 import { MAX_BAR_WIDTH } from "@/components/Measurements/charts/density";
 import {
@@ -36,6 +45,7 @@ import {
     ChartRange,
     cutoffFor,
     DEFAULT_CHART_RANGE,
+    displayFilterFor,
     pointsSince
 } from "@/components/Measurements/charts/range";
 import { ChartPoint, PlanPeriod } from "@/components/Measurements/charts/series";
@@ -76,14 +86,13 @@ const CustomTooltip = ({ active, payload, label, category }: TooltipProps) => {
     return null;
 };
 
-const MeasurementBarChart = (props: { category: MeasurementCategory, cutoff: Date | null }) => {
+const MeasurementBarChart = (props: { category: MeasurementCategory, points: ChartPoint[] }) => {
     const [, i18n] = useTranslation();
 
     // Bars need a band axis (recharts miscomputes bar heights on a numeric
     // time axis), so make the bands time-proportional by filling in the
     // missing days instead
-    const points = chartPointsFor(props.category.entries, props.category.unit, props.category.unit);
-    const data = fillMissingDays(aggregatePerDay(pointsSince(points, props.cutoff)));
+    const data = fillMissingDays(aggregatePerDay(props.points));
 
     if (data.length === 0) {
         return <ChartEmptyState />;
@@ -364,7 +373,8 @@ const MeasurementDeltaBarChart = (props: { points: ChartPoint[], unit: string })
  * bar chart cannot place a marker line at an exact value on a band axis.
  */
 const MeasurementDistributionChart = (props: {
-    points: ChartPoint[],
+    values: ValueCount[],
+    latest: number,
     unit: string,
     binWidth?: number,
     countsAreDays?: boolean,
@@ -372,11 +382,11 @@ const MeasurementDistributionChart = (props: {
     const [t, i18n] = useTranslation();
     const [selected, setSelected] = React.useState<number | null>(null);
 
-    if (props.points.length === 0) {
+    if (props.values.length === 0) {
         return <ChartEmptyState />;
     }
 
-    const histogram = buildHistogram(props.points, props.binWidth);
+    const histogram = buildHistogram(props.values, props.latest, props.binWidth);
     const bins = histogram.counts.length;
     const maxCount = Math.max(...histogram.counts);
     const lowerEdgeOf = (bin: number): number => histogram.firstEdge + bin * histogram.binWidth;
@@ -630,24 +640,20 @@ const MeasurementHeatmapChart = (props: { points: ChartPoint[], unit: string }) 
 };
 
 const MeasurementLineChart = (props: {
-    category: MeasurementCategory,
+    unit: string,
+    points: ChartPoint[],
     cutoff: Date | null,
+    config: ChartConfig,
     planPeriods?: PlanPeriod[],
 }) => {
-    const series = measurementSeries(
-        props.category.entries,
-        props.category.unit,
-        props.category.unit,
-        props.cutoff,
-        props.category.chartConfig,
-    );
+    const series = measurementSeries(props.points, props.cutoff, props.config);
 
     return <>
         <MeasurementSeriesChart
             series={series}
-            unit={props.category.unit}
+            unit={props.unit}
             planPeriods={props.planPeriods} />
-        <OverallChange series={series} unit={props.category.unit} />
+        <OverallChange series={series} unit={props.unit} />
     </>;
 };
 
@@ -657,72 +663,83 @@ export const MeasurementChart = (props: {
     planPeriods?: PlanPeriod[],
 }) => {
     const [t] = useTranslation();
-    const cutoff = cutoffFor(props.range ?? DEFAULT_CHART_RANGE);
+    const category = props.category;
+    const range = props.range ?? DEFAULT_CHART_RANGE;
+    const cutoff = cutoffFor(range);
+    const summed = isSummedPerDay(category.metricType);
 
-    if (props.category.isGroup) {
+    // A pick that does not fit the metric type falls back to the derived chart,
+    // which is also what a category configured on another client gets here
+    const resolved = resolveChartType(category.metricType, category.chartType);
+
+    const { ids, level, filters } = chartQueryFor(category, range);
+    const buckets = useMeasurementBucketsQuery(ids, level, filters).data ?? [];
+
+    // Its own query, since a histogram needs every value and the points above
+    // are condensed. Over the range itself, without the average lead: counted
+    // values carry no date and cannot be trimmed afterwards.
+    const counts = useMeasurementValueCountsQuery(
+        category.id!,
+        summed,
+        displayFilterFor(range),
+        !category.isGroup && resolved === 'distribution',
+    ).data ?? [];
+
+    if (category.isGroup) {
+        const points = groupComponentPoints(category, buckets, cutoff);
         // The components are labelled by their metric type, like everywhere else
-        const chart = groupChart(props.category, cutoff, c => categoryDisplayName(c, t));
+        const chart = groupChart(category, points, c => categoryDisplayName(c, t));
 
         switch (chart.kind) {
             case 'stacked':
                 return <MeasurementStackedBarChart
                     points={chart.points}
                     labels={chart.labels}
-                    unit={props.category.unit} />;
+                    unit={category.unit} />;
             case 'range':
-                return <MeasurementRangeBarChart points={chart.points} unit={props.category.unit} />;
+                return <MeasurementRangeBarChart points={chart.points} unit={category.unit} />;
             case 'components':
-                return <MeasurementSeriesChart series={chart.series} unit={props.category.unit} />;
+                return <MeasurementSeriesChart series={chart.series} unit={category.unit} />;
         }
     }
 
-    const summed = isSummedPerDay(props.category.metricType);
-
-    // A pick that does not fit the metric type falls back to the derived chart,
-    // which is also what a category configured on another client gets here
-    const resolved = resolveChartType(props.category.metricType, props.category.chartType);
+    const all = chartPointsForBuckets(buckets, category.unit, category.unit, summed);
+    const points = pointsSince(all, cutoff);
 
     if (resolved === 'delta') {
-        const all = chartPointsFor(props.category.entries, props.category.unit, props.category.unit);
-
         return <>
             <MeasurementDeltaBarChart
                 // Not condensed: a week is already the bucket, and the deltas
                 // are what the chart draws rather than the values behind them
-                points={weeklyDeltas(pointsSince(all, cutoff), summed)}
-                unit={props.category.unit} />
+                points={weeklyDeltas(points, summed)}
+                unit={category.unit} />
             {/* the one-number version of the bars above; a summed metric has no level to change */}
             {!summed && <OverallChange
                 series={[{
-                    points: pointsSince(
-                        movingAverage(all, averageWindowOf(props.category.chartConfig)),
-                        cutoff,
-                    ),
+                    points: pointsSince(movingAverage(all, averageWindowOf(category.chartConfig)), cutoff),
                     role: 'average',
                 }]}
-                unit={props.category.unit} />}
+                unit={category.unit} />}
         </>;
     }
 
     if (resolved === 'distribution') {
-        // What is binned mirrors the heatmap's split: the summed types
-        // distribute their daily totals, the sample types every reading (three
-        // weigh-ins on one day are all part of the distribution). Deliberately
-        // not condensed on the way: bucket means would narrow the very spread
-        // the histogram exists to show
-        const points = pointsSince(
-            chartPointsFor(props.category.entries, props.category.unit, props.category.unit),
-            cutoff,
-        );
-        const values = summed ? aggregatePerDay(points) : points;
+        // Values are counted per unit they were entered in, so each goes
+        // through the conversion helper before equal ones are added up
+        const histogram = valueHistogram(counts, category.unit, category.unit);
+        // How many readings there are, not how many distinct values: a
+        // hundred weigh-ins around one number are a distribution, three are
+        // not, however far apart they lie
+        const readings = counts.reduce((sum, count) => sum + count.count, 0);
 
-        // A histogram of a handful of values is noise with gaps, so too few
+        // A histogram of a handful of readings is noise with gaps, so too few
         // fall through to the derived default chart below
-        if (values.length >= DISTRIBUTION_MIN_VALUES) {
+        if (readings >= DISTRIBUTION_MIN_VALUES) {
             return <MeasurementDistributionChart
-                points={values}
-                unit={props.category.unit}
-                binWidth={binWidthFor(props.category.metricType, props.category.unit)}
+                values={histogram.values}
+                latest={histogram.latest}
+                unit={category.unit}
+                binWidth={binWidthFor(category.metricType, category.unit)}
                 countsAreDays={summed} />;
         }
     }
@@ -730,23 +747,18 @@ export const MeasurementChart = (props: {
     if (resolved === 'heatmap') {
         // The cells are days, so how a day's readings become one value has to
         // be decided here: the summed types are a daily total, the sample types
-        // are repeated readings of the same thing and average. The points are
-        // deliberately not condensed on the way, which for a grid of days would
-        // collapse whole weeks into a single cell
-        const points = pointsSince(
-            chartPointsFor(props.category.entries, props.category.unit, props.category.unit),
-            cutoff,
-        );
-
+        // are repeated readings of the same thing and average
         return <MeasurementHeatmapChart
             points={summed ? aggregatePerDay(points) : averagePerDay(points)}
-            unit={props.category.unit} />;
+            unit={category.unit} />;
     }
 
     return summed
-        ? <MeasurementBarChart category={props.category} cutoff={cutoff} />
+        ? <MeasurementBarChart category={category} points={points} />
         : <MeasurementLineChart
-            category={props.category}
+            unit={category.unit}
+            points={all}
             cutoff={cutoff}
+            config={category.chartConfig}
             planPeriods={props.planPeriods} />;
 };

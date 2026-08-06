@@ -5,10 +5,14 @@ import {
     CategoryForm,
     componentColor,
     componentPalette,
+    chartQueryFor,
+    DEFAULT_CHART_RANGE,
     entryFilterFor,
     groupChart,
+    groupComponentPoints,
     MeasurementCategory,
     MeasurementChart,
+    useMeasurementBucketsQuery,
     useMeasurementsCategoryQuery,
     valueWithUnit
 } from "@/components/Measurements";
@@ -98,9 +102,18 @@ const MeasurementCardTableContent = (props: { category: MeasurementCategory }) =
     const { t } = useTranslation();
 
     // The dot ties a component row to its line in the chart above. A range is
-    // a single bar, where the ends speak for themselves.
+    // a single bar, where the ends speak for themselves. The same derivation
+    // the chart uses, so both decide over one span and one cached request.
+    const { ids, level, filters } = chartQueryFor(props.category, DEFAULT_CHART_RANGE);
+    const buckets = useMeasurementBucketsQuery(
+        ids,
+        level,
+        filters,
+        props.category.isGroup,
+    ).data ?? [];
     const showComponentColors = props.category.isGroup
-        && groupChart(props.category).kind === 'components';
+        && groupChart(props.category, groupComponentPoints(props.category, buckets)).kind
+        === 'components';
     const palette = componentPalette(props.category.children.length);
 
     return (<>

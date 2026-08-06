@@ -1,13 +1,19 @@
+import { BucketLevel } from "@/components/Measurements/api/measurements";
 import {
     averageWindowOf,
     ChartConfig,
+    ChartType,
     isGroupTotalMetricType,
     isSummedPerDay,
     MeasurementCategory,
+    MetricType,
+    resolveChartType,
     trendPeriodOf
 } from "@/components/Measurements/models/Category";
+import { MeasurementBucket, MeasurementValueCount } from "@/components/Measurements/models/Bucket";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
-import { pointsSince } from "@/components/Measurements/charts/range";
+import { convertWeight, isWeightUnit } from "@/core/lib/weightUnit";
+import { ChartRange, entryFilterFor, pointsSince } from "@/components/Measurements/charts/range";
 import { ChartPoint, ChartSeries, PlanPeriod } from "@/components/Measurements/charts/series";
 import { calculateEMA } from "@/core/lib/ema";
 
@@ -51,6 +57,98 @@ export const chartPointsFor = (
             ...(min !== undefined && max !== undefined ? { min: min, max: max } : {}),
         };
     });
+
+/**
+ * Turns the server's condensed buckets into chart points, converting to the
+ * target unit.
+ *
+ * The counterpart of chartPointsFor for the aggregated read path. A bucket
+ * arrives once per unit its entries were written in, so the slices are
+ * converted before they are merged: a mean over kg and lb values is a number
+ * in neither. Their spread becomes the point's range, left off where it says
+ * nothing (a single reading, a summed total, which has no spread).
+ */
+export const chartPointsForBuckets = (
+    buckets: MeasurementBucket[],
+    targetUnit: string,
+    categoryUnit: string,
+    summed: boolean = false,
+): ChartPoint[] => {
+    const convert = (value: number, from: string | null) => {
+        const unit = from || categoryUnit;
+
+        return isWeightUnit(unit) && isWeightUnit(targetUnit)
+            ? convertWeight(value, unit, targetUnit)
+            : value;
+    };
+
+    const byStart = new Map<number, MeasurementBucket[]>();
+    for (const bucket of buckets) {
+        const start = bucket.start.getTime();
+        byStart.set(start, [...(byStart.get(start) ?? []), bucket]);
+    }
+
+    return [...byStart.entries()]
+        .sort(([a], [b]) => a - b)
+        .map(([start, slices]) => {
+            const total = slices.reduce((sum, s) => sum + convert(s.sum, s.unit), 0);
+            if (summed) {
+                return { date: start, value: total };
+            }
+
+            const value = total / slices.reduce((count, s) => count + s.count, 0);
+            const min = Math.min(...slices.map(s => convert(s.min, s.unit)));
+            const max = Math.max(...slices.map(s => convert(s.max, s.unit)));
+
+            return min < value || max > value
+                ? { date: start, value: value, min: min, max: max }
+                : { date: start, value: value };
+        });
+};
+
+/**
+ * What the chart of a category reads: which categories, at which level, over
+ * which span.
+ *
+ * Derived in one place because two widgets ask for it, the chart and the card
+ * whose component rows follow the chart's kind. Two different derivations
+ * would mean two query keys, i.e. two requests deciding over different spans.
+ */
+export const chartQueryFor = (category: MeasurementCategory, range: ChartRange): {
+    ids: string[],
+    level: BucketLevel,
+    filters: object,
+} => ({
+    // A group asks for its components in one call, so they share the calendar
+    // unit and the halves of a reading still meet on the same bucket
+    ids: category.isGroup ? category.children.map(child => child.id!) : [category.id!],
+    level: category.isGroup
+        ? (isSummedPerDay(category.metricType) ? 'day' : 'auto')
+        : bucketLevelFor(category.metricType, category.chartType),
+    // The points reach back beyond the range, so the moving average derived
+    // from them does not start over at the cutoff
+    filters: entryFilterFor(range),
+});
+
+/**
+ * The point level a category's chart needs.
+ *
+ * Two charts are built on a calendar unit and fix it: a heatmap draws days, a
+ * week-over-week chart weeks. A distribution has no time axis and reads
+ * counted values of its own; the points it gets here are what its fallback
+ * draws when there are too few values to bin.
+ */
+export const bucketLevelFor = (metricType: MetricType, chartType: ChartType): BucketLevel => {
+    switch (resolveChartType(metricType, chartType)) {
+        case 'heatmap':
+            return 'day';
+        case 'delta':
+            return 'week';
+        default:
+            // The summed types are drawn as daily totals whatever the range
+            return isSummedPerDay(metricType) ? 'day' : 'auto';
+    }
+};
 
 /**
  * For each point, the average of all points in the given days preceding it.
@@ -379,10 +477,14 @@ export interface Histogram {
  * decision, the same split as for the heatmap: the summed types distribute
  * their days, the sample types every reading.
  */
-export const buildHistogram = (points: ChartPoint[], binWidth?: number): Histogram => {
-    const values = points.map(point => point.value).sort((a, b) => a - b);
-    const minValue = values[0];
-    const maxValue = values[values.length - 1];
+export const buildHistogram = (
+    values: ValueCount[],
+    latest: number,
+    binWidth?: number,
+): Histogram => {
+    const sorted = [...values].sort((a, b) => a.value - b.value);
+    const minValue = sorted[0].value;
+    const maxValue = sorted[sorted.length - 1].value;
 
     let width = binWidth ?? niceBinWidth(minValue, maxValue);
     // Doubling keeps the edges round, unlike recomputing a fitted width
@@ -392,18 +494,78 @@ export const buildHistogram = (points: ChartPoint[], binWidth?: number): Histogr
 
     const firstBin = Math.floor(minValue / width);
     const counts = new Array<number>(Math.floor(maxValue / width) - firstBin + 1).fill(0);
-    for (const value of values) {
-        counts[Math.floor(value / width) - firstBin]++;
+    for (const entry of sorted) {
+        counts[Math.floor(entry.value / width) - firstBin] += entry.count;
     }
-
-    const middle = Math.floor(values.length / 2);
 
     return {
         firstEdge: firstBin * width,
         binWidth: width,
         counts: counts,
-        median: values.length % 2 === 1 ? values[middle] : (values[middle - 1] + values[middle]) / 2,
-        latest: points.reduce((a, b) => b.date > a.date ? b : a).value,
+        median: weightedMedian(sorted),
+        latest: latest,
+    };
+};
+
+/** One value and how often it occurred, which is what a histogram bins */
+export interface ValueCount {
+    value: number;
+    count: number;
+}
+
+/** The middle value, counting each one as often as it occurred */
+const weightedMedian = (sorted: ValueCount[]): number => {
+    const total = sorted.reduce((sum, entry) => sum + entry.count, 0);
+    const at = (index: number) => {
+        let seen = 0;
+        for (const entry of sorted) {
+            seen += entry.count;
+            if (index < seen) {
+                return entry.value;
+            }
+        }
+        return sorted[sorted.length - 1].value;
+    };
+
+    const first = at(Math.floor((total - 1) / 2));
+
+    return total % 2 === 1 ? first : (first + at(Math.floor(total / 2))) / 2;
+};
+
+/**
+ * The counted values of a category in the target unit, and where the user
+ * stands today.
+ *
+ * Values are counted per unit they were entered in, so each goes through the
+ * conversion helper before equal ones are added up.
+ */
+export const valueHistogram = (
+    counts: MeasurementValueCount[],
+    targetUnit: string,
+    categoryUnit: string,
+): { values: ValueCount[], latest: number } => {
+    const convert = (value: number, from: string | null) => {
+        const unit = from || categoryUnit;
+
+        return isWeightUnit(unit) && isWeightUnit(targetUnit)
+            ? convertWeight(value, unit, targetUnit)
+            : value;
+    };
+
+    const merged = new Map<number, number>();
+    for (const count of counts) {
+        const value = convert(count.value, count.unit);
+        merged.set(value, (merged.get(value) ?? 0) + count.count);
+    }
+
+    const newest = counts.reduce(
+        (a, b) => b.newest > a.newest ? b : a,
+        counts[0],
+    );
+
+    return {
+        values: [...merged.entries()].map(([value, count]) => ({ value: value, count: count })),
+        latest: newest === undefined ? 0 : convert(newest.value, newest.unit),
     };
 };
 
@@ -499,20 +661,34 @@ export const fillMissingDays = (points: ChartPoint[]): ChartPoint[] => {
  * shared timestamp, which is how both the importer and the group form write
  * them; an unpaired half-reading is skipped, it has no range.
  */
-export const groupRangeEntries = (
+export const groupComponentPoints = (
     group: MeasurementCategory,
+    buckets: MeasurementBucket[],
     cutoff: Date | null = null,
-): ChartPoint[] => {
+): Map<string, ChartPoint[]> => new Map(group.children.map(child => [
+    child.id!,
+    pointsSince(
+        chartPointsForBuckets(
+            buckets.filter(bucket => bucket.category === child.id),
+            child.unit,
+            child.unit,
+            // A stage the night was slept in twice is that night's total, not
+            // the average of its two stretches
+            isSummedPerDay(child.metricType),
+        ),
+        cutoff,
+    ),
+]));
+
+export const groupRangeEntries = (points: Map<string, ChartPoint[]>): ChartPoint[] => {
     const byDate = new Map<number, number[]>();
-    for (const child of group.children) {
-        for (const entry of child.entries) {
-            const date = entry.date.getTime();
-            const values = byDate.get(date);
-            const value = entry.valueIn(child.unit, child.unit);
+    for (const component of points.values()) {
+        for (const point of component) {
+            const values = byDate.get(point.date);
             if (values === undefined) {
-                byDate.set(date, [value]);
+                byDate.set(point.date, [point.value]);
             } else {
-                values.push(value);
+                values.push(point.value);
             }
         }
     }
@@ -529,7 +705,7 @@ export const groupRangeEntries = (
         }))
         .sort((a, b) => a.date - b.date);
 
-    return pointsSince(ranges, cutoff);
+    return ranges;
 };
 
 /**
@@ -538,11 +714,11 @@ export const groupRangeEntries = (
  */
 export const groupComponentSeries = (
     group: MeasurementCategory,
-    cutoff: Date | null = null,
+    points: Map<string, ChartPoint[]>,
     labelOf: (category: MeasurementCategory) => string = category => category.name,
 ): ChartSeries[] =>
     group.children.map(child => ({
-        points: pointsSince(chartPointsFor(child.entries, child.unit, child.unit), cutoff),
+        points: points.get(child.id!) ?? [],
         role: 'component' as const,
         label: labelOf(child),
     }));
@@ -557,13 +733,10 @@ export const groupComponentSeries = (
  * so it stays a 7-day average rather than an average of bucket means.
  */
 export const measurementSeries = (
-    entries: MeasurementEntry[],
-    targetUnit: string,
-    categoryUnit: string,
+    all: ChartPoint[],
     cutoff: Date | null = null,
     config: ChartConfig = {},
 ): ChartSeries[] => {
-    const all = chartPointsFor(entries, targetUnit, categoryUnit);
     // The average is computed over the full history and only then cut, so the
     // first points of the range average the days before it instead of
     // starting over at the cutoff
@@ -614,21 +787,14 @@ export interface StackedPoint {
  */
 export const groupStackedEntries = (
     components: MeasurementCategory[],
-    cutoff: Date | null = null,
+    points: Map<string, ChartPoint[]>,
 ): StackedPoint[] => {
     const byDay = new Map<number, number[]>();
     components.forEach((child, index) => {
-        for (const entry of child.entries) {
-            if (cutoff !== null && entry.date < cutoff) {
-                continue;
-            }
-            const date = entry.date;
-            const day = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
-            const values = byDay.get(day) ?? new Array<number>(components.length).fill(0);
-            // A component can hold several entries for one day (a nap next to
-            // the night), and the bar shows the day, so they add up
-            values[index] += entry.valueIn(child.unit, child.unit);
-            byDay.set(day, values);
+        for (const point of points.get(child.id!) ?? []) {
+            const values = byDay.get(point.date) ?? new Array<number>(components.length).fill(0);
+            values[index] += point.value;
+            byDay.set(point.date, values);
         }
     });
 
@@ -654,22 +820,22 @@ export type GroupChart =
 
 export const groupChart = (
     group: MeasurementCategory,
-    cutoff: Date | null = null,
+    points: Map<string, ChartPoint[]>,
     labelOf: (category: MeasurementCategory) => string = category => category.name,
 ): GroupChart => {
     if (isSummedPerDay(group.metricType)) {
         const components = stackableComponents(group);
-        const stacked = groupStackedEntries(components, cutoff);
+        const stacked = groupStackedEntries(components, points);
         if (stacked.length > 0) {
             return { kind: 'stacked', points: stacked, labels: components.map(labelOf) };
         }
     }
 
-    const ranges = group.children.length === 2 ? groupRangeEntries(group, cutoff) : [];
+    const ranges = group.children.length === 2 ? groupRangeEntries(points) : [];
 
     return ranges.length > 0
         ? { kind: 'range', points: ranges }
-        : { kind: 'components', series: groupComponentSeries(group, cutoff, labelOf) };
+        : { kind: 'components', series: groupComponentSeries(group, points, labelOf) };
 };
 
 /**

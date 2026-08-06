@@ -1,9 +1,22 @@
+import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from '@testing-library/react';
+import { mockChartQueries } from "@/tests/chartQueries";
+import { testQueryClient } from "@/tests/queryClient";
 import { MeasurementCategory, MetricType } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
 import React from 'react';
 import { describe, test } from 'vitest';
+
+vi.mock("@/components/Measurements/queries");
+
+/** The chart reads its points from the aggregated queries, not from the
+ * entries the category carries */
+const renderChart = (element: React.ReactElement, categories: MeasurementCategory[]) => {
+    mockChartQueries(categories);
+
+    return render(<QueryClientProvider client={testQueryClient}>{element}</QueryClientProvider>);
+};
 
 const entry = (id: string, date: Date, value: number) =>
     new MeasurementEntry(id, 'c-1', date, value, '');
@@ -18,7 +31,7 @@ describe('MeasurementChart', () => {
             entry('d-2', new Date(2023, 1, 2), 31),
         ]);
 
-        render(<MeasurementChart category={category} />);
+        renderChart(<MeasurementChart category={category} />, [category]);
     });
 
     test('mounts a bar chart for a summed-per-day category', () => {
@@ -27,12 +40,15 @@ describe('MeasurementChart', () => {
             entry('d-2', new Date(2023, 1, 1, 18), 6000),
         ], 'steps');
 
-        render(<MeasurementChart category={category} />);
+        renderChart(<MeasurementChart category={category} />, [category]);
     });
 
     test('mounts with no entries', () => {
-        render(<MeasurementChart category={new MeasurementCategory('c-1', 'Biceps', 'cm')} />);
-        render(<MeasurementChart category={new MeasurementCategory('c-2', 'Steps', 'steps', [], 'steps')} />);
+        const empty = new MeasurementCategory('c-1', 'Biceps', 'cm');
+        const emptySummed = new MeasurementCategory('c-2', 'Steps', 'steps', [], 'steps');
+
+        renderChart(<MeasurementChart category={empty} />, [empty]);
+        renderChart(<MeasurementChart category={emptySummed} />, [emptySummed]);
     });
 
     test('mounts a combined chart for a group', () => {
@@ -48,7 +64,7 @@ describe('MeasurementChart', () => {
         ];
         group.children = [systolic, diastolic];
 
-        render(<MeasurementChart category={group} />);
+        renderChart(<MeasurementChart category={group} />, [group]);
     });
 
     test('draws a heatmap when the category asks for one', () => {
@@ -56,7 +72,7 @@ describe('MeasurementChart', () => {
             entry('d-1', new Date(2023, 1, 1), 4000),
         ], 'steps', false, null, 0, 'heatmap');
 
-        render(<MeasurementChart category={category} range="all" />);
+        renderChart(<MeasurementChart category={category} range="all" />, [category]);
 
         // Unlike the recharts charts, the grid is plain elements and does
         // render in jsdom
@@ -70,7 +86,7 @@ describe('MeasurementChart', () => {
             entry('d-2', new Date(2026, 0, 12), 31),
         ], 'custom', false, null, 0, 'delta');
 
-        render(<MeasurementChart category={category} range="all" />);
+        renderChart(<MeasurementChart category={category} range="all" />, [category]);
 
         expect(screen.getByText(/overallChangeWeight/)).toBeInTheDocument();
     });
@@ -81,7 +97,7 @@ describe('MeasurementChart', () => {
             entry('d-2', new Date(2026, 0, 12), 6000),
         ], 'steps', false, null, 0, 'delta');
 
-        render(<MeasurementChart category={category} range="all" />);
+        renderChart(<MeasurementChart category={category} range="all" />, [category]);
 
         expect(screen.queryByText(/overallChangeWeight/)).not.toBeInTheDocument();
     });
@@ -96,7 +112,7 @@ describe('MeasurementChart', () => {
             'custom', false, null, 0, 'distribution',
         );
 
-        render(<MeasurementChart category={category} range="all" />);
+        renderChart(<MeasurementChart category={category} range="all" />, [category]);
 
         // Plain elements like the heatmap, so the bars render in jsdom
         const chart = screen.getByRole('img', { name: 'measurements.chartTypes.distribution' });
@@ -117,7 +133,7 @@ describe('MeasurementChart', () => {
             'steps', false, null, 0, 'distribution',
         );
 
-        render(<MeasurementChart category={category} range="all" />);
+        renderChart(<MeasurementChart category={category} range="all" />, [category]);
 
         const chart = screen.getByRole('img', { name: 'measurements.chartTypes.distribution' });
         fireEvent.mouseEnter(chart.firstChild!.firstChild as Element);
@@ -138,12 +154,17 @@ describe('MeasurementChart', () => {
             'custom', false, null, 0, 'distribution',
         );
 
-        const { rerender } = render(<MeasurementChart category={wide} range="all" />);
+        const { rerender } = renderChart(<MeasurementChart category={wide} range="all" />, [wide]);
         const chart = screen.getByRole('img', { name: 'measurements.chartTypes.distribution' });
         fireEvent.mouseEnter(chart.firstChild!.lastChild as Element);
         expect(screen.getByText(/distributionEntryCount/)).toBeInTheDocument();
 
-        rerender(<MeasurementChart category={narrow} range="all" />);
+        mockChartQueries([narrow]);
+        rerender(
+            <QueryClientProvider client={testQueryClient}>
+                <MeasurementChart category={narrow} range="all" />
+            </QueryClientProvider>,
+        );
 
         expect(screen.queryByText(/distributionEntryCount/)).not.toBeInTheDocument();
         expect(screen.getByText(/distributionMedian/)).toBeInTheDocument();
@@ -155,7 +176,7 @@ describe('MeasurementChart', () => {
             entry('d-2', new Date(2026, 0, 12), 31),
         ], 'custom', false, null, 0, 'distribution');
 
-        render(<MeasurementChart category={category} range="all" />);
+        renderChart(<MeasurementChart category={category} range="all" />, [category]);
 
         expect(screen.queryByRole('img')).not.toBeInTheDocument();
     });
@@ -176,7 +197,7 @@ describe('MeasurementChart', () => {
             'steps', false, null, 0, 'distribution',
         );
 
-        render(<MeasurementChart category={category} range="all" />);
+        renderChart(<MeasurementChart category={category} range="all" />, [category]);
 
         expect(screen.queryByRole('img')).not.toBeInTheDocument();
     });
@@ -188,7 +209,7 @@ describe('MeasurementChart', () => {
             entry('d-1', new Date(2023, 1, 1), 30),
         ], 'custom', false, null, 0, 'bar');
 
-        render(<MeasurementChart category={category} range="all" />);
+        renderChart(<MeasurementChart category={category} range="all" />, [category]);
 
         expect(screen.queryByRole('img')).not.toBeInTheDocument();
     });
@@ -206,6 +227,6 @@ describe('MeasurementChart', () => {
             stage('rem', 'REM sleep', 'sleep_rem', 60),
         ];
 
-        render(<MeasurementChart category={group} />);
+        renderChart(<MeasurementChart category={group} />, [group]);
     });
 });

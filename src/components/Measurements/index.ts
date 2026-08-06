@@ -16,6 +16,7 @@ export { MeasurementCategoryOverview } from "./screens/MeasurementCategoryOvervi
 export {
     categoryDisplayName,
     correlatesWithNutrition,
+    isSummedPerDay,
     limitsFor,
     MeasurementCategory,
     METRIC_TYPE_BODY_WEIGHT
@@ -35,7 +36,9 @@ export {
     useAddMeasurementEntryQuery,
     useDeleteMeasurementEntryQuery,
     useEditMeasurementEntryQuery,
-    useMeasurementsCategoryQuery
+    useMeasurementBucketsQuery,
+    useMeasurementsCategoryQuery,
+    useMeasurementValueCountsQuery
 } from "./queries";
 export {
     useBodyWeightCategoryQuery,
@@ -45,7 +48,13 @@ export {
 
 // Charts
 export { componentColor, componentPalette } from "./charts/colors";
-export { groupChart, measurementSeries } from "./charts/data";
+export {
+    chartPointsFor,
+    chartQueryFor,
+    groupChart,
+    groupComponentPoints,
+    measurementSeries
+} from "./charts/data";
 export { valueWithUnit } from "./charts/format";
 export { CHART_RANGES, cutoffFor, DEFAULT_CHART_RANGE, entryFilterFor } from "./charts/range";
 export type { ChartRange } from "./charts/range";

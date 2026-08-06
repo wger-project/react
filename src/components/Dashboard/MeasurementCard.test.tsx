@@ -6,6 +6,7 @@ import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
 import type { Mock } from 'vitest';
 
+import { mockChartQueries } from "@/tests/chartQueries";
 vi.mock("@/components/Measurements/queries");
 vi.useFakeTimers();
 
@@ -24,6 +25,8 @@ describe("smoke test the MeasurementCard component", () => {
                     TEST_MEASUREMENT_CATEGORY_2
                 ]
             }));
+            // The cards read their points from the aggregated queries
+            mockChartQueries([TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2]);
         });
 
         test('renders the current categories correctly', async () => {
@@ -64,6 +67,7 @@ describe("smoke test the MeasurementCard component", () => {
                 isLoading: false,
                 data: [group]
             }));
+            mockChartQueries([group]);
         });
 
         test('lists the latest reading of each component', async () => {

@@ -5,6 +5,7 @@ import { useMeasurementsCategoryQuery, useReorderMeasurementCategoriesQuery } fr
 import { MeasurementCategoryOverview } from "@/components/Measurements/screens/MeasurementCategoryOverview";
 import React from 'react';
 import { BrowserRouter } from "react-router-dom";
+import { mockChartQueries } from "@/tests/chartQueries";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
 import type { Mock } from 'vitest';
 
@@ -23,6 +24,8 @@ describe("Test the MeasurementCategoryOverview component", () => {
         (useReorderMeasurementCategoriesQuery as Mock).mockImplementation(() => ({
             mutate: vi.fn()
         }));
+        // The cards read their points from the aggregated queries
+        mockChartQueries([TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2]);
     });
 
     afterEach(() => {

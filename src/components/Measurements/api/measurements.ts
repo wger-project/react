@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { MeasurementBucket, MeasurementValueCount } from "@/components/Measurements/models/Bucket";
 import { MeasurementCategory, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { ApiMeasurementCategoryType } from '@/types';
@@ -8,6 +9,67 @@ import { makeHeader, makeUrl } from "@/core/lib/url";
 
 export const API_MEASUREMENTS_CATEGORY_PATH = 'measurement-category';
 export const API_MEASUREMENTS_ENTRY_PATH = 'measurement';
+export const API_MEASUREMENTS_AGGREGATE_PATH = 'measurement/aggregate';
+export const API_MEASUREMENTS_VALUE_COUNTS_PATH = 'measurement/value-counts';
+
+/**
+ * Calendar unit the server condenses into. 'auto' takes the finest one that
+ * keeps the series under the point limit, which is what a line chart wants;
+ * the others exist because the chart is built on a unit and coarser points
+ * would draw a grid of the wrong cells.
+ */
+export type BucketLevel = 'auto' | 'hour' | 'day' | 'week' | 'month';
+
+/** The zone the buckets are cut in: a reading half an hour after midnight
+ * belongs to the day the user had it, not to the one UTC was on. */
+const browserTimezone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+/**
+ * The entries of one or more categories, condensed into chart points.
+ *
+ * [categoryIds] takes a group's components in one call, which is what lets the
+ * halves of a reading meet on the same bucket.
+ */
+export const getMeasurementBuckets = async (
+    categoryIds: string[],
+    level: BucketLevel = 'auto',
+    filtersetQuery: object = {},
+): Promise<MeasurementBucket[]> => {
+    const url = makeUrl(API_MEASUREMENTS_AGGREGATE_PATH, {
+        query: {
+            category__in: categoryIds.join(','),
+            bucket: level,
+            tz: browserTimezone(),
+            ...filtersetQuery,
+        }
+    });
+    const { data } = await axios.get(url, { headers: makeHeader() });
+
+    return data.map((item: unknown) => MeasurementBucket.fromJson(item));
+};
+
+/**
+ * How often each value of a category occurred, which is what the histogram
+ * bins. [summedPerDay] counts daily totals instead, for the metrics whose
+ * samples mean nothing on their own.
+ */
+export const getMeasurementValueCounts = async (
+    categoryId: string,
+    summedPerDay: boolean,
+    filtersetQuery: object = {},
+): Promise<MeasurementValueCount[]> => {
+    const url = makeUrl(API_MEASUREMENTS_VALUE_COUNTS_PATH, {
+        query: {
+            category: categoryId,
+            summed_per_day: summedPerDay ? 'true' : 'false',
+            tz: browserTimezone(),
+            ...filtersetQuery,
+        }
+    });
+    const { data } = await axios.get(url, { headers: makeHeader() });
+
+    return data.map((item: unknown) => MeasurementValueCount.fromJson(item));
+};
 
 /**
  * How much of each category's history a caller needs.

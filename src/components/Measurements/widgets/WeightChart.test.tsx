@@ -1,4 +1,4 @@
-import { measurementSeries, MeasurementEntry } from "@/components/Measurements";
+import { chartPointsFor, measurementSeries, MeasurementEntry } from "@/components/Measurements";
 import { makeWeightEntry } from "@/tests/weight/testData";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render } from '@testing-library/react';
@@ -61,8 +61,10 @@ describe("the series the chart is built from", () => {
             makeWeightEntry(new Date('2021-12-10'), 80, { id: 'd-1', unit: 'kg' }),
         ];
 
-        const inKg = measurementSeries(weights, 'kg', 'kg')[0].points.map(p => p.value);
-        const inLb = measurementSeries(weights, 'lb', 'kg')[0].points.map(p => p.value);
+        const inKg = measurementSeries(chartPointsFor(weights, 'kg', 'kg'))[0].points
+            .map(p => p.value);
+        const inLb = measurementSeries(chartPointsFor(weights, 'lb', 'kg'))[0].points
+            .map(p => p.value);
 
         expect(inKg).toStrictEqual([80, 40.82]);
         expect(inLb).toStrictEqual([176.37, 90]);

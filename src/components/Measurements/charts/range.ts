@@ -39,22 +39,36 @@ export const cutoffFor = (range: ChartRange, now: Date = new Date()): Date | nul
 const AVERAGE_LEAD_DAYS = Math.max(...AVERAGE_WINDOWS);
 
 /**
- * Oldest entry to fetch for a range, null for the full history.
+ * The cutoff minus a lead, rounded down to midnight.
  *
- * Rounded down to midnight, and deliberately so: this ends up in a query key,
- * and a bound derived from the current instant would differ on every render
- * and refetch forever.
+ * The rounding is deliberate: these end up in query keys, and a bound derived
+ * from the current instant would differ on every render and refetch forever.
  */
-export const fetchCutoffFor = (range: ChartRange, now: Date = new Date()): Date | null => {
+const cutoffAtMidnight = (range: ChartRange, now: Date, leadDays: number): Date | null => {
     const cutoff = cutoffFor(range, now);
     if (cutoff === null) {
         return null;
     }
 
-    const lead = new Date(cutoff.getTime() - AVERAGE_LEAD_DAYS * DAY_MS);
+    const lead = new Date(cutoff.getTime() - leadDays * DAY_MS);
 
     return new Date(lead.getFullYear(), lead.getMonth(), lead.getDate());
 };
+
+/** Oldest entry to fetch for a range, null for the full history */
+export const fetchCutoffFor = (range: ChartRange, now: Date = new Date()): Date | null =>
+    cutoffAtMidnight(range, now, AVERAGE_LEAD_DAYS);
+
+/**
+ * Oldest entry to summarise for a range, null for the full history: the range
+ * itself, with no lead.
+ *
+ * For the reads that cannot be trimmed afterwards, i.e. the counted values
+ * behind the histogram: they carry no date, so a read with the average lead
+ * would bin a month and a half into a chart labelled one month.
+ */
+export const displayCutoffFor = (range: ChartRange, now: Date = new Date()): Date | null =>
+    cutoffAtMidnight(range, now, 0);
 
 /**
  * Entry filter that fetches only what a range needs, empty for the full
@@ -63,6 +77,13 @@ export const fetchCutoffFor = (range: ChartRange, now: Date = new Date()): Date 
  */
 export const entryFilterFor = (range: ChartRange, now: Date = new Date()): object => {
     const cutoff = fetchCutoffFor(range, now);
+
+    return cutoff === null ? {} : { "date__gte": cutoff.toISOString() };
+};
+
+/** Filter for the reads that summarise exactly the range, see displayCutoffFor */
+export const displayFilterFor = (range: ChartRange, now: Date = new Date()): object => {
+    const cutoff = displayCutoffFor(range, now);
 
     return cutoff === null ? {} : { "date__gte": cutoff.toISOString() };
 };
