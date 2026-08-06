@@ -237,7 +237,10 @@ const summarise = (date: number, bucket: ChartPoint[]): ChartPoint => {
  * the spread as a band. That keeps exactly the information a line through
  * every single sample buries.
  *
- * Series that already fit are returned unchanged.
+ * Series that already fit are returned unchanged, which is what the points of
+ * the aggregate endpoint are: the server condenses to the same limit. What is
+ * left for this are the charts that still read raw entries (WeightChart), and
+ * it goes once those read buckets too.
  */
 export const downsample = (points: ChartPoint[], maxPoints: number = MAX_CHART_POINTS): ChartPoint[] => {
     if (points.length <= maxPoints) {

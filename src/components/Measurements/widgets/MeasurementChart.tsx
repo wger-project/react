@@ -58,37 +58,91 @@ import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, Tooltip, XAxis, YAxi
 import { theme } from "@/theme";
 import { dateToLocale } from "@/core/lib/date";
 
-export interface TooltipProps {
+interface TooltipProps {
     active?: boolean,
+    /** The hovered entries, read by each tooltip the way its own chart wrote them */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload?: any,
     label?: string,
-    category: MeasurementCategory
 }
 
-const CustomTooltip = ({ active, payload, label, category }: TooltipProps) => {
+/** What every tooltip here shares: the day, and under it what was measured on it */
+const TooltipFrame = (props: { label?: string, children: React.ReactNode }) =>
+    <Paper style={{ padding: 8 }}>
+        <p><strong>{dateToLocale(new Date(Number(props.label)))}</strong></p>
+        {props.children}
+    </Paper>;
+
+/**
+ * The frame every bar chart here is drawn in: the grid, the date axis and the
+ * value axis, which only differ in the unit they read. The bars themselves are
+ * the caller's, they are what each chart is about.
+ */
+const BarChartFrame = (props: {
+    data: { date: number }[],
+    unit: string,
+    /** Where the value axis starts for a unit that brings no axis of its own */
+    domainStart: 0 | 'auto',
+    axis: ReturnType<typeof durationAxis>,
+    tooltip: React.ReactElement,
+    ariaLabel?: string,
+    children: React.ReactNode,
+}) => {
     const [, i18n] = useTranslation();
 
-    if (active && payload && payload.length) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const value = payload.find((p: any) => p.dataKey === 'value');
+    return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+        {/*
+          * Bar width follows from how many bars share the width: recharts
+          * sizes them to the band, the gap (taken off both sides, so a bar
+          * keeps 70% of its band) holds neighbours apart, and the maximum
+          * keeps a handful of bars from becoming blocks
+          */}
+        <BarChart
+            data={props.data}
+            responsive
+            width="90%"
+            height={200}
+            barCategoryGap="15%"
+            aria-label={props.ariaLabel}>
+            <CartesianGrid
+                stroke="#ccc"
+                strokeDasharray="5 5"
+                vertical={false} />
+            <XAxis
+                dataKey="date"
+                tickFormatter={dateTick(spansYears(props.data))}
+            />
+            <YAxis
+                type="number"
+                domain={props.axis?.domain ?? [props.domainStart, 'auto']}
+                ticks={props.axis?.ticks}
+                width="auto"
+                tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
+            <Tooltip content={props.tooltip} />
+            {props.children}
+        </BarChart>
+    </Box>;
+};
 
-        return (
-            <Paper style={{ padding: 8 }}>
-                <p><strong>{dateToLocale(new Date(label!))}</strong></p>
-                {value && <p>
-                    {category.name}: {valueWithUnit(value.value, category.unit, i18n.language)}
-                </p>}
-            </Paper>
-        );
+const CustomTooltip = (props: TooltipProps & { category: MeasurementCategory }) => {
+    const [t, i18n] = useTranslation();
+
+    if (!props.active || !props.payload?.length) {
+        return null;
     }
 
-    return null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const value = props.payload.find((entry: any) => entry.dataKey === 'value');
+
+    return <TooltipFrame label={props.label}>
+        {value && <p>
+            {categoryDisplayName(props.category, t)}
+            : {valueWithUnit(value.value, props.category.unit, i18n.language)}
+        </p>}
+    </TooltipFrame>;
 };
 
 const MeasurementBarChart = (props: { category: MeasurementCategory, points: ChartPoint[] }) => {
-    const [, i18n] = useTranslation();
-
     // Bars need a band axis (recharts miscomputes bar heights on a numeric
     // time axis), so make the bands time-proportional by filling in the
     // missing days instead
@@ -98,66 +152,35 @@ const MeasurementBarChart = (props: { category: MeasurementCategory, points: Cha
         return <ChartEmptyState />;
     }
 
-    const axis = durationAxis(props.category.unit, 0, Math.max(...data.map(point => point.value)));
-
-    return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
-        {/*
-          * Bar width follows from how many bars share the width: recharts
-          * sizes them to the band, the gap (taken off both sides, so a bar
-          * keeps 70% of its band) holds neighbours apart, and the maximum
-          * keeps a handful of bars from becoming blocks
-          */}
-        <BarChart data={data} responsive width="90%" height={200} barCategoryGap="15%">
-            <CartesianGrid
-                stroke="#ccc"
-                strokeDasharray="5 5"
-                vertical={false} />
-            <XAxis
-                dataKey="date"
-                tickFormatter={dateTick(spansYears(data))}
-            />
-            <YAxis
-                type="number"
-                domain={axis?.domain ?? [0, 'auto']}
-                ticks={axis?.ticks}
-                width="auto"
-                tickFormatter={value => valueWithUnit(value, props.category.unit, i18n.language)} />
-            <Tooltip content={(<CustomTooltip category={props.category} />)} />
-            <Bar
-                dataKey="value"
-                fill={theme.palette.secondary.main}
-                maxBarSize={MAX_BAR_WIDTH} />
-        </BarChart>
-    </Box>;
+    return <BarChartFrame
+        data={data}
+        unit={props.category.unit}
+        domainStart={0}
+        axis={durationAxis(props.category.unit, 0, Math.max(...data.map(point => point.value)))}
+        tooltip={<CustomTooltip category={props.category} />}>
+        <Bar
+            dataKey="value"
+            fill={theme.palette.secondary.main}
+            maxBarSize={MAX_BAR_WIDTH} />
+    </BarChartFrame>;
 };
 
-interface RangeTooltipProps {
-    active?: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    payload?: any;
-    label?: string;
-    unit: string;
-}
-
-const RangeTooltip = ({ active, payload, label, unit }: RangeTooltipProps) => {
+const RangeTooltip = (props: TooltipProps & { unit: string }) => {
     const [, i18n] = useTranslation();
 
-    if (!active || !payload?.length) {
+    if (!props.active || !props.payload?.length) {
         return null;
     }
 
-    const [low, high] = payload[0].value as [number, number];
+    const [low, high] = props.payload[0].value as [number, number];
 
-    return (
-        <Paper style={{ padding: 8 }}>
-            <p><strong>{dateToLocale(new Date(Number(label)))}</strong></p>
-            {/* a range is quoted as high over low, the way a blood pressure reading is written */}
-            <p>
-                {valueOnly(high, unit, i18n.language)}/
-                {valueWithUnit(low, unit, i18n.language)}
-            </p>
-        </Paper>
-    );
+    return <TooltipFrame label={props.label}>
+        {/* a range is quoted as high over low, the way a blood pressure reading is written */}
+        <p>
+            {valueOnly(high, props.unit, i18n.language)}/
+            {valueWithUnit(low, props.unit, i18n.language)}
+        </p>
+    </TooltipFrame>;
 };
 
 /**
@@ -169,70 +192,45 @@ const RangeTooltip = ({ active, payload, label, unit }: RangeTooltipProps) => {
  * matters, the gap within one reading.
  */
 const MeasurementRangeBarChart = (props: { points: ChartPoint[], unit: string }) => {
-    const [, i18n] = useTranslation();
     const data = props.points.map(point => ({ date: point.date, range: [point.min!, point.max!] }));
-    const axis = durationAxis(
-        props.unit,
-        Math.min(...props.points.map(point => point.min!)),
-        Math.max(...props.points.map(point => point.max!)),
-    );
 
-    return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
-        <BarChart data={data} responsive width="90%" height={200} barCategoryGap="15%">
-            <CartesianGrid
-                stroke="#ccc"
-                strokeDasharray="5 5"
-                vertical={false} />
-            <XAxis
-                dataKey="date"
-                tickFormatter={dateTick(spansYears(props.points))}
-            />
-            <YAxis
-                type="number"
-                domain={axis?.domain ?? ['auto', 'auto']}
-                ticks={axis?.ticks}
-                width="auto"
-                tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
-            <Tooltip content={<RangeTooltip unit={props.unit} />} />
-            <Bar
-                dataKey="range"
-                fill={theme.palette.secondary.main}
-                maxBarSize={MAX_BAR_WIDTH} />
-        </BarChart>
-    </Box>;
+    return <BarChartFrame
+        data={data}
+        unit={props.unit}
+        domainStart="auto"
+        axis={durationAxis(
+            props.unit,
+            Math.min(...props.points.map(point => point.min!)),
+            Math.max(...props.points.map(point => point.max!)),
+        )}
+        tooltip={<RangeTooltip unit={props.unit} />}>
+        <Bar
+            dataKey="range"
+            fill={theme.palette.secondary.main}
+            maxBarSize={MAX_BAR_WIDTH} />
+    </BarChartFrame>;
 };
 
-interface StackedTooltipProps {
-    active?: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    payload?: any;
-    label?: string;
-    unit: string;
-}
-
 /** The whole bar with its parts: a single segment says little without the night it belongs to */
-const StackedTooltip = ({ active, payload, label, unit }: StackedTooltipProps) => {
+const StackedTooltip = (props: TooltipProps & { unit: string }) => {
     const [, i18n] = useTranslation();
 
-    if (!active || !payload?.length) {
+    if (!props.active || !props.payload?.length) {
         return null;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const parts = payload.filter((entry: any) => entry.value > 0);
+    const parts = props.payload.filter((entry: any) => entry.value > 0);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const total = parts.reduce((sum: number, entry: any) => sum + entry.value, 0);
 
-    return (
-        <Paper style={{ padding: 8 }}>
-            <p><strong>{dateToLocale(new Date(Number(label)))}</strong></p>
-            <p>{valueWithUnit(total, unit, i18n.language)}</p>
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {parts.map((entry: any) => <p key={entry.dataKey}>
-                {entry.dataKey}: {valueOnly(entry.value, unit, i18n.language)}
-            </p>)}
-        </Paper>
-    );
+    return <TooltipFrame label={props.label}>
+        <p>{valueWithUnit(total, props.unit, i18n.language)}</p>
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        {parts.map((entry: any) => <p key={entry.dataKey}>
+            {entry.dataKey}: {valueOnly(entry.value, props.unit, i18n.language)}
+        </p>)}
+    </TooltipFrame>;
 };
 
 /**
@@ -249,7 +247,6 @@ const MeasurementStackedBarChart = (props: {
     labels: string[],
     unit: string,
 }) => {
-    const [, i18n] = useTranslation();
     const palette = componentPalette(props.labels.length);
     const data = props.points.map(point => ({
         date: point.date,
@@ -260,59 +257,35 @@ const MeasurementStackedBarChart = (props: {
     const totals = props.points.map(
         point => point.values.reduce((sum: number, value) => sum + (value ?? 0), 0),
     );
-    const axis = durationAxis(props.unit, 0, Math.max(...totals));
 
-    return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
-        <BarChart data={data} responsive width="90%" height={200} barCategoryGap="15%">
-            <CartesianGrid
-                stroke="#ccc"
-                strokeDasharray="5 5"
-                vertical={false} />
-            <XAxis
-                dataKey="date"
-                tickFormatter={dateTick(spansYears(props.points))}
-            />
-            <YAxis
-                type="number"
-                domain={axis?.domain ?? [0, 'auto']}
-                ticks={axis?.ticks}
-                width="auto"
-                tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
-            <Tooltip content={<StackedTooltip unit={props.unit} />} />
-            {props.labels.map((label, index) => <Bar
-                key={label}
-                dataKey={label}
-                stackId="components"
-                fill={componentColor(palette, index)}
-                maxBarSize={MAX_BAR_WIDTH} />)}
-        </BarChart>
-    </Box>;
+    return <BarChartFrame
+        data={data}
+        unit={props.unit}
+        domainStart={0}
+        axis={durationAxis(props.unit, 0, Math.max(...totals))}
+        tooltip={<StackedTooltip unit={props.unit} />}>
+        {props.labels.map((label, index) => <Bar
+            key={label}
+            dataKey={label}
+            stackId="components"
+            fill={componentColor(palette, index)}
+            maxBarSize={MAX_BAR_WIDTH} />)}
+    </BarChartFrame>;
 };
 
-interface DeltaTooltipProps {
-    active?: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    payload?: any;
-    label?: string;
-    unit: string;
-}
-
-const DeltaTooltip = ({ active, payload, label, unit }: DeltaTooltipProps) => {
+const DeltaTooltip = (props: TooltipProps & { unit: string }) => {
     const [, i18n] = useTranslation();
 
-    if (!active || !payload?.length) {
+    if (!props.active || !props.payload?.length) {
         return null;
     }
 
-    const value = payload[0].value as number;
+    const value = props.payload[0].value as number;
 
-    return (
-        <Paper style={{ padding: 8 }}>
-            <p><strong>{dateToLocale(new Date(Number(label)))}</strong></p>
-            {/* the plus is ours, only the minus comes out of the number format */}
-            <p>{value > 0 ? '+' : ''}{valueWithUnit(value, unit, i18n.language)}</p>
-        </Paper>
-    );
+    return <TooltipFrame label={props.label}>
+        {/* the plus is ours, only the minus comes out of the number format */}
+        <p>{value > 0 ? '+' : ''}{valueWithUnit(value, props.unit, i18n.language)}</p>
+    </TooltipFrame>;
 };
 
 /**
@@ -321,46 +294,28 @@ const DeltaTooltip = ({ active, payload, label, unit }: DeltaTooltipProps) => {
  * directly than the trend line does.
  */
 const MeasurementDeltaBarChart = (props: { points: ChartPoint[], unit: string }) => {
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     if (props.points.length === 0) {
         return <ChartEmptyState />;
     }
 
     const values = props.points.map(point => point.value);
-    const axis = durationAxis(props.unit, Math.min(0, ...values), Math.max(0, ...values));
 
-    return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
-        <BarChart
-            data={props.points}
-            responsive
-            width="90%"
-            height={200}
-            barCategoryGap="15%"
-            aria-label={t('measurements.chartTypes.delta')}>
-            <CartesianGrid
-                stroke="#ccc"
-                strokeDasharray="5 5"
-                vertical={false} />
-            <XAxis
-                dataKey="date"
-                tickFormatter={dateTick(spansYears(props.points))}
-            />
-            <YAxis
-                type="number"
-                domain={axis?.domain ?? ['auto', 'auto']}
-                ticks={axis?.ticks}
-                width="auto"
-                tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
-            <Tooltip content={<DeltaTooltip unit={props.unit} />} />
-            {/* without the baseline a chart of only decreases reads as a normal one pointing down */}
-            <ReferenceLine y={0} stroke={theme.palette.text.primary} />
-            <Bar dataKey="value" maxBarSize={MAX_BAR_WIDTH}>
-                {props.points.map(point =>
-                    <Cell key={point.date} fill={deltaColor(theme, point.value)} />)}
-            </Bar>
-        </BarChart>
-    </Box>;
+    return <BarChartFrame
+        data={props.points}
+        unit={props.unit}
+        domainStart="auto"
+        axis={durationAxis(props.unit, Math.min(0, ...values), Math.max(0, ...values))}
+        tooltip={<DeltaTooltip unit={props.unit} />}
+        ariaLabel={t('measurements.chartTypes.delta')}>
+        {/* without the baseline a chart of only decreases reads as a normal one pointing down */}
+        <ReferenceLine y={0} stroke={theme.palette.text.primary} />
+        <Bar dataKey="value" maxBarSize={MAX_BAR_WIDTH}>
+            {props.points.map(point =>
+                <Cell key={point.date} fill={deltaColor(theme, point.value)} />)}
+        </Bar>
+    </BarChartFrame>;
 };
 
 /**

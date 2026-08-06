@@ -1,6 +1,9 @@
 export type WeightUnit = 'kg' | 'lb';
 
+// Mirror the server's constants (wger/utils/units.py), both of them: a
+// division by the other factor is a hair off and could round differently
 export const KG_PER_LB = 0.45359237;
+export const LB_PER_KG = 2.20462262;
 
 /*
  * Narrows a stored or server-provided unit. Everything else is a free-text
@@ -19,7 +22,7 @@ export function convertWeight(value: number, from: WeightUnit, to: WeightUnit): 
     if (from === to) {
         return value;
     }
-    const converted = from === 'lb' ? value * KG_PER_LB : value / KG_PER_LB;
+    const converted = from === 'lb' ? value * KG_PER_LB : value * LB_PER_KG;
 
     return Math.round(converted * 100) / 100;
 }
