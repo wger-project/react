@@ -145,10 +145,10 @@ describe("Test the GroupEntryForm component", () => {
     const queryClient = new QueryClient();
     let mutate = vi.fn();
 
-    const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg', undefined, 'blood_pressure');
+    const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg', 'blood_pressure');
     group.children = [
-        new MeasurementCategory('c-sys', 'Systolic', 'mmHg', undefined, 'blood_pressure_systolic', false, 'g-1'),
-        new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', undefined, 'blood_pressure_diastolic', false, 'g-1'),
+        new MeasurementCategory('c-sys', 'Systolic', 'mmHg', 'blood_pressure_systolic', false, 'g-1'),
+        new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', 'blood_pressure_diastolic', false, 'g-1'),
     ];
 
     beforeEach(() => {

@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import {
     useAddMeasurementCategoryQuery,
     useEditMeasurementCategoryQuery,
-    useMeasurementsCategoryQuery
+    useCategoryEntryFlagsQuery
 } from "@/components/Measurements/queries";
 import { MeasurementCategory, TrendCharacter } from "@/components/Measurements/models/Category";
 import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
@@ -34,7 +34,6 @@ const groupWithComponent = (childId: string): MeasurementCategory => {
         childId,
         'Systolic',
         'mmHg',
-        undefined,
         'blood_pressure',
         false,
         TEST_GROUP_CATEGORY.id,
@@ -56,8 +55,13 @@ describe("Test the CategoryForm component", () => {
         (useAddMeasurementCategoryQuery as Mock).mockImplementation(() => ({
             mutate: mutate
         }));
-        (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
-            data: [TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2, TEST_GROUP_CATEGORY]
+        // the two measurement categories hold entries, the group is free
+        (useCategoryEntryFlagsQuery as Mock).mockImplementation(() => ({
+            data: [
+                { category: TEST_MEASUREMENT_CATEGORY_1, hasEntries: true },
+                { category: TEST_MEASUREMENT_CATEGORY_2, hasEntries: true },
+                { category: TEST_GROUP_CATEGORY, hasEntries: false },
+            ]
         }));
     });
 
@@ -182,7 +186,6 @@ describe("Test the CategoryForm component", () => {
             null,
             'Something',
             'mmHg',
-            undefined,
             'custom',
             false,
             TEST_GROUP_CATEGORY.id,
@@ -208,8 +211,11 @@ describe("Test the CategoryForm component", () => {
 
     test('A group is not offered as a parent, it only holds its own components', async () => {
         // Arrange
-        (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
-            data: [MeasurementCategory.clone(TEST_GROUP_CATEGORY, { metricType: 'blood_pressure' })]
+        (useCategoryEntryFlagsQuery as Mock).mockImplementation(() => ({
+            data: [{
+                category: MeasurementCategory.clone(TEST_GROUP_CATEGORY, { metricType: 'blood_pressure' }),
+                hasEntries: false,
+            }]
         }));
 
         // Act
@@ -250,8 +256,11 @@ describe("Test the CategoryForm component", () => {
             'Waist',
             'cm',
         );
-        (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
-            data: [group, candidate]
+        (useCategoryEntryFlagsQuery as Mock).mockImplementation(() => ({
+            data: [
+                { category: group, hasEntries: false },
+                { category: candidate, hasEntries: false },
+            ]
         }));
 
         // Act
@@ -297,8 +306,8 @@ describe("Test the CategoryForm component", () => {
         // Arrange: its chart follows from what its components are to each
         // other, which is what groupChart decides; a pick would have no effect
         const group = groupWithComponent('cccccccc-cccc-cccc-cccc-000000000044');
-        (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
-            data: [group]
+        (useCategoryEntryFlagsQuery as Mock).mockImplementation(() => ({
+            data: [{ category: group, hasEntries: false }]
         }));
 
         // Act
@@ -345,7 +354,7 @@ describe("Test the CategoryForm component", () => {
     test('A summed type has no line to configure', () => {
         // Its chart is one bar per day, which has neither a trend nor an average
         const steps = new MeasurementCategory(
-            'cccccccc-cccc-cccc-cccc-000000000045', 'Steps', 'steps', undefined, 'steps',
+            'cccccccc-cccc-cccc-cccc-000000000045', 'Steps', 'steps', 'steps',
         );
 
         // Act

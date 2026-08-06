@@ -34,9 +34,11 @@ export {
 // Query hooks
 export {
     useAddMeasurementEntryQuery,
+    useAllMeasurementEntriesQuery,
     useDeleteMeasurementEntryQuery,
     useEditMeasurementEntryQuery,
     useMeasurementBucketsQuery,
+    useMeasurementEntriesQuery,
     useMeasurementsCategoryQuery,
     useMeasurementValueCountsQuery
 } from "./queries";

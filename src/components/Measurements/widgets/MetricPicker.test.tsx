@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import {
     useAddMeasurementCategoryQuery,
+    useCategoryEntryFlagsQuery,
     useMeasurementsCategoryQuery
 } from "@/components/Measurements/queries";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
@@ -27,6 +28,8 @@ describe("Test the NewCategoryPicker component", () => {
         mutate = vi.fn();
 
         (useAddMeasurementCategoryQuery as Mock).mockImplementation(() => ({ mutate: mutate }));
+        // read by the form the custom entry leads into
+        (useCategoryEntryFlagsQuery as Mock).mockImplementation(() => ({ data: [] }));
         (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
             data: [TEST_MEASUREMENT_CATEGORY_1]
         }));
@@ -69,7 +72,6 @@ describe("Test the NewCategoryPicker component", () => {
             null,
             'Resting heart rate',
             'bpm',
-            undefined,
             'resting_heart_rate',
         ), expect.anything());
     });
@@ -82,7 +84,6 @@ describe("Test the NewCategoryPicker component", () => {
             'cccccccc-cccc-cccc-cccc-000000000099',
             'Distance',
             'km',
-            undefined,
             'distance',
         );
         mutate.mockImplementation((_category, options) => options.onSuccess(created));

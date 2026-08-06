@@ -6,7 +6,12 @@ import { MeasurementCategoryOverview } from "@/components/Measurements/screens/M
 import React from 'react';
 import { BrowserRouter } from "react-router-dom";
 import { mockChartQueries } from "@/tests/chartQueries";
-import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
+import {
+    TEST_MEASUREMENT_CATEGORY_1,
+    TEST_MEASUREMENT_CATEGORY_2,
+    TEST_MEASUREMENT_SEED_1,
+    TEST_MEASUREMENT_SEED_2
+} from "@/tests/measurementsTestData";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Measurements/queries");
@@ -25,7 +30,7 @@ describe("Test the MeasurementCategoryOverview component", () => {
             mutate: vi.fn()
         }));
         // The cards read their points from the aggregated queries
-        mockChartQueries([TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2]);
+        mockChartQueries([TEST_MEASUREMENT_SEED_1, TEST_MEASUREMENT_SEED_2]);
     });
 
     afterEach(() => {

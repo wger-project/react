@@ -1,11 +1,18 @@
 import { MeasurementCategory, MeasurementEntry } from "@/components/Measurements";
-import { getMeasurementCategories } from "@/components/Measurements/api/measurements";
+import {
+    getAllMeasurementEntries,
+    getMeasurementCategories
+} from "@/components/Measurements/api/measurements";
 import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutritionalDiary";
 import { getSessions } from "@/components/Routines/api/session";
 import { getBodyWeightCategory, getWeights } from "@/components/Measurements/api/bodyWeight";
 import { TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2 } from "@/tests/nutritionDiaryTestdata";
 import { testQueryClient } from "@/tests/queryClient";
-import { testBodyWeightCategory, makeWeightEntry } from "@/tests/weight/testData";
+import {
+    makeWeightEntry,
+    TEST_BODY_WEIGHT_CATEGORY_UUID,
+    testBodyWeightCategory
+} from "@/tests/weight/testData";
 import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
 import { dateToYYYYMMDD } from "@/core/lib/date";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -50,16 +57,44 @@ describe('CalendarComponent', () => {
             [testWorkoutSession]
         ));
 
+        const group = new MeasurementCategory(
+            'cccccccc-cccc-cccc-cccc-000000000002',
+            "Blood pressure",
+            "mmHg",
+        );
+        group.children = [new MeasurementCategory(
+            'cccccccc-cccc-cccc-cccc-000000000003',
+            "Systolic",
+            "mmHg",
+            'custom',
+            false,
+            group.id,
+        )];
         (getMeasurementCategories as Mock).mockImplementation(() => Promise.resolve([
             new MeasurementCategory(
                 'cccccccc-cccc-cccc-cccc-000000000001',
                 "Body Fat",
                 "%",
-                [new MeasurementEntry(
-                    'dddddddd-dddd-dddd-dddd-000000000001',
-                    'cccccccc-cccc-cccc-cccc-000000000001',
-                    new Date(currentYear, currentMonth, 1, 12, 0), 20, "Normal"
-                )]
+            ),
+            group,
+        ]));
+        // the entries of the month, over all categories, which is where the
+        // components of a group and the body weight arrive in as well
+        (getAllMeasurementEntries as Mock).mockImplementation(() => Promise.resolve([
+            new MeasurementEntry(
+                'dddddddd-dddd-dddd-dddd-000000000001',
+                'cccccccc-cccc-cccc-cccc-000000000001',
+                new Date(currentYear, currentMonth, 1, 12, 0), 20, "Normal"
+            ),
+            new MeasurementEntry(
+                'dddddddd-dddd-dddd-dddd-000000000002',
+                'cccccccc-cccc-cccc-cccc-000000000003',
+                new Date(currentYear, currentMonth, 1, 12, 0), 120, ""
+            ),
+            new MeasurementEntry(
+                'dddddddd-dddd-dddd-dddd-000000000003',
+                TEST_BODY_WEIGHT_CATEGORY_UUID,
+                new Date(currentYear, currentMonth, 1, 12, 0), 65, ""
             ),
         ]));
 
@@ -130,8 +165,18 @@ describe('CalendarComponent', () => {
         const day = await screen.findByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 1))}`);
         await user.click(day);
 
+        // more than one measurement, so they are behind the expander
+        await user.click(await screen.findByText('measurements.measurements'));
+
         // Assert
-        expect(await screen.findByText(/body fat: 20 %/i)).toBeInTheDocument();
+        expect(await screen.findByText('Body Fat')).toBeInTheDocument();
+        expect(screen.getByText(/20 %/i)).toBeInTheDocument();
+        // the components of a group are categories of their own, and the only
+        // place their readings can come from
+        expect(screen.getByText('Systolic')).toBeInTheDocument();
+        expect(screen.getByText(/120 mmHg/i)).toBeInTheDocument();
+        // body weight has its own row on a day, it is not listed a second time
+        expect(screen.queryByText(/65/)).toBeNull();
     });
 
     test('displays weight details for selected day', async () => {

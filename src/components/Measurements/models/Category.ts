@@ -1,4 +1,3 @@
-import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { Adapter } from "@/core/lib/Adapter";
 import { isWeightUnit, WeightUnit } from "@/core/lib/weightUnit";
 import { TFunction } from "i18next";
@@ -404,8 +403,6 @@ export function isGroupTotalMetricType(type: MetricType): boolean {
 
 export class MeasurementCategory {
 
-    entries: MeasurementEntry[] = [];
-
     /**
      * Child categories (components) of a multi-value group such as blood
      * pressure. Populated by the API layer for display, never persisted
@@ -417,7 +414,6 @@ export class MeasurementCategory {
         public id: string | null,
         public name: string,
         public unit: string,
-        entries?: MeasurementEntry[],
         public metricType: MetricType = 'custom',
         public isOfficial: boolean = false,
         public parentId: string | null = null,
@@ -427,9 +423,6 @@ export class MeasurementCategory {
         /** Taste-level chart settings, read through trendOf and averageWindowOf */
         public chartConfig: ChartConfig = {},
     ) {
-        if (entries) {
-            this.entries = entries;
-        }
     }
 
     get isGroup(): boolean {
@@ -441,7 +434,6 @@ export class MeasurementCategory {
             overrides?.id ?? other.id,
             overrides?.name ?? other.name,
             overrides?.unit ?? other.unit,
-            other.entries,
             overrides?.metricType ?? other.metricType,
             other.isOfficial,
             // null is a meaningful override here (remove from group), so the
@@ -483,7 +475,6 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             item.id,
             item.name,
             item.unit,
-            undefined,
             metricTypeFromApi(item.metric_type),
             item.is_official,
             item.parent ?? null,

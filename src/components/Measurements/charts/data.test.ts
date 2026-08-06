@@ -23,7 +23,7 @@ import {
     weeklyDeltas
 } from "@/components/Measurements/charts/data";
 import { ChartPoint } from "@/components/Measurements/charts/series";
-import { bucketsFor } from "@/tests/chartQueries";
+import { bucketsFor, CategorySeed } from "@/tests/chartQueries";
 import { describe, expect, test } from 'vitest';
 
 const entry = (date: Date, value: number, extraData: Record<string, unknown> = {}) =>
@@ -339,9 +339,12 @@ describe('niceBinWidth', () => {
     });
 });
 
+/** A group and the entries its components hold, which are read separately */
+type SeededGroup = { group: MeasurementCategory, seeds: CategorySeed[] };
+
 /** The points the aggregated read returns for a group */
-const groupPoints = (group: MeasurementCategory) =>
-    groupComponentPoints(group, group.children.flatMap(child => bucketsFor(child)));
+const groupPoints = (seeded: SeededGroup) =>
+    groupComponentPoints(seeded.group, seeded.seeds.flatMap(seed => bucketsFor(seed)));
 
 describe('buildHistogram', () => {
     const counted = (...values: number[]) => values.map(value => ({ value: value, count: 1 }));
@@ -503,20 +506,28 @@ describe('fillMissingDays', () => {
 
 describe('groups', () => {
 
-    const bloodPressure = (readings: [Date, number, number | null][]) => {
-        const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg', [], 'blood_pressure');
-        const systolic = new MeasurementCategory('c-sys', 'Systolic', 'mmHg', [], 'custom', false, 'g-1', 0);
-        const diastolic = new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', [], 'custom', false, 'g-1', 1);
+    const bloodPressure = (readings: [Date, number, number | null][]): SeededGroup => {
+        const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg', 'blood_pressure');
+        const systolic = new MeasurementCategory('c-sys', 'Systolic', 'mmHg', 'custom', false, 'g-1', 0);
+        const diastolic = new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', 'custom', false, 'g-1', 1);
+        const systolicEntries: MeasurementEntry[] = [];
+        const diastolicEntries: MeasurementEntry[] = [];
 
         for (const [date, high, low] of readings) {
-            systolic.entries.push(new MeasurementEntry(null, 'c-sys', date, high, ''));
+            systolicEntries.push(new MeasurementEntry(null, 'c-sys', date, high, ''));
             if (low !== null) {
-                diastolic.entries.push(new MeasurementEntry(null, 'c-dia', date, low, ''));
+                diastolicEntries.push(new MeasurementEntry(null, 'c-dia', date, low, ''));
             }
         }
         group.children = [systolic, diastolic];
 
-        return group;
+        return {
+            group: group,
+            seeds: [
+                { category: systolic, entries: systolicEntries },
+                { category: diastolic, entries: diastolicEntries },
+            ],
+        };
     };
 
     test('pairs the components of a reading into one range', () => {
@@ -538,13 +549,13 @@ describe('groups', () => {
     });
 
     test('reads the low and high end from the values, not from the component order', () => {
-        const group = bloodPressure([[day(1), 80, 120]]);
+        const seeded = bloodPressure([[day(1), 80, 120]]);
 
-        expect(groupRangeEntries(groupPoints(group))[0]).toMatchObject({ min: 80, max: 120 });
+        expect(groupRangeEntries(groupPoints(seeded))[0]).toMatchObject({ min: 80, max: 120 });
     });
 
     test('builds one named component series per child', () => {
-        const series = groupComponentSeries(bloodPressure([[day(1), 120, 80]]), groupPoints(bloodPressure([[day(1), 120, 80]])));
+        const series = groupComponentSeries(bloodPressure([[day(1), 120, 80]]).group, groupPoints(bloodPressure([[day(1), 120, 80]])));
 
         expect(series.map(s => s.label)).toEqual(['Systolic', 'Diastolic']);
         expect(series.map(s => s.role)).toEqual(['component', 'component']);
@@ -552,24 +563,31 @@ describe('groups', () => {
     });
 
     test('two components are charted as ranges', () => {
-        const chart = groupChart(bloodPressure([[day(1), 120, 80]]), groupPoints(bloodPressure([[day(1), 120, 80]])));
+        const chart = groupChart(bloodPressure([[day(1), 120, 80]]).group, groupPoints(bloodPressure([[day(1), 120, 80]])));
 
         expect(chart.kind).toBe('range');
     });
 
     test('a group whose readings are all unpaired falls back to component lines', () => {
-        const chart = groupChart(bloodPressure([[day(1), 120, null], [day(2), 125, null]]), groupPoints(bloodPressure([[day(1), 120, null], [day(2), 125, null]])));
+        const chart = groupChart(
+            bloodPressure([[day(1), 120, null], [day(2), 125, null]]).group,
+            groupPoints(bloodPressure([[day(1), 120, null], [day(2), 125, null]])),
+        );
 
         expect(chart.kind).toBe('components');
     });
 
     test('three components cannot be a range', () => {
-        const group = bloodPressure([[day(1), 120, 80]]);
-        const third = new MeasurementCategory('c-map', 'Mean', 'mmHg', [], 'custom', false, 'g-1', 2);
-        third.entries = [new MeasurementEntry(null, 'c-map', day(1), 93, '')];
+        const seeded = bloodPressure([[day(1), 120, 80]]);
+        const third = new MeasurementCategory('c-map', 'Mean', 'mmHg', 'custom', false, 'g-1', 2);
+        const group = seeded.group;
         group.children = [...group.children, third];
+        seeded.seeds = [
+            ...seeded.seeds,
+            { category: third, entries: [new MeasurementEntry(null, 'c-map', day(1), 93, '')] },
+        ];
 
-        const chart = groupChart(group, groupPoints(group));
+        const chart = groupChart(group, groupPoints(seeded));
 
         expect(chart.kind).toBe('components');
     });
@@ -577,56 +595,57 @@ describe('groups', () => {
 
 describe('sleep group', () => {
     /** A sleep group: the total plus two stages, all on the same night */
-    const sleep = (withStages: boolean = true) => {
-        const group = new MeasurementCategory('g-s', 'Sleep', 'min', [], 'sleep');
+    const sleep = (withStages: boolean = true): SeededGroup => {
+        const group = new MeasurementCategory('g-s', 'Sleep', 'min', 'sleep');
         const child = (
             id: string,
             name: string,
             type: MetricType,
             order: number,
             value: number | null,
-        ) => {
-            const category = new MeasurementCategory(id, name, 'min', [], type, false, 'g-s', order);
-            category.entries = value === null
+        ): CategorySeed => ({
+            category: new MeasurementCategory(id, name, 'min', type, false, 'g-s', order),
+            entries: value === null
                 ? []
-                : [new MeasurementEntry(`e-${id}`, id, day(2), value, '')];
-            return category;
-        };
+                : [new MeasurementEntry(`e-${id}`, id, day(2), value, '')],
+        });
 
-        group.children = [
+        const seeds = [
             child('total', 'Total sleep', 'sleep_total', 0, 480),
             child('deep', 'Deep sleep', 'sleep_deep', 1, withStages ? 90 : null),
             child('rem', 'REM sleep', 'sleep_rem', 2, withStages ? 60 : null),
         ];
-        return group;
+        group.children = seeds.map(seed => seed.category);
+
+        return { group: group, seeds: seeds };
     };
 
     test('the roll-up component is left out of the stack', () => {
         // Total sleep covers the stages, so stacking it would count the night
         // twice
-        expect(stackableComponents(sleep()).map(c => c.metricType))
+        expect(stackableComponents(sleep().group).map(c => c.metricType))
             .toEqual(['sleep_deep', 'sleep_rem']);
     });
 
     test('stacked entries carry one value per component and day', () => {
-        const group = sleep();
-        const stacked = groupStackedEntries(stackableComponents(group), groupPoints(group));
+        const seeded = sleep();
+        const stacked = groupStackedEntries(stackableComponents(seeded.group), groupPoints(seeded));
 
         expect(stacked).toStrictEqual([{ date: day(2).getTime(), values: [90, 60] }]);
     });
 
     test('several entries of one day add up within their component', () => {
         // A nap next to the night: the bar shows the day, not the segment
-        const group = sleep();
-        const deep = group.children[1];
-        deep.entries = [...deep.entries, new MeasurementEntry('e-nap', 'deep', day(2, 14), 20, '')];
+        const seeded = sleep();
+        const deep = seeded.seeds[1];
+        deep.entries = [...deep.entries!, new MeasurementEntry('e-nap', 'deep', day(2, 14), 20, '')];
 
-        expect(groupStackedEntries(stackableComponents(group), groupPoints(group))[0].values)
+        expect(groupStackedEntries(stackableComponents(seeded.group), groupPoints(seeded))[0].values)
             .toEqual([110, 60]);
     });
 
     test('a summed group stacks its components', () => {
-        const chart = groupChart(sleep(), groupPoints(sleep()));
+        const chart = groupChart(sleep().group, groupPoints(sleep()));
 
         expect(chart.kind).toBe('stacked');
         expect(chart.kind === 'stacked' && chart.labels).toEqual(['Deep sleep', 'REM sleep']);
@@ -635,7 +654,7 @@ describe('sleep group', () => {
     test('without stage data the group falls back to component lines', () => {
         // Only the total reported, so there is nothing to stack. Falling
         // through keeps the chart from going blank while data exists
-        expect(groupChart(sleep(false), groupPoints(sleep(false))).kind).toBe('components');
+        expect(groupChart(sleep(false).group, groupPoints(sleep(false))).kind).toBe('components');
     });
 });
 

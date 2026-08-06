@@ -13,8 +13,8 @@ import {
 } from "@/components/Measurements/models/Category";
 import {
     useAddMeasurementCategoryQuery,
-    useEditMeasurementCategoryQuery,
-    useMeasurementsCategoryQuery
+    useCategoryEntryFlagsQuery,
+    useEditMeasurementCategoryQuery
 } from "@/components/Measurements/queries";
 import { Button, MenuItem, Stack, TextField } from "@mui/material";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
@@ -49,31 +49,31 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     const [t] = useTranslation();
     const useAddCategoryQuery = useAddMeasurementCategoryQuery();
     const useEditCategoryQuery = useEditMeasurementCategoryQuery(category?.id || '');
-    // The categories are read only to offer the groups this one can join, and
-    // of their entries only whether there are any at all, so a single entry
-    // per category is fetched instead of every one of them
-    const categoryQuery = useMeasurementsCategoryQuery({ entries: 'probe' });
+    // The categories are read only to offer the groups this one can join, of
+    // which an entry-free one is one, so that is all that is asked of them
+    const categoryQuery = useCategoryEntryFlagsQuery();
 
     // Name and unit belong to the user only for a free-form category. A typed
     // one takes both from its metric type, which is also what is shown for it
     const isCustom = (category?.metricType ?? 'custom') === 'custom';
 
+    // Asked of the category itself, which carries its components: the query
+    // returns the top-level ones only, so looking for a row whose parent is
+    // this one never finds anything
+    const hasChildren = category?.isGroup ?? false;
     // Multi-value groups, e.g. blood pressure. Mirrors the server rules: only
     // top-level, entry-free categories can be parents, a category that already
     // has children cannot be nested, a typed category stays top-level, and a
     // group takes only its own components. The current parent always stays
     // selectable so editing something else doesn't silently drop it.
-    const categories = categoryQuery.data ?? [];
-    // Asked of the category itself, which carries its components: the query
-    // returns the top-level ones only, so looking for a row whose parent is
-    // this one never finds anything
-    const hasChildren = category?.isGroup ?? false;
-    const parentCandidates = categories.filter(c =>
-        c.parentId === null
-        && c.id !== category?.id
-        && !isGroupMetricType(c.metricType)
-        && (c.entries.length === 0 || c.id === category?.parentId)
-    );
+    const parentCandidates = (categoryQuery.data ?? [])
+        .filter(({ category: c, hasEntries }) =>
+            c.parentId === null
+            && c.id !== category?.id
+            && !isGroupMetricType(c.metricType)
+            && (!hasEntries || c.id === category?.parentId)
+        )
+        .map(({ category: c }) => c);
     // Match the backend column limits. We do NOT enforce a minimum length:
     // many users have legitimate 1-2 char names (e.g. CJK abbreviations
     // like 体重 / 体脂), and the backend allows them.
@@ -149,7 +149,6 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                         null,
                         values.name,
                         values.unit,
-                        undefined,
                         values.metricType,
                         false,
                         parentId,

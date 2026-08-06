@@ -1,9 +1,18 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from '@testing-library/react';
 import { MeasurementCard } from "@/components/Dashboard/MeasurementCard";
-import { MeasurementCategory, useMeasurementsCategoryQuery } from "@/components/Measurements";
+import {
+    MeasurementCategory,
+    useMeasurementEntriesQuery,
+    useMeasurementsCategoryQuery
+} from "@/components/Measurements";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
-import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2 } from "@/tests/measurementsTestData";
+import {
+    TEST_MEASUREMENT_CATEGORY_1,
+    TEST_MEASUREMENT_CATEGORY_2,
+    TEST_MEASUREMENT_SEED_1,
+    TEST_MEASUREMENT_SEED_2
+} from "@/tests/measurementsTestData";
 import type { Mock } from 'vitest';
 
 import { mockChartQueries } from "@/tests/chartQueries";
@@ -11,6 +20,12 @@ vi.mock("@/components/Measurements/queries");
 vi.useFakeTimers();
 
 const queryClient = new QueryClient();
+
+/** Answers the entry reads of the table under each chart, by category */
+const mockEntryQueries = (byCategory: Record<string, MeasurementEntry[]>) =>
+    (useMeasurementEntriesQuery as Mock).mockImplementation(
+        (categoryId: string) => ({ data: byCategory[categoryId] ?? [] })
+    );
 
 describe("smoke test the MeasurementCard component", () => {
 
@@ -26,7 +41,11 @@ describe("smoke test the MeasurementCard component", () => {
                 ]
             }));
             // The cards read their points from the aggregated queries
-            mockChartQueries([TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_CATEGORY_2]);
+            mockChartQueries([TEST_MEASUREMENT_SEED_1, TEST_MEASUREMENT_SEED_2]);
+            mockEntryQueries({
+                [TEST_MEASUREMENT_CATEGORY_1.id!]: TEST_MEASUREMENT_SEED_1.entries,
+                [TEST_MEASUREMENT_CATEGORY_2.id!]: TEST_MEASUREMENT_SEED_2.entries,
+            });
         });
 
         test('renders the current categories correctly', async () => {
@@ -53,21 +72,27 @@ describe("smoke test the MeasurementCard component", () => {
 
         beforeEach(() => {
             const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg');
-            const systolic = new MeasurementCategory('c-sys', 'Systolic', 'mmHg', undefined, 'blood_pressure', false, 'g-1');
-            systolic.entries = [
+            const systolic = new MeasurementCategory('c-sys', 'Systolic', 'mmHg', 'blood_pressure', false, 'g-1');
+            const diastolic = new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', 'blood_pressure', false, 'g-1');
+            group.children = [systolic, diastolic];
+            const systolicEntries = [
                 // sorted by date descending, like the server delivers them
                 new MeasurementEntry('d-2', 'c-sys', new Date(2023, 1, 2, 8), 125, ''),
                 new MeasurementEntry('d-1', 'c-sys', new Date(2023, 1, 1, 8), 120, ''),
             ];
-            const diastolic = new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', undefined, 'blood_pressure', false, 'g-1');
-            group.children = [systolic, diastolic];
 
             (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
                 data: [group]
             }));
-            mockChartQueries([group]);
+            mockChartQueries([
+                { category: group },
+                { category: systolic, entries: systolicEntries },
+                { category: diastolic },
+            ]);
+            // the component row reads the newest entry, the group parent none
+            mockEntryQueries({ 'c-sys': systolicEntries });
         });
 
         test('lists the latest reading of each component', async () => {

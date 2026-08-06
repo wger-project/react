@@ -1,6 +1,6 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from '@testing-library/react';
-import { mockChartQueries } from "@/tests/chartQueries";
+import { CategorySeed, mockChartQueries } from "@/tests/chartQueries";
 import { testQueryClient } from "@/tests/queryClient";
 import { MeasurementCategory, MetricType } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
@@ -10,10 +10,9 @@ import { describe, test } from 'vitest';
 
 vi.mock("@/components/Measurements/queries");
 
-/** The chart reads its points from the aggregated queries, not from the
- * entries the category carries */
-const renderChart = (element: React.ReactElement, categories: MeasurementCategory[]) => {
-    mockChartQueries(categories);
+/** The chart reads its points from the aggregated queries, not as entries */
+const renderChart = (element: React.ReactElement, seeds: CategorySeed[]) => {
+    mockChartQueries(seeds);
 
     return render(<QueryClientProvider client={testQueryClient}>{element}</QueryClientProvider>);
 };
@@ -21,58 +20,63 @@ const renderChart = (element: React.ReactElement, categories: MeasurementCategor
 const entry = (id: string, date: Date, value: number) =>
     new MeasurementEntry(id, 'c-1', date, value, '');
 
+/** A category with the history the server holds for it */
+const seed = (category: MeasurementCategory, entries: MeasurementEntry[] = []): CategorySeed =>
+    ({ category: category, entries: entries });
+
 // Recharts only paints SVG content once a ResizeObserver entry reports real
 // dimensions, which jsdom does not provide. We therefore only assert the
 // charts mount; the aggregation logic is covered separately below.
 describe('MeasurementChart', () => {
     test('mounts a line chart for a custom category', () => {
-        const category = new MeasurementCategory('c-1', 'Biceps', 'cm', [
+        const category = new MeasurementCategory('c-1', 'Biceps', 'cm');
+
+        renderChart(<MeasurementChart category={category} />, [seed(category, [
             entry('d-1', new Date(2023, 1, 1), 30),
             entry('d-2', new Date(2023, 1, 2), 31),
-        ]);
-
-        renderChart(<MeasurementChart category={category} />, [category]);
+        ])]);
     });
 
     test('mounts a bar chart for a summed-per-day category', () => {
-        const category = new MeasurementCategory('c-1', 'Steps', 'steps', [
+        const category = new MeasurementCategory('c-1', 'Steps', 'steps', 'steps');
+
+        renderChart(<MeasurementChart category={category} />, [seed(category, [
             entry('d-1', new Date(2023, 1, 1, 8), 4000),
             entry('d-2', new Date(2023, 1, 1, 18), 6000),
-        ], 'steps');
-
-        renderChart(<MeasurementChart category={category} />, [category]);
+        ])]);
     });
 
     test('mounts with no entries', () => {
         const empty = new MeasurementCategory('c-1', 'Biceps', 'cm');
-        const emptySummed = new MeasurementCategory('c-2', 'Steps', 'steps', [], 'steps');
+        const emptySummed = new MeasurementCategory('c-2', 'Steps', 'steps', 'steps');
 
-        renderChart(<MeasurementChart category={empty} />, [empty]);
-        renderChart(<MeasurementChart category={emptySummed} />, [emptySummed]);
+        renderChart(<MeasurementChart category={empty} />, [seed(empty)]);
+        renderChart(<MeasurementChart category={emptySummed} />, [seed(emptySummed)]);
     });
 
     test('mounts a combined chart for a group', () => {
         const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg');
-        const systolic = new MeasurementCategory('c-sys', 'Systolic', 'mmHg', [], 'blood_pressure', false, 'g-1');
-        systolic.entries = [
-            new MeasurementEntry('d-1', 'c-sys', new Date(2023, 1, 1, 8), 120, ''),
-            new MeasurementEntry('d-2', 'c-sys', new Date(2023, 1, 2, 8), 125, ''),
-        ];
-        const diastolic = new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', [], 'blood_pressure', false, 'g-1');
-        diastolic.entries = [
-            new MeasurementEntry('d-3', 'c-dia', new Date(2023, 1, 1, 8), 80, ''),
-        ];
+        const systolic = new MeasurementCategory('c-sys', 'Systolic', 'mmHg', 'blood_pressure', false, 'g-1');
+        const diastolic = new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', 'blood_pressure', false, 'g-1');
         group.children = [systolic, diastolic];
 
-        renderChart(<MeasurementChart category={group} />, [group]);
+        renderChart(<MeasurementChart category={group} />, [
+            seed(group),
+            seed(systolic, [
+                new MeasurementEntry('d-1', 'c-sys', new Date(2023, 1, 1, 8), 120, ''),
+                new MeasurementEntry('d-2', 'c-sys', new Date(2023, 1, 2, 8), 125, ''),
+            ]),
+            seed(diastolic, [new MeasurementEntry('d-3', 'c-dia', new Date(2023, 1, 1, 8), 80, '')]),
+        ]);
     });
 
     test('draws a heatmap when the category asks for one', () => {
-        const category = new MeasurementCategory('c-1', 'Steps', 'steps', [
-            entry('d-1', new Date(2023, 1, 1), 4000),
-        ], 'steps', false, null, 0, 'heatmap');
+        const category = new MeasurementCategory('c-1', 'Steps', 'steps', 'steps', false, null, 0, 'heatmap');
 
-        renderChart(<MeasurementChart category={category} range="all" />, [category]);
+        renderChart(
+            <MeasurementChart category={category} range="all" />,
+            [seed(category, [entry('d-1', new Date(2023, 1, 1), 4000)])],
+        );
 
         // Unlike the recharts charts, the grid is plain elements and does
         // render in jsdom
@@ -81,38 +85,38 @@ describe('MeasurementChart', () => {
 
     test('mounts a change chart with the overall change under it', () => {
         // 5 January 2026 is a Monday
-        const category = new MeasurementCategory('c-1', 'Biceps', 'cm', [
+        const category = new MeasurementCategory('c-1', 'Biceps', 'cm', 'custom', false, null, 0, 'delta');
+
+        renderChart(<MeasurementChart category={category} range="all" />, [seed(category, [
             entry('d-1', new Date(2026, 0, 5), 30),
             entry('d-2', new Date(2026, 0, 12), 31),
-        ], 'custom', false, null, 0, 'delta');
-
-        renderChart(<MeasurementChart category={category} range="all" />, [category]);
+        ])]);
 
         expect(screen.getByText(/overallChangeWeight/)).toBeInTheDocument();
     });
 
     test('a summed metric has no level to change, so no overall change', () => {
-        const category = new MeasurementCategory('c-1', 'Steps', 'steps', [
+        const category = new MeasurementCategory('c-1', 'Steps', 'steps', 'steps', false, null, 0, 'delta');
+
+        renderChart(<MeasurementChart category={category} range="all" />, [seed(category, [
             entry('d-1', new Date(2026, 0, 5), 4000),
             entry('d-2', new Date(2026, 0, 12), 6000),
-        ], 'steps', false, null, 0, 'delta');
-
-        renderChart(<MeasurementChart category={category} range="all" />, [category]);
+        ])]);
 
         expect(screen.queryByText(/overallChangeWeight/)).not.toBeInTheDocument();
     });
 
     test('draws a distribution histogram when the category asks for one', () => {
         const category = new MeasurementCategory(
-            'c-1', 'Biceps', 'cm',
+            'c-1', 'Biceps', 'cm', 'custom', false, null, 0, 'distribution',
+        );
+
+        renderChart(<MeasurementChart category={category} range="all" />, [seed(category,
             Array.from(
                 { length: 20 },
                 (_, i) => entry(`d-${i}`, new Date(2026, 0, 1 + i), 30 + i % 3),
             ),
-            'custom', false, null, 0, 'distribution',
-        );
-
-        renderChart(<MeasurementChart category={category} range="all" />, [category]);
+        )]);
 
         // Plain elements like the heatmap, so the bars render in jsdom
         const chart = screen.getByRole('img', { name: 'measurements.chartTypes.distribution' });
@@ -125,15 +129,15 @@ describe('MeasurementChart', () => {
 
     test('a summed distribution counts days and reads out as days', () => {
         const category = new MeasurementCategory(
-            'c-1', 'Steps', 'steps',
+            'c-1', 'Steps', 'steps', 'steps', false, null, 0, 'distribution',
+        );
+
+        renderChart(<MeasurementChart category={category} range="all" />, [seed(category,
             Array.from(
                 { length: 20 },
                 (_, i) => entry(`d-${i}`, new Date(2026, 0, 1 + i), 4000 + 100 * (i % 5)),
             ),
-            'steps', false, null, 0, 'distribution',
-        );
-
-        renderChart(<MeasurementChart category={category} range="all" />, [category]);
+        )]);
 
         const chart = screen.getByRole('img', { name: 'measurements.chartTypes.distribution' });
         fireEvent.mouseEnter(chart.firstChild!.firstChild as Element);
@@ -143,18 +147,17 @@ describe('MeasurementChart', () => {
     test('a selection from before the data changed is dropped, not read out of range', () => {
         // 20 distinct values spread over 20 bins, then the same category
         // shrunk to a single bin while the last bin is still hovered
-        const wide = new MeasurementCategory(
-            'c-1', 'Biceps', 'cm',
-            Array.from({ length: 20 }, (_, i) => entry(`d-${i}`, new Date(2026, 0, 1 + i), 30 + i)),
-            'custom', false, null, 0, 'distribution',
+        const category = new MeasurementCategory(
+            'c-1', 'Biceps', 'cm', 'custom', false, null, 0, 'distribution',
         );
-        const narrow = new MeasurementCategory(
-            'c-1', 'Biceps', 'cm',
+        const wide = seed(category,
+            Array.from({ length: 20 }, (_, i) => entry(`d-${i}`, new Date(2026, 0, 1 + i), 30 + i)),
+        );
+        const narrow = seed(category,
             Array.from({ length: 20 }, (_, i) => entry(`d-${i}`, new Date(2026, 0, 1 + i), 30)),
-            'custom', false, null, 0, 'distribution',
         );
 
-        const { rerender } = renderChart(<MeasurementChart category={wide} range="all" />, [wide]);
+        const { rerender } = renderChart(<MeasurementChart category={category} range="all" />, [wide]);
         const chart = screen.getByRole('img', { name: 'measurements.chartTypes.distribution' });
         fireEvent.mouseEnter(chart.firstChild!.lastChild as Element);
         expect(screen.getByText(/distributionEntryCount/)).toBeInTheDocument();
@@ -162,7 +165,7 @@ describe('MeasurementChart', () => {
         mockChartQueries([narrow]);
         rerender(
             <QueryClientProvider client={testQueryClient}>
-                <MeasurementChart category={narrow} range="all" />
+                <MeasurementChart category={category} range="all" />
             </QueryClientProvider>,
         );
 
@@ -171,12 +174,14 @@ describe('MeasurementChart', () => {
     });
 
     test('too few values fall back to the derived chart instead of a noise histogram', () => {
-        const category = new MeasurementCategory('c-1', 'Biceps', 'cm', [
+        const category = new MeasurementCategory(
+            'c-1', 'Biceps', 'cm', 'custom', false, null, 0, 'distribution',
+        );
+
+        renderChart(<MeasurementChart category={category} range="all" />, [seed(category, [
             entry('d-1', new Date(2026, 0, 5), 30),
             entry('d-2', new Date(2026, 0, 12), 31),
-        ], 'custom', false, null, 0, 'distribution');
-
-        renderChart(<MeasurementChart category={category} range="all" />, [category]);
+        ])]);
 
         expect(screen.queryByRole('img')).not.toBeInTheDocument();
     });
@@ -185,7 +190,10 @@ describe('MeasurementChart', () => {
         // 30 samples on 4 days are 4 daily totals: not enough for a
         // histogram, whatever the sample count says
         const category = new MeasurementCategory(
-            'c-1', 'Steps', 'steps',
+            'c-1', 'Steps', 'steps', 'steps', false, null, 0, 'distribution',
+        );
+
+        renderChart(<MeasurementChart category={category} range="all" />, [seed(category,
             Array.from(
                 { length: 30 },
                 (_, i) => entry(
@@ -194,10 +202,7 @@ describe('MeasurementChart', () => {
                     500,
                 ),
             ),
-            'steps', false, null, 0, 'distribution',
-        );
-
-        renderChart(<MeasurementChart category={category} range="all" />, [category]);
+        )]);
 
         expect(screen.queryByRole('img')).not.toBeInTheDocument();
     });
@@ -205,28 +210,29 @@ describe('MeasurementChart', () => {
     test('keeps the derived chart when the pick does not fit the metric type', () => {
         // Bars are not offered for a sample type, and a pick that does not fit
         // falls back to the derived chart instead of being drawn anyway
-        const category = new MeasurementCategory('c-1', 'Biceps', 'cm', [
-            entry('d-1', new Date(2023, 1, 1), 30),
-        ], 'custom', false, null, 0, 'bar');
+        const category = new MeasurementCategory('c-1', 'Biceps', 'cm', 'custom', false, null, 0, 'bar');
 
-        renderChart(<MeasurementChart category={category} range="all" />, [category]);
+        renderChart(
+            <MeasurementChart category={category} range="all" />,
+            [seed(category, [entry('d-1', new Date(2023, 1, 1), 30)])],
+        );
 
         expect(screen.queryByRole('img')).not.toBeInTheDocument();
     });
 
     test('mounts a stacked chart for a sleep group', () => {
-        const group = new MeasurementCategory('g-s', 'Sleep', 'min', [], 'sleep');
-        const stage = (id: string, name: string, type: MetricType, value: number) => {
-            const category = new MeasurementCategory(id, name, 'min', [], type, false, 'g-s');
-            category.entries = [new MeasurementEntry(`d-${id}`, id, new Date(2023, 1, 2), value, '')];
-            return category;
-        };
-        group.children = [
+        const group = new MeasurementCategory('g-s', 'Sleep', 'min', 'sleep');
+        const stage = (id: string, name: string, type: MetricType, value: number) => seed(
+            new MeasurementCategory(id, name, 'min', type, false, 'g-s'),
+            [new MeasurementEntry(`d-${id}`, id, new Date(2023, 1, 2), value, '')],
+        );
+        const stages = [
             stage('total', 'Total sleep', 'sleep_total', 480),
             stage('deep', 'Deep sleep', 'sleep_deep', 90),
             stage('rem', 'REM sleep', 'sleep_rem', 60),
         ];
+        group.children = stages.map(stage => stage.category);
 
-        renderChart(<MeasurementChart category={group} />, [group]);
+        renderChart(<MeasurementChart category={group} />, [seed(group), ...stages]);
     });
 });

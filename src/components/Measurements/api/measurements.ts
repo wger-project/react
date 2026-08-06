@@ -71,24 +71,8 @@ export const getMeasurementValueCounts = async (
     return data.map((item: unknown) => MeasurementValueCount.fromJson(item));
 };
 
-/**
- * How much of each category's history a caller needs.
- *
- * 'all' is the history the entry filterset asks for, capped by [entryLimit].
- * 'probe' fetches a single entry per category, for callers that only ask
- * whether a category holds entries at all: the lists come back truncated, so
- * `entries.length === 0` is the only thing they may be read for. 'none' skips
- * the entries, and with them one request per category, for callers that need
- * the categories themselves.
- */
-export type EntryLoading = 'all' | 'probe' | 'none';
-
 export type MeasurementQueryOptions = {
     filtersetQueryCategories?: object,
-    filtersetQueryEntries?: object,
-    entries?: EntryLoading,
-    /** How many entries per category at most, unlimited if left out */
-    entryLimit?: number,
 }
 
 /**
@@ -128,26 +112,30 @@ export const getMeasurementEntries = async (
 };
 
 /**
- * The first entry of a category, or none: enough to tell an empty category
- * from a filled one without reading a history that can run into thousands of
- * rows (the sleep stages alone write five entries a night).
+ * The entries of every category at once, for the callers that show a window
+ * of time rather than one category: asking per category would be one request
+ * each, and would miss the components of a group, which are categories the
+ * category list does not return on their own.
  */
-const probeMeasurementEntries = async (categoryId: string): Promise<MeasurementEntry[]> => {
+export const getAllMeasurementEntries = async (filtersetQuery: object = {}): Promise<MeasurementEntry[]> => {
+    const out: MeasurementEntry[] = [];
     const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
-        query: { category: categoryId, limit: 1 }
+        query: {
+            limit: API_MAX_PAGE_SIZE,
+            ...filtersetQuery,
+        }
     });
-    const { data } = await axios.get(url, { headers: makeHeader() });
 
-    return data.results.map((entryData: unknown) => MeasurementEntry.fromJson(entryData));
+    for await (const page of fetchPaginated(url, makeHeader())) {
+        for (const entryData of page) {
+            out.push(MeasurementEntry.fromJson(entryData));
+        }
+    }
+    return out;
 };
 
 export const getMeasurementCategories = async (options?: MeasurementQueryOptions): Promise<MeasurementCategory[]> => {
-    const {
-        filtersetQueryCategories = {},
-        filtersetQueryEntries = {},
-        entries = 'all',
-        entryLimit,
-    } = options || {};
+    const { filtersetQueryCategories = {} } = options || {};
 
     let categories: MeasurementCategory[] = [];
     const categoryUrl = makeUrl(API_MEASUREMENTS_CATEGORY_PATH, {
@@ -167,15 +155,6 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
     // don't surface it between the regular measurement categories
     categories = categories.filter(c => !(c.isOfficial && c.metricType === METRIC_TYPE_BODY_WEIGHT));
 
-    // Load entries for each category
-    if (entries !== 'none') {
-        await Promise.all(categories.map(async (category) => {
-            category.entries = entries === 'probe'
-                ? await probeMeasurementEntries(category.id!)
-                : await getMeasurementEntries(category.id!, filtersetQueryEntries, entryLimit);
-        }));
-    }
-
     // Multi-value groups: attach the children to their parent, only the
     // top-level categories are returned
     const byId = new Map(categories.map(c => [c.id, c]));
@@ -193,10 +172,30 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
     return categories.filter(c => c.parentId === null);
 };
 
-export const getMeasurementCategory = async (
-    id: string,
-    filtersetQueryEntries: object = {},
-): Promise<MeasurementCategory> => {
+/** A category, and whether it holds any entries at all */
+export type CategoryEntryFlag = {
+    category: MeasurementCategory,
+    hasEntries: boolean,
+}
+
+/**
+ * The categories, each with whether it holds entries: what the group picker
+ * needs, since only an entry-free category may become a group parent.
+ *
+ * One entry per category is read to answer it, rather than a history that can
+ * run into thousands of rows (the sleep stages alone write five entries a
+ * night). The entries themselves are of no interest, so they don't leave here.
+ */
+export const getCategoryEntryFlags = async (): Promise<CategoryEntryFlag[]> => {
+    const categories = await getMeasurementCategories();
+
+    return Promise.all(categories.map(async (category) => ({
+        category: category,
+        hasEntries: (await getMeasurementEntries(category.id!, {}, 1)).length > 0,
+    })));
+};
+
+export const getMeasurementCategory = async (id: string): Promise<MeasurementCategory> => {
     const { data: receivedCategories } = await axios.get<ApiMeasurementCategoryType>(
         makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: id }),
         { headers: makeHeader() },
@@ -214,10 +213,6 @@ export const getMeasurementCategory = async (
         }
     }
     category.children.sort((a, b) => a.order - b.order);
-
-    await Promise.all([category, ...category.children].map(async (cat) => {
-        cat.entries = await getMeasurementEntries(cat.id!, filtersetQueryEntries);
-    }));
 
     return category;
 };

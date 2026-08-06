@@ -66,7 +66,7 @@ describe('MeasurementCategory', () => {
     });
 
     test('clone treats a null parentId override as "remove from group"', () => {
-        const category = new MeasurementCategory('c-1', 'Systolic', 'mmHg', undefined, 'blood_pressure', false, 'c-parent', 1);
+        const category = new MeasurementCategory('c-1', 'Systolic', 'mmHg', 'blood_pressure', false, 'c-parent', 1);
 
         expect(MeasurementCategory.clone(category).parentId).toBe('c-parent');
         expect(MeasurementCategory.clone(category, { name: 'x' }).parentId).toBe('c-parent');
@@ -146,7 +146,7 @@ describe('MeasurementCategory', () => {
 
         test('toJson sends the picked type', () => {
             const category = new MeasurementCategory(
-                'c-1', 'Steps', 'steps', undefined, 'steps', false, null, 0, 'heatmap',
+                'c-1', 'Steps', 'steps', 'steps', false, null, 0, 'heatmap',
             );
 
             expect(category.toJson().chart_type).toBe('heatmap');
@@ -154,7 +154,7 @@ describe('MeasurementCategory', () => {
 
         test('clone carries the chart type over and can override it', () => {
             const category = new MeasurementCategory(
-                'c-1', 'Steps', 'steps', undefined, 'steps', false, null, 0, 'heatmap',
+                'c-1', 'Steps', 'steps', 'steps', false, null, 0, 'heatmap',
             );
 
             expect(MeasurementCategory.clone(category).chartType).toBe('heatmap');
@@ -254,7 +254,7 @@ describe('MeasurementCategory', () => {
 
         test('a typed category is named after its metric type', () => {
             const category = new MeasurementCategory(
-                'c-1', 'Blutdruck', 'mmHg', undefined, 'blood_pressure_systolic',
+                'c-1', 'Blutdruck', 'mmHg', 'blood_pressure_systolic',
             );
 
             expect(categoryDisplayName(category, t))

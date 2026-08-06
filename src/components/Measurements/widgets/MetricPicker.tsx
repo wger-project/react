@@ -32,7 +32,7 @@ export const NewCategoryPicker = ({ closeFn }: { closeFn?: () => void }) => {
     const [t, i18n] = useTranslation();
     const navigate = useNavigate();
     const [isCustom, setIsCustom] = React.useState(false);
-    const categoryQuery = useMeasurementsCategoryQuery({ entries: 'none' });
+    const categoryQuery = useMeasurementsCategoryQuery();
     const addCategoryQuery = useAddMeasurementCategoryQuery();
 
     if (isCustom) {
@@ -52,7 +52,7 @@ export const NewCategoryPicker = ({ closeFn }: { closeFn?: () => void }) => {
                 key={metricType}
                 disabled={taken.has(metricType)}
                 onClick={() => addCategoryQuery.mutate(
-                    new MeasurementCategory(null, defaults.name, defaults.unit, undefined, metricType),
+                    new MeasurementCategory(null, defaults.name, defaults.unit, metricType),
                     {
                         // Straight to the new category: the overview is long
                         // enough that a row appearing somewhere in it does not

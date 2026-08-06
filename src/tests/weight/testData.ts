@@ -7,7 +7,6 @@ export const testBodyWeightCategory = new MeasurementCategory(
     TEST_BODY_WEIGHT_CATEGORY_UUID,
     'Body weight',
     'kg',
-    undefined,
     METRIC_TYPE_BODY_WEIGHT,
     true,
 );

@@ -1,7 +1,14 @@
-import { useMeasurementsQuery } from "@/components/Measurements/queries";
+import {
+    useMeasurementEntriesQuery,
+    useMeasurementsQuery
+} from "@/components/Measurements/queries";
 import { MeasurementCategoryDetail } from "@/components/Measurements/screens/MeasurementCategoryDetail";
 import { mockChartQueries } from "@/tests/chartQueries";
-import { TEST_MEASUREMENT_CATEGORY_1 } from "@/tests/measurementsTestData";
+import {
+    TEST_MEASUREMENT_CATEGORY_1,
+    TEST_MEASUREMENT_ENTRIES_1,
+    TEST_MEASUREMENT_SEED_1
+} from "@/tests/measurementsTestData";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
 import React from 'react';
@@ -25,8 +32,12 @@ describe("Test the MeasurementCategoryDetail component", () => {
             isLoading: false,
             data: TEST_MEASUREMENT_CATEGORY_1
         }));
-        // The chart reads its points from the aggregated queries
-        mockChartQueries([TEST_MEASUREMENT_CATEGORY_1]);
+        // The chart reads its points from the aggregated queries, the grid
+        // under it the entries themselves
+        mockChartQueries([TEST_MEASUREMENT_SEED_1]);
+        (useMeasurementEntriesQuery as Mock).mockImplementation(() => ({
+            data: TEST_MEASUREMENT_ENTRIES_1
+        }));
     });
 
     afterEach(() => {

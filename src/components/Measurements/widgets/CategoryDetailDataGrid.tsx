@@ -46,8 +46,8 @@ const buildRows = (entries: MeasurementEntry[], unit: string, categoryUnit: stri
 
 export const CategoryDetailDataGrid = (props: {
     category: MeasurementCategory,
-    /** Rows to show, the category's own entries by default */
-    entries?: MeasurementEntry[],
+    /** Rows to show, read by the caller: a category carries no entries itself */
+    entries: MeasurementEntry[],
     /**
      * Unit the values are shown and edited in, the category's own by default.
      * Body weight is shown in the profile unit, since its entries can be
@@ -57,7 +57,7 @@ export const CategoryDetailDataGrid = (props: {
 }) => {
 
     const [t, i18n] = useTranslation();
-    const entries = props.entries ?? props.category.entries;
+    const entries = props.entries;
     const unit = props.displayUnit ?? props.category.unit;
     const data: GridRowsProp = buildRows(entries, unit, props.category.unit);
     const updateEntryQuery = useEditMeasurementEntryQuery();

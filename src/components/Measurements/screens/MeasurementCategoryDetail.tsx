@@ -4,9 +4,10 @@ import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import {
     categoryDisplayName,
     correlatesWithNutrition,
+    MeasurementCategory,
     METRIC_TYPE_BODY_WEIGHT
 } from "@/components/Measurements/models/Category";
-import { useMeasurementsQuery } from "@/components/Measurements/queries";
+import { useMeasurementEntriesQuery, useMeasurementsQuery } from "@/components/Measurements/queries";
 import { useNutritionPlanPeriods } from "@/components/Nutrition";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
 import { CategoryDetailDropdown } from "@/components/Measurements/widgets/CategoryDetailDropdown";
@@ -19,6 +20,18 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, useParams } from "react-router-dom";
 
+/**
+ * The grid of one category, over the entries the range covers.
+ *
+ * A component of its own because a group renders one per component, and each
+ * of them reads its own entries.
+ */
+const CategoryEntriesGrid = (props: { category: MeasurementCategory, range: ChartRange }) => {
+    const entriesQuery = useMeasurementEntriesQuery(props.category.id!, entryFilterFor(props.range));
+
+    return <CategoryDetailDataGrid category={props.category} entries={entriesQuery.data ?? []} />;
+};
+
 export const MeasurementCategoryDetail = () => {
     const params = useParams<{ categoryId: string }>();
     const categoryId = params.categoryId ?? '';
@@ -28,10 +41,8 @@ export const MeasurementCategoryDetail = () => {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [range, setRange] = React.useState<ChartRange>(DEFAULT_CHART_RANGE);
-    // Fetch what the range shows, rather than the whole history. The grid
-    // below lists the same entries, so it follows the range too
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const categoryQuery = useMeasurementsQuery(categoryId, entryFilterFor(range));
+    const categoryQuery = useMeasurementsQuery(categoryId);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const planPeriods = useNutritionPlanPeriods(
         correlatesWithNutrition(categoryQuery.data?.metricType ?? 'custom'),
@@ -67,9 +78,9 @@ export const MeasurementCategoryDetail = () => {
                     ? categoryQuery.data!.children.map(child =>
                         <React.Fragment key={child.id}>
                             <Typography variant="h5">{categoryDisplayName(child, t)}</Typography>
-                            <CategoryDetailDataGrid category={child} />
+                            <CategoryEntriesGrid category={child} range={range} />
                         </React.Fragment>)
-                    : <CategoryDetailDataGrid category={categoryQuery.data!} />}
+                    : <CategoryEntriesGrid category={categoryQuery.data!} range={range} />}
             </Stack>
         }
         fab={<AddMeasurementEntryFab category={categoryQuery.data!} />}

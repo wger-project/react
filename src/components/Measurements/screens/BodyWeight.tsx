@@ -50,8 +50,6 @@ export const BodyWeight = () => {
                     planPeriods={planPeriods}
                     chartConfig={categoryQuery.data!.chartConfig} />
                 <Box sx={{ mt: 4 }} />
-                {/* The entries are read by their own query here, the official
-                    category is fetched without them */}
                 <CategoryDetailDataGrid
                     category={categoryQuery.data!}
                     entries={weightyQuery.data!}

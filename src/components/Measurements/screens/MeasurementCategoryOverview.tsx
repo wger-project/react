@@ -59,10 +59,7 @@ export const MeasurementCategoryOverview = () => {
     // One range for all cards: picking it per card would put a row of
     // buttons on every one of them
     const [range, setRange] = React.useState<ChartRange>(DEFAULT_CHART_RANGE);
-    // Only the categories: the cards chart the condensed reads, so nothing on
-    // this page touches the entries themselves. The range stays out of the
-    // query as well, otherwise picking one would read the same list again
-    const categoryQuery = useMeasurementsCategoryQuery({ entries: 'none' });
+    const categoryQuery = useMeasurementsCategoryQuery();
 
     return categoryQuery.isLoading
         ? <LoadingPlaceholder />

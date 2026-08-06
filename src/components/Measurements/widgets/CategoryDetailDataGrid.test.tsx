@@ -30,19 +30,15 @@ describe('CategoryDetailDataGrid', () => {
     });
 
     test('entries synced from a health app offer no edit or delete actions', async () => {
-        const category = new MeasurementCategory(
-            CATEGORY_UUID,
-            'Biceps',
-            'cm',
-            [
-                new MeasurementEntry(USER_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 1), 10, '', 'user'),
-                new MeasurementEntry(SYNCED_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 2), 12, '', 'apple'),
-            ],
-        );
+        const category = new MeasurementCategory(CATEGORY_UUID, 'Biceps', 'cm');
+        const entries = [
+            new MeasurementEntry(USER_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 1), 10, '', 'user'),
+            new MeasurementEntry(SYNCED_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 2), 12, '', 'apple'),
+        ];
 
         render(
             <QueryClientProvider client={testQueryClient}>
-                <CategoryDetailDataGrid category={category} />
+                <CategoryDetailDataGrid category={category} entries={entries} />
             </QueryClientProvider>
         );
         await screen.findByText('10');
@@ -59,19 +55,15 @@ describe('CategoryDetailDataGrid', () => {
     });
 
     test('a duration reads h:mm, in the value and in the change columns', async () => {
-        const category = new MeasurementCategory(
-            CATEGORY_UUID,
-            'Total sleep',
-            'min',
-            [
-                new MeasurementEntry(USER_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 1), 480, '', 'user'),
-                new MeasurementEntry(SYNCED_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 2), 437, '', 'apple'),
-            ],
-        );
+        const category = new MeasurementCategory(CATEGORY_UUID, 'Total sleep', 'min');
+        const entries = [
+            new MeasurementEntry(USER_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 1), 480, '', 'user'),
+            new MeasurementEntry(SYNCED_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 2), 437, '', 'apple'),
+        ];
 
         render(
             <QueryClientProvider client={testQueryClient}>
-                <CategoryDetailDataGrid category={category} />
+                <CategoryDetailDataGrid category={category} entries={entries} />
             </QueryClientProvider>
         );
         await screen.findByText('8:00 h');

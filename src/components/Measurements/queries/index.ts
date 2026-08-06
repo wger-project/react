@@ -6,9 +6,12 @@ import {
     editMeasurementCategory,
     editMeasurementEntry,
     BucketLevel,
+    getAllMeasurementEntries,
+    getCategoryEntryFlags,
     getMeasurementBuckets,
     getMeasurementCategories,
     getMeasurementCategory,
+    getMeasurementEntries,
     getMeasurementValueCounts,
     MeasurementQueryOptions,
     updateMeasurementCategoryOrder
@@ -19,19 +22,41 @@ import { QueryKey } from "@/core/lib/consts";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
+/**
+ * Which categories hold entries. Under the category key so that adding or
+ * removing one refreshes it, like every other read of that list.
+ */
+const CATEGORY_ENTRY_FLAGS_KEY = [QueryKey.MEASUREMENTS_CATEGORIES, 'entry-flags'];
+
 /** The condensed reads behind the charts, which every write invalidates */
 const invalidateChartReads = (queryClient: ReturnType<typeof useQueryClient>) => {
     queryClient.invalidateQueries({ queryKey: [QueryKey.MEASUREMENT_BUCKETS,] });
     queryClient.invalidateQueries({ queryKey: [QueryKey.MEASUREMENT_VALUE_COUNTS,] });
 };
 
+/**
+ * What a written entry ages: the entries themselves, the charts drawn from
+ * them, and whether the category holds any. Not the categories, they carry
+ * nothing that an entry can change.
+ */
+const invalidateEntryReads = (queryClient: ReturnType<typeof useQueryClient>) => {
+    queryClient.invalidateQueries({ queryKey: [QueryKey.MEASUREMENT_ENTRIES,] });
+    queryClient.invalidateQueries({ queryKey: CATEGORY_ENTRY_FLAGS_KEY });
+    invalidateChartReads(queryClient);
+};
+
 export function useMeasurementsCategoryQuery(options?: MeasurementQueryOptions) {
     return useQuery({
         queryKey: [QueryKey.MEASUREMENTS_CATEGORIES, JSON.stringify(options || {})],
         queryFn: () => getMeasurementCategories(options),
-        // Widening the range refetches, and the charts would otherwise drop
-        // back to the loading placeholder while the longer history arrives
-        placeholderData: keepPreviousData,
+    });
+}
+
+/** The categories, each with whether it holds entries: what a group parent may be */
+export function useCategoryEntryFlagsQuery() {
+    return useQuery({
+        queryKey: CATEGORY_ENTRY_FLAGS_KEY,
+        queryFn: () => getCategoryEntryFlags(),
     });
 }
 
@@ -98,11 +123,40 @@ export const useReorderMeasurementCategoriesQuery = () => {
     });
 };
 
-export function useMeasurementsQuery(id: string, filtersetQueryEntries: object = {}) {
+export function useMeasurementsQuery(id: string) {
     return useQuery({
-        queryKey: [QueryKey.MEASUREMENTS, id, JSON.stringify(filtersetQueryEntries)],
-        queryFn: () => getMeasurementCategory(id, filtersetQueryEntries),
+        queryKey: [QueryKey.MEASUREMENTS, id],
+        queryFn: () => getMeasurementCategory(id),
+    });
+}
+
+/**
+ * The entries of one category.
+ *
+ * [limit] reads only that many of the newest ones, for the callers that show
+ * the latest handful rather than a span of time.
+ */
+export function useMeasurementEntriesQuery(
+    categoryId: string,
+    filtersetQuery: object = {},
+    limit?: number,
+    enabled: boolean = true,
+) {
+    return useQuery({
+        queryKey: [QueryKey.MEASUREMENT_ENTRIES, categoryId, JSON.stringify(filtersetQuery), limit ?? null],
+        queryFn: () => getMeasurementEntries(categoryId, filtersetQuery, limit),
+        enabled: enabled,
+        // Picking another range refetches, and the table would otherwise drop
+        // back to the loading placeholder while the new one arrives
         placeholderData: keepPreviousData,
+    });
+}
+
+/** The entries of every category in one read, for the views that show a window of time */
+export function useAllMeasurementEntriesQuery(filtersetQuery: object = {}) {
+    return useQuery({
+        queryKey: [QueryKey.MEASUREMENT_ENTRIES, 'all', JSON.stringify(filtersetQuery)],
+        queryFn: () => getAllMeasurementEntries(filtersetQuery),
     });
 }
 
@@ -111,15 +165,7 @@ export const useAddMeasurementEntryQuery = () => {
 
     return useMutation({
         mutationFn: (entry: MeasurementEntry) => addMeasurementEntry(entry),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [QueryKey.MEASUREMENTS,]
-            });
-            queryClient.invalidateQueries({
-                queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
-            });
-            invalidateChartReads(queryClient);
-        }
+        onSuccess: () => invalidateEntryReads(queryClient)
     });
 };
 
@@ -129,15 +175,7 @@ export const useAddGroupEntriesQuery = () => {
 
     return useMutation({
         mutationFn: (entries: MeasurementEntry[]) => Promise.all(entries.map(entry => addMeasurementEntry(entry))),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [QueryKey.MEASUREMENTS,]
-            });
-            queryClient.invalidateQueries({
-                queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
-            });
-            invalidateChartReads(queryClient);
-        }
+        onSuccess: () => invalidateEntryReads(queryClient)
     });
 };
 
@@ -146,15 +184,7 @@ export const useEditMeasurementEntryQuery = () => {
 
     return useMutation({
         mutationFn: (entry: MeasurementEntry) => editMeasurementEntry(entry),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [QueryKey.MEASUREMENTS,]
-            });
-            queryClient.invalidateQueries({
-                queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
-            });
-            invalidateChartReads(queryClient);
-        }
+        onSuccess: () => invalidateEntryReads(queryClient)
     });
 };
 
@@ -163,16 +193,7 @@ export const useDeleteMeasurementEntryQuery = () => {
 
     return useMutation({
         mutationFn: (id: string) => deleteMeasurementEntry(id),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: [QueryKey.MEASUREMENTS,]
-            });
-            // The category lists carry the entries as well, like on add and edit
-            queryClient.invalidateQueries({
-                queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
-            });
-            invalidateChartReads(queryClient);
-        }
+        onSuccess: () => invalidateEntryReads(queryClient)
     });
 };
 

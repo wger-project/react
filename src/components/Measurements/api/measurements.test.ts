@@ -5,8 +5,10 @@ import {
     deleteMeasurementEntry,
     editMeasurementCategory,
     editMeasurementEntry,
+    getCategoryEntryFlags,
     getMeasurementCategories,
     getMeasurementCategory,
+    getMeasurementEntries,
 } from "@/components/Measurements/api/measurements";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
@@ -69,78 +71,49 @@ describe('measurement service tests', () => {
         });
     });
 
-    test('Correctly filters categories and entries', async () => {
+    test('Correctly filters the categories', async () => {
 
-        await getMeasurementCategories({
-            filtersetQueryEntries: { foo: "bar" },
-            filtersetQueryCategories: { baz: "1234" }
-        });
+        await getMeasurementCategories({ filtersetQueryCategories: { baz: "1234" } });
 
-        expect(axios.get).toHaveBeenCalledTimes(2);
-        expect(axios.get).toHaveBeenNthCalledWith(1,
+        expect(axios.get).toHaveBeenCalledWith(
             expect.stringContaining('baz=1234'),
             expect.anything()
         );
-        expect(axios.get).toHaveBeenNthCalledWith(2,
-            expect.stringContaining('foo=bar'),
-            expect.anything()
-        );
-
     });
 
-    test('GET measurement categories', async () => {
+    test('GET measurement categories reads no entries along with them', async () => {
 
         const result = await getMeasurementCategories();
-        expect(axios.get).toHaveBeenCalledTimes(2);
 
+        expect(axios.get).toHaveBeenCalledTimes(1);
         expect(result).toStrictEqual([
-            new MeasurementCategory(CATEGORY_UUID, "Weight", "kg", [
-                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, new Date("2021-01-01T08:00:00+01:00"), 80, "")
-            ])
+            new MeasurementCategory(CATEGORY_UUID, "Weight", "kg")
         ]);
     });
 
-    test("entries 'none' reads the categories without a request per category", async () => {
+    test('the entry flags ask for a single entry per category', async () => {
 
-        const result = await getMeasurementCategories({ entries: 'none' });
-
-        expect(axios.get).toHaveBeenCalledTimes(1);
-        expect(result[0].entries).toHaveLength(0);
-    });
-
-    test("entries 'probe' asks for a single entry per category", async () => {
-
-        const result = await getMeasurementCategories({ entries: 'probe' });
+        const result = await getCategoryEntryFlags();
 
         expect(axios.get).toHaveBeenNthCalledWith(2,
             expect.stringContaining('limit=1'),
             expect.anything()
         );
-        expect(result[0].entries).toHaveLength(1);
+        expect(result).toStrictEqual([{
+            category: new MeasurementCategory(CATEGORY_UUID, "Weight", "kg"),
+            hasEntries: true,
+        }]);
     });
 
-    test("entryLimit caps how many entries are read per category", async () => {
+    test('an entry limit reads the newest entries in a single request', async () => {
 
-        const result = await getMeasurementCategories({ entryLimit: 5 });
+        const result = await getMeasurementEntries(CATEGORY_UUID, {}, 5);
 
-        expect(axios.get).toHaveBeenNthCalledWith(2,
+        expect(axios.get).toHaveBeenCalledWith(
             expect.stringContaining('limit=5'),
             expect.anything()
         );
-        expect(result[0].entries).toHaveLength(1);
-    });
-
-    test("entries 'probe' ignores the entry filterset, it fetches no history", async () => {
-
-        await getMeasurementCategories({
-            entries: 'probe',
-            filtersetQueryEntries: { foo: "bar" },
-        });
-
-        expect(axios.get).toHaveBeenNthCalledWith(2,
-            expect.not.stringContaining('foo=bar'),
-            expect.anything()
-        );
+        expect(result).toHaveLength(1);
     });
 
     test('GET measurement categories hides the official body weight category', async () => {
@@ -172,8 +145,6 @@ describe('measurement service tests', () => {
         const result = await getMeasurementCategories();
 
         expect(result.map(c => c.id)).toStrictEqual([CATEGORY_UUID]);
-        // no entries are loaded for the hidden category
-        expect(axios.get).toHaveBeenCalledTimes(2);
     });
 
     test('GET measurement category', async () => {
@@ -189,12 +160,10 @@ describe('measurement service tests', () => {
         });
 
         const result = await getMeasurementCategory(CATEGORY_UUID);
-        expect(axios.get).toHaveBeenCalledTimes(3);
+        expect(axios.get).toHaveBeenCalledTimes(2);
 
         expect(result).toStrictEqual(
-            new MeasurementCategory(CATEGORY_UUID, "Weight", "kg", [
-                new MeasurementEntry(ENTRY_UUID, CATEGORY_UUID, new Date("2021-01-01T08:00:00+01:00"), 80, "")
-            ])
+            new MeasurementCategory(CATEGORY_UUID, "Weight", "kg")
         );
     });
 
@@ -242,9 +211,7 @@ describe('measurement service tests', () => {
         const result = await getMeasurementCategory(CATEGORY_UUID);
 
         expect(result.isGroup).toBe(true);
-        expect(result.entries).toStrictEqual([]);
         expect(result.children.map(c => c.id)).toStrictEqual([CATEGORY_UUID_2]);
-        expect(result.children[0].entries.map(e => e.value)).toStrictEqual([120]);
     });
 
     test('GET measurement categories attaches children to their group', async () => {

@@ -62,6 +62,7 @@ export enum QueryKey {
     // the body weight queries)
     MEASUREMENTS = 'measurements',
     MEASUREMENTS_CATEGORIES = 'measurements-categories',
+    MEASUREMENT_ENTRIES = 'measurement-entries',
     MEASUREMENT_BUCKETS = 'measurement-buckets',
     MEASUREMENT_VALUE_COUNTS = 'measurement-value-counts',
 
