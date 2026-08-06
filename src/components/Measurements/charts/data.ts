@@ -12,7 +12,7 @@ import {
 } from "@/components/Measurements/models/Category";
 import { MeasurementBucket, MeasurementValueCount } from "@/components/Measurements/models/Bucket";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
-import { convertWeight, isWeightUnit } from "@/core/lib/weightUnit";
+import { convertStoredValue } from "@/core/lib/weightUnit";
 import { ChartRange, entryFilterFor, pointsSince } from "@/components/Measurements/charts/range";
 import { ChartPoint, ChartSeries, PlanPeriod } from "@/components/Measurements/charts/series";
 import { calculateEMA } from "@/core/lib/ema";
@@ -74,13 +74,8 @@ export const chartPointsForBuckets = (
     categoryUnit: string,
     summed: boolean = false,
 ): ChartPoint[] => {
-    const convert = (value: number, from: string | null) => {
-        const unit = from || categoryUnit;
-
-        return isWeightUnit(unit) && isWeightUnit(targetUnit)
-            ? convertWeight(value, unit, targetUnit)
-            : value;
-    };
+    const convert = (value: number, from: string | null) =>
+        convertStoredValue(value, from, categoryUnit, targetUnit);
 
     const byStart = new Map<number, MeasurementBucket[]>();
     for (const bucket of buckets) {
@@ -544,13 +539,8 @@ export const valueHistogram = (
     targetUnit: string,
     categoryUnit: string,
 ): { values: ValueCount[], latest: number } => {
-    const convert = (value: number, from: string | null) => {
-        const unit = from || categoryUnit;
-
-        return isWeightUnit(unit) && isWeightUnit(targetUnit)
-            ? convertWeight(value, unit, targetUnit)
-            : value;
-    };
+    const convert = (value: number, from: string | null) =>
+        convertStoredValue(value, from, categoryUnit, targetUnit);
 
     const merged = new Map<number, number>();
     for (const count of counts) {

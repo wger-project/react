@@ -1,4 +1,8 @@
-import { entryFilterFor, fetchCutoffFor } from "@/components/Measurements/charts/range";
+import {
+    displayCutoffFor,
+    entryFilterFor,
+    fetchCutoffFor
+} from "@/components/Measurements/charts/range";
 import { describe, expect, test } from 'vitest';
 
 const noon = new Date(2026, 5, 15, 12, 30);
@@ -37,5 +41,26 @@ describe('entryFilterFor', () => {
 
     test('the full history needs no filter', () => {
         expect(entryFilterFor('all', noon)).toStrictEqual({});
+    });
+
+    test('the display cutoff is the range itself, with no lead', () => {
+        // The counted values behind the histogram carry no date and cannot be
+        // trimmed afterwards, so reading them with the average lead would bin
+        // a month and a half into a chart labelled one month
+        const now = new Date(2026, 4, 20, 15, 30);
+        const display = displayCutoffFor('lastMonth', now)!;
+        const fetch = fetchCutoffFor('lastMonth', now)!;
+
+        expect(display).toStrictEqual(new Date(2026, 3, 20));
+        expect(display.getTime()).toBeGreaterThan(fetch.getTime());
+    });
+
+    test('both query cutoffs sit at midnight, so they hold across renders', () => {
+        const now = new Date(2026, 4, 20, 15, 30);
+
+        for (const cutoff of [displayCutoffFor('lastMonth', now)!, fetchCutoffFor('lastMonth', now)!]) {
+            expect(cutoff.getHours()).toBe(0);
+            expect(cutoff.getMinutes()).toBe(0);
+        }
     });
 });

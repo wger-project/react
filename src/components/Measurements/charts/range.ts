@@ -88,6 +88,13 @@ export const displayFilterFor = (range: ChartRange, now: Date = new Date()): obj
     return cutoff === null ? {} : { "date__gte": cutoff.toISOString() };
 };
 
-/** The points from the cutoff on; a null cutoff covers the full history */
+/**
+ * The points from the cutoff on; a null cutoff covers the full history.
+ *
+ * A condensed point sits at the start of its bucket, so the bucket the cutoff
+ * falls into drops out whole rather than half: at a week bucket that is up to
+ * a week of readings the range technically covers. Deliberate, a part bucket
+ * drawn next to full ones reads as a real dip.
+ */
 export const pointsSince = (points: ChartPoint[], cutoff: Date | null): ChartPoint[] =>
     cutoff === null ? points : points.filter(point => point.date >= cutoff.getTime());

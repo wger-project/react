@@ -1,5 +1,5 @@
 import { Adapter } from "@/core/lib/Adapter";
-import { convertWeight, isWeightUnit } from "@/core/lib/weightUnit";
+import { convertStoredValue } from "@/core/lib/weightUnit";
 
 export class MeasurementEntry {
 
@@ -57,11 +57,7 @@ export class MeasurementEntry {
     }
 
     private convert(value: number, targetUnit: string, categoryUnit: string): number {
-        const from = this.unitOrFallback(categoryUnit);
-
-        return isWeightUnit(from) && isWeightUnit(targetUnit)
-            ? convertWeight(value, from, targetUnit)
-            : value;
+        return convertStoredValue(value, this.extraData.unit as string, categoryUnit, targetUnit);
     }
 
     static clone(other: MeasurementEntry, overrides?: Partial<Pick<MeasurementEntry, 'id' | 'category' | 'date' | 'value' | 'notes' | 'extraData'>>): MeasurementEntry {

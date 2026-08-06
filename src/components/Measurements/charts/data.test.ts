@@ -1,9 +1,4 @@
-import { MeasurementBucket } from "@/components/Measurements/models/Bucket";
-import {
-    isSummedPerDay,
-    MeasurementCategory,
-    MetricType
-} from "@/components/Measurements/models/Category";
+import { MeasurementCategory, MetricType } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
     aggregatePerDay,
@@ -28,6 +23,7 @@ import {
     weeklyDeltas
 } from "@/components/Measurements/charts/data";
 import { ChartPoint } from "@/components/Measurements/charts/series";
+import { bucketsFor } from "@/tests/chartQueries";
 import { describe, expect, test } from 'vitest';
 
 const entry = (date: Date, value: number, extraData: Record<string, unknown> = {}) =>
@@ -343,34 +339,9 @@ describe('niceBinWidth', () => {
     });
 });
 
-/**
- * The points the aggregated read returns for a group, one bucket per entry
- * unless the metric is summed per day, which the query condenses to days.
- */
-const groupPoints = (group: MeasurementCategory) => groupComponentPoints(
-    group,
-    group.children.flatMap(child => {
-        const summed = isSummedPerDay(child.metricType);
-        const byStart = new Map<number, MeasurementEntry[]>();
-        for (const entry of child.entries) {
-            const date = entry.date;
-            const start = summed
-                ? new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
-                : date.getTime();
-            byStart.set(start, [...(byStart.get(start) ?? []), entry]);
-        }
-
-        return [...byStart.entries()].map(([start, entries]) => new MeasurementBucket(
-            child.id!,
-            new Date(start),
-            null,
-            entries.length,
-            entries.reduce((sum, e) => sum + e.value, 0),
-            Math.min(...entries.map(e => e.value)),
-            Math.max(...entries.map(e => e.value)),
-        ));
-    }),
-);
+/** The points the aggregated read returns for a group */
+const groupPoints = (group: MeasurementCategory) =>
+    groupComponentPoints(group, group.children.flatMap(child => bucketsFor(child)));
 
 describe('buildHistogram', () => {
     const counted = (...values: number[]) => values.map(value => ({ value: value, count: 1 }));

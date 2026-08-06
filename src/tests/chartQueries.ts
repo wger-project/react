@@ -46,7 +46,11 @@ const groupBy = <T>(items: T[], key: (item: T) => number): Map<number, T[]> => {
     return out;
 };
 
-const bucketsFor = (category: MeasurementCategory | undefined): MeasurementBucket[] => {
+/**
+ * The buckets the server returns for a category: one per entry, or daily
+ * totals for the summed metrics, which it condenses whatever the count.
+ */
+export const bucketsFor = (category: MeasurementCategory | undefined): MeasurementBucket[] => {
     if (category === undefined) {
         return [];
     }

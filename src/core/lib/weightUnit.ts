@@ -23,3 +23,24 @@ export function convertWeight(value: number, from: WeightUnit, to: WeightUnit): 
 
     return Math.round(converted * 100) / 100;
 }
+
+/*
+ * Reads a stored value in the target unit: the unit it was entered in wins,
+ * the category unit fills in, and anything that is not a weight is a plain
+ * label and passes through.
+ *
+ * The one place that decides what a stored number means. A category can hold
+ * mixed units, so the raw value on its own is meaningless.
+ */
+export function convertStoredValue(
+    value: number,
+    storedUnit: string | null | undefined,
+    categoryUnit: string,
+    targetUnit: string,
+): number {
+    const from = storedUnit || categoryUnit;
+
+    return isWeightUnit(from) && isWeightUnit(targetUnit)
+        ? convertWeight(value, from, targetUnit)
+        : value;
+}

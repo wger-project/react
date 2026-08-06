@@ -90,10 +90,11 @@ export const useReorderMeasurementCategoriesQuery = () => {
         mutationFn: (categories: MeasurementCategory[]) => Promise.all(
             categories.map((category, index) => updateMeasurementCategoryOrder(category.id!, index))
         ),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,] });
-            invalidateChartReads(queryClient);
-        }
+        // Not the chart reads: the order decides where a card sits, not what
+        // it draws
+        onSuccess: () => queryClient.invalidateQueries({
+            queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
+        })
     });
 };
 
