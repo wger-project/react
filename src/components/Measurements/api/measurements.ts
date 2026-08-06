@@ -74,11 +74,12 @@ export const getMeasurementValueCounts = async (
 /**
  * How much of each category's history a caller needs.
  *
- * 'all' is the history the entry filterset asks for. 'probe' fetches a single
- * entry per category, for callers that only ask whether a category holds
- * entries at all: the lists come back truncated, so `entries.length === 0` is
- * the only thing they may be read for. 'none' skips the entries, and with them
- * one request per category, for callers that need the categories themselves.
+ * 'all' is the history the entry filterset asks for, capped by [entryLimit].
+ * 'probe' fetches a single entry per category, for callers that only ask
+ * whether a category holds entries at all: the lists come back truncated, so
+ * `entries.length === 0` is the only thing they may be read for. 'none' skips
+ * the entries, and with them one request per category, for callers that need
+ * the categories themselves.
  */
 export type EntryLoading = 'all' | 'probe' | 'none';
 
@@ -86,20 +87,38 @@ export type MeasurementQueryOptions = {
     filtersetQueryCategories?: object,
     filtersetQueryEntries?: object,
     entries?: EntryLoading,
+    /** How many entries per category at most, unlimited if left out */
+    entryLimit?: number,
 }
 
-/** Every entry of a category, over all pages */
-export const getMeasurementEntries = async (categoryId: string, filtersetQuery: object = {}): Promise<MeasurementEntry[]> => {
-    const out: MeasurementEntry[] = [];
+/**
+ * Every entry of a category, over all pages.
+ *
+ * [limit] stops at that many of the newest ones, in a single request: the
+ * server orders by date descending, so a caller that shows the latest handful
+ * has no reason to drain a history that runs into thousands of rows.
+ */
+export const getMeasurementEntries = async (
+    categoryId: string,
+    filtersetQuery: object = {},
+    limit?: number,
+): Promise<MeasurementEntry[]> => {
     const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
         query: {
             category: categoryId,
-            limit: API_MAX_PAGE_SIZE,
+            limit: limit ?? API_MAX_PAGE_SIZE,
             ...filtersetQuery,
         }
     });
 
+    if (limit !== undefined) {
+        const { data } = await axios.get(url, { headers: makeHeader() });
+
+        return data.results.map((entryData: unknown) => MeasurementEntry.fromJson(entryData));
+    }
+
     // Collect all pages of entries
+    const out: MeasurementEntry[] = [];
     for await (const page of fetchPaginated(url, makeHeader())) {
         for (const entryData of page) {
             out.push(MeasurementEntry.fromJson(entryData));
@@ -127,6 +146,7 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
         filtersetQueryCategories = {},
         filtersetQueryEntries = {},
         entries = 'all',
+        entryLimit,
     } = options || {};
 
     let categories: MeasurementCategory[] = [];
@@ -152,7 +172,7 @@ export const getMeasurementCategories = async (options?: MeasurementQueryOptions
         await Promise.all(categories.map(async (category) => {
             category.entries = entries === 'probe'
                 ? await probeMeasurementEntries(category.id!)
-                : await getMeasurementEntries(category.id!, filtersetQueryEntries);
+                : await getMeasurementEntries(category.id!, filtersetQueryEntries, entryLimit);
         }));
     }
 

@@ -7,7 +7,7 @@ import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
 import { categoryDisplayName, MeasurementCategory } from "@/components/Measurements/models/Category";
 import { unitLabel } from "@/components/Measurements/charts/format";
-import { ChartRange, DEFAULT_CHART_RANGE, entryFilterFor } from "@/components/Measurements/charts/range";
+import { ChartRange, DEFAULT_CHART_RANGE } from "@/components/Measurements/charts/range";
 import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
 import { OverviewEmpty } from "@/core/ui/Widgets/OverviewEmpty";
@@ -59,11 +59,10 @@ export const MeasurementCategoryOverview = () => {
     // One range for all cards: picking it per card would put a row of
     // buttons on every one of them
     const [range, setRange] = React.useState<ChartRange>(DEFAULT_CHART_RANGE);
-    // Fetch what the range shows, rather than the whole history: this page
-    // charts three months by default, and a synced account holds years
-    const categoryQuery = useMeasurementsCategoryQuery({
-        filtersetQueryEntries: entryFilterFor(range),
-    });
+    // Only the categories: the cards chart the condensed reads, so nothing on
+    // this page touches the entries themselves. The range stays out of the
+    // query as well, otherwise picking one would read the same list again
+    const categoryQuery = useMeasurementsCategoryQuery({ entries: 'none' });
 
     return categoryQuery.isLoading
         ? <LoadingPlaceholder />

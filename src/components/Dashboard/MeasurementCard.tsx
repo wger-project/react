@@ -7,7 +7,6 @@ import {
     componentPalette,
     chartQueryFor,
     DEFAULT_CHART_RANGE,
-    entryFilterFor,
     groupChart,
     groupComponentPoints,
     MeasurementCategory,
@@ -33,16 +32,17 @@ import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 
 
+/** Entries the table under each chart lists, at most */
+const TABLE_ROWS = 5;
+
 export const MeasurementCard = () => {
     const { t } = useTranslation();
-    // A year, like the body weight card next to it: the chart below covers
-    // three months, the table under it wants the latest entries of a category
-    // that may be measured only every few months. Fetching the full history
-    // instead is what a synced account pays for, the sleep stages alone write
-    // five entries a night
-    const categoryQuery = useMeasurementsCategoryQuery({
-        filtersetQueryEntries: entryFilterFor('lastYear'),
-    });
+    // The chart reads its points condensed, the table below it only wants the
+    // newest few rows, so that is all that is read here. A window would leave
+    // a category that is measured every few months with an empty table, and
+    // the full history is what a synced account pays for: the sleep stages
+    // alone write five entries a night
+    const categoryQuery = useMeasurementsCategoryQuery({ entryLimit: TABLE_ROWS });
 
     if (categoryQuery.isLoading) {
         return <LoadingPlaceholder />;
@@ -156,7 +156,7 @@ const MeasurementCardTableContent = (props: { category: MeasurementCategory }) =
                             </TableCell>
                         </TableRow>;
                     })
-                    : [...props.category.entries].slice(0, 5).map(entry => (
+                    : [...props.category.entries].slice(0, TABLE_ROWS).map(entry => (
                         <TableRow key={`measurement-entry-${entry.id}`}>
                             <TableCell>{entry.date.toLocaleDateString()}</TableCell>
                             <TableCell>

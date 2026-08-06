@@ -119,6 +119,17 @@ describe('measurement service tests', () => {
         expect(result[0].entries).toHaveLength(1);
     });
 
+    test("entryLimit caps how many entries are read per category", async () => {
+
+        const result = await getMeasurementCategories({ entryLimit: 5 });
+
+        expect(axios.get).toHaveBeenNthCalledWith(2,
+            expect.stringContaining('limit=5'),
+            expect.anything()
+        );
+        expect(result[0].entries).toHaveLength(1);
+    });
+
     test("entries 'probe' ignores the entry filterset, it fetches no history", async () => {
 
         await getMeasurementCategories({
