@@ -29,7 +29,11 @@ export const CategoryList = (props: { category: MeasurementCategory, range: Char
 
     return <>
         <Card>
-            <CardHeader title={categoryDisplayName(props.category, t)} subheader={unitLabel(props.category.unit)} />
+            {/* A category without a unit gets no subheader rather than an empty one */}
+            <CardHeader
+                title={categoryDisplayName(props.category, t)}
+                subheader={unitLabel(props.category.unit) || undefined}
+            />
             <CardContent>
                 <MeasurementChart category={props.category} range={props.range} />
             </CardContent>

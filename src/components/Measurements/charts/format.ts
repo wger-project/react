@@ -54,9 +54,15 @@ export const valueOnly = (value: number, unit: string, locale: string): string =
  */
 export const unitLabel = (unit: string): string => unit === MINUTES ? 'h' : unit;
 
-/** A measured value with its unit, both localised */
+/**
+ * A measured value with its unit, both localised. A value stands on its own
+ * where there is no unit: a step count is a bare number, and so may be a
+ * free-form category.
+ */
 export const valueWithUnit = (value: number, unit: string, locale: string): string =>
-    `${valueOnly(value, unit, locale)} ${unitLabel(unit)}`;
+    unit === ''
+        ? valueOnly(value, unit, locale)
+        : `${valueOnly(value, unit, locale)} ${unitLabel(unit)}`;
 
 /** Ticks a duration axis aims for, few enough that the labels stay apart */
 const DURATION_TICKS = 6;

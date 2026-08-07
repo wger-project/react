@@ -253,7 +253,8 @@ const METRIC_DEFAULTS: Partial<Record<MetricType, { name: string, unit: string }
     heart_rate: { name: 'Heart rate', unit: 'bpm' },
     resting_heart_rate: { name: 'Resting heart rate', unit: 'bpm' },
     blood_oxygen: { name: 'Blood oxygen', unit: '%' },
-    steps: { name: 'Steps', unit: 'count' },
+    // A step count is a bare number, not a quantity in some unit
+    steps: { name: 'Steps', unit: '' },
     distance: { name: 'Distance', unit: 'km' },
     energy: { name: 'Energy', unit: 'kcal' },
     sleep: { name: 'Sleep', unit: 'min' },
