@@ -15,6 +15,8 @@ vi.mock("@/components/Measurements/queries");
 const CATEGORY_UUID = 'cccccccc-cccc-cccc-cccc-000000000001';
 const USER_ENTRY_UUID = 'dddddddd-dddd-dddd-dddd-000000000001';
 const SYNCED_ENTRY_UUID = 'dddddddd-dddd-dddd-dddd-000000000002';
+const NEXT_ENTRY_UUID = 'dddddddd-dddd-dddd-dddd-000000000003';
+const OLDEST_ENTRY_UUID = 'dddddddd-dddd-dddd-dddd-000000000004';
 
 describe('CategoryDetailDataGrid', () => {
 
@@ -52,6 +54,48 @@ describe('CategoryDetailDataGrid', () => {
         expect(within(syncedRow).queryByRole('menuitem', { name: /edit/i })).not.toBeInTheDocument();
         expect(within(syncedRow).queryByRole('menuitem', { name: /delete/i })).not.toBeInTheDocument();
         expect(within(syncedRow).getByRole('menuitem', { name: 'syncedEntryInfo' })).toBeInTheDocument();
+    });
+
+    test('a page measures its difference columns against the entries outside it', async () => {
+        const category = new MeasurementCategory(CATEGORY_UUID, 'Biceps', 'cm');
+        const page = [
+            new MeasurementEntry(USER_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 3), 12, ''),
+            new MeasurementEntry(SYNCED_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 2), 11, '', 'apple'),
+        ];
+        // The entry the page ends before, and the oldest one of the range
+        const neighbours = [
+            new MeasurementEntry(NEXT_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 1), 10, ''),
+            new MeasurementEntry(OLDEST_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 0, 1), 5, ''),
+        ];
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <CategoryDetailDataGrid
+                    category={category}
+                    entries={page}
+                    pagination={{
+                        rowCount: 42,
+                        model: { page: 3, pageSize: 5 },
+                        onModelChange: vi.fn(),
+                        neighbours: neighbours,
+                        isLoading: false,
+                    }} />
+            </QueryClientProvider>
+        );
+        await screen.findByText('12 cm');
+
+        const cell = (id: string, field: string) =>
+            document.querySelector(`[data-id="${id}"] [data-field="${field}"]`)?.textContent;
+
+        // The last row of the page differs from the entry after it, and both
+        // rows count from the oldest one there is
+        expect(cell(SYNCED_ENTRY_UUID, 'change')).toBe('1');
+        expect(cell(SYNCED_ENTRY_UUID, 'totalChange')).toBe('6');
+        expect(cell(USER_ENTRY_UUID, 'totalChange')).toBe('7');
+
+        // Neither of them is a row of its own
+        expect(document.querySelector(`[data-id="${NEXT_ENTRY_UUID}"]`)).toBeNull();
+        expect(document.querySelector(`[data-id="${OLDEST_ENTRY_UUID}"]`)).toBeNull();
     });
 
     test('a duration reads h:mm, in the value and in the change columns', async () => {

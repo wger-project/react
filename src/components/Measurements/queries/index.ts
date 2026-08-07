@@ -12,7 +12,9 @@ import {
     getMeasurementCategories,
     getMeasurementCategory,
     getMeasurementEntries,
+    getMeasurementEntryPage,
     getMeasurementValueCounts,
+    getOldestMeasurementEntry,
     MeasurementQueryOptions,
     updateMeasurementCategoryOrder
 } from "@/components/Measurements/api/measurements";
@@ -149,6 +151,39 @@ export function useMeasurementEntriesQuery(
         // Picking another range refetches, and the table would otherwise drop
         // back to the loading placeholder while the new one arrives
         placeholderData: keepPreviousData,
+    });
+}
+
+/**
+ * One page of a category's entries, for the tables that show a page at a time.
+ *
+ * Kept apart from the query above, which hands over a whole span: a table
+ * shows ten rows, and a synced category holds thousands of them.
+ */
+export function useMeasurementEntryPageQuery(
+    categoryId: string,
+    offset: number,
+    limit: number,
+    filtersetQuery: object = {},
+) {
+    return useQuery({
+        queryKey: [QueryKey.MEASUREMENT_ENTRIES, categoryId, JSON.stringify(filtersetQuery), 'page', offset, limit],
+        queryFn: () => getMeasurementEntryPage(categoryId, offset, limit, filtersetQuery),
+        // Turning the page refetches, and the table would otherwise drop back
+        // to an empty grid while the next one arrives
+        placeholderData: keepPreviousData,
+    });
+}
+
+/**
+ * The oldest entry of a category, which the total change of every row is
+ * measured against. Its own query, so paging through the table doesn't read
+ * it again: it only changes with the range.
+ */
+export function useOldestMeasurementEntryQuery(categoryId: string, filtersetQuery: object = {}) {
+    return useQuery({
+        queryKey: [QueryKey.MEASUREMENT_ENTRIES, categoryId, JSON.stringify(filtersetQuery), 'oldest'],
+        queryFn: () => getOldestMeasurementEntry(categoryId, filtersetQuery),
     });
 }
 

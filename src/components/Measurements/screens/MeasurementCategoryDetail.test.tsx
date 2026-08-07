@@ -1,6 +1,7 @@
 import {
-    useMeasurementEntriesQuery,
-    useMeasurementsQuery
+    useMeasurementEntryPageQuery,
+    useMeasurementsQuery,
+    useOldestMeasurementEntryQuery
 } from "@/components/Measurements/queries";
 import { MeasurementCategoryDetail } from "@/components/Measurements/screens/MeasurementCategoryDetail";
 import { mockChartQueries } from "@/tests/chartQueries";
@@ -33,11 +34,17 @@ describe("Test the MeasurementCategoryDetail component", () => {
             data: TEST_MEASUREMENT_CATEGORY_1
         }));
         // The chart reads its points from the aggregated queries, the grid
-        // under it the entries themselves
+        // under it one page of the entries themselves
         mockChartQueries([TEST_MEASUREMENT_SEED_1]);
-        (useMeasurementEntriesQuery as Mock).mockImplementation(() => ({
-            data: TEST_MEASUREMENT_ENTRIES_1
+        (useMeasurementEntryPageQuery as Mock).mockImplementation(() => ({
+            data: {
+                entries: TEST_MEASUREMENT_ENTRIES_1,
+                count: TEST_MEASUREMENT_ENTRIES_1.length,
+                next: null,
+            },
+            isFetching: false,
         }));
+        (useOldestMeasurementEntryQuery as Mock).mockImplementation(() => ({ data: null }));
     });
 
     afterEach(() => {

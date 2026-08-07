@@ -7,11 +7,17 @@ import {
     MeasurementCategory,
     METRIC_TYPE_BODY_WEIGHT
 } from "@/components/Measurements/models/Category";
-import { useMeasurementEntriesQuery, useMeasurementsQuery } from "@/components/Measurements/queries";
+import {
+    useMeasurementEntryPageQuery,
+    useMeasurementsQuery,
+    useOldestMeasurementEntryQuery
+} from "@/components/Measurements/queries";
 import { useNutritionPlanPeriods } from "@/components/Nutrition";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
 import { CategoryDetailDropdown } from "@/components/Measurements/widgets/CategoryDetailDropdown";
-import { ChartRange, DEFAULT_CHART_RANGE, entryFilterFor } from "@/components/Measurements/charts/range";
+import { ChartRange, DEFAULT_CHART_RANGE, displayFilterFor } from "@/components/Measurements/charts/range";
+import { PAGINATION_OPTIONS } from "@/core/lib/consts";
+import { GridPaginationModel } from "@mui/x-data-grid";
 import { AddMeasurementEntryFab } from "@/components/Measurements/widgets/fab";
 import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
@@ -21,15 +27,47 @@ import { useTranslation } from "react-i18next";
 import { Navigate, useParams } from "react-router-dom";
 
 /**
- * The grid of one category, over the entries the range covers.
+ * The grid of one category, a page at a time over the entries the range
+ * covers.
  *
  * A component of its own because a group renders one per component, and each
  * of them reads its own entries.
  */
 const CategoryEntriesGrid = (props: { category: MeasurementCategory, range: ChartRange }) => {
-    const entriesQuery = useMeasurementEntriesQuery(props.category.id!, entryFilterFor(props.range));
+    // The range as it is labelled, not the chart's read: that one takes a
+    // month of lead so the moving average has something to average over, and
+    // the table would list those rows as if they were part of the range
+    const filter = displayFilterFor(props.range);
+    const [pagination, setPagination] = React.useState<GridPaginationModel>({
+        page: 0,
+        pageSize: PAGINATION_OPTIONS.pageSize,
+    });
+    // Another range is another set of entries, and page seven of the last one
+    // says nothing about it
+    React.useEffect(
+        () => setPagination(model => ({ ...model, page: 0 })),
+        [props.range]
+    );
 
-    return <CategoryDetailDataGrid category={props.category} entries={entriesQuery.data ?? []} />;
+    const pageQuery = useMeasurementEntryPageQuery(
+        props.category.id!,
+        pagination.page * pagination.pageSize,
+        pagination.pageSize,
+        filter,
+    );
+    const oldestQuery = useOldestMeasurementEntryQuery(props.category.id!, filter);
+    const page = pageQuery.data;
+
+    return <CategoryDetailDataGrid
+        category={props.category}
+        entries={page?.entries ?? []}
+        pagination={{
+            rowCount: page?.count ?? 0,
+            model: pagination,
+            onModelChange: setPagination,
+            neighbours: [page?.next, oldestQuery.data].filter(entry => entry != null),
+            isLoading: pageQuery.isFetching,
+        }} />;
 };
 
 export const MeasurementCategoryDetail = () => {

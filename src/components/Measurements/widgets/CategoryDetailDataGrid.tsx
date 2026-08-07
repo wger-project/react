@@ -20,6 +20,7 @@ import {
     GridRowEditStopReasons,
     GridRowId,
     GridRowModel,
+    GridPaginationModel,
     GridRowModes,
     GridRowModesModel,
     GridRowsProp,
@@ -31,17 +32,28 @@ import { useTranslation } from "react-i18next";
 // Values are read through the unit helper, never off the raw column: a
 // category can hold entries in mixed units, and the change columns are
 // computed from the converted values
-const buildRows = (entries: MeasurementEntry[], unit: string, categoryUnit: string): GridRowsProp =>
-    processTimeSeries(entries, e => e.valueIn(unit, categoryUnit)).map((row) => ({
-        id: row.entry.id,
-        date: row.entry.date,
-        value: row.entry.valueIn(unit, categoryUnit),
-        notes: row.entry.notes,
-        isEditable: row.entry.isEditable,
-        change: +row.change.toFixed(2),
-        totalChange: +row.totalChange.toFixed(2),
-        days: +row.days.toFixed(1),
-    }));
+//
+// [neighbours] are entries the shown ones are measured against without being
+// rows themselves, see the pagination prop. They are always older, so the
+// rows stay at the front of the series and the extra ones cut off again
+const buildRows = (
+    entries: MeasurementEntry[],
+    neighbours: MeasurementEntry[],
+    unit: string,
+    categoryUnit: string,
+): GridRowsProp =>
+    processTimeSeries([...entries, ...neighbours], e => e.valueIn(unit, categoryUnit))
+        .slice(0, entries.length)
+        .map((row) => ({
+            id: row.entry.id,
+            date: row.entry.date,
+            value: row.entry.valueIn(unit, categoryUnit),
+            notes: row.entry.notes,
+            isEditable: row.entry.isEditable,
+            change: +row.change.toFixed(2),
+            totalChange: +row.totalChange.toFixed(2),
+            days: +row.days.toFixed(1),
+        }));
 
 
 export const CategoryDetailDataGrid = (props: {
@@ -54,12 +66,34 @@ export const CategoryDetailDataGrid = (props: {
      * stored in either; an edited value is then stamped with it.
      */
     displayUnit?: string,
+    /**
+     * Reading one page at a time, for the histories that are too long to hold:
+     * the grid then shows what it was handed and asks the caller for the next
+     * page, rather than paging through a list of its own.
+     *
+     * [neighbours] are the entries outside the page the difference columns are
+     * measured against, i.e. the one after the page and the oldest there is.
+     * Sorting and filtering are off in this mode: both would only reach the
+     * page in hand, which is not what a sorted table means.
+     */
+    pagination?: {
+        rowCount: number,
+        model: GridPaginationModel,
+        onModelChange: (model: GridPaginationModel) => void,
+        neighbours: MeasurementEntry[],
+        isLoading: boolean,
+    },
 }) => {
 
     const [t, i18n] = useTranslation();
     const entries = props.entries;
     const unit = props.displayUnit ?? props.category.unit;
-    const data: GridRowsProp = buildRows(entries, unit, props.category.unit);
+    const data: GridRowsProp = buildRows(
+        entries,
+        props.pagination?.neighbours ?? [],
+        unit,
+        props.category.unit,
+    );
     const updateEntryQuery = useEditMeasurementEntryQuery();
     const deleteEntryQuery = useDeleteMeasurementEntryQuery();
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -284,14 +318,17 @@ export const CategoryDetailDataGrid = (props: {
         <DataGrid
             editMode="row"
             rows={data}
-            columns={columns}
-            initialState={{
-                pagination: {
-                    paginationModel: {
-                        pageSize: PAGINATION_OPTIONS.pageSize,
-                    },
-                },
-            }}
+            columns={props.pagination === undefined
+                ? columns
+                : columns.map(column => ({ ...column, sortable: false, filterable: false }))}
+            initialState={props.pagination === undefined
+                ? { pagination: { paginationModel: { pageSize: PAGINATION_OPTIONS.pageSize } } }
+                : undefined}
+            paginationMode={props.pagination === undefined ? 'client' : 'server'}
+            rowCount={props.pagination?.rowCount}
+            paginationModel={props.pagination?.model}
+            onPaginationModelChange={props.pagination?.onModelChange}
+            loading={props.pagination?.isLoading}
             pageSizeOptions={PAGINATION_OPTIONS.pageSizeOptions}
             disableRowSelectionOnClick
             isCellEditable={(params) => params.row.isEditable}

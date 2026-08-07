@@ -111,6 +111,72 @@ export const getMeasurementEntries = async (
     return out;
 };
 
+/** One page of a category's entries, newest first, as a table pages through them */
+export type MeasurementEntryPage = {
+    entries: MeasurementEntry[],
+    /** Entries the filter matches in total, i.e. how many pages there are */
+    count: number,
+    /**
+     * The entry right after the page, none at the end of the history: the row
+     * before it is a difference to it, and it is the one row a page is
+     * otherwise missing.
+     */
+    next: MeasurementEntry | null,
+};
+
+/**
+ * One page of a category's entries, rather than the history they are cut out
+ * of: a table shows ten rows at a time, and a synced category holds thousands.
+ */
+export const getMeasurementEntryPage = async (
+    categoryId: string,
+    offset: number,
+    limit: number,
+    filtersetQuery: object = {},
+): Promise<MeasurementEntryPage> => {
+    // One row past the page, which is what its last row is measured against
+    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
+        query: {
+            category: categoryId,
+            limit: limit + 1,
+            offset: offset,
+            ...filtersetQuery,
+        }
+    });
+    const { data } = await axios.get(url, { headers: makeHeader() });
+    const entries = data.results.map((entryData: unknown) => MeasurementEntry.fromJson(entryData));
+
+    return {
+        entries: entries.slice(0, limit),
+        count: data.count,
+        next: entries.length > limit ? entries[limit] : null,
+    };
+};
+
+/**
+ * The oldest entry the filter matches, or none at all.
+ *
+ * The total change of a row is measured against it, so a table that holds a
+ * page rather than the whole history has to ask for it: ordered by id as well,
+ * since entries can share a date and the column would otherwise pick either.
+ */
+export const getOldestMeasurementEntry = async (
+    categoryId: string,
+    filtersetQuery: object = {},
+): Promise<MeasurementEntry | null> => {
+    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
+        query: {
+            category: categoryId,
+            limit: 1,
+            ordering: 'date,id',
+            ...filtersetQuery,
+        }
+    });
+    const { data } = await axios.get(url, { headers: makeHeader() });
+
+    return data.results.length > 0 ? MeasurementEntry.fromJson(data.results[0]) : null;
+};
+
 /**
  * The entries of every category at once, for the callers that show a window
  * of time rather than one category: asking per category would be one request

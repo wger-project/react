@@ -9,6 +9,8 @@ import {
     getMeasurementCategories,
     getMeasurementCategory,
     getMeasurementEntries,
+    getMeasurementEntryPage,
+    getOldestMeasurementEntry,
 } from "@/components/Measurements/api/measurements";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
@@ -22,6 +24,7 @@ const CATEGORY_UUID = 'cccccccc-cccc-cccc-cccc-000000000001';
 const CATEGORY_UUID_2 = 'cccccccc-cccc-cccc-cccc-000000000009';
 const ENTRY_UUID = 'dddddddd-dddd-dddd-dddd-000000000001';
 const ENTRY_UUID_2 = 'dddddddd-dddd-dddd-dddd-000000000005';
+const ENTRY_UUID_3 = 'dddddddd-dddd-dddd-dddd-000000000007';
 
 describe('measurement service tests', () => {
     const measurementEntryResponse = {
@@ -114,6 +117,72 @@ describe('measurement service tests', () => {
             expect.anything()
         );
         expect(result).toHaveLength(1);
+    });
+
+    test('a page is read with the row after it, which is no part of the page', async () => {
+
+        const entry = (id: string, value: number) => ({
+            "id": id,
+            "category": CATEGORY_UUID,
+            "value": value,
+            "date": "2021-01-01T08:00:00+01:00",
+            "notes": ""
+        });
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({
+            data: {
+                count: 42,
+                next: null,
+                previous: null,
+                results: [entry(ENTRY_UUID, 80), entry(ENTRY_UUID_2, 79), entry(ENTRY_UUID_3, 78)],
+            }
+        }));
+
+        const page = await getMeasurementEntryPage(CATEGORY_UUID, 10, 2);
+
+        expect(axios.get).toHaveBeenCalledWith(
+            expect.stringContaining('limit=3'),
+            expect.anything()
+        );
+        expect(axios.get).toHaveBeenCalledWith(
+            expect.stringContaining('offset=10'),
+            expect.anything()
+        );
+        expect(page.entries.map(e => e.value)).toStrictEqual([80, 79]);
+        expect(page.next!.value).toBe(78);
+        // What the table pages through, not what it was handed
+        expect(page.count).toBe(42);
+    });
+
+    test('the last page of a history has no row after it', async () => {
+
+        const page = await getMeasurementEntryPage(CATEGORY_UUID, 0, 10);
+
+        expect(page.entries).toHaveLength(1);
+        expect(page.next).toBeNull();
+    });
+
+    test('the oldest entry is read as a single row, in a total order', async () => {
+
+        const result = await getOldestMeasurementEntry(CATEGORY_UUID);
+
+        expect(axios.get).toHaveBeenCalledWith(
+            expect.stringContaining(`ordering=${encodeURIComponent('date,id')}`),
+            expect.anything()
+        );
+        expect(axios.get).toHaveBeenCalledWith(
+            expect.stringContaining('limit=1'),
+            expect.anything()
+        );
+        expect(result!.id).toBe(ENTRY_UUID);
+    });
+
+    test('a category without entries has no oldest one', async () => {
+
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({
+            data: { count: 0, next: null, previous: null, results: [] }
+        }));
+
+        expect(await getOldestMeasurementEntry(CATEGORY_UUID)).toBeNull();
     });
 
     test('GET measurement categories hides the official body weight category', async () => {
