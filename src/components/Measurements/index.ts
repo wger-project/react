@@ -40,6 +40,7 @@ export {
     useMeasurementBucketsQuery,
     useMeasurementEntriesQuery,
     useMeasurementsCategoryQuery,
+    useMeasurementsQuery,
     useMeasurementValueCountsQuery
 } from "./queries";
 export {

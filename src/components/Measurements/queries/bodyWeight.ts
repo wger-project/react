@@ -21,9 +21,6 @@ const OFFICIAL_BODY_WEIGHT = 'official-body-weight';
  */
 const bodyWeightCategoryQueryOptions = {
     queryKey: [QueryKey.MEASUREMENTS_CATEGORIES, OFFICIAL_BODY_WEIGHT],
-    // Called through, not captured: this module sits in an import cycle
-    // between the weight, measurement and nutrition domains, where a binding
-    // read while the modules initialise can still be undefined
     queryFn: () => getBodyWeightCategory(),
 };
 

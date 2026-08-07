@@ -3,7 +3,6 @@ import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import {
     categoryDisplayName,
-    correlatesWithNutrition,
     MeasurementCategory,
     METRIC_TYPE_BODY_WEIGHT
 } from "@/components/Measurements/models/Category";
@@ -12,7 +11,7 @@ import {
     useMeasurementsQuery,
     useOldestMeasurementEntryQuery
 } from "@/components/Measurements/queries";
-import { useNutritionPlanPeriods } from "@/components/Nutrition";
+import { PlanPeriod } from "@/components/Measurements/charts/series";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
 import { CategoryDetailDropdown } from "@/components/Measurements/widgets/CategoryDetailDropdown";
 import { ChartRange, DEFAULT_CHART_RANGE, displayFilterFor } from "@/components/Measurements/charts/range";
@@ -70,7 +69,8 @@ const CategoryEntriesGrid = (props: { category: MeasurementCategory, range: Char
         }} />;
 };
 
-export const MeasurementCategoryDetail = () => {
+/** [planPeriods] come from the caller: measurements know nothing about nutrition */
+export const MeasurementCategoryDetail = (props: { planPeriods?: PlanPeriod[] }) => {
     const params = useParams<{ categoryId: string }>();
     const categoryId = params.categoryId ?? '';
     if (!categoryId) {
@@ -81,10 +81,6 @@ export const MeasurementCategoryDetail = () => {
     const [range, setRange] = React.useState<ChartRange>(DEFAULT_CHART_RANGE);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const categoryQuery = useMeasurementsQuery(categoryId);
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const planPeriods = useNutritionPlanPeriods(
-        correlatesWithNutrition(categoryQuery.data?.metricType ?? 'custom'),
-    );
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [t, i18n] = useTranslation();
 
@@ -111,7 +107,7 @@ export const MeasurementCategoryDetail = () => {
                 <MeasurementChart
                     category={categoryQuery.data!}
                     range={range}
-                    planPeriods={planPeriods} />
+                    planPeriods={props.planPeriods ?? []} />
                 {categoryQuery.data!.isGroup
                     ? categoryQuery.data!.children.map(child =>
                         <React.Fragment key={child.id}>

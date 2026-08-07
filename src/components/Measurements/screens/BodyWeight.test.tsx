@@ -8,9 +8,6 @@ import { BodyWeight } from "./BodyWeight";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Measurements/api/bodyWeight");
-vi.mock('@/components/Nutrition/queries/plan', () => ({
-    useNutritionPlanPeriods: () => [],
-}));
 vi.mock('@/components/User/queries/profile', () => ({
     useProfileQuery: () => ({ isLoading: false, data: { useMetric: true } }),
 }));

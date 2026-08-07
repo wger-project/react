@@ -125,10 +125,11 @@ export const useReorderMeasurementCategoriesQuery = () => {
     });
 };
 
-export function useMeasurementsQuery(id: string) {
+export function useMeasurementsQuery(id: string, enabled: boolean = true) {
     return useQuery({
         queryKey: [QueryKey.MEASUREMENTS, id],
         queryFn: () => getMeasurementCategory(id),
+        enabled: enabled,
     });
 }
 
