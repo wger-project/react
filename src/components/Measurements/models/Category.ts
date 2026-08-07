@@ -13,6 +13,7 @@ export const METRIC_TYPES = [
     'blood_pressure_diastolic',
     'heart_rate',
     'resting_heart_rate',
+    'blood_oxygen',
     'steps',
     'distance',
     'energy',
@@ -249,6 +250,7 @@ const METRIC_DEFAULTS: Partial<Record<MetricType, { name: string, unit: string }
     blood_pressure_diastolic: { name: 'Diastolic', unit: 'mmHg' },
     heart_rate: { name: 'Heart rate', unit: 'bpm' },
     resting_heart_rate: { name: 'Resting heart rate', unit: 'bpm' },
+    blood_oxygen: { name: 'Blood oxygen', unit: '%' },
     steps: { name: 'Steps', unit: 'count' },
     distance: { name: 'Distance', unit: 'km' },
     energy: { name: 'Energy', unit: 'kcal' },
@@ -302,6 +304,9 @@ const METRIC_LIMITS: Partial<Record<MetricType, MetricLimits>> = {
     blood_pressure_diastolic: { min: 30, max: 150, softMin: 50, softMax: 110 },
     heart_rate: { min: 30, max: 250, softMin: 40, softMax: 200 },
     resting_heart_rate: { min: 30, max: 120, softMin: 40, softMax: 100 },
+    // A saturation cannot exceed 100 %, and the floor is deliberately far below
+    // what a pulse oximeter still displays
+    blood_oxygen: { min: 50, max: 100, softMin: 90, softMax: 100 },
     // The cumulative types hold a whole day, and a rest day really is 0 steps
     steps: { min: 0, max: 100000, softMin: 0, softMax: 30000 },
     distance: { min: 0, max: 500, softMin: 0, softMax: 30 },
@@ -355,6 +360,7 @@ const BIN_WIDTHS: Partial<Record<MetricType, number>> = {
     blood_pressure_diastolic: 5,
     heart_rate: 2,
     resting_heart_rate: 1,
+    blood_oxygen: 1,
     steps: 1000,
     distance: 1,
     energy: 100,

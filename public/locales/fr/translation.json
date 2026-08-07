@@ -380,6 +380,7 @@
             "blood_pressure_diastolic": "Diastolique",
             "heart_rate": "Fréquence cardiaque",
             "resting_heart_rate": "Fréquence cardiaque au repos",
+            "blood_oxygen": "Saturation en oxygène",
             "steps": "Pas",
             "distance": "Distance",
             "energy": "Énergie",

@@ -292,6 +292,7 @@
             "blood_pressure_diastolic": "Diastolisch",
             "heart_rate": "Herzfrequenz",
             "resting_heart_rate": "Ruhepuls",
+            "blood_oxygen": "Sauerstoffsättigung",
             "steps": "Schritte",
             "distance": "Distanz",
             "energy": "Energie",

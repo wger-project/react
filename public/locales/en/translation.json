@@ -376,6 +376,7 @@
             "blood_pressure_diastolic": "Diastolic",
             "heart_rate": "Heart rate",
             "resting_heart_rate": "Resting heart rate",
+            "blood_oxygen": "Blood oxygen",
             "steps": "Steps",
             "distance": "Distance",
             "energy": "Energy",
