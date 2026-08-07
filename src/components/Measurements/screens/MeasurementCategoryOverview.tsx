@@ -1,18 +1,28 @@
 import React from "react";
-import { Button, Card, CardActions, CardContent, CardHeader, IconButton, Stack, Tooltip, } from "@mui/material";
+import {
+    Box,
+    Card,
+    CardActionArea,
+    CardActions,
+    CardContent,
+    CardHeader,
+    IconButton,
+    Stack,
+    Tooltip,
+} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import SortIcon from '@mui/icons-material/Sort';
 import { useTranslation } from "react-i18next";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
 import { categoryDisplayName, MeasurementCategory } from "@/components/Measurements/models/Category";
-import { unitLabel } from "@/components/Measurements/charts/format";
+import { CategoryLatestValue } from "@/components/Measurements/widgets/CategoryLatestValue";
 import { ChartRange, DEFAULT_CHART_RANGE } from "@/components/Measurements/charts/range";
 import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
 import { OverviewEmpty } from "@/core/ui/Widgets/OverviewEmpty";
 import { AddMeasurementCategoryFab } from "@/components/Measurements/widgets/fab";
-import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
+import { WgerContainerFullWidth } from "@/core/ui/Widgets/Container";
 import { makeLink, WgerLink } from "@/core/lib/url";
 import { Link } from "react-router-dom";
 import { CategoryReorderList } from "@/components/Measurements/widgets/CategoryReorderList";
@@ -28,23 +38,26 @@ export const CategoryList = (props: { category: MeasurementCategory, range: Char
     const handleCloseModal = () => setOpenModal(false);
 
     return <>
-        <Card>
-            {/* A category without a unit gets no subheader rather than an empty one */}
-            <CardHeader
-                title={categoryDisplayName(props.category, t)}
-                subheader={unitLabel(props.category.unit) || undefined}
-            />
-            <CardContent>
-                <MeasurementChart category={props.category} range={props.range} />
-            </CardContent>
-            <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
-                <Button size="small">
-                    <Link to={makeLink(WgerLink.MEASUREMENT_DETAIL, i18n.language, { id: props.category.id! })}>
-                        {t("seeDetails")}
-                    </Link>
-                </Button>
-
-                <IconButton onClick={handleOpenModal}>
+        {/* The whole card is the way into the category; only the quick-add
+          * button below stays a control of its own */}
+        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <CardActionArea
+                component={Link}
+                to={makeLink(WgerLink.MEASUREMENT_DETAIL, i18n.language, { id: props.category.id! })}>
+                {/* The unit rides on the value; a category still without one
+                  * shows it on its chart axis instead */}
+                <CardHeader
+                    title={categoryDisplayName(props.category, t)}
+                    action={<CategoryLatestValue category={props.category} />}
+                />
+                <CardContent>
+                    <MeasurementChart category={props.category} range={props.range} />
+                </CardContent>
+            </CardActionArea>
+            {/* mt: auto pins the action row, so it aligns across a grid row of
+              * cards with differently sized charts */}
+            <CardActions disableSpacing sx={{ justifyContent: "flex-end", mt: 'auto' }}>
+                <IconButton onClick={handleOpenModal} aria-label={t('add')}>
                     <AddIcon />
                 </IconButton>
             </CardActions>
@@ -68,7 +81,7 @@ export const MeasurementCategoryOverview = () => {
     return categoryQuery.isLoading
         ? <LoadingPlaceholder />
         : <>
-            <WgerContainerRightSidebar
+            <WgerContainerFullWidth
                 title={t("measurements.measurements")}
                 optionsMenu={
                     <Tooltip title={t('measurements.reorderCategories')}>
@@ -77,16 +90,24 @@ export const MeasurementCategoryOverview = () => {
                         </IconButton>
                     </Tooltip>
                 }
-                mainContent={<Stack spacing={2}>
+                fab={<AddMeasurementCategoryFab isLoading={categoryQuery.isFetching} />}
+            >
+                <Stack spacing={2}>
                     {categoryQuery.data!.length === 0 && <OverviewEmpty />}
                     {categoryQuery.data!.length > 0
                         && <ChartRangeSelector value={range} onChange={setRange} />}
-                    {categoryQuery.data!.map(c =>
-                        <CategoryList category={c} key={c.id} range={range} />)}
+                    {/* min() keeps the column from forcing a horizontal scroll
+                      * on screens narrower than one card */}
+                    <Box sx={{
+                        display: 'grid',
+                        gap: 2,
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(min(380px, 100%), 1fr))',
+                    }}>
+                        {categoryQuery.data!.map(c =>
+                            <CategoryList category={c} key={c.id} range={range} />)}
+                    </Box>
                 </Stack>
-                }
-                fab={<AddMeasurementCategoryFab isLoading={categoryQuery.isFetching} />}
-            />
+            </WgerContainerFullWidth>
             <WgerModal
                 title={t('measurements.reorderCategories')}
                 isOpen={openReorderModal}

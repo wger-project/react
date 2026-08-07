@@ -67,6 +67,7 @@ type WgerTemplateContainerFullWidthProps = {
     backToUrl?: string;
     optionsMenu?: ReactElement;
     maxWidth?: false | Breakpoint | undefined
+    fab?: ReactElement;
 };
 
 export const WgerContainerFullWidth = (props: WgerTemplateContainerFullWidthProps) => {
@@ -93,6 +94,7 @@ export const WgerContainerFullWidth = (props: WgerTemplateContainerFullWidthProp
                     {props.children}
                 </Grid>
             </Grid>
+            {props.fab}
         </Container>
     );
 };
