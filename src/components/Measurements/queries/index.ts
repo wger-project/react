@@ -49,7 +49,7 @@ const invalidateEntryReads = (queryClient: ReturnType<typeof useQueryClient>) =>
 
 export function useMeasurementsCategoryQuery(options?: MeasurementQueryOptions) {
     return useQuery({
-        queryKey: [QueryKey.MEASUREMENTS_CATEGORIES, JSON.stringify(options || {})],
+        queryKey: [QueryKey.MEASUREMENTS_CATEGORIES, options ?? {}],
         queryFn: () => getMeasurementCategories(options),
     });
 }
@@ -146,7 +146,7 @@ export function useMeasurementEntriesQuery(
     enabled: boolean = true,
 ) {
     return useQuery({
-        queryKey: [QueryKey.MEASUREMENT_ENTRIES, categoryId, JSON.stringify(filtersetQuery), limit ?? null],
+        queryKey: [QueryKey.MEASUREMENT_ENTRIES, categoryId, filtersetQuery, limit ?? null],
         queryFn: () => getMeasurementEntries(categoryId, filtersetQuery, limit),
         enabled: enabled,
         // Picking another range refetches, and the table would otherwise drop
@@ -168,7 +168,7 @@ export function useMeasurementEntryPageQuery(
     filtersetQuery: object = {},
 ) {
     return useQuery({
-        queryKey: [QueryKey.MEASUREMENT_ENTRIES, categoryId, JSON.stringify(filtersetQuery), 'page', offset, limit],
+        queryKey: [QueryKey.MEASUREMENT_ENTRIES, categoryId, filtersetQuery, 'page', offset, limit],
         queryFn: () => getMeasurementEntryPage(categoryId, offset, limit, filtersetQuery),
         // Turning the page refetches, and the table would otherwise drop back
         // to an empty grid while the next one arrives
@@ -183,7 +183,7 @@ export function useMeasurementEntryPageQuery(
  */
 export function useOldestMeasurementEntryQuery(categoryId: string, filtersetQuery: object = {}) {
     return useQuery({
-        queryKey: [QueryKey.MEASUREMENT_ENTRIES, categoryId, JSON.stringify(filtersetQuery), 'oldest'],
+        queryKey: [QueryKey.MEASUREMENT_ENTRIES, categoryId, filtersetQuery, 'oldest'],
         queryFn: () => getOldestMeasurementEntry(categoryId, filtersetQuery),
     });
 }
@@ -191,7 +191,7 @@ export function useOldestMeasurementEntryQuery(categoryId: string, filtersetQuer
 /** The entries of every category in one read, for the views that show a window of time */
 export function useAllMeasurementEntriesQuery(filtersetQuery: object = {}) {
     return useQuery({
-        queryKey: [QueryKey.MEASUREMENT_ENTRIES, 'all', JSON.stringify(filtersetQuery)],
+        queryKey: [QueryKey.MEASUREMENT_ENTRIES, 'all', filtersetQuery],
         queryFn: () => getAllMeasurementEntries(filtersetQuery),
     });
 }
@@ -253,7 +253,7 @@ export function useMeasurementBucketsQuery(
             QueryKey.MEASUREMENT_BUCKETS,
             categoryIds.join(','),
             level,
-            JSON.stringify(filtersetQuery),
+            filtersetQuery,
         ],
         queryFn: () => getMeasurementBuckets(categoryIds, level, filtersetQuery),
         enabled: enabled && categoryIds.length > 0,
@@ -275,7 +275,7 @@ export function useMeasurementValueCountsQuery(
             QueryKey.MEASUREMENT_VALUE_COUNTS,
             categoryId,
             summedPerDay,
-            JSON.stringify(filtersetQuery),
+            filtersetQuery,
         ],
         queryFn: () => getMeasurementValueCounts(categoryId, summedPerDay, filtersetQuery),
         enabled: enabled,
