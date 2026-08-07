@@ -1,8 +1,8 @@
 import { Box, Button, Stack } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { useLanguageCheckQuery } from "@/core/queries";
-import { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
-import { PaddingBox } from "@/components/Exercises/screens/Detail/ExerciseDetails";
+import type { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
+import { PaddingBox } from "@/components/Exercises/widgets/PaddingBox";
 import { MarkdownEditor } from "@/core/forms/MarkdownEditor";
 import { ExerciseNotes } from "@/components/Exercises/forms/ExerciseNotes";
 import { descriptionValidator, noteValidator } from "@/components/Exercises/forms/yupValidators";

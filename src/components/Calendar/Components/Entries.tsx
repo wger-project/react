@@ -14,7 +14,7 @@ import React from 'react';
 import { useTranslation } from "react-i18next";
 import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Measurements";
 import { dateToLocale } from "@/core/lib/date";
-import { DayProps } from "./CalendarComponent";
+import type { DayProps } from "./CalendarComponent";
 
 interface LogProps {
     selectedDay: DayProps;

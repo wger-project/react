@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import Grid from "@mui/material/Grid";
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { DayProps } from "./CalendarComponent";
+import type { DayProps } from "./CalendarComponent";
 import CalendarDay from './CalendarDay';
 
 interface CalendarDayGridProps {

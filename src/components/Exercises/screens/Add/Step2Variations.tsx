@@ -1,7 +1,7 @@
 import { Exercise } from "@/components/Exercises/models/exercise";
 
 import { useExercisesQuery } from "@/components/Exercises/queries";
-import { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
+import type { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
 import { useExerciseSubmissionStateValue } from "@/components/Exercises/screens/Add/state";
 import {
     setNewBaseVariationId,

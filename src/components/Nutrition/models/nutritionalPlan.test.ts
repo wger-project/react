@@ -1,4 +1,5 @@
-import { NutritionalPlan, PSEUDO_MEAL_ID } from "@/components/Nutrition/models/nutritionalPlan";
+import { PSEUDO_MEAL_ID } from "@/components/Nutrition/models/consts";
+import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import { TEST_DIARY_ENTRY_3, TEST_DIARY_ENTRY_4 } from "@/tests/nutritionDiaryTestdata";
 import { TEST_MEAL_1, TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 import { yyyymmddToDate } from "@/core/lib/date";

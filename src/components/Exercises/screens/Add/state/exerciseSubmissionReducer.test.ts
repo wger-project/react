@@ -22,7 +22,7 @@ import {
 import {
     ExerciseSubmissionAction,
     ExerciseSubmissionState
-} from "@/components/Exercises/screens/Add/state/exerciseSubmissionState";
+} from "@/components/Exercises/screens/Add/state/stateTypes";
 import { ImageFormData } from "@/components/Exercises/models/exercise";
 import { ImageStyle } from "@/components/Exercises/models/image";
 

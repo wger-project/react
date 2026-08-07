@@ -1,8 +1,9 @@
-import { exerciseSubmissionInitialState, SetExerciseSubmissionState } from '@/components/Exercises/screens/Add/state';
 import {
+    exerciseSubmissionInitialState,
     ExerciseSubmissionAction,
-    ExerciseSubmissionState
-} from "@/components/Exercises/screens/Add/state/exerciseSubmissionState";
+    ExerciseSubmissionState,
+    SetExerciseSubmissionState
+} from "@/components/Exercises/screens/Add/state/stateTypes";
 import { ImageFormData } from "@/components/Exercises/models/exercise";
 
 
