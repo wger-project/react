@@ -7,6 +7,7 @@ export const METRIC_TYPES = [
     'custom',
     'body_weight',
     'body_fat',
+    'lean_body_mass',
     'height',
     'blood_pressure',
     'blood_pressure_systolic',
@@ -190,7 +191,7 @@ export function resolveChartType(type: MetricType, picked: ChartType): ChartType
  * they qualify; the typed health metrics do not.
  */
 export function correlatesWithNutrition(type: MetricType): boolean {
-    return type === 'body_weight' || type === 'body_fat' || type === 'custom';
+    return type === 'body_weight' || type === 'body_fat' || type === 'lean_body_mass' || type === 'custom';
 }
 
 /**
@@ -244,6 +245,7 @@ export function isPickableMetricType(type: MetricType): boolean {
 const METRIC_DEFAULTS: Partial<Record<MetricType, { name: string, unit: string }>> = {
     body_weight: { name: 'Weight', unit: 'kg' },
     body_fat: { name: 'Body fat', unit: '%' },
+    lean_body_mass: { name: 'Lean body mass', unit: 'kg' },
     height: { name: 'Height', unit: 'cm' },
     blood_pressure: { name: 'Blood pressure', unit: 'mmHg' },
     blood_pressure_systolic: { name: 'Systolic', unit: 'mmHg' },
@@ -299,6 +301,8 @@ export interface MetricLimits {
 /* eslint-disable camelcase */
 const METRIC_LIMITS: Partial<Record<MetricType, MetricLimits>> = {
     body_fat: { min: 2, max: 60, softMin: 5, softMax: 50 },
+    // Always below the body weight it is part of, so the floor can sit lower
+    lean_body_mass: { min: 10, max: 250, softMin: 30, softMax: 90 },
     height: { min: 50, max: 250, softMin: 140, softMax: 210 },
     blood_pressure_systolic: { min: 50, max: 250, softMin: 90, softMax: 180 },
     blood_pressure_diastolic: { min: 30, max: 150, softMin: 50, softMax: 110 },
@@ -355,6 +359,7 @@ export function limitsFor(type: MetricType, unit?: string): MetricLimits {
 /* eslint-disable camelcase */
 const BIN_WIDTHS: Partial<Record<MetricType, number>> = {
     body_fat: 0.5,
+    lean_body_mass: 0.5,
     height: 1,
     blood_pressure_systolic: 5,
     blood_pressure_diastolic: 5,

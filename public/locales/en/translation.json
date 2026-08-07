@@ -370,6 +370,7 @@
             "custom": "Custom",
             "body_weight": "Body weight",
             "body_fat": "Body fat",
+            "lean_body_mass": "Lean body mass",
             "height": "Height",
             "blood_pressure": "Blood pressure",
             "blood_pressure_systolic": "Systolic",

@@ -291,6 +291,7 @@
             "custom": "Personalizado",
             "body_weight": "Peso corporal",
             "body_fat": "Grasa corporal",
+            "lean_body_mass": "Masa magra",
             "height": "Altura",
             "blood_pressure": "Presión arterial",
             "blood_pressure_systolic": "Sistólica",

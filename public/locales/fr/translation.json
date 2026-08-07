@@ -374,6 +374,7 @@
             "custom": "Personnalisé",
             "body_weight": "Poids corporel",
             "body_fat": "Graisse corporelle",
+            "lean_body_mass": "Masse maigre",
             "height": "Taille",
             "blood_pressure": "Pression artérielle",
             "blood_pressure_systolic": "Systolique",

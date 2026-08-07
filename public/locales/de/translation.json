@@ -286,6 +286,7 @@
             "custom": "Benutzerdefiniert",
             "body_weight": "Körpergewicht",
             "body_fat": "Körperfett",
+            "lean_body_mass": "Magermasse",
             "height": "Körpergröße",
             "blood_pressure": "Blutdruck",
             "blood_pressure_systolic": "Systolisch",
