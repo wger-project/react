@@ -50,6 +50,11 @@ describe('valueWithUnit', () => {
         expect(valueWithUnit(1234.5, 'kcal', 'de')).toBe('1.234,5 kcal');
     });
 
+    test('caps the fraction digits for at-a-glance readings', () => {
+        expect(valueWithUnit(61.87, 'bpm', 'en', 0)).toBe('62 bpm');
+        expect(valueWithUnit(82.46, 'kg', 'en', 1)).toBe('82.5 kg');
+    });
+
     test('shows a value stored in minutes as hours and minutes', () => {
         expect(valueWithUnit(452, 'min', 'de')).toBe('7:32 h');
     });

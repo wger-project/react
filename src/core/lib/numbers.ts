@@ -13,11 +13,12 @@ export function numberLocale(num: number, locale: string) {
 }
 
 /*
- * Formats a number, localised, with up to two fraction digits: as many as the
- * server stores, and few enough to hide the artefacts of summing floats
+ * Formats a number, localised, with up to [maxDecimals] fraction digits. The
+ * default keeps as many as the server stores, and few enough to hide the
+ * artefacts of summing floats
  */
-export function numberDecimalLocale(num: number, locale: string) {
-    return num.toLocaleString(locale, { maximumFractionDigits: 2 });
+export function numberDecimalLocale(num: number, locale: string, maxDecimals: number = 2) {
+    return num.toLocaleString(locale, { maximumFractionDigits: maxDecimals });
 }
 
 /*

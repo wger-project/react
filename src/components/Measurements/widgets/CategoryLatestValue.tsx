@@ -1,6 +1,10 @@
 import { Stack, Typography } from "@mui/material";
 import { valueOnly, valueWithUnit } from "@/components/Measurements/charts/format";
-import { isGroupTotalMetricType, MeasurementCategory } from "@/components/Measurements/models/Category";
+import {
+    displayDecimalsFor,
+    isGroupTotalMetricType,
+    MeasurementCategory
+} from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { useLatestMeasurementEntriesQuery } from "@/components/Measurements/queries";
 import { dateToRelative } from "@/core/lib/date";
@@ -23,23 +27,25 @@ export const latestHeadline = (
     locale: string,
 ): string | null => {
     const valueOf = (entry: MeasurementEntry) => entry.valueIn(category.unit, category.unit);
+    // At-a-glance precision: a pulse has no meaningful tenths, a weight does
+    const decimals = displayDecimalsFor(category.metricType);
 
     if (!category.isGroup) {
-        return valueWithUnit(valueOf(entries[0]), category.unit, locale);
+        return valueWithUnit(valueOf(entries[0]), category.unit, locale, decimals);
     }
 
     const total = category.children.find(child => isGroupTotalMetricType(child.metricType));
     if (total !== undefined) {
         const entry = entries.find(e => e.category === total.id);
-        return entry === undefined ? null : valueWithUnit(valueOf(entry), category.unit, locale);
+        return entry === undefined ? null : valueWithUnit(valueOf(entry), category.unit, locale, decimals);
     }
 
     if (category.children.length === 2
         && entries.length === 2
         && entries[0].date.getTime() === entries[1].date.getTime()) {
         const values = entries.map(valueOf);
-        return `${valueOnly(Math.max(...values), category.unit, locale)}/`
-            + valueWithUnit(Math.min(...values), category.unit, locale);
+        return `${valueOnly(Math.max(...values), category.unit, locale, decimals)}/`
+            + valueWithUnit(Math.min(...values), category.unit, locale, decimals);
     }
 
     return null;

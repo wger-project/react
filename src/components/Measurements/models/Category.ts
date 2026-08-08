@@ -396,6 +396,29 @@ export function binWidthFor(type: MetricType, unit?: string): number | undefined
 }
 
 /**
+ * Most decimals a value of this type is shown with at a glance (the card
+ * headline). Detail tables, forms and tooltips keep the stored value.
+ *
+ * Follows the resolution the metric is measured at, like the bin widths: a
+ * pulse has no meaningful tenths, a body weight does, and a short walk needs
+ * its hundredths of a kilometre. Durations never ask, they are read as hours
+ * and minutes. Mirrors MetricType.displayDecimals in flutter.
+ */
+export function displayDecimalsFor(type: MetricType): number {
+    switch (type) {
+        case 'body_weight':
+        case 'lean_body_mass':
+        case 'body_fat':
+        case 'custom':
+            return 1;
+        case 'distance':
+            return 2;
+        default:
+            return 0;
+    }
+}
+
+/**
  * One component of a group, e.g. systolic. Components exist only as the
  * children of their group, which the server creates them with, so they are
  * never offered when creating a category.

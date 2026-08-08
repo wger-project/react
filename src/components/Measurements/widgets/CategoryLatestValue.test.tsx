@@ -53,6 +53,19 @@ describe('latestHeadline', () => {
         expect(latestHeadline(bloodPressureGroup(), entries, 'de')).toBe('130/82 mmHg');
     });
 
+    test('the decimals follow the resolution of the metric type', () => {
+        const date = new Date(2026, 7, 1, 8, 0);
+        const heartRate = new MeasurementCategory('hr', 'Heart rate', 'bpm', 'heart_rate');
+
+        // A pulse has no meaningful tenths, however precise the aggregate is
+        expect(latestHeadline(heartRate, [entryFor('hr', 61.87, date)], 'de')).toBe('62 bpm');
+        expect(latestHeadline(
+            bloodPressureGroup(),
+            [entryFor('sys', 136.42, date), entryFor('dia', 77.04, date)],
+            'de',
+        )).toBe('136/77 mmHg');
+    });
+
     test('an unpaired half-reading shows no value', () => {
         const entries = [
             entryFor('sys', 130, new Date(2026, 7, 2, 8, 0)),

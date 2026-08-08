@@ -44,9 +44,13 @@ export const hoursAndMinutes = (minutes: number, locale: string): string => {
 /**
  * A measured value on its own, formatted the way its unit is read. For the
  * ends of a range, where only the last one carries the unit.
+ *
+ * [decimals] caps the fraction digits, for at-a-glance readings (see
+ * displayDecimalsFor); without it the stored precision shows. A duration
+ * ignores it, hours and minutes have no decimals to cap.
  */
-export const valueOnly = (value: number, unit: string, locale: string): string =>
-    unit === MINUTES ? hoursAndMinutes(value, locale) : numberDecimalLocale(value, locale);
+export const valueOnly = (value: number, unit: string, locale: string, decimals?: number): string =>
+    unit === MINUTES ? hoursAndMinutes(value, locale) : numberDecimalLocale(value, locale, decimals);
 
 /**
  * The unit as it is shown. A duration is stored in minutes but read in hours,
@@ -57,12 +61,12 @@ export const unitLabel = (unit: string): string => unit === MINUTES ? 'h' : unit
 /**
  * A measured value with its unit, both localised. A value stands on its own
  * where there is no unit: a step count is a bare number, and so may be a
- * free-form category.
+ * free-form category. [decimals] as in valueOnly.
  */
-export const valueWithUnit = (value: number, unit: string, locale: string): string =>
+export const valueWithUnit = (value: number, unit: string, locale: string, decimals?: number): string =>
     unit === ''
-        ? valueOnly(value, unit, locale)
-        : `${valueOnly(value, unit, locale)} ${unitLabel(unit)}`;
+        ? valueOnly(value, unit, locale, decimals)
+        : `${valueOnly(value, unit, locale, decimals)} ${unitLabel(unit)}`;
 
 /** Ticks a duration axis aims for, few enough that the labels stay apart */
 const DURATION_TICKS = 6;
