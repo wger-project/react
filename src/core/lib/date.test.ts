@@ -1,4 +1,4 @@
-import { dateTimeToHHMM, dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
+import { dateTimeToHHMM, dateToRelative, dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
 
 /*
  * All date helpers must behave the same in every timezone, so the whole suite
@@ -83,5 +83,25 @@ describe.each([
             expect(result).toStrictEqual('23:10');
         });
 
+    });
+
+    describe('dateToRelative', () => {
+        const now = new Date(2026, 7, 7, 9, 0);
+
+        test('today and yesterday are named, not counted', () => {
+            expect(dateToRelative(new Date(2026, 7, 7, 0, 30), 'de', now)).toBe('heute');
+            // Calendar days, not elapsed hours: late yesterday is yesterday
+            expect(dateToRelative(new Date(2026, 7, 6, 23, 50), 'de', now)).toBe('gestern');
+        });
+
+        test('recent dates count in days', () => {
+            expect(dateToRelative(new Date(2026, 7, 2), 'de', now)).toBe('vor 5 Tagen');
+        });
+
+        test('older dates grow to weeks, months and years', () => {
+            expect(dateToRelative(new Date(2026, 6, 17), 'de', now)).toBe('vor 3 Wochen');
+            expect(dateToRelative(new Date(2026, 5, 1), 'de', now)).toBe('vor 2 Monaten');
+            expect(dateToRelative(new Date(2024, 7, 1), 'de', now)).toBe('vor 2 Jahren');
+        });
     });
 });

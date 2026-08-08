@@ -8,6 +8,7 @@ import {
     BucketLevel,
     getAllMeasurementEntries,
     getCategoryEntryFlags,
+    getLatestMeasurementEntries,
     getMeasurementBuckets,
     getMeasurementCategories,
     getMeasurementCategory,
@@ -151,6 +152,21 @@ export function useMeasurementEntriesQuery(
         enabled: enabled,
         // Picking another range refetches, and the table would otherwise drop
         // back to the loading placeholder while the new one arrives
+        placeholderData: keepPreviousData,
+    });
+}
+
+/**
+ * The newest entries of a category, or of a group's components together, see
+ * getLatestMeasurementEntries. Under the entry key, so every write refreshes
+ * it along with the other entry reads.
+ */
+export function useLatestMeasurementEntriesQuery(categoryIds: string[]) {
+    return useQuery({
+        queryKey: [QueryKey.MEASUREMENT_ENTRIES, 'latest', categoryIds],
+        queryFn: () => getLatestMeasurementEntries(categoryIds),
+        // A group synced without its components yet has nothing to ask for
+        enabled: categoryIds.length > 0,
         placeholderData: keepPreviousData,
     });
 }

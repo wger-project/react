@@ -154,6 +154,29 @@ export const getMeasurementEntryPage = async (
 };
 
 /**
+ * The newest entries across the given categories, newest first, in a single
+ * request.
+ *
+ * What a card headline needs: for a leaf that is one entry, for a group one
+ * per component, since the components of a reading share its timestamp and
+ * the latest reading is therefore among the newest [categoryIds.length]
+ * entries of the components together.
+ */
+export const getLatestMeasurementEntries = async (
+    categoryIds: string[],
+): Promise<MeasurementEntry[]> => {
+    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
+        query: {
+            category__in: categoryIds.join(','),
+            limit: categoryIds.length,
+        }
+    });
+    const { data } = await axios.get(url, { headers: makeHeader() });
+
+    return data.results.map((entryData: unknown) => MeasurementEntry.fromJson(entryData));
+};
+
+/**
  * The oldest entry the filter matches, or none at all.
  *
  * The total change of a row is measured against it, so a table that holds a

@@ -10,6 +10,8 @@ import { useTranslation } from "react-i18next";
  */
 const rangeLabel = (range: ChartRange, t: TFunction): string => {
     switch (range) {
+        case 'lastWeek':
+            return t('measurements.chartRangeWeeks', { count: 1 });
         case 'lastMonth':
             return t('measurements.chartRangeMonths', { count: 1 });
         case 'last3Months':

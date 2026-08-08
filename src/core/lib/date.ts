@@ -11,6 +11,35 @@ export function isSameDay(date1: Date, date2: Date): boolean {
 }
 
 /*
+ * A date as a relative phrase ("today", "3 weeks ago"), in the locale's own
+ * words via Intl.
+ *
+ * Counts calendar days rather than elapsed hours, so an entry from late
+ * yesterday still reads as yesterday this morning. The unit grows with the
+ * distance: days within a week, then weeks, months, years.
+ */
+export function dateToRelative(date: Date, locale?: string, now: Date = new Date()): string {
+    const dayMs = 24 * 60 * 60 * 1000;
+    // Rounded because a DST day is 23 or 25 hours long
+    const days = Math.round((
+        new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
+        - new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+    ) / dayMs);
+
+    const format = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
+    if (Math.abs(days) < 7) {
+        return format.format(-days, 'day');
+    }
+    if (Math.abs(days) < 31) {
+        return format.format(-Math.round(days / 7), 'week');
+    }
+    if (Math.abs(days) < 365) {
+        return format.format(-Math.round(days / 30), 'month');
+    }
+    return format.format(-Math.round(days / 365), 'year');
+}
+
+/*
  * Util function that converts a date to a YYYY-MM-DD string
  *
  * This is built from the local date components on purpose: the shorter

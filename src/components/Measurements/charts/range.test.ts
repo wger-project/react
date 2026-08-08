@@ -18,6 +18,12 @@ describe('fetchCutoffFor', () => {
         expect(fetchCutoffFor('lastYear', noon)).toStrictEqual(new Date(2025, 4, 16));
     });
 
+    test('a week is today plus the six days before it', () => {
+        // 2026-06-15 minus 6 days minus the 30 day average lead
+        expect(fetchCutoffFor('lastWeek', noon)).toStrictEqual(new Date(2026, 4, 10));
+        expect(displayCutoffFor('lastWeek', noon)).toStrictEqual(new Date(2026, 5, 9));
+    });
+
     test('is stable across the day, so it can go into a query key', () => {
         // Derived from the current instant it would differ on every render,
         // and the query would refetch forever

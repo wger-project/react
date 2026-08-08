@@ -396,6 +396,8 @@
         "chartRangeAll": "All",
         "chartRangeMonths_one": "1 month",
         "chartRangeMonths_other": "{{count}} months",
+        "chartRangeWeeks_one": "1 week",
+        "chartRangeWeeks_other": "{{count}} weeks",
         "chartRangeYears_one": "1 year",
         "chartRangeYears_other": "{{count}} years",
         "customMeasurement": "Custom measurement",

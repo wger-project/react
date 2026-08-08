@@ -2,12 +2,10 @@ import { AVERAGE_WINDOWS } from "@/components/Measurements/models/Category";
 import { ChartPoint } from "@/components/Measurements/charts/series";
 
 /**
- * How far back the charts go.
- *
- * The default is the shortest one: a chart is only readable if the span it
- * covers is, and the recent values are what tracking progress is about.
+ * How far back the charts go, in the order the selector offers them: widest
+ * first, narrowing left to right, like the flutter app.
  */
-export const CHART_RANGES = ['lastMonth', 'last3Months', 'lastYear', 'all'] as const;
+export const CHART_RANGES = ['all', 'lastYear', 'last3Months', 'lastMonth', 'lastWeek'] as const;
 export type ChartRange = typeof CHART_RANGES[number];
 
 export const DEFAULT_CHART_RANGE: ChartRange = 'last3Months';
@@ -15,10 +13,13 @@ export const DEFAULT_CHART_RANGE: ChartRange = 'last3Months';
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const DAYS: Record<ChartRange, number | null> = {
-    lastMonth: 30,
-    last3Months: 90,
-    lastYear: 365,
     all: null,
+    lastYear: 365,
+    last3Months: 90,
+    lastMonth: 30,
+    // Six, not seven: the cutoff lands six days back, so the window is today
+    // plus the six days before it, i.e. one week of calendar days
+    lastWeek: 6,
 };
 
 /** Oldest date still shown, null for the full history */
