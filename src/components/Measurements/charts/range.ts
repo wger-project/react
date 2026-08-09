@@ -1,5 +1,5 @@
-import { AVERAGE_WINDOWS } from "@/components/Measurements/models/Category";
 import { ChartPoint } from "@/components/Measurements/charts/series";
+import { AVERAGE_WINDOWS } from "@/components/Measurements/models/Category";
 
 /**
  * How far back the charts go, in the order the selector offers them: widest
@@ -8,7 +8,10 @@ import { ChartPoint } from "@/components/Measurements/charts/series";
 export const CHART_RANGES = ['all', 'lastYear', 'last3Months', 'lastMonth', 'lastWeek'] as const;
 export type ChartRange = typeof CHART_RANGES[number];
 
-export const DEFAULT_CHART_RANGE: ChartRange = 'last3Months';
+/**
+ * The range the charts cover until the user picks another one.
+ */
+export const DEFAULT_CHART_RANGE: ChartRange = 'lastMonth';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 

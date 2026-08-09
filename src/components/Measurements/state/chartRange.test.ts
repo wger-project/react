@@ -27,10 +27,11 @@ describe('chartRange store', () => {
     });
 
     test('a pick is persisted, so the next page load starts from it', () => {
-        act(() => setChartRange('lastMonth'));
+        // Deliberately not the default, or the test would pass without storing
+        act(() => setChartRange('lastYear'));
 
         // What the module reads when a full page load re-imports it
-        expect(loadChartRange()).toBe('lastMonth');
+        expect(loadChartRange()).toBe('lastYear');
     });
 
     test('a stored value this release does not know falls back to the default', () => {
