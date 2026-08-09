@@ -831,6 +831,62 @@ export const groupChart = (
         : { kind: 'components', series: groupComponentSeries(group, points, labelOf) };
 };
 
+/** One reading of a group: a timestamp, and what each component holds for it */
+export interface GroupReading {
+    date: Date;
+    /** Keyed by component id, the value in that component's own unit */
+    values: Map<string, number>;
+}
+
+/**
+ * The readings of a group, newest first: one per timestamp, paired the way the
+ * importer and the group form write them. A reading only some components
+ * reported is kept, a night without deep sleep is not a broken pair.
+ */
+export const groupReadings = (
+    group: MeasurementCategory,
+    entries: MeasurementEntry[],
+): GroupReading[] => {
+    const unitOf = new Map(group.children.map(child => [child.id!, child.unit]));
+
+    // Keyed by component id, not by name: two components can share a name
+    const byDate = new Map<number, Map<string, number>>();
+    for (const entry of entries) {
+        const unit = unitOf.get(entry.category);
+        if (unit === undefined) {
+            continue;
+        }
+        const values = byDate.get(entry.date.getTime()) ?? new Map<string, number>();
+        const value = entry.valueIn(unit, unit);
+        values.set(entry.category, (values.get(entry.category) ?? 0) + value);
+        byDate.set(entry.date.getTime(), values);
+    }
+
+    return [...byDate.entries()]
+        .map(([date, values]) => ({ date: new Date(date), values: values }))
+        .sort((a, b) => b.date.getTime() - a.date.getTime());
+};
+
+/**
+ * One page of a group's readings, cut where a reading ends.
+ * {@link truncated} says the server returned fewer entries than it had, which
+ * leaves the oldest reading half-read: dropping it keeps it off two pages.
+ */
+export const groupReadingPage = (
+    group: MeasurementCategory,
+    entries: MeasurementEntry[],
+    pageSize: number,
+    truncated: boolean,
+): { readings: GroupReading[], hasMore: boolean } => {
+    const all = groupReadings(group, entries);
+    const whole = truncated && all.length > 1 ? all.slice(0, -1) : all;
+
+    return {
+        readings: whole.slice(0, pageSize),
+        hasMore: truncated || whole.length > pageSize,
+    };
+};
+
 /**
  * The parts of the periods that overlap the span the chart covers, clamped to
  * it. Periods entirely outside it are dropped, so a band never draws past the

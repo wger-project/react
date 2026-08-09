@@ -6,6 +6,7 @@ import {
     editMeasurementCategory,
     editMeasurementEntry,
     getCategoryEntryFlags,
+    getGroupEntryPage,
     getMeasurementCategories,
     getMeasurementCategory,
     getMeasurementEntries,
@@ -183,6 +184,69 @@ describe('measurement service tests', () => {
         }));
 
         expect(await getOldestMeasurementEntry(CATEGORY_UUID)).toBeNull();
+    });
+
+    describe('getGroupEntryPage', () => {
+
+        const groupResponse = (next: string | null) => ({
+            data: {
+                count: 4,
+                next: next,
+                previous: null,
+                results: [{
+                    "id": ENTRY_UUID,
+                    "category": CATEGORY_UUID,
+                    "value": 120,
+                    "date": "2021-01-01T08:00:00+01:00",
+                    "notes": ""
+                }],
+            }
+        });
+
+        test('reads the components together, below the cursor', async () => {
+            (axios.get as Mock).mockImplementation(() => Promise.resolve(groupResponse(null)));
+
+            await getGroupEntryPage(
+                [CATEGORY_UUID, CATEGORY_UUID_2],
+                22,
+                new Date("2021-02-03T07:00:00.000Z"),
+            );
+
+            const [url] = (axios.get as Mock).mock.calls[0];
+            expect(url).toContain(`category__in=${CATEGORY_UUID}%2C${CATEGORY_UUID_2}`);
+            expect(url).toContain('limit=22');
+            expect(url).toContain('date__lt=2021-02-03T07%3A00%3A00.000Z');
+        });
+
+        test('the newest page is read without a cursor', async () => {
+            (axios.get as Mock).mockImplementation(() => Promise.resolve(groupResponse(null)));
+
+            await getGroupEntryPage([CATEGORY_UUID], 22);
+
+            expect((axios.get as Mock).mock.calls[0][0]).not.toContain('date__lt');
+        });
+
+        test('what is left over comes from the server, not from the page size', async () => {
+            // A page the server capped below the limit that was asked for: it
+            // still says there is more, and counting the rows would not
+            (axios.get as Mock).mockImplementation(
+                () => Promise.resolve(groupResponse('http://localhost/api/v2/measurement/?offset=999'))
+            );
+
+            const page = await getGroupEntryPage([CATEGORY_UUID], 1010);
+
+            expect(page.truncated).toBe(true);
+        });
+
+        test('a page the server has nothing after is not truncated', async () => {
+            (axios.get as Mock).mockImplementation(() => Promise.resolve(groupResponse(null)));
+
+            const page = await getGroupEntryPage([CATEGORY_UUID], 1);
+
+            // Exactly as many rows as were asked for, and still the end
+            expect(page.entries).toHaveLength(1);
+            expect(page.truncated).toBe(false);
+        });
     });
 
     test('GET measurement categories hides the official body weight category', async () => {

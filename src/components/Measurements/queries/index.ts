@@ -8,6 +8,8 @@ import {
     BucketLevel,
     getAllMeasurementEntries,
     getCategoryEntryFlags,
+    getGroupEntryPage,
+    GroupEntryPage,
     getLatestMeasurementEntries,
     getMeasurementBuckets,
     getMeasurementCategories,
@@ -19,10 +21,17 @@ import {
     MeasurementQueryOptions,
     updateMeasurementCategoryOrder
 } from "@/components/Measurements/api/measurements";
+import { groupReadingPage } from "@/components/Measurements/charts/data";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { QueryKey } from "@/core/lib/consts";
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+    keepPreviousData,
+    useInfiniteQuery,
+    useMutation,
+    useQuery,
+    useQueryClient
+} from "@tanstack/react-query";
 
 
 /**
@@ -189,6 +198,45 @@ export function useMeasurementEntryPageQuery(
         // Turning the page refetches, and the table would otherwise drop back
         // to an empty grid while the next one arrives
         placeholderData: keepPreviousData,
+    });
+}
+
+/**
+ * The readings of a group, a page at a time. Each page carries the cursor of
+ * the next one, which is why they are fetched as a chain rather than by index.
+ */
+export function useGroupReadingsQuery(
+    group: MeasurementCategory,
+    pageSize: number,
+    filtersetQuery: object = {},
+) {
+    const categoryIds = group.children.map(child => child.id!);
+    // A page plus the reading it is cut at; asking for a page exactly would
+    // spend a row on the cut every time
+    const limit = (pageSize + 1) * categoryIds.length;
+    const readingsOf = (page: GroupEntryPage) =>
+        groupReadingPage(group, page.entries, pageSize, page.truncated);
+
+    return useInfiniteQuery({
+        queryKey: [
+            QueryKey.MEASUREMENT_ENTRIES,
+            'group-readings',
+            categoryIds.join(','),
+            filtersetQuery,
+            pageSize,
+        ],
+        queryFn: ({ pageParam }) => getGroupEntryPage(categoryIds, limit, pageParam, filtersetQuery),
+        initialPageParam: undefined as Date | undefined,
+        getNextPageParam: page => {
+            const { readings, hasMore } = readingsOf(page);
+
+            return hasMore && readings.length > 0
+                ? readings[readings.length - 1].date
+                : undefined;
+        },
+        select: data => data.pages.map(readingsOf),
+        // A group synced without its components yet has nothing to ask for
+        enabled: categoryIds.length > 0,
     });
 }
 

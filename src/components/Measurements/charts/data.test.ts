@@ -14,6 +14,8 @@ import {
     groupComponentSeries,
     groupComponentPoints,
     groupRangeEntries,
+    groupReadingPage,
+    groupReadings,
     groupStackedEntries,
     movingAverage,
     niceBinWidth,
@@ -590,6 +592,111 @@ describe('groups', () => {
         const chart = groupChart(group, groupPoints(seeded));
 
         expect(chart.kind).toBe('components');
+    });
+});
+
+describe('groupReadings', () => {
+
+    const group = () => {
+        const bloodPressure = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg', 'blood_pressure');
+        bloodPressure.children = [
+            new MeasurementCategory('c-sys', 'Systolic', 'mmHg', 'blood_pressure_systolic', false, 'g-1', 0),
+            new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', 'blood_pressure_diastolic', false, 'g-1', 1),
+        ];
+        return bloodPressure;
+    };
+
+    /** The entries of one reading, newest first as the API returns them */
+    const reading = (date: Date, high: number, low: number | null) => [
+        new MeasurementEntry('e-sys', 'c-sys', date, high, ''),
+        ...(low === null ? [] : [new MeasurementEntry('e-dia', 'c-dia', date, low, '')]),
+    ];
+
+    test('pairs the components sharing a timestamp into one reading', () => {
+        const readings = groupReadings(group(), reading(day(1, 8), 120, 80));
+
+        expect(readings).toHaveLength(1);
+        expect(readings[0].date).toEqual(day(1, 8));
+        expect([...readings[0].values]).toEqual([['c-sys', 120], ['c-dia', 80]]);
+    });
+
+    test('keeps a reading only some components reported', () => {
+        const readings = groupReadings(group(), reading(day(1, 8), 120, null));
+
+        expect([...readings[0].values]).toEqual([['c-sys', 120]]);
+    });
+
+    test('returns the readings newest first', () => {
+        const readings = groupReadings(group(), [
+            ...reading(day(1, 8), 120, 80),
+            ...reading(day(3, 8), 130, 90),
+        ]);
+
+        expect(readings.map(r => r.date)).toEqual([day(3, 8), day(1, 8)]);
+    });
+
+    test('ignores entries of a category that is not a component', () => {
+        const stray = new MeasurementEntry('e-x', 'c-other', day(1, 8), 42, '');
+
+        expect(groupReadings(group(), [stray])).toEqual([]);
+    });
+
+    test('reads the values through the unit helper', () => {
+        const weight = new MeasurementCategory('g-w', 'Weights', 'kg', 'custom');
+        weight.children = [new MeasurementCategory('c-kg', 'Left', 'kg', 'custom', false, 'g-w', 0)];
+        const entries = [new MeasurementEntry('e-1', 'c-kg', day(1), 220, '', 'user', { unit: 'lb' })];
+
+        expect([...groupReadings(weight, entries)[0].values]).toEqual([['c-kg', 99.79]]);
+    });
+});
+
+describe('groupReadingPage', () => {
+
+    const group = () => {
+        const bloodPressure = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg', 'blood_pressure');
+        bloodPressure.children = [
+            new MeasurementCategory('c-sys', 'Systolic', 'mmHg', 'blood_pressure_systolic', false, 'g-1', 0),
+            new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', 'blood_pressure_diastolic', false, 'g-1', 1),
+        ];
+        return bloodPressure;
+    };
+
+    /** [count] complete readings, newest first */
+    const entriesFor = (count: number) => {
+        const entries: MeasurementEntry[] = [];
+        for (let index = 0; index < count; index++) {
+            entries.push(new MeasurementEntry('e-sys', 'c-sys', day(count - index), 120, ''));
+            entries.push(new MeasurementEntry('e-dia', 'c-dia', day(count - index), 80, ''));
+        }
+        return entries;
+    };
+
+    test('hands over what it was given when the page was not truncated', () => {
+        const page = groupReadingPage(group(), entriesFor(3), 10, false);
+
+        expect(page.readings).toHaveLength(3);
+        expect(page.hasMore).toBe(false);
+    });
+
+    test('drops the oldest reading of a truncated page, it may be missing components', () => {
+        const page = groupReadingPage(group(), entriesFor(3), 10, true);
+
+        expect(page.readings.map(r => r.date)).toEqual([day(3), day(2)]);
+        expect(page.hasMore).toBe(true);
+    });
+
+    test('cuts at the page size, and says there is more', () => {
+        const page = groupReadingPage(group(), entriesFor(5), 2, false);
+
+        expect(page.readings.map(r => r.date)).toEqual([day(5), day(4)]);
+        expect(page.hasMore).toBe(true);
+    });
+
+    test('keeps a page holding a single timestamp, there is nothing to drop it for', () => {
+        const page = groupReadingPage(group(), entriesFor(1), 10, true);
+
+        expect(page.readings).toHaveLength(1);
+        expect(page.hasMore).toBe(true);
     });
 });
 

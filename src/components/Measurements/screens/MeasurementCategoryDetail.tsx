@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import {
@@ -14,6 +14,7 @@ import {
 import { PlanPeriod } from "@/components/Measurements/charts/series";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
 import { CategoryDetailDropdown } from "@/components/Measurements/widgets/CategoryDetailDropdown";
+import { GroupReadingsGrid } from "@/components/Measurements/widgets/GroupReadingsGrid";
 import { ChartRange, displayFilterFor } from "@/components/Measurements/charts/range";
 import { setChartRange, useChartRange } from "@/components/Measurements/state/chartRange";
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
@@ -110,11 +111,7 @@ export const MeasurementCategoryDetail = (props: { planPeriods?: PlanPeriod[] })
                     range={range}
                     planPeriods={props.planPeriods ?? []} />
                 {categoryQuery.data!.isGroup
-                    ? categoryQuery.data!.children.map(child =>
-                        <React.Fragment key={child.id}>
-                            <Typography variant="h5">{categoryDisplayName(child, t)}</Typography>
-                            <CategoryEntriesGrid category={child} range={range} />
-                        </React.Fragment>)
+                    ? <GroupReadingsGrid group={categoryQuery.data!} range={range} />
                     : <CategoryEntriesGrid category={categoryQuery.data!} range={range} />}
             </Stack>
         }

@@ -153,6 +153,43 @@ export const getMeasurementEntryPage = async (
     };
 };
 
+/** One page of the entries of a group's components, newest first */
+export type GroupEntryPage = {
+    entries: MeasurementEntry[],
+    /** Whether the server held entries back, see groupReadingPage */
+    truncated: boolean,
+};
+
+/**
+ * The entries of a group's components down to {@link before}, the timestamp of
+ * the oldest reading already shown. A cursor rather than an offset: the limit
+ * cuts entries, which cannot be counted back into whole readings.
+ */
+export const getGroupEntryPage = async (
+    categoryIds: string[],
+    limit: number,
+    before?: Date,
+    filtersetQuery: object = {},
+): Promise<GroupEntryPage> => {
+    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
+        query: {
+            category__in: categoryIds.join(','),
+            limit: limit,
+            ...(before !== undefined ? { date__lt: before.toISOString() } : {}),
+            ...filtersetQuery,
+        }
+    });
+    const { data } = await axios.get(url, { headers: makeHeader() });
+
+    return {
+        entries: data.results.map((entryData: unknown) => MeasurementEntry.fromJson(entryData)),
+        // What the server itself says is left over, rather than whether the
+        // page came back full: it caps `limit` at its own maximum, and a page
+        // cut by that cap looks unfilled
+        truncated: data.next !== null,
+    };
+};
+
 /**
  * The newest entries across the given categories, newest first, in a single
  * request.
