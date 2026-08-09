@@ -14,7 +14,8 @@ import {
 import { PlanPeriod } from "@/components/Measurements/charts/series";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
 import { CategoryDetailDropdown } from "@/components/Measurements/widgets/CategoryDetailDropdown";
-import { ChartRange, DEFAULT_CHART_RANGE, displayFilterFor } from "@/components/Measurements/charts/range";
+import { ChartRange, displayFilterFor } from "@/components/Measurements/charts/range";
+import { setChartRange, useChartRange } from "@/components/Measurements/state/chartRange";
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
 import { GridPaginationModel } from "@mui/x-data-grid";
 import { AddMeasurementEntryFab } from "@/components/Measurements/widgets/fab";
@@ -78,7 +79,7 @@ export const MeasurementCategoryDetail = (props: { planPeriods?: PlanPeriod[] })
     }
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [range, setRange] = React.useState<ChartRange>(DEFAULT_CHART_RANGE);
+    const range = useChartRange();
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const categoryQuery = useMeasurementsQuery(categoryId);
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -103,7 +104,7 @@ export const MeasurementCategoryDetail = (props: { planPeriods?: PlanPeriod[] })
             : <CategoryDetailDropdown category={categoryQuery.data!} />}
         mainContent={
             <Stack spacing={2}>
-                <ChartRangeSelector value={range} onChange={setRange} />
+                <ChartRangeSelector value={range} onChange={setChartRange} />
                 <MeasurementChart
                     category={categoryQuery.data!}
                     range={range}

@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { DEFAULT_CHART_RANGE, entryFilterFor } from "@/components/Measurements";
 import { getBodyWeightCategory, getWeights } from "@/components/Measurements/api/bodyWeight";
 import { testQueryClient } from "@/tests/queryClient";
+import { resetChartRange } from "@/components/Measurements/state/chartRange";
 import { testBodyWeightCategory, makeWeightEntry } from "@/tests/weight/testData";
 import { BodyWeight } from "./BodyWeight";
 import type { Mock } from 'vitest';
@@ -23,6 +24,9 @@ describe("Test BodyWeight component", () => {
     // See https://github.com/maslianok/react-resize-detector#testing-with-enzyme-and-jest
     afterEach(() => {
         vi.restoreAllMocks();
+        // The range store is shared module state, a picked range would leak
+        // into the next test
+        resetChartRange();
     });
 
     // Arrange

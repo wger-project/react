@@ -17,7 +17,8 @@ import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { useMeasurementsCategoryQuery } from "@/components/Measurements/queries";
 import { categoryDisplayName, MeasurementCategory } from "@/components/Measurements/models/Category";
 import { CategoryLatestValue } from "@/components/Measurements/widgets/CategoryLatestValue";
-import { ChartRange, DEFAULT_CHART_RANGE } from "@/components/Measurements/charts/range";
+import { ChartRange } from "@/components/Measurements/charts/range";
+import { setChartRange, useChartRange } from "@/components/Measurements/state/chartRange";
 import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
 import { OverviewEmpty } from "@/core/ui/Widgets/OverviewEmpty";
@@ -73,9 +74,9 @@ export const CategoryList = (props: { category: MeasurementCategory, range: Char
 export const MeasurementCategoryOverview = () => {
     const [t] = useTranslation();
     const [openReorderModal, setOpenReorderModal] = React.useState(false);
-    // One range for all cards: picking it per card would put a row of
-    // buttons on every one of them
-    const [range, setRange] = React.useState<ChartRange>(DEFAULT_CHART_RANGE);
+    // One range for all cards, shared with the other measurement screens:
+    // picking it per card would put a row of buttons on every one of them
+    const range = useChartRange();
     const categoryQuery = useMeasurementsCategoryQuery();
 
     return categoryQuery.isLoading
@@ -95,7 +96,7 @@ export const MeasurementCategoryOverview = () => {
                 <Stack spacing={2}>
                     {categoryQuery.data!.length === 0 && <OverviewEmpty />}
                     {categoryQuery.data!.length > 0
-                        && <ChartRangeSelector value={range} onChange={setRange} />}
+                        && <ChartRangeSelector value={range} onChange={setChartRange} />}
                     {/* min() keeps the column from forcing a horizontal scroll
                       * on screens narrower than one card */}
                     <Box sx={{

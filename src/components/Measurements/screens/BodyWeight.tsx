@@ -1,8 +1,9 @@
 import { Box, Stack } from "@mui/material";
-import { ChartRange, DEFAULT_CHART_RANGE, entryFilterFor } from "@/components/Measurements/charts/range";
+import { entryFilterFor } from "@/components/Measurements/charts/range";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
 import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { PlanPeriod } from "@/components/Measurements/charts/series";
+import { setChartRange, useChartRange } from "@/components/Measurements/state/chartRange";
 import {
     useBodyWeightCategoryQuery,
     useBodyWeightQuery,
@@ -13,14 +14,14 @@ import { AddBodyWeightEntryFab } from "@/components/Measurements/widgets/fab";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { OverviewEmpty } from "@/core/ui/Widgets/OverviewEmpty";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 
 /** [planPeriods] come from the caller: measurements know nothing about nutrition */
 export const BodyWeight = (props: { planPeriods?: PlanPeriod[] }) => {
     const [t] = useTranslation();
-    const [range, setRange] = useState<ChartRange>(DEFAULT_CHART_RANGE);
+    // Shared with the other measurement screens, see useChartRange
+    const range = useChartRange();
     // Fetch what the range shows, rather than the whole history. The filter
     // reaches a week further back than the chart draws, so the moving average
     // of the first days in range still averages the days before them. The
@@ -39,7 +40,7 @@ export const BodyWeight = (props: { planPeriods?: PlanPeriod[] }) => {
     return <WgerContainerRightSidebar
         title={t("weight")}
         mainContent={<Stack spacing={2}>
-            <ChartRangeSelector value={range} onChange={setRange} />
+            <ChartRangeSelector value={range} onChange={setChartRange} />
             {weightyQuery.data!.length === 0 && <OverviewEmpty />}
             {weightyQuery.data!.length !== 0 && <>
                 <WeightChart
