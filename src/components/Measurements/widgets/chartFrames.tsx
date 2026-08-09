@@ -1,4 +1,4 @@
-import { Box, Paper } from "@mui/material";
+import { Box, Paper, useTheme } from "@mui/material";
 import {
     dateTick,
     durationAxis,
@@ -41,6 +41,7 @@ export const BarChartFrame = (props: {
     children: React.ReactNode,
 }) => {
     const [, i18n] = useTranslation();
+    const theme = useTheme();
 
     return <Box sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
         {/*
@@ -57,7 +58,7 @@ export const BarChartFrame = (props: {
             barCategoryGap="15%"
             aria-label={props.ariaLabel}>
             <CartesianGrid
-                stroke="#ccc"
+                stroke={theme.palette.divider}
                 strokeDasharray="5 5"
                 vertical={false} />
             <XAxis

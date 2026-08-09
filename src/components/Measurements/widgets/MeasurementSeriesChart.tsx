@@ -286,7 +286,7 @@ export const MeasurementSeriesChart = (props: MeasurementSeriesChartProps) => {
         </Stack>}
         <ComposedChart responsive width="90%" height={props.height ?? 200}>
             <CartesianGrid
-                stroke="#ccc"
+                stroke={theme.palette.divider}
                 strokeDasharray="5 5" />
             <XAxis
                 dataKey="date"

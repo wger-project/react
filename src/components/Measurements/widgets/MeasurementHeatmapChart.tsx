@@ -48,7 +48,7 @@ export const MeasurementHeatmapChart = (props: { points: ChartPoint[], unit: str
         }
         const share = grid.maxValue <= 0 ? 1 : Math.min(1, Math.max(0, value / grid.maxValue));
 
-        return alpha(theme.palette.secondary.main, 0.3 + 0.7 * share);
+        return alpha(theme.palette.primary.main, 0.3 + 0.7 * share);
     };
 
     // The grid is whole weeks and its last one usually runs past today, so the

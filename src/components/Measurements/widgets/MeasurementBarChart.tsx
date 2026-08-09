@@ -45,7 +45,7 @@ export const MeasurementBarChart = (props: { category: MeasurementCategory, poin
         tooltip={<CustomTooltip category={props.category} />}>
         <Bar
             dataKey="value"
-            fill={theme.palette.secondary.main}
+            fill={theme.palette.primary.main}
             maxBarSize={MAX_BAR_WIDTH} />
     </BarChartFrame>;
 };

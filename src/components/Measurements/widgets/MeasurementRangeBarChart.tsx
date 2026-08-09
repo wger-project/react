@@ -47,7 +47,7 @@ export const MeasurementRangeBarChart = (props: { points: ChartPoint[], unit: st
         tooltip={<RangeTooltip unit={props.unit} />}>
         <Bar
             dataKey="range"
-            fill={theme.palette.secondary.main}
+            fill={theme.palette.primary.main}
             maxBarSize={MAX_BAR_WIDTH} />
     </BarChartFrame>;
 };
