@@ -119,16 +119,20 @@ export const exerciseSubmissionReducer = (state: ExerciseSubmissionState, action
                 musclesSecondary: action.payload as number[]
             };
 
+        // An exercise either joins an existing variation group or connects to a
+        // single exercise, so setting one clears the other
         case SetExerciseSubmissionState.SET_VARIATION_ID:
             return {
                 ...state,
-                variationGroup: action.payload as string | null
+                variationGroup: action.payload as string | null,
+                newVariationExerciseId: null
             };
 
         case SetExerciseSubmissionState.SET_NEW_VARIATION_BASE_ID:
             return {
                 ...state,
-                newVariationExerciseId: action.payload as number
+                newVariationExerciseId: action.payload as number | null,
+                variationGroup: null
             };
 
         case SetExerciseSubmissionState.SET_LANGUAGE:

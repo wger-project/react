@@ -117,6 +117,21 @@ describe("Test the add exercise step 2 component", () => {
         expect(switchFor("Crunches")).not.toBeChecked();
     });
 
+    test("Selecting an entry deselects the previously selected one", async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        renderStep();
+        await user.click(screen.getByText("Benchpress"));
+        await user.click(screen.getByText("Crunches"));
+
+        // Assert
+        expect(switchFor("Crunches")).toBeChecked();
+        expect(switchFor("Benchpress")).not.toBeChecked();
+        expect(switchFor("Curls")).not.toBeChecked();
+    });
+
 
     test("can correctly filter the exercises", async () => {
         // Arrange

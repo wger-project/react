@@ -30,7 +30,7 @@ import {
     Typography
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 /*
@@ -60,46 +60,21 @@ const ExerciseInfoListItem = ({ exercises }: { exercises: Exercise[] }) => {
     const [state, dispatch] = useExerciseSubmissionStateValue();
     const [showMore, setShowMore] = useState<boolean>(false);
 
-    const [stateVariationGroup, setStateVariationGroup] = useState<string | null>(state.variationGroup);
-    const [stateNewVariationId, setStateNewVariationId] = useState<number | null>(state.newVariationExerciseId);
+    const isChecked = variationGroup === null
+        ? state.newVariationExerciseId === exerciseId
+        : state.variationGroup === variationGroup;
 
-    useEffect(() => {
-        dispatch(setVariationId(stateVariationGroup));
-    }, [dispatch, stateVariationGroup]);
-
-    useEffect(() => {
-        dispatch(setNewBaseVariationId(stateNewVariationId));
-    }, [dispatch, stateNewVariationId]);
-
-
-    const handleToggle = (variationGroup: string | null, newVariationId: number | null) => () => {
-
-        if (variationGroup !== null) {
-            newVariationId = null;
-            if (variationGroup === state.variationGroup) {
-                variationGroup = null;
-            }
+    const handleToggle = () => {
+        if (variationGroup === null) {
+            dispatch(setNewBaseVariationId(isChecked ? null : exerciseId));
         } else {
-            variationGroup = null;
-            if (newVariationId === state.newVariationExerciseId) {
-                newVariationId = null;
-            }
+            dispatch(setVariationId(isChecked ? null : variationGroup));
         }
-
-        setStateVariationGroup(variationGroup);
-        setStateNewVariationId(newVariationId);
     };
-
-    let isChecked;
-    if (variationGroup === null) {
-        isChecked = state.newVariationExerciseId === exerciseId;
-    } else {
-        isChecked = variationGroup === state.variationGroup;
-    }
 
     return (
         <ListItem disableGutters>
-            <ListItemButton onClick={handleToggle(variationGroup, exerciseId)}>
+            <ListItemButton onClick={handleToggle}>
                 <ListItemIcon>
                     <AvatarGroup max={MAX_EXERCISE_IMAGES} spacing={"small"}>
                         {exercises.map((base) =>
