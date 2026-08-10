@@ -38,8 +38,8 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
     const weightsQuery = useBodyWeightQuery();
     const sessionQuery = useSessionsQuery({
         filtersetQuerySessions: {
-            "date__gte": dateToYYYYMMDD(startOfMonth),
-            "date__lte": dateToYYYYMMDD(endOfMonth),
+            "datetime_start__gte": startOfMonth.toISOString(),
+            "datetime_start__lt": new Date(currentYear, currentMonth + 1, 1).toISOString(),
         },
         filtersetQueryLogs: {
             "date__gte": dateToYYYYMMDD(startOfMonth),
@@ -99,7 +99,7 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
                 date: new Date(date),
                 weightEntry: weightsQuery.data?.find(w => isSameDay(w.date, date)),
                 measurements: measurements.filter(m => isSameDay(m.date, date)) || [],
-                workoutSession: sessionQuery.data?.find(m => isSameDay(m.date, date)) || undefined,
+                workoutSession: sessionQuery.data?.find(m => isSameDay(m.datetimeStart, date)) || undefined,
                 nutritionLogs: nutritionDiaryQuery.data?.filter(m => isSameDay(m.datetime, date)) || [],
             });
             date.setDate(date.getDate() + 1);

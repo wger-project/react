@@ -2,7 +2,6 @@ import { Day } from "@/components/Routines/models/Day";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import i18n from 'i18next';
 import { Adapter } from "@/core/lib/Adapter";
-import { dateTimeToHHMM, dateToYYYYMMDD, HHMMToDateTime, yyyymmddToDate } from "@/core/lib/date";
 
 export const NOTES_MAX_LENGTH = 1000 as const;
 
@@ -14,11 +13,10 @@ interface WorkoutSessionParams {
     id: string | null;
     dayId: number;
     routineId: number;
-    date: Date;
+    datetimeStart: Date;
+    datetimeEnd: Date | null;
     notes: string | null;
     impression: string;
-    timeStart: Date | null;
-    timeEnd: Date | null;
     dayObj?: Day;
     logs?: WorkoutLog[];
 }
@@ -28,11 +26,10 @@ export class WorkoutSession {
     id: string | null;
     dayId: number;
     routineId: number;
-    date: Date;
+    datetimeStart: Date;
+    datetimeEnd: Date | null;
     notes: string | null;
     impression: string;
-    timeStart: Date | null;
-    timeEnd: Date | null;
     dayObj?: Day;
     logs: WorkoutLog[] = [];
 
@@ -40,11 +37,10 @@ export class WorkoutSession {
         this.id = params.id;
         this.dayId = params.dayId;
         this.routineId = params.routineId;
-        this.date = params.date;
+        this.datetimeStart = params.datetimeStart;
+        this.datetimeEnd = params.datetimeEnd;
         this.notes = params.notes;
         this.impression = params.impression;
-        this.timeStart = params.timeStart;
-        this.timeEnd = params.timeEnd;
         if (params.dayObj) {
             this.dayObj = params.dayObj;
         }
@@ -70,10 +66,10 @@ export class WorkoutSession {
     }
 
     get textRepresentation(): string {
-        const time = this.timeStart && this.timeEnd ? `${this.timeStart.toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-        })} - ${this.timeEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} /` : "";
+        const format = (date: Date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const time = this.datetimeEnd
+            ? `${format(this.datetimeStart)} - ${format(this.datetimeEnd)} /`
+            : `${format(this.datetimeStart)} /`;
 
         const notes = this.notes ?? "";
 
@@ -89,11 +85,10 @@ export class WorkoutSessionAdapter implements Adapter<WorkoutSession> {
         id: item.id,
         dayId: item.day!,
         routineId: item.routine!,
-        date: yyyymmddToDate(item.date!),
+        datetimeStart: new Date(item.datetime_start),
+        datetimeEnd: item.datetime_end ? new Date(item.datetime_end) : null,
         notes: item.notes !== undefined ? item.notes : null,
         impression: item.impression!,
-        timeStart: item.time_start !== undefined ? HHMMToDateTime(item.time_start) : null,
-        timeEnd: item.time_end !== undefined ? HHMMToDateTime(item.time_end) : null,
         dayObj: item.dayObj,
         logs: item.logs
     });
@@ -102,13 +97,12 @@ export class WorkoutSessionAdapter implements Adapter<WorkoutSession> {
     toJson = (item: WorkoutSession) => ({
         ...(item.id != null ? { id: item.id } : {}),
         day: item.dayId,
-        date: dateToYYYYMMDD(item.date),
         routine: item.routineId,
         notes: item.notes,
         impression: item.impression,
         // eslint-disable-next-line camelcase
-        time_start: dateTimeToHHMM(item.timeStart),
+        datetime_start: item.datetimeStart.toISOString(),
         // eslint-disable-next-line camelcase
-        time_end: dateTimeToHHMM(item.timeEnd),
+        datetime_end: item.datetimeEnd ? item.datetimeEnd.toISOString() : null,
     });
 }

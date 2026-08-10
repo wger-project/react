@@ -62,7 +62,7 @@ describe('SessionForm', () => {
         // Assert
         expect(mockUseFindSessionQuery).toHaveBeenCalledWith(
             routineId,
-            { routine: routineId, date: '2024-05-01', day: dayId }
+            { routine: routineId, datetime_start__date: '2024-05-01', day: dayId }
         );
 
         // Act - the parent selects another date
@@ -80,7 +80,7 @@ describe('SessionForm', () => {
         // Assert
         expect(mockUseFindSessionQuery).toHaveBeenLastCalledWith(
             routineId,
-            { routine: routineId, date: '2024-05-08', day: dayId }
+            { routine: routineId, datetime_start__date: '2024-05-08', day: dayId }
         );
     });
 
@@ -129,11 +129,11 @@ describe('SessionForm', () => {
             id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000001',
             dayId: dayId,
             routineId: routineId,
-            date: date.toJSDate(),
+
             notes: 'Test notes',
             impression: '3',
-            timeStart: timeStart.toJSDate(),
-            timeEnd: timeEnd.toJSDate()
+            datetimeStart: timeStart.toJSDate(),
+            datetimeEnd: timeEnd.toJSDate()
         });
 
         mockUseFindSessionQuery.mockReturnValue({
@@ -219,6 +219,35 @@ describe('SessionForm', () => {
         expect(editMutateAsync).not.toHaveBeenCalled();
     });
 
+    test('submits a session that runs past midnight with the end on the next day', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        mockUseFindSessionQuery.mockReturnValue({
+            data: new WorkoutSession({
+                id: null,
+                dayId: dayId,
+                routineId: routineId,
+                notes: '',
+                impression: '2',
+                datetimeStart: DateTime.fromISO('2024-05-01T23:00').toJSDate(),
+                datetimeEnd: DateTime.fromISO('2024-05-01T01:30').toJSDate(),
+            }),
+            isLoading: false,
+            isSuccess: true
+        });
+
+        // Act
+        renderForm(DateTime.fromISO('2024-05-01'));
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        // Assert
+        await waitFor(() => expect(editMutateAsync).toHaveBeenCalled());
+        const draft = editMutateAsync.mock.calls[0][0] as WorkoutSession;
+        expect(draft.datetimeStart).toEqual(DateTime.fromISO('2024-05-01T23:00').toJSDate());
+        expect(draft.datetimeEnd).toEqual(DateTime.fromISO('2024-05-02T01:30').toJSDate());
+    });
+
     test('submits an existing session through the edit mutation', async () => {
 
         // Arrange
@@ -227,11 +256,11 @@ describe('SessionForm', () => {
             id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000001',
             dayId: dayId,
             routineId: routineId,
-            date: DateTime.fromISO('2024-05-01').toJSDate(),
+
             notes: 'Test notes',
             impression: '3',
-            timeStart: null,
-            timeEnd: null
+            datetimeStart: DateTime.fromISO('2024-05-01').toJSDate(),
+            datetimeEnd: null
         });
         mockUseFindSessionQuery.mockReturnValue({
             data: mockSession,
