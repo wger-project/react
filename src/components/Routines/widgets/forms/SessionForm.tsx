@@ -8,6 +8,7 @@ import {
 import { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery } from "@/components/Routines/queries";
 import { WgerTextField } from "@/core/forms/WgerTextField";
 import { dateToYYYYMMDD } from "@/core/lib/date";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
 import { Button, ButtonGroup, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
@@ -257,6 +258,10 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
                                 </Button>
 
                             </ButtonGroup>
+                        </Grid>
+                        <Grid size={12}>
+                            <FormQueryErrors mutationQuery={addSessionQuery} />
+                            <FormQueryErrors mutationQuery={editSessionQuery} />
                         </Grid>
                         <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
                             <Button

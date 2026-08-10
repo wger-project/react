@@ -219,6 +219,32 @@ describe('SessionForm', () => {
         expect(editMutateAsync).not.toHaveBeenCalled();
     });
 
+    test('shows what the server rejected', async () => {
+
+        // Arrange
+        mockUseFindSessionQuery.mockReturnValue({
+            data: null,
+            isLoading: false,
+            isSuccess: true
+        });
+        mockUseAddSessionQuery.mockReturnValue({
+            data: null,
+            isPending: false,
+            mutateAsync: addMutateAsync,
+            isError: true,
+            error: {
+                message: 'Request failed with status code 400',
+                response: { data: { datetime_end: ['A session cannot be longer than 5 hours.'] } }
+            },
+        });
+
+        // Act
+        renderForm(DateTime.fromISO('2024-05-01'));
+
+        // Assert
+        expect(screen.getByText(/A session cannot be longer than 5 hours/)).toBeInTheDocument();
+    });
+
     test('submits a session that runs past midnight with the end on the next day', async () => {
 
         // Arrange
