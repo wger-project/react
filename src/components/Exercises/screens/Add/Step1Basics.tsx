@@ -46,7 +46,8 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
         <Formik
             initialValues={{
                 nameEn: state.nameEn,
-                newAlternativeNameEn: state.alternativeNamesEn,
+                // The alias field and its validator work with objects, the state keeps plain strings
+                newAlternativeNameEn: state.alternativeNamesEn.map(alias => ({ alias })),
                 category: state.category !== null ? state.category : '',
                 muscles: state.muscles,
                 equipment: state.equipment,
@@ -56,7 +57,7 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
             onSubmit={values => {
                 dispatch(exerciseReducer.setNameEn(values.nameEn));
                 dispatch(exerciseReducer.setCategory(values.category as number));
-                dispatch(exerciseReducer.setAlternativeNamesEn(values.newAlternativeNameEn));
+                dispatch(exerciseReducer.setAlternativeNamesEn(values.newAlternativeNameEn.map(item => item.alias)));
                 dispatch(exerciseReducer.setEquipment(values.equipment));
 
                 onContinue!();

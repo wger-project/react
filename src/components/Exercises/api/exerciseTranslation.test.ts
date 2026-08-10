@@ -49,6 +49,15 @@ describe("Exercise translation service API tests", () => {
 
         // Assert
         expect(axios.post).toHaveBeenCalledTimes(1);
+        const [url, body] = (axios.post as Mock).mock.calls[0];
+        expect(url).toMatch(/\/api\/v2\/exercise-translation\/$/);
+        expect(body).toEqual({
+            exercise: 100,
+            language: 2,
+            name: "Test exercise",
+            description_source: "Test description",
+            license_author: "Asimov",
+        });
         expect(result.id).toEqual(886);
         expect(result.name).toEqual("Test exercise");
         expect(result.description).toEqual("Test description");
@@ -87,6 +96,15 @@ describe("Exercise translation service API tests", () => {
 
         // Assert
         expect(axios.patch).toHaveBeenCalledTimes(1);
+        const [url, body] = (axios.patch as Mock).mock.calls[0];
+        expect(url).toMatch(/\/api\/v2\/exercise-translation\/886\/$/);
+        // The author is deliberately not sent when editing, the server keeps its history
+        expect(body).toEqual({
+            exercise: 100,
+            language: 2,
+            name: "A new, cooler name!!!",
+            description_source: "A new, cooler description!!!",
+        });
         expect(result.name).toEqual("A new, cooler name!!!");
     });
 

@@ -45,6 +45,11 @@ describe("Test the EntryForm component", () => {
         }));
     });
 
+    afterEach(() => {
+        // One test below fakes the clock, a failure there must not leak into the rest
+        vi.useRealTimers();
+    });
+
     test('Passing an existing entry renders its values in the form', () => {
 
         // Arrange

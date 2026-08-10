@@ -34,19 +34,23 @@ vi.mock('@/components/User/queries/profile', () => ({
 }));
 
 
-// TODO: using vi.useFakeTimers() and vi.setSystemTime(new Date('2024-12-01'));
-//       seems to break the test and they never complete. As a workaround the dates
-//       for the entries are set to the 1st and 2nd of the month, but that means
-//       that this test won't work on the 1st of every month since days in the future
-//       are not clickable.
+/*
+ * The calendar renders relative to "today", so the clock is fixed to the middle of
+ * a month. shouldAdvanceTime keeps the timers running, without it the queries never
+ * resolve and the tests time out.
+ */
 describe('CalendarComponent', () => {
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth();
+    // A Sunday, so the grid needs the maximum number of leading days
+    const currentYear = 2024;
+    const currentMonth = 11;
+    const today = new Date(currentYear, currentMonth, 15, 12, 0);
 
-    const user = userEvent.setup();
+    let user: ReturnType<typeof userEvent.setup>;
 
     beforeEach(() => {
+        vi.useFakeTimers({ shouldAdvanceTime: true });
+        vi.setSystemTime(today);
+        user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
         (getBodyWeightCategory as Mock).mockImplementation(() => Promise.resolve(testBodyWeightCategory));
         (getWeights as Mock).mockImplementation(() => Promise.resolve([
@@ -108,6 +112,7 @@ describe('CalendarComponent', () => {
 
     afterEach(() => {
         vi.clearAllMocks();
+        vi.useRealTimers();
     });
 
     const renderComponent = () => {
@@ -129,17 +134,49 @@ describe('CalendarComponent', () => {
     test("renders calendar with days and header", () => {
         renderComponent();
         const days = screen.getAllByText(/^\d+$/);
-        const monthName = new Date(currentYear, currentMonth, 1).toLocaleString('en-US', { month: 'long' });
         expect(days.length).toBeGreaterThan(getDaysInMonth(currentYear, currentMonth));
 
-        expect(screen.getByText(`${monthName} ${currentYear}`)).toBeInTheDocument();
+        expect(screen.getByText('December 2024')).toBeInTheDocument();
 
-        const weekDays = Array.from({ length: 7 }, (_, i) =>
-            new Date(1970, 0, i + 5).toLocaleString('en-US', { weekday: 'short' })
-        );
-        weekDays.forEach((day) => {
+        // The week starts on monday
+        ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].forEach((day) => {
             expect(screen.getByText(day)).toBeInTheDocument();
         });
+    });
+
+    test('pads the grid with the surrounding months so the columns line up', () => {
+        renderComponent();
+
+        // December 2024 starts on a sunday and ends on a tuesday, so the grid needs
+        // six leading days from november and five trailing ones from january
+        expect(screen.getByTestId('day-2024-11-25')).toBeInTheDocument();
+        expect(screen.getByTestId('day-2024-12-01')).toBeInTheDocument();
+        expect(screen.getByTestId('day-2024-12-31')).toBeInTheDocument();
+        expect(screen.getByTestId('day-2025-01-05')).toBeInTheDocument();
+
+        expect(screen.queryByTestId('day-2024-11-24')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('day-2025-01-06')).not.toBeInTheDocument();
+
+        // 6 + 31 + 5, always full weeks
+        const dayCells = screen.getAllByTestId(/^day-\d{4}-\d{2}-\d{2}$/);
+        expect(dayCells).toHaveLength(42);
+        expect(dayCells.length % 7).toBe(0);
+    });
+
+    test('does not navigate past the current month', () => {
+        renderComponent();
+
+        // Act - there is nothing to log in the future
+        fireEvent.click(screen.getByText('>'));
+
+        // Assert
+        expect(screen.getByText('December 2024')).toBeInTheDocument();
+
+        // ...but going back and forth again works
+        fireEvent.click(screen.getByText('<'));
+        expect(screen.getByText('November 2024')).toBeInTheDocument();
+        fireEvent.click(screen.getByText('>'));
+        expect(screen.getByText('December 2024')).toBeInTheDocument();
     });
 
     test('navigates to previous and next month', () => {
@@ -184,10 +221,10 @@ describe('CalendarComponent', () => {
         renderComponent();
 
         // Act
-        const day = screen.getByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 2))}`);
+        const day = await screen.findByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 2))}`);
         await user.click(day);
 
         // Assert
-        expect(screen.getByText('70.0 server.kg')).toBeInTheDocument();
+        expect(await screen.findByText('70.0 server.kg')).toBeInTheDocument();
     });
 });

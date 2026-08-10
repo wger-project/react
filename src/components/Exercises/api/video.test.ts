@@ -43,11 +43,15 @@ describe("Exercise video service API tests", () => {
 
         // Assert
         expect(axios.post).toHaveBeenCalled();
-        expect(axios.post).toHaveBeenCalledWith(
-            "https://example.com/api/v2/video/",
-            expect.objectContaining({ exercise: 42 }),
-            expect.anything()
-        );
+        const [url, body] = (axios.post as Mock).mock.calls[0];
+        expect(url).toBe("https://example.com/api/v2/video/");
+        // The file itself must be in the payload, not just the metadata
+        expect(body.video).toBeInstanceOf(File);
+        expect(body.video.name).toBe("test.mp4");
+        expect(body).toMatchObject({
+            exercise: 42,
+            license_author: "Prostetnic Vogon Jeltz",
+        });
         expect(result).toEqual(video);
     });
 

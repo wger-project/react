@@ -53,7 +53,7 @@ describe("Exercise translation model tests", () => {
         });
     });
 
-    test('slug apadpter', () => {
+    test('slug adapter', () => {
         // Arrange
         const e1 = new Translation({
             id: 2,

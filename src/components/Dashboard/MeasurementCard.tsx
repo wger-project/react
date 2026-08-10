@@ -44,7 +44,8 @@ export const MeasurementCard = () => {
         return <LoadingPlaceholder />;
     }
 
-    return categoryQuery.data === null
+    // The categories endpoint always returns an array, a new user simply gets an empty one
+    return !categoryQuery.data?.length
         ? <EmptyCard
             title={t("measurements.measurements")}
             modalContent={<CategoryForm />}

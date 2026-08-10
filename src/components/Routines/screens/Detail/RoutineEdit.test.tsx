@@ -16,7 +16,7 @@ vi.mock("@/components/Exercises/api/language");
 vi.mock("@/components/Routines/api/routine");
 vi.mock("@/components/User/api/profile");
 
-describe("Smoke tests the RoutineDetailsTable component", () => {
+describe("Smoke tests the RoutineEdit component", () => {
 
     beforeEach(() => {
         (getRoutine as Mock).mockResolvedValue(testRoutine1);

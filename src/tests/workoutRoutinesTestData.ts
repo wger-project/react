@@ -158,10 +158,10 @@ export const testRoutineDayData1 = [
             new SlotData(
                 '',
                 false,
-                [1],
+                [345],
                 [
                     new SetConfigData({
-                            exerciseId: 1,
+                            exerciseId: 345,
                             slotEntryId: 1,
                             type: 'normal',
                             nrOfSets: 4,

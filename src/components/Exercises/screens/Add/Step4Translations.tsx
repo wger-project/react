@@ -65,7 +65,8 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
         <Formik
             initialValues={{
                 name: state.nameI18n,
-                alternativeNames: state.alternativeNamesI18n,
+                // The alias field and its validator work with objects, the state keeps plain strings
+                alternativeNames: state.alternativeNamesI18n.map(alias => ({ alias })),
                 description: state.descriptionI18n,
                 language: state.languageId === null ? '' : state.languageId,
                 notes: state.notesI18n
@@ -94,7 +95,7 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
 
                 dispatch(setNameI18n(values.name));
                 dispatch(setDescriptionI18n(values.description));
-                dispatch(setAlternativeNamesI18n(values.alternativeNames));
+                dispatch(setAlternativeNamesI18n(values.alternativeNames.map(item => item.alias)));
                 dispatch(setLanguageId(values.language === '' ? null : values.language as unknown as number));
                 dispatch(setNotesI18n(values.notes));
 

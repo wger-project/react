@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
@@ -17,64 +18,96 @@ describe('SessionForm', () => {
     const routineId = 1;
     const dayId = 2;
 
+    let addMutateAsync: Mock;
+    let editMutateAsync: Mock;
+
     beforeEach(() => {
         mockUseFindSessionQuery.mockClear();
+        addMutateAsync = vi.fn().mockResolvedValue(undefined);
+        editMutateAsync = vi.fn().mockResolvedValue(undefined);
         mockUseAddSessionQuery.mockReturnValue({
             data: null,
             isPending: false,
+            mutateAsync: addMutateAsync,
         });
         mockUseEditSessionQuery.mockReturnValue({
             data: null,
             isPending: false,
+            mutateAsync: editMutateAsync,
         });
     });
 
-    test('calls useFindSessionQuery with the correct parameters when the date changes', async () => {
+    const renderForm = (selectedDate: DateTime, setSelectedDate: React.Dispatch<React.SetStateAction<DateTime>> = () => {
+    }) => render(
+        <BrowserRouter>
+            <SessionForm
+                dayId={dayId}
+                routineId={routineId}
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate} />
+        </BrowserRouter>
+    );
+
+    test('looks up the session for the currently selected date', async () => {
         // Arrange
-        const user = userEvent.setup();
-        const mockSession = new WorkoutSession({
-            id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000000',
-            dayId: 0,
-            routineId: 0,
-            date: new Date(),
-            notes: '',
-            impression: "1",
-            timeStart: null,
-            timeEnd: null
-        });
         mockUseFindSessionQuery.mockReturnValue({
-            data: mockSession,
+            data: null,
             isLoading: false,
             isSuccess: true
         });
 
         // Act
-        render(
+        const { rerender } = renderForm(DateTime.fromISO('2024-05-01'));
+
+        // Assert
+        expect(mockUseFindSessionQuery).toHaveBeenCalledWith(
+            routineId,
+            { routine: routineId, date: '2024-05-01', day: dayId }
+        );
+
+        // Act - the parent selects another date
+        rerender(
             <BrowserRouter>
                 <SessionForm
                     dayId={dayId}
                     routineId={routineId}
-                    selectedDate={DateTime.now()}
+                    selectedDate={DateTime.fromISO('2024-05-08')}
                     setSelectedDate={() => {
                     }} />
             </BrowserRouter>
         );
 
         // Assert
-        const datePicker = screen.getByRole('group', { name: /date/i });
-        const newDate = DateTime.now();
-
-        await user.type(datePicker, newDate.toFormat('yyyy-MM-dd'));
-        await user.tab();
-
-        expect(mockUseFindSessionQuery).toHaveBeenCalledWith(
-            1,
-            {
-                routine: routineId,
-                date: newDate.toFormat('yyyy-MM-dd'),
-                day: 2
-            }
+        expect(mockUseFindSessionQuery).toHaveBeenLastCalledWith(
+            routineId,
+            { routine: routineId, date: '2024-05-08', day: dayId }
         );
+    });
+
+    test('reports a date picked in the form back to the parent', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        const setSelectedDate = vi.fn();
+        mockUseFindSessionQuery.mockReturnValue({
+            data: null,
+            isLoading: false,
+            isSuccess: true
+        });
+
+        // Act
+        renderForm(DateTime.fromISO('2024-05-01'), setSelectedDate);
+        const dateGroup = screen.getByRole('group', { name: /date/i });
+        await user.click(within(dateGroup).getByRole('spinbutton', { name: /year/i }));
+        await user.keyboard('2025');
+
+        // Assert
+        // The picker hands the edited value to the parent, which owns the selected date.
+        // The concrete value can't be asserted here: the date field's section navigation
+        // doesn't work under happy-dom, so only the year section really changes.
+        await waitFor(() => expect(setSelectedDate).toHaveBeenCalled());
+        const reported = setSelectedDate.mock.calls.at(-1)![0] as DateTime;
+        expect(reported).toBeInstanceOf(DateTime);
+        expect(reported.year).toBe(2025);
     });
 
     test('updates the form values when a session is found', async () => {
@@ -159,5 +192,65 @@ describe('SessionForm', () => {
         await waitFor(() => {
             expect((screen.getByRole('textbox', { name: /notes/i }) as HTMLTextAreaElement).value).toBe('');
         });
+    });
+
+    test('submits a new session through the add mutation', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        mockUseFindSessionQuery.mockReturnValue({
+            data: null,
+            isLoading: false,
+            isSuccess: true
+        });
+
+        // Act
+        renderForm(DateTime.fromISO('2024-05-01'));
+        await user.type(screen.getByRole('textbox', { name: /notes/i }), 'Great session');
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        // Assert
+        await waitFor(() => expect(addMutateAsync).toHaveBeenCalled());
+        const draft = addMutateAsync.mock.calls[0][0] as WorkoutSession;
+        expect(draft.id).toBeNull();
+        expect(draft.routineId).toBe(routineId);
+        expect(draft.dayId).toBe(dayId);
+        expect(draft.notes).toBe('Great session');
+        expect(editMutateAsync).not.toHaveBeenCalled();
+    });
+
+    test('submits an existing session through the edit mutation', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        const mockSession = new WorkoutSession({
+            id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000001',
+            dayId: dayId,
+            routineId: routineId,
+            date: DateTime.fromISO('2024-05-01').toJSDate(),
+            notes: 'Test notes',
+            impression: '3',
+            timeStart: null,
+            timeEnd: null
+        });
+        mockUseFindSessionQuery.mockReturnValue({
+            data: mockSession,
+            isLoading: false,
+            isSuccess: true
+        });
+
+        // Act
+        renderForm(DateTime.fromISO('2024-05-01'));
+        await waitFor(() =>
+            expect(screen.getByRole('textbox', { name: /notes/i })).toHaveValue('Test notes')
+        );
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        // Assert
+        await waitFor(() => expect(editMutateAsync).toHaveBeenCalled());
+        const draft = editMutateAsync.mock.calls[0][0] as WorkoutSession;
+        expect(draft.id).toBe(mockSession.id);
+        expect(draft.notes).toBe('Test notes');
+        expect(addMutateAsync).not.toHaveBeenCalled();
     });
 });

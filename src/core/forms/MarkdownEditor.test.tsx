@@ -81,4 +81,51 @@ describe('MarkdownEditor', () => {
         const img = screen.queryByRole('img');
         expect(img).toBeNull();
     });
+
+    /*
+     * The markdown syntax is not the only way into the preview, the library also
+     * parses raw HTML in the input.
+     */
+    it('blocks raw HTML links', () => {
+        render(
+            <MarkdownEditor value={'<a href="http://evil.com">Malicious Link</a>'} onChange={mockChange} />
+        );
+
+        fireEvent.click(screen.getByText('preview'));
+
+        expect(screen.queryByRole('link')).toBeNull();
+        expect(screen.getByText('Malicious Link')).not.toHaveAttribute('href');
+    });
+
+    it('blocks raw HTML images and their event handlers', () => {
+        render(
+            <MarkdownEditor value={'<img src="x" onerror="alert(1)" alt="boom" />'} onChange={mockChange} />
+        );
+
+        fireEvent.click(screen.getByText('preview'));
+
+        expect(screen.queryByRole('img')).toBeNull();
+        expect(document.querySelector('img')).toBeNull();
+        expect(document.body.innerHTML).not.toContain('onerror');
+    });
+
+    it('does not execute raw script tags', () => {
+        render(
+            <MarkdownEditor value={'<script>window.pwned = true;</script>'} onChange={mockChange} />
+        );
+
+        fireEvent.click(screen.getByText('preview'));
+
+        expect(document.querySelector('script')).toBeNull();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        expect((window as any).pwned).toBeUndefined();
+    });
+
+    it('shows a placeholder when there is nothing to preview', () => {
+        render(<MarkdownEditor value="" onChange={mockChange} />);
+
+        fireEvent.click(screen.getByText('preview'));
+
+        expect(screen.getByText('No content')).toBeInTheDocument();
+    });
 });

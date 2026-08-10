@@ -2,13 +2,18 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MeasurementEntry } from "@/components/Measurements";
+import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { testQueryClient } from "@/tests/queryClient";
 import { makeWeightEntry } from "@/tests/weight/testData";
 import React from 'react';
+import { TEST_INGREDIENT_1 } from "@/tests/ingredientTestdata";
+import { TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2 } from "@/tests/nutritionDiaryTestdata";
+import { testWorkoutLogs, testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
 import { dateToLocale } from "@/core/lib/date";
 import { DayProps } from './CalendarComponent';
 import Entries from './Entries';
 
+vi.mock("@/components/Measurements/api/bodyWeight");
 vi.mock('@/components/User/queries/profile', () => ({
     useProfileQuery: () => ({ isLoading: false, data: { useMetric: true } }),
 }));
@@ -96,5 +101,54 @@ describe('Entries Component', () => {
 
         expect(screen.queryByText('Chest size')).toBeInTheDocument();
         expect(screen.getByText('Arm size')).toBeInTheDocument();
+    });
+
+    test('Shows the workout session logs in a collapsible', async () => {
+        const propsWithSession = {
+            ...defaultProps,
+            workoutSession: new WorkoutSession({ ...testWorkoutSession, logs: testWorkoutLogs })
+        };
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithSession} />
+            </QueryClientProvider>
+        );
+
+        // Initially only the session header with its summary is visible
+        expect(screen.getByText('routines.workoutSession')).toBeInTheDocument();
+        expect(screen.getByText(/everything is awesome/)).toBeInTheDocument();
+        expect(screen.queryByText('8 × 80')).not.toBeInTheDocument();
+
+        const user = userEvent.setup();
+        await user.click(screen.getByText('routines.workoutSession'));
+
+        // The logs are rendered as "repetitions × weight" per exercise
+        expect(screen.getAllByText('Squats').length).toBe(testWorkoutLogs.length);
+        expect(screen.getByText(/^8 × 80/)).toBeInTheDocument();
+        expect(screen.getByText(/^8 × 82.5/)).toBeInTheDocument();
+    });
+
+    test('Shows the nutrition diary entries in a collapsible', async () => {
+        const propsWithNutrition = {
+            ...defaultProps,
+            nutritionLogs: [TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2]
+        };
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithNutrition} />
+            </QueryClientProvider>
+        );
+
+        // Initially only the header is visible
+        expect(screen.getByText('nutrition.nutritionalDiary')).toBeInTheDocument();
+        expect(screen.queryByText(TEST_INGREDIENT_1.name)).not.toBeInTheDocument();
+
+        const user = userEvent.setup();
+        await user.click(screen.getByText('nutrition.nutritionalDiary'));
+
+        expect(screen.getByText(TEST_INGREDIENT_1.name)).toBeInTheDocument();
+        expect(screen.getByText(`${TEST_DIARY_ENTRY_1.amount} nutrition.gramShort`)).toBeInTheDocument();
     });
 });

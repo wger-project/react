@@ -14,13 +14,11 @@ import {
     getRoutineStatisticsData,
     getRoutineStructure,
 } from "@/components/Routines/api/routine";
-import { getRoutineLogs } from "@/components/Routines/api/workoutLogs";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
 import { Day } from "@/components/Routines/models/Day";
 import { RoutineStatsData } from "@/components/Routines/models/LogStats";
 import { Routine } from "@/components/Routines/models/Routine";
 import { SetConfigData } from "@/components/Routines/models/SetConfigData";
-import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { testExerciseBenchPress, testExerciseCurls } from "@/tests/exerciseTestdata";
 import {
     responseAddRoutine,
@@ -32,7 +30,6 @@ import {
     responseRoutineDayData,
     responseRoutineDayDataIterationGap,
     responseRoutineLogData,
-    responseRoutineLogs,
     responseRoutinesShallowWithTemplate,
     responseRoutineStats,
     responseRoutineStructure,
@@ -104,55 +101,7 @@ describe("workout routine service tests", () => {
     });
 
 
-    test('GET the routine logs', async () => {
-
-        // Arrange
-        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
-        (getRoutineRepUnits as Mock).mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
-        (getRoutineWeightUnits as Mock).mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
-
-        // Act
-        const result = await getRoutineLogs(1);
-
-        // Assert
-        expect(axios.get).toHaveBeenCalledTimes(1);
-        expect(result).toStrictEqual([
-            new WorkoutLog({
-                id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000002',
-                routineId: 1,
-                date: new Date("2023-05-10"),
-                iteration: 1,
-                exerciseId: 345,
-                slotEntryId: 2,
-                repetitionsUnitId: 1,
-                repetitions: 12,
-                repetitionsTarget: 12,
-                weight: 10.00,
-                weightUnitId: 1,
-                rir: null,
-                repetitionsUnit: testRepUnit1,
-                weightUnit: testWeightUnit1,
-            }),
-
-            new WorkoutLog({
-                id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000001',
-                routineId: 1,
-                date: new Date("2023-05-13"),
-                iteration: 1,
-                exerciseId: 345,
-                slotEntryId: 2,
-                repetitionsUnitId: 1,
-                repetitions: 10,
-                weight: 20,
-                weightTarget: 20,
-                weightUnitId: 1,
-                rir: 1.5,
-                rirTarget: 1,
-                repetitionsUnit: testRepUnit1,
-                weightUnit: testWeightUnit1,
-            }),
-        ]);
-    });
+    // Note: getRoutineLogs itself lives in workoutLogs.ts and is tested there
 
     test('GET the routine day data', async () => {
         // Arrange
