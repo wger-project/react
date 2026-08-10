@@ -32,20 +32,25 @@ describe('Tests for the ProgressionForm', () => {
         })
     ];
 
+    // The max configs deliberately differ from the min ones in operation, step and
+    // repeat: the form only renders one set of those controls, so the max values
+    // follow the min ones and the payload below pins exactly that.
     const testMaxConfigs = [
         new BaseConfig({
             id: 124,
             slotEntryId: 10,
             iteration: 1,
             value: 6,
+            step: 'percent',
         }),
         new BaseConfig({
             id: 457,
             slotEntryId: 10,
             iteration: 2,
             value: 2,
-            operation: '+',
-            repeat: true
+            operation: '-',
+            step: 'percent',
+            repeat: false
         })
     ];
 
@@ -54,7 +59,7 @@ describe('Tests for the ProgressionForm', () => {
         mockProcessBaseConfigs.mockClear();
     });
 
-    function renderWidget() {
+    function renderWidget(iterations: number[] = [1, 2]) {
         render(
             <QueryClientProvider client={testQueryClient}>
                 <ProgressionForm
@@ -63,7 +68,7 @@ describe('Tests for the ProgressionForm', () => {
                     type={'weight'}
                     slotEntryId={10}
                     routineId={1}
-                    iterations={[1, 2]}
+                    iterations={iterations}
                     isWeeklyCycle={true}
                 />
             </QueryClientProvider>
@@ -173,5 +178,87 @@ describe('Tests for the ProgressionForm', () => {
                 }
             }
         );
+    });
+
+    test('adds a config for an iteration that has none yet', async () => {
+
+        // Act
+        // The third week has no config, its row only offers to add one
+        renderWidget([1, 2, 3]);
+        const addButtons = screen.getAllByTestId('AddIcon');
+        await user.click(addButtons[0].closest('button')!);
+
+        const minFields = screen.getAllByLabelText('min');
+        await user.type(minFields[2], '9');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        // Assert
+        const [payload] = mockProcessBaseConfigs.mock.calls[0];
+        expect(payload.values.toAdd).toEqual([{
+            "iteration": 3,
+            "operation": "r",
+            "repeat": false,
+            "requirements": { "rules": [] },
+            "slot_entry": 10,
+            "step": "abs",
+            "value": "9"
+        }]);
+        // The new entry has no id yet, so it must not show up in the edit list
+        expect(payload.values.toEdit.map((entry: { id: number }) => entry.id)).toEqual([123, 456]);
+    });
+
+    test('deletes the config of an iteration', async () => {
+
+        // Act
+        renderWidget();
+        // The first row cannot be deleted while later ones exist
+        const deleteButtons = screen.getAllByTestId('DeleteIcon');
+        await user.click(deleteButtons[1].closest('button')!);
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        // Assert
+        const [payload] = mockProcessBaseConfigs.mock.calls[0];
+        expect(payload.values.toDelete).toEqual([456]);
+        expect(payload.maxValues.toDelete).toEqual([457]);
+        expect(payload.values.toAdd).toEqual([]);
+    });
+
+    test('clearing a value deletes that config as well', async () => {
+
+        // Act
+        renderWidget();
+        const minFields = screen.getAllByLabelText('min');
+        await user.clear(minFields[1]);
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        // Assert
+        const [payload] = mockProcessBaseConfigs.mock.calls[0];
+        expect(payload.values.toDelete).toContain(456);
+    });
+
+    test('the first entry can only be deleted when it is the only one', async () => {
+
+        // Act
+        renderWidget();
+
+        // Assert
+        const deleteButtons = screen.getAllByTestId('DeleteIcon');
+        expect(deleteButtons[0].closest('button')).toBeDisabled();
+        expect(deleteButtons[1].closest('button')).toBeEnabled();
+    });
+
+    test('the max value may not be smaller than the min value', async () => {
+
+        // Act
+        renderWidget();
+        const maxFields = screen.getAllByLabelText('max');
+        await user.clear(maxFields[0]);
+        await user.type(maxFields[0], '2'); // the min value of that row is 5
+        await user.tab();
+
+        // Assert
+        expect(await screen.findByText('forms.maxLessThanMin')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /save/i })).toBeDisabled();
+        expect(mockProcessBaseConfigs).not.toHaveBeenCalled();
     });
 });

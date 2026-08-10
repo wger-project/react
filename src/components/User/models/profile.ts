@@ -2,8 +2,8 @@
 
 import { Adapter } from "@/core/lib/Adapter";
 
+// Note that the email is read-only in the API, it is managed via allauth
 export interface EditProfileParams {
-    email: string,
     height: number,
     weight_unit: 'kg' | 'lb',
     weightRounding: number | null,

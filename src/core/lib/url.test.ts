@@ -82,6 +82,70 @@ describe("test the header utility", () => {
             'Content-Type': 'application/json',
         });
     });
+
+    test('no CSRF token outside of the django application', () => {
+        document.cookie = 'csrftoken=abc123';
+
+        // IS_PROD is false in the test setup
+        expect(makeHeader()).not.toHaveProperty('X-CSRFToken');
+    });
+});
+
+/*
+ * The CSRF header is only sent when the app runs embedded in django, which is
+ * decided by IS_PROD. That constant is mocked to false for the whole test suite,
+ * so this block re-imports the module with its own config mock.
+ */
+describe("test the CSRF header in the django application", () => {
+
+    const prodConfig = {
+        IS_PROD: true,
+        PUBLIC_URL: '',
+        SERVER_URL: 'https://example.com',
+        MIN_ACCOUNT_AGE_TO_TRUST: 21,
+        VITE_API_SERVER: 'https://example.com',
+        VITE_API_KEY: '122333444455555666666',
+    };
+
+    afterEach(() => {
+        document.cookie = 'csrftoken=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        vi.doUnmock('@/config');
+        vi.resetModules();
+    });
+
+    test('reads the CSRF cookie and sends it as a header', async () => {
+        vi.resetModules();
+        vi.doMock('@/config', () => prodConfig);
+        document.cookie = 'csrftoken=abc123';
+
+        const { makeHeader: makeProdHeader } = await import("@/core/lib/url");
+
+        expect(makeProdHeader()['X-CSRFToken']).toBe('abc123');
+    });
+
+    test('picks the right cookie when several are set', async () => {
+        vi.resetModules();
+        vi.doMock('@/config', () => prodConfig);
+        document.cookie = 'other=nope';
+        document.cookie = 'csrftoken=abc123';
+        document.cookie = 'csrftoken_other=wrong';
+
+        const { makeHeader: makeProdHeader } = await import("@/core/lib/url");
+
+        expect(makeProdHeader()['X-CSRFToken']).toBe('abc123');
+
+        document.cookie = 'other=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        document.cookie = 'csrftoken_other=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    });
+
+    test('sends no CSRF header when the cookie is missing', async () => {
+        vi.resetModules();
+        vi.doMock('@/config', () => prodConfig);
+
+        const { makeHeader: makeProdHeader } = await import("@/core/lib/url");
+
+        expect(makeProdHeader()).not.toHaveProperty('X-CSRFToken');
+    });
 });
 
 

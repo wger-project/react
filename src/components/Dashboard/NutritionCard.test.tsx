@@ -73,5 +73,55 @@ describe("test the NutritionCard component", () => {
         });
     });
 
+    describe("The query failed", () => {
+
+        beforeEach(() => {
+            (useFetchLastNutritionalPlanQuery as Mock).mockImplementation(() => ({
+                isSuccess: false,
+                isLoading: false,
+                isError: true,
+                data: undefined
+            }));
+        });
+
+        test('falls back to the empty card instead of crashing', async () => {
+
+            // Act
+            render(
+                <QueryClientProvider client={queryClient}>
+                    <NutritionCard />
+                </QueryClientProvider>
+            );
+
+            // Assert
+            expect(screen.getByText('nothingHereYet')).toBeInTheDocument();
+        });
+    });
+
+    describe("The query is loading", () => {
+
+        beforeEach(() => {
+            (useFetchLastNutritionalPlanQuery as Mock).mockImplementation(() => ({
+                isSuccess: false,
+                isLoading: true,
+                data: undefined
+            }));
+        });
+
+        test('shows the loading placeholder', async () => {
+
+            // Act
+            render(
+                <QueryClientProvider client={queryClient}>
+                    <NutritionCard />
+                </QueryClientProvider>
+            );
+
+            // Assert
+            expect(screen.getByRole('progressbar')).toBeInTheDocument();
+            expect(screen.queryByText('nothingHereYet')).not.toBeInTheDocument();
+        });
+    });
+
 });
 

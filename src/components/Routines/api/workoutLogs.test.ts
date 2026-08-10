@@ -36,6 +36,10 @@ describe("workout logs service tests", () => {
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
+        const [url] = (axios.get as Mock).mock.calls[0];
+        // Without the routine filter the user would get the logs of all their routines
+        expect(url).toContain('routine=1');
+        expect(url).toContain('ordering=-date');
         expect(result).toStrictEqual([
             new WorkoutLog({
                 id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000002',

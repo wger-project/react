@@ -17,7 +17,10 @@ describe("Permission API tests", () => {
         const result = await checkPermission('exercises.delete_exercise');
 
         // Assert
-        expect(axios.get).toHaveBeenCalled();
+        expect(axios.get).toHaveBeenCalledWith(
+            expect.stringContaining('permission=exercises.delete_exercise'),
+            expect.anything()
+        );
         expect(result).toEqual(true);
     });
 

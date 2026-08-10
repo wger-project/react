@@ -44,7 +44,6 @@ describe("Profile API tests", () => {
         (axios.post as Mock).mockResolvedValue({ data: testProfileApiResponse });
 
         const result = await editProfile({
-            email: "new@example.com",
             height: 175,
             weightRounding: 2.5,
             repetitionsRounding: 1,
@@ -54,7 +53,6 @@ describe("Profile API tests", () => {
         const [url, body] = (axios.post as Mock).mock.calls[0];
         expect(url).toMatch(/\/api\/v2\/userprofile\/$/);
         expect(body).toEqual({
-            email: "new@example.com",
             height: 175,
 
             weight_rounding: 2.5,
@@ -67,10 +65,10 @@ describe("Profile API tests", () => {
     test('editProfile omits the rounding fields when they are undefined', async () => {
         (axios.post as Mock).mockResolvedValue({ data: testProfileApiResponse });
 
-        await editProfile({ email: "x@example.com", height: 180 });
+        await editProfile({ height: 180 });
 
         const [, body] = (axios.post as Mock).mock.calls[0];
-        expect(body).toEqual({ email: "x@example.com", height: 180 });
+        expect(body).toEqual({ height: 180 });
         expect(body).not.toHaveProperty("weight_rounding");
         expect(body).not.toHaveProperty("repetitions_rounding");
     });

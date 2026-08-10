@@ -46,8 +46,9 @@ export const NutritionCard = () => {
         return <LoadingPlaceholder />;
     }
 
-    return planQuery.data !== null ? (
-        <NutritionCardContent plan={planQuery.data!} />
+    // The data is null when the user has no plan and undefined when the query failed
+    return planQuery.data ? (
+        <NutritionCardContent plan={planQuery.data} />
     ) : (
         <EmptyCard title={t("nutritionalPlan")} modalContent={<PlanForm />} modalTitle={t("add")} />
     );
