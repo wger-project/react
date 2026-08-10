@@ -1,6 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from '@testing-library/react';
 import { compareValue, RoutineDetailsTable } from "@/components/Routines/screens/Detail/RoutineDetailsTable";
+import { WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
 import React from "react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { getLanguages } from "@/components/Exercises/api/language";
@@ -82,5 +83,27 @@ describe('compareValue', () => {
     test('returns null when from and to are both null or undefined', () => {
         expect(compareValue(5, null, null)).toBeNull();
         expect(compareValue(5, undefined, undefined)).toBeNull();
+    });
+
+    test('compares against a target of zero coming from the API', () => {
+        // A routine can ask for 0 RiR (train to failure) or a weight of 0 for a
+        // bodyweight exercise. Such a target must still be compared against, so this
+        // goes through the adapter instead of using a literal.
+        const log = new WorkoutLogAdapter().fromJson({
+            id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000001',
+            date: '2024-05-10',
+            iteration: 1,
+            exercise: 345,
+            slot_entry: 2,
+            repetitions: "10.00",
+            repetitions_target: "10.00",
+            weight: "0.00",
+            weight_target: "0.00",
+            rir: "0.00",
+            rir_target: "0.00",
+        });
+
+        expect(compareValue(log.rir, log.rirTarget, null)).toBe('match');
+        expect(compareValue(log.weight, log.weightTarget, null)).toBe('match');
     });
 });
