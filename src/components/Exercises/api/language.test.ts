@@ -10,7 +10,7 @@ describe("Language service tests", () => {
     test('GET language entries', async () => {
 
         // Arrange
-        const muscleResponse = {
+        const languageResponse = {
             count: 3,
             next: null,
             previous: null,
@@ -34,7 +34,7 @@ describe("Language service tests", () => {
         };
 
         // Act
-        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: muscleResponse }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: languageResponse }));
         const result = await getLanguages();
 
         // Assert

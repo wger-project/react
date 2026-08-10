@@ -10,7 +10,7 @@ import type { Mock } from 'vitest';
 vi.mock("@/components/Exercises/queries");
 const mockedEquipmentQuery = useEquipmentQuery as Mock;
 
-describe("Test the CategoryFilter component", () => {
+describe("Test the EquipmentFilter component", () => {
     beforeEach(() => {
         mockedEquipmentQuery.mockImplementation(() => (
             {

@@ -27,7 +27,7 @@ describe('editBaseConfig', () => {
         value: 120,
     };
 
-    const mockUrl = '/api/baseconfig/';
+    const mockUrl = ApiPath.WEIGHT_CONFIG;
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -40,7 +40,7 @@ describe('editBaseConfig', () => {
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
         expect(axios.patch).toHaveBeenCalledWith(
-            expect.any(String),
+            expect.stringMatching(/\/api\/v2\/weight-config\/1\/$/),
             mockEditBaseConfigParams,
             expect.any(Object)
         );

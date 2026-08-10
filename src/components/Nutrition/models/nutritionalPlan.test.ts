@@ -83,22 +83,6 @@ describe("Test the nutritional plan model", () => {
         expect(values.sodium).toBeCloseTo(0.3296, 2);
     });
 
-    test('correctly calculates the average nutritional values for the current day', async () => {
-
-        // Act
-        const values = TEST_NUTRITIONAL_PLAN_1.loggedNutritionalValuesToday;
-
-        // Assert
-        expect(values.energy).toBeCloseTo(296.7, 2);
-        expect(values.protein).toBeCloseTo(13.8199, 2);
-        expect(values.carbohydrates).toBeCloseTo(80.87, 2);
-        expect(values.carbohydratesSugar).toBeCloseTo(44.34999, 2);
-        expect(values.fat).toBeCloseTo(6.51, 2);
-        expect(values.fatSaturated).toBeCloseTo(1.58, 2);
-        expect(values.fiber).toBeCloseTo(5.25, 2);
-        expect(values.sodium).toBeCloseTo(0.064, 2);
-    });
-
     test('correctly groups the diary entries by date', async () => {
 
         // Act

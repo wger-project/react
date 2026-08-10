@@ -90,7 +90,7 @@ describe("meal service tests", () => {
         expect(calledUrls.some(u => u.includes(`/meal/?plan=${RESPONSE_PLAN_UUID_2}`))).toBe(true);
         expect(calledUrls.some(u => u.includes(`/mealitem/?meal=${RESPONSE_MEAL_UUID}`))).toBe(true);
 
-        // getIngredients is called once per meal with the deduped ingredient ids
+        // The ingredients of a meal are fetched in one go, in the order of its items
         expect(getIngredients).toHaveBeenCalledWith([101, 102]);
 
         expect(result).toHaveLength(1);

@@ -194,9 +194,16 @@ describe("test the makeLink helper", () => {
 
 describe("test the getAcceptLanguage helper", () => {
 
+    // i18n is a singleton shared with the rest of the suite
+    const originalLanguages = i18n.languages;
+
     beforeEach(() => {
         // @ts-expect-error - test helper assignment
         i18n.languages = undefined;
+    });
+
+    afterAll(() => {
+        i18n.languages = originalLanguages;
     });
 
     test("returns default when languages is undefined", () => {

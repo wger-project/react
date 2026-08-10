@@ -56,7 +56,7 @@ describe("test the NutritionCard component", () => {
             }));
         });
 
-        test('renders the current nutritional plan correctly', async () => {
+        test('renders the call to action correctly', async () => {
 
             // Act
             render(

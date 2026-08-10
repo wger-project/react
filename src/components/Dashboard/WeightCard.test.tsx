@@ -21,7 +21,6 @@ describe("test the WeightCard component", () => {
 
         afterEach(() => {
             vi.restoreAllMocks();
-            vi.useRealTimers();
         });
 
         test('renders the weights correctly', async () => {

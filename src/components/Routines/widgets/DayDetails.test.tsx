@@ -154,22 +154,17 @@ describe("Test the DayDragAndDropGrid component", () => {
                 <DayDragAndDropGrid routineId={222} selectedDayIndex={0} setSelectedDayIndex={mockSetSelectedDay} />
             </QueryClientProvider>
         );
-        await waitFor(() => {
-            expect(getRoutine).toHaveBeenCalled();
-        });
-        await waitFor(async () => {
-            await user.click(screen.getByRole('button', { name: 'routines.addDay' }));
-        });
+        await user.click(await screen.findByRole('button', { name: 'routines.addDay' }));
 
         // Assert
-        expect(mockAddDay).toHaveBeenCalledWith(new Day({
+        await waitFor(() => expect(mockAddDay).toHaveBeenCalledWith(new Day({
             isRest: false,
             name: "routines.newDay 4",
             needLogsToAdvance: false,
             order: 4,
             routineId: 222,
-        }));
-        expect(mockSetSelectedDay).toHaveBeenCalledWith(3);
+        })));
+        await waitFor(() => expect(mockSetSelectedDay).toHaveBeenCalledWith(3));
     });
 });
 
