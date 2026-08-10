@@ -48,10 +48,11 @@ describe("smoke test the MeasurementCard component", () => {
     describe("No data available", () => {
 
         beforeEach(() => {
+            // A new user without any categories gets an empty list from the API
             (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
                 isSuccess: true,
                 isLoading: false,
-                data: null
+                data: []
             }));
         });
 

@@ -59,7 +59,7 @@ describe("Profile API tests", () => {
 
             weight_rounding: 2.5,
 
-            repetition_rounding: 1,
+            repetitions_rounding: 1,
         });
         expect(result).toBeInstanceOf(Profile);
     });
@@ -72,7 +72,7 @@ describe("Profile API tests", () => {
         const [, body] = (axios.post as Mock).mock.calls[0];
         expect(body).toEqual({ email: "x@example.com", height: 180 });
         expect(body).not.toHaveProperty("weight_rounding");
-        expect(body).not.toHaveProperty("repetition_rounding");
+        expect(body).not.toHaveProperty("repetitions_rounding");
     });
 
     test('editProfile sends null rounding values explicitly (different from undefined)', async () => {
@@ -85,6 +85,6 @@ describe("Profile API tests", () => {
 
         const [, body] = (axios.post as Mock).mock.calls[0];
 
-        expect(body).toEqual({ weight_rounding: null, repetition_rounding: null });
+        expect(body).toEqual({ weight_rounding: null, repetitions_rounding: null });
     });
 });

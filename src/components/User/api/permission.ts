@@ -9,17 +9,19 @@ export const PERMISSION_PATH = 'check-permission';
  */
 export const checkPermission = async (permission: string): Promise<boolean> => {
     const url = makeUrl(PERMISSION_PATH, { query: { 'permission': permission } });
-    const response = await axios.get(
-        url,
-        { headers: makeHeader() }
-    );
 
-    // User is logged out, etc.
-    if (response.status === 400) {
+    // Axios rejects 4xx responses, and logged out users get a 400 here. We need to
+    // catch that, otherwise react-query retries the query and reports an error for
+    // what is a perfectly normal case.
+    try {
+        const response = await axios.get(
+            url,
+            { headers: makeHeader() }
+        );
+        return response.data.result;
+    } catch {
         return false;
     }
-
-    return response.data.result;
 };
 
 

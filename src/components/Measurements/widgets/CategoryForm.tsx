@@ -61,7 +61,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             fullWidth
                             id="name"
                             label={t('name')}
-                            error={formik.touched.name && Boolean(formik.touched.name)}
+                            error={formik.touched.name && Boolean(formik.errors.name)}
                             helperText={formik.touched.name && formik.errors.name}
                             {...formik.getFieldProps('name')}
                         />

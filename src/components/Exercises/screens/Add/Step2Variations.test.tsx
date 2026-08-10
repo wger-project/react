@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Step2Variations } from "@/components/Exercises/screens/Add/Step2Variations";
 
@@ -37,13 +37,23 @@ describe("Test the add exercise step 2 component", () => {
         vi.clearAllMocks();
     });
 
-    test("Renders without crashing", () => {
-        // Act
-        render(
+    // The step only reacts to clicks when it can dispatch to the submission state,
+    // outside of the provider the dispatch is a no-op.
+    const renderStep = () => render(
+        <ExerciseSubmissionStateProvider>
             <QueryClientProvider client={queryClient}>
                 <Step2Variations onContinue={mockOnContinue} />
             </QueryClientProvider>
-        );
+        </ExerciseSubmissionStateProvider>
+    );
+
+    // Benchpress and curls share a variation group and are rendered as one entry
+    const switchFor = (exerciseName: string) =>
+        within(screen.getByText(exerciseName).closest('li')!).getByRole('switch');
+
+    test("Renders without crashing", () => {
+        // Act
+        renderStep();
 
         // Assert
         expect(screen.getByText("exercises.whatVariationsExist")).toBeInTheDocument();
@@ -55,19 +65,17 @@ describe("Test the add exercise step 2 component", () => {
     });
 
     test("Correctly sets the variation ID", async () => {
+        // Arrange
+        const user = userEvent.setup();
+
         // Act
-        render(
-            <ExerciseSubmissionStateProvider>
-                <QueryClientProvider client={queryClient}>
-                    <Step2Variations onContinue={mockOnContinue} />
-                </QueryClientProvider>
-            </ExerciseSubmissionStateProvider>
-        );
-        const benchPress = screen.getByText("Benchpress");
-        await userEvent.click(benchPress);
+        renderStep();
+        expect(switchFor("Benchpress")).not.toBeChecked();
+        await user.click(screen.getByText("Benchpress"));
 
         // Assert
-        //...
+        expect(switchFor("Benchpress")).toBeChecked();
+        expect(switchFor("Curls")).toBeChecked();
     });
 
     test("Correctly unsets the variation ID", async () => {
@@ -75,16 +83,12 @@ describe("Test the add exercise step 2 component", () => {
         const user = userEvent.setup();
 
         // Act
-        render(
-            <QueryClientProvider client={queryClient}>
-                <Step2Variations onContinue={mockOnContinue} />
-            </QueryClientProvider>
-        );
-        const benchpress = screen.getByText("Benchpress");
-        await user.click(benchpress);
-        await user.click(benchpress);
+        renderStep();
+        await user.click(screen.getByText("Benchpress"));
+        await user.click(screen.getByText("Benchpress"));
 
         // Assert
+        expect(switchFor("Benchpress")).not.toBeChecked();
     });
 
     test("Correctly sets the newVariationExerciseId ID", async () => {
@@ -92,32 +96,27 @@ describe("Test the add exercise step 2 component", () => {
         const user = userEvent.setup();
 
         // Act
-        render(
-            <QueryClientProvider client={queryClient}>
-                <Step2Variations onContinue={mockOnContinue} />
-            </QueryClientProvider>
-        );
-        const crunches = screen.getByText("Crunches");
-        await user.click(crunches);
+        renderStep();
+        expect(switchFor("Crunches")).not.toBeChecked();
+        await user.click(screen.getByText("Crunches"));
 
         // Assert
+        expect(switchFor("Crunches")).toBeChecked();
     });
+
     test("Correctly unsets the newVariationExerciseId ID", async () => {
         // Arrange
         const user = userEvent.setup();
 
         // Act
-        render(
-            <QueryClientProvider client={queryClient}>
-                <Step2Variations onContinue={mockOnContinue} />
-            </QueryClientProvider>
-        );
-        const crunches = screen.getByText("Crunches");
-        await user.click(crunches);
-        await user.click(crunches);
+        renderStep();
+        await user.click(screen.getByText("Crunches"));
+        await user.click(screen.getByText("Crunches"));
 
         // Assert
+        expect(switchFor("Crunches")).not.toBeChecked();
     });
+
 
     test("can correctly filter the exercises", async () => {
         // Arrange

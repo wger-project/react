@@ -1,5 +1,5 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { WeightForm } from "@/components/Weight/forms/WeightForm";
 import { WeightEntry } from "@/components/Weight/models/WeightEntry";
@@ -84,29 +84,54 @@ describe("Test WeightForm component", () => {
 
         // Arrange
         const user = userEvent.setup();
+        const mutateAddMock = vi.fn();
+        const mutateEditMock = vi.fn();
+        (useAddWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        (useEditWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+
+        // Act
         render(
             <QueryClientProvider client={testQueryClient}>
                 <WeightForm />
             </QueryClientProvider>
         );
-
-        const group = screen.getByRole('group', { name: /date/i });
-        const dateInput = within(group).getByRole('textbox', { hidden: true });
         const weightInput = await screen.findByLabelText('weight');
-        const submitButton = screen.getByRole('button', { name: 'submit' });
+        await user.clear(weightInput);
+        await user.type(weightInput, '80');
+        fireEvent.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert - a brand new entry is submitted through the add mutation
+        await waitFor(() => {
+            expect(mutateAddMock).toHaveBeenCalled();
+        });
+        const submitted = mutateAddMock.mock.calls[0][0] as WeightEntry;
+        expect(Number(submitted.weight)).toBe(80);
+        expect(submitted.id).toBeUndefined();
+        expect(submitted.date).toBeInstanceOf(Date);
+        expect(mutateEditMock).not.toHaveBeenCalled();
+    });
+
+    test('An invalid weight blocks the submission', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        const mutateAddMock = vi.fn();
+        (useAddWeightEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
 
         // Act
-        user.type(dateInput, '2022-02-28');
-        user.type(weightInput, '80');
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <WeightForm />
+            </QueryClientProvider>
+        );
+        const weightInput = await screen.findByLabelText('weight');
+        await user.clear(weightInput);
+        await user.type(weightInput, '10'); // below the min of 30 kg
+        fireEvent.click(screen.getByRole('button', { name: 'submit' }));
 
         // Assert
-        expect(dateInput).toBeInTheDocument();
-        expect(weightInput).toBeInTheDocument();
-        expect(submitButton).toBeInTheDocument();
-        await user.click(submitButton);
-        await waitFor(() => {
-            expect(useAddWeightEntryQuery).toHaveBeenCalled();
-        });
+        await waitFor(() => expect(weightInput).toHaveAttribute('aria-invalid', 'true'));
+        expect(mutateAddMock).not.toHaveBeenCalled();
     });
 
     test('The weight field error state follows validity, not just touched', async () => {

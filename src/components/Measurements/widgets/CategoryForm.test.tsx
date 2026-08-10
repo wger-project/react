@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { useAddMeasurementCategoryQuery, useEditMeasurementCategoryQuery } from "@/components/Measurements/queries";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
@@ -90,5 +90,31 @@ describe("Test the CategoryForm component", () => {
         // Assert
         await user.click(submitButton);
         expect(mutate).toHaveBeenCalledWith(new MeasurementCategory(null, 'calves', 'cm'));
+    });
+
+    test('The name field error state follows validity, not just touched', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={TEST_MEASUREMENT_CATEGORY_1} />
+            </QueryClientProvider>
+        );
+        const nameInput = await screen.findByLabelText('name');
+
+        // Act + Assert: touching a valid field must not mark it as an error
+        await user.click(nameInput);
+        await user.tab();
+        expect(nameInput).not.toHaveAttribute('aria-invalid', 'true');
+
+        // Act + Assert: clearing it violates the required rule
+        await user.clear(nameInput);
+        await user.tab();
+        await waitFor(() => expect(nameInput).toHaveAttribute('aria-invalid', 'true'));
+
+        // Act + Assert: correcting it must clear the error state again
+        await user.type(nameInput, 'Biceps');
+        await waitFor(() => expect(nameInput).not.toHaveAttribute('aria-invalid', 'true'));
     });
 });
