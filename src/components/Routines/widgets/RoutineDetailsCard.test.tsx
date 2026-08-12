@@ -41,4 +41,22 @@ describe("Test the RoutineDetail component", () => {
         expect(screen.getByText('Every day is leg day 🦵🏻')).toBeInTheDocument();
         expect(screen.getByText('Squats')).toBeInTheDocument();
     });
+
+    test('renders days the sequence has no data for', async () => {
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/routine/101']}>
+                    <Routes>
+                        <Route path="routine/:routineId" element={<RoutineDetailsCard />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        // Assert: only the leg day has data, the other two are in the structure only
+        expect(screen.getByText('Pull day')).toBeInTheDocument();
+        expect(screen.getByText('routines.restDay')).toBeInTheDocument();
+    });
 });

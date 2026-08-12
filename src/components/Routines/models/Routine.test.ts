@@ -144,4 +144,21 @@ describe('Routine model tests', () => {
         expect(routine.dayDataCurrentIteration.length).toEqual(4);
         expect(routine.dayDataCurrentIterationFiltered.map(dayData => dayData.day!.id)).toEqual([1, 2]);
     });
+
+    test('lists every day of the structure, in order', () => {
+
+        // Assert
+        expect(routine.daysCurrentIteration.map(entry => entry.day.id)).toEqual([5, 6, 19]);
+    });
+
+    test('keeps days the sequence has no data for', () => {
+
+        // Act
+        const result = routine.daysCurrentIteration;
+
+        // Assert
+        expect(result[0].dayData).toEqual(testRoutineDayData1[0]);
+        expect(result[1].dayData).toBeNull();
+        expect(result[2].dayData).toBeNull();
+    });
 });

@@ -45,8 +45,8 @@ describe("Smoke tests the RoutineEdit component", () => {
         expect(screen.getByText('editName')).toBeInTheDocument();
         expect(screen.queryAllByText('Every day is leg day 🦵🏻')).toHaveLength(3);
         expect(screen.getByText('durationWeeksDays')).toBeInTheDocument();
-        expect(screen.queryAllByText('routines.restDay')).toHaveLength(3);
-        expect(screen.queryAllByText('Pull day')).toHaveLength(2);
+        expect(screen.queryAllByText('routines.restDay')).toHaveLength(4);
+        expect(screen.queryAllByText('Pull day')).toHaveLength(3);
         expect(screen.queryAllByText('Full body routine')).toHaveLength(2);
         expect(screen.getByText('routines.addDay')).toBeInTheDocument();
         expect(screen.getByText('routines.resultingRoutine')).toBeInTheDocument();
