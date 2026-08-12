@@ -60,6 +60,16 @@ const StyledContainer = styled(Container)({
     }
 });
 
+// The surrounding Stack turns this into a flex item, which blockifies inline-flex to flex.
+// The cell's text-align can then no longer center the content, hence justifyContent.
+const loggedValueSx = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    whiteSpace: 'nowrap',
+    gap: '2px',
+} as const;
+
 
 export const RoutineDetailsTable = () => {
     const { t, i18n } = useTranslation();
@@ -276,7 +286,7 @@ export const RoutineTable = (props: {
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <Box component="span" sx={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                <Box component="span" sx={loggedValueSx}>
                                     {log.repetitions ?? '-/-'}
                                     {getComparisonIcon(log.repetitions, setConfig?.repetitions, setConfig?.maxRepetitions)}
                                 </Box>
@@ -286,7 +296,7 @@ export const RoutineTable = (props: {
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <Box component="span" sx={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                <Box component="span" sx={loggedValueSx}>
                                     {log.weight ?? '-/-'}
                                     {getComparisonIcon(log.weight, setConfig?.weight, setConfig?.maxWeight)}
                                 </Box>
@@ -296,7 +306,7 @@ export const RoutineTable = (props: {
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <Box component="span" sx={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                <Box component="span" sx={loggedValueSx}>
                                     {log.restTime ?? '-/-'}
                                     {getComparisonIcon(log.restTime, setConfig?.restTime, setConfig?.maxRestTime)}
                                 </Box>
@@ -306,7 +316,7 @@ export const RoutineTable = (props: {
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <Box component="span" sx={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                <Box component="span" sx={loggedValueSx}>
                                     {log.rir ?? '-/-'}
                                     {getComparisonIcon(log.rir, setConfig?.rir, setConfig?.maxRir, false)}
                                 </Box>
