@@ -72,8 +72,8 @@ describe("smoke test the MeasurementCard component", () => {
 
         beforeEach(() => {
             const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg');
-            const systolic = new MeasurementCategory('c-sys', 'Systolic', 'mmHg', 'blood_pressure', false, 'g-1');
-            const diastolic = new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', 'blood_pressure', false, 'g-1');
+            const systolic = new MeasurementCategory('c-sys', 'Systolic', 'mmHg', 'blood_pressure_systolic', false, 'g-1');
+            const diastolic = new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', 'blood_pressure_diastolic', false, 'g-1');
             group.children = [systolic, diastolic];
             const systolicEntries = [
                 // sorted by date descending, like the server delivers them
@@ -106,7 +106,10 @@ describe("smoke test the MeasurementCard component", () => {
 
             // Assert
             expect(screen.getAllByText('Blood pressure').length).toBeGreaterThan(0);
-            expect(screen.getAllByText('Systolic').length).toBeGreaterThan(0);
+            // a typed component is listed under its metric type; the name the
+            // server stored for it is English
+            expect(screen.getAllByText('measurements.metricTypes.blood_pressure_systolic').length)
+                .toBeGreaterThan(0);
 
             // scoped to the table, the values also appear on the chart's axis
             const table = within(screen.getByRole('table'));

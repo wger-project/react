@@ -2,6 +2,7 @@ import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { DashboardCard } from "@/components/Dashboard/DashboardCard";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
 import {
+    categoryDisplayName,
     CategoryForm,
     componentColor,
     componentPalette,
@@ -102,6 +103,7 @@ const MeasurementCardContent = (props: { categories: MeasurementCategory[] }) =>
  * left out where the chart draws something else than one line per component.
  */
 const ComponentRow = (props: { component: MeasurementCategory, unit: string, color?: string }) => {
+    const { t } = useTranslation();
     // Only the newest one is shown, so only the newest one is read
     const latest = useMeasurementEntriesQuery(props.component.id!, {}, 1).data?.[0];
 
@@ -114,7 +116,7 @@ const ComponentRow = (props: { component: MeasurementCategory, unit: string, col
                     height: 12,
                     width: 12,
                 }} />}
-                <span>{props.component.name}</span>
+                <span>{categoryDisplayName(props.component, t)}</span>
             </Stack>
         </TableCell>
         <TableCell>
@@ -152,7 +154,7 @@ const MeasurementCardTableContent = (props: { category: MeasurementCategory }) =
 
     return (<>
         <Typography variant="h6" gutterBottom>
-            {props.category.name}
+            {categoryDisplayName(props.category, t)}
         </Typography>
         <MeasurementChart category={props.category} />
         <Table size="small">
