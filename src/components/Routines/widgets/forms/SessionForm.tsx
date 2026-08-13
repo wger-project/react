@@ -7,7 +7,6 @@ import {
 } from "@/components/Routines/models/WorkoutSession";
 import { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery } from "@/components/Routines/queries";
 import { WgerTextField } from "@/core/forms/WgerTextField";
-import { dateToYYYYMMDD } from "@/core/lib/date";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
 import { Button, ButtonGroup, Typography } from "@mui/material";
@@ -44,13 +43,20 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
     const [session, setSession] = React.useState<WorkoutSession | undefined>(initialSession);
 
     const addSessionQuery = useAddSessionQuery();
-    const editSessionQuery = useEditSessionQuery(session?.id || '');
+    const editSessionQuery = useEditSessionQuery();
+    // The day as the instants it spans in the browser's timezone. A date bound
+    // would be cut in the server's, and a session logged shortly after
+    // midnight would go looking on the wrong day: the form would find nothing
+    // and save a second session next to the one that is already there
+    const dayStart = selectedDate.startOf('day');
     const findSessionQuery = useFindSessionQuery(
         routineId,
         {
             routine: routineId,
             // eslint-disable-next-line camelcase
-            datetime_start__date: dateToYYYYMMDD(selectedDate.toJSDate()),
+            datetime_start__gte: dayStart.toJSDate().toISOString(),
+            // eslint-disable-next-line camelcase
+            datetime_start__lt: dayStart.plus({ days: 1 }).toJSDate().toISOString(),
             day: dayId
         }
     );

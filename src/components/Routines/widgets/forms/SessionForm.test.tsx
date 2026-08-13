@@ -48,6 +48,12 @@ describe('SessionForm', () => {
         </BrowserRouter>
     );
 
+    /** The instants a local calendar day spans, which is the window the form searches */
+    const dayWindow = (day: string) => ({
+        datetime_start__gte: DateTime.fromISO(day).startOf('day').toJSDate().toISOString(),
+        datetime_start__lt: DateTime.fromISO(day).startOf('day').plus({ days: 1 }).toJSDate().toISOString(),
+    });
+
     test('looks up the session for the currently selected date', async () => {
         // Arrange
         mockUseFindSessionQuery.mockReturnValue({
@@ -59,10 +65,11 @@ describe('SessionForm', () => {
         // Act
         const { rerender } = renderForm(DateTime.fromISO('2024-05-01'));
 
-        // Assert
+        // Assert - as instants, so a session logged after midnight is not
+        // looked for on the day the server's timezone puts it on
         expect(mockUseFindSessionQuery).toHaveBeenCalledWith(
             routineId,
-            { routine: routineId, datetime_start__date: '2024-05-01', day: dayId }
+            { routine: routineId, ...dayWindow('2024-05-01'), day: dayId }
         );
 
         // Act - the parent selects another date
@@ -80,7 +87,7 @@ describe('SessionForm', () => {
         // Assert
         expect(mockUseFindSessionQuery).toHaveBeenLastCalledWith(
             routineId,
-            { routine: routineId, datetime_start__date: '2024-05-08', day: dayId }
+            { routine: routineId, ...dayWindow('2024-05-08'), day: dayId }
         );
     });
 

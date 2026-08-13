@@ -10,6 +10,20 @@ import { QueryKey, } from "@/core/lib/consts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
+/**
+ * What a written session ages: the routine it belongs to, and the search the
+ * session form looks it up with. Without the latter the form would still be
+ * told there is no session for that day and save a second one.
+ */
+const invalidateSessionReads = (
+    queryClient: ReturnType<typeof useQueryClient>,
+    session: WorkoutSession,
+) => {
+    queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW] });
+    queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, session.routineId] });
+    queryClient.invalidateQueries({ queryKey: [QueryKey.SESSION_SEARCH] });
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useFindSessionQuery = (routineId: number, queryParams: Record<string, any>) => useQuery({
     queryFn: () => searchSession(queryParams),
@@ -21,7 +35,7 @@ export const useAddSessionQuery = () => {
 
     return useMutation({
         mutationFn: (session: WorkoutSession) => addSession(session),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW] }),
+        onSuccess: (session: WorkoutSession) => invalidateSessionReads(queryClient, session),
     });
 };
 
@@ -31,15 +45,12 @@ export const useSessionsQuery = (options?: SessionQueryOptions) => useQuery({
 });
 
 
-export const useEditSessionQuery = (id: string) => {
+export const useEditSessionQuery = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: (session: WorkoutSession) => editSession(session),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW] });
-            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, id] });
-        }
+        onSuccess: (session: WorkoutSession) => invalidateSessionReads(queryClient, session),
     });
 };
 
