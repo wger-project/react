@@ -102,7 +102,7 @@ export const ExerciseDetailView = ({
                     </>}
 
                 <Typography variant="h5">{t("exercises.description")}</Typography>
-                <div dangerouslySetInnerHTML={{ __html: currentTranslation?.description! }} />
+                <div dangerouslySetInnerHTML={{ __html: currentTranslation?.description ?? "" }} />
                 <PaddingBox />
 
                 {currentTranslation?.notes.length > 0 && <Typography variant="h5">{t("exercises.notes")}</Typography>}

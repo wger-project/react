@@ -144,7 +144,7 @@ export const BmiCalculator = () => {
                         />
                         <CartesianGrid strokeDasharray="3 3" />
                         <Tooltip
-                            // @ts-ignore
+                            // @ts-expect-error -- Recharts exposes broader formatter value types than this chart accepts.
                             formatter={(value, name) => [Math.round(value as number), t('bmi.' + (name as string))]}
                         />
 

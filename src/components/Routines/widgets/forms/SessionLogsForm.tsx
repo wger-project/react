@@ -12,7 +12,7 @@ import { Alert, Button, IconButton, InputAdornment, MenuItem, Snackbar, TextFiel
 import Grid from '@mui/material/Grid';
 import { FieldArray, Form, Formik, FormikProps } from "formik";
 import { DateTime } from "luxon";
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 
@@ -31,6 +31,9 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
     const languageQuery = useLanguageQuery();
     const handleSnackbarClose = () => setSnackbarOpen(false);
     const [exerciseIdToSwap, setExerciseIdToSwap] = useState<number | null>(null);
+
+    // Counter for the keys of the logs the user adds on top of the planned ones
+    const extraLogKey = useRef(0);
 
     let language = undefined;
     if (languageQuery.isSuccess) {
@@ -139,6 +142,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                 for (let i = 0; i < config.nrOfSets; i++) {
 
                     initialValues.logs.push({
+                        clientKey: `${dayData.iteration}-${config.slotEntryId}-${config.exerciseId}-${i}`,
                         exercise: config.exercise!,
                         repetitionsUnit: config.repetitionsUnit!,
                         weightUnit: config.weightUnit!,
@@ -174,7 +178,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                         {({ insert, remove }) => (<>
 
                                 {formik.values.logs.map((log, index) => (
-                                    <Grid container key={index} spacing={1} sx={{ mt: 2 }}>
+                                    <Grid container key={log.clientKey} spacing={1} sx={{ mt: 2 }}>
 
                                         {/* Only show the exercise name the first time it appears */}
                                         {(index === 0 || (index > 0 && formik.values.logs[index - 1].exercise!.id !== formik.values.logs[index].exercise!.id)) && <>
@@ -195,6 +199,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                                                     type="button"
                                                     size="small"
                                                     onClick={() => insert(index, {
+                                                        clientKey: `extra-${extraLogKey.current++}`,
                                                         exercise: formik.values.logs[index].exercise,
                                                         repetitions: formik.values.logs[index].repetitions,
                                                         weight: formik.values.logs[index].weight

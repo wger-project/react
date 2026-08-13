@@ -6,6 +6,7 @@ import { WeightUnit } from "@/components/Routines/models/WeightUnit";
 import { Adapter } from "@/core/lib/Adapter";
 
 export interface LogEntryForm {
+    clientKey: string;
     exercise: Exercise | null;
     repetitionsUnit: RepetitionUnit | null;
     weightUnit: WeightUnit | null;

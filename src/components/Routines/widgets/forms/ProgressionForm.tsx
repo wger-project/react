@@ -349,7 +349,7 @@ export const ProgressionForm = (props: {
                                 {({ insert, remove }) => (<>
 
                                         {formik.values.entries.map((log, index) => (
-                                            <React.Fragment key={index}>
+                                            <React.Fragment key={`progression-${log.iteration}`}>
                                                 <Grid size={2} sx={{
                                                     display: 'flex',
                                                     justifyContent: 'space-around',
@@ -453,8 +453,8 @@ export const ProgressionForm = (props: {
                                                                     values={log.requirements}
                                                                     fieldName={`entries.${index}.requirements`} />}
                                                             {log.requirements.length >= 0 && <br />}
-                                                            {log.requirements.length >= 0 && log.requirements.map((requirement, index) => (
-                                                                <Typography key={index} variant={'caption'}>
+                                                            {log.requirements.length >= 0 && log.requirements.map((requirement) => (
+                                                                <Typography key={JSON.stringify(requirement)} variant={'caption'}>
                                                                     {requirement} &nbsp;
                                                                 </Typography>
                                                             ))}

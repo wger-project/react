@@ -54,8 +54,8 @@ export const MacrosPieChart = (props: { data: NutritionalValues }) => {
             fill="#8884d8"
             dataKey="value"
         >
-            {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={colorGenerator.next().value!} />
+            {data.map((entry) => (
+                <Cell key={`cell-${entry.name}`} fill={colorGenerator.next().value!} />
             ))}
         </Pie>
         {/*<Tooltip />*/}

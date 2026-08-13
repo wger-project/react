@@ -9,10 +9,22 @@ export function ExerciseAliases(props: { fieldName: string }) {
     const [t] = useTranslation();
     const [field, meta, helpers] = useField<AliasItem[]>(props.fieldName);
 
-    const normalize = (items: (AliasItem | string)[] | null | undefined): AliasItem[] =>
-        (items || []).map(item =>
-            typeof item === "string" ? { alias: item } : ("alias" in item ? (item as AliasItem) : { alias: String(item) })
-        );
+    const normalize = (items: (AliasItem | string)[] | null | undefined): AliasItem[] => {
+        const seen = new Set<string>();
+
+        return (items || [])
+            .map(item =>
+                typeof item === "string" ? { alias: item } : ("alias" in item ? (item as AliasItem) : { alias: String(item) })
+            )
+            .filter(item => {
+                if (seen.has(item.alias)) {
+                    return false;
+                }
+                seen.add(item.alias);
+
+                return true;
+            });
+    };
 
     /**
      * Extract a human-readable error string from the Yup alias validator, which
@@ -68,7 +80,7 @@ export function ExerciseAliases(props: { fieldName: string }) {
                         newVal.splice(index, 1);
                         helpers.setValue(newVal);
                     }}
-                    key={option.id ?? `${option.alias}-${index}`}
+                    key={option.id ?? option.alias}
                 />
             ));
 

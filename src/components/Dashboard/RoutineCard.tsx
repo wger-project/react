@@ -78,11 +78,13 @@ const DayListItem = (props: { dayData: RoutineDayData }) => {
 
             <Collapse in={expandView} timeout="auto" unmountOnExit>
                 {props.dayData.slots.map((slotData, index) => (
+                    // The API doesn't expose an id for the slots and they are not reordered here
+                    // eslint-disable-next-line @eslint-react/no-array-index-key
                     <div key={index}>
-                        {slotData.setConfigs.map((setConfigData, index) => (
+                        {slotData.setConfigs.map((setConfigData) => (
                             <SetConfigDataDetails
                                 setConfigData={setConfigData}
-                                key={index}
+                                key={`set-config-${setConfigData.slotEntryId}-${setConfigData.exerciseId}`}
                                 rowHeight={"70px"}
                                 showExercise={true}
                             />

@@ -145,7 +145,7 @@ function SlotDataList(props: { slotData: SlotData }) {
                     return <SetConfigDataDetails
                         setConfigData={setConfig}
                         marginBottom="1em"
-                        key={index}
+                        key={`set-config-${setConfig.slotEntryId}-${setConfig.exerciseId}`}
                         showExercise={showExercise}
                     />;
                 })}
@@ -248,6 +248,8 @@ export const DayDetailsCard = (props: {
             {slotData.length > 0 && <CardContent sx={{ padding: 0, marginBottom: 0 }}>
                 <Stack>
                     {slotData.map((slotData, index) => (
+                        // The API doesn't expose an id for the slots and they are not reordered here
+                        // eslint-disable-next-line @eslint-react/no-array-index-key
                         <div key={index}>
                             <Box sx={{ padding: 1 }}>
                                 <SlotDataList slotData={slotData} />
