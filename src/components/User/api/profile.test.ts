@@ -41,7 +41,7 @@ describe("Profile API tests", () => {
     });
 
     test('editProfile renames weightRounding/repetitionsRounding to snake_case keys', async () => {
-        (axios.post as Mock).mockResolvedValue({ data: testProfileApiResponse });
+        (axios.patch as Mock).mockResolvedValue({ data: testProfileApiResponse });
 
         const result = await editProfile({
             height: 175,
@@ -49,8 +49,8 @@ describe("Profile API tests", () => {
             repetitionsRounding: 1,
         });
 
-        expect(axios.post).toHaveBeenCalledTimes(1);
-        const [url, body] = (axios.post as Mock).mock.calls[0];
+        expect(axios.patch).toHaveBeenCalledTimes(1);
+        const [url, body] = (axios.patch as Mock).mock.calls[0];
         expect(url).toMatch(/\/api\/v2\/userprofile\/$/);
         expect(body).toEqual({
             height: 175,
@@ -63,25 +63,25 @@ describe("Profile API tests", () => {
     });
 
     test('editProfile omits the rounding fields when they are undefined', async () => {
-        (axios.post as Mock).mockResolvedValue({ data: testProfileApiResponse });
+        (axios.patch as Mock).mockResolvedValue({ data: testProfileApiResponse });
 
         await editProfile({ height: 180 });
 
-        const [, body] = (axios.post as Mock).mock.calls[0];
+        const [, body] = (axios.patch as Mock).mock.calls[0];
         expect(body).toEqual({ height: 180 });
         expect(body).not.toHaveProperty("weight_rounding");
         expect(body).not.toHaveProperty("repetitions_rounding");
     });
 
     test('editProfile sends null rounding values explicitly (different from undefined)', async () => {
-        (axios.post as Mock).mockResolvedValue({ data: testProfileApiResponse });
+        (axios.patch as Mock).mockResolvedValue({ data: testProfileApiResponse });
 
         await editProfile({
             weightRounding: null,
             repetitionsRounding: null,
         });
 
-        const [, body] = (axios.post as Mock).mock.calls[0];
+        const [, body] = (axios.patch as Mock).mock.calls[0];
 
         expect(body).toEqual({ weight_rounding: null, repetitions_rounding: null });
     });
