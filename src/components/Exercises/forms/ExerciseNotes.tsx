@@ -5,12 +5,13 @@ import Grid from '@mui/material/Grid';
 import { useField } from "formik";
 import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { randomUUID } from "@/core/lib/uuid";
 
 export function ExerciseNotes(props: { fieldName: string }) {
     const [t] = useTranslation();
     const [field, meta, helpers] = useField(props.fieldName);
     const [newNoteValue, setNewNoteValue] = useState<string>('');
-    const noteKeys = useRef<string[]>(field.value.map(() => crypto.randomUUID()));
+    const noteKeys = useRef<string[]>(field.value.map(() => randomUUID()));
 
     const deleteAtIndex = (index: number) => {
         noteKeys.current.splice(index, 1);
@@ -22,7 +23,7 @@ export function ExerciseNotes(props: { fieldName: string }) {
         helpers.setValue(field.value);
     };
     const addEntry = () => {
-        noteKeys.current.push(crypto.randomUUID());
+        noteKeys.current.push(randomUUID());
         field.value.push(newNoteValue);
         helpers.setValue(field.value);
         setNewNoteValue('');
