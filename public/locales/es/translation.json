@@ -312,6 +312,7 @@
         "indicatorRaw": "Bruto",
         "indicatorAvg": "medio",
         "indicatorTrend": "tendencia",
+        "noDataAvailable": "No hay datos disponibles",
         "overallChangeWeight": "Cambio general",
         "chartRangeAll": "Todo",
         "chartRangeMonths_one": "1 mes",

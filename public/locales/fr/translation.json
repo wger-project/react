@@ -395,6 +395,7 @@
         "indicatorRaw": "brut",
         "indicatorAvg": "moy",
         "indicatorTrend": "tendance",
+        "noDataAvailable": "Aucune donnée disponible",
         "overallChangeWeight": "Changement global",
         "chartRangeAll": "Tout",
         "chartRangeMonths_one": "1 mois",

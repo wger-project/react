@@ -307,6 +307,7 @@
         "indicatorRaw": "raw",
         "indicatorAvg": "Durchschn.",
         "indicatorTrend": "Trend",
+        "noDataAvailable": "Keine Daten vorhanden",
         "overallChangeWeight": "Allgemeine Veränderung",
         "chartRangeAll": "Gesamt",
         "chartRangeMonths_one": "1 Monat",
