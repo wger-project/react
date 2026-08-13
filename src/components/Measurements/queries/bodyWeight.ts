@@ -52,7 +52,7 @@ export function useBodyWeightQuery(filtersetQueryEntries: object = {}) {
     const queryClient = useQueryClient();
 
     return useQuery({
-        queryKey: [QueryKey.MEASUREMENTS, OFFICIAL_BODY_WEIGHT, filtersetQueryEntries],
+        queryKey: [QueryKey.MEASUREMENT_ENTRIES, OFFICIAL_BODY_WEIGHT, filtersetQueryEntries],
         queryFn: async () => {
             const category = await queryClient.ensureQueryData(bodyWeightCategoryQueryOptions);
             return getWeights(category, filtersetQueryEntries);
