@@ -106,7 +106,7 @@
     "test:coverage": "LANG=de_de vitest run --coverage",
     "i18n": "i18next",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src",
+    "lint": "eslint src --max-warnings 0",
     "lint:quiet": "eslint --quiet src",
     "lint:fix": "eslint --fix src"
   },
