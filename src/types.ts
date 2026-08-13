@@ -49,6 +49,9 @@ export interface ApiMeasurementCategoryType {
     is_official: boolean,
     parent: string | null,
     order: number,
+    chart_type: string | null,
+    /** Free-form settings object, see ChartConfig for the keys this release writes */
+    chart_config: Record<string, unknown> | null,
 }
 
 export const NUTRI_SCORES = ['a', 'b', 'c', 'd', 'e'] as const;

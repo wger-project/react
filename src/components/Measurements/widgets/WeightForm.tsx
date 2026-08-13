@@ -1,6 +1,4 @@
 import { Button, Stack, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { limitsFor, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
@@ -13,9 +11,8 @@ import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/M
 import { useProfileQuery } from "@/components/User";
 import { WeightUnit } from "@/core/lib/weightUnit";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { EntryDateTimeField } from "@/components/Measurements/widgets/EntryDateTimeField";
 import { Form, Formik } from "formik";
-import { DateTime } from "luxon";
-import { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from 'yup';
 
@@ -32,8 +29,7 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
     const editWeightQuery = useEditMeasurementEntryQuery();
     const displayUnit = useDisplayWeightUnit();
 
-    const [dateValue, setDateValue] = useState<DateTime | null>(weightEntry ? DateTime.fromJSDate(weightEntry.date) : DateTime.now);
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
 
     const lb = limitsFor(METRIC_TYPE_BODY_WEIGHT, 'lb');
     const kg = limitsFor(METRIC_TYPE_BODY_WEIGHT, 'kg');
@@ -124,20 +120,9 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
                             </ToggleButtonGroup>
                         </Stack>
 
-                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                            <DateTimePicker
-                                label={t('date')}
-                                value={dateValue}
-                                slotProps={{ textField: { variant: 'outlined' } }}
-                                disableFuture={true}
-                                onChange={(newValue) => {
-                                    if (newValue) {
-                                        formik.setFieldValue('date', newValue.toJSDate());
-                                    }
-                                    setDateValue(newValue);
-                                }}
-                            />
-                        </LocalizationProvider>
+                        <EntryDateTimeField
+                            initialDate={weightEntry ? weightEntry.date : new Date()}
+                            onChange={date => formik.setFieldValue('date', date)} />
                         <FormQueryErrors mutationQuery={weightEntry ? editWeightQuery : addWeightQuery} />
                         <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
                             <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>

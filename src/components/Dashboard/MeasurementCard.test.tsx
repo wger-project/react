@@ -3,6 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import { MeasurementCard } from "@/components/Dashboard/MeasurementCard";
 import {
     MeasurementCategory,
+    useLatestMeasurementEntriesQuery,
     useMeasurementEntriesQuery,
     useMeasurementsCategoryQuery
 } from "@/components/Measurements";
@@ -22,10 +23,17 @@ vi.useFakeTimers();
 const queryClient = new QueryClient();
 
 /** Answers the entry reads of the table under each chart, by category */
-const mockEntryQueries = (byCategory: Record<string, MeasurementEntry[]>) =>
+const mockEntryQueries = (byCategory: Record<string, MeasurementEntry[]>) => {
     (useMeasurementEntriesQuery as Mock).mockImplementation(
         (categoryId: string) => ({ data: byCategory[categoryId] ?? [] })
     );
+    // the component rows of a group read the newest entry of each of them
+    (useLatestMeasurementEntriesQuery as Mock).mockImplementation(
+        (categoryIds: string[]) => ({
+            data: categoryIds.flatMap(id => (byCategory[id] ?? []).slice(0, 1)),
+        })
+    );
+};
 
 describe("smoke test the MeasurementCard component", () => {
 

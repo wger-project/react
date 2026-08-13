@@ -1,4 +1,4 @@
-import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import { componentPalette, seriesColor } from "@/components/Measurements/charts/colors";
 import { clampPeriods, planNamesAt, pointsOfRole } from "@/components/Measurements/charts/data";
 import { dotRadius, useChartWidth } from "@/components/Measurements/charts/density";
@@ -17,6 +17,7 @@ import {
     PlanPeriod
 } from "@/components/Measurements/charts/series";
 import { ChartEmptyState } from "@/components/Measurements/widgets/ChartEmptyState";
+import { TooltipFrame, TooltipProps } from "@/components/Measurements/widgets/chartFrames";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -32,7 +33,6 @@ import {
     XAxis,
     YAxis
 } from "recharts";
-import { dateToLocale } from "@/core/lib/date";
 
 /** Opacity of the band drawn around a series of ranged points */
 const BAND_OPACITY = 0.15;
@@ -43,11 +43,7 @@ const PLAN_BAND_OPACITY = 0.15;
 /** Point count above which the connectors to the trend stop being readable */
 const MAX_VARIANCE_LINES = 30;
 
-interface TooltipProps {
-    active?: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    payload?: any;
-    label?: string;
+interface SeriesTooltipProps extends TooltipProps {
     unit: string;
     planPeriods: PlanPeriod[];
 }
@@ -86,7 +82,7 @@ const tooltipRows = (
     return [...rows.values()];
 };
 
-const CustomTooltip = ({ active, payload, label, unit, planPeriods }: TooltipProps) => {
+const SeriesTooltip = ({ active, payload, label, unit, planPeriods }: SeriesTooltipProps) => {
     const [, i18n] = useTranslation();
 
     if (!active || !payload?.length) {
@@ -98,8 +94,7 @@ const CustomTooltip = ({ active, payload, label, unit, planPeriods }: TooltipPro
     const plans = planNamesAt(planPeriods, Number(label));
 
     return (
-        <Paper style={{ padding: 8 }}>
-            <p><strong>{dateToLocale(new Date(Number(label)))}</strong></p>
+        <TooltipFrame label={label}>
             {tooltipRows(payload).map(row => (
                 <p key={row.name}>
                     {row.name}
@@ -109,7 +104,7 @@ const CustomTooltip = ({ active, payload, label, unit, planPeriods }: TooltipPro
                 </p>
             ))}
             {plans.map(name => <p key={name}><em>{name}</em></p>)}
-        </Paper>
+        </TooltipFrame>
     );
 };
 
@@ -300,7 +295,7 @@ export const MeasurementSeriesChart = (props: MeasurementSeriesChartProps) => {
                 ticks={axis?.ticks}
                 width="auto"
                 tickFormatter={value => valueWithUnit(value, props.unit, i18n.language)} />
-            <Tooltip content={<CustomTooltip unit={props.unit} planPeriods={periods} />} />
+            <Tooltip content={<SeriesTooltip unit={props.unit} planPeriods={periods} />} />
 
             {props.showMean && mean !== null && <ReferenceLine
                 y={mean}

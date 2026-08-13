@@ -1,5 +1,5 @@
 import React from "react";
-import { CircularProgress, Fab } from "@mui/material";
+import { CircularProgress, Fab, Theme } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
@@ -7,6 +7,14 @@ import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { NewCategoryPicker } from "@/components/Measurements/widgets/MetricPicker";
 import { EntryForm, GroupEntryForm } from "@/components/Measurements/widgets/EntryForm";
 import { WeightForm } from "@/components/Measurements/widgets/WeightForm";
+
+/** Above the bottom navigation, and at the edge of the content rather than of the window */
+const FAB_POSITION = {
+    position: 'fixed',
+    bottom: '5rem',
+    right: (theme: Theme) => `max(${theme.spacing(2)}, calc((100vw - ${theme.breakpoints.values.lg}px) / 2 + ${theme.spacing(2)}))`,
+    zIndex: 9,
+} as const;
 
 /**
  * @param isLoading whether the overview is (re)reading its categories. A new
@@ -27,12 +35,7 @@ export const AddMeasurementCategoryFab = ({ isLoading = false }: { isLoading?: b
                 aria-label="add"
                 disabled={isLoading}
                 onClick={handleOpenModal}
-                sx={{
-                    position: 'fixed',
-                    bottom: '5rem',
-                    right: (theme) => `max(${theme.spacing(2)}, calc((100vw - ${theme.breakpoints.values.lg}px) / 2 + ${theme.spacing(2)}))`,
-                    zIndex: 9,
-                }}>
+                sx={FAB_POSITION}>
                 {isLoading ? <CircularProgress size={24} color="inherit" /> : <AddIcon />}
             </Fab>
             <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
@@ -54,12 +57,7 @@ export const AddMeasurementEntryFab = ({ category }: { category: MeasurementCate
             color="secondary"
             aria-label="add"
             onClick={handleOpenModal}
-            sx={{
-                position: 'fixed',
-                bottom: '5rem',
-                right: (theme) => `max(${theme.spacing(2)}, calc((100vw - ${theme.breakpoints.values.lg}px) / 2 + ${theme.spacing(2)}))`,
-                zIndex: 9,
-            }}>
+            sx={FAB_POSITION}>
             <AddIcon />
         </Fab>
         <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
@@ -82,12 +80,7 @@ export const AddBodyWeightEntryFab = () => {
                 color="secondary"
                 aria-label="add"
                 onClick={handleOpenModal}
-                sx={{
-                    position: 'fixed',
-                    bottom: '5rem',
-                    right: (theme) => `max(${theme.spacing(2)}, calc((100vw - ${theme.breakpoints.values.lg}px) / 2 + ${theme.spacing(2)}))`,
-                    zIndex: 9,
-                }}>
+                sx={FAB_POSITION}>
                 <AddIcon />
             </Fab>
             <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>

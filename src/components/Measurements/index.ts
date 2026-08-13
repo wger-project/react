@@ -37,6 +37,7 @@ export {
     useAllMeasurementEntriesQuery,
     useDeleteMeasurementEntryQuery,
     useEditMeasurementEntryQuery,
+    useLatestMeasurementEntriesQuery,
     useMeasurementBucketsQuery,
     useMeasurementEntriesQuery,
     useMeasurementsCategoryQuery,

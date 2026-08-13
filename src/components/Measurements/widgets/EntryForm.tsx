@@ -1,6 +1,4 @@
 import { Button, Stack, TextField } from "@mui/material";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import {
     categoryDisplayName,
     limitsFor,
@@ -13,9 +11,8 @@ import {
     useAddMeasurementEntryQuery,
     useEditMeasurementEntryQuery
 } from "@/components/Measurements/queries";
+import { EntryDateTimeField } from "@/components/Measurements/widgets/EntryDateTimeField";
 import { Form, Formik } from "formik";
-import { DateTime } from "luxon";
-import React from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from 'yup';
 
@@ -34,11 +31,10 @@ interface EntryFormProps {
 
 export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
 
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
     const useAddEntryQuery = useAddMeasurementEntryQuery();
     const useEditEntryQuery = useEditMeasurementEntryQuery();
 
-    const [dateValue, setDateValue] = React.useState<DateTime | null>(entry ? DateTime.fromJSDate(entry.date) : DateTime.now());
 
     // The bounds follow the metric type of the category, and for body weight
     // the unit the entry itself is in
@@ -98,20 +94,9 @@ export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
                             slotProps={{ htmlInput: { inputMode: 'decimal' } }}
                             {...formik.getFieldProps('value')}
                         />
-                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                            <DateTimePicker
-                                label={t('date')}
-                                value={dateValue}
-                                slotProps={{ textField: { variant: 'outlined' } }}
-                                disableFuture={true}
-                                onChange={(newValue) => {
-                                    if (newValue) {
-                                        formik.setFieldValue('date', newValue.toJSDate());
-                                    }
-                                    setDateValue(newValue);
-                                }}
-                            />
-                        </LocalizationProvider>
+                        <EntryDateTimeField
+                            initialDate={entry ? entry.date : new Date()}
+                            onChange={date => formik.setFieldValue('date', date)} />
 
                         <TextField
                             fullWidth
@@ -147,10 +132,9 @@ interface GroupEntryFormProps {
  */
 export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
 
-    const [t, i18n] = useTranslation();
+    const [t] = useTranslation();
     const addGroupEntriesQuery = useAddGroupEntriesQuery();
 
-    const [dateValue, setDateValue] = React.useState<DateTime | null>(DateTime.now());
 
     const validationSchema = yup.object({
         date: yup
@@ -195,20 +179,9 @@ export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
             {formik => (
                 <Form>
                     <Stack spacing={2}>
-                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                            <DateTimePicker
-                                label={t('date')}
-                                value={dateValue}
-                                slotProps={{ textField: { variant: 'outlined' } }}
-                                disableFuture={true}
-                                onChange={(newValue) => {
-                                    if (newValue) {
-                                        formik.setFieldValue('date', newValue.toJSDate());
-                                    }
-                                    setDateValue(newValue);
-                                }}
-                            />
-                        </LocalizationProvider>
+                        <EntryDateTimeField
+                            initialDate={new Date()}
+                            onChange={date => formik.setFieldValue('date', date)} />
                         {group.children.map(child =>
                             <TextField
                                 key={child.id}

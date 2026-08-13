@@ -12,6 +12,7 @@ import {
     groupComponentPoints,
     MeasurementCategory,
     MeasurementChart,
+    useLatestMeasurementEntriesQuery,
     useMeasurementBucketsQuery,
     useMeasurementEntriesQuery,
     useMeasurementsCategoryQuery,
@@ -104,8 +105,9 @@ const MeasurementCardContent = (props: { categories: MeasurementCategory[] }) =>
  */
 const ComponentRow = (props: { component: MeasurementCategory, unit: string, color?: string }) => {
     const { t } = useTranslation();
-    // Only the newest one is shown, so only the newest one is read
-    const latest = useMeasurementEntriesQuery(props.component.id!, {}, 1).data?.[0];
+    // The same read the category headers use, so the newest value of a
+    // category is cached once rather than under a key per caller
+    const latest = useLatestMeasurementEntriesQuery([props.component.id!]).data?.[0];
 
     return <TableRow>
         <TableCell>
