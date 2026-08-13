@@ -1,5 +1,5 @@
 import { Box, Stack } from "@mui/material";
-import { entryFilterFor } from "@/components/Measurements/charts/range";
+import { displayCutoffFor, entryFilterFor } from "@/components/Measurements/charts/range";
 import { CategoryDetailDataGrid } from "@/components/Measurements/widgets/CategoryDetailDataGrid";
 import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { PlanPeriod } from "@/components/Measurements/charts/series";
@@ -23,9 +23,8 @@ export const BodyWeight = (props: { planPeriods?: PlanPeriod[] }) => {
     // Shared with the other measurement screens, see useChartRange
     const range = useChartRange();
     // Fetch what the range shows, rather than the whole history. The filter
-    // reaches a week further back than the chart draws, so the moving average
-    // of the first days in range still averages the days before them. The
-    // table below lists the same entries, so it follows the range too
+    // reaches a month further back than the chart draws, so the moving average
+    // of the first days in range still averages the days before them
     const weightyQuery = useBodyWeightQuery(entryFilterFor(range));
     const categoryQuery = useBodyWeightCategoryQuery();
     const displayUnit = useDisplayWeightUnit();
@@ -36,6 +35,13 @@ export const BodyWeight = (props: { planPeriods?: PlanPeriod[] }) => {
 
     // Entries without their own unit fall back to the one of the category
     const categoryUnit = categoryQuery.data!.unit;
+
+    // The range as it is labelled: the lead the chart averages over is not part
+    // of it, and the table would list those rows as if they were
+    const cutoff = displayCutoffFor(range);
+    const entriesInRange = cutoff === null
+        ? weightyQuery.data!
+        : weightyQuery.data!.filter(entry => entry.date >= cutoff);
 
     return <WgerContainerRightSidebar
         title={t("weight")}
@@ -53,7 +59,7 @@ export const BodyWeight = (props: { planPeriods?: PlanPeriod[] }) => {
                 <Box sx={{ mt: 4 }} />
                 <CategoryDetailDataGrid
                     category={categoryQuery.data!}
-                    entries={weightyQuery.data!}
+                    entries={entriesInRange}
                     displayUnit={displayUnit} />
             </>}
         </Stack>
