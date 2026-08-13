@@ -227,4 +227,27 @@ describe('CalendarComponent', () => {
         // Assert
         expect(await screen.findByText('70.0 server.kg')).toBeInTheDocument();
     });
+
+    test('reads the month as the instants it spans in the browser timezone', async () => {
+        const start = new Date(currentYear, currentMonth, 1).toISOString();
+        const end = new Date(currentYear, currentMonth + 1, 1).toISOString();
+
+        renderComponent();
+        await screen.findByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 1))}`);
+
+        // A date bound would be read as midnight in the server's timezone and
+        // leave out the entries of the last day
+        expect(getWeights).toHaveBeenCalledWith(
+            testBodyWeightCategory,
+            { "date__gte": start, "date__lt": end },
+        );
+        expect(getAllMeasurementEntries).toHaveBeenCalledWith({ "date__gte": start, "date__lt": end });
+        expect(getSessions).toHaveBeenCalledWith({
+            filtersetQuerySessions: { "datetime_start__gte": start, "datetime_start__lt": end },
+            filtersetQueryLogs: { "date__gte": start, "date__lt": end },
+        });
+        expect(getNutritionalDiaryEntries).toHaveBeenCalledWith({
+            filtersetQuery: { "datetime__gte": start, "datetime__lt": end },
+        });
+    });
 });

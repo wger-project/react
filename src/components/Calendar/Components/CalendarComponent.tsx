@@ -10,7 +10,7 @@ import {
 } from "@/components/Measurements";
 import { DiaryEntry, useNutritionDiaryQuery } from "@/components/Nutrition";
 import { useSessionsQuery, WorkoutSession } from "@/components/Routines";
-import { dateToYYYYMMDD, isSameDay } from "@/core/lib/date";
+import { isSameDay } from "@/core/lib/date";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Box, Card, CardContent, CardHeader, useMediaQuery, useTheme } from '@mui/material';
@@ -35,41 +35,37 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
     const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
 
     const startOfMonth = new Date(currentYear, currentMonth, 1);
-    const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
+    const startOfNextMonth = new Date(currentYear, currentMonth + 1, 1);
 
     const isStandalone = props.isStandalone ?? true;
 
+    /*
+     * The month the calendar shows, as the instants it begins and ends at.
+     *
+     * Everything read here is stored as a datetime, and the days are grouped in
+     * the browser's timezone: a YYYY-MM-DD bound would parse to midnight in the
+     * server's and drop the entries of the last day.
+     */
+    const monthWindow = (field: string) => ({
+        [`${field}__gte`]: startOfMonth.toISOString(),
+        [`${field}__lt`]: startOfNextMonth.toISOString(),
+    });
 
     // The calendar shows one month, so body weight is read for the same window
     // as everything else on it
-    const weightsQuery = useBodyWeightQuery({
-        "date__gte": dateToYYYYMMDD(startOfMonth),
-        "date__lte": dateToYYYYMMDD(endOfMonth),
-    });
+    const weightsQuery = useBodyWeightQuery(monthWindow('date'));
     const sessionQuery = useSessionsQuery({
-        filtersetQuerySessions: {
-            "datetime_start__gte": startOfMonth.toISOString(),
-            "datetime_start__lt": new Date(currentYear, currentMonth + 1, 1).toISOString(),
-        },
-        filtersetQueryLogs: {
-            "date__gte": dateToYYYYMMDD(startOfMonth),
-            "date__lte": dateToYYYYMMDD(endOfMonth),
-        }
+        filtersetQuerySessions: monthWindow('datetime_start'),
+        filtersetQueryLogs: monthWindow('date'),
     });
     // The categories name the entries below, which arrive from one read over
     // all of them: asking per category would be a request each, and would
     // leave out the components of a group, which are categories the list does
     // not return on their own
     const categoryQuery = useMeasurementsCategoryQuery();
-    const measurementQuery = useAllMeasurementEntriesQuery({
-        "date__gte": dateToYYYYMMDD(startOfMonth),
-        "date__lte": dateToYYYYMMDD(endOfMonth),
-    });
+    const measurementQuery = useAllMeasurementEntriesQuery(monthWindow('date'));
     const nutritionDiaryQuery = useNutritionDiaryQuery({
-        filtersetQuery: {
-            "datetime__gte": dateToYYYYMMDD(startOfMonth),
-            "datetime__lte": dateToYYYYMMDD(endOfMonth),
-        }
+        filtersetQuery: monthWindow('datetime'),
     });
 
     const isLoading = weightsQuery.isLoading || sessionQuery.isLoading || categoryQuery.isLoading || measurementQuery.isLoading || nutritionDiaryQuery.isLoading;
