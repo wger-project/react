@@ -1,5 +1,9 @@
 import { chartPointsFor, measurementSeries } from "@/components/Measurements/charts/data";
-import { ChartRange, cutoffFor, DEFAULT_CHART_RANGE } from "@/components/Measurements/charts/range";
+import {
+    ChartRange,
+    DEFAULT_CHART_RANGE,
+    displayCutoffFor
+} from "@/components/Measurements/charts/range";
 import { PlanPeriod } from "@/components/Measurements/charts/series";
 import { ChartConfig } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
@@ -35,7 +39,7 @@ export const WeightChart = (
     // before anything is derived from it
     const series = measurementSeries(
         chartPointsFor(weights, unit, categoryUnit),
-        cutoffFor(range ?? DEFAULT_CHART_RANGE),
+        displayCutoffFor(range ?? DEFAULT_CHART_RANGE),
         chartConfig,
     );
 

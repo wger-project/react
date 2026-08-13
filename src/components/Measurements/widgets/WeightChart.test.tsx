@@ -1,7 +1,7 @@
 import { chartPointsFor, measurementSeries, MeasurementEntry } from "@/components/Measurements";
 import { makeWeightEntry } from "@/tests/weight/testData";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { describe, expect, test } from 'vitest';
 import { testQueryClient } from "@/tests/queryClient";
@@ -41,6 +41,33 @@ describe("WeightChart", () => {
             makeWeightEntry(new Date('2021-12-10'), 80, { id: 'd-1' }),
             makeWeightEntry(new Date('2021-12-15'), 85, { id: 'd-3' }),
         ]);
+    });
+
+    test('draws the day the range starts on whole', () => {
+        // A Monday noon; six days back is 9 June, the first day of the week
+        // the selector labels as one
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date(2026, 5, 15, 12, 0));
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <WeightChart
+                    weights={[
+                        makeWeightEntry(new Date(2026, 5, 9, 9, 0), 80, { id: 'd-1' }),
+                        makeWeightEntry(new Date(2026, 5, 15, 8, 0), 82, { id: 'd-2' }),
+                    ]}
+                    unit="kg"
+                    categoryUnit="kg"
+                    range="lastWeek" />
+            </QueryClientProvider>
+        );
+
+        // The range starts at that day's midnight, not at the hour of day the
+        // clock shows, so the morning entry is part of it. With only one entry
+        // left there would be nothing to average and no overall change
+        expect(screen.getByText(/overallChangeWeight/)).toBeInTheDocument();
+
+        vi.useRealTimers();
     });
 
     test('respects the height prop', () => {

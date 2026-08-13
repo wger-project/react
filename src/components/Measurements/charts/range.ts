@@ -25,7 +25,13 @@ const DAYS: Record<ChartRange, number | null> = {
     lastWeek: 6,
 };
 
-/** Oldest date still shown, null for the full history */
+/**
+ * The instant a range starts at, null for the full history.
+ *
+ * The bound the other cutoffs are derived from, not one to cut a view at: it
+ * moves with the clock, so the day it lands on would be half in and half out.
+ * Views cut at displayCutoffFor.
+ */
 export const cutoffFor = (range: ChartRange, now: Date = new Date()): Date | null => {
     const days = DAYS[range];
 
@@ -64,12 +70,14 @@ export const fetchCutoffFor = (range: ChartRange, now: Date = new Date()): Date 
     cutoffAtMidnight(range, now, AVERAGE_LEAD_DAYS);
 
 /**
- * Oldest entry to summarise for a range, null for the full history: the range
- * itself, with no lead.
+ * The day a range starts on, null for the full history: the range itself, with
+ * no lead.
  *
- * For the reads that cannot be trimmed afterwards, i.e. the counted values
- * behind the histogram: they carry no date, so a read with the average lead
- * would bin a month and a half into a chart labelled one month.
+ * Where every view of a range is cut, so that the chart, the table and the
+ * histogram agree on the day at its edge: it is in whole or not at all. The
+ * reads that cannot be trimmed afterwards use it as well, i.e. the counted
+ * values behind the histogram: they carry no date, so a read with the average
+ * lead would bin a month and a half into a chart labelled one month.
  */
 export const displayCutoffFor = (range: ChartRange, now: Date = new Date()): Date | null =>
     cutoffAtMidnight(range, now, 0);

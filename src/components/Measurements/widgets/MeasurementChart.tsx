@@ -24,8 +24,8 @@ import {
 } from "@/components/Measurements/queries";
 import {
     ChartRange,
-    cutoffFor,
     DEFAULT_CHART_RANGE,
+    displayCutoffFor,
     displayFilterFor,
     pointsSince
 } from "@/components/Measurements/charts/range";
@@ -53,7 +53,7 @@ export const MeasurementChart = (props: {
     const [t] = useTranslation();
     const category = props.category;
     const range = props.range ?? DEFAULT_CHART_RANGE;
-    const cutoff = cutoffFor(range);
+    const cutoff = displayCutoffFor(range);
     const summed = isSummedPerDay(category.metricType);
 
     // A pick that does not fit the metric type falls back to the derived chart,
