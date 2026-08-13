@@ -4,15 +4,12 @@ import { ExerciseDetailView } from "@/components/Exercises/screens/Detail/Exerci
 import { getLanguageByShortName, Language } from "@/components/Exercises/models/language";
 import { useExerciseQuery, useExercisesForVariationQuery, useLanguageQuery, } from "@/components/Exercises/queries";
 import { ENGLISH_LANGUAGE_OBJ } from "@/core/lib/consts";
-import { Box, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { Head } from "./Head";
-
-export const PaddingBox = () => {
-    return <Box sx={{ height: 20 }} />;
-};
+import { PaddingBox } from "@/components/Exercises/widgets/PaddingBox";
 
 export const ExerciseDetails = () => {
     const [language, setLanguage] = useState<Language>(ENGLISH_LANGUAGE_OBJ);

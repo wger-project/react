@@ -1,5 +1,6 @@
 import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { PSEUDO_MEAL_ID } from "@/components/Nutrition/models/consts";
 import { Meal } from "@/components/Nutrition/models/meal";
 import { ApiNutritionalPlanType } from "@/types";
 import { Adapter } from "@/core/lib/Adapter";
@@ -11,9 +12,6 @@ export type GroupedDiaryEntries = {
     entries: DiaryEntry[];
     nutritionalValues: NutritionalValues;
 }
-
-export const PSEUDO_MEAL_ID = '00000000-0000-0000-0000-000000000000';
-
 
 type NutritionalPlanConstructorParams = {
     id?: string | null,

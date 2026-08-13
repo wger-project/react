@@ -1,4 +1,4 @@
-import { PaddingBox } from "@/components/Exercises/screens/Detail/ExerciseDetails";
+import { PaddingBox } from "@/components/Exercises/widgets/PaddingBox";
 import { EditExerciseCategory } from "@/components/Exercises/forms/Category";
 import { EditExerciseEquipment } from "@/components/Exercises/forms/Equipment";
 import { ExerciseAliases } from "@/components/Exercises/forms/ExerciseAliases";

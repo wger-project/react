@@ -24,6 +24,7 @@ export {
     useAddDiaryEntryQuery,
     useFetchLastNutritionalPlanQuery,
     useNutritionDiaryQuery,
+    useNutritionPlanPeriods,
 } from "./queries";
 
 // Widgets

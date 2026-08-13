@@ -1,4 +1,3 @@
-import { FilterType } from "@/components/Weight/widgets/FilterButtons";
 import i18n from 'i18next';
 import { DateTime, DateTimeFormatOptions } from "luxon";
 
@@ -9,6 +8,35 @@ export function isSameDay(date1: Date, date2: Date): boolean {
         date1.getMonth() === date2.getMonth() &&
         date1.getDate() === date2.getDate()
     );
+}
+
+/*
+ * A date as a relative phrase ("today", "3 weeks ago"), in the locale's own
+ * words via Intl.
+ *
+ * Counts calendar days rather than elapsed hours, so an entry from late
+ * yesterday still reads as yesterday this morning. The unit grows with the
+ * distance: days within a week, then weeks, months, years.
+ */
+export function dateToRelative(date: Date, locale?: string, now: Date = new Date()): string {
+    const dayMs = 24 * 60 * 60 * 1000;
+    // Rounded because a DST day is 23 or 25 hours long
+    const days = Math.round((
+        new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
+        - new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+    ) / dayMs);
+
+    const format = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
+    if (Math.abs(days) < 7) {
+        return format.format(-days, 'day');
+    }
+    if (Math.abs(days) < 31) {
+        return format.format(-Math.round(days / 7), 'week');
+    }
+    if (Math.abs(days) < 365) {
+        return format.format(-Math.round(days / 30), 'month');
+    }
+    return format.format(-Math.round(days / 365), 'year');
 }
 
 /*
@@ -133,33 +161,4 @@ export function HHMMToDateTime(time: string | null) {
     dateTime.setMinutes(parseInt(minute));
 
     return dateTime;
-}
-
-/*
- * Util function that calculates a date in the past based on a string filter
- * and returns it as a YYYY-MM-DD string for API queries.
- *
- * @param filter - A string representing the desired time period (e.g., 'lastWeek', 'lastMonth')
- * @param currentDate - (Optional) The current date to base calculations on. Defaults to `new Date()`.
- *                      This parameter allows for testing or custom date bases.
- * @returns - Date string in the format YYYY-MM-DD or undefined for no filtering
- */
-export function calculatePastDate(filter: FilterType, currentDate: Date = new Date()): string | undefined {
-
-    // Luxon clamps to the last day of the target month (March 31st minus one
-    // month is February 28th) and leaves the passed in date untouched, both of
-    // which the native setMonth/setDate can't do.
-    const base = DateTime.fromJSDate(currentDate);
-
-    const filterMap: Record<FilterType, DateTime | undefined> = {
-        lastWeek: base.minus({ weeks: 1 }),
-        lastMonth: base.minus({ months: 1 }),
-        lastHalfYear: base.minus({ months: 6 }),
-        lastYear: base.minus({ years: 1 }),
-        '': undefined
-    };
-
-    const pastDate = filterMap[filter];
-
-    return pastDate ? dateToYYYYMMDD(pastDate.toJSDate()) : undefined;
 }

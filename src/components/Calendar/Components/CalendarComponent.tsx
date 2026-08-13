@@ -1,12 +1,17 @@
 import CalendarDayGrid from "@/components/Calendar/Components/CalendarDayGrid";
 import CalendarHeader from "@/components/Calendar/Components/CalendarHeader";
 import { CalendarMeasurement } from "@/components/Calendar/Helpers/CalendarMeasurement";
-import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
-import { useMeasurementsCategoryQuery } from "@/components/Measurements";
+import {
+    categoryDisplayName,
+    MeasurementEntry,
+    useAllMeasurementEntriesQuery,
+    useBodyWeightQuery,
+    useMeasurementsCategoryQuery
+} from "@/components/Measurements";
 import { DiaryEntry, useNutritionDiaryQuery } from "@/components/Nutrition";
 import { useSessionsQuery, WorkoutSession } from "@/components/Routines";
-import { useBodyWeightQuery, WeightEntry } from "@/components/Weight";
 import { dateToYYYYMMDD, isSameDay } from "@/core/lib/date";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Box, Card, CardContent, CardHeader, useMediaQuery, useTheme } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -15,7 +20,7 @@ import Entries from './Entries';
 
 export interface DayProps {
     date: Date,
-    weightEntry: WeightEntry | undefined,
+    weightEntry: MeasurementEntry | undefined,
     measurements: CalendarMeasurement[],
     nutritionLogs: DiaryEntry[],
     workoutSession: WorkoutSession | undefined,
@@ -35,7 +40,12 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
     const isStandalone = props.isStandalone ?? true;
 
 
-    const weightsQuery = useBodyWeightQuery();
+    // The calendar shows one month, so body weight is read for the same window
+    // as everything else on it
+    const weightsQuery = useBodyWeightQuery({
+        "date__gte": dateToYYYYMMDD(startOfMonth),
+        "date__lte": dateToYYYYMMDD(endOfMonth),
+    });
     const sessionQuery = useSessionsQuery({
         filtersetQuerySessions: {
             "date__gte": dateToYYYYMMDD(startOfMonth),
@@ -46,11 +56,14 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
             "date__lte": dateToYYYYMMDD(endOfMonth),
         }
     });
-    const measurementQuery = useMeasurementsCategoryQuery({
-        filtersetQueryEntries: {
-            "date__gte": dateToYYYYMMDD(startOfMonth),
-            "date__lte": dateToYYYYMMDD(endOfMonth),
-        }
+    // The categories name the entries below, which arrive from one read over
+    // all of them: asking per category would be a request each, and would
+    // leave out the components of a group, which are categories the list does
+    // not return on their own
+    const categoryQuery = useMeasurementsCategoryQuery();
+    const measurementQuery = useAllMeasurementEntriesQuery({
+        "date__gte": dateToYYYYMMDD(startOfMonth),
+        "date__lte": dateToYYYYMMDD(endOfMonth),
     });
     const nutritionDiaryQuery = useNutritionDiaryQuery({
         filtersetQuery: {
@@ -59,8 +72,8 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
         }
     });
 
-    const isLoading = weightsQuery.isLoading || sessionQuery.isLoading || measurementQuery.isLoading || nutritionDiaryQuery.isLoading;
-    const isSuccess = weightsQuery.isSuccess && sessionQuery.isSuccess && measurementQuery.isSuccess && nutritionDiaryQuery.isSuccess;
+    const isLoading = weightsQuery.isLoading || sessionQuery.isLoading || categoryQuery.isLoading || measurementQuery.isLoading || nutritionDiaryQuery.isLoading;
+    const isSuccess = weightsQuery.isSuccess && sessionQuery.isSuccess && categoryQuery.isSuccess && measurementQuery.isSuccess && nutritionDiaryQuery.isSuccess;
 
     const defaultDay: DayProps = {
         date: currentDate,
@@ -76,9 +89,25 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
         const date = new Date(year, month, 1);
         const result: DayProps[] = [];
 
-        const measurements = measurementQuery.data?.flatMap(category =>
-            category.entries.map(entry => new CalendarMeasurement(category.name, category.unit, entry.value, entry.date))
-        ) ?? [];
+        // Body weight has its own row on a day, and the official category it
+        // is stored in is not in this list; an entry of it is skipped here
+        // rather than shown a second time
+        const byId = new Map((categoryQuery.data ?? [])
+            .flatMap(category => [category, ...category.children])
+            .map(category => [category.id, category]));
+
+        const measurements = (measurementQuery.data ?? []).flatMap(entry => {
+            const category = byId.get(entry.category);
+
+            return category === undefined
+                ? []
+                : [new CalendarMeasurement(
+                    categoryDisplayName(category, t),
+                    category.unit,
+                    entry.value,
+                    entry.date,
+                )];
+        });
 
         const firstDayOfMonth = new Date(year, month, 1);
         let dayOfWeek = firstDayOfMonth.getDay();
@@ -120,7 +149,7 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
         }
 
         return result;
-    }, [currentYear, currentMonth, weightsQuery.data, sessionQuery.data, measurementQuery.data, nutritionDiaryQuery.data]);
+    }, [currentYear, currentMonth, weightsQuery.data, sessionQuery.data, categoryQuery.data, measurementQuery.data, nutritionDiaryQuery.data, t]);
     const [selectedDay, setSelectedDay] = useState<DayProps>(days.find(day => isSameDay(day.date, currentDate)) || defaultDay);
 
     const theme = useTheme();

@@ -14,18 +14,6 @@ import { yyyymmddToDate } from "@/core/lib/date";
 import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
 import { testWorkoutLogs } from "@/tests/workoutLogsRoutinesTestData";
 
-export const testWeightUnitKg = new WeightUnit(1, "kg");
-export const testWeightUnitLb = new WeightUnit(2, "lb");
-export const testWeightUnitPlates = new WeightUnit(3, "Plates");
-
-export const testWeightUnits = [testWeightUnitKg, testWeightUnitLb, testWeightUnitPlates];
-
-export const testRepUnitRepetitions = new RepetitionUnit(1, "Repetitions");
-export const testRepUnitUnitFailure = new RepetitionUnit(2, "Unit failure");
-export const testRepUnitUnitMinutes = new RepetitionUnit(3, "Minutes");
-
-export const testRepetitionUnits = [testRepUnitRepetitions, testRepUnitUnitFailure, testRepUnitUnitMinutes];
-
 export const testDayLegs = new Day({
     id: 5,
     routineId: 1,

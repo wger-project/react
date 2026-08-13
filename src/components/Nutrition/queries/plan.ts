@@ -8,13 +8,34 @@ import {
     getNutritionalPlanFull,
     getNutritionalPlansSparse
 } from "@/components/Nutrition/api/nutritionalPlan";
+import { PlanPeriod } from "@/components/Measurements";
 import { QueryKey } from "@/core/lib/consts";
+import { useTranslation } from "react-i18next";
 
-export function useFetchNutritionalPlansQuery() {
+export function useFetchNutritionalPlansQuery(enabled = true) {
     return useQuery({
         queryKey: [QueryKey.NUTRITIONAL_PLANS],
-        queryFn: () => getNutritionalPlansSparse()
+        queryFn: () => getNutritionalPlansSparse(),
+        enabled: enabled,
     });
+}
+
+/**
+ * The plans as periods a measurement chart can shade, newest first. A plan
+ * without an end date is still running, so its period reaches up to now.
+ *
+ * Pass enabled=false where the metric has nothing to do with nutrition, so
+ * those charts do not fetch the plans at all.
+ */
+export function useNutritionPlanPeriods(enabled = true): PlanPeriod[] {
+    const [t] = useTranslation();
+    const query = useFetchNutritionalPlansQuery(enabled);
+
+    return (query.data ?? []).map(plan => ({
+        start: plan.start.getTime(),
+        end: (plan.end ?? new Date()).getTime(),
+        name: plan.description !== '' ? plan.description : t('nutrition.plan'),
+    }));
 }
 
 

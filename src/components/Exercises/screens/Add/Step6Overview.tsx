@@ -16,7 +16,7 @@ import Grid from '@mui/material/Grid';
 import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
+import type { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
 import {
     useAddExerciseFullQuery,
     useAddExerciseImageQuery,

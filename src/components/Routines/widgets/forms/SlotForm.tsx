@@ -2,6 +2,7 @@ import { TextField } from "@mui/material";
 import { LoadingProgressIcon } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { Slot } from "@/components/Routines/models/Slot";
 import { useEditSlotQuery } from "@/components/Routines/queries";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -15,6 +16,7 @@ export const SlotForm = (props: { slot: Slot, routineId: number }) => {
     };
 
     return (<>
+        <FormQueryErrorsSnackbar mutationQuery={editSlotQuery} />
         <TextField
             label={t('comment')}
             variant="standard"

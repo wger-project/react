@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Button, MenuItem, Stack, TextField, } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
-import { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
+import type { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
 import { ExerciseAliases } from "@/components/Exercises/forms/ExerciseAliases";
 import { ExerciseEquipmentSelect } from "@/components/Exercises/forms/ExerciseEquipmentSelect";
 import { ExerciseName } from "@/components/Exercises/forms/ExerciseName";

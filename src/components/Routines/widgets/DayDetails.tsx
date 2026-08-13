@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { LoadingPlaceholder, LoadingProgressIcon } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { useProfileQuery } from "@/components/User";
 import { Day } from "@/components/Routines/models/Day";
 import { Slot } from "@/components/Routines/models/Slot";
@@ -103,6 +104,10 @@ export const DayDragAndDropGrid = (props: {
 
     return (
         <Grid container direction="row" spacing={1}>
+            {/* A refused reorder leaves the new order on screen until the next
+                load, so at least say that it did not stick */}
+            <FormQueryErrorsSnackbar mutationQuery={editDayOrderQuery} />
+            <FormQueryErrorsSnackbar mutationQuery={addDayQuery} />
             <Grid size={12}>
                 <Stack direction={"row"}>
                     <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
@@ -371,6 +376,9 @@ export const DayDetails = (props: {
 
 
     return (<>
+        <FormQueryErrorsSnackbar mutationQuery={editSlotOrderQuery} />
+        <FormQueryErrorsSnackbar mutationQuery={addSlotQuery} />
+        <FormQueryErrorsSnackbar mutationQuery={addSlotEntryQuery} />
         <DayForm
             routineId={props.routineId}
             day={props.day}

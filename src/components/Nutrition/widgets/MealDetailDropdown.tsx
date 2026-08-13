@@ -5,6 +5,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Alert, IconButton, Menu, MenuItem, Snackbar } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { Meal } from "@/components/Nutrition/models/meal";
 import { useDeleteMealQuery } from "@/components/Nutrition/queries";
@@ -76,6 +77,8 @@ export const MealDetailDropdown = (props: {
 
 
     return <>
+        <FormQueryErrorsSnackbar mutationQuery={deleteMealQuery} />
+        <FormQueryErrorsSnackbar mutationQuery={addDiaryEntriesQuery} />
         {props.meal.isRealMeal && !props.onlyLogging && <Tooltip title={t('nutrition.logThisMeal')}>
             <IconButton aria-label="settings" onClick={handleAddDiaryEntry}>
                 <HistoryEduIcon />
