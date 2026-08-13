@@ -220,17 +220,22 @@ describe("exerciseSubmissionReducer - reducer", () => {
         expect(next.musclesSecondary).toEqual([4, 5]);
     });
 
-    test("SET_VARIATION_ID updates only variationGroup", () => {
-        const next = exerciseSubmissionReducer(baseState, setVariationId("uuid-1"));
+    test("SET_VARIATION_ID updates variationGroup and clears newVariationExerciseId", () => {
+        const next = exerciseSubmissionReducer({ ...baseState, newVariationExerciseId: 99 }, setVariationId("uuid-1"));
         expect(next.variationGroup).toBe("uuid-1");
+        expect(next.newVariationExerciseId).toBeNull();
 
         const cleared = exerciseSubmissionReducer(next, setVariationId(null));
         expect(cleared.variationGroup).toBeNull();
     });
 
-    test("SET_NEW_VARIATION_BASE_ID updates only newVariationExerciseId", () => {
-        const next = exerciseSubmissionReducer(baseState, setNewBaseVariationId(99));
+    test("SET_NEW_VARIATION_BASE_ID updates newVariationExerciseId and clears variationGroup", () => {
+        const next = exerciseSubmissionReducer({ ...baseState, variationGroup: "uuid-1" }, setNewBaseVariationId(99));
         expect(next.newVariationExerciseId).toBe(99);
+        expect(next.variationGroup).toBeNull();
+
+        const cleared = exerciseSubmissionReducer(next, setNewBaseVariationId(null));
+        expect(cleared.newVariationExerciseId).toBeNull();
     });
 
     test("SET_LANGUAGE updates only languageId", () => {

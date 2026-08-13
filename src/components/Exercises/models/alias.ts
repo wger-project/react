@@ -23,7 +23,7 @@ export class AliasAdapter implements Adapter<Alias> {
     toJson(item: Alias) {
         return {
             id: item.id,
-            name: item.alias,
+            alias: item.alias,
         };
     }
 }

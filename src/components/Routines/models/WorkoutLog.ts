@@ -75,31 +75,34 @@ export class WorkoutLog {
         restTime?: number | null;
         restTimeTarget?: number | null
     }) {
+        // Note that all of these use ?? and not ||: zero is a meaningful value here.
+        // Training to failure is 0 RiR, a bodyweight exercise has a weight of 0 and
+        // supersets are done with no rest in between.
         this.id = data.id;
         this.date = typeof data.date === 'string' ? new Date(data.date) : data.date;
         this.iteration = data.iteration;
         this.slotEntryId = data.slotEntryId;
-        this.sessionId = data.sessionId || null;
-        this.routineId = data.routineId || null;
+        this.sessionId = data.sessionId ?? null;
+        this.routineId = data.routineId ?? null;
 
         this.exerciseObj = data.exercise;
         this.exerciseId = data.exerciseId;
 
-        this.repetitionUnitObj = data.repetitionsUnit || null;
-        this.repetitionUnitId = data.repetitionsUnitId || null;
+        this.repetitionUnitObj = data.repetitionsUnit ?? null;
+        this.repetitionUnitId = data.repetitionsUnitId ?? null;
         this.repetitions = data.repetitions;
-        this.repetitionsTarget = data.repetitionsTarget || null;
+        this.repetitionsTarget = data.repetitionsTarget ?? null;
 
-        this.weightUnitObj = data.weightUnit || null;
-        this.weightUnitId = data.weightUnitId || null;
+        this.weightUnitObj = data.weightUnit ?? null;
+        this.weightUnitId = data.weightUnitId ?? null;
         this.weight = data.weight;
-        this.weightTarget = data.weightTarget || null;
+        this.weightTarget = data.weightTarget ?? null;
 
         this.rir = data.rir;
-        this.rirTarget = data.rirTarget || null;
+        this.rirTarget = data.rirTarget ?? null;
 
-        this.restTime = data.restTime || null;
-        this.restTimeTarget = data.restTimeTarget || null;
+        this.restTime = data.restTime ?? null;
+        this.restTimeTarget = data.restTimeTarget ?? null;
     }
 
     get rirString(): string {

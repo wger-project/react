@@ -144,7 +144,8 @@ describe("Session service tests", () => {
             filtersetQuerySessions: { baz: 1234 }
         });
 
-        // No results, so no loading of ingredients or weight units
+        // Without any logs there is nothing to look the exercises up for
+        expect(exerciseService.getExercisesByIds).not.toHaveBeenCalled();
         expect(axios.get).toHaveBeenCalledTimes(2);
         expect(axios.get).toHaveBeenNthCalledWith(1,
             expect.stringContaining('foo=bar'),

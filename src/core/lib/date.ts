@@ -146,22 +146,20 @@ export function HHMMToDateTime(time: string | null) {
  */
 export function calculatePastDate(filter: FilterType, currentDate: Date = new Date()): string | undefined {
 
-    // Dictionary for filters
-    const filterMap: Record<FilterType, (() => void) | undefined> = {
-        lastWeek: () => currentDate.setDate(currentDate.getDate() - 7),
-        lastMonth: () => currentDate.setMonth(currentDate.getMonth() - 1),
-        lastHalfYear: () => currentDate.setMonth(currentDate.getMonth() - 6),
-        lastYear: () => currentDate.setFullYear(currentDate.getFullYear() - 1),
+    // Luxon clamps to the last day of the target month (March 31st minus one
+    // month is February 28th) and leaves the passed in date untouched, both of
+    // which the native setMonth/setDate can't do.
+    const base = DateTime.fromJSDate(currentDate);
+
+    const filterMap: Record<FilterType, DateTime | undefined> = {
+        lastWeek: base.minus({ weeks: 1 }),
+        lastMonth: base.minus({ months: 1 }),
+        lastHalfYear: base.minus({ months: 6 }),
+        lastYear: base.minus({ years: 1 }),
         '': undefined
     };
 
-    // Execute the corresponding function for the filter
-    const applyFilter = filterMap[filter];
-    if (applyFilter) {
-        applyFilter();
-    } else {
-        return undefined;
-    }
+    const pastDate = filterMap[filter];
 
-    return dateToYYYYMMDD(currentDate);
+    return pastDate ? dateToYYYYMMDD(pastDate.toJSDate()) : undefined;
 }

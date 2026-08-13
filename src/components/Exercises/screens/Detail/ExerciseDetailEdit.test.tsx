@@ -33,6 +33,7 @@ import userEvent from "@testing-library/user-event";
 import type { Mock } from 'vitest';
 import { Exercise } from "../../models/exercise";
 import { ExerciseImage } from "../../models/image";
+import { Translation } from "../../models/translation";
 
 // It seems we run into a timeout when running the tests on GitHub actions
 vi.setConfig({ testTimeout: 15000 });
@@ -75,7 +76,11 @@ describe("Exercise translation edit tests", () => {
             mutateAsync: editTranslationMutateMock
         }));
         (editTranslation as Mock).mockImplementation(() => Promise.resolve(testExerciseSquats.translations[1]));
-        (useProfileQuery as Mock).mockImplementation(() => Promise.resolve(testProfileDataVerified));
+        (useProfileQuery as Mock).mockImplementation(() => ({
+            isLoading: false,
+            isSuccess: true,
+            data: testProfileDataVerified
+        }));
 
         (useEditExerciseImageQuery as Mock).mockImplementation(() => ({
             isError: false,
@@ -106,16 +111,6 @@ describe("Exercise translation edit tests", () => {
             mutateAsync: vi.fn(),
         }));
 
-        // addTranslation.mockImplementation(() => Promise.resolve(
-        //     new Translation(
-        //         300,
-        //         '409f4b97-a56d-4852-85b2-834ba18b7ccc',
-        //         'Sanglier',
-        //         "Le sanglier d'Europe, est une espèce de mammifères de la famille des Suidés",
-        //         3,
-        //     )
-        // ));
-
         (usePostAliasQuery as Mock).mockImplementation(() => ({
             isPending: false,
             mutateAsync: postAliasMutateMock,
@@ -124,16 +119,25 @@ describe("Exercise translation edit tests", () => {
             isPending: false,
             mutateAsync: deleteAliasMutateMock,
         }));
-        (usePermissionQuery as Mock).mockImplementation(() => Promise.resolve({ isSuccess: true, data: true }));
-        (useCategoriesQuery as Mock).mockImplementation(() => Promise.resolve({
+        // These tests are about the translation form, the permission-gated
+        // sections (category, muscles, images, ...) stay hidden
+        (usePermissionQuery as Mock).mockImplementation(() => ({
+            isLoading: false,
+            isSuccess: true,
+            data: false
+        }));
+        (useCategoriesQuery as Mock).mockImplementation(() => ({
+            isLoading: false,
             isSuccess: true,
             data: testCategories
         }));
-        (useEquipmentQuery as Mock).mockImplementation(() => Promise.resolve({
+        (useEquipmentQuery as Mock).mockImplementation(() => ({
+            isLoading: false,
             isSuccess: true,
             data: testEquipment
         }));
-        (useMusclesQuery as Mock).mockImplementation(() => Promise.resolve({
+        (useMusclesQuery as Mock).mockImplementation(() => ({
+            isLoading: false,
             isSuccess: true,
             data: testMuscles
         }));
@@ -279,6 +283,14 @@ describe("Exercise translation edit tests", () => {
     test('creates a new translation if the language is not available', async () => {
         // Arrange
         const user = userEvent.setup();
+        const description = "Le sanglier d'Europe est une espèce de mammifères de la famille des Suidés";
+        addTranslationMutateMock.mockResolvedValue(new Translation({
+            id: 300,
+            uuid: '409f4b97-a56d-4852-85b2-834ba18b7ccc',
+            name: 'Sanglier',
+            description: description,
+            language: testLanguageFrench.id,
+        }));
 
         // Act
         render(
@@ -290,49 +302,40 @@ describe("Exercise translation edit tests", () => {
             </QueryClientProvider>
         );
 
-        // Enter description
+        // Enter name and description (paste, typing char by char is too slow here)
         const name = screen.getByLabelText('name');
-        await user.type(name, 'Sanglier');
-
-        window.focus = () => {
-        };
-
-        // const wrapper = screen.getByTestId('jodit-editor');
-
-        //const textarea = container.querySelector('textarea');
-        //await user.click(textarea!);
-        //await user.type(textarea!, "Le sanglier d'Europe, est une espèce de mammifères de la famille des Suidés");
-        //await user.keyboard("Le sanglier d'Europe, est une espèce de mammifères de la famille des Suidés");
-
+        await user.click(name);
+        await user.paste('Sanglier');
+        const descriptionInput = screen.getByPlaceholderText('useMarkdownHint');
+        await user.click(descriptionInput);
+        await user.paste(description);
 
         // Add a new alias
         const aliasInput = screen.getByRole('combobox');
         await user.click(aliasInput);
-        await user.type(aliasInput, "Sanglier d'Europe");
+        await user.paste("Sanglier d'Europe");
         await user.keyboard('{enter}');
 
         const button = screen.getByText('save');
         await user.click(button);
 
-        // Assert
+        // Assert - the new translation is created, nothing existing is touched
+        await waitFor(() => expect(addTranslationMutateMock).toHaveBeenCalledWith({
+            exerciseId: 345,
+            languageId: testLanguageFrench.id,
+            name: 'Sanglier',
+            descriptionSource: description,
+            author: testProfileDataVerified.username,
+        }));
+        expect(editTranslationMutateMock).not.toHaveBeenCalled();
+        expect(editTranslation).not.toHaveBeenCalled();
         expect(deleteAliasMutateMock).not.toHaveBeenCalled();
 
-        // TODO: fix tests, see https://github.com/wger-project/react/issues/404
-        /*
-        expect(postAliasMutateMock).toHaveBeenCalledWith({
-            translationId: 300, // new translation id
+        // The alias is attached to the newly created translation
+        await waitFor(() => expect(postAliasMutateMock).toHaveBeenCalledWith({
+            translationId: 300,
             alias: "Sanglier d'Europe",
-        });
-        */
-
-        expect(editTranslation).not.toHaveBeenCalled();
-        /*
-        expect(addExerciseTranslation).toHaveBeenCalledWith(345,
-            3,
-            'Sanglier',
-            "Le sanglier d'Europe, est une espèce de mammifères de la famille des Suidés"
-        );
-        */
+        }));
     });
 });
 

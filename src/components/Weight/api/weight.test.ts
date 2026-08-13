@@ -7,6 +7,10 @@ vi.mock("axios");
 
 describe("weight service tests", () => {
 
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
     test('GET weight entries', async () => {
 
         const weightResponse = {
@@ -55,6 +59,9 @@ describe("weight service tests", () => {
 
         // Assert
         expect(axios.patch).toHaveBeenCalledTimes(1);
+        const [url, body] = (axios.patch as Mock).mock.calls[0];
+        expect(url).toMatch(/\/api\/v2\/weightentry\/1\/$/);
+        expect(body).toEqual({ date: new Date('2021-12-10').toISOString(), weight: 80 });
         expect(result).toStrictEqual(new WeightEntry(new Date('2021-12-10'), 80, 1));
     });
 
@@ -70,7 +77,38 @@ describe("weight service tests", () => {
 
         // Assert
         expect(axios.post).toHaveBeenCalledTimes(1);
+        const [url, body] = (axios.post as Mock).mock.calls[0];
+        expect(url).toMatch(/\/api\/v2\/weightentry\/$/);
+        expect(body).toEqual({ date: new Date('2021-12-10').toISOString(), weight: 80 });
         expect(result).toStrictEqual(new WeightEntry(new Date('2021-12-10'), 80, 1));
+    });
+
+    test('GET the weight entries with a date filter', async () => {
+
+        // Arrange
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: { results: [] } }));
+
+        // Act
+        await getWeights('lastMonth');
+
+        // Assert
+        const [url] = (axios.get as Mock).mock.calls[0];
+        expect(url).toContain('date__gte=');
+        expect(url).toContain('ordering=-date');
+        expect(url).toContain('limit=900');
+    });
+
+    test('GET the weight entries without a filter sends no date', async () => {
+
+        // Arrange
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: { results: [] } }));
+
+        // Act
+        await getWeights();
+
+        // Assert
+        const [url] = (axios.get as Mock).mock.calls[0];
+        expect(url).not.toContain('date__gte');
     });
 
 });

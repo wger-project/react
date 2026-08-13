@@ -16,7 +16,6 @@ import { EntryForm } from "@/components/Measurements/widgets/EntryForm";
 import i18n from "i18next";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_ENTRIES_1 } from "@/tests/measurementsTestData";
 
-vi.mock("@/components/Weight/api/weight");
 
 vi.mock("@/components/Measurements/queries");
 
@@ -48,6 +47,11 @@ describe("Test the EntryForm component", () => {
         (useAddMeasurementEntryQuery as Mock).mockImplementation(() => ({
             mutate: mutate
         }));
+    });
+
+    afterEach(() => {
+        // One test below fakes the clock, a failure there must not leak into the rest
+        vi.useRealTimers();
     });
 
     test('Passing an existing entry renders its values in the form', () => {
@@ -112,8 +116,6 @@ describe("Test the EntryForm component", () => {
             42.42,
             'The Shiba Inu is a breed of hunting dog from Japan.',
         ));
-
-        vi.useRealTimers();
     });
 
     describe('Localization', () => {

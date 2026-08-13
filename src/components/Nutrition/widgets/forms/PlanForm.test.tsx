@@ -7,22 +7,24 @@ import userEvent from "@testing-library/user-event";
 import React from 'react';
 import type { Mock } from 'vitest';
 
-vi.mock("@/components/Weight/api/weight");
 vi.mock("@/components/Nutrition/queries");
 
 describe("Test the PlanForm component", () => {
     const queryClient = new QueryClient();
-    let mutate = vi.fn();
+    let addMutate = vi.fn();
+    let editMutate = vi.fn();
 
     beforeEach(() => {
-        mutate = vi.fn();
+        // Separate mocks, a single one could not tell the add and edit branch apart
+        addMutate = vi.fn();
+        editMutate = vi.fn();
 
         (useEditNutritionalPlanQuery as Mock).mockImplementation(() => ({
-            mutate: mutate
+            mutate: editMutate
         }));
 
         (useAddNutritionalPlanQuery as Mock).mockImplementation(() => ({
-            mutate: mutate
+            mutate: addMutate
         }));
     });
 
@@ -58,7 +60,7 @@ describe("Test the PlanForm component", () => {
 
         // Assert
         await user.click(screen.getByRole('button', { name: 'submit' }));
-        expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
+        expect(editMutate).toHaveBeenCalledWith(expect.objectContaining({
                 id: 'aaaaaaaa-0000-0000-0000-000000000101',
                 description: "a better name",
                 // the existing plan's dates must be preserved when only the description changes
@@ -72,6 +74,7 @@ describe("Test the PlanForm component", () => {
                 onlyLogging: false,
             })
         );
+        expect(addMutate).not.toHaveBeenCalled();
     });
 
     test('Creating a new plan', async () => {
@@ -90,7 +93,7 @@ describe("Test the PlanForm component", () => {
 
         // Assert
         await user.click(screen.getByRole('button', { name: 'submit' }));
-        expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
+        expect(addMutate).toHaveBeenCalledWith(expect.objectContaining({
                 description: 'a new, cool plan',
                 onlyLogging: true,
                 goalCarbohydrates: null,
@@ -100,5 +103,86 @@ describe("Test the PlanForm component", () => {
                 goalFiber: null,
             })
         );
+        expect(editMutate).not.toHaveBeenCalled();
+    });
+
+    test('The goal fields only appear once the goals are switched on', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <PlanForm />
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.queryByLabelText('nutrition.goalEnergy')).not.toBeInTheDocument();
+
+        // Act
+        await user.click(screen.getByRole('switch', { name: 'nutrition.useGoalsHelpText' }));
+
+        // Assert
+        expect(screen.getByLabelText('nutrition.goalEnergy')).toBeInTheDocument();
+        expect(screen.getByLabelText('nutrition.goalProtein')).toBeInTheDocument();
+        expect(screen.getByLabelText('nutrition.goalCarbohydrates')).toBeInTheDocument();
+        expect(screen.getByLabelText('nutrition.goalFat')).toBeInTheDocument();
+        expect(screen.getByLabelText('nutrition.goalFiber')).toBeInTheDocument();
+    });
+
+    test('Submits the entered goals', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <PlanForm />
+            </QueryClientProvider>
+        );
+        await user.click(screen.getByRole('switch', { name: 'nutrition.useGoalsHelpText' }));
+        await user.type(screen.getByLabelText('nutrition.goalEnergy'), '2500');
+        await user.type(screen.getByLabelText('nutrition.goalProtein'), '150');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        expect(addMutate).toHaveBeenCalledWith(expect.objectContaining({
+            goalEnergy: '2500',
+            goalProtein: '150',
+            goalCarbohydrates: null,
+            goalFat: null,
+            goalFiber: null,
+        }));
+    });
+
+    test('Switching the goals back off clears them from the payload', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <PlanForm />
+            </QueryClientProvider>
+        );
+        const goalsSwitch = screen.getByRole('switch', { name: 'nutrition.useGoalsHelpText' });
+        await user.click(goalsSwitch);
+        await user.type(screen.getByLabelText('nutrition.goalEnergy'), '2500');
+        await user.click(goalsSwitch);
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        // The entered value must not be sent once the user turned the goals off again
+        expect(addMutate).toHaveBeenCalledWith(expect.objectContaining({
+            goalEnergy: null,
+            goalProtein: null,
+            goalCarbohydrates: null,
+            goalFat: null,
+            goalFiber: null,
+        }));
     });
 });

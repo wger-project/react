@@ -1,5 +1,7 @@
+import { Day } from "@/components/Routines/models/Day";
 import { DEFAULT_WORKOUT_DURATION, Routine } from "@/components/Routines/models/Routine";
-import { DateTime } from "luxon";
+import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
+import { isSameDay, yyyymmddToDate } from "@/core/lib/date";
 import {
     testMuscleBiggus,
     testMuscleDacttilaris,
@@ -7,14 +9,16 @@ import {
     testMuscleRectusAbdominis
 } from "@/tests/exerciseTestdata";
 import { testRoutine1, testRoutineDayData1 } from "@/tests/workoutRoutinesTestData";
-import { isSameDay, yyyymmddToDate } from "@/core/lib/date";
+import { DateTime } from "luxon";
 
 describe('Routine model tests', () => {
 
     let routine: Routine;
 
     beforeEach(() => {
-        routine = testRoutine1;
+        // Work on a copy, the tests below modify the routine and the shared
+        // fixture must not leak state between them
+        routine = Routine.clone(testRoutine1);
     });
 
 
@@ -56,6 +60,7 @@ describe('Routine model tests', () => {
 
     test('correctly calculates the routine duration - exactly one week', () => {
         // Arrange
+        routine.start = new Date('2025-01-01');
         routine.end = new Date('2025-01-08');
 
         // Act
@@ -70,6 +75,7 @@ describe('Routine model tests', () => {
 
     test('correctly calculates the routine duration - more than one week', () => {
         // Arrange
+        routine.start = new Date('2025-01-01');
         routine.end = new Date('2025-01-10');
 
         // Act
@@ -111,20 +117,48 @@ describe('Routine model tests', () => {
         expect(routine.dayDataCurrentIteration).toEqual(testRoutineDayData1);
     });
 
-    test('correctly filters out null days', () => {
+    test('correctly filters out null days and duplicated days', () => {
 
         // Arrange
+        const dayProps = {
+            routineId: 1,
+            description: '',
+            isRest: false,
+            needLogsToAdvance: false,
+            type: 'custom' as const,
+            config: null
+        };
+        const dayA = new Day({ id: 1, order: 1, name: 'Day A', ...dayProps });
+        const dayB = new Day({ id: 2, order: 2, name: 'Day B', ...dayProps });
+
         routine.dayData = [
-            ...testRoutineDayData1,
-            ...testRoutineDayData1,
-            ...testRoutineDayData1,
+            new RoutineDayData(1, new Date('2026-01-01'), '', dayA),
+            // rest days come through with a null day
+            new RoutineDayData(1, new Date('2026-01-02'), '', null),
+            // the "fixed weekly schedule" toggle repeats the same day
+            new RoutineDayData(1, new Date('2026-01-03'), '', dayA),
+            new RoutineDayData(1, new Date('2026-01-04'), '', dayB),
         ];
-        routine.dayData[0].date = new Date('2026-01-01');
-        routine.dayData[1].date = new Date('2026-01-02');
-        routine.dayData[2].date = new Date('2026-01-03');
 
         // Assert
-        expect(routine.dayDataCurrentIteration.length).toEqual(3);
-        expect(routine.dayDataCurrentIterationFiltered).toEqual(testRoutineDayData1);
+        expect(routine.dayDataCurrentIteration.length).toEqual(4);
+        expect(routine.dayDataCurrentIterationFiltered.map(dayData => dayData.day!.id)).toEqual([1, 2]);
+    });
+
+    test('lists every day of the structure, in order', () => {
+
+        // Assert
+        expect(routine.daysCurrentIteration.map(entry => entry.day.id)).toEqual([5, 6, 19]);
+    });
+
+    test('keeps days the sequence has no data for', () => {
+
+        // Act
+        const result = routine.daysCurrentIteration;
+
+        // Assert
+        expect(result[0].dayData).toEqual(testRoutineDayData1[0]);
+        expect(result[1].dayData).toBeNull();
+        expect(result[2].dayData).toBeNull();
     });
 });

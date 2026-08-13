@@ -30,8 +30,8 @@ interface SessionFormProps {
 type SessionFormValues = {
     notes: string | null;
     date: Date;
-    start: DateTime<true> | DateTime<false> | null;
-    end: DateTime<true> | DateTime<false> | null;
+    start: DateTime | null;
+    end: DateTime | null;
     impression: string;
 };
 

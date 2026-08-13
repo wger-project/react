@@ -111,5 +111,21 @@ describe.each([
             const result = calculatePastDate('lastYear', yyyymmddToDate('2023-02-14'));
             expect(result).toStrictEqual('2022-02-14');
         });
+
+        it('clamps to the last day of the month instead of overflowing', () => {
+            // Naively subtracting a month from March 31st lands on "February 31st",
+            // which rolls over into March again
+            expect(calculatePastDate('lastMonth', yyyymmddToDate('2023-03-31'))).toStrictEqual('2023-02-28');
+            expect(calculatePastDate('lastMonth', yyyymmddToDate('2024-03-31'))).toStrictEqual('2024-02-29');
+            expect(calculatePastDate('lastHalfYear', yyyymmddToDate('2023-08-31'))).toStrictEqual('2023-02-28');
+        });
+
+        it('does not modify the date it was given', () => {
+            const date = yyyymmddToDate('2023-02-14');
+
+            calculatePastDate('lastYear', date);
+
+            expect(dateToYYYYMMDD(date)).toStrictEqual('2023-02-14');
+        });
     });
 });

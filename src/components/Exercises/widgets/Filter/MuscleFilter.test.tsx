@@ -9,7 +9,7 @@ import type { Mock } from 'vitest';
 vi.mock("@/components/Exercises/queries");
 const mockedMuscleQuery = useMusclesQuery as Mock;
 
-describe("Test the CategoryFilter component", () => {
+describe("Test the MuscleFilter component", () => {
     beforeEach(() => {
         mockedMuscleQuery.mockImplementation(() => (
             {

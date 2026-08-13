@@ -13,6 +13,7 @@ import FlagCircleIcon from '@mui/icons-material/FlagCircle';
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
 import {
+    Box,
     Container,
     FormControlLabel,
     Stack,
@@ -58,6 +59,16 @@ const StyledContainer = styled(Container)({
         backgroundColor: 'white',
     }
 });
+
+// The surrounding Stack turns this into a flex item, which blockifies inline-flex to flex.
+// The cell's text-align can then no longer center the content, hence justifyContent.
+const loggedValueSx = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    whiteSpace: 'nowrap',
+    gap: '2px',
+} as const;
 
 
 export const RoutineDetailsTable = () => {
@@ -275,40 +286,40 @@ export const RoutineTable = (props: {
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <span>
+                                <Box component="span" sx={loggedValueSx}>
                                     {log.repetitions ?? '-/-'}
                                     {getComparisonIcon(log.repetitions, setConfig?.repetitions, setConfig?.maxRepetitions)}
-                                </span>
+                                </Box>
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <span>
+                                <Box component="span" sx={loggedValueSx}>
                                     {log.weight ?? '-/-'}
                                     {getComparisonIcon(log.weight, setConfig?.weight, setConfig?.maxWeight)}
-                                </span>
+                                </Box>
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <span>
+                                <Box component="span" sx={loggedValueSx}>
                                     {log.restTime ?? '-/-'}
                                     {getComparisonIcon(log.restTime, setConfig?.restTime, setConfig?.maxRestTime)}
-                                </span>
+                                </Box>
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
                         {logs.map((log) =>
                             <Stack key={log.id}>
-                                <span>
+                                <Box component="span" sx={loggedValueSx}>
                                     {log.rir ?? '-/-'}
                                     {getComparisonIcon(log.rir, setConfig?.rir, setConfig?.maxRir, false)}
-                                </span>
+                                </Box>
                             </Stack>
                         )}
                     </TableCell>

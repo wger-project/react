@@ -25,8 +25,9 @@ export const RoutineCard = () => {
         return <LoadingPlaceholder />;
     }
 
-    return routineQuery.data !== null ? (
-        <RoutineCardContent routine={routineQuery.data!} />
+    // The data is null when the user has no routine and undefined when the query failed
+    return routineQuery.data ? (
+        <RoutineCardContent routine={routineQuery.data} />
     ) : (
         <EmptyCard title={t("routines.routine")} link={makeLink(WgerLink.ROUTINE_ADD, i18n.language)} />
     );

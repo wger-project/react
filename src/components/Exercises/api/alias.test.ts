@@ -6,7 +6,11 @@ import type { Mock } from 'vitest';
 vi.mock("axios");
 
 
-describe("Exercise translation service API tests", () => {
+describe("Exercise alias service API tests", () => {
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
 
 
     test('POST a new alias', async () => {
@@ -29,6 +33,10 @@ describe("Exercise translation service API tests", () => {
 
         // Assert
         expect(axios.post).toHaveBeenCalledTimes(1);
+        const [url, body] = (axios.post as Mock).mock.calls[0];
+        expect(url).toMatch(/\/api\/v2\/exercisealias\/$/);
+        // The alias belongs to a translation, not to the exercise
+        expect(body).toEqual({ translation: 100, alias: "Elbow dislocator" });
         expect(result).toEqual(new Alias(200, "eb18288d-4ca3-4c54-8279-343b110d86e0", "Elbow dislocator"));
     });
 
@@ -42,6 +50,10 @@ describe("Exercise translation service API tests", () => {
 
         // Assert
         expect(axios.delete).toHaveBeenCalledTimes(1);
+        expect(axios.delete).toHaveBeenCalledWith(
+            expect.stringMatching(/\/api\/v2\/exercisealias\/100\/$/),
+            expect.anything()
+        );
         expect(result).toEqual(204);
     });
 });
