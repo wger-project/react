@@ -1,20 +1,13 @@
 import React from "react";
-import { CircularProgress, Fab, Theme } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
+import { WgerFab } from "@/core/ui/Widgets/Fab";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { NewCategoryPicker } from "@/components/Measurements/widgets/MetricPicker";
 import { EntryForm, GroupEntryForm } from "@/components/Measurements/widgets/EntryForm";
 import { WeightForm } from "@/components/Measurements/widgets/WeightForm";
-
-/** Above the bottom navigation, and at the edge of the content rather than of the window */
-const FAB_POSITION = {
-    position: 'fixed',
-    bottom: '5rem',
-    right: (theme: Theme) => `max(${theme.spacing(2)}, calc((100vw - ${theme.breakpoints.values.lg}px) / 2 + ${theme.spacing(2)}))`,
-    zIndex: 9,
-} as const;
 
 /**
  * @param isLoading whether the overview is (re)reading its categories. A new
@@ -30,14 +23,9 @@ export const AddMeasurementCategoryFab = ({ isLoading = false }: { isLoading?: b
 
     return (
         <div>
-            <Fab
-                color="secondary"
-                aria-label="add"
-                disabled={isLoading}
-                onClick={handleOpenModal}
-                sx={FAB_POSITION}>
+            <WgerFab onClick={handleOpenModal} disabled={isLoading}>
                 {isLoading ? <CircularProgress size={24} color="inherit" /> : <AddIcon />}
-            </Fab>
+            </WgerFab>
             <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
                 <NewCategoryPicker closeFn={handleCloseModal} />
             </WgerModal>
@@ -53,13 +41,9 @@ export const AddMeasurementEntryFab = ({ category }: { category: MeasurementCate
 
 
     return (<>
-        <Fab
-            color="secondary"
-            aria-label="add"
-            onClick={handleOpenModal}
-            sx={FAB_POSITION}>
+        <WgerFab onClick={handleOpenModal}>
             <AddIcon />
-        </Fab>
+        </WgerFab>
         <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
             {category.isGroup
                 ? <GroupEntryForm closeFn={handleCloseModal} group={category} />
@@ -76,13 +60,9 @@ export const AddBodyWeightEntryFab = () => {
 
     return (
         <div>
-            <Fab
-                color="secondary"
-                aria-label="add"
-                onClick={handleOpenModal}
-                sx={FAB_POSITION}>
+            <WgerFab onClick={handleOpenModal}>
                 <AddIcon />
-            </Fab>
+            </WgerFab>
             <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
                 <WeightForm closeFn={handleCloseModal} />
             </WgerModal>
