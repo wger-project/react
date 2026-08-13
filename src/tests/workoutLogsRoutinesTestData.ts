@@ -82,9 +82,8 @@ export const testWorkoutSession = new WorkoutSession({
     id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000001',
     dayId: 2,
     routineId: 3,
-    date: new Date(2025, 1, 10),
     notes: 'everything is awesome',
     impression: "1",
-    timeStart: new Date(2025, 1, 10, 10, 30),
-    timeEnd: new Date(2025, 1, 10, 12, 0),
+    datetimeStart: new Date(2025, 1, 10, 10, 30),
+    datetimeEnd: new Date(2025, 1, 10, 12, 0),
 });

@@ -8,6 +8,7 @@ import {
 import { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery } from "@/components/Routines/queries";
 import { WgerTextField } from "@/core/forms/WgerTextField";
 import { dateToYYYYMMDD } from "@/core/lib/date";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
 import { Button, ButtonGroup, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
@@ -48,7 +49,8 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
         routineId,
         {
             routine: routineId,
-            date: dateToYYYYMMDD(selectedDate.toJSDate()),
+            // eslint-disable-next-line camelcase
+            datetime_start__date: dateToYYYYMMDD(selectedDate.toJSDate()),
             day: dayId
         }
     );
@@ -65,13 +67,10 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
         start: yup
             .date()
             .nullable(),
+        // An end before the start is not an error, it means the session ran over midnight
         end: yup
             .date()
-            .nullable()
-            .min(
-                yup.ref('start'),
-                t('forms.endBeforeStart')
-            ),
+            .nullable(),
         fitInWeek: yup.boolean()
     });
 
@@ -84,18 +83,18 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
             formikRef.current.setValues({
                 notes: findSessionQuery.data.notes || '',
                 impression: findSessionQuery.data.impression || IMPRESSION_NEUTRAL,
-                date: findSessionQuery.data.date,
-                start: findSessionQuery.data.timeStart ? DateTime.fromJSDate(findSessionQuery.data.timeStart) : null,
-                end: findSessionQuery.data.timeEnd ? DateTime.fromJSDate(findSessionQuery.data.timeEnd) : null,
+                date: findSessionQuery.data.datetimeStart,
+                start: DateTime.fromJSDate(findSessionQuery.data.datetimeStart),
+                end: findSessionQuery.data.datetimeEnd ? DateTime.fromJSDate(findSessionQuery.data.datetimeEnd) : null,
             });
             setSession(findSessionQuery.data);
         } else if (findSessionQuery.isSuccess && !findSessionQuery.data) {
             formikRef.current.setValues({
                 notes: '',
                 impression: IMPRESSION_NEUTRAL,
-                date: initialSession?.date || DateTime.now().toJSDate(), //JS Date, not DateTime
-                start: initialSession?.timeStart ? DateTime.fromJSDate(initialSession.timeStart) : null,
-                end: initialSession?.timeEnd ? DateTime.fromJSDate(initialSession.timeEnd) : null,
+                date: initialSession?.datetimeStart || DateTime.now().toJSDate(), //JS Date, not DateTime
+                start: initialSession ? DateTime.fromJSDate(initialSession.datetimeStart) : null,
+                end: initialSession?.datetimeEnd ? DateTime.fromJSDate(initialSession.datetimeEnd) : null,
             });
             setSession(undefined);
         }
@@ -108,23 +107,35 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
             enableReinitialize
             initialValues={{
                 notes: session !== undefined ? session.notes : '',
-                date: session !== undefined ? session.date : new Date(),
-                start: session !== undefined && session.timeStart !== null ? DateTime.fromJSDate(session.timeStart!) : null,
-                end: session !== undefined && session.timeEnd !== null ? DateTime.fromJSDate(session.timeEnd!) : null,
+                date: session !== undefined ? session.datetimeStart : new Date(),
+                start: session !== undefined ? DateTime.fromJSDate(session.datetimeStart) : null,
+                end: session?.datetimeEnd != null ? DateTime.fromJSDate(session.datetimeEnd) : null,
                 impression: session !== undefined ? session.impression : IMPRESSION_NEUTRAL,
             }}
             innerRef={formikRef}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
+                const day = selectedDate.startOf('day');
+                const start = values.start
+                    ? day.set({ hour: values.start.hour, minute: values.start.minute })
+                    : day;
+                let end = values.end
+                    ? day.set({ hour: values.end.hour, minute: values.end.minute })
+                    : null;
+
+                // An end before the start means the session ran past midnight
+                if (end !== null && end < start) {
+                    end = end.plus({ days: 1 });
+                }
+
                 const draft = new WorkoutSession({
                     id: session?.id ?? null,
                     dayId: dayId,
                     routineId: routineId,
-                    date: selectedDate.toJSDate(),
                     notes: values.notes,
                     impression: values.impression,
-                    timeStart: values.start ? values.start.toJSDate() : null,
-                    timeEnd: values.end ? values.end.toJSDate() : null,
+                    datetimeStart: start.toJSDate(),
+                    datetimeEnd: end !== null ? end.toJSDate() : null,
                 });
 
                 if (session !== undefined) {
@@ -247,6 +258,10 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
                                 </Button>
 
                             </ButtonGroup>
+                        </Grid>
+                        <Grid size={12}>
+                            <FormQueryErrors mutationQuery={addSessionQuery} />
+                            <FormQueryErrors mutationQuery={editSessionQuery} />
                         </Grid>
                         <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
                             <Button
