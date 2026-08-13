@@ -1,10 +1,9 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { buildHistogram, ValueCount } from "@/components/Measurements/charts/data";
 import { valueOnly, valueWithUnit } from "@/components/Measurements/charts/format";
 import { ChartEmptyState } from "@/components/Measurements/widgets/ChartEmptyState";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { theme } from "@/theme";
 
 /**
  * Histogram of how often each value occurred: the values of the selected range
@@ -23,6 +22,7 @@ export const MeasurementDistributionChart = (props: {
     countsAreDays?: boolean,
 }) => {
     const [t, i18n] = useTranslation();
+    const theme = useTheme();
     const [selected, setSelected] = React.useState<number | null>(null);
 
     if (props.values.length === 0) {

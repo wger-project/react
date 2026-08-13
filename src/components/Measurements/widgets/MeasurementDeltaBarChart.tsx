@@ -4,9 +4,9 @@ import { durationAxis, valueWithUnit } from "@/components/Measurements/charts/fo
 import { ChartPoint } from "@/components/Measurements/charts/series";
 import { BarChartFrame, TooltipFrame, TooltipProps } from "@/components/Measurements/widgets/chartFrames";
 import { ChartEmptyState } from "@/components/Measurements/widgets/ChartEmptyState";
+import { useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Bar, Cell, ReferenceLine } from "recharts";
-import { theme } from "@/theme";
 
 const DeltaTooltip = (props: TooltipProps & { unit: string }) => {
     const [, i18n] = useTranslation();
@@ -30,6 +30,7 @@ const DeltaTooltip = (props: TooltipProps & { unit: string }) => {
  */
 export const MeasurementDeltaBarChart = (props: { points: ChartPoint[], unit: string }) => {
     const [t] = useTranslation();
+    const theme = useTheme();
 
     if (props.points.length === 0) {
         return <ChartEmptyState />;

@@ -1,3 +1,4 @@
+import { createTheme, ThemeProvider } from "@mui/material";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen } from '@testing-library/react';
 import { CategorySeed, mockChartQueries } from "@/tests/chartQueries";
@@ -81,6 +82,25 @@ describe('MeasurementChart', () => {
         // Unlike the recharts charts, the grid is plain elements and does
         // render in jsdom
         expect(screen.getByRole('img')).toBeInTheDocument();
+    });
+
+    test('draws with the theme it is rendered in', () => {
+        const category = new MeasurementCategory('c-1', 'Steps', 'steps', 'steps', false, null, 0, 'heatmap');
+        const theme = createTheme({ palette: { primary: { main: 'rgb(1, 2, 3)' } } });
+
+        mockChartQueries([seed(category, [entry('d-1', new Date(2023, 1, 1), 4000)])]);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <ThemeProvider theme={theme}>
+                    <MeasurementChart category={category} range="all" />
+                </ThemeProvider>
+            </QueryClientProvider>
+        );
+
+        // The app mounts its own theme into a shadow root, so a chart reading
+        // the exported one draws colours the page never set
+        const cells = [...screen.getByRole('img').querySelectorAll('div')];
+        expect(cells.some(cell => getComputedStyle(cell).backgroundColor.includes('1, 2, 3'))).toBe(true);
     });
 
     test('mounts a change chart with the overall change under it', () => {

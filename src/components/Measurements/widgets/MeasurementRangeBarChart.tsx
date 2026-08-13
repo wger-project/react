@@ -2,9 +2,9 @@ import { MAX_BAR_WIDTH } from "@/components/Measurements/charts/density";
 import { durationAxis, valueOnly, valueWithUnit } from "@/components/Measurements/charts/format";
 import { ChartPoint } from "@/components/Measurements/charts/series";
 import { BarChartFrame, TooltipFrame, TooltipProps } from "@/components/Measurements/widgets/chartFrames";
+import { useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Bar } from "recharts";
-import { theme } from "@/theme";
 
 const RangeTooltip = (props: TooltipProps & { unit: string }) => {
     const [, i18n] = useTranslation();
@@ -33,6 +33,7 @@ const RangeTooltip = (props: TooltipProps & { unit: string }) => {
  * matters, the gap within one reading.
  */
 export const MeasurementRangeBarChart = (props: { points: ChartPoint[], unit: string }) => {
+    const theme = useTheme();
     const data = props.points.map(point => ({ date: point.date, range: [point.min!, point.max!] }));
 
     return <BarChartFrame

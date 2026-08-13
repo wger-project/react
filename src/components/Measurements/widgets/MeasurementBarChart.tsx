@@ -5,9 +5,9 @@ import { durationAxis, valueWithUnit } from "@/components/Measurements/charts/fo
 import { ChartPoint } from "@/components/Measurements/charts/series";
 import { BarChartFrame, TooltipFrame, TooltipProps } from "@/components/Measurements/widgets/chartFrames";
 import { ChartEmptyState } from "@/components/Measurements/widgets/ChartEmptyState";
+import { useTheme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Bar } from "recharts";
-import { theme } from "@/theme";
 
 const CustomTooltip = (props: TooltipProps & { category: MeasurementCategory }) => {
     const [t, i18n] = useTranslation();
@@ -28,6 +28,7 @@ const CustomTooltip = (props: TooltipProps & { category: MeasurementCategory }) 
 };
 
 export const MeasurementBarChart = (props: { category: MeasurementCategory, points: ChartPoint[] }) => {
+    const theme = useTheme();
     // Bars need a band axis (recharts miscomputes bar heights on a numeric
     // time axis), so make the bands time-proportional by filling in the
     // missing days instead

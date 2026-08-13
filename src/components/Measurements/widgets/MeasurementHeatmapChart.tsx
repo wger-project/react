@@ -1,4 +1,4 @@
-import { alpha, Box, Typography } from "@mui/material";
+import { alpha, Box, Typography, useTheme } from "@mui/material";
 import { buildHeatmapGrid, DAYS_PER_WEEK, heatmapDayAt } from "@/components/Measurements/charts/data";
 import { valueWithUnit } from "@/components/Measurements/charts/format";
 import { ChartPoint } from "@/components/Measurements/charts/series";
@@ -6,7 +6,6 @@ import { ChartEmptyState } from "@/components/Measurements/widgets/ChartEmptySta
 import { dateToLocale } from "@/core/lib/date";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { theme } from "@/theme";
 
 /** Widest a heatmap cell gets, and the room its weekday labels need */
 const MAX_HEATMAP_CELL = 22;
@@ -25,6 +24,7 @@ const WEEKDAY_LABEL_WIDTH = 30;
  */
 export const MeasurementHeatmapChart = (props: { points: ChartPoint[], unit: string }) => {
     const [t, i18n] = useTranslation();
+    const theme = useTheme();
     const [selected, setSelected] = React.useState<number | null>(null);
 
     if (props.points.length === 0) {
