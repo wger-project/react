@@ -457,11 +457,27 @@ export class MeasurementCategory {
         public chartType: ChartType = 'auto',
         /** Taste-level chart settings, read through trendOf and averageWindowOf */
         public chartConfig: ChartConfig = {},
+        /**
+         * What the server calculates this category from, 'NONE' for one the
+         * user fills themselves. Deliberately a plain string: a type added
+         * after this release still has to read as calculated, see isCalculated
+         */
+        public dynamicType: string = 'NONE',
+        /** Configuration of the calculation, its keys depend on dynamicType */
+        public dynamicParams: object = {},
     ) {
     }
 
     get isGroup(): boolean {
         return this.children.length > 0;
+    }
+
+    /**
+     * Whether the server maintains the entries of this category. They are
+     * read-only, and adding one by hand is refused
+     */
+    get isCalculated(): boolean {
+        return this.dynamicType !== 'NONE';
     }
 
     static clone(other: MeasurementCategory, overrides?: Partial<Pick<MeasurementCategory, 'id' | 'name' | 'unit' | 'metricType' | 'parentId' | 'chartType'>>): MeasurementCategory {
@@ -477,6 +493,8 @@ export class MeasurementCategory {
             other.order,
             overrides?.chartType ?? other.chartType,
             other.chartConfig,
+            other.dynamicType,
+            other.dynamicParams,
         );
         category.children = other.children;
         return category;
@@ -519,6 +537,10 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             typeof item.chart_config === 'object' && item.chart_config !== null
                 ? item.chart_config
                 : {},
+            typeof item.dynamic_type === 'string' ? item.dynamic_type : 'NONE',
+            typeof item.dynamic_params === 'object' && item.dynamic_params !== null
+                ? item.dynamic_params
+                : {},
         );
     }
 
@@ -537,6 +559,10 @@ class MeasurementCategoryAdapter implements Adapter<MeasurementCategory> {
             chart_config: item.chartConfig,
             parent: item.parentId,
             order: item.order,
+            // eslint-disable-next-line camelcase
+            dynamic_type: item.dynamicType,
+            // eslint-disable-next-line camelcase
+            dynamic_params: item.dynamicParams,
         };
     }
 }

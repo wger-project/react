@@ -39,6 +39,10 @@ export const AddMeasurementEntryFab = ({ category }: { category: MeasurementCate
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
 
+    // The entries of a calculated category are maintained by the server
+    if (category.isCalculated) {
+        return null;
+    }
 
     return (<>
         <WgerFab onClick={handleOpenModal}>

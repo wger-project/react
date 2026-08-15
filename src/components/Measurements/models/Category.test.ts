@@ -56,7 +56,53 @@ describe('MeasurementCategory', () => {
             chart_config: {},
             parent: null,
             order: 2,
+            dynamic_type: 'NONE',
+            dynamic_params: {},
         });
+    });
+
+    test('the calculation survives the json round trip', () => {
+        const category = MeasurementCategory.fromJson({
+            id: 'c-1',
+            name: 'Waist to height',
+            unit: '',
+            metric_type: 'custom',
+            is_official: false,
+            dynamic_type: 'WHTR',
+            dynamic_params: { category_id: 'c-waist' },
+        });
+
+        expect(category.isCalculated).toBe(true);
+        expect(MeasurementCategory.clone(category).toJson()).toMatchObject({
+            dynamic_type: 'WHTR',
+            dynamic_params: { category_id: 'c-waist' },
+        });
+    });
+
+    test('a category the server does not calculate is not calculated', () => {
+        const category = MeasurementCategory.fromJson({
+            id: 'c-1',
+            name: 'Biceps',
+            unit: 'cm',
+            metric_type: 'custom',
+            is_official: false,
+        });
+
+        expect(category.dynamicType).toBe('NONE');
+        expect(category.isCalculated).toBe(false);
+    });
+
+    test('a calculation added after this release still reads as calculated', () => {
+        const category = MeasurementCategory.fromJson({
+            id: 'c-1',
+            name: 'Something new',
+            unit: '',
+            metric_type: 'custom',
+            is_official: false,
+            dynamic_type: 'FUTURE_TYPE',
+        });
+
+        expect(category.isCalculated).toBe(true);
     });
 
     test('an unknown metric type from the server falls back to custom', () => {

@@ -392,7 +392,9 @@ describe('measurement service tests', () => {
             chart_type: null,
             chart_config: {},
             parent: null,
-            order: 0
+            order: 0,
+            dynamic_type: "NONE",
+            dynamic_params: {}
         });
         expect(result).toBeInstanceOf(MeasurementCategory);
         expect(result.id).toBe(CATEGORY_UUID_2);
@@ -417,7 +419,9 @@ describe('measurement service tests', () => {
             chart_type: null,
             chart_config: {},
             parent: null,
-            order: 0
+            order: 0,
+            dynamic_type: "NONE",
+            dynamic_params: {}
         });
         expect(result.name).toBe("Renamed");
     });

@@ -57,10 +57,12 @@ export const CategoryList = (props: { category: MeasurementCategory, range: Char
             </CardActionArea>
             {/* mt: auto pins the action row, so it aligns across a grid row of
               * cards with differently sized charts */}
+            {/* The entries of a calculated category are the server's, adding
+              * one by hand is refused */}
             <CardActions disableSpacing sx={{ justifyContent: "flex-end", mt: 'auto' }}>
-                <IconButton onClick={handleOpenModal} aria-label={t('add')}>
+                {!props.category.isCalculated && <IconButton onClick={handleOpenModal} aria-label={t('add')}>
                     <AddIcon />
-                </IconButton>
+                </IconButton>}
             </CardActions>
         </Card>
         <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
