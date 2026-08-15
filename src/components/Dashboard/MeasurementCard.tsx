@@ -20,7 +20,6 @@ import {
 } from "@/components/Measurements";
 import i18n from "@/i18n";
 import { makeLink, WgerLink } from "@/core/lib/url";
-import "slick-carousel/slick/slick.css";
 import { Box, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
@@ -29,10 +28,8 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Slider, { Settings } from "react-slick";
-import "slick-carousel/slick/slick-theme.css";
 
 
 /** Entries the table under each chart lists, at most */
@@ -58,21 +55,6 @@ export const MeasurementCard = () => {
 const MeasurementCardContent = (props: { categories: MeasurementCategory[] }) => {
     const { t } = useTranslation();
 
-    // TODO: is there a better solution for this?
-    // Workaround for react-slick import issue where it returns a module object
-    // instead of the component
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const SlickSlider = (Slider as any).default ?? Slider;
-
-    const settings: Settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        arrows: false,
-    };
-
     return (<>
         <DashboardCard
             title={t("measurements.measurements")}
@@ -87,12 +69,70 @@ const MeasurementCardContent = (props: { categories: MeasurementCategory[] }) =>
                 </>
             }
         >
-            <div className="slider-container">
-                <SlickSlider {...settings}>
-                    {props.categories.map(c => <MeasurementCardTableContent key={c.id} category={c} />)}
-                </SlickSlider>
-            </div>
+            <CategoryCarousel categories={props.categories} />
         </DashboardCard>
+    </>);
+};
+
+
+/**
+ * The categories side by side, one at a time.
+ *
+ * Snap points do the paging, so a swipe always comes to rest on a category
+ * rather than between two of them.
+ */
+const CategoryCarousel = (props: { categories: MeasurementCategory[] }) => {
+    const { t } = useTranslation();
+    const strip = useRef<HTMLDivElement>(null);
+    const [current, setCurrent] = useState(0);
+
+    return (<>
+        <Box
+            ref={strip}
+            onScroll={event => setCurrent(Math.round(
+                event.currentTarget.scrollLeft / event.currentTarget.clientWidth
+            ))}
+            sx={{
+                display: 'flex',
+                overflowX: 'auto',
+                scrollSnapType: 'x mandatory',
+                // the dots are the visible position indicator
+                scrollbarWidth: 'none',
+                '&::-webkit-scrollbar': { display: 'none' },
+            }}
+        >
+            {props.categories.map(category =>
+                <Box
+                    key={category.id}
+                    sx={{ flex: '0 0 100%', minWidth: 0, scrollSnapAlign: 'start' }}
+                >
+                    <MeasurementCardTableContent category={category} />
+                </Box>
+            )}
+        </Box>
+        <Stack direction="row" spacing={1} sx={{ justifyContent: 'center', mt: 1 }}>
+            {props.categories.map((category, index) =>
+                <Box
+                    component="button"
+                    key={category.id}
+                    aria-current={index === current}
+                    aria-label={categoryDisplayName(category, t)}
+                    onClick={() => strip.current?.scrollTo({
+                        left: index * strip.current.clientWidth,
+                        behavior: 'smooth',
+                    })}
+                    sx={{
+                        backgroundColor: index === current ? 'primary.main' : 'action.disabled',
+                        border: 0,
+                        borderRadius: '50%',
+                        cursor: 'pointer',
+                        height: 10,
+                        p: 0,
+                        width: 10,
+                    }}
+                />
+            )}
+        </Stack>
     </>);
 };
 
