@@ -1,6 +1,6 @@
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
-import { testExerciseSquats } from "@/tests/exerciseTestdata";
+import { testExerciseCurls, testExerciseSquats } from "@/tests/exerciseTestdata";
 import { testRepUnitRepetitions, testWeightUnitKg } from "@/tests/unitsTestData";
 
 const testWorkoutLog1 = new WorkoutLog({
@@ -69,6 +69,45 @@ const testWorkoutLog4 = new WorkoutLog({
     repetitionsUnit: testRepUnitRepetitions,
     weightUnit: testWeightUnitKg,
     exercise: testExerciseSquats
+});
+
+/*
+ * A log for an exercise that is not part of the routine's structure
+ */
+export const testWorkoutLogCurls = new WorkoutLog({
+    id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000009',
+    routineId: 1,
+    date: new Date(2023, 1, 3),
+    iteration: null,
+    exerciseId: 3,
+    slotEntryId: null,
+    repetitionsUnitId: 1,
+    repetitions: 12,
+    weight: 20,
+    weightUnitId: 1,
+    rir: null,
+    repetitionsUnit: testRepUnitRepetitions,
+    weightUnit: testWeightUnitKg,
+    exercise: testExerciseCurls
+});
+
+/*
+ * A log whose exercise could not be loaded, e.g. because it was deleted
+ */
+export const testWorkoutLogUnknownExercise = new WorkoutLog({
+    id: 'aaaaaaaa-aaaa-aaaa-aaaa-000000000010',
+    routineId: 1,
+    date: new Date(2023, 1, 4),
+    iteration: null,
+    exerciseId: 999,
+    slotEntryId: null,
+    repetitionsUnitId: 1,
+    repetitions: 10,
+    weight: 30,
+    weightUnitId: 1,
+    rir: null,
+    repetitionsUnit: testRepUnitRepetitions,
+    weightUnit: testWeightUnitKg,
 });
 
 export const testWorkoutLogs = [

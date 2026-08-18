@@ -1,5 +1,4 @@
-import { getExercisesByIds } from "@/components/Exercises/api/exercise";
-import { Exercise } from "@/components/Exercises/models/exercise";
+import { attachExercises } from "@/components/Routines/api/workoutLogs";
 import { WorkoutLog, WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
 import { WorkoutSession, WorkoutSessionAdapter } from "@/components/Routines/models/WorkoutSession";
 import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
@@ -48,16 +47,7 @@ export const getSessions = async (options?: SessionQueryOptions): Promise<Workou
         }
     }
 
-    const exerciseIds = [...new Set(logs.map(log => log.exerciseId))];
-    if (exerciseIds.length > 0) {
-        const exercises: Record<number, Exercise> = {};
-        for (const exercise of await getExercisesByIds(exerciseIds)) {
-            exercises[exercise.id!] = exercise;
-        }
-        for (const log of logs) {
-            log.exerciseObj = exercises[log.exerciseId];
-        }
-    }
+    await attachExercises(logs);
 
     for await (const sessionPage of fetchPaginated(
         makeUrl(

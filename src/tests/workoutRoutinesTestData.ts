@@ -12,7 +12,11 @@ import { WeightUnit } from "@/components/Routines/models/WeightUnit";
 import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { yyyymmddToDate } from "@/core/lib/date";
 import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
-import { testWorkoutLogs } from "@/tests/workoutLogsRoutinesTestData";
+import {
+    testWorkoutLogCurls,
+    testWorkoutLogs,
+    testWorkoutLogUnknownExercise
+} from "@/tests/workoutLogsRoutinesTestData";
 
 export const testDayLegs = new Day({
     id: 5,
@@ -203,6 +207,15 @@ export const testRoutineLogData = [
             datetimeEnd: new Date('2024-07-01 17:30'),
         }),
         testWorkoutLogs
+    )
+];
+
+// Same session, but with additional logs for exercises that the routine
+// structure doesn't contain
+export const testRoutineLogDataOtherExercise = [
+    new RoutineLogData(
+        testRoutineLogData[0].session,
+        [...testWorkoutLogs, testWorkoutLogCurls, testWorkoutLogUnknownExercise]
     )
 ];
 
@@ -700,6 +713,24 @@ export const responseRoutineLogData = [
             datetime_end: "2024-08-01T11:00:00+02:00",
         },
         logs: [],
+    },
+];
+
+// /routine/<id>/logs/ — the same, with logs for two different exercises. Only
+// the first one is part of the routine's structure.
+export const responseRoutineLogDataWithLogs = [
+    {
+        ...responseRoutineLogData[0],
+        logs: [
+            responseRoutineLogs.results[0],
+            {
+                ...responseRoutineLogs.results[0],
+                id: "aaaaaaaa-aaaa-aaaa-aaaa-000000000003",
+                exercise: 3,
+                iteration: null,
+                slot_entry: null,
+            },
+        ],
     },
 ];
 

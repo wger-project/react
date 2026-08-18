@@ -19,7 +19,7 @@ import { Day } from "@/components/Routines/models/Day";
 import { RoutineStatsData } from "@/components/Routines/models/LogStats";
 import { Routine } from "@/components/Routines/models/Routine";
 import { SetConfigData } from "@/components/Routines/models/SetConfigData";
-import { testExerciseBenchPress, testExerciseCurls } from "@/tests/exerciseTestdata";
+import { testExerciseBenchPress, testExerciseCurls, testExerciseSquats } from "@/tests/exerciseTestdata";
 import {
     responseAddRoutine,
     responseApiWorkoutRoutine,
@@ -30,6 +30,7 @@ import {
     responseRoutineDayData,
     responseRoutineDayDataIterationGap,
     responseRoutineLogData,
+    responseRoutineLogDataWithLogs,
     responseRoutinesShallowWithTemplate,
     responseRoutineStats,
     responseRoutineStructure,
@@ -315,6 +316,19 @@ describe("workout routine service tests", () => {
         expect(result[0].session.id).toBe(1);
         expect(result[0].session.dayId).toBe(5);
         expect(result[0].logs).toEqual([]);
+    });
+
+    test('getRoutineLogData loads the exercises the logs point to', async () => {
+        (axios.get as Mock).mockResolvedValue({ data: responseRoutineLogDataWithLogs });
+        (getExercisesByIds as Mock).mockResolvedValue([testExerciseSquats, testExerciseCurls]);
+
+        const result = await getRoutineLogData(1);
+
+        // The exercises are loaded in one request and assigned to their logs. Note
+        // that the second one is not part of the routine's structure.
+        expect(getExercisesByIds).toHaveBeenCalledWith([345, 3]);
+        expect(result[0].logs[0].exerciseObj).toEqual(testExerciseSquats);
+        expect(result[0].logs[1].exerciseObj).toEqual(testExerciseCurls);
     });
 
     test('getRoutine assembles detail + structure + dayData + units into a single Routine', async () => {
