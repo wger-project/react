@@ -2,11 +2,12 @@ import {
     addSession,
     editSession,
     getSessions,
-    searchSession,
+    searchSessions,
     SessionQueryOptions
 } from "@/components/Routines/api/session";
 import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { QueryKey, } from "@/core/lib/consts";
+import { DateTime } from "luxon";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
@@ -25,10 +26,39 @@ const invalidateSessionReads = (
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useFindSessionQuery = (routineId: number, queryParams: Record<string, any>) => useQuery({
-    queryFn: () => searchSession(queryParams),
+export const useFindSessionsQuery = (routineId: number, queryParams: Record<string, any>) => useQuery({
+    queryFn: () => searchSessions(queryParams),
     queryKey: [QueryKey.SESSION_SEARCH, routineId, queryParams],
 });
+
+/*
+ * The sessions logged on one day of a routine, and the one being worked on
+ *
+ * A single session is the one, several need the caller to pick one by id. The
+ * day is read as the instants it spans in the browser's timezone: a date bound
+ * would be cut in the server's, and a session logged shortly after midnight
+ * would be looked for on the wrong day.
+ */
+export const useSessionOfDay = (routineId: number, dayId: number, date: DateTime, chosenId: string | null) => {
+    const dayStart = date.startOf('day');
+    const query = useFindSessionsQuery(routineId, {
+        routine: routineId,
+        // eslint-disable-next-line camelcase
+        datetime_start__gte: dayStart.toJSDate().toISOString(),
+        // eslint-disable-next-line camelcase
+        datetime_start__lt: dayStart.plus({ days: 1 }).toJSDate().toISOString(),
+        day: dayId,
+    });
+
+    const sessions = query.data ?? [];
+
+    return {
+        sessions: sessions,
+        session: sessions.length === 1 ? sessions[0] : sessions.find(entry => entry.id === chosenId),
+        isLoading: query.isLoading,
+        isSuccess: query.isSuccess,
+    };
+};
 
 export const useAddSessionQuery = () => {
     const queryClient = useQueryClient();

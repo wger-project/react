@@ -23,7 +23,7 @@ export interface DayProps {
     weightEntry: MeasurementEntry | undefined,
     measurements: CalendarMeasurement[],
     nutritionLogs: DiaryEntry[],
-    workoutSession: WorkoutSession | undefined,
+    workoutSessions: WorkoutSession[],
 }
 
 
@@ -74,7 +74,7 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
     const defaultDay: DayProps = {
         date: currentDate,
         weightEntry: undefined,
-        workoutSession: undefined,
+        workoutSessions: [],
         measurements: [],
         nutritionLogs: []
     };
@@ -115,7 +115,7 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
                 weightEntry: undefined,
                 measurements: [],
                 nutritionLogs: [],
-                workoutSession: undefined
+                workoutSessions: []
             });
         }
 
@@ -124,7 +124,7 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
                 date: new Date(date),
                 weightEntry: weightsQuery.data?.find(w => isSameDay(w.date, date)),
                 measurements: measurements.filter(m => isSameDay(m.date, date)) || [],
-                workoutSession: sessionQuery.data?.find(m => isSameDay(m.datetimeStart, date)) || undefined,
+                workoutSessions: sessionQuery.data?.filter(m => isSameDay(m.datetimeStart, date)) ?? [],
                 nutritionLogs: nutritionDiaryQuery.data?.filter(m => isSameDay(m.datetime, date)) || [],
             });
             date.setDate(date.getDate() + 1);
@@ -138,7 +138,7 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
             result.push({
                 date: new Date(year, month + 1, i),
                 weightEntry: undefined,
-                workoutSession: undefined,
+                workoutSessions: [],
                 measurements: [],
                 nutritionLogs: []
             });

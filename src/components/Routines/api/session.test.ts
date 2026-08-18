@@ -1,5 +1,5 @@
 import * as exerciseService from "@/components/Exercises/api/exercise";
-import { addSession, editSession, getSessions, searchSession } from "@/components/Routines/api/session";
+import { addSession, editSession, getSessions, searchSessions } from "@/components/Routines/api/session";
 import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
 import axios from "axios";
@@ -156,9 +156,9 @@ describe("Session service tests", () => {
         );
     });
 
-    test('searchSession returns the parsed session when count === 1', async () => {
+    test('searchSessions parses every session of the query', async () => {
         const apiResponse = {
-            count: 1, next: null, previous: null,
+            count: 2, next: null, previous: null,
             results: [
                 {
                     id: SESSION_UUID, routine: 39764, day: 5,
@@ -167,38 +167,35 @@ describe("Session service tests", () => {
                     datetime_start: "2025-08-07T20:10:58+02:00",
                     datetime_end: "2025-08-07T23:28:21+02:00",
                 },
+                {
+                    id: SESSION_UUID_2, routine: 39764, day: 5,
+                    notes: null,
+                    impression: "2",
+                    datetime_start: "2025-08-07T08:00:00+02:00",
+                    datetime_end: null,
+                },
             ],
         };
         (axios.get as Mock).mockResolvedValue({ data: apiResponse });
 
-        const result = await searchSession({ routine: 39764, datetime_start__date: "2025-08-07" });
+        const result = await searchSessions({ routine: 39764, datetime_start__date: "2025-08-07" });
 
         const url = (axios.get as Mock).mock.calls[0][0] as string;
         expect(url).toContain("/api/v2/workoutsession/");
         expect(url).toContain("routine=39764");
         expect(url).toContain("datetime_start__date=2025-08-07");
-        expect(result).toBeInstanceOf(WorkoutSession);
-        expect(result?.id).toBe(SESSION_UUID);
+        expect(result.every(session => session instanceof WorkoutSession)).toBe(true);
+        expect(result.map(session => session.id)).toEqual([SESSION_UUID, SESSION_UUID_2]);
     });
 
-    test('searchSession returns null when count !== 1', async () => {
+    test('searchSessions returns an empty list when nothing matches', async () => {
         (axios.get as Mock).mockResolvedValue({
             data: { count: 0, next: null, previous: null, results: [] },
         });
 
-        const result = await searchSession({ routine: 1 });
+        const result = await searchSessions({ routine: 1 });
 
-        expect(result).toBeNull();
-    });
-
-    test('searchSession returns null when count is greater than 1 (ambiguous)', async () => {
-        (axios.get as Mock).mockResolvedValue({
-            data: { count: 2, next: null, previous: null, results: [{}, {}] },
-        });
-
-        const result = await searchSession({ routine: 1 });
-
-        expect(result).toBeNull();
+        expect(result).toEqual([]);
     });
 
     test('addSession POSTs the serialized session and returns the parsed session', async () => {

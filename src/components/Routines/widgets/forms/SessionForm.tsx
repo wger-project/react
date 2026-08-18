@@ -5,63 +5,69 @@ import {
     NOTES_MAX_LENGTH,
     WorkoutSession
 } from "@/components/Routines/models/WorkoutSession";
-import { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery } from "@/components/Routines/queries";
+import { useAddSessionQuery, useEditSessionQuery, useSessionOfDay } from "@/components/Routines/queries";
 import { WgerTextField } from "@/core/forms/WgerTextField";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
-import { Button, ButtonGroup, Typography } from "@mui/material";
+import { Add, SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
+import {
+    Button,
+    ButtonGroup,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Typography
+} from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { Form, Formik, FormikProps } from "formik";
+import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from 'yup';
 
 interface SessionFormProps {
-    initialSession?: WorkoutSession;
     dayId: number,
     routineId: number,
     selectedDate: DateTime,
-    setSelectedDate: React.Dispatch<React.SetStateAction<DateTime>>
+    setSelectedDate: (date: DateTime) => void,
+    chosenSessionId: string | null,
+    setChosenSessionId: (id: string | null) => void
 }
 
-type SessionFormValues = {
-    notes: string | null;
-    date: Date;
-    start: DateTime | null;
-    end: DateTime | null;
-    impression: string;
-};
+/* Stands in for the session id while the user is adding one to a day that
+ * already has sessions */
+const NEW_SESSION = 'new';
 
-export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, setSelectedDate }: SessionFormProps) => {
-
-    const formikRef = useRef<FormikProps<SessionFormValues> | null>(null);
+export const SessionForm = (
+    {
+        dayId,
+        routineId,
+        selectedDate,
+        setSelectedDate,
+        chosenSessionId,
+        setChosenSessionId
+    }: SessionFormProps) => {
 
     const [t, i18n] = useTranslation();
-    const [session, setSession] = React.useState<WorkoutSession | undefined>(initialSession);
 
     const addSessionQuery = useAddSessionQuery();
     const editSessionQuery = useEditSessionQuery();
-    // The day as the instants it spans in the browser's timezone. A date bound
-    // would be cut in the server's, and a session logged shortly after
-    // midnight would go looking on the wrong day: the form would find nothing
-    // and save a second session next to the one that is already there
-    const dayStart = selectedDate.startOf('day');
-    const findSessionQuery = useFindSessionQuery(
+    const { sessions, session, isLoading: isLoadingSessions } = useSessionOfDay(
         routineId,
-        {
-            routine: routineId,
-            // eslint-disable-next-line camelcase
-            datetime_start__gte: dayStart.toJSDate().toISOString(),
-            // eslint-disable-next-line camelcase
-            datetime_start__lt: dayStart.plus({ days: 1 }).toJSDate().toISOString(),
-            day: dayId
-        }
+        dayId,
+        selectedDate,
+        chosenSessionId
     );
 
-    const isLoading = addSessionQuery.isPending || editSessionQuery.isPending || findSessionQuery.isLoading;
+    // A day can hold several sessions. One is edited right away, more than one
+    // has to be picked apart by the user first, otherwise the form would either
+    // edit an arbitrary one or add yet another next to them
+    const needsChoice = sessions.length > 1 && session === undefined && chosenSessionId !== NEW_SESSION;
+
+    const isLoading = addSessionQuery.isPending || editSessionQuery.isPending || isLoadingSessions;
 
     const validationSchema = yup.object({
         notes: yup
@@ -81,33 +87,6 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
     });
 
 
-    useEffect(() => {
-        if (!formikRef.current) {
-            return;
-        }
-        if (findSessionQuery.data) {
-            formikRef.current.setValues({
-                notes: findSessionQuery.data.notes || '',
-                impression: findSessionQuery.data.impression || IMPRESSION_NEUTRAL,
-                date: findSessionQuery.data.datetimeStart,
-                start: DateTime.fromJSDate(findSessionQuery.data.datetimeStart),
-                end: findSessionQuery.data.datetimeEnd ? DateTime.fromJSDate(findSessionQuery.data.datetimeEnd) : null,
-            });
-            setSession(findSessionQuery.data);
-        } else if (findSessionQuery.isSuccess && !findSessionQuery.data) {
-            formikRef.current.setValues({
-                notes: '',
-                impression: IMPRESSION_NEUTRAL,
-                date: initialSession?.datetimeStart || DateTime.now().toJSDate(), //JS Date, not DateTime
-                start: initialSession ? DateTime.fromJSDate(initialSession.datetimeStart) : null,
-                end: initialSession?.datetimeEnd ? DateTime.fromJSDate(initialSession.datetimeEnd) : null,
-            });
-            setSession(undefined);
-        }
-
-    }, [findSessionQuery.data, findSessionQuery.isSuccess, initialSession, selectedDate]);
-
-
     return (
         <Formik
             enableReinitialize
@@ -118,7 +97,6 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
                 end: session?.datetimeEnd != null ? DateTime.fromJSDate(session.datetimeEnd) : null,
                 impression: session !== undefined ? session.impression : IMPRESSION_NEUTRAL,
             }}
-            innerRef={formikRef}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
                 const day = selectedDate.startOf('day');
@@ -147,7 +125,10 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
                 if (session !== undefined) {
                     await editSessionQuery.mutateAsync(draft);
                 } else {
-                    await addSessionQuery.mutateAsync(draft);
+                    // Keep editing what was just added, a second submit would
+                    // otherwise write another session
+                    const added = await addSessionQuery.mutateAsync(draft);
+                    setChosenSessionId(added?.id ?? null);
                 }
             }}
         >
@@ -178,107 +159,136 @@ export const SessionForm = ({ initialSession, dayId, routineId, selectedDate, se
                                     }}
                                 />
                             </LocalizationProvider>
-                        </Grid>
-                        <Grid size={{ xs: 6, sm: 3 }}>
-                            <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                                <TimePicker
-                                    label={t('start')}
-                                    {...formik.getFieldProps('start')}
-                                    onChange={(newValue) => {
-                                        if (newValue) {
-                                            formik.setFieldValue('start', newValue);
-                                        }
-                                    }}
-                                    slotProps={{
-                                        textField: {
-                                            variant: "standard",
-                                            fullWidth: true,
-                                            error: formik.touched.start && Boolean(formik.errors.start),
-                                            helperText: formik.touched.start && formik.errors.start
-                                        }
-                                    }}
-                                />
-                            </LocalizationProvider>
-                        </Grid>
-                        <Grid size={{ xs: 6, sm: 3 }}>
-                            <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                                <TimePicker
-                                    label={t('end')}
-                                    {...formik.getFieldProps('end')}
-                                    onChange={(newValue) => {
-                                        if (newValue) {
-                                            formik.setFieldValue('end', newValue);
-                                        }
-                                    }}
-                                    slotProps={{
-                                        textField: {
-                                            variant: "standard",
-                                            fullWidth: true,
-                                            error: formik.touched.end && Boolean(formik.errors.end),
-                                            helperText: formik.touched.end && formik.errors.end
-                                        }
-                                    }}
-                                />
-                            </LocalizationProvider>
-                        </Grid>
-                        <Grid size={12}>
-                            <WgerTextField
-                                fieldName="notes"
-                                title={t('notes')}
-                                fieldProps={{ multiline: true, rows: 4 }}
-                            />
+                            {sessions.length > 1 && !needsChoice &&
+                                <Button size="small" sx={{ mt: 1 }} onClick={() => setChosenSessionId(null)}>
+                                    {t('routines.changeSession')}
+                                </Button>}
                         </Grid>
 
-                        <Grid size={12}>
-                            <Typography variant="caption">{t('routines.impression')}</Typography>
-                            <ButtonGroup
-                                fullWidth
-                                color="primary"
-                            >
-                                <Button
-                                    size="small"
-                                    color="info"
-                                    variant={formik.values.impression === IMPRESSION_BAD ? 'contained' : 'outlined'}
-                                    onClick={() => formik.setFieldValue('impression', IMPRESSION_BAD)}
-                                >
-                                    <SentimentVeryDissatisfied />
-                                    {t('routines.impressionBad')}
-                                </Button>
-                                <Button
-                                    size="small"
-                                    color="info"
-                                    variant={formik.values.impression === IMPRESSION_NEUTRAL ? 'contained' : 'outlined'}
-                                    onClick={() => formik.setFieldValue('impression', IMPRESSION_NEUTRAL)}
-                                >
-                                    <SentimentNeutral />
-                                    {t('routines.impressionNeutral')}
-                                </Button>
-                                <Button
-                                    size="small"
-                                    color="info"
-                                    variant={formik.values.impression === IMPRESSION_GOOD ? 'contained' : 'outlined'}
-                                    onClick={() => formik.setFieldValue('impression', IMPRESSION_GOOD)}
-                                >
-                                    <SentimentSatisfiedAlt />
-                                    {t('routines.impressionGood')}
-                                </Button>
+                        {needsChoice ? <Grid size={12}>
+                            <Typography variant={"body1"} sx={{ mt: 2 }}>
+                                {t('routines.multipleSessions')}
+                            </Typography>
+                            <List>
+                                {sessions.map(entry =>
+                                    <ListItem key={entry.id} disablePadding>
+                                        <ListItemButton onClick={() => setChosenSessionId(entry.id)}>
+                                            <ListItemText primary={entry.textRepresentation} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                )}
+                                <ListItem disablePadding>
+                                    <ListItemButton onClick={() => setChosenSessionId(NEW_SESSION)}>
+                                        <ListItemIcon sx={{ minWidth: 36 }}>
+                                            <Add />
+                                        </ListItemIcon>
+                                        <ListItemText primary={t('routines.newSession')} />
+                                    </ListItemButton>
+                                </ListItem>
+                            </List>
+                        </Grid> : <>
+                            <Grid size={{ xs: 6, sm: 3 }}>
+                                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                                    <TimePicker
+                                        label={t('start')}
+                                        {...formik.getFieldProps('start')}
+                                        onChange={(newValue) => {
+                                            if (newValue) {
+                                                formik.setFieldValue('start', newValue);
+                                            }
+                                        }}
+                                        slotProps={{
+                                            textField: {
+                                                variant: "standard",
+                                                fullWidth: true,
+                                                error: formik.touched.start && Boolean(formik.errors.start),
+                                                helperText: formik.touched.start && formik.errors.start
+                                            }
+                                        }}
+                                    />
+                                </LocalizationProvider>
+                            </Grid>
+                            <Grid size={{ xs: 6, sm: 3 }}>
+                                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                                    <TimePicker
+                                        label={t('end')}
+                                        {...formik.getFieldProps('end')}
+                                        onChange={(newValue) => {
+                                            if (newValue) {
+                                                formik.setFieldValue('end', newValue);
+                                            }
+                                        }}
+                                        slotProps={{
+                                            textField: {
+                                                variant: "standard",
+                                                fullWidth: true,
+                                                error: formik.touched.end && Boolean(formik.errors.end),
+                                                helperText: formik.touched.end && formik.errors.end
+                                            }
+                                        }}
+                                    />
+                                </LocalizationProvider>
+                            </Grid>
+                            <Grid size={12}>
+                                <WgerTextField
+                                    fieldName="notes"
+                                    title={t('notes')}
+                                    fieldProps={{ multiline: true, rows: 4 }}
+                                />
+                            </Grid>
 
-                            </ButtonGroup>
-                        </Grid>
-                        <Grid size={12}>
-                            <FormQueryErrors mutationQuery={addSessionQuery} />
-                            <FormQueryErrors mutationQuery={editSessionQuery} />
-                        </Grid>
-                        <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
-                            <Button
-                                disabled={isLoading}
-                                color="primary"
-                                variant="contained"
-                                type="submit"
-                                sx={{ mt: 2 }}>
-                                {t('submit')}
-                            </Button>
-                        </Grid>
+                            <Grid size={12}>
+                                <Typography variant="caption">{t('routines.impression')}</Typography>
+                                <ButtonGroup
+                                    fullWidth
+                                    color="primary"
+                                >
+                                    <Button
+                                        size="small"
+                                        color="info"
+                                        variant={formik.values.impression === IMPRESSION_BAD ? 'contained' : 'outlined'}
+                                        onClick={() => formik.setFieldValue('impression', IMPRESSION_BAD)}
+                                    >
+                                        <SentimentVeryDissatisfied />
+                                        {t('routines.impressionBad')}
+                                    </Button>
+                                    <Button
+                                        size="small"
+                                        color="info"
+                                        variant={formik.values.impression === IMPRESSION_NEUTRAL ? 'contained' : 'outlined'}
+                                        onClick={() => formik.setFieldValue('impression', IMPRESSION_NEUTRAL)}
+                                    >
+                                        <SentimentNeutral />
+                                        {t('routines.impressionNeutral')}
+                                    </Button>
+                                    <Button
+                                        size="small"
+                                        color="info"
+                                        variant={formik.values.impression === IMPRESSION_GOOD ? 'contained' : 'outlined'}
+                                        onClick={() => formik.setFieldValue('impression', IMPRESSION_GOOD)}
+                                    >
+                                        <SentimentSatisfiedAlt />
+                                        {t('routines.impressionGood')}
+                                    </Button>
+
+                                </ButtonGroup>
+                            </Grid>
+                            <Grid size={12}>
+                                <FormQueryErrors mutationQuery={addSessionQuery} />
+                                <FormQueryErrors mutationQuery={editSessionQuery} />
+                            </Grid>
+                            <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
+                                <Button
+                                    disabled={isLoading}
+                                    color="primary"
+                                    variant="contained"
+                                    type="submit"
+                                    sx={{ mt: 2 }}>
+                                    {t('submit')}
+                                </Button>
+                            </Grid>
+
+                        </>}
                     </Grid>
                 </Form>
             )}

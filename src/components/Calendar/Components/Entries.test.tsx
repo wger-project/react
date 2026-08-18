@@ -28,7 +28,7 @@ describe('Entries Component', () => {
         weightEntry: undefined,
         measurements: [],
         nutritionLogs: [],
-        workoutSession: undefined
+        workoutSessions: []
     };
 
     test('Correctly shows date and title', () => {
@@ -106,7 +106,7 @@ describe('Entries Component', () => {
     test('Shows the workout session logs in a collapsible', async () => {
         const propsWithSession = {
             ...defaultProps,
-            workoutSession: new WorkoutSession({ ...testWorkoutSession, logs: testWorkoutLogs })
+            workoutSessions: [new WorkoutSession({ ...testWorkoutSession, logs: testWorkoutLogs })]
         };
 
         render(
@@ -127,6 +127,37 @@ describe('Entries Component', () => {
         expect(screen.getAllByText('Squats').length).toBe(testWorkoutLogs.length);
         expect(screen.getByText(/^8 × 80/)).toBeInTheDocument();
         expect(screen.getByText(/^8 × 82.5/)).toBeInTheDocument();
+    });
+
+    test('Shows every session of the day', async () => {
+        const propsWithSessions = {
+            ...defaultProps,
+            workoutSessions: [
+                new WorkoutSession({ ...testWorkoutSession, notes: 'morning workout', logs: testWorkoutLogs }),
+                new WorkoutSession({
+                    ...testWorkoutSession,
+                    id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000002',
+                    notes: 'evening workout',
+                    logs: []
+                }),
+            ]
+        };
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithSessions} />
+            </QueryClientProvider>
+        );
+
+        // Both are listed, and expanding one leaves the other closed
+        expect(screen.getAllByText('routines.workoutSession')).toHaveLength(2);
+        expect(screen.getByText(/morning workout/)).toBeInTheDocument();
+        expect(screen.getByText(/evening workout/)).toBeInTheDocument();
+
+        const user = userEvent.setup();
+        await user.click(screen.getByText(/morning workout/));
+
+        expect(screen.getByText(/^8 × 80/)).toBeInTheDocument();
     });
 
     test('Shows the nutrition diary entries in a collapsible', async () => {

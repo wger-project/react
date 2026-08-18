@@ -61,4 +61,6 @@ export {
     useEditSlotsQuery,
 } from "./slots";
 
-export { useAddSessionQuery, useEditSessionQuery, useFindSessionQuery, useSessionsQuery } from "./sessions";
+export {
+    useAddSessionQuery, useEditSessionQuery, useFindSessionsQuery, useSessionOfDay, useSessionsQuery
+} from "./sessions";

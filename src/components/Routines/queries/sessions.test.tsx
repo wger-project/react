@@ -1,11 +1,14 @@
-import { addSession, editSession, searchSession } from "@/components/Routines/api/session";
+import { addSession, editSession, searchSessions } from "@/components/Routines/api/session";
 import {
     useAddSessionQuery,
     useEditSessionQuery,
-    useFindSessionQuery
+    useFindSessionsQuery,
+    useSessionOfDay
 } from "@/components/Routines/queries";
 import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DateTime } from "luxon";
+import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { act, renderHook, waitFor } from '@testing-library/react';
 import React from "react";
 import type { Mock } from 'vitest';
@@ -28,9 +31,77 @@ describe("session queries", () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
-        (searchSession as Mock).mockResolvedValue(null);
+        (searchSessions as Mock).mockResolvedValue([]);
         (addSession as Mock).mockResolvedValue(testWorkoutSession);
         (editSession as Mock).mockResolvedValue(testWorkoutSession);
+    });
+
+    describe('useSessionOfDay', () => {
+
+        const wrapper = () => {
+            const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+            return ({ children }: { children: React.ReactNode }) =>
+                <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+        };
+
+        const sessionOn = (id: string, hour: number) => new WorkoutSession({
+            id: id,
+            dayId: 5,
+            routineId: 1,
+            notes: null,
+            impression: '2',
+            datetimeStart: DateTime.fromISO(`2024-05-01T${hour}:00`).toJSDate(),
+            datetimeEnd: null,
+        });
+
+        test('asks for the instants the local day spans', async () => {
+            (searchSessions as Mock).mockResolvedValue([]);
+
+            const { result } = renderHook(
+                () => useSessionOfDay(1, 5, DateTime.fromISO('2024-05-01T18:30'), null),
+                { wrapper: wrapper() }
+            );
+
+            // A date bound would be cut in the server's timezone, and a session
+            // logged shortly after midnight looked for on the wrong day
+            await waitFor(() => expect(result.current.isSuccess).toBe(true));
+            expect(searchSessions).toHaveBeenCalledWith({
+                routine: 1,
+                day: 5,
+                datetime_start__gte: DateTime.fromISO('2024-05-01').startOf('day').toJSDate().toISOString(),
+                datetime_start__lt: DateTime.fromISO('2024-05-02').startOf('day').toJSDate().toISOString(),
+            });
+        });
+
+        test('takes the only session of the day without being asked', async () => {
+            const session = sessionOn('bbbbbbbb-bbbb-bbbb-bbbb-000000000001', 8);
+            (searchSessions as Mock).mockResolvedValue([session]);
+
+            const { result } = renderHook(
+                () => useSessionOfDay(1, 5, DateTime.fromISO('2024-05-01'), null),
+                { wrapper: wrapper() }
+            );
+
+            await waitFor(() => expect(result.current.session).toEqual(session));
+        });
+
+        test('waits for a pick when the day holds several', async () => {
+            const morning = sessionOn('bbbbbbbb-bbbb-bbbb-bbbb-000000000001', 8);
+            const evening = sessionOn('bbbbbbbb-bbbb-bbbb-bbbb-000000000002', 18);
+            (searchSessions as Mock).mockResolvedValue([morning, evening]);
+
+            const { result, rerender } = renderHook(
+                ({ chosenId }: { chosenId: string | null }) =>
+                    useSessionOfDay(1, 5, DateTime.fromISO('2024-05-01'), chosenId),
+                { wrapper: wrapper(), initialProps: { chosenId: null as string | null } }
+            );
+
+            await waitFor(() => expect(result.current.sessions).toHaveLength(2));
+            expect(result.current.session).toBeUndefined();
+
+            rerender({ chosenId: evening.id });
+            expect(result.current.session).toEqual(evening);
+        });
     });
 
     // The session form looks up the day it is editing; a search still
@@ -43,16 +114,16 @@ describe("session queries", () => {
 
         const { result } = renderHook(
             () => ({
-                search: useFindSessionQuery(testWorkoutSession.routineId, { day: testWorkoutSession.dayId }),
+                search: useFindSessionsQuery(testWorkoutSession.routineId, { day: testWorkoutSession.dayId }),
                 write: useWrite(),
             }),
             { wrapper }
         );
         await waitFor(() => expect(result.current.search.isSuccess).toBe(true));
-        expect(searchSession).toHaveBeenCalledTimes(1);
+        expect(searchSessions).toHaveBeenCalledTimes(1);
 
         act(() => result.current.write());
 
-        await waitFor(() => expect(searchSession).toHaveBeenCalledTimes(2));
+        await waitFor(() => expect(searchSessions).toHaveBeenCalledTimes(2));
     });
 });
