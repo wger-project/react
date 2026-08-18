@@ -77,17 +77,30 @@ export const getRoutineLogs = async (id: number, options?
 
     // Load the referenced exercises
     if (loadExercises) {
-        const exerciseIds = [...new Set(out.map(log => log.exerciseId))];
-        if (exerciseIds.length > 0) {
-            const exercises = new Map<number, Exercise>();
-            for (const exercise of await getExercisesByIds(exerciseIds)) {
-                exercises.set(exercise.id!, exercise);
-            }
-            for (const log of out) {
-                log.exerciseObj = exercises.get(log.exerciseId);
-            }
-        }
+        await attachExercises(out);
     }
 
     return out;
+};
+
+/*
+ * Load the exercises the logs point to and attach them
+ *
+ * One request for all of them, logs whose exercise could not be loaded keep an
+ * undefined exerciseObj.
+ */
+export const attachExercises = async (logs: WorkoutLog[]): Promise<void> => {
+    const exerciseIds = [...new Set(logs.map(log => log.exerciseId))];
+    if (exerciseIds.length === 0) {
+        return;
+    }
+
+    const exercises = new Map<number, Exercise>();
+    for (const exercise of await getExercisesByIds(exerciseIds)) {
+        exercises.set(exercise.id!, exercise);
+    }
+
+    for (const log of logs) {
+        log.exerciseObj = exercises.get(log.exerciseId);
+    }
 };

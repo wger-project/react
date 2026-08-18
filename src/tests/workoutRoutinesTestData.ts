@@ -12,19 +12,11 @@ import { WeightUnit } from "@/components/Routines/models/WeightUnit";
 import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { yyyymmddToDate } from "@/core/lib/date";
 import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
-import { testWorkoutLogs } from "@/tests/workoutLogsRoutinesTestData";
-
-export const testWeightUnitKg = new WeightUnit(1, "kg");
-export const testWeightUnitLb = new WeightUnit(2, "lb");
-export const testWeightUnitPlates = new WeightUnit(3, "Plates");
-
-export const testWeightUnits = [testWeightUnitKg, testWeightUnitLb, testWeightUnitPlates];
-
-export const testRepUnitRepetitions = new RepetitionUnit(1, "Repetitions");
-export const testRepUnitUnitFailure = new RepetitionUnit(2, "Unit failure");
-export const testRepUnitUnitMinutes = new RepetitionUnit(3, "Minutes");
-
-export const testRepetitionUnits = [testRepUnitRepetitions, testRepUnitUnitFailure, testRepUnitUnitMinutes];
+import {
+    testWorkoutLogCurls,
+    testWorkoutLogs,
+    testWorkoutLogUnknownExercise
+} from "@/tests/workoutLogsRoutinesTestData";
 
 export const testDayLegs = new Day({
     id: 5,
@@ -216,6 +208,15 @@ export const testRoutineLogData = [
             timeEnd: new Date('2024-12-01 17:30'),
         }),
         testWorkoutLogs
+    )
+];
+
+// Same session, but with additional logs for exercises that the routine
+// structure doesn't contain
+export const testRoutineLogDataOtherExercise = [
+    new RoutineLogData(
+        testRoutineLogData[0].session,
+        [...testWorkoutLogs, testWorkoutLogCurls, testWorkoutLogUnknownExercise]
     )
 ];
 
@@ -714,6 +715,24 @@ export const responseRoutineLogData = [
             time_end: "11:00",
         },
         logs: [],
+    },
+];
+
+// /routine/<id>/logs/ — the same, with logs for two different exercises. Only
+// the first one is part of the routine's structure.
+export const responseRoutineLogDataWithLogs = [
+    {
+        ...responseRoutineLogData[0],
+        logs: [
+            responseRoutineLogs.results[0],
+            {
+                ...responseRoutineLogs.results[0],
+                id: "aaaaaaaa-aaaa-aaaa-aaaa-000000000003",
+                exercise: 3,
+                iteration: null,
+                slot_entry: null,
+            },
+        ],
     },
 ];
 

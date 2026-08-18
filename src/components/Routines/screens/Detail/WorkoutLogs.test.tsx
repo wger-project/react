@@ -9,7 +9,15 @@ import {
 } from "@/components/Routines/queries";
 import React from 'react';
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { testRoutine1, testRoutineLogData } from "@/tests/workoutRoutinesTestData";
+import { Routine } from "@/components/Routines/models/Routine";
+import {
+    testDayLegs,
+    testRoutine1,
+    testRoutine2,
+    testRoutineDayData1,
+    testRoutineLogData,
+    testRoutineLogDataOtherExercise
+} from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Routines/queries");
@@ -79,6 +87,141 @@ describe("Test the RoutineLogs component", () => {
         // must end up in its table. The cell values themselves can't be asserted here:
         // the DataGrid virtualises them and happy-dom reports no dimensions.
         expect(screen.getByRole('grid')).toBeInTheDocument();
+        expect(screen.getAllByRole('menuitem', { name: /delete/i })).toHaveLength(testRoutineLogData[0].logs.length);
+    });
+
+    test('shows the error when the logs could not be loaded', () => {
+
+        // Arrange
+        (useRoutineLogData as Mock).mockImplementation(() => ({
+            isSuccess: false,
+            isLoading: false,
+            error: new Error('the server said no'),
+            data: undefined
+        }));
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/log/101']}>
+                    <Routes>
+                        <Route path="log/:routineId" element={<WorkoutLogs />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.getByText(/the server said no/)).toBeInTheDocument();
+    });
+
+    test('shows logs for exercises that are not part of the routine', () => {
+
+        // Arrange
+        (useRoutineLogData as Mock).mockImplementation(() => ({
+            isSuccess: true,
+            isLoading: false,
+            data: testRoutineLogDataOtherExercise
+        }));
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/log/101']}>
+                    <Routes>
+                        <Route path="log/:routineId" element={<WorkoutLogs />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.getByText('routines.otherLoggedExercises')).toBeInTheDocument();
+        expect(screen.getByText('Curls')).toBeInTheDocument();
+
+        // The squats are planned for the day and must not be repeated in that section
+        expect(screen.getAllByText('Squats')).toHaveLength(1);
+    });
+
+    test('skips logs whose exercise could not be loaded', () => {
+
+        // Arrange
+        (useRoutineLogData as Mock).mockImplementation(() => ({
+            isSuccess: true,
+            isLoading: false,
+            data: testRoutineLogDataOtherExercise
+        }));
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/log/101']}>
+                    <Routes>
+                        <Route path="log/:routineId" element={<WorkoutLogs />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        // Assert
+        // Only squats and curls are rendered, the third exercise of the log data
+        // has no object to read a name from
+        expect(screen.getAllByRole('grid')).toHaveLength(2);
+    });
+
+    test('renders a day repeated by the weekly schedule only once', () => {
+
+        // Arrange
+        (useRoutineDetailQuery as Mock).mockImplementation(() => ({
+            isSuccess: true,
+            isLoading: false,
+            data: new Routine({
+                id: 1,
+                days: [testDayLegs],
+                dayData: [testRoutineDayData1[0], testRoutineDayData1[0]],
+            })
+        }));
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/log/101']}>
+                    <Routes>
+                        <Route path="log/:routineId" element={<WorkoutLogs />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.getAllByText('Every day is leg day 🦵🏻')).toHaveLength(1);
+        expect(screen.getAllByText('Squats')).toHaveLength(1);
+    });
+
+    test('shows the logs of a routine without days', () => {
+
+        // Arrange
+        (useRoutineDetailQuery as Mock).mockImplementation(() => ({
+            isSuccess: true,
+            isLoading: false,
+            data: testRoutine2
+        }));
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/log/101']}>
+                    <Routes>
+                        <Route path="log/:routineId" element={<WorkoutLogs />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.queryByText('Every day is leg day 🦵🏻')).not.toBeInTheDocument();
+        expect(screen.getByText('routines.otherLoggedExercises')).toBeInTheDocument();
+        expect(screen.getByText('Squats')).toBeInTheDocument();
         expect(screen.getAllByRole('menuitem', { name: /delete/i })).toHaveLength(testRoutineLogData[0].logs.length);
     });
 });

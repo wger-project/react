@@ -1,6 +1,7 @@
 import { getExercisesByIds } from "@/components/Exercises/api/exercise";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
+import { attachExercises } from "@/components/Routines/api/workoutLogs";
 import { Day } from "@/components/Routines/models/Day";
 import { RoutineStatsData, RoutineStatsDataAdapter } from "@/components/Routines/models/LogStats";
 import { Routine } from "@/components/Routines/models/Routine";
@@ -244,7 +245,14 @@ export const getRoutineLogData = async (routineId: number): Promise<RoutineLogDa
 
     const adapter = new RoutineLogDataAdapter();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return response.data.map((data: any) => adapter.fromJson(data));
+    const logData: RoutineLogData[] = response.data.map((data: any) => adapter.fromJson(data));
+
+    // The exercises can't be taken from the routine structure, a log can point to
+    // one that is not (or no longer) part of it, e.g. after a swap or when the
+    // logs were imported from another app.
+    await attachExercises(logData.flatMap(data => data.logs));
+
+    return logData;
 };
 
 export const getRoutineStatisticsData = async (routineId: number): Promise<RoutineStatsData> => {
