@@ -144,6 +144,7 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         date: item.date.toISOString(),
         slot_entry: item.slotEntryId,
         exercise: item.exerciseId,
+        session: item.sessionId,
         routine: item.routineId,
 
         repetitions_unit: item.repetitionUnitId,

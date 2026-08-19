@@ -118,6 +118,7 @@ describe('WorkoutLog model', () => {
             date: new Date('2024-05-10').toISOString(),
             slot_entry: 2,
             exercise: 345,
+            session: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000001',
             routine: 1,
 
             repetitions_unit: 1,
@@ -134,6 +135,16 @@ describe('WorkoutLog model', () => {
             rest: 120,
             rest_target: 90,
         });
+    });
+
+    test('keeps a log without a session unassigned', () => {
+
+        // Act
+        const adapter = new WorkoutLogAdapter();
+        const json = adapter.toJson(adapter.fromJson({ ...apiResponse, session: null }));
+
+        // Assert
+        expect(json.session).toBeNull();
     });
 
     test('a zero target survives the round trip to the API', () => {
