@@ -6,6 +6,7 @@ import {
     useCategoryEntryFlagsQuery,
     useMeasurementsCategoryQuery
 } from "@/components/Measurements/queries";
+import { useProfileQuery } from "@/components/User";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { NewCategoryPicker } from "@/components/Measurements/widgets/MetricPicker";
 import React from 'react';
@@ -16,6 +17,7 @@ import { MemoryRouter, useLocation } from "react-router-dom";
 vi.mock("@/components/Measurements/api/bodyWeight");
 
 vi.mock("@/components/Measurements/queries");
+vi.mock("@/components/User");
 
 /** Renders where the picker navigated to */
 const LocationDisplay = () => <div data-testid="location">{useLocation().pathname}</div>;
@@ -30,6 +32,8 @@ describe("Test the NewCategoryPicker component", () => {
         (useAddMeasurementCategoryQuery as Mock).mockImplementation(() => ({ mutate: mutate }));
         // read by the form the custom entry leads into
         (useCategoryEntryFlagsQuery as Mock).mockImplementation(() => ({ data: [] }));
+        // the form the picker leads into reads it
+        (useProfileQuery as Mock).mockImplementation(() => ({ data: { height: 180 } }));
         (useMeasurementsCategoryQuery as Mock).mockImplementation(() => ({
             data: [TEST_MEASUREMENT_CATEGORY_1]
         }));
@@ -97,6 +101,19 @@ describe("Test the NewCategoryPicker component", () => {
         expect(screen.getByTestId('location')).toHaveTextContent(
             `/measurement/category/${created.id}`
         );
+    });
+
+    test('The metrics are listed by name, not in the order the types are declared', () => {
+
+        // Act
+        renderPicker();
+
+        // Assert
+        const names = screen
+            .getAllByText(/^measurements\.metricTypes\./)
+            .map(node => node.textContent ?? '');
+        expect(names.length).toBeGreaterThan(3);
+        expect(names).toStrictEqual([...names].sort((a, b) => a.localeCompare(b)));
     });
 
     test('A metric that already has a category cannot be picked again', () => {

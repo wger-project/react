@@ -26,7 +26,9 @@ export const AddMeasurementCategoryFab = ({ isLoading = false }: { isLoading?: b
             <WgerFab onClick={handleOpenModal} disabled={isLoading}>
                 {isLoading ? <CircularProgress size={24} color="inherit" /> : <AddIcon />}
             </WgerFab>
-            <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
+            {/* The picker turns into the category form, and that form grows
+              * with what is picked in it */}
+            <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal} stableHeight>
                 <NewCategoryPicker closeFn={handleCloseModal} />
             </WgerModal>
         </div>

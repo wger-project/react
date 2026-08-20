@@ -25,3 +25,6 @@ export { ExerciseVideo, ExerciseVideoAdapter } from "./models/video";
 
 // Query hooks
 export { useLanguageQuery, useMusclesQuery } from "./queries";
+
+// API
+export { getExercise, getExercisesByUuids } from "./api/exercise";

@@ -71,7 +71,13 @@ export const CategoryDetailDropdown = (props: { category: MeasurementCategory })
                 <MenuItem onClick={handleDelete}>{t("delete")}</MenuItem>
             </Menu>
 
-            <WgerModal title={t('edit')} isOpen={openEditModal} closeFn={handleCloseEditModal}>
+            {/* Fixed height: the form grows with the calculation picked in it */}
+            <WgerModal
+                title={t('edit')}
+                isOpen={openEditModal}
+                closeFn={handleCloseEditModal}
+                stableHeight
+            >
                 <CategoryForm category={props.category} closeFn={handleCloseEditModal} />
             </WgerModal>
 

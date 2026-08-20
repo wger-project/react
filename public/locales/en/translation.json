@@ -406,7 +406,38 @@
         "chartRangeYears_other": "{{count}} years",
         "customMeasurement": "Custom measurement",
         "metricAlreadyTracked": "Already tracked",
-        "categoryFormHelpText": "Measurement category, such as 'biceps' or 'body fat'"
+        "categoryFormHelpText": "Measurement category, such as 'biceps' or 'body fat'",
+        "calculations": {
+            "sourceManual": "Entered by hand",
+            "sourceCalculated": "Calculated by wger",
+            "type": "Calculation",
+            "locked": "The calculation cannot be changed. Delete the category to stop calculating it.",
+            "paramsIncomplete": "The calculation is not configured completely yet",
+            "missingHeight": "The height in your profile is missing, so no values can be computed yet.",
+            "noSourceCategory": "You have no other category to read from yet.",
+            "badge": "Calculated",
+            "entryInfo": "This value is calculated by wger and cannot be edited",
+            "names": {
+                "BMI": "BMI",
+                "WHTR": "Waist to height ratio",
+                "ONE_REP_MAX": "One-rep max",
+                "ONE_RM_TOTAL": "One-rep max total"
+            },
+            "descriptions": {
+                "BMI": "From your body weight and the height in your profile",
+                "WHTR": "From {{category}} and the height in your profile"
+            },
+            "params": {
+                "category_id": "Source category",
+                "max_reps": "Max reps counted",
+                "window_days": "Window in days"
+            },
+            "paramsHelp": {
+                "exercise_ids": "Between {{min}} and {{max}} exercises, {{count}} selected.",
+                "max_reps": "{{min}} to {{max}}. Sets above this are ignored.",
+                "window_days": "{{min}} to {{max}}. How far back a best set counts."
+            }
+        }
     },
     "server": {
         "abs": "Abs",

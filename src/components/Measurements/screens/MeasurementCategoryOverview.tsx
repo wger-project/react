@@ -27,11 +27,21 @@ import { WgerContainerFullWidth } from "@/core/ui/Widgets/Container";
 import { makeLink, WgerLink } from "@/core/lib/url";
 import { Link } from "react-router-dom";
 import { CategoryReorderList } from "@/components/Measurements/widgets/CategoryReorderList";
+import {
+    CalculationBadge,
+    calculationSourceId,
+    CalculationSource
+} from "@/components/Measurements/widgets/CalculationMark";
 import { EntryForm, GroupEntryForm } from "@/components/Measurements/widgets/EntryForm";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 
 
-export const CategoryList = (props: { category: MeasurementCategory, range: ChartRange }) => {
+export const CategoryList = (props: {
+    category: MeasurementCategory,
+    range: ChartRange,
+    /** Name of the category a calculated one reads, see CalculationSource */
+    sourceName?: string,
+}) => {
 
     const [t, i18n] = useTranslation();
     const [openModal, setOpenModal] = React.useState(false);
@@ -48,7 +58,15 @@ export const CategoryList = (props: { category: MeasurementCategory, range: Char
                 {/* The unit rides on the value; a category still without one
                   * shows it on its chart axis instead */}
                 <CardHeader
-                    title={categoryDisplayName(props.category, t)}
+                    title={<>
+                        {categoryDisplayName(props.category, t)}
+                        {' '}
+                        <CalculationBadge category={props.category} />
+                    </>}
+                    subheader={<CalculationSource
+                        category={props.category}
+                        sourceName={props.sourceName}
+                    />}
                     action={<CategoryLatestValue category={props.category} />}
                 />
                 <CardContent>
@@ -107,7 +125,14 @@ export const MeasurementCategoryOverview = () => {
                         gridTemplateColumns: 'repeat(auto-fill, minmax(min(380px, 100%), 1fr))',
                     }}>
                         {categoryQuery.data!.map(c =>
-                            <CategoryList category={c} key={c.id} range={range} />)}
+                            <CategoryList
+                                category={c}
+                                key={c.id}
+                                range={range}
+                                sourceName={categoryQuery.data!.find(
+                                    candidate => candidate.id === calculationSourceId(c)
+                                )?.name}
+                            />)}
                     </Box>
                 </Stack>
             </WgerContainerFullWidth>

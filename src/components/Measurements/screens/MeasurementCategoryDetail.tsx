@@ -1,5 +1,10 @@
 import { Stack } from "@mui/material";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import {
+    CalculationBadge,
+    calculationSourceId,
+    CalculationSource
+} from "@/components/Measurements/widgets/CalculationMark";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import {
     categoryDisplayName,
@@ -83,6 +88,10 @@ export const MeasurementCategoryDetail = (props: { planPeriods?: PlanPeriod[] })
     const range = useChartRange();
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const categoryQuery = useMeasurementsQuery(categoryId);
+    // Only a ratio names another category, so only then is one looked up
+    const sourceId = categoryQuery.data ? calculationSourceId(categoryQuery.data) : undefined;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const sourceQuery = useMeasurementsQuery(sourceId ?? '', sourceId !== undefined);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [t, i18n] = useTranslation();
 
@@ -105,6 +114,18 @@ export const MeasurementCategoryDetail = (props: { planPeriods?: PlanPeriod[] })
             : <CategoryDetailDropdown category={categoryQuery.data!} />}
         mainContent={
             <Stack spacing={2}>
+                {/* The mark of a calculated category, plus what it reads */}
+                {categoryQuery.data!.isCalculated && <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ alignItems: 'center' }}
+                >
+                    <CalculationBadge category={categoryQuery.data!} />
+                    <CalculationSource
+                        category={categoryQuery.data!}
+                        sourceName={sourceQuery.data?.name}
+                    />
+                </Stack>}
                 <ChartRangeSelector value={range} onChange={setChartRange} />
                 <MeasurementChart
                     category={categoryQuery.data!}

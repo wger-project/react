@@ -1,6 +1,9 @@
 import { Adapter } from "@/core/lib/Adapter";
 import { convertStoredValue } from "@/core/lib/weightUnit";
 
+/** The server writes this source for the entries of a calculated category */
+export const MEASUREMENT_SOURCE_CALCULATED = 'calculated';
+
 export class MeasurementEntry {
 
     constructor(
@@ -14,7 +17,10 @@ export class MeasurementEntry {
     ) {
     }
 
-    /** Entries synced from a health app are managed by the source app */
+    /**
+     * Only what the user wrote themselves is theirs to change: an imported
+     * entry belongs to the app it came from, a calculated one to the server
+     */
     get isEditable(): boolean {
         return this.source === 'user';
     }

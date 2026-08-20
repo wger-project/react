@@ -256,6 +256,37 @@
     "notes": "Notas personales",
     "seeDetails": "Ver los detalles",
     "measurements": {
+        "calculations": {
+            "sourceManual": "Introducido a mano",
+            "sourceCalculated": "Calculado por wger",
+            "type": "Cálculo",
+            "locked": "El cálculo no se puede cambiar. Borre la categoría para dejar de calcularla.",
+            "paramsIncomplete": "El cálculo todavía no está configurado por completo",
+            "missingHeight": "Falta la altura en su perfil, por lo que todavía no se pueden calcular valores.",
+            "noSourceCategory": "Todavía no tiene otra categoría de la que leer.",
+            "badge": "Calculado",
+            "entryInfo": "Este valor lo calcula wger y no se puede editar",
+            "names": {
+                "BMI": "IMC",
+                "WHTR": "Relación cintura-estatura",
+                "ONE_REP_MAX": "1RM",
+                "ONE_RM_TOTAL": "Suma de 1RM"
+            },
+            "descriptions": {
+                "BMI": "De su peso corporal y la altura de su perfil",
+                "WHTR": "De {{category}} y la altura de su perfil"
+            },
+            "params": {
+                "category_id": "Categoría de origen",
+                "max_reps": "Repeticiones máximas contadas",
+                "window_days": "Ventana en días"
+            },
+            "paramsHelp": {
+                "exercise_ids": "Entre {{min}} y {{max}} ejercicios, {{count}} seleccionados.",
+                "max_reps": "De {{min}} a {{max}}. Las series por encima se ignoran.",
+                "window_days": "De {{min}} a {{max}}. Hasta dónde cuenta la mejor serie."
+            }
+        },
         "measurements": "Mediciones",
         "reorderCategories": "Reordenar categorías",
         "unitFormHelpText": "La unidad en la que se medirá la categoría, como cm o %",

@@ -6,6 +6,7 @@ import {
     useEditMeasurementCategoryQuery,
     useCategoryEntryFlagsQuery
 } from "@/components/Measurements/queries";
+import { useProfileQuery } from "@/components/User";
 import { MeasurementCategory, TrendCharacter } from "@/components/Measurements/models/Category";
 import { CategoryForm } from "@/components/Measurements/widgets/CategoryForm";
 import React from 'react';
@@ -15,6 +16,27 @@ import type { Mock } from 'vitest';
 vi.mock("@/components/Measurements/api/bodyWeight");
 
 vi.mock("@/components/Measurements/queries");
+vi.mock("@/components/User");
+// The parameter block reads exercises; without this the suite would hit the
+// network for the language list and for every exercise a chip names
+vi.mock("@/components/Exercises", async (importOriginal) => ({
+    ...await importOriginal<typeof import("@/components/Exercises")>(),
+    useLanguageQuery: vi.fn(() => ({ isSuccess: true, data: [] })),
+    getExercise: vi.fn(async (id: number) => ({
+        id: id,
+        getTranslation: () => ({ name: `Exercise ${id}` }),
+    })),
+    getExercisesByUuids: vi.fn(async () => [
+        { id: 73, getTranslation: () => ({ name: 'Bench press' }) },
+        { id: 615, getTranslation: () => ({ name: 'Squats' }) },
+        { id: 184, getTranslation: () => ({ name: 'Deadlifts' }) },
+    ]),
+}));
+// The autocompleter reads the language list from the module directly
+vi.mock("@/components/Exercises/queries", async (importOriginal) => ({
+    ...await importOriginal<typeof import("@/components/Exercises/queries")>(),
+    useLanguageQuery: vi.fn(() => ({ isSuccess: true, data: [] })),
+}));
 
 // an entry-free category, eligible as a group parent
 const TEST_GROUP_CATEGORY = new MeasurementCategory(
@@ -62,6 +84,9 @@ describe("Test the CategoryForm component", () => {
                 { category: TEST_MEASUREMENT_CATEGORY_2, hasEntries: true },
                 { category: TEST_GROUP_CATEGORY, hasEntries: false },
             ]
+        }));
+        (useProfileQuery as Mock).mockImplementation(() => ({
+            data: { height: 180 }
         }));
     });
 
@@ -474,5 +499,266 @@ describe("Test the CategoryForm component", () => {
         // Act + Assert: correcting it must clear the error state again
         await user.type(nameInput, 'Biceps');
         await waitFor(() => expect(nameInput).not.toHaveAttribute('aria-invalid', 'true'));
+    });
+
+    test('Switching a new category to calculated prefills it and offers the types', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm />
+            </QueryClientProvider>
+        );
+
+        // Act
+        await user.click(screen.getByRole('button', { name: 'measurements.calculations.sourceCalculated' }));
+
+        // Assert: the first calculation is picked, with its name and unit
+        expect(await screen.findByLabelText('measurements.calculations.type')).toBeInTheDocument();
+        await waitFor(() =>
+            expect(screen.getByLabelText('name')).toHaveValue('measurements.calculations.names.BMI'));
+        expect(screen.getByLabelText('unit')).toHaveValue('kg/m²');
+    });
+
+    test('A calculated category is saved with its type and parameters', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm />
+            </QueryClientProvider>
+        );
+
+        // Act
+        await user.click(screen.getByRole('button', { name: 'measurements.calculations.sourceCalculated' }));
+        await waitFor(() => expect(screen.getByLabelText('unit')).toHaveValue('kg/m²'));
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        await waitFor(() => expect(mutate).toHaveBeenCalled());
+        expect(mutate.mock.calls[0][0].dynamicType).toBe('BMI');
+        expect(mutate.mock.calls[0][0].dynamicParams).toStrictEqual({});
+    });
+
+    test('A category the user fills in themselves is not offered a calculation', async () => {
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={TEST_MEASUREMENT_CATEGORY_1} />
+            </QueryClientProvider>
+        );
+
+        // Assert: what a category computes is set when it is created
+        expect(screen.queryByRole('button', { name: 'measurements.calculations.sourceCalculated' }))
+            .not.toBeInTheDocument();
+        expect(screen.queryByRole('combobox', { name: 'measurements.calculations.type' }))
+            .not.toBeInTheDocument();
+    });
+
+    test('A calculation this release does not know is left alone', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        const newer = MeasurementCategory.clone(TEST_GROUP_CATEGORY);
+        newer.dynamicType = 'FFMI';
+        newer.dynamicParams = { category_id: 'c-body-fat' };
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={newer} />
+            </QueryClientProvider>
+        );
+
+        // Assert: nothing to switch or configure, and saving keeps the
+        // stored configuration as it is
+        expect(screen.queryByRole('button', { name: 'measurements.calculations.sourceCalculated' }))
+            .not.toBeInTheDocument();
+        expect(screen.queryByRole('combobox', { name: 'measurements.calculations.type' }))
+            .not.toBeInTheDocument();
+
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        await waitFor(() => expect(mutate).toHaveBeenCalled());
+        expect(mutate.mock.calls[0][0].dynamicType).toBe('FFMI');
+        expect(mutate.mock.calls[0][0].dynamicParams).toStrictEqual({ category_id: 'c-body-fat' });
+    });
+
+    test('A calculation without a unit is accepted, a hand-kept category still needs one', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm />
+            </QueryClientProvider>
+        );
+        await user.type(screen.getByLabelText('name'), 'Ratio');
+
+        // Act + Assert: without a calculation the unit is required
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        await waitFor(() =>
+            expect(screen.getByLabelText('unit')).toHaveAttribute('aria-invalid', 'true'));
+        expect(mutate).not.toHaveBeenCalled();
+
+        // Act: the ratio is a bare number, so it may go without one
+        await user.click(screen.getByRole('button', { name: 'measurements.calculations.sourceCalculated' }));
+        await user.clear(screen.getByLabelText('unit'));
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        await waitFor(() => expect(mutate).toHaveBeenCalled());
+        expect(mutate.mock.calls[0][0].unit).toBe('');
+    });
+
+    test('An existing calculated category keeps its calculation', async () => {
+
+        // Arrange
+        const calculated = MeasurementCategory.clone(TEST_GROUP_CATEGORY);
+        calculated.dynamicType = 'ONE_REP_MAX';
+        calculated.dynamicParams = { exercise_id: 1, max_reps: 5 };
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={calculated} />
+            </QueryClientProvider>
+        );
+
+        // Assert: no way back to hand entry and no way to another calculation
+        expect(screen.queryByRole('button', { name: 'measurements.calculations.sourceManual' }))
+            .not.toBeInTheDocument();
+        expect(screen.getByLabelText('measurements.calculations.type')).toHaveAttribute(
+            'aria-disabled',
+            'true',
+        );
+        expect(screen.getByText('measurements.calculations.locked')).toBeInTheDocument();
+    });
+
+    test('An existing calculation shows the exercise it reads, by name', async () => {
+
+        // Arrange
+        const calculated = MeasurementCategory.clone(TEST_GROUP_CATEGORY);
+        calculated.dynamicType = 'ONE_REP_MAX';
+        calculated.dynamicParams = { exercise_id: 42 };
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={calculated} />
+            </QueryClientProvider>
+        );
+
+        // Assert: the chip resolves the stored id into the exercise name
+        expect(await screen.findByText('Exercise 42')).toBeInTheDocument();
+    });
+
+    test('A total starts with bench press, squat and deadlift', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm />
+            </QueryClientProvider>
+        );
+
+        // Act: switch to a calculation and pick the total
+        await user.click(screen.getByRole('button', { name: 'measurements.calculations.sourceCalculated' }));
+        await user.click(await screen.findByRole('combobox', {
+            name: 'measurements.calculations.type',
+        }));
+        await user.click(screen.getByRole('option', {
+            name: 'measurements.calculations.names.ONE_RM_TOTAL',
+        }));
+
+        // Assert: the three are in, and they are what gets saved
+        expect(await screen.findByText('Bench press')).toBeInTheDocument();
+        expect(screen.getByText('Squats')).toBeInTheDocument();
+        expect(screen.getByText('Deadlifts')).toBeInTheDocument();
+
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        await waitFor(() => expect(mutate).toHaveBeenCalled());
+        expect(mutate.mock.calls[0][0].dynamicParams).toStrictEqual({
+            exercise_ids: [73, 615, 184],
+            max_reps: 5,
+            window_days: 30,
+        });
+    });
+
+    test('An incomplete calculation is complained about when the form is saved', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        (useCategoryEntryFlagsQuery as Mock).mockImplementation(() => ({ data: [] }));
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm />
+            </QueryClientProvider>
+        );
+
+        const pick = async (name: RegExp) => {
+            await user.click(await screen.findByRole('combobox', {
+                name: 'measurements.calculations.type',
+            }));
+            await user.click(await screen.findByRole('option', { name: name }));
+        };
+
+        // Act & assert: an exercise that is still missing says nothing yet
+        await user.click(screen.getByRole('button', {
+            name: 'measurements.calculations.sourceCalculated',
+        }));
+        await pick(/names.ONE_REP_MAX/);
+        expect(screen.queryByText('measurements.calculations.paramsIncomplete')).toBeNull();
+
+        // Sending the form says it, and saves nothing
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(await screen.findByText('measurements.calculations.paramsIncomplete'))
+            .toBeInTheDocument();
+        expect(mutate).not.toHaveBeenCalled();
+
+        // The complaint belongs to what is picked now, not to what was before
+        await pick(/names.BMI/);
+        await waitFor(() =>
+            expect(screen.queryByText('measurements.calculations.paramsIncomplete')).toBeNull()
+        );
+    });
+
+    test('A calculation the user already has cannot be picked twice', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        const bmi = MeasurementCategory.clone(TEST_GROUP_CATEGORY, { id: 'c-bmi', name: 'BMI' });
+        bmi.dynamicType = 'BMI';
+        (useCategoryEntryFlagsQuery as Mock).mockImplementation(() => ({
+            data: [{ category: bmi, hasEntries: false }]
+        }));
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm />
+            </QueryClientProvider>
+        );
+
+        // Act: the switch skips BMI, and the list offers it disabled
+        await user.click(screen.getByRole('button', { name: 'measurements.calculations.sourceCalculated' }));
+        const select = await screen.findByRole('combobox', {
+            name: 'measurements.calculations.type',
+        });
+
+        // Assert: the switch lands on the first calculation still to be had
+        expect(select).toHaveTextContent('names.WHTR');
+        expect(screen.getByLabelText('name')).toHaveValue(
+            'measurements.calculations.names.WHTR'
+        );
+
+        await user.click(select);
+        expect(screen.getByRole('option', { name: /names.BMI/ }))
+            .toHaveAttribute('aria-disabled', 'true');
+        expect(screen.getByRole('option', { name: /names.WHTR/ }))
+            .not.toHaveAttribute('aria-disabled');
     });
 });

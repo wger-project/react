@@ -2,11 +2,15 @@ import { processTimeSeries } from "@/core/lib/timeSeries";
 import { valueOnly, valueWithUnit } from "@/components/Measurements/charts/format";
 import { limitsFor, MeasurementCategory } from "@/components/Measurements/models/Category";
 import { collectValidationErrors } from "@/core/lib/forms";
-import { MeasurementEntry } from "@/components/Measurements/models/Entry";
+import {
+    MEASUREMENT_SOURCE_CALCULATED,
+    MeasurementEntry
+} from "@/components/Measurements/models/Entry";
 import { useDeleteMeasurementEntryQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
 import { luxonDateTimeToLocale } from "@/core/lib/date";
 import CancelIcon from "@mui/icons-material/Close";
+import CalculateIcon from "@mui/icons-material/Calculate";
 import CloudSyncIcon from "@mui/icons-material/CloudSync";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
@@ -50,6 +54,7 @@ const buildRows = (
             value: row.entry.valueIn(unit, categoryUnit),
             notes: row.entry.notes,
             isEditable: row.entry.isEditable,
+            source: row.entry.source,
             change: +row.change.toFixed(2),
             totalChange: +row.totalChange.toFixed(2),
             days: +row.days.toFixed(1),
@@ -254,13 +259,22 @@ export const CategoryDetailDataGrid = (props: {
             width: 100,
             cellClassName: 'actions',
             getActions: ({ id, row }) => {
-                // synced entries are managed by the source app, offer no actions
+                // Entries the user did not write offer no actions. Who keeps
+                // them differs: an import is changed in the app it came from,
+                // a calculated value is the server's and changes with what it
+                // is computed from
                 if (!row.isEditable) {
+                    const isCalculated = row.source === MEASUREMENT_SOURCE_CALCULATED;
+                    const info = isCalculated
+                        ? t('measurements.calculations.entryInfo')
+                        : t('syncedEntryInfo');
                     return [
                         <GridActionsCellItem
                             key="synced"
-                            icon={<Tooltip title={t('syncedEntryInfo')}><CloudSyncIcon /></Tooltip>}
-                            label={t('syncedEntryInfo')}
+                            icon={<Tooltip title={info}>
+                                {isCalculated ? <CalculateIcon /> : <CloudSyncIcon />}
+                            </Tooltip>}
+                            label={info}
                             color="inherit"
                             // a badge, not a button: disabled drops the click
                             // affordance, the style keeps hover events flowing

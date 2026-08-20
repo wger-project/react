@@ -339,6 +339,37 @@
     },
     "filters": "Filtres",
     "measurements": {
+        "calculations": {
+            "sourceManual": "Saisi à la main",
+            "sourceCalculated": "Calculé par wger",
+            "type": "Calcul",
+            "locked": "Le calcul ne peut pas être modifié. Supprimez la catégorie pour arrêter de la calculer.",
+            "paramsIncomplete": "Le calcul n'est pas encore entièrement configuré",
+            "missingHeight": "La taille manque dans votre profil, aucune valeur ne peut donc encore être calculée.",
+            "noSourceCategory": "Vous n'avez pas encore d'autre catégorie à lire.",
+            "badge": "Calculé",
+            "entryInfo": "Cette valeur est calculée par wger et ne peut pas être modifiée",
+            "names": {
+                "BMI": "IMC",
+                "WHTR": "Rapport tour de taille sur taille",
+                "ONE_REP_MAX": "1RM",
+                "ONE_RM_TOTAL": "Total 1RM"
+            },
+            "descriptions": {
+                "BMI": "À partir de votre poids et de la taille indiquée dans votre profil",
+                "WHTR": "À partir de {{category}} et de la taille indiquée dans votre profil"
+            },
+            "params": {
+                "category_id": "Catégorie source",
+                "max_reps": "Répétitions maximales comptées",
+                "window_days": "Fenêtre en jours"
+            },
+            "paramsHelp": {
+                "exercise_ids": "Entre {{min}} et {{max}} exercices, {{count}} sélectionnés.",
+                "max_reps": "De {{min}} à {{max}}. Les séries au-dessus sont ignorées.",
+                "window_days": "De {{min}} à {{max}}. Jusqu’où remonte la meilleure série."
+            }
+        },
         "measurements": "Mesures",
         "reorderCategories": "Réorganiser les catégories",
         "unitFormHelpText": "L'unité dans laquelle la catégorie sera mesurée, telle que cm ou %",

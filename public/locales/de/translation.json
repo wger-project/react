@@ -254,6 +254,37 @@
     "preferences": "Voreinstellungen",
     "success": "Geschafft!",
     "measurements": {
+        "calculations": {
+            "sourceManual": "Von Hand eingetragen",
+            "sourceCalculated": "Von wger berechnet",
+            "type": "Berechnung",
+            "locked": "Die Berechnung kann nicht geändert werden. Lösche die Kategorie, um sie zu beenden.",
+            "paramsIncomplete": "Die Berechnung ist noch nicht vollständig eingerichtet",
+            "missingHeight": "In deinem Profil fehlt die Körpergröße, daher können noch keine Werte berechnet werden.",
+            "noSourceCategory": "Du hast noch keine andere Kategorie, aus der gelesen werden kann.",
+            "badge": "Berechnet",
+            "entryInfo": "Dieser Wert wird von wger berechnet und kann nicht geändert werden",
+            "names": {
+                "BMI": "BMI",
+                "WHTR": "Taille-Größe-Verhältnis",
+                "ONE_REP_MAX": "1RM",
+                "ONE_RM_TOTAL": "1RM-Summe"
+            },
+            "descriptions": {
+                "BMI": "Aus deinem Körpergewicht und der Körpergröße in deinem Profil",
+                "WHTR": "Aus {{category}} und der Körpergröße in deinem Profil"
+            },
+            "params": {
+                "category_id": "Quellkategorie",
+                "max_reps": "Maximale Wiederholungen",
+                "window_days": "Zeitfenster in Tagen"
+            },
+            "paramsHelp": {
+                "exercise_ids": "Zwischen {{min}} und {{max}} Übungen, {{count}} ausgewählt.",
+                "max_reps": "{{min}} bis {{max}}. Sätze darüber werden ignoriert.",
+                "window_days": "{{min}} bis {{max}}. Wie weit zurück ein bester Satz zählt."
+            }
+        },
         "reorderCategories": "Kategorien neu anordnen",
         "deleteInfo": "Dies wird die Kategorie sowie alle seine Einträge löschen",
         "deleteInfoGroup": "Dies wird die Gruppe sowie alle ihre Komponenten und deren Einträge löschen",

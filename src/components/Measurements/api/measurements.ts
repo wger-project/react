@@ -315,7 +315,12 @@ export type CategoryEntryFlag = {
 export const getCategoryEntryFlags = async (): Promise<CategoryEntryFlag[]> => {
     const categories = await getMeasurementCategories();
 
-    return Promise.all(categories.map(async (category) => ({
+    // The list nests the components of a group in their parent, but a
+    // component is a category like any other here: it is the one that holds
+    // the entries of its group, since a parent never does
+    const flat = categories.flatMap(category => [category, ...category.children]);
+
+    return Promise.all(flat.map(async (category) => ({
         category: category,
         hasEntries: (await getMeasurementEntries(category.id!, {}, 1)).length > 0,
     })));

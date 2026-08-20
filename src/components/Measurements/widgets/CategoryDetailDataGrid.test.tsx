@@ -56,6 +56,30 @@ describe('CategoryDetailDataGrid', () => {
         expect(within(syncedRow).getByRole('menuitem', { name: 'syncedEntryInfo' })).toBeInTheDocument();
     });
 
+    test('a calculated entry says who keeps it, not that it was synced', async () => {
+        const category = new MeasurementCategory(CATEGORY_UUID, 'BMI', '');
+        const entries = [
+            new MeasurementEntry(
+                SYNCED_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 2), 24, '', 'calculated'),
+        ];
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <CategoryDetailDataGrid category={category} entries={entries} />
+            </QueryClientProvider>
+        );
+        await screen.findByText('24');
+
+        const row = document.querySelector(`[data-id="${SYNCED_ENTRY_UUID}"]`) as HTMLElement;
+        expect(within(row).queryByRole('menuitem', { name: /edit/i })).not.toBeInTheDocument();
+        expect(within(row).getByRole(
+            'menuitem',
+            { name: 'measurements.calculations.entryInfo' },
+        )).toBeInTheDocument();
+        expect(within(row).queryByRole('menuitem', { name: 'syncedEntryInfo' }))
+            .not.toBeInTheDocument();
+    });
+
     test('a page measures its difference columns against the entries outside it', async () => {
         const category = new MeasurementCategory(CATEGORY_UUID, 'Biceps', 'cm');
         const page = [

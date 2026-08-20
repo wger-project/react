@@ -11,13 +11,31 @@ import {
     TrendCharacter,
     trendOf
 } from "@/components/Measurements/models/Category";
+import { getExercisesByUuids } from "@/components/Exercises";
+import {
+    BIG_THREE_UUIDS,
+    CALCULATION_NONE,
+    calculationType,
+    CalculationSlug,
+    CalculationType,
+    defaultParams,
+    missingParams
+} from "@/components/Measurements/models/Calculation";
 import {
     useAddMeasurementCategoryQuery,
     useCategoryEntryFlagsQuery,
     useEditMeasurementCategoryQuery
 } from "@/components/Measurements/queries";
-import { Button, MenuItem, Stack, TextField } from "@mui/material";
+import { CalculationSection } from "@/components/Measurements/widgets/CalculationSection";
+import {
+    Button,
+    MenuItem,
+    Stack,
+    TextField
+} from "@mui/material";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
+import { QueryKey } from "@/core/lib/consts";
+import { useQueryClient } from "@tanstack/react-query";
 import { Form, Formik } from "formik";
 import React from 'react';
 import { useTranslation } from "react-i18next";
@@ -82,10 +100,29 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
             .string()
             .required(t('forms.fieldRequired'))
             .max(100, t('forms.maxLength', { chars: '100' })),
-        unit: yup
-            .string()
-            .required(t('forms.fieldRequired'))
-            .max(30, t('forms.maxLength', { chars: '30' }))
+        // Required only where the field is offered: a typed category takes
+        // its unit from the metric type (a step count has none at all), and a
+        // calculation defines what the number is, which may be a bare ratio
+        unit: isCustom
+            ? yup
+                .string()
+                .max(30, t('forms.maxLength', { chars: '30' }))
+                .when('calculation', {
+                    is: CALCULATION_NONE,
+                    then: schema => schema.required(t('forms.fieldRequired')),
+                })
+            : yup.string(),
+        // The parameters belong to the schema like every other field, so a
+        // fixed one clears its error by itself
+        params: yup.mixed().test(
+            'calculation-params',
+            t('measurements.calculations.paramsIncomplete'),
+            function (value) {
+                const picked = calculationType(this.parent.calculation);
+                return picked === undefined
+                    || missingParams(picked, (value ?? {}) as Record<string, unknown>).length === 0;
+            },
+        ),
     });
 
 
@@ -93,6 +130,105 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     // whether the user changed them
     const seededTrend = trendOf(category?.chartConfig ?? {});
     const seededWindow = averageWindowOf(category?.chartConfig ?? {});
+
+    const storedCalculation = category?.dynamicType ?? CALCULATION_NONE;
+
+    /** What the form holds, named so that a whole-form update can be typed */
+    interface CategoryFormValues {
+        name: string;
+        unit: string;
+        metricType: MetricType;
+        chartType: ChartType;
+        trend: TrendCharacter;
+        averageWindow: number;
+        parentId: string;
+        calculation: string;
+        params: Record<string, unknown>;
+    }
+
+    // Group children are in this list as well, and they are categories like
+    // any other here: one can hold the entries that block a calculation, and
+    // one can be the source of a ratio
+    const allCategories = (categoryQuery.data ?? []).map(flag => flag.category);
+
+    const queryClient = useQueryClient();
+    // Which calculation the last pick was for, see prefillBigThree
+    const pickedRef = React.useRef('');
+
+    const [nameEdited, setNameEdited] = React.useState(category !== undefined);
+    const [unitEdited, setUnitEdited] = React.useState(category !== undefined);
+
+
+    /**
+     * Switches the form to a calculation: its parameters start at their
+     * defaults, and name and unit are prefilled as long as the user has not
+     * written their own.
+     */
+    const pickCalculation = (
+        formik: {
+            values: CategoryFormValues,
+            setValues: (values: CategoryFormValues) => unknown,
+            setFieldValue: (field: string, value: unknown) => unknown,
+        },
+        type?: CalculationType,
+    ) => {
+        if (type === undefined) {
+            return;
+        }
+        pickedRef.current = type.slug;
+
+        // One update, not one per field: each validates on its own and would
+        // check the new parameters against the calculation before them
+        formik.setValues({
+            ...formik.values,
+            calculation: type.slug,
+            params: defaultParams(type),
+            ...(nameEdited
+                ? {}
+                : { name: t(`measurements.calculations.names.${type.slug as CalculationSlug}`) }),
+            ...(unitEdited ? {} : { unit: type.unit }),
+        });
+        prefillBigThree(formik, type);
+    };
+
+    /**
+     * A total of several exercises means bench press, squat and deadlift for
+     * most people, so that is what a fresh one starts with. The chips stay
+     * removable, and an instance that never synced them prefills nothing.
+     */
+    const prefillBigThree = async (
+        formik: { setFieldValue: (field: string, value: unknown) => unknown },
+        type: CalculationType,
+    ) => {
+        const param = type.params.find(candidate => candidate.kind === 'exercises');
+        if (param === undefined) {
+            return;
+        }
+
+        try {
+            const exercises = await queryClient.ensureQueryData({
+                queryKey: [QueryKey.EXERCISES, 'big-three'],
+                queryFn: () => getExercisesByUuids(BIG_THREE_UUIDS),
+                staleTime: Infinity,
+            });
+            const ids = exercises
+                .map(exercise => exercise.id)
+                .filter((id): id is number => id !== null);
+
+            // The chips read an exercise under this key, and the whole record
+            // is already here, so they do not have to fetch it again
+            for (const exercise of exercises) {
+                queryClient.setQueryData([QueryKey.EXERCISE_DETAIL, exercise.id], exercise);
+            }
+
+            // The user may have picked something else while this was loading
+            if (ids.length === BIG_THREE_UUIDS.length && pickedRef.current === type.slug) {
+                formik.setFieldValue('params', { ...defaultParams(type), [param.key]: ids });
+            }
+        } catch {
+            // Nothing to prefill, the user picks the exercises themselves
+        }
+    };
 
     return (
         <Formik
@@ -106,7 +242,9 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                 // the empty string stands in for "no group", MUI selects
                 // don't accept null values
                 parentId: category?.parentId ?? "",
-            }}
+                calculation: storedCalculation,
+                params: (category?.dynamicParams ?? {}) as Record<string, unknown>,
+            } as CategoryFormValues}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
                 const parentId = values.parentId === "" ? null : values.parentId;
@@ -137,13 +275,18 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
 
                 // Edit existing category
                 if (category) {
-                    useEditCategoryQuery.mutate(withSettings(MeasurementCategory.clone(category, {
+                    const edited = MeasurementCategory.clone(category, {
                         name: values.name,
                         unit: values.unit,
                         metricType: values.metricType,
                         chartType: values.chartType,
                         parentId: parentId,
-                    })), options);
+                    });
+                    edited.dynamicType = values.calculation;
+                    edited.dynamicParams = values.calculation === CALCULATION_NONE
+                        ? {}
+                        : values.params;
+                    useEditCategoryQuery.mutate(withSettings(edited), options);
                 } else {
                     useAddCategoryQuery.mutate(withSettings(new MeasurementCategory(
                         null,
@@ -154,6 +297,9 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                         parentId,
                         0,
                         values.chartType,
+                        {},
+                        values.calculation,
+                        values.calculation === CALCULATION_NONE ? {} : values.params,
                     )), options);
                 }
             }}
@@ -168,6 +314,10 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             error={formik.touched.name && Boolean(formik.errors.name)}
                             helperText={formik.touched.name && formik.errors.name}
                             {...formik.getFieldProps('name')}
+                            onChange={event => {
+                                setNameEdited(true);
+                                formik.handleChange(event);
+                            }}
                         />}
                         {isCustom && <TextField
                             fullWidth
@@ -180,7 +330,21 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                                     : t('measurements.unitFormHelpText')
                             }
                             {...formik.getFieldProps('unit')}
+                            onChange={event => {
+                                setUnitEdited(true);
+                                formik.handleChange(event);
+                            }}
                         />}
+                        {/* What a category computes is set when it is created:
+                          * the server refuses a change afterwards, so an
+                          * existing one only shows what it already does */}
+                        {isCustom && !hasChildren
+                            && (category === undefined || category.isCalculated)
+                            && <CalculationSection
+                                category={category}
+                                categories={allCategories}
+                                onPick={(type?: CalculationType) => pickCalculation(formik, type)}
+                            />}
                         {/* The metric type is picked when the category is
                           * created (see NewCategoryPicker) and fixed from then
                           * on: the key of a typed category is derived from it,
@@ -215,36 +379,40 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                           * currently drawn as something else keeps its
                           * settings but cannot change them
                           */}
-                        {canDrawLine(formik.values.metricType, hasChildren) && <>
-                            <TextField
-                                select
-                                fullWidth
-                                id="trend"
-                                label={t('measurements.chartTrend')}
-                                disabled={!drawsLine(formik.values)}
-                                {...formik.getFieldProps('trend')}
-                            >
-                                {TREND_CHARACTERS.map((trend: TrendCharacter) =>
-                                    <MenuItem key={trend} value={trend}>
-                                        {t(`measurements.trends.${trend}`)}
-                                    </MenuItem>
-                                )}
-                            </TextField>
-                            <TextField
-                                select
-                                fullWidth
-                                id="averageWindow"
-                                label={t('measurements.chartAverageWindow')}
-                                disabled={!drawsLine(formik.values)}
-                                {...formik.getFieldProps('averageWindow')}
-                            >
-                                {AVERAGE_WINDOWS.map(days =>
-                                    <MenuItem key={days} value={days}>
-                                        {t('measurements.chartAverageWindowDays', { count: days })}
-                                    </MenuItem>
-                                )}
-                            </TextField>
-                        </>}
+                        {canDrawLine(formik.values.metricType, hasChildren) &&
+                            /* The two settings of the line share a row: they
+                             * belong together and the form is long enough
+                             */
+                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    id="trend"
+                                    label={t('measurements.chartTrend')}
+                                    disabled={!drawsLine(formik.values)}
+                                    {...formik.getFieldProps('trend')}
+                                >
+                                    {TREND_CHARACTERS.map((trend: TrendCharacter) =>
+                                        <MenuItem key={trend} value={trend}>
+                                            {t(`measurements.trends.${trend}`)}
+                                        </MenuItem>
+                                    )}
+                                </TextField>
+                                <TextField
+                                    select
+                                    fullWidth
+                                    id="averageWindow"
+                                    label={t('measurements.chartAverageWindow')}
+                                    disabled={!drawsLine(formik.values)}
+                                    {...formik.getFieldProps('averageWindow')}
+                                >
+                                    {AVERAGE_WINDOWS.map(days =>
+                                        <MenuItem key={days} value={days}>
+                                            {t('measurements.chartAverageWindowDays', { count: days })}
+                                        </MenuItem>
+                                    )}
+                                </TextField>
+                            </Stack>}
                         {!hasChildren && formik.values.metricType === 'custom'
                             && parentCandidates.length > 0 &&
                             <TextField

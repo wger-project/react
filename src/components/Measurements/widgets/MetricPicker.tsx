@@ -45,8 +45,30 @@ export const NewCategoryPicker = ({ closeFn }: { closeFn?: () => void }) => {
 
     const taken = new Set((categoryQuery.data ?? []).map(c => c.metricType));
 
+    // By the name the user reads, not by the order the types are declared in:
+    // that one comes from the server's enum and means nothing here. The
+    // comparison is the language's own, so ä sorts where the language puts it
+    const pickable = METRIC_TYPES.filter(isPickableMetricType).sort((a, b) =>
+        t(`measurements.metricTypes.${a}`).localeCompare(
+            t(`measurements.metricTypes.${b}`),
+            i18n.language,
+        )
+    );
+
     return <List>
-        {METRIC_TYPES.filter(isPickableMetricType).map((metricType: MetricType) => {
+        {/* The free-form category first: it is the one every user can add,
+          * the typed ones below are each available only once */}
+        <ListItemButton onClick={() => setIsCustom(true)}>
+            <ListItemIcon>
+                <StraightenIcon />
+            </ListItemIcon>
+            <ListItemText
+                primary={t('measurements.customMeasurement')}
+                secondary={t('measurements.categoryFormHelpText')}
+            />
+        </ListItemButton>
+        <Divider />
+        {pickable.map((metricType: MetricType) => {
             const defaults = defaultsForMetricType(metricType);
             return <ListItemButton
                 key={metricType}
@@ -76,15 +98,5 @@ export const NewCategoryPicker = ({ closeFn }: { closeFn?: () => void }) => {
                 />
             </ListItemButton>;
         })}
-        <Divider />
-        <ListItemButton onClick={() => setIsCustom(true)}>
-            <ListItemIcon>
-                <StraightenIcon />
-            </ListItemIcon>
-            <ListItemText
-                primary={t('measurements.customMeasurement')}
-                secondary={t('measurements.categoryFormHelpText')}
-            />
-        </ListItemButton>
     </List>;
 };
