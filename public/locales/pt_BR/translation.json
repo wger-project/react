@@ -250,6 +250,7 @@
     "delete": "Excluir",
     "weight": "Peso",
     "date": "Data",
+    "off": "Desligado",
     "submit": "Enviar",
     "edit": "Editar",
     "add": "Adicionar",
@@ -327,7 +328,6 @@
         "filterVegan": "Vegano",
         "filterVegetarian": "Vegetariano",
         "filterNutriscore": "Filtro Nutri-Score",
-        "filterNutriscoreOff": "Desligado",
         "filterNutriscoreNoFilter": "Sem filtro",
         "filterNutriscoreOrBetter": "{{grade}} ou melhor"
     },

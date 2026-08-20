@@ -117,6 +117,7 @@
         "max_reps": "Max. Wdh.",
         "plates": "Gewichtsscheiben"
     },
+    "off": "Aus",
     "submit": "Abschicken",
     "weight": "Gewicht",
     "syncedEntryInfo": "Dieser Eintrag wurde aus einer Health-App synchronisiert und kann nur dort geändert werden",
@@ -423,7 +424,6 @@
         "filterVegan": "Vegan",
         "filterVegetarian": "Vegetarisch",
         "filterNutriscore": "Nährwertfilter",
-        "filterNutriscoreOff": "Aus",
         "filterNutriscoreNoFilter": "Kein Filter",
         "filterNutriscoreOrBetter": "{{grade}} oder besser"
     },

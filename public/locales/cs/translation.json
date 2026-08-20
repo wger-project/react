@@ -108,7 +108,6 @@
         "filterVegan": "Vegan",
         "filterVegetarian": "Vegetarián",
         "filterNutriscore": "Nutri-Score filter",
-        "filterNutriscoreOff": "Vypnout",
         "filterNutriscoreNoFilter": "Žádný filtr",
         "filterNutriscoreOrBetter": "{{grade}} nebo lepší"
     },
@@ -129,6 +128,7 @@
     "weight": "Váha",
     "date": "Datum",
     "timeOfDay": "Čas",
+    "off": "Vypnout",
     "submit": "Potvrdit",
     "edit": "Upravit",
     "delete": "Odstranit",

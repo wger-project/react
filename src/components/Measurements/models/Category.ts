@@ -43,16 +43,19 @@ export const METRIC_TYPE_BODY_WEIGHT: MetricType = 'body_weight';
 export const CHART_TYPES = ['auto', 'line', 'bar', 'heatmap', 'delta', 'distribution'] as const;
 export type ChartType = typeof CHART_TYPES[number];
 
+/** What both line settings take when the user turns their line off */
+export const CHART_LINE_OFF = 'none';
+
 /**
  * How closely the trend line follows the values, as the EMA period it maps to.
  *
  * Stored as the character rather than the number, so the periods stay tunable
  * without touching what users configured.
  */
-export const TREND_CHARACTERS = ['reactive', 'balanced', 'sluggish'] as const;
+export const TREND_CHARACTERS = [CHART_LINE_OFF, 'reactive', 'balanced', 'sluggish'] as const;
 export type TrendCharacter = typeof TREND_CHARACTERS[number];
 
-const TREND_EMA_PERIODS: Record<TrendCharacter, number> = {
+const TREND_EMA_PERIODS: Record<Exclude<TrendCharacter, typeof CHART_LINE_OFF>, number> = {
     reactive: 5,
     balanced: 10,
     sluggish: 20,
@@ -64,7 +67,7 @@ export const AVERAGE_WINDOWS = [7, 14, 30];
 /** Taste-level chart settings, see chart_config on the server */
 export interface ChartConfig {
     trend?: TrendCharacter;
-    average_window?: number;
+    average_window?: number | typeof CHART_LINE_OFF;
 
     /** Keys another client wrote, kept so a write from here does not drop them */
     [key: string]: unknown;
@@ -77,18 +80,27 @@ export function trendOf(config: ChartConfig): TrendCharacter {
         : 'balanced';
 }
 
-/** The EMA period the trend line of this configuration is smoothed with */
-export function trendPeriodOf(config: ChartConfig): number {
-    return TREND_EMA_PERIODS[trendOf(config)];
+/**
+ * The EMA period the trend line of this configuration is smoothed with, null
+ * for a chart that draws no trend line
+ */
+export function trendPeriodOf(config: ChartConfig): number | null {
+    const trend = trendOf(config);
+
+    return trend === CHART_LINE_OFF ? null : TREND_EMA_PERIODS[trend];
 }
 
 /**
- * Window the moving average covers, in days. Anything the picker does not
- * offer falls back to the first window, the same rule an unfitting chart type
- * follows.
+ * Window the moving average covers, in days, null for a chart that draws no
+ * average. Anything the picker does not offer falls back to the first window,
+ * the same rule an unfitting chart type follows.
  */
-export function averageWindowOf(config: ChartConfig): number {
+export function averageWindowOf(config: ChartConfig): number | null {
     const window = config.average_window;
+
+    if (window === CHART_LINE_OFF) {
+        return null;
+    }
 
     return typeof window === 'number' && AVERAGE_WINDOWS.includes(window)
         ? window

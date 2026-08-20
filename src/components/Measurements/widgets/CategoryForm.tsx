@@ -2,6 +2,7 @@ import {
     availableChartTypes,
     AVERAGE_WINDOWS,
     averageWindowOf,
+    CHART_LINE_OFF,
     ChartType,
     isGroupMetricType,
     MeasurementCategory,
@@ -129,7 +130,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     // What the two chart settings were seeded with, which is also what decides
     // whether the user changed them
     const seededTrend = trendOf(category?.chartConfig ?? {});
-    const seededWindow = averageWindowOf(category?.chartConfig ?? {});
+    const seededWindow = averageWindowOf(category?.chartConfig ?? {}) ?? CHART_LINE_OFF;
 
     const storedCalculation = category?.dynamicType ?? CALCULATION_NONE;
 
@@ -140,7 +141,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
         metricType: MetricType;
         chartType: ChartType;
         trend: TrendCharacter;
-        averageWindow: number;
+        averageWindow: number | typeof CHART_LINE_OFF;
         parentId: string;
         calculation: string;
         params: Record<string, unknown>;
@@ -394,7 +395,9 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                                 >
                                     {TREND_CHARACTERS.map((trend: TrendCharacter) =>
                                         <MenuItem key={trend} value={trend}>
-                                            {t(`measurements.trends.${trend}`)}
+                                            {trend === CHART_LINE_OFF
+                                                ? t('off')
+                                                : t(`measurements.trends.${trend}`)}
                                         </MenuItem>
                                     )}
                                 </TextField>
@@ -406,6 +409,9 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                                     disabled={!drawsLine(formik.values)}
                                     {...formik.getFieldProps('averageWindow')}
                                 >
+                                    <MenuItem value={CHART_LINE_OFF}>
+                                        {t('off')}
+                                    </MenuItem>
                                     {AVERAGE_WINDOWS.map(days =>
                                         <MenuItem key={days} value={days}>
                                             {t('measurements.chartAverageWindowDays', { count: days })}

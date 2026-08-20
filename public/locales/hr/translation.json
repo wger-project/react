@@ -113,6 +113,7 @@
         "plates": "Ploče",
         "max_reps": "Maks. broj ponavljanja"
     },
+    "off": "Isključeno",
     "submit": "Pošalji",
     "weight": "Težina",
     "workout": "Trening",
@@ -317,7 +318,6 @@
         "filterVegan": "Veganski",
         "filterVegetarian": "Vegetarijanski",
         "filterNutriscore": "Nutri-Score filtar",
-        "filterNutriscoreOff": "Isključeno",
         "filterNutriscoreNoFilter": "Bez filtra",
         "filterNutriscoreOrBetter": "{{grade}} ili bolje"
     },

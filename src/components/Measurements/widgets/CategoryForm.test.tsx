@@ -437,6 +437,28 @@ describe("Test the CategoryForm component", () => {
             .toEqual({ goal_line: 75, trend: 'reactive' });
     });
 
+    test('Both lines of the chart can be turned off', async () => {
+        // Arrange
+        const user = userEvent.setup();
+        const category = MeasurementCategory.clone(TEST_MEASUREMENT_CATEGORY_1);
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <CategoryForm category={category} />
+            </QueryClientProvider>
+        );
+        await user.click(screen.getByRole('combobox', { name: 'measurements.chartTrend' }));
+        await user.click(screen.getByRole('option', { name: 'off' }));
+        await user.click(screen.getByRole('combobox', { name: 'measurements.chartAverageWindow' }));
+        await user.click(screen.getByRole('option', { name: 'off' }));
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        expect(mutate.mock.calls[0][0].chartConfig)
+            .toEqual({ trend: 'none', average_window: 'none' });
+    });
+
     test('A rename keeps a setting this release does not know', async () => {
         // 'glacial' reads as the default here, and writing that default back
         // would drop it. Only a setting the user changed is written.

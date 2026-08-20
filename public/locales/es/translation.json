@@ -9,6 +9,7 @@
     "difference": "Diferencia",
     "edit": "Editar",
     "nutritionalPlan": "Plan nutricional",
+    "off": "Apagado",
     "submit": "Enviar",
     "weight": "Peso",
     "syncedEntryInfo": "Esta entrada se sincronizó desde una aplicación de salud y solo se puede cambiar allí",
@@ -260,10 +261,10 @@
             "sourceManual": "Introducido a mano",
             "sourceCalculated": "Calculado por wger",
             "type": "Cálculo",
-            "locked": "El cálculo no se puede cambiar. Borre la categoría para dejar de calcularla.",
+            "locked": "El cálculo no se puede cambiar. Borra la categoría para dejar de calcularla.",
             "paramsIncomplete": "El cálculo todavía no está configurado por completo",
-            "missingHeight": "Falta la altura en su perfil, por lo que todavía no se pueden calcular valores.",
-            "noSourceCategory": "Todavía no tiene otra categoría de la que leer.",
+            "missingHeight": "Falta la altura en tu perfil, por lo que todavía no se pueden calcular valores.",
+            "noSourceCategory": "Todavía no tienes otra categoría de la que leer.",
             "badge": "Calculado",
             "entryInfo": "Este valor lo calcula wger y no se puede editar",
             "names": {
@@ -273,8 +274,8 @@
                 "ONE_RM_TOTAL": "Suma de 1RM"
             },
             "descriptions": {
-                "BMI": "De su peso corporal y la altura de su perfil",
-                "WHTR": "De {{category}} y la altura de su perfil"
+                "BMI": "De tu peso corporal y la altura de tu perfil",
+                "WHTR": "De {{category}} y la altura de tu perfil"
             },
             "params": {
                 "category_id": "Categoría de origen",
@@ -421,7 +422,6 @@
         "filterVegan": "Vegana",
         "filterVegetarian": "Vegetariana",
         "filterNutriscore": "Filtro Nutri-Score",
-        "filterNutriscoreOff": "Apagado",
         "filterNutriscoreNoFilter": "Sin filtrado",
         "filterNutriscoreOrBetter": "{{grade}} o mejor"
     },

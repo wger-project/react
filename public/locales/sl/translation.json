@@ -5,6 +5,7 @@
     "cm": "cm",
     "date": "Datum",
     "timeOfDay": "Čas dneva",
+    "off": "Izklopljeno",
     "submit": "Pošlji",
     "edit": "Uredi",
     "editName": "Uredi {{name}}",
@@ -159,7 +160,6 @@
         "filterVegan": "Vegansko",
         "filterVegetarian": "Vegetarijansko",
         "filterNutriscore": "Filter Nutri-Score",
-        "filterNutriscoreOff": "Izklopljeno",
         "filterNutriscoreNoFilter": "Brez filtra",
         "filterNutriscoreOrBetter": "{{grade}} ali bolje"
     },

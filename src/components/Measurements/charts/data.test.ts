@@ -17,6 +17,7 @@ import {
     groupReadingPage,
     groupReadings,
     groupStackedEntries,
+    measurementSeries,
     movingAverage,
     niceBinWidth,
     overallChange,
@@ -121,6 +122,25 @@ describe('movingAverage', () => {
         const result = movingAverage([{ date: day(1).getTime(), value: 10, min: 5, max: 15 }]);
 
         expect(result[0]).toStrictEqual({ date: day(1).getTime(), value: 10 });
+    });
+});
+
+describe('measurementSeries', () => {
+    const points = [point(day(1), 10), point(day(2), 20), point(day(3), 30)];
+
+    test('draws the values, the average and the trend', () => {
+        const roles = measurementSeries(points).map(series => series.role);
+
+        expect(roles).toEqual(['raw', 'average', 'trend']);
+    });
+
+    test('leaves out the line the user turned off', () => {
+        expect(measurementSeries(points, null, { average_window: 'none' }).map(s => s.role))
+            .toEqual(['raw', 'trend']);
+        expect(measurementSeries(points, null, { trend: 'none' }).map(s => s.role))
+            .toEqual(['raw', 'average']);
+        expect(measurementSeries(points, null, { trend: 'none', average_window: 'none' })
+            .map(s => s.role)).toEqual(['raw']);
     });
 });
 

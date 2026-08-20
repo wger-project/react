@@ -111,6 +111,7 @@
         "triceps": "Tricipiti",
         "kilometers_per_hour": "Chilometri all'ora"
     },
+    "off": "Disattivato",
     "submit": "Invia",
     "weight": "Peso",
     "workout": "Allenamento",
@@ -188,7 +189,6 @@
         "filterVegan": "Vegano",
         "filterVegetarian": "Vegetariano",
         "filterNutriscore": "Filtro Nutri-Score",
-        "filterNutriscoreOff": "Disattivato",
         "filterNutriscoreNoFilter": "Nessun filtro",
         "filterNutriscoreOrBetter": "{{grade}} o meglio"
     },

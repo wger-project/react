@@ -4,6 +4,7 @@
     "cm": "cm",
     "date": "Data",
     "timeOfDay": "Hora do dia",
+    "off": "Desligado",
     "submit": "Submeter",
     "edit": "Editar",
     "editName": "Editar {{name}}",
@@ -159,7 +160,6 @@
         "filterVegan": "Vegano",
         "filterVegetarian": "Vegetariano",
         "filterNutriscore": "Filtro Nutri-Score",
-        "filterNutriscoreOff": "Desligado",
         "filterNutriscoreNoFilter": "Sem filtro",
         "filterNutriscoreOrBetter": "{{grade}} ou melhor"
     },

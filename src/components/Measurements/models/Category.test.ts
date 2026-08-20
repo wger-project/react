@@ -251,10 +251,20 @@ describe('MeasurementCategory', () => {
         });
 
         test('the trend character maps to the EMA period the chart uses', () => {
-            expect(trendPeriodOf({ trend: 'reactive' }))
-                .toBeLessThan(trendPeriodOf({ trend: 'balanced' }));
-            expect(trendPeriodOf({ trend: 'sluggish' }))
-                .toBeGreaterThan(trendPeriodOf({ trend: 'balanced' }));
+            expect(trendPeriodOf({ trend: 'reactive' })!)
+                .toBeLessThan(trendPeriodOf({ trend: 'balanced' })!);
+            expect(trendPeriodOf({ trend: 'sluggish' })!)
+                .toBeGreaterThan(trendPeriodOf({ trend: 'balanced' })!);
+        });
+
+        test('a line the user turned off has no period and no window', () => {
+            expect(trendPeriodOf({ trend: 'none' })).toBeNull();
+            expect(averageWindowOf({ average_window: 'none' })).toBeNull();
+        });
+
+        test('turning one line off leaves the other alone', () => {
+            expect(averageWindowOf({ trend: 'none', average_window: 14 })).toBe(14);
+            expect(trendPeriodOf({ trend: 'reactive', average_window: 'none' })).not.toBeNull();
         });
 
         test('a setting is changed without dropping the keys of another client', () => {

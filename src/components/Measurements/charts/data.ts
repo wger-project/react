@@ -730,10 +730,16 @@ export const measurementSeries = (
     cutoff: Date | null = null,
     config: ChartConfig = {},
 ): ChartSeries[] => {
+    // Both lines can be turned off, then only the values are drawn
+    const window = averageWindowOf(config);
+    const period = trendPeriodOf(config);
+
     // The average is computed over the full history and only then cut, so the
     // first points of the range average the days before it instead of
     // starting over at the cutoff
-    const average = pointsSince(movingAverage(all, averageWindowOf(config)), cutoff);
+    const average = window === null
+        ? []
+        : pointsSince(movingAverage(all, window), cutoff);
     const points = pointsSince(all, cutoff);
 
     const condensed = downsample(points);
@@ -747,8 +753,12 @@ export const measurementSeries = (
 
     return [
         raw,
-        { points: downsample(average), role: 'average' },
-        { points: smoothedTrendline(condensed, trendPeriodOf(config)), role: 'trend' },
+        ...(window === null
+            ? []
+            : [{ points: downsample(average), role: 'average' } as ChartSeries]),
+        ...(period === null
+            ? []
+            : [{ points: smoothedTrendline(condensed, period), role: 'trend' } as ChartSeries]),
     ];
 };
 

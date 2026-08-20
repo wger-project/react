@@ -6,6 +6,7 @@
     "edit": "Modifier",
     "weight": "Poids",
     "syncedEntryInfo": "Cette entrée a été synchronisée depuis une app de santé et ne peut être modifiée que là-bas",
+    "off": "Off",
     "submit": "Envoyer",
     "add": "Ajouter",
     "close": "Fermer",
@@ -319,7 +320,6 @@
         "languageFilterCurrentAndEnglish": "Langue courante ({{lang}}) & Anglais",
         "filterVegan": "Végan",
         "filterNutriscore": "Filtre Nutri-Score",
-        "filterNutriscoreOff": "Off",
         "filterNutriscoreNoFilter": "Pas de filtre",
         "filterNutriscoreOrBetter": "{{grade}} ou mieux"
     },
@@ -346,12 +346,12 @@
             "locked": "Le calcul ne peut pas être modifié. Supprimez la catégorie pour arrêter de la calculer.",
             "paramsIncomplete": "Le calcul n'est pas encore entièrement configuré",
             "missingHeight": "La taille manque dans votre profil, aucune valeur ne peut donc encore être calculée.",
-            "noSourceCategory": "Vous n'avez pas encore d'autre catégorie à lire.",
+            "noSourceCategory": "Vous n'avez pas encore d'autre catégorie dans laquelle puiser.",
             "badge": "Calculé",
             "entryInfo": "Cette valeur est calculée par wger et ne peut pas être modifiée",
             "names": {
                 "BMI": "IMC",
-                "WHTR": "Rapport tour de taille sur taille",
+                "WHTR": "Rapport taille-hauteur",
                 "ONE_REP_MAX": "1RM",
                 "ONE_RM_TOTAL": "Total 1RM"
             },

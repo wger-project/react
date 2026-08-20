@@ -1,4 +1,5 @@
 import {
+    AVERAGE_WINDOWS,
     averageWindowOf,
     binWidthFor,
     categoryDisplayName,
@@ -104,7 +105,12 @@ export const MeasurementChart = (props: {
             {/* the one-number version of the bars above; a summed metric has no level to change */}
             {!summed && <OverallChange
                 series={[{
-                    points: pointsSince(movingAverage(all, averageWindowOf(category.chartConfig)), cutoff),
+                    // Its own smoothing: the number answers where the level
+                    // went, also for a chart whose average line is turned off
+                    points: pointsSince(
+                        movingAverage(all, averageWindowOf(category.chartConfig) ?? AVERAGE_WINDOWS[0]),
+                        cutoff,
+                    ),
                     role: 'average',
                 }]}
                 unit={category.unit} />}
