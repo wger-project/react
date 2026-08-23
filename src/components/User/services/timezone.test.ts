@@ -1,4 +1,5 @@
 import { editProfile, getProfile } from "@/components/User/api/profile";
+import { Profile } from "@/components/User/models/profile";
 import { REPORTED_TIMEZONE_KEY, syncProfileTimezone } from "@/components/User/services/timezone";
 import { testProfileDataVerified } from "@/tests/userTestdata";
 import type { Mock } from 'vitest';
@@ -7,11 +8,7 @@ vi.mock("@/components/User/api/profile");
 
 const DETECTED = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-const profileWithZone = (timeZone: string) => {
-    const profile = Object.create(testProfileDataVerified);
-    profile.timeZone = timeZone;
-    return profile;
-};
+const profileWithZone = (timeZone: string) => new Profile({ ...testProfileDataVerified, timeZone });
 
 describe("syncProfileTimezone", () => {
 
