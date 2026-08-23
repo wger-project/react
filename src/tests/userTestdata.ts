@@ -10,6 +10,7 @@ export const testProfileDataVerified = new Profile({
     height: 180,
     weightRounding: null,
     repetitionsRounding: null,
+    timeZone: '',
 });
 
 export const testProfileDataNotVerified = new Profile({
@@ -22,6 +23,7 @@ export const testProfileDataNotVerified = new Profile({
     height: 180,
     weightRounding: null,
     repetitionsRounding: null,
+    timeZone: '',
 });
 
 export const testProfileApiResponse = {
