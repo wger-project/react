@@ -359,9 +359,14 @@ export const addMeasurementCategory = async (category: MeasurementCategory): Pro
 };
 
 export const editMeasurementCategory = async (category: MeasurementCategory): Promise<MeasurementCategory> => {
+    // metric_type stays out of the payload: it is identity and the server
+    // refuses a change, while a type this client does not know reads as
+    // 'custom', so echoing it back would ask for exactly that refused change
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { metric_type, ...data } = category.toJson();
     const response = await axios.patch(
         makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { id: category.id! }),
-        category.toJson(),
+        data,
         { headers: makeHeader() }
     );
 

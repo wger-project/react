@@ -411,11 +411,12 @@ describe('measurement service tests', () => {
         const [url, body] = (axios.patch as Mock).mock.calls[0];
         expect(url).toMatch(new RegExp(`/api/v2/measurement-category/${CATEGORY_UUID_2}/$`));
 
+        // No metric_type: it is identity, and a type this client does not
+        // know reads as 'custom', so an echo would ask for a refused change
         expect(body).toEqual({
             id: CATEGORY_UUID_2,
             name: "Renamed",
             unit: "%",
-            metric_type: "custom",
             chart_type: null,
             chart_config: {},
             parent: null,
