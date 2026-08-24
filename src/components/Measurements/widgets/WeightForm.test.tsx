@@ -130,6 +130,55 @@ describe("Test WeightForm component", () => {
         });
     });
 
+    test('an emptied date does not silently submit the old one', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        const mutateAddMock = vi.fn();
+        (useAddMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <WeightForm />
+            </QueryClientProvider>
+        );
+        const group = screen.getByRole('group', { name: /date/i });
+        const sections = within(group).getAllByRole('spinbutton');
+
+        // Act
+        await user.type(await screen.findByLabelText('weight'), '80');
+        await user.click(sections[0]);
+        await user.keyboard('{Control>}a{/Control}{Backspace}');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        expect(mutateAddMock).not.toHaveBeenCalled();
+    });
+
+    test('a future date blocks the submit', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        const mutateAddMock = vi.fn();
+        (useAddMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <WeightForm />
+            </QueryClientProvider>
+        );
+        const group = screen.getByRole('group', { name: /date/i });
+        const sections = within(group).getAllByRole('spinbutton');
+
+        // Act: the picker reddens a future date but fires onChange anyway,
+        // so the schema has to be what keeps it out of the submit
+        await user.click(sections[0]);
+        await user.keyboard('12102099');
+        await user.type(await screen.findByLabelText('weight'), '80');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        expect(mutateAddMock).not.toHaveBeenCalled();
+    });
+
     test('The weight field error state follows validity, not just touched', async () => {
 
         // Arrange

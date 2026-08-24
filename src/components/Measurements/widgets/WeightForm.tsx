@@ -34,6 +34,8 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
     const lb = limitsFor(METRIC_TYPE_BODY_WEIGHT, 'lb');
     const kg = limitsFor(METRIC_TYPE_BODY_WEIGHT, 'kg');
     const validationSchema = yup.object({
+        // The date field delivers null for input it cannot store
+        date: yup.date().nullable().required(t('forms.fieldRequired')),
         unit: yup.string().oneOf(['kg', 'lb']),
         weight: yup
             .number()
