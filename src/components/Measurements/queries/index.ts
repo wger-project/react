@@ -50,6 +50,9 @@ const invalidateChartReads = (queryClient: ReturnType<typeof useQueryClient>) =>
  * What a written entry ages: the entries themselves, the charts drawn from
  * them, and whether the category holds any. Not the categories, they carry
  * nothing that an entry can change.
+ *
+ * Category writes age the same reads: a calculated category materializes,
+ * rewrites or removes its entries server side.
  */
 const invalidateEntryReads = (queryClient: ReturnType<typeof useQueryClient>) => {
     queryClient.invalidateQueries({ queryKey: [QueryKey.MEASUREMENT_ENTRIES,] });
@@ -79,7 +82,7 @@ export const useAddMeasurementCategoryQuery = () => {
         mutationFn: (category: MeasurementCategory) => addMeasurementCategory(category),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,] });
-            invalidateChartReads(queryClient);
+            invalidateEntryReads(queryClient);
         }
     });
 };
@@ -96,7 +99,7 @@ export const useEditMeasurementCategoryQuery = (id: string) => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
             });
-            invalidateChartReads(queryClient);
+            invalidateEntryReads(queryClient);
         }
     });
 };
@@ -113,7 +116,7 @@ export const useDeleteMeasurementCategoryQuery = (id: string) => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.MEASUREMENTS_CATEGORIES,]
             });
-            invalidateChartReads(queryClient);
+            invalidateEntryReads(queryClient);
         }
     });
 };
