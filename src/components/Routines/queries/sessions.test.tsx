@@ -54,7 +54,7 @@ describe("session queries", () => {
             datetimeEnd: null,
         });
 
-        test('asks for the instants the local day spans', async () => {
+        test('asks for the day as a date filter', async () => {
             (searchSessions as Mock).mockResolvedValue([]);
 
             const { result } = renderHook(
@@ -62,14 +62,13 @@ describe("session queries", () => {
                 { wrapper: wrapper() }
             );
 
-            // A date bound would be cut in the server's timezone, and a session
-            // logged shortly after midnight looked for on the wrong day
+            // The server cuts the date filter in the profile timezone, the
+            // same zone the streaks and the calendar count their days in
             await waitFor(() => expect(result.current.isSuccess).toBe(true));
             expect(searchSessions).toHaveBeenCalledWith({
                 routine: 1,
                 day: 5,
-                datetime_start__gte: DateTime.fromISO('2024-05-01').startOf('day').toJSDate().toISOString(),
-                datetime_start__lt: DateTime.fromISO('2024-05-02').startOf('day').toJSDate().toISOString(),
+                datetime_start__date: '2024-05-01',
             });
         });
 

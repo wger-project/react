@@ -35,18 +35,15 @@ export const useFindSessionsQuery = (routineId: number, queryParams: Record<stri
  * The sessions logged on one day of a routine, and the one being worked on
  *
  * A single session is the one, several need the caller to pick one by id. The
- * day is read as the instants it spans in the browser's timezone: a date bound
- * would be cut in the server's, and a session logged shortly after midnight
- * would be looked for on the wrong day.
+ * day goes out as a date filter, which the server resolves in the user's
+ * profile timezone: the same zone the streaks and the calendar cut their days
+ * in, so the form and the statistics agree on what belongs to a day.
  */
 export const useSessionOfDay = (routineId: number, dayId: number, date: DateTime, chosenId: string | null) => {
-    const dayStart = date.startOf('day');
     const query = useFindSessionsQuery(routineId, {
         routine: routineId,
         // eslint-disable-next-line camelcase
-        datetime_start__gte: dayStart.toJSDate().toISOString(),
-        // eslint-disable-next-line camelcase
-        datetime_start__lt: dayStart.plus({ days: 1 }).toJSDate().toISOString(),
+        datetime_start__date: date.toISODate(),
         day: dayId,
     });
 
