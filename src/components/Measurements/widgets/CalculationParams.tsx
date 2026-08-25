@@ -1,15 +1,14 @@
 import {
     Exercise,
-    getExercise,
     getLanguageByShortName,
     NameAutocompleter,
-    useLanguageQuery
+    useExercisesDetailQueries,
+    useLanguageQuery,
+    usePrimeExercise
 } from "@/components/Exercises";
 import { CalculationParam, CalculationType, unitMatches } from "@/components/Measurements/models/Calculation";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
-import { QueryKey } from "@/core/lib/consts";
 import { Alert, Box, Chip, MenuItem, Stack, TextField, Typography } from "@mui/material";
-import { useQueries, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -59,16 +58,8 @@ export const CalculationParams = ({
     );
     // The same key the rest of the app reads an exercise under, so a detail
     // page that already loaded one answers for the chip as well
-    const exerciseQueries = useQueries({
-        queries: exerciseIds.map(id => ({
-            queryKey: [QueryKey.EXERCISE_DETAIL, id],
-            queryFn: () => getExercise(id),
-            // An exercise record does not change while a form is open, and
-            // without this a seeded one would be refetched right away
-            staleTime: Infinity,
-        })),
-    });
-    const queryClient = useQueryClient();
+    const exerciseQueries = useExercisesDetailQueries(exerciseIds);
+    const primeExercise = usePrimeExercise();
     const exerciseName = (id: number): string => {
         const exercise = exerciseQueries
             .map(query => query.data)
@@ -126,7 +117,7 @@ export const CalculationParams = ({
             }
             // The autocompleter hands over the full record, so the chip does
             // not have to fetch what is already here
-            queryClient.setQueryData([QueryKey.EXERCISE_DETAIL, exercise.id], exercise);
+            primeExercise(exercise);
             if (!isMulti) {
                 set(param.key, exercise.id);
                 return;

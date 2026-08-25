@@ -12,7 +12,7 @@ import {
     TrendCharacter,
     trendOf
 } from "@/components/Measurements/models/Category";
-import { getExercisesByUuids } from "@/components/Exercises";
+import { useFetchExercisesByUuidsQuery } from "@/components/Exercises";
 import {
     BIG_THREE_UUIDS,
     CALCULATION_NONE,
@@ -35,8 +35,6 @@ import {
     TextField
 } from "@mui/material";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { QueryKey } from "@/core/lib/consts";
-import { useQueryClient } from "@tanstack/react-query";
 import { Form, Formik } from "formik";
 import React from 'react';
 import { useTranslation } from "react-i18next";
@@ -152,7 +150,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     // one can be the source of a ratio
     const allCategories = (categoryQuery.data ?? []).map(flag => flag.category);
 
-    const queryClient = useQueryClient();
+    const fetchExercisesByUuids = useFetchExercisesByUuidsQuery();
     // Which calculation the last pick was for, see prefillBigThree
     const pickedRef = React.useRef('');
 
@@ -207,20 +205,10 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
         }
 
         try {
-            const exercises = await queryClient.ensureQueryData({
-                queryKey: [QueryKey.EXERCISES, 'big-three'],
-                queryFn: () => getExercisesByUuids(BIG_THREE_UUIDS),
-                staleTime: Infinity,
-            });
+            const exercises = await fetchExercisesByUuids(BIG_THREE_UUIDS);
             const ids = exercises
                 .map(exercise => exercise.id)
                 .filter((id): id is number => id !== null);
-
-            // The chips read an exercise under this key, and the whole record
-            // is already here, so they do not have to fetch it again
-            for (const exercise of exercises) {
-                queryClient.setQueryData([QueryKey.EXERCISE_DETAIL, exercise.id], exercise);
-            }
 
             // The user may have picked something else while this was loading
             if (ids.length === BIG_THREE_UUIDS.length && pickedRef.current === type.slug) {

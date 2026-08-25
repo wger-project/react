@@ -22,11 +22,14 @@ vi.mock("@/components/User");
 vi.mock("@/components/Exercises", async (importOriginal) => ({
     ...await importOriginal<typeof import("@/components/Exercises")>(),
     useLanguageQuery: vi.fn(() => ({ isSuccess: true, data: [] })),
-    getExercise: vi.fn(async (id: number) => ({
-        id: id,
-        getTranslation: () => ({ name: `Exercise ${id}` }),
-    })),
-    getExercisesByUuids: vi.fn(async () => [
+    useExercisesDetailQueries: vi.fn((ids: number[]) => {
+        const names: Record<number, string> = { 73: 'Bench press', 615: 'Squats', 184: 'Deadlifts' };
+        return ids.map(id => ({
+            data: { id: id, getTranslation: () => ({ name: names[id] ?? `Exercise ${id}` }) },
+        }));
+    }),
+    usePrimeExercise: vi.fn(() => vi.fn()),
+    useFetchExercisesByUuidsQuery: vi.fn(() => async () => [
         { id: 73, getTranslation: () => ({ name: 'Bench press' }) },
         { id: 615, getTranslation: () => ({ name: 'Squats' }) },
         { id: 184, getTranslation: () => ({ name: 'Deadlifts' }) },

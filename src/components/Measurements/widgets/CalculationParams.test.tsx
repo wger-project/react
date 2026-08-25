@@ -9,10 +9,10 @@ import React from 'react';
 vi.mock("@/components/Exercises", async (importOriginal) => ({
     ...await importOriginal<typeof import("@/components/Exercises")>(),
     useLanguageQuery: vi.fn(() => ({ isSuccess: true, data: [] })),
-    getExercise: vi.fn(async (id: number) => ({
-        id: id,
-        getTranslation: () => ({ name: `Exercise ${id}` }),
-    })),
+    useExercisesDetailQueries: vi.fn((ids: number[]) => ids.map(id => ({
+        data: { id: id, getTranslation: () => ({ name: `Exercise ${id}` }) },
+    }))),
+    usePrimeExercise: vi.fn(() => vi.fn()),
 }));
 // The autocompleter reads the language list from the module directly
 vi.mock("@/components/Exercises/queries", async (importOriginal) => ({
