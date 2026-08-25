@@ -1,25 +1,16 @@
 import {
-    availableChartTypes,
-    AVERAGE_WINDOWS,
     averageWindowOf,
     CHART_LINE_OFF,
     ChartType,
     isGroupMetricType,
     MeasurementCategory,
     MetricType,
-    resolveChartType,
-    TREND_CHARACTERS,
-    TrendCharacter,
     trendOf
 } from "@/components/Measurements/models/Category";
-import { useFetchExercisesByUuidsQuery } from "@/components/Exercises";
 import {
-    BIG_THREE_UUIDS,
     CALCULATION_NONE,
     calculationType,
-    CalculationSlug,
     CalculationType,
-    defaultParams,
     missingParams
 } from "@/components/Measurements/models/Calculation";
 import {
@@ -28,6 +19,9 @@ import {
     useEditMeasurementCategoryQuery
 } from "@/components/Measurements/queries";
 import { CalculationSection } from "@/components/Measurements/widgets/CalculationSection";
+import { CategoryFormValues } from "@/components/Measurements/widgets/categoryFormValues";
+import { ChartSettingsFields } from "@/components/Measurements/widgets/ChartSettingsFields";
+import { useCalculationPrefill } from "@/components/Measurements/widgets/useCalculationPrefill";
 import {
     Button,
     MenuItem,
@@ -44,22 +38,6 @@ interface CategoryFormProps {
     category?: MeasurementCategory,
     closeFn?: () => void,
 }
-
-/** What the chart type picker offers: no override, plus what the type allows */
-const chartTypeChoices = (metricType: MetricType): ChartType[] =>
-    ['auto', ...availableChartTypes(metricType)];
-
-/**
- * Whether the category can be drawn as a line at all, which is what the trend
- * and the average settings belong to. A summed type is drawn as bars whatever
- * is picked, and a group by what its components are.
- */
-const canDrawLine = (metricType: MetricType, hasChildren: boolean): boolean =>
-    !hasChildren && availableChartTypes(metricType).includes('line');
-
-/** Whether it is drawn as one right now, i.e. whether those settings apply */
-const drawsLine = (values: { metricType: MetricType, chartType: ChartType }): boolean =>
-    resolveChartType(values.metricType, values.chartType) === 'line';
 
 export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
 
@@ -132,92 +110,14 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
 
     const storedCalculation = category?.dynamicType ?? CALCULATION_NONE;
 
-    /** What the form holds, named so that a whole-form update can be typed */
-    interface CategoryFormValues {
-        name: string;
-        unit: string;
-        metricType: MetricType;
-        chartType: ChartType;
-        trend: TrendCharacter;
-        averageWindow: number | typeof CHART_LINE_OFF;
-        parentId: string;
-        calculation: string;
-        params: Record<string, unknown>;
-    }
-
     // Group children are in this list as well, and they are categories like
     // any other here: one can hold the entries that block a calculation, and
     // one can be the source of a ratio
     const allCategories = (categoryQuery.data ?? []).map(flag => flag.category);
 
-    const fetchExercisesByUuids = useFetchExercisesByUuidsQuery();
-    // Which calculation the last pick was for, see prefillBigThree
-    const pickedRef = React.useRef('');
-
-    const [nameEdited, setNameEdited] = React.useState(category !== undefined);
-    const [unitEdited, setUnitEdited] = React.useState(category !== undefined);
-
-
-    /**
-     * Switches the form to a calculation: its parameters start at their
-     * defaults, and name and unit are prefilled as long as the user has not
-     * written their own.
-     */
-    const pickCalculation = (
-        formik: {
-            values: CategoryFormValues,
-            setValues: (values: CategoryFormValues) => unknown,
-            setFieldValue: (field: string, value: unknown) => unknown,
-        },
-        type?: CalculationType,
-    ) => {
-        if (type === undefined) {
-            return;
-        }
-        pickedRef.current = type.slug;
-
-        // One update, not one per field: each validates on its own and would
-        // check the new parameters against the calculation before them
-        formik.setValues({
-            ...formik.values,
-            calculation: type.slug,
-            params: defaultParams(type),
-            ...(nameEdited
-                ? {}
-                : { name: t(`measurements.calculations.names.${type.slug as CalculationSlug}`) }),
-            ...(unitEdited ? {} : { unit: type.unit }),
-        });
-        prefillBigThree(formik, type);
-    };
-
-    /**
-     * A total of several exercises means bench press, squat and deadlift for
-     * most people, so that is what a fresh one starts with. The chips stay
-     * removable, and an instance that never synced them prefills nothing.
-     */
-    const prefillBigThree = async (
-        formik: { setFieldValue: (field: string, value: unknown) => unknown },
-        type: CalculationType,
-    ) => {
-        const param = type.params.find(candidate => candidate.kind === 'exercises');
-        if (param === undefined) {
-            return;
-        }
-
-        try {
-            const exercises = await fetchExercisesByUuids(BIG_THREE_UUIDS);
-            const ids = exercises
-                .map(exercise => exercise.id)
-                .filter((id): id is number => id !== null);
-
-            // The user may have picked something else while this was loading
-            if (ids.length === BIG_THREE_UUIDS.length && pickedRef.current === type.slug) {
-                formik.setFieldValue('params', { ...defaultParams(type), [param.key]: ids });
-            }
-        } catch {
-            // Nothing to prefill, the user picks the exercises themselves
-        }
-    };
+    const { pickCalculation, markNameEdited, markUnitEdited } = useCalculationPrefill(
+        category !== undefined,
+    );
 
     return (
         <Formik
@@ -304,7 +204,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             helperText={formik.touched.name && formik.errors.name}
                             {...formik.getFieldProps('name')}
                             onChange={event => {
-                                setNameEdited(true);
+                                markNameEdited();
                                 formik.handleChange(event);
                             }}
                         />}
@@ -320,7 +220,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             }
                             {...formik.getFieldProps('unit')}
                             onChange={event => {
-                                setUnitEdited(true);
+                                markUnitEdited();
                                 formik.handleChange(event);
                             }}
                         />}
@@ -339,74 +239,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                           * on: the key of a typed category is derived from it,
                           * and the server refuses a change
                           */}
-                        {/*
-                          * Only the shapes that are a matter of taste are
-                          * offered, and only those the metric type can be drawn
-                          * as. A group gets no picker at all, its chart follows
-                          * from what its components are to each other; a
-                          * category with children is one whatever its metric
-                          * type says, which is also how the charts decide
-                          */}
-                        {!hasChildren && availableChartTypes(formik.values.metricType).length > 0 &&
-                            <TextField
-                                select
-                                fullWidth
-                                id="chartType"
-                                label={t('measurements.chartType')}
-                                {...formik.getFieldProps('chartType')}
-                            >
-                                {chartTypeChoices(formik.values.metricType).map(chartType =>
-                                    <MenuItem key={chartType} value={chartType}>
-                                        {t(`measurements.chartTypes.${chartType}`)}
-                                    </MenuItem>
-                                )}
-                            </TextField>
-                        }
-                        {/* The trend line and the moving average are parts of
-                          * the line chart: a category that can never be drawn
-                          * as one is not offered them at all, and one that is
-                          * currently drawn as something else keeps its
-                          * settings but cannot change them
-                          */}
-                        {canDrawLine(formik.values.metricType, hasChildren) &&
-                            /* The two settings of the line share a row: they
-                             * belong together and the form is long enough
-                             */
-                            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                                <TextField
-                                    select
-                                    fullWidth
-                                    id="trend"
-                                    label={t('measurements.chartTrend')}
-                                    disabled={!drawsLine(formik.values)}
-                                    {...formik.getFieldProps('trend')}
-                                >
-                                    {TREND_CHARACTERS.map((trend: TrendCharacter) =>
-                                        <MenuItem key={trend} value={trend}>
-                                            {trend === CHART_LINE_OFF
-                                                ? t('off')
-                                                : t(`measurements.trends.${trend}`)}
-                                        </MenuItem>
-                                    )}
-                                </TextField>
-                                <TextField
-                                    select
-                                    fullWidth
-                                    id="averageWindow"
-                                    label={t('measurements.chartAverageWindow')}
-                                    disabled={!drawsLine(formik.values)}
-                                    {...formik.getFieldProps('averageWindow')}
-                                >
-                                    <MenuItem value={CHART_LINE_OFF}>
-                                        {t('off')}
-                                    </MenuItem>
-                                    {AVERAGE_WINDOWS.map(days =>
-                                        <MenuItem key={days} value={days}>
-                                            {t('measurements.chartAverageWindowDays', { count: days })}
-                                        </MenuItem>
-                                    )}
-                                </TextField>
-                            </Stack>}
+                        <ChartSettingsFields hasChildren={hasChildren} />
                         {!hasChildren && formik.values.metricType === 'custom'
                             && parentCandidates.length > 0 &&
                             <TextField
