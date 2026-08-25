@@ -1,9 +1,10 @@
-import { addSession, editSession, searchSessions } from "@/components/Routines/api/session";
+import { addSession, editSession, getSessions, searchSessions } from "@/components/Routines/api/session";
 import {
     useAddSessionQuery,
     useEditSessionQuery,
     useFindSessionsQuery,
-    useSessionOfDay
+    useSessionOfDay,
+    useSessionsQuery
 } from "@/components/Routines/queries";
 import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -32,6 +33,7 @@ describe("session queries", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         (searchSessions as Mock).mockResolvedValue([]);
+        (getSessions as Mock).mockResolvedValue([]);
         (addSession as Mock).mockResolvedValue(testWorkoutSession);
         (editSession as Mock).mockResolvedValue(testWorkoutSession);
     });
@@ -124,5 +126,28 @@ describe("session queries", () => {
         act(() => result.current.write());
 
         await waitFor(() => expect(searchSessions).toHaveBeenCalledTimes(2));
+    });
+
+    // The calendar renders the full list; a write must not leave it showing
+    // the pre-write state until the staleTime runs out
+    test.each(sessionMutations)('a session %s refreshes the full session list', async (_name, useWrite) => {
+
+        const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+        const wrapper = ({ children }: { children: React.ReactNode }) =>
+            <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+
+        const { result } = renderHook(
+            () => ({
+                sessions: useSessionsQuery(),
+                write: useWrite(),
+            }),
+            { wrapper }
+        );
+        await waitFor(() => expect(result.current.sessions.isSuccess).toBe(true));
+        expect(getSessions).toHaveBeenCalledTimes(1);
+
+        act(() => result.current.write());
+
+        await waitFor(() => expect(getSessions).toHaveBeenCalledTimes(2));
     });
 });

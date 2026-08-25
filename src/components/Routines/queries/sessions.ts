@@ -12,9 +12,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
 /**
- * What a written session ages: the routine it belongs to, and the search the
- * session form looks it up with. Without the latter the form would still be
- * told there is no session for that day and save a second one.
+ * What a written session ages: the routine it belongs to, the search the
+ * session form looks it up with, and the full list the calendar renders.
+ * Without the search the form would still be told there is no session for
+ * that day and save a second one.
  */
 const invalidateSessionReads = (
     queryClient: ReturnType<typeof useQueryClient>,
@@ -23,6 +24,7 @@ const invalidateSessionReads = (
     queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW] });
     queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, session.routineId] });
     queryClient.invalidateQueries({ queryKey: [QueryKey.SESSION_SEARCH] });
+    queryClient.invalidateQueries({ queryKey: [QueryKey.SESSIONS_FULL] });
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
