@@ -2,18 +2,23 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from '@testing-library/react';
 import {
     addMeasurementCategory,
+    addMeasurementEntry,
     deleteMeasurementCategory,
     editMeasurementCategory,
+    getCategoryEntryFlags,
     getMeasurementEntries
 } from "@/components/Measurements/api/measurements";
 import type { Mock } from 'vitest';
 import {
     useAddMeasurementCategoryQuery,
+    useAddMeasurementEntryQuery,
+    useCategoryEntryFlagsQuery,
     useDeleteMeasurementCategoryQuery,
     useEditMeasurementCategoryQuery,
     useMeasurementEntriesQuery
 } from "@/components/Measurements/queries";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import React from 'react';
 
 vi.mock("@/components/Measurements/api/measurements");
@@ -35,6 +40,56 @@ const categoryMutations: [string, () => () => void][] = [
         return () => mutation.mutate(CATEGORY_UUID);
     }],
 ];
+
+describe('entry flags', () => {
+    const makeWrapper = () => {
+        const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+        return ({ children }: { children: React.ReactNode }) =>
+            <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+    };
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+        (getCategoryEntryFlags as Mock).mockResolvedValue([]);
+        (addMeasurementEntry as Mock).mockResolvedValue(
+            new MeasurementEntry(null, CATEGORY_UUID, new Date(), 42, '', 'user', {})
+        );
+    });
+
+    test('the flags are fetched once, not again per remount or focus', async () => {
+        // One request per category hides behind this read
+        const wrapper = makeWrapper();
+
+        const first = renderHook(() => useCategoryEntryFlagsQuery(), { wrapper });
+        await waitFor(() => expect(first.result.current.isSuccess).toBe(true));
+        first.unmount();
+
+        const second = renderHook(() => useCategoryEntryFlagsQuery(), { wrapper });
+        await waitFor(() => expect(second.result.current.isSuccess).toBe(true));
+
+        expect(getCategoryEntryFlags).toHaveBeenCalledTimes(1);
+    });
+
+    test('an entry write still refreshes the flags', async () => {
+        const wrapper = makeWrapper();
+
+        const { result } = renderHook(
+            () => ({
+                flags: useCategoryEntryFlagsQuery(),
+                write: useAddMeasurementEntryQuery(),
+            }),
+            { wrapper }
+        );
+        await waitFor(() => expect(result.current.flags.isSuccess).toBe(true));
+        expect(getCategoryEntryFlags).toHaveBeenCalledTimes(1);
+
+        act(() => result.current.write.mutate(
+            new MeasurementEntry(null, CATEGORY_UUID, new Date(), 42, '', 'user', {})
+        ));
+
+        await waitFor(() => expect(getCategoryEntryFlags).toHaveBeenCalledTimes(2));
+    });
+});
 
 describe('category mutations', () => {
 

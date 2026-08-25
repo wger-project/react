@@ -72,6 +72,9 @@ export function useCategoryEntryFlagsQuery() {
     return useQuery({
         queryKey: CATEGORY_ENTRY_FLAGS_KEY,
         queryFn: () => getCategoryEntryFlags(),
+        // One request per category hides behind this read: never refetch it on
+        // focus or remount, the writes invalidate the key explicitly
+        staleTime: Infinity,
     });
 }
 
