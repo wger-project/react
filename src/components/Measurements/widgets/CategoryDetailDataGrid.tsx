@@ -1,6 +1,7 @@
 import { processTimeSeries } from "@/core/lib/timeSeries";
 import { valueOnly, valueWithUnit } from "@/components/Measurements/charts/format";
-import { limitsFor, MeasurementCategory } from "@/components/Measurements/models/Category";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { limitsSchema } from "@/components/Measurements/widgets/limitsSchema";
 import { collectValidationErrors } from "@/core/lib/forms";
 import {
     MEASUREMENT_SOURCE_CALCULATED,
@@ -155,13 +156,7 @@ export const CategoryDetailDataGrid = (props: {
         // so the row is not saved with one either; throwing keeps it in edit
         // mode so it can be corrected
         const value = Number(newRow.value);
-        const { min, max } = limitsFor(props.category.metricType, unit);
-        if (isNaN(value) || value < min) {
-            throw new Error(t('forms.minValue', { value: `${min} ${unit}` }));
-        }
-        if (value > max) {
-            throw new Error(t('forms.maxValue', { value: `${max} ${unit}` }));
-        }
+        limitsSchema(props.category.metricType, unit, t).validateSync(value);
 
         await updateEntryQuery.mutateAsync(MeasurementEntry.clone(entry, {
             date: date,

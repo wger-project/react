@@ -1,9 +1,9 @@
 import { Button, Stack, TextField } from "@mui/material";
 import {
     categoryDisplayName,
-    limitsFor,
     MeasurementCategory
 } from "@/components/Measurements/models/Category";
+import { limitsSchema } from "@/components/Measurements/widgets/limitsSchema";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import {
@@ -38,16 +38,12 @@ export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
 
     // The bounds follow the metric type of the category, and for body weight
     // the unit the entry itself is in
-    const limits = limitsFor(
-        category.metricType,
-        entry ? entry.unitOrFallback(category.unit) : category.unit,
-    );
     const validationSchema = yup.object({
-        value: yup
-            .number()
-            .required(t('forms.fieldRequired'))
-            .min(limits.min, t('forms.minValue', { value: String(limits.min) }))
-            .max(limits.max, t('forms.maxValue', { value: String(limits.max) })),
+        value: limitsSchema(
+            category.metricType,
+            entry ? entry.unitOrFallback(category.unit) : category.unit,
+            t,
+        ),
         date: yup
             .date()
             .required(t('forms.fieldRequired')),
@@ -142,18 +138,9 @@ export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
             .required(t('forms.fieldRequired')),
         // Each component is bounded by its own type: systolic and diastolic
         // do not share a range
-        values: yup.object(Object.fromEntries(group.children.map(child => {
-            const limits = limitsFor(child.metricType, child.unit);
-
-            return [
-                child.id!,
-                yup
-                    .number()
-                    .required(t('forms.fieldRequired'))
-                    .min(limits.min, t('forms.minValue', { value: String(limits.min) }))
-                    .max(limits.max, t('forms.maxValue', { value: String(limits.max) })),
-            ];
-        }))),
+        values: yup.object(Object.fromEntries(group.children.map(child =>
+            [child.id!, limitsSchema(child.metricType, child.unit, t)]
+        ))),
     });
 
     return (

@@ -9,11 +9,12 @@ import {
     MeasurementCategory
 } from "@/components/Measurements/models/Category";
 import { useGroupReadingsQuery } from "@/components/Measurements/queries";
+import { useRangePagination } from "@/components/Measurements/widgets/useRangePagination";
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
 import { luxonDateTimeToLocale } from "@/core/lib/date";
 import { makeLink, WgerLink } from "@/core/lib/url";
 import { Box, Link as MuiLink, Stack } from "@mui/material";
-import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { DateTime } from "luxon";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -32,16 +33,7 @@ export const GroupReadingsGrid = (props: { group: MeasurementCategory, range: Ch
     // The range as it is labelled, not the chart's read: the table would list
     // the average's lead as if it were part of the range
     const filter = displayFilterFor(props.range);
-    const [pagination, setPagination] = React.useState<GridPaginationModel>({
-        page: 0,
-        pageSize: PAGINATION_OPTIONS.pageSize,
-    });
-    // Another range is another set of readings, and page seven of the last one
-    // says nothing about it
-    React.useEffect(
-        () => setPagination(model => ({ ...model, page: 0 })),
-        [props.range]
-    );
+    const [pagination, setPagination] = useRangePagination(props.range);
 
     const query = useGroupReadingsQuery(group, pagination.pageSize, filter);
     const pages = query.data ?? [];

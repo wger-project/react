@@ -22,8 +22,7 @@ import { CategoryDetailDropdown } from "@/components/Measurements/widgets/Catego
 import { GroupReadingsGrid } from "@/components/Measurements/widgets/GroupReadingsGrid";
 import { ChartRange, displayFilterFor } from "@/components/Measurements/charts/range";
 import { setChartRange, useChartRange } from "@/components/Measurements/state/chartRange";
-import { PAGINATION_OPTIONS } from "@/core/lib/consts";
-import { GridPaginationModel } from "@mui/x-data-grid";
+import { useRangePagination } from "@/components/Measurements/widgets/useRangePagination";
 import { AddMeasurementEntryFab } from "@/components/Measurements/widgets/fab";
 import { ChartRangeSelector } from "@/components/Measurements/widgets/ChartRangeSelector";
 import { MeasurementChart } from "@/components/Measurements/widgets/MeasurementChart";
@@ -44,16 +43,7 @@ const CategoryEntriesGrid = (props: { category: MeasurementCategory, range: Char
     // month of lead so the moving average has something to average over, and
     // the table would list those rows as if they were part of the range
     const filter = displayFilterFor(props.range);
-    const [pagination, setPagination] = React.useState<GridPaginationModel>({
-        page: 0,
-        pageSize: PAGINATION_OPTIONS.pageSize,
-    });
-    // Another range is another set of entries, and page seven of the last one
-    // says nothing about it
-    React.useEffect(
-        () => setPagination(model => ({ ...model, page: 0 })),
-        [props.range]
-    );
+    const [pagination, setPagination] = useRangePagination(props.range);
 
     const pageQuery = useMeasurementEntryPageQuery(
         props.category.id!,

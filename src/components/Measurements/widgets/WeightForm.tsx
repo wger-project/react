@@ -1,5 +1,6 @@
 import { Button, Stack, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { limitsFor, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements/models/Category";
+import { METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements/models/Category";
+import { limitsSchema } from "@/components/Measurements/widgets/limitsSchema";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import {
@@ -31,23 +32,17 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
 
     const [t] = useTranslation();
 
-    const lb = limitsFor(METRIC_TYPE_BODY_WEIGHT, 'lb');
-    const kg = limitsFor(METRIC_TYPE_BODY_WEIGHT, 'kg');
     const validationSchema = yup.object({
         // The date field delivers null for input it cannot store
         date: yup.date().nullable().required(t('forms.fieldRequired')),
         unit: yup.string().oneOf(['kg', 'lb']),
+        // The bounds follow the unit the value is typed in
         weight: yup
             .number()
-            .required(t('forms.fieldRequired'))
             .when('unit', {
                 is: 'lb',
-                then: schema => schema
-                    .min(lb.min, t('forms.minValue', { value: `${lb.min} ${t('server.lb')}` }))
-                    .max(lb.max, t('forms.maxValue', { value: `${lb.max} ${t('server.lb')}` })),
-                otherwise: schema => schema
-                    .min(kg.min, t('forms.minValue', { value: `${kg.min} ${t('server.kg')}` }))
-                    .max(kg.max, t('forms.maxValue', { value: `${kg.max} ${t('server.kg')}` })),
+                then: () => limitsSchema(METRIC_TYPE_BODY_WEIGHT, 'lb', t, t('server.lb')),
+                otherwise: () => limitsSchema(METRIC_TYPE_BODY_WEIGHT, 'kg', t, t('server.kg')),
             }),
     });
 
