@@ -52,13 +52,8 @@ export {
 
 // Charts
 export { componentColor, componentPalette } from "./charts/colors";
-export {
-    chartPointsFor,
-    chartQueryFor,
-    groupChart,
-    groupComponentPoints,
-    measurementSeries
-} from "./charts/data";
+export { chartPointsFor, chartQueryFor } from "./charts/data";
+export { groupChart, groupComponentPoints, measurementSeries } from "./charts/groups";
 export { valueWithUnit } from "./charts/format";
 export { CHART_RANGES, cutoffFor, DEFAULT_CHART_RANGE, entryFilterFor } from "./charts/range";
 export type { ChartRange } from "./charts/range";

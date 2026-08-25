@@ -21,7 +21,7 @@ import {
     MeasurementQueryOptions,
     updateMeasurementCategoryOrder
 } from "@/components/Measurements/api/measurements";
-import { groupReadingPage } from "@/components/Measurements/charts/data";
+import { groupReadingPage } from "@/components/Measurements/charts/groups";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { QueryKey } from "@/core/lib/consts";

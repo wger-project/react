@@ -1,5 +1,6 @@
 import { Typography } from "@mui/material";
-import { overallChange, pointsOfRole } from "@/components/Measurements/charts/data";
+import { overallChange } from "@/components/Measurements/charts/data";
+import { pointsOfRole } from "@/components/Measurements/charts/groups";
 import { valueWithUnit } from "@/components/Measurements/charts/format";
 import { ChartSeries } from "@/components/Measurements/charts/series";
 import React from "react";

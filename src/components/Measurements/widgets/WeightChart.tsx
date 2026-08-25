@@ -1,4 +1,5 @@
-import { chartPointsFor, measurementSeries } from "@/components/Measurements/charts/data";
+import { chartPointsFor } from "@/components/Measurements/charts/data";
+import { measurementSeries } from "@/components/Measurements/charts/groups";
 import {
     ChartRange,
     DEFAULT_CHART_RANGE,

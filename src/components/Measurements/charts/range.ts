@@ -13,7 +13,7 @@ export type ChartRange = typeof CHART_RANGES[number];
  */
 export const DEFAULT_CHART_RANGE: ChartRange = 'lastMonth';
 
-const DAY_MS = 24 * 60 * 60 * 1000;
+import { DAY_MS } from "@/core/lib/date";
 
 const DAYS: Record<ChartRange, number | null> = {
     all: null,

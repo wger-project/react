@@ -1,6 +1,7 @@
 import { Box, Stack, Typography, useTheme } from "@mui/material";
 import { componentPalette, seriesColor } from "@/components/Measurements/charts/colors";
-import { clampPeriods, planNamesAt, pointsOfRole } from "@/components/Measurements/charts/data";
+import { clampPeriods, planNamesAt } from "@/components/Measurements/charts/data";
+import { pointsOfRole } from "@/components/Measurements/charts/groups";
 import { dotRadius, useChartWidth } from "@/components/Measurements/charts/density";
 import {
     dateTick,

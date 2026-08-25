@@ -2,6 +2,20 @@ import i18n from 'i18next';
 import { DateTime, DateTimeFormatOptions } from "luxon";
 
 
+/** Milliseconds in a day. Only for durations; a calendar day can be 23 or 25 hours long */
+export const DAY_MS = 24 * 60 * 60 * 1000;
+
+// Calendar arithmetic, not milliseconds: a DST day is 23 or 25 hours long
+export const dayOf = (date: Date): Date => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+export const shiftDays = (date: Date, days: number): Date =>
+    new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
+// getDay() counts from Sunday, the week starts on Monday
+export const mondayOf = (date: Date): Date => shiftDays(date, -((date.getDay() + 6) % 7));
+export const daysBetween = (from: Date, to: Date): number => Math.round(
+    (Date.UTC(to.getFullYear(), to.getMonth(), to.getDate())
+        - Date.UTC(from.getFullYear(), from.getMonth(), from.getDate())) / DAY_MS
+);
+
 export function isSameDay(date1: Date, date2: Date): boolean {
     return (
         date1.getFullYear() === date2.getFullYear() &&

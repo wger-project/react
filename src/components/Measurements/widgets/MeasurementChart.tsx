@@ -1,28 +1,13 @@
 import {
-    AVERAGE_WINDOWS,
-    averageWindowOf,
-    binWidthFor,
-    categoryDisplayName,
-    isSummedPerDay,
-    MeasurementCategory,
-    resolveChartType
-} from "@/components/Measurements/models/Category";
-import {
     aggregatePerDay,
     averagePerDay,
-    chartQueryFor,
     chartPointsForBuckets,
-    DISTRIBUTION_MIN_VALUES,
-    groupChart,
-    groupComponentPoints,
+    chartQueryFor,
     movingAverage,
-    valueHistogram,
     weeklyDeltas
 } from "@/components/Measurements/charts/data";
-import {
-    useMeasurementBucketsQuery,
-    useMeasurementValueCountsQuery
-} from "@/components/Measurements/queries";
+import { groupChart, groupComponentPoints } from "@/components/Measurements/charts/groups";
+import { DISTRIBUTION_MIN_VALUES, valueHistogram } from "@/components/Measurements/charts/histogram";
 import {
     ChartRange,
     DEFAULT_CHART_RANGE,
@@ -31,6 +16,16 @@ import {
     pointsSince
 } from "@/components/Measurements/charts/range";
 import { PlanPeriod } from "@/components/Measurements/charts/series";
+import {
+    AVERAGE_WINDOWS,
+    averageWindowOf,
+    binWidthFor,
+    categoryDisplayName,
+    isSummedPerDay,
+    MeasurementCategory,
+    resolveChartType
+} from "@/components/Measurements/models/Category";
+import { useMeasurementBucketsQuery, useMeasurementValueCountsQuery } from "@/components/Measurements/queries";
 import { MeasurementBarChart } from "@/components/Measurements/widgets/MeasurementBarChart";
 import { MeasurementDeltaBarChart } from "@/components/Measurements/widgets/MeasurementDeltaBarChart";
 import { MeasurementDistributionChart } from "@/components/Measurements/widgets/MeasurementDistributionChart";

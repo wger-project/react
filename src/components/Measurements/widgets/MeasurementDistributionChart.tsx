@@ -1,5 +1,5 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import { buildHistogram, ValueCount } from "@/components/Measurements/charts/data";
+import { ValueCount, buildHistogram } from "@/components/Measurements/charts/histogram";
 import { valueOnly, valueWithUnit } from "@/components/Measurements/charts/format";
 import { ChartEmptyState } from "@/components/Measurements/widgets/ChartEmptyState";
 import React from "react";

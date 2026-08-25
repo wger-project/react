@@ -1,5 +1,5 @@
 import { componentColor, componentPalette } from "@/components/Measurements/charts/colors";
-import { StackedPoint } from "@/components/Measurements/charts/data";
+import { StackedPoint } from "@/components/Measurements/charts/groups";
 import { MAX_BAR_WIDTH } from "@/components/Measurements/charts/density";
 import { durationAxis, valueOnly, valueWithUnit } from "@/components/Measurements/charts/format";
 import { BarChartFrame, TooltipFrame, TooltipProps } from "@/components/Measurements/widgets/chartFrames";

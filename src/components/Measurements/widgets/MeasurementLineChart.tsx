@@ -1,5 +1,5 @@
 import { ChartConfig } from "@/components/Measurements/models/Category";
-import { measurementSeries } from "@/components/Measurements/charts/data";
+import { measurementSeries } from "@/components/Measurements/charts/groups";
 import { ChartPoint, PlanPeriod } from "@/components/Measurements/charts/series";
 import { MeasurementSeriesChart } from "@/components/Measurements/widgets/MeasurementSeriesChart";
 import { OverallChange } from "@/components/Measurements/widgets/OverallChange";

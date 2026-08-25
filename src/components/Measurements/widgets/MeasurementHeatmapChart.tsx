@@ -1,5 +1,5 @@
 import { alpha, Box, Typography, useTheme } from "@mui/material";
-import { buildHeatmapGrid, DAYS_PER_WEEK, heatmapDayAt } from "@/components/Measurements/charts/data";
+import { DAYS_PER_WEEK, buildHeatmapGrid, heatmapDayAt } from "@/components/Measurements/charts/heatmap";
 import { valueWithUnit } from "@/components/Measurements/charts/format";
 import { ChartPoint } from "@/components/Measurements/charts/series";
 import { ChartEmptyState } from "@/components/Measurements/widgets/ChartEmptyState";

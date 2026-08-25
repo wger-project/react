@@ -1,5 +1,5 @@
 import { componentColor, componentPalette } from "@/components/Measurements/charts/colors";
-import { stackableComponents } from "@/components/Measurements/charts/data";
+import { stackableComponents } from "@/components/Measurements/charts/groups";
 import { valueWithUnit } from "@/components/Measurements/charts/format";
 import { ChartRange, displayFilterFor } from "@/components/Measurements/charts/range";
 import {

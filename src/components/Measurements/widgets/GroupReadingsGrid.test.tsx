@@ -1,6 +1,6 @@
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
-import { groupReadingPage } from "@/components/Measurements/charts/data";
+import { groupReadingPage } from "@/components/Measurements/charts/groups";
 import { useGroupReadingsQuery } from "@/components/Measurements/queries";
 import { GroupReadingsGrid } from "@/components/Measurements/widgets/GroupReadingsGrid";
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
