@@ -5,6 +5,7 @@
     "delete": "Deletar",
     "add": "Adicionar",
     "weight": "Peso",
+    "off": "Desligado",
     "submit": "Enviar",
     "difference": "Diferença",
     "close": "Fechar",
@@ -336,7 +337,6 @@
         "languageFilterAll": "Todos os idiomas",
         "filterVegan": "Vegano",
         "filterNutriscore": "Filtro Nutri-Score",
-        "filterNutriscoreOff": "Desligado",
         "filterNutriscoreNoFilter": "Sem filtro",
         "filterNutriscoreOrBetter": "{{grade}} ou melhor"
     },

@@ -1,11 +1,18 @@
 import { MeasurementCategory, MeasurementEntry } from "@/components/Measurements";
-import { WeightEntry } from "@/components/Weight";
-import { getMeasurementCategories } from "@/components/Measurements/api/measurements";
+import {
+    getAllMeasurementEntries,
+    getMeasurementCategories
+} from "@/components/Measurements/api/measurements";
 import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutritionalDiary";
 import { getSessions } from "@/components/Routines/api/session";
-import { getWeights } from "@/components/Weight/api/weight";
+import { getBodyWeightCategory, getWeights } from "@/components/Measurements/api/bodyWeight";
 import { TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2 } from "@/tests/nutritionDiaryTestdata";
 import { testQueryClient } from "@/tests/queryClient";
+import {
+    makeWeightEntry,
+    TEST_BODY_WEIGHT_CATEGORY_UUID,
+    testBodyWeightCategory
+} from "@/tests/weight/testData";
 import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
 import { dateToYYYYMMDD } from "@/core/lib/date";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -21,7 +28,10 @@ import CalendarComponent from "./CalendarComponent";
 vi.mock("@/components/Measurements/api/measurements");
 vi.mock("@/components/Nutrition/api/nutritionalDiary");
 vi.mock("@/components/Routines/api/session");
-vi.mock("@/components/Weight/api/weight");
+vi.mock("@/components/Measurements/api/bodyWeight");
+vi.mock('@/components/User/queries/profile', () => ({
+    useProfileQuery: () => ({ isLoading: false, data: { useMetric: true } }),
+}));
 
 
 /*
@@ -42,27 +52,53 @@ describe('CalendarComponent', () => {
         vi.setSystemTime(today);
         user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
+        (getBodyWeightCategory as Mock).mockImplementation(() => Promise.resolve(testBodyWeightCategory));
         (getWeights as Mock).mockImplementation(() => Promise.resolve([
-            new WeightEntry(
-                new Date(currentYear, currentMonth, 2, 12, 0),
-                70
-            ),
+            makeWeightEntry(new Date(currentYear, currentMonth, 2, 12, 0), 70),
         ]));
 
         (getSessions as Mock).mockImplementation(() => Promise.resolve(
             [testWorkoutSession]
         ));
 
+        const group = new MeasurementCategory(
+            'cccccccc-cccc-cccc-cccc-000000000002',
+            "Blood pressure",
+            "mmHg",
+        );
+        group.children = [new MeasurementCategory(
+            'cccccccc-cccc-cccc-cccc-000000000003',
+            "Systolic",
+            "mmHg",
+            'custom',
+            false,
+            group.id,
+        )];
         (getMeasurementCategories as Mock).mockImplementation(() => Promise.resolve([
             new MeasurementCategory(
                 'cccccccc-cccc-cccc-cccc-000000000001',
                 "Body Fat",
                 "%",
-                [new MeasurementEntry(
-                    'dddddddd-dddd-dddd-dddd-000000000001',
-                    'cccccccc-cccc-cccc-cccc-000000000001',
-                    new Date(currentYear, currentMonth, 1, 12, 0), 20, "Normal"
-                )]
+            ),
+            group,
+        ]));
+        // the entries of the month, over all categories, which is where the
+        // components of a group and the body weight arrive in as well
+        (getAllMeasurementEntries as Mock).mockImplementation(() => Promise.resolve([
+            new MeasurementEntry(
+                'dddddddd-dddd-dddd-dddd-000000000001',
+                'cccccccc-cccc-cccc-cccc-000000000001',
+                new Date(currentYear, currentMonth, 1, 12, 0), 20, "Normal"
+            ),
+            new MeasurementEntry(
+                'dddddddd-dddd-dddd-dddd-000000000002',
+                'cccccccc-cccc-cccc-cccc-000000000003',
+                new Date(currentYear, currentMonth, 1, 12, 0), 120, ""
+            ),
+            new MeasurementEntry(
+                'dddddddd-dddd-dddd-dddd-000000000003',
+                TEST_BODY_WEIGHT_CATEGORY_UUID,
+                new Date(currentYear, currentMonth, 1, 12, 0), 65, ""
             ),
         ]));
 
@@ -166,8 +202,18 @@ describe('CalendarComponent', () => {
         const day = await screen.findByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 1))}`);
         await user.click(day);
 
+        // more than one measurement, so they are behind the expander
+        await user.click(await screen.findByText('measurements.measurements'));
+
         // Assert
-        expect(await screen.findByText(/body fat: 20 %/i)).toBeInTheDocument();
+        expect(await screen.findByText('Body Fat')).toBeInTheDocument();
+        expect(screen.getByText(/20 %/i)).toBeInTheDocument();
+        // the components of a group are categories of their own, and the only
+        // place their readings can come from
+        expect(screen.getByText('Systolic')).toBeInTheDocument();
+        expect(screen.getByText(/120 mmHg/i)).toBeInTheDocument();
+        // body weight has its own row on a day, it is not listed a second time
+        expect(screen.queryByText(/65/)).toBeNull();
     });
 
     test('displays weight details for selected day', async () => {
@@ -175,10 +221,33 @@ describe('CalendarComponent', () => {
         renderComponent();
 
         // Act
-        const day = screen.getByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 2))}`);
+        const day = await screen.findByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 2))}`);
         await user.click(day);
 
         // Assert
-        expect(screen.getByText('70.0')).toBeInTheDocument();
+        expect(await screen.findByText('70.0 server.kg')).toBeInTheDocument();
+    });
+
+    test('reads the month as the instants it spans in the browser timezone', async () => {
+        const start = new Date(currentYear, currentMonth, 1).toISOString();
+        const end = new Date(currentYear, currentMonth + 1, 1).toISOString();
+
+        renderComponent();
+        await screen.findByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 1))}`);
+
+        // A date bound would be read as midnight in the server's timezone and
+        // leave out the entries of the last day
+        expect(getWeights).toHaveBeenCalledWith(
+            testBodyWeightCategory,
+            { "date__gte": start, "date__lt": end },
+        );
+        expect(getAllMeasurementEntries).toHaveBeenCalledWith({ "date__gte": start, "date__lt": end });
+        expect(getSessions).toHaveBeenCalledWith({
+            filtersetQuerySessions: { "datetime_start__gte": start, "datetime_start__lt": end },
+            filtersetQueryLogs: { "date__gte": start, "date__lt": end },
+        });
+        expect(getNutritionalDiaryEntries).toHaveBeenCalledWith({
+            filtersetQuery: { "datetime__gte": start, "datetime__lt": end },
+        });
     });
 });

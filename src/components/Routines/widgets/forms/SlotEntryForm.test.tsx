@@ -14,8 +14,8 @@ import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines
 import { editProfile, getProfile } from "@/components/User/api/profile";
 import { getTestQueryClient } from "@/tests/queryClient";
 import { testProfileDataVerified } from "@/tests/userTestdata";
-import { testDayLegs } from "@/tests/workoutRoutinesTestData";
 import { testRepetitionUnits, testWeightUnits } from "@/tests/unitsTestData";
+import { testDayLegs } from "@/tests/workoutRoutinesTestData";
 import { DEBOUNCE_ROUTINE_FORMS } from "@/core/lib/consts";
 
 

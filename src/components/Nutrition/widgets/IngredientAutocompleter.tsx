@@ -353,7 +353,7 @@ export function IngredientAutocompleter({ callback, initialIngredient }: Ingredi
                             min={0}
                             max={NUTRI_SCORES.length}
                             marks={[
-                                { value: NUTRISCORE_OFF_INDEX, label: t("nutrition.filterNutriscoreOff") },
+                                { value: NUTRISCORE_OFF_INDEX, label: t("off") },
                                 ...NUTRI_SCORES.map((score, index) => ({
                                     value: index + 1,
                                     label: score.toUpperCase(),

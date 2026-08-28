@@ -33,8 +33,15 @@ global.TextEncoder = TextEncoder as any;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 global.TextDecoder = TextDecoder as any;
 
-// jsdom doesn't provide these browser APIs that recharts/react-resize-detector rely on.
+/*
+ * jsdom doesn't provide these browser APIs that recharts/react-resize-detector
+ * rely on. Both take their callback like the real ones do, and never call it:
+ * nothing is laid out here, so nothing is ever observed to change.
+ */
 class MockResizeObserver {
+    constructor(readonly callback: ResizeObserverCallback) {
+    }
+
     observe(): void {
     }
 
@@ -48,7 +55,11 @@ class MockResizeObserver {
 class MockIntersectionObserver {
     readonly root = null;
     readonly rootMargin = '';
+    readonly scrollMargin = '';
     readonly thresholds: ReadonlyArray<number> = [];
+
+    constructor(readonly callback: IntersectionObserverCallback) {
+    }
 
     observe(): void {
     }
@@ -64,10 +75,8 @@ class MockIntersectionObserver {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-global.ResizeObserver = MockResizeObserver as any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-global.IntersectionObserver = MockIntersectionObserver as any;
+global.ResizeObserver = MockResizeObserver;
+global.IntersectionObserver = MockIntersectionObserver;
 
 // runs a cleanup after each test case (e.g. clearing jsdom)
 afterEach(() => {

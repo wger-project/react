@@ -1,4 +1,4 @@
-import { Muscle } from "@/components/Exercises";
+import type { Muscle } from "@/components/Exercises";
 import { PUBLIC_URL } from "@/config";
 import React from "react";
 

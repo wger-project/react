@@ -1,10 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { useLanguageQuery } from "@/components/Exercises";
-import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "@/components/Routines/queries";
+import { useAddRoutineLogsQuery, useRoutineDetailQuery, useSessionOfDay } from "@/components/Routines/queries";
 import { SessionLogsForm } from '@/components/Routines/widgets/forms/SessionLogsForm';
 import { DateTime } from "luxon";
 import { testLanguages } from "@/tests/exerciseTestdata";
+import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
@@ -17,6 +18,7 @@ describe('SessionLogsForm', () => {
     const mockUseLanguageQuery = useLanguageQuery as Mock;
     const mockAddLogsQuery = useAddRoutineLogsQuery as Mock;
     const mockRoutineDetailQuery = useRoutineDetailQuery as Mock;
+    const mockUseSessionOfDay = useSessionOfDay as Mock;
     const mockMutateAsync = vi.fn();
 
     beforeEach(() => {
@@ -34,6 +36,12 @@ describe('SessionLogsForm', () => {
             isLoading: false,
             data: testLanguages,
         });
+        mockUseSessionOfDay.mockReturnValue({
+            sessions: [testWorkoutSession],
+            session: testWorkoutSession,
+            isLoading: false,
+            isSuccess: true,
+        });
     });
 
 
@@ -42,6 +50,7 @@ describe('SessionLogsForm', () => {
             dayId={5}
             routineId={1}
             selectedDate={DateTime.now()}
+            chosenSessionId={null}
         />);
 
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -70,6 +79,7 @@ describe('SessionLogsForm', () => {
             dayId={5}
             routineId={1}
             selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
         />);
 
         const weightElements = screen.getAllByRole('textbox').filter(input => (input as HTMLInputElement).value === '20');
@@ -92,6 +102,25 @@ describe('SessionLogsForm', () => {
         expect(mockMutateAsync.mock.calls[0][0][3]).toMatchObject(originalData);
     });
 
+    test('writes the logs into the session the screen works on', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={testWorkoutSession.id}
+        />);
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        // Assert
+        // Without the id the server would sort the logs into a session by their
+        // time, which is a guess as soon as the day holds more than one
+        expect(mockMutateAsync.mock.calls[0][0][0].session).toEqual(testWorkoutSession.id);
+    });
+
     test('add log action buttons works', async () => {
         // Arrange
         const user = userEvent.setup();
@@ -101,6 +130,7 @@ describe('SessionLogsForm', () => {
             dayId={5}
             routineId={1}
             selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
         />);
         await user.click(screen.getByTestId('AddIcon'));
         await user.click(screen.getByRole('button', { name: /submit/i }));
@@ -118,6 +148,7 @@ describe('SessionLogsForm', () => {
             dayId={5}
             routineId={1}
             selectedDate={DateTime.now()}
+            chosenSessionId={null}
         />);
         await user.click(screen.getAllByTestId('DeleteOutlinedIcon')[0]);
 

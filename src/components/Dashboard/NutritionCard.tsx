@@ -1,4 +1,5 @@
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
 import {
@@ -130,6 +131,7 @@ const MealListItem = (props: { meal: Meal; planId: string }) => {
 
     return (
         <>
+            <FormQueryErrorsSnackbar mutationQuery={addDiaryEntryQuery} />
             <ListItemButton onClick={handleToggleExpand} selected={expandView}>
                 <ListItemIcon>{expandView ? <ExpandLessIcon /> : <ExpandMoreIcon />}</ListItemIcon>
                 <ListItemText primary={primaryHeader} secondary={secondaryHeader} />

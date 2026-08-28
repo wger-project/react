@@ -11,6 +11,7 @@ import {
     useEditDiaryEntryQuery
 } from "@/components/Nutrition/queries";
 import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
@@ -60,14 +61,16 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
             .required(t('forms.fieldRequired')),
     });
 
+    // The dialog closes only once the server took the change, so a rejected
+    // write is shown instead of disappearing with it
+    const closeOnSuccess = { onSuccess: () => closeFn?.() };
+
     const handleDelete = () => {
         if (entry) {
-            deleteDiaryQuery.mutate(entry.id!);
+            deleteDiaryQuery.mutate(entry.id!, closeOnSuccess);
+            return;
         }
-
-        if (closeFn) {
-            closeFn();
-        }
+        closeFn?.();
     };
 
     const handleUnitChange = (value: string) => {
@@ -104,7 +107,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         weightUnitId: selectedUnit?.id ?? null,
                         weightUnit: selectedUnit,
                     });
-                    editDiaryQuery.mutate(newDiaryEntry);
+                    editDiaryQuery.mutate(newDiaryEntry, closeOnSuccess);
                 } else {
                     // Add
                     addDiaryQuery.mutate(new DiaryEntry({
@@ -115,12 +118,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         mealId: selectedMeal,
                         weightUnitId: selectedUnit?.id ?? null,
                         weightUnit: selectedUnit,
-                    }));
-                }
-
-                // if closeFn is defined, close the modal (this form does not have to be displayed in one)
-                if (closeFn) {
-                    closeFn();
+                    }), closeOnSuccess);
                 }
             }}
         >
@@ -216,6 +214,8 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                                 }}
                             />
                         </LocalizationProvider>
+                        <FormQueryErrors mutationQuery={entry ? editDiaryQuery : addDiaryQuery} />
+                        <FormQueryErrors mutationQuery={deleteDiaryQuery} />
                         <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
                             {(closeFn !== undefined && entry !== undefined)
                                 && <Button color="error" variant="outlined" onClick={handleDelete}>

@@ -1,4 +1,4 @@
-import { calculatePastDate, dateTimeToHHMM, dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
+import { dateTimeToHHMM, dateToRelative, dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
 
 /*
  * All date helpers must behave the same in every timezone, so the whole suite
@@ -85,47 +85,26 @@ describe.each([
 
     });
 
+    describe('dateToRelative', () => {
+        // Built in the test rather than held in a constant: the describe body
+        // runs while the tests are collected, before beforeAll switches the
+        // timezone, and the reference instant would be the runner's own
+        const now = () => new Date(2026, 7, 7, 9, 0);
 
-    describe('calculatePastDate', () => {
-
-        it('should return undefined for empty string filter', () => {
-            expect(calculatePastDate('', yyyymmddToDate('2023-08-14'))).toBeUndefined();
+        test('today and yesterday are named, not counted', () => {
+            expect(dateToRelative(new Date(2026, 7, 7, 0, 30), 'de', now())).toBe('heute');
+            // Calendar days, not elapsed hours: late yesterday is yesterday
+            expect(dateToRelative(new Date(2026, 7, 6, 23, 50), 'de', now())).toBe('gestern');
         });
 
-        it('should return the correct date for lastWeek filter', () => {
-            const result = calculatePastDate('lastWeek', yyyymmddToDate('2023-02-14'));
-            expect(result).toStrictEqual('2023-02-07');
+        test('recent dates count in days', () => {
+            expect(dateToRelative(new Date(2026, 7, 2), 'de', now())).toBe('vor 5 Tagen');
         });
 
-        it('should return the correct date for lastMonth filter', () => {
-            const result = calculatePastDate('lastMonth', yyyymmddToDate('2023-02-14'));
-            expect(result).toStrictEqual('2023-01-14');
-        });
-
-        it('should return the correct date for lastHalfYear filter', () => {
-            const result = calculatePastDate('lastHalfYear', yyyymmddToDate('2023-08-14'));
-            expect(result).toStrictEqual('2023-02-14');
-        });
-
-        it('should return the correct date for lastYear filter', () => {
-            const result = calculatePastDate('lastYear', yyyymmddToDate('2023-02-14'));
-            expect(result).toStrictEqual('2022-02-14');
-        });
-
-        it('clamps to the last day of the month instead of overflowing', () => {
-            // Naively subtracting a month from March 31st lands on "February 31st",
-            // which rolls over into March again
-            expect(calculatePastDate('lastMonth', yyyymmddToDate('2023-03-31'))).toStrictEqual('2023-02-28');
-            expect(calculatePastDate('lastMonth', yyyymmddToDate('2024-03-31'))).toStrictEqual('2024-02-29');
-            expect(calculatePastDate('lastHalfYear', yyyymmddToDate('2023-08-31'))).toStrictEqual('2023-02-28');
-        });
-
-        it('does not modify the date it was given', () => {
-            const date = yyyymmddToDate('2023-02-14');
-
-            calculatePastDate('lastYear', date);
-
-            expect(dateToYYYYMMDD(date)).toStrictEqual('2023-02-14');
+        test('older dates grow to weeks, months and years', () => {
+            expect(dateToRelative(new Date(2026, 6, 17), 'de', now())).toBe('vor 3 Wochen');
+            expect(dateToRelative(new Date(2026, 5, 1), 'de', now())).toBe('vor 2 Monaten');
+            expect(dateToRelative(new Date(2024, 7, 1), 'de', now())).toBe('vor 2 Jahren');
         });
     });
 });

@@ -2,6 +2,7 @@
     "difference": "差異",
     "close": "關閉",
     "timeOfDay": "時間",
+    "off": "關閉",
     "submit": "提交",
     "deleteConfirmation": "你確定要刪除“{{name}}”嗎？",
     "licenses": {
@@ -127,7 +128,6 @@
         "languageFilterCurrentAndEnglish": "當前語言({{lang}}) 與英文",
         "filterVegan": "純素主義",
         "filterNutriscore": "依營養分數（Nutri-Score ）篩選",
-        "filterNutriscoreOff": "關閉",
         "filterNutriscoreNoFilter": "不套用篩選"
     },
     "images": "圖片",

@@ -1,12 +1,12 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
-import { useBodyWeightQuery } from "@/components/Weight";
+import { useBodyWeightCategoryQuery, useBodyWeightQuery, useDisplayWeightUnit } from "@/components/Measurements";
 import { WeightCard } from "@/components/Dashboard/WeightCard";
 import { testQueryClient } from "@/tests/queryClient";
-import { testWeightEntries } from "@/tests/weight/testData";
+import { testBodyWeightCategory, testWeightEntries } from "@/tests/weight/testData";
 import type { Mock } from 'vitest';
 
-vi.mock("@/components/Weight/queries");
+vi.mock("@/components/Measurements/queries/bodyWeight");
 
 describe("test the WeightCard component", () => {
 
@@ -16,6 +16,11 @@ describe("test the WeightCard component", () => {
                 isSuccess: true,
                 isLoading: false,
                 data: testWeightEntries
+            }));
+            (useDisplayWeightUnit as Mock).mockReturnValue('kg');
+            (useBodyWeightCategoryQuery as Mock).mockImplementation(() => ({
+                isLoading: false,
+                data: testBodyWeightCategory
             }));
         });
 

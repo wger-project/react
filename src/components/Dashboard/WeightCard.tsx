@@ -1,7 +1,16 @@
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
-import { useBodyWeightQuery, WeightChart, WeightEntry, WeightForm, WeightTableDashboard } from "@/components/Weight";
+import {
+    entryFilterFor,
+    MeasurementEntry,
+    useBodyWeightCategoryQuery,
+    useBodyWeightQuery,
+    useDisplayWeightUnit,
+    WeightChart,
+    WeightForm,
+    WeightTableDashboard
+} from "@/components/Measurements";
 import { makeLink, WgerLink } from "@/core/lib/url";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button, IconButton } from "@mui/material";
@@ -12,7 +21,7 @@ import { DashboardCard } from "./DashboardCard";
 
 export const WeightCard = () => {
     const [t] = useTranslation();
-    const weightyQuery = useBodyWeightQuery("lastYear");
+    const weightyQuery = useBodyWeightQuery(entryFilterFor('lastYear'));
 
     if (weightyQuery.isLoading) {
         return <LoadingPlaceholder />;
@@ -24,11 +33,16 @@ export const WeightCard = () => {
         <EmptyCard title={t("weight")} modalContent={<WeightForm />} />
     );
 };
-export const WeightCardContent = (props: { entries: WeightEntry[] }) => {
+export const WeightCardContent = (props: { entries: MeasurementEntry[] }) => {
     const [openModal, setOpenModal] = React.useState(false);
     const handleOpenModal = () => setOpenModal(true);
     const handleCloseModal = () => setOpenModal(false);
     const [t, i18n] = useTranslation();
+    const displayUnit = useDisplayWeightUnit();
+    const categoryQuery = useBodyWeightCategoryQuery();
+
+    // Entries without their own unit fall back to the one of the category
+    const categoryUnit = categoryQuery.data?.unit ?? 'kg';
 
     return (
         <>
@@ -48,9 +62,17 @@ export const WeightCardContent = (props: { entries: WeightEntry[] }) => {
                     </>
                 }
             >
-                <WeightChart weights={props.entries} height={200} />
+                <WeightChart
+                    weights={props.entries}
+                    unit={displayUnit}
+                    categoryUnit={categoryUnit}
+                    chartConfig={categoryQuery.data?.chartConfig}
+                    height={200} />
                 <Box sx={{ mt: 2 }}>
-                    <WeightTableDashboard weights={props.entries} />
+                    <WeightTableDashboard
+                        weights={props.entries}
+                        unit={displayUnit}
+                        categoryUnit={categoryUnit} />
                 </Box>
             </DashboardCard>
 

@@ -1,5 +1,5 @@
 import * as exerciseService from "@/components/Exercises/api/exercise";
-import { addSession, editSession, getSessions, searchSession } from "@/components/Routines/api/session";
+import { addSession, editSession, getSessions, searchSessions } from "@/components/Routines/api/session";
 import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
 import axios from "axios";
@@ -84,11 +84,10 @@ describe("Session service tests", () => {
                             "id": SESSION_UUID,
                             "routine": 39764,
                             "day": null,
-                            "date": "2025-08-07",
                             "notes": null,
                             "impression": "3",
-                            "time_start": "20:10:58",
-                            "time_end": "23:28:21"
+                            "datetime_start": "2025-08-07T20:10:58+02:00",
+                            "datetime_end": "2025-08-07T23:28:21+02:00"
                         },
                     ]
                 }
@@ -157,57 +156,54 @@ describe("Session service tests", () => {
         );
     });
 
-    test('searchSession returns the parsed session when count === 1', async () => {
+    test('searchSessions parses every session of the query', async () => {
         const apiResponse = {
-            count: 1, next: null, previous: null,
+            count: 2, next: null, previous: null,
             results: [
                 {
                     id: SESSION_UUID, routine: 39764, day: 5,
-                    date: "2025-08-07",
                     notes: "ok",
                     impression: "3",
-                    time_start: "20:10:58", time_end: "23:28:21",
+                    datetime_start: "2025-08-07T20:10:58+02:00",
+                    datetime_end: "2025-08-07T23:28:21+02:00",
+                },
+                {
+                    id: SESSION_UUID_2, routine: 39764, day: 5,
+                    notes: null,
+                    impression: "2",
+                    datetime_start: "2025-08-07T08:00:00+02:00",
+                    datetime_end: null,
                 },
             ],
         };
         (axios.get as Mock).mockResolvedValue({ data: apiResponse });
 
-        const result = await searchSession({ routine: 39764, date: "2025-08-07" });
+        const result = await searchSessions({ routine: 39764, datetime_start__date: "2025-08-07" });
 
         const url = (axios.get as Mock).mock.calls[0][0] as string;
         expect(url).toContain("/api/v2/workoutsession/");
         expect(url).toContain("routine=39764");
-        expect(url).toContain("date=2025-08-07");
-        expect(result).toBeInstanceOf(WorkoutSession);
-        expect(result?.id).toBe(SESSION_UUID);
+        expect(url).toContain("datetime_start__date=2025-08-07");
+        expect(result.every(session => session instanceof WorkoutSession)).toBe(true);
+        expect(result.map(session => session.id)).toEqual([SESSION_UUID, SESSION_UUID_2]);
     });
 
-    test('searchSession returns null when count !== 1', async () => {
+    test('searchSessions returns an empty list when nothing matches', async () => {
         (axios.get as Mock).mockResolvedValue({
             data: { count: 0, next: null, previous: null, results: [] },
         });
 
-        const result = await searchSession({ routine: 1 });
+        const result = await searchSessions({ routine: 1 });
 
-        expect(result).toBeNull();
-    });
-
-    test('searchSession returns null when count is greater than 1 (ambiguous)', async () => {
-        (axios.get as Mock).mockResolvedValue({
-            data: { count: 2, next: null, previous: null, results: [{}, {}] },
-        });
-
-        const result = await searchSession({ routine: 1 });
-
-        expect(result).toBeNull();
+        expect(result).toEqual([]);
     });
 
     test('addSession POSTs the serialized session and returns the parsed session', async () => {
         (axios.post as Mock).mockResolvedValue({
             data: {
-                id: SESSION_UUID_2, routine: 39764, day: 5, date: "2025-08-07",
+                id: SESSION_UUID_2, routine: 39764, day: 5,
                 notes: null, impression: "3",
-                time_start: null, time_end: null,
+                datetime_start: "2025-08-07T00:00:00+02:00", datetime_end: null,
             },
         });
 
@@ -215,11 +211,10 @@ describe("Session service tests", () => {
             id: null,
             routineId: 39764,
             dayId: 5,
-            date: new Date(2025, 7, 7),
             notes: null,
             impression: "3",
-            timeStart: null,
-            timeEnd: null,
+            datetimeStart: new Date(2025, 7, 7, 20, 10),
+            datetimeEnd: null,
         }));
 
         expect(axios.post).toHaveBeenCalledTimes(1);
@@ -228,11 +223,10 @@ describe("Session service tests", () => {
         expect(body).toEqual({
             routine: 39764,
             day: 5,
-            date: "2025-08-07",
             notes: null,
             impression: "3",
-            time_start: null,
-            time_end: null,
+            datetime_start: new Date(2025, 7, 7, 20, 10).toISOString(),
+            datetime_end: null,
         });
         expect(result).toBeInstanceOf(WorkoutSession);
         expect(result.id).toBe(SESSION_UUID_2);
@@ -241,9 +235,9 @@ describe("Session service tests", () => {
     test('editSession PATCHes /workoutsession/<id>/ with the serialized session', async () => {
         (axios.patch as Mock).mockResolvedValue({
             data: {
-                id: SESSION_UUID, routine: 39764, day: 5, date: "2025-08-07",
+                id: SESSION_UUID, routine: 39764, day: 5,
                 notes: "edited", impression: "3",
-                time_start: null, time_end: null,
+                datetime_start: "2025-08-07T00:00:00+02:00", datetime_end: null,
             },
         });
 
@@ -251,11 +245,10 @@ describe("Session service tests", () => {
             id: SESSION_UUID,
             routineId: 39764,
             dayId: 5,
-            date: new Date(2025, 7, 7),
             notes: "edited",
             impression: "3",
-            timeStart: null,
-            timeEnd: null,
+            datetimeStart: new Date(2025, 7, 7, 20, 10),
+            datetimeEnd: null,
         }));
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
@@ -265,11 +258,10 @@ describe("Session service tests", () => {
             id: SESSION_UUID,
             routine: 39764,
             day: 5,
-            date: "2025-08-07",
             notes: "edited",
             impression: "3",
-            time_start: null,
-            time_end: null,
+            datetime_start: new Date(2025, 7, 7, 20, 10).toISOString(),
+            datetime_end: null,
         });
         expect(result.notes).toBe("edited");
     });

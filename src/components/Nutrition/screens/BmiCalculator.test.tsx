@@ -1,14 +1,15 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
+import { useBodyWeightCategoryQuery, useBodyWeightQuery } from "@/components/Measurements";
 import { BmiCalculator } from "@/components/Nutrition/screens/BmiCalculator";
-import { useBodyWeightQuery } from "@/components/Weight";
 import { useProfileQuery } from "@/components/User";
 import i18n from 'i18next';
 import { BrowserRouter } from 'react-router-dom';
 import { testQueryClient } from "@/tests/queryClient";
+import { makeWeightEntry, testBodyWeightCategory } from "@/tests/weight/testData";
 import type { Mock } from 'vitest';
 
-vi.mock('@/components/Weight/queries');
+vi.mock('@/components/Measurements/queries/bodyWeight');
 vi.mock('@/components/User/queries/profile');
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -34,7 +35,11 @@ describe('BmiCalculator', () => {
     beforeEach(() => {
         (useBodyWeightQuery as Mock).mockReturnValue({
             isLoading: false,
-            data: [{ weight: 55, date: new Date() }],
+            data: [makeWeightEntry(new Date(), 55)],
+        });
+        (useBodyWeightCategoryQuery as Mock).mockReturnValue({
+            isLoading: false,
+            data: testBodyWeightCategory,
         });
         (useProfileQuery as Mock).mockReturnValue({
             isLoading: false,
@@ -59,17 +64,18 @@ describe('BmiCalculator', () => {
         expect(screen.getByLabelText('height')).toHaveValue(180);
     });
 
-    it('converts the last weight entry to kg for imperial users', async () => {
-        (useProfileQuery as Mock).mockReturnValue({
+    it('converts an entry stored in pounds to kg', async () => {
+        // The unit travels with the entry, so the profile has no say in this
+        (useBodyWeightQuery as Mock).mockReturnValue({
             isLoading: false,
-            data: { height: 180, useMetric: false },
+            data: [makeWeightEntry(new Date(), 121, { unit: 'lb' })],
         });
 
         render(<BmiCalculator />, { wrapper });
 
-        // 55 lb are 24.947 kg, which gives a BMI of 7.699...
-        expect(screen.getByLabelText('weight')).toHaveValue(55 * 0.453592);
-        expect(screen.getByText('BMI: 7.7')).toBeInTheDocument();
+        // 121 lb are 54.88 kg, which gives a BMI of 16.938...
+        expect(screen.getByLabelText('weight')).toHaveValue(54.88);
+        expect(screen.getByText('BMI: 16.9')).toBeInTheDocument();
     });
 
     it('shows no result when the user has no weight entries', async () => {

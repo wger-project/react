@@ -1,6 +1,10 @@
 import { Box, Stack, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { useBodyWeightQuery } from "@/components/Weight";
+import {
+    entryFilterFor,
+    useBodyWeightCategoryQuery,
+    useBodyWeightQuery
+} from "@/components/Measurements";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { useProfileQuery } from "@/components/User";
@@ -23,22 +27,23 @@ const getRangeColor = (name: string) => {
 export const BmiCalculator = () => {
     const [t] = useTranslation();
 
-    const weightQuery = useBodyWeightQuery();
+    // Only the most recent entry is used to prefill the field; a year back is
+    // generous for that and keeps the query bounded
+    const weightQuery = useBodyWeightQuery(entryFilterFor('lastYear'));
+    const categoryQuery = useBodyWeightCategoryQuery();
     const profileQuery = useProfileQuery();
+    // Entries without their own unit fall back to the one of the category
+    const categoryUnit = categoryQuery.data?.unit ?? 'kg';
 
     const [height, setHeight] = useState<number | null>();
     const [weight, setWeight] = useState<number | null>();
 
-    // Set default weight from last weight entry
+    // Set default weight from last weight entry, the BMI is always computed in kg
     useEffect(() => {
         if (weightQuery.data && weightQuery.data.length > 0) {
-            const lastWeightEntry = weightQuery.data[0];
-            const weightInKg = profileQuery.data?.useMetric
-                ? lastWeightEntry.weight
-                : lastWeightEntry.weight * 0.453592; // Convert lb to kg
-            setWeight(weightInKg);
+            setWeight(weightQuery.data[0].valueIn('kg', categoryUnit));
         }
-    }, [weightQuery.data, profileQuery.data]);
+    }, [weightQuery.data, categoryUnit]);
 
     useEffect(() => {
         if (profileQuery.data?.height) {

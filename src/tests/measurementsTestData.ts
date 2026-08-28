@@ -33,7 +33,6 @@ export const TEST_MEASUREMENT_CATEGORY_1 = new MeasurementCategory(
     CATEGORY_1,
     "Biceps",
     "cm",
-    TEST_MEASUREMENT_ENTRIES_1,
 );
 
 
@@ -41,5 +40,15 @@ export const TEST_MEASUREMENT_CATEGORY_2 = new MeasurementCategory(
     CATEGORY_2,
     "Body fat",
     "%",
-    TEST_MEASUREMENT_ENTRIES_2
 );
+
+/** A category with its history, for the mocked chart reads */
+export const TEST_MEASUREMENT_SEED_1 = {
+    category: TEST_MEASUREMENT_CATEGORY_1,
+    entries: TEST_MEASUREMENT_ENTRIES_1,
+};
+
+export const TEST_MEASUREMENT_SEED_2 = {
+    category: TEST_MEASUREMENT_CATEGORY_2,
+    entries: TEST_MEASUREMENT_ENTRIES_2,
+};

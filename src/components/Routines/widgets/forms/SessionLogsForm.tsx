@@ -3,7 +3,7 @@ import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { Exercise, getLanguageByShortName, NameAutocompleter, useLanguageQuery } from "@/components/Exercises";
 import { RIR_VALUES_SELECT } from "@/components/Routines/models/BaseConfig";
 import { LogEntryForm } from "@/components/Routines/models/WorkoutLog";
-import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "@/components/Routines/queries";
+import { useAddRoutineLogsQuery, useRoutineDetailQuery, useSessionOfDay } from "@/components/Routines/queries";
 import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "@/core/lib/consts";
 import { SwapHoriz } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
@@ -20,13 +20,18 @@ interface SessionLogsFormProps {
     dayId: number,
     routineId: number,
     selectedDate: DateTime,
+    chosenSessionId: string | null,
 }
 
-export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsFormProps) => {
+export const SessionLogsForm = ({ dayId, routineId, selectedDate, chosenSessionId }: SessionLogsFormProps) => {
 
     const { t, i18n } = useTranslation();
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const routineQuery = useRoutineDetailQuery(routineId);
+    // The session the form above works on, so the logs end up in the one the
+    // user has in front of them. Without it the server would sort them into a
+    // session by their time, which on a day with several of them is a guess
+    const { session } = useSessionOfDay(routineId, dayId, selectedDate, chosenSessionId);
     const addLogsQuery = useAddRoutineLogsQuery(routineId);
     const languageQuery = useLanguageQuery();
     const handleSnackbarClose = () => setSnackbarOpen(false);
@@ -67,6 +72,7 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
             .filter(l => l.rir !== '' || l.repetitions !== '' || l.weight !== '')
             .map(l => ({
                     date: selectedDate.toISO(),
+                    session: session?.id,
                     iteration: iteration,
                     exercise: l.exercise?.id,
                     day: dayId,

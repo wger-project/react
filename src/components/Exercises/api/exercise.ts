@@ -81,6 +81,27 @@ export const getExercisesByIds = async (ids: number[]): Promise<Exercise[]> => {
 
 
 /*
+ * Fetch exercises by their uuid, the id that is the same on every instance
+ *
+ * The API filters one uuid at a time (no uuid__in), so this asks for them in
+ * parallel. A uuid the instance does not know is left out of the result.
+ */
+export const getExercisesByUuids = async (uuids: string[]): Promise<Exercise[]> => {
+    const responses = await Promise.all(uuids.map(uuid =>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        axios.get<ResponseType<any>>(
+            makeUrl(EXERCISE_INFO_PATH, { query: { uuid: uuid } }),
+            { headers: makeHeader() },
+        )
+    ));
+
+    return responses.flatMap(response => processExerciseApiData({
+        results: response.data.results,
+    }));
+};
+
+
+/*
  * Fetch exercises that belong to the same variation group
  */
 export const getExercisesForVariation = async (id: string | null | undefined): Promise<Exercise[]> => {

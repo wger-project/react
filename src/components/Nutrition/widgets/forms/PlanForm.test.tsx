@@ -1,5 +1,6 @@
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/components/Nutrition/queries";
 import { PlanForm } from "@/components/Nutrition/widgets/forms/PlanForm";
+import { mutateMock } from "@/tests/mutationMock";
 import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from '@testing-library/react';
@@ -7,17 +8,18 @@ import userEvent from "@testing-library/user-event";
 import React from 'react';
 import type { Mock } from 'vitest';
 
+vi.mock("@/components/Measurements/api/bodyWeight");
 vi.mock("@/components/Nutrition/queries");
 
 describe("Test the PlanForm component", () => {
     const queryClient = new QueryClient();
-    let addMutate = vi.fn();
-    let editMutate = vi.fn();
+    // Separate mocks, a single one could not tell the add and edit branch apart
+    let addMutate = mutateMock();
+    let editMutate = mutateMock();
 
     beforeEach(() => {
-        // Separate mocks, a single one could not tell the add and edit branch apart
-        addMutate = vi.fn();
-        editMutate = vi.fn();
+        addMutate = mutateMock();
+        editMutate = mutateMock();
 
         (useEditNutritionalPlanQuery as Mock).mockImplementation(() => ({
             mutate: editMutate
@@ -73,7 +75,7 @@ describe("Test the PlanForm component", () => {
                 goalProtein: null,
                 onlyLogging: false,
             })
-        );
+            , expect.anything());
         expect(addMutate).not.toHaveBeenCalled();
     });
 
@@ -102,7 +104,7 @@ describe("Test the PlanForm component", () => {
                 goalProtein: null,
                 goalFiber: null,
             })
-        );
+            , expect.anything());
         expect(editMutate).not.toHaveBeenCalled();
     });
 
@@ -155,7 +157,7 @@ describe("Test the PlanForm component", () => {
             goalCarbohydrates: null,
             goalFat: null,
             goalFiber: null,
-        }));
+        }), expect.anything());
     });
 
     test('Switching the goals back off clears them from the payload', async () => {
@@ -183,6 +185,6 @@ describe("Test the PlanForm component", () => {
             goalCarbohydrates: null,
             goalFat: null,
             goalFiber: null,
-        }));
+        }), expect.anything());
     });
 });

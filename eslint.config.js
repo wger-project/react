@@ -18,6 +18,12 @@ const DOMAINS = [
     'User',
 ];
 
+// The key must not import the values: nutrition reads measurements, not the
+// other way round, or the two form a module initialisation cycle.
+const FORBIDDEN_DEPENDENCIES = {
+    Measurements: ['Nutrition'],
+};
+
 const restrictAllDomains = {
     "patterns": [{
         "group": DOMAINS.map(d => `@/components/${d}/*`),
@@ -32,12 +38,18 @@ const domainOverrides = DOMAINS.map(domain => ({
     files: [`src/components/${domain}/**/*.{ts,tsx}`],
     rules: {
         "no-restricted-imports": ["error", {
-            "patterns": [{
-                "group": DOMAINS
-                    .filter(d => d !== domain)
-                    .map(d => `@/components/${d}/*`),
-                "message": `Import other domains via their public surface (e.g. '@/components/${DOMAINS[0]}'), not internal sub-paths.`,
-            }]
+            "patterns": [
+                {
+                    "group": DOMAINS
+                        .filter(d => d !== domain)
+                        .map(d => `@/components/${d}/*`),
+                    "message": `Import other domains via their public surface (e.g. '@/components/${DOMAINS[0]}'), not internal sub-paths.`,
+                },
+                ...(FORBIDDEN_DEPENDENCIES[domain] ?? []).map(target => ({
+                    "group": [`@/components/${target}`, `@/components/${target}/*`],
+                    "message": `${domain} must not import ${target}: the dependency runs the other way. Take what you need as a prop, from the page that composes both.`,
+                })),
+            ]
         }],
     }
 }));

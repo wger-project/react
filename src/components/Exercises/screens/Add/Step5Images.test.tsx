@@ -1,7 +1,5 @@
-import {
-    exerciseSubmissionInitialState,
-    ExerciseSubmissionStateContext
-} from "@/components/Exercises/screens/Add/state/exerciseSubmissionState";
+import { exerciseSubmissionInitialState } from "@/components/Exercises/screens/Add/state/stateTypes";
+import { ExerciseSubmissionStateContext } from "@/components/Exercises/screens/Add/state/exerciseSubmissionState";
 import { Step5Images } from "@/components/Exercises/screens/Add/Step5Images";
 import { ImageFormData } from "@/components/Exercises/models/exercise";
 import { ImageStyle } from "@/components/Exercises/models/image";

@@ -28,6 +28,7 @@ describe("Test the exercise contribution query", () => {
             height: 180,
             weightRounding: null,
             repetitionsRounding: null,
+            timeZone: '',
         });
     });
 

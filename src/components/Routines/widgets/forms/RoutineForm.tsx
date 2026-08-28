@@ -5,6 +5,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { WgerTextField } from "@/core/forms/WgerTextField";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { useProfileQuery } from "@/components/User";
 import {
     DESCRIPTION_MAX_LENGTH,
@@ -145,6 +146,10 @@ export const RoutineForm = ({
             {formik => (
                 <Form>
                     <Grid container spacing={2}>
+                        <Grid size={{ xs: 12 }}>
+                            <FormQueryErrors
+                                mutationQuery={routine?.id ? editRoutineQuery : addRoutineQuery} />
+                        </Grid>
 
                         <Grid size={{ xs: 12 }}>
                             <WgerTextField fieldName="name" title={t('name')} />

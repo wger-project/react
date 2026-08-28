@@ -11,18 +11,22 @@ export type SessionQueryOptions = {
     filtersetQueryLogs?: object,
 }
 
+/*
+ * Look up sessions, e.g. the ones of a single day
+ *
+ * A day can hold several sessions, so this returns all of them in the order the
+ * server sends them, by start time.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const searchSession = async (queryParams: Record<string, any>): Promise<WorkoutSession | null> => {
+export const searchSessions = async (queryParams: Record<string, any>): Promise<WorkoutSession[]> => {
     const response = await axios.get(
         makeUrl(ApiPath.SESSION, { query: queryParams }),
         { headers: makeHeader() }
     );
 
-    if (response.data.count === 1) {
-        return new WorkoutSessionAdapter().fromJson(response.data.results[0]);
-    }
-
-    return null;
+    const adapter = new WorkoutSessionAdapter();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return response.data.results.map((session: any) => adapter.fromJson(session));
 };
 
 export const getSessions = async (options?: SessionQueryOptions): Promise<WorkoutSession[]> => {

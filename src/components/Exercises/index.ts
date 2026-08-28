@@ -24,4 +24,10 @@ export { Translation, TranslationAdapter } from "./models/translation";
 export { ExerciseVideo, ExerciseVideoAdapter } from "./models/video";
 
 // Query hooks
-export { useLanguageQuery, useMusclesQuery } from "./queries";
+export {
+    useExercisesDetailQueries,
+    useFetchExercisesByUuidsQuery,
+    useLanguageQuery,
+    useMusclesQuery,
+    usePrimeExercise,
+} from "./queries";
