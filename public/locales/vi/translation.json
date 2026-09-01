@@ -1,10 +1,10 @@
 {
-    "weight": "cân nặng",
-    "date": "ngày",
-    "submit": "nộp",
-    "delete": "xóa bỏ",
-    "edit": "biên tập",
-    "add": "thêm vào",
+    "weight": "Cân nặng",
+    "date": "Ngày",
+    "submit": "Nhập",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "add": "Thêm",
     "currentWeight": "cân nặng hiện tại",
     "workout": "Bài tập",
     "licenses": {
@@ -57,7 +57,7 @@
     "close": "Đóng",
     "alsoSearchEnglish": "Tìm kiếm thên bằng tiếng Anh",
     "seeDetails": "Xem chi tiết",
-    "deleteConfirmation": "Bạn chắc chắc muốn xóa \"{{name}}\"?",
+    "deleteConfirmation": "Bạn có chắc muốn xóa \"{{name}}\"?",
     "loading": "Đang tải...",
     "nutritionalPlan": "Kế hoạch dinh dưỡng",
     "nothingHereYet": "Để trống...",
@@ -66,5 +66,28 @@
     "value": "Giá trị",
     "actions": "Tác vụ",
     "unit": "Đơn vị tính",
-    "copyToClipboard": "Lưu vào clipboard"
+    "copyToClipboard": "Lưu vào clipboard",
+    "dashboard": {
+        "customizeDashboard": "Tùy chỉnh dashboard",
+        "dragWidgetsHelp": "Kéo widget để sắp xếp chúng hoặc điều chỉnh kích thước bằng góc dưới phải",
+        "resetLayout": "Reset về layout mặc định"
+    },
+    "core": {
+        "exitEditMode": "Thoát chế độ tùy chỉnh",
+        "customize": "Tùy chỉnh"
+    },
+    "syncedEntryInfo": "Mục này được đồng bộ từ app khác và không chỉnh sửa được ở đây",
+    "height": "Chiều cao",
+    "cm": "cm",
+    "off": "Nghỉ",
+    "preview": "Xem trước",
+    "editName": "Sửa {{name}}",
+    "useMarkdownHint": "Bạn có thể dùng Mardown để định dạng văn bản như *italic*, **bold**, - list",
+    "all": "Tất cả",
+    "lastYear": "Năm trước",
+    "lastHalfYear": "6 tháng trước",
+    "lastMonth": "Tháng trước",
+    "lastWeek": "Tuần trước",
+    "start": "Bắt đầu",
+    "end": "Kết thúc"
 }
