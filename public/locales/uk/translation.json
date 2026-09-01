@@ -58,7 +58,13 @@
         "replacementsInfoText": "За бажанням ви також можете вибрати вправу, яка має замінити цю вправу (наприклад, тому що її було подано двічі або подібне). Це замінить вправу в програмах, а також у журналах тренувань, а не просто видалить її. Ці зміни також поширюватимуться на будь-який екземпляр, який синхронізує вправи з цього.",
         "noReplacementSelected": " Жодна вправа не вибрана для заміни",
         "swapExercise": "Обмін вправи",
-        "addImage": "Додати зображення"
+        "addImage": "Додати зображення",
+        "replacementCannotBeSame": "Заміна не може бути тією ж вправою, яку видаляють.",
+        "transferMediaLabel": "Перенести медіафайли до вправи-замінника",
+        "transferTranslationsLabel": "Перенести переклади до вправи-замінника (пропускаючи вже наявні мови)",
+        "exactMatch": "Точний збіг",
+        "imageIsAiGenerated": "Зображення згенероване ШІ (Штучним Інтелектом)",
+        "dropOrClickImage": "Перетягніть зображення сюди або натисніть, щоб вибрати"
     },
     "noResults": "Немає результатів",
     "noResultsDescription": "Не знайдено результатів для даного запиту, подумайте про зменшення кількості фільтрів.",
@@ -240,7 +246,11 @@
         "addSet": "Додайте підход",
         "setNr": "Підходів {{number}}",
         "exerciseNotAvailable": "Помилка під час завантаження вправи",
-        "multipleSessions": "Цього дня було зареєстровано більше одного сеансу, виберіть той, який потрібно редагувати"
+        "multipleSessions": "Цього дня було зареєстровано більше одного сеансу, виберіть той, який потрібно редагувати",
+        "iterationNr": "Цикл {{number}}",
+        "otherLoggedExercises": "Інші виконані вправи",
+        "newSession": "Нове тренування",
+        "changeSession": "Вибрати інше тренування"
     },
     "seeDetails": "Дивітити подробиці",
     "actions": "Дії",
@@ -257,13 +267,101 @@
         "calculations": {
             "paramsHelp": {
                 "window_days": "{{min}} до {{max}}. Наскільки далеко назад враховується найкращий підхід.",
-                "max_reps": "Від {{min}} до {{max}}. Підходи вище цього значення ігноруються."
+                "max_reps": "Від {{min}} до {{max}}. Підходи вище цього значення ігноруються.",
+                "exercise_ids": "Оберіть від {{min}} до {{max}} вправ, вибрано: {{count}}."
+            },
+            "sourceManual": "Введено вручну",
+            "sourceCalculated": "Обчислено wger",
+            "type": "Обчислення",
+            "locked": "Цей розрахунок неможливо змінити. Видаліть категорію, щоб зупинити його обчислення.",
+            "paramsIncomplete": "Обчислення ще не налаштовано повністю",
+            "missingHeight": "У вашому профілі не вказано зріст, тому значення поки що не можуть бути обчислені.",
+            "noSourceCategory": "У вас ще немає іншої категорії, з якої можна зчитати дані.",
+            "badge": "Обчислено",
+            "entryInfo": "Це значення розраховане wger і його не можна редагувати",
+            "names": {
+                "BMI": "ІМТ (Індекс маси тіла)",
+                "WHTR": "Співвідношення талії до зросту",
+                "ONE_REP_MAX": "Повторний максимум",
+                "ONE_RM_TOTAL": "Сума повторних максимумів"
+            },
+            "descriptions": {
+                "BMI": "На основі ваги вашого тіла та зросту у профілі",
+                "WHTR": "На основі категорії «{{category}}» та зросту у профілі"
+            },
+            "params": {
+                "category_id": "Категорія-джерело",
+                "max_reps": "Макс. кількість повторень",
+                "window_days": "Період у днях"
             }
-        }
+        },
+        "deleteInfoGroup": "Це видалить групу, а також усі її компоненти та їхні записи",
+        "chartType": "Тип графіка",
+        "chartTypes": {
+            "line": "Лінійний",
+            "bar": "Стовпчиками",
+            "heatmap": "Теплова карта",
+            "distribution": "Розподіл",
+            "auto": "Автоматично",
+            "delta": "Графік змін"
+        },
+        "chartTrend": "Лінія тренду",
+        "trends": {
+            "balanced": "Збалансований",
+            "reactive": "Швидкий",
+            "sluggish": "Плавний"
+        },
+        "chartAverageWindow": "Усереднення за",
+        "chartAverageWindowDays_other": "{{count}} днів",
+        "distributionMedian": "Медіана",
+        "distributionLatest": "Останнє",
+        "distributionEntryCount_one": "1 запис",
+        "distributionEntryCount_other": "{{count}} записів",
+        "distributionDayCount_other": "{{count}} днів",
+        "partOfGroup": "У складі групи",
+        "noGroup": "Без групи",
+        "metricTypes": {
+            "custom": "Власна метрика",
+            "body_weight": "Вага тіла",
+            "body_fat": "Відсоток жиру",
+            "lean_body_mass": "Суха маса тіла",
+            "height": "Зріст",
+            "blood_pressure": "Кров'яний тиск",
+            "blood_pressure_systolic": "Систолічний тиск",
+            "blood_pressure_diastolic": "Діастолічний тиск",
+            "heart_rate": "Частота серцевих скорочень",
+            "resting_heart_rate": "Пульс у стані спокою",
+            "blood_oxygen": "Рівень кисню в крові",
+            "steps": "Кроки",
+            "distance": "Дистанція",
+            "energy": "Енергія",
+            "sleep": "Сон",
+            "sleep_total": "Загальний час сну",
+            "sleep_light": "Поверхневий сон",
+            "sleep_deep": "Глибокий сон",
+            "sleep_rem": "Швидкий сон",
+            "sleep_awake": "Пробудження"
+        },
+        "indicatorRaw": "фактичне",
+        "indicatorAvg": "середнє",
+        "indicatorTrend": "тренд",
+        "noDataAvailable": "Немає даних",
+        "overallChangeWeight": "Загальна зміна ваги",
+        "chartRangeAll": "Весь час",
+        "chartRangeMonths_one": "1 місяць",
+        "chartRangeMonths_other": "{{count}} місяців",
+        "chartRangeWeeks_one": "1 тиждень",
+        "chartRangeWeeks_other": "{{count}} тижнів",
+        "chartRangeYears_one": "1 рік",
+        "chartRangeYears_other": "{{count}} років",
+        "customMeasurement": "Власне вимірювання",
+        "metricAlreadyTracked": "Вже відстежується",
+        "categoryFormHelpText": "Категорія вимірювання, наприклад 'біцепс' або 'відсоток жиру'",
+        "reorderCategories": "Змінити порядок категорій"
     },
     "deleteConfirmation": "Ви дійсно хочете видалити \"{{name}}\"?",
     "licenses": {
-        "authorProfile": "Посилання на веб-сайт або профіль автора, якщо є",
+        "authorProfile": "Посилання на веб-сторінку автора або профіль, якщо є",
         "originalTitle": "Назва",
         "derivativeSourceUrl": "Посилання на першоджерело, якщо це похідна робота",
         "derivativeSourceUrlHelper": "Зауважте, що похідна робота – це робота, яка не тільки базується на попередній роботі, але й містить достатню кількість нового, творчого вмісту, щоб надати їй власне авторське право.",
@@ -324,17 +422,20 @@
         "ofWhichSugars": "з них цукрів",
         "languageFilterCurrentOnly": "Тільки поточною мовою ({{lang}})",
         "languageFilterCurrentAndEnglish": "Поточна мова ({{lang}}) та Англійська",
-        "languageFilterAll": "Всіма мовами"
+        "languageFilterAll": "Всіма мовами",
+        "filterVegan": "Веганське",
+        "filterVegetarian": "Вегетаріанське",
+        "filterNutriscoreNoFilter": "Без фільтра"
     },
     "timeOfDay": "Час доби",
     "close": "Закрити",
     "alsoSearchEnglish": "Також шукайте імена англійською мовою",
     "downloadAsPdf": "Завантажити як PDF",
     "total": "Всього",
-    "height": "Висота",
+    "height": "Зріст",
     "cm": "см",
     "all": "Всі",
-    "lastYear": "Минулого року",
+    "lastYear": "Останній рік",
     "lastHalfYear": "Останні 6 місяців",
     "lastMonth": "Останній місяць",
     "lastWeek": "Минулий тиждень",
@@ -375,5 +476,12 @@
     },
     "trophies": {
         "trophies": "Трофеї"
-    }
+    },
+    "syncedEntryInfo": "Цей запис синхронізовано з додатка «Здоров'я», тому змінити його можна лише там",
+    "currentTrend": "Поточна тенденція",
+    "mean": "Середнє значення",
+    "trend": "Тенденція",
+    "variance": "Коливання",
+    "totalChange": "Загальний прогрес",
+    "preview": "Попередній перегляд"
 }
