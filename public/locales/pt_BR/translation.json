@@ -99,7 +99,11 @@
         "addSet": "Adicionar série",
         "setNr": "Série {{number}}",
         "exerciseNotAvailable": "Erro ao carregar exercício",
-        "iterationNr": "Iteração {{number}}"
+        "iterationNr": "Iteração {{number}}",
+        "otherLoggedExercises": "Outros exercícios registrados",
+        "multipleSessions": "Mais de uma sessão foi registrada neste dia, escolha qual editar.",
+        "newSession": "Nova sessão de treinamento",
+        "changeSession": "Escolha outra sessão"
     },
     "server": {
         "glutes": "Glúteos",
@@ -161,7 +165,14 @@
     "measurements": {
         "unitFormHelpText": "A unidade na qual a categoria será medida, como cm ou %",
         "measurements": "Medições",
-        "deleteInfo": "Isso excluirá a categoria, bem como todas as suas entradas"
+        "deleteInfo": "Isso excluirá a categoria, bem como todas as suas entradas",
+        "reorderCategories": "Reordenar categorías",
+        "deleteInfoGroup": "Isso eliminará o grupo assim como todos os seus componentes e entradas",
+        "metricType": "Tipo de métrica",
+        "chartType": "Tipo de gráfico",
+        "chartTypes": {
+            "auto": "Automático"
+        }
     },
     "category": "Categoria",
     "success": "Concluído com Sucesso!",
@@ -380,5 +391,6 @@
     "currentTrend": "Tendência atual",
     "mean": "Significar",
     "trend": "Tendência",
-    "variance": "Variância"
+    "variance": "Variância",
+    "syncedEntryInfo": "Este registro foi sincronizado a partir de um aplicativo de saúde e só pode ser alterado nele."
 }
