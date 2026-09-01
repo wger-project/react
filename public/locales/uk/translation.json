@@ -425,7 +425,8 @@
         "languageFilterAll": "Всіма мовами",
         "filterVegan": "Веганське",
         "filterVegetarian": "Вегетаріанське",
-        "filterNutriscoreNoFilter": "Без фільтра"
+        "filterNutriscoreNoFilter": "Без фільтра",
+        "filterNutriscoreOrBetter": "{{grade}} або краще"
     },
     "timeOfDay": "Час доби",
     "close": "Закрити",
@@ -483,5 +484,6 @@
     "trend": "Тенденція",
     "variance": "Коливання",
     "totalChange": "Загальний прогрес",
-    "preview": "Попередній перегляд"
+    "preview": "Попередній перегляд",
+    "off": "Вимкнено"
 }
