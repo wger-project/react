@@ -111,6 +111,18 @@ export default tseslint.config(
             "no-restricted-imports": ["error", restrictAllDomains],
         }
     },
+    {
+        // Formik is being phased out in favour of TanStack Form; no new Formik forms.
+        files: ['src/**/*.{ts,tsx}'],
+        rules: {
+            '@typescript-eslint/no-restricted-imports': ['warn', {
+                paths: [{
+                    name: 'formik',
+                    message: 'Formik is being phased out: build new forms with TanStack Form.',
+                }],
+            }],
+        }
+    },
     // Per-domain overrides: relax the rule for same-domain imports.
     ...domainOverrides,
     {
