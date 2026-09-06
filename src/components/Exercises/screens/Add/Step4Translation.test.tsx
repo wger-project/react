@@ -115,12 +115,10 @@ describe("Test the add exercise step 4 component", () => {
         expect(mutateAsync).not.toHaveBeenCalled();
     });
 
-    test("with translation enabled and a valid description: triggers the language check and dispatches all values", async () => {
-        const VALID_DESCRIPTION =
-            "Eine ausreichend lange Beschreibung der Übung, die die yup-Mindestlänge erfüllt.";
-        const user = userEvent.setup();
-        renderStep();
+    const VALID_DESCRIPTION =
+        "Eine ausreichend lange Beschreibung der Übung, die die yup-Mindestlänge erfüllt.";
 
+    async function fillTranslation(user: ReturnType<typeof userEvent.setup>) {
         // Enable the form
         await user.click(screen.getByRole("switch"));
 
@@ -134,7 +132,13 @@ describe("Test the add exercise step 4 component", () => {
         // Fill the markdown description (uses the placeholder from t('useMarkdownHint'))
         const description = screen.getByPlaceholderText("useMarkdownHint");
         await user.type(description, VALID_DESCRIPTION);
+    }
 
+    test("with translation enabled and a valid description: triggers the language check and dispatches all values", async () => {
+        const user = userEvent.setup();
+        renderStep();
+
+        await fillTranslation(user);
         await user.click(screen.getByText("continue"));
 
         await waitFor(() => {
@@ -151,6 +155,33 @@ describe("Test the add exercise step 4 component", () => {
         expect(setLanguageId).toHaveBeenCalledWith(testLanguages[0].id);
         expect(setNameI18n).toHaveBeenCalledWith("Bankdrücken");
         expect(setDescriptionI18n).toHaveBeenCalledWith(VALID_DESCRIPTION);
+    });
+
+    test("with translation enabled and a failing language check: shows the server message on the description and does not continue", async () => {
+        // The mutation resolves with the 400 payload instead of rejecting
+        mutateAsync = vi.fn().mockResolvedValue({
+            check: { message: "this does not look like German" },
+        });
+        mockedUseLanguageCheckQuery.mockImplementation(() => ({
+            isPending: false,
+            mutateAsync,
+        }));
+
+        const user = userEvent.setup();
+        renderStep();
+
+        await fillTranslation(user);
+        await user.click(screen.getByText("continue"));
+
+        await waitFor(() => {
+            expect(mutateAsync).toHaveBeenCalled();
+        });
+        // The server message replaces the yup helper text under the description
+        expect(await screen.findByText("this does not look like German")).toBeInTheDocument();
+        expect(mockOnContinue).not.toHaveBeenCalled();
+        // The input is still saved so it survives going back and forth
+        expect(setDescriptionI18n).toHaveBeenCalledWith(VALID_DESCRIPTION);
+        expect(setLanguageId).toHaveBeenCalledWith(testLanguages[0].id);
     });
 
     test("the language dropdown excludes English (the primary language is captured in step 3)", async () => {
