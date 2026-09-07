@@ -5,6 +5,8 @@ import React from "react";
 
 interface WgerTextFieldProps {
     title: string,
+    /** Shown under the field while it has no error */
+    helperText?: string,
     fieldProps?: TextFieldProps,
     fullwidth?: boolean,
 }
@@ -13,7 +15,7 @@ interface WgerTextFieldProps {
  * The generic text field, bound to the form field it is rendered in via
  * form.AppField. Successor of the Formik WgerTextField one folder up.
  */
-export function WgerTextField({ title, fieldProps, fullwidth = true }: WgerTextFieldProps) {
+export function WgerTextField({ title, helperText, fieldProps, fullwidth = true }: WgerTextFieldProps) {
     const field = useFieldContext<string>();
     const error = field.state.meta.isTouched ? fieldErrorMessage(field.state.meta.errors) : undefined;
 
@@ -27,7 +29,7 @@ export function WgerTextField({ title, fieldProps, fullwidth = true }: WgerTextF
         onChange={e => field.handleChange(e.target.value)}
         onBlur={field.handleBlur}
         error={error !== undefined}
-        helperText={error}
+        helperText={error ?? helperText}
         {...fieldProps}
     />;
 }

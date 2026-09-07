@@ -1,10 +1,11 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { Meal } from "@/components/Nutrition/models/meal";
 import { useAddMealQuery, useEditMealQuery } from "@/components/Nutrition/queries";
+import { useAppForm } from "@/core/forms/appForm";
+import { yupSchema } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React from 'react';
 import { useTranslation } from "react-i18next";
@@ -14,6 +15,11 @@ interface MealFormProps {
     planId: string,
     meal?: Meal,
     closeFn?: () => void,
+}
+
+interface MealFormValues {
+    name: string,
+    time: Date | null,
 }
 
 export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
@@ -32,76 +38,79 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
             .required()
     });
 
+    const defaultValues: MealFormValues = {
+        name: meal ? meal.name : "",
+        time: meal ? meal.time : new Date(),
+    };
+
+    const form = useAppForm({
+        defaultValues,
+        validators: { onChangeAsync: yupSchema<MealFormValues>(validationSchema) },
+        onSubmit: async ({ value }) => {
+            // The schema already refused a missing time, this only narrows the type
+            if (value.time === null) {
+                return;
+            }
+
+            // The dialog closes only once the server took the meal, so a
+            // rejected write is shown instead of disappearing with it
+            const options = { onSuccess: () => closeFn?.() };
+
+            if (meal) {
+                // Edit
+                const newMeal = Meal.clone(meal, { name: value.name, time: value.time });
+                editMealQuery.mutate(newMeal, options);
+
+            } else {
+                // Add
+                addMealQuery.mutate(new Meal({
+                    planId: planId,
+                    name: value.name,
+                    time: value.time,
+                }), options);
+            }
+        },
+    });
 
     return (
-        <Formik
-            initialValues={{
-                name: meal ? meal.name : "",
-                time: meal ? meal.time : new Date()
-            }}
-            validationSchema={validationSchema}
-            onSubmit={async (values) => {
-                if (!(values.time instanceof Date)) {
-                    // @ts-ignore - The result from the datepicker is a Luxon DateTime object, not a JS DateTime
-                    values.time = values.time.toJSDate();
-                }
+        <form onSubmit={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+        }}>
+            <Stack spacing={2}>
+                <form.AppField name="name">
+                    {field => <field.WgerTextField
+                        title={t('description')}
+                        fieldProps={{ variant: 'outlined' }}
+                    />}
+                </form.AppField>
 
-                // The dialog closes only once the server took the meal, so a
-                // rejected write is shown instead of disappearing with it
-                const options = { onSuccess: () => closeFn?.() };
-
-                if (meal) {
-                    // Edit
-                    const newMeal = Meal.clone(meal, { name: values.name, time: values.time });
-                    editMealQuery.mutate(newMeal, options);
-
-                } else {
-                    // Add
-                    addMealQuery.mutate(new Meal({
-                        planId: planId,
-                        name: values.name,
-                        time: values.time,
-                    }), options);
-                }
-            }}
-        >
-            {formik => (
-                <Form>
-                    <Stack spacing={2}>
-                        <TextField
-                            fullWidth
-                            id="name"
-                            label={t('description')}
-                            error={formik.touched.name && Boolean(formik.errors.name)}
-                            helperText={formik.touched.name && formik.errors.name}
-                            {...formik.getFieldProps('name')}
-                        />
-
-                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                            <TimePicker
-                                label={t('timeOfDay')}
-                                value={formik.values.time !== null ? DateTime.fromJSDate(formik.values.time) : null}
-                                onChange={(newValue) => formik.setFieldValue('time', newValue ? newValue.toJSDate() : null)}
-                            />
-                        </LocalizationProvider>
-                        <FormQueryErrors mutationQuery={meal ? editMealQuery : addMealQuery} />
-                        <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
-                            {closeFn !== undefined
-                                && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
-                                    {t('close')}
-                                </Button>}
-                            <Button
-                                disabled={addMealQuery.isPending || editMealQuery.isPending}
-                                color="primary"
-                                variant="contained"
-                                type="submit"
-                            >
-                                {t('submit')}
-                            </Button>
-                        </Stack>
-                    </Stack>
-                </Form>
-            )}
-        </Formik>
+                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                    <form.Field name="time">
+                        {field => <TimePicker
+                            label={t('timeOfDay')}
+                            value={field.state.value !== null ? DateTime.fromJSDate(field.state.value) : null}
+                            onChange={newValue => field.handleChange(newValue ? newValue.toJSDate() : null)}
+                        />}
+                    </form.Field>
+                </LocalizationProvider>
+                <FormQueryErrors mutationQuery={meal ? editMealQuery : addMealQuery} />
+                <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
+                    {closeFn !== undefined
+                        && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
+                            {t('close')}
+                        </Button>}
+                    <Button
+                        disabled={addMealQuery.isPending || editMealQuery.isPending}
+                        color="primary"
+                        variant="contained"
+                        type="submit"
+                    >
+                        {t('submit')}
+                    </Button>
+                </Stack>
+            </Stack>
+        </form>
     );
 };

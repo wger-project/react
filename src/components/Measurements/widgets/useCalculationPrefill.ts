@@ -5,15 +5,13 @@ import {
     CalculationType,
     defaultParams
 } from "@/components/Measurements/models/Calculation";
-import { CategoryFormValues } from "@/components/Measurements/widgets/categoryFormValues";
+import { SetCategoryFormValues } from "@/components/Measurements/widgets/categoryFormValues";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 
-/** The part of formik the prefill writes to */
+/** The part of the form the prefill writes to */
 interface PrefillTarget {
-    values: CategoryFormValues;
-    setValues: (values: CategoryFormValues) => unknown;
-    setFieldValue: (field: string, value: unknown) => unknown;
+    setValues: SetCategoryFormValues;
 }
 
 /**
@@ -38,7 +36,7 @@ export const useCalculationPrefill = (isEdit: boolean) => {
      * most people, so that is what a fresh one starts with. The chips stay
      * removable, and an instance that never synced them prefills nothing.
      */
-    const prefillBigThree = async (formik: PrefillTarget, type: CalculationType) => {
+    const prefillBigThree = async (form: PrefillTarget, type: CalculationType) => {
         const param = type.params.find(candidate => candidate.kind === 'exercises');
         if (param === undefined) {
             return;
@@ -52,14 +50,14 @@ export const useCalculationPrefill = (isEdit: boolean) => {
 
             // The user may have picked something else while this was loading
             if (ids.length === BIG_THREE_UUIDS.length && pickedRef.current === type.slug) {
-                formik.setFieldValue('params', { ...defaultParams(type), [param.key]: ids });
+                form.setValues({ params: { ...defaultParams(type), [param.key]: ids } });
             }
         } catch {
             // Nothing to prefill, the user picks the exercises themselves
         }
     };
 
-    const pickCalculation = (formik: PrefillTarget, type?: CalculationType) => {
+    const pickCalculation = (form: PrefillTarget, type?: CalculationType) => {
         if (type === undefined) {
             return;
         }
@@ -67,8 +65,7 @@ export const useCalculationPrefill = (isEdit: boolean) => {
 
         // One update, not one per field: each validates on its own and would
         // check the new parameters against the calculation before them
-        formik.setValues({
-            ...formik.values,
+        form.setValues({
             calculation: type.slug,
             params: defaultParams(type),
             ...(nameEdited
@@ -76,7 +73,7 @@ export const useCalculationPrefill = (isEdit: boolean) => {
                 : { name: t(`measurements.calculations.names.${type.slug as CalculationSlug}`) }),
             ...(unitEdited ? {} : { unit: type.unit }),
         });
-        prefillBigThree(formik, type);
+        prefillBigThree(form, type);
     };
 
     return {

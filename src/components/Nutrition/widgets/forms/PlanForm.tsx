@@ -5,8 +5,7 @@ import {
     FormHelperText,
     InputAdornment,
     Stack,
-    Switch,
-    TextField
+    Switch
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -16,8 +15,10 @@ import { ENERGY_FACTOR } from "@/components/Nutrition/helpers/nutritionalValues"
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/components/Nutrition/queries";
-import { Form, Formik } from "formik";
+import { useAppForm } from "@/core/forms/appForm";
+import { fieldErrorMessage, yupSchema } from "@/core/forms/formUtils";
 import i18n from "@/i18n";
+import { TFunction } from "i18next";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -28,6 +29,28 @@ interface PlanFormProps {
     plan?: NutritionalPlan,
     closeFn?: () => void,
 }
+
+interface PlanFormValues {
+    description: string,
+    // YYYY-MM-DD, what the date pickers hand over
+    start: string,
+    end: string | null,
+    onlyLogging: boolean,
+    // The text fields hand over strings, the schema casts them to numbers;
+    // the empty string is a goal that is not set
+    goalEnergy: string,
+    goalProtein: string,
+    goalCarbohydrates: string,
+    goalFiber: string,
+    goalFat: string,
+}
+
+const goalString = (goal: number | null | undefined): string =>
+    goal === null || goal === undefined ? '' : String(goal);
+
+/** The energy a macro goal amounts to, shown in front of it */
+const energyOf = (goal: string, factor: number, t: TFunction) =>
+    goal !== '' ? t('nutrition.valueEnergyKcal', { value: Number(goal) * factor }) : '';
 
 export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
 
@@ -83,85 +106,81 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             )
     });
 
+    const defaultValues: PlanFormValues = {
+        description: plan ? plan.description : t('nutrition.plan'),
+
+        start: plan ? dateToYYYYMMDD(plan.start) : dateToYYYYMMDD(new Date()),
+        end: plan && plan.end !== null ? dateToYYYYMMDD(plan.end) : null,
+
+        onlyLogging: plan ? plan.onlyLogging : true,
+        goalEnergy: goalString(plan?.goalEnergy),
+        goalProtein: goalString(plan?.goalProtein),
+        goalCarbohydrates: goalString(plan?.goalCarbohydrates),
+        goalFiber: goalString(plan?.goalFiber),
+        goalFat: goalString(plan?.goalFat),
+    };
+
+    const form = useAppForm({
+        defaultValues,
+        validators: { onChangeAsync: yupSchema<PlanFormValues>(validationSchema) },
+        onSubmit: async ({ value }) => {
+            // A goal counts only while the goals are switched on
+            const goal = (entered: string): number | null =>
+                useGoals && entered !== '' ? Number(entered) : null;
+
+            const newPlan = new NutritionalPlan({
+
+                // the values are YYYY-MM-DD strings, parse them as local dates:
+                // new Date() would interpret them as UTC midnight and shift the
+                // day in timezones behind UTC
+                start: yyyymmddToDate(value.start),
+                end: value.end ? yyyymmddToDate(value.end) : null,
+
+                description: value.description,
+                onlyLogging: value.onlyLogging,
+                goalEnergy: goal(value.goalEnergy),
+                goalProtein: goal(value.goalProtein),
+                goalCarbohydrates: goal(value.goalCarbohydrates),
+                goalFiber: goal(value.goalFiber),
+                goalFat: goal(value.goalFat),
+            });
+
+
+            // The dialog closes only once the server took the plan, so a
+            // rejected write is shown instead of disappearing with it
+            const options = { onSuccess: () => closeFn?.() };
+
+            if (plan) {
+                newPlan.id = plan.id!;
+                editPlanQuery.mutate(newPlan, options);
+            } else {
+                addPlanQuery.mutate(newPlan, options);
+            }
+        },
+    });
 
     return (
-        (<Formik
-            initialValues={{
-                description: plan ? plan.description : t('nutrition.plan'),
-
-                start: plan ? dateToYYYYMMDD(plan.start) : dateToYYYYMMDD(new Date()),
-                end: plan && plan.end !== null ? dateToYYYYMMDD(plan.end) : null,
-
-                onlyLogging: plan ? plan.onlyLogging : true,
-                goalEnergy: plan ? plan.goalEnergy : null,
-                goalProtein: plan ? plan.goalProtein : null,
-                goalCarbohydrates: plan ? plan.goalCarbohydrates : null,
-                goalFiber: plan ? plan.goalFiber : null,
-                goalFat: plan ? plan.goalFat : null,
-            }}
-            validationSchema={validationSchema}
-            onSubmit={async (values) => {
-                values.goalEnergy = values.goalEnergy ? values.goalEnergy : null;
-                values.goalProtein = values.goalProtein ? values.goalProtein : null;
-                values.goalCarbohydrates = values.goalCarbohydrates ? values.goalCarbohydrates : null;
-                values.goalFiber = values.goalFiber ? values.goalFiber : null;
-                values.goalFat = values.goalFat ? values.goalFat : null;
-
-                if (!useGoals) {
-                    values.goalEnergy = null;
-                    values.goalProtein = null;
-                    values.goalCarbohydrates = null;
-                    values.goalFiber = null;
-                    values.goalFat = null;
-                }
-
-
-                const newPlan = new NutritionalPlan({
-
-                    // the values are YYYY-MM-DD strings, parse them as local dates:
-                    // new Date() would interpret them as UTC midnight and shift the
-                    // day in timezones behind UTC
-                    start: yyyymmddToDate(values.start),
-                    end: values.end ? yyyymmddToDate(values.end) : null,
-
-                    description: values.description,
-                    onlyLogging: values.onlyLogging,
-                    goalEnergy: values.goalEnergy,
-                    goalProtein: values.goalProtein,
-                    goalCarbohydrates: values.goalCarbohydrates,
-                    goalFiber: values.goalFiber,
-                    goalFat: values.goalFat,
-                });
-
-
-                // The dialog closes only once the server took the plan, so a
-                // rejected write is shown instead of disappearing with it
-                const options = { onSuccess: () => closeFn?.() };
-
-                if (plan) {
-                    newPlan.id = plan.id!;
-                    editPlanQuery.mutate(newPlan, options);
-                } else {
-                    addPlanQuery.mutate(newPlan, options);
-                }
-            }}
-        >
-            {formik => (
-                <Form>
-                    <Stack spacing={2}>
-                        <TextField
-                            fullWidth
-                            id="description"
-                            label={t('description')}
-                            error={formik.touched.description && Boolean(formik.errors.description)}
-                            // @ts-ignore - the description might come from t(), which might be undefined
-                            helperText={formik.touched.description && formik.errors.description}
-                            {...formik.getFieldProps('description')}
-                        />
-                        <Grid container spacing={1}>
-                            <Grid size={6}>
-                                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                                    <DatePicker
+        <form onSubmit={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+        }}>
+            <Stack spacing={2}>
+                <form.AppField name="description">
+                    {field => <field.WgerTextField
+                        title={t('description')}
+                        fieldProps={{ variant: 'outlined' }}
+                    />}
+                </form.AppField>
+                <Grid container spacing={1}>
+                    <Grid size={6}>
+                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                            <form.Field name="start">
+                                {field => {
+                                    const error = field.state.meta.isTouched
+                                        ? fieldErrorMessage(field.state.meta.errors)
+                                        : undefined;
+                                    return <DatePicker
                                         format="yyyy-MM-dd"
                                         label={t('start')}
                                         value={startDateValue}
@@ -169,24 +188,30 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                             textField: {
                                                 variant: "standard",
                                                 fullWidth: true,
-                                                error: formik.touched.start && Boolean(formik.errors.start),
-                                                helperText: formik.touched.start && formik.errors.start ? String(formik.errors.start) : ''
+                                                error: error !== undefined,
+                                                helperText: error ?? ''
                                             }
                                         }}
                                         onChange={(newValue) => {
                                             if (newValue) {
-                                                formik.setFieldValue('start', dateToYYYYMMDD(newValue.toJSDate()));
+                                                field.handleChange(dateToYYYYMMDD(newValue.toJSDate()));
                                             }
                                             setStartDateValue(newValue);
                                         }}
+                                    />;
+                                }}
+                            </form.Field>
+                        </LocalizationProvider>
+                    </Grid>
 
-                                    />
-                                </LocalizationProvider>
-                            </Grid>
-
-                            <Grid size={6}>
-                                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                                    <DatePicker
+                    <Grid size={6}>
+                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                            <form.Field name="end">
+                                {field => {
+                                    const error = field.state.meta.isTouched
+                                        ? fieldErrorMessage(field.state.meta.errors)
+                                        : undefined;
+                                    return <DatePicker
                                         format="yyyy-MM-dd"
                                         label={t('end')}
                                         value={endDateValue}
@@ -194,161 +219,158 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                             textField: {
                                                 variant: "standard",
                                                 fullWidth: true,
-                                                error: formik.touched.end && Boolean(formik.errors.end),
-                                                helperText: formik.touched.end && formik.errors.end ? String(formik.errors.end) : ''
+                                                error: error !== undefined,
+                                                helperText: error ?? ''
                                             }
                                         }}
                                         onChange={(newValue) => {
                                             if (newValue) {
-                                                formik.setFieldValue('end', dateToYYYYMMDD(newValue.toJSDate()));
+                                                field.handleChange(dateToYYYYMMDD(newValue.toJSDate()));
                                             }
                                             setEndDateValue(newValue);
                                         }}
+                                    />;
+                                }}
+                            </form.Field>
+                        </LocalizationProvider>
+                    </Grid>
+                </Grid>
 
-                                    />
-                                </LocalizationProvider>
-                            </Grid>
-                        </Grid>
+                <FormGroup>
+                    <form.Field name="onlyLogging">
+                        {field => <FormControlLabel
+                            label={t('nutrition.onlyLoggingHelpText')}
+                            control={
+                                <Switch
+                                    id="onlyLogging"
+                                    name={field.name}
+                                    checked={field.state.value}
+                                    onChange={event => field.handleChange(event.target.checked)}
+                                    onBlur={field.handleBlur}
+                                />}
+                        />}
+                    </form.Field>
+                </FormGroup>
+                {/*TODO:  implement the options like in the mobile app */}
+                {/*<FormControl fullWidth>*/}
+                {/*    <InputLabel id="demo-simple-select-label">Goal Setting</InputLabel>*/}
+                {/*    <Select*/}
+                {/*        labelId="demo-simple-select-label"*/}
+                {/*        id="demo-simple-select"*/}
+                {/*        value={10}*/}
+                {/*        label="Goal setting"*/}
+                {/*        onChange={() => {*/}
+                {/*        }}*/}
+                {/*    >*/}
+                {/*        <MenuItem value={10}>Based on my meals</MenuItem>*/}
+                {/*        <MenuItem value={20}>Set basic macros</MenuItem>*/}
+                {/*        <MenuItem value={30}>Set advanced macros</MenuItem>*/}
+                {/*    </Select>*/}
+                {/*</FormControl>*/}
+                <FormGroup>
+                    <FormControlLabel
+                        label={t('nutrition.useGoalsHelpText')}
+                        control={
+                            <Switch
+                                id="useGoals"
+                                checked={useGoals}
+                                onChange={() => setUseGoals(!useGoals)}
 
-                        <FormGroup>
-                            <FormControlLabel
-                                label={t('nutrition.onlyLoggingHelpText')}
-                                control={
-                                    <Switch
-                                        id="onlyLogging"
-                                        checked={formik.values.onlyLogging}
-                                        {...formik.getFieldProps('onlyLogging')}
-                                    />}
-                            />
-                        </FormGroup>
-                        {/*TODO:  implement the options like in the mobile app */}
-                        {/*<FormControl fullWidth>*/}
-                        {/*    <InputLabel id="demo-simple-select-label">Goal Setting</InputLabel>*/}
-                        {/*    <Select*/}
-                        {/*        labelId="demo-simple-select-label"*/}
-                        {/*        id="demo-simple-select"*/}
-                        {/*        value={10}*/}
-                        {/*        label="Goal setting"*/}
-                        {/*        onChange={() => {*/}
-                        {/*        }}*/}
-                        {/*    >*/}
-                        {/*        <MenuItem value={10}>Based on my meals</MenuItem>*/}
-                        {/*        <MenuItem value={20}>Set basic macros</MenuItem>*/}
-                        {/*        <MenuItem value={30}>Set advanced macros</MenuItem>*/}
-                        {/*    </Select>*/}
-                        {/*</FormControl>*/}
-                        <FormGroup>
-                            <FormControlLabel
-                                label={t('nutrition.useGoalsHelpText')}
-                                control={
-                                    <Switch
-                                        id="goalEnergy"
-                                        checked={useGoals}
-                                        onChange={() => setUseGoals(!useGoals)}
-
-                                    />}
-                            />
-                        </FormGroup>
-                        <FormHelperText>{t('nutrition.useGoalsHelpTextLong')}</FormHelperText>
+                            />}
+                    />
+                </FormGroup>
+                <FormHelperText>{t('nutrition.useGoalsHelpTextLong')}</FormHelperText>
 
 
-                        {useGoals && <>
-                            <TextField
-                                fullWidth
-                                id="energy"
-                                label={t('nutrition.goalEnergy')}
-                                error={formik.touched.goalEnergy && Boolean(formik.errors.goalEnergy)}
-                                helperText={formik.touched.goalEnergy && formik.errors.goalEnergy}
-                                {...formik.getFieldProps('goalEnergy')}
-                                slotProps={{
+                {useGoals && <>
+                    <form.AppField name="goalEnergy">
+                        {field => <field.WgerTextField
+                            title={t('nutrition.goalEnergy')}
+                            fieldProps={{
+                                variant: 'outlined',
+                                slotProps: {
                                     input: {
                                         endAdornment: <InputAdornment
                                             position="end">{t('nutrition.kcal')}</InputAdornment>
                                     },
                                     htmlInput: { inputMode: 'decimal' }
-                                }}
-                            />
-                            <Grid container spacing={1}>
-                                <Grid size={4}>
-                                    <TextField
-                                        id="protein"
-                                        fullWidth
-                                        label={t('nutrition.goalProtein')}
-                                        error={formik.touched.goalProtein && Boolean(formik.errors.goalProtein)}
-                                        helperText={formik.touched.goalProtein && formik.errors.goalProtein}
-                                        {...formik.getFieldProps('goalProtein')}
-                                        slotProps={{
+                                },
+                            }}
+                        />}
+                    </form.AppField>
+                    <Grid container spacing={1}>
+                        <Grid size={4}>
+                            <form.AppField name="goalProtein">
+                                {field => <field.WgerTextField
+                                    title={t('nutrition.goalProtein')}
+                                    fieldProps={{
+                                        variant: 'outlined',
+                                        slotProps: {
                                             input: {
                                                 startAdornment: <InputAdornment position="start">
-                                                    {formik.values.goalProtein !== null && formik.values.goalProtein !== undefined
-                                                        ? t('nutrition.valueEnergyKcal', { value: formik.values.goalProtein * ENERGY_FACTOR.protein })
-                                                        : ''}
+                                                    {energyOf(field.state.value, ENERGY_FACTOR.protein, t)}
                                                 </InputAdornment>,
                                                 endAdornment: <InputAdornment position="end">
                                                     {t('nutrition.gramShort')}
                                                 </InputAdornment>
                                             },
                                             htmlInput: { inputMode: 'decimal' }
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid size={4}>
-                                    <TextField
-                                        id="carbohydrates"
-                                        fullWidth
-                                        label={t('nutrition.goalCarbohydrates')}
-                                        error={formik.touched.goalCarbohydrates && Boolean(formik.errors.goalCarbohydrates)}
-                                        helperText={formik.touched.goalCarbohydrates && formik.errors.goalCarbohydrates}
-                                        {...formik.getFieldProps('goalCarbohydrates')}
-                                        slotProps={{
+                                        },
+                                    }}
+                                />}
+                            </form.AppField>
+                        </Grid>
+                        <Grid size={4}>
+                            <form.AppField name="goalCarbohydrates">
+                                {field => <field.WgerTextField
+                                    title={t('nutrition.goalCarbohydrates')}
+                                    fieldProps={{
+                                        variant: 'outlined',
+                                        slotProps: {
                                             input: {
                                                 startAdornment: <InputAdornment position="start">
-                                                    {formik.values.goalCarbohydrates !== null && formik.values.goalCarbohydrates !== undefined
-                                                        ? t('nutrition.valueEnergyKcal', { value: formik.values.goalCarbohydrates * ENERGY_FACTOR.carbohydrates })
-                                                        : ''}
+                                                    {energyOf(field.state.value, ENERGY_FACTOR.carbohydrates, t)}
                                                 </InputAdornment>,
                                                 endAdornment:
                                                     <InputAdornment
                                                         position="end">{t('nutrition.gramShort')}</InputAdornment>
                                             },
                                             htmlInput: { inputMode: 'decimal' }
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid size={4}>
-                                    <TextField
-                                        id="fat"
-                                        fullWidth
-                                        label={t('nutrition.goalFat')}
-                                        error={formik.touched.goalFat && Boolean(formik.errors.goalFat)}
-                                        helperText={formik.touched.goalFat && formik.errors.goalFat}
-                                        {...formik.getFieldProps('goalFat')}
-                                        slotProps={{
+                                        },
+                                    }}
+                                />}
+                            </form.AppField>
+                        </Grid>
+                        <Grid size={4}>
+                            <form.AppField name="goalFat">
+                                {field => <field.WgerTextField
+                                    title={t('nutrition.goalFat')}
+                                    fieldProps={{
+                                        variant: 'outlined',
+                                        slotProps: {
                                             input: {
                                                 startAdornment: <InputAdornment position="start">
-                                                    {formik.values.goalFat !== null && formik.values.goalFat !== undefined
-                                                        ? t('nutrition.valueEnergyKcal', { value: formik.values.goalFat * ENERGY_FACTOR.fat })
-                                                        : ''}
+                                                    {energyOf(field.state.value, ENERGY_FACTOR.fat, t)}
                                                 </InputAdornment>,
                                                 endAdornment:
                                                     <InputAdornment
                                                         position="end">{t('nutrition.gramShort')}</InputAdornment>
                                             },
                                             htmlInput: { inputMode: 'decimal' }
-                                        }}
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={1}>
-                                <Grid size={4}>
-                                    <TextField
-                                        id="fiber"
-                                        fullWidth
-                                        label={t('nutrition.goalFiber')}
-                                        error={formik.touched.goalFiber && Boolean(formik.errors.goalFiber)}
-                                        helperText={formik.touched.goalFiber && formik.errors.goalFiber}
-                                        {...formik.getFieldProps('goalFiber')}
-                                        slotProps={{
+                                        },
+                                    }}
+                                />}
+                            </form.AppField>
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                        <Grid size={4}>
+                            <form.AppField name="goalFiber">
+                                {field => <field.WgerTextField
+                                    title={t('nutrition.goalFiber')}
+                                    fieldProps={{
+                                        variant: 'outlined',
+                                        slotProps: {
                                             input: {
                                                 startAdornment: <InputAdornment position="start">
                                                     {t('nutrition.valueEnergyKcal', { value: 0 })}
@@ -358,24 +380,24 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                                 </InputAdornment>
                                             },
                                             htmlInput: { inputMode: 'decimal' }
-                                        }}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </>}
+                                        },
+                                    }}
+                                />}
+                            </form.AppField>
+                        </Grid>
+                    </Grid>
+                </>}
 
-                        <FormQueryErrors mutationQuery={plan ? editPlanQuery : addPlanQuery} />
-                        <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
-                            <Button color="primary"
-                                    variant="contained"
-                                    type="submit"
-                                    sx={{ mt: 2 }}>
-                                {t('submit')}
-                            </Button>
-                        </Stack>
-                    </Stack>
-                </Form>
-            )}
-        </Formik>)
+                <FormQueryErrors mutationQuery={plan ? editPlanQuery : addPlanQuery} />
+                <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
+                    <Button color="primary"
+                            variant="contained"
+                            type="submit"
+                            sx={{ mt: 2 }}>
+                        {t('submit')}
+                    </Button>
+                </Stack>
+            </Stack>
+        </form>
     );
 };

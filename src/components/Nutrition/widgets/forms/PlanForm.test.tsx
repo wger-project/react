@@ -152,8 +152,8 @@ describe("Test the PlanForm component", () => {
 
         // Assert
         expect(addMutate).toHaveBeenCalledWith(expect.objectContaining({
-            goalEnergy: '2500',
-            goalProtein: '150',
+            goalEnergy: 2500,
+            goalProtein: 150,
             goalCarbohydrates: null,
             goalFat: null,
             goalFiber: null,

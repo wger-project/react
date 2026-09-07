@@ -1,4 +1,4 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import {
     categoryDisplayName,
     MeasurementCategory
@@ -12,7 +12,8 @@ import {
     useEditMeasurementEntryQuery
 } from "@/components/Measurements/queries";
 import { EntryDateTimeField } from "@/components/Measurements/widgets/EntryDateTimeField";
-import { Form, Formik } from "formik";
+import { useAppForm } from "@/core/forms/appForm";
+import { yupSchema } from "@/core/forms/formUtils";
 import { useTranslation } from "react-i18next";
 import * as yup from 'yup';
 
@@ -27,6 +28,13 @@ interface EntryFormProps {
      * of the metric's own.
      */
     category: MeasurementCategory,
+}
+
+interface EntryFormValues {
+    // The text field hands over strings, the schema casts them to numbers
+    value: string,
+    date: Date | null,
+    notes: string,
 }
 
 export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
@@ -52,73 +60,90 @@ export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
             .max(100, t('forms.maxLength', { value: '100' })),
     });
 
+    const initialDate = entry ? entry.date : new Date();
+    const defaultValues: EntryFormValues = {
+        value: String(entry ? entry.value : 0),
+        date: initialDate,
+        notes: entry ? entry.notes : "",
+    };
+
+    const form = useAppForm({
+        defaultValues,
+        validators: { onChangeAsync: yupSchema<EntryFormValues>(validationSchema) },
+        onSubmit: async ({ value: values }) => {
+            // The schema already refused a null date, this only narrows the type
+            if (values.date === null) {
+                return;
+            }
+            const value = Number(values.value);
+
+            // The form closes only once the server took the entry, so a
+            // rejected write is shown instead of disappearing with it
+            const options = { onSuccess: () => closeFn?.() };
+
+            // Edit existing entry
+            if (entry) {
+                useEditEntryQuery.mutate(MeasurementEntry.clone(entry, {
+                    value: value,
+                    date: values.date,
+                    notes: values.notes,
+                }), options);
+            } else {
+                useAddEntryQuery.mutate(
+                    new MeasurementEntry(null, category.id!, values.date, value, values.notes),
+                    options
+                );
+            }
+        },
+    });
 
     return (
-        (<Formik
-            initialValues={{
-                value: entry ? entry.value : 0,
-                date: entry ? entry.date : new Date(),
-                notes: entry ? entry.notes : "",
-            }}
-            validationSchema={validationSchema}
-            onSubmit={async (values) => {
-                // The form closes only once the server took the entry, so a
-                // rejected write is shown instead of disappearing with it
-                const options = { onSuccess: () => closeFn?.() };
+        <form onSubmit={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+        }}>
+            <Stack spacing={2}>
+                <form.AppField name="value">
+                    {field => <field.WgerTextField
+                        title={t('value')}
+                        fieldProps={{
+                            variant: 'outlined',
+                            type: 'number',
+                            slotProps: { htmlInput: { inputMode: 'decimal' } },
+                        }}
+                    />}
+                </form.AppField>
+                <EntryDateTimeField
+                    initialDate={initialDate}
+                    onChange={date => form.setFieldValue('date', date)} />
 
-                // Edit existing entry
-                if (entry) {
-                    useEditEntryQuery.mutate(MeasurementEntry.clone(entry, values), options);
-                } else {
-                    useAddEntryQuery.mutate(
-                        new MeasurementEntry(null, category.id!, values.date, values.value, values.notes),
-                        options
-                    );
-                }
-            }}
-        >
-            {formik => (
-                <Form>
-                    <Stack spacing={2}>
-                        <TextField
-                            fullWidth
-                            id="value"
-                            type={"number"}
-                            label={t('value')}
-                            error={formik.touched.value && Boolean(formik.errors.value)}
-                            helperText={formik.touched.value && formik.errors.value}
-                            slotProps={{ htmlInput: { inputMode: 'decimal' } }}
-                            {...formik.getFieldProps('value')}
-                        />
-                        <EntryDateTimeField
-                            initialDate={entry ? entry.date : new Date()}
-                            onChange={date => formik.setFieldValue('date', date)} />
-
-                        <TextField
-                            fullWidth
-                            id="notes"
-                            label={t('notes')}
-                            multiline
-                            error={formik.touched.notes && Boolean(formik.errors.notes)}
-                            helperText={formik.touched.notes && formik.errors.notes}
-                            {...formik.getFieldProps('notes')}
-                        />
-                        <FormQueryErrors mutationQuery={entry ? useEditEntryQuery : useAddEntryQuery} />
-                        <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
-                            <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
-                                {t('submit')}
-                            </Button>
-                        </Stack>
-                    </Stack>
-                </Form>
-            )}
-        </Formik>)
+                <form.AppField name="notes">
+                    {field => <field.WgerTextField
+                        title={t('notes')}
+                        fieldProps={{ variant: 'outlined', multiline: true }}
+                    />}
+                </form.AppField>
+                <FormQueryErrors mutationQuery={entry ? useEditEntryQuery : useAddEntryQuery} />
+                <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
+                    <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
+                        {t('submit')}
+                    </Button>
+                </Stack>
+            </Stack>
+        </form>
     );
 };
 
 interface GroupEntryFormProps {
     group: MeasurementCategory,
     closeFn?: () => void,
+}
+
+interface GroupEntryFormValues {
+    date: Date | null,
+    // One value per child category, keyed by its id
+    values: Record<string, string>,
 }
 
 /**
@@ -143,60 +168,63 @@ export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
         ))),
     });
 
+    const initialDate = new Date();
+    const defaultValues: GroupEntryFormValues = {
+        date: initialDate,
+        values: Object.fromEntries(group.children.map(child => [child.id!, ''])),
+    };
+
+    const form = useAppForm({
+        defaultValues,
+        validators: { onChangeAsync: yupSchema<GroupEntryFormValues>(validationSchema) },
+        onSubmit: async ({ value: values }) => {
+            if (values.date === null) {
+                return;
+            }
+            const date = values.date;
+
+            addGroupEntriesQuery.mutate(
+                group.children.map(child => new MeasurementEntry(
+                    null,
+                    child.id!,
+                    date,
+                    Number(values.values[child.id!]),
+                    '',
+                )),
+                { onSuccess: () => closeFn?.() }
+            );
+        },
+    });
+
     return (
-        (<Formik
-            initialValues={{
-                date: new Date(),
-                values: Object.fromEntries(group.children.map(child => [child.id!, ''])),
-            }}
-            validationSchema={validationSchema}
-            onSubmit={async (values) => {
-                addGroupEntriesQuery.mutate(
-                    group.children.map(child => new MeasurementEntry(
-                        null,
-                        child.id!,
-                        values.date,
-                        Number(values.values[child.id!]),
-                        '',
-                    )),
-                    { onSuccess: () => closeFn?.() }
-                );
-            }}
-        >
-            {formik => (
-                <Form>
-                    <Stack spacing={2}>
-                        <EntryDateTimeField
-                            initialDate={new Date()}
-                            onChange={date => formik.setFieldValue('date', date)} />
-                        {group.children.map(child =>
-                            <TextField
-                                key={child.id}
-                                fullWidth
-                                id={`values.${child.id}`}
-                                type={"number"}
-                                label={`${categoryDisplayName(child, t)} (${child.unit || group.unit})`}
-                                error={
-                                    Boolean(formik.touched.values?.[child.id!])
-                                    && Boolean(formik.errors.values?.[child.id!])
-                                }
-                                helperText={
-                                    formik.touched.values?.[child.id!]
-                                    && formik.errors.values?.[child.id!]
-                                }
-                                slotProps={{ htmlInput: { inputMode: 'decimal' } }}
-                                {...formik.getFieldProps(`values.${child.id}`)}
-                            />
-                        )}
-                        <FormQueryErrors mutationQuery={addGroupEntriesQuery} />
-                        <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
-                            <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
-                                {t('submit')}
-                            </Button>
-                        </Stack>
-                    </Stack>
-                </Form>
-            )}
-        </Formik>)
+        <form onSubmit={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+        }}>
+            <Stack spacing={2}>
+                <EntryDateTimeField
+                    initialDate={initialDate}
+                    onChange={date => form.setFieldValue('date', date)} />
+                {group.children.map(child =>
+                    <form.AppField key={child.id} name={`values.${child.id}`}>
+                        {field => <field.WgerTextField
+                            title={`${categoryDisplayName(child, t)} (${child.unit || group.unit})`}
+                            fieldProps={{
+                                variant: 'outlined',
+                                type: 'number',
+                                slotProps: { htmlInput: { inputMode: 'decimal' } },
+                            }}
+                        />}
+                    </form.AppField>
+                )}
+                <FormQueryErrors mutationQuery={addGroupEntriesQuery} />
+                <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
+                    <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
+                        {t('submit')}
+                    </Button>
+                </Stack>
+            </Stack>
+        </form>
     );
 };
