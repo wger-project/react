@@ -1,11 +1,7 @@
 import { Alert, Box, Button, Grid, Modal, Stack, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
 import { useAppForm } from "@/core/forms/appForm";
-import { LicenseAuthor } from "@/core/forms/LicenseAuthor";
-import { LicenseAuthorUrl } from "@/core/forms/LicenseAuthorUrl";
-import { LicenseDerivativeSourceUrl } from "@/core/forms/LicenseDerivativeSourceUrl";
-import { LicenseObjectUrl } from "@/core/forms/LicenseObjectUrl";
-import { LicenseTitle } from "@/core/forms/LicenseTitle";
+import { submitHandler } from "@/core/forms/formUtils";
 import { ImageDropZone } from "./ImageDropZone";
 import { ImageIsAiCheckbox, ImageStyleToggle } from "./ImageStyle";
 import { useTranslation } from "react-i18next";
@@ -65,17 +61,14 @@ export const ImageFormModal = ({
 const ImageForm = ({ image, onSubmit, submitLabel }: Pick<ImageFormModalProps, 'onSubmit' | 'submitLabel'> & {
     image: ImageFormData,
 }) => {
+    const { t } = useTranslation();
     const form = useAppForm({
         defaultValues: image,
         onSubmit: async ({ value }) => onSubmit(value),
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Grid container spacing={2}>
                 <Grid size={4}>
                     <form.Subscribe selector={state => state.values.url}>
@@ -90,11 +83,40 @@ const ImageForm = ({ image, onSubmit, submitLabel }: Pick<ImageFormModalProps, '
                 </Grid>
                 <Grid size={8}>
                     <Stack spacing={2}>
-                        <form.AppField name="title">{() => <LicenseTitle />}</form.AppField>
-                        <form.AppField name="objectUrl">{() => <LicenseObjectUrl />}</form.AppField>
-                        <form.AppField name="author">{() => <LicenseAuthor />}</form.AppField>
-                        <form.AppField name="authorUrl">{() => <LicenseAuthorUrl />}</form.AppField>
-                        <form.AppField name="derivativeSourceUrl">{() => <LicenseDerivativeSourceUrl />}</form.AppField>
+                        <form.AppField name="title">
+                            {field => <field.WgerTextField
+                                title={t('licenses.originalTitle')}
+                                variant="standard"
+                            />}
+                        </form.AppField>
+                        <form.AppField name="objectUrl">
+                            {field => <field.WgerTextField
+                                title={t('licenses.originalObjectUrl')}
+                                variant="standard"
+                                fieldProps={{ placeholder: "https://" }}
+                            />}
+                        </form.AppField>
+                        <form.AppField name="author">
+                            {field => <field.WgerTextField
+                                title={t('licenses.authors')}
+                                variant="standard"
+                            />}
+                        </form.AppField>
+                        <form.AppField name="authorUrl">
+                            {field => <field.WgerTextField
+                                title={t('licenses.authorProfile')}
+                                variant="standard"
+                                fieldProps={{ placeholder: "https://" }}
+                            />}
+                        </form.AppField>
+                        <form.AppField name="derivativeSourceUrl">
+                            {field => <field.WgerTextField
+                                title={t('licenses.derivativeSourceUrl')}
+                                variant="standard"
+                                helperText={t('licenses.derivativeSourceUrlHelper')}
+                                fieldProps={{ placeholder: "https://" }}
+                            />}
+                        </form.AppField>
                         <form.AppField name="style">{() => <ImageStyleToggle />}</form.AppField>
                         <form.AppField name="isAi">{() => <ImageIsAiCheckbox />}</form.AppField>
 

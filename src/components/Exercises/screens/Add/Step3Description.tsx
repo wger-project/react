@@ -7,7 +7,7 @@ import { MarkdownEditor } from "@/core/forms/MarkdownEditor";
 import { ExerciseNotes } from "@/components/Exercises/forms/ExerciseNotes";
 import { descriptionValidator, noteValidator } from "@/components/Exercises/forms/yupValidators";
 import { useAppForm } from "@/core/forms/appForm";
-import { fieldErrorMessage, setServerError, yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, fieldError, setServerError, submitHandler } from "@/core/forms/formUtils";
 import { useTranslation } from "react-i18next";
 import { useExerciseSubmissionStateValue } from "@/components/Exercises/screens/Add/state";
 import { setDescriptionEn, setNotesEn } from "@/components/Exercises/screens/Add/state/exerciseSubmissionReducer";
@@ -65,17 +65,11 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Stack>
                 <form.Field name="description">
                     {field => {
-                        const error = field.state.meta.isTouched
-                            ? fieldErrorMessage(field.state.meta.errors)
-                            : undefined;
+                        const error = fieldError(field);
                         return <MarkdownEditor
                             label={t('exercises.description')}
                             value={field.state.value}

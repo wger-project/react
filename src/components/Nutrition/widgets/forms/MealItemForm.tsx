@@ -9,7 +9,7 @@ import {
 } from "@/components/Nutrition/queries";
 import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -112,11 +112,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Stack spacing={2}>
                 <IngredientAutocompleter
                     callback={(value: Ingredient | null) => {
@@ -131,7 +127,6 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                     {field => <field.WgerTextField
                         title={'amount'}
                         fieldProps={{
-                            variant: 'outlined',
                             slotProps: {
                                 input: {
                                     endAdornment: (

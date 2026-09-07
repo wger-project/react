@@ -14,7 +14,7 @@ import {
 import LoadingButton from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
 import { Day, DayType } from "@/components/Routines/models/Day";
@@ -115,17 +115,13 @@ export const DayForm = (props: {
     });
 
     return <>
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <FormQueryErrorsSnackbar mutationQuery={editDayQuery} />
             <FormQueryErrorsSnackbar mutationQuery={deleteDayQuery} />
             <Grid container spacing={2}>
                 <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <form.AppField name="name">
-                        {field => <field.WgerTextField
+                        {field => <field.WgerTextField variant="standard"
                             title="Name"
                             fieldProps={{ disabled: isRestDay }}
                         />}
@@ -162,7 +158,7 @@ export const DayForm = (props: {
                 </Grid>
                 <Grid size={12}>
                     <form.AppField name="description">
-                        {field => <field.WgerTextField
+                        {field => <field.WgerTextField variant="standard"
                             title="Description"
                             fieldProps={{ multiline: true, rows: 4, disabled: isRestDay }}
                         />}

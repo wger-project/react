@@ -27,7 +27,7 @@ import {
 } from "@/components/Exercises/forms/yupValidators";
 import { useLanguageQuery } from "@/components/Exercises/queries";
 import { useAppForm } from "@/core/forms/appForm";
-import { fieldErrorMessage, setServerError, yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, fieldError, setServerError, submitHandler } from "@/core/forms/formUtils";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useExerciseSubmissionStateValue } from "@/components/Exercises/screens/Add/state";
@@ -118,11 +118,7 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Stack spacing={2}>
                 <FormGroup>
                     <FormControlLabel checked={translateExercise}
@@ -148,7 +144,7 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
                                         onChange={e => field.handleChange(e.target.value as number | '')}
                                         onBlur={field.handleBlur}
                                         label={t('language')}
-                                        error={field.state.meta.isTouched && fieldErrorMessage(field.state.meta.errors) !== undefined}
+                                        error={fieldError(field) !== undefined}
                                     >
                                         {languageQuery.data!.filter(language => language.id !== ENGLISH_LANGUAGE_ID).map(language => (
                                             <MenuItem key={language.id} value={language.id}>
@@ -165,9 +161,7 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
 
                         <form.Field name="description">
                             {field => {
-                                const error = field.state.meta.isTouched
-                                    ? fieldErrorMessage(field.state.meta.errors)
-                                    : undefined;
+                                const error = fieldError(field);
                                 return <MarkdownEditor
                                     label={t('exercises.description')}
                                     value={field.state.value}

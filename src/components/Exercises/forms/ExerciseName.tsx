@@ -1,14 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { TextField } from "@mui/material";
 import { useFieldContext } from "@/core/forms/formContexts";
-import { fieldErrorMessage } from "@/core/forms/formUtils";
+import { fieldError } from "@/core/forms/formUtils";
 import React from "react";
 
 /** Bound to the form field it is rendered in via form.AppField */
 export function ExerciseName() {
     const [t] = useTranslation();
     const field = useFieldContext<string>();
-    const error = field.state.meta.isTouched ? fieldErrorMessage(field.state.meta.errors) : undefined;
+    const error = fieldError(field);
 
     return <TextField
         fullWidth

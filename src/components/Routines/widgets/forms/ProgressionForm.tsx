@@ -5,7 +5,7 @@ import { Box, Button, Divider, IconButton, MenuItem, Stack, Switch, TextField, T
 import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import {
     BaseConfig,
@@ -323,11 +323,7 @@ const ProgressionFields = (props: ProgressionFormProps & {
     return <>
         <Stack sx={{ width: '100%' }}>
             <Typography variant={"h6"}>{title}</Typography>
-            <form onSubmit={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                form.handleSubmit();
-            }}>
+            <form onSubmit={submitHandler(form)}>
                 <Grid container spacing={1}>
                     <Grid size={4} offset={2} sx={{ textAlign: "center" }}>
                         {t('value')}
@@ -403,7 +399,7 @@ const ProgressionFields = (props: ProgressionFormProps & {
                                 <Grid size={2}>
                                     {log.edited &&
                                         <form.AppField name={`entries[${index}].value`}>
-                                            {field => <field.WgerTextField
+                                            {field => <field.WgerTextField variant="standard"
                                                 title={t('min')}
                                                 fullwidth={true}
                                                 fieldProps={{ slotProps: { htmlInput: { inputMode: 'decimal' } } }}
@@ -413,7 +409,7 @@ const ProgressionFields = (props: ProgressionFormProps & {
                                 <Grid size={2}>
                                     {log.edited &&
                                         <form.AppField name={`entries[${index}].valueMax`}>
-                                            {field => <field.WgerTextField
+                                            {field => <field.WgerTextField variant="standard"
                                                 title={t('max')}
                                                 fullwidth={true}
                                                 fieldProps={{ slotProps: { htmlInput: { inputMode: 'decimal' } } }}

@@ -16,7 +16,7 @@ import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/components/Nutrition/queries";
 import { useAppForm } from "@/core/forms/appForm";
-import { fieldErrorMessage, yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
 import i18n from "@/i18n";
 import { TFunction } from "i18next";
 import { DateTime } from "luxon";
@@ -160,16 +160,11 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Stack spacing={2}>
                 <form.AppField name="description">
                     {field => <field.WgerTextField
                         title={t('description')}
-                        fieldProps={{ variant: 'outlined' }}
                     />}
                 </form.AppField>
                 <Grid container spacing={1}>
@@ -177,9 +172,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                         <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                             <form.Field name="start">
                                 {field => {
-                                    const error = field.state.meta.isTouched
-                                        ? fieldErrorMessage(field.state.meta.errors)
-                                        : undefined;
+                                    const error = fieldError(field);
                                     return <DatePicker
                                         format="yyyy-MM-dd"
                                         label={t('start')}
@@ -208,9 +201,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                         <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                             <form.Field name="end">
                                 {field => {
-                                    const error = field.state.meta.isTouched
-                                        ? fieldErrorMessage(field.state.meta.errors)
-                                        : undefined;
+                                    const error = fieldError(field);
                                     return <DatePicker
                                         format="yyyy-MM-dd"
                                         label={t('end')}
@@ -287,7 +278,6 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                         {field => <field.WgerTextField
                             title={t('nutrition.goalEnergy')}
                             fieldProps={{
-                                variant: 'outlined',
                                 slotProps: {
                                     input: {
                                         endAdornment: <InputAdornment
@@ -304,7 +294,6 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 {field => <field.WgerTextField
                                     title={t('nutrition.goalProtein')}
                                     fieldProps={{
-                                        variant: 'outlined',
                                         slotProps: {
                                             input: {
                                                 startAdornment: <InputAdornment position="start">
@@ -325,7 +314,6 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 {field => <field.WgerTextField
                                     title={t('nutrition.goalCarbohydrates')}
                                     fieldProps={{
-                                        variant: 'outlined',
                                         slotProps: {
                                             input: {
                                                 startAdornment: <InputAdornment position="start">
@@ -346,7 +334,6 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 {field => <field.WgerTextField
                                     title={t('nutrition.goalFat')}
                                     fieldProps={{
-                                        variant: 'outlined',
                                         slotProps: {
                                             input: {
                                                 startAdornment: <InputAdornment position="start">
@@ -369,7 +356,6 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                                 {field => <field.WgerTextField
                                     title={t('nutrition.goalFiber')}
                                     fieldProps={{
-                                        variant: 'outlined',
                                         slotProps: {
                                             input: {
                                                 startAdornment: <InputAdornment position="start">

@@ -37,7 +37,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppForm } from "@/core/forms/appForm";
-import { fieldErrorMessage, yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { Alert, Box, Button, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
@@ -388,11 +388,7 @@ const TranslationEditForm = ({
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Grid container spacing={1}>
                 <Grid size={12}>
                     <Typography variant={'h5'}>{t('translation')}</Typography>
@@ -440,9 +436,7 @@ const TranslationEditForm = ({
                     {/* Markdown Editor */}
                     <form.Field name="description">
                         {field => {
-                            const error = field.state.meta.isTouched
-                                ? fieldErrorMessage(field.state.meta.errors)
-                                : undefined;
+                            const error = fieldError(field);
                             return <MarkdownEditor
                                 value={field.state.value}
                                 onChange={(val) => field.handleChange(val)}

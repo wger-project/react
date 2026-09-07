@@ -29,7 +29,7 @@ import {
     TextField
 } from "@mui/material";
 import { useAppForm } from "@/core/forms/appForm";
-import { fieldErrorMessage, yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, fieldErrorMessage, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import React from 'react';
 import { useTranslation } from "react-i18next";
@@ -209,11 +209,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
     };
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <form.Subscribe selector={state => ({
                 values: state.values,
                 submissionAttempts: state.submissionAttempts,
@@ -224,26 +220,14 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                         {isCustom && <form.AppField name="name">
                             {field => <field.WgerTextField
                                 title={t('name')}
-                                fieldProps={{
-                                    variant: 'outlined',
-                                    onChange: event => {
-                                        markNameEdited();
-                                        field.handleChange(event.target.value);
-                                    },
-                                }}
+                                onValueChange={markNameEdited}
                             />}
                         </form.AppField>}
                         {isCustom && <form.AppField name="unit">
                             {field => <field.WgerTextField
                                 title={t('unit')}
                                 helperText={t('measurements.unitFormHelpText')}
-                                fieldProps={{
-                                    variant: 'outlined',
-                                    onChange: event => {
-                                        markUnitEdited();
-                                        field.handleChange(event.target.value);
-                                    },
-                                }}
+                                onValueChange={markUnitEdited}
                             />}
                         </form.AppField>}
                         {/* What a category computes is set when it is created:

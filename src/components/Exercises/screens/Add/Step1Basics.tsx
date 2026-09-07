@@ -10,7 +10,7 @@ import { alternativeNameValidator, categoryValidator, nameValidator } from "@/co
 import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery, } from "@/components/Exercises/queries";
 import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useExerciseSubmissionStateValue } from "@/components/Exercises/screens/Add/state";
@@ -73,11 +73,7 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Stack spacing={2}>
                 <form.AppField name="nameEn">{() => <ExerciseName />}</form.AppField>
                 <form.AppField name="newAlternativeNameEn">{() => <ExerciseAliases />}</form.AppField>

@@ -5,7 +5,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useAppForm } from "@/core/forms/appForm";
-import { fieldErrorMessage, yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { useProfileQuery } from "@/components/User";
 import {
@@ -150,11 +150,7 @@ export const RoutineForm = ({
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Grid container spacing={2}>
                 <Grid size={{ xs: 12 }}>
                     <FormQueryErrors
@@ -163,12 +159,12 @@ export const RoutineForm = ({
 
                 <Grid size={{ xs: 12 }}>
                     <form.AppField name="name">
-                        {field => <field.WgerTextField title={t('name')} />}
+                        {field => <field.WgerTextField variant="standard" title={t('name')} />}
                     </form.AppField>
                 </Grid>
                 <Grid size={12}>
                     <form.AppField name="description">
-                        {field => <field.WgerTextField
+                        {field => <field.WgerTextField variant="standard"
                             title={t('description')}
                             fieldProps={{ multiline: true, rows: 4 }}
                         />}
@@ -178,9 +174,7 @@ export const RoutineForm = ({
                     <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                         <form.Field name="start">
                             {field => {
-                                const error = field.state.meta.isTouched
-                                    ? fieldErrorMessage(field.state.meta.errors)
-                                    : undefined;
+                                const error = fieldError(field);
                                 return <DatePicker
                                     defaultValue={DateTime.now()}
                                     label={t('start')}
@@ -208,9 +202,7 @@ export const RoutineForm = ({
                     <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
                         <form.Field name="end">
                             {field => {
-                                const error = field.state.meta.isTouched
-                                    ? fieldErrorMessage(field.state.meta.errors)
-                                    : undefined;
+                                const error = fieldError(field);
                                 return <DatePicker
                                     defaultValue={DateTime.now()}
                                     label={t('end')}

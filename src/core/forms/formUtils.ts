@@ -1,4 +1,5 @@
-import type { AnyFormApi, StandardSchemaV1 } from "@tanstack/react-form";
+import type { AnyFieldApi, AnyFormApi, StandardSchemaV1 } from "@tanstack/react-form";
+import type { FormEvent } from "react";
 import { AnySchema, ValidationError } from "yup";
 
 interface Issue {
@@ -93,4 +94,18 @@ export function setServerError(form: AnyFormApi, field: string, message: string 
         ...prev,
         errorMap: { ...prev.errorMap, onServer: message },
     }));
+}
+
+/** The field's error text once the user touched it, nothing before that or while it is valid */
+export function fieldError(field: AnyFieldApi): string | undefined {
+    return field.state.meta.isTouched ? fieldErrorMessage(field.state.meta.errors) : undefined;
+}
+
+/** What the form element does on submit: keeps the browser out of it and lets TanStack validate and submit */
+export function submitHandler(form: AnyFormApi) {
+    return (event: FormEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+        form.handleSubmit();
+    };
 }

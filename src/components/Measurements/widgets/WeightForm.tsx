@@ -11,7 +11,7 @@ import { weightUnitOf } from "@/components/Measurements/models/bodyWeight";
 import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Measurements/queries/bodyWeight";
 import { useProfileQuery } from "@/components/User";
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import { WeightUnit } from "@/core/lib/weightUnit";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { EntryDateTimeField } from "@/components/Measurements/widgets/EntryDateTimeField";
@@ -117,17 +117,13 @@ const WeightFormFields = ({ category, displayUnit, weightEntry, closeFn }: Weigh
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Stack spacing={2}>
                 <Stack direction="row" spacing={2}>
                     <form.AppField name="weight">
                         {field => <field.WgerTextField
                             title={t('weight')}
-                            fieldProps={{ variant: 'outlined', slotProps: { htmlInput: { inputMode: 'decimal' } } }}
+                            fieldProps={{ slotProps: { htmlInput: { inputMode: 'decimal' } } }}
                         />}
                     </form.AppField>
                     <form.Field name="unit">

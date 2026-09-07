@@ -12,7 +12,7 @@ import {
 } from "@/components/Nutrition/queries";
 import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
 import { useAppForm } from "@/core/forms/appForm";
-import { fieldErrorMessage, yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
@@ -137,17 +137,11 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Stack spacing={2}>
                 <form.Field name="ingredient">
                     {field => {
-                        const error = field.state.meta.isTouched
-                            ? fieldErrorMessage(field.state.meta.errors)
-                            : undefined;
+                        const error = fieldError(field);
                         return <>
                             <IngredientAutocompleter
                                 callback={(value: Ingredient | null) => {
@@ -170,7 +164,6 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                     {field => <field.WgerTextField
                         title={'amount'}
                         fieldProps={{
-                            variant: 'outlined',
                             slotProps: {
                                 input: {
                                     endAdornment: (

@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, InputLabel, Select } from "@mui/material";
 import { useFieldContext } from "@/core/forms/formContexts";
-import { fieldErrorMessage } from "@/core/forms/formUtils";
+import { fieldError } from "@/core/forms/formUtils";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 export function ExerciseSelect(props: { options: any }) {
     const [t] = useTranslation();
     const field = useFieldContext<number | ''>();
-    const error = field.state.meta.isTouched ? fieldErrorMessage(field.state.meta.errors) : undefined;
+    const error = fieldError(field);
 
     return <FormControl fullWidth>
         <InputLabel id="label-category">{t("category")}</InputLabel>

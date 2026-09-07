@@ -4,7 +4,7 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { Meal } from "@/components/Nutrition/models/meal";
 import { useAddMealQuery, useEditMealQuery } from "@/components/Nutrition/queries";
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { DateTime } from "luxon";
 import React from 'react';
@@ -73,16 +73,11 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Stack spacing={2}>
                 <form.AppField name="name">
                     {field => <field.WgerTextField
                         title={t('description')}
-                        fieldProps={{ variant: 'outlined' }}
                     />}
                 </form.AppField>
 

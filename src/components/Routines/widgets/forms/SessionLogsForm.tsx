@@ -1,5 +1,5 @@
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import {
     Exercise,
@@ -205,11 +205,7 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
     };
 
     return (<>
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             {/* The rows read every value of every log, which an array field does
               * not re-render for: it only follows the array's length */}
             <form.Subscribe selector={state => state.values.logs}>
@@ -271,7 +267,7 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
                         </>}
                         <Grid size={4}>
                             <form.AppField name={`logs[${index}].repetitions`}>
-                                {field => <field.WgerTextField
+                                {field => <field.WgerTextField variant="standard"
                                     title={t('server.repetitions')}
                                     fieldProps={{
                                         slotProps: {
@@ -296,7 +292,7 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
                         </Grid>
                         <Grid size={4}>
                             <form.AppField name={`logs[${index}].weight`}>
-                                {field => <field.WgerTextField
+                                {field => <field.WgerTextField variant="standard"
                                     title={t('weight')}
                                     fieldProps={{
                                         slotProps: {

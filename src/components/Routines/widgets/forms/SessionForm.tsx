@@ -7,7 +7,7 @@ import {
 } from "@/components/Routines/models/WorkoutSession";
 import { useAddSessionQuery, useEditSessionQuery, useSessionOfDay } from "@/components/Routines/queries";
 import { useAppForm } from "@/core/forms/appForm";
-import { fieldErrorMessage, yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Add, SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
 import {
@@ -175,16 +175,9 @@ const SessionFormFields = (
         },
     });
 
-    /** The picker's error state, shown once the field was touched */
-    const pickerError = (meta: { isTouched: boolean, errors: ReadonlyArray<unknown> }) =>
-        meta.isTouched ? fieldErrorMessage(meta.errors) : undefined;
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Grid container spacing={2}>
                 <Grid size={{ xs: 12, sm: 6 }}>
                     <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
@@ -205,7 +198,7 @@ const SessionFormFields = (
                                     textField: {
                                         variant: "standard",
                                         fullWidth: true,
-                                        error: pickerError(field.state.meta) !== undefined,
+                                        error: fieldError(field) !== undefined,
                                     }
                                 }}
                             />}
@@ -256,8 +249,8 @@ const SessionFormFields = (
                                             variant: "standard",
                                             fullWidth: true,
                                             onBlur: field.handleBlur,
-                                            error: pickerError(field.state.meta) !== undefined,
-                                            helperText: pickerError(field.state.meta)
+                                            error: fieldError(field) !== undefined,
+                                            helperText: fieldError(field)
                                         }
                                     }}
                                 />}
@@ -281,8 +274,8 @@ const SessionFormFields = (
                                             variant: "standard",
                                             fullWidth: true,
                                             onBlur: field.handleBlur,
-                                            error: pickerError(field.state.meta) !== undefined,
-                                            helperText: pickerError(field.state.meta)
+                                            error: fieldError(field) !== undefined,
+                                            helperText: fieldError(field)
                                         }
                                     }}
                                 />}
@@ -291,7 +284,7 @@ const SessionFormFields = (
                     </Grid>
                     <Grid size={12}>
                         <form.AppField name="notes">
-                            {field => <field.WgerTextField
+                            {field => <field.WgerTextField variant="standard"
                                 title={t('notes')}
                                 fieldProps={{ multiline: true, rows: 4 }}
                             />}

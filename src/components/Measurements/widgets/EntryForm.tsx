@@ -13,7 +13,7 @@ import {
 } from "@/components/Measurements/queries";
 import { EntryDateTimeField } from "@/components/Measurements/widgets/EntryDateTimeField";
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema } from "@/core/forms/formUtils";
+import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import { useTranslation } from "react-i18next";
 import * as yup from 'yup';
 
@@ -98,17 +98,12 @@ export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Stack spacing={2}>
                 <form.AppField name="value">
                     {field => <field.WgerTextField
                         title={t('value')}
                         fieldProps={{
-                            variant: 'outlined',
                             type: 'number',
                             slotProps: { htmlInput: { inputMode: 'decimal' } },
                         }}
@@ -121,7 +116,7 @@ export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
                 <form.AppField name="notes">
                     {field => <field.WgerTextField
                         title={t('notes')}
-                        fieldProps={{ variant: 'outlined', multiline: true }}
+                        fieldProps={{ multiline: true }}
                     />}
                 </form.AppField>
                 <FormQueryErrors mutationQuery={entry ? useEditEntryQuery : useAddEntryQuery} />
@@ -197,11 +192,7 @@ export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
     });
 
     return (
-        <form onSubmit={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
-        }}>
+        <form onSubmit={submitHandler(form)}>
             <Stack spacing={2}>
                 <EntryDateTimeField
                     initialDate={initialDate}
@@ -211,7 +202,6 @@ export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
                         {field => <field.WgerTextField
                             title={`${categoryDisplayName(child, t)} (${child.unit || group.unit})`}
                             fieldProps={{
-                                variant: 'outlined',
                                 type: 'number',
                                 slotProps: { htmlInput: { inputMode: 'decimal' } },
                             }}
