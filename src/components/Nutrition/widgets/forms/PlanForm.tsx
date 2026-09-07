@@ -57,7 +57,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
     const [t] = useTranslation();
     const addPlanQuery = useAddNutritionalPlanQuery();
     const editPlanQuery = useEditNutritionalPlanQuery(plan?.id ?? '');
-    const [useGoals, setUseGoals] = useState(plan?.hasAnyGoals);
+    const [useGoals, setUseGoals] = useState(plan?.hasAnyGoals ?? false);
     const [startDateValue, setStartDateValue] = useState<DateTime | null>(plan ? DateTime.fromJSDate(plan.start) : DateTime.now);
     const [endDateValue, setEndDateValue] = useState<DateTime | null>(plan && plan?.end !== null ? DateTime.fromJSDate(plan!.end) : null);
 
