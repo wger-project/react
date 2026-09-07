@@ -105,7 +105,7 @@ describe("Test the EntryForm component", () => {
         // Assert
         expect(submitButton).toBeInTheDocument();
         await user.click(submitButton);
-        // The async validation is debounced through a timer the fake clock has to fire
+        // The submit resolves asynchronously, so the fake clock has to advance first
         await waitFor(() => expect(mutate).toHaveBeenCalledWith(new MeasurementEntry(
             null,
             TEST_MEASUREMENT_CATEGORY_1.id!,

@@ -1,3 +1,11 @@
+import { Day, DayType } from "@/components/Routines/models/Day";
+import { useDeleteDayQuery, useEditDayQuery } from "@/components/Routines/queries";
+import { DayTypeSelect } from "@/components/Routines/widgets/forms/DayTypeSelect";
+import { DefaultRoundingMenu } from "@/components/Routines/widgets/forms/RoutineForm";
+import { useAppForm } from "@/core/forms/appForm";
+import { submitHandler, yupSchema } from "@/core/forms/formUtils";
+import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutlined";
 import {
@@ -13,14 +21,6 @@ import {
 } from "@mui/material";
 import LoadingButton from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
-import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema, submitHandler } from "@/core/forms/formUtils";
-import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
-import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
-import { Day, DayType } from "@/components/Routines/models/Day";
-import { useDeleteDayQuery, useEditDayQuery } from "@/components/Routines/queries";
-import { DayTypeSelect } from "@/components/Routines/widgets/forms/DayTypeSelect";
-import { DefaultRoundingMenu } from "@/components/Routines/widgets/forms/RoutineForm";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from 'yup';
@@ -122,8 +122,8 @@ export const DayForm = (props: {
                 <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <form.AppField name="name">
                         {field => <field.WgerTextField variant="standard"
-                            title="Name"
-                            fieldProps={{ disabled: isRestDay }}
+                                                       title={t('name')}
+                                                       fieldProps={{ disabled: isRestDay }}
                         />}
                     </form.AppField>
                 </Grid>
@@ -159,8 +159,8 @@ export const DayForm = (props: {
                 <Grid size={12}>
                     <form.AppField name="description">
                         {field => <field.WgerTextField variant="standard"
-                            title="Description"
-                            fieldProps={{ multiline: true, rows: 4, disabled: isRestDay }}
+                                                       title={t('description')}
+                                                       fieldProps={{ multiline: true, rows: 4, disabled: isRestDay }}
                         />}
                     </form.AppField>
                 </Grid>
