@@ -1,11 +1,11 @@
 import { Alert, Box, Button, Grid, Modal, Stack, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
+import { useAppForm } from "@/core/forms/appForm";
 import { LicenseAuthor } from "@/core/forms/LicenseAuthor";
 import { LicenseAuthorUrl } from "@/core/forms/LicenseAuthorUrl";
 import { LicenseDerivativeSourceUrl } from "@/core/forms/LicenseDerivativeSourceUrl";
 import { LicenseObjectUrl } from "@/core/forms/LicenseObjectUrl";
 import { LicenseTitle } from "@/core/forms/LicenseTitle";
-import { Form, Formik } from "formik";
 import { ImageDropZone } from "./ImageDropZone";
 import { ImageIsAiCheckbox, ImageStyleToggle } from "./ImageStyle";
 import { useTranslation } from "react-i18next";
@@ -34,75 +34,94 @@ const style = {
     p: 4,
 };
 
-export const ImageFormModal = ({ 
-    open, 
-    onClose, 
-    image, 
-    onSubmit, 
-    submitLabel 
+export const ImageFormModal = ({
+                                   open,
+                                   onClose,
+                                   image,
+                                   onSubmit,
+                                   submitLabel
 }: ImageFormModalProps) => {
     const { t } = useTranslation();
 
     // If no image is provided, don't render or show a loader
     if (!image) return null;
-    
+
     return (
         <Modal open={open} onClose={onClose}>
-            <Box 
+            <Box
               sx={style}
             >
                 <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
                     {t('exercises.imageDetails')}
                 </Typography>
 
-                <Formik
-                    // Important: initialValues now come from the 'image' prop
-                    initialValues={image}
-                    enableReinitialize={true} // Allows form to update if 'image' prop changes
-                    onSubmit={onSubmit}
-                >
-                    {({ values, submitForm }) => (
-                        <Form>
-                            <Grid container spacing={2}>
-                                <Grid size={4}>
-                                    <ImageDropZone />
-                                </Grid>
-                                <Grid size={8}>
-                                    <Stack spacing={2}>
-                                        <LicenseTitle fieldName={'title'} />
-                                        <LicenseObjectUrl fieldName={'objectUrl'} />
-                                        <LicenseAuthor fieldName={'author'} />
-                                        <LicenseAuthorUrl fieldName={'authorUrl'} />
-                                        <LicenseDerivativeSourceUrl fieldName={'derivativeSourceUrl'} />
-                                        <ImageStyleToggle fieldName={'style'} />
-                                        <ImageIsAiCheckbox fieldName={'isAi'} />
-
-                                        <Alert icon={<InfoIcon fontSize="inherit" />} severity="info">
-                                            By submitting this image, you agree to release it under the <a
-                                            href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank"
-                                            rel="noreferrer">CC
-                                            BY-SA 4.0</a> license. The image must be either your own work or the
-                                            author must have released in under
-                                            a license compatible with CC BY-SA 4.0.
-                                        </Alert>
-                                    </Stack>
-                                </Grid>
-                            </Grid>
-
-                            <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
-                                <Button
-                                    variant="contained"
-                                    onClick={submitForm}
-                                    disabled={!values.url}
-                                    data-testid="submit-edit-image-form"
-                                >
-                                    {submitLabel}
-                                </Button>
-                            </Stack>
-                        </Form>
-                    )}
-                </Formik>
+                {/* The form freezes its default values, so another image gets a fresh form via the key */}
+                <ImageForm key={JSON.stringify(image)} image={image} onSubmit={onSubmit} submitLabel={submitLabel} />
             </Box>
         </Modal>
+    );
+};
+
+const ImageForm = ({ image, onSubmit, submitLabel }: Pick<ImageFormModalProps, 'onSubmit' | 'submitLabel'> & {
+    image: ImageFormData,
+}) => {
+    const form = useAppForm({
+        defaultValues: image,
+        onSubmit: async ({ value }) => onSubmit(value),
+    });
+
+    return (
+        <form onSubmit={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+        }}>
+            <Grid container spacing={2}>
+                <Grid size={4}>
+                    <form.Subscribe selector={state => state.values.url}>
+                        {url => <ImageDropZone
+                            url={url}
+                            onPick={(file, pickedUrl) => {
+                                form.setFieldValue('file', file);
+                                form.setFieldValue('url', pickedUrl);
+                            }}
+                        />}
+                    </form.Subscribe>
+                </Grid>
+                <Grid size={8}>
+                    <Stack spacing={2}>
+                        <form.AppField name="title">{() => <LicenseTitle />}</form.AppField>
+                        <form.AppField name="objectUrl">{() => <LicenseObjectUrl />}</form.AppField>
+                        <form.AppField name="author">{() => <LicenseAuthor />}</form.AppField>
+                        <form.AppField name="authorUrl">{() => <LicenseAuthorUrl />}</form.AppField>
+                        <form.AppField name="derivativeSourceUrl">{() => <LicenseDerivativeSourceUrl />}</form.AppField>
+                        <form.AppField name="style">{() => <ImageStyleToggle />}</form.AppField>
+                        <form.AppField name="isAi">{() => <ImageIsAiCheckbox />}</form.AppField>
+
+                        <Alert icon={<InfoIcon fontSize="inherit" />} severity="info">
+                            By submitting this image, you agree to release it under the <a
+                            href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank"
+                            rel="noreferrer">CC
+                            BY-SA 4.0</a> license. The image must be either your own work or the
+                            author must have released in under
+                            a license compatible with CC BY-SA 4.0.
+                        </Alert>
+                    </Stack>
+                </Grid>
+            </Grid>
+
+            <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
+                <form.Subscribe selector={state => state.values.url}>
+                    {url => <Button
+                        variant="contained"
+                        type="submit"
+                        disabled={!url}
+                        data-testid="submit-edit-image-form"
+                    >
+                        {submitLabel}
+                    </Button>}
+                </form.Subscribe>
+            </Stack>
+        </form>
     );
 };

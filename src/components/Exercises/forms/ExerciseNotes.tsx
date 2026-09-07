@@ -2,30 +2,34 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { useField } from "formik";
+import { useFieldContext } from "@/core/forms/formContexts";
+import { useNestedFieldError } from "@/core/forms/useNestedFieldError";
 import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { randomUUID } from "@/core/lib/uuid";
 
-export function ExerciseNotes(props: { fieldName: string }) {
+/** Bound to the form field it is rendered in via form.AppField */
+export function ExerciseNotes() {
     const [t] = useTranslation();
-    const [field, meta, helpers] = useField(props.fieldName);
+    const field = useFieldContext<string[]>();
+    const notes = field.state.value;
+    // The validator reports on the single notes, e.g. `notes[0]`
+    const nestedError = useNestedFieldError(field);
+    const error = field.state.meta.isTouched ? nestedError : undefined;
     const [newNoteValue, setNewNoteValue] = useState<string>('');
-    const noteKeys = useRef<string[]>(field.value.map(() => randomUUID()));
+    const noteKeys = useRef<string[]>(notes.map(() => randomUUID()));
 
     const deleteAtIndex = (index: number) => {
         noteKeys.current.splice(index, 1);
-        helpers.setValue(field.value.filter((_: string, b: number) => b !== index));
+        field.handleChange(notes.filter((_, i) => i !== index));
     };
 
     const setNoteValueIndex = (index: number, note: string) => {
-        field.value[index] = note;
-        helpers.setValue(field.value);
+        field.handleChange(notes.map((existing, i) => i === index ? note : existing));
     };
     const addEntry = () => {
         noteKeys.current.push(randomUUID());
-        field.value.push(newNoteValue);
-        helpers.setValue(field.value);
+        field.handleChange([...notes, newNoteValue]);
         setNewNoteValue('');
     };
 
@@ -38,8 +42,8 @@ export function ExerciseNotes(props: { fieldName: string }) {
                 variant="standard"
                 value={newNoteValue}
                 onChange={event => setNewNoteValue(event.target.value)}
-                error={meta.touched && Boolean(meta.error)}
-                helperText={meta.touched && meta.error ? meta.error : t('exercises.notesHelpText')}
+                error={error !== undefined}
+                helperText={error ?? t('exercises.notesHelpText')}
                 slotProps={{
                     input: {
                         endAdornment: (
@@ -53,7 +57,7 @@ export function ExerciseNotes(props: { fieldName: string }) {
                 }}
             />
         </Grid>
-        {field.value.map((note: string, index: number) =>
+        {notes.map((note: string, index: number) =>
             <TextField
                 key={noteKeys.current[index]}
                 fullWidth
@@ -61,7 +65,7 @@ export function ExerciseNotes(props: { fieldName: string }) {
                 onChange={(event) => setNoteValueIndex(index, event.target.value)}
                 sx={{ mt: 2 }}
                 variant="standard"
-                error={meta.touched && Boolean(meta.error)}
+                error={error !== undefined}
                 slotProps={{
                     input: {
                         endAdornment: (

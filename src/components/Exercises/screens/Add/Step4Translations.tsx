@@ -16,7 +16,7 @@ import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { useLanguageCheckQuery } from "@/core/queries";
 import type { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
 import { PaddingBox } from "@/components/Exercises/widgets/PaddingBox";
-import { ExerciseAliases } from "@/components/Exercises/forms/ExerciseAliases";
+import { AliasItem, ExerciseAliases } from "@/components/Exercises/forms/ExerciseAliases";
 import { ExerciseName } from "@/components/Exercises/forms/ExerciseName";
 import { ExerciseNotes } from "@/components/Exercises/forms/ExerciseNotes";
 import {
@@ -26,7 +26,8 @@ import {
     noteValidator
 } from "@/components/Exercises/forms/yupValidators";
 import { useLanguageQuery } from "@/components/Exercises/queries";
-import { Form, Formik } from "formik";
+import { useAppForm } from "@/core/forms/appForm";
+import { fieldErrorMessage, setServerError, yupSchema } from "@/core/forms/formUtils";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useExerciseSubmissionStateValue } from "@/components/Exercises/screens/Add/state";
@@ -39,6 +40,15 @@ import {
 } from "@/components/Exercises/screens/Add/state/exerciseSubmissionReducer";
 import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
 import * as yup from "yup";
+
+interface Step4Values {
+    name: string,
+    alternativeNames: AliasItem[],
+    description: string,
+    // the empty string stands in for "not picked yet", MUI selects don't accept null
+    language: number | '',
+    notes: string[],
+}
 
 export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
@@ -61,80 +71,84 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
         } : {}
     );
 
-    return (
-        <Formik
-            initialValues={{
-                name: state.nameI18n,
-                // The alias field and its validator work with objects, the state keeps plain strings
-                alternativeNames: state.alternativeNamesI18n.map(alias => ({ alias })),
-                description: state.descriptionI18n,
-                language: state.languageId === null ? '' : state.languageId,
-                notes: state.notesI18n
-            }}
-            validationSchema={validationSchema}
-            onSubmit={async (values, { setFieldError }) => {
-                let canContinue = true;
+    const defaultValues: Step4Values = {
+        name: state.nameI18n,
+        // The alias field and its validator work with objects, the state keeps plain strings
+        alternativeNames: state.alternativeNamesI18n.map(alias => ({ alias })),
+        description: state.descriptionI18n,
+        language: state.languageId === null ? '' : state.languageId,
+        notes: state.notesI18n
+    };
 
-                if (values.description !== '') {
-                    const validationResult = await languageCheckQuery.mutateAsync({
-                        input: values.description,
-                        languageId: values.language! as unknown as number
-                    });
+    const form = useAppForm({
+        defaultValues,
+        // The schema follows the switch, TanStack picks up the new one on every render
+        validators: { onChange: yupSchema<Step4Values>(validationSchema) },
+        onSubmit: async ({ value }) => {
+            let canContinue = true;
+
+            if (value.description !== '') {
+                const validationResult = await languageCheckQuery.mutateAsync({
+                    input: value.description,
+                    languageId: value.language as number
+                });
+
+                // @ts-ignore - validationResult contains the message from the backend
+                if ("success" in validationResult) {
+                    canContinue = true;
+                } else {
+                    canContinue = false;
 
                     // @ts-ignore - validationResult contains the message from the backend
-                    if ("success" in validationResult) {
-                        canContinue = true;
-                    } else {
-                        canContinue = false;
-
-                        // @ts-ignore - validationResult contains the message from the backend
-                        setFieldError('description', validationResult.check.message);
-                    }
+                    setServerError(form, 'description', validationResult.check.message);
                 }
+            }
 
 
-                dispatch(setNameI18n(values.name));
-                dispatch(setDescriptionI18n(values.description));
-                dispatch(setAlternativeNamesI18n(values.alternativeNames.map(item => item.alias)));
-                dispatch(setLanguageId(values.language === '' ? null : values.language as unknown as number));
-                dispatch(setNotesI18n(values.notes));
+            dispatch(setNameI18n(value.name));
+            dispatch(setDescriptionI18n(value.description));
+            dispatch(setAlternativeNamesI18n(value.alternativeNames.map(item => item.alias)));
+            dispatch(setLanguageId(value.language === '' ? null : value.language));
+            dispatch(setNotesI18n(value.notes));
 
-                if (canContinue) {
-                    onContinue!();
-                }
-            }}
-        >{formik => (
-            <Form>
-                <Stack spacing={2}>
-                    <FormGroup>
-                        <FormControlLabel checked={translateExercise}
-                                          onClick={() => setTranslateExercise(!translateExercise)}
-                                          control={<Switch />}
-                                          label={t('exercises.translateExerciseNow')} />
-                    </FormGroup>
-                    {translateExercise && (
-                        <>
-                            {languageQuery.isLoading ? (
-                                <Box>
-                                    <LoadingWidget />
-                                </Box>
-                            ) : (
-                                <FormControl fullWidth>
+            if (canContinue) {
+                onContinue!();
+            }
+        },
+    });
+
+    return (
+        <form onSubmit={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+        }}>
+            <Stack spacing={2}>
+                <FormGroup>
+                    <FormControlLabel checked={translateExercise}
+                                      onClick={() => setTranslateExercise(!translateExercise)}
+                                      control={<Switch />}
+                                      label={t('exercises.translateExerciseNow')} />
+                </FormGroup>
+                {translateExercise && (
+                    <>
+                        {languageQuery.isLoading ? (
+                            <Box>
+                                <LoadingWidget />
+                            </Box>
+                        ) : (
+                            <form.Field name="language">
+                                {field => <FormControl fullWidth>
                                     <InputLabel id="label-language">{t('language')}</InputLabel>
                                     <Select
                                         labelId="label-language"
                                         id="language"
-                                        value={formik.getFieldProps("language").value}
-                                        onChange={e => {
-                                            formik.setFieldValue(
-                                                formik.getFieldProps("language").name,
-                                                e.target.value
-                                            );
-                                        }}
+                                        name={field.name}
+                                        value={field.state.value}
+                                        onChange={e => field.handleChange(e.target.value as number | '')}
+                                        onBlur={field.handleBlur}
                                         label={t('language')}
-                                        error={Boolean(
-                                            formik.touched.language && formik.errors.language
-                                        )}
+                                        error={field.state.meta.isTouched && fieldErrorMessage(field.state.meta.errors) !== undefined}
                                     >
                                         {languageQuery.data!.filter(language => language.id !== ENGLISH_LANGUAGE_ID).map(language => (
                                             <MenuItem key={language.id} value={language.id}>
@@ -142,49 +156,59 @@ export const Step4Translations = ({ onContinue, onBack }: StepProps) => {
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                </FormControl>
-                            )}
-                            <ExerciseName fieldName={'name'} />
+                                </FormControl>}
+                            </form.Field>
+                        )}
+                        <form.AppField name="name">{() => <ExerciseName />}</form.AppField>
 
-                            <ExerciseAliases fieldName={'alternativeNames'} />
+                        <form.AppField name="alternativeNames">{() => <ExerciseAliases />}</form.AppField>
 
-                            <MarkdownEditor
-                                label={t('exercises.description')}
-                                value={formik.values.description}
-                                onChange={(val) => formik.setFieldValue('description', val)}
-                                error={formik.touched.description && Boolean(formik.errors.description)}
-                                helperText={formik.touched.description ? formik.errors.description : undefined}
-                            />
+                        <form.Field name="description">
+                            {field => {
+                                const error = field.state.meta.isTouched
+                                    ? fieldErrorMessage(field.state.meta.errors)
+                                    : undefined;
+                                return <MarkdownEditor
+                                    label={t('exercises.description')}
+                                    value={field.state.value}
+                                    onChange={(val) => {
+                                        // The server's verdict was about the old text
+                                        setServerError(form, 'description', undefined);
+                                        field.handleChange(val);
+                                    }}
+                                    error={error !== undefined}
+                                    helperText={error}
+                                />;
+                            }}
+                        </form.Field>
 
-                            <PaddingBox />
-                            <ExerciseNotes fieldName={'notes'} />
-                        </>
-                    )}
-                </Stack>
+                        <PaddingBox />
+                        <form.AppField name="notes">{() => <ExerciseNotes />}</form.AppField>
+                    </>
+                )}
+            </Stack>
 
-                <Grid container>
-                    <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
-                        <Box sx={{ mb: 2 }}>
-                            <div>
-                                <Button
-                                    onClick={onBack}
-                                    sx={{ mt: 1, mr: 1 }}
-                                >
-                                    {t('goBack')}
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    type="submit"
-                                    sx={{ mt: 1, mr: 1 }}
-                                >
-                                    {t('continue')}
-                                </Button>
-                            </div>
-                        </Box>
-                    </Grid>
+            <Grid container>
+                <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
+                    <Box sx={{ mb: 2 }}>
+                        <div>
+                            <Button
+                                onClick={onBack}
+                                sx={{ mt: 1, mr: 1 }}
+                            >
+                                {t('goBack')}
+                            </Button>
+                            <Button
+                                variant="contained"
+                                type="submit"
+                                sx={{ mt: 1, mr: 1 }}
+                            >
+                                {t('continue')}
+                            </Button>
+                        </div>
+                    </Box>
                 </Grid>
-            </Form>
-        )}
-        </Formik>
+            </Grid>
+        </form>
     );
 };

@@ -141,4 +141,16 @@ describe("Test the add exercise step 3 component", () => {
         // But the user does NOT advance to the next step
         expect(mockOnContinue).not.toHaveBeenCalled();
     });
+
+    test("a too short description shows the error and skips the language check", async () => {
+        const user = userEvent.setup();
+        renderStep();
+
+        await fillDescription(user, 'too short');
+        await user.click(screen.getByText("continue"));
+
+        expect(await screen.findByText('forms.minLength')).toBeInTheDocument();
+        expect(mutateAsync).not.toHaveBeenCalled();
+        expect(mockOnContinue).not.toHaveBeenCalled();
+    });
 });

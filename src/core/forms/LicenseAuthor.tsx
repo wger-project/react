@@ -1,19 +1,25 @@
 import { useTranslation } from "react-i18next";
 import { TextField } from "@mui/material";
+import { useFieldContext } from "@/core/forms/formContexts";
+import { fieldErrorMessage } from "@/core/forms/formUtils";
 import React from "react";
-import { useField } from "formik";
 
-export function LicenseAuthor(props: { fieldName: string }) {
+/** Bound to the form field it is rendered in via form.AppField */
+export function LicenseAuthor() {
     const [t] = useTranslation();
-    const [field, meta] = useField(props.fieldName);
+    const field = useFieldContext<string>();
+    const error = field.state.meta.isTouched ? fieldErrorMessage(field.state.meta.errors) : undefined;
 
     return <TextField
         fullWidth
-        id={props.fieldName}
+        id={field.name}
+        name={field.name}
         label={t("licenses.authors")}
         variant="standard"
-        error={meta.touched && Boolean(meta.error)}
-        helperText={meta.touched && meta.error}
-        {...field}
+        value={field.state.value}
+        onChange={event => field.handleChange(event.target.value)}
+        onBlur={field.handleBlur}
+        error={error !== undefined}
+        helperText={error}
     />;
 }

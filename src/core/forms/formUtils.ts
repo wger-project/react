@@ -1,4 +1,4 @@
-import type { StandardSchemaV1 } from "@tanstack/react-form";
+import type { AnyFormApi, StandardSchemaV1 } from "@tanstack/react-form";
 import { AnySchema, ValidationError } from "yup";
 
 interface Issue {
@@ -82,4 +82,15 @@ export function fieldErrorMessage(errors: ReadonlyArray<unknown>): string | unde
         return String(first.message);
     }
     return undefined;
+}
+
+/**
+ * An error the server reported for one field, shown until it is cleared
+ * again. Replaces Formik's setFieldError.
+ */
+export function setServerError(form: AnyFormApi, field: string, message: string | undefined) {
+    form.setFieldMeta(field, prev => ({
+        ...prev,
+        errorMap: { ...prev.errorMap, onServer: message },
+    }));
 }

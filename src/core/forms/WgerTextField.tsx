@@ -1,26 +1,35 @@
 import { TextField, TextFieldProps } from "@mui/material";
-import { useField } from "formik";
+import { useFieldContext } from "@/core/forms/formContexts";
+import { fieldErrorMessage } from "@/core/forms/formUtils";
 import React from "react";
 
 interface WgerTextFieldProps {
-    fieldName: string,
     title: string,
+    /** Shown under the field while it has no error */
+    helperText?: string,
     fieldProps?: TextFieldProps,
     fullwidth?: boolean,
 }
 
-export function WgerTextField(props: WgerTextFieldProps) {
-    const [field, meta] = useField(props.fieldName);
-    const fullwidth = props.fullwidth ?? true;
+/**
+ * The generic text field, bound to the form field it is rendered in via
+ * form.AppField.
+ */
+export function WgerTextField({ title, helperText, fieldProps, fullwidth = true }: WgerTextFieldProps) {
+    const field = useFieldContext<string>();
+    const error = field.state.meta.isTouched ? fieldErrorMessage(field.state.meta.errors) : undefined;
 
     return <TextField
         fullWidth={fullwidth}
-        id={props.fieldName}
-        label={props.title}
+        id={field.name}
+        name={field.name}
+        label={title}
         variant="standard"
-        error={meta.touched && Boolean(meta.error)}
-        helperText={meta.touched && meta.error}
-        {...field}
-        {...props.fieldProps}
+        value={field.state.value}
+        onChange={e => field.handleChange(e.target.value)}
+        onBlur={field.handleBlur}
+        error={error !== undefined}
+        helperText={error ?? helperText}
+        {...fieldProps}
     />;
 }
