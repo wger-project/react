@@ -1,5 +1,10 @@
 import type { StandardSchemaV1 } from "@tanstack/react-form";
-import type { AnySchema } from "yup";
+import { AnySchema, ValidationError } from "yup";
+
+interface Issue {
+    message: string,
+    path?: Array<string | number>,
+}
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
     typeof value === 'object' && value !== null && Object.getPrototypeOf(value) === Object.prototype;
@@ -20,20 +25,45 @@ function emptyStringsToUndefined(value: unknown): unknown {
     return value === '' ? undefined : value;
 }
 
+/** "logs[0].weight" as the segments a Standard Schema issue carries */
+const pathSegments = (path: string | undefined): Array<string | number> | undefined =>
+    path?.match(/[^.[\]]+/g)?.map(segment => /^\d+$/.test(segment) ? Number(segment) : segment);
+
+/** Yup's own conversion, which it only runs for its async Standard Schema adapter */
+function issuesOf(error: ValidationError, parentPath?: string): Issue[] {
+    if (error.inner.length === 0 && error.errors.length > 0) {
+        const path = parentPath ? `${parentPath}.${error.path}` : error.path;
+        return error.errors.map(message => ({ message, path: pathSegments(path) }));
+    }
+    const path = parentPath ? `${parentPath}.${error.path}` : error.path;
+    return error.inner.flatMap(inner => issuesOf(inner, path));
+}
+
 /**
- * A yup schema as form validator.
+ * A yup schema as synchronous form validator.
  *
- * Yup types its Standard Schema input as the cast output (weight: number),
- * but the form holds what the inputs hand it (weight: string), so the input
- * type is asserted to the form's. Validation itself casts as before.
+ * Yup's own Standard Schema adapter is async, and TanStack drops a submit
+ * while an async validation is still running, e.g. when the user saves right
+ * after typing. Our schemas have no async rules, so validateSync closes that
+ * window. Yup also types its input as the cast output (weight: number) while
+ * the form holds what the inputs hand it (weight: string), so the input type
+ * is asserted to the form's.
  */
 export function yupSchema<TFormData>(schema: AnySchema): StandardSchemaV1<TFormData> {
-    const standard = schema['~standard'];
     const adapted = {
         '~standard': {
             version: 1,
-            vendor: standard.vendor,
-            validate: (value: unknown) => standard.validate(emptyStringsToUndefined(value)),
+            vendor: 'yup',
+            validate: (value: unknown) => {
+                try {
+                    return { value: schema.validateSync(emptyStringsToUndefined(value), { abortEarly: false }) };
+                } catch (error) {
+                    if (error instanceof ValidationError) {
+                        return { issues: issuesOf(error) };
+                    }
+                    throw error;
+                }
+            },
         },
     };
     return adapted as StandardSchemaV1<TFormData>;
