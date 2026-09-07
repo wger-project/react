@@ -81,7 +81,7 @@ const WeightFormFields = ({ category, displayUnit, weightEntry, closeFn }: Weigh
 
     const form = useAppForm({
         defaultValues,
-        validators: { onChangeAsync: yupSchema<WeightFormValues>(validationSchema) },
+        validators: { onChange: yupSchema<WeightFormValues>(validationSchema) },
         onSubmit: async ({ value }) => {
             // The schema already refused a null date, this only narrows the type
             if (value.date === null) {

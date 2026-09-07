@@ -77,7 +77,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
 
     const form = useAppForm({
         defaultValues,
-        validators: { onChangeAsync: yupSchema<MealItemFormValues>(validationSchema) },
+        validators: { onChange: yupSchema<MealItemFormValues>(validationSchema) },
         onSubmit: async ({ value }) => {
             // The schema already refused a missing ingredient, this only narrows the type
             if (value.ingredient === null) {

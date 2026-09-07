@@ -261,4 +261,21 @@ describe('Tests for the ProgressionForm', () => {
         expect(screen.getByRole('button', { name: /save/i })).toBeDisabled();
         expect(mockProcessBaseConfigs).not.toHaveBeenCalled();
     });
+
+    test('switching an operation to replace clears repeat and requirements', async () => {
+        // Act: the second row adds and repeats, see testConfigs
+        renderWidget();
+        await user.click(screen.getAllByRole('combobox', { name: /routines\.operation/i })[1]);
+        await user.click(screen.getByRole('option', { name: 'Replace' }));
+
+        // Assert: the repeat switch of that row is off and locked
+        const repeatSwitches = screen.getAllByRole('switch');
+        expect(repeatSwitches[1]).not.toBeChecked();
+        expect(repeatSwitches[1]).toBeDisabled();
+
+        await user.click(screen.getByRole('button', { name: /save/i }));
+        expect(mockProcessBaseConfigs).toHaveBeenCalledTimes(1);
+        const payload = mockProcessBaseConfigs.mock.calls[0][0];
+        expect(payload.values.toEdit[1]).toMatchObject({ id: 456, operation: 'r', repeat: false });
+    });
 });

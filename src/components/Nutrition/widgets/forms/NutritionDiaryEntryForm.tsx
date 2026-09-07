@@ -98,7 +98,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
 
     const form = useAppForm({
         defaultValues,
-        validators: { onChangeAsync: yupSchema<DiaryEntryFormValues>(validationSchema) },
+        validators: { onChange: yupSchema<DiaryEntryFormValues>(validationSchema) },
         onSubmit: async ({ value }) => {
             // The schema already refused these, this only narrows the types
             if (value.datetime === null || value.ingredient === null) {

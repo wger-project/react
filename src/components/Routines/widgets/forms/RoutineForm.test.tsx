@@ -1,5 +1,5 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RoutineForm } from "@/components/Routines/widgets/forms/RoutineForm";
 import { BrowserRouter } from "react-router-dom";
@@ -91,5 +91,26 @@ describe('RoutineForm', () => {
             name: "New routine name",
             description: "The description goes here",
         }));
+    });
+
+    test('a too short name shows the error and blocks the save', async () => {
+
+        // Act
+        render(
+            <BrowserRouter>
+                <QueryClientProvider client={testQueryClient}>
+                    <RoutineForm existingRoutine={testRoutine1} />
+                </QueryClientProvider>
+            </BrowserRouter>
+        );
+        const nameInput = screen.getByRole('textbox', { name: /name/i });
+        await user.clear(nameInput);
+        await user.type(nameInput, 'ab');
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        // Assert
+        await waitFor(() => expect(nameInput).toHaveAttribute('aria-invalid', 'true'));
+        expect(screen.getByText('forms.minLength')).toBeInTheDocument();
+        expect(mockEditRoutine).not.toHaveBeenCalled();
     });
 });

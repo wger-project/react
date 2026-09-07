@@ -69,7 +69,7 @@ export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
 
     const form = useAppForm({
         defaultValues,
-        validators: { onChangeAsync: yupSchema<EntryFormValues>(validationSchema) },
+        validators: { onChange: yupSchema<EntryFormValues>(validationSchema) },
         onSubmit: async ({ value: values }) => {
             // The schema already refused a null date, this only narrows the type
             if (values.date === null) {
@@ -176,7 +176,7 @@ export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
 
     const form = useAppForm({
         defaultValues,
-        validators: { onChangeAsync: yupSchema<GroupEntryFormValues>(validationSchema) },
+        validators: { onChange: yupSchema<GroupEntryFormValues>(validationSchema) },
         onSubmit: async ({ value: values }) => {
             if (values.date === null) {
                 return;

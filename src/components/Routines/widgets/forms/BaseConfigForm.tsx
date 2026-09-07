@@ -47,7 +47,6 @@ import {
     useDeleteMaxNrOfSetsConfigQuery,
     useEditMaxNrOfSetsConfigQuery
 } from "@/components/Routines/queries/configs";
-import { useFormikContext } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEBOUNCE_ROUTINE_FORMS } from "@/core/lib/consts";
@@ -236,12 +235,12 @@ export const SlotBaseConfigValueField = (props: {
 
 
 export const ConfigDetailsRequirementsField = (props: {
-    fieldName: string,
     values: RequirementsType[],
+    /** Called with the selection once the user saves the menu */
+    onChange: (values: RequirementsType[]) => void,
     disabled?: boolean
 }) => {
 
-    const { setFieldValue } = useFormikContext();
     const { t } = useTranslation();
     const disable = props.disabled ?? false;
 
@@ -257,8 +256,8 @@ export const ConfigDetailsRequirementsField = (props: {
         }
     };
 
-    const handleSubmit = async () => {
-        await setFieldValue(props.fieldName, selectedElements);
+    const handleSubmit = () => {
+        props.onChange(selectedElements);
         setAnchorEl(null);
     };
 

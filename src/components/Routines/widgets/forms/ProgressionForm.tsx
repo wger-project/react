@@ -4,26 +4,28 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutlined";
 import { Box, Button, Divider, IconButton, MenuItem, Stack, Switch, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
-import { WgerTextField } from "@/core/forms/WgerTextField";
+import { useAppForm } from "@/core/forms/appForm";
+import { yupSchema } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import {
     BaseConfig,
     BaseConfigEntryForm,
     OPERATION_REPLACE,
     OPERATION_VALUES_SELECT,
+    OperationType,
     REQUIREMENTS_VALUES,
-    STEP_VALUES_SELECT
+    STEP_VALUES_SELECT,
+    StepType
 } from "@/components/Routines/models/BaseConfig";
 import { useProcessConfigsQuery } from "@/components/Routines/queries/configs";
 import { ConfigDetailsRequirementsField, ConfigType } from "@/components/Routines/widgets/forms/BaseConfigForm";
-import { FieldArray, Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AddBaseConfigParams, EditBaseConfigParams } from "@/components/Routines/api/baseConfig";
 import { ApiPath } from "@/core/lib/consts";
 import * as yup from "yup";
 
-export const ProgressionForm = (props: {
+interface ProgressionFormProps {
     configs: BaseConfig[],
     configsMax: BaseConfig[],
     type: ConfigType,
@@ -32,12 +34,82 @@ export const ProgressionForm = (props: {
     iterations: number[],
     forceInteger?: boolean;
     isWeeklyCycle: boolean;
+}
+
+interface ProgressionFormValues {
+    entries: BaseConfigEntryForm[],
+}
+
+const getEmptyConfig = (iter: number, edited: boolean, forceInteger: boolean): BaseConfigEntryForm => ({
+    forceInteger: forceInteger,
+
+    edited: edited,
+    iteration: iter,
+
+    id: null,
+    idMax: null,
+    value: '',
+    valueMax: '',
+    operation: OPERATION_REPLACE,
+    operationMax: OPERATION_REPLACE,
+    step: "abs",
+    stepMax: "abs",
+    requirements: [],
+    requirementsMax: [],
+    repeat: false,
+    repeatMax: false,
+});
+
+export const ProgressionForm = (props: ProgressionFormProps) => {
+    const forceInteger = props.forceInteger ?? false;
+
+    const defaultEntries: BaseConfigEntryForm[] = [];
+    for (const iteration of props.iterations) {
+        const config: BaseConfig | undefined = props.configs.find((c) => c.iteration === iteration);
+        const configMax: BaseConfig | undefined = props.configsMax.find((c) => c.iteration === iteration);
+
+        if (config === undefined) {
+            defaultEntries.push(getEmptyConfig(iteration, false, forceInteger));
+        } else {
+            defaultEntries.push({
+                forceInteger: forceInteger,
+
+                edited: true,
+                id: config.id,
+                idMax: configMax === undefined ? null : configMax.id,
+                iteration: iteration,
+                value: String(config.value),
+                valueMax: configMax === undefined ? '' : String(configMax.value),
+                operation: config.operation,
+                operationMax: configMax === undefined ? OPERATION_REPLACE : config.operation,
+                step: config.step,
+                stepMax: configMax === undefined ? "abs" : configMax.step,
+                requirements: config.requirements?.rules ?? [],
+                requirementsMax: configMax === undefined ? [] : configMax.requirements?.rules ?? [],
+                repeat: config.repeat,
+                repeatMax: configMax === undefined ? false : config.repeat,
+            });
+        }
+    }
+
+    // The form freezes its default values, so saved or reloaded configs get a
+    // fresh form via the key
+    return <ProgressionFields
+        key={JSON.stringify(defaultEntries)}
+        {...props}
+        forceInteger={forceInteger}
+        defaultEntries={defaultEntries}
+    />;
+};
+
+const ProgressionFields = (props: ProgressionFormProps & {
+    forceInteger: boolean,
+    defaultEntries: BaseConfigEntryForm[],
 }) => {
     const { t } = useTranslation();
     const [iterationsToDelete, setIterationsToDelete] = useState<number[]>([]);
     const processEntriesQuery = useProcessConfigsQuery(props.routineId);
-
-    const forceInteger = props.forceInteger ?? false;
+    const forceInteger = props.forceInteger;
 
     let apiPath: ApiPath;
     let apiPathMax: ApiPath;
@@ -161,56 +233,7 @@ export const ProgressionForm = (props: {
         ,
     });
 
-    const getEmptyConfig = (iter: number, edited: boolean): BaseConfigEntryForm => ({
-        forceInteger: forceInteger,
-
-        edited: edited,
-        iteration: iter,
-
-        id: null,
-        idMax: null,
-        value: '',
-        valueMax: '',
-        operation: OPERATION_REPLACE,
-        operationMax: OPERATION_REPLACE,
-        step: "abs",
-        stepMax: "abs",
-        requirements: [],
-        requirementsMax: [],
-        repeat: false,
-        repeatMax: false,
-    });
-
-    const initialValues = { entries: [] as BaseConfigEntryForm[] };
-    for (const iteration of props.iterations) {
-        const config: BaseConfig | undefined = props.configs.find((c) => c.iteration === iteration);
-        const configMax: BaseConfig | undefined = props.configsMax.find((c) => c.iteration === iteration);
-
-        if (config === undefined) {
-            initialValues.entries.push(getEmptyConfig(iteration, false));
-        } else {
-            initialValues.entries.push({
-                forceInteger: forceInteger,
-
-                edited: true,
-                id: config.id,
-                idMax: configMax === undefined ? null : configMax.id,
-                iteration: iteration,
-                value: String(config.value),
-                valueMax: configMax === undefined ? '' : String(configMax.value),
-                operation: config.operation,
-                operationMax: configMax === undefined ? OPERATION_REPLACE : config.operation,
-                step: config.step,
-                stepMax: configMax === undefined ? "abs" : configMax.step,
-                requirements: config.requirements?.rules ?? [],
-                requirementsMax: configMax === undefined ? [] : configMax.requirements?.rules ?? [],
-                repeat: config.repeat,
-                repeatMax: configMax === undefined ? false : config.repeat,
-            });
-        }
-    }
-
-    const handleSubmit = (values: { entries: BaseConfigEntryForm[] }) => {
+    const handleSubmit = (values: ProgressionFormValues) => {
         // Remove empty entries
         const data = values.entries.filter(e => e.edited);
 
@@ -291,209 +314,224 @@ export const ProgressionForm = (props: {
         });
     };
 
+    const form = useAppForm({
+        defaultValues: { entries: props.defaultEntries } as ProgressionFormValues,
+        validators: { onChange: yupSchema<ProgressionFormValues>(validationSchema) },
+        onSubmit: async ({ value }) => handleSubmit(value),
+    });
 
     return <>
         <Stack sx={{ width: '100%' }}>
             <Typography variant={"h6"}>{title}</Typography>
-            <Formik
-                enableReinitialize
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                    handleSubmit(values);
-                    setSubmitting(false);
-                }}
-            >
-                {formik => (
-                    <Form>
+            <form onSubmit={e => {
+                e.preventDefault();
+                e.stopPropagation();
+                form.handleSubmit();
+            }}>
+                <Grid container spacing={1}>
+                    <Grid size={4} offset={2} sx={{ textAlign: "center" }}>
+                        {t('value')}
+                    </Grid>
+                    <Grid size={6}>
                         <Grid container spacing={1}>
-                            <Grid size={4} offset={2} sx={{ textAlign: "center" }}>
-                                {t('value')}
+                            <Grid size={3}>
+                                {t('routines.operation')}
                             </Grid>
-                            <Grid size={6}>
-                                <Grid container spacing={1}>
-                                    <Grid size={3}>
-                                        {t('routines.operation')}
-                                    </Grid>
-                                    <Grid size={3}>
-                                        {t('routines.step')}
-                                    </Grid>
-                                    <Grid size={3} sx={{ textAlign: 'center' }}>
-                                        {t('routines.requirements')}
-                                        <br />
-                                        <Tooltip title={t('routines.requirementsHelpText')}>
-                                            <IconButton onClick={() => {
-                                            }}>
-                                                <HelpOutlineIcon fontSize="small" />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Grid>
-                                    <Grid size={3} sx={{ textAlign: 'center' }}>
-                                        {t('routines.repeat')}
-                                        <br />
-                                        <Tooltip title={t('routines.repeatHelpText')}>
-                                            <IconButton onClick={() => {
-                                            }}>
-                                                <HelpOutlineIcon fontSize="small" />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Grid>
-                                </Grid>
+                            <Grid size={3}>
+                                {t('routines.step')}
                             </Grid>
-                            <Grid size={12}>
-                                <Divider />
+                            <Grid size={3} sx={{ textAlign: 'center' }}>
+                                {t('routines.requirements')}
+                                <br />
+                                <Tooltip title={t('routines.requirementsHelpText')}>
+                                    <IconButton onClick={() => {
+                                    }}>
+                                        <HelpOutlineIcon fontSize="small" />
+                                    </IconButton>
+                                </Tooltip>
                             </Grid>
-
-
-                            <FieldArray name={"entries"} validateOnChange={true}>
-                                {({ insert, remove }) => (<>
-
-                                        {formik.values.entries.map((log, index) => (
-                                            <React.Fragment key={`progression-${log.iteration}`}>
-                                                <Grid size={2} sx={{
-                                                    display: 'flex',
-                                                    justifyContent: 'space-around',
-                                                    alignItems: 'center'
-                                                }}>
-                                                    {props.isWeeklyCycle ? t('routines.weekNr', { number: log.iteration }) : t('routines.workoutNr', { number: log.iteration })}
-                                                    {log.edited
-                                                        ? <IconButton
-                                                            // Allow deleting the first element if it's not the only one
-                                                            disabled={log.iteration === 1 && formik.values.entries.filter(e => e.edited && e.iteration !== 1).length > 0}
-                                                            size="small"
-                                                            onClick={() => {
-                                                                if (log.id !== null) {
-                                                                    setIterationsToDelete([...iterationsToDelete, log.iteration]);
-                                                                }
-                                                                remove(index);
-                                                                insert(index, getEmptyConfig(log.iteration, false));
-                                                            }}>
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                        : <IconButton size="small" onClick={() => {
-                                                            remove(index);
-                                                            insert(index, getEmptyConfig(log.iteration, true));
-                                                        }}>
-                                                            <AddIcon />
-                                                        </IconButton>
-                                                    }
-                                                </Grid>
-
-
-                                                <Grid size={2}>
-                                                    {log.edited &&
-                                                        <WgerTextField
-                                                            fieldName={`entries.${index}.value`}
-                                                            title={t('min')}
-                                                            fullwidth={true}
-                                                            fieldProps={{ slotProps: { htmlInput: { inputMode: 'decimal' } } }}
-                                                        />}
-                                                </Grid>
-                                                <Grid size={2}>
-                                                    {log.edited && <WgerTextField
-                                                        fieldName={`entries.${index}.valueMax`}
-                                                        title={t('max')}
-                                                        fullwidth={true}
-                                                        fieldProps={{ slotProps: { htmlInput: { inputMode: 'decimal' } } }}
-                                                    />
-                                                    }
-
-                                                </Grid>
-                                                <Grid size={6}>
-                                                    <Grid container spacing={1}>
-                                                        <Grid size={3}>
-                                                            {log.edited && <TextField
-                                                                disabled={log.iteration === 1}
-                                                                fullWidth
-                                                                select
-                                                                label={t('routines.operation')}
-                                                                variant="standard"
-                                                                {...formik.getFieldProps(`entries.${index}.operation`)}
-                                                                onChange={async (e) => {
-                                                                    formik.handleChange(e);
-                                                                    if (e.target.value === OPERATION_REPLACE) {
-                                                                        await formik.setFieldValue(`entries.${index}.requirements`, []);
-                                                                        await formik.setFieldValue(`entries.${index}.repeat`, false);
-                                                                    }
-                                                                }}
-                                                            >
-                                                                {OPERATION_VALUES_SELECT.map((option) => (
-                                                                    <MenuItem key={option.value} value={option.value}>
-                                                                        {option.label}
-                                                                    </MenuItem>
-                                                                ))}
-                                                            </TextField>}
-
-                                                        </Grid>
-                                                        <Grid size={3}>
-                                                            {log.edited && <TextField
-                                                                disabled={log.iteration === 1 || log.operation === OPERATION_REPLACE}
-                                                                fullWidth
-                                                                select
-                                                                label={t('routines.step')}
-                                                                variant="standard"
-                                                                {...formik.getFieldProps(`entries.${index}.step`)}
-                                                            >
-                                                                {STEP_VALUES_SELECT.map((option) => (
-                                                                    <MenuItem key={option.value} value={option.value}>
-                                                                        {option.label}
-                                                                    </MenuItem>
-                                                                ))}
-                                                                {/* "not applicable" is set automatically by the server */}
-                                                                {(log.iteration === 1 || log.operation === OPERATION_REPLACE) &&
-                                                                    <MenuItem key="na" value="na">
-                                                                        n/a
-                                                                    </MenuItem>}
-                                                            </TextField>}
-                                                        </Grid>
-                                                        <Grid size={3} sx={{ textAlign: 'center' }}>
-                                                            {log.edited &&
-                                                                <ConfigDetailsRequirementsField
-                                                                    disabled={log.iteration === 1 || log.operation === OPERATION_REPLACE}
-                                                                    values={log.requirements}
-                                                                    fieldName={`entries.${index}.requirements`} />}
-                                                            {log.requirements.length >= 0 && <br />}
-                                                            {log.requirements.length >= 0 && log.requirements.map((requirement) => (
-                                                                <Typography key={JSON.stringify(requirement)} variant={'caption'}>
-                                                                    {requirement} &nbsp;
-                                                                </Typography>
-                                                            ))}
-                                                        </Grid>
-                                                        <Grid size={3} sx={{ textAlign: 'center' }}>
-                                                            {log.edited && <Switch
-                                                                checked={formik.values.entries[index].repeat}
-                                                                {...formik.getFieldProps(`entries.${index}.repeat`)}
-                                                                disabled={log.iteration === 1 || log.operation === OPERATION_REPLACE}
-                                                            />}
-                                                        </Grid>
-                                                    </Grid>
-                                                </Grid>
-                                            </React.Fragment>
-                                        ))}
-                                    </>
-                                )}
-                            </FieldArray>
-                            {processEntriesQuery.isError && <Grid size={12}>
-                                <FormQueryErrors mutationQuery={processEntriesQuery} />
-                            </Grid>}
-
-                            <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
-                                <Button
-                                    color="primary"
-                                    disabled={!formik.isValid || formik.isSubmitting || !formik.dirty}
-                                    variant="contained"
-                                    type="submit"
-                                    sx={{ mt: 2 }}>
-                                    {t('save')}
-                                </Button>
-                            </Grid>
-                            <Grid size={12}>
-                                <Box sx={{ height: 20 }} />
+                            <Grid size={3} sx={{ textAlign: 'center' }}>
+                                {t('routines.repeat')}
+                                <br />
+                                <Tooltip title={t('routines.repeatHelpText')}>
+                                    <IconButton onClick={() => {
+                                    }}>
+                                        <HelpOutlineIcon fontSize="small" />
+                                    </IconButton>
+                                </Tooltip>
                             </Grid>
                         </Grid>
-                    </Form>
-                )}
-            </Formik>
+                    </Grid>
+                    <Grid size={12}>
+                        <Divider />
+                    </Grid>
+
+
+                    {/* The rows read every value of every entry, which an array field
+                      * does not re-render for: it only follows the array's length */}
+                    <form.Subscribe selector={state => state.values.entries}>
+                        {entries => entries.map((log, index) => (
+                            <React.Fragment key={`progression-${log.iteration}`}>
+                                <Grid size={2} sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-around',
+                                    alignItems: 'center'
+                                }}>
+                                    {props.isWeeklyCycle ? t('routines.weekNr', { number: log.iteration }) : t('routines.workoutNr', { number: log.iteration })}
+                                    {log.edited
+                                        ? <IconButton
+                                            // Allow deleting the first element if it's not the only one
+                                            disabled={log.iteration === 1 && entries.filter(e => e.edited && e.iteration !== 1).length > 0}
+                                            size="small"
+                                            onClick={() => {
+                                                if (log.id !== null) {
+                                                    setIterationsToDelete([...iterationsToDelete, log.iteration]);
+                                                }
+                                                form.replaceFieldValue('entries', index, getEmptyConfig(log.iteration, false, forceInteger));
+                                            }}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                        : <IconButton size="small" onClick={() => {
+                                            form.replaceFieldValue('entries', index, getEmptyConfig(log.iteration, true, forceInteger));
+                                        }}>
+                                            <AddIcon />
+                                        </IconButton>
+                                    }
+                                </Grid>
+
+
+                                <Grid size={2}>
+                                    {log.edited &&
+                                        <form.AppField name={`entries[${index}].value`}>
+                                            {field => <field.WgerTextField
+                                                title={t('min')}
+                                                fullwidth={true}
+                                                fieldProps={{ slotProps: { htmlInput: { inputMode: 'decimal' } } }}
+                                            />}
+                                        </form.AppField>}
+                                </Grid>
+                                <Grid size={2}>
+                                    {log.edited &&
+                                        <form.AppField name={`entries[${index}].valueMax`}>
+                                            {field => <field.WgerTextField
+                                                title={t('max')}
+                                                fullwidth={true}
+                                                fieldProps={{ slotProps: { htmlInput: { inputMode: 'decimal' } } }}
+                                            />}
+                                        </form.AppField>}
+
+                                </Grid>
+                                <Grid size={6}>
+                                    <Grid container spacing={1}>
+                                        <Grid size={3}>
+                                            {log.edited && <form.Field name={`entries[${index}].operation`}>
+                                                {field => <TextField
+                                                    disabled={log.iteration === 1}
+                                                    fullWidth
+                                                    select
+                                                    label={t('routines.operation')}
+                                                    variant="standard"
+                                                    name={field.name}
+                                                    value={field.state.value}
+                                                    onBlur={field.handleBlur}
+                                                    onChange={(e) => {
+                                                        field.handleChange(e.target.value as OperationType);
+                                                        if (e.target.value === OPERATION_REPLACE) {
+                                                            form.setFieldValue(`entries[${index}].requirements`, []);
+                                                            form.setFieldValue(`entries[${index}].repeat`, false);
+                                                        }
+                                                    }}
+                                                >
+                                                    {OPERATION_VALUES_SELECT.map((option) => (
+                                                        <MenuItem key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </TextField>}
+                                            </form.Field>}
+
+                                        </Grid>
+                                        <Grid size={3}>
+                                            {log.edited && <form.Field name={`entries[${index}].step`}>
+                                                {field => <TextField
+                                                    disabled={log.iteration === 1 || log.operation === OPERATION_REPLACE}
+                                                    fullWidth
+                                                    select
+                                                    label={t('routines.step')}
+                                                    variant="standard"
+                                                    name={field.name}
+                                                    value={field.state.value}
+                                                    onChange={e => field.handleChange(e.target.value as StepType)}
+                                                    onBlur={field.handleBlur}
+                                                >
+                                                    {STEP_VALUES_SELECT.map((option) => (
+                                                        <MenuItem key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                    {/* "not applicable" is set automatically by the server */}
+                                                    {(log.iteration === 1 || log.operation === OPERATION_REPLACE) &&
+                                                        <MenuItem key="na" value="na">
+                                                            n/a
+                                                        </MenuItem>}
+                                                </TextField>}
+                                            </form.Field>}
+                                        </Grid>
+                                        <Grid size={3} sx={{ textAlign: 'center' }}>
+                                            {log.edited &&
+                                                <ConfigDetailsRequirementsField
+                                                    disabled={log.iteration === 1 || log.operation === OPERATION_REPLACE}
+                                                    values={log.requirements}
+                                                    onChange={values => form.setFieldValue(`entries[${index}].requirements`, values)}
+                                                />}
+                                            {log.requirements.length >= 0 && <br />}
+                                            {log.requirements.length >= 0 && log.requirements.map((requirement) => (
+                                                <Typography key={JSON.stringify(requirement)} variant={'caption'}>
+                                                    {requirement} &nbsp;
+                                                </Typography>
+                                            ))}
+                                        </Grid>
+                                        <Grid size={3} sx={{ textAlign: 'center' }}>
+                                            {log.edited && <form.Field name={`entries[${index}].repeat`}>
+                                                {field => <Switch
+                                                    name={field.name}
+                                                    checked={field.state.value}
+                                                    onChange={event => field.handleChange(event.target.checked)}
+                                                    onBlur={field.handleBlur}
+                                                    disabled={log.iteration === 1 || log.operation === OPERATION_REPLACE}
+                                                />}
+                                            </form.Field>}
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </React.Fragment>
+                        ))}
+                    </form.Subscribe>
+                    {processEntriesQuery.isError && <Grid size={12}>
+                        <FormQueryErrors mutationQuery={processEntriesQuery} />
+                    </Grid>}
+
+                    <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
+                        <form.Subscribe selector={state => ({
+                            isValid: state.isValid,
+                            isSubmitting: state.isSubmitting,
+                            isDirty: state.isDirty,
+                        })}>
+                            {({ isValid, isSubmitting, isDirty }) => <Button
+                                color="primary"
+                                disabled={!isValid || isSubmitting || !isDirty}
+                                variant="contained"
+                                type="submit"
+                                sx={{ mt: 2 }}>
+                                {t('save')}
+                            </Button>}
+                        </form.Subscribe>
+                    </Grid>
+                    <Grid size={12}>
+                        <Box sx={{ height: 20 }} />
+                    </Grid>
+                </Grid>
+            </form>
         </Stack>
     </>;
 };

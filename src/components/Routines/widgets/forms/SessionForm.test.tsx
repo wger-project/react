@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
+import { IMPRESSION_GOOD, WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { useAddSessionQuery, useEditSessionQuery, useSessionOfDay } from "@/components/Routines/queries";
 import { DateTime } from 'luxon';
 import { BrowserRouter } from "react-router-dom";
@@ -374,5 +374,22 @@ describe('SessionForm', () => {
         expect(draft.id).toBe(mockSession.id);
         expect(draft.notes).toBe('Test notes');
         expect(addMutateAsync).not.toHaveBeenCalled();
+    });
+
+    test('the picked impression is sent along', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        mockUseSessionOfDay.mockImplementation(lookupReturning([]));
+
+        // Act
+        renderForm(DateTime.fromISO('2024-05-01'));
+        await user.click(screen.getByRole('button', { name: /routines\.impressiongood/i }));
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        // Assert
+        await waitFor(() => expect(addMutateAsync).toHaveBeenCalled());
+        const draft = addMutateAsync.mock.calls[0][0] as WorkoutSession;
+        expect(draft.impression).toBe(IMPRESSION_GOOD);
     });
 });

@@ -45,7 +45,7 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
 
     const form = useAppForm({
         defaultValues,
-        validators: { onChangeAsync: yupSchema<MealFormValues>(validationSchema) },
+        validators: { onChange: yupSchema<MealFormValues>(validationSchema) },
         onSubmit: async ({ value }) => {
             // The schema already refused a missing time, this only narrows the type
             if (value.time === null) {

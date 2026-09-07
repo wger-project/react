@@ -136,7 +136,7 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
 
     const form = useAppForm({
         defaultValues,
-        validators: { onChangeAsync: yupSchema<CategoryFormValues>(validationSchema) },
+        validators: { onChange: yupSchema<CategoryFormValues>(validationSchema) },
         onSubmit: async ({ value: values }) => {
             const parentId = values.parentId === "" ? null : values.parentId;
 

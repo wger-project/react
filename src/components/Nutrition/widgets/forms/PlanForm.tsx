@@ -122,7 +122,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
 
     const form = useAppForm({
         defaultValues,
-        validators: { onChangeAsync: yupSchema<PlanFormValues>(validationSchema) },
+        validators: { onChange: yupSchema<PlanFormValues>(validationSchema) },
         onSubmit: async ({ value }) => {
             // A goal counts only while the goals are switched on
             const goal = (entered: string): number | null =>

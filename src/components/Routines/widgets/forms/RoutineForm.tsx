@@ -4,7 +4,8 @@ import Grid from '@mui/material/Grid';
 import Tooltip from "@mui/material/Tooltip";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { WgerTextField } from "@/core/forms/WgerTextField";
+import { useAppForm } from "@/core/forms/appForm";
+import { fieldErrorMessage, yupSchema } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { useProfileQuery } from "@/components/User";
 import {
@@ -17,7 +18,6 @@ import {
 } from "@/components/Routines/models/Routine";
 import { useAddRoutineQuery, useEditRoutineQuery } from "@/components/Routines/queries/routines";
 import { SlotEntryRoundingField } from "@/components/Routines/widgets/forms/SlotEntryForm";
-import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -30,6 +30,15 @@ interface RoutineFormProps {
     isTemplate?: boolean,
     isPublicTemplate?: boolean,
     closeFn?: () => void,
+}
+
+interface RoutineFormValues {
+    name: string,
+    description: string,
+    // What the pickers hand over; yup casts the ISO string a DateTime prints as
+    start: DateTime,
+    end: DateTime,
+    fitInWeek: boolean,
 }
 
 export const RoutineForm = ({
@@ -51,10 +60,7 @@ export const RoutineForm = ({
             isPublic: isPublicTemplate
         });
 
-    /*
-     * Note: Controlling the state of the dates manually, otherwise some undebuggable errors
-     *       about missing properties occur deep within formik.
-     */
+    // The pickers keep their own copy of the dates, the duration below reads it
     const [startDate, setStartDate] = useState<DateTime>(DateTime.fromJSDate(routine.start));
     const [endDate, setEndDate] = useState<DateTime>(DateTime.fromJSDate(routine.end));
 
@@ -112,64 +118,76 @@ export const RoutineForm = ({
         fitInWeek: yup.boolean()
     });
 
+    const defaultValues: RoutineFormValues = {
+        name: routine.name,
+        description: routine.description,
+        start: startDate,
+        end: endDate,
+        fitInWeek: routine.fitInWeek,
+    };
+
+    const form = useAppForm({
+        defaultValues,
+        validators: { onChange: yupSchema<RoutineFormValues>(validationSchema) },
+        onSubmit: async ({ value }) => {
+            routine.name = value.name;
+            routine.description = value.description;
+            routine.fitInWeek = value.fitInWeek;
+            routine.start = value.start.toJSDate();
+            routine.end = value.end.toJSDate();
+
+            if (routine.id !== null) {
+                editRoutineQuery.mutate(routine);
+            } else {
+                const result = await addRoutineQuery.mutateAsync(routine);
+                navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
+
+                if (closeFn) {
+                    closeFn();
+                }
+            }
+        },
+    });
 
     return (
-        (<Formik
-            initialValues={{
-                name: routine.name,
-                description: routine.description,
-                start: startDate,
-                end: endDate,
-                fitInWeek: routine.fitInWeek
-            }}
+        <form onSubmit={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+        }}>
+            <Grid container spacing={2}>
+                <Grid size={{ xs: 12 }}>
+                    <FormQueryErrors
+                        mutationQuery={routine?.id ? editRoutineQuery : addRoutineQuery} />
+                </Grid>
 
-            validationSchema={validationSchema}
-            onSubmit={async (values) => {
-                routine.name = values.name;
-                routine.description = values.description;
-                routine.fitInWeek = values.fitInWeek;
-                routine.start = values.start!.toJSDate();
-                routine.end = values.end!.toJSDate();
-
-                if (routine.id !== null) {
-                    editRoutineQuery.mutate(routine);
-                } else {
-                    const result = await addRoutineQuery.mutateAsync(routine);
-                    navigate(makeLink(WgerLink.ROUTINE_EDIT, i18n.language, { id: result.id! }));
-
-                    if (closeFn) {
-                        closeFn();
-                    }
-                }
-            }}
-        >
-            {formik => (
-                <Form>
-                    <Grid container spacing={2}>
-                        <Grid size={{ xs: 12 }}>
-                            <FormQueryErrors
-                                mutationQuery={routine?.id ? editRoutineQuery : addRoutineQuery} />
-                        </Grid>
-
-                        <Grid size={{ xs: 12 }}>
-                            <WgerTextField fieldName="name" title={t('name')} />
-                        </Grid>
-                        <Grid size={12}>
-                            <WgerTextField
-                                fieldName="description"
-                                title={t('description')}
-                                fieldProps={{ multiline: true, rows: 4 }}
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 6 }}>
-                            <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                                <DatePicker
+                <Grid size={{ xs: 12 }}>
+                    <form.AppField name="name">
+                        {field => <field.WgerTextField title={t('name')} />}
+                    </form.AppField>
+                </Grid>
+                <Grid size={12}>
+                    <form.AppField name="description">
+                        {field => <field.WgerTextField
+                            title={t('description')}
+                            fieldProps={{ multiline: true, rows: 4 }}
+                        />}
+                    </form.AppField>
+                </Grid>
+                <Grid size={{ xs: 6 }}>
+                    <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                        <form.Field name="start">
+                            {field => {
+                                const error = field.state.meta.isTouched
+                                    ? fieldErrorMessage(field.state.meta.errors)
+                                    : undefined;
+                                return <DatePicker
                                     defaultValue={DateTime.now()}
                                     label={t('start')}
                                     value={startDate}
                                     onChange={(newValue) => {
                                         if (newValue) {
-                                            formik.setFieldValue('start', newValue);
+                                            field.handleChange(newValue);
                                             setStartDate(newValue);
                                         }
                                     }}
@@ -177,22 +195,29 @@ export const RoutineForm = ({
                                         textField: {
                                             variant: "standard",
                                             fullWidth: true,
-                                            error: formik.touched.start && Boolean(formik.errors.start),
-                                            helperText: formik.touched.start && formik.errors.start ? String(formik.errors.start) : ''
+                                            error: error !== undefined,
+                                            helperText: error ?? ''
                                         }
                                     }}
-                                />
-                            </LocalizationProvider>
-                        </Grid>
-                        <Grid size={{ xs: 5 }}>
-                            <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
-                                <DatePicker
+                                />;
+                            }}
+                        </form.Field>
+                    </LocalizationProvider>
+                </Grid>
+                <Grid size={{ xs: 5 }}>
+                    <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                        <form.Field name="end">
+                            {field => {
+                                const error = field.state.meta.isTouched
+                                    ? fieldErrorMessage(field.state.meta.errors)
+                                    : undefined;
+                                return <DatePicker
                                     defaultValue={DateTime.now()}
                                     label={t('end')}
                                     value={endDate}
                                     onChange={(newValue) => {
                                         if (newValue) {
-                                            formik.setFieldValue('end', newValue);
+                                            field.handleChange(newValue);
                                             setEndDate(newValue);
                                         }
                                     }}
@@ -200,53 +225,62 @@ export const RoutineForm = ({
                                         textField: {
                                             variant: "standard",
                                             fullWidth: true,
-                                            error: formik.touched.end && Boolean(formik.errors.end),
-                                            helperText: formik.touched.end && formik.errors.end ? String(formik.errors.end) : ''
+                                            error: error !== undefined,
+                                            helperText: error ?? ''
                                         }
                                     }}
-                                />
-                            </LocalizationProvider>
-                        </Grid>
-                        <Grid
-                            size={{ xs: 1 }}
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                textAlign: "center"
+                                />;
                             }}
-                        >
-                            {durationDays === 0 ? t('durationWeeks', { number: durationWeeks }) : t('durationWeeksDays', {
-                                nrWeeks: durationWeeks,
-                                nrDays: durationDays
-                            })}
-                        </Grid>
-                        <Grid size={12}>
-                            <FormControlLabel
-                                control={
-                                    <Switch checked={formik.values.fitInWeek} {...formik.getFieldProps('fitInWeek')} />
-                                }
-                                label={t('routines.fitDaysInWeek')} />
-                            <Tooltip title={t('routines.fitDaysInWeekHelpText')}>
-                                <IconButton size="small">
-                                    <HelpOutlineIcon fontSize="inherit" />
-                                </IconButton>
-                            </Tooltip>
-                        </Grid>
-                        <Grid size={12}>
-                            <Button
-                                disabled={formik.isSubmitting}
-                                color="primary"
-                                variant="contained"
-                                type="submit"
-                                sx={{ mt: 2 }}>
-                                {t('save')}
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Form>
-            )}
-        </Formik>)
+                        </form.Field>
+                    </LocalizationProvider>
+                </Grid>
+                <Grid
+                    size={{ xs: 1 }}
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center"
+                    }}
+                >
+                    {durationDays === 0 ? t('durationWeeks', { number: durationWeeks }) : t('durationWeeksDays', {
+                        nrWeeks: durationWeeks,
+                        nrDays: durationDays
+                    })}
+                </Grid>
+                <Grid size={12}>
+                    <form.Field name="fitInWeek">
+                        {field => <FormControlLabel
+                            control={
+                                <Switch
+                                    name={field.name}
+                                    checked={field.state.value}
+                                    onChange={event => field.handleChange(event.target.checked)}
+                                    onBlur={field.handleBlur}
+                                />
+                            }
+                            label={t('routines.fitDaysInWeek')} />}
+                    </form.Field>
+                    <Tooltip title={t('routines.fitDaysInWeekHelpText')}>
+                        <IconButton size="small">
+                            <HelpOutlineIcon fontSize="inherit" />
+                        </IconButton>
+                    </Tooltip>
+                </Grid>
+                <Grid size={12}>
+                    <form.Subscribe selector={state => state.isSubmitting}>
+                        {isSubmitting => <Button
+                            disabled={isSubmitting}
+                            color="primary"
+                            variant="contained"
+                            type="submit"
+                            sx={{ mt: 2 }}>
+                            {t('save')}
+                        </Button>}
+                    </form.Subscribe>
+                </Grid>
+            </Grid>
+        </form>
     );
 };
 
