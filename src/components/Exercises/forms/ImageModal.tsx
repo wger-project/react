@@ -1,7 +1,7 @@
 import { Alert, Box, Button, Grid, Modal, Stack, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
 import { useAppForm } from "@/core/forms/appForm";
-import { submitHandler } from "@/core/forms/formUtils";
+import { defaultsKey, submitHandler } from "@/core/forms/formUtils";
 import { ImageDropZone } from "./ImageDropZone";
 import { ImageIsAiCheckbox, ImageStyleToggle } from "./ImageStyle";
 import { useTranslation } from "react-i18next";
@@ -52,7 +52,7 @@ export const ImageFormModal = ({
                 </Typography>
 
                 {/* The form freezes its default values, so another image gets a fresh form via the key */}
-                <ImageForm key={JSON.stringify(image)} image={image} onSubmit={onSubmit} submitLabel={submitLabel} />
+                <ImageForm key={defaultsKey(image)} image={image} onSubmit={onSubmit} submitLabel={submitLabel} />
             </Box>
         </Modal>
     );

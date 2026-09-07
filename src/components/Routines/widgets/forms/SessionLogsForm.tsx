@@ -1,6 +1,3 @@
-import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema, submitHandler } from "@/core/forms/formUtils";
-import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import {
     Exercise,
     getLanguageByShortName,
@@ -11,7 +8,15 @@ import {
 import { RIR_VALUES_SELECT } from "@/components/Routines/models/BaseConfig";
 import { LogEntryForm } from "@/components/Routines/models/WorkoutLog";
 import { useAddRoutineLogsQuery, useRoutineDetailQuery, useSessionOfDay } from "@/components/Routines/queries";
+import {
+    logsPayload,
+    plannedLogs,
+    SessionLogsFormValues
+} from "@/components/Routines/widgets/forms/sessionLogsFormData";
+import { useAppForm } from "@/core/forms/appForm";
+import { defaultsKey, submitHandler, yupSchema } from "@/core/forms/formUtils";
 import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "@/core/lib/consts";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { SwapHoriz } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -27,10 +32,6 @@ interface SessionLogsFormProps {
     routineId: number,
     selectedDate: DateTime,
     chosenSessionId: string | null,
-}
-
-interface SessionLogsFormValues {
-    logs: LogEntryForm[],
 }
 
 export const SessionLogsForm = ({ dayId, routineId, selectedDate, chosenSessionId }: SessionLogsFormProps) => {
@@ -55,53 +56,22 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate, chosenSessionI
         return <LoadingPlaceholder />;
     }
 
-    const routine = routineQuery.data!;
-    const iterationDayData = routine?.getDayData(dayId, selectedDate.toJSDate()) ?? [];
-    const hasNoIterationData = iterationDayData.length === 0;
-
-    // Compute initial values
-    const defaultLogs: LogEntryForm[] = [];
-
-    const dayDataList = hasNoIterationData ? routine.dayDataCurrentIteration.filter(dayData => dayData.day?.id === dayId) : iterationDayData;
-
-    for (const dayData of dayDataList) {
-        for (const slot of dayData.slots) {
-            for (const config of slot.setConfigs) {
-                for (let i = 0; i < config.nrOfSets; i++) {
-
-                    defaultLogs.push({
-                        clientKey: `${dayData.iteration}-${config.slotEntryId}-${config.exerciseId}-${i}`,
-                        exercise: config.exercise!,
-                        repetitionsUnit: config.repetitionsUnit!,
-                        weightUnit: config.weightUnit!,
-                        slotEntry: config.slotEntryId,
-
-                        rir: !hasNoIterationData && config.rir !== null ? config.rir : '',
-                        rirTarget: !hasNoIterationData && config.rir !== null ? config.rir : '',
-                        repetitions: !hasNoIterationData && config.repetitions !== null ? config.repetitions : '',
-                        repetitionsTarget: !hasNoIterationData && config.repetitions !== null ? config.repetitions : '',
-                        weight: !hasNoIterationData && config.weight !== null ? config.weight : '',
-                        weightTarget: !hasNoIterationData && config.weight !== null ? config.weight : ''
-                    });
-                }
-            }
-        }
-    }
+    const { logs: defaultLogs, iteration } = plannedLogs(routineQuery.data!, dayId, selectedDate.toJSDate());
 
     return (<>
-        {hasNoIterationData &&
+        {iteration === null &&
             <Alert severity={'info'} sx={{ marginTop: 2 }}>{t('routines.weightLogNotPlanned')}</Alert>
         }
 
         {/* The form freezes its default values, so a changed plan for the day
           * gets a fresh form via the key */}
         <SessionLogsFields
-            key={defaultLogs.map(log => `${log.clientKey}:${log.repetitions}:${log.weight}:${log.rir}`).join('|')}
+            key={defaultsKey(defaultLogs.map(log => [log.clientKey, log.repetitions, log.weight, log.rir]))}
             dayId={dayId}
             routineId={routineId}
             selectedDate={selectedDate}
             sessionId={session?.id}
-            iteration={hasNoIterationData ? null : iterationDayData[0].iteration}
+            iteration={iteration}
             language={language}
             defaultLogs={defaultLogs}
         />
@@ -138,37 +108,13 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
     });
 
     const handleSubmit = async (values: SessionLogsFormValues) => {
-        const data = values.logs
-            .filter(l => l.rir !== '' || l.repetitions !== '' || l.weight !== '')
-            .map(l => ({
-                    date: selectedDate.toISO(),
-                    session: sessionId,
-                    iteration: iteration,
-                    exercise: l.exercise?.id,
-                    day: dayId,
-                    routine: routineId,
-                    // eslint-disable-next-line camelcase
-                    slot_entry: l.slotEntry,
-
-                    rir: l.rir !== '' ? l.rir : null,
-                    // eslint-disable-next-line camelcase
-                    rir_target: l.rirTarget !== '' ? l.rirTarget : null,
-
-                    // eslint-disable-next-line camelcase
-                    repetitions_unit: l.repetitionsUnit?.id,
-                    repetitions: l.repetitions !== '' ? l.repetitions : null,
-                    // eslint-disable-next-line camelcase
-                    repetitions_target: l.repetitionsTarget !== '' ? l.repetitionsTarget : null,
-
-                    // eslint-disable-next-line camelcase
-                    weight_unit: l.weightUnit?.id,
-                    weight: l.weight !== '' ? l.weight : null,
-                    // eslint-disable-next-line camelcase
-                    weight_target: l.weightTarget !== '' ? l.weightTarget : null,
-                }
-            ));
-
-        await addLogsQuery.mutateAsync(data);
+        await addLogsQuery.mutateAsync(logsPayload(values.logs, {
+            date: selectedDate,
+            sessionId,
+            iteration,
+            dayId,
+            routineId,
+        }));
         setSnackbarOpen(true);
     };
 
@@ -268,47 +214,48 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
                         <Grid size={4}>
                             <form.AppField name={`logs[${index}].repetitions`}>
                                 {field => <field.WgerTextField variant="standard"
-                                    title={t('server.repetitions')}
-                                    fieldProps={{
-                                        slotProps: {
-                                            input: {
-                                                endAdornment:
-                                                    <InputAdornment position="end">
-                                                        {/* Only show reps that are not "repetitions" */}
-                                                        {log.repetitionsUnit?.id !== REP_UNIT_REPETITIONS
-                                                            ? <Typography variant={'caption'}>
-                                                                {log.repetitionsUnit?.name}
-                                                            </Typography>
-                                                            : null}
-                                                    </InputAdornment>
-                                            },
-                                            htmlInput: {
-                                                inputMode: 'decimal'
-                                            }
-                                        }
-                                    }}
+                                                               title={t('server.repetitions')}
+                                                               fieldProps={{
+                                                                   slotProps: {
+                                                                       input: {
+                                                                           endAdornment:
+                                                                               <InputAdornment position="end">
+                                                                                   {/* Only show reps that are not "repetitions" */}
+                                                                                   {log.repetitionsUnit?.id !== REP_UNIT_REPETITIONS
+                                                                                       ?
+                                                                                       <Typography variant={'caption'}>
+                                                                                           {log.repetitionsUnit?.name}
+                                                                                       </Typography>
+                                                                                       : null}
+                                                                               </InputAdornment>
+                                                                       },
+                                                                       htmlInput: {
+                                                                           inputMode: 'decimal'
+                                                                       }
+                                                                   }
+                                                               }}
                                 />}
                             </form.AppField>
                         </Grid>
                         <Grid size={4}>
                             <form.AppField name={`logs[${index}].weight`}>
                                 {field => <field.WgerTextField variant="standard"
-                                    title={t('weight')}
-                                    fieldProps={{
-                                        slotProps: {
-                                            input: {
-                                                endAdornment:
-                                                    <InputAdornment position="end">
-                                                        <Typography variant={'caption'}>
-                                                            {log.weightUnit?.name}
-                                                        </Typography>
-                                                    </InputAdornment>
-                                            },
-                                            htmlInput: {
-                                                inputMode: 'decimal'
-                                            }
-                                        }
-                                    }}
+                                                               title={t('weight')}
+                                                               fieldProps={{
+                                                                   slotProps: {
+                                                                       input: {
+                                                                           endAdornment:
+                                                                               <InputAdornment position="end">
+                                                                                   <Typography variant={'caption'}>
+                                                                                       {log.weightUnit?.name}
+                                                                                   </Typography>
+                                                                               </InputAdornment>
+                                                                       },
+                                                                       htmlInput: {
+                                                                           inputMode: 'decimal'
+                                                                       }
+                                                                   }
+                                                               }}
                                 />}
                             </form.AppField>
                         </Grid>

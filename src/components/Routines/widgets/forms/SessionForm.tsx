@@ -7,7 +7,7 @@ import {
 } from "@/components/Routines/models/WorkoutSession";
 import { useAddSessionQuery, useEditSessionQuery, useSessionOfDay } from "@/components/Routines/queries";
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
+import { defaultsKey, fieldError, submitHandler, yupSchema } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Add, SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
 import {
@@ -74,7 +74,7 @@ export const SessionForm = (
     // The form freezes its default values, so a session that arrives or changes
     // later gets a fresh form via the key
     return <SessionFormFields
-        key={session?.id ?? NEW_SESSION}
+        key={defaultsKey(session?.id)}
         dayId={dayId}
         routineId={routineId}
         selectedDate={selectedDate}

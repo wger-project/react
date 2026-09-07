@@ -48,9 +48,11 @@ interface PlanFormValues {
 const goalString = (goal: number | null | undefined): string =>
     goal === null || goal === undefined ? '' : String(goal);
 
-/** The energy a macro goal amounts to, shown in front of it */
+type GoalName = 'goalEnergy' | 'goalProtein' | 'goalCarbohydrates' | 'goalFiber' | 'goalFat';
+
+/** The energy a macro goal amounts to, shown in front of it; fibre has none, so its zero always shows */
 const energyOf = (goal: string, factor: number, t: TFunction) =>
-    goal !== '' ? t('nutrition.valueEnergyKcal', { value: Number(goal) * factor }) : '';
+    goal !== '' || factor === 0 ? t('nutrition.valueEnergyKcal', { value: Number(goal) * factor }) : '';
 
 export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
 
@@ -159,6 +161,30 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
         },
     });
 
+    /** A goal in kcal or grams; with an energy factor the field shows what the grams amount to */
+    const goalField = (name: GoalName, energyFactor?: number) => (
+        <form.AppField name={name}>
+            {field => <field.WgerTextField
+                title={t(`nutrition.${name}`)}
+                fieldProps={{
+                    slotProps: {
+                        input: {
+                            startAdornment: energyFactor !== undefined
+                                ? <InputAdornment position="start">
+                                    {energyOf(field.state.value, energyFactor, t)}
+                                </InputAdornment>
+                                : undefined,
+                            endAdornment: <InputAdornment position="end">
+                                {t(name === 'goalEnergy' ? 'nutrition.kcal' : 'nutrition.gramShort')}
+                            </InputAdornment>,
+                        },
+                        htmlInput: { inputMode: 'decimal' },
+                    },
+                }}
+            />}
+        </form.AppField>
+    );
+
     return (
         <form onSubmit={submitHandler(form)}>
             <Stack spacing={2}>
@@ -242,22 +268,6 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                         />}
                     </form.Field>
                 </FormGroup>
-                {/*TODO:  implement the options like in the mobile app */}
-                {/*<FormControl fullWidth>*/}
-                {/*    <InputLabel id="demo-simple-select-label">Goal Setting</InputLabel>*/}
-                {/*    <Select*/}
-                {/*        labelId="demo-simple-select-label"*/}
-                {/*        id="demo-simple-select"*/}
-                {/*        value={10}*/}
-                {/*        label="Goal setting"*/}
-                {/*        onChange={() => {*/}
-                {/*        }}*/}
-                {/*    >*/}
-                {/*        <MenuItem value={10}>Based on my meals</MenuItem>*/}
-                {/*        <MenuItem value={20}>Set basic macros</MenuItem>*/}
-                {/*        <MenuItem value={30}>Set advanced macros</MenuItem>*/}
-                {/*    </Select>*/}
-                {/*</FormControl>*/}
                 <FormGroup>
                     <FormControlLabel
                         label={t('nutrition.useGoalsHelpText')}
@@ -274,103 +284,14 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
 
 
                 {useGoals && <>
-                    <form.AppField name="goalEnergy">
-                        {field => <field.WgerTextField
-                            title={t('nutrition.goalEnergy')}
-                            fieldProps={{
-                                slotProps: {
-                                    input: {
-                                        endAdornment: <InputAdornment
-                                            position="end">{t('nutrition.kcal')}</InputAdornment>
-                                    },
-                                    htmlInput: { inputMode: 'decimal' }
-                                },
-                            }}
-                        />}
-                    </form.AppField>
+                    {goalField('goalEnergy')}
                     <Grid container spacing={1}>
-                        <Grid size={4}>
-                            <form.AppField name="goalProtein">
-                                {field => <field.WgerTextField
-                                    title={t('nutrition.goalProtein')}
-                                    fieldProps={{
-                                        slotProps: {
-                                            input: {
-                                                startAdornment: <InputAdornment position="start">
-                                                    {energyOf(field.state.value, ENERGY_FACTOR.protein, t)}
-                                                </InputAdornment>,
-                                                endAdornment: <InputAdornment position="end">
-                                                    {t('nutrition.gramShort')}
-                                                </InputAdornment>
-                                            },
-                                            htmlInput: { inputMode: 'decimal' }
-                                        },
-                                    }}
-                                />}
-                            </form.AppField>
-                        </Grid>
-                        <Grid size={4}>
-                            <form.AppField name="goalCarbohydrates">
-                                {field => <field.WgerTextField
-                                    title={t('nutrition.goalCarbohydrates')}
-                                    fieldProps={{
-                                        slotProps: {
-                                            input: {
-                                                startAdornment: <InputAdornment position="start">
-                                                    {energyOf(field.state.value, ENERGY_FACTOR.carbohydrates, t)}
-                                                </InputAdornment>,
-                                                endAdornment:
-                                                    <InputAdornment
-                                                        position="end">{t('nutrition.gramShort')}</InputAdornment>
-                                            },
-                                            htmlInput: { inputMode: 'decimal' }
-                                        },
-                                    }}
-                                />}
-                            </form.AppField>
-                        </Grid>
-                        <Grid size={4}>
-                            <form.AppField name="goalFat">
-                                {field => <field.WgerTextField
-                                    title={t('nutrition.goalFat')}
-                                    fieldProps={{
-                                        slotProps: {
-                                            input: {
-                                                startAdornment: <InputAdornment position="start">
-                                                    {energyOf(field.state.value, ENERGY_FACTOR.fat, t)}
-                                                </InputAdornment>,
-                                                endAdornment:
-                                                    <InputAdornment
-                                                        position="end">{t('nutrition.gramShort')}</InputAdornment>
-                                            },
-                                            htmlInput: { inputMode: 'decimal' }
-                                        },
-                                    }}
-                                />}
-                            </form.AppField>
-                        </Grid>
+                        <Grid size={4}>{goalField('goalProtein', ENERGY_FACTOR.protein)}</Grid>
+                        <Grid size={4}>{goalField('goalCarbohydrates', ENERGY_FACTOR.carbohydrates)}</Grid>
+                        <Grid size={4}>{goalField('goalFat', ENERGY_FACTOR.fat)}</Grid>
                     </Grid>
                     <Grid container spacing={1}>
-                        <Grid size={4}>
-                            <form.AppField name="goalFiber">
-                                {field => <field.WgerTextField
-                                    title={t('nutrition.goalFiber')}
-                                    fieldProps={{
-                                        slotProps: {
-                                            input: {
-                                                startAdornment: <InputAdornment position="start">
-                                                    {t('nutrition.valueEnergyKcal', { value: 0 })}
-                                                </InputAdornment>,
-                                                endAdornment: <InputAdornment position="end">
-                                                    {t('nutrition.gramShort')}
-                                                </InputAdornment>
-                                            },
-                                            htmlInput: { inputMode: 'decimal' }
-                                        },
-                                    }}
-                                />}
-                            </form.AppField>
-                        </Grid>
+                        <Grid size={4}>{goalField('goalFiber', 0)}</Grid>
                     </Grid>
                 </>}
 

@@ -13,15 +13,12 @@ import {
     nameValidator
 } from "@/components/Exercises/forms/yupValidators";
 import { Language } from "@/components/Exercises/models/language";
-import { Note } from "@/components/Exercises/models/note";
 import { Translation } from "@/components/Exercises/models/translation";
+import { TranslationNotes } from "@/components/Exercises/screens/Detail/TranslationNotes";
 import {
-    useAddNoteQuery,
     useAddTranslationQuery,
     useDeleteAliasQuery,
-    useDeleteNoteQuery,
     useEditExerciseImageQuery,
-    useEditNoteQuery,
     useEditTranslationQuery,
     useExerciseQuery,
     useMusclesQuery,
@@ -32,14 +29,11 @@ import { usePermissionQuery, useProfileQuery, WgerPermissions } from "@/componen
 import { MarkdownEditor } from "@/core/forms/MarkdownEditor";
 import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { FormQueryErrorsSnackbar } from '@/core/ui/Widgets/FormError';
-import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
+import { defaultsKey, fieldError, submitHandler, yupSchema } from "@/core/forms/formUtils";
 import { Exercise } from "@/components/Exercises/models/exercise";
-import { Alert, Box, Button, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, IconButton, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -172,13 +166,13 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
         {/* The form freezes its default values, so a saved or reloaded
           * translation gets a fresh form via the key */}
         <TranslationEditForm
-            key={JSON.stringify([
+            key={defaultsKey(
                 language.id,
                 exerciseTranslation.id,
                 exerciseTranslation.name,
                 exerciseTranslation.descriptionSource,
                 exerciseTranslation.aliases.map(alias => [alias.id, alias.alias]),
-            ])}
+            )}
             exercise={exercise}
             language={language}
             exerciseTranslation={exerciseTranslation}
@@ -325,13 +319,6 @@ const TranslationEditForm = ({
     const editTranslationQuery = useEditTranslationQuery(exerciseId);
     const postAliasQuery = usePostAliasQuery(exerciseId);
     const deleteAliasQuery = useDeleteAliasQuery(exerciseId);
-    const addNoteMutation = useAddNoteQuery(exerciseId);
-    const editNoteMutation = useEditNoteQuery(exerciseId);
-    const deleteNoteMutation = useDeleteNoteQuery(exerciseId);
-
-    const [newNoteValue, setNewNoteValue] = useState('');
-    const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
-    const [editingNoteValue, setEditingNoteValue] = useState('');
 
     const validationSchema = yup.object({
         name: nameValidator(),
@@ -470,104 +457,11 @@ const TranslationEditForm = ({
                     </Grid>
                 </>}
 
-                <Grid size={12}>
-                    <PaddingBox />
-                </Grid>
-
-                <Grid size={12}>
-                    <Typography variant={'h6'}>{t('exercises.notes')}</Typography>
-                </Grid>
-                <Grid size={{ xs: 12, md: 6 }}>
-                    <ul>
-                        {exerciseEnglish.notes.map((note: Note) => (
-                            <li key={note.id}>{note.note}</li>
-                        ))}
-                    </ul>
-                </Grid>
-                <Grid size={{ xs: 12, md: 6 }}>
-                    {exerciseTranslation.notes.map((note: Note) => (
-                        <TextField
-                            key={note.id}
-                            fullWidth
-                            value={editingNoteId === note.id ? editingNoteValue : note.note}
-                            onChange={(e) => {
-                                if (editingNoteId !== note.id) {
-                                    setEditingNoteId(note.id);
-                                    setEditingNoteValue(e.target.value);
-                                } else {
-                                    setEditingNoteValue(e.target.value);
-                                }
-                            }}
-                            onFocus={() => {
-                                if (editingNoteId !== note.id) {
-                                    setEditingNoteId(note.id);
-                                    setEditingNoteValue(note.note);
-                                }
-                            }}
-                            sx={{ mb: 1 }}
-                            variant="standard"
-                            slotProps={{
-                                input: {
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            {editingNoteId === note.id && editingNoteValue !== note.note && (
-                                                <IconButton
-                                                    onClick={async () => {
-                                                        await editNoteMutation.mutateAsync(
-                                                            new Note(note.id, note.translation, editingNoteValue)
-                                                        );
-                                                        setEditingNoteId(null);
-                                                        setEditingNoteValue('');
-                                                    }}
-                                                    disabled={editNoteMutation.isPending}
-                                                >
-                                                    <SaveIcon />
-                                                </IconButton>
-                                            )}
-                                            <IconButton
-                                                onClick={() => deleteNoteMutation.mutate(note.id!)}
-                                                disabled={deleteNoteMutation.isPending}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
-                                }
-                            }}
-                        />
-                    ))}
-                    {exerciseTranslation.id && (
-                        <TextField
-                            fullWidth
-                            label={t('exercises.newNote')}
-                            variant="standard"
-                            value={newNoteValue}
-                            onChange={(e) => setNewNoteValue(e.target.value)}
-                            helperText={t('exercises.notesHelpText')}
-                            slotProps={{
-                                input: {
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                onClick={async () => {
-                                                    if (newNoteValue.trim()) {
-                                                        await addNoteMutation.mutateAsync(
-                                                            new Note(null, exerciseTranslation.id!, newNoteValue)
-                                                        );
-                                                        setNewNoteValue('');
-                                                    }
-                                                }}
-                                                disabled={addNoteMutation.isPending || !newNoteValue.trim()}
-                                            >
-                                                <AddIcon />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
-                                }
-                            }}
-                        />
-                    )}
-                </Grid>
+                <TranslationNotes
+                    exerciseId={exerciseId}
+                    translation={exerciseTranslation}
+                    englishNotes={exerciseEnglish.notes}
+                />
 
                 <Grid size={12}>
                     <PaddingBox />

@@ -109,3 +109,9 @@ export function submitHandler(form: AnyFormApi) {
         form.handleSubmit();
     };
 }
+
+/**
+ * A key for a form component whose defaults come from loaded data: a change
+ * remounts it with fresh defaults, which is what enableReinitialize did.
+ */
+export const defaultsKey = (...parts: unknown[]): string => JSON.stringify(parts);
