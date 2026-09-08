@@ -303,7 +303,16 @@
         "operation": "Operation",
         "step": "Step",
         "requirements": "Requirements",
-        "requirementsHelpText": "Select the workout results (from previous logs) that must be met for this rule to take effect",
+        "requirementsHelpText": "Select the workout results (from previous logs) that must be met for this rule to take effect. The rules compare against the planned value, the 'top of range' variants against the planned maximum. For a double progression, gate the weight on 'Repetitions (top of range)' and require all sets.",
+        "requirementRules": {
+            "weight": "Weight",
+            "repetitions": "Repetitions",
+            "rir": "RiR",
+            "rest": "Rest time",
+            "max_repetitions": "Repetitions (top of range)",
+            "max_weight": "Weight (top of range)"
+        },
+        "requirementsAllSets": "All sets must qualify",
         "repeat": "Repeat rule",
         "repeatHelpText": "Check the check box if you want this rule to continue to apply to subsequent workouts until you define a new one",
         "markAsTemplate": "Manage template",

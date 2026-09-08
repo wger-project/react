@@ -236,8 +236,9 @@ export const SlotBaseConfigValueField = (props: {
 
 export const ConfigDetailsRequirementsField = (props: {
     values: RequirementsType[],
+    allSets: boolean,
     /** Called with the selection once the user saves the menu */
-    onChange: (values: RequirementsType[]) => void,
+    onChange: (values: RequirementsType[], allSets: boolean) => void,
     disabled?: boolean
 }) => {
 
@@ -245,27 +246,39 @@ export const ConfigDetailsRequirementsField = (props: {
     const disable = props.disabled ?? false;
 
     const [selectedElements, setSelectedElements] = useState<RequirementsType[]>(props.values);
+    const [allSets, setAllSets] = useState<boolean>(props.allSets);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleSelection = (value: RequirementsType) => {
         // if the value is not in selectedElements, add it
-        if (!selectedElements.includes(value)) {
-            setSelectedElements([...selectedElements, value]);
-        } else {
-            setSelectedElements(selectedElements.filter((e) => e !== value));
+        const selection = selectedElements.includes(value)
+            ? selectedElements.filter((e) => e !== value)
+            : [...selectedElements, value];
+        setSelectedElements(selection);
+
+        // "All sets" only means something together with rules
+        if (selection.length === 0) {
+            setAllSets(false);
         }
     };
 
     const handleSubmit = () => {
-        props.onChange(selectedElements);
+        props.onChange(selectedElements, allSets);
         setAnchorEl(null);
+    };
+
+    const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
+        // The parent may have reset the values since the menu was last saved
+        setSelectedElements(props.values);
+        setAllSets(props.allSets);
+        setAnchorEl(event.currentTarget);
     };
 
 
     return <>
         <IconButton
             disabled={disable}
-            onClick={(event) => setAnchorEl(event.currentTarget)}
+            onClick={handleOpen}
         >
             {anchorEl ? <ArrowDropUpIcon fontSize="small" /> : <SettingsIcon fontSize="small" />}
         </IconButton>
@@ -276,17 +289,31 @@ export const ConfigDetailsRequirementsField = (props: {
         >
             {...REQUIREMENTS_VALUES.map((e) => <MenuItem
                 key={e}
-                onClick={() => handleSelection(e as unknown as RequirementsType)}>
+                onClick={() => handleSelection(e)}>
                 <ListItemIcon>
-                    {selectedElements.includes(e as unknown as RequirementsType)
+                    {selectedElements.includes(e)
                         ? <CheckBoxIcon fontSize="small" />
                         : <CheckBoxOutlineBlank fontSize="small" />
                     }
                 </ListItemIcon>
                 <ListItemText>
-                    {e}
+                    {t(`routines.requirementRules.${e}`)}
                 </ListItemText>
             </MenuItem>)}
+            <Divider />
+            <MenuItem
+                disabled={selectedElements.length === 0}
+                onClick={() => setAllSets(!allSets)}>
+                <ListItemIcon>
+                    {allSets
+                        ? <CheckBoxIcon fontSize="small" />
+                        : <CheckBoxOutlineBlank fontSize="small" />
+                    }
+                </ListItemIcon>
+                <ListItemText>
+                    {t('routines.requirementsAllSets')}
+                </ListItemText>
+            </MenuItem>
             <Divider />
             <MenuItem>
 

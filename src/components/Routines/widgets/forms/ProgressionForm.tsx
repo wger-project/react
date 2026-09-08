@@ -223,6 +223,7 @@ const ProgressionFields = (props: ProgressionFormProps & {
                                                         field.handleChange(e.target.value as OperationType);
                                                         if (e.target.value === OPERATION_REPLACE) {
                                                             form.setFieldValue(`entries[${index}].requirements`, []);
+                                                            form.setFieldValue(`entries[${index}].allSets`, false);
                                                             form.setFieldValue(`entries[${index}].repeat`, false);
                                                         }
                                                     }}
@@ -267,14 +268,21 @@ const ProgressionFields = (props: ProgressionFormProps & {
                                                 <ConfigDetailsRequirementsField
                                                     disabled={log.iteration === 1 || log.operation === OPERATION_REPLACE}
                                                     values={log.requirements}
-                                                    onChange={values => form.setFieldValue(`entries[${index}].requirements`, values)}
+                                                    allSets={log.allSets}
+                                                    onChange={(values, allSets) => {
+                                                        form.setFieldValue(`entries[${index}].requirements`, values);
+                                                        form.setFieldValue(`entries[${index}].allSets`, allSets);
+                                                    }}
                                                 />}
                                             {log.requirements.length >= 0 && <br />}
                                             {log.requirements.length >= 0 && log.requirements.map((requirement) => (
-                                                <Typography key={JSON.stringify(requirement)} variant={'caption'}>
-                                                    {requirement} &nbsp;
+                                                <Typography key={requirement} variant={'caption'}>
+                                                    {t(`routines.requirementRules.${requirement}`)} &nbsp;
                                                 </Typography>
                                             ))}
+                                            {log.allSets && <Typography variant={'caption'}>
+                                                ({t('routines.requirementsAllSets')})
+                                            </Typography>}
                                         </Grid>
                                         <Grid size={3} sx={{ textAlign: 'center' }}>
                                             {log.edited && <form.Field name={`entries[${index}].repeat`}>

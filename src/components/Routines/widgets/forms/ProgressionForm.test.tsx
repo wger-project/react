@@ -1,5 +1,5 @@
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { BaseConfig } from "@/components/Routines/models/BaseConfig";
 import { ProgressionForm } from "@/components/Routines/widgets/forms/ProgressionForm";
@@ -59,12 +59,16 @@ describe('Tests for the ProgressionForm', () => {
         mockProcessBaseConfigs.mockClear();
     });
 
-    function renderWidget(iterations: number[] = [1, 2]) {
+    function renderWidget(
+        iterations: number[] = [1, 2],
+        configs: BaseConfig[] = testConfigs,
+        configsMax: BaseConfig[] = testMaxConfigs,
+    ) {
         render(
             <QueryClientProvider client={testQueryClient}>
                 <ProgressionForm
-                    configs={testConfigs}
-                    configsMax={testMaxConfigs}
+                    configs={configs}
+                    configsMax={configsMax}
                     type={'weight'}
                     slotEntryId={10}
                     routineId={1}
@@ -137,7 +141,7 @@ describe('Tests for the ProgressionForm', () => {
                         "iteration": 1,
                         "operation": "r",
                         "repeat": false,
-                        "requirements": { "rules": [] },
+                        "requirements": { "rules": [], "all_sets": false },
                         "slot_entry": 10,
                         "step": "abs",
                         "value": "7"
@@ -146,7 +150,7 @@ describe('Tests for the ProgressionForm', () => {
                         "iteration": 2,
                         "operation": "+",
                         "repeat": true,
-                        "requirements": { "rules": [] },
+                        "requirements": { "rules": [], "all_sets": false },
                         "slot_entry": 10,
                         "step": "abs",
                         "value": "2"
@@ -161,7 +165,7 @@ describe('Tests for the ProgressionForm', () => {
                         "iteration": 1,
                         "operation": "r",
                         "repeat": false,
-                        "requirements": { "rules": [] },
+                        "requirements": { "rules": [], "all_sets": false },
                         "slot_entry": 10,
                         "step": "abs",
                         "value": "5"
@@ -170,7 +174,7 @@ describe('Tests for the ProgressionForm', () => {
                         "iteration": 2,
                         "operation": "+",
                         "repeat": true,
-                        "requirements": { "rules": [] },
+                        "requirements": { "rules": [], "all_sets": false },
                         "slot_entry": 10,
                         "step": "abs",
                         "value": "1"
@@ -198,7 +202,7 @@ describe('Tests for the ProgressionForm', () => {
             "iteration": 3,
             "operation": "r",
             "repeat": false,
-            "requirements": { "rules": [] },
+            "requirements": { "rules": [], "all_sets": false },
             "slot_entry": 10,
             "step": "abs",
             "value": "9"
@@ -277,5 +281,83 @@ describe('Tests for the ProgressionForm', () => {
         expect(mockProcessBaseConfigs).toHaveBeenCalledTimes(1);
         const payload = mockProcessBaseConfigs.mock.calls[0][0];
         expect(payload.values.toEdit[1]).toMatchObject({ id: 456, operation: 'r', repeat: false });
+    });
+
+    describe('requirements', () => {
+
+        // The second week is a double progression: +1 once every set reaches
+        // the top of the rep range
+        const gatedConfigs = [
+            testConfigs[0],
+            new BaseConfig({
+                id: 456,
+                slotEntryId: 10,
+                iteration: 2,
+                value: 1,
+                operation: '+',
+                repeat: true,
+                requirements: { rules: ['max_repetitions'], "all_sets": true },
+            })
+        ];
+
+        const renderGatedWidget = () => renderWidget([1, 2], gatedConfigs, []);
+
+        test('shows the stored rules and the all sets flag', () => {
+            renderGatedWidget();
+
+            expect(screen.getByText('routines.requirementRules.max_repetitions')).toBeInTheDocument();
+            expect(screen.getByText(/routines\.requirementsAllSets/)).toBeInTheDocument();
+        });
+
+        test('keeps the stored requirements when saving an unrelated change', async () => {
+            renderGatedWidget();
+            const minFields = screen.getAllByLabelText('min');
+            await user.clear(minFields[0]);
+            await user.type(minFields[0], '6');
+            await user.click(screen.getByRole('button', { name: /save/i }));
+
+            const [payload] = mockProcessBaseConfigs.mock.calls[0];
+            expect(payload.values.toEdit[1]).toMatchObject({
+                id: 456,
+                requirements: { rules: ['max_repetitions'], "all_sets": true },
+            });
+        });
+
+        test('rules and all sets picked in the menu end up in the payload', async () => {
+            // The first row is the baseline and has its menu locked
+            renderWidget();
+            const menuButtons = screen.getAllByTestId('SettingsIcon');
+            await user.click(menuButtons[1].closest('button')!);
+
+            await user.click(screen.getByRole('menuitem', { name: /requirementRules\.max_repetitions/ }));
+            await user.click(screen.getByRole('menuitem', { name: /requirementsAllSets/ }));
+            await user.click(within(screen.getByRole('menu')).getByRole('button', { name: /save/i }));
+            await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument());
+
+            expect(screen.getByText(/routines\.requirementsAllSets/)).toBeInTheDocument();
+            await user.click(screen.getByRole('button', { name: /save/i }));
+
+            const [payload] = mockProcessBaseConfigs.mock.calls[0];
+            expect(payload.values.toEdit[1].requirements).toEqual({
+                rules: ['max_repetitions'],
+                "all_sets": true,
+            });
+            expect(payload.maxValues.toEdit[1].requirements).toEqual({
+                rules: ['max_repetitions'],
+                "all_sets": true,
+            });
+        });
+
+        test('switching an operation to replace clears the all sets flag', async () => {
+            renderGatedWidget();
+            await user.click(screen.getAllByRole('combobox', { name: /routines\.operation/i })[1]);
+            await user.click(screen.getByRole('option', { name: 'Replace' }));
+
+            expect(screen.queryByText(/routines\.requirementsAllSets/)).not.toBeInTheDocument();
+            await user.click(screen.getByRole('button', { name: /save/i }));
+
+            const [payload] = mockProcessBaseConfigs.mock.calls[0];
+            expect(payload.values.toEdit[1].requirements).toEqual({ rules: [], "all_sets": false });
+        });
     });
 });

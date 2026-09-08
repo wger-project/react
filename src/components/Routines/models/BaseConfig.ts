@@ -19,6 +19,7 @@ export interface BaseConfigEntryForm {
     stepMax: StepType;
     requirements: RequirementsType[];
     requirementsMax: RequirementsType[];
+    allSets: boolean;
     repeat: boolean;
     repeatMax: boolean;
 }
@@ -27,11 +28,19 @@ export const OPERATION_REPLACE = 'r';
 export const OPERATION_ADD = '+';
 export const OPERATION_SUBSTRACT = '-';
 
-export const REQUIREMENTS_VALUES = ["weight", "repetitions", "rir", "rest"] as const;
+/** Rules a progression can be gated on, see REQUIREMENT_RULES on the server */
+export const REQUIREMENTS_VALUES = [
+    "weight",
+    "repetitions",
+    "rir",
+    "rest",
+    "max_repetitions",
+    "max_weight",
+] as const;
 
 export type OperationType = "+" | "-" | "r";
 export type StepType = "abs" | "percent";
-export type RequirementsType = typeof REQUIREMENTS_VALUES;
+export type RequirementsType = (typeof REQUIREMENTS_VALUES)[number];
 
 
 export const STEP_VALUES_SELECT = [
@@ -55,6 +64,8 @@ export const RIR_VALUES_SELECT = [...RIR_VALUES_SELECT_LIST] as const;
 
 export interface RuleRequirements {
     rules: RequirementsType[];
+    /** Every logged set has to meet the rules, not just one */
+    all_sets?: boolean;
 }
 
 export class BaseConfig {

@@ -7,7 +7,8 @@ import {
     BaseConfig,
     BaseConfigEntryForm,
     OPERATION_REPLACE,
-    REQUIREMENTS_VALUES
+    REQUIREMENTS_VALUES,
+    RuleRequirements
 } from "@/components/Routines/models/BaseConfig";
 import { ApiPath } from "@/core/lib/consts";
 import { TFunction } from "i18next";
@@ -33,6 +34,7 @@ export const emptyEntry = (iteration: number, edited: boolean, forceInteger: boo
     stepMax: "abs",
     requirements: [],
     requirementsMax: [],
+    allSets: false,
     repeat: false,
     repeatMax: false,
 });
@@ -66,6 +68,7 @@ export function progressionEntries(
             stepMax: configMax === undefined ? "abs" : configMax.step,
             requirements: config.requirements?.rules ?? [],
             requirementsMax: configMax === undefined ? [] : configMax.requirements?.rules ?? [],
+            allSets: config.requirements?.all_sets ?? false,
             repeat: config.repeat,
             repeatMax: configMax === undefined ? false : config.repeat,
         };
@@ -104,6 +107,7 @@ export const progressionSchema = (t: TFunction) => yup.object({
             operationMax: yup.string().required(),
             requirements: yup.array().of(yup.string().oneOf(REQUIREMENTS_VALUES)),
             requirementsMax: yup.array().of(yup.string().oneOf(REQUIREMENTS_VALUES)),
+            allSets: yup.boolean(),
             repeat: yup.boolean(),
             repeatMax: yup.boolean()
         })
@@ -155,6 +159,13 @@ export const progressionSchema = (t: TFunction) => yup.object({
     ,
 });
 
+/** The requirements of a form row as the API expects them */
+const requirementsPayload = (entry: BaseConfigEntryForm): RuleRequirements => ({
+    rules: entry.requirements ?? [],
+    // eslint-disable-next-line camelcase
+    all_sets: entry.allSets,
+});
+
 interface PayloadContext {
     slotEntryId: number,
     configs: BaseConfig[],
@@ -183,7 +194,7 @@ export function progressionPayload(
         operation: data.operation,
         step: data.step,
         repeat: data.repeat,
-        requirements: { rules: data.requirements ?? [] }
+        requirements: requirementsPayload(data)
     }));
     const addList: AddBaseConfigParams[] = data.filter(data => data.id === null && data.value !== '').map(data => ({
         // eslint-disable-next-line camelcase
@@ -193,7 +204,7 @@ export function progressionPayload(
         operation: data.operation,
         step: data.step,
         repeat: data.repeat,
-        requirements: { rules: data.requirements ?? [] }
+        requirements: requirementsPayload(data)
     }));
     // Items to delete, also includes all where the value is empty
     const deleteList = configs.filter(c => iterationsToDelete.includes(c.iteration)).map(c => c.id);
@@ -213,7 +224,7 @@ export function progressionPayload(
         operation: data.operation,
         step: data.step,
         repeat: data.repeat,
-        requirements: { rules: data.requirements ?? [] }
+        requirements: requirementsPayload(data)
     }));
     const addListMax: AddBaseConfigParams[] = data.filter(data => data.idMax === null && data.valueMax !== '').map(data => ({
         iteration: data.iteration,
@@ -223,7 +234,7 @@ export function progressionPayload(
         operation: data.operation,
         step: data.stepMax,
         repeat: data.repeat,
-        requirements: { rules: data.requirements ?? [] }
+        requirements: requirementsPayload(data)
     }));
     // Items to delete, also includes all where the value is empty
     const deleteListMax = configsMax.filter(c => iterationsToDelete.includes(c.iteration)).map(c => c.id);
