@@ -1,3 +1,11 @@
+import { Day, DayType } from "@/components/Routines/models/Day";
+import { useDeleteDayQuery, useEditDayQuery } from "@/components/Routines/queries";
+import { DayTypeSelect } from "@/components/Routines/widgets/forms/DayTypeSelect";
+import { DefaultRoundingMenu } from "@/components/Routines/widgets/forms/RoutineForm";
+import { useAppForm } from "@/core/forms/appForm";
+import { submitHandler, yupSchema } from "@/core/forms/formUtils";
+import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutlined";
 import {
@@ -13,17 +21,17 @@ import {
 } from "@mui/material";
 import LoadingButton from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
-import { WgerTextField } from "@/core/forms/WgerTextField";
-import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
-import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
-import { Day, DayType } from "@/components/Routines/models/Day";
-import { useDeleteDayQuery, useEditDayQuery } from "@/components/Routines/queries";
-import { DayTypeSelect } from "@/components/Routines/widgets/forms/DayTypeSelect";
-import { DefaultRoundingMenu } from "@/components/Routines/widgets/forms/RoutineForm";
-import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from 'yup';
+
+interface DayFormValues {
+    name: string,
+    description: string,
+    isRest: boolean,
+    needsLogsToAdvance: boolean,
+    type: string,
+}
 
 export const DayForm = (props: {
     day: Day,
@@ -80,138 +88,132 @@ export const DayForm = (props: {
         type: Yup.string(),
     });
 
-    const handleSubmit = (values: Partial<{
-        name: string,
-        description: string,
-        isRest: boolean,
-        needsLogsToAdvance: boolean,
-        type: string
-    }>) =>
+    const handleSubmit = (values: Partial<DayFormValues>) =>
         editDayQuery.mutate(Day.clone(
-        props.day,
-        {
-            ...(values.name !== undefined && { name: values.name }),
-            ...(values.description !== undefined && { description: values.description }),
-            ...({ isRest: values.isRest }),
-            ...(values.needsLogsToAdvance !== undefined && { needLogsToAdvance: values.needsLogsToAdvance }),
+            props.day,
+            {
+                ...(values.name !== undefined && { name: values.name }),
+                ...(values.description !== undefined && { description: values.description }),
+                ...({ isRest: values.isRest }),
+                ...(values.needsLogsToAdvance !== undefined && { needLogsToAdvance: values.needsLogsToAdvance }),
                 ...(values.type !== undefined && { type: values.type as DayType }),
-        })
-    );
+            })
+        );
+
+    const defaultValues: DayFormValues = {
+        name: props.day.name,
+        description: props.day.description,
+        isRest: props.day.isRest,
+        needsLogsToAdvance: props.day.needLogsToAdvance,
+        type: props.day.type,
+    };
+
+    const form = useAppForm({
+        defaultValues,
+        validators: { onChange: yupSchema<DayFormValues>(validationSchema) },
+        onSubmit: async ({ value }) => handleSubmit(value),
+    });
 
     return <>
-        <Formik
-            initialValues={{
-                name: props.day.name,
-                description: props.day.description,
-                isRest: props.day.isRest,
-                needsLogsToAdvance: props.day.needLogsToAdvance,
-                type: props.day.type,
-            }}
-            validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
-                handleSubmit(values);
-                setSubmitting(false);
-            }}
-            initialTouched={{ name: true, description: true, isRest: true, needsLogsToAdvance: true }}
-        >
-            {(formik) => (
-                <Form>
-                    <FormQueryErrorsSnackbar mutationQuery={editDayQuery} />
-                    <FormQueryErrorsSnackbar mutationQuery={deleteDayQuery} />
-                    <Grid container spacing={2}>
-                        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                            <WgerTextField
-                                fieldName="name"
-                                title="Name"
-                                fieldProps={{ disabled: isRestDay }}
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-                            <DayTypeSelect
-                                fieldName="type"
-                                title="Type"
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-                            <FormControlLabel
-                                control={<Switch checked={isRestDay} onChange={handleRestDayChange} />}
-                                label={t('routines.restDay')} />
-                        </Grid>
-                        <Grid size={{ xs: 12, sm: 4, md: 3 }}>
-                            <FormControlLabel
-                                disabled={isRestDay}
-                                control={<Switch
-                                    checked={formik.values.needsLogsToAdvance}
-                                    {...formik.getFieldProps('needsLogsToAdvance')}
-                                />}
-                                label={t('routines.needsLogsToAdvance')} />
-                            <Tooltip title={t('routines.needsLogsToAdvanceHelpText')}>
-                                <IconButton onClick={() => {
-                                }}>
-                                    <HelpOutlineIcon fontSize="small" />
-                                </IconButton>
-                            </Tooltip>
-                        </Grid>
-                        <Grid size={12}>
-                            <WgerTextField
-                                fieldName="description"
-                                title="Description"
-                                fieldProps={{ multiline: true, rows: 4, disabled: isRestDay }}
-                            />
-                        </Grid>
+        <form onSubmit={submitHandler(form)}>
+            <FormQueryErrorsSnackbar mutationQuery={editDayQuery} />
+            <FormQueryErrorsSnackbar mutationQuery={deleteDayQuery} />
+            <Grid container spacing={2}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                    <form.AppField name="name">
+                        {field => <field.WgerTextField variant="standard"
+                                                       title={t('name')}
+                                                       fieldProps={{ disabled: isRestDay }}
+                        />}
+                    </form.AppField>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                    <form.AppField name="type">
+                        {() => <DayTypeSelect />}
+                    </form.AppField>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+                    <FormControlLabel
+                        control={<Switch checked={isRestDay} onChange={handleRestDayChange} />}
+                        label={t('routines.restDay')} />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 4, md: 3 }}>
+                    <form.Field name="needsLogsToAdvance">
+                        {field => <FormControlLabel
+                            disabled={isRestDay}
+                            control={<Switch
+                                name={field.name}
+                                checked={field.state.value}
+                                onChange={event => field.handleChange(event.target.checked)}
+                                onBlur={field.handleBlur}
+                            />}
+                            label={t('routines.needsLogsToAdvance')} />}
+                    </form.Field>
+                    <Tooltip title={t('routines.needsLogsToAdvanceHelpText')}>
+                        <IconButton onClick={() => {
+                        }}>
+                            <HelpOutlineIcon fontSize="small" />
+                        </IconButton>
+                    </Tooltip>
+                </Grid>
+                <Grid size={12}>
+                    <form.AppField name="description">
+                        {field => <field.WgerTextField variant="standard"
+                                                       title={t('description')}
+                                                       fieldProps={{ multiline: true, rows: 4, disabled: isRestDay }}
+                        />}
+                    </form.AppField>
+                </Grid>
 
-                        <Grid size={8}>
-                            {editDayQuery.isPending
-                                ? <LoadingButton loading variant="contained" color="primary">
-                                    {t('save')}
-                                </LoadingButton>
-                                : <Button
-                                    variant="contained"
-                                    color="primary"
-                                    type="submit"
-                                    disabled={isRestDay}
-                                >
-                                    {t('save')}
-                                </Button>
-                            }
+                <Grid size={8}>
+                    {editDayQuery.isPending
+                        ? <LoadingButton loading variant="contained" color="primary">
+                            {t('save')}
+                        </LoadingButton>
+                        : <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            disabled={isRestDay}
+                        >
+                            {t('save')}
+                        </Button>
+                    }
 
-                            &nbsp;
+                    &nbsp;
 
-                            <Button
-                                variant="outlined"
-                                startIcon={<DeleteIcon />}
-                                onClick={handleDeleteDay}
-                                disabled={editDayQuery.isPending}
-                            >
-                                {t('delete')}
-                            </Button>
-                        </Grid>
-                        <Grid size={4} sx={{ display: "flex", justifyContent: "flex-end" }}>
-                            <DefaultRoundingMenu routineId={props.routineId} />
-                        </Grid>
-                    </Grid>
+                    <Button
+                        variant="outlined"
+                        startIcon={<DeleteIcon />}
+                        onClick={handleDeleteDay}
+                        disabled={editDayQuery.isPending}
+                    >
+                        {t('delete')}
+                    </Button>
+                </Grid>
+                <Grid size={4} sx={{ display: "flex", justifyContent: "flex-end" }}>
+                    <DefaultRoundingMenu routineId={props.routineId} />
+                </Grid>
+            </Grid>
 
-                    <Dialog open={openDialog} onClose={handleDialogClose}>
-                        <DialogTitle>{t('routines.confirmRestDay')}</DialogTitle>
-                        <DialogContent>
-                            {t('routines.confirmRestDayHelpText')}
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleDialogClose}>{t('cancel')}</Button>
-                            <Button onClick={handleConfirmRestChange}>{t('continue')}</Button>
-                        </DialogActions>
-                    </Dialog>
+            <Dialog open={openDialog} onClose={handleDialogClose}>
+                <DialogTitle>{t('routines.confirmRestDay')}</DialogTitle>
+                <DialogContent>
+                    {t('routines.confirmRestDayHelpText')}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose}>{t('cancel')}</Button>
+                    <Button onClick={handleConfirmRestChange}>{t('continue')}</Button>
+                </DialogActions>
+            </Dialog>
 
-                    <DeleteConfirmationModal
-                        title={t('deleteConfirmation', { name: props.day.displayName })}
-                        message={t('routines.deleteDayConfirmation')}
-                        isOpen={openDeleteDialog}
-                        closeFn={handleCancelDeleteDay}
-                        deleteFn={handleConfirmDeleteDay}
-                    />
-                </Form>
-            )}
-        </Formik>
+            <DeleteConfirmationModal
+                title={t('deleteConfirmation', { name: props.day.displayName })}
+                message={t('routines.deleteDayConfirmation')}
+                isOpen={openDeleteDialog}
+                closeFn={handleCancelDeleteDay}
+                deleteFn={handleConfirmDeleteDay}
+            />
+        </form>
     </>;
 };
-

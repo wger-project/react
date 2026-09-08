@@ -7,24 +7,26 @@ import {
 } from "@/components/Measurements/models/Calculation";
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { CalculationParams } from "@/components/Measurements/widgets/CalculationParams";
+import { CategoryFormValues } from "@/components/Measurements/widgets/categoryFormValues";
 import { useProfileQuery } from "@/components/User";
 import { Alert, MenuItem, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
-import { useFormikContext } from "formik";
 import React from "react";
 import { useTranslation } from "react-i18next";
-
-interface CalculationValues {
-    calculation: string;
-    params: Record<string, unknown>;
-}
 
 interface CalculationSectionProps {
     /** The category being edited, absent while one is created */
     category?: MeasurementCategory;
     /** Every category of the user, group children included */
     categories: MeasurementCategory[];
+    /** What the form holds for the calculation and its parameters */
+    values: Pick<CategoryFormValues, 'calculation' | 'params'>;
+    /** The complaint about the parameters, given only once the form was sent */
+    paramsError?: string;
     /** Switches to a calculation, which also prefills the name and the unit */
     onPick: (type?: CalculationType) => void;
+    /** Back to filling the category in by hand */
+    onManual: () => void;
+    onParamsChange: (params: Record<string, unknown>) => void;
 }
 
 /**
@@ -34,11 +36,14 @@ interface CalculationSectionProps {
 export const CalculationSection = ({
                                        category,
                                        categories,
+                                       values,
+                                       paramsError,
                                        onPick,
+                                       onManual,
+                                       onParamsChange,
                                    }: CalculationSectionProps) => {
 
     const [t] = useTranslation();
-    const { values, errors, submitCount, setFieldValue } = useFormikContext<CalculationValues>();
     const profileQuery = useProfileQuery();
 
     // What a category computes is what it is, like its metric type, so it is
@@ -78,7 +83,7 @@ export const CalculationSection = ({
                         return;
                     }
                     if (mode === 'manual') {
-                        setFieldValue('calculation', CALCULATION_NONE);
+                        onManual();
                         return;
                     }
                     onPick(firstAvailable());
@@ -120,13 +125,12 @@ export const CalculationSection = ({
             <CalculationParams
                 type={picked}
                 params={values.params}
-                onChange={params => setFieldValue('params', params)}
+                onChange={onParamsChange}
                 categories={categories}
                 categoryId={category?.id}
             />
             {/* Only once sent: incomplete is the normal state while typing */}
-            {submitCount > 0 && typeof errors.params === 'string' &&
-                <Alert severity="error">{errors.params}</Alert>}
+            {paramsError !== undefined && <Alert severity="error">{paramsError}</Alert>}
         </>}
     </>;
 };

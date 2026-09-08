@@ -134,4 +134,29 @@ describe("<Step1Basics />", () => {
         ]);
         expect(setEquipment).toHaveBeenCalledWith([42]);
     });
+
+    test("a too short alias shows its error and blocks the step", async () => {
+        // Arrange
+        const user = userEvent.setup();
+        const mockOnContinue = vi.fn();
+        const queryClient = new QueryClient();
+        render(
+            <ExerciseSubmissionStateProvider>
+                <QueryClientProvider client={queryClient}>
+                    <Step1Basics onContinue={mockOnContinue} />
+                </QueryClientProvider>
+            </ExerciseSubmissionStateProvider>
+        );
+
+        // Act: the validator complains about the single alias, not the list
+        await user.type(screen.getByLabelText("name"), 'Biceps enlarger');
+        const aliases = screen.getByLabelText("exercises.alternativeNames");
+        await user.type(aliases, 'abc');
+        await user.keyboard('{enter}');
+        await user.click(screen.getByText('continue'));
+
+        // Assert
+        expect(await screen.findByText('forms.minLength')).toBeInTheDocument();
+        expect(mockOnContinue).not.toHaveBeenCalled();
+    });
 });

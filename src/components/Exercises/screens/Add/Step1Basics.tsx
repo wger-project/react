@@ -2,19 +2,28 @@ import { Autocomplete, Box, Button, MenuItem, Stack, TextField, } from "@mui/mat
 import Grid from '@mui/material/Grid';
 import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
 import type { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
-import { ExerciseAliases } from "@/components/Exercises/forms/ExerciseAliases";
+import { AliasItem, ExerciseAliases } from "@/components/Exercises/forms/ExerciseAliases";
 import { ExerciseEquipmentSelect } from "@/components/Exercises/forms/ExerciseEquipmentSelect";
 import { ExerciseName } from "@/components/Exercises/forms/ExerciseName";
 import { ExerciseSelect } from "@/components/Exercises/forms/ExerciseSelect";
 import { alternativeNameValidator, categoryValidator, nameValidator } from "@/components/Exercises/forms/yupValidators";
 import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery, } from "@/components/Exercises/queries";
 import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
-import { Form, Formik } from "formik";
+import { useAppForm } from "@/core/forms/appForm";
+import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useExerciseSubmissionStateValue } from "@/components/Exercises/screens/Add/state";
 import * as exerciseReducer from "@/components/Exercises/screens/Add/state/exerciseSubmissionReducer";
 import * as yup from "yup";
+
+interface Step1Values {
+    nameEn: string,
+    newAlternativeNameEn: AliasItem[],
+    // the empty string stands in for "not picked yet", MUI selects don't accept null
+    category: number | '',
+    equipment: number[],
+}
 
 export const Step1Basics = ({ onContinue }: StepProps) => {
     const [t] = useTranslation();
@@ -42,139 +51,130 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
         category: categoryValidator(),
     });
 
+    const defaultValues: Step1Values = {
+        nameEn: state.nameEn,
+        // The alias field and its validator work with objects, the state keeps plain strings
+        newAlternativeNameEn: state.alternativeNamesEn.map(alias => ({ alias })),
+        category: state.category !== null ? state.category : '',
+        equipment: state.equipment,
+    };
+
+    const form = useAppForm({
+        defaultValues,
+        validators: { onChange: yupSchema<Step1Values>(validationSchema) },
+        onSubmit: async ({ value }) => {
+            dispatch(exerciseReducer.setNameEn(value.nameEn));
+            dispatch(exerciseReducer.setCategory(value.category as number));
+            dispatch(exerciseReducer.setAlternativeNamesEn(value.newAlternativeNameEn.map(item => item.alias)));
+            dispatch(exerciseReducer.setEquipment(value.equipment));
+
+            onContinue!();
+        },
+    });
+
     return (
-        <Formik
-            initialValues={{
-                nameEn: state.nameEn,
-                // The alias field and its validator work with objects, the state keeps plain strings
-                newAlternativeNameEn: state.alternativeNamesEn.map(alias => ({ alias })),
-                category: state.category !== null ? state.category : '',
-                muscles: state.muscles,
-                equipment: state.equipment,
-                musclesSecondary: state.musclesSecondary,
-            }}
-            validationSchema={validationSchema}
-            onSubmit={values => {
-                dispatch(exerciseReducer.setNameEn(values.nameEn));
-                dispatch(exerciseReducer.setCategory(values.category as number));
-                dispatch(exerciseReducer.setAlternativeNamesEn(values.newAlternativeNameEn.map(item => item.alias)));
-                dispatch(exerciseReducer.setEquipment(values.equipment));
+        <form onSubmit={submitHandler(form)}>
+            <Stack spacing={2}>
+                <form.AppField name="nameEn">{() => <ExerciseName />}</form.AppField>
+                <form.AppField name="newAlternativeNameEn">{() => <ExerciseAliases />}</form.AppField>
 
-                onContinue!();
-            }}
-        >
-            {formik => {
-                return (
-                    (<Form>
-                        <Stack spacing={2}>
-                            <ExerciseName fieldName={'nameEn'} />
-                            <ExerciseAliases fieldName={'newAlternativeNameEn'} />
+                {categoryQuery.isLoading
+                    ? <Box> <LoadingWidget /> </Box>
+                    : <form.AppField name="category">
+                        {() => <ExerciseSelect
+                            options={categoryQuery.data!.map(category => (
+                                <MenuItem key={category.id} value={category.id}>
+                                    {category.translatedName}
+                                </MenuItem>
+                            ))}
+                        />}
+                    </form.AppField>
+                }
 
-                            {categoryQuery.isLoading
-                                ? <Box> <LoadingWidget /> </Box>
-                                : <ExerciseSelect
-                                    fieldName={'category'}
-                                    options={categoryQuery.data!.map(category => (
-                                        <MenuItem key={category.id} value={category.id}>
-                                            {category.translatedName}
-                                        </MenuItem>
-                                    ))}
+                {equipmentQuery.isLoading
+                    ? <Box> <LoadingWidget /> </Box>
+                    : <form.AppField name="equipment">
+                        {() => <ExerciseEquipmentSelect options={equipmentQuery.data!} />}
+                    </form.AppField>
+                }
+
+                {musclesQuery.isLoading
+                    ? <Box> <LoadingWidget /> </Box>
+                    : <>
+                        <Autocomplete
+                            multiple
+                            id="muscles"
+                            options={musclesQuery.data!.map(m => m.id)}
+                            getOptionDisabled={(option) =>
+                                secondaryMuscles.includes(option)
+                            }
+                            getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName()}
+                            value={primaryMuscles}
+                            onChange={(event, newValue) => {
+                                setPrimaryMuscles(newValue);
+                            }}
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    variant="standard"
+                                    label={t("exercises.muscles")}
                                 />
+                            )}
+                        />
+                        <Autocomplete
+                            multiple
+                            id="secondary-muscles"
+                            options={musclesQuery.data!.map(m => m.id)}
+                            getOptionDisabled={(option) =>
+                                primaryMuscles.includes(option)
                             }
-
-                            {equipmentQuery.isLoading
-                                ? <Box> <LoadingWidget /> </Box>
-                                : <ExerciseEquipmentSelect fieldName={'equipment'} options={equipmentQuery.data!} />
-                            }
-
-                            {musclesQuery.isLoading
-                                ? <Box> <LoadingWidget /> </Box>
-                                : <>
-                                    <Autocomplete
-                                        multiple
-                                        id="muscles"
-                                        options={musclesQuery.data!.map(m => m.id)}
-                                        getOptionDisabled={(option) =>
-                                            secondaryMuscles.includes(option)
-                                        }
-                                        getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName()}
-                                        value={primaryMuscles}
-                                        onChange={(event, newValue) => {
-                                            setPrimaryMuscles(newValue);
-                                        }}
-                                        renderInput={params => (
-                                            <TextField
-                                                {...params}
-                                                variant="standard"
-                                                label={t("exercises.muscles")}
-                                                value={formik.getFieldProps("muscles").value}
-                                                onChange={e => {
-                                                    formik.setFieldValue(
-                                                        formik.getFieldProps("muscles").name,
-                                                        e.target.value
-                                                    );
-                                                }}
-                                            />
-                                        )}
-                                    />
-                                    <Autocomplete
-                                        multiple
-                                        id="secondary-muscles"
-                                        options={musclesQuery.data!.map(m => m.id)}
-                                        getOptionDisabled={(option) =>
-                                            primaryMuscles.includes(option)
-                                        }
-                                        getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName()}
-                                        value={secondaryMuscles}
-                                        onChange={(event, newValue) => {
-                                            setSecondaryMuscles(newValue);
-                                        }}
-                                        renderInput={params => (
-                                            <TextField
-                                                {...params}
-                                                variant="standard"
-                                                label={t("exercises.secondaryMuscles")}
-                                                value={formik.getFieldProps("musclesSecondary").value}
-                                            />
-                                        )}
-                                    />
-                                    <Grid container>
-                                        <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
-                                            <MuscleOverview
-                                                primaryMuscles={primaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
-                                                secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
-                                                isFront={true}
-                                            />
-                                        </Grid>
-                                        <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
-                                            <MuscleOverview
-                                                primaryMuscles={primaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
-                                                secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
-                                                isFront={false}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </>
-                            }
-                        </Stack>
+                            getOptionLabel={option => musclesQuery.data!.find(m => m.id === option)!.getName()}
+                            value={secondaryMuscles}
+                            onChange={(event, newValue) => {
+                                setSecondaryMuscles(newValue);
+                            }}
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    variant="standard"
+                                    label={t("exercises.secondaryMuscles")}
+                                />
+                            )}
+                        />
                         <Grid container>
-                            <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
-                                <Box sx={{ mb: 2 }}>
-                                    <div>
-                                        <Button
-                                            variant="contained"
-                                            type="submit"
-                                            sx={{ mt: 1, mr: 1 }}
-                                        >
-                                            {t('continue')}
-                                        </Button>
-                                    </div>
-                                </Box>
+                            <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
+                                <MuscleOverview
+                                    primaryMuscles={primaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                    secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                    isFront={true}
+                                />
+                            </Grid>
+                            <Grid sx={{ display: "flex", justifyContent: "center" }} size={6}>
+                                <MuscleOverview
+                                    primaryMuscles={primaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                    secondaryMuscles={secondaryMuscles.map(m => musclesQuery.data!.find(mq => mq.id === m)!)}
+                                    isFront={false}
+                                />
                             </Grid>
                         </Grid>
-                    </Form>)
-                );
-            }}
-        </Formik>
+                    </>
+                }
+            </Stack>
+            <Grid container>
+                <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
+                    <Box sx={{ mb: 2 }}>
+                        <div>
+                            <Button
+                                variant="contained"
+                                type="submit"
+                                sx={{ mt: 1, mr: 1 }}
+                            >
+                                {t('continue')}
+                            </Button>
+                        </div>
+                    </Box>
+                </Grid>
+            </Grid>
+        </form>
     );
 };

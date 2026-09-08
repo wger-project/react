@@ -1,13 +1,19 @@
 import { Autocomplete, Chip, InputAdornment, TextField } from "@mui/material";
-import { useField } from "formik";
+import { useFieldContext } from "@/core/forms/formContexts";
+import { useNestedFieldError } from "@/core/forms/useNestedFieldError";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-type AliasItem = { id?: number; alias: string };
+export type AliasItem = { id?: number; alias: string };
 
-export function ExerciseAliases(props: { fieldName: string }) {
+/** Bound to the form field it is rendered in via form.AppField */
+export function ExerciseAliases() {
     const [t] = useTranslation();
-    const [field, meta, helpers] = useField<AliasItem[]>(props.fieldName);
+    const field = useFieldContext<AliasItem[]>();
+    // The validator reports on the single aliases, e.g. `aliases[0].alias`
+    const nestedError = useNestedFieldError(field);
+    const error = field.state.meta.isTouched ? nestedError : undefined;
+    const value = field.state.value || [];
 
     const normalize = (items: (AliasItem | string)[] | null | undefined): AliasItem[] => {
         const seen = new Set<string>();
@@ -26,38 +32,11 @@ export function ExerciseAliases(props: { fieldName: string }) {
             });
     };
 
-    /**
-     * Extract a human-readable error string from the Yup alias validator, which
-     * returns a list of errors.
-     */
-    const formatError = (err: unknown): string | undefined => {
-        if (!err) return undefined;
-        if (typeof err === "string") return err;
-
-        if (typeof err === "object") {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const o = err as any;
-            if (typeof o.alias === "string") return o.alias;
-            if (typeof o.message === "string") return o.message;
-
-            for (const k of Object.keys(o)) {
-                const v = o[k];
-                if (typeof v === "string") return v;
-                if (v && typeof v === "object") {
-                    if (typeof v.alias === "string") return v.alias;
-                    if (typeof v.message === "string") return v.message;
-                }
-            }
-        }
-
-        return String(err);
-    };
-
     return <Autocomplete
         multiple
         freeSolo
-        id={props.fieldName}
-        value={field.value || []}
+        id={field.name}
+        value={value}
         options={[]}
         getOptionLabel={(opt) => (typeof opt === "string" ? opt : opt.alias)}
         isOptionEqualToValue={(option, value) => {
@@ -68,18 +47,14 @@ export function ExerciseAliases(props: { fieldName: string }) {
             return optionAlias === valueAlias && (optionId === valueId || optionId === undefined || valueId === undefined);
         }}
         onChange={(_, newValue) => {
-            helpers.setValue(normalize(newValue));
+            field.handleChange(normalize(newValue));
         }}
-        onBlur={field.onBlur}
+        onBlur={field.handleBlur}
         renderInput={(params) => {
-            const chips = (field.value || []).map((option, index) => (
+            const chips = value.map((option, index) => (
                 <Chip
                     label={option.alias}
-                    onDelete={() => {
-                        const newVal = [...(field.value || [])];
-                        newVal.splice(index, 1);
-                        helpers.setValue(newVal);
-                    }}
+                    onDelete={() => field.handleChange(value.filter((_, i) => i !== index))}
                     key={option.id ?? option.alias}
                 />
             ));
@@ -90,8 +65,8 @@ export function ExerciseAliases(props: { fieldName: string }) {
                     id="exerciseAliases"
                     variant="standard"
                     label={t("exercises.alternativeNames")}
-                    error={meta.touched && Boolean(meta.error)}
-                    helperText={meta.touched ? formatError(meta.error) : undefined}
+                    error={error !== undefined}
+                    helperText={error}
                     slotProps={{
                         ...params.slotProps,
                         input: {

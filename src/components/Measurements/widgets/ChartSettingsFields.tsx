@@ -8,9 +8,8 @@ import {
     TREND_CHARACTERS,
     TrendCharacter
 } from "@/components/Measurements/models/Category";
-import { CategoryFormValues } from "@/components/Measurements/widgets/categoryFormValues";
+import { CategoryFormValues, SetCategoryFormValues } from "@/components/Measurements/widgets/categoryFormValues";
 import { MenuItem, Stack, TextField } from "@mui/material";
-import { useFormikContext } from "formik";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 
@@ -29,14 +28,19 @@ const canDrawLine = (metricType: MetricType, hasChildren: boolean): boolean =>
 const drawsLine = (values: { metricType: MetricType, chartType: ChartType }): boolean =>
     resolveChartType(values.metricType, values.chartType) === 'line';
 
+interface ChartSettingsFieldsProps {
+    hasChildren: boolean;
+    values: CategoryFormValues;
+    onChange: SetCategoryFormValues;
+}
+
 /**
  * How a category is drawn: the chart it is shown as, and the two settings of
  * the line. Renders nothing where the metric type leaves no choice.
  */
-export const ChartSettingsFields = ({ hasChildren }: { hasChildren: boolean }) => {
+export const ChartSettingsFields = ({ hasChildren, values, onChange }: ChartSettingsFieldsProps) => {
     const [t] = useTranslation();
-    const formik = useFormikContext<CategoryFormValues>();
-    const metricType = formik.values.metricType;
+    const metricType = values.metricType;
 
     return <>
         {/*
@@ -52,7 +56,8 @@ export const ChartSettingsFields = ({ hasChildren }: { hasChildren: boolean }) =
                 fullWidth
                 id="chartType"
                 label={t('measurements.chartType')}
-                {...formik.getFieldProps('chartType')}
+                value={values.chartType}
+                onChange={event => onChange({ chartType: event.target.value as ChartType })}
             >
                 {chartTypeChoices(metricType).map(chartType =>
                     <MenuItem key={chartType} value={chartType}>
@@ -76,8 +81,9 @@ export const ChartSettingsFields = ({ hasChildren }: { hasChildren: boolean }) =
                     fullWidth
                     id="trend"
                     label={t('measurements.chartTrend')}
-                    disabled={!drawsLine(formik.values)}
-                    {...formik.getFieldProps('trend')}
+                    disabled={!drawsLine(values)}
+                    value={values.trend}
+                    onChange={event => onChange({ trend: event.target.value as TrendCharacter })}
                 >
                     {TREND_CHARACTERS.map((trend: TrendCharacter) =>
                         <MenuItem key={trend} value={trend}>
@@ -90,8 +96,12 @@ export const ChartSettingsFields = ({ hasChildren }: { hasChildren: boolean }) =
                     fullWidth
                     id="averageWindow"
                     label={t('measurements.chartAverageWindow')}
-                    disabled={!drawsLine(formik.values)}
-                    {...formik.getFieldProps('averageWindow')}
+                    disabled={!drawsLine(values)}
+                    value={values.averageWindow}
+                    // MUI hands the menu item's value back as it is, the string type is only nominal
+                    onChange={event => onChange({
+                        averageWindow: event.target.value as unknown as CategoryFormValues['averageWindow']
+                    })}
                 >
                     <MenuItem value={CHART_LINE_OFF}>{t('off')}</MenuItem>
                     {AVERAGE_WINDOWS.map(days =>

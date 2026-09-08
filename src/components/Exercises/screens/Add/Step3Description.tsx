@@ -6,13 +6,18 @@ import { PaddingBox } from "@/components/Exercises/widgets/PaddingBox";
 import { MarkdownEditor } from "@/core/forms/MarkdownEditor";
 import { ExerciseNotes } from "@/components/Exercises/forms/ExerciseNotes";
 import { descriptionValidator, noteValidator } from "@/components/Exercises/forms/yupValidators";
-import { Form, Formik } from "formik";
+import { useAppForm } from "@/core/forms/appForm";
+import { yupSchema, fieldError, setServerError, submitHandler } from "@/core/forms/formUtils";
 import { useTranslation } from "react-i18next";
 import { useExerciseSubmissionStateValue } from "@/components/Exercises/screens/Add/state";
 import { setDescriptionEn, setNotesEn } from "@/components/Exercises/screens/Add/state/exerciseSubmissionReducer";
 import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
 import * as yup from "yup";
 
+interface Step3Values {
+    description: string,
+    notes: string[],
+}
 
 export const Step3Description = ({ onContinue, onBack }: StepProps) => {
     const [t] = useTranslation();
@@ -24,80 +29,88 @@ export const Step3Description = ({ onContinue, onBack }: StepProps) => {
         notes: noteValidator()
     });
 
-    return (
-        (<Formik
-            initialValues={{
-                description: state.descriptionEn,
-                notes: state.notesEn,
-            }}
-            validationSchema={validationSchema}
-            onSubmit={async (values, { setFieldError }) => {
-                let canContinue: boolean;
+    const defaultValues: Step3Values = {
+        description: state.descriptionEn,
+        notes: state.notesEn,
+    };
 
-                const validationResult = await languageCheckQuery.mutateAsync({
-                    input: values.description,
-                    languageId: ENGLISH_LANGUAGE_ID
-                });
+    const form = useAppForm({
+        defaultValues,
+        validators: { onChange: yupSchema<Step3Values>(validationSchema) },
+        onSubmit: async ({ value }) => {
+            let canContinue: boolean;
+
+            const validationResult = await languageCheckQuery.mutateAsync({
+                input: value.description,
+                languageId: ENGLISH_LANGUAGE_ID
+            });
+
+            // @ts-ignore - validationResult contains the message from the backend
+            if ("success" in validationResult) {
+                canContinue = true;
+            } else {
+                canContinue = false;
 
                 // @ts-ignore - validationResult contains the message from the backend
-                if ("success" in validationResult) {
-                    canContinue = true;
-                } else {
-                    canContinue = false;
+                setServerError(form, 'description', validationResult.check.message);
+            }
 
-                    // @ts-ignore - validationResult contains the message from the backend
-                    setFieldError('description', validationResult.check.message);
-                }
+            dispatch(setDescriptionEn(value.description));
+            dispatch(setNotesEn(value.notes));
 
-                dispatch(setDescriptionEn(values.description));
-                dispatch(setNotesEn(values.notes));
+            if (canContinue) {
+                onContinue!();
+            }
+        },
+    });
 
-                if (canContinue) {
-                    onContinue!();
-                }
-
-            }}
-        >
-            {({ values, errors, touched, setFieldValue }) => (
-                <Form>
-                    <Stack>
-                        <MarkdownEditor
+    return (
+        <form onSubmit={submitHandler(form)}>
+            <Stack>
+                <form.Field name="description">
+                    {field => {
+                        const error = fieldError(field);
+                        return <MarkdownEditor
                             label={t('exercises.description')}
-                            value={values.description}
-                            onChange={(val) => setFieldValue('description', val)}
-                            error={touched.description && Boolean(errors.description)}
-                            helperText={touched.description ? errors.description : undefined}
-                        />
+                            value={field.state.value}
+                            onChange={(val) => {
+                                // The server's verdict was about the old text
+                                setServerError(form, 'description', undefined);
+                                field.handleChange(val);
+                            }}
+                            error={error !== undefined}
+                            helperText={error}
+                        />;
+                    }}
+                </form.Field>
 
-                        <PaddingBox />
+                <PaddingBox />
 
-                        <ExerciseNotes fieldName={'notes'} />
+                <form.AppField name="notes">{() => <ExerciseNotes />}</form.AppField>
 
-                        <Grid container>
-                            <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
-                                <Box sx={{ mb: 2 }}>
-                                    <div>
-                                        <Button
-                                            onClick={onBack}
-                                            sx={{ mt: 1, mr: 1 }}
-                                        >
-                                            {t('goBack')}
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            type="submit"
-                                            disabled={languageCheckQuery.isPending}
-                                            sx={{ mt: 1, mr: 1 }}
-                                        >
-                                            {t('continue')}
-                                        </Button>
-                                    </div>
-                                </Box>
-                            </Grid>
-                        </Grid>
-                    </Stack>
-                </Form>
-            )}
-        </Formik>)
+                <Grid container>
+                    <Grid sx={{ display: "flex", justifyContent: "end" }} size={12}>
+                        <Box sx={{ mb: 2 }}>
+                            <div>
+                                <Button
+                                    onClick={onBack}
+                                    sx={{ mt: 1, mr: 1 }}
+                                >
+                                    {t('goBack')}
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    type="submit"
+                                    disabled={languageCheckQuery.isPending}
+                                    sx={{ mt: 1, mr: 1 }}
+                                >
+                                    {t('continue')}
+                                </Button>
+                            </div>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Stack>
+        </form>
     );
 };

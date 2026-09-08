@@ -12,3 +12,6 @@ export interface CategoryFormValues {
     calculation: string;
     params: Record<string, unknown>;
 }
+
+/** Writes part of the form in one go, validated once as a whole */
+export type SetCategoryFormValues = (patch: Partial<CategoryFormValues>) => void;

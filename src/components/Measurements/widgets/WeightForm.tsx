@@ -1,5 +1,5 @@
-import { Button, Stack, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements/models/Category";
+import { Button, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { MeasurementCategory, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measurements/models/Category";
 import { limitsSchema } from "@/components/Measurements/widgets/limitsSchema";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
@@ -10,10 +10,11 @@ import {
 import { weightUnitOf } from "@/components/Measurements/models/bodyWeight";
 import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Measurements/queries/bodyWeight";
 import { useProfileQuery } from "@/components/User";
+import { useAppForm } from "@/core/forms/appForm";
+import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import { WeightUnit } from "@/core/lib/weightUnit";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { EntryDateTimeField } from "@/components/Measurements/widgets/EntryDateTimeField";
-import { Form, Formik } from "formik";
 import { useTranslation } from "react-i18next";
 import * as yup from 'yup';
 
@@ -22,14 +23,38 @@ interface WeightFormProps {
     closeFn?: () => void,
 }
 
-export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
+interface WeightFormValues {
+    // The text field hands over strings, the schema casts them to numbers
+    weight: string,
+    unit: WeightUnit,
+    date: Date | null,
+}
 
+export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
     const categoryQuery = useBodyWeightCategoryQuery();
     const profileQuery = useProfileQuery();
-    const addWeightQuery = useAddMeasurementEntryQuery();
-    const editWeightQuery = useEditMeasurementEntryQuery();
     const displayUnit = useDisplayWeightUnit();
 
+    // Also wait for the profile: the form freezes its default values, and the
+    // unit default falls back to kg while the profile has not loaded yet
+    if (categoryQuery.isLoading || profileQuery.isLoading) {
+        return <LoadingPlaceholder />;
+    }
+
+    return <WeightFormFields
+        category={categoryQuery.data!}
+        displayUnit={displayUnit}
+        weightEntry={weightEntry}
+        closeFn={closeFn}
+    />;
+};
+
+const WeightFormFields = ({ category, displayUnit, weightEntry, closeFn }: WeightFormProps & {
+    category: MeasurementCategory,
+    displayUnit: WeightUnit,
+}) => {
+    const addWeightQuery = useAddMeasurementEntryQuery();
+    const editWeightQuery = useEditMeasurementEntryQuery();
     const [t] = useTranslation();
 
     const validationSchema = yup.object({
@@ -46,89 +71,89 @@ export const WeightForm = ({ weightEntry, closeFn }: WeightFormProps) => {
             }),
     });
 
-    // Also wait for the profile: Formik freezes the initial values, and the
-    // unit default falls back to kg while the profile has not loaded yet
-    if (categoryQuery.isLoading || profileQuery.isLoading) {
-        return <LoadingPlaceholder />;
-    }
+    const initialDate = weightEntry ? weightEntry.date : new Date();
+    const defaultValues: WeightFormValues = {
+        // when editing, show the value in the unit it was entered in
+        weight: String(weightEntry ? weightEntry.value : 0),
+        unit: weightEntry ? weightUnitOf(weightEntry, category.unit) : displayUnit,
+        date: initialDate,
+    };
 
-    const category = categoryQuery.data!;
+    const form = useAppForm({
+        defaultValues,
+        validators: { onChange: yupSchema<WeightFormValues>(validationSchema) },
+        onSubmit: async ({ value }) => {
+            // The schema already refused a null date, this only narrows the type
+            if (value.date === null) {
+                return;
+            }
+            const weight = Number(value.weight);
+
+            // The form closes only once the server took the entry, so a
+            // rejected write is shown instead of disappearing with it
+            const options = { onSuccess: () => closeFn?.() };
+
+            // Edit existing weight entry
+            if (weightEntry) {
+                editWeightQuery.mutate(MeasurementEntry.clone(weightEntry, {
+                    value: weight,
+                    date: value.date,
+                    extraData: weightEntry.extraDataInUnit(value.unit),
+                }), options);
+
+                // Create a new weight entry
+            } else {
+                addWeightQuery.mutate(new MeasurementEntry(
+                    null,
+                    category.id!,
+                    value.date,
+                    weight,
+                    '',
+                    'user',
+                    { unit: value.unit },
+                ), options);
+            }
+        },
+    });
 
     return (
-        (<Formik
-            initialValues={{
-                // when editing, show the value in the unit it was entered in
-                weight: weightEntry ? weightEntry.value : 0,
-                unit: weightEntry ? weightUnitOf(weightEntry, category.unit) : displayUnit,
-                date: weightEntry ? weightEntry.date : new Date(),
-            }}
-            validationSchema={validationSchema}
-            onSubmit={async (values) => {
-                // The form closes only once the server took the entry, so a
-                // rejected write is shown instead of disappearing with it
-                const options = { onSuccess: () => closeFn?.() };
-
-                // Edit existing weight entry
-                if (weightEntry) {
-                    editWeightQuery.mutate(MeasurementEntry.clone(weightEntry, {
-                        value: values.weight,
-                        date: values.date,
-                        extraData: weightEntry.extraDataInUnit(values.unit),
-                    }), options);
-
-                    // Create a new weight entry
-                } else {
-                    addWeightQuery.mutate(new MeasurementEntry(
-                        null,
-                        category.id!,
-                        values.date,
-                        values.weight,
-                        '',
-                        'user',
-                        { unit: values.unit },
-                    ), options);
-                }
-            }}
-        >
-            {formik => (
-                <Form>
-                    <Stack spacing={2}>
-                        <Stack direction="row" spacing={2}>
-                            <TextField
-                                fullWidth
-                                id="weight"
-                                label={t('weight')}
-                                error={formik.touched.weight && Boolean(formik.errors.weight)}
-                                helperText={formik.touched.weight && formik.errors.weight}
-                                slotProps={{ htmlInput: { inputMode: 'decimal' } }}
-                                {...formik.getFieldProps('weight')}
-                            />
+        <form onSubmit={submitHandler(form)}>
+            <Stack spacing={2}>
+                <Stack direction="row" spacing={2}>
+                    <form.AppField name="weight">
+                        {field => <field.WgerTextField
+                            title={t('weight')}
+                            fieldProps={{ slotProps: { htmlInput: { inputMode: 'decimal' } } }}
+                        />}
+                    </form.AppField>
+                    <form.Field name="unit">
+                        {field => (
                             <ToggleButtonGroup
                                 exclusive
-                                value={formik.values.unit}
+                                value={field.state.value}
                                 onChange={(_, newUnit: WeightUnit | null) => {
                                     if (newUnit) {
-                                        formik.setFieldValue('unit', newUnit);
+                                        field.handleChange(newUnit);
                                     }
                                 }}
                             >
                                 <ToggleButton value="kg">{t('server.kg')}</ToggleButton>
                                 <ToggleButton value="lb">{t('server.lb')}</ToggleButton>
                             </ToggleButtonGroup>
-                        </Stack>
+                        )}
+                    </form.Field>
+                </Stack>
 
-                        <EntryDateTimeField
-                            initialDate={weightEntry ? weightEntry.date : new Date()}
-                            onChange={date => formik.setFieldValue('date', date)} />
-                        <FormQueryErrors mutationQuery={weightEntry ? editWeightQuery : addWeightQuery} />
-                        <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
-                            <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
-                                {t('submit')}
-                            </Button>
-                        </Stack>
-                    </Stack>
-                </Form>
-            )}
-        </Formik>)
+                <EntryDateTimeField
+                    initialDate={initialDate}
+                    onChange={date => form.setFieldValue('date', date)} />
+                <FormQueryErrors mutationQuery={weightEntry ? editWeightQuery : addWeightQuery} />
+                <Stack direction="row" sx={{ justifyContent: "end", mt: 2 }}>
+                    <Button color="primary" variant="contained" type="submit" sx={{ mt: 2 }}>
+                        {t('submit')}
+                    </Button>
+                </Stack>
+            </Stack>
+        </form>
     );
 };

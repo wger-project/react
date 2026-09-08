@@ -3,7 +3,7 @@
 // prevent the create-mode form submission. The rest of the suite runs on
 // happy-dom for speed.)
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
@@ -105,13 +105,14 @@ describe("Test the EntryForm component", () => {
         // Assert
         expect(submitButton).toBeInTheDocument();
         await user.click(submitButton);
-        expect(mutate).toHaveBeenCalledWith(new MeasurementEntry(
+        // The submit resolves asynchronously, so the fake clock has to advance first
+        await waitFor(() => expect(mutate).toHaveBeenCalledWith(new MeasurementEntry(
             null,
             TEST_MEASUREMENT_CATEGORY_1.id!,
             fakeNow,
             42.42,
             'The Shiba Inu is a breed of hunting dog from Japan.',
-        ), expect.anything());
+        ), expect.anything()));
 
         vi.useRealTimers();
     });

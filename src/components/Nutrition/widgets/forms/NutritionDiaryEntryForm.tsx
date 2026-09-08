@@ -11,8 +11,9 @@ import {
     useEditDiaryEntryQuery
 } from "@/components/Nutrition/queries";
 import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
+import { useAppForm } from "@/core/forms/appForm";
+import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { Form, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -27,6 +28,13 @@ type NutritionDiaryEntryFormProps = {
     mealId?: string | null,
     meals?: Meal[],
     closeFn?: () => void,
+}
+
+interface DiaryEntryFormValues {
+    datetime: Date | null,
+    // The text field hands over strings, the schema casts them to numbers
+    amount: string,
+    ingredient: number | null,
 }
 
 export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn }: NutritionDiaryEntryFormProps) => {
@@ -82,69 +90,81 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
         }
     };
 
+    const defaultValues: DiaryEntryFormValues = {
+        datetime: entry ? entry.datetime : new Date(),
+        amount: String(entry ? entry.amount : 0),
+        ingredient: entry ? entry.ingredientId : null,
+    };
+
+    const form = useAppForm({
+        defaultValues,
+        validators: { onChange: yupSchema<DiaryEntryFormValues>(validationSchema) },
+        onSubmit: async ({ value }) => {
+            // The schema already refused these, this only narrows the types
+            if (value.datetime === null || value.ingredient === null) {
+                return;
+            }
+
+            // Make sure "amount" is a number
+            const newAmount = Number(value.amount);
+
+            if (entry) {
+                // Edit
+                const newDiaryEntry = DiaryEntry.clone(entry, {
+                    mealId: selectedMeal,
+                    planId: planId,
+                    amount: newAmount,
+                    datetime: value.datetime,
+                    ingredientId: value.ingredient,
+                    ingredient: selectedIngredient,
+                    weightUnitId: selectedUnit?.id ?? null,
+                    weightUnit: selectedUnit,
+                });
+                editDiaryQuery.mutate(newDiaryEntry, closeOnSuccess);
+            } else {
+                // Add
+                addDiaryQuery.mutate(new DiaryEntry({
+                    planId: planId,
+                    amount: newAmount,
+                    datetime: value.datetime,
+                    ingredientId: value.ingredient,
+                    mealId: selectedMeal,
+                    weightUnitId: selectedUnit?.id ?? null,
+                    weightUnit: selectedUnit,
+                }), closeOnSuccess);
+            }
+        },
+    });
+
     return (
-        (<Formik
-            initialValues={{
-                datetime: entry ? entry.datetime : new Date(),
-                amount: entry ? entry.amount : 0,
-                ingredient: entry ? entry.ingredientId : null,
-            }}
-            validationSchema={validationSchema}
-            onSubmit={async (values) => {
-
-                // Make sure "amount" is a number
-                const newAmount = Number(values.amount);
-
-                if (entry) {
-                    // Edit
-                    const newDiaryEntry = DiaryEntry.clone(entry, {
-                        mealId: selectedMeal,
-                        planId: planId,
-                        amount: newAmount,
-                        datetime: values.datetime,
-                        ingredientId: values.ingredient!,
-                        ingredient: selectedIngredient,
-                        weightUnitId: selectedUnit?.id ?? null,
-                        weightUnit: selectedUnit,
-                    });
-                    editDiaryQuery.mutate(newDiaryEntry, closeOnSuccess);
-                } else {
-                    // Add
-                    addDiaryQuery.mutate(new DiaryEntry({
-                        planId: planId,
-                        amount: newAmount,
-                        datetime: values.datetime,
-                        ingredientId: values.ingredient!,
-                        mealId: selectedMeal,
-                        weightUnitId: selectedUnit?.id ?? null,
-                        weightUnit: selectedUnit,
-                    }), closeOnSuccess);
-                }
-            }}
-        >
-            {formik => (
-                <Form>
-                    <Stack spacing={2}>
-                        <IngredientAutocompleter
-                            callback={(value: Ingredient | null) => {
-                                formik.setFieldTouched('ingredient', true);
-                                formik.setFieldValue('ingredient', value?.id ?? null);
-                                setSelectedIngredient(value);
-                                setWeightUnits(value?.weightUnits ?? []);
-                                setSelectedUnit(null);
-                            }}
-                            initialIngredient={entry ? entry.ingredient : null}
+        <form onSubmit={submitHandler(form)}>
+            <Stack spacing={2}>
+                <form.Field name="ingredient">
+                    {field => {
+                        const error = fieldError(field);
+                        return <>
+                            <IngredientAutocompleter
+                                callback={(value: Ingredient | null) => {
+                                    field.handleChange(value?.id ?? null);
+                                    setSelectedIngredient(value);
+                                    setWeightUnits(value?.weightUnits ?? []);
+                                    setSelectedUnit(null);
+                                }}
+                                initialIngredient={entry ? entry.ingredient : null}
                             />
-                            {formik.touched.ingredient && formik.errors.ingredient && (
-                            <div style={{ color: 'crimson', fontSize: '0.7rem', marginLeft: '12px' }}>
-                                {formik.errors.ingredient}
-                            </div>
+                            {error !== undefined && (
+                                <div style={{ color: 'crimson', fontSize: '0.7rem', marginLeft: '12px' }}>
+                                    {error}
+                                </div>
                             )}
-                        <TextField
-                            fullWidth
-                            id="amount"
-                            label={'amount'}
-                            slotProps={{
+                        </>;
+                    }}
+                </form.Field>
+                <form.AppField name="amount">
+                    {field => <field.WgerTextField
+                        title={'amount'}
+                        fieldProps={{
+                            slotProps: {
                                 input: {
                                     endAdornment: (
                                         <InputAdornment position="end">
@@ -171,68 +191,65 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                                     )
                                 },
                                 htmlInput: { inputMode: 'decimal' }
-                            }}
-                            error={formik.touched.amount && Boolean(formik.errors.amount)}
-                            helperText={formik.touched.amount && formik.errors.amount}
-                            {...formik.getFieldProps('amount')}
-                        />
-                        {mealObjs.length > 0 && <Autocomplete
+                            },
+                        }}
+                    />}
+                </form.AppField>
+                {mealObjs.length > 0 && <Autocomplete
+                    value={selectedMeal}
+                    options={mealObjs.map(e => e.id)}
+                    getOptionLabel={option => mealObjs.find(e => e.id === option)!.displayName!}
+                    onChange={(event, newValue) => setSelectedMeal(newValue)}
+                    renderInput={params => (
+                        <TextField
+                            label={t("nutrition.meal")}
                             value={selectedMeal}
-                            options={mealObjs.map(e => e.id)}
-                            getOptionLabel={option => mealObjs.find(e => e.id === option)!.displayName!}
-                            onChange={(event, newValue) => setSelectedMeal(newValue)}
-                            renderInput={params => (
-                                <TextField
-                                    label={t("nutrition.meal")}
-                                    value={selectedMeal}
-                                    {...params}
-                                />
-                            )}
-                        />}
-                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                            {...params}
+                        />
+                    )}
+                />}
+                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
 
-                            <DateTimePicker
-                                format="yyyy-MM-dd HH:mm"
-                                label={t('date')}
-                                value={dateValue}
-                                disableFuture={true}
-                                onChange={(newValue) => {
-                                    formik.setFieldValue('datetime', newValue?.toJSDate());
+                    <DateTimePicker
+                        format="yyyy-MM-dd HH:mm"
+                        label={t('date')}
+                        value={dateValue}
+                        disableFuture={true}
+                        onChange={(newValue) => {
+                            form.setFieldValue('datetime', newValue?.toJSDate() ?? null);
 
-                                    setDateValue(newValue);
-                                }}
-                                shouldDisableDate={(date) => {
+                            setDateValue(newValue);
+                        }}
+                        shouldDisableDate={(date) => {
 
-                                    // Allow the date of the current weight entry, since we are editing it
-                                    // @ts-ignore - date is a Luxon DateTime!
-                                    if (entry && dateToYYYYMMDD(entry.datetime) === dateToYYYYMMDD(date.toJSDate())) {
-                                        return false;
-                                    }
+                            // Allow the date of the current weight entry, since we are editing it
+                            // @ts-ignore - date is a Luxon DateTime!
+                            if (entry && dateToYYYYMMDD(entry.datetime) === dateToYYYYMMDD(date.toJSDate())) {
+                                return false;
+                            }
 
-                                    // all other dates are allowed
-                                    return false;
-                                }}
-                            />
-                        </LocalizationProvider>
-                        <FormQueryErrors mutationQuery={entry ? editDiaryQuery : addDiaryQuery} />
-                        <FormQueryErrors mutationQuery={deleteDiaryQuery} />
-                        <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
-                            {(closeFn !== undefined && entry !== undefined)
-                                && <Button color="error" variant="outlined" onClick={handleDelete}>
-                                    {t('delete')}
-                                </Button>}
+                            // all other dates are allowed
+                            return false;
+                        }}
+                    />
+                </LocalizationProvider>
+                <FormQueryErrors mutationQuery={entry ? editDiaryQuery : addDiaryQuery} />
+                <FormQueryErrors mutationQuery={deleteDiaryQuery} />
+                <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
+                    {(closeFn !== undefined && entry !== undefined)
+                        && <Button color="error" variant="outlined" onClick={handleDelete}>
+                            {t('delete')}
+                        </Button>}
 
-                            {closeFn !== undefined
-                                && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
-                                    {t('close')}
-                                </Button>}
-                            <Button color="primary" variant="contained" type="submit">
-                                {t('submit')}
-                            </Button>
-                        </Stack>
-                    </Stack>
-                </Form>
-            )}
-        </Formik>)
+                    {closeFn !== undefined
+                        && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
+                            {t('close')}
+                        </Button>}
+                    <Button color="primary" variant="contained" type="submit">
+                        {t('submit')}
+                    </Button>
+                </Stack>
+            </Stack>
+        </form>
     );
 };

@@ -100,7 +100,6 @@ export default defineConfig(({ mode }) => {
                             '@emotion/react',
                             '@emotion/styled',
                             'recharts',
-                            'formik',
                             'react-i18next',
                             'react-router-dom',
                             '@tanstack/react-query',

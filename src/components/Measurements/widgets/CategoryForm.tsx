@@ -19,7 +19,7 @@ import {
     useEditMeasurementCategoryQuery
 } from "@/components/Measurements/queries";
 import { CalculationSection } from "@/components/Measurements/widgets/CalculationSection";
-import { CategoryFormValues } from "@/components/Measurements/widgets/categoryFormValues";
+import { CategoryFormValues, SetCategoryFormValues } from "@/components/Measurements/widgets/categoryFormValues";
 import { ChartSettingsFields } from "@/components/Measurements/widgets/ChartSettingsFields";
 import { useCalculationPrefill } from "@/components/Measurements/widgets/useCalculationPrefill";
 import {
@@ -28,8 +28,9 @@ import {
     Stack,
     TextField
 } from "@mui/material";
+import { useAppForm } from "@/core/forms/appForm";
+import { yupSchema, fieldErrorMessage, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { Form, Formik } from "formik";
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from 'yup';
@@ -119,111 +120,116 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
         category !== undefined,
     );
 
-    return (
-        <Formik
-            initialValues={{
-                name: category ? category.name : "",
-                unit: category ? category.unit : "",
-                metricType: category ? category.metricType : 'custom' as MetricType,
-                chartType: category ? category.chartType : 'auto' as ChartType,
-                trend: seededTrend,
-                averageWindow: seededWindow,
-                // the empty string stands in for "no group", MUI selects
-                // don't accept null values
-                parentId: category?.parentId ?? "",
-                calculation: storedCalculation,
-                params: (category?.dynamicParams ?? {}) as Record<string, unknown>,
-            } as CategoryFormValues}
-            validationSchema={validationSchema}
-            onSubmit={async (values) => {
-                const parentId = values.parentId === "" ? null : values.parentId;
+    const defaultValues: CategoryFormValues = {
+        name: category ? category.name : "",
+        unit: category ? category.unit : "",
+        metricType: category ? category.metricType : 'custom' as MetricType,
+        chartType: category ? category.chartType : 'auto' as ChartType,
+        trend: seededTrend,
+        averageWindow: seededWindow,
+        // the empty string stands in for "no group", MUI selects
+        // don't accept null values
+        parentId: category?.parentId ?? "",
+        calculation: storedCalculation,
+        params: (category?.dynamicParams ?? {}) as Record<string, unknown>,
+    };
 
-                /**
-                 * Applies the chart settings the user actually changed.
-                 *
-                 * Only a changed one is written, so renaming a category leaves
-                 * its configuration exactly as it was: a value another client
-                 * wrote and this one does not know reads as the default here,
-                 * and writing that default back would drop it.
-                 */
-                const withSettings = (target: MeasurementCategory): MeasurementCategory => {
-                    let out = target;
-                    if (values.trend !== seededTrend) {
-                        out = out.withChartSetting('trend', values.trend);
-                    }
-                    if (values.averageWindow !== seededWindow) {
-                        out = out.withChartSetting('average_window', values.averageWindow);
-                    }
+    const form = useAppForm({
+        defaultValues,
+        validators: { onChange: yupSchema<CategoryFormValues>(validationSchema) },
+        onSubmit: async ({ value: values }) => {
+            const parentId = values.parentId === "" ? null : values.parentId;
 
-                    return out;
-                };
-
-                // The form closes only once the server took the category, so a
-                // rejected write is shown instead of disappearing with it
-                const options = { onSuccess: () => closeFn?.() };
-
-                // Edit existing category
-                if (category) {
-                    const edited = MeasurementCategory.clone(category, {
-                        name: values.name,
-                        unit: values.unit,
-                        metricType: values.metricType,
-                        chartType: values.chartType,
-                        parentId: parentId,
-                    });
-                    edited.dynamicType = values.calculation;
-                    edited.dynamicParams = values.calculation === CALCULATION_NONE
-                        ? {}
-                        : values.params;
-                    useEditCategoryQuery.mutate(withSettings(edited), options);
-                } else {
-                    useAddCategoryQuery.mutate(withSettings(new MeasurementCategory(
-                        null,
-                        values.name,
-                        values.unit,
-                        values.metricType,
-                        false,
-                        parentId,
-                        0,
-                        values.chartType,
-                        {},
-                        values.calculation,
-                        values.calculation === CALCULATION_NONE ? {} : values.params,
-                    )), options);
+            /**
+             * Applies the chart settings the user actually changed.
+             *
+             * Only a changed one is written, so renaming a category leaves
+             * its configuration exactly as it was: a value another client
+             * wrote and this one does not know reads as the default here,
+             * and writing that default back would drop it.
+             */
+            const withSettings = (target: MeasurementCategory): MeasurementCategory => {
+                let out = target;
+                if (values.trend !== seededTrend) {
+                    out = out.withChartSetting('trend', values.trend);
                 }
-            }}
-        >
-            {formik => (
-                <Form>
+                if (values.averageWindow !== seededWindow) {
+                    out = out.withChartSetting('average_window', values.averageWindow);
+                }
+
+                return out;
+            };
+
+            // The form closes only once the server took the category, so a
+            // rejected write is shown instead of disappearing with it
+            const options = { onSuccess: () => closeFn?.() };
+
+            // Edit existing category
+            if (category) {
+                const edited = MeasurementCategory.clone(category, {
+                    name: values.name,
+                    unit: values.unit,
+                    metricType: values.metricType,
+                    chartType: values.chartType,
+                    parentId: parentId,
+                });
+                edited.dynamicType = values.calculation;
+                edited.dynamicParams = values.calculation === CALCULATION_NONE
+                    ? {}
+                    : values.params;
+                useEditCategoryQuery.mutate(withSettings(edited), options);
+            } else {
+                useAddCategoryQuery.mutate(withSettings(new MeasurementCategory(
+                    null,
+                    values.name,
+                    values.unit,
+                    values.metricType,
+                    false,
+                    parentId,
+                    0,
+                    values.chartType,
+                    {},
+                    values.calculation,
+                    values.calculation === CALCULATION_NONE ? {} : values.params,
+                )), options);
+            }
+        },
+    });
+
+    // One validation for the whole patch: each field on its own would check
+    // the new parameters against the calculation before them
+    const setValues: SetCategoryFormValues = (patch) => {
+        for (const key of Object.keys(patch) as Array<keyof CategoryFormValues>) {
+            const value = patch[key];
+            if (value !== undefined) {
+                form.setFieldValue(key, value, { dontValidate: true });
+            }
+        }
+        form.validate('change');
+    };
+
+    return (
+        <form onSubmit={submitHandler(form)}>
+            <form.Subscribe selector={state => ({
+                values: state.values,
+                submissionAttempts: state.submissionAttempts,
+                paramsErrors: state.fieldMeta.params?.errors,
+            })}>
+                {({ values, submissionAttempts, paramsErrors }) => (
                     <Stack spacing={2}>
-                        {isCustom && <TextField
-                            fullWidth
-                            id="name"
-                            label={t('name')}
-                            error={formik.touched.name && Boolean(formik.errors.name)}
-                            helperText={formik.touched.name && formik.errors.name}
-                            {...formik.getFieldProps('name')}
-                            onChange={event => {
-                                markNameEdited();
-                                formik.handleChange(event);
-                            }}
-                        />}
-                        {isCustom && <TextField
-                            fullWidth
-                            id="unit"
-                            label={t('unit')}
-                            error={formik.touched.unit && Boolean(formik.errors.unit)}
-                            helperText={
-                                formik.touched.unit && formik.errors.unit
-                                    ? formik.errors.unit
-                                    : t('measurements.unitFormHelpText')
-                            }
-                            {...formik.getFieldProps('unit')}
-                            onChange={event => {
-                                markUnitEdited();
-                                formik.handleChange(event);
-                            }}
-                        />}
+                        {isCustom && <form.AppField name="name">
+                            {field => <field.WgerTextField
+                                title={t('name')}
+                                onValueChange={markNameEdited}
+                            />}
+                        </form.AppField>}
+                        {isCustom && <form.AppField name="unit">
+                            {field => <field.WgerTextField
+                                title={t('unit')}
+                                helperText={t('measurements.unitFormHelpText')}
+                                onValueChange={markUnitEdited}
+                            />}
+                        </form.AppField>}
                         {/* What a category computes is set when it is created:
                           * the server refuses a change afterwards, so an
                           * existing one only shows what it already does */}
@@ -232,30 +238,42 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             && <CalculationSection
                                 category={category}
                                 categories={allCategories}
-                                onPick={(type?: CalculationType) => pickCalculation(formik, type)}
+                                values={values}
+                                // Only once sent: incomplete is the normal state while typing
+                                paramsError={submissionAttempts > 0
+                                    ? fieldErrorMessage(paramsErrors ?? [])
+                                    : undefined}
+                                onPick={(type?: CalculationType) => pickCalculation({ setValues }, type)}
+                                onManual={() => setValues({ calculation: CALCULATION_NONE })}
+                                onParamsChange={params => setValues({ params })}
                             />}
                         {/* The metric type is picked when the category is
                           * created (see NewCategoryPicker) and fixed from then
                           * on: the key of a typed category is derived from it,
                           * and the server refuses a change
                           */}
-                        <ChartSettingsFields hasChildren={hasChildren} />
-                        {!hasChildren && formik.values.metricType === 'custom'
+                        <ChartSettingsFields hasChildren={hasChildren} values={values} onChange={setValues} />
+                        {!hasChildren && values.metricType === 'custom'
                             && parentCandidates.length > 0 &&
-                            <TextField
-                                select
-                                fullWidth
-                                id="parentId"
-                                label={t('measurements.partOfGroup')}
-                                {...formik.getFieldProps('parentId')}
-                            >
-                                <MenuItem value="">{t('measurements.noGroup')}</MenuItem>
-                                {parentCandidates.map(candidate =>
-                                    <MenuItem key={candidate.id} value={candidate.id!}>
-                                        {candidate.name}
-                                    </MenuItem>
-                                )}
-                            </TextField>
+                            <form.Field name="parentId">
+                                {field => <TextField
+                                    select
+                                    fullWidth
+                                    id="parentId"
+                                    name={field.name}
+                                    label={t('measurements.partOfGroup')}
+                                    value={field.state.value}
+                                    onChange={event => field.handleChange(event.target.value)}
+                                    onBlur={field.handleBlur}
+                                >
+                                    <MenuItem value="">{t('measurements.noGroup')}</MenuItem>
+                                    {parentCandidates.map(candidate =>
+                                        <MenuItem key={candidate.id} value={candidate.id!}>
+                                            {candidate.name}
+                                        </MenuItem>
+                                    )}
+                                </TextField>}
+                            </form.Field>
                         }
                         <FormQueryErrors
                             mutationQuery={category ? useEditCategoryQuery : useAddCategoryQuery} />
@@ -265,8 +283,8 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
                             </Button>
                         </Stack>
                     </Stack>
-                </Form>
-            )}
-        </Formik>
+                )}
+            </form.Subscribe>
+        </form>
     );
 };

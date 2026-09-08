@@ -155,4 +155,45 @@ describe('SessionLogsForm', () => {
         // Assert
         expect(screen.queryByText('Squats')).not.toBeInTheDocument();
     });
+
+    test('removing a single set drops just that log', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act: the first delete icon belongs to the exercise, the second to its first set
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
+        />);
+        await user.click(screen.getAllByTestId('DeleteOutlinedIcon')[1]);
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        // Assert
+        expect(screen.getByText('Squats')).toBeInTheDocument();
+        expect(mockMutateAsync.mock.calls[0][0].length).toEqual(3);
+    });
+
+    test('a weight that is not a number shows the error and blocks the submit', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
+        />);
+        const weightInput = screen.getAllByRole('textbox').filter(input => (input as HTMLInputElement).value === '20')[0];
+        await user.clear(weightInput);
+        await user.type(weightInput, 'heavy');
+        await user.tab();
+
+        // Assert
+        expect(await screen.findByText('forms.enterNumber')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /submit/i })).toBeDisabled();
+        expect(mockMutateAsync).not.toHaveBeenCalled();
+    });
 });

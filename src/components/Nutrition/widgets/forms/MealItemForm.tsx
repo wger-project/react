@@ -1,4 +1,4 @@
-import { Button, InputAdornment, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { Button, InputAdornment, MenuItem, Select, Stack } from "@mui/material";
 import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
@@ -8,8 +8,9 @@ import {
     useEditMealItemQuery,
 } from "@/components/Nutrition/queries";
 import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
+import { useAppForm } from "@/core/forms/appForm";
+import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { Form, Formik } from "formik";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
@@ -19,6 +20,12 @@ const GRAM_UNIT_VALUE = 'g';
 type MealItemFormProps =
     | { planId: string; item: MealItem; closeFn?: () => void; mealId?: string }
     | { planId: string; mealId: string; item?: undefined; closeFn?: () => void };
+
+interface MealItemFormValues {
+    // The text field hands over strings, the schema casts them to numbers
+    amount: string,
+    ingredient: number | null,
+}
 
 export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProps) => {
 
@@ -63,58 +70,64 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
         }
     };
 
+    const defaultValues: MealItemFormValues = {
+        amount: String(item ? item.amount : 0),
+        ingredient: item ? item.ingredientId : null,
+    };
+
+    const form = useAppForm({
+        defaultValues,
+        validators: { onChange: yupSchema<MealItemFormValues>(validationSchema) },
+        onSubmit: async ({ value }) => {
+            // The schema already refused a missing ingredient, this only narrows the type
+            if (value.ingredient === null) {
+                return;
+            }
+
+            // Just to make sure we get a number
+            const newAmount = Math.round(Number(value.amount));
+
+            if (item) {
+                // Edit
+                const newMealItem = MealItem.clone(item, {
+                    amount: newAmount,
+                    ingredientId: value.ingredient,
+                    ingredient: selectedIngredient,
+                    weightUnitId: selectedUnit?.id ?? null,
+                    weightUnit: selectedUnit,
+                });
+                editMealItemQuery.mutate(newMealItem, closeOnSuccess);
+            } else {
+                // Add
+                addMealItemQuery.mutate(new MealItem({
+                    mealId: mealId!,
+                    amount: newAmount,
+                    ingredientId: value.ingredient,
+                    weightUnitId: selectedUnit?.id ?? null,
+                    weightUnit: selectedUnit,
+                    order: 1,
+                }), closeOnSuccess);
+            }
+        },
+    });
+
     return (
-        <Formik
-            initialValues={{
-                amount: item ? item.amount : 0,
-                ingredient: item ? item.ingredientId : 0,
-            }}
-            validationSchema={validationSchema}
-            onSubmit={async (values) => {
-
-                // Just to make sure we get a number
-                const newAmount = Math.round(values.amount);
-
-                if (item) {
-                    // Edit
-                    const newMealItem = MealItem.clone(item, {
-                        amount: newAmount,
-                        ingredientId: values.ingredient,
-                        ingredient: selectedIngredient,
-                        weightUnitId: selectedUnit?.id ?? null,
-                        weightUnit: selectedUnit,
-                    });
-                    editMealItemQuery.mutate(newMealItem, closeOnSuccess);
-                } else {
-                    // Add
-                    addMealItemQuery.mutate(new MealItem({
-                        mealId: mealId!,
-                        amount: newAmount,
-                        ingredientId: values.ingredient,
-                        weightUnitId: selectedUnit?.id ?? null,
-                        weightUnit: selectedUnit,
-                        order: 1,
-                    }), closeOnSuccess);
-                }
-            }}
-        >
-            {formik => (
-                <Form>
-                    <Stack spacing={2}>
-                        <IngredientAutocompleter
-                            callback={(value: Ingredient | null) => {
-                                formik.setFieldValue('ingredient', value ? value.id : null);
-                                setSelectedIngredient(value);
-                                setWeightUnits(value?.weightUnits ?? []);
-                                setSelectedUnit(null);
-                            }}
-                            initialIngredient={item ? item.ingredient : null}
-                        />
-                        <TextField
-                            fullWidth
-                            id="amount"
-                            label={'amount'}
-                            slotProps={{
+        <form onSubmit={submitHandler(form)}>
+            <Stack spacing={2}>
+                <IngredientAutocompleter
+                    callback={(value: Ingredient | null) => {
+                        form.setFieldValue('ingredient', value ? value.id : null);
+                        setSelectedIngredient(value);
+                        setWeightUnits(value?.weightUnits ?? []);
+                        setSelectedUnit(null);
+                    }}
+                    initialIngredient={item ? item.ingredient : null}
+                />
+                <form.AppField name="amount">
+                    {field => <field.WgerTextField
+                        title={'amount'}
+                        fieldProps={{
+                            slotProps: {
                                 input: {
                                     endAdornment: (
                                         <InputAdornment position="end">
@@ -141,32 +154,29 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                                     )
                                 },
                                 htmlInput: { inputMode: 'decimal' }
-                            }}
-                            error={formik.touched.amount && Boolean(formik.errors.amount)}
-                            helperText={formik.touched.amount && formik.errors.amount}
-                            {...formik.getFieldProps('amount')}
-                        />
+                            },
+                        }}
+                    />}
+                </form.AppField>
 
-                        <FormQueryErrors mutationQuery={item ? editMealItemQuery : addMealItemQuery} />
-                        <FormQueryErrors mutationQuery={deleteMealItemQuery} />
-                        <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
-                            {(closeFn !== undefined && item !== undefined)
-                                && <Button color="error" variant="outlined" onClick={handleDelete}>
-                                    {t('delete')}
-                                </Button>}
+                <FormQueryErrors mutationQuery={item ? editMealItemQuery : addMealItemQuery} />
+                <FormQueryErrors mutationQuery={deleteMealItemQuery} />
+                <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
+                    {(closeFn !== undefined && item !== undefined)
+                        && <Button color="error" variant="outlined" onClick={handleDelete}>
+                            {t('delete')}
+                        </Button>}
 
-                            {closeFn !== undefined
-                                && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
-                                    {t('close')}
-                                </Button>}
+                    {closeFn !== undefined
+                        && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
+                            {t('close')}
+                        </Button>}
 
-                            <Button color="primary" variant="contained" type="submit">
-                                {t('submit')}
-                            </Button>
-                        </Stack>
-                    </Stack>
-                </Form>
-            )}
-        </Formik>
+                    <Button color="primary" variant="contained" type="submit">
+                        {t('submit')}
+                    </Button>
+                </Stack>
+            </Stack>
+        </form>
     );
 };
