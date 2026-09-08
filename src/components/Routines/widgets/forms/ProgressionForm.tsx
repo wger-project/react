@@ -274,8 +274,8 @@ const ProgressionFields = (props: ProgressionFormProps & {
                                                         form.setFieldValue(`entries[${index}].allSets`, allSets);
                                                     }}
                                                 />}
-                                            {log.requirements.length >= 0 && <br />}
-                                            {log.requirements.length >= 0 && log.requirements.map((requirement) => (
+                                            <br />
+                                            {log.requirements.map((requirement) => (
                                                 <Typography key={requirement} variant={'caption'}>
                                                     {t(`routines.requirementRules.${requirement}`)} &nbsp;
                                                 </Typography>

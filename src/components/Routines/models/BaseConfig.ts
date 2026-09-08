@@ -18,7 +18,6 @@ export interface BaseConfigEntryForm {
     step: StepType;
     stepMax: StepType;
     requirements: RequirementsType[];
-    requirementsMax: RequirementsType[];
     allSets: boolean;
     repeat: boolean;
     repeatMax: boolean;
