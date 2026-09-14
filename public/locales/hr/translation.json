@@ -247,7 +247,11 @@
         "addSet": "Dodaj seriju",
         "setNr": "Serija {{number}}",
         "iterationNr": "{{number}}. ponavljanje",
-        "exerciseNotAvailable": "Greška prilikom učitavanja vježbe"
+        "exerciseNotAvailable": "Greška prilikom učitavanja vježbe",
+        "otherLoggedExercises": "Ostale zapisane vježbe",
+        "multipleSessions": "Tog dana je zabilježeno više sesija. Odaberi sesiju koju želiš urediti",
+        "newSession": "Nova sesija",
+        "changeSession": "Odaberi jednu drugu sesiju"
     },
     "preferences": "Postavke",
     "notes": "Bilješke",
@@ -258,7 +262,32 @@
     "measurements": {
         "measurements": "Mjerenja",
         "unitFormHelpText": "Jedinica za mjerenje kategorije, npr. cm ili %",
-        "deleteInfo": "Ovo će izbrisati kategoriju kao i sve njezine unose"
+        "deleteInfo": "Ovo će izbrisati kategoriju kao i sve njezine unose",
+        "reorderCategories": "Promijeni redoslijed kategorija",
+        "metricTypes": {
+            "custom": "Prilagođeno",
+            "body_weight": "Tjelesna težina"
+        },
+        "deleteInfoGroup": "Ovim će se izbrisati grupa kao i sve njezine komponente i njihovi unosi",
+        "metricType": "Vrsta metrike",
+        "chartType": "Vrsta dijagrama",
+        "chartTypes": {
+            "auto": "Automatski",
+            "line": "Linija",
+            "bar": "Stupci",
+            "delta": "Promjena"
+        },
+        "chartTrend": "Linija trenda",
+        "trends": {
+            "reactive": "Reaktivno",
+            "balanced": "Uravnoteženo",
+            "sluggish": "Izglađeno"
+        },
+        "chartAverageWindowDays_one": "1 dan",
+        "chartAverageWindowDays_other": "{{count}} dana",
+        "distributionDayCount_other": "{{count}} dana",
+        "distributionMedian": "Medijan",
+        "chartAverageWindow": "Prosjek za"
     },
     "deleteConfirmation": "Stvarno želiš izbrisati „{{name}}”?",
     "nutrition": {
@@ -385,5 +414,6 @@
     "currentTrend": "Trenutačni trend",
     "mean": "Srednja vrijednost",
     "trend": "Trend",
-    "variance": "Varijacija"
+    "variance": "Varijacija",
+    "syncedEntryInfo": "Ovaj je unos sinkroniziran iz aplikacije o zdravlju te se može mijenjati isključivo ondje"
 }
