@@ -293,7 +293,9 @@
             "auto": "Automatski",
             "line": "Linija",
             "bar": "Stupci",
-            "delta": "Promjena"
+            "delta": "Promjena",
+            "heatmap": "Toplinska karta",
+            "distribution": "Distribucija"
         },
         "chartTrend": "Linija trenda",
         "trends": {
@@ -322,8 +324,14 @@
         "calculations": {
             "paramsHelp": {
                 "exercise_ids": "Između {{min}} i {{max}} vježbi, odabrano je {count}."
-            }
-        }
+            },
+            "sourceManual": "Ručno upisano",
+            "sourceCalculated": "Izračunato od aplikacije wger",
+            "badge": "Izračunato"
+        },
+        "chartRangeWeeks_one": "1 tjedan",
+        "chartRangeYears_one": "1 godina",
+        "categoryFormHelpText": "Kategorija mjerenja, kao što su „bicepsi” ili „tjelesna mast”"
     },
     "deleteConfirmation": "Stvarno želiš izbrisati „{{name}}”?",
     "nutrition": {
