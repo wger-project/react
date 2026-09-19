@@ -33,8 +33,18 @@ export const BodyWeight = (props: { planPeriods?: PlanPeriod[] }) => {
         return <LoadingPlaceholder />;
     }
 
+    // No official category yet: show the empty state (the FAB creates one)
+    // instead of dereferencing a null category below.
+    if (!categoryQuery.data) {
+        return <WgerContainerRightSidebar
+            title={t("weight")}
+            mainContent={<OverviewEmpty />}
+            fab={<AddBodyWeightEntryFab />}
+        />;
+    }
+
     // Entries without their own unit fall back to the one of the category
-    const categoryUnit = categoryQuery.data!.unit;
+    const categoryUnit = categoryQuery.data.unit;
 
     // The range as it is labelled: the lead the chart averages over is not part
     // of it, and the table would list those rows as if they were

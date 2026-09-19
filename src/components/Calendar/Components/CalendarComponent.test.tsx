@@ -228,6 +228,23 @@ describe('CalendarComponent', () => {
         expect(await screen.findByText('70.0 server.kg')).toBeInTheDocument();
     });
 
+    test('still renders the detail panel when the official body weight category is missing', async () => {
+        // Before the fix the body weight query threw and, gated behind isSuccess,
+        // hung the whole calendar on its spinner.
+        (getBodyWeightCategory as Mock).mockImplementation(() => Promise.resolve(null));
+
+        renderComponent();
+
+        const day = await screen.findByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 1))}`);
+        await user.click(day);
+        await user.click(await screen.findByText('measurements.measurements'));
+
+        // The panel rendered its content rather than staying on the spinner
+        expect(await screen.findByText('Body Fat')).toBeInTheDocument();
+        // getWeights is skipped entirely when there is no category to read from
+        expect(getWeights).not.toHaveBeenCalled();
+    });
+
     test('reads the month as the instants it spans in the browser timezone', async () => {
         const start = new Date(currentYear, currentMonth, 1).toISOString();
         const end = new Date(currentYear, currentMonth + 1, 1).toISOString();

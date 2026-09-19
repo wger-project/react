@@ -10,11 +10,13 @@ import { ApiMeasurementCategoryType } from '@/types';
 import axios from 'axios';
 
 /*
- * Fetch the user's official body weight category
- *
- * The server guarantees that every user has exactly one
+ * Fetch the user's official body weight category, or null if they have none
+ * yet. It is created lazily, so fixture-created accounts (the signal is
+ * @disable_for_loaddata) can lack it; null lets callers treat that as "no body
+ * weight" instead of throwing. null, not undefined, as this resolves a
+ * react-query query. A request failure still rejects through axios.
  */
-export const getBodyWeightCategory = async (): Promise<MeasurementCategory> => {
+export const getBodyWeightCategory = async (): Promise<MeasurementCategory | null> => {
     const url = makeUrl(API_MEASUREMENTS_CATEGORY_PATH, {
         query: { metric_type: METRIC_TYPE_BODY_WEIGHT, is_official: 'true' }
     });
@@ -22,10 +24,8 @@ export const getBodyWeightCategory = async (): Promise<MeasurementCategory> => {
         headers: makeHeader(),
     });
 
-    // The server guarantees the category exists; still fail with a clear
-    // message instead of a TypeError should that ever break
     if (data.results.length === 0) {
-        throw new Error('No official body weight category found');
+        return null;
     }
 
     return MeasurementCategory.fromJson(data.results[0]);
