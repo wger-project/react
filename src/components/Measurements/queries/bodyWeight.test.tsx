@@ -46,6 +46,21 @@ describe("body weight queries", () => {
         (deleteMeasurementEntry as Mock).mockResolvedValue(undefined);
     });
 
+    test('resolves to an empty history when the category is missing', async () => {
+
+        (getBodyWeightCategory as Mock).mockResolvedValue(null);
+
+        const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+        const wrapper = ({ children }: { children: React.ReactNode }) =>
+            <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+
+        const { result } = renderHook(() => useBodyWeightQuery(), { wrapper });
+
+        await waitFor(() => expect(result.current.isSuccess).toBe(true));
+        expect(result.current.data).toEqual([]);
+        expect(getWeights).not.toHaveBeenCalled();
+    });
+
     // Body weight rows are measurement rows, so a write through the measurement
     // mutations has to refresh the weight view as well
     test.each(entryMutations)('an entry %s invalidates the body weight view', async (_name, useWrite) => {

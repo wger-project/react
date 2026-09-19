@@ -55,6 +55,10 @@ export function useBodyWeightQuery(filtersetQueryEntries: object = {}) {
         queryKey: [QueryKey.MEASUREMENT_ENTRIES, OFFICIAL_BODY_WEIGHT, filtersetQueryEntries],
         queryFn: async () => {
             const category = await queryClient.ensureQueryData(bodyWeightCategoryQueryOptions);
+            // No category yet: no entries to read (see getBodyWeightCategory).
+            if (category === null) {
+                return [];
+            }
             return getWeights(category, filtersetQueryEntries);
         },
         // Widening the range refetches, and the chart would otherwise drop
