@@ -54,7 +54,7 @@ describe('ExerciseLog', () => {
             />
         );
 
-        await user.click(screen.getAllByRole('menuitem', { name: /delete/i })[0]);
+        await user.click(screen.getAllByRole('button', { name: /delete/i })[0]);
         expect(mockDeleteMutate).toHaveBeenCalledWith('aaaaaaaa-aaaa-aaaa-aaaa-000000000005');
         expect(mockEditMutate).not.toHaveBeenCalled();
 
@@ -69,8 +69,8 @@ describe('ExerciseLog', () => {
             />
         );
 
-        await user.click(screen.getAllByRole('menuitem', { name: /edit/i })[0]);
-        await user.click(screen.getAllByRole('menuitem', { name: /save/i })[0]);
+        await user.click(screen.getAllByRole('button', { name: /edit/i })[0]);
+        await user.click(screen.getAllByRole('button', { name: /save/i })[0]);
 
         expect(mockDeleteMutate).not.toHaveBeenCalled();
         expect(mockEditMutate).toHaveBeenCalled();
