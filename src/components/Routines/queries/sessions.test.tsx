@@ -115,7 +115,7 @@ describe("session queries", () => {
 
         const { result } = renderHook(
             () => ({
-                search: useFindSessionsQuery(testWorkoutSession.routineId, { day: testWorkoutSession.dayId }),
+                search: useFindSessionsQuery(testWorkoutSession.routineId!, { day: testWorkoutSession.dayId }),
                 write: useWrite(),
             }),
             { wrapper }

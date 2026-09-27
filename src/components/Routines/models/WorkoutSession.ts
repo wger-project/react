@@ -11,8 +11,8 @@ export const IMPRESSION_GOOD = '3' as const;
 
 interface WorkoutSessionParams {
     id: string | null;
-    dayId: number;
-    routineId: number;
+    dayId: number | null;
+    routineId: number | null;
     datetimeStart: Date;
     datetimeEnd: Date | null;
     notes: string | null;
@@ -24,8 +24,8 @@ interface WorkoutSessionParams {
 export class WorkoutSession {
 
     id: string | null;
-    dayId: number;
-    routineId: number;
+    dayId: number | null;
+    routineId: number | null;
     datetimeStart: Date;
     datetimeEnd: Date | null;
     notes: string | null;
@@ -83,8 +83,8 @@ export class WorkoutSessionAdapter implements Adapter<WorkoutSession> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson = (item: any) => new WorkoutSession({
         id: item.id,
-        dayId: item.day!,
-        routineId: item.routine!,
+        dayId: item.day ?? null,
+        routineId: item.routine ?? null,
         datetimeStart: new Date(item.datetime_start),
         datetimeEnd: item.datetime_end ? new Date(item.datetime_end) : null,
         notes: item.notes !== undefined ? item.notes : null,
