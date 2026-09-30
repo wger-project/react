@@ -311,12 +311,17 @@
             "edt": "Trening s povečevanjem gostote",
             "rft": "Krogi za čas",
             "afap": "Kakor hitro je mogoče"
-        }
+        },
+        "otherLoggedExercises": "Ostale zabeležene vaje",
+        "multipleSessions": "Večkot ena seja je bila zabelež na ta dan, izberi eno za urejevanje",
+        "newSession": "Nova seja",
+        "changeSession": "Izberi drugo sejo"
     },
     "measurements": {
         "measurements": "Meritve",
         "unitFormHelpText": "Enota, v kateri se bo kategorija merila, na primer cm ali %",
-        "deleteInfo": "S tem boste izbrisali kategorijo in vse njene vnose"
+        "deleteInfo": "S tem boste izbrisali kategorijo in vse njene vnose",
+        "reorderCategories": "Preuredi kategorije"
     },
     "server": {
         "abs": "Trebušne mišice",
@@ -380,5 +385,6 @@
     "variance": "Varianca",
     "totalChange": "Skupna sprememba",
     "private": "Zasebno",
-    "public": "Javno"
+    "public": "Javno",
+    "syncedEntryInfo": "Ta vnos je bil sinhroniziran iz aplikacije za zdravje in je lahko spremenjen samo tam"
 }
