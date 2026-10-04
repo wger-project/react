@@ -202,7 +202,16 @@
         "step": "Schritt",
         "requirements": "Voraussetzungen",
         "repeat": "Wiederhole Regel",
-        "requirementsHelpText": "Wähle das Trainingsergebnis (aus einem vorherigen Eintrag), welcher erreicht werden muss, damit die Regel auslöst",
+        "requirementsHelpText": "Wähle die Trainingsergebnisse (aus vorherigen Einträgen), die erreicht werden müssen, damit die Regel auslöst. Die Regeln vergleichen mit dem geplanten Wert, die Varianten \"obere Grenze\" mit dem geplanten Maximum. Für eine doppelte Progression koppelst du das Gewicht an \"Wiederholungen (obere Grenze)\" und verlangst alle Sätze.",
+        "requirementRules": {
+            "weight": "Gewicht",
+            "repetitions": "Wiederholungen",
+            "rir": "RiR",
+            "rest": "Pausenzeit",
+            "max_repetitions": "Wiederholungen (obere Grenze)",
+            "max_weight": "Gewicht (obere Grenze)"
+        },
+        "requirementsAllSets": "Alle Sätze müssen die Regeln erfüllen",
         "markAsTemplate": "Verwalte Vorlage",
         "template": "Vorlage",
         "templates": "Vorlagen",

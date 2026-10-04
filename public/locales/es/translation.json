@@ -146,7 +146,7 @@
     "noResults": "Sin resultados",
     "success": "¡Éxito!",
     "routines": {
-        "rir": "Repeticiones",
+        "rir": "RiR",
         "addDay": "Añadir un día de entrenamiento",
         "addWeightLog": "Añadir un registro para el entrenamiento",
         "addLogToDay": "Añadir un registro a este día",
@@ -230,7 +230,16 @@
         "repeatHelpText": "Compruebe la casilla de verificación si desea que esta regla se siga aplicando a ejercicios posteriores hasta que defina una nueva",
         "templatesHelpText": "Las plantillas son una manera de guardar su rutina para uso posterior y como punto de partida para futuras rutinas. No puedes editar plantillas, pero puedes duplicarlas y hacer cambios en la copia (así como convertirlas en una rutina regular, por supuesto).",
         "workoutSession": "Sesión de entrenamiento",
-        "requirementsHelpText": "Seleccione los resultados de entrenamiento (de registros anteriores) que deben cumplirse para que esta regla surta efecto",
+        "requirementsHelpText": "Seleccione los resultados de entrenamiento (de registros anteriores) que deben cumplirse para que esta regla surta efecto. Las reglas comparan con el valor planificado, las variantes \"límite superior\" con el máximo planificado. Para una progresión doble, condicione el peso a \"Repeticiones (límite superior)\" y exija todas las series.",
+        "requirementRules": {
+            "weight": "Peso",
+            "repetitions": "Repeticiones",
+            "rir": "RiR",
+            "rest": "Descanso",
+            "max_repetitions": "Repeticiones (límite superior)",
+            "max_weight": "Peso (límite superior)"
+        },
+        "requirementsAllSets": "Todas las series deben cumplir las reglas",
         "template": "Plantilla",
         "templates": "Plantillas",
         "publicTemplate": "Plantilla pública",

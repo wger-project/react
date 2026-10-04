@@ -15,6 +15,7 @@ export interface AddBaseConfigParams {
     iteration?: number;
     operation?: OperationType;
     step?: StepType;
+    repeat?: boolean;
     requirements?: RuleRequirements;
 }
 

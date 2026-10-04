@@ -217,7 +217,16 @@
         "impressionHelpText": "Ce formulaire enregistre vos résultats d'entraînement (répétitions, poids, etc.) pour chaque exercice. Les modifications que vous effectuez ici, comme la suppression ou le remplacement d'exercices, n'affectent que les journaux spécifiques que vous enregistrez et ne modifient pas votre routine globale. Seules les lignes contenant des valeurs de poids ou de répétitions sont enregistrées.",
         "operation": "Opération",
         "step": "Étape",
-        "requirementsHelpText": "Sélectionnez les résultats d'entraînement (à partir des journaux précédents) qui doivent être atteints pour que cette règle prenne effet",
+        "requirementsHelpText": "Sélectionnez les résultats d'entraînement (à partir des journaux précédents) qui doivent être atteints pour que cette règle prenne effet. Les règles comparent avec la valeur prévue, les variantes \"limite haute\" avec le maximum prévu. Pour une double progression, conditionnez le poids à \"Répétitions (limite haute)\" et exigez toutes les séries.",
+        "requirementRules": {
+            "weight": "Poids",
+            "repetitions": "Répétitions",
+            "rir": "ReR",
+            "rest": "Temps de repos",
+            "max_repetitions": "Répétitions (limite haute)",
+            "max_weight": "Poids (limite haute)"
+        },
+        "requirementsAllSets": "Toutes les séries doivent remplir les règles",
         "requirements": "Exigences",
         "repeat": "Répéter la règle",
         "template": "Modèle",

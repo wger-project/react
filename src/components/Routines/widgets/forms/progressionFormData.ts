@@ -7,7 +7,9 @@ import {
     BaseConfig,
     BaseConfigEntryForm,
     OPERATION_REPLACE,
-    REQUIREMENTS_VALUES
+    REQUIREMENTS_VALUES,
+    RuleRequirements,
+    StepType
 } from "@/components/Routines/models/BaseConfig";
 import { ApiPath } from "@/core/lib/consts";
 import { TFunction } from "i18next";
@@ -32,7 +34,7 @@ export const emptyEntry = (iteration: number, edited: boolean, forceInteger: boo
     step: "abs",
     stepMax: "abs",
     requirements: [],
-    requirementsMax: [],
+    allSets: false,
     repeat: false,
     repeatMax: false,
 });
@@ -65,7 +67,7 @@ export function progressionEntries(
             step: config.step,
             stepMax: configMax === undefined ? "abs" : configMax.step,
             requirements: config.requirements?.rules ?? [],
-            requirementsMax: configMax === undefined ? [] : configMax.requirements?.rules ?? [],
+            allSets: config.requirements?.all_sets ?? false,
             repeat: config.repeat,
             repeatMax: configMax === undefined ? false : config.repeat,
         };
@@ -103,7 +105,7 @@ export const progressionSchema = (t: TFunction) => yup.object({
             operation: yup.string().required(),
             operationMax: yup.string().required(),
             requirements: yup.array().of(yup.string().oneOf(REQUIREMENTS_VALUES)),
-            requirementsMax: yup.array().of(yup.string().oneOf(REQUIREMENTS_VALUES)),
+            allSets: yup.boolean(),
             repeat: yup.boolean(),
             repeatMax: yup.boolean()
         })
@@ -155,6 +157,13 @@ export const progressionSchema = (t: TFunction) => yup.object({
     ,
 });
 
+/** The requirements of a form row as the API expects them */
+const requirementsPayload = (entry: BaseConfigEntryForm): RuleRequirements => ({
+    rules: entry.requirements ?? [],
+    // eslint-disable-next-line camelcase
+    all_sets: entry.allSets,
+});
+
 interface PayloadContext {
     slotEntryId: number,
     configs: BaseConfig[],
@@ -173,28 +182,26 @@ export function progressionPayload(
     // Remove empty entries
     const data = entries.filter(e => e.edited);
 
+    // The min and max configs share operation, repeat and requirements, only
+    // the value (and the step of a new max config) differ
+    const params = (entry: BaseConfigEntryForm, value: number | string, step: StepType): AddBaseConfigParams => ({
+        // eslint-disable-next-line camelcase
+        slot_entry: slotEntryId,
+        value: value as number,
+        iteration: entry.iteration,
+        operation: entry.operation,
+        step: step,
+        repeat: entry.repeat,
+        requirements: requirementsPayload(entry),
+    });
+
     // Split between min and max values
-    const editList: EditBaseConfigParams[] = data.filter(data => data.id !== null).map(data => ({
-        id: data.id!,
-        // eslint-disable-next-line camelcase
-        slot_entry: slotEntryId,
-        value: data.value as number,
-        iteration: data.iteration,
-        operation: data.operation,
-        step: data.step,
-        repeat: data.repeat,
-        requirements: { rules: data.requirements ?? [] }
-    }));
-    const addList: AddBaseConfigParams[] = data.filter(data => data.id === null && data.value !== '').map(data => ({
-        // eslint-disable-next-line camelcase
-        slot_entry: slotEntryId,
-        value: data.value as number,
-        iteration: data.iteration,
-        operation: data.operation,
-        step: data.step,
-        repeat: data.repeat,
-        requirements: { rules: data.requirements ?? [] }
-    }));
+    const editList: EditBaseConfigParams[] = data
+        .filter(data => data.id !== null)
+        .map(data => ({ id: data.id!, ...params(data, data.value, data.step) }));
+    const addList: AddBaseConfigParams[] = data
+        .filter(data => data.id === null && data.value !== '')
+        .map(data => params(data, data.value, data.step));
     // Items to delete, also includes all where the value is empty
     const deleteList = configs.filter(c => iterationsToDelete.includes(c.iteration)).map(c => c.id);
     data.forEach(entry => {
@@ -204,31 +211,16 @@ export function progressionPayload(
     });
 
     // Max values
-    const editListMax: EditBaseConfigParams[] = data.filter(data => data.idMax !== null && data.valueMax !== '').map(data => ({
-        id: data.idMax!,
-        // eslint-disable-next-line camelcase
-        slot_entry: slotEntryId,
-        value: data.valueMax as number,
-        iteration: data.iteration,
-        operation: data.operation,
-        step: data.step,
-        repeat: data.repeat,
-        requirements: { rules: data.requirements ?? [] }
-    }));
-    const addListMax: AddBaseConfigParams[] = data.filter(data => data.idMax === null && data.valueMax !== '').map(data => ({
-        iteration: data.iteration,
-        // eslint-disable-next-line camelcase
-        slot_entry: slotEntryId,
-        value: data.valueMax as number,
-        operation: data.operation,
-        step: data.stepMax,
-        repeat: data.repeat,
-        requirements: { rules: data.requirements ?? [] }
-    }));
+    const editListMax: EditBaseConfigParams[] = data
+        .filter(data => data.idMax !== null && data.valueMax !== '')
+        .map(data => ({ id: data.idMax!, ...params(data, data.valueMax, data.step) }));
+    const addListMax: AddBaseConfigParams[] = data
+        .filter(data => data.idMax === null && data.valueMax !== '')
+        .map(data => params(data, data.valueMax, data.stepMax));
     // Items to delete, also includes all where the value is empty
     const deleteListMax = configsMax.filter(c => iterationsToDelete.includes(c.iteration)).map(c => c.id);
     data.forEach(entry => {
-        if (entry.valueMax === "" && entry.idMax !== null && !deleteList.includes(entry.idMax)) {
+        if (entry.valueMax === "" && entry.idMax !== null && !deleteListMax.includes(entry.idMax)) {
             deleteListMax.push(entry.idMax);
         }
     });
