@@ -247,7 +247,11 @@
         "addSet": "Dodaj seriju",
         "setNr": "Serija {{number}}",
         "iterationNr": "{{number}}. ponavljanje",
-        "exerciseNotAvailable": "Greška prilikom učitavanja vježbe"
+        "exerciseNotAvailable": "Greška prilikom učitavanja vježbe",
+        "otherLoggedExercises": "Ostale zapisane vježbe",
+        "multipleSessions": "Tog dana je zabilježeno više sesija. Odaberi sesiju koju želiš urediti",
+        "newSession": "Nova sesija",
+        "changeSession": "Odaberi jednu drugu sesiju"
     },
     "preferences": "Postavke",
     "notes": "Bilješke",
@@ -258,7 +262,76 @@
     "measurements": {
         "measurements": "Mjerenja",
         "unitFormHelpText": "Jedinica za mjerenje kategorije, npr. cm ili %",
-        "deleteInfo": "Ovo će izbrisati kategoriju kao i sve njezine unose"
+        "deleteInfo": "Ovo će izbrisati kategoriju kao i sve njezine unose",
+        "reorderCategories": "Promijeni redoslijed kategorija",
+        "metricTypes": {
+            "custom": "Prilagođeno",
+            "body_weight": "Tjelesna težina",
+            "body_fat": "Tjelesna masnoća",
+            "height": "Visina",
+            "blood_pressure": "Krvni tlak",
+            "blood_pressure_systolic": "Sistolički",
+            "blood_pressure_diastolic": "Dijastolički",
+            "heart_rate": "Puls",
+            "resting_heart_rate": "Puls pri mirovanju",
+            "blood_oxygen": "Kisik u krvi",
+            "steps": "Koraci",
+            "distance": "Daljina",
+            "energy": "Energija",
+            "sleep": "Spavanje",
+            "sleep_total": "Ukupno spavanje",
+            "sleep_light": "Lagano spavanje",
+            "sleep_deep": "Duboko spavanje",
+            "sleep_rem": "REM spavanje",
+            "sleep_awake": "Budnost",
+            "lean_body_mass": "Nemasna tjelesna masa"
+        },
+        "deleteInfoGroup": "Ovim će se izbrisati grupa kao i sve njezine komponente i njihovi unosi",
+        "metricType": "Vrsta metrike",
+        "chartType": "Vrsta dijagrama",
+        "chartTypes": {
+            "auto": "Automatski",
+            "line": "Linija",
+            "bar": "Stupci",
+            "delta": "Promjena",
+            "heatmap": "Toplinska karta",
+            "distribution": "Distribucija"
+        },
+        "chartTrend": "Linija trenda",
+        "trends": {
+            "reactive": "Reaktivno",
+            "balanced": "Uravnoteženo",
+            "sluggish": "Izglađeno"
+        },
+        "chartAverageWindowDays_one": "1 dan",
+        "chartAverageWindowDays_other": "{{count}} dana",
+        "distributionDayCount_other": "{{count}} dana",
+        "distributionMedian": "Medijan",
+        "chartAverageWindow": "Prosjek za",
+        "noDataAvailable": "Nema podataka",
+        "overallChangeWeight": "Sveukupna promjena",
+        "partOfGroup": "Dio grupe",
+        "noGroup": "Nijedna grupa",
+        "indicatorAvg": "prosjek",
+        "indicatorTrend": "trend",
+        "chartRangeAll": "Sve",
+        "chartRangeMonths_one": "1 mjesec",
+        "distributionDayCount_one": "1 dan",
+        "distributionLatest": "Najnovija",
+        "distributionEntryCount_one": "1 unos",
+        "distributionEntryCount_other": "{{count}} unosa",
+        "customMeasurement": "Prilagođeno mjerenje",
+        "calculations": {
+            "paramsHelp": {
+                "exercise_ids": "Između {{min}} i {{max}} vježbi, odabrano je {count}."
+            },
+            "sourceManual": "Ručno upisano",
+            "sourceCalculated": "Izračunato od aplikacije wger",
+            "badge": "Izračunato"
+        },
+        "chartRangeWeeks_one": "1 tjedan",
+        "chartRangeYears_one": "1 godina",
+        "categoryFormHelpText": "Kategorija mjerenja, kao što su „bicepsi” ili „tjelesna mast”"
     },
     "deleteConfirmation": "Stvarno želiš izbrisati „{{name}}”?",
     "nutrition": {
@@ -356,7 +429,7 @@
     "entries": "Unosi",
     "no_entries_for_day": "Nema unosa za ovaj dan",
     "editName": "Uredi {{ime}}",
-    "start": "Start",
+    "start": "Počni",
     "end": "Kraj",
     "comment": "Komentar",
     "successfullyDeleted": "Uspješno izbrisano",
@@ -385,5 +458,6 @@
     "currentTrend": "Trenutačni trend",
     "mean": "Srednja vrijednost",
     "trend": "Trend",
-    "variance": "Varijacija"
+    "variance": "Varijacija",
+    "syncedEntryInfo": "Ovaj je unos sinkroniziran iz aplikacije o zdravlju te se može mijenjati isključivo ondje"
 }

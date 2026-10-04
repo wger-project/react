@@ -48,12 +48,12 @@ describe('CategoryDetailDataGrid', () => {
         const userRow = document.querySelector(`[data-id="${USER_ENTRY_UUID}"]`) as HTMLElement;
         const syncedRow = document.querySelector(`[data-id="${SYNCED_ENTRY_UUID}"]`) as HTMLElement;
 
-        expect(within(userRow).getByRole('menuitem', { name: /edit/i })).toBeInTheDocument();
-        expect(within(userRow).getByRole('menuitem', { name: /delete/i })).toBeInTheDocument();
+        expect(within(userRow).getByRole('button', { name: /edit/i })).toBeInTheDocument();
+        expect(within(userRow).getByRole('button', { name: /delete/i })).toBeInTheDocument();
 
-        expect(within(syncedRow).queryByRole('menuitem', { name: /edit/i })).not.toBeInTheDocument();
-        expect(within(syncedRow).queryByRole('menuitem', { name: /delete/i })).not.toBeInTheDocument();
-        expect(within(syncedRow).getByRole('menuitem', { name: 'syncedEntryInfo' })).toBeInTheDocument();
+        expect(within(syncedRow).queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
+        expect(within(syncedRow).queryByRole('button', { name: /delete/i })).not.toBeInTheDocument();
+        expect(within(syncedRow).getByRole('button', { name: 'syncedEntryInfo' })).toBeInTheDocument();
     });
 
     test('a calculated entry says who keeps it, not that it was synced', async () => {
@@ -71,12 +71,12 @@ describe('CategoryDetailDataGrid', () => {
         await screen.findByText('24');
 
         const row = document.querySelector(`[data-id="${SYNCED_ENTRY_UUID}"]`) as HTMLElement;
-        expect(within(row).queryByRole('menuitem', { name: /edit/i })).not.toBeInTheDocument();
+        expect(within(row).queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
         expect(within(row).getByRole(
-            'menuitem',
+            'button',
             { name: 'measurements.calculations.entryInfo' },
         )).toBeInTheDocument();
-        expect(within(row).queryByRole('menuitem', { name: 'syncedEntryInfo' }))
+        expect(within(row).queryByRole('button', { name: 'syncedEntryInfo' }))
             .not.toBeInTheDocument();
     });
 
@@ -191,8 +191,8 @@ describe('CategoryDetailDataGrid', () => {
             renderGrid([makeWeightEntry(new Date('2021/12/10'), 90, { id: ENTRY_UUID_1, unit: 'lb' })]);
 
             await screen.findByText(/40[.,]82/);
-            await user.click(screen.getByRole('menuitem', { name: /edit/i }));
-            await user.click(screen.getByRole('menuitem', { name: /save/i }));
+            await user.click(screen.getByRole('button', { name: /edit/i }));
+            await user.click(screen.getByRole('button', { name: /save/i }));
 
             // the displayed conversion must not be written back to the entry
             expect(mutateEditMock).toHaveBeenCalled();
@@ -211,14 +211,14 @@ describe('CategoryDetailDataGrid', () => {
             renderGrid([makeWeightEntry(new Date('2021/12/10'), 90, { id: ENTRY_UUID_1, unit: 'lb' })]);
 
             await screen.findByText(/40[.,]82/);
-            await user.click(screen.getByRole('menuitem', { name: /edit/i }));
+            await user.click(screen.getByRole('button', { name: /edit/i }));
 
             // the typed value is in the unit the grid shows, not the one the
             // entry was stored in
             const valueInput = screen.getByRole('spinbutton');
             await user.clear(valueInput);
             await user.type(valueInput, '41');
-            await user.click(screen.getByRole('menuitem', { name: /save/i }));
+            await user.click(screen.getByRole('button', { name: /save/i }));
 
             expect(mutateEditMock).toHaveBeenCalled();
             const submitted = mutateEditMock.mock.calls[0][0] as MeasurementEntry;
@@ -236,12 +236,12 @@ describe('CategoryDetailDataGrid', () => {
             renderGrid([makeWeightEntry(new Date('2021/12/10'), 80, { id: ENTRY_UUID_1, unit: 'kg' })]);
 
             await screen.findByText('80 kg');
-            await user.click(screen.getByRole('menuitem', { name: /edit/i }));
+            await user.click(screen.getByRole('button', { name: /edit/i }));
 
             const valueInput = screen.getByRole('spinbutton');
             await user.clear(valueInput);
             await user.type(valueInput, '5000');
-            await user.click(screen.getByRole('menuitem', { name: /save/i }));
+            await user.click(screen.getByRole('button', { name: /save/i }));
 
             // nothing is saved, the error shows up and the cell stays editable
             expect(mutateEditMock).not.toHaveBeenCalled();
@@ -251,7 +251,7 @@ describe('CategoryDetailDataGrid', () => {
             // correcting the value saves normally
             await user.clear(valueInput);
             await user.type(valueInput, '90');
-            await user.click(screen.getByRole('menuitem', { name: /save/i }));
+            await user.click(screen.getByRole('button', { name: /save/i }));
             expect(mutateEditMock).toHaveBeenCalled();
             const submitted = mutateEditMock.mock.calls[0][0] as MeasurementEntry;
             expect(Number(submitted.value)).toBe(90);
@@ -268,12 +268,12 @@ describe('CategoryDetailDataGrid', () => {
             renderGrid([makeWeightEntry(new Date('2021/12/10'), 80, { id: ENTRY_UUID_1, unit: 'kg' })]);
 
             await screen.findByText('80 kg');
-            await user.click(screen.getByRole('menuitem', { name: /edit/i }));
+            await user.click(screen.getByRole('button', { name: /edit/i }));
 
             const valueInput = screen.getByRole('spinbutton');
             await user.clear(valueInput);
             await user.type(valueInput, '90');
-            await user.click(screen.getByRole('menuitem', { name: /save/i }));
+            await user.click(screen.getByRole('button', { name: /save/i }));
 
             expect(mutateEditMock).toHaveBeenCalled();
             expect(

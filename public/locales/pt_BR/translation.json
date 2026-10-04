@@ -171,7 +171,32 @@
         "metricType": "Tipo de métrica",
         "chartType": "Tipo de gráfico",
         "chartTypes": {
-            "auto": "Automático"
+            "auto": "Automático",
+            "line": "Linha",
+            "bar": "Barras",
+            "delta": "Mudar",
+            "distribution": "Distribuição"
+        },
+        "trends": {
+            "reactive": "Reativo",
+            "balanced": "Balanciado"
+        },
+        "chartAverageWindowDays_one": "1 dia",
+        "chartAverageWindowDays_other": "{{count}} dias",
+        "distributionMedian": "Mediana",
+        "distributionLatest": "Recente",
+        "distributionDayCount_one": "1 dia",
+        "distributionDayCount_other": "{{count}} dias",
+        "noGroup": "Sem grupo",
+        "metricTypes": {
+            "custom": "Customizado",
+            "body_fat": "Gordura corporal",
+            "height": "Altura",
+            "blood_pressure": "Pressão arterial",
+            "blood_pressure_systolic": "Sistólica",
+            "blood_pressure_diastolic": "Diastólico",
+            "heart_rate": "Frequência cardíaca",
+            "resting_heart_rate": "Frequência cardíaca em repouso"
         }
     },
     "category": "Categoria",

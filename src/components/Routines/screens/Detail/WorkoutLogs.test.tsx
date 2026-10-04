@@ -87,7 +87,7 @@ describe("Test the RoutineLogs component", () => {
         // must end up in its table. The cell values themselves can't be asserted here:
         // the DataGrid virtualises them and happy-dom reports no dimensions.
         expect(screen.getByRole('grid')).toBeInTheDocument();
-        expect(screen.getAllByRole('menuitem', { name: /delete/i })).toHaveLength(testRoutineLogData[0].logs.length);
+        expect(screen.getAllByRole('button', { name: /delete/i })).toHaveLength(testRoutineLogData[0].logs.length);
     });
 
     test('shows the error when the logs could not be loaded', () => {
@@ -222,6 +222,6 @@ describe("Test the RoutineLogs component", () => {
         expect(screen.queryByText('Every day is leg day 🦵🏻')).not.toBeInTheDocument();
         expect(screen.getByText('routines.otherLoggedExercises')).toBeInTheDocument();
         expect(screen.getByText('Squats')).toBeInTheDocument();
-        expect(screen.getAllByRole('menuitem', { name: /delete/i })).toHaveLength(testRoutineLogData[0].logs.length);
+        expect(screen.getAllByRole('button', { name: /delete/i })).toHaveLength(testRoutineLogData[0].logs.length);
     });
 });
