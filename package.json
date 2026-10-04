@@ -9,7 +9,7 @@
     "react",
     "components"
   ],
-  "author": "wger team",
+  "author": "wger team <hello@wger.de>",
   "homepage": "https://github.com/wger-project/react",
   "bugs": {
     "url": "https://github.com/wger-project/react/issues"
@@ -22,9 +22,6 @@
     "build/"
   ],
   "main": "build/main.js",
-  "exports": {
-    ".": "./build/index.js"
-  },
   "version": "26.10.4",
   "license": "AGPL-3.0-or-later",
   "repository": {
@@ -120,5 +117,5 @@
       "last 1 safari version"
     ]
   },
-  "packageManager": "npm@10.5.0"
+  "packageManager": "npm@11.12.1"
 }
