@@ -27,7 +27,10 @@
   },
   "version": "26.10.4",
   "license": "AGPL-3.0-or-later",
-  "repository": "https://github.com/wger-project/react",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wger-project/react.git"
+  },
   "type": "module",
   "publishConfig": {
     "access": "public"
