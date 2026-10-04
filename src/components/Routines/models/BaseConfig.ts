@@ -30,11 +30,11 @@ export const OPERATION_SUBSTRACT = '-';
 /** Rules a progression can be gated on, see REQUIREMENT_RULES on the server */
 export const REQUIREMENTS_VALUES = [
     "weight",
+    "max_weight",
     "repetitions",
+    "max_repetitions",
     "rir",
     "rest",
-    "max_repetitions",
-    "max_weight",
 ] as const;
 
 export type OperationType = "+" | "-" | "r";

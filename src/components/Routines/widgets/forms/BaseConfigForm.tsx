@@ -234,6 +234,14 @@ export const SlotBaseConfigValueField = (props: {
 };
 
 
+/** Rules that gate the same field on the bottom and the top of its range */
+const RANGE_COUNTERPART: Partial<Record<RequirementsType, RequirementsType>> = {
+    'weight': 'max_weight',
+    'max_weight': 'weight',
+    'repetitions': 'max_repetitions',
+    'max_repetitions': 'repetitions',
+};
+
 export const ConfigDetailsRequirementsField = (props: {
     values: RequirementsType[],
     allSets: boolean,
@@ -250,10 +258,11 @@ export const ConfigDetailsRequirementsField = (props: {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleSelection = (value: RequirementsType) => {
-        // if the value is not in selectedElements, add it
+        // if the value is not in selectedElements, add it and drop the other
+        // end of its range, the top already implies the bottom
         const selection = selectedElements.includes(value)
             ? selectedElements.filter((e) => e !== value)
-            : [...selectedElements, value];
+            : [...selectedElements.filter((e) => e !== RANGE_COUNTERPART[value]), value];
         setSelectedElements(selection);
 
         // "All sets" only means something together with rules

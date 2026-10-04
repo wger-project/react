@@ -182,6 +182,19 @@ describe('ConfigDetailsRequirementsField', () => {
         expect(onChange).toHaveBeenCalledExactlyOnceWith([], false);
     });
 
+    test('picking one end of a range drops the other one', async () => {
+        const user = userEvent.setup();
+        render(<ConfigDetailsRequirementsField values={['repetitions', 'rir']} allSets={false} onChange={onChange} />);
+        await user.click(screen.getByRole('button'));
+
+        await user.click(screen.getByRole('menuitem', { name: /requirementRules\.max_repetitions/ }));
+        const bottomItem = screen.getByRole('menuitem', { name: /requirementRules\.repetitions/ });
+        expect(within(bottomItem).queryByTestId('CheckBoxIcon')).not.toBeInTheDocument();
+
+        await user.click(within(screen.getByRole('menu')).getByRole('button', { name: /save/i }));
+        expect(onChange).toHaveBeenCalledExactlyOnceWith(['rir', 'max_repetitions'], false);
+    });
+
     test('reopens with the values of the parent, not with its last selection', async () => {
         const user = userEvent.setup();
         const { rerender } = render(
