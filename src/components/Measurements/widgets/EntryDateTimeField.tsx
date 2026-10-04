@@ -1,5 +1,6 @@
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { dateLocale } from "@/core/lib/date";
 import { DateTime } from "luxon";
 import React from 'react';
 import { useTranslation } from "react-i18next";
@@ -16,7 +17,7 @@ export const EntryDateTimeField = (props: { initialDate: Date, onChange: (date: 
     const [t, i18n] = useTranslation();
     const [value, setValue] = React.useState<DateTime | null>(DateTime.fromJSDate(props.initialDate));
 
-    return <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+    return <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
         <DateTimePicker
             label={t('date')}
             value={value}

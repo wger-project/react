@@ -22,7 +22,7 @@ import { TFunction } from "i18next";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
+import { dateLocale, dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
 import * as yup from 'yup';
 
 interface PlanFormProps {
@@ -195,12 +195,11 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                 </form.AppField>
                 <Grid container spacing={1}>
                     <Grid size={6}>
-                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
                             <form.Field name="start">
                                 {field => {
                                     const error = fieldError(field);
                                     return <DatePicker
-                                        format="yyyy-MM-dd"
                                         label={t('start')}
                                         value={startDateValue}
                                         slotProps={{
@@ -224,12 +223,11 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
                     </Grid>
 
                     <Grid size={6}>
-                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
                             <form.Field name="end">
                                 {field => {
                                     const error = fieldError(field);
                                     return <DatePicker
-                                        format="yyyy-MM-dd"
                                         label={t('end')}
                                         value={endDateValue}
                                         slotProps={{

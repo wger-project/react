@@ -7,6 +7,7 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { useAppForm } from "@/core/forms/appForm";
 import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
+import { dateLocale } from "@/core/lib/date";
 import { useProfileQuery } from "@/components/User";
 import {
     DESCRIPTION_MAX_LENGTH,
@@ -171,7 +172,7 @@ export const RoutineForm = ({
                     </form.AppField>
                 </Grid>
                 <Grid size={{ xs: 6 }}>
-                    <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                    <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
                         <form.Field name="start">
                             {field => {
                                 const error = fieldError(field);
@@ -199,7 +200,7 @@ export const RoutineForm = ({
                     </LocalizationProvider>
                 </Grid>
                 <Grid size={{ xs: 5 }}>
-                    <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                    <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
                         <form.Field name="end">
                             {field => {
                                 const error = fieldError(field);

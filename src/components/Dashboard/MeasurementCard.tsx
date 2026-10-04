@@ -19,6 +19,7 @@ import {
     valueWithUnit
 } from "@/components/Measurements";
 import i18n from "@/i18n";
+import { dateToLocale } from "@/core/lib/date";
 import { makeLink, WgerLink } from "@/core/lib/url";
 import { Box, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -218,7 +219,7 @@ const MeasurementCardTableContent = (props: { category: MeasurementCategory }) =
                             color={showComponentColors ? componentColor(palette, index) : undefined} />)
                     : entries.map(entry => (
                         <TableRow key={`measurement-entry-${entry.id}`}>
-                            <TableCell>{entry.date.toLocaleDateString()}</TableCell>
+                            <TableCell>{dateToLocale(entry.date)}</TableCell>
                             <TableCell>
                                 {valueWithUnit(
                                     entry.valueIn(props.category.unit, props.category.unit),

@@ -1,6 +1,3 @@
-import { Autocomplete, Button, InputAdornment, MenuItem, Select, Stack, TextField } from "@mui/material";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { Meal } from "@/components/Nutrition/models/meal";
@@ -12,12 +9,15 @@ import {
 } from "@/components/Nutrition/queries";
 import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
+import { fieldError, submitHandler, yupSchema } from "@/core/forms/formUtils";
+import { dateLocale, dateToYYYYMMDD } from "@/core/lib/date";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
+import { Autocomplete, Button, InputAdornment, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToYYYYMMDD } from "@/core/lib/date";
 import * as yup from "yup";
 
 const GRAM_UNIT_VALUE = 'g';
@@ -208,10 +208,9 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         />
                     )}
                 />}
-                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
 
                     <DateTimePicker
-                        format="yyyy-MM-dd HH:mm"
                         label={t('date')}
                         value={dateValue}
                         disableFuture={true}

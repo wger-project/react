@@ -84,13 +84,26 @@ export function yyyymmddToDate(dateStr: string): Date {
 
 
 /*
+ * The locale dates are formatted in: the page language, with the browser's
+ * region when the language has none (page "en", browser "en-NZ" -> "en-NZ")
+ */
+export function dateLocale(language: string | undefined = i18n.language, preferred: readonly string[] = navigator.languages) {
+    if (!language || language.includes('-')) {
+        return language;
+    }
+
+    const prefix = `${language.toLowerCase()}-`;
+    return preferred.find(l => l.toLowerCase().startsWith(prefix)) ?? language;
+}
+
+/*
  * Returns the localized time from a date object
  */
 export function dateTimeToLocaleHHMM(dateTime: Date | null, locale?: string, options?: Intl.DateTimeFormatOptions) {
     if (dateTime == null) {
         return null;
     }
-    locale = locale ?? i18n.language;
+    locale = locale ?? dateLocale();
     options = options ?? { hour: '2-digit', minute: '2-digit' };
 
     return dateTime.toLocaleTimeString(
@@ -105,7 +118,7 @@ export function dateTimeToLocale(dateTime: Date | null, locale?: string, options
         return '';
     }
 
-    locale = locale ?? i18n.language;
+    locale = locale ?? dateLocale();
     options = options ?? {
         year: '2-digit',
         month: '2-digit',
@@ -123,7 +136,7 @@ export function luxonDateTimeToLocale(dateTime: DateTime | null, locale?: string
         return '';
     }
 
-    locale = locale ?? i18n.language;
+    locale = locale ?? dateLocale();
     options = options ?? DateTime.DATE_MED;
 
     return dateTime.toLocaleString(options, { locale: locale });
@@ -135,7 +148,7 @@ export function dateToLocale(dateTime: Date | null, locale?: string, options?: I
         return '';
     }
 
-    locale = locale ?? i18n.language;
+    locale = locale ?? dateLocale();
     options = options ?? {
         year: '2-digit',
         month: '2-digit',

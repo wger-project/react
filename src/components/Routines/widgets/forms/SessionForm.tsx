@@ -9,6 +9,7 @@ import { useAddSessionQuery, useEditSessionQuery, useSessionOfDay } from "@/comp
 import { useAppForm } from "@/core/forms/appForm";
 import { defaultsKey, fieldError, submitHandler, yupSchema } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
+import { dateLocale } from "@/core/lib/date";
 import { Add, SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
 import {
     Button,
@@ -180,7 +181,7 @@ const SessionFormFields = (
         <form onSubmit={submitHandler(form)}>
             <Grid container spacing={2}>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                    <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
                         <form.Field name="date">
                             {field => <DatePicker
                                 value={selectedDate}
@@ -233,7 +234,7 @@ const SessionFormFields = (
                     </List>
                 </Grid> : <>
                     <Grid size={{ xs: 6, sm: 3 }}>
-                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
                             <form.Field name="start">
                                 {field => <TimePicker
                                     label={t('start')}
@@ -258,7 +259,7 @@ const SessionFormFields = (
                         </LocalizationProvider>
                     </Grid>
                     <Grid size={{ xs: 6, sm: 3 }}>
-                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={i18n.language}>
+                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
                             <form.Field name="end">
                                 {field => <TimePicker
                                     label={t('end')}

@@ -3,7 +3,7 @@ import { PlanForm } from "@/components/Nutrition/widgets/forms/PlanForm";
 import { mutateMock } from "@/tests/mutationMock";
 import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import React from 'react';
 import type { Mock } from 'vitest';
@@ -185,6 +185,34 @@ describe("Test the PlanForm component", () => {
             goalCarbohydrates: null,
             goalFat: null,
             goalFiber: null,
+        }), expect.anything());
+    });
+
+    test.each([
+        ['en-US', '09272026'],
+        ['en-NZ', '27092026'],
+    ])('A start date typed in the %s order is submitted as that day', async (browserLanguage, keys) => {
+
+        // Arrange
+        const languages = vi.spyOn(navigator, 'languages', 'get').mockReturnValue([browserLanguage]);
+        onTestFinished(() => languages.mockRestore());
+        const user = userEvent.setup();
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <PlanForm />
+            </QueryClientProvider>
+        );
+        const sections = within(screen.getByRole('group', { name: 'start' })).getAllByRole('spinbutton');
+
+        // Act
+        await user.click(sections[0]);
+        await user.keyboard(keys);
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        expect(addMutate).toHaveBeenCalledWith(expect.objectContaining({
+            start: new Date(2026, 8, 27),
         }), expect.anything());
     });
 });
