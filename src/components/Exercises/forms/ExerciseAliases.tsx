@@ -6,8 +6,13 @@ import { useTranslation } from "react-i18next";
 
 export type AliasItem = { id?: number; alias: string };
 
-/** Bound to the form field it is rendered in via form.AppField */
-export function ExerciseAliases() {
+/**
+ * Bound to the form field it is rendered in via form.AppField
+ *
+ * With canDeleteSaved=false, aliases that already exist on the server (the ones
+ * with an id) can't be removed, only the ones added in this form.
+ */
+export function ExerciseAliases({ canDeleteSaved = true }: { canDeleteSaved?: boolean }) {
     const [t] = useTranslation();
     const field = useFieldContext<AliasItem[]>();
     // The validator reports on the single aliases, e.g. `aliases[0].alias`
@@ -47,14 +52,22 @@ export function ExerciseAliases() {
             return optionAlias === valueAlias && (optionId === valueId || optionId === undefined || valueId === undefined);
         }}
         onChange={(_, newValue) => {
-            field.handleChange(normalize(newValue));
+            // Backspace and the clear button would also drop saved aliases
+            const kept = canDeleteSaved
+                ? []
+                : value.filter(saved => saved.id !== undefined && !newValue.some(
+                    item => typeof item !== "string" && item.id === saved.id
+                ));
+            field.handleChange(normalize([...kept, ...newValue]));
         }}
         onBlur={field.handleBlur}
         renderInput={(params) => {
             const chips = value.map((option, index) => (
                 <Chip
                     label={option.alias}
-                    onDelete={() => field.handleChange(value.filter((_, i) => i !== index))}
+                    onDelete={canDeleteSaved || option.id === undefined
+                        ? () => field.handleChange(value.filter((_, i) => i !== index))
+                        : undefined}
                     key={option.id ?? option.alias}
                 />
             ));

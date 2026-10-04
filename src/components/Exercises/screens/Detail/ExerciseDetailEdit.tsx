@@ -60,6 +60,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
     const addVideoPermissionQuery = usePermissionQuery(WgerPermissions.ADD_VIDEO);
     const deleteVideoPermissionQuery = usePermissionQuery(WgerPermissions.DELETE_VIDEO);
     const editExercisePermissionQuery = usePermissionQuery(WgerPermissions.EDIT_EXERCISE);
+    const deleteExercisePermissionQuery = usePermissionQuery(WgerPermissions.DELETE_EXERCISE);
     const musclesQuery = useMusclesQuery();
     const profileQuery = useProfileQuery();
 
@@ -91,6 +92,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
         || addVideoPermissionQuery.isLoading
         || deleteVideoPermissionQuery.isLoading
         || editExercisePermissionQuery.isLoading
+        || deleteExercisePermissionQuery.isLoading
     ) {
         return <LoadingWidget />;
     }
@@ -178,6 +180,7 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
             exerciseTranslation={exerciseTranslation}
             exerciseEnglish={exerciseEnglish}
             canEditExercise={editExercisePermissionQuery.data}
+            canDeleteAliases={deleteExercisePermissionQuery.data}
             username={profileQuery.data!.username}
             onSaved={() => setAlertIsVisible(true)}
         />
@@ -301,6 +304,7 @@ const TranslationEditForm = ({
                                  exerciseTranslation,
                                  exerciseEnglish,
                                  canEditExercise,
+                                 canDeleteAliases,
                                  username,
                                  onSaved,
                              }: {
@@ -309,6 +313,7 @@ const TranslationEditForm = ({
     exerciseTranslation: Translation,
     exerciseEnglish: Translation,
     canEditExercise: boolean | undefined,
+    canDeleteAliases: boolean | undefined,
     username: string,
     onSaved: () => void,
 }) => {
@@ -404,7 +409,8 @@ const TranslationEditForm = ({
                     <Box sx={{ mb: 2 }}>
                         <form.AppField name="name">{() => <ExerciseName />}</form.AppField>
                     </Box>
-                    <form.AppField name="alternativeNames">{() => <ExerciseAliases />}</form.AppField>
+                    <form.AppField name="alternativeNames">{() => <ExerciseAliases
+                        canDeleteSaved={canDeleteAliases ?? false} />}</form.AppField>
                 </Grid>
                 <Grid size={12}>
                     <PaddingBox />
