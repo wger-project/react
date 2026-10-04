@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
         build: {
             outDir: 'build',
             sourcemap: true,
-            rollupOptions: {
+            rolldownOptions: {
                 output: {
                     postBanner: `/*! ${pkg.name} ${pkg.version} */`,
                     entryFileNames: 'main.js',
@@ -44,7 +44,6 @@ export default defineConfig(({ mode }) => {
             css: false,
             pool: 'threads',
             maxWorkers: '50%',
-            minWorkers: 1,
 
             // Note: `include` lives in the projects (extends merges arrays, a
             // root-level include would make both projects run everything)
