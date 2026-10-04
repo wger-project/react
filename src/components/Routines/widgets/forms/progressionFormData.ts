@@ -220,7 +220,7 @@ export function progressionPayload(
     // Items to delete, also includes all where the value is empty
     const deleteListMax = configsMax.filter(c => iterationsToDelete.includes(c.iteration)).map(c => c.id);
     data.forEach(entry => {
-        if (entry.valueMax === "" && entry.idMax !== null && !deleteList.includes(entry.idMax)) {
+        if (entry.valueMax === "" && entry.idMax !== null && !deleteListMax.includes(entry.idMax)) {
             deleteListMax.push(entry.idMax);
         }
     });
