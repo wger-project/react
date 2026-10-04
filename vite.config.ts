@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import eslintPlugin from '@nabla/vite-plugin-eslint';
+import pkg from './package.json' with { type: 'json' };
 
 export default defineConfig(({ mode }) => {
     const isTest = mode === 'test' || process.env.VITEST;
@@ -13,6 +14,7 @@ export default defineConfig(({ mode }) => {
             sourcemap: true,
             rollupOptions: {
                 output: {
+                    postBanner: `/*! ${pkg.name} ${pkg.version} */`,
                     entryFileNames: 'main.js',
                     chunkFileNames: 'chunks/[name]-[hash].js',
                     assetFileNames: 'assets/[name][extname]',
