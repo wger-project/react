@@ -10,8 +10,13 @@ interface ValidationErrorResponse {
     [key: string]: string;
 }
 
+// Errors of a list serializer, keyed by item index
+interface ValidationErrorResponseNested {
+    [key: string]: ValidationErrorResponseList | ValidationErrorResponseNested;
+}
+
 export function collectValidationErrors(
-    errors: ValidationErrorResponseList | ValidationErrorResponseSubList | ValidationErrorResponse | undefined | null,
+    errors: ValidationErrorResponseList | ValidationErrorResponseSubList | ValidationErrorResponse | ValidationErrorResponseNested | undefined | null,
     parentKey?: string
 ): string[] {
     const allErrors: string[] = [];
@@ -41,6 +46,9 @@ export function collectValidationErrors(
             } else if (typeof value === "string") {
                 // If value is a string, treat as a single error message
                 allErrors.push(`${key}: ${value}`);
+            } else if (typeof value === "object" && value !== null) {
+                // If value is an object, treat as nested errors and recurse
+                allErrors.push(...collectValidationErrors(value, key));
             }
         }
     }
