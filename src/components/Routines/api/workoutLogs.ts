@@ -47,12 +47,21 @@ export const addLogs = async (entries: any[]): Promise<WorkoutLog[]> => {
  */
 export const getRoutineLogs = async (id: number, options?
 : { loadExercises?: boolean, filtersetQuery?: object }): Promise<WorkoutLog[]> => {
+    return getWorkoutLogs({
+        ...options,
+        filtersetQuery: { routine: id.toString(), ...options?.filtersetQuery },
+    });
+};
+
+/* Logs across all routines, including entries without a routine. */
+export const getWorkoutLogs = async (options?
+: { loadExercises?: boolean, filtersetQuery?: object }): Promise<WorkoutLog[]> => {
     const { loadExercises = false, filtersetQuery = {} } = options || {};
 
     const adapter = new WorkoutLogAdapter();
     const url = makeUrl(
         ApiPath.WORKOUT_LOG,
-        { query: { routine: id.toString(), limit: API_MAX_PAGE_SIZE, ordering: '-date', ...filtersetQuery } }
+        { query: { limit: API_MAX_PAGE_SIZE, ordering: '-date', ...filtersetQuery } }
     );
 
     const unitResponses = await Promise.all([getRoutineRepUnits(), getRoutineWeightUnits()]);

@@ -1,5 +1,5 @@
 import { getExercisesByIds } from "@/components/Exercises/api/exercise";
-import { addLogs, deleteLog, editLog, getRoutineLogs } from "@/components/Routines/api/workoutLogs";
+import { addLogs, deleteLog, editLog, getRoutineLogs, getWorkoutLogs } from "@/components/Routines/api/workoutLogs";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { testExerciseSquats } from "@/tests/exerciseTestdata";
@@ -23,6 +23,38 @@ describe("workout logs service tests", () => {
 
     beforeEach(() => {
         vi.resetAllMocks();
+    });
+
+    test('loads all pages across routines with server-side date bounds and attaches exercises', async () => {
+        const next = 'https://example.com/api/v2/workoutlog/?offset=1';
+        const [first, second] = responseRoutineLogs.results;
+        (axios.get as Mock)
+            .mockResolvedValueOnce({ data: { results: [{ ...first, routine: 1 }], next } })
+            .mockResolvedValueOnce({ data: { results: [{ ...second, routine: 2 }], next: null } });
+        (getRoutineRepUnits as Mock).mockResolvedValue([testRepUnit1]);
+        (getRoutineWeightUnits as Mock).mockResolvedValue([testWeightUnit1]);
+        (getExercisesByIds as Mock).mockResolvedValue([testExerciseSquats]);
+        const filter = { date__gte: '2026-06-01T00:00:00Z', date__lt: '2026-07-01T00:00:00Z' };
+
+        const logs = await getWorkoutLogs({ loadExercises: true, filtersetQuery: filter });
+
+        const params = new URL((axios.get as Mock).mock.calls[0][0]).searchParams;
+        expect(params.has('routine')).toBe(false);
+        expect(params.get('date__gte')).toBe(filter.date__gte);
+        expect(params.get('date__lt')).toBe(filter.date__lt);
+        expect((axios.get as Mock).mock.calls[1][0]).toBe(next);
+        expect(logs.map(log => log.routineId)).toEqual([1, 2]);
+        expect(logs.every(log => log.exerciseObj === testExerciseSquats)).toBe(true);
+        expect(getExercisesByIds).toHaveBeenCalledWith([345]);
+    });
+
+    test('does not return a partial history when a later page fails', async () => {
+        (axios.get as Mock)
+            .mockResolvedValueOnce({ data: { results: responseRoutineLogs.results, next: 'https://example.com/next' } })
+            .mockRejectedValueOnce(new Error('offline'));
+        (getRoutineRepUnits as Mock).mockResolvedValue([]);
+        (getRoutineWeightUnits as Mock).mockResolvedValue([]);
+        await expect(getWorkoutLogs()).rejects.toThrow('offline');
     });
 
     test('GET the routine logs', async () => {

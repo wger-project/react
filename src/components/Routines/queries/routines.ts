@@ -113,9 +113,9 @@ export const useDeleteRoutineQuery = (id: number) => {
     return useMutation({
         mutationFn: () => deleteRoutine(id),
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_ANALYTICS] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_OVERVIEW] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_DETAIL, id] });
         }
     });
 };
-

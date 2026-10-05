@@ -17,6 +17,7 @@ export { WorkoutStats } from "./screens/Detail/WorkoutStats";
 export { PrivateTemplateOverview } from "./screens/Overview/PrivateTemplateOverview";
 export { PublicTemplateOverview } from "./screens/Overview/PublicTemplateOverview";
 export { RoutineOverview } from "./screens/Overview/RoutineOverview";
+export { ExerciseAnalytics } from "./screens/Overview/ExerciseAnalytics";
 
 // Models
 export {
