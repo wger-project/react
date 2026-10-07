@@ -1,4 +1,4 @@
-import { ExerciseImageAvatar, getLanguageByShortName, Language, useLanguageQuery } from "@/components/Exercises";
+import { Exercise, ExerciseImageAvatar, getLanguageByShortName, Language, useLanguageQuery } from "@/components/Exercises";
 import { Day, getDayName } from "@/components/Routines/models/Day";
 import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
 import { SetConfigData } from "@/components/Routines/models/SetConfigData";
@@ -19,6 +19,7 @@ import {
     Container,
     Divider,
     IconButton,
+    Link,
     Stack,
     Typography,
     useTheme
@@ -61,6 +62,26 @@ export const RoutineDetailsCard = () => {
 };
 
 
+/*
+ * Name of an exercise, linking to its detail page
+ */
+function ExerciseNameLink(props: { exercise: Exercise, language?: Language }) {
+    const { i18n } = useTranslation();
+    const translation = props.exercise.getTranslation(props.language);
+
+    return <Link
+        href={makeLink(WgerLink.EXERCISE_DETAIL, i18n.language, {
+            id: props.exercise.id!,
+            slug: translation.nameSlug
+        })}
+        color="inherit"
+        underline="hover"
+    >
+        {translation.name}
+    </Link>;
+}
+
+
 export function SetConfigDataDetails(props: {
     setConfigData: SetConfigData,
     rowHeight?: undefined | string,
@@ -91,7 +112,7 @@ export function SetConfigDataDetails(props: {
                 <Stack spacing={0}>
                     <Typography variant={"h6"}>
                         {props.showExercise && (props.setConfigData.exercise
-                            ? props.setConfigData.exercise.getTranslation(language).name
+                            ? <ExerciseNameLink exercise={props.setConfigData.exercise} language={language} />
                             : t('routines.exerciseNotAvailable'))}
                     </Typography>
                     <div>
@@ -200,7 +221,7 @@ function SlotEntryList(props: { slot: Slot }) {
                 {props.slot.entries.map((entry) =>
                     <Typography variant={"h6"} key={entry.id}>
                         {entry.exercise
-                            ? entry.exercise.getTranslation(language).name
+                            ? <ExerciseNameLink exercise={entry.exercise} language={language} />
                             : t('routines.exerciseNotAvailable')}
                     </Typography>
                 )}

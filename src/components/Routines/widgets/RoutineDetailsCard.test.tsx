@@ -5,6 +5,7 @@ import { RoutineDetailsCard } from "@/components/Routines/widgets/RoutineDetails
 import React from 'react';
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
+import { Routine } from "@/components/Routines/models/Routine";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Exercises/api/language");
@@ -58,5 +59,35 @@ describe("Test the RoutineDetail component", () => {
         // Assert: only the leg day has data, the other two are in the structure only
         expect(screen.getByText('Pull day')).toBeInTheDocument();
         expect(screen.getByText('routines.restDay')).toBeInTheDocument();
+    });
+
+    test.each([
+        ['with sequence data', testRoutine1],
+        ['without sequence data', new Routine({ ...testRoutine1, dayData: [] })],
+    ])('links the exercises to their detail page (%s)', async (_, routine) => {
+
+        // Arrange
+        (useRoutineDetailQuery as Mock).mockImplementation(() => ({
+            isSuccess: true,
+            isLoading: false,
+            data: routine
+        }));
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter initialEntries={['/routine/101']}>
+                    <Routes>
+                        <Route path="routine/:routineId" element={<RoutineDetailsCard />} />
+                    </Routes>
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.getByRole('link', { name: 'Squats' })).toHaveAttribute(
+            'href',
+            expect.stringMatching(/\/exercise\/345\/view\/squats$/)
+        );
     });
 });
