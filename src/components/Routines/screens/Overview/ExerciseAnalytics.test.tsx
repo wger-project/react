@@ -1,9 +1,11 @@
+import { Exercise } from '@/components/Exercises';
+import { analyticsDateFilter } from '@/components/Routines/models/analytics';
 import { getLanguages } from "@/components/Exercises/api/language";
 import { getWorkoutLogs } from "@/components/Routines/api/workoutLogs";
 import { getRoutinesShallow } from "@/components/Routines/api/routine";
 import { ExerciseAnalytics } from "@/components/Routines/screens/Overview/ExerciseAnalytics";
 import { analyticsLog } from "@/tests/analyticsTestData";
-import { testExerciseSquats, testLanguages, testMuscleBiggus } from "@/tests/exerciseTestdata";
+import { testExerciseBenchPress, testExerciseSquats, testLanguages, testMuscleBiggus } from "@/tests/exerciseTestdata";
 import { getTestQueryClient } from "@/tests/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from '@testing-library/react';
@@ -22,16 +24,17 @@ const renderPage = () => render(<MemoryRouter>
 
 beforeEach(() => {
     vi.clearAllMocks();
+    window.localStorage.removeItem('wgerAnalyticsRange');
     vi.mocked(getLanguages).mockResolvedValue(testLanguages);
     vi.mocked(getWorkoutLogs).mockResolvedValue([
         analyticsLog(), analyticsLog({ id: 'second', routineId: 2, weight: 60, repetitions: 5 }),
     ]);
 });
 
-test('defaults to weight and all history; metrics and table reflect logs across routines', async () => {
+test('defaults to weight and one year; metrics and table reflect logs across routines', async () => {
     const user = userEvent.setup();
     renderPage();
-    await waitFor(() => expect(getWorkoutLogs).toHaveBeenCalledWith({ loadExercises: true, filtersetQuery: {} }));
+    await waitFor(() => expect(getWorkoutLogs).toHaveBeenCalledWith({ loadExercises: true, filtersetQuery: analyticsDateFilter('lastYear') }));
     expect(screen.getByRole('combobox', { name: 'routines.analytics.metric' })).toHaveTextContent('weight');
     await user.click(screen.getByRole('button', { name: 'routines.analytics.tableView' }));
     expect(await screen.findByRole('cell', { name: '60' })).toBeInTheDocument();
@@ -47,12 +50,13 @@ test('defaults to weight and all history; metrics and table reflect logs across 
 test('exercise and muscle selectors filter the displayed history', async () => {
     const user = userEvent.setup();
     vi.mocked(getWorkoutLogs).mockResolvedValue([
-        analyticsLog(), analyticsLog({ id: 'unknown', exerciseId: 999, exerciseObj: undefined, weight: 999 }),
+        analyticsLog(), analyticsLog({ id: 'other', exerciseId: 999,
+            exerciseObj: new Exercise({ ...testExerciseBenchPress, id: 999, muscles: [], musclesSecondary: [] }), weight: 999 }),
     ]);
     renderPage();
     await user.click(screen.getByRole('button', { name: 'routines.analytics.tableView' }));
     expect(await screen.findByRole('cell', { name: '999' })).toBeInTheDocument();
-    await user.click(screen.getByRole('combobox', { name: 'routines.analytics.muscle' }));
+    await user.click(screen.getByRole('combobox', { name: 'exercises.muscles' }));
     await user.click(await screen.findByRole('option', { name: testMuscleBiggus.getName() }));
     expect(screen.queryByRole('cell', { name: '999' })).not.toBeInTheDocument();
     await user.click(screen.getByRole('combobox', { name: 'routines.analytics.exercise' }));
@@ -122,5 +126,19 @@ test('routine overview menu opens the independent analytics route even without r
     await user.click(link);
     expect(await screen.findByText('routines.analytics.description')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'routines.routines' })).toHaveAttribute('href', '/en/routine/overview');
+    await waitFor(() => expect(getWorkoutLogs).toHaveBeenCalledWith({ loadExercises: true, filtersetQuery: analyticsDateFilter('lastYear') }));
+});
+
+test('persists the selected range and restores it when the page is reopened', async () => {
+    const user = userEvent.setup();
+    const page = renderPage();
+    await waitFor(() => expect(getWorkoutLogs).toHaveBeenCalledTimes(1));
+    await user.click(screen.getByRole('button', { name: 'measurements.chartRangeAll' }));
+    await waitFor(() => expect(getWorkoutLogs).toHaveBeenLastCalledWith({ loadExercises: true, filtersetQuery: {} }));
+    expect(window.localStorage.getItem('wgerAnalyticsRange')).toBe('all');
+    page.unmount();
+    vi.mocked(getWorkoutLogs).mockClear();
+    renderPage();
     await waitFor(() => expect(getWorkoutLogs).toHaveBeenCalledWith({ loadExercises: true, filtersetQuery: {} }));
+    expect(screen.getByRole('button', { name: 'measurements.chartRangeAll' })).toHaveAttribute('aria-pressed', 'true');
 });

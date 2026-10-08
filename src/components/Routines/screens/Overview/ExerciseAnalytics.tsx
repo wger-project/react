@@ -10,6 +10,7 @@ import { ChartRange, ChartRangeSelector } from "@/components/Measurements";
 import {
     aggregateAnalytics, analyticsDateFilter, AnalyticsMetric, AnalyticsUnit,
 } from "@/components/Routines/models/analytics";
+import { loadAnalyticsRange, saveAnalyticsRange } from "@/components/Routines/state/analyticsRange";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { useExerciseAnalyticsQuery } from "@/components/Routines/queries/analytics";
 import { ExerciseAnalyticsChart } from "@/components/Routines/widgets/ExerciseAnalyticsChart";
@@ -30,7 +31,7 @@ const withSelection = (options: Option[], selected: Option | null): Option[] =>
 export const ExerciseAnalytics = () => {
     const [t, i18n] = useTranslation();
     const [metric, setMetric] = useState<AnalyticsMetric>('weight');
-    const [range, setRange] = useState<ChartRange>('all');
+    const [range, setRange] = useState<ChartRange>(loadAnalyticsRange);
     const [exercise, setExercise] = useState<Option | null>(null);
     const [muscle, setMuscle] = useState<Option | null>(null);
     const [table, setTable] = useState(false);
@@ -45,8 +46,7 @@ export const ExerciseAnalytics = () => {
         for (const log of logs) {
             exercises.set(log.exerciseId, {
                 id: log.exerciseId,
-                name: log.exerciseObj?.getTranslation(language)?.name
-                    ?? t('routines.analytics.unknownExercise', { id: log.exerciseId }),
+                name: log.exerciseObj!.getTranslation(language).name,
             });
             for (const item of [...log.exerciseObj?.muscles ?? [], ...log.exerciseObj?.musclesSecondary ?? []]) {
                 muscles.set(item.id, { id: item.id, name: item.getName() });
@@ -54,7 +54,7 @@ export const ExerciseAnalytics = () => {
         }
         const byName = (a: Option, b: Option) => a.name.localeCompare(b.name, i18n.language);
         return { exercises: [...exercises.values()].sort(byName), muscles: [...muscles.values()].sort(byName) };
-    }, [logs, languages.data, i18n.language, t]);
+    }, [logs, languages.data, i18n.language]);
 
     const result = useMemo(() => aggregateAnalytics(logs, metric, {
         exerciseId: exercise?.id ?? null, muscleId: muscle?.id ?? null,
@@ -63,7 +63,7 @@ export const ExerciseAnalytics = () => {
     const series = result.series.map(item => ({
         ...item,
         name: item.exerciseId === null ? muscle?.name ?? ''
-            : names.get(item.exerciseId) ?? t('routines.analytics.unknownExercise', { id: item.exerciseId }),
+            : names.get(item.exerciseId)!,
     }));
     const viewLabel = t(table ? 'routines.analytics.chartView' : 'routines.analytics.tableView');
 
@@ -80,7 +80,10 @@ export const ExerciseAnalytics = () => {
         <Stack spacing={3}>
             <Typography color="text.secondary">{t('routines.analytics.description')}</Typography>
             <Box sx={{ overflowX: 'auto' }}>
-                <ChartRangeSelector value={range} onChange={setRange} />
+                <ChartRangeSelector value={range} onChange={value => {
+                    setRange(value);
+                    saveAnalyticsRange(value);
+                }} />
             </Box>
             <Grid container spacing={2}>
                 <Grid size={{ xs: 12, sm: 5 }}>
@@ -106,7 +109,7 @@ export const ExerciseAnalytics = () => {
                         isOptionEqualToValue={(a, b) => a.id === b.id}
                         loading={query.isFetching}
                         renderInput={params => <TextField {...params}
-                            label={t('routines.analytics.muscle')} placeholder={t('all')} />}
+                            label={t('exercises.muscles')} placeholder={t('all')} />}
                     />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 3 }}>

@@ -59,13 +59,12 @@ describe('exercise analytics aggregation', () => {
         expect(reps.skipped).toBe(2);
     });
 
-    test('uses time metadata when present and supports units from older servers', () => {
+    test('uses API time metadata independently of the unit ID', () => {
         const unit = new RepetitionUnitAdapter().fromJson({ id: 99, name: 'Minutes', unit_type: 'TIME', multiplier: 60 });
         const result = aggregateAnalytics([
             analyticsLog({ id: 'modern', repetitions: 2, repetitionUnitId: 99, repetitionUnitObj: unit }),
-            analyticsLog({ id: 'legacy', repetitions: 1, repetitionUnitId: 4, repetitionUnitObj: new RepetitionUnit(4, 'Minutes') }),
         ], 'volume', all);
-        expect(result.series[0].points[0].value).toBe(180);
+        expect(result.series[0].points[0].value).toBe(120);
     });
 
     test('muscle filters include primary and secondary matches once, and intersect with exercise', () => {
@@ -102,12 +101,14 @@ describe('exercise analytics aggregation', () => {
 
     test('unknown units and invalid duration multipliers cannot create a misleading value', () => {
         const logs = [
-            analyticsLog({ id: 'no-rep-unit', repetitionUnitId: null, repetitionUnitObj: null }),
+            analyticsLog({ id: 'no-rep-unit', repetitionUnitId: 1, repetitionUnitObj: null }),
+            analyticsLog({ id: 'no-multiplier', repetitionUnitId: 4,
+                repetitionUnitObj: new RepetitionUnit(4, 'Minutes', 'TIME', null) }),
             analyticsLog({ id: 'negative-reps', repetitions: -1 }),
             analyticsLog({ id: 'duration', repetitionUnitId: 3,
                 repetitionUnitObj: new RepetitionUnit(3, 'Seconds', 'TIME', 0) }),
         ];
-        expect(aggregateAnalytics(logs, 'volume', all)).toEqual({ series: [], skipped: 3 });
+        expect(aggregateAnalytics(logs, 'volume', all)).toEqual({ series: [], skipped: 4 });
         expect(aggregateAnalytics([analyticsLog({ weight: null })], 'weight', all)).toEqual({ series: [], skipped: 1 });
     });
 });

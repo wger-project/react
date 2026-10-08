@@ -63,19 +63,17 @@ const valueFor = (log: WorkoutLog, metric: AnalyticsMetric): { value: number, un
         return null;
     }
 
-    // Older servers did not send unit_type/multiplier. These are the fixed
-    // repetition unit IDs, also used by existing routine forms and fixtures.
     const unit = log.repetitionUnitObj;
-    const type = unit?.unitType ?? (
-        [1, 2, 7].includes(log.repetitionUnitId ?? -1) ? 'REPETITIONS'
-            : [3, 4].includes(log.repetitionUnitId ?? -1) ? 'TIME' : null
-    );
+    const type = unit?.unitType;
     if (metric === 'reps') {
         return type === 'REPETITIONS' ? { value: log.repetitions, unit: 'reps' } : null;
     }
     // A hold is duration, never repetitions. Keep it separate from kg × reps.
     if (type === 'TIME') {
-        const multiplier = unit?.multiplier ?? (log.repetitionUnitId === 4 ? 60 : 1);
+        const multiplier = unit?.multiplier;
+        if (multiplier === null || multiplier === undefined) {
+            return null;
+        }
         const seconds = log.repetitions * multiplier;
         return Number.isFinite(seconds) && multiplier > 0 ? { value: seconds, unit: 'seconds' } : null;
     }

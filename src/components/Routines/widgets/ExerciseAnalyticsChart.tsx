@@ -21,7 +21,7 @@ export const ExerciseAnalyticsChart = (props: {
         kg: 'kg',
         kgReps: t('routines.analytics.kgReps'),
         reps: t('routines.reps'),
-        seconds: t('routines.analytics.seconds'),
+        seconds: t('server.seconds'),
     }[props.unit];
     const number = (value: number) => value.toLocaleString(i18n.language, { maximumFractionDigits: 2 });
     const data = useMemo(() => {
@@ -73,7 +73,7 @@ export const ExerciseAnalyticsChart = (props: {
                 tickFormatter={value => dateToLocale(new Date(value))}
                 minTickGap={30}
             />
-            <YAxis width="auto" domain={[0, 'auto']} tickFormatter={number} />
+            <YAxis width="auto" domain={['auto', 'auto']} tickFormatter={number} />
             <Tooltip
                 labelFormatter={label => dateToLocale(new Date(Number(label)))}
                 formatter={value => `${number(Number(value))} ${unitLabel}`}
