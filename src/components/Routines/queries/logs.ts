@@ -9,6 +9,7 @@ export function useDeleteRoutineLogQuery(routineId: number) {
     return useMutation({
         mutationFn: (logId: string) => deleteLog(logId),
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_ANALYTICS] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_LOG_DATA, routineId] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_STATS, routineId] });
         }
@@ -29,6 +30,7 @@ export function useEditRoutineLogQuery(routineId: number) {
     return useMutation({
         mutationFn: (log: WorkoutLog) => editLog(log),
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_ANALYTICS] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_LOGS, routineId] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_STATS, routineId] });
         }
@@ -42,6 +44,7 @@ export function useAddRoutineLogsQuery(routineId: number) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         mutationFn: (entries: any[]) => addLogs(entries),
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_ANALYTICS] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_LOGS, routineId] });
             queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_STATS, routineId] });
         }

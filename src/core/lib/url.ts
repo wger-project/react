@@ -56,6 +56,7 @@ export enum WgerLink {
 
     // Routines
     ROUTINE_OVERVIEW,
+    EXERCISE_ANALYTICS,
     ROUTINE_DETAIL,
     ROUTINE_EDIT,
     ROUTINE_DETAIL_TABLE,
@@ -116,6 +117,8 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
         // Workout routines
         case WgerLink.ROUTINE_OVERVIEW:
             return `/${language}/routine/overview`;
+        case WgerLink.EXERCISE_ANALYTICS:
+            return `/${language}/routine/analytics`;
         case WgerLink.ROUTINE_DETAIL:
             return `/${language}/routine/${params!.id}/view`;
         case WgerLink.ROUTINE_DETAIL_TABLE:
