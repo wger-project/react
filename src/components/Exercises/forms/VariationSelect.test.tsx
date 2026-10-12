@@ -107,6 +107,21 @@ describe("VariationSelect", () => {
         expect(screen.queryByText("Skull crusher")).not.toBeInTheDocument();
     });
 
+    test("filters exercises by alias (case-insensitive)", async () => {
+        const user = userEvent.setup();
+        renderSelect();
+        const input = screen.getByRole("textbox", { name: /name/i });
+
+        // 'Beinverdicker' is an alias of the German translation of testExerciseSquats
+        await user.type(input, "beinverd");
+
+        expect(screen.getByText("Squats")).toBeInTheDocument();
+        expect(screen.queryByText("Crunches")).not.toBeInTheDocument();
+        expect(screen.queryByText("Benchpress")).not.toBeInTheDocument();
+        expect(screen.queryByText("Curls")).not.toBeInTheDocument();
+        expect(screen.queryByText("Skull crusher")).not.toBeInTheDocument();
+    });
+
     test("hides the current exercise (exerciseId prop) from the standalone list", () => {
         // Squats has id 345 and no variation group, so passing its id should hide it
         renderSelect({ exerciseId: SQUATS_ID });

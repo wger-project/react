@@ -6,7 +6,7 @@ import { Step2Variations } from "@/components/Exercises/screens/Add/Step2Variati
 import { useExercisesQuery } from "@/components/Exercises/queries";
 import React from "react";
 import { ExerciseSubmissionStateProvider } from "@/components/Exercises/screens/Add/state";
-import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls } from "@/tests/exerciseTestdata";
+import { testExerciseBenchPress, testExerciseCrunches, testExerciseCurls, testExerciseSquats } from "@/tests/exerciseTestdata";
 import type { Mock } from 'vitest';
 
 vi.mock('@/components/Exercises/queries');
@@ -158,6 +158,34 @@ describe("Test the add exercise step 2 component", () => {
         await user.clear(input);
         await user.type(input, 'Bench');
         expect(screen.getByText("Benchpress")).toBeInTheDocument();
+        expect(screen.queryByText("Curls")).not.toBeInTheDocument();
+        expect(screen.queryByText("Crunches")).not.toBeInTheDocument();
+    });
+
+    test("can filter the exercises by alias", async () => {
+        // Arrange
+        const user = userEvent.setup();
+        mockedUseExercisesQuery.mockImplementation(() => ({
+            isLoading: false,
+            isSuccess: true,
+            data: [
+                testExerciseBenchPress,
+                testExerciseCurls,
+                testExerciseCrunches,
+                testExerciseSquats,
+            ]
+        }));
+
+        // Act
+        renderStep();
+        const input = screen.getByRole('textbox', { name: /name/i });
+
+        // 'Beinverdicker' is an alias of the German translation of testExerciseSquats
+        await user.type(input, "beinverd");
+
+        // Assert
+        expect(screen.getByText("Squats")).toBeInTheDocument();
+        expect(screen.queryByText("Benchpress")).not.toBeInTheDocument();
         expect(screen.queryByText("Curls")).not.toBeInTheDocument();
         expect(screen.queryByText("Crunches")).not.toBeInTheDocument();
     });
