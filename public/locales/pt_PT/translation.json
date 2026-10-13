@@ -311,7 +311,11 @@
             "afap": "O mais rápido possível"
         },
         "iterationNr": "Iteração {{number}}",
-        "exerciseNotAvailable": "Erro ao carregar exercício"
+        "exerciseNotAvailable": "Erro ao carregar exercício",
+        "analytics": {
+            "title": "Análise de exercícios",
+            "menu": "Opções de rotina"
+        }
     },
     "measurements": {
         "measurements": "Medições",
@@ -380,5 +384,6 @@
     "mean": "Média",
     "trend": "Tendência",
     "variance": "Variação",
-    "totalChange": "Variação total"
+    "totalChange": "Variação total",
+    "syncedEntryInfo": "Este registo foi sincronizado de uma aplicação de saúde e só pode ser alterada nela"
 }
