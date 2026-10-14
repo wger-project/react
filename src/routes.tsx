@@ -33,6 +33,7 @@ import {
     WeightOverview,
 } from "@/pages";
 import { ExerciseDetailPage } from "@/pages/ExerciseDetails";
+import { RouteErrorBoundary } from "@/core/ui/Widgets/PageErrorBoundary";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
@@ -44,7 +45,8 @@ import { Route, Routes } from "react-router-dom";
  */
 export const WgerRoutes = () => {
     return (
-        <Routes>
+        <RouteErrorBoundary>
+            <Routes>
             <Route path="/:lang">
                 <Route path="routine">
                     <Route index element={<RoutineOverview />} />
@@ -141,6 +143,7 @@ export const WgerRoutes = () => {
                     </main>
                 }
             />
-        </Routes>
+            </Routes>
+        </RouteErrorBoundary>
     );
 };
