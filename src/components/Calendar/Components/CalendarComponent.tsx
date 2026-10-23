@@ -151,14 +151,11 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    useEffect(() => {
-        if (isSuccess) {
-            const todayWithData = days.find(day => isSameDay(day.date, currentDate));
-            if (todayWithData) {
-                setSelectedDay(todayWithData);
-            }
-        }
-    }, [currentDate, days, isSuccess]);
+    // The entries panel reads the selected day from the current data, so that
+    // e.g. a deleted session disappears from it instead of showing a stale copy
+    const selectedDayData = days.find(
+        day => day.date.getMonth() === currentMonth && isSameDay(day.date, selectedDay.date)
+    ) ?? selectedDay;
 
 
     useEffect(() => {
@@ -266,7 +263,7 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
                     <LoadingPlaceholder />
                 </Card>}
 
-            {isSuccess && <Entries selectedDay={selectedDay} isStandalone={isStandalone} />}
+            {isSuccess && <Entries selectedDay={selectedDayData} isStandalone={isStandalone} />}
         </Box>
     );
 };

@@ -1,11 +1,15 @@
 import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Measurements";
+import { useDeleteSessionQuery, WorkoutSession } from "@/components/Routines";
 import { dateToLocale } from "@/core/lib/date";
+import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import {
     Card,
     CardContent,
     CardHeader,
     Collapse,
+    IconButton,
     List,
     ListItem,
     ListItemButton,
@@ -31,6 +35,8 @@ const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
     // A day can hold several sessions, at most one of them is expanded
     const [openSessionId, setOpenSessionId] = React.useState<string | null>(null);
     const [openNutritionDiary, setOpenNutritionDiary] = React.useState(false);
+    const [sessionToDelete, setSessionToDelete] = React.useState<WorkoutSession | null>(null);
+    const deleteSessionQuery = useDeleteSessionQuery();
 
     isStandalone = isStandalone ?? true;
 
@@ -113,7 +119,17 @@ const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
 
                     {/* Workout sessions */}
                     {selectedDay.workoutSessions.map((session) => <React.Fragment key={session.id}>
-                        <ListItem>
+                        <ListItem
+                            secondaryAction={
+                                <IconButton
+                                    edge="end"
+                                    aria-label={t("delete")}
+                                    onClick={() => setSessionToDelete(session)}
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                            }
+                        >
                             <ListItemButton
                                 onClick={() => setOpenSessionId(openSessionId === session.id ? null : session.id)}
                                 selected={openSessionId === session.id}
@@ -171,6 +187,14 @@ const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
                 </List>
 
             </CardContent>
+
+            <DeleteConfirmationModal
+                title={t('deleteConfirmation', { name: t("routines.workoutSession") })}
+                message={t("routines.deleteSessionInfo")}
+                isOpen={sessionToDelete !== null}
+                closeFn={() => setSessionToDelete(null)}
+                deleteFn={() => deleteSessionQuery.mutate(sessionToDelete!)}
+            />
         </Card>
     );
 };
