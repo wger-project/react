@@ -1,5 +1,6 @@
 import {
     addSession,
+    deleteSession,
     editSession,
     getSessions,
     searchSessions,
@@ -83,4 +84,23 @@ export const useEditSessionQuery = () => {
     });
 };
 
+/*
+ * Delete a session together with its logs, so everything that reads either
+ * of them is stale afterwards
+ */
+export const useDeleteSessionQuery = () => {
+    const queryClient = useQueryClient();
 
+    return useMutation({
+        mutationFn: async (session: WorkoutSession) => {
+            await deleteSession(session.id!);
+            return session;
+        },
+        onSuccess: (session: WorkoutSession) => {
+            invalidateSessionReads(queryClient, session);
+            queryClient.invalidateQueries({ queryKey: [QueryKey.EXERCISE_ANALYTICS] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_LOG_DATA, session.routineId] });
+            queryClient.invalidateQueries({ queryKey: [QueryKey.ROUTINE_STATS, session.routineId] });
+        },
+    });
+};

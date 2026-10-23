@@ -62,5 +62,10 @@ export {
 } from "./slots";
 
 export {
-    useAddSessionQuery, useEditSessionQuery, useFindSessionsQuery, useSessionOfDay, useSessionsQuery
+    useAddSessionQuery,
+    useDeleteSessionQuery,
+    useEditSessionQuery,
+    useFindSessionsQuery,
+    useSessionOfDay,
+    useSessionsQuery
 } from "./sessions";

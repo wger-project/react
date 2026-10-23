@@ -305,6 +305,7 @@
         "routine": "Routine",
         "routines": "Routines",
         "workoutSession": "Workout session",
+        "deleteSessionInfo": "This will delete the session as well as all the sets logged in it",
         "rir": "RiR",
         "restDay": "Rest day",
         "confirmRestDay": "Confirm rest day change",

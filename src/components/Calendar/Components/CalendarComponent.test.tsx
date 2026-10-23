@@ -4,7 +4,8 @@ import {
     getMeasurementCategories
 } from "@/components/Measurements/api/measurements";
 import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutritionalDiary";
-import { getSessions } from "@/components/Routines/api/session";
+import { deleteSession, getSessions } from "@/components/Routines/api/session";
+import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { getBodyWeightCategory, getWeights } from "@/components/Measurements/api/bodyWeight";
 import { TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2 } from "@/tests/nutritionDiaryTestdata";
 import { testQueryClient } from "@/tests/queryClient";
@@ -14,9 +15,9 @@ import {
     testBodyWeightCategory
 } from "@/tests/weight/testData";
 import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
-import { dateToYYYYMMDD } from "@/core/lib/date";
+import { dateToLocale, dateToYYYYMMDD } from "@/core/lib/date";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import i18n from "i18next";
 import React from "react";
@@ -250,4 +251,51 @@ describe('CalendarComponent', () => {
             filtersetQuery: { "datetime__gte": start, "datetime__lt": end },
         });
     });
+
+    test('removes a deleted session from the selected day', async () => {
+        const session = new WorkoutSession({
+            ...testWorkoutSession,
+            notes: 'leg day',
+            datetimeStart: new Date(currentYear, currentMonth, 3, 10, 30),
+            datetimeEnd: new Date(currentYear, currentMonth, 3, 12, 0),
+        });
+        (getSessions as Mock).mockImplementation(() => Promise.resolve([session]));
+        (deleteSession as Mock).mockImplementation(() => {
+            (getSessions as Mock).mockImplementation(() => Promise.resolve([]));
+            return Promise.resolve(204);
+        });
+
+        renderComponent();
+        const day = await screen.findByTestId(`day-${dateToYYYYMMDD(new Date(currentYear, currentMonth, 3))}`);
+        await user.click(day);
+        expect(await screen.findByText(/leg day/)).toBeInTheDocument();
+
+        await user.click(screen.getByRole('button', { name: 'delete' }));
+        await user.click(screen.getByRole('button', { name: 'delete' }));
+
+        expect(deleteSession).toHaveBeenCalledWith(session.id);
+        await waitFor(() => expect(screen.queryByText(/leg day/)).not.toBeInTheDocument());
+        // The selection stays on the day the session was deleted from
+        expect(screen.getByText(dateToLocale(new Date(currentYear, currentMonth, 3)), { exact: false })).toBeInTheDocument();
+    });
+
+    test('changing the month moves the selection along', async () => {
+        (getWeights as Mock).mockImplementation(() => Promise.resolve([
+            makeWeightEntry(new Date(currentYear, currentMonth, 15, 12, 0), 70),
+        ]));
+
+        renderComponent();
+        expect(await screen.findByText('70.0 server.kg')).toBeInTheDocument();
+
+        // Another month shows its first day, not today without its entries
+        await user.click(screen.getByText('<'));
+        expect(await screen.findByText(dateToLocale(new Date(currentYear, currentMonth - 1, 1)), { exact: false })).toBeInTheDocument();
+        expect(screen.queryByText('70.0 server.kg')).not.toBeInTheDocument();
+
+        // Back in the current month, today is selected again
+        await user.click(screen.getByText('>'));
+        expect(await screen.findByText(dateToLocale(today), { exact: false })).toBeInTheDocument();
+        expect(await screen.findByText('70.0 server.kg')).toBeInTheDocument();
+    });
 });
+
