@@ -14,7 +14,7 @@ import { isSameDay } from "@/core/lib/date";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Box, Card, CardContent, CardHeader, useMediaQuery, useTheme } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import Entries from './Entries';
 
@@ -31,8 +31,10 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
     const [t] = useTranslation();
 
     const currentDate = useMemo(() => new Date(), []);
-    const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
-    const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
+    // The calendar always shows the month of the selected day
+    const [selectedDate, setSelectedDate] = useState(currentDate);
+    const currentMonth = selectedDate.getMonth();
+    const currentYear = selectedDate.getFullYear();
 
     const startOfMonth = new Date(currentYear, currentMonth, 1);
     const startOfNextMonth = new Date(currentYear, currentMonth + 1, 1);
@@ -70,14 +72,6 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
 
     const isLoading = weightsQuery.isLoading || sessionQuery.isLoading || categoryQuery.isLoading || measurementQuery.isLoading || nutritionDiaryQuery.isLoading;
     const isSuccess = weightsQuery.isSuccess && sessionQuery.isSuccess && categoryQuery.isSuccess && measurementQuery.isSuccess && nutritionDiaryQuery.isSuccess;
-
-    const defaultDay: DayProps = {
-        date: currentDate,
-        weightEntry: undefined,
-        workoutSessions: [],
-        measurements: [],
-        nutritionLogs: []
-    };
 
     const days = useMemo(() => {
         const year = currentYear;
@@ -146,44 +140,39 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
 
         return result;
     }, [currentYear, currentMonth, weightsQuery.data, sessionQuery.data, categoryQuery.data, measurementQuery.data, nutritionDiaryQuery.data, t]);
-    const [selectedDay, setSelectedDay] = useState<DayProps>(days.find(day => isSameDay(day.date, currentDate)) || defaultDay);
+    // Read from the current data, so that e.g. a deleted session disappears
+    // from the entries panel instead of showing a stale copy
+    const selectedDay: DayProps = days.find(
+        day => day.date.getMonth() === currentMonth && isSameDay(day.date, selectedDate)
+    ) ?? {
+        date: selectedDate,
+        weightEntry: undefined,
+        workoutSessions: [],
+        measurements: [],
+        nutritionLogs: []
+    };
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    // The entries panel reads the selected day from the current data, so that
-    // e.g. a deleted session disappears from it instead of showing a stale copy
-    const selectedDayData = days.find(
-        day => day.date.getMonth() === currentMonth && isSameDay(day.date, selectedDay.date)
-    ) ?? selectedDay;
-
-
-    useEffect(() => {
-        setCurrentMonth(selectedDay.date.getMonth());
-        setCurrentYear(selectedDay.date.getFullYear());
-    }, [selectedDay]);
-
     const handleDayClick = (day: DayProps) => {
-        setSelectedDay(day);
+        setSelectedDate(day.date);
+    };
+
+    // Changing the month selects its first day, or today in the current month
+    const selectMonth = (year: number, month: number) => {
+        setSelectedDate(year === currentDate.getFullYear() && month === currentDate.getMonth()
+            ? currentDate
+            : new Date(year, month, 1));
     };
 
     const handlePrevMonth = () => {
-        if (currentMonth === 0) {
-            setCurrentMonth(11);
-            setCurrentYear(currentYear - 1);
-        } else {
-            setCurrentMonth(currentMonth - 1);
-        }
+        selectMonth(currentYear, currentMonth - 1);
     };
 
     const handleNextMonth = () => {
         if (currentMonth < currentDate.getMonth() || currentYear < currentDate.getFullYear()) {
-            if (currentMonth === 11) {
-                setCurrentMonth(0);
-                setCurrentYear(currentYear + 1);
-            } else {
-                setCurrentMonth(currentMonth + 1);
-            }
+            selectMonth(currentYear, currentMonth + 1);
         }
     };
 
@@ -263,7 +252,7 @@ const CalendarComponent = (props: { isStandalone?: boolean }) => {
                     <LoadingPlaceholder />
                 </Card>}
 
-            {isSuccess && <Entries selectedDay={selectedDayData} isStandalone={isStandalone} />}
+            {isSuccess && <Entries selectedDay={selectedDay} isStandalone={isStandalone} />}
         </Box>
     );
 };

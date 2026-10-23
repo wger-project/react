@@ -278,5 +278,24 @@ describe('CalendarComponent', () => {
         // The selection stays on the day the session was deleted from
         expect(screen.getByText(dateToLocale(new Date(currentYear, currentMonth, 3)), { exact: false })).toBeInTheDocument();
     });
+
+    test('changing the month moves the selection along', async () => {
+        (getWeights as Mock).mockImplementation(() => Promise.resolve([
+            makeWeightEntry(new Date(currentYear, currentMonth, 15, 12, 0), 70),
+        ]));
+
+        renderComponent();
+        expect(await screen.findByText('70.0 server.kg')).toBeInTheDocument();
+
+        // Another month shows its first day, not today without its entries
+        await user.click(screen.getByText('<'));
+        expect(await screen.findByText(dateToLocale(new Date(currentYear, currentMonth - 1, 1)), { exact: false })).toBeInTheDocument();
+        expect(screen.queryByText('70.0 server.kg')).not.toBeInTheDocument();
+
+        // Back in the current month, today is selected again
+        await user.click(screen.getByText('>'));
+        expect(await screen.findByText(dateToLocale(today), { exact: false })).toBeInTheDocument();
+        expect(await screen.findByText('70.0 server.kg')).toBeInTheDocument();
+    });
 });
 
