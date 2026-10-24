@@ -286,7 +286,9 @@ const ExerciseLogTooltip = ({ active, payload }: TooltipContentProps<ValueType, 
 };
 
 export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
+    const { t } = useTranslation();
     const weightUnit = useDisplayWeightUnit();
+    const weightUnitLabel = t(weightUnit === 'lb' ? 'server.lb' : 'server.kg');
 
     // Group by rep count
     //
@@ -314,7 +316,7 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
                     domain={["auto", "auto"]}
                     dataKey="value"
                     name="Value"
-                    unit={weightUnit}
+                    unit={weightUnitLabel}
                 />
 
                 {Array.from(result).map(([key, value]) => {
