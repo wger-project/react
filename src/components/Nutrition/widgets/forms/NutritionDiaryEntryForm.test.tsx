@@ -20,22 +20,20 @@ import type { Mock } from 'vitest';
 vi.mock('@/components/Nutrition/queries');
 vi.mock("@/components/Nutrition/api/ingredient");
 
-async function fillInEntry(user: UserEvent) {
+async function fillInEntry(user: UserEvent, ingredientName: string) {
+    // An already selected ingredient is shown instead of the search
+    const clearButton = screen.queryByRole('button', { name: 'nutrition.changeIngredient' });
+    if (clearButton !== null) {
+        await user.click(clearButton);
+    }
+
     const autocomplete = screen.getByTestId('autocomplete');
     const input = within(autocomplete).getByRole('combobox');
     await user.click(autocomplete);
     await user.type(input, 'Bagu');
 
-    // Wait for the debounced search results to render in the dropdown before
-    // navigating to them with the keyboard. Note: in edit mode the currently
-    // selected ingredient (yogurt) is filtered out of the dropdown
-    // (filterSelectedOptions), so wait for the second result, which is always
-    // present.
-    await screen.findByText('1001 Nacht Haferbrei');
-
-    // Select the first result
-    await user.click(input);
-    await user.keyboard('{ArrowDown}{Enter}');
+    // Wait for the debounced search results, then pick one by name
+    await user.click(await screen.findByText(ingredientName));
 
     const amountInput = screen.getByLabelText('amount');
     await user.clear(amountInput);
@@ -75,10 +73,10 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                 <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123" closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await fillInEntry(user);
+        await fillInEntry(user, '0% fat Greek style yogurt');
 
         // Assert
-        expect(screen.getByDisplayValue('0% fat Greek style yogurt')).toBeInTheDocument();
+        expect(within(screen.getByTestId('selected-ingredient')).getByText('0% fat Greek style yogurt')).toBeInTheDocument();
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateEditMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
@@ -104,10 +102,10 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                                          mealId="bbbbbbbb-0000-0000-0000-000000000456" closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await fillInEntry(user);
+        await fillInEntry(user, '0% fat Greek style yogurt');
 
         // Assert
-        expect(screen.getByDisplayValue('0% fat Greek style yogurt')).toBeInTheDocument();
+        expect(within(screen.getByTestId('selected-ingredient')).getByText('0% fat Greek style yogurt')).toBeInTheDocument();
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateEditMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
@@ -135,7 +133,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                                          closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await fillInEntry(user);
+        await fillInEntry(user, '1001 Nacht Haferbrei');
 
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
@@ -165,7 +163,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         );
 
         // Assert - ingredient and amount are prefilled
-        expect(screen.getByDisplayValue('0% fat Greek style yogurt')).toBeInTheDocument();
+        expect(within(screen.getByTestId('selected-ingredient')).getByText('0% fat Greek style yogurt')).toBeInTheDocument();
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
 
         // Submitting without changes keeps the entry's data
@@ -236,7 +234,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                                          closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await fillInEntry(user);
+        await fillInEntry(user, '1001 Nacht Haferbrei');
 
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();

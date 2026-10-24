@@ -3,40 +3,31 @@ import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { useAddMealItemQuery, useEditMealItemQuery, useSearchIngredientQuery } from "@/components/Nutrition/queries";
 import { MealItemForm } from "@/components/Nutrition/widgets/forms/MealItemForm";
-import { SEARCH_DEBOUNCE_MS } from "@/components/Nutrition/widgets/IngredientAutocompleter";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
 import { mutateMock } from "@/tests/mutationMock";
 import { TEST_MEAL_ITEM_1, TEST_WEIGHT_UNIT_SLICE } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import type { Mock } from 'vitest';
-
-const DEBOUNCE_WAIT_MS = SEARCH_DEBOUNCE_MS + 100;
 
 vi.mock('@/components/Nutrition/queries');
 vi.mock("@/components/Nutrition/api/ingredient");
 
-// Note: this helper still relies on a real-time sleep rather than waitFor.
-// The MUI Autocomplete flow with a prefilled value has subtle ordering
-// requirements between the typed search, the dropdown render, and ArrowDown+
-// Enter — replacing the sleep with waitFor on searchIngredient changes the
-// outcome of "An existing entry should be updated" (display value differs).
-// Worth revisiting if/when the test expectations are modernized.
-async function fillInEntry(user: UserEvent) {
+async function fillInEntry(user: UserEvent, ingredientName: string) {
+    // An already selected ingredient is shown instead of the search
+    const clearButton = screen.queryByRole('button', { name: 'nutrition.changeIngredient' });
+    if (clearButton !== null) {
+        await user.click(clearButton);
+    }
+
     const autocomplete = screen.getByTestId('autocomplete');
     const input = within(autocomplete).getByRole('combobox');
     await user.click(autocomplete);
     await user.type(input, 'Bagu');
 
-    // Wait for debounce
-    await act(async () => {
-        await new Promise((r) => setTimeout(r, DEBOUNCE_WAIT_MS));
-    });
-
-    // Select the first result
-    await user.click(input);
-    await user.keyboard('{ArrowDown}{Enter}');
+    // Wait for the debounced search results, then pick one by name
+    await user.click(await screen.findByText(ingredientName));
 
     const amountInput = screen.getByLabelText('amount');
     await user.clear(amountInput);
@@ -73,10 +64,10 @@ describe('Test the MealItemForm component', () => {
                               planId="aaaaaaaa-0000-0000-0000-000000000987" closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await fillInEntry(user);
+        await fillInEntry(user, '0% fat Greek style yogurt');
 
         // Assert
-        expect(screen.getByDisplayValue('0% fat Greek style yogurt')).toBeInTheDocument();
+        expect(within(screen.getByTestId('selected-ingredient')).getByText('0% fat Greek style yogurt')).toBeInTheDocument();
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateEditMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
@@ -100,10 +91,10 @@ describe('Test the MealItemForm component', () => {
                               closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await fillInEntry(user);
+        await fillInEntry(user, '1001 Nacht Haferbrei');
 
         // Assert
-        expect(screen.getByDisplayValue('1001 Nacht Haferbrei')).toBeInTheDocument();
+        expect(within(screen.getByTestId('selected-ingredient')).getByText('1001 Nacht Haferbrei')).toBeInTheDocument();
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateAddMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
@@ -141,8 +132,7 @@ describe('Test the MealItemForm component', () => {
                 <MealItemForm planId="aaaaaaaa-0000-0000-0000-000000000987" item={item} closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await user.click(screen.getByText('slice (50g)'));
-        await user.click(await screen.findByRole('option', { name: 'nutrition.gramShort' }));
+        await user.click(screen.getByRole('button', { name: 'nutrition.gramShort' }));
         await user.click(screen.getByRole('button', { name: 'submit' }));
 
         // Assert
