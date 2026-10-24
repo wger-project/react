@@ -11,7 +11,6 @@ import importPlugin from 'eslint-plugin-import-x';
 const DOMAINS = [
     'Exercises',
     'Routines',
-    'Weight',
     'Nutrition',
     'Measurements',
     'Trophies',
