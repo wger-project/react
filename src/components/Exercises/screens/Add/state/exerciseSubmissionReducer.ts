@@ -62,6 +62,11 @@ export const setImages = (images: ImageFormData[]): ExerciseSubmissionAction => 
 };
 
 
+export const setAuthor = (author: string): ExerciseSubmissionAction => {
+    return { type: SetExerciseSubmissionState.SET_AUTHOR, payload: author };
+};
+
+
 export const exerciseSubmissionReducer = (state: ExerciseSubmissionState, action: ExerciseSubmissionAction): ExerciseSubmissionState => {
 
     if (action === undefined) {
@@ -76,6 +81,12 @@ export const exerciseSubmissionReducer = (state: ExerciseSubmissionState, action
             return {
                 ...state,
                 nameEn: action.payload as string
+            };
+
+        case SetExerciseSubmissionState.SET_AUTHOR:
+            return {
+                ...state,
+                author: action.payload as string
             };
 
         case SetExerciseSubmissionState.SET_DESCRIPTION_EN:

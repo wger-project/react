@@ -72,7 +72,13 @@
         "transferTranslationsLabel": "Übertrage Übersetzungen auf den Ersatz (überspringt Sprachen, die bereits vorhanden sind)",
         "imageIsAiGenerated": "Bild wurde mit KI generiert",
         "dropOrClickImage": "Ziehe ein Bild hierher oder klicke, um auszuwählen",
-        "addImage": "Bild hinzufügen"
+        "addImage": "Bild hinzufügen",
+        "submitAuthorNotice": "Die Übung wird unter der Lizenz CC BY-SA 4.0 veröffentlicht, mit dem oben angegebenen Autor.",
+        "authorHelpText": "Wird als Autor der Übung angezeigt (CC BY-SA 4.0). Ändere es nur, wenn du nicht der Autor bist.",
+        "editAuthorNotice": "Änderungen werden unter der Lizenz CC BY-SA 4.0 veröffentlicht und dein Benutzername wird zu den Autoren dieser Übung hinzugefügt.",
+        "contentLicense": "Die Inhalte dieser Seite sind unter der <0>Lizenz CC BY-SA 4</0> verfügbar.",
+        "authorsList": "Autoren: {{authors}}",
+        "lastUpdate": "Zuletzt aktualisiert: {{date}}"
     },
     "noResults": "Keine Ergebnisse",
     "noResultsDescription": "Keine Ergebnisse für diese Suche gefunden, bitte reduziere die Anzahl der Filter.",
@@ -444,7 +450,8 @@
         "originalObjectUrl": "Link zur Quell-Website, falls verfügbar",
         "originalTitle": "Titel",
         "authorProfile": "Link zur Website oder Profil des Autors, falls verfügbar",
-        "derivativeSourceUrlHelper": "Beachte, dass ein abgeleitetes Werk nicht nur auf einem vorherigen Werk basiert, sondern auch genügend neue, kreative Inhalte enthält, um ein eigenes Urheberrecht zu beanspruchen."
+        "derivativeSourceUrlHelper": "Beachte, dass ein abgeleitetes Werk nicht nur auf einem vorherigen Werk basiert, sondern auch genügend neue, kreative Inhalte enthält, um ein eigenes Urheberrecht zu beanspruchen.",
+        "authorsHelper": "Leer lassen, wenn es dein eigenes Foto ist, dann wird dein Benutzername verwendet."
     },
     "filters": "Filter",
     "calendar": "Kalender",

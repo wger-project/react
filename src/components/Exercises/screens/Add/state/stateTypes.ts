@@ -18,7 +18,8 @@ export enum SetExerciseSubmissionState {
     SET_ALIASES_I18N,
     SET_DESCRIPTION_I18N,
     SET_NOTES_I18N,
-    SET_IMAGES
+    SET_IMAGES,
+    SET_AUTHOR
 }
 
 export type ExerciseSubmissionAction = {
@@ -46,6 +47,8 @@ export type ExerciseSubmissionState = {
     newVariationExerciseId: number | null;
 
     images: ImageFormData[];
+
+    author: string;
 }
 
 export const exerciseSubmissionInitialState: ExerciseSubmissionState = {
@@ -68,4 +71,6 @@ export const exerciseSubmissionInitialState: ExerciseSubmissionState = {
     notesI18n: [],
 
     images: [],
+
+    author: "",
 };

@@ -165,6 +165,10 @@ export const ExerciseDetailEdit = ({ exerciseId, language }: ViewProps) => {
                 <PaddingBox />
             </Box>}
 
+        <Alert severity="info" sx={{ mb: 2 }}>
+            {t('exercises.editAuthorNotice')}
+        </Alert>
+
         {/* The form freezes its default values, so a saved or reloaded
           * translation gets a fresh form via the key */}
         <TranslationEditForm

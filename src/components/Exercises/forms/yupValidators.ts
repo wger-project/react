@@ -44,6 +44,11 @@ export const noteValidator = () => yup
             .min(MIN_NOTE_LENGTH, i18n.t("forms.minLength", { 'chars': MIN_NOTE_LENGTH }))
     );
 
+export const authorValidator = () => yup
+    .string()
+    .trim()
+    .required(i18n.t("forms.fieldRequired"));
+
 export const categoryValidator = () => yup
     .number()
     .required(i18n.t("forms.fieldRequired"));

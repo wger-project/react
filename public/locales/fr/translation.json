@@ -67,7 +67,13 @@
         "exactMatch": "Correspondance exacte",
         "imageIsAiGenerated": "L'image a été générée par IA",
         "dropOrClickImage": "Déposez une image ici ou cliquez pour la sélectionner",
-        "addImage": "Ajouter une image"
+        "addImage": "Ajouter une image",
+        "submitAuthorNotice": "L'exercice est publié sous licence CC BY-SA 4.0, en mentionnant l'auteur indiqué ci-dessus.",
+        "authorHelpText": "Affiché comme auteur de l'exercice (CC BY-SA 4.0). Ne le modifiez que si vous n'êtes pas l'auteur.",
+        "editAuthorNotice": "Les modifications sont publiées sous licence CC BY-SA 4.0 et votre nom d'utilisateur est ajouté aux auteurs de cet exercice.",
+        "contentLicense": "Le contenu de cette page est disponible sous <0>licence CC BY-SA 4</0>.",
+        "authorsList": "Auteurs : {{authors}}",
+        "lastUpdate": "Dernière mise à jour : {{date}}"
     },
     "server": {
         "arms": "Bras",
@@ -344,7 +350,8 @@
         "authorProfile": "Lien vers le profile ou le site de l'auteur, si disponible",
         "derivativeSourceUrl": "Lien vers la source originale, s'il s'agit d'une œuvre dérivée",
         "originalObjectUrl": "Lien vers le site Web source, si disponible",
-        "derivativeSourceUrlHelper": "Notez qu'une œuvre dérivée est une œuvre qui n'est pas seulement basée sur une œuvre antérieure, mais qui contient également suffisamment de contenu nouveau et créatif pour lui donner droit à son propre droit d'auteur."
+        "derivativeSourceUrlHelper": "Notez qu'une œuvre dérivée est une œuvre qui n'est pas seulement basée sur une œuvre antérieure, mais qui contient également suffisamment de contenu nouveau et créatif pour lui donner droit à son propre droit d'auteur.",
+        "authorsHelper": "Laissez vide s'il s'agit de votre propre photo, votre nom d'utilisateur sera alors utilisé."
     },
     "filters": "Filtres",
     "measurements": {

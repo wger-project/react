@@ -10,7 +10,7 @@ import { Note } from "@/components/Exercises/models/note";
 import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
 import { useCanContributeExercises } from "@/components/User";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { dateTimeToLocale } from "@/core/lib/date";
 
 
@@ -258,10 +258,13 @@ export const ExerciseDetailView = ({
                     sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
                 >
                     <i className="fa-brands fa-creative-commons" style={{ fontSize: 20 }} />
-                    The content on this page is available under the
-                    <a href="https://creativecommons.org/licenses/by-sa/4.0/deed">
-                        CC BY-SA 4 License
-                    </a>.
+                    <span>
+                        <Trans
+                            i18nKey="exercises.contentLicense"
+                            components={[<a key="license"
+                                            href="https://creativecommons.org/licenses/by-sa/4.0/deed" />]}
+                        />
+                    </span>
                 </Typography>
 
                 <Typography
@@ -269,8 +272,8 @@ export const ExerciseDetailView = ({
                     sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
                 >
                     <>
-                        Authors: {exercise.authors.join(", ")}<br />
-                        Last update: {dateTimeToLocale(exercise.lastUpdateGlobal)}
+                        {t('exercises.authorsList', { authors: exercise.authors.join(", ") })}<br />
+                        {t('exercises.lastUpdate', { date: dateTimeToLocale(exercise.lastUpdateGlobal) })}
                     </>
                 </Typography>
             </Grid>
