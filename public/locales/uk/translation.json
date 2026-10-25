@@ -456,7 +456,8 @@
         "filterVegetarian": "Вегетаріанське",
         "filterNutriscoreNoFilter": "Без фільтра",
         "filterNutriscoreOrBetter": "{{grade}} або вище",
-        "filterNutriscore": "Фільтр Nutri-Score"
+        "filterNutriscore": "Фільтр Nutri-Score",
+        "changeIngredient": "Оберіть інший інгредієнт"
     },
     "timeOfDay": "Час",
     "close": "Закрити",
