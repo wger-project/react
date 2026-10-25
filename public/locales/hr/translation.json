@@ -160,7 +160,7 @@
         "reps": "Ponavljanja",
         "intensity": "Intenzitet",
         "currentRoutine": "Trenutačna rutina",
-        "iteration": "Ponavljanje rutine",
+        "iteration": "Ponavljanje",
         "weekly": "Tjedno",
         "daily": "Dnevno",
         "day": {
@@ -194,7 +194,7 @@
         "resultingRoutine": "Rezultirajuća rutina",
         "deleteDayConfirmation": "Ovo će ukloniti sve serije, vježbe i pravila napredovanja",
         "exerciseHasProgression": "Ova vježba ima pravila napredovanja i ne može se ovdje uređivati. Za uređivanje klikni gumb.",
-        "requirementsHelpText": "Odaberi rezultate treninga (iz prethodnih dnevnika) koji se moraju doseći da bi ovo pravilo stupilo na snagu",
+        "requirementsHelpText": "Odaberi rezultate treninga (iz prethodnih dnevnika) koji se moraju doseći da bi ovo pravilo stupilo na snagu. Pravila se uspoređuju s planiranom vrijednošću, varijante „vrha raspona” s planiranim maksimumom. Za dvostruku progresiju, ograniči težinu na „Ponavljanja (vrh raspona)” i zahtijevaj sve serije.",
         "repeat": "Ponovi pravilo",
         "repeatHelpText": "Označi potvrdni okvir ako želiš da se ovo pravilo i dalje primjenjuje na sljedeće treninge sve dok ne definiraš novo pravilo",
         "step": "Korak",
@@ -251,7 +251,30 @@
         "otherLoggedExercises": "Ostale zapisane vježbe",
         "multipleSessions": "Tog dana je zabilježeno više sesija. Odaberi sesiju koju želiš urediti",
         "newSession": "Nova sesija",
-        "changeSession": "Odaberi jednu drugu sesiju"
+        "changeSession": "Odaberi jednu drugu sesiju",
+        "analytics": {
+            "title": "Analitike vježbe",
+            "menu": "Opcije rutine",
+            "description": "Tvoja povijest vježbe kroz sve rutine i sesije.",
+            "exercise": "Vježba",
+            "metric": "Metrika",
+            "weightHelp": "Dnevna maksimalna težina, pretvorena u kg.",
+            "kgReps": "kg × ponavljanja",
+            "tableView": "Prikaži tablicu podataka",
+            "chartView": "Prikaži dijagram",
+            "loadError": "Nije bilo moguće učitati tvoju povijest treninga.",
+            "retry": "Pokušaj ponovo",
+            "empty": "Nema podataka za ove filtre i metriku. Pokušaj jednu drugu metriku ili dulji vremenski raspon.",
+            "skipped_one": "{{count}} zapis sadrži nedostajuće vrijednosti ili nekompatibilne jedinice za ovu metriku i ne prikazuje se.",
+            "skipped_other": "{{count}} zapisa sadrže nedostajuće vrijednosti ili nekompatibilne jedinice za ovu metriku i ne prikazuju se."
+        },
+        "requirementRules": {
+            "weight": "Težina",
+            "repetitions": "Ponavljanja",
+            "rest": "Vrijeme odmora",
+            "max_repetitions": "Ponavljanja (vrh raspona)",
+            "max_weight": "Težina (vrh raspona)"
+        }
     },
     "preferences": "Postavke",
     "notes": "Bilješke",
@@ -323,15 +346,39 @@
         "customMeasurement": "Prilagođeno mjerenje",
         "calculations": {
             "paramsHelp": {
-                "exercise_ids": "Između {{min}} i {{max}} vježbi, odabrano je {count}."
+                "exercise_ids": "Između {{min}} i {{max}} vježbi, odabrano je {count}.",
+                "max_reps": "{{min}} do {{max}}. Serije iznad ovoga se zanemaruju.",
+                "window_days": "{{min}} do {{max}}. Koliko daleko unatrag se računa najbolja serija."
             },
             "sourceManual": "Ručno upisano",
             "sourceCalculated": "Izračunato od aplikacije wger",
-            "badge": "Izračunato"
+            "badge": "Izračunato",
+            "type": "Izračun",
+            "locked": "Izračun se ne može promijeniti. Izbriši kategoriju za zaustavljanje izračunjavanja.",
+            "paramsIncomplete": "Izračun još nije u potpunosti konfiguriran",
+            "missingHeight": "U tvom profilu nedostaje visina , tako da se vrijednosti još ne mogu izračunati.",
+            "noSourceCategory": "Još nemaš jednu drugu kategoriju iz koje bi se moglo čitati.",
+            "entryInfo": "Ovu vrijednost izračunava wger i ne može se urediti",
+            "names": {
+                "BMI": "BMI",
+                "WHTR": "Omjer struka i visine",
+                "ONE_REP_MAX": "Maks. jedno ponavljanje",
+                "ONE_RM_TOTAL": "Ukupno maks. jedno ponavljanje"
+            },
+            "descriptions": {
+                "BMI": "Na temelju tvoje tjelesne težine i visine u tvom profilu",
+                "WHTR": "Iz kategorije {{category}} i visine u tvom profilu"
+            },
+            "params": {
+                "category_id": "Kategorija izvora",
+                "max_reps": "Maks. broj brojanih ponavljanja",
+                "window_days": "Vremenski okvir u danima"
+            }
         },
         "chartRangeWeeks_one": "1 tjedan",
         "chartRangeYears_one": "1 godina",
-        "categoryFormHelpText": "Kategorija mjerenja, kao što su „bicepsi” ili „tjelesna mast”"
+        "categoryFormHelpText": "Kategorija mjerenja, kao što su „bicepsi” ili „tjelesna mast”",
+        "metricAlreadyTracked": "Već se prati"
     },
     "deleteConfirmation": "Stvarno želiš izbrisati „{{name}}”?",
     "nutrition": {
@@ -392,7 +439,8 @@
         "filterVegetarian": "Vegetarijanski",
         "filterNutriscore": "Nutri-Score filtar",
         "filterNutriscoreNoFilter": "Bez filtra",
-        "filterNutriscoreOrBetter": "{{grade}} ili bolje"
+        "filterNutriscoreOrBetter": "{{grade}} ili bolje",
+        "changeIngredient": "Odaberi jedan drugi sastojak"
     },
     "downloadAsPdf": "Preuzmi kao PDF",
     "total": "Ukupno",
