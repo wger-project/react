@@ -35,7 +35,11 @@ describe('Adjusting a meal before logging it', () => {
         (useAddDiaryEntriesQuery as Mock).mockReturnValue({ mutate, isPending: false });
     });
 
-    const form = () => <MealLogForm meal={meal} planId="plan-1" closeFn={closeFn} onSuccess={onSuccess} />;
+    const Form = ({ value = meal }: { value?: Meal }) => <MealLogForm
+        meal={value} planId="plan-1" closeFn={closeFn} onSuccess={onSuccess}
+        addDiaryEntriesQuery={useAddDiaryEntriesQuery('plan-1')}
+    />;
+    const form = () => <Form />;
     const firstAmount = () => screen.getByRole('spinbutton', { name: TEST_INGREDIENT_1.name });
     const secondAmount = () => screen.getByRole('spinbutton', { name: TEST_INGREDIENT_2.name });
 
@@ -109,7 +113,7 @@ describe('Adjusting a meal before logging it', () => {
         expect(mutate).not.toHaveBeenCalled();
     });
 
-    test.each(['', '-1', '0.5', '1000.01', '1.234', '1e309'])('rejects invalid quantity %j without closing the form', async amount => {
+    test.each(['', '-1', '0.5', '1000.01', '1.234', '1.0000000001', '150.0000000001', '1e309'])('rejects invalid quantity %j without closing the form', async amount => {
         const user = userEvent.setup();
         render(form());
         fireEvent.change(firstAmount(), { target: { value: amount } });
@@ -119,12 +123,14 @@ describe('Adjusting a meal before logging it', () => {
         expect(closeFn).not.toHaveBeenCalled();
     });
 
-    test('accepts two decimal places and amounts larger than the slider range', async () => {
+    test.each(['1.01', '1.1', '150.29', '250.25', '1000'])('accepts valid quantity %s without changing its serialized value', async amount => {
         const user = userEvent.setup();
         render(form());
-        fireEvent.change(firstAmount(), { target: { value: '250.25' } });
+        fireEvent.change(firstAmount(), { target: { value: amount } });
         await user.click(screen.getByRole('button', { name: 'nutrition.adjustAndLog' }));
-        expect((mutate.mock.calls[0][0] as DiaryEntry[])[0].amount).toBe(250.25);
+        const entry = (mutate.mock.calls[0][0] as DiaryEntry[])[0];
+        expect(entry.amount).toBe(Number(amount));
+        expect(entry.toJson().amount).toBe(amount);
     });
 
     test('cancel leaves saved quantities and history intact and creates no entries', async () => {
@@ -181,7 +187,7 @@ describe('Adjusting a meal before logging it', () => {
         const view = render(form());
         fireEvent.change(firstAmount(), { target: { value: '50' } });
         const refreshedMeal = Meal.clone(meal, { items: [...meal.items].reverse() });
-        view.rerender(<MealLogForm meal={refreshedMeal} planId="plan-1" closeFn={closeFn} />);
+        view.rerender(<Form value={refreshedMeal} />);
         expect(firstAmount()).toHaveValue(50);
         expect(secondAmount()).toHaveValue(2);
         await user.click(screen.getByRole('button', { name: 'nutrition.adjustAndLog' }));

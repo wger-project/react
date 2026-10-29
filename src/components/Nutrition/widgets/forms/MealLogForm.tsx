@@ -1,6 +1,6 @@
 import { Meal } from "../../models/meal";
 import { MealItem } from "../../models/mealItem";
-import { useAddDiaryEntriesQuery } from "../../queries/diary";
+import type { useAddDiaryEntriesQuery } from "../../queries/diary";
 import { MacrosSummary } from "./IngredientAmountFields";
 import { useAppForm } from "@/core/forms/appForm";
 import { fieldError, submitHandler, yupSchema } from "@/core/forms/formUtils";
@@ -18,6 +18,7 @@ import * as yup from "yup";
 interface MealLogFormProps {
     meal: Meal,
     planId: string,
+    addDiaryEntriesQuery: ReturnType<typeof useAddDiaryEntriesQuery>,
     closeFn: () => void,
     onSuccess?: () => void,
 }
@@ -27,9 +28,8 @@ interface MealLogValues {
     datetime: Date | null,
 }
 
-export const MealLogForm = ({ meal, planId, closeFn, onSuccess }: MealLogFormProps) => {
+export const MealLogForm = ({ meal, planId, addDiaryEntriesQuery, closeFn, onSuccess }: MealLogFormProps) => {
     const [t, i18n] = useTranslation();
-    const addDiaryEntriesQuery = useAddDiaryEntriesQuery(planId);
     // Keep the draft attached to its original ingredients through background refetches.
     const [draftMeal] = useState(() => Meal.clone(meal, { items: meal.items.map(item => MealItem.clone(item)) }));
     const [defaultValues] = useState<MealLogValues>(() => ({
@@ -45,8 +45,7 @@ export const MealLogForm = ({ meal, planId, closeFn, onSuccess }: MealLogFormPro
         .test('finite', t('forms.enterNumber'), value => Number.isFinite(value))
         .test('minimum', t('forms.minValue', { value: '1' }), value => value === 0 || value >= 1)
         .max(1000, t('forms.maxValue', { value: '1000' }))
-        .test('precision', t('nutrition.amountPrecision'), value =>
-            Math.abs(value * 100 - Math.round(value * 100)) < 1e-7)
+        .test('precision', t('nutrition.amountPrecision'), value => value === Number(value.toFixed(2)))
     ).required().min(1).test('nonzero', t('nutrition.mealAmountRequired'), values =>
         values.some(value => value !== undefined && value > 0 && Number.isFinite(value)));
 

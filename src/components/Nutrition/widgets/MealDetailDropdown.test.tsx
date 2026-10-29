@@ -4,8 +4,10 @@ import { useAddDiaryEntriesQuery } from "@/components/Nutrition/queries/diary";
 import { TEST_MEAL_1 } from "@/tests/nutritionTestdata";
 import { TEST_INGREDIENT_1 } from "@/tests/ingredientTestdata";
 import { Meal } from "@/components/Nutrition/models/meal";
+import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import { mutateMock } from "@/tests/mutationMock";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { QueryClient, QueryClientProvider, useMutation } from "@tanstack/react-query";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { Mock } from "vitest";
 
@@ -67,6 +69,68 @@ describe('Meal logging actions', () => {
         })), expect.anything());
         expect(screen.queryByRole('alert')).not.toBeInTheDocument();
         act(() => mutate.mock.calls[0][1].onSuccess());
+        expect(screen.getByRole('alert')).toHaveTextContent('nutrition.diaryEntrySaved');
+    });
+
+    test.each(['Escape', 'backdrop', 'close icon'])('keeps a pending adjusted save open when dismissed with %s', async dismissal => {
+        const user = userEvent.setup();
+        const pendingSave = Promise.withResolvers<DiaryEntry[]>();
+        const mutate = vi.fn<(entries: DiaryEntry[]) => Promise<DiaryEntry[]>>(() => pendingSave.promise);
+        (useAddDiaryEntriesQuery as Mock).mockImplementation(function usePendingDiarySave() {
+            return useMutation({ mutationFn: mutate });
+        });
+        render(<QueryClientProvider client={new QueryClient()}>
+            <MealDetailDropdown meal={TEST_MEAL_1} planId="plan-1" onlyLogging={false}
+                                isExpanded={false} handleExpanded={vi.fn()} />
+        </QueryClientProvider>);
+        await user.click(screen.getByRole('button', { name: 'nutrition.mealActions' }));
+        await user.click(screen.getByRole('menuitem', { name: 'nutrition.adjustAndLog' }));
+        fireEvent.change(screen.getByRole('spinbutton', { name: TEST_INGREDIENT_1.name }), { target: { value: '50' } });
+        await user.click(screen.getByRole('button', { name: 'nutrition.adjustAndLog' }));
+        expect(mutate).toHaveBeenCalledOnce();
+
+        await waitFor(() => expect(screen.getByRole('spinbutton', { name: TEST_INGREDIENT_1.name })).toBeDisabled());
+        const dismiss = async () => {
+            if (dismissal === 'Escape') {
+                fireEvent.keyDown(screen.getByRole('spinbutton', { name: TEST_INGREDIENT_1.name }), { key: 'Escape' });
+            } else if (dismissal === 'backdrop') {
+                await user.click(document.querySelector('.MuiBackdrop-root')!);
+            } else {
+                await user.click(screen.getByTestId('CloseIcon'));
+            }
+        };
+        await dismiss();
+        const amount = screen.getByRole('spinbutton', { name: TEST_INGREDIENT_1.name });
+        expect(amount).toHaveValue(50);
+        expect(amount).toBeDisabled();
+        fireEvent.submit(amount.closest('form')!);
+        expect(mutate).toHaveBeenCalledOnce();
+
+        await act(async () => pendingSave.reject(new Error('Meal save failed')));
+        await waitFor(() => expect(screen.getByRole('spinbutton', { name: TEST_INGREDIENT_1.name })).toBeEnabled());
+        expect(screen.getByRole('spinbutton', { name: TEST_INGREDIENT_1.name })).toHaveValue(50);
+        expect(screen.getAllByRole('alert').some(alert => alert.textContent?.includes('Meal save failed'))).toBe(true);
+        await dismiss();
+        expect(screen.queryByRole('spinbutton', { name: TEST_INGREDIENT_1.name })).not.toBeInTheDocument();
+    });
+
+    test('a successful adjusted save closes the pending dialog and shows confirmation', async () => {
+        const user = userEvent.setup();
+        const pendingSave = Promise.withResolvers<DiaryEntry[]>();
+        const mutate = vi.fn<(entries: DiaryEntry[]) => Promise<DiaryEntry[]>>(() => pendingSave.promise);
+        (useAddDiaryEntriesQuery as Mock).mockImplementation(function usePendingDiarySave() {
+            return useMutation({ mutationFn: mutate });
+        });
+        render(<QueryClientProvider client={new QueryClient()}>
+            <MealDetailDropdown meal={TEST_MEAL_1} planId="plan-1" onlyLogging={false}
+                                isExpanded={false} handleExpanded={vi.fn()} />
+        </QueryClientProvider>);
+        await user.click(screen.getByRole('button', { name: 'nutrition.mealActions' }));
+        await user.click(screen.getByRole('menuitem', { name: 'nutrition.adjustAndLog' }));
+        await user.click(screen.getByRole('button', { name: 'nutrition.adjustAndLog' }));
+        await waitFor(() => expect(screen.getByRole('spinbutton', { name: TEST_INGREDIENT_1.name })).toBeDisabled());
+        await act(async () => pendingSave.resolve([]));
+        await waitFor(() => expect(screen.queryByRole('spinbutton', { name: TEST_INGREDIENT_1.name })).not.toBeInTheDocument());
         expect(screen.getByRole('alert')).toHaveTextContent('nutrition.diaryEntrySaved');
     });
 
