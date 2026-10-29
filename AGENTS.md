@@ -79,6 +79,8 @@ components/<Domain>/
 - **Test data:** reuse the fixtures in `src/tests/*TestData.ts` / `*Testdata.ts` (cross-domain) or next to the code
   (domain-local)
   instead of building new objects inline.
+- **Don't test library behavior.** No tests that only show that MUI renders a prop, React Query caches or i18next
+  translates; test our own components, hooks and helpers.
 - **i18n:** any new user-visible string goes through `t()` / `<Trans>`. No hard-coded English/German in JSX. Add new
   keys only to `public/locales/en/translation.json` (`npm run i18n` extracts them); the other languages come from
   Weblate. If the flutter app already has the string (`../flutter/lib/l10n/app_*.arb`), use its English text
