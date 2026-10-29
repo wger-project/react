@@ -11,6 +11,7 @@ import { Meal } from "@/components/Nutrition/models/meal";
 import { useDeleteMealQuery } from "@/components/Nutrition/queries";
 import { useAddDiaryEntriesQuery } from "@/components/Nutrition/queries/diary";
 import { MealForm } from "@/components/Nutrition/widgets/forms/MealForm";
+import { MealLogForm } from "./forms/MealLogForm";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SNACKBAR_AUTO_HIDE_DURATION } from "@/core/lib/consts";
@@ -32,6 +33,7 @@ export const MealDetailDropdown = (props: {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openLogModal, setOpenLogModal] = useState(false);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -71,8 +73,7 @@ export const MealDetailDropdown = (props: {
 
     const handleAddDiaryEntry = () => {
         const diaryEntries = props.meal.items.map(item => item.diaryEntry(props.planId));
-        addDiaryEntriesQuery.mutate(diaryEntries);
-        setOpenSnackbar(true);
+        addDiaryEntriesQuery.mutate(diaryEntries, { onSuccess: () => setOpenSnackbar(true) });
     };
 
 
@@ -80,11 +81,12 @@ export const MealDetailDropdown = (props: {
         <FormQueryErrorsSnackbar mutationQuery={deleteMealQuery} />
         <FormQueryErrorsSnackbar mutationQuery={addDiaryEntriesQuery} />
         {props.meal.isRealMeal && !props.onlyLogging && <Tooltip title={t('nutrition.logThisMeal')}>
-            <IconButton aria-label="settings" onClick={handleAddDiaryEntry}>
+            <IconButton aria-label={t('nutrition.logThisMeal')} onClick={handleAddDiaryEntry}
+                        disabled={addDiaryEntriesQuery.isPending || props.meal.items.length === 0}>
                 <HistoryEduIcon />
             </IconButton>
         </Tooltip>}
-        {props.meal.isRealMeal && <IconButton aria-label="settings" onClick={handleClick}>
+        {props.meal.isRealMeal && <IconButton aria-label={t('nutrition.mealActions')} onClick={handleClick}>
             <MoreVertIcon />
         </IconButton>}
         <IconButton aria-label="settings" onClick={props.handleExpanded}>
@@ -95,6 +97,13 @@ export const MealDetailDropdown = (props: {
             open={open}
             onClose={handleClose}
         >
+            {!props.onlyLogging && <MenuItem
+                disabled={props.meal.items.length === 0 || addDiaryEntriesQuery.isPending}
+                onClick={() => {
+                    handleClose();
+                    setOpenLogModal(true);
+                }}
+            >{t('nutrition.adjustAndLog')}</MenuItem>}
             <MenuItem onClick={handleEdit}>{t("edit")}</MenuItem>
             <MenuItem onClick={handleDelete}>{t("delete")}</MenuItem>
         </Menu>
@@ -102,6 +111,16 @@ export const MealDetailDropdown = (props: {
         <WgerModal title={t('edit')} isOpen={openEditModal} closeFn={handleCloseEditModal}>
             <MealForm meal={props.meal} closeFn={handleCloseEditModal} planId={props.planId} />
         </WgerModal>
+
+        {openLogModal && <WgerModal
+            title={t('nutrition.adjustAndLog')}
+            subtitle={props.meal.displayName ?? undefined}
+            isOpen={openLogModal}
+            closeFn={() => setOpenLogModal(false)}
+        >
+            <MealLogForm meal={props.meal} planId={props.planId}
+                         closeFn={() => setOpenLogModal(false)} onSuccess={() => setOpenSnackbar(true)} />
+        </WgerModal>}
 
         <DeleteConfirmationModal
             title={t('deleteConfirmation', { name: props.meal.name })}
