@@ -19,6 +19,7 @@ type IngredientAmountFieldsProps = {
     onWeightUnitChange: (unit: NutritionWeightUnit | null) => void,
     amount: number,
     ingredientError?: string,
+    ingredientReadOnly?: boolean,
 
     /** Renders the form's bound amount field with the given end adornment */
     renderAmountField: (endAdornment: React.ReactNode) => React.ReactNode,
@@ -45,7 +46,9 @@ export const IngredientAmountFields = (props: IngredientAmountFieldsProps) => {
     </InputAdornment>;
 
     return <>
-        {ingredient === null
+        {ingredient === null && props.ingredientReadOnly
+            ? <Typography>…</Typography>
+            : ingredient === null
             ? <>
                 <IngredientAutocompleter callback={changeIngredient} />
                 {props.ingredientError !== undefined && (
@@ -54,7 +57,8 @@ export const IngredientAmountFields = (props: IngredientAmountFieldsProps) => {
                     </div>
                 )}
             </>
-            : <SelectedIngredient ingredient={ingredient} onClear={() => changeIngredient(null)} />
+            : <SelectedIngredient ingredient={ingredient}
+                                  onClear={props.ingredientReadOnly ? undefined : () => changeIngredient(null)} />
         }
 
         {props.renderAmountField(endAdornment)}
@@ -91,7 +95,7 @@ export const IngredientAmountFields = (props: IngredientAmountFieldsProps) => {
     </>;
 };
 
-const SelectedIngredient = (props: { ingredient: Ingredient, onClear: () => void }) => {
+const SelectedIngredient = (props: { ingredient: Ingredient, onClear?: () => void }) => {
     const [t, i18n] = useTranslation();
     const { ingredient } = props;
 
@@ -115,9 +119,9 @@ const SelectedIngredient = (props: { ingredient: Ingredient, onClear: () => void
         >
             <InfoOutlinedIcon />
         </IconButton>
-        <IconButton aria-label={t('nutrition.changeIngredient')} onClick={props.onClear}>
+        {props.onClear && <IconButton aria-label={t('nutrition.changeIngredient')} onClick={props.onClear}>
             <CloseIcon />
-        </IconButton>
+        </IconButton>}
     </Stack>;
 };
 
