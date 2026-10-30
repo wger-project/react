@@ -13,10 +13,11 @@ import { numberGramLocale, numberLocale } from "@/core/lib/numbers";
 const IngredientTableRow = (props: { item: MealItem | DiaryEntry, planId?: string, meals?: Meal[] }) => {
     const [t, i18n] = useTranslation();
     const [expandForm, setExpandForm] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     const isEditable = props.planId !== undefined && props.item instanceof DiaryEntry;
     const handleToggleForm = () => {
-        if (isEditable) {
+        if (isEditable && !isSaving) {
             setExpandForm(!expandForm);
         }
     };
@@ -36,7 +37,7 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry, planId?: strin
             </TableCell>
             <TableCell onClick={handleToggleForm} sx={{ paddingX: 1, ...clickableSx }}>
                 {props.item.amountString} {props.item.ingredient?.name}
-                {isEditable && <IconButton aria-label={t('edit')} aria-expanded={expandForm}
+                {isEditable && <IconButton aria-label={t('edit')} aria-expanded={expandForm} disabled={isSaving}
                     onClick={event => {
                         event.stopPropagation();
                         handleToggleForm();
@@ -68,6 +69,7 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry, planId?: strin
                         entry={props.item as DiaryEntry}
                         meals={props.meals}
                         closeFn={() => setExpandForm(false)}
+                        onPendingChange={setIsSaving}
                     />
                 </Collapse>
             </TableCell>

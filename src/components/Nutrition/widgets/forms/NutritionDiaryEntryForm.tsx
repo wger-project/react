@@ -16,7 +16,7 @@ import { Autocomplete, Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DateTime } from "luxon";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 
@@ -26,6 +26,7 @@ type NutritionDiaryEntryFormProps = {
     mealId?: string | null,
     meals?: Meal[],
     closeFn?: () => void,
+    onPendingChange?: (pending: boolean) => void,
 }
 
 interface DiaryEntryFormValues {
@@ -35,7 +36,7 @@ interface DiaryEntryFormValues {
     ingredient: number | null,
 }
 
-export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn }: NutritionDiaryEntryFormProps) => {
+export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn, onPendingChange }: NutritionDiaryEntryFormProps) => {
 
     const meal = mealId === undefined ? null : mealId;
     const mealObjs = meals === undefined ? [] : meals;
@@ -44,6 +45,8 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
     const addDiaryQuery = useAddDiaryEntryQuery(planId);
     const editDiaryQuery = useEditDiaryEntryQuery(planId);
     const deleteDiaryQuery = useDeleteDiaryEntryQuery(planId);
+    const isPending = Boolean(editDiaryQuery.isPending || addDiaryQuery.isPending || deleteDiaryQuery.isPending);
+    useEffect(() => { onPendingChange?.(isPending); }, [isPending, onPendingChange]);
     const [dateValue, setDateValue] = useState<DateTime | null>(entry ? DateTime.fromJSDate(entry.datetime) : DateTime.now());
     const [selectedMeal, setSelectedMeal] = useState<string | null>(meal ?? entry?.mealId ?? null);
 
@@ -138,6 +141,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                             }}
                             ingredientError={fieldError(field)}
                             weightUnit={selectedUnit}
+                            weightUnitId={selectedUnitId}
                             onWeightUnitChange={unit => {
                                 setSelectedUnit(unit);
                                 setSelectedUnitId(unit?.id ?? null);
@@ -198,16 +202,16 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                 <FormQueryErrors mutationQuery={deleteDiaryQuery} />
                 <Stack direction="row" spacing={2} sx={{ justifyContent: "end" }}>
                     {(closeFn !== undefined && entry !== undefined)
-                        && <Button color="error" variant="outlined" onClick={handleDelete}>
+                        && <Button color="error" variant="outlined" onClick={handleDelete} disabled={isPending}>
                             {t('delete')}
                         </Button>}
 
                     {closeFn !== undefined
-                        && <Button color="primary" variant="outlined" onClick={() => closeFn()}>
+                        && <Button color="primary" variant="outlined" onClick={() => closeFn()} disabled={isPending}>
                             {t('close')}
                         </Button>}
                     <Button color="primary" variant="contained" type="submit"
-                            disabled={editDiaryQuery.isPending || addDiaryQuery.isPending || deleteDiaryQuery.isPending}>
+                            disabled={isPending}>
                         {t('submit')}
                     </Button>
                 </Stack>

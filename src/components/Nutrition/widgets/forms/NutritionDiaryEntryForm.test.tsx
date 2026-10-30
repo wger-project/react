@@ -80,6 +80,21 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(entry.weightUnit).toBe(TEST_WEIGHT_UNIT_SLICE);
     });
 
+    test.each([null, TEST_INGREDIENT_1])('unresolved servings are not displayed as grams (%s)', async ingredient => {
+        const user = userEvent.setup();
+        const entry = DiaryEntry.clone(TEST_DIARY_ENTRY_1, {
+            ingredient, weightUnit: null, weightUnitId: 987,
+        });
+        render(<NutritionDiaryEntryForm planId={entry.planId} entry={entry} />);
+        expect(screen.getByText('nutrition.unavailableWeightUnit')).toBeInTheDocument();
+        expect(screen.queryByTestId('macros-summary')).not.toBeInTheDocument();
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(mutateEditMock).toHaveBeenLastCalledWith(expect.objectContaining({ weightUnitId: 987 }), expect.anything());
+        await user.click(screen.getByRole('button', { name: 'nutrition.gramShort' }));
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(mutateEditMock).toHaveBeenLastCalledWith(expect.objectContaining({ weightUnitId: null }), expect.anything());
+    });
+
     test('closing a draft leaves the cached entry unchanged', async () => {
         const user = userEvent.setup();
         const entry = DiaryEntry.clone(TEST_DIARY_ENTRY_1);
@@ -114,8 +129,10 @@ describe('Test the NutritionDiaryEntryForm component', () => {
 
     test('a pending save disables resubmission', () => {
         (useEditDiaryEntryQuery as Mock).mockReturnValue({ mutate: mutateEditMock, isPending: true });
-        render(<NutritionDiaryEntryForm planId={TEST_DIARY_ENTRY_1.planId} entry={TEST_DIARY_ENTRY_1} />);
+        render(<NutritionDiaryEntryForm planId={TEST_DIARY_ENTRY_1.planId} entry={TEST_DIARY_ENTRY_1} closeFn={closeFnMock} />);
         expect(screen.getByRole('button', { name: 'submit' })).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'close' })).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'delete' })).toBeDisabled();
     });
 
     test('a failed write leaves the form open and displays the error', async () => {

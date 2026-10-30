@@ -16,6 +16,7 @@ type IngredientAmountFieldsProps = {
     ingredient: Ingredient | null,
     onIngredientChange: (ingredient: Ingredient | null) => void,
     weightUnit: NutritionWeightUnit | null,
+    weightUnitId?: number | null,
     onWeightUnitChange: (unit: NutritionWeightUnit | null) => void,
     amount: number,
     ingredientError?: string,
@@ -35,6 +36,7 @@ export const IngredientAmountFields = (props: IngredientAmountFieldsProps) => {
     const [t] = useTranslation();
     const { ingredient, weightUnit, onWeightUnitChange } = props;
     const weightUnits = ingredient?.weightUnits ?? [];
+    const unresolvedUnit = props.weightUnitId != null && weightUnit === null;
 
     const changeIngredient = (value: Ingredient | null) => {
         props.onIngredientChange(value);
@@ -42,7 +44,8 @@ export const IngredientAmountFields = (props: IngredientAmountFieldsProps) => {
     };
 
     const endAdornment = <InputAdornment position="end">
-        {weightUnit === null ? t('nutrition.gramShort') : `× ${weightUnit.name}`}
+        {unresolvedUnit ? t('nutrition.unavailableWeightUnit')
+            : weightUnit === null ? t('nutrition.gramShort') : `× ${weightUnit.name}`}
     </InputAdornment>;
 
     return <>
@@ -63,13 +66,13 @@ export const IngredientAmountFields = (props: IngredientAmountFieldsProps) => {
 
         {props.renderAmountField(endAdornment)}
 
-        {weightUnits.length > 0 && (
+        {(weightUnits.length > 0 || unresolvedUnit) && (
             <Stack direction="row" useFlexGap sx={{ gap: 1, overflowX: 'auto', pb: 0.5 }}>
                 <Chip
                     label={t('nutrition.gramShort')}
-                    aria-pressed={weightUnit === null}
-                    color={weightUnit === null ? 'primary' : 'default'}
-                    variant={weightUnit === null ? 'filled' : 'outlined'}
+                    aria-pressed={weightUnit === null && !unresolvedUnit}
+                    color={weightUnit === null && !unresolvedUnit ? 'primary' : 'default'}
+                    variant={weightUnit === null && !unresolvedUnit ? 'filled' : 'outlined'}
                     onClick={() => onWeightUnitChange(null)}
                 />
                 {weightUnits.map(unit => {
@@ -86,7 +89,7 @@ export const IngredientAmountFields = (props: IngredientAmountFieldsProps) => {
             </Stack>
         )}
 
-        {ingredient !== null && props.amount > 0 && (
+        {ingredient !== null && !unresolvedUnit && props.amount > 0 && (
             <MacrosSummary
                 values={NutritionalValues.fromIngredient(ingredient, props.amount, weightUnit)}
                 grams={weightUnit === null ? null : props.amount * weightUnit.grams}
