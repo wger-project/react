@@ -4,7 +4,8 @@ import * as yup from "yup";
 const MIN_CHAR_NAME = 5;
 const MAX_CHAR_NAME = 40;
 
-const MIN_DESC_LENGTH = 40;
+const MIN_DESC_LENGTH = 120;
+const MIN_DESC_WORDS = 15;
 
 const MIN_NOTE_LENGTH = 15;
 
@@ -29,10 +30,26 @@ export const alternativeNameValidator = () => yup
         })
     );
 
-export const descriptionValidator = () => yup
+/** Words are tokens with at least one letter, so markdown list markers don't count */
+const countWords = (text: string) => text.split(/\s+/).filter(token => /\p{L}/u.test(token)).length;
+
+/**
+ * Description of a translation. An existing description passed as ``unchanged`` stays
+ * valid as long as it isn't edited, older entries may be shorter than the current limits.
+ */
+export const descriptionValidator = (unchanged?: string) => yup
     .string()
-    .min(MIN_DESC_LENGTH, i18n.t("forms.minLength", { 'chars': MIN_DESC_LENGTH }))
-    .required(i18n.t("forms.fieldRequired"));
+    .required(i18n.t("forms.fieldRequired"))
+    .test(
+        'minLength',
+        i18n.t("forms.minLength", { 'chars': MIN_DESC_LENGTH }),
+        value => value === unchanged || (value ?? '').length >= MIN_DESC_LENGTH
+    )
+    .test(
+        'minWords',
+        i18n.t("forms.minWords", { 'words': MIN_DESC_WORDS }),
+        value => value === unchanged || countWords(value ?? '') >= MIN_DESC_WORDS
+    );
 
 export const noteValidator = () => yup
     .array()

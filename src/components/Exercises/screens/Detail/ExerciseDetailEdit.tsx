@@ -332,7 +332,7 @@ const TranslationEditForm = ({
     const validationSchema = yup.object({
         name: nameValidator(),
         alternativeNames: alternativeNameValidator(),
-        description: descriptionValidator()
+        description: descriptionValidator(exerciseTranslation.descriptionSource)
     });
 
     const defaultValues: TranslationFormValues = {

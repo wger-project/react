@@ -221,7 +221,8 @@
         "minValue": "The value for this field has to be higher than {{value}}",
         "maxValue": "The value for this field has to be less than {{value}}",
         "maxLessThanMin": "The max value has to be bigger than the minimum",
-        "endBeforeStart": "The end value cannot be before the start"
+        "endBeforeStart": "The end value cannot be before the start",
+        "minWords": "Please enter at least {{words}} words"
     },
     "name": "Name",
     "category": "Category",

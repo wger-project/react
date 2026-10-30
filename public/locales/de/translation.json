@@ -146,7 +146,8 @@
         "enterNumber": "Bitte gib eine gültige Nummer ein",
         "enterInteger": "Bitte gib eine ganze Zahl ein",
         "maxLessThanMin": "Der maximale Wert muss größer als der minimale sein",
-        "endBeforeStart": "Der Endwert darf nicht vor dem Startwert liegen"
+        "endBeforeStart": "Der Endwert darf nicht vor dem Startwert liegen",
+        "minWords": "Bitte gib mindestens {{words}} Wörter ein"
     },
     "routines": {
         "sets": "Sätze",

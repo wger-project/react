@@ -352,7 +352,8 @@ describe("Exercise translation edit tests", () => {
     test('creates a new translation if the language is not available', async () => {
         // Arrange
         const user = userEvent.setup();
-        const description = "Le sanglier d'Europe est une espèce de mammifères de la famille des Suidés";
+        const description = "Le sanglier d'Europe est une espèce de mammifères de la famille des Suidés, très répandue "
+            + "dans les forêts du continent, où il vit en groupes et se nourrit surtout de plantes et de racines.";
         addTranslationMutateMock.mockResolvedValue(new Translation({
             id: 300,
             uuid: '409f4b97-a56d-4852-85b2-834ba18b7ccc',
