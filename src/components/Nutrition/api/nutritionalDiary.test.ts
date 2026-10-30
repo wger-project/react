@@ -126,7 +126,11 @@ describe("Nutritional diary service tests", () => {
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.patch as Mock).mock.calls[0];
         expect(url).toMatch(new RegExp(`/api/v2/nutritiondiary/${RESPONSE_DIARY_UUID}/$`));
-        expect(body).toMatchObject({ amount: "99" });
+        expect(body).toEqual({
+            amount: 99,
+            datetime: "2024-08-01T08:00:00.000Z",
+            weight_unit: null,
+        });
         expect(result.amount).toBe(99);
     });
 

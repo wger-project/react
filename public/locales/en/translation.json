@@ -133,6 +133,8 @@
         "swapExercise": "Swap exercise"
     },
     "nutrition": {
+        "invalidPortion": "Enter an amount from 1 to 1000 with at most two decimal places.",
+        "unavailableWeightUnit": "Serving unit unavailable",
         "plans": "Nutritional plans",
         "copyPlan": "Make a copy of this plan",
         "plan": "Nutritional plan",

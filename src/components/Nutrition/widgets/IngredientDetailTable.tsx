@@ -1,5 +1,6 @@
 import PhotoIcon from "@mui/icons-material/Photo";
-import { Avatar, Collapse, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { Avatar, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import { Meal } from "@/components/Nutrition/models/meal";
@@ -12,10 +13,11 @@ import { numberGramLocale, numberLocale } from "@/core/lib/numbers";
 const IngredientTableRow = (props: { item: MealItem | DiaryEntry, planId?: string, meals?: Meal[] }) => {
     const [t, i18n] = useTranslation();
     const [expandForm, setExpandForm] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     const isEditable = props.planId !== undefined && props.item instanceof DiaryEntry;
     const handleToggleForm = () => {
-        if (isEditable) {
+        if (isEditable && !isSaving) {
             setExpandForm(!expandForm);
         }
     };
@@ -35,6 +37,13 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry, planId?: strin
             </TableCell>
             <TableCell onClick={handleToggleForm} sx={{ paddingX: 1, ...clickableSx }}>
                 {props.item.amountString} {props.item.ingredient?.name}
+                {isEditable && <IconButton aria-label={t('edit')} aria-expanded={expandForm} disabled={isSaving}
+                    onClick={event => {
+                        event.stopPropagation();
+                        handleToggleForm();
+                    }}>
+                    <EditOutlinedIcon />
+                </IconButton>}
             </TableCell>
             <TableCell align={'right'} sx={{ paddingX: 1 }}>
                 {t('nutrition.valueEnergyKcalKj', {
@@ -60,6 +69,7 @@ const IngredientTableRow = (props: { item: MealItem | DiaryEntry, planId?: strin
                         entry={props.item as DiaryEntry}
                         meals={props.meals}
                         closeFn={() => setExpandForm(false)}
+                        onPendingChange={setIsSaving}
                     />
                 </Collapse>
             </TableCell>
@@ -73,7 +83,7 @@ export const IngredientDetailTable = (props: {
     showSum: boolean,
     // When given, diary entry rows can be expanded to an edit form
     planId?: string,
-    // When given, the edit form lets the user move the entry to another meal
+    // Retained for callers that also use this table for meal context
     meals?: Meal[]
 }) => {
     const [t, i18n] = useTranslation();
