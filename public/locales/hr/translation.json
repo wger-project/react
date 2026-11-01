@@ -65,7 +65,13 @@
         "transferTranslationsLabel": "Prenesi prijevode na zamjensku vježbu (jezici koji su već prisutni se ptreskaču)",
         "imageIsAiGenerated": "Slika je stvorena pomoću umjetne inteligencije",
         "dropOrClickImage": "Povuci i ispusti sliku ovdje ili klikni za biranje",
-        "addImage": "Dodaj sliku"
+        "addImage": "Dodaj sliku",
+        "submitAuthorNotice": "Vježba je objavljena pod licencom CC BY-SA 4.0, uz navođenje gore navedenog autora.",
+        "authorHelpText": "Prikazano kao autor vježbe (CC BY-SA 4.0). Promijeni samo ako nisi autor.",
+        "editAuthorNotice": "Promjene su objavljene pod licencom CC BY-SA 4.0. Tvoje se korisničko ime dodaje autorima ove vježbe.",
+        "contentLicense": "Sadržaj na ovoj stranici je dostupan pod licencom <0>CC BY-SA 4</0>.",
+        "authorsList": "Autori: {{authors}}",
+        "lastUpdate": "Zadnje aktualiziranje: {{date}}"
     },
     "noResults": "Nema rezultata",
     "noResultsDescription": "Za ovaj upit nisu pronađeni rezultati. Smanji broja filtara.",
@@ -266,15 +272,21 @@
             "retry": "Pokušaj ponovo",
             "empty": "Nema podataka za ove filtre i metriku. Pokušaj jednu drugu metriku ili dulji vremenski raspon.",
             "skipped_one": "{{count}} zapis sadrži nedostajuće vrijednosti ili nekompatibilne jedinice za ovu metriku i ne prikazuje se.",
-            "skipped_other": "{{count}} zapisa sadrže nedostajuće vrijednosti ili nekompatibilne jedinice za ovu metriku i ne prikazuju se."
+            "skipped_other": "{{count}} zapisa sadrže nedostajuće vrijednosti ili nekompatibilne jedinice za ovu metriku i ne prikazuju se.",
+            "volumeHelp": "Dnevni volumen (težina × ponavljanja), pretvoren u kg × ponavljanja. Serije s tjelesnom težinom bez vanjske težine koriste ponavljanja; vremenski mjerene serije koriste sekunde. One se prikazuju zasebno.",
+            "repsHelp": "Ukupan dnevni broj ponavljanja. Vremenski mjerene serije i serije temeljene na udaljenosti se ne računaju kao ponavljanja.",
+            "muscleHelp": "Mišićne grupe uključuju primarne i sekundarne mišiće; svaka serija broji se samo jednom."
         },
         "requirementRules": {
             "weight": "Težina",
             "repetitions": "Ponavljanja",
             "rest": "Vrijeme odmora",
             "max_repetitions": "Ponavljanja (vrh raspona)",
-            "max_weight": "Težina (vrh raspona)"
-        }
+            "max_weight": "Težina (vrh raspona)",
+            "rir": "Broj ponavljanja u rezervi"
+        },
+        "deleteSessionInfo": "Ovo će izbrisati sesiju kao i sve u njoj zabilježene serije",
+        "requirementsAllSets": "Sve serije moraju ispunjavati uvjete"
     },
     "preferences": "Postavke",
     "notes": "Bilješke",
@@ -378,7 +390,8 @@
         "chartRangeWeeks_one": "1 tjedan",
         "chartRangeYears_one": "1 godina",
         "categoryFormHelpText": "Kategorija mjerenja, kao što su „bicepsi” ili „tjelesna mast”",
-        "metricAlreadyTracked": "Već se prati"
+        "metricAlreadyTracked": "Već se prati",
+        "indicatorRaw": "neobrađeno"
     },
     "deleteConfirmation": "Stvarno želiš izbrisati „{{name}}”?",
     "nutrition": {
@@ -455,7 +468,8 @@
         "originalTitle": "Naslov",
         "authors": "Autori",
         "derivativeSourceUrl": "Poveznica na izvorni izvor, ako je ovo izvedeno djelo",
-        "derivativeSourceUrlHelper": "Izvedeni rad koji se ne temelji samo na prethodnom radu, te sadrži dovoljno novog, kreativnog sadržaja ima pravo na vlastito autorsko pravo."
+        "derivativeSourceUrlHelper": "Izvedeni rad koji se ne temelji samo na prethodnom radu, te sadrži dovoljno novog, kreativnog sadržaja ima pravo na vlastito autorsko pravo.",
+        "authorsHelper": "Ostavi prazno ako je to tvoja fotografija. Tada se koristi tvoje korisničko ime."
     },
     "filters": "Filtri",
     "height": "Visina",
