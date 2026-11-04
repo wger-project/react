@@ -283,7 +283,7 @@
             "retry": "Повторити",
             "empty": "Немає даних для цих фільтрів та показника. Спробуйте інший показник або довший період часу.",
             "skipped_one": "{{count}} запис має пропущені значення або несумісні одиниці вимірювання для цього показника й не відображається.",
-            "skipped_other": "{{count}} записи мають пропущені значення або несумісні одиниці вимірювання для цього показника й не відображаються."
+            "skipped_few": "{{count}} записи мають пропущені значення або несумісні одиниці вимірювання для цього показника й не відображаються."
         },
         "deleteSessionInfo": "Це видалить тренування, а також усі записані в ньому підходи"
     },
@@ -347,12 +347,12 @@
             "sluggish": "Плавний"
         },
         "chartAverageWindow": "Усереднення за",
-        "chartAverageWindowDays_other": "Середнє за {{count}} днів",
+        "chartAverageWindowDays_many": "Середнє за {{count}} днів",
         "distributionMedian": "Медіана",
         "distributionLatest": "Останнє",
         "distributionEntryCount_one": "1 запис",
-        "distributionEntryCount_other": "{{count}} записів",
-        "distributionDayCount_other": "{{count}} днів",
+        "distributionEntryCount_many": "{{count}} записів",
+        "distributionDayCount_many": "{{count}} днів",
         "partOfGroup": "У складі групи",
         "noGroup": "Без групи",
         "metricTypes": {
@@ -384,11 +384,11 @@
         "overallChangeWeight": "Загальна зміна ваги",
         "chartRangeAll": "Весь період",
         "chartRangeMonths_one": "За останній місяць",
-        "chartRangeMonths_other": "{{count}} місяців",
+        "chartRangeMonths_many": "{{count}} місяців",
         "chartRangeWeeks_one": "За останній тиждень",
-        "chartRangeWeeks_other": "{{count}} тижнів",
+        "chartRangeWeeks_many": "{{count}} тижнів",
         "chartRangeYears_one": "За останній рік",
-        "chartRangeYears_other": "{{count}} років",
+        "chartRangeYears_many": "{{count}} років",
         "customMeasurement": "Власне вимірювання",
         "metricAlreadyTracked": "Вже відстежується",
         "categoryFormHelpText": "Категорія вимірювання, наприклад 'біцепс' або 'відсоток жиру'",
