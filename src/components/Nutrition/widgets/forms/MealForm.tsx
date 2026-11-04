@@ -32,8 +32,8 @@ export const MealForm = ({ meal, planId, closeFn }: MealFormProps) => {
         name: yup
             .string()
             .required()
-            .max(25, t('forms.maxLength', { chars: '25' }))
-            .min(3, t('forms.minLength', { chars: '3' })),
+            .max(25, t('forms.maxLength', { count: 25 }))
+            .min(3, t('forms.minLength', { count: 3 })),
         time: yup
             .date()
             .required()

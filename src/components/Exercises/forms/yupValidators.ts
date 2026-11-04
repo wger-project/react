@@ -12,8 +12,8 @@ const MIN_NOTE_LENGTH = 15;
 
 export const nameValidator = () => yup
     .string()
-    .min(MIN_CHAR_NAME, i18n.t("forms.minLength", { 'chars': MIN_CHAR_NAME }))
-    .max(MAX_CHAR_NAME, i18n.t("forms.maxLength", { 'chars': MAX_CHAR_NAME }))
+    .min(MIN_CHAR_NAME, i18n.t("forms.minLength", { count: MIN_CHAR_NAME }))
+    .max(MAX_CHAR_NAME, i18n.t("forms.maxLength", { count: MAX_CHAR_NAME }))
     .required(i18n.t("forms.fieldRequired"));
 
 export const alternativeNameValidator = () => yup
@@ -24,8 +24,8 @@ export const alternativeNameValidator = () => yup
         yup.object({
             id: yup.number().nullable(),
             alias: yup.string()
-                .min(MIN_CHAR_NAME, i18n.t("forms.minLength", { 'chars': MIN_CHAR_NAME }))
-                .max(MAX_CHAR_NAME, i18n.t("forms.maxLength", { 'chars': MAX_CHAR_NAME }))
+                .min(MIN_CHAR_NAME, i18n.t("forms.minLength", { count: MIN_CHAR_NAME }))
+                .max(MAX_CHAR_NAME, i18n.t("forms.maxLength", { count: MAX_CHAR_NAME }))
                 .required()
         })
     );
@@ -42,12 +42,12 @@ export const descriptionValidator = (unchanged?: string) => yup
     .required(i18n.t("forms.fieldRequired"))
     .test(
         'minLength',
-        i18n.t("forms.minLength", { 'chars': MIN_DESC_LENGTH }),
+        i18n.t("forms.minLength", { count: MIN_DESC_LENGTH }),
         value => value === unchanged || (value ?? '').length >= MIN_DESC_LENGTH
     )
     .test(
         'minWords',
-        i18n.t("forms.minWords", { 'words': MIN_DESC_WORDS }),
+        i18n.t("forms.minWords", { count: MIN_DESC_WORDS }),
         value => value === unchanged || countWords(value ?? '') >= MIN_DESC_WORDS
     );
 
@@ -58,7 +58,7 @@ export const noteValidator = () => yup
     .of(
         yup
             .string()
-            .min(MIN_NOTE_LENGTH, i18n.t("forms.minLength", { 'chars': MIN_NOTE_LENGTH }))
+            .min(MIN_NOTE_LENGTH, i18n.t("forms.minLength", { count: MIN_NOTE_LENGTH }))
     );
 
 export const authorValidator = () => yup

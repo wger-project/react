@@ -135,10 +135,9 @@ export class Routine {
         const durationDays = this.duration.days;
         const durationWeeks = this.duration.weeks;
 
-        return durationDays === 0 ? i18n.t('durationWeeks', { number: durationWeeks }) : i18n.t('durationWeeksDays', {
-            nrWeeks: durationWeeks,
-            nrDays: durationDays
-        });
+        const weeksText = i18n.t('durationWeeks', { count: durationWeeks });
+
+        return durationDays === 0 ? weeksText : `${weeksText}, ${i18n.t('durationDays', { count: durationDays })}`;
     }
 
     get mainMuscles() {

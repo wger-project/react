@@ -77,14 +77,14 @@ export const CategoryForm = ({ category, closeFn }: CategoryFormProps) => {
         name: yup
             .string()
             .required(t('forms.fieldRequired'))
-            .max(100, t('forms.maxLength', { chars: '100' })),
+            .max(100, t('forms.maxLength', { count: 100 })),
         // Required only where the field is offered: a typed category takes
         // its unit from the metric type (a step count has none at all), and a
         // calculation defines what the number is, which may be a bare ratio
         unit: isCustom
             ? yup
                 .string()
-                .max(30, t('forms.maxLength', { chars: '30' }))
+                .max(30, t('forms.maxLength', { count: 30 }))
                 .when('calculation', {
                     is: CALCULATION_NONE,
                     then: schema => schema.required(t('forms.fieldRequired')),

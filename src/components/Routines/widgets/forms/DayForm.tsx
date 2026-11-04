@@ -78,11 +78,11 @@ export const DayForm = (props: {
 
     const validationSchema = Yup.object().shape({
         name: Yup.string()
-            .max(nameMaxLength, t('forms.maxLength', { chars: nameMaxLength }))
-            .min(nameMinLength, t('forms.minLength', { chars: nameMinLength }))
+            .max(nameMaxLength, t('forms.maxLength', { count: nameMaxLength }))
+            .min(nameMinLength, t('forms.minLength', { count: nameMinLength }))
             .required('Name is required'),
         description: Yup.string()
-            .max(descriptionMaxLength, t('forms.maxLength', { chars: descriptionMaxLength })),
+            .max(descriptionMaxLength, t('forms.maxLength', { count: descriptionMaxLength })),
         isRest: Yup.boolean(),
         needsLogsToAdvance: Yup.boolean(),
         type: Yup.string(),
