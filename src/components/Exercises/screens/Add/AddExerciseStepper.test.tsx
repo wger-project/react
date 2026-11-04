@@ -30,4 +30,18 @@ describe("Test the add-exercise stepper component", () => {
         expect(screen.getByText("images")).toBeInTheDocument();
         expect(screen.getByText("overview")).toBeInTheDocument();
     });
+
+    test("Warns against adding personal exercises", () => {
+        // Act
+        const queryClient = new QueryClient();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <AddExerciseStepper />
+            </QueryClientProvider>
+        );
+
+        // Assert
+        expect(screen.getByRole("alert")).toHaveTextContent("exercises.personalExercisesWarningTitle");
+        expect(screen.getByRole("alert")).toHaveTextContent("exercises.personalExercisesWarningBody");
+    });
 });

@@ -29,6 +29,8 @@
         "primaryMuscles": "Primäre Muskeln",
         "identicalExercisePleaseDiscard": "Wenn dir eine Übung auffällt, die mit der von dir hinzugefügten identisch ist, verwerfe bitte deinen Entwurf und bearbeite stattdessen diese Übung.",
         "contributeExercise": "Eine Übung beisteuern",
+        "personalExercisesWarningTitle": "Füge keine persönlichen Übungen hinzu",
+        "personalExercisesWarningBody": "Übungen werden der gemeinsamen Datenbank hinzugefügt und sind für alle Nutzer sichtbar. Füge nur allgemeine Übungen hinzu, die für alle nützlich sind. Übungen, die nur erstellt werden, damit ein Import aus einer anderen App funktioniert, werden gelöscht.",
         "checkInformationBeforeSubmitting": "Bitte überprüfe vor dem Absenden der Übung, ob die von dir eingegebenen Informationen korrekt sind",
         "successfullyUpdated": "Die Übung wurde erfolgreich aktualisiert. Aufgrund von Caching kann es einige Zeit dauern, bis die Änderungen in der gesamten Anwendung sichtbar sind.",
         "alsoKnownAs": "Auch bekannt als:",

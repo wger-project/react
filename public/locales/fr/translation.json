@@ -20,6 +20,8 @@
         "missingExercise": "Un certain exercice manque ?",
         "missingExerciseDescription": "Aidez la communauté en y contribuant !",
         "contributeExercise": "Contribuer à un exercice",
+        "personalExercisesWarningTitle": "N'ajoutez pas d'exercices personnels",
+        "personalExercisesWarningBody": "Les exercices sont ajoutés à la base de données partagée et sont visibles par tous les utilisateurs. N'ajoutez que des exercices généraux, utiles à tout le monde. Les exercices créés uniquement pour faire fonctionner une importation depuis une autre application seront supprimés.",
         "exercises": "Exercices",
         "category": "Catégorie",
         "equipment": "Équipement",

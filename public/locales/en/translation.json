@@ -77,6 +77,8 @@
         "transferMediaLabel": "Transfer media to the replacement exercise",
         "transferTranslationsLabel": "Transfer translations to the replacement (skips languages already present)",
         "contributeExercise": "Contribute an exercise",
+        "personalExercisesWarningTitle": "Don't add personal exercises",
+        "personalExercisesWarningBody": "Exercises are added to the shared database and are visible to all users. Only add general exercises that are useful to everyone. Exercises created just to make an import from another app work will be deleted.",
         "step1HeaderBasics": "Basics in English",
         "variations": "Variations",
         "notEnoughRightsHeader": "You can't contribute exercises",
