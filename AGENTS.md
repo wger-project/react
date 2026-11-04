@@ -84,7 +84,8 @@ components/<Domain>/
 - **i18n:** any new user-visible string goes through `t()` / `<Trans>`. No hard-coded English/German in JSX. Add new
   keys only to `public/locales/en/translation.json` (`npm run i18n` extracts them); the other languages come from
   Weblate. If the flutter app already has the string (`../flutter/lib/l10n/app_*.arb`), use its English text
-  byte-for-byte so Weblate can cross-suggest translations.
+  byte-for-byte so Weblate can cross-suggest translations. Strings with a number use plural keys (`_one`, `_other`)
+  and a numeric `count`, also keep `{{count}}` in `_one`: in some languages that form also covers numbers like 21.
 - **Dates:** everything is in the browser's local timezone. Use the helpers in `core/lib/date` (`dateToYYYYMMDD`,
   `yyyymmddToDate`, `isSameDay`, …) for calendar days, never `toISOString().slice(0, 10)`, which shifts the day.
   `core/lib/date.test.ts` re-runs under several `TZ` values in its own vitest project.
