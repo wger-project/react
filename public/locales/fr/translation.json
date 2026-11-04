@@ -5,7 +5,7 @@
     "days": "Jours",
     "edit": "Modifier",
     "weight": "Poids",
-    "syncedEntryInfo": "Cette entrée a été synchronisée depuis une app de santé et ne peut être modifiée que là-bas",
+    "syncedEntryOverwriteWarning": "Les modifications de cette entrée peuvent être écrasées par l'app dont elle provient",
     "off": "Off",
     "submit": "Envoyer",
     "add": "Ajouter",

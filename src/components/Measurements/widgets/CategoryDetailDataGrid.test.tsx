@@ -31,11 +31,13 @@ describe('CategoryDetailDataGrid', () => {
         }));
     });
 
-    test('entries synced from a health app offer no edit or delete actions', async () => {
+    const renderSyncedEntry = async (source: string) => {
+        const deleteMutate = vi.fn();
+        (useDeleteMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: deleteMutate }));
         const category = new MeasurementCategory(CATEGORY_UUID, 'Biceps', 'cm');
         const entries = [
             new MeasurementEntry(USER_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 1), 10, '', 'user'),
-            new MeasurementEntry(SYNCED_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 2), 12, '', 'apple'),
+            new MeasurementEntry(SYNCED_ENTRY_UUID, CATEGORY_UUID, new Date(2023, 1, 2), 12, '', source),
         ];
 
         render(
@@ -45,15 +47,68 @@ describe('CategoryDetailDataGrid', () => {
         );
         await screen.findByText('10');
 
-        const userRow = document.querySelector(`[data-id="${USER_ENTRY_UUID}"]`) as HTMLElement;
-        const syncedRow = document.querySelector(`[data-id="${SYNCED_ENTRY_UUID}"]`) as HTMLElement;
+        return {
+            deleteMutate,
+            userRow: document.querySelector(`[data-id="${USER_ENTRY_UUID}"]`) as HTMLElement,
+            syncedRow: document.querySelector(`[data-id="${SYNCED_ENTRY_UUID}"]`) as HTMLElement,
+        };
+    };
 
-        expect(within(userRow).getByRole('button', { name: /edit/i })).toBeInTheDocument();
-        expect(within(userRow).getByRole('button', { name: /delete/i })).toBeInTheDocument();
+    test.each(['apple', 'google', 'device', 'some-future-source'])(
+        'an entry from %s can be changed and carries the warning',
+        async (source) => {
+            const { userRow, syncedRow } = await renderSyncedEntry(source);
 
-        expect(within(syncedRow).queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
-        expect(within(syncedRow).queryByRole('button', { name: /delete/i })).not.toBeInTheDocument();
-        expect(within(syncedRow).getByRole('button', { name: 'syncedEntryInfo' })).toBeInTheDocument();
+            expect(within(syncedRow).getByRole('button', { name: /edit/i })).toBeInTheDocument();
+            expect(within(syncedRow).getByRole('button', { name: /delete/i })).toBeInTheDocument();
+            expect(within(syncedRow).getByRole('button', { name: 'syncedEntryOverwriteWarning' }))
+                .toBeInTheDocument();
+            expect(within(userRow).queryByRole('button', { name: 'syncedEntryOverwriteWarning' }))
+                .not.toBeInTheDocument();
+        },
+    );
+
+    test('editing a synced entry warns that it may be overwritten', async () => {
+        const user = userEvent.setup();
+        const { syncedRow } = await renderSyncedEntry('apple');
+
+        await user.click(within(syncedRow).getByRole('button', { name: /edit/i }));
+
+        expect(await screen.findByRole('alert')).toHaveTextContent('syncedEntryOverwriteWarning');
+    });
+
+    test('editing a manual entry shows no warning', async () => {
+        const user = userEvent.setup();
+        const { userRow } = await renderSyncedEntry('apple');
+
+        await user.click(within(userRow).getByRole('button', { name: /edit/i }));
+
+        expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    });
+
+    test('a synced entry is only deleted after confirming the warning', async () => {
+        const user = userEvent.setup();
+        const { syncedRow, deleteMutate } = await renderSyncedEntry('apple');
+
+        await user.click(within(syncedRow).getByRole('button', { name: /delete/i }));
+
+        expect(deleteMutate).not.toHaveBeenCalled();
+        expect(await screen.findByText('syncedEntryOverwriteWarning')).toBeInTheDocument();
+
+        // The grid behind the open modal is hidden, this is the modal's button
+        await user.click(screen.getByRole('button', { name: /delete/i }));
+
+        expect(deleteMutate).toHaveBeenCalledWith(SYNCED_ENTRY_UUID);
+    });
+
+    test('a manual entry is deleted without asking', async () => {
+        const user = userEvent.setup();
+        const { userRow, deleteMutate } = await renderSyncedEntry('apple');
+
+        await user.click(within(userRow).getByRole('button', { name: /delete/i }));
+
+        expect(deleteMutate).toHaveBeenCalledWith(USER_ENTRY_UUID);
+        expect(screen.queryByText('syncedEntryOverwriteWarning')).not.toBeInTheDocument();
     });
 
     test('a calculated entry says who keeps it, not that it was synced', async () => {
@@ -76,7 +131,7 @@ describe('CategoryDetailDataGrid', () => {
             'button',
             { name: 'measurements.calculations.entryInfo' },
         )).toBeInTheDocument();
-        expect(within(row).queryByRole('button', { name: 'syncedEntryInfo' }))
+        expect(within(row).queryByRole('button', { name: 'syncedEntryOverwriteWarning' }))
             .not.toBeInTheDocument();
     });
 

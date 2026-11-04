@@ -12,7 +12,7 @@
     "off": "Apagado",
     "submit": "Enviar",
     "weight": "Peso",
-    "syncedEntryInfo": "Esta entrada se sincronizó desde una aplicación de salud y solo se puede cambiar allí",
+    "syncedEntryOverwriteWarning": "Los cambios en esta entrada pueden ser sobrescritos por la aplicación de la que procede",
     "workout": "Entrenamiento",
     "exercises": {
         "secondaryMuscles": "Músculos secundarios",

@@ -9,7 +9,7 @@
         "customize": "Customize"
     },
     "weight": "Weight",
-    "syncedEntryInfo": "This entry was synced from a health app and can only be changed there",
+    "syncedEntryOverwriteWarning": "Changes to this entry may be overwritten by the app it came from",
     "height": "Height",
     "cm": "cm",
     "date": "Date",

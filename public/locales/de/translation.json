@@ -129,7 +129,7 @@
     "off": "Aus",
     "submit": "Abschicken",
     "weight": "Gewicht",
-    "syncedEntryInfo": "Dieser Eintrag wurde aus einer Health-App synchronisiert und kann nur dort geändert werden",
+    "syncedEntryOverwriteWarning": "Änderungen an diesem Eintrag können von der App, aus der er stammt, überschrieben werden",
     "workout": "Training",
     "images": "Bilder",
     "description": "Beschreibung",
