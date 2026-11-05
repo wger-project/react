@@ -181,9 +181,13 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn,
                         value={dateValue}
                         disableFuture={true}
                         onChange={(newValue) => {
-                            form.setFieldValue('datetime', newValue?.toJSDate() ?? null);
-
-                            setDateValue(newValue);
+                            // Calendar selection starts at midnight, whose offset can
+                            // differ from the selected occurrence of a repeated hour.
+                            const resolved = newValue?.isValid && dateValue?.isValid
+                                ? newValue.getPossibleOffsets().find(candidate => candidate.offset === dateValue.offset) ?? newValue
+                                : newValue;
+                            form.setFieldValue('datetime', resolved?.toJSDate() ?? null);
+                            setDateValue(resolved);
                         }}
                         shouldDisableDate={(date) => {
 

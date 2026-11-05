@@ -16,6 +16,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from '@testing-library/react';
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import React from 'react';
+import { Settings } from 'luxon';
 import type { Mock } from 'vitest';
 
 vi.mock('@/components/Nutrition/queries');
@@ -61,6 +62,31 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         (useDeleteDiaryEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateDeleteMock }));
         (searchIngredient as Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
         (useSearchIngredientQuery as Mock).mockImplementation(() => searchIngredient);
+    });
+
+    test.each([
+        ['2026-10-25T00:30:15.123Z', '25', '2026-10-25T00:30:15.123Z'],
+        ['2026-10-25T01:30:15.123Z', '25', '2026-10-25T01:30:15.123Z'],
+        ['2026-10-25T00:30:15.123Z', '26', '2026-10-26T01:30:15.123Z'],
+    ])('calendar selection preserves the intended instant (%s, day %s)', async (initial, day, expected) => {
+        const previousZone = Settings.defaultZone;
+        Settings.defaultZone = 'Europe/Berlin';
+        try {
+            const user = userEvent.setup();
+            const entry = DiaryEntry.clone(TEST_DIARY_ENTRY_1, { datetime: new Date(initial) });
+            render(<NutritionDiaryEntryForm planId={entry.planId} entry={entry} />);
+            await user.click(screen.getByRole('button', { name: /choose date/i }));
+            await user.click(await screen.findByRole('gridcell', { name: day }));
+            const accept = screen.queryByRole('button', { name: 'OK' });
+            if (accept) await user.click(accept);
+            await user.click(screen.getByRole('button', { name: 'submit' }));
+            expect(mutateEditMock).toHaveBeenCalledOnce();
+            const saved = mutateEditMock.mock.calls[0][0] as DiaryEntry;
+            expect(saved.datetime.toISOString()).toBe(expected);
+            expect(entry.datetime.toISOString()).toBe(initial);
+        } finally {
+            Settings.defaultZone = previousZone;
+        }
     });
 
 
