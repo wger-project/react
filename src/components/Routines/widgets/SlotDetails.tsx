@@ -3,6 +3,7 @@ import { BaseConfig } from "@/components/Routines/models/BaseConfig";
 import { Slot } from "@/components/Routines/models/Slot";
 import { SlotEntry } from "@/components/Routines/models/SlotEntry";
 import { useDeleteSlotEntryQuery, useEditSlotEntryQuery } from "@/components/Routines/queries";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { ConfigDetailsRiRField, SlotBaseConfigValueField } from "@/components/Routines/widgets/forms/BaseConfigForm";
 import {
     SlotEntryRepetitionUnitField,
@@ -184,6 +185,8 @@ export const SlotEntryDetails = (props: {
 
     return (
         (<React.Fragment>
+            <FormQueryErrorsSnackbar mutationQuery={editSlotEntryQuery} />
+            <FormQueryErrorsSnackbar mutationQuery={deleteSlotEntryQuery} />
             <Grid container sx={{ paddingTop: 1 }} spacing={1}>
                 {!props.isGrouped && <>
                     <Grid size={{ xs: 3, sm: 1 }} sx={{ alignContent: "center" }}>

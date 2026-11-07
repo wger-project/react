@@ -1,7 +1,20 @@
-import { FilterType } from "@/components/Weight/widgets/FilterButtons";
 import i18n from 'i18next';
 import { DateTime, DateTimeFormatOptions } from "luxon";
 
+
+/** Milliseconds in a day. Only for durations; a calendar day can be 23 or 25 hours long */
+export const DAY_MS = 24 * 60 * 60 * 1000;
+
+// Calendar arithmetic, not milliseconds: a DST day is 23 or 25 hours long
+export const dayOf = (date: Date): Date => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+export const shiftDays = (date: Date, days: number): Date =>
+    new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
+// getDay() counts from Sunday, the week starts on Monday
+export const mondayOf = (date: Date): Date => shiftDays(date, -((date.getDay() + 6) % 7));
+export const daysBetween = (from: Date, to: Date): number => Math.round(
+    (Date.UTC(to.getFullYear(), to.getMonth(), to.getDate())
+        - Date.UTC(from.getFullYear(), from.getMonth(), from.getDate())) / DAY_MS
+);
 
 export function isSameDay(date1: Date, date2: Date): boolean {
     return (
@@ -9,6 +22,35 @@ export function isSameDay(date1: Date, date2: Date): boolean {
         date1.getMonth() === date2.getMonth() &&
         date1.getDate() === date2.getDate()
     );
+}
+
+/*
+ * A date as a relative phrase ("today", "3 weeks ago"), in the locale's own
+ * words via Intl.
+ *
+ * Counts calendar days rather than elapsed hours, so an entry from late
+ * yesterday still reads as yesterday this morning. The unit grows with the
+ * distance: days within a week, then weeks, months, years.
+ */
+export function dateToRelative(date: Date, locale?: string, now: Date = new Date()): string {
+    const dayMs = 24 * 60 * 60 * 1000;
+    // Rounded because a DST day is 23 or 25 hours long
+    const days = Math.round((
+        new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
+        - new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+    ) / dayMs);
+
+    const format = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
+    if (Math.abs(days) < 7) {
+        return format.format(-days, 'day');
+    }
+    if (Math.abs(days) < 31) {
+        return format.format(-Math.round(days / 7), 'week');
+    }
+    if (Math.abs(days) < 365) {
+        return format.format(-Math.round(days / 30), 'month');
+    }
+    return format.format(-Math.round(days / 365), 'year');
 }
 
 /*
@@ -42,13 +84,26 @@ export function yyyymmddToDate(dateStr: string): Date {
 
 
 /*
+ * The locale dates are formatted in: the page language, with the browser's
+ * region when the language has none (page "en", browser "en-NZ" -> "en-NZ")
+ */
+export function dateLocale(language: string | undefined = i18n.language, preferred: readonly string[] = navigator.languages) {
+    if (!language || language.includes('-')) {
+        return language;
+    }
+
+    const prefix = `${language.toLowerCase()}-`;
+    return preferred.find(l => l.toLowerCase().startsWith(prefix)) ?? language;
+}
+
+/*
  * Returns the localized time from a date object
  */
 export function dateTimeToLocaleHHMM(dateTime: Date | null, locale?: string, options?: Intl.DateTimeFormatOptions) {
     if (dateTime == null) {
         return null;
     }
-    locale = locale ?? i18n.language;
+    locale = locale ?? dateLocale();
     options = options ?? { hour: '2-digit', minute: '2-digit' };
 
     return dateTime.toLocaleTimeString(
@@ -63,7 +118,7 @@ export function dateTimeToLocale(dateTime: Date | null, locale?: string, options
         return '';
     }
 
-    locale = locale ?? i18n.language;
+    locale = locale ?? dateLocale();
     options = options ?? {
         year: '2-digit',
         month: '2-digit',
@@ -81,7 +136,7 @@ export function luxonDateTimeToLocale(dateTime: DateTime | null, locale?: string
         return '';
     }
 
-    locale = locale ?? i18n.language;
+    locale = locale ?? dateLocale();
     options = options ?? DateTime.DATE_MED;
 
     return dateTime.toLocaleString(options, { locale: locale });
@@ -93,7 +148,7 @@ export function dateToLocale(dateTime: Date | null, locale?: string, options?: I
         return '';
     }
 
-    locale = locale ?? i18n.language;
+    locale = locale ?? dateLocale();
     options = options ?? {
         year: '2-digit',
         month: '2-digit',
@@ -133,35 +188,4 @@ export function HHMMToDateTime(time: string | null) {
     dateTime.setMinutes(parseInt(minute));
 
     return dateTime;
-}
-
-/*
- * Util function that calculates a date in the past based on a string filter
- * and returns it as a YYYY-MM-DD string for API queries.
- *
- * @param filter - A string representing the desired time period (e.g., 'lastWeek', 'lastMonth')
- * @param currentDate - (Optional) The current date to base calculations on. Defaults to `new Date()`.
- *                      This parameter allows for testing or custom date bases.
- * @returns - Date string in the format YYYY-MM-DD or undefined for no filtering
- */
-export function calculatePastDate(filter: FilterType, currentDate: Date = new Date()): string | undefined {
-
-    // Dictionary for filters
-    const filterMap: Record<FilterType, (() => void) | undefined> = {
-        lastWeek: () => currentDate.setDate(currentDate.getDate() - 7),
-        lastMonth: () => currentDate.setMonth(currentDate.getMonth() - 1),
-        lastHalfYear: () => currentDate.setMonth(currentDate.getMonth() - 6),
-        lastYear: () => currentDate.setFullYear(currentDate.getFullYear() - 1),
-        '': undefined
-    };
-
-    // Execute the corresponding function for the filter
-    const applyFilter = filterMap[filter];
-    if (applyFilter) {
-        applyFilter();
-    } else {
-        return undefined;
-    }
-
-    return dateToYYYYMMDD(currentDate);
 }

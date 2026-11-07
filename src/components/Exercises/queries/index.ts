@@ -35,9 +35,12 @@ import { useCallback } from "react";
 export {
     useAddExerciseFullQuery,
     useExerciseQuery,
+    useExercisesDetailQueries,
     useExercisesForVariationQuery,
     useExercisesQuery,
     useFetchExerciseQuery,
+    useFetchExercisesByUuidsQuery,
+    usePrimeExercise,
 } from "./exercises";
 
 /**

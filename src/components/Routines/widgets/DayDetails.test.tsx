@@ -10,7 +10,7 @@ import { MemoryRouter } from "react-router-dom";
 import { getLanguages } from "@/components/Exercises/api/language";
 import { addDay } from "@/components/Routines/api/day";
 import { getRoutine } from "@/components/Routines/api/routine";
-import { addSlot } from "@/components/Routines/api/slot";
+import { addSlot, deleteSlot } from "@/components/Routines/api/slot";
 import { getProfile } from "@/components/User/api/profile";
 import { addSlotEntry } from "@/components/Routines/api/slotEntry";
 import { getTestQueryClient } from "@/tests/queryClient";
@@ -154,22 +154,17 @@ describe("Test the DayDragAndDropGrid component", () => {
                 <DayDragAndDropGrid routineId={222} selectedDayIndex={0} setSelectedDayIndex={mockSetSelectedDay} />
             </QueryClientProvider>
         );
-        await waitFor(() => {
-            expect(getRoutine).toHaveBeenCalled();
-        });
-        await waitFor(async () => {
-            await user.click(screen.getByRole('button', { name: 'routines.addDay' }));
-        });
+        await user.click(await screen.findByRole('button', { name: 'routines.addDay' }));
 
         // Assert
-        expect(mockAddDay).toHaveBeenCalledWith(new Day({
+        await waitFor(() => expect(mockAddDay).toHaveBeenCalledWith(new Day({
             isRest: false,
             name: "routines.newDay 4",
             needLogsToAdvance: false,
             order: 4,
             routineId: 222,
-        }));
-        expect(mockSetSelectedDay).toHaveBeenCalledWith(3);
+        })));
+        await waitFor(() => expect(mockSetSelectedDay).toHaveBeenCalledWith(3));
     });
 });
 
@@ -187,11 +182,15 @@ describe("DayDetails component", () => {
         const queryClient = getTestQueryClient();
         queryClient.setQueryData(['profile'], testProfileDataVerified);
 
+        // Deleting a slot writes back into the day, so each test gets its own copy
+        // and the shared fixture keeps all its slots
+        const dayCopy = Day.clone(day, { slots: [...day.slots] });
+
         return render(
             <QueryClientProvider client={queryClient}>
                 <MemoryRouter>
                     <DayDetails
-                        day={day}
+                        day={dayCopy}
                         routineId={1}
                         setSelectedDayIndex={mockSetSelectedDay}
                     />
@@ -233,7 +232,10 @@ describe("DayDetails component", () => {
 
     test('clicking delete removes slot and shows snackbar', async () => {
         const user = userEvent.setup();
+        const slotCount = testDayLegs.slots.length;
         renderComponent(testDayLegs);
+
+        expect(screen.getAllByText('routines.addSet')).toHaveLength(slotCount);
 
         // Find the slot delete button (skip the DayForm's delete icon)
         const deleteIcons = screen.getAllByTestId('DeleteIcon');
@@ -242,6 +244,14 @@ describe("DayDetails component", () => {
         // Snackbar should appear
         expect(screen.getByText('Set successfully deleted')).toBeInTheDocument();
         expect(screen.getByText('undo')).toBeInTheDocument();
+
+        // The slot is gone from the day, but is only deleted on the server once the
+        // snackbar times out without an undo
+        expect(screen.queryAllByText('routines.addSet')).toHaveLength(slotCount - 1);
+        expect(deleteSlot).not.toHaveBeenCalled();
+
+        // The shared fixture must keep its slots
+        expect(testDayLegs.slots).toHaveLength(slotCount);
     });
 
     // handleDuplicateSlot

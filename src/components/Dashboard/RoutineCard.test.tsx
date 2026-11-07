@@ -62,6 +62,56 @@ describe("test the RoutineCard component", () => {
             expect(screen.getByText('add')).toBeInTheDocument();
         });
     });
+
+    describe("The query failed", () => {
+
+        beforeEach(() => {
+            (useActiveRoutineQuery as Mock).mockImplementation(() => ({
+                isSuccess: false,
+                isLoading: false,
+                isError: true,
+                data: undefined
+            }));
+        });
+
+        test('falls back to the call to action instead of crashing', async () => {
+
+            // Act
+            render(
+                <QueryClientProvider client={testQueryClient}>
+                    <RoutineCard />
+                </QueryClientProvider>
+            );
+
+            // Assert
+            expect(screen.getByText('nothingHereYet')).toBeInTheDocument();
+        });
+    });
+
+    describe("The query is loading", () => {
+
+        beforeEach(() => {
+            (useActiveRoutineQuery as Mock).mockImplementation(() => ({
+                isSuccess: false,
+                isLoading: true,
+                data: undefined
+            }));
+        });
+
+        test('shows the loading placeholder', async () => {
+
+            // Act
+            render(
+                <QueryClientProvider client={testQueryClient}>
+                    <RoutineCard />
+                </QueryClientProvider>
+            );
+
+            // Assert
+            expect(screen.getByRole('progressbar')).toBeInTheDocument();
+            expect(screen.queryByText('nothingHereYet')).not.toBeInTheDocument();
+        });
+    });
 });
 
 

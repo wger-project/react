@@ -41,50 +41,48 @@ describe("Profile API tests", () => {
     });
 
     test('editProfile renames weightRounding/repetitionsRounding to snake_case keys', async () => {
-        (axios.post as Mock).mockResolvedValue({ data: testProfileApiResponse });
+        (axios.patch as Mock).mockResolvedValue({ data: testProfileApiResponse });
 
         const result = await editProfile({
-            email: "new@example.com",
             height: 175,
             weightRounding: 2.5,
             repetitionsRounding: 1,
         });
 
-        expect(axios.post).toHaveBeenCalledTimes(1);
-        const [url, body] = (axios.post as Mock).mock.calls[0];
+        expect(axios.patch).toHaveBeenCalledTimes(1);
+        const [url, body] = (axios.patch as Mock).mock.calls[0];
         expect(url).toMatch(/\/api\/v2\/userprofile\/$/);
         expect(body).toEqual({
-            email: "new@example.com",
             height: 175,
 
             weight_rounding: 2.5,
 
-            repetition_rounding: 1,
+            repetitions_rounding: 1,
         });
         expect(result).toBeInstanceOf(Profile);
     });
 
     test('editProfile omits the rounding fields when they are undefined', async () => {
-        (axios.post as Mock).mockResolvedValue({ data: testProfileApiResponse });
+        (axios.patch as Mock).mockResolvedValue({ data: testProfileApiResponse });
 
-        await editProfile({ email: "x@example.com", height: 180 });
+        await editProfile({ height: 180 });
 
-        const [, body] = (axios.post as Mock).mock.calls[0];
-        expect(body).toEqual({ email: "x@example.com", height: 180 });
+        const [, body] = (axios.patch as Mock).mock.calls[0];
+        expect(body).toEqual({ height: 180 });
         expect(body).not.toHaveProperty("weight_rounding");
-        expect(body).not.toHaveProperty("repetition_rounding");
+        expect(body).not.toHaveProperty("repetitions_rounding");
     });
 
     test('editProfile sends null rounding values explicitly (different from undefined)', async () => {
-        (axios.post as Mock).mockResolvedValue({ data: testProfileApiResponse });
+        (axios.patch as Mock).mockResolvedValue({ data: testProfileApiResponse });
 
         await editProfile({
             weightRounding: null,
             repetitionsRounding: null,
         });
 
-        const [, body] = (axios.post as Mock).mock.calls[0];
+        const [, body] = (axios.patch as Mock).mock.calls[0];
 
-        expect(body).toEqual({ weight_rounding: null, repetition_rounding: null });
+        expect(body).toEqual({ weight_rounding: null, repetitions_rounding: null });
     });
 });

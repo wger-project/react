@@ -12,6 +12,15 @@ export const SessionAdd = () => {
     const params = useParams<{ routineId: string, dayId: string }>();
     const { t, i18n } = useTranslation();
     const [selectedDate, setSelectedDate] = useState<DateTime>(DateTime.now());
+    // Which session of the day the screen works on. Both forms read it: one
+    // edits it, the other writes its logs into it. Another date has its own
+    // sessions, so the pick doesn't travel along
+    const [chosenSessionId, setChosenSessionId] = useState<string | null>(null);
+
+    const selectDate = (date: DateTime) => {
+        setSelectedDate(date);
+        setChosenSessionId(null);
+    };
 
     const routineId = parseInt(params.routineId ?? '');
     if (Number.isNaN(routineId)) {
@@ -32,7 +41,9 @@ export const SessionAdd = () => {
                     routineId={routineId}
                     dayId={dayId}
                     selectedDate={selectedDate}
-                    setSelectedDate={setSelectedDate}
+                    setSelectedDate={selectDate}
+                    chosenSessionId={chosenSessionId}
+                    setChosenSessionId={setChosenSessionId}
                 />
 
                 <Typography variant={"h5"}>{t('exercises.exercises')}</Typography>
@@ -43,6 +54,7 @@ export const SessionAdd = () => {
                     routineId={routineId}
                     dayId={dayId}
                     selectedDate={selectedDate}
+                    chosenSessionId={chosenSessionId}
                 />
             </Stack>
         }

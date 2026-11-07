@@ -17,6 +17,8 @@ export const FormQueryErrors = (props: { mutationQuery: any }) => {
                 <AlertTitle>{props.mutationQuery.error?.message}</AlertTitle>
                 <ul>
                     {collectValidationErrors(props.mutationQuery.error.response?.data).map((error, index) =>
+                        // Two entries of the same list produce the same message, so the text alone is no key
+                        // eslint-disable-next-line @eslint-react/no-array-index-key
                         <li key={index}>{error}</li>
                     )}
                 </ul>
@@ -37,6 +39,8 @@ export const FormQueryErrorsSnackbar = (props: { mutationQuery: any }) => {
                 <AlertTitle>{props.mutationQuery.error?.message}</AlertTitle>
                 <ul>
                     {collectValidationErrors(props.mutationQuery.error.response?.data).map((error, index) =>
+                        // Two entries of the same list produce the same message, so the text alone is no key
+                        // eslint-disable-next-line @eslint-react/no-array-index-key
                         <li key={index}>{error}</li>
                     )}
                 </ul>

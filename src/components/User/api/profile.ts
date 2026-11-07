@@ -36,10 +36,10 @@ export const editProfile = async (data: Partial<EditProfileParams>): Promise<Pro
 
         ...(weightRounding !== undefined && { weight_rounding: weightRounding }),
 
-        ...(repetitionsRounding !== undefined && { repetition_rounding: repetitionsRounding }),
+        ...(repetitionsRounding !== undefined && { repetitions_rounding: repetitionsRounding }),
     };
 
-    const response = await axios.post(
+    const response = await axios.patch(
         makeUrl(ApiPath.API_PROFILE_PATH),
         payload,
         { headers: makeHeader() }

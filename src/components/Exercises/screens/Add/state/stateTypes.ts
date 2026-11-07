@@ -1,3 +1,5 @@
+import { ImageFormData } from "@/components/Exercises/models/exercise";
+
 export enum SetExerciseSubmissionState {
     RESET,
 
@@ -16,5 +18,59 @@ export enum SetExerciseSubmissionState {
     SET_ALIASES_I18N,
     SET_DESCRIPTION_I18N,
     SET_NOTES_I18N,
-    SET_IMAGES
+    SET_IMAGES,
+    SET_AUTHOR
 }
+
+export type ExerciseSubmissionAction = {
+    type: SetExerciseSubmissionState,
+    payload?: number | number[] | string | string[] | null | ImageFormData[],
+}
+
+export type ExerciseSubmissionState = {
+    nameEn: string;
+    descriptionEn: string;
+    alternativeNamesEn: string[];
+    notesEn: string[];
+
+    languageId: number | null;
+    nameI18n: string;
+    alternativeNamesI18n: string[];
+    descriptionI18n: string;
+    notesI18n: string[];
+
+    category: number | null;
+    muscles: number[];
+    musclesSecondary: number[];
+    equipment: number[];
+    variationGroup: string | null;
+    newVariationExerciseId: number | null;
+
+    images: ImageFormData[];
+
+    author: string;
+}
+
+export const exerciseSubmissionInitialState: ExerciseSubmissionState = {
+    category: null,
+    muscles: [],
+    musclesSecondary: [],
+    variationGroup: null,
+    newVariationExerciseId: null,
+    languageId: null,
+    equipment: [],
+
+    nameEn: "",
+    descriptionEn: "",
+    alternativeNamesEn: [],
+    notesEn: [],
+
+    nameI18n: "",
+    alternativeNamesI18n: [],
+    descriptionI18n: "",
+    notesI18n: [],
+
+    images: [],
+
+    author: "",
+};

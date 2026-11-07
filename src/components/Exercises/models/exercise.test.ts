@@ -1,4 +1,4 @@
-import { ExerciseAdapter } from "@/components/Exercises/models/exercise";
+import { Exercise, ExerciseAdapter } from "@/components/Exercises/models/exercise";
 import { Language } from "@/components/Exercises/models/language";
 import {
     testExerciseBenchPress,
@@ -36,6 +36,20 @@ describe("Exercise base model tests", () => {
 
         // Assert
         expect(testExerciseSquats.getTranslation(unknownLanguage).name).toBe("Squats");
+    });
+
+    test('translation helper - falls back to the first translation without english', () => {
+
+        // Arrange
+        // Self hosted instances can have exercises without an english translation
+        const exercise = new Exercise({
+            ...testExerciseSquats,
+            translations: [testExerciseSquats.translations[1]]
+        });
+
+        // Assert
+        expect(exercise.getTranslation(testLanguageEnglish).name).toBe("Kniebeuge");
+        expect(exercise.getTranslation().name).toBe("Kniebeuge");
     });
 
     test('adapter - from json', () => {

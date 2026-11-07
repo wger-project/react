@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import ImageList from '@mui/material/ImageList';
-import { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
+import type { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
 import { ImageFormModal } from "@/components/Exercises/forms/ImageModal";
 import { ImageFormData } from "@/components/Exercises/models/exercise";
 import { ImageStyle } from "@/components/Exercises/models/image";

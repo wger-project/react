@@ -149,7 +149,11 @@ export function VariationSelect({
         let allExercises: Exercise[] = exercisesQuery.data;
 
         if (searchTerm !== '') {
-            allExercises = allExercises.filter((base) => base.getTranslation().name.toLowerCase().includes(searchTerm.toLowerCase()));
+            const term = searchTerm.toLowerCase();
+            allExercises = allExercises.filter((base) =>
+                base.translations.some((translation) =>
+                    translation.name.toLowerCase().includes(term)
+                    || translation.aliases.some((alias) => alias.alias.toLowerCase().includes(term))));
         }
 
         // Group first (including current exercise, so groups show all members)

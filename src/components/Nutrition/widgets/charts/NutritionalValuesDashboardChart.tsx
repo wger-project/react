@@ -20,10 +20,12 @@ export const NutritionalValuesDashboardChart = (props: {
     const [t, i18n] = useTranslation();
     const data = [
         {
+            id: 'logged',
             name: '',
             value: energyPercentage,
         },
         {
+            id: 'remaining',
             name: '',
             value: energyPercentage < 100 ? 100 - energyPercentage : 0,
         },
@@ -46,7 +48,7 @@ export const NutritionalValuesDashboardChart = (props: {
                 dataKey="value"
             >
                 {data.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell key={`cell-${entry.id}`} fill={COLORS[index % COLORS.length]} />
                 ))}
             </Pie>
             <g>

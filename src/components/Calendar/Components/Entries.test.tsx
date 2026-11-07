@@ -1,30 +1,44 @@
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { WeightEntry } from '@/components/Weight';
+import { MeasurementEntry } from "@/components/Measurements";
+import { deleteSession } from "@/components/Routines/api/session";
+import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
+import { testQueryClient } from "@/tests/queryClient";
+import { makeWeightEntry } from "@/tests/weight/testData";
 import React from 'react';
+import { TEST_INGREDIENT_1 } from "@/tests/ingredientTestdata";
+import { TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2 } from "@/tests/nutritionDiaryTestdata";
+import { testWorkoutLogs, testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
 import { dateToLocale } from "@/core/lib/date";
 import { DayProps } from './CalendarComponent';
 import Entries from './Entries';
 
+vi.mock("@/components/Measurements/api/bodyWeight");
+vi.mock("@/components/Routines/api/session");
+vi.mock('@/components/User/queries/profile', () => ({
+    useProfileQuery: () => ({ isLoading: false, data: { useMetric: true } }),
+}));
 
 describe('Entries Component', () => {
     const mockDate = new Date('2025-4-25');
 
-    const mockWeightEntry: WeightEntry = new WeightEntry(
-        mockDate,
-        75.5
-    );
+    const mockWeightEntry: MeasurementEntry = makeWeightEntry(mockDate, 75.5);
 
     const defaultProps: DayProps = {
         date: mockDate,
         weightEntry: undefined,
         measurements: [],
         nutritionLogs: [],
-        workoutSession: undefined
+        workoutSessions: []
     };
 
     test('Correctly shows date and title', () => {
-        render(<Entries selectedDay={defaultProps} />);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={defaultProps} />
+            </QueryClientProvider>
+        );
 
         expect(screen.getByText(/entries/i)).toBeInTheDocument();
         expect(screen.getByText(dateToLocale(mockDate), { exact: false })).toBeInTheDocument();
@@ -36,10 +50,14 @@ describe('Entries Component', () => {
             weightEntry: mockWeightEntry
         };
 
-        render(<Entries selectedDay={propsWithWeight} />);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithWeight} />
+            </QueryClientProvider>
+        );
 
         expect(screen.getByText('weight')).toBeInTheDocument();
-        expect(screen.getByText('75.5')).toBeInTheDocument();
+        expect(screen.getByText('75.5 server.kg')).toBeInTheDocument();
     });
 
     test('Shows measurement directly, if theres only one entry', () => {
@@ -50,7 +68,11 @@ describe('Entries Component', () => {
             ]
         };
 
-        render(<Entries selectedDay={propsWithOneMeasurement} />);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithOneMeasurement} />
+            </QueryClientProvider>
+        );
 
         expect(screen.getByText('measurements.measurements')).toBeInTheDocument();
         expect(screen.getByText('Chest size: 95 cm')).toBeInTheDocument();
@@ -65,7 +87,11 @@ describe('Entries Component', () => {
             ]
         };
 
-        render(<Entries selectedDay={propsWithMultipleMeasurements} />);
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithMultipleMeasurements} />
+            </QueryClientProvider>
+        );
 
         // Initially only the header is visible
         expect(screen.getByText('measurements.measurements')).toBeInTheDocument();
@@ -77,5 +103,130 @@ describe('Entries Component', () => {
 
         expect(screen.queryByText('Chest size')).toBeInTheDocument();
         expect(screen.getByText('Arm size')).toBeInTheDocument();
+    });
+
+    test('Shows the workout session logs in a collapsible', async () => {
+        const propsWithSession = {
+            ...defaultProps,
+            workoutSessions: [new WorkoutSession({ ...testWorkoutSession, logs: testWorkoutLogs })]
+        };
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithSession} />
+            </QueryClientProvider>
+        );
+
+        // Initially only the session header with its summary is visible
+        expect(screen.getByText('routines.workoutSession')).toBeInTheDocument();
+        expect(screen.getByText(/everything is awesome/)).toBeInTheDocument();
+        expect(screen.queryByText('8 × 80')).not.toBeInTheDocument();
+
+        const user = userEvent.setup();
+        await user.click(screen.getByText('routines.workoutSession'));
+
+        // The logs are rendered as "repetitions × weight" per exercise
+        expect(screen.getAllByText('Squats').length).toBe(testWorkoutLogs.length);
+        expect(screen.getByText(/^8 × 80/)).toBeInTheDocument();
+        expect(screen.getByText(/^8 × 82.5/)).toBeInTheDocument();
+    });
+
+    test('Deletes a workout session after confirming', async () => {
+        const session = new WorkoutSession({ ...testWorkoutSession, logs: testWorkoutLogs });
+        const propsWithSession = {
+            ...defaultProps,
+            workoutSessions: [session]
+        };
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithSession} />
+            </QueryClientProvider>
+        );
+
+        const user = userEvent.setup();
+        await user.click(screen.getByRole('button', { name: 'delete' }));
+
+        // Nothing is deleted until the user confirms
+        expect(screen.getByText('routines.deleteSessionInfo')).toBeInTheDocument();
+        expect(deleteSession).not.toHaveBeenCalled();
+
+        await user.click(screen.getByRole('button', { name: 'delete' }));
+
+        expect(deleteSession).toHaveBeenCalledTimes(1);
+        expect(deleteSession).toHaveBeenCalledWith(session.id);
+    });
+
+    test('Does not delete a workout session when the dialog is closed', async () => {
+        const propsWithSession = {
+            ...defaultProps,
+            workoutSessions: [new WorkoutSession({ ...testWorkoutSession, logs: testWorkoutLogs })]
+        };
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithSession} />
+            </QueryClientProvider>
+        );
+
+        const user = userEvent.setup();
+        await user.click(screen.getByRole('button', { name: 'delete' }));
+        await user.click(screen.getByRole('button', { name: 'close' }));
+
+        expect(deleteSession).not.toHaveBeenCalled();
+    });
+
+    test('Shows every session of the day', async () => {
+        const propsWithSessions = {
+            ...defaultProps,
+            workoutSessions: [
+                new WorkoutSession({ ...testWorkoutSession, notes: 'morning workout', logs: testWorkoutLogs }),
+                new WorkoutSession({
+                    ...testWorkoutSession,
+                    id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000002',
+                    notes: 'evening workout',
+                    logs: []
+                }),
+            ]
+        };
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithSessions} />
+            </QueryClientProvider>
+        );
+
+        // Both are listed, and expanding one leaves the other closed
+        expect(screen.getAllByText('routines.workoutSession')).toHaveLength(2);
+        expect(screen.getByText(/morning workout/)).toBeInTheDocument();
+        expect(screen.getByText(/evening workout/)).toBeInTheDocument();
+
+        const user = userEvent.setup();
+        await user.click(screen.getByText(/morning workout/));
+
+        expect(screen.getByText(/^8 × 80/)).toBeInTheDocument();
+    });
+
+    test('Shows the nutrition diary entries in a collapsible', async () => {
+        const propsWithNutrition = {
+            ...defaultProps,
+            nutritionLogs: [TEST_DIARY_ENTRY_1, TEST_DIARY_ENTRY_2]
+        };
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithNutrition} />
+            </QueryClientProvider>
+        );
+
+        // Initially only the header is visible
+        expect(screen.getByText('nutrition.nutritionalDiary')).toBeInTheDocument();
+        expect(screen.queryByText(TEST_INGREDIENT_1.name)).not.toBeInTheDocument();
+
+        const user = userEvent.setup();
+        await user.click(screen.getByText('nutrition.nutritionalDiary'));
+
+        expect(screen.getByText(TEST_INGREDIENT_1.name)).toBeInTheDocument();
+        expect(screen.getByText(`${TEST_DIARY_ENTRY_1.amount} nutrition.gramShort`)).toBeInTheDocument();
     });
 });

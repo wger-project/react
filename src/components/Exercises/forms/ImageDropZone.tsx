@@ -1,13 +1,17 @@
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { Box, Stack, Typography } from "@mui/material";
-import { ImageFormData } from "@/components/Exercises/models/exercise";
-import { useFormikContext } from "formik";
 import * as React from 'react';
 import { useTranslation } from "react-i18next";
 
-export function ImageDropZone() {
+interface ImageDropZoneProps {
+    /** The preview, empty while no image was picked */
+    url: string;
+    /** Called with the picked file and its object URL */
+    onPick: (file: File, url: string) => void;
+}
+
+export function ImageDropZone({ url, onPick }: ImageDropZoneProps) {
     const [t] = useTranslation();
-    const { values, setFieldValue } = useFormikContext<ImageFormData>();
     const [isDragOver, setIsDragOver] = React.useState(false);
     const inputRef = React.useRef<HTMLInputElement>(null);
 
@@ -15,8 +19,7 @@ export function ImageDropZone() {
         if (!file.type.startsWith('image/')) {
             return;
         }
-        setFieldValue('file', file);
-        setFieldValue('url', URL.createObjectURL(file));
+        onPick(file, URL.createObjectURL(file));
     };
 
     const handleDrop = (e: React.DragEvent<HTMLElement>) => {
@@ -55,10 +58,10 @@ export function ImageDropZone() {
                 '& > *:not(input)': { pointerEvents: 'none' },
             }}
         >
-            {values.url ? (
+            {url ? (
                 <img
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    src={values.url}
+                    src={url}
                     alt="Preview"
                 />
             ) : (

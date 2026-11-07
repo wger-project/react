@@ -4,6 +4,7 @@ import {
     reset,
     setAlternativeNamesEn,
     setAlternativeNamesI18n,
+    setAuthor,
     setCategory,
     setDescriptionEn,
     setDescriptionI18n,
@@ -22,7 +23,7 @@ import {
 import {
     ExerciseSubmissionAction,
     ExerciseSubmissionState
-} from "@/components/Exercises/screens/Add/state/exerciseSubmissionState";
+} from "@/components/Exercises/screens/Add/state/stateTypes";
 import { ImageFormData } from "@/components/Exercises/models/exercise";
 import { ImageStyle } from "@/components/Exercises/models/image";
 
@@ -48,6 +49,7 @@ describe("exerciseSubmissionReducer - action creators", () => {
 
     test.each([
         ["setNameEn", setNameEn, "Bench Press", SetExerciseSubmissionState.SET_NAME_EN],
+        ["setAuthor", setAuthor, "Jane Doe", SetExerciseSubmissionState.SET_AUTHOR],
         ["setDescriptionEn", setDescriptionEn, "A description", SetExerciseSubmissionState.SET_DESCRIPTION_EN],
         ["setNameI18n", setNameI18n, "Bankdrücken", SetExerciseSubmissionState.SET_NAME_I18N],
         ["setDescriptionI18n", setDescriptionI18n, "Eine Beschreibung", SetExerciseSubmissionState.SET_DESCRIPTION_I18N],
@@ -164,6 +166,12 @@ describe("exerciseSubmissionReducer - reducer", () => {
         expect(next).not.toBe(baseState);
     });
 
+    test("SET_AUTHOR updates only author", () => {
+        const next = exerciseSubmissionReducer(baseState, setAuthor("Jane Doe"));
+        expect(next.author).toBe("Jane Doe");
+        expect(next.nameEn).toBe(baseState.nameEn);
+    });
+
     test("SET_DESCRIPTION_EN updates only descriptionEn", () => {
         const next = exerciseSubmissionReducer(baseState, setDescriptionEn("Squat down"));
         expect(next.descriptionEn).toBe("Squat down");
@@ -220,17 +228,22 @@ describe("exerciseSubmissionReducer - reducer", () => {
         expect(next.musclesSecondary).toEqual([4, 5]);
     });
 
-    test("SET_VARIATION_ID updates only variationGroup", () => {
-        const next = exerciseSubmissionReducer(baseState, setVariationId("uuid-1"));
+    test("SET_VARIATION_ID updates variationGroup and clears newVariationExerciseId", () => {
+        const next = exerciseSubmissionReducer({ ...baseState, newVariationExerciseId: 99 }, setVariationId("uuid-1"));
         expect(next.variationGroup).toBe("uuid-1");
+        expect(next.newVariationExerciseId).toBeNull();
 
         const cleared = exerciseSubmissionReducer(next, setVariationId(null));
         expect(cleared.variationGroup).toBeNull();
     });
 
-    test("SET_NEW_VARIATION_BASE_ID updates only newVariationExerciseId", () => {
-        const next = exerciseSubmissionReducer(baseState, setNewBaseVariationId(99));
+    test("SET_NEW_VARIATION_BASE_ID updates newVariationExerciseId and clears variationGroup", () => {
+        const next = exerciseSubmissionReducer({ ...baseState, variationGroup: "uuid-1" }, setNewBaseVariationId(99));
         expect(next.newVariationExerciseId).toBe(99);
+        expect(next.variationGroup).toBeNull();
+
+        const cleared = exerciseSubmissionReducer(next, setNewBaseVariationId(null));
+        expect(cleared.newVariationExerciseId).toBeNull();
     });
 
     test("SET_LANGUAGE updates only languageId", () => {

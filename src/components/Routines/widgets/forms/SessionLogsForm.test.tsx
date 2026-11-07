@@ -1,13 +1,18 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { useLanguageQuery } from "@/components/Exercises";
-import { useAddRoutineLogsQuery, useRoutineDetailQuery, useRoutineLogQuery } from "@/components/Routines/queries";
+import {
+    useAddRoutineLogsQuery,
+    useRoutineDetailQuery,
+    useRoutineLogQuery,
+    useSessionOfDay
+} from "@/components/Routines/queries";
+import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { SessionLogsForm } from '@/components/Routines/widgets/forms/SessionLogsForm';
 import { DateTime } from "luxon";
 import { testLanguages } from "@/tests/exerciseTestdata";
+import { testWorkoutLogs, testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
-import { testWorkoutLogs } from "@/tests/workoutLogsRoutinesTestData";
-import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import type { Mock } from 'vitest';
 
 
@@ -19,6 +24,7 @@ describe('SessionLogsForm', () => {
     const mockUseLanguageQuery = useLanguageQuery as Mock;
     const mockAddLogsQuery = useAddRoutineLogsQuery as Mock;
     const mockRoutineDetailQuery = useRoutineDetailQuery as Mock;
+    const mockUseSessionOfDay = useSessionOfDay as Mock;
     const mockRoutineLogQuery = useRoutineLogQuery as Mock;
     const mockMutateAsync = vi.fn();
 
@@ -37,6 +43,12 @@ describe('SessionLogsForm', () => {
             isLoading: false,
             data: testLanguages,
         });
+        mockUseSessionOfDay.mockReturnValue({
+            sessions: [testWorkoutSession],
+            session: testWorkoutSession,
+            isLoading: false,
+            isSuccess: true,
+        });
         mockRoutineLogQuery.mockReturnValue({
             isSuccess: false,
             data: [],
@@ -49,6 +61,7 @@ describe('SessionLogsForm', () => {
             dayId={5}
             routineId={1}
             selectedDate={DateTime.now()}
+            chosenSessionId={null}
         />);
 
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -77,6 +90,7 @@ describe('SessionLogsForm', () => {
             dayId={5}
             routineId={1}
             selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
         />);
 
         const weightElements = screen.getAllByRole('textbox').filter(input => (input as HTMLInputElement).value === '20');
@@ -99,6 +113,25 @@ describe('SessionLogsForm', () => {
         expect(mockMutateAsync.mock.calls[0][0][3]).toMatchObject(originalData);
     });
 
+    test('writes the logs into the session the screen works on', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={testWorkoutSession.id}
+        />);
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        // Assert
+        // Without the id the server would sort the logs into a session by their
+        // time, which is a guess as soon as the day holds more than one
+        expect(mockMutateAsync.mock.calls[0][0][0].session).toEqual(testWorkoutSession.id);
+    });
+
     test('add log action buttons works', async () => {
         // Arrange
         const user = userEvent.setup();
@@ -108,6 +141,7 @@ describe('SessionLogsForm', () => {
             dayId={5}
             routineId={1}
             selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
         />);
         await user.click(screen.getByTestId('AddIcon'));
         await user.click(screen.getByRole('button', { name: /submit/i }));
@@ -125,6 +159,7 @@ describe('SessionLogsForm', () => {
             dayId={5}
             routineId={1}
             selectedDate={DateTime.now()}
+            chosenSessionId={null}
         />);
         await user.click(screen.getAllByTestId('DeleteOutlinedIcon')[0]);
 
@@ -132,11 +167,53 @@ describe('SessionLogsForm', () => {
         expect(screen.queryByText('Squats')).not.toBeInTheDocument();
     });
 
+    test('removing a single set drops just that log', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act: the first delete icon belongs to the exercise, the second to its first set
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
+        />);
+        await user.click(screen.getAllByTestId('DeleteOutlinedIcon')[1]);
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        // Assert
+        expect(screen.getByText('Squats')).toBeInTheDocument();
+        expect(mockMutateAsync.mock.calls[0][0].length).toEqual(3);
+    });
+
+    test('a weight that is not a number shows the error and blocks the submit', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
+        />);
+        const weightInput = screen.getAllByRole('textbox').filter(input => (input as HTMLInputElement).value === '20')[0];
+        await user.clear(weightInput);
+        await user.type(weightInput, 'heavy');
+        await user.tab();
+
+        // Assert
+        expect(await screen.findByText('forms.enterNumber')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /submit/i })).toBeDisabled();
+        expect(mockMutateAsync).not.toHaveBeenCalled();
+    });
+
     test('renders notes field for each log entry', async () => {
         render(<SessionLogsForm
             dayId={5}
             routineId={1}
             selectedDate={DateTime.now()}
+            chosenSessionId={null}
         />);
 
         const notesFields = screen.getAllByRole('textbox', { name: /notes/i });
@@ -158,6 +235,7 @@ describe('SessionLogsForm', () => {
             dayId={5}
             routineId={1}
             selectedDate={DateTime.now()}
+            chosenSessionId={null}
         />);
 
         expect(screen.getAllByText(/Felt great last time/).length).toBeGreaterThan(0);
@@ -170,6 +248,7 @@ describe('SessionLogsForm', () => {
             dayId={5}
             routineId={1}
             selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
         />);
 
         const notesField = screen.getAllByRole('textbox', { name: /notes/i })[0];

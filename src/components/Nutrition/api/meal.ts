@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { ApiMealType, Meal } from "@/components/Nutrition/models/meal";
-import { ApiMealItemType, MealItem } from "@/components/Nutrition/models/mealItem";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { getIngredients } from "@/components/Nutrition/api/ingredient";
-import { ResponseType } from "@/core/api/responseType";
 import { ApiPath } from "@/core/lib/consts";
+import { fetchAll } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 
 
@@ -36,19 +36,11 @@ export const deleteMeal = async (id: string): Promise<void> => {
 
 export const getMealsForPlan = async (planId: string): Promise<Meal[]> => {
 
-    const { data: receivedMeals } = await axios.get<ResponseType<ApiMealType>>(
-        makeUrl(ApiPath.MEAL, { query: { plan: planId } }),
-        { headers: makeHeader() },
-    );
-    const meals = receivedMeals.results.map((meal) => Meal.fromJson(meal));
+    const meals = await fetchAll(makeUrl(ApiPath.MEAL, { query: { plan: planId } }), Meal.fromJson);
     for (const meal of meals) {
         const ingredientIds: number[] = [];
 
-        const { data: receivedMealItems } = await axios.get<ResponseType<ApiMealItemType>>(
-            makeUrl(ApiPath.MEAL_ITEM, { query: { meal: meal.id } }),
-            { headers: makeHeader() },
-        );
-        const items = receivedMealItems.results.map((item) => MealItem.fromJson(item));
+        const items = await fetchAll(makeUrl(ApiPath.MEAL_ITEM, { query: { meal: meal.id } }), MealItem.fromJson);
 
         for (const item of items) {
             ingredientIds.push(item.ingredientId);

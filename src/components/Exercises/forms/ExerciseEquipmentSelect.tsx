@@ -1,27 +1,26 @@
 import { Autocomplete, TextField } from "@mui/material";
-import { useField } from "formik";
+import { useFieldContext } from "@/core/forms/formContexts";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
+/** Bound to the form field it is rendered in via form.AppField */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function ExerciseEquipmentSelect(props: { fieldName: string, options: any[] }) {
+export function ExerciseEquipmentSelect(props: { options: any[] }) {
     const [t] = useTranslation();
-    const [field, , helpers] = useField(props.fieldName);
+    const field = useFieldContext<number[]>();
 
     return <Autocomplete
         multiple
-        id={props.fieldName}
+        id={field.name}
         options={props.options.map(e => e.id)}
         getOptionLabel={option => props.options.find(e => e.id === option)!.translatedName}
-        {...field}
-        onChange={(event, newValue) => {
-            helpers.setValue(newValue);
-        }}
+        value={field.state.value}
+        onChange={(event, newValue) => field.handleChange(newValue)}
+        onBlur={field.handleBlur}
         renderInput={params => (
             <TextField
                 variant="standard"
                 label={t("exercises.equipment")}
-                value={field.value}
                 {...params}
             />
         )}

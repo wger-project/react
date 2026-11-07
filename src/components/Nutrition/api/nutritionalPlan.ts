@@ -4,6 +4,7 @@ import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutrition
 import { getMealsForPlan } from "@/components/Nutrition/api/meal";
 import { ResponseType } from "@/core/api/responseType";
 import { ApiNutritionalPlanType } from '@/types';
+import { fetchAll } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 
 export const API_NUTRITIONAL_PLAN_PATH = 'nutritionplan';
@@ -13,11 +14,7 @@ export type NutritionalPlanOptions = {
 }
 
 export const getNutritionalPlansSparse = async (): Promise<NutritionalPlan[]> => {
-    const { data: receivedPlans } = await axios.get<ResponseType<ApiNutritionalPlanType>>(
-        makeUrl(API_NUTRITIONAL_PLAN_PATH),
-        { headers: makeHeader() },
-    );
-    return receivedPlans.results.map((plan) => nutritionalPlanAdapter.fromJson(plan));
+    return await fetchAll(makeUrl(API_NUTRITIONAL_PLAN_PATH), json => nutritionalPlanAdapter.fromJson(json));
 };
 
 export const getLastNutritionalPlan = async (): Promise<NutritionalPlan | null> => {

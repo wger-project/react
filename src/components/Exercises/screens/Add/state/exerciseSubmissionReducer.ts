@@ -1,8 +1,9 @@
-import { exerciseSubmissionInitialState, SetExerciseSubmissionState } from '@/components/Exercises/screens/Add/state';
 import {
+    exerciseSubmissionInitialState,
     ExerciseSubmissionAction,
-    ExerciseSubmissionState
-} from "@/components/Exercises/screens/Add/state/exerciseSubmissionState";
+    ExerciseSubmissionState,
+    SetExerciseSubmissionState
+} from "@/components/Exercises/screens/Add/state/stateTypes";
 import { ImageFormData } from "@/components/Exercises/models/exercise";
 
 
@@ -61,6 +62,11 @@ export const setImages = (images: ImageFormData[]): ExerciseSubmissionAction => 
 };
 
 
+export const setAuthor = (author: string): ExerciseSubmissionAction => {
+    return { type: SetExerciseSubmissionState.SET_AUTHOR, payload: author };
+};
+
+
 export const exerciseSubmissionReducer = (state: ExerciseSubmissionState, action: ExerciseSubmissionAction): ExerciseSubmissionState => {
 
     if (action === undefined) {
@@ -75,6 +81,12 @@ export const exerciseSubmissionReducer = (state: ExerciseSubmissionState, action
             return {
                 ...state,
                 nameEn: action.payload as string
+            };
+
+        case SetExerciseSubmissionState.SET_AUTHOR:
+            return {
+                ...state,
+                author: action.payload as string
             };
 
         case SetExerciseSubmissionState.SET_DESCRIPTION_EN:
@@ -119,16 +131,20 @@ export const exerciseSubmissionReducer = (state: ExerciseSubmissionState, action
                 musclesSecondary: action.payload as number[]
             };
 
+        // An exercise either joins an existing variation group or connects to a
+        // single exercise, so setting one clears the other
         case SetExerciseSubmissionState.SET_VARIATION_ID:
             return {
                 ...state,
-                variationGroup: action.payload as string | null
+                variationGroup: action.payload as string | null,
+                newVariationExerciseId: null
             };
 
         case SetExerciseSubmissionState.SET_NEW_VARIATION_BASE_ID:
             return {
                 ...state,
-                newVariationExerciseId: action.payload as number
+                newVariationExerciseId: action.payload as number | null,
+                variationGroup: null
             };
 
         case SetExerciseSubmissionState.SET_LANGUAGE:

@@ -133,11 +133,11 @@ export const WorkoutStats = () => {
                         {statsData.data.map((row) => (
                             <TableRow key={row.key}>
                                 <TableCell>{row.key}</TableCell>
-                                {row.values.map((value, index) => (
+                                {statsData.headers.map((header, index) => (
                                     <TableCell
-                                        key={index}
+                                        key={header}
                                         sx={{ textAlign: 'right', }}
-                                    >{value?.toFixed(selectedValueType === StatType.Intensity ? 2 : 0) || ""}
+                                    >{row.values[index]?.toFixed(selectedValueType === StatType.Intensity ? 2 : 0) || ""}
                                     </TableCell>
                                 ))}
                             </TableRow>

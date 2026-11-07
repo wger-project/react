@@ -66,11 +66,21 @@ describe("Image service API tests", () => {
 
         // Assert
         expect(axios.post).toHaveBeenCalled();
-        expect(axios.post).toHaveBeenCalledWith(
-            'https://example.com/api/v2/exerciseimage/',
-            expect.objectContaining({ "exercise": 101 }),
-            expect.anything()
-        );
+        const [url, body] = (axios.post as Mock).mock.calls[0];
+        expect(url).toBe('https://example.com/api/v2/exerciseimage/');
+        // The file itself must be in the payload, not just the metadata
+        expect(body.image).toBeInstanceOf(File);
+        expect(body.image.name).toBe("test.jpg");
+        expect(body).toMatchObject({
+            exercise: 101,
+            license_title: "top title",
+            license_author: "Dr No",
+            license_author_url: "http://dr.no",
+            license_object_url: "",
+            license_derivative_source_url: "",
+            style: ImageStyle.THREE_D,
+            is_ai_generated: false,
+        });
         expect(result).toEqual(image);
     });
 
@@ -138,10 +148,7 @@ describe("Image service API tests", () => {
         expect(result.id).toBe(1);
     });
 
-    test('PATCH with a new file completes successfully and forwards the metadata', async () => {
-        // Note: happy-dom's FormData implementation does not preserve File entries
-        // reliably under introspection, so we only assert that the metadata fields
-        // were appended (these go through the same code path as the file).
+    test('PATCH with a new file sends the file along with the metadata', async () => {
         const apiResponse = {
             id: 1,
             uuid: "004bb79f-36bf-4c48-8c00-d863d724717c",
@@ -179,8 +186,12 @@ describe("Image service API tests", () => {
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, formData] = (axios.patch as Mock).mock.calls[0];
         expect(url).toBe("https://example.com/api/v2/exerciseimage/1/");
-        expect((formData as FormData).get("license_title")).toBe("t");
-        expect((formData as FormData).get("license_author")).toBe("a");
+        const fd = formData as FormData;
+        expect(fd.get("license_title")).toBe("t");
+        expect(fd.get("license_author")).toBe("a");
+        // Without this the request would silently patch the metadata only
+        expect(fd.has("image")).toBe(true);
+        expect((fd.get("image") as File).name).toBe("new.jpg");
         expect(result).toBeInstanceOf(ExerciseImage);
     });
 

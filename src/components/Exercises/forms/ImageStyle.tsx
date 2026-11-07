@@ -7,18 +7,14 @@ import { Checkbox, FormControlLabel, Stack, Typography } from "@mui/material";
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { ImageStyle } from "@/components/Exercises/models/image";
-import { useField } from "formik";
+import { useFieldContext } from "@/core/forms/formContexts";
 import * as React from 'react';
 import { useTranslation } from "react-i18next";
 
-export function ImageStyleToggle(props: { fieldName: string }) {
+/** Bound to the form field it is rendered in via form.AppField */
+export function ImageStyleToggle() {
     const [t] = useTranslation();
-
-    const [field, , helpers] = useField(props.fieldName);
-    const selectedStyle = (field.value !== undefined && field.value !== null && field.value !== '')
-        ? Number(field.value)
-        : undefined;
-    const [style, setStyle] = React.useState<number | undefined>(selectedStyle);
+    const field = useFieldContext<number>();
 
     const handleAlignment = (
         event: React.MouseEvent<HTMLElement>,
@@ -27,13 +23,12 @@ export function ImageStyleToggle(props: { fieldName: string }) {
         if (newStyle === null) {
           return;
         }
-        helpers.setValue(newStyle);
-        setStyle(newStyle);
+        field.handleChange(newStyle);
     };
 
     return (
         <ToggleButtonGroup
-            value={style}
+            value={field.state.value}
             exclusive
             fullWidth
             onChange={handleAlignment}
@@ -77,17 +72,18 @@ export function ImageStyleToggle(props: { fieldName: string }) {
     );
 }
 
-export function ImageIsAiCheckbox(props: { fieldName: string }) {
+/** Bound to the form field it is rendered in via form.AppField */
+export function ImageIsAiCheckbox() {
     const [t] = useTranslation();
-    const [field, , helpers] = useField<boolean>(props.fieldName);
+    const field = useFieldContext<boolean>();
 
     return (
         <FormControlLabel
             control={
                 <Checkbox
-                    name={props.fieldName}
-                    checked={!!field.value}
-                    onChange={(e) => helpers.setValue(e.target.checked)}
+                    name={field.name}
+                    checked={!!field.state.value}
+                    onChange={(e) => field.handleChange(e.target.checked)}
                     data-testid="image-is-ai-checkbox"
                 />
             }

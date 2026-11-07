@@ -4,6 +4,7 @@
     "cm": "cm",
     "date": "Data",
     "timeOfDay": "Hora do dia",
+    "off": "Desligado",
     "submit": "Submeter",
     "edit": "Editar",
     "editName": "Editar {{name}}",
@@ -53,7 +54,9 @@
         "step1HeaderBasics": "Conceitos básicos em inglês",
         "variations": "Variações",
         "notEnoughRightsHeader": "Não podes contribuir com exercícios",
-        "notEnoughRights": "Só podes contribuir com exercícios se a tua conta tiver mais de {{days}} dias e o email estiver verificado",
+        "notEnoughRights_one": "Só podes contribuir com exercícios se a tua conta tiver mais de {{count}} dia e o email estiver verificado",
+        "notEnoughRights_many": "Só podes contribuir com exercícios se a tua conta tiver mais de {{count}} dias e o email estiver verificado",
+        "notEnoughRights_other": "Só podes contribuir com exercícios se a tua conta tiver mais de {{count}} dias e o email estiver verificado",
         "muscles": "Músculos",
         "secondaryMuscles": "Músculos secundários",
         "whatVariationsExist": "Que variações deste exercício existem, se houver?",
@@ -159,7 +162,6 @@
         "filterVegan": "Vegano",
         "filterVegetarian": "Vegetariano",
         "filterNutriscore": "Filtro Nutri-Score",
-        "filterNutriscoreOff": "Desligado",
         "filterNutriscoreNoFilter": "Sem filtro",
         "filterNutriscoreOrBetter": "{{grade}} ou melhor"
     },
@@ -188,8 +190,12 @@
         "valueTooShort": "O valor é muito curto",
         "valueTooLong": "O valor é muito longo",
         "fieldRequired": "Campo obrigatório",
-        "maxLength": "Insere menos de {{chars}} caracteres",
-        "minLength": "Insere mais de {{chars}} caracteres",
+        "maxLength_one": "Insere menos de {{count}} caractere",
+        "maxLength_many": "Insere menos de {{count}} caracteres",
+        "maxLength_other": "Insere menos de {{count}} caracteres",
+        "minLength_one": "Insere mais de {{count}} caractere",
+        "minLength_many": "Insere mais de {{count}} caracteres",
+        "minLength_other": "Insere mais de {{count}} caracteres",
         "minValue": "O valor tem de ser maior que {{value}}",
         "maxValue": "O valor tem de ser menor que {{value}}",
         "maxLessThanMin": "O valor máximo tem de ser maior que o mínimo",
@@ -202,8 +208,12 @@
     "save": "Guardar",
     "min": "Mín",
     "max": "Máx",
-    "durationWeeks": "{{number}} semanas",
-    "durationWeeksDays": "{{nrWeeks}} semanas, {{nrDays}} dias",
+    "durationWeeks_one": "{{count}} semana",
+    "durationWeeks_many": "{{count}} semanas",
+    "durationWeeks_other": "{{count}} semanas",
+    "durationDays_one": "{{count}} dia",
+    "durationDays_many": "{{count}} dias",
+    "durationDays_other": "{{count}} dias",
     "videos": "Vídeos",
     "undo": "Desfazer",
     "successfullyDeleted": "Eliminado com sucesso",
@@ -224,8 +234,12 @@
         "workoutNr": "Treino nº {{number}}",
         "weekNr": "Semana {{number}}",
         "backToRoutine": "Voltar à rotina",
-        "minLengthRoutine": "A rotina tem de ter pelo menos {{number}} semanas",
-        "maxLengthRoutine": "A rotina pode ter no máximo {{number}} semanas",
+        "minLengthRoutine_one": "A rotina tem de ter pelo menos {{count}} semana",
+        "minLengthRoutine_many": "A rotina tem de ter pelo menos {{count}} semanas",
+        "minLengthRoutine_other": "A rotina tem de ter pelo menos {{count}} semanas",
+        "maxLengthRoutine_one": "A rotina pode ter no máximo {{count}} semana",
+        "maxLengthRoutine_many": "A rotina pode ter no máximo {{count}} semanas",
+        "maxLengthRoutine_other": "A rotina pode ter no máximo {{count}} semanas",
         "resultingRoutine": "Rotina resultante",
         "addDay": "Adicionar dia de treino",
         "deleteDayConfirmation": "Isto vai apagar todas as séries, exercícios e regras de progressão",
@@ -311,7 +325,11 @@
             "afap": "O mais rápido possível"
         },
         "iterationNr": "Iteração {{number}}",
-        "exerciseNotAvailable": "Erro ao carregar exercício"
+        "exerciseNotAvailable": "Erro ao carregar exercício",
+        "analytics": {
+            "title": "Análise de exercícios",
+            "menu": "Opções de rotina"
+        }
     },
     "measurements": {
         "measurements": "Medições",
@@ -380,5 +398,6 @@
     "mean": "Média",
     "trend": "Tendência",
     "variance": "Variação",
-    "totalChange": "Variação total"
+    "totalChange": "Variação total",
+    "syncedEntryInfo": "Este registo foi sincronizado de uma aplicação de saúde e só pode ser alterada nela"
 }

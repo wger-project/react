@@ -12,19 +12,11 @@ import { WeightUnit } from "@/components/Routines/models/WeightUnit";
 import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { yyyymmddToDate } from "@/core/lib/date";
 import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
-import { testWorkoutLogs } from "@/tests/workoutLogsRoutinesTestData";
-
-export const testWeightUnitKg = new WeightUnit(1, "kg");
-export const testWeightUnitLb = new WeightUnit(2, "lb");
-export const testWeightUnitPlates = new WeightUnit(3, "Plates");
-
-export const testWeightUnits = [testWeightUnitKg, testWeightUnitLb, testWeightUnitPlates];
-
-export const testRepUnitRepetitions = new RepetitionUnit(1, "Repetitions");
-export const testRepUnitUnitFailure = new RepetitionUnit(2, "Unit failure");
-export const testRepUnitUnitMinutes = new RepetitionUnit(3, "Minutes");
-
-export const testRepetitionUnits = [testRepUnitRepetitions, testRepUnitUnitFailure, testRepUnitUnitMinutes];
+import {
+    testWorkoutLogCurls,
+    testWorkoutLogs,
+    testWorkoutLogUnknownExercise
+} from "@/tests/workoutLogsRoutinesTestData";
 
 export const testDayLegs = new Day({
     id: 5,
@@ -170,10 +162,10 @@ export const testRoutineDayData1 = [
             new SlotData(
                 '',
                 false,
-                [1],
+                [345],
                 [
                     new SetConfigData({
-                            exerciseId: 1,
+                        exerciseId: 345,
                             slotEntryId: 1,
                             type: 'normal',
                             nrOfSets: 4,
@@ -209,13 +201,21 @@ export const testRoutineLogData = [
             id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000111',
             dayId: 2,
             routineId: 1,
-            date: yyyymmddToDate('2024-07-01'),
             notes: 'everything was great today!',
             impression: '1',
-            timeStart: new Date('2024-12-01 12:30'),
-            timeEnd: new Date('2024-12-01 17:30'),
+            datetimeStart: new Date('2024-07-01 12:30'),
+            datetimeEnd: new Date('2024-07-01 17:30'),
         }),
         testWorkoutLogs
+    )
+];
+
+// Same session, but with additional logs for exercises that the routine
+// structure doesn't contain
+export const testRoutineLogDataOtherExercise = [
+    new RoutineLogData(
+        testRoutineLogData[0].session,
+        [...testWorkoutLogs, testWorkoutLogCurls, testWorkoutLogUnknownExercise]
     )
 ];
 
@@ -586,6 +586,120 @@ export const responseRoutineStructure = {
     ],
 };
 
+// A routine whose first cycle is cut short by the end date: the pull day is part
+// of the structure, but never reaches a first iteration in the day sequence.
+export const responseRoutineStructureIterationGap = {
+    days: [
+        {
+            id: 100,
+            order: 1,
+            name: "Push day",
+            description: "",
+            is_rest: false,
+            need_logs_to_advance: false,
+            type: "custom",
+            config: null,
+            slots: [{
+                id: 10,
+                day: 100,
+                order: 1,
+                comment: "",
+                config: null,
+                entries: [{
+                    id: 1000,
+                    slot: 10,
+                    exercise: 2,
+                    repetition_unit: 1,
+                    repetition_rounding: "1.00",
+                    weight_unit: 1,
+                    weight_rounding: "1.25",
+                    order: 1,
+                    comment: "",
+                    type: "normal",
+                    config: null,
+                }],
+            }],
+        },
+        {
+            id: 101,
+            order: 2,
+            name: "Pull day",
+            description: "",
+            is_rest: false,
+            need_logs_to_advance: false,
+            type: "custom",
+            config: null,
+            slots: [{
+                id: 11,
+                day: 101,
+                order: 1,
+                comment: "",
+                config: null,
+                entries: [{
+                    id: 1001,
+                    slot: 11,
+                    exercise: 3,
+                    repetition_unit: 1,
+                    repetition_rounding: "1.00",
+                    weight_unit: 1,
+                    weight_rounding: "1.25",
+                    order: 1,
+                    comment: "",
+                    type: "normal",
+                    config: null,
+                }],
+            }],
+        },
+    ],
+};
+
+// The matching day sequence, containing only the push day
+export const responseRoutineDayDataIterationGap = [
+    {
+        iteration: 1,
+        date: "2024-04-01",
+        label: null,
+        day: {
+            id: 100,
+            order: 1,
+            name: "Push day",
+            type: "custom",
+            description: "",
+            is_rest: false,
+            last_day_in_week: false,
+            need_logs_to_advance: false,
+            config: null,
+        },
+        slots: [{
+            comment: "",
+            is_superset: false,
+            exercises: [2],
+            sets: [{
+                exercise: 2,
+                slot_entry_id: 1000,
+                type: "normal",
+                sets: 3,
+                max_sets: null,
+                weight: "100.00",
+                max_weight: null,
+                weight_unit: 1,
+                weight_rounding: "1.25",
+                repetitions: "10.00",
+                max_repetitions: null,
+                repetitions_unit: 1,
+                repetitions_rounding: "1.00",
+                rir: null,
+                max_rir: null,
+                rpe: null,
+                rest: null,
+                max_rest: null,
+                text_repr: "3 Sets, 10 × 100 kg",
+                comment: "",
+            }],
+        }],
+    },
+];
+
 // /routine/<id>/logs/ — sessions with their attached logs.
 export const responseRoutineLogData = [
     {
@@ -593,13 +707,30 @@ export const responseRoutineLogData = [
             id: 1,
             day: 5,
             routine: 1,
-            date: "2024-08-01",
             notes: "felt good",
             impression: "3",
-            time_start: "10:00",
-            time_end: "11:00",
+            datetime_start: "2024-08-01T10:00:00+02:00",
+            datetime_end: "2024-08-01T11:00:00+02:00",
         },
         logs: [],
+    },
+];
+
+// /routine/<id>/logs/ — the same, with logs for two different exercises. Only
+// the first one is part of the routine's structure.
+export const responseRoutineLogDataWithLogs = [
+    {
+        ...responseRoutineLogData[0],
+        logs: [
+            responseRoutineLogs.results[0],
+            {
+                ...responseRoutineLogs.results[0],
+                id: "aaaaaaaa-aaaa-aaaa-aaaa-000000000003",
+                exercise: 3,
+                iteration: null,
+                slot_entry: null,
+            },
+        ],
     },
 ];
 

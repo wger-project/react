@@ -6,21 +6,7 @@ import { makeHeader, makeUrl } from "@/core/lib/url";
 import { SearchLanguageFilter } from '@/core/ui/Widgets/SearchLanguageFilter';
 import axios from 'axios';
 
-export const EXERCISE_PATH = 'exercise';
 export const EXERCISE_TRANSLATION_PATH = 'exercise-translation';
-
-
-/*
- * Fetch all exercise translations for a given exercise base
- */
-export const getExerciseTranslations = async (id: number): Promise<Translation[]> => {
-    const url = makeUrl(EXERCISE_PATH, { query: { exercise: id } });
-    const { data } = await axios.get<ResponseType<Translation>>(url, {
-        headers: makeHeader(),
-    });
-    const adapter = new TranslationAdapter();
-    return data.results.map(e => adapter.fromJson(e));
-};
 
 
 /*

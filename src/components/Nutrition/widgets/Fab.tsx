@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
-import { Fab } from "@mui/material";
+import { WgerFab } from "@/core/ui/Widgets/Fab";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
@@ -17,18 +17,9 @@ export const AddNutritionalPlanFab = () => {
 
     return (
         <div>
-            <Fab
-                color="secondary"
-                aria-label="add"
-                onClick={handleOpenModal}
-                sx={{
-                    position: 'fixed',
-                    bottom: '5rem',
-                    right: (theme) => `max(${theme.spacing(2)}, calc((100vw - ${theme.breakpoints.values.lg}px) / 2 + ${theme.spacing(2)}))`,
-                    zIndex: 9,
-                }}>
+            <WgerFab onClick={handleOpenModal}>
                 <AddIcon />
-            </Fab>
+            </WgerFab>
             <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
                 <PlanForm closeFn={handleCloseModal} />
             </WgerModal>
@@ -45,18 +36,9 @@ export const AddNutritionDiaryEntryFab = (props: { plan: NutritionalPlan }) => {
 
     return (
         <div>
-            <Fab
-                color="secondary"
-                aria-label="add"
-                onClick={handleOpenModal}
-                sx={{
-                    position: 'fixed',
-                    bottom: '5rem',
-                    right: (theme) => `max(${theme.spacing(2)}, calc((100vw - ${theme.breakpoints.values.lg}px) / 2 + ${theme.spacing(2)}))`,
-                    zIndex: 9,
-                }}>
+            <WgerFab onClick={handleOpenModal}>
                 <HistoryEduIcon />
-            </Fab>
+            </WgerFab>
             <WgerModal title={t('nutrition.addNutritionalDiary')} isOpen={openModal} closeFn={handleCloseModal}>
                 <NutritionDiaryEntryForm closeFn={handleCloseModal} planId={props.plan.id!} meals={props.plan.meals} />
             </WgerModal>

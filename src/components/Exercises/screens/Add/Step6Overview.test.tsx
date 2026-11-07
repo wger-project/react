@@ -9,10 +9,8 @@ import {
     useLanguageQuery,
     useMusclesQuery,
 } from "@/components/Exercises/queries";
-import { useProfileQuery } from "@/components/User";
 import { useExerciseSubmissionStateValue } from "@/components/Exercises/screens/Add/state";
 import { testCategories, testEquipment, testLanguages, testMuscles } from "@/tests/exerciseTestdata";
-import { testProfileDataVerified } from "@/tests/userTestdata";
 import { ENGLISH_LANGUAGE_ID } from "@/core/lib/consts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
@@ -22,7 +20,6 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import type { Mock } from "vitest";
 
 vi.mock("@/components/Exercises/queries");
-vi.mock("@/components/User/queries/profile");
 vi.mock("@/components/Exercises/screens/Add/state");
 
 const mockOnContinue = vi.fn();
@@ -32,7 +29,6 @@ const mockedMuscleQuery = useMusclesQuery as Mock;
 const mockedUseEquipmentQuery = useEquipmentQuery as Mock;
 const mockedLanguageQuery = useLanguageQuery as Mock;
 const mockedUseExerciseStateValue = useExerciseSubmissionStateValue as Mock;
-const mockedUseProfileQuery = useProfileQuery as Mock;
 const addFullExerciseMutation = useAddExerciseFullQuery as Mock;
 const addImageMutation = useAddExerciseImageQuery as Mock;
 
@@ -58,6 +54,8 @@ const baseState = {
     notesI18n: [],
 
     images: [] as ImageFormData[],
+
+    author: "Jane Doe",
 };
 
 function renderStep() {
@@ -81,7 +79,6 @@ describe("Test the add exercise step 6 component", () => {
         mockedMuscleQuery.mockImplementation(() => ({ isLoading: false, data: testMuscles }));
         mockedUseEquipmentQuery.mockImplementation(() => ({ isLoading: false, data: testEquipment }));
         mockedLanguageQuery.mockImplementation(() => ({ isLoading: false, data: testLanguages }));
-        mockedUseProfileQuery.mockImplementation(() => ({ isLoading: false, data: testProfileDataVerified }));
         addFullExerciseMutation.mockImplementation(() => ({
             isIdle: true,
             isSuccess: false,
@@ -148,7 +145,7 @@ describe("Test the add exercise step 6 component", () => {
                 muscleIds: baseState.muscles,
                 secondaryMuscleIds: baseState.musclesSecondary,
             },
-            author: testProfileDataVerified.username,
+            author: "Jane Doe",
             variationGroup: null,
             variationsConnectTo: null,
         });
@@ -165,6 +162,37 @@ describe("Test the add exercise step 6 component", () => {
             name: baseState.nameI18n,
             description: baseState.descriptionI18n,
         });
+    });
+
+    test("renders the alternative names as text and submits them as alias objects", async () => {
+        const mutateAsync = vi.fn().mockResolvedValue(42);
+        addFullExerciseMutation.mockImplementation(() => ({
+            isIdle: true, isSuccess: false, isPending: false, isError: false, mutateAsync,
+        }));
+        mockedUseExerciseStateValue.mockImplementation(() => [{
+            ...baseState,
+            alternativeNamesEn: ["Biceps enlarger 2000", "Arms exploder"],
+            alternativeNamesI18n: ["Gonfleur de biceps"],
+        }]);
+
+        const user = userEvent.setup();
+        renderStep();
+
+        // The overview lists the names as readable text, not as "[object Object]"
+        expect(screen.getByText("Biceps enlarger 2000, Arms exploder")).toBeInTheDocument();
+        expect(screen.getByText("Gonfleur de biceps")).toBeInTheDocument();
+
+        await user.click(screen.getByText("exercises.submitExercise"));
+
+        await waitFor(() => {
+            expect(mutateAsync).toHaveBeenCalled();
+        });
+        const [payload] = mutateAsync.mock.calls[0];
+        expect(payload.translations[0].aliases).toEqual([
+            { alias: "Biceps enlarger 2000" },
+            { alias: "Arms exploder" },
+        ]);
+        expect(payload.translations[1].aliases).toEqual([{ alias: "Gonfleur de biceps" }]);
     });
 
     test("when no second language is set, only the EN translation is sent", async () => {

@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import eslintPlugin from '@nabla/vite-plugin-eslint';
+import pkg from './package.json' with { type: 'json' };
 
 export default defineConfig(({ mode }) => {
     const isTest = mode === 'test' || process.env.VITEST;
@@ -11,8 +12,9 @@ export default defineConfig(({ mode }) => {
         build: {
             outDir: 'build',
             sourcemap: true,
-            rollupOptions: {
+            rolldownOptions: {
                 output: {
+                    postBanner: `/*! ${pkg.name} ${pkg.version} */`,
                     entryFileNames: 'main.js',
                     chunkFileNames: 'chunks/[name]-[hash].js',
                     assetFileNames: 'assets/[name][extname]',
@@ -42,7 +44,6 @@ export default defineConfig(({ mode }) => {
             css: false,
             pool: 'threads',
             maxWorkers: '50%',
-            minWorkers: 1,
 
             // Note: `include` lives in the projects (extends merges arrays, a
             // root-level include would make both projects run everything)
@@ -95,13 +96,11 @@ export default defineConfig(({ mode }) => {
                         include: [
                             '@mui/material',
                             '@mui/icons-material',
-                            '@mui/lab',
                             '@mui/x-data-grid',
                             '@mui/x-date-pickers',
                             '@emotion/react',
                             '@emotion/styled',
                             'recharts',
-                            'formik',
                             'react-i18next',
                             'react-router-dom',
                             '@tanstack/react-query',

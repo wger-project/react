@@ -35,6 +35,25 @@ describe('editDay', () => {
         expect(updatedDay).toEqual(Day.fromJson(mockDayData));
     });
 
+    test('should PATCH the day id and the serialized day', async () => {
+        mockedAxios.patch.mockResolvedValue({ data: mockDayData });
+
+        await editDay(testDay);
+
+        const [url, body] = mockedAxios.patch.mock.calls[0];
+        expect(url).toMatch(/\/api\/v2\/day\/1\/$/);
+        expect(body).toEqual({
+            routine: 1,
+            name: 'Test Day',
+            description: 'A test day',
+            order: 1,
+            is_rest: false,
+            need_logs_to_advance: false,
+            type: 'custom',
+            config: null,
+        });
+    });
+
     test('should handle errors gracefully', async () => {
         const errorMessage = 'Network Error';
         mockedAxios.patch.mockRejectedValue(new Error(errorMessage));
@@ -78,6 +97,25 @@ describe('addDay', () => {
 
         expect(axios.post).toHaveBeenCalledTimes(1);
         expect(newDay).toEqual(Day.fromJson(mockDayData));
+    });
+
+    test('should POST the day in the snake_case format the API expects', async () => {
+        mockedAxios.post.mockResolvedValue({ data: mockDayData });
+
+        await addDay(testDay);
+
+        const [url, body] = mockedAxios.post.mock.calls[0];
+        expect(url).toMatch(/\/api\/v2\/day\/$/);
+        expect(body).toEqual({
+            routine: 1,
+            name: 'Test Day',
+            description: 'A test day',
+            order: 1,
+            is_rest: false,
+            need_logs_to_advance: false,
+            type: 'custom',
+            config: null,
+        });
     });
 
     test('should handle errors gracefully', async () => {

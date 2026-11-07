@@ -2,8 +2,8 @@ import { getExercisesByIds } from "@/components/Exercises/api/exercise";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
 import { WorkoutLog, WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
-import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
-import { fetchPaginated } from "@/core/lib/requests";
+import { ApiPath } from "@/core/lib/consts";
+import { fetchAll } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import axios from "axios";
 
@@ -47,47 +47,66 @@ export const addLogs = async (entries: any[]): Promise<WorkoutLog[]> => {
  */
 export const getRoutineLogs = async (id: number, options?
 : { loadExercises?: boolean, filtersetQuery?: object }): Promise<WorkoutLog[]> => {
+    return getWorkoutLogs({
+        ...options,
+        filtersetQuery: { routine: id.toString(), ...options?.filtersetQuery },
+    });
+};
+
+/* Logs across all routines, including entries without a routine. */
+export const getWorkoutLogs = async (options?
+: { loadExercises?: boolean, filtersetQuery?: object }): Promise<WorkoutLog[]> => {
     const { loadExercises = false, filtersetQuery = {} } = options || {};
 
     const adapter = new WorkoutLogAdapter();
     const url = makeUrl(
         ApiPath.WORKOUT_LOG,
-        { query: { routine: id.toString(), limit: API_MAX_PAGE_SIZE, ordering: '-date', ...filtersetQuery } }
+        { query: { ordering: '-date', ...filtersetQuery } }
     );
 
     const unitResponses = await Promise.all([getRoutineRepUnits(), getRoutineWeightUnits()]);
     const repUnits = unitResponses[0];
     const weightUnits = unitResponses[1];
 
-    const out: WorkoutLog[] = [];
-    for await (const page of fetchPaginated(url)) {
-        for (const logData of page) {
-            const log = adapter.fromJson(logData);
-            if (log.repetitionUnitId !== null) {
-                log.repetitionUnitObj = repUnits.find(e => e.id === log.repetitionUnitId) ?? null;
-            }
-
-            if (log.weightUnitId !== null) {
-                log.weightUnitObj = weightUnits.find(e => e.id === log.weightUnitId) ?? null;
-            }
-
-            out.push(log);
+    const out = await fetchAll(url, json => {
+        const log = adapter.fromJson(json);
+        if (log.repetitionUnitId !== null) {
+            log.repetitionUnitObj = repUnits.find(e => e.id === log.repetitionUnitId) ?? null;
         }
-    }
+
+        if (log.weightUnitId !== null) {
+            log.weightUnitObj = weightUnits.find(e => e.id === log.weightUnitId) ?? null;
+        }
+
+        return log;
+    });
 
     // Load the referenced exercises
     if (loadExercises) {
-        const exerciseIds = [...new Set(out.map(log => log.exerciseId))];
-        if (exerciseIds.length > 0) {
-            const exercises = new Map<number, Exercise>();
-            for (const exercise of await getExercisesByIds(exerciseIds)) {
-                exercises.set(exercise.id!, exercise);
-            }
-            for (const log of out) {
-                log.exerciseObj = exercises.get(log.exerciseId);
-            }
-        }
+        await attachExercises(out);
     }
 
     return out;
+};
+
+/*
+ * Load the exercises the logs point to and attach them
+ *
+ * One request for all of them, logs whose exercise could not be loaded keep an
+ * undefined exerciseObj.
+ */
+export const attachExercises = async (logs: WorkoutLog[]): Promise<void> => {
+    const exerciseIds = [...new Set(logs.map(log => log.exerciseId))];
+    if (exerciseIds.length === 0) {
+        return;
+    }
+
+    const exercises = new Map<number, Exercise>();
+    for (const exercise of await getExercisesByIds(exerciseIds)) {
+        exercises.set(exercise.id!, exercise);
+    }
+
+    for (const log of logs) {
+        log.exerciseObj = exercises.get(log.exerciseId);
+    }
 };

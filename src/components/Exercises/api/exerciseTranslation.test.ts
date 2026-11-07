@@ -2,7 +2,6 @@ import {
     addTranslation,
     deleteExerciseTranslation,
     editTranslation,
-    getExerciseTranslations,
     searchExerciseTranslations,
 } from "@/components/Exercises/api/exerciseTranslation";
 import axios from "axios";
@@ -49,6 +48,15 @@ describe("Exercise translation service API tests", () => {
 
         // Assert
         expect(axios.post).toHaveBeenCalledTimes(1);
+        const [url, body] = (axios.post as Mock).mock.calls[0];
+        expect(url).toMatch(/\/api\/v2\/exercise-translation\/$/);
+        expect(body).toEqual({
+            exercise: 100,
+            language: 2,
+            name: "Test exercise",
+            description_source: "Test description",
+            license_author: "Asimov",
+        });
         expect(result.id).toEqual(886);
         expect(result.name).toEqual("Test exercise");
         expect(result.description).toEqual("Test description");
@@ -87,6 +95,15 @@ describe("Exercise translation service API tests", () => {
 
         // Assert
         expect(axios.patch).toHaveBeenCalledTimes(1);
+        const [url, body] = (axios.patch as Mock).mock.calls[0];
+        expect(url).toMatch(/\/api\/v2\/exercise-translation\/886\/$/);
+        // The author is deliberately not sent when editing, the server keeps its history
+        expect(body).toEqual({
+            exercise: 100,
+            language: 2,
+            name: "A new, cooler name!!!",
+            description_source: "A new, cooler description!!!",
+        });
         expect(result.name).toEqual("A new, cooler name!!!");
     });
 
@@ -105,39 +122,6 @@ describe("Exercise translation service API tests", () => {
             expect.anything()
         );
         expect(result).toEqual(204);
-    });
-
-    test('getExerciseTranslations queries the exercise endpoint with the given exercise id', async () => {
-        const apiResponse = {
-            count: 1,
-            next: null,
-            previous: null,
-            results: [
-                {
-                    id: 1,
-                    uuid: "u1",
-                    exercise: 100,
-                    aliases: [],
-                    name: "Squats",
-                    description: "Do a squat",
-                    notes: [],
-                    creation_date: "2022-06-23",
-                    language: 2,
-                    license: 2,
-                    author_history: ["tester"],
-                },
-            ],
-        };
-        (axios.get as Mock).mockResolvedValue({ data: apiResponse });
-
-        const result = await getExerciseTranslations(100);
-
-        const [url] = (axios.get as Mock).mock.calls[0];
-        expect(url).toContain("/api/v2/exercise/");
-        expect(url).toContain("exercise=100");
-        expect(result).toHaveLength(1);
-        expect(result[0].id).toBe(1);
-        expect(result[0].name).toBe("Squats");
     });
 
     test('searchExerciseTranslations builds the URL with name__search and language__code', async () => {

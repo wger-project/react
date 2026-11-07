@@ -1,4 +1,5 @@
 import { IngredientSearch } from "@/components/Nutrition";
+import { syncProfileTimezone } from "@/components/User";
 import { LoadingWidget } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerRoutes } from "@/routes";
 import { makeTheme, theme } from '@/theme';
@@ -123,6 +124,15 @@ if (rootNoShadowDom) {
 }
 
 renderComponentShadowDom('react-page');
+
+// On the app pages (all behind a login) report the browser's timezone to the
+// profile. Not on the public embeds like the ingredient search, where the
+// profile request would just 403.
+if (rootElement || rootNoShadowDom || document.getElementById('react-page')) {
+    syncProfileTimezone().catch(() => {
+        // Not critical, the next page load tries again
+    });
+}
 
 /*
  * Components used in the wger django app, don't change the IDs here

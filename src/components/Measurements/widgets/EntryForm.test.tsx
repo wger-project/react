@@ -3,20 +3,21 @@
 // prevent the create-mode form submission. The rest of the suite runs on
 // happy-dom for speed.)
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import {
+    useAddGroupEntriesQuery,
     useAddMeasurementEntryQuery,
-    useEditMeasurementEntryQuery,
-    useMeasurementsQuery
+    useEditMeasurementEntryQuery
 } from "@/components/Measurements/queries";
 import type { Mock } from 'vitest';
-import { EntryForm } from "@/components/Measurements/widgets/EntryForm";
+import { MeasurementCategory } from "@/components/Measurements/models/Category";
+import { EntryForm, GroupEntryForm } from "@/components/Measurements/widgets/EntryForm";
 import i18n from "i18next";
 import { TEST_MEASUREMENT_CATEGORY_1, TEST_MEASUREMENT_ENTRIES_1 } from "@/tests/measurementsTestData";
 
-vi.mock("@/components/Weight/api/weight");
+vi.mock("@/components/Measurements/api/bodyWeight");
 
 vi.mock("@/components/Measurements/queries");
 
@@ -25,7 +26,7 @@ describe("Test the EntryForm component", () => {
     const queryClient = new QueryClient();
     let mutate = vi.fn();
 
-    const renderComponent = (props: { entry?: MeasurementEntry, categoryId: string }) => {
+    const renderComponent = (props: { entry?: MeasurementEntry, category: MeasurementCategory }) => {
         return render(
             <QueryClientProvider client={queryClient}>
                 <EntryForm {...props} />
@@ -34,12 +35,6 @@ describe("Test the EntryForm component", () => {
     };
 
     beforeEach(() => {
-        (useMeasurementsQuery as Mock).mockImplementation(() => ({
-            isSuccess: true,
-            isLoading: false,
-            data: TEST_MEASUREMENT_CATEGORY_1
-        }));
-
         mutate = vi.fn();
 
         (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({
@@ -50,13 +45,18 @@ describe("Test the EntryForm component", () => {
         }));
     });
 
+    afterEach(() => {
+        // One test below fakes the clock, a failure there must not leak into the rest
+        vi.useRealTimers();
+    });
+
     test('Passing an existing entry renders its values in the form', () => {
 
         // Arrange
         const entry = TEST_MEASUREMENT_ENTRIES_1[0];
 
         // Act
-        renderComponent({ entry, categoryId: 'cccccccc-cccc-cccc-cccc-000000000001' });
+        renderComponent({ entry, category: TEST_MEASUREMENT_CATEGORY_1 });
 
         // Assert
         expect(screen.getByDisplayValue('10')).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe("Test the EntryForm component", () => {
         const user = userEvent.setup();
 
         // Act
-        renderComponent({ entry, categoryId: 'cccccccc-cccc-cccc-cccc-000000000001' });
+        renderComponent({ entry, category: TEST_MEASUREMENT_CATEGORY_1 });
         const submitButton = screen.getByRole('button', { name: 'submit' });
         await user.clear(screen.getByLabelText('value'));
         await user.type(screen.getByLabelText('value'), '25');
@@ -82,7 +82,7 @@ describe("Test the EntryForm component", () => {
         // Assert
         expect(submitButton).toBeInTheDocument();
         await user.click(submitButton);
-        expect(mutate).toHaveBeenCalledWith(MeasurementEntry.clone(entry, { value: 25 }));
+        expect(mutate).toHaveBeenCalledWith(MeasurementEntry.clone(entry, { value: 25 }), expect.anything());
     });
 
     test('Creating a new entry', async () => {
@@ -92,7 +92,7 @@ describe("Test the EntryForm component", () => {
         const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
         // Act
-        renderComponent({ categoryId: 'cccccccc-cccc-cccc-cccc-000000000011' });
+        renderComponent({ category: TEST_MEASUREMENT_CATEGORY_1 });
         const valueInput = await screen.findByLabelText('value');
         const notesInput = await screen.findByLabelText('notes');
         const submitButton = screen.getByRole('button', { name: 'submit' });
@@ -105,13 +105,14 @@ describe("Test the EntryForm component", () => {
         // Assert
         expect(submitButton).toBeInTheDocument();
         await user.click(submitButton);
-        expect(mutate).toHaveBeenCalledWith(new MeasurementEntry(
+        // The submit resolves asynchronously, so the fake clock has to advance first
+        await waitFor(() => expect(mutate).toHaveBeenCalledWith(new MeasurementEntry(
             null,
-            'cccccccc-cccc-cccc-cccc-000000000011',
+            TEST_MEASUREMENT_CATEGORY_1.id!,
             fakeNow,
             42.42,
             'The Shiba Inu is a breed of hunting dog from Japan.',
-        ));
+        ), expect.anything()));
 
         vi.useRealTimers();
     });
@@ -125,7 +126,7 @@ describe("Test the EntryForm component", () => {
             i18n.changeLanguage('en');
             const entry = TEST_MEASUREMENT_ENTRIES_1[0];
 
-            const { container } = renderComponent({ entry, categoryId: 'cccccccc-cccc-cccc-cccc-000000000001' });
+            const { container } = renderComponent({ entry, category: TEST_MEASUREMENT_CATEGORY_1 });
 
             const picker = container.querySelector('.MuiPickersInputBase-root');
             expect(picker?.textContent).toContain('02/01/2023');
@@ -136,12 +137,73 @@ describe("Test the EntryForm component", () => {
             i18n.changeLanguage('de');
             const entry = TEST_MEASUREMENT_ENTRIES_1[0];
 
-            const { container } = renderComponent({ entry, categoryId: 'cccccccc-cccc-cccc-cccc-000000000001' });
+            const { container } = renderComponent({ entry, category: TEST_MEASUREMENT_CATEGORY_1 });
 
             const picker = container.querySelector('.MuiPickersInputBase-root');
             expect(picker?.textContent).toContain('01.02.2023');
             // expect(picker?.textContent).toContain('08:00');
             expect(picker?.textContent).not.toContain('AM');
         });
+    });
+});
+
+describe("Test the GroupEntryForm component", () => {
+    const queryClient = new QueryClient();
+    let mutate = vi.fn();
+
+    const group = new MeasurementCategory('g-1', 'Blood pressure', 'mmHg', 'blood_pressure');
+    group.children = [
+        new MeasurementCategory('c-sys', 'Systolic', 'mmHg', 'blood_pressure_systolic', false, 'g-1'),
+        new MeasurementCategory('c-dia', 'Diastolic', 'mmHg', 'blood_pressure_diastolic', false, 'g-1'),
+    ];
+
+    beforeEach(() => {
+        mutate = vi.fn();
+        (useAddGroupEntriesQuery as Mock).mockImplementation(() => ({
+            mutate: mutate
+        }));
+    });
+
+    test('renders one value field per child', () => {
+        render(
+            <QueryClientProvider client={queryClient}>
+                <GroupEntryForm group={group} />
+            </QueryClientProvider>
+        );
+
+        expect(screen.getByLabelText('measurements.metricTypes.blood_pressure_systolic (mmHg)')).toBeInTheDocument();
+        expect(screen.getByLabelText('measurements.metricTypes.blood_pressure_diastolic (mmHg)')).toBeInTheDocument();
+    });
+
+    test('submits one entry per child with a shared date', async () => {
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <GroupEntryForm group={group} />
+            </QueryClientProvider>
+        );
+
+        await user.type(screen.getByLabelText('measurements.metricTypes.blood_pressure_systolic (mmHg)'), '120');
+        await user.type(screen.getByLabelText('measurements.metricTypes.blood_pressure_diastolic (mmHg)'), '80');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        expect(mutate).toHaveBeenCalledTimes(1);
+        const entries = mutate.mock.calls[0][0] as MeasurementEntry[];
+        expect(entries.map(e => [e.category, e.value])).toStrictEqual([['c-sys', 120], ['c-dia', 80]]);
+        expect(entries[0].date).toStrictEqual(entries[1].date);
+    });
+
+    test('does not submit while a value is missing', async () => {
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <GroupEntryForm group={group} />
+            </QueryClientProvider>
+        );
+
+        await user.type(screen.getByLabelText('measurements.metricTypes.blood_pressure_systolic (mmHg)'), '120');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        expect(mutate).not.toHaveBeenCalled();
     });
 });

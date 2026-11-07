@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { VariationSelect } from "@/components/Exercises/forms/VariationSelect";
 import { useEditExerciseQuery } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
+import { randomUUID } from "@/core/lib/uuid";
 
 export function EditExerciseVariation(props: { exerciseId: number, initial: string | null }) {
     const [selectedVariationId, setSelectedVariationId] = useState<string | null>(props.initial);
@@ -31,7 +32,7 @@ export function EditExerciseVariation(props: { exerciseId: number, initial: stri
 
         if (id !== null) {
             // Generate a new variation group UUID and assign both exercises to it
-            const variationGroup = crypto.randomUUID();
+            const variationGroup = randomUUID();
             try {
                 await editMutation.mutateAsync({
                     id: props.exerciseId,

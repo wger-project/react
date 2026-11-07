@@ -1,5 +1,6 @@
 import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { PSEUDO_MEAL_ID } from "@/components/Nutrition/models/consts";
 import { Meal } from "@/components/Nutrition/models/meal";
 import { ApiNutritionalPlanType } from "@/types";
 import { Adapter } from "@/core/lib/Adapter";
@@ -11,9 +12,6 @@ export type GroupedDiaryEntries = {
     entries: DiaryEntry[];
     nutritionalValues: NutritionalValues;
 }
-
-export const PSEUDO_MEAL_ID = '00000000-0000-0000-0000-000000000000';
-
 
 type NutritionalPlanConstructorParams = {
     id?: string | null,
@@ -111,10 +109,14 @@ export class NutritionalPlan {
      * If no entries are available, the function returns an empty NutritionalValues object.
      */
     get loggedNutritionalValues7DayAvg(): NutritionalValues {
-        const today = new Date();
-        const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+        // The window ends with today, entries logged for a future date must not
+        // count towards the average (the sum is always divided by 7 days).
+        const endOfToday = new Date();
+        endOfToday.setHours(23, 59, 59, 999);
+        const sevenDaysAgo = new Date(endOfToday.getTime() - 7 * 24 * 60 * 60 * 1000);
+
         const out = this.getNutritionalValuesFromDiaryEntries(
-            this.diaryEntries.filter(entry => entry.datetime >= sevenDaysAgo)
+            this.diaryEntries.filter(entry => entry.datetime >= sevenDaysAgo && entry.datetime <= endOfToday)
         );
 
         out.energy = out.energy / 7;

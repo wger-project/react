@@ -11,7 +11,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useNutritionDiaryQuery = (options?: NutritionalDiaryEntriesOptions) => useQuery({
     queryFn: () => getNutritionalDiaryEntries(options),
-    queryKey: [QueryKey.NUTRITIONAL_PLAN_DIARY, JSON.stringify(options || {})],
+    queryKey: [QueryKey.NUTRITIONAL_PLAN_DIARY, options ?? {}],
 });
 
 export const useAddDiaryEntryQuery = (planId: string) => {

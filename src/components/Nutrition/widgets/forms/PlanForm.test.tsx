@@ -1,28 +1,32 @@
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/components/Nutrition/queries";
 import { PlanForm } from "@/components/Nutrition/widgets/forms/PlanForm";
+import { mutateMock } from "@/tests/mutationMock";
 import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import React from 'react';
 import type { Mock } from 'vitest';
 
-vi.mock("@/components/Weight/api/weight");
+vi.mock("@/components/Measurements/api/bodyWeight");
 vi.mock("@/components/Nutrition/queries");
 
 describe("Test the PlanForm component", () => {
     const queryClient = new QueryClient();
-    let mutate = vi.fn();
+    // Separate mocks, a single one could not tell the add and edit branch apart
+    let addMutate = mutateMock();
+    let editMutate = mutateMock();
 
     beforeEach(() => {
-        mutate = vi.fn();
+        addMutate = mutateMock();
+        editMutate = mutateMock();
 
         (useEditNutritionalPlanQuery as Mock).mockImplementation(() => ({
-            mutate: mutate
+            mutate: editMutate
         }));
 
         (useAddNutritionalPlanQuery as Mock).mockImplementation(() => ({
-            mutate: mutate
+            mutate: addMutate
         }));
     });
 
@@ -58,7 +62,7 @@ describe("Test the PlanForm component", () => {
 
         // Assert
         await user.click(screen.getByRole('button', { name: 'submit' }));
-        expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
+        expect(editMutate).toHaveBeenCalledWith(expect.objectContaining({
                 id: 'aaaaaaaa-0000-0000-0000-000000000101',
                 description: "a better name",
                 // the existing plan's dates must be preserved when only the description changes
@@ -71,7 +75,8 @@ describe("Test the PlanForm component", () => {
                 goalProtein: null,
                 onlyLogging: false,
             })
-        );
+            , expect.anything());
+        expect(addMutate).not.toHaveBeenCalled();
     });
 
     test('Creating a new plan', async () => {
@@ -90,7 +95,7 @@ describe("Test the PlanForm component", () => {
 
         // Assert
         await user.click(screen.getByRole('button', { name: 'submit' }));
-        expect(mutate).toHaveBeenCalledWith(expect.objectContaining({
+        expect(addMutate).toHaveBeenCalledWith(expect.objectContaining({
                 description: 'a new, cool plan',
                 onlyLogging: true,
                 goalCarbohydrates: null,
@@ -99,6 +104,171 @@ describe("Test the PlanForm component", () => {
                 goalProtein: null,
                 goalFiber: null,
             })
+            , expect.anything());
+        expect(editMutate).not.toHaveBeenCalled();
+    });
+
+    test('The goal fields only appear once the goals are switched on', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <PlanForm />
+            </QueryClientProvider>
         );
+
+        // Assert
+        expect(screen.queryByLabelText('nutrition.goalEnergy')).not.toBeInTheDocument();
+
+        // Act
+        await user.click(screen.getByRole('switch', { name: 'nutrition.useGoalsHelpText' }));
+
+        // Assert
+        expect(screen.getByLabelText('nutrition.goalEnergy')).toBeInTheDocument();
+        expect(screen.getByLabelText('nutrition.goalProtein')).toBeInTheDocument();
+        expect(screen.getByLabelText('nutrition.goalCarbohydrates')).toBeInTheDocument();
+        expect(screen.getByLabelText('nutrition.goalFat')).toBeInTheDocument();
+        expect(screen.getByLabelText('nutrition.goalFiber')).toBeInTheDocument();
+    });
+
+    test('Submits the entered goals', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <PlanForm />
+            </QueryClientProvider>
+        );
+        await user.click(screen.getByRole('switch', { name: 'nutrition.useGoalsHelpText' }));
+        await user.type(screen.getByLabelText('nutrition.goalEnergy'), '2500');
+        await user.type(screen.getByLabelText('nutrition.goalProtein'), '150');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        expect(addMutate).toHaveBeenCalledWith(expect.objectContaining({
+            goalEnergy: 2500,
+            goalProtein: 150,
+            goalCarbohydrates: null,
+            goalFat: null,
+            goalFiber: null,
+        }), expect.anything());
+    });
+
+    test.each([
+        ['goalEnergy', '2500'],
+        ['goalEnergy', '7000'],
+        ['goalProtein', '-1'],
+        ['goalCarbohydrates', 'invalid'],
+        ['goalFiber', '0'],
+        ['goalFat', '501'],
+    ])('Switching the goals back off clears %s = %s from the payload', async (field, value) => {
+
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <PlanForm />
+            </QueryClientProvider>
+        );
+        const goalsSwitch = screen.getByRole('switch', { name: 'nutrition.useGoalsHelpText' });
+        await user.click(goalsSwitch);
+        await user.type(screen.getByLabelText(`nutrition.${field}`), value);
+        await user.click(goalsSwitch);
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        // The entered value must not be sent once the user turned the goals off again
+        expect(addMutate).toHaveBeenCalledWith(expect.objectContaining({
+            goalEnergy: null,
+            goalProtein: null,
+            goalCarbohydrates: null,
+            goalFat: null,
+            goalFiber: null,
+        }), expect.anything());
+    });
+
+    test('Switching goals back on keeps their values and validates them', async () => {
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <PlanForm />
+            </QueryClientProvider>
+        );
+        const goalsSwitch = screen.getByRole('switch', { name: 'nutrition.useGoalsHelpText' });
+        await user.click(goalsSwitch);
+        await user.type(screen.getByLabelText('nutrition.goalEnergy'), '7000');
+        await user.click(goalsSwitch);
+        await user.click(goalsSwitch);
+
+        expect(screen.getByLabelText('nutrition.goalEnergy')).toHaveValue('7000');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(addMutate).not.toHaveBeenCalled();
+
+        await user.clear(screen.getByLabelText('nutrition.goalEnergy'));
+        await user.type(screen.getByLabelText('nutrition.goalEnergy'), '2500');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(addMutate).toHaveBeenCalledWith(expect.objectContaining({
+            goalEnergy: 2500,
+        }), expect.anything());
+    });
+
+    test('An existing plan can be saved after disabling invalid goals', async () => {
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <PlanForm plan={TEST_NUTRITIONAL_PLAN_1} />
+            </QueryClientProvider>
+        );
+        const goalsSwitch = screen.getByRole('switch', { name: 'nutrition.useGoalsHelpText' });
+        await user.click(goalsSwitch);
+        await user.type(screen.getByLabelText('nutrition.goalProtein'), '-1');
+        await user.click(goalsSwitch);
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        expect(editMutate).toHaveBeenCalledWith(expect.objectContaining({
+            id: TEST_NUTRITIONAL_PLAN_1.id,
+            goalEnergy: null,
+            goalProtein: null,
+            goalCarbohydrates: null,
+            goalFat: null,
+            goalFiber: null,
+        }), expect.anything());
+        expect(addMutate).not.toHaveBeenCalled();
+    });
+
+    test.each([
+        ['en-US', '09272026'],
+        ['en-NZ', '27092026'],
+    ])('A start date typed in the %s order is submitted as that day', async (browserLanguage, keys) => {
+
+        // Arrange
+        const languages = vi.spyOn(navigator, 'languages', 'get').mockReturnValue([browserLanguage]);
+        onTestFinished(() => languages.mockRestore());
+        const user = userEvent.setup();
+
+        render(
+            <QueryClientProvider client={queryClient}>
+                <PlanForm />
+            </QueryClientProvider>
+        );
+        const sections = within(screen.getByRole('group', { name: 'start' })).getAllByRole('spinbutton');
+
+        // Act
+        await user.click(sections[0]);
+        await user.keyboard(keys);
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        // Assert
+        expect(addMutate).toHaveBeenCalledWith(expect.objectContaining({
+            start: new Date(2026, 8, 27),
+        }), expect.anything());
     });
 });

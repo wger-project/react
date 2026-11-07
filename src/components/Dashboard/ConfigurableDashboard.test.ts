@@ -126,4 +126,63 @@ describe('loadDashboardState migration', () => {
         });
         expect(saved.hiddenWidgetIds).toEqual(expect.arrayContaining(['nutrition']));
     });
+
+    test('returns null when nothing was saved yet', () => {
+        expect(loadDashboardState()).toBeNull();
+    });
+
+    test('returns null instead of throwing on corrupt data', () => {
+        // Arrange
+        localStorage.setItem('dashboard-state', '{not json');
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {
+        });
+
+        // Act
+        const res = loadDashboardState();
+
+        // Assert
+        expect(res).toBeNull();
+        expect(consoleError).toHaveBeenCalled();
+        consoleError.mockRestore();
+    });
+
+    test('survives a saved state without layouts', () => {
+        // Arrange
+        // The layouts are rebuilt from the defaults, the widget selection must survive
+        localStorage.setItem('dashboard-state', JSON.stringify({
+            version: 1,
+            selectedWidgetIds: ['routine'],
+            hiddenWidgetIds: [],
+            layouts: null,
+        }));
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {
+        });
+
+        // Act
+        const res = loadDashboardState();
+
+        // Assert
+        expect(res).not.toBeNull();
+        expect(res!.selectedWidgetIds).toContain('routine');
+        consoleError.mockRestore();
+    });
+
+    test('keeps the widgets the user explicitly hid', () => {
+        // Arrange
+        localStorage.setItem('dashboard-state', JSON.stringify({
+            version: 1,
+            selectedWidgetIds: [],
+            hiddenWidgetIds: ['nutrition'],
+            layouts: { lg: [], md: [], sm: [], xs: [] },
+        }));
+
+        // Act
+        const res = loadDashboardState();
+
+        // Assert
+        // An empty selection falls back to everything, except what was hidden
+        expect(res!.selectedWidgetIds).not.toContain('nutrition');
+        expect(res!.selectedWidgetIds.length).toBe(AVAILABLE_WIDGETS.length - 1);
+        expect(res!.hiddenWidgetIds).toEqual(['nutrition']);
+    });
 });

@@ -30,6 +30,7 @@ export enum QueryKey {
     ROUTINE_LOGS = 'routine-logs',
     ROUTINE_LOG_DATA = 'routine-log-data',
     ROUTINE_STATS = 'routine-stats',
+    EXERCISE_ANALYTICS = 'exercise-analytics',
     ROUTINES_ACTIVE = 'routines-active',
     ROUTINES_SHALLOW = 'routines-shallow',
     PRIVATE_TEMPLATES = 'private-templates',
@@ -43,9 +44,6 @@ export enum QueryKey {
     NUTRITIONAL_PLAN_DIARY = 'nutritional-plan-diary',
     NUTRITIONAL_PLAN_LAST = 'nutritional-plan-last',
     INGREDIENT = 'ingredient',
-
-    // Body weight
-    BODY_WEIGHT = 'body-weight',
 
     // Profile
     PROFILE = 'profile',
@@ -61,9 +59,13 @@ export enum QueryKey {
     EQUIPMENT = 'equipment',
     MUSCLES = 'muscles',
 
-    // Measurements
+    // Measurements (body weight is measurement data and shares these, see
+    // the body weight queries)
     MEASUREMENTS = 'measurements',
     MEASUREMENTS_CATEGORIES = 'measurements-categories',
+    MEASUREMENT_ENTRIES = 'measurement-entries',
+    MEASUREMENT_BUCKETS = 'measurement-buckets',
+    MEASUREMENT_VALUE_COUNTS = 'measurement-value-counts',
 
     // Nutrition (search)
     INGREDIENT_SEARCH = 'ingredient-search',

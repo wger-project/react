@@ -4,7 +4,7 @@ import { testRoutineStatistics } from "@/tests/workoutStatisticsTestData";
 describe('RoutineStatsDataAdapter parser tests', () => {
 
 
-    test('calls addQuery.mutate with correct data when creating a new entry', async () => {
+    test('parses the statistics response of the API', async () => {
         const adapter = new RoutineStatsDataAdapter();
 
         const result = adapter.fromJson(testRoutineStatistics);

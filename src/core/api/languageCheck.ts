@@ -20,7 +20,7 @@ export const checkLanguage = async (data: LanguageCheckInput): Promise<object> =
         input: data.input,
         ...(data.languageId !== undefined
             ? { language: data.languageId }
-            : { languageCode: data.languageCode })
+            : { language_code: data.languageCode })
     };
 
     const response = await axios.post(

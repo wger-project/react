@@ -1,4 +1,5 @@
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { EmptyCard } from "@/components/Dashboard/EmptyCard";
 import {
@@ -46,8 +47,9 @@ export const NutritionCard = () => {
         return <LoadingPlaceholder />;
     }
 
-    return planQuery.data !== null ? (
-        <NutritionCardContent plan={planQuery.data!} />
+    // The data is null when the user has no plan and undefined when the query failed
+    return planQuery.data ? (
+        <NutritionCardContent plan={planQuery.data} />
     ) : (
         <EmptyCard title={t("nutritionalPlan")} modalContent={<PlanForm />} modalTitle={t("add")} />
     );
@@ -112,7 +114,7 @@ const MealListItem = (props: { meal: Meal; planId: string }) => {
 
     const handleToggleExpand = () => setExpandView(!expandView);
 
-    const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    const handleCloseSnackbar = (event?: React.SyntheticEvent | Event | null, reason?: string) => {
         if (reason === "clickaway") {
             return;
         }
@@ -129,6 +131,7 @@ const MealListItem = (props: { meal: Meal; planId: string }) => {
 
     return (
         <>
+            <FormQueryErrorsSnackbar mutationQuery={addDiaryEntryQuery} />
             <ListItemButton onClick={handleToggleExpand} selected={expandView}>
                 <ListItemIcon>{expandView ? <ExpandLessIcon /> : <ExpandMoreIcon />}</ListItemIcon>
                 <ListItemText primary={primaryHeader} secondary={secondaryHeader} />

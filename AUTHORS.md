@@ -2,7 +2,7 @@
 
 Thank you all for contributing to the project, you are true heroes! 🫶
 
-*Generated on 2026-06-17*
+*Generated on 2026-08-28*
 
 ---
 
@@ -67,6 +67,11 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - G. Buendía - [https://github.com/gbuendia](https://github.com/gbuendia)
 - Allan Nordhøy - [https://github.com/comradekingu](https://github.com/comradekingu)
 - HackingAll - [https://github.com/HackingAllYT](https://github.com/HackingAllYT)
+- armandoschianodicola - [https://github.com/armandoschianodicola](https://github.com/armandoschianodicola)
+- AaryanPuri - [https://github.com/AaryanPuri](https://github.com/AaryanPuri)
+- tomorigabor - [https://github.com/tomorigabor](https://github.com/tomorigabor)
+- Mehak-mahajan - [https://github.com/Mehak-mahajan](https://github.com/Mehak-mahajan)
+- Muhammad Fezan - [https://github.com/faizan7800](https://github.com/faizan7800)
 
 ## Translators
 
@@ -74,6 +79,7 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 
 - Hesham sraj
 - Anonymous
+- Hanaa - [https://github.com/hn-n](https://github.com/hn-n)
 
 ### Catalan
 
@@ -208,6 +214,10 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - shwetank gupta - [https://github.com/shwetankg07](https://github.com/shwetankg07)
 - Madhav Agarwal - [https://github.com/gmrmad1](https://github.com/gmrmad1)
 
+### Hungarian
+
+- tomorigabor - [https://github.com/tomorigabor](https://github.com/tomorigabor)
+
 ### Italian
 
 - Mirco Pasquale - [https://github.com/mircopsq](https://github.com/mircopsq)
@@ -227,10 +237,12 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - DT
 - MARCO ACORTE - [https://github.com/marco-acorte](https://github.com/marco-acorte)
 - Dario Coltri - [https://github.com/casacoltri](https://github.com/casacoltri)
+- Leonardo Lalli - [https://github.com/Leonardo-Lalli](https://github.com/Leonardo-Lalli)
 
 ### Korean
 
 - kobo
+- KT Park - [https://github.com/kk673](https://github.com/kk673)
 
 ### Macedonian
 
@@ -308,6 +320,7 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - Ninguém Mesmo
 - Pedro Remedios - [https://github.com/premedios](https://github.com/premedios)
 - Mateus Volpato - [https://github.com/mvolpato96](https://github.com/mvolpato96)
+- ssantos - [https://github.com/SantosSi](https://github.com/SantosSi)
 
 ### Romanian
 
@@ -346,6 +359,7 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 ### Slovenian
 
 - Valentino Angioi
+- Jure Repinc - [https://github.com/JLP](https://github.com/JLP)
 
 ### Spanish
 
@@ -376,6 +390,7 @@ Thank you all for contributing to the project, you are true heroes! 🫶
 - PNS11 - [https://github.com/cess11](https://github.com/cess11)
 - Kevin Gregard - [https://github.com/Kladdiskakan](https://github.com/Kladdiskakan)
 - Dudeatron - [https://github.com/Dudeatron](https://github.com/Dudeatron)
+- Nils Rutqvist
 
 ### Tamil
 

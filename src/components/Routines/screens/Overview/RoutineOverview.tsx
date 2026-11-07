@@ -5,6 +5,7 @@ import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { OverviewEmpty } from "@/core/ui/Widgets/OverviewEmpty";
 import { Routine } from "@/components/Routines/models/Routine";
 import { AddRoutineFab } from "@/components/Routines/screens/Overview/Fab";
+import { RoutineOverviewDropdown } from "@/components/Routines/widgets/RoutineOverviewDropdown";
 import { useRoutinesShallowQuery } from "@/components/Routines/queries";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -62,6 +63,7 @@ export const RoutineOverview = () => {
 
     return <WgerContainerRightSidebar
         title={t("routines.routines")}
+        optionsMenu={<RoutineOverviewDropdown />}
         mainContent={<>
             {routineQuery.data!.length === 0
                 ? <OverviewEmpty />

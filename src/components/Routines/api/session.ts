@@ -1,9 +1,8 @@
-import { getExercisesByIds } from "@/components/Exercises/api/exercise";
-import { Exercise } from "@/components/Exercises/models/exercise";
-import { WorkoutLog, WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
+import { attachExercises } from "@/components/Routines/api/workoutLogs";
+import { WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
 import { WorkoutSession, WorkoutSessionAdapter } from "@/components/Routines/models/WorkoutSession";
-import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
-import { fetchPaginated } from "@/core/lib/requests";
+import { ApiPath } from "@/core/lib/consts";
+import { fetchAll } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import axios from 'axios';
 
@@ -12,18 +11,22 @@ export type SessionQueryOptions = {
     filtersetQueryLogs?: object,
 }
 
+/*
+ * Look up sessions, e.g. the ones of a single day
+ *
+ * A day can hold several sessions, so this returns all of them in the order the
+ * server sends them, by start time.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const searchSession = async (queryParams: Record<string, any>): Promise<WorkoutSession | null> => {
+export const searchSessions = async (queryParams: Record<string, any>): Promise<WorkoutSession[]> => {
     const response = await axios.get(
         makeUrl(ApiPath.SESSION, { query: queryParams }),
         { headers: makeHeader() }
     );
 
-    if (response.data.count === 1) {
-        return new WorkoutSessionAdapter().fromJson(response.data.results[0]);
-    }
-
-    return null;
+    const adapter = new WorkoutSessionAdapter();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return response.data.results.map((session: any) => adapter.fromJson(session));
 };
 
 export const getSessions = async (options?: SessionQueryOptions): Promise<WorkoutSession[]> => {
@@ -32,47 +35,23 @@ export const getSessions = async (options?: SessionQueryOptions): Promise<Workou
 
     const sessionAdapter = new WorkoutSessionAdapter();
     const logAdapter = new WorkoutLogAdapter();
-    const result: WorkoutSession[] = [];
-    const logs: WorkoutLog[] = [];
 
     // Fetch all logs first
-    for await (const logPage of fetchPaginated(
-        makeUrl(
-            ApiPath.WORKOUT_LOG,
-            { query: { limit: API_MAX_PAGE_SIZE, ...filtersetQueryLogs } }
-        ),
-        makeHeader()
-    )) {
-        for (const logData of logPage) {
-            logs.push(logAdapter.fromJson(logData));
-        }
-    }
+    const logs = await fetchAll(
+        makeUrl(ApiPath.WORKOUT_LOG, { query: filtersetQueryLogs }),
+        json => logAdapter.fromJson(json)
+    );
 
-    const exerciseIds = [...new Set(logs.map(log => log.exerciseId))];
-    if (exerciseIds.length > 0) {
-        const exercises: Record<number, Exercise> = {};
-        for (const exercise of await getExercisesByIds(exerciseIds)) {
-            exercises[exercise.id!] = exercise;
-        }
-        for (const log of logs) {
-            log.exerciseObj = exercises[log.exerciseId];
-        }
-    }
+    await attachExercises(logs);
 
-    for await (const sessionPage of fetchPaginated(
-        makeUrl(
-            ApiPath.SESSION,
-            { query: { limit: API_MAX_PAGE_SIZE, ...filtersetQuerySessions } }
-        ), makeHeader()
-    )) {
-        for (const sessionData of sessionPage) {
-            const session = sessionAdapter.fromJson(sessionData);
+    return await fetchAll(
+        makeUrl(ApiPath.SESSION, { query: filtersetQuerySessions }),
+        json => {
+            const session = sessionAdapter.fromJson(json);
             session.logs = logs.filter(log => log.sessionId === session.id);
-            result.push(session);
+            return session;
         }
-    }
-
-    return result;
+    );
 };
 
 export const addSession = async (session: WorkoutSession): Promise<WorkoutSession> => {
@@ -83,6 +62,18 @@ export const addSession = async (session: WorkoutSession): Promise<WorkoutSessio
     );
 
     return new WorkoutSessionAdapter().fromJson(response.data);
+};
+
+/*
+ * Delete a session. The server deletes the logs that belong to it as well.
+ */
+export const deleteSession = async (id: string): Promise<number> => {
+    const response = await axios.delete(
+        makeUrl(ApiPath.SESSION, { id: id }),
+        { headers: makeHeader() }
+    );
+
+    return response.status;
 };
 
 export const editSession = async (session: WorkoutSession): Promise<WorkoutSession> => {

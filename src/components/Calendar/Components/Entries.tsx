@@ -1,9 +1,15 @@
+import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Measurements";
+import { useDeleteSessionQuery, WorkoutSession } from "@/components/Routines";
+import { dateToLocale } from "@/core/lib/date";
+import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import {
     Card,
     CardContent,
     CardHeader,
     Collapse,
+    IconButton,
     List,
     ListItem,
     ListItemButton,
@@ -12,8 +18,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { dateToLocale } from "@/core/lib/date";
-import { DayProps } from "./CalendarComponent";
+import type { DayProps } from "./CalendarComponent";
 
 interface LogProps {
     selectedDay: DayProps;
@@ -22,10 +27,16 @@ interface LogProps {
 
 const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
     const [t] = useTranslation();
+    const displayWeightUnit = useDisplayWeightUnit();
+    // Entries without their own unit fall back to the one of the category
+    const categoryUnit = useBodyWeightCategoryQuery().data?.unit ?? 'kg';
 
     const [openMeasurements, setOpenMeasurements] = React.useState(false);
-    const [openSession, setOpenSession] = React.useState(false);
+    // A day can hold several sessions, at most one of them is expanded
+    const [openSessionId, setOpenSessionId] = React.useState<string | null>(null);
     const [openNutritionDiary, setOpenNutritionDiary] = React.useState(false);
+    const [sessionToDelete, setSessionToDelete] = React.useState<WorkoutSession | null>(null);
+    const deleteSessionQuery = useDeleteSessionQuery();
 
     isStandalone = isStandalone ?? true;
 
@@ -65,7 +76,7 @@ const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
                         <ListItem>
                             <ListItemText
                                 primary={t("weight")}
-                                secondary={selectedDay.weightEntry.weight.toFixed(1)}
+                                secondary={`${selectedDay.weightEntry.valueIn(displayWeightUnit, categoryUnit).toFixed(1)} ${t(`server.${displayWeightUnit}`)}`}
                                 sx={{ pl: 2 }}
                             />
                         </ListItem>}
@@ -93,8 +104,10 @@ const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
                         </ListItem>
                         <Collapse in={openMeasurements} timeout="auto" unmountOnExit>
                             <List sx={{ pl: 4, pt: 0 }}>
-                                {selectedDay.measurements.map((measurement, key) => (
-                                    <ListItem key={key} dense>
+                                {selectedDay.measurements.map((measurement) => (
+                                    <ListItem
+                                        key={`${measurement.date.toISOString()}-${measurement.name}-${measurement.unit}`}
+                                        dense>
                                         <ListItemText
                                             primary={measurement.name}
                                             secondary={`${measurement.value} ${measurement.unit}`}
@@ -104,16 +117,26 @@ const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
                         </Collapse>
                     </>}
 
-                    {/* Workout session */}
-                    {selectedDay.workoutSession && <>
-                        <ListItem>
+                    {/* Workout sessions */}
+                    {selectedDay.workoutSessions.map((session) => <React.Fragment key={session.id}>
+                        <ListItem
+                            secondaryAction={
+                                <IconButton
+                                    edge="end"
+                                    aria-label={t("delete")}
+                                    onClick={() => setSessionToDelete(session)}
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                            }
+                        >
                             <ListItemButton
-                                onClick={() => setOpenSession(!openSession)}
-                                selected={openSession}
+                                onClick={() => setOpenSessionId(openSessionId === session.id ? null : session.id)}
+                                selected={openSessionId === session.id}
                             >
                                 <ListItemText
                                     primary={t("routines.workoutSession")}
-                                    secondary={selectedDay.workoutSession.textRepresentation}
+                                    secondary={session.textRepresentation}
                                     sx={{
                                         '& .MuiListItemText-secondary': {
                                             whiteSpace: 'nowrap',
@@ -122,12 +145,12 @@ const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
                                         }
                                     }}
                                 />
-                                {openSession ? <ExpandLess /> : <ExpandMore />}
+                                {openSessionId === session.id ? <ExpandLess /> : <ExpandMore />}
                             </ListItemButton>
                         </ListItem>
-                        <Collapse in={openSession} timeout="auto" unmountOnExit>
+                        <Collapse in={openSessionId === session.id} timeout="auto" unmountOnExit>
                             <List sx={{ pl: 4, pt: 0 }}>
-                                {selectedDay.workoutSession.logs.map((log) => (
+                                {session.logs.map((log) => (
                                     <ListItem key={log.id} dense>
                                         <ListItemText
                                             primary={log.exerciseObj?.getTranslation().name}
@@ -136,8 +159,7 @@ const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
                                     </ListItem>))}
                             </List>
                         </Collapse>
-
-                    </>}
+                    </React.Fragment>)}
 
                     {/* Nutrition diary */}
                     {selectedDay.nutritionLogs.length > 0 && <>
@@ -165,6 +187,14 @@ const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
                 </List>
 
             </CardContent>
+
+            <DeleteConfirmationModal
+                title={t('deleteConfirmation', { name: t("routines.workoutSession") })}
+                message={t("routines.deleteSessionInfo")}
+                isOpen={sessionToDelete !== null}
+                closeFn={() => setSessionToDelete(null)}
+                deleteFn={() => deleteSessionQuery.mutate(sessionToDelete!)}
+            />
         </Card>
     );
 };

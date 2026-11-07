@@ -2,6 +2,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import { Button, IconButton, Stack, Tooltip as MuiTooltip, Typography } from "@mui/material";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerFullWidth } from "@/core/ui/Widgets/Container";
+import { Exercise } from "@/components/Exercises";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { useRoutineDetailQuery, useRoutineLogData } from "@/components/Routines/queries";
 import { ExerciseLog } from "@/components/Routines/widgets/LogWidgets";
@@ -23,6 +24,11 @@ export const WorkoutLogs = () => {
         return <LoadingPlaceholder />;
     }
 
+    const error = routineLogDataQuery.error ?? routineQuery.error;
+    if (error) {
+        return <p>Error: {error.message}</p>;
+    }
+
     // Group by exercise
     let groupedWorkoutLogs: Map<number, WorkoutLog[]> = new Map();
 
@@ -35,6 +41,21 @@ export const WorkoutLogs = () => {
         return r;
     }, groupedWorkoutLogs);
 
+    const plannedDays = routineQuery.data!.dayDataCurrentIterationFiltered
+        .filter((dayData) => !dayData.day!.isRest);
+
+    // The days above only cover the exercises planned for the current iteration.
+    // Logs for anything else, e.g. a swapped exercise or a routine that was
+    // imported without days, are collected in their own section so they don't
+    // silently disappear. Exercises that could not be loaded are skipped.
+    const plannedExerciseIds = new Set(
+        plannedDays.flatMap(dayData => dayData.slots.flatMap(slot => slot.exercises.map(exercise => exercise.id)))
+    );
+    const otherExercises = Array.from(groupedWorkoutLogs.entries())
+        .filter(([exerciseId]) => !plannedExerciseIds.has(exerciseId))
+        .map(([, logs]) => logs[0].exerciseObj)
+        .filter((exercise): exercise is Exercise => exercise !== undefined)
+        .sort((a, b) => a.getTranslation().name.localeCompare(b.getTranslation().name));
 
     return (
         <WgerContainerFullWidth
@@ -55,7 +76,7 @@ export const WorkoutLogs = () => {
                 {t('routines.logsFilterNote')}
             </Typography>
 
-            {routineQuery.data!.dayDataCurrentIteration.filter((dayData) => dayData.day !== null && !dayData.day.isRest).map((dayData) =>
+            {plannedDays.map((dayData) =>
                 <React.Fragment key={dayData.day!.id}>
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
@@ -88,6 +109,21 @@ export const WorkoutLogs = () => {
                     )}
                 </React.Fragment>
             )}
+
+            {otherExercises.length > 0 && <>
+                <Typography variant={"h4"} sx={{ mt: 4 }}>
+                    {t('routines.otherLoggedExercises')}
+                </Typography>
+
+                {otherExercises.map(exercise =>
+                    <ExerciseLog
+                        key={exercise.id}
+                        routineId={routineId}
+                        exercise={exercise}
+                        logEntries={groupedWorkoutLogs.get(exercise.id!)}
+                    />
+                )}
+            </>}
 
         </WgerContainerFullWidth>
     );

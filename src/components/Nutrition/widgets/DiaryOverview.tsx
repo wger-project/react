@@ -27,7 +27,7 @@ export const DiaryOverview = (props: {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {Array.from(props.logged).map(([key]) =>
+                {Array.from(props.logged).map(([key, diaryEntries]) =>
                     <TableRow key={key}>
                         <TableCell>
                             <Link
@@ -37,11 +37,11 @@ export const DiaryOverview = (props: {
                         </TableCell>
                         <TableCell align="right">
                             {t('nutrition.valueEnergyKcal',
-                                { value: numberLocale(props.logged.get(key)?.nutritionalValues.energy!, i18n.language) }
+                                { value: numberLocale(diaryEntries.nutritionalValues.energy, i18n.language) }
                             )}
                         </TableCell>
                         <TableCell align="right">
-                            {numberLocale(props.logged.get(key)?.nutritionalValues.energy! - props.planned.energy, i18n.language)}
+                            {numberLocale(diaryEntries.nutritionalValues.energy - props.planned.energy, i18n.language)}
                         </TableCell>
                     </TableRow>)
                 }

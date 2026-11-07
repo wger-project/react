@@ -1,6 +1,7 @@
 import { getExercisesByIds } from "@/components/Exercises/api/exercise";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
+import { attachExercises } from "@/components/Routines/api/workoutLogs";
 import { Day } from "@/components/Routines/models/Day";
 import { RoutineStatsData, RoutineStatsDataAdapter } from "@/components/Routines/models/LogStats";
 import { Routine } from "@/components/Routines/models/Routine";
@@ -8,6 +9,7 @@ import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
 import { RoutineLogData, RoutineLogDataAdapter } from "@/components/Routines/models/RoutineLogData";
 import { ResponseType } from "@/core/api/responseType";
 import { ApiPath } from "@/core/lib/consts";
+import { fetchAll } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import axios from 'axios';
 
@@ -41,12 +43,16 @@ export const processRoutine = async (id: number): Promise<Routine> => {
     const dayStructure = responses[3];
 
 
-    // Collect all unique exercise IDs and load the data in bulk
+    // Collect all unique exercise IDs and load the data in bulk.
+    //
+    // The structure is the source of truth here: a day whose first iteration falls
+    // past the routine's end date has no entry in the day data, but its slots are
+    // still edited and displayed.
     const exerciseIds = new Set<number>();
-    for (const dayData of dayDataAllIterations.filter(d => d.day !== null && d.iteration === 1)) {
-        for (const slotData of dayData.slots) {
-            for (const setData of slotData.setConfigs) {
-                exerciseIds.add(setData.exerciseId);
+    for (const day of dayStructure) {
+        for (const slot of day.slots) {
+            for (const slotEntry of slot.entries) {
+                exerciseIds.add(slotEntry.exerciseId);
             }
         }
     }
@@ -110,15 +116,11 @@ export const processRoutine = async (id: number): Promise<Routine> => {
  * Note: this returns all the data, including all sub-objects
  */
 export const getRoutines = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false } });
-    const response = await axios.get<ResponseType<Routine>>(
-        url,
-        { headers: makeHeader() }
-    );
+    const ids = await fetchAll(makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false } }), json => json.id as number);
 
     const out: Routine[] = [];
-    for (const routineData of response.data.results) {
-        out.push(await processRoutine(routineData.id!));
+    for (const id of ids) {
+        out.push(await processRoutine(id));
     }
     return out;
 };
@@ -154,32 +156,15 @@ export const getRoutine = async (id: number): Promise<Routine> => {
  */
 export const getRoutinesShallow = async (): Promise<Routine[]> => {
     const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false } });
-    const response = await axios.get<ResponseType<Routine>>(
-        url,
-        { headers: makeHeader() }
-    );
-
-    return response.data.results.map(routineData => Routine.fromJson(routineData)).filter(routine => routine.isNotTemplate);
+    return (await fetchAll(url, Routine.fromJson)).filter(routine => routine.isNotTemplate);
 };
 
 export const getPrivateTemplatesShallow = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.PRIVATE_TEMPLATE);
-    const response = await axios.get<ResponseType<Routine>>(
-        url,
-        { headers: makeHeader() }
-    );
-
-    return response.data.results.map(routineData => Routine.fromJson(routineData));
+    return await fetchAll(makeUrl(ApiPath.PRIVATE_TEMPLATE), Routine.fromJson);
 };
 
 export const getPublicTemplatesShallow = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.PUBLIC_TEMPLATE);
-    const response = await axios.get<ResponseType<Routine>>(
-        url,
-        { headers: makeHeader() }
-    );
-
-    return response.data.results.map(routineData => Routine.fromJson(routineData));
+    return await fetchAll(makeUrl(ApiPath.PUBLIC_TEMPLATE), Routine.fromJson);
 };
 
 export const addRoutine = async (routine: Routine): Promise<Routine> => {
@@ -240,7 +225,14 @@ export const getRoutineLogData = async (routineId: number): Promise<RoutineLogDa
 
     const adapter = new RoutineLogDataAdapter();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return response.data.map((data: any) => adapter.fromJson(data));
+    const logData: RoutineLogData[] = response.data.map((data: any) => adapter.fromJson(data));
+
+    // The exercises can't be taken from the routine structure, a log can point to
+    // one that is not (or no longer) part of it, e.g. after a swap or when the
+    // logs were imported from another app.
+    await attachExercises(logData.flatMap(data => data.logs));
+
+    return logData;
 };
 
 export const getRoutineStatisticsData = async (routineId: number): Promise<RoutineStatsData> => {
