@@ -4,15 +4,13 @@ import { useLanguageQuery } from "@/components/Exercises";
 import {
     useAddRoutineLogsQuery,
     useRoutineDetailQuery,
-    useRoutineLogQuery,
     useSessionOfDay
 } from "@/components/Routines/queries";
-import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { SessionLogsForm } from '@/components/Routines/widgets/forms/SessionLogsForm';
 import { DateTime } from "luxon";
 import { testLanguages } from "@/tests/exerciseTestdata";
-import { testWorkoutLogs, testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
+import { testWorkoutSession } from "@/tests/workoutLogsRoutinesTestData";
 import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
@@ -26,7 +24,6 @@ describe('SessionLogsForm', () => {
     const mockAddLogsQuery = useAddRoutineLogsQuery as Mock;
     const mockRoutineDetailQuery = useRoutineDetailQuery as Mock;
     const mockUseSessionOfDay = useSessionOfDay as Mock;
-    const mockRoutineLogQuery = useRoutineLogQuery as Mock;
     const mockMutateAsync = vi.fn();
     const mockSaveSession = vi.fn();
 
@@ -51,10 +48,6 @@ describe('SessionLogsForm', () => {
             session: testWorkoutSession,
             isLoading: false,
             isSuccess: true,
-        });
-        mockRoutineLogQuery.mockReturnValue({
-            isSuccess: false,
-            data: [],
         });
     });
 
@@ -235,51 +228,6 @@ describe('SessionLogsForm', () => {
         expect(screen.queryByRole('textbox', { name: /notes/i })).not.toBeInTheDocument();
         await user.click(screen.getAllByRole('button', { name: 'routines.setNr: notes' })[0]);
         expect(screen.getAllByRole('textbox', { name: /notes/i })).toHaveLength(1);
-    });
-
-    test('shows the last note of the exercise from an earlier day', async () => {
-        mockRoutineLogQuery.mockReturnValue({
-            isSuccess: true,
-            data: [new WorkoutLog({
-                ...testWorkoutLogs[0],
-                exerciseId: 345,
-                date: new Date(2024, 4, 4, 18, 0),
-                notes: 'Felt great last time',
-            })],
-        });
-
-        render(<SessionLogsForm
-            dayId={5}
-            routineId={1}
-            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
-            chosenSessionId={null}
-            saveSession={mockSaveSession}
-        />);
-
-        expect(screen.getAllByText('routines.lastSession').length).toBeGreaterThan(0);
-    });
-
-    test('ignores notes from the logged day and later ones', async () => {
-        const noteOn = (date: Date) => new WorkoutLog({
-            ...testWorkoutLogs[0],
-            exerciseId: 345,
-            date: date,
-            notes: 'Not from an earlier day',
-        });
-        mockRoutineLogQuery.mockReturnValue({
-            isSuccess: true,
-            data: [noteOn(new Date(2024, 4, 5, 0, 0)), noteOn(new Date(2024, 4, 6, 9, 0))],
-        });
-
-        render(<SessionLogsForm
-            dayId={5}
-            routineId={1}
-            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
-            chosenSessionId={null}
-            saveSession={mockSaveSession}
-        />);
-
-        expect(screen.queryByText('routines.lastSession')).not.toBeInTheDocument();
     });
 
     test('a note on a set without values shows the error and blocks the submit', async () => {

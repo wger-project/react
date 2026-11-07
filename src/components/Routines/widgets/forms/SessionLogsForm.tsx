@@ -10,7 +10,6 @@ import { LogEntryForm } from "@/components/Routines/models/WorkoutLog";
 import {
     useAddRoutineLogsQuery,
     useRoutineDetailQuery,
-    useRoutineLogQuery,
     useSessionOfDay
 } from "@/components/Routines/queries";
 import { sessionNeedsChoice } from "@/components/Routines/widgets/forms/SessionForm";
@@ -30,8 +29,8 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import {
     Alert,
-    Button,
     Box,
+    Button,
     CardActions,
     CardHeader,
     IconButton,
@@ -141,7 +140,6 @@ const SessionLogsFields = (
     const { t } = useTranslation();
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const addLogsQuery = useAddRoutineLogsQuery(routineId);
-    const logsQuery = useRoutineLogQuery(routineId);
     const handleSnackbarClose = () => setSnackbarOpen(false);
     const [exerciseIdToSwap, setExerciseIdToSwap] = useState<number | null>(null);
     // The exercise card whose action menu is open
@@ -152,18 +150,6 @@ const SessionLogsFields = (
     const [saved, setSaved] = useState<{ day: string | null, keys: Set<string> }>({ day: null, keys: new Set() });
     const day = selectedDate.toISODate();
     const savedKeys = saved.day === day ? saved.keys : new Set<string>();
-
-    // Most recent note per exercise from the days before the one being logged
-    const lastNoteByExercise = new Map<number, string>();
-    if (logsQuery.isSuccess) {
-        const dayStart = selectedDate.startOf('day').toJSDate();
-        const sorted = [...logsQuery.data].sort((a, b) => b.date.getTime() - a.date.getTime());
-        for (const log of sorted) {
-            if (log.notes && log.date < dayStart && !lastNoteByExercise.has(log.exerciseId)) {
-                lastNoteByExercise.set(log.exerciseId, log.notes);
-            }
-        }
-    }
 
     // Counter for the keys of the logs the user adds on top of the planned ones
     const extraLogKey = useRef(0);
@@ -285,7 +271,6 @@ const SessionLogsFields = (
                     {groupByExercise(logs).map(group => {
                         const exerciseId = group.exercise.id!;
                         const last = group.entries[group.entries.length - 1];
-                        const lastNote = lastNoteByExercise.get(exerciseId);
 
                         return <Box component="section" key={group.entries[0].log.clientKey}>
                             <CardHeader
@@ -293,7 +278,6 @@ const SessionLogsFields = (
                                 title={exerciseIdToSwap === exerciseId
                                     ? <NameAutocompleter callback={handleCallback} />
                                     : group.exercise.getTranslation(language).name}
-                                subheader={lastNote ? t('routines.lastSession', { note: lastNote }) : undefined}
                                 slotProps={{ title: { variant: 'h6' } }}
                                 action={<IconButton
                                     aria-label={t('actions')}
