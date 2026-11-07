@@ -1,14 +1,3 @@
-import HelpOutlineIcon from "@mui/icons-material/HelpOutlined";
-import { Button, FormControlLabel, IconButton, Menu, MenuItem, Stack, Switch } from "@mui/material";
-import Grid from '@mui/material/Grid';
-import Tooltip from "@mui/material/Tooltip";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
-import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { dateLocale } from "@/core/lib/date";
-import { useProfileQuery } from "@/components/User";
 import {
     DESCRIPTION_MAX_LENGTH,
     MAX_WORKOUT_DURATION,
@@ -19,11 +8,22 @@ import {
 } from "@/components/Routines/models/Routine";
 import { useAddRoutineQuery, useEditRoutineQuery } from "@/components/Routines/queries/routines";
 import { SlotEntryRoundingField } from "@/components/Routines/widgets/forms/SlotEntryForm";
+import { useProfileQuery } from "@/components/User";
+import { useAppForm } from "@/core/forms/appForm";
+import { fieldError, submitHandler, yupSchema } from "@/core/forms/formUtils";
+import { dateLocale } from "@/core/lib/date";
+import { makeLink, WgerLink } from "@/core/lib/url";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutlined";
+import { Button, FormControlLabel, IconButton, Menu, MenuItem, Stack, Switch } from "@mui/material";
+import Grid from '@mui/material/Grid';
+import Tooltip from "@mui/material/Tooltip";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DateTime } from "luxon";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { makeLink, WgerLink } from "@/core/lib/url";
 import * as yup from 'yup';
 
 interface RoutineFormProps {
@@ -166,8 +166,8 @@ export const RoutineForm = ({
                 <Grid size={12}>
                     <form.AppField name="description">
                         {field => <field.WgerTextField variant="standard"
-                            title={t('description')}
-                            fieldProps={{ multiline: true, rows: 4 }}
+                                                       title={t('description')}
+                                                       fieldProps={{ multiline: true, rows: 4 }}
                         />}
                     </form.AppField>
                 </Grid>

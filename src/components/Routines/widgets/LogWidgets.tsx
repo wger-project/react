@@ -1,8 +1,19 @@
+import { Exercise } from "@/components/Exercises";
+import { useDisplayWeightUnit } from "@/components/Measurements";
+import { RIR_VALUES_SELECT_LIST } from "@/components/Routines/models/BaseConfig";
+import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
+import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "@/components/Routines/queries";
+import { generateChartColors } from "@/core/lib/colors";
+import { PAGINATION_OPTIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/core/lib/consts";
+import { dateToLocale, luxonDateTimeToLocale } from "@/core/lib/date";
+import { convertWeight, WeightUnit } from "@/core/lib/weightUnit";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import CancelIcon from "@mui/icons-material/Cancel";
+import ChatBubbleOutlineOutlined from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { Box, Card, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Tooltip as MuiTooltip, Typography } from '@mui/material';
 import Grid from "@mui/material/Grid";
 import {
     DataGrid,
@@ -16,30 +27,11 @@ import {
     GridRowModesModel,
     GridRowsProp
 } from "@mui/x-data-grid";
-import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { Exercise } from "@/components/Exercises";
-import { useDisplayWeightUnit } from "@/components/Measurements";
-import { RIR_VALUES_SELECT_LIST } from "@/components/Routines/models/BaseConfig";
-import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
-import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "@/components/Routines/queries";
 import { DateTime } from "luxon";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import {
-    CartesianGrid,
-    Legend,
-    Scatter,
-    ScatterChart,
-    Tooltip,
-    TooltipContentProps,
-    XAxis,
-    YAxis
-} from "recharts";
+import { CartesianGrid, Legend, Scatter, ScatterChart, Tooltip, TooltipContentProps, XAxis, YAxis } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
-import { generateChartColors } from "@/core/lib/colors";
-import { PAGINATION_OPTIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/core/lib/consts";
-import { dateToLocale, luxonDateTimeToLocale } from "@/core/lib/date";
-import { convertWeight, WeightUnit } from "@/core/lib/weightUnit";
 
 
 export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logEntries: WorkoutLog[] | undefined }) => {
@@ -54,6 +46,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
         repetitions: logEntry.repetitions,
         weight: logEntry.weight,
         rir: logEntry.rir,
+        notes: logEntry.notes,
         entry: logEntry
     }));
 
@@ -100,6 +93,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
             log.repetitions = newRow.repetitions;
             log.weight = newRow.weight;
             log.rir = newRow.rir;
+            log.notes = newRow.notes;
 
             editLogQuery.mutate(log);
         }
@@ -154,6 +148,23 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             getOptionLabel: (value: any) => value.label,
             valueOptions: RIR_VALUES_SELECT_LIST,
+        },
+        {
+            field: 'notes',
+            type: 'string',
+            width: 90,
+            align: 'center',
+            headerAlign: 'center',
+            sortable: false,
+            disableColumnMenu: true,
+            editable: true,
+            headerName: t('notes'),
+            // The full text doesn't fit the column, it is in the tooltip
+            renderCell: ({ value }) => value
+                ? <MuiTooltip title={value} slotProps={{ tooltip: { sx: { whiteSpace: 'pre-line' } } }}>
+                    <ChatBubbleOutlineOutlined fontSize="small" color="action" sx={{ verticalAlign: 'middle' }} />
+                </MuiTooltip>
+                : null,
         },
         {
             field: 'actions',
@@ -321,7 +332,7 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
 
                 {Array.from(result).map(([key, value]) => {
                         const color = colorGenerator.next().value!;
-                        const formattedData = formatData(value, weightUnit);
+                    const formattedData = formatData(value, weightUnit);
 
                         return <Scatter
                             key={key}

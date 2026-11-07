@@ -39,7 +39,8 @@ export function plannedLogs(routine: Routine, dayId: number, date: Date): {
                         repetitions: !hasNoIterationData && config.repetitions !== null ? config.repetitions : '',
                         repetitionsTarget: !hasNoIterationData && config.repetitions !== null ? config.repetitions : '',
                         weight: !hasNoIterationData && config.weight !== null ? config.weight : '',
-                        weightTarget: !hasNoIterationData && config.weight !== null ? config.weight : ''
+                        weightTarget: !hasNoIterationData && config.weight !== null ? config.weight : '',
+                        notes: ''
                     });
                 }
             }
@@ -57,10 +58,13 @@ interface PayloadContext {
     routineId: number,
 }
 
+/** Whether the set has a value, sets without one are not saved */
+export const isFilledIn = (log: LogEntryForm) => log.rir !== '' || log.repetitions !== '' || log.weight !== '';
+
 /** The logs the user filled in, as the server takes them; untouched sets are left out */
 export function logsPayload(logs: LogEntryForm[], { date, sessionId, iteration, dayId, routineId }: PayloadContext) {
     return logs
-        .filter(l => l.rir !== '' || l.repetitions !== '' || l.weight !== '')
+        .filter(isFilledIn)
         .map(l => ({
                 date: date.toISO(),
                 session: sessionId,
@@ -86,6 +90,8 @@ export function logsPayload(logs: LogEntryForm[], { date, sessionId, iteration, 
                 weight: l.weight !== '' ? l.weight : null,
                 // eslint-disable-next-line camelcase
                 weight_target: l.weightTarget !== '' ? l.weightTarget : null,
+
+                notes: l.notes !== '' ? l.notes : null,
             }
         ));
 }

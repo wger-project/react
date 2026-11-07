@@ -96,7 +96,8 @@ export const ExerciseAnalytics = () => {
                         isOptionEqualToValue={(a, b) => a.id === b.id}
                         loading={query.isFetching}
                         renderInput={params => <TextField {...params}
-                            label={t('routines.analytics.exercise')} placeholder={t('all')} />}
+                                                          label={t('routines.analytics.exercise')}
+                                                          placeholder={t('all')} />}
                     />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 4 }}>
@@ -109,7 +110,7 @@ export const ExerciseAnalytics = () => {
                         isOptionEqualToValue={(a, b) => a.id === b.id}
                         loading={query.isFetching}
                         renderInput={params => <TextField {...params}
-                            label={t('exercises.muscles')} placeholder={t('all')} />}
+                                                          label={t('exercises.muscles')} placeholder={t('all')} />}
                     />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 3 }}>
@@ -133,9 +134,10 @@ export const ExerciseAnalytics = () => {
                 {' '}{t('routines.analytics.muscleHelp')}
             </Typography>
             {query.isPending ? <LoadingPlaceholder /> : query.isError ? <Alert severity="error"
-                action={<Button color="inherit" onClick={() => void query.refetch()}>
-                    {t('routines.analytics.retry')}
-                </Button>}>
+                                                                               action={<Button color="inherit"
+                                                                                               onClick={() => void query.refetch()}>
+                                                                                   {t('routines.analytics.retry')}
+                                                                               </Button>}>
                 {t('routines.analytics.loadError')}
             </Alert> : <>
                 {result.skipped > 0 && <Alert severity="info">

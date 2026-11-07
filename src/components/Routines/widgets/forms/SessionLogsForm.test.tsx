@@ -1,7 +1,12 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { useLanguageQuery } from "@/components/Exercises";
-import { useAddRoutineLogsQuery, useRoutineDetailQuery, useSessionOfDay } from "@/components/Routines/queries";
+import {
+    useAddRoutineLogsQuery,
+    useRoutineDetailQuery,
+    useSessionOfDay
+} from "@/components/Routines/queries";
+import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { SessionLogsForm } from '@/components/Routines/widgets/forms/SessionLogsForm';
 import { DateTime } from "luxon";
 import { testLanguages } from "@/tests/exerciseTestdata";
@@ -20,9 +25,11 @@ describe('SessionLogsForm', () => {
     const mockRoutineDetailQuery = useRoutineDetailQuery as Mock;
     const mockUseSessionOfDay = useSessionOfDay as Mock;
     const mockMutateAsync = vi.fn();
+    const mockSaveSession = vi.fn();
 
     beforeEach(() => {
         vi.clearAllMocks();
+        mockSaveSession.mockResolvedValue(testWorkoutSession.id);
         mockRoutineDetailQuery.mockReturnValue({
             isLoading: false,
             data: testRoutine1,
@@ -51,6 +58,7 @@ describe('SessionLogsForm', () => {
             routineId={1}
             selectedDate={DateTime.now()}
             chosenSessionId={null}
+            saveSession={mockSaveSession}
         />);
 
         expect(screen.getByText('Squats')).toBeInTheDocument();
@@ -80,6 +88,7 @@ describe('SessionLogsForm', () => {
             routineId={1}
             selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
             chosenSessionId={null}
+            saveSession={mockSaveSession}
         />);
 
         const weightElements = screen.getAllByRole('textbox').filter(input => (input as HTMLInputElement).value === '20');
@@ -91,10 +100,11 @@ describe('SessionLogsForm', () => {
         await user.click(repsElements[0]);
         await user.clear(repsElements[0]);
         await user.type(repsElements[0], "17");
-        await user.click(screen.getByRole('button', { name: /submit/i }));
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
 
 
         // Assert
+        await waitFor(() => expect(mockMutateAsync).toHaveBeenCalled());
         expect(mockMutateAsync.mock.calls[0][0].length).toEqual(4);
         expect(mockMutateAsync.mock.calls[0][0][0]).toMatchObject(updatedData);
         expect(mockMutateAsync.mock.calls[0][0][1]).toMatchObject(originalData);
@@ -102,7 +112,7 @@ describe('SessionLogsForm', () => {
         expect(mockMutateAsync.mock.calls[0][0][3]).toMatchObject(originalData);
     });
 
-    test('writes the logs into the session the screen works on', async () => {
+    test('writes the logs into the session saved before them', async () => {
         // Arrange
         const user = userEvent.setup();
 
@@ -112,12 +122,13 @@ describe('SessionLogsForm', () => {
             routineId={1}
             selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
             chosenSessionId={testWorkoutSession.id}
+            saveSession={mockSaveSession}
         />);
-        await user.click(screen.getByRole('button', { name: /submit/i }));
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
 
         // Assert
-        // Without the id the server would sort the logs into a session by their
-        // time, which is a guess as soon as the day holds more than one
+        await waitFor(() => expect(mockMutateAsync).toHaveBeenCalled());
+        expect(mockSaveSession).toHaveBeenCalledBefore(mockMutateAsync);
         expect(mockMutateAsync.mock.calls[0][0][0].session).toEqual(testWorkoutSession.id);
     });
 
@@ -131,11 +142,13 @@ describe('SessionLogsForm', () => {
             routineId={1}
             selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
             chosenSessionId={null}
+            saveSession={mockSaveSession}
         />);
-        await user.click(screen.getByTestId('AddIcon'));
-        await user.click(screen.getByRole('button', { name: /submit/i }));
+        await user.click(screen.getByRole('button', { name: 'routines.addSet' }));
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
 
         // Assert - one more than before
+        await waitFor(() => expect(mockMutateAsync).toHaveBeenCalled());
         expect(mockMutateAsync.mock.calls[0][0].length).toEqual(5);
     });
 
@@ -149,8 +162,10 @@ describe('SessionLogsForm', () => {
             routineId={1}
             selectedDate={DateTime.now()}
             chosenSessionId={null}
+            saveSession={mockSaveSession}
         />);
-        await user.click(screen.getAllByTestId('DeleteOutlinedIcon')[0]);
+        await user.click(screen.getByRole('button', { name: 'actions' }));
+        await user.click(screen.getByRole('menuitem', { name: 'delete' }));
 
         // Assert
         expect(screen.queryByText('Squats')).not.toBeInTheDocument();
@@ -160,17 +175,19 @@ describe('SessionLogsForm', () => {
         // Arrange
         const user = userEvent.setup();
 
-        // Act: the first delete icon belongs to the exercise, the second to its first set
+        // Act
         render(<SessionLogsForm
             dayId={5}
             routineId={1}
             selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
             chosenSessionId={null}
+            saveSession={mockSaveSession}
         />);
-        await user.click(screen.getAllByTestId('DeleteOutlinedIcon')[1]);
-        await user.click(screen.getByRole('button', { name: /submit/i }));
+        await user.click(screen.getAllByRole('button', { name: 'routines.setNr: delete' })[0]);
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
 
         // Assert
+        await waitFor(() => expect(mockMutateAsync).toHaveBeenCalled());
         expect(screen.getByText('Squats')).toBeInTheDocument();
         expect(mockMutateAsync.mock.calls[0][0].length).toEqual(3);
     });
@@ -185,6 +202,7 @@ describe('SessionLogsForm', () => {
             routineId={1}
             selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
             chosenSessionId={null}
+            saveSession={mockSaveSession}
         />);
         const weightInput = screen.getAllByRole('textbox').filter(input => (input as HTMLInputElement).value === '20')[0];
         await user.clear(weightInput);
@@ -193,7 +211,180 @@ describe('SessionLogsForm', () => {
 
         // Assert
         expect(await screen.findByText('forms.enterNumber')).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /submit/i })).toBeDisabled();
+        expect(screen.getByRole('button', { name: /^save$/i })).toBeDisabled();
         expect(mockMutateAsync).not.toHaveBeenCalled();
+    });
+
+    test('opens the note field of a set on request', async () => {
+        const user = userEvent.setup();
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.now()}
+            chosenSessionId={null}
+            saveSession={mockSaveSession}
+        />);
+
+        expect(screen.queryByRole('textbox', { name: /notes/i })).not.toBeInTheDocument();
+        await user.click(screen.getAllByRole('button', { name: 'routines.setNr: notes' })[0]);
+        expect(screen.getAllByRole('textbox', { name: /notes/i })).toHaveLength(1);
+    });
+
+    test('a note on a set without values shows the error and blocks the submit', async () => {
+        const user = userEvent.setup();
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            // No iteration planned for this date, so the sets start without values
+            selectedDate={DateTime.now()}
+            chosenSessionId={null}
+            saveSession={mockSaveSession}
+        />);
+        await user.click(screen.getAllByRole('button', { name: 'routines.setNr: notes' })[0]);
+        const notesField = screen.getByRole('textbox', { name: /notes/i });
+        await user.type(notesField, 'Grip slipped');
+        await user.tab();
+
+        expect(await screen.findByText('routines.notesNeedValues')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /^save$/i })).toBeDisabled();
+    });
+
+    test('submits notes value with log entry', async () => {
+        const user = userEvent.setup();
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
+            saveSession={mockSaveSession}
+        />);
+
+        await user.click(screen.getAllByRole('button', { name: 'routines.setNr: notes' })[0]);
+        await user.type(screen.getByRole('textbox', { name: /notes/i }), 'Good session');
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
+
+        await waitFor(() => expect(mockMutateAsync).toHaveBeenCalled());
+        expect(mockMutateAsync.mock.calls[0][0][0]).toMatchObject({ notes: 'Good session' });
+    });
+
+    test('saves no logs when the session was not saved', async () => {
+        const user = userEvent.setup();
+        mockSaveSession.mockResolvedValue(false);
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
+            saveSession={mockSaveSession}
+        />);
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
+
+        await waitFor(() => expect(mockSaveSession).toHaveBeenCalled());
+        expect(mockMutateAsync).not.toHaveBeenCalled();
+        expect(screen.queryByText('success')).not.toBeInTheDocument();
+    });
+
+    test('saves just the session when no set is filled in', async () => {
+        const user = userEvent.setup();
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            // No iteration planned for this date, so the sets start without values
+            selectedDate={DateTime.now()}
+            chosenSessionId={null}
+            saveSession={mockSaveSession}
+        />);
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
+
+        expect(await screen.findByText('success')).toBeInTheDocument();
+        expect(mockSaveSession).toHaveBeenCalled();
+        expect(mockMutateAsync).not.toHaveBeenCalled();
+    });
+
+    test('a second save does not post the already saved logs again', async () => {
+        const user = userEvent.setup();
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
+            saveSession={mockSaveSession}
+        />);
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
+        await waitFor(() => expect(mockMutateAsync).toHaveBeenCalledTimes(1));
+
+        await user.click(screen.getByRole('button', { name: 'routines.addSet' }));
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
+
+        await waitFor(() => expect(mockSaveSession).toHaveBeenCalledTimes(2));
+        expect(mockMutateAsync).toHaveBeenCalledTimes(2);
+        expect(mockMutateAsync.mock.calls[1][0]).toHaveLength(1);
+    });
+
+    test('shows the error when saving the logs fails', async () => {
+        const user = userEvent.setup();
+        mockMutateAsync.mockRejectedValue(new Error('Server error'));
+        mockAddLogsQuery.mockReturnValue({
+            isPending: false,
+            isError: true,
+            error: new Error('Server error'),
+            mutateAsync: mockMutateAsync,
+        });
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
+            saveSession={mockSaveSession}
+        />);
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
+
+        await waitFor(() => expect(mockMutateAsync).toHaveBeenCalled());
+        expect(screen.getByText('Server error')).toBeInTheDocument();
+        expect(screen.queryByText('success')).not.toBeInTheDocument();
+    });
+
+    test('can not save while the day\'s sessions are loading', async () => {
+        mockUseSessionOfDay.mockReturnValue({
+            sessions: [],
+            session: undefined,
+            isLoading: true,
+            isSuccess: false,
+        });
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.now()}
+            chosenSessionId={null}
+            saveSession={mockSaveSession}
+        />);
+
+        expect(screen.getByRole('button', { name: /^save$/i })).toBeDisabled();
+    });
+
+    test('can not save while the user still has to pick one of the day\'s sessions', async () => {
+        mockUseSessionOfDay.mockReturnValue({
+            sessions: [testWorkoutSession, new WorkoutSession({ ...testWorkoutSession, id: 'other' })],
+            session: undefined,
+            isLoading: false,
+            isSuccess: true,
+        });
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.now()}
+            chosenSessionId={null}
+            saveSession={mockSaveSession}
+        />);
+
+        expect(screen.getByRole('button', { name: /^save$/i })).toBeDisabled();
     });
 });

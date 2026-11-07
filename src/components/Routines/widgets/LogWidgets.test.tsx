@@ -80,6 +80,24 @@ describe('ExerciseLog', () => {
         expect(mockDeleteMutate).not.toHaveBeenCalled();
         expect(mockEditMutate).toHaveBeenCalled();
     });
+
+    test('shows the note of a log in a tooltip', async () => {
+        const logs = [
+            new WorkoutLog({ ...testWorkoutLogs[0], notes: 'Grip slipped' }),
+            ...testWorkoutLogs.slice(1),
+        ];
+        render(
+            <ExerciseLog
+                exercise={testExerciseBenchPress}
+                routineId={mockRoutineId}
+                logEntries={logs}
+            />
+        );
+
+        expect(screen.queryByText('Grip slipped')).not.toBeInTheDocument();
+        await user.hover(screen.getByLabelText('Grip slipped'));
+        expect(await screen.findByRole('tooltip')).toHaveTextContent('Grip slipped');
+    });
 });
 
 describe('formatData', () => {

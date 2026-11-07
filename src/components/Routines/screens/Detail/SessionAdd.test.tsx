@@ -79,7 +79,8 @@ describe("Smoke tests the SessionAdd component", () => {
         );
         await waitFor(() => expect(screen.getByText(/morning workout/)).toBeInTheDocument());
         await user.click(screen.getByText(/morning workout/));
-        await waitFor(() => expect(screen.getByRole('textbox', { name: /notes/i })).toBeInTheDocument());
+        // The session's notes field, the set logs below have their own ones
+        await waitFor(() => expect(document.getElementById('notes')).toBeInTheDocument());
 
         // Act - move the form to another day
         const dateGroup = screen.getByRole('group', { name: /date/i });

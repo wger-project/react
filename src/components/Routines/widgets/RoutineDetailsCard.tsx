@@ -1,4 +1,10 @@
-import { Exercise, ExerciseImageAvatar, getLanguageByShortName, Language, useLanguageQuery } from "@/components/Exercises";
+import {
+    Exercise,
+    ExerciseImageAvatar,
+    getLanguageByShortName,
+    Language,
+    useLanguageQuery
+} from "@/components/Exercises";
 import { Day, getDayName } from "@/components/Routines/models/Day";
 import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
 import { SetConfigData } from "@/components/Routines/models/SetConfigData";

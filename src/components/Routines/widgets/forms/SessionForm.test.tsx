@@ -5,7 +5,7 @@ import { IMPRESSION_GOOD, WorkoutSession } from "@/components/Routines/models/Wo
 import { useAddSessionQuery, useEditSessionQuery, useSessionOfDay } from "@/components/Routines/queries";
 import { DateTime } from 'luxon';
 import { BrowserRouter } from "react-router-dom";
-import { SessionForm } from './SessionForm';
+import { SessionForm, SessionFormHandle } from './SessionForm';
 import type { Mock } from 'vitest';
 
 
@@ -37,18 +37,24 @@ describe('SessionForm', () => {
         });
     });
 
-    /* Stands in for the screen, which owns the session the form works on */
+    /* Stands in for the screen, which owns the session the form works on and saves it */
     const Harness = (props: { selectedDate: DateTime, setSelectedDate: (date: DateTime) => void }) => {
         const [chosenSessionId, setChosenSessionId] = React.useState<string | null>(null);
+        const ref = React.useRef<SessionFormHandle>(null);
 
-        return <SessionForm
-            dayId={dayId}
-            routineId={routineId}
-            selectedDate={props.selectedDate}
-            setSelectedDate={props.setSelectedDate}
-            chosenSessionId={chosenSessionId}
-            setChosenSessionId={setChosenSessionId} />;
+        return <>
+            <SessionForm
+                ref={ref}
+                dayId={dayId}
+                routineId={routineId}
+                selectedDate={props.selectedDate}
+                setSelectedDate={props.setSelectedDate}
+                chosenSessionId={chosenSessionId}
+                setChosenSessionId={setChosenSessionId} />
+            <button onClick={async () => submitResult = await ref.current!.submit()}>submit</button>
+        </>;
     };
+    let submitResult: string | null | false | undefined;
 
     const renderForm = (selectedDate: DateTime, setSelectedDate: (date: DateTime) => void = () => {
     }) => render(
@@ -391,5 +397,62 @@ describe('SessionForm', () => {
         await waitFor(() => expect(addMutateAsync).toHaveBeenCalled());
         const draft = addMutateAsync.mock.calls[0][0] as WorkoutSession;
         expect(draft.impression).toBe(IMPRESSION_GOOD);
+    });
+
+    test('the handle reports the id of the saved session', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        addMutateAsync.mockResolvedValue(new WorkoutSession({
+            id: 'bbbbbbbb-bbbb-bbbb-bbbb-000000000009',
+            dayId: dayId,
+            routineId: routineId,
+            notes: '',
+            impression: '2',
+            datetimeStart: DateTime.fromISO('2024-05-01').toJSDate(),
+            datetimeEnd: null,
+        }));
+        mockUseSessionOfDay.mockImplementation(lookupReturning([]));
+        submitResult = undefined;
+
+        // Act
+        renderForm(DateTime.fromISO('2024-05-01'));
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        // Assert
+        await waitFor(() => expect(submitResult).toBe('bbbbbbbb-bbbb-bbbb-bbbb-000000000009'));
+    });
+
+    test('the handle saves nothing while the user still has to pick a session', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        mockUseSessionOfDay.mockImplementation(lookupReturning(twoSessions()));
+        submitResult = undefined;
+
+        // Act
+        renderForm(DateTime.fromISO('2024-05-01'));
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        // Assert
+        await waitFor(() => expect(submitResult).toBe(false));
+        expect(addMutateAsync).not.toHaveBeenCalled();
+        expect(editMutateAsync).not.toHaveBeenCalled();
+    });
+
+    test('the handle reports a failed save', async () => {
+
+        // Arrange
+        const user = userEvent.setup();
+        addMutateAsync.mockRejectedValue(new Error('Request failed with status code 400'));
+        mockUseSessionOfDay.mockImplementation(lookupReturning([]));
+        submitResult = undefined;
+
+        // Act
+        renderForm(DateTime.fromISO('2024-05-01'));
+        await user.click(screen.getByRole('button', { name: /submit/i }));
+
+        // Assert
+        await waitFor(() => expect(submitResult).toBe(false));
     });
 });

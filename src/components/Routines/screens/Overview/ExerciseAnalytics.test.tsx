@@ -1,9 +1,10 @@
 import { Exercise } from '@/components/Exercises';
-import { analyticsDateFilter } from '@/components/Routines/models/analytics';
 import { getLanguages } from "@/components/Exercises/api/language";
-import { getWorkoutLogs } from "@/components/Routines/api/workoutLogs";
 import { getRoutinesShallow } from "@/components/Routines/api/routine";
+import { getWorkoutLogs } from "@/components/Routines/api/workoutLogs";
+import { analyticsDateFilter } from '@/components/Routines/models/analytics';
 import { ExerciseAnalytics } from "@/components/Routines/screens/Overview/ExerciseAnalytics";
+import { WgerRoutes } from "@/routes";
 import { analyticsLog } from "@/tests/analyticsTestData";
 import { testExerciseBenchPress, testExerciseSquats, testLanguages, testMuscleBiggus } from "@/tests/exerciseTestdata";
 import { getTestQueryClient } from "@/tests/queryClient";
@@ -12,7 +13,6 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { WgerRoutes } from "@/routes";
 
 vi.mock('@/components/Routines/api/workoutLogs');
 vi.mock('@/components/Exercises/api/language');
@@ -34,7 +34,10 @@ beforeEach(() => {
 test('defaults to weight and one year; metrics and table reflect logs across routines', async () => {
     const user = userEvent.setup();
     renderPage();
-    await waitFor(() => expect(getWorkoutLogs).toHaveBeenCalledWith({ loadExercises: true, filtersetQuery: analyticsDateFilter('lastYear') }));
+    await waitFor(() => expect(getWorkoutLogs).toHaveBeenCalledWith({
+        loadExercises: true,
+        filtersetQuery: analyticsDateFilter('lastYear')
+    }));
     expect(screen.getByRole('combobox', { name: 'routines.analytics.metric' })).toHaveTextContent('weight');
     await user.click(screen.getByRole('button', { name: 'routines.analytics.tableView' }));
     expect(await screen.findByRole('cell', { name: '60' })).toBeInTheDocument();
@@ -50,8 +53,12 @@ test('defaults to weight and one year; metrics and table reflect logs across rou
 test('exercise and muscle selectors filter the displayed history', async () => {
     const user = userEvent.setup();
     vi.mocked(getWorkoutLogs).mockResolvedValue([
-        analyticsLog(), analyticsLog({ id: 'other', exerciseId: 999,
-            exerciseObj: new Exercise({ ...testExerciseBenchPress, id: 999, muscles: [], musclesSecondary: [] }), weight: 999 }),
+        analyticsLog(), analyticsLog({
+            id: 'other',
+            exerciseId: 999,
+            exerciseObj: new Exercise({ ...testExerciseBenchPress, id: 999, muscles: [], musclesSecondary: [] }),
+            weight: 999
+        }),
     ]);
     renderPage();
     await user.click(screen.getByRole('button', { name: 'routines.analytics.tableView' }));
@@ -73,9 +80,11 @@ test('a new date range queries the server and shows an empty state without losin
     vi.mocked(getWorkoutLogs).mockResolvedValue([]);
     await user.click(screen.getByRole('button', { name: 'measurements.chartRangeWeeks' }));
     expect(await screen.findByText('routines.analytics.empty')).toBeInTheDocument();
-    expect(getWorkoutLogs).toHaveBeenLastCalledWith({ loadExercises: true, filtersetQuery: {
-        date__gte: expect.any(String), date__lt: expect.any(String),
-    } });
+    expect(getWorkoutLogs).toHaveBeenLastCalledWith({
+        loadExercises: true, filtersetQuery: {
+            date__gte: expect.any(String), date__lt: expect.any(String),
+        }
+    });
     expect(screen.getByRole('combobox', { name: 'routines.analytics.exercise' })).toBeEnabled();
     expect(screen.getByRole('combobox', { name: 'routines.analytics.exercise' })).toHaveValue('Squats');
     await user.click(screen.getByRole('combobox', { name: 'routines.analytics.exercise' }));
@@ -85,7 +94,11 @@ test('a new date range queries the server and shows an empty state without losin
 
 test('bodyweight volume is visible in its own unit instead of a zero weighted total', async () => {
     const user = userEvent.setup();
-    vi.mocked(getWorkoutLogs).mockResolvedValue([analyticsLog(), analyticsLog({ id: 'body', weight: 0, repetitions: 20 })]);
+    vi.mocked(getWorkoutLogs).mockResolvedValue([analyticsLog(), analyticsLog({
+        id: 'body',
+        weight: 0,
+        repetitions: 20
+    })]);
     renderPage();
     await user.click(screen.getByRole('combobox', { name: 'routines.analytics.metric' }));
     await user.click(screen.getByRole('option', { name: 'routines.volume' }));
@@ -98,8 +111,11 @@ test('bodyweight volume is visible in its own unit instead of a zero weighted to
 
 test('shows a pending state and can retry a failed history request', async () => {
     const user = userEvent.setup();
-    let rejectRequest: (error: Error) => void = () => {};
-    vi.mocked(getWorkoutLogs).mockImplementationOnce(() => new Promise((_, reject) => { rejectRequest = reject; }));
+    let rejectRequest: (error: Error) => void = () => {
+    };
+    vi.mocked(getWorkoutLogs).mockImplementationOnce(() => new Promise((_, reject) => {
+        rejectRequest = reject;
+    }));
     renderPage();
     expect(screen.queryByText('routines.analytics.empty')).not.toBeInTheDocument();
     await waitFor(() => expect(getWorkoutLogs).toHaveBeenCalled());
@@ -126,7 +142,10 @@ test('routine overview menu opens the independent analytics route even without r
     await user.click(link);
     expect(await screen.findByText('routines.analytics.description')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'routines.routines' })).toHaveAttribute('href', '/en/routine/overview');
-    await waitFor(() => expect(getWorkoutLogs).toHaveBeenCalledWith({ loadExercises: true, filtersetQuery: analyticsDateFilter('lastYear') }));
+    await waitFor(() => expect(getWorkoutLogs).toHaveBeenCalledWith({
+        loadExercises: true,
+        filtersetQuery: analyticsDateFilter('lastYear')
+    }));
 });
 
 test('persists the selected range and restores it when the page is reopened', async () => {

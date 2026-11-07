@@ -44,10 +44,14 @@ describe('exercise analytics aggregation', () => {
             analyticsLog({ id: 'zero', weight: 0 }),
             analyticsLog({ id: 'null', weight: null }),
             analyticsLog({ id: 'body', weightUnitId: 3, weight: 100 }),
-            analyticsLog({ id: 'seconds', repetitions: 30, weight: null, repetitionUnitId: 3,
-                repetitionUnitObj: new RepetitionUnit(3, 'Seconds', 'TIME', 1) }),
-            analyticsLog({ id: 'minutes', repetitions: 2, weight: 0, repetitionUnitId: 4,
-                repetitionUnitObj: new RepetitionUnit(4, 'Minutes', 'TIME', 60) }),
+            analyticsLog({
+                id: 'seconds', repetitions: 30, weight: null, repetitionUnitId: 3,
+                repetitionUnitObj: new RepetitionUnit(3, 'Seconds', 'TIME', 1)
+            }),
+            analyticsLog({
+                id: 'minutes', repetitions: 2, weight: 0, repetitionUnitId: 4,
+                repetitionUnitObj: new RepetitionUnit(4, 'Minutes', 'TIME', 60)
+            }),
         ];
         const result = aggregateAnalytics(logs, 'volume', all);
         expect(result.skipped).toBe(0);
@@ -60,7 +64,12 @@ describe('exercise analytics aggregation', () => {
     });
 
     test('uses API time metadata independently of the unit ID', () => {
-        const unit = new RepetitionUnitAdapter().fromJson({ id: 99, name: 'Minutes', unit_type: 'TIME', multiplier: 60 });
+        const unit = new RepetitionUnitAdapter().fromJson({
+            id: 99,
+            name: 'Minutes',
+            unit_type: 'TIME',
+            multiplier: 60
+        });
         const result = aggregateAnalytics([
             analyticsLog({ id: 'modern', repetitions: 2, repetitionUnitId: 99, repetitionUnitObj: unit }),
         ], 'volume', all);
@@ -68,7 +77,12 @@ describe('exercise analytics aggregation', () => {
     });
 
     test('muscle filters include primary and secondary matches once, and intersect with exercise', () => {
-        const secondary = new Exercise({ ...testExerciseSquats, id: 999, muscles: [], musclesSecondary: [testMuscleBiggus] });
+        const secondary = new Exercise({
+            ...testExerciseSquats,
+            id: 999,
+            muscles: [],
+            musclesSecondary: [testMuscleBiggus]
+        });
         const both = new Exercise({ ...testExerciseSquats, musclesSecondary: [testMuscleBiggus] });
         const logs = [
             analyticsLog({ exerciseObj: both }),
@@ -88,7 +102,11 @@ describe('exercise analytics aggregation', () => {
             analyticsLog({ id: 'invalid', repetitions: NaN }),
             analyticsLog({ id: 'plates', weightUnitId: 4 }),
             analyticsLog({ id: 'assistance', weight: -20 }),
-            analyticsLog({ id: 'distance', repetitionUnitId: 8, repetitionUnitObj: new RepetitionUnit(8, 'Meters', 'DISTANCE', 1) }),
+            analyticsLog({
+                id: 'distance',
+                repetitionUnitId: 8,
+                repetitionUnitObj: new RepetitionUnit(8, 'Meters', 'DISTANCE', 1)
+            }),
             analyticsLog({ id: 'date', date: new Date('invalid') }),
         ], 'volume', all);
         expect(result).toEqual({ series: [], skipped: 6 });
@@ -102,11 +120,15 @@ describe('exercise analytics aggregation', () => {
     test('unknown units and invalid duration multipliers cannot create a misleading value', () => {
         const logs = [
             analyticsLog({ id: 'no-rep-unit', repetitionUnitId: 1, repetitionUnitObj: null }),
-            analyticsLog({ id: 'no-multiplier', repetitionUnitId: 4,
-                repetitionUnitObj: new RepetitionUnit(4, 'Minutes', 'TIME', null) }),
+            analyticsLog({
+                id: 'no-multiplier', repetitionUnitId: 4,
+                repetitionUnitObj: new RepetitionUnit(4, 'Minutes', 'TIME', null)
+            }),
             analyticsLog({ id: 'negative-reps', repetitions: -1 }),
-            analyticsLog({ id: 'duration', repetitionUnitId: 3,
-                repetitionUnitObj: new RepetitionUnit(3, 'Seconds', 'TIME', 0) }),
+            analyticsLog({
+                id: 'duration', repetitionUnitId: 3,
+                repetitionUnitObj: new RepetitionUnit(3, 'Seconds', 'TIME', 0)
+            }),
         ];
         expect(aggregateAnalytics(logs, 'volume', all)).toEqual({ series: [], skipped: 4 });
         expect(aggregateAnalytics([analyticsLog({ weight: null })], 'weight', all)).toEqual({ series: [], skipped: 1 });

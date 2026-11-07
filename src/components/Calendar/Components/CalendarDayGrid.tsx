@@ -36,7 +36,8 @@ const CalendarDayGrid: React.FC<CalendarDayGridProps> = ({
             ))}
 
             {days.map((day) => (
-                <Grid size={12 / 7} key={`day-${day.date.toISOString()}`} sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Grid size={12 / 7} key={`day-${day.date.toISOString()}`}
+                      sx={{ display: 'flex', justifyContent: 'center' }}>
                     <CalendarDay
                         day={day}
                         currentMonth={currentMonth}

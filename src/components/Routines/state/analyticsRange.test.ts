@@ -19,8 +19,12 @@ test('restores a saved range without changing the measurements preference', () =
 });
 
 test('continues with the default when storage is blocked', () => {
-    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked'); });
-    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked'); });
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+        throw new Error('blocked');
+    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+        throw new Error('blocked');
+    });
     expect(loadAnalyticsRange()).toBe('lastYear');
     expect(() => saveAnalyticsRange('all')).not.toThrow();
 });

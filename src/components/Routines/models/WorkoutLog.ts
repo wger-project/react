@@ -17,6 +17,7 @@ export interface LogEntryForm {
     repetitionsTarget: number | string | null;
     weight: number | string;
     weightTarget: number | string | null;
+    notes: string;
 }
 
 
@@ -45,6 +46,7 @@ export class WorkoutLog {
     public restTime: number | null;
     public restTimeTarget: number | null;
 
+    public notes: string | null;
 
     public exerciseObj?: Exercise;
 
@@ -73,7 +75,9 @@ export class WorkoutLog {
         rirTarget?: number | null;
 
         restTime?: number | null;
-        restTimeTarget?: number | null
+        restTimeTarget?: number | null;
+
+        notes?: string | null;
     }) {
         // Note that all of these use ?? and not ||: zero is a meaningful value here.
         // Training to failure is 0 RiR, a bodyweight exercise has a weight of 0 and
@@ -103,6 +107,7 @@ export class WorkoutLog {
 
         this.restTime = data.restTime ?? null;
         this.restTimeTarget = data.restTimeTarget ?? null;
+        this.notes = data.notes || null;
     }
 
     get rirString(): string {
@@ -135,7 +140,8 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
             rirTarget: item.rir_target === null ? null : Number.parseFloat(item.rir_target),
 
             restTime: item.rest,
-            restTimeTarget: item.rest_target
+            restTimeTarget: item.rest_target,
+            notes: item.notes || null
         });
 
     toJson = (item: WorkoutLog) => ({
@@ -159,6 +165,7 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         rir_target: item.rirTarget,
 
         rest: item.restTime,
-        rest_target: item.restTimeTarget
+        rest_target: item.restTimeTarget,
+        notes: item.notes || null
     });
 }
