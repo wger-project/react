@@ -220,25 +220,65 @@ describe('SessionLogsForm', () => {
         expect(notesFields.length).toBeGreaterThan(0);
     });
 
-    test('shows last-session note as helper text when previous log has notes', async () => {
-        const logWithNote = new WorkoutLog({
-            ...testWorkoutLogs[0],
-            exerciseId: 345,
-            notes: 'Felt great last time',
-        });
+    test('shows the last note of the exercise from an earlier day', async () => {
         mockRoutineLogQuery.mockReturnValue({
             isSuccess: true,
-            data: [logWithNote],
+            data: [new WorkoutLog({
+                ...testWorkoutLogs[0],
+                exerciseId: 345,
+                date: new Date(2024, 4, 4, 18, 0),
+                notes: 'Felt great last time',
+            })],
         });
 
         render(<SessionLogsForm
             dayId={5}
             routineId={1}
-            selectedDate={DateTime.now()}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
             chosenSessionId={null}
         />);
 
-        expect(screen.getAllByText(/Felt great last time/).length).toBeGreaterThan(0);
+        expect(screen.getAllByText('routines.lastSession').length).toBeGreaterThan(0);
+    });
+
+    test('ignores notes from the logged day and later ones', async () => {
+        const noteOn = (date: Date) => new WorkoutLog({
+            ...testWorkoutLogs[0],
+            exerciseId: 345,
+            date: date,
+            notes: 'Not from an earlier day',
+        });
+        mockRoutineLogQuery.mockReturnValue({
+            isSuccess: true,
+            data: [noteOn(new Date(2024, 4, 5, 0, 0)), noteOn(new Date(2024, 4, 6, 9, 0))],
+        });
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
+        />);
+
+        expect(screen.queryByText('routines.lastSession')).not.toBeInTheDocument();
+    });
+
+    test('a note on a set without values shows the error and blocks the submit', async () => {
+        const user = userEvent.setup();
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            // No iteration planned for this date, so the sets start without values
+            selectedDate={DateTime.now()}
+            chosenSessionId={null}
+        />);
+        const notesField = screen.getAllByRole('textbox', { name: /notes/i })[0];
+        await user.type(notesField, 'Grip slipped');
+        await user.tab();
+
+        expect(await screen.findByText('routines.notesNeedValues')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /submit/i })).toBeDisabled();
     });
 
     test('submits notes value with log entry', async () => {

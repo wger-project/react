@@ -100,12 +100,13 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
     const handleSnackbarClose = () => setSnackbarOpen(false);
     const [exerciseIdToSwap, setExerciseIdToSwap] = useState<number | null>(null);
 
-    // Build a map of exerciseId → most recent note from previous logs
+    // Most recent note per exercise from the days before the one being logged
     const lastNoteByExercise = new Map<number, string>();
     if (logsQuery.isSuccess) {
+        const dayStart = selectedDate.startOf('day').toJSDate();
         const sorted = [...logsQuery.data].sort((a, b) => b.date.getTime() - a.date.getTime());
         for (const log of sorted) {
-            if (log.notes && !lastNoteByExercise.has(log.exerciseId)) {
+            if (log.notes && log.date < dayStart && !lastNoteByExercise.has(log.exerciseId)) {
                 lastNoteByExercise.set(log.exerciseId, log.notes);
             }
         }
@@ -119,7 +120,17 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
             yup.object().shape({
                 rir: yup.number().nullable(),
                 repetitions: yup.number().typeError(t('forms.enterNumber')).nullable(),
-                weight: yup.number().typeError(t('forms.enterNumber')).nullable()
+                weight: yup.number().typeError(t('forms.enterNumber')).nullable(),
+                // Sets without values are not saved, so neither would their note
+                notes: yup.string().test(
+                    'notes-need-values',
+                    t('routines.notesNeedValues'),
+                    // Empty fields arrive here as undefined, see yupSchema
+                    (value, context) => !value
+                        || context.parent.repetitions !== undefined
+                        || context.parent.weight !== undefined
+                        || context.parent.rir !== undefined
+                ),
             })
         ),
     });
@@ -157,6 +168,7 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
                     repetitionsTarget: '',
                     rir: '',
                     rirTarget: '',
+                    notes: '',
                     exercise: exercise,
                 };
             }
@@ -307,7 +319,7 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
                                 {field => <field.WgerTextField variant="standard"
                                                                title={t('notes')}
                                                                helperText={lastNoteByExercise.get(log.exercise?.id ?? 0)
-                                                                   ? `${t('routines.lastSession')}: ${lastNoteByExercise.get(log.exercise?.id ?? 0)}`
+                                                                   ? t('routines.lastSession', { note: lastNoteByExercise.get(log.exercise?.id ?? 0) })
                                                                    : undefined}
                                                                fieldProps={{ multiline: true }}
                                 />}
