@@ -122,6 +122,19 @@ describe("VariationSelect", () => {
         expect(screen.queryByText("Skull crusher")).not.toBeInTheDocument();
     });
 
+    test("filters exercises by the name of a non-English translation", async () => {
+        const user = userEvent.setup();
+        renderSelect();
+        const input = screen.getByRole("textbox", { name: /name/i });
+
+        // 'Kniebeuge' is the German translation of testExerciseSquats
+        await user.type(input, "KNIEBEU");
+
+        expect(screen.getByText("Squats")).toBeInTheDocument();
+        expect(screen.queryByText("Crunches")).not.toBeInTheDocument();
+        expect(screen.queryByText("Benchpress")).not.toBeInTheDocument();
+    });
+
     test("hides the current exercise (exerciseId prop) from the standalone list", () => {
         // Squats has id 345 and no variation group, so passing its id should hide it
         renderSelect({ exerciseId: SQUATS_ID });

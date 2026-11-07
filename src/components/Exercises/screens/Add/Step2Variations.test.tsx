@@ -189,4 +189,30 @@ describe("Test the add exercise step 2 component", () => {
         expect(screen.queryByText("Curls")).not.toBeInTheDocument();
         expect(screen.queryByText("Crunches")).not.toBeInTheDocument();
     });
+
+    test("can filter the exercises by the name of a non-English translation", async () => {
+        // Arrange
+        const user = userEvent.setup();
+        mockedUseExercisesQuery.mockImplementation(() => ({
+            isLoading: false,
+            isSuccess: true,
+            data: [
+                testExerciseBenchPress,
+                testExerciseCrunches,
+                testExerciseSquats,
+            ]
+        }));
+
+        // Act
+        renderStep();
+        const input = screen.getByRole('textbox', { name: /name/i });
+
+        // 'Kniebeuge' is the German translation of testExerciseSquats
+        await user.type(input, "KNIEBEU");
+
+        // Assert
+        expect(screen.getByText("Squats")).toBeInTheDocument();
+        expect(screen.queryByText("Benchpress")).not.toBeInTheDocument();
+        expect(screen.queryByText("Crunches")).not.toBeInTheDocument();
+    });
 });
