@@ -2,8 +2,8 @@ import { getExercisesByIds } from "@/components/Exercises/api/exercise";
 import { Exercise } from "@/components/Exercises/models/exercise";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
 import { WorkoutLog, WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
-import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
-import { fetchPaginated } from "@/core/lib/requests";
+import { ApiPath } from "@/core/lib/consts";
+import { fetchAll } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import axios from "axios";
 
@@ -61,28 +61,25 @@ export const getWorkoutLogs = async (options?
     const adapter = new WorkoutLogAdapter();
     const url = makeUrl(
         ApiPath.WORKOUT_LOG,
-        { query: { limit: API_MAX_PAGE_SIZE, ordering: '-date', ...filtersetQuery } }
+        { query: { ordering: '-date', ...filtersetQuery } }
     );
 
     const unitResponses = await Promise.all([getRoutineRepUnits(), getRoutineWeightUnits()]);
     const repUnits = unitResponses[0];
     const weightUnits = unitResponses[1];
 
-    const out: WorkoutLog[] = [];
-    for await (const page of fetchPaginated(url)) {
-        for (const logData of page) {
-            const log = adapter.fromJson(logData);
-            if (log.repetitionUnitId !== null) {
-                log.repetitionUnitObj = repUnits.find(e => e.id === log.repetitionUnitId) ?? null;
-            }
-
-            if (log.weightUnitId !== null) {
-                log.weightUnitObj = weightUnits.find(e => e.id === log.weightUnitId) ?? null;
-            }
-
-            out.push(log);
+    const out = await fetchAll(url, json => {
+        const log = adapter.fromJson(json);
+        if (log.repetitionUnitId !== null) {
+            log.repetitionUnitObj = repUnits.find(e => e.id === log.repetitionUnitId) ?? null;
         }
-    }
+
+        if (log.weightUnitId !== null) {
+            log.weightUnitObj = weightUnits.find(e => e.id === log.weightUnitId) ?? null;
+        }
+
+        return log;
+    });
 
     // Load the referenced exercises
     if (loadExercises) {

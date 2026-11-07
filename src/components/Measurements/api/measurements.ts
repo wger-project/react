@@ -4,7 +4,7 @@ import { MeasurementCategory, METRIC_TYPE_BODY_WEIGHT } from "@/components/Measu
 import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { ApiMeasurementCategoryType } from '@/types';
 import { API_MAX_PAGE_SIZE } from "@/core/lib/consts";
-import { fetchPaginated } from '@/core/lib/requests';
+import { fetchAll } from '@/core/lib/requests';
 import { makeHeader, makeUrl } from "@/core/lib/url";
 
 export const API_MEASUREMENTS_CATEGORY_PATH = 'measurement-category';
@@ -101,14 +101,7 @@ export const getMeasurementEntries = async (
         return data.results.map((entryData: unknown) => MeasurementEntry.fromJson(entryData));
     }
 
-    // Collect all pages of entries
-    const out: MeasurementEntry[] = [];
-    for await (const page of fetchPaginated(url, makeHeader())) {
-        for (const entryData of page) {
-            out.push(MeasurementEntry.fromJson(entryData));
-        }
-    }
-    return out;
+    return await fetchAll(url, MeasurementEntry.fromJson);
 };
 
 /** One page of a category's entries, newest first, as a table pages through them */
@@ -244,38 +237,17 @@ export const getOldestMeasurementEntry = async (
  * category list does not return on their own.
  */
 export const getAllMeasurementEntries = async (filtersetQuery: object = {}): Promise<MeasurementEntry[]> => {
-    const out: MeasurementEntry[] = [];
-    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, {
-        query: {
-            limit: API_MAX_PAGE_SIZE,
-            ...filtersetQuery,
-        }
-    });
-
-    for await (const page of fetchPaginated(url, makeHeader())) {
-        for (const entryData of page) {
-            out.push(MeasurementEntry.fromJson(entryData));
-        }
-    }
-    return out;
+    const url = makeUrl(API_MEASUREMENTS_ENTRY_PATH, { query: filtersetQuery });
+    return await fetchAll(url, MeasurementEntry.fromJson);
 };
 
 export const getMeasurementCategories = async (options?: MeasurementQueryOptions): Promise<MeasurementCategory[]> => {
     const { filtersetQueryCategories = {} } = options || {};
 
-    let categories: MeasurementCategory[] = [];
-    const categoryUrl = makeUrl(API_MEASUREMENTS_CATEGORY_PATH, {
-        query: {
-            limit: API_MAX_PAGE_SIZE,
-            ...filtersetQueryCategories
-        }
-    });
-
-    for await (const page of fetchPaginated(categoryUrl, makeHeader())) {
-        for (const catData of page) {
-            categories.push(MeasurementCategory.fromJson(catData));
-        }
-    }
+    let categories = await fetchAll(
+        makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { query: filtersetQueryCategories }),
+        MeasurementCategory.fromJson
+    );
 
     // The official body weight category is managed via the body weight screens,
     // don't surface it between the regular measurement categories
@@ -335,14 +307,8 @@ export const getMeasurementCategory = async (id: string): Promise<MeasurementCat
     const category = MeasurementCategory.fromJson(receivedCategories);
 
     // Children of a multi-value group; empty for plain categories
-    const childrenUrl = makeUrl(API_MEASUREMENTS_CATEGORY_PATH, {
-        query: { parent: id, limit: API_MAX_PAGE_SIZE }
-    });
-    for await (const page of fetchPaginated(childrenUrl, makeHeader())) {
-        for (const childData of page) {
-            category.children.push(MeasurementCategory.fromJson(childData));
-        }
-    }
+    const childrenUrl = makeUrl(API_MEASUREMENTS_CATEGORY_PATH, { query: { parent: id } });
+    category.children.push(...await fetchAll(childrenUrl, MeasurementCategory.fromJson));
     category.children.sort((a, b) => a.order - b.order);
 
     return category;
