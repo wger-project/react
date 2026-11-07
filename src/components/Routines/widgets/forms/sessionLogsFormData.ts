@@ -58,10 +58,13 @@ interface PayloadContext {
     routineId: number,
 }
 
+/** Whether the set has a value, sets without one are not saved */
+export const isFilledIn = (log: LogEntryForm) => log.rir !== '' || log.repetitions !== '' || log.weight !== '';
+
 /** The logs the user filled in, as the server takes them; untouched sets are left out */
 export function logsPayload(logs: LogEntryForm[], { date, sessionId, iteration, dayId, routineId }: PayloadContext) {
     return logs
-        .filter(l => l.rir !== '' || l.repetitions !== '' || l.weight !== '')
+        .filter(isFilledIn)
         .map(l => ({
                 date: date.toISO(),
                 session: sessionId,

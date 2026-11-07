@@ -357,6 +357,51 @@ describe('SessionLogsForm', () => {
         expect(mockMutateAsync).not.toHaveBeenCalled();
     });
 
+    test('a second save does not post the already saved logs again', async () => {
+        const user = userEvent.setup();
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
+            saveSession={mockSaveSession}
+        />);
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
+        await waitFor(() => expect(mockMutateAsync).toHaveBeenCalledTimes(1));
+
+        await user.click(screen.getByRole('button', { name: 'routines.addSet' }));
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
+
+        await waitFor(() => expect(mockSaveSession).toHaveBeenCalledTimes(2));
+        expect(mockMutateAsync).toHaveBeenCalledTimes(2);
+        expect(mockMutateAsync.mock.calls[1][0]).toHaveLength(1);
+    });
+
+    test('shows the error when saving the logs fails', async () => {
+        const user = userEvent.setup();
+        mockMutateAsync.mockRejectedValue(new Error('Server error'));
+        mockAddLogsQuery.mockReturnValue({
+            isPending: false,
+            isError: true,
+            error: new Error('Server error'),
+            mutateAsync: mockMutateAsync,
+        });
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.fromISO('2024-05-05T12:00:00')}
+            chosenSessionId={null}
+            saveSession={mockSaveSession}
+        />);
+        await user.click(screen.getByRole('button', { name: /^save$/i }));
+
+        await waitFor(() => expect(mockMutateAsync).toHaveBeenCalled());
+        expect(screen.getByText('Server error')).toBeInTheDocument();
+        expect(screen.queryByText('success')).not.toBeInTheDocument();
+    });
+
     test('can not save while the user still has to pick one of the day\'s sessions', async () => {
         mockUseSessionOfDay.mockReturnValue({
             sessions: [testWorkoutSession, new WorkoutSession({ ...testWorkoutSession, id: 'other' })],

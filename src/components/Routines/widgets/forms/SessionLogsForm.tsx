@@ -15,6 +15,7 @@ import {
 } from "@/components/Routines/queries";
 import { sessionNeedsChoice } from "@/components/Routines/widgets/forms/SessionForm";
 import {
+    isFilledIn,
     logsPayload,
     plannedLogs,
     SessionLogsFormValues
@@ -23,6 +24,7 @@ import { useAppForm } from "@/core/forms/appForm";
 import { defaultsKey, submitHandler, yupSchema } from "@/core/forms/formUtils";
 import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "@/core/lib/consts";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { ChatBubble, ChatBubbleOutlineOutlined, MoreVert, SwapHoriz } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -146,6 +148,10 @@ const SessionLogsFields = (
     const [menu, setMenu] = useState<{ anchor: HTMLElement, exerciseId: number } | null>(null);
     // Sets whose note field the user opened; a set with a note always shows it
     const [openNotes, setOpenNotes] = useState<Set<string>>(new Set());
+    // Sets already saved for a day: another save must not post them again
+    const [saved, setSaved] = useState<{ day: string | null, keys: Set<string> }>({ day: null, keys: new Set() });
+    const day = selectedDate.toISODate();
+    const savedKeys = saved.day === day ? saved.keys : new Set<string>();
 
     // Most recent note per exercise from the days before the one being logged
     const lastNoteByExercise = new Map<number, string>();
@@ -191,7 +197,8 @@ const SessionLogsFields = (
             return;
         }
 
-        const payload = logsPayload(values.logs, {
+        const toSave = values.logs.filter(log => isFilledIn(log) && !savedKeys.has(log.clientKey));
+        const payload = logsPayload(toSave, {
             date: selectedDate,
             sessionId,
             iteration,
@@ -199,7 +206,13 @@ const SessionLogsFields = (
             routineId,
         });
         if (payload.length > 0) {
-            await addLogsQuery.mutateAsync(payload);
+            try {
+                await addLogsQuery.mutateAsync(payload);
+            } catch {
+                // Shown by FormQueryErrors
+                return;
+            }
+            setSaved({ day, keys: new Set([...savedKeys, ...toSave.map(log => log.clientKey)]) });
         }
         setSnackbarOpen(true);
     };
@@ -216,7 +229,7 @@ const SessionLogsFields = (
         }
 
         const updatedLogs = form.state.values.logs.map((log) => {
-            if (exerciseIdToSwap === log.exercise!.id) {
+            if (exerciseIdToSwap === log.exercise!.id && !savedKeys.has(log.clientKey)) {
                 // Empty the rest of the values, this is a new exercise not in the routine
                 return {
                     ...log,
@@ -247,8 +260,9 @@ const SessionLogsFields = (
         return next;
     });
 
-    const numberFieldProps = (adornment: React.ReactNode, label: string) => ({
+    const numberFieldProps = (adornment: React.ReactNode, label: string, disabled: boolean) => ({
         variant: "standard" as const,
+        disabled,
         slotProps: {
             input: {
                 endAdornment: <InputAdornment position="end">
@@ -317,6 +331,7 @@ const SessionLogsFields = (
                                             const setLabel = t('routines.setNr', { number: setIndex + 1 });
                                             const hasNote = log.notes !== '';
                                             const showNote = hasNote || openNotes.has(log.clientKey);
+                                            const isSaved = savedKeys.has(log.clientKey);
 
                                             return <Fragment key={log.clientKey}>
                                                 <TableRow>
@@ -334,7 +349,8 @@ const SessionLogsFields = (
                                                                     log.repetitionsUnit?.id !== REP_UNIT_REPETITIONS
                                                                         ? log.repetitionsUnit?.name
                                                                         : null,
-                                                                    `${setLabel}: ${t('server.repetitions')}`
+                                                                    `${setLabel}: ${t('server.repetitions')}`,
+                                                                    isSaved
                                                                 )}
                                                             />}
                                                         </form.AppField>
@@ -345,7 +361,8 @@ const SessionLogsFields = (
                                                                 title=""
                                                                 fieldProps={numberFieldProps(
                                                                     log.weightUnit?.name,
-                                                                    `${setLabel}: ${t('weight')}`
+                                                                    `${setLabel}: ${t('weight')}`,
+                                                                    isSaved
                                                                 )}
                                                             />}
                                                         </form.AppField>
@@ -355,6 +372,7 @@ const SessionLogsFields = (
                                                             {field => <TextField
                                                                 fullWidth
                                                                 select
+                                                                disabled={isSaved}
                                                                 variant="standard"
                                                                 name={field.name}
                                                                 value={field.state.value}
@@ -380,6 +398,7 @@ const SessionLogsFields = (
                                                         <Stack direction="row">
                                                             <IconButton
                                                                 size="small"
+                                                                disabled={isSaved}
                                                                 aria-label={`${setLabel}: ${t('notes')}`}
                                                                 aria-expanded={showNote}
                                                                 color={hasNote ? 'primary' : 'default'}
@@ -391,6 +410,7 @@ const SessionLogsFields = (
                                                             </IconButton>
                                                             <IconButton
                                                                 size="small"
+                                                                disabled={isSaved}
                                                                 aria-label={`${setLabel}: ${t('delete')}`}
                                                                 onClick={() => form.removeFieldValue('logs', index)}
                                                             >
@@ -408,6 +428,7 @@ const SessionLogsFields = (
                                                                 fieldProps={{
                                                                     variant: "standard",
                                                                     multiline: true,
+                                                                    disabled: isSaved,
                                                                     placeholder: t('notes'),
                                                                     autoFocus: !hasNote,
                                                                     slotProps: {
@@ -466,6 +487,8 @@ const SessionLogsFields = (
                     <ListItemText>{t('delete')}</ListItemText>
                 </MenuItem>
             </Menu>
+
+            <FormQueryErrors mutationQuery={addLogsQuery} />
 
             {/* Stays in view, so saving doesn't need a scroll to the end of a long day */}
             <Paper
