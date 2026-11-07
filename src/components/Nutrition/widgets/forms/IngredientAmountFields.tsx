@@ -122,7 +122,7 @@ const SelectedIngredient = (props: { ingredient: Ingredient, onClear: () => void
 };
 
 /** Energy of an entry and how it splits into the macronutrients */
-const MacrosSummary = (props: { values: NutritionalValues, grams: number | null }) => {
+export const MacrosSummary = (props: { values: NutritionalValues, grams: number | null }) => {
     const [t, i18n] = useTranslation();
     const { values } = props;
 
