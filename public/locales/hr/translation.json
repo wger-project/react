@@ -209,9 +209,9 @@
         "minLengthRoutine_one": "Rutina mora trajati najmanje {{count}} tjedan",
         "minLengthRoutine_few": "Rutina mora trajati najmanje {{count}} tjedna",
         "minLengthRoutine_other": "Rutina mora trajati najmanje {{count}} tjedana",
-        "maxLengthRoutine_one": "Rutina mora trajati najviše {{count}} tjedan",
-        "maxLengthRoutine_few": "Rutina mora trajati najviše {{count}} tjedna",
-        "maxLengthRoutine_other": "Rutina mora trajati najviše {{count}} tjedana",
+        "maxLengthRoutine_one": "Rutina može trajati najviše {{count}} tjedan",
+        "maxLengthRoutine_few": "Rutina može trajati najviše {{count}} tjedna",
+        "maxLengthRoutine_other": "Rutina može trajati najviše {{count}} tjedana",
         "resultingRoutine": "Rezultirajuća rutina",
         "deleteDayConfirmation": "Ovo će ukloniti sve serije, vježbe i pravila napredovanja",
         "exerciseHasProgression": "Ova vježba ima pravila napredovanja i ne može se ovdje uređivati. Za uređivanje klikni gumb.",
@@ -288,7 +288,7 @@
             "empty": "Nema podataka za ove filtre i metriku. Pokušaj jednu drugu metriku ili dulji vremenski raspon.",
             "skipped_one": "{{count}} zapis sadrži nedostajuće vrijednosti ili nekompatibilne jedinice za ovu metriku i ne prikazuje se.",
             "skipped_few": "{{count}} zapisa sadrže nedostajuće vrijednosti ili nekompatibilne jedinice za ovu metriku i ne prikazuju se.",
-            "skipped_other": "{{count}} zapisa sadrži nedostajuće vrijednosti ili nekompatibilne jedinice za ovu metriku i ne prikazuje se.",
+            "skipped_other": "{{count}} zapisa sadrži nedostajuće vrijednosti ili nekompatibilne jedinice za ovu metriku i ne prikazuju se.",
             "volumeHelp": "Dnevni volumen (težina × ponavljanja), pretvoren u kg × ponavljanja. Serije s tjelesnom težinom bez vanjske težine koriste ponavljanja; vremenski mjerene serije koriste sekunde. One se prikazuju zasebno.",
             "repsHelp": "Ukupan dnevni broj ponavljanja. Vremenski mjerene serije i serije temeljene na udaljenosti se ne računaju kao ponavljanja.",
             "muscleHelp": "Mišićne grupe uključuju primarne i sekundarne mišiće; svaka serija broji se samo jednom."
@@ -379,7 +379,7 @@
         "customMeasurement": "Prilagođeno mjerenje",
         "calculations": {
             "paramsHelp": {
-                "exercise_ids": "Između {{min}} i {{max}} vježbi, odabrano je {count}.",
+                "exercise_ids": "Između {{min}} i {{max}} vježbi, odabrano je {{count}}.",
                 "max_reps": "{{min}} do {{max}}. Serije iznad ovoga se zanemaruju.",
                 "window_days": "{{min}} do {{max}}. Koliko daleko unatrag se računa najbolja serija."
             },
@@ -515,7 +515,7 @@
     "calendar": "Kalendar",
     "entries": "Unosi",
     "no_entries_for_day": "Nema unosa za ovaj dan",
-    "editName": "Uredi {{ime}}",
+    "editName": "Uredi {{name}}",
     "start": "Počni",
     "end": "Kraj",
     "comment": "Komentar",
