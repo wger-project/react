@@ -72,7 +72,9 @@
         "editAuthorNotice": "Зміни публікуються за ліцензією CC BY-SA 4.0, а ваше ім’я користувача додається до списку авторів цієї вправи.",
         "contentLicense": "Матеріали на цій сторінці доступні за ліцензією <0>CC BY-SA 4.0</0>.",
         "authorsList": "Автори:: {{authors}}",
-        "lastUpdate": "Останнє оновлення:: {{date}}"
+        "lastUpdate": "Останнє оновлення:: {{date}}",
+        "personalExercisesWarningTitle": "Не додавайте особисті вправи",
+        "personalExercisesWarningBody": "Додані вправи потрапляють до спільної бази даних і стають доступними всім користувачам. Додавайте лише загальні вправи, які можуть бути корисними кожному. Вправи, створені виключно для забезпечення імпорту з інших застосунків, буде видалено."
     },
     "noResults": "Немає результатів",
     "noResultsDescription": "Для цього запиту не знайдено результатів. Спробуйте зменшити кількість фільтрів.",
@@ -144,7 +146,10 @@
         "endBeforeStart": "Кінцеве значення не може передувати початку",
         "enterNumber": "Введіть дійсне число",
         "maxLessThanMin": "Максимальне значення має бути більшим за мінімальне",
-        "enterInteger": "Будь ласка, введіть ціле число"
+        "enterInteger": "Будь ласка, введіть ціле число",
+        "minWords_one": "Будь ласка, введіть щонайменше {{count}} слово",
+        "minWords_few": "Будь ласка, введіть щонайменше {{count}} слова",
+        "minWords_many": "Будь ласка, введіть щонайменше {{count}} слів"
     },
     "category": "Категорія",
     "cancel": "Скасувати",
@@ -310,8 +315,10 @@
         "metricType": "Тип метрики",
         "chartAverageWindowDays_one": "Середнє за {{count}} день",
         "chartAverageWindowDays_few": "Середнє за {{count}} дні",
+        "chartAverageWindowDays_many": "Середнє за {{count}} днів",
         "distributionDayCount_one": "{{count}} день",
         "distributionDayCount_few": "{{count}} дні",
+        "distributionDayCount_many": "{{count}} днів",
         "calculations": {
             "paramsHelp": {
                 "window_days": "Діапазон від {{min}} до {{max}}. Це період часу, який враховується для розрахунку найкращого показника.",
@@ -360,13 +367,11 @@
             "sluggish": "Плавний"
         },
         "chartAverageWindow": "Усереднення за",
-        "chartAverageWindowDays_many": "Середнє за {{count}} днів",
         "distributionMedian": "Медіана",
         "distributionLatest": "Останнє",
         "distributionEntryCount_one": "{{count}} запис",
         "distributionEntryCount_few": "{{count}} записи",
         "distributionEntryCount_many": "{{count}} записів",
-        "distributionDayCount_many": "{{count}} днів",
         "partOfGroup": "У складі групи",
         "noGroup": "Без групи",
         "metricTypes": {
@@ -545,5 +550,6 @@
     "totalChange": "Загальний прогрес",
     "preview": "Попередній перегляд",
     "off": "Вимкнено",
-    "useMarkdownHint": "Для форматування тексту можна використовувати базовий Markdown: курсив, жирний шрифт, — список"
+    "useMarkdownHint": "Для форматування тексту можна використовувати базовий Markdown: курсив, жирний шрифт, — список",
+    "syncedEntryOverwriteWarning": "Зміни цього запису можуть бути перезаписані застосунком, з якого його було імпортовано"
 }
