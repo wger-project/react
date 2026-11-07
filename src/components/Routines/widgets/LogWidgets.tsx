@@ -2,7 +2,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { Box, Card, CardContent, Typography } from '@mui/material';
+import ChatBubbleOutlineOutlined from "@mui/icons-material/ChatBubbleOutlineOutlined";
+import { Box, Card, CardContent, Tooltip as MuiTooltip, Typography } from '@mui/material';
 import Grid from "@mui/material/Grid";
 import {
     DataGrid,
@@ -160,10 +161,19 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
         {
             field: 'notes',
             type: 'string',
-            flex: 2,
+            width: 90,
+            align: 'center',
+            headerAlign: 'center',
+            sortable: false,
             disableColumnMenu: true,
             editable: true,
             headerName: t('notes'),
+            // The full text doesn't fit the column, it is in the tooltip
+            renderCell: ({ value }) => value
+                ? <MuiTooltip title={value} slotProps={{ tooltip: { sx: { whiteSpace: 'pre-line' } } }}>
+                    <ChatBubbleOutlineOutlined fontSize="small" color="action" sx={{ verticalAlign: 'middle' }} />
+                </MuiTooltip>
+                : null,
         },
         {
             field: 'actions',
