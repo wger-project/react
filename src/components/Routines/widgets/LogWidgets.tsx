@@ -1,8 +1,18 @@
+import { Exercise } from "@/components/Exercises";
+import { useDisplayWeightUnit } from "@/components/Measurements";
+import { RIR_VALUES_SELECT_LIST } from "@/components/Routines/models/BaseConfig";
+import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
+import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "@/components/Routines/queries";
+import { generateChartColors } from "@/core/lib/colors";
+import { PAGINATION_OPTIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/core/lib/consts";
+import { dateToLocale, luxonDateTimeToLocale } from "@/core/lib/date";
+import { convertWeight, WeightUnit } from "@/core/lib/weightUnit";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import CancelIcon from "@mui/icons-material/Cancel";
+import ChatBubbleOutlineOutlined from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import ChatBubbleOutlineOutlined from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import { Box, Card, CardContent, Tooltip as MuiTooltip, Typography } from '@mui/material';
 import Grid from "@mui/material/Grid";
 import {
@@ -17,30 +27,11 @@ import {
     GridRowModesModel,
     GridRowsProp
 } from "@mui/x-data-grid";
-import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { Exercise } from "@/components/Exercises";
-import { useDisplayWeightUnit } from "@/components/Measurements";
-import { RIR_VALUES_SELECT_LIST } from "@/components/Routines/models/BaseConfig";
-import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
-import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "@/components/Routines/queries";
 import { DateTime } from "luxon";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import {
-    CartesianGrid,
-    Legend,
-    Scatter,
-    ScatterChart,
-    Tooltip,
-    TooltipContentProps,
-    XAxis,
-    YAxis
-} from "recharts";
+import { CartesianGrid, Legend, Scatter, ScatterChart, Tooltip, TooltipContentProps, XAxis, YAxis } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
-import { generateChartColors } from "@/core/lib/colors";
-import { PAGINATION_OPTIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/core/lib/consts";
-import { dateToLocale, luxonDateTimeToLocale } from "@/core/lib/date";
-import { convertWeight, WeightUnit } from "@/core/lib/weightUnit";
 
 
 export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logEntries: WorkoutLog[] | undefined }) => {

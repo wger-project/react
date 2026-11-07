@@ -1,9 +1,10 @@
 import { Exercise } from '@/components/Exercises';
-import { analyticsDateFilter } from '@/components/Routines/models/analytics';
 import { getLanguages } from "@/components/Exercises/api/language";
-import { getWorkoutLogs } from "@/components/Routines/api/workoutLogs";
 import { getRoutinesShallow } from "@/components/Routines/api/routine";
+import { getWorkoutLogs } from "@/components/Routines/api/workoutLogs";
+import { analyticsDateFilter } from '@/components/Routines/models/analytics';
 import { ExerciseAnalytics } from "@/components/Routines/screens/Overview/ExerciseAnalytics";
+import { WgerRoutes } from "@/routes";
 import { analyticsLog } from "@/tests/analyticsTestData";
 import { testExerciseBenchPress, testExerciseSquats, testLanguages, testMuscleBiggus } from "@/tests/exerciseTestdata";
 import { getTestQueryClient } from "@/tests/queryClient";
@@ -12,7 +13,6 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { WgerRoutes } from "@/routes";
 
 vi.mock('@/components/Routines/api/workoutLogs');
 vi.mock('@/components/Exercises/api/language');

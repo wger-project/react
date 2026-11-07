@@ -27,18 +27,6 @@ export class MeasurementEntry {
         return this.source !== 'user' && this.isEditable;
     }
 
-    static clone(other: MeasurementEntry, overrides?: Partial<Pick<MeasurementEntry, 'id' | 'category' | 'date' | 'value' | 'notes' | 'extraData'>>): MeasurementEntry {
-        return new MeasurementEntry(
-            overrides?.id ?? other.id,
-            overrides?.category ?? other.category,
-            overrides?.date ?? other.date,
-            overrides?.value ?? other.value,
-            overrides?.notes ?? other.notes,
-            other.source,
-            overrides?.extraData ?? other.extraData,
-        );
-    }
-
     /**
      * The unit the value was entered in: extra_data.unit, falling back to the
      * category unit when absent (same chain as the server)
@@ -78,6 +66,18 @@ export class MeasurementEntry {
 
     private convert(value: number, targetUnit: string, categoryUnit: string): number {
         return convertStoredValue(value, this.extraData.unit as string, categoryUnit, targetUnit);
+    }
+
+    static clone(other: MeasurementEntry, overrides?: Partial<Pick<MeasurementEntry, 'id' | 'category' | 'date' | 'value' | 'notes' | 'extraData'>>): MeasurementEntry {
+        return new MeasurementEntry(
+            overrides?.id ?? other.id,
+            overrides?.category ?? other.category,
+            overrides?.date ?? other.date,
+            overrides?.value ?? other.value,
+            overrides?.notes ?? other.notes,
+            other.source,
+            overrides?.extraData ?? other.extraData,
+        );
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
