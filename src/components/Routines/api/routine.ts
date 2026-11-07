@@ -8,7 +8,8 @@ import { Routine } from "@/components/Routines/models/Routine";
 import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
 import { RoutineLogData, RoutineLogDataAdapter } from "@/components/Routines/models/RoutineLogData";
 import { ResponseType } from "@/core/api/responseType";
-import { ApiPath } from "@/core/lib/consts";
+import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
+import { fetchPaginated } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import axios from 'axios';
 
@@ -115,15 +116,13 @@ export const processRoutine = async (id: number): Promise<Routine> => {
  * Note: this returns all the data, including all sub-objects
  */
 export const getRoutines = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false } });
-    const response = await axios.get<ResponseType<Routine>>(
-        url,
-        { headers: makeHeader() }
-    );
+    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false, limit: API_MAX_PAGE_SIZE } });
 
     const out: Routine[] = [];
-    for (const routineData of response.data.results) {
-        out.push(await processRoutine(routineData.id!));
+    for await (const page of fetchPaginated(url, makeHeader())) {
+        for (const routineData of page as Routine[]) {
+            out.push(await processRoutine(routineData.id!));
+        }
     }
     return out;
 };
@@ -157,34 +156,25 @@ export const getRoutine = async (id: number): Promise<Routine> => {
  *
  * Note: strictly only the routine data, no days or any other sub-objects
  */
-export const getRoutinesShallow = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false } });
-    const response = await axios.get<ResponseType<Routine>>(
-        url,
-        { headers: makeHeader() }
-    );
+const getRoutinesFromUrl = async (url: string): Promise<Routine[]> => {
+    const out: Routine[] = [];
+    for await (const page of fetchPaginated(url, makeHeader())) {
+        out.push(...page.map(routineData => Routine.fromJson(routineData)));
+    }
+    return out;
+};
 
-    return response.data.results.map(routineData => Routine.fromJson(routineData)).filter(routine => routine.isNotTemplate);
+export const getRoutinesShallow = async (): Promise<Routine[]> => {
+    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false, limit: API_MAX_PAGE_SIZE } });
+    return (await getRoutinesFromUrl(url)).filter(routine => routine.isNotTemplate);
 };
 
 export const getPrivateTemplatesShallow = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.PRIVATE_TEMPLATE);
-    const response = await axios.get<ResponseType<Routine>>(
-        url,
-        { headers: makeHeader() }
-    );
-
-    return response.data.results.map(routineData => Routine.fromJson(routineData));
+    return await getRoutinesFromUrl(makeUrl(ApiPath.PRIVATE_TEMPLATE, { query: { limit: API_MAX_PAGE_SIZE } }));
 };
 
 export const getPublicTemplatesShallow = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.PUBLIC_TEMPLATE);
-    const response = await axios.get<ResponseType<Routine>>(
-        url,
-        { headers: makeHeader() }
-    );
-
-    return response.data.results.map(routineData => Routine.fromJson(routineData));
+    return await getRoutinesFromUrl(makeUrl(ApiPath.PUBLIC_TEMPLATE, { query: { limit: API_MAX_PAGE_SIZE } }));
 };
 
 export const addRoutine = async (routine: Routine): Promise<Routine> => {

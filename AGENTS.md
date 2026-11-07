@@ -62,6 +62,9 @@ components/<Domain>/
   needed as a prop from the page that composes both.
 - **Components use `queries/`, not `api/`.** Put new endpoints in `api/`, wrap them in a hook in `queries/`, export
   what other domains need from `index.ts`.
+- **List endpoints are paginated** (server default: 20 per page). Functions that should return every entry pass
+  `limit: API_MAX_PAGE_SIZE` and loop over `fetchPaginated()` (see `getMuscles`), never read only `data.results` of
+  the first response. A single page is fine only with an intentional `limit` (latest entry, search, cursor paging).
 - **`core/` or domain?** Only promote to `core/` when two unrelated domains use it. When in doubt, keep it in the
   domain.
 - **Types** live with the code that owns them, no central `types/` folder.

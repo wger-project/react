@@ -4,6 +4,8 @@ import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutrition
 import { getMealsForPlan } from "@/components/Nutrition/api/meal";
 import { ResponseType } from "@/core/api/responseType";
 import { ApiNutritionalPlanType } from '@/types';
+import { API_MAX_PAGE_SIZE } from "@/core/lib/consts";
+import { fetchPaginated } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 
 export const API_NUTRITIONAL_PLAN_PATH = 'nutritionplan';
@@ -13,11 +15,11 @@ export type NutritionalPlanOptions = {
 }
 
 export const getNutritionalPlansSparse = async (): Promise<NutritionalPlan[]> => {
-    const { data: receivedPlans } = await axios.get<ResponseType<ApiNutritionalPlanType>>(
-        makeUrl(API_NUTRITIONAL_PLAN_PATH),
-        { headers: makeHeader() },
-    );
-    return receivedPlans.results.map((plan) => nutritionalPlanAdapter.fromJson(plan));
+    const out: NutritionalPlan[] = [];
+    for await (const page of fetchPaginated(makeUrl(API_NUTRITIONAL_PLAN_PATH, { query: { limit: API_MAX_PAGE_SIZE } }))) {
+        out.push(...(page as ApiNutritionalPlanType[]).map((plan) => nutritionalPlanAdapter.fromJson(plan)));
+    }
+    return out;
 };
 
 export const getLastNutritionalPlan = async (): Promise<NutritionalPlan | null> => {
