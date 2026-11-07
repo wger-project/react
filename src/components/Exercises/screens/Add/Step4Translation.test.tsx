@@ -116,7 +116,8 @@ describe("Test the add exercise step 4 component", () => {
     });
 
     const VALID_DESCRIPTION =
-        "Eine ausreichend lange Beschreibung der Übung, die die yup-Mindestlänge erfüllt.";
+        "Stelle dich aufrecht hin, die Füße schulterbreit, und halte die Kurzhanteln seitlich am Körper. "
+        + "Beuge langsam beide Arme bis zu den Schultern und senke die Gewichte kontrolliert wieder ab.";
 
     async function fillTranslation(user: ReturnType<typeof userEvent.setup>) {
         // Enable the form

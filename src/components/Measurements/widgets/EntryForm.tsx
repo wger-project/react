@@ -57,7 +57,7 @@ export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
             .required(t('forms.fieldRequired')),
         notes: yup
             .string()
-            .max(100, t('forms.maxLength', { value: '100' })),
+            .max(100, t('forms.maxLength', { count: 100 })),
     });
 
     const initialDate = entry ? entry.date : new Date();

@@ -6,9 +6,15 @@ import { AliasItem, ExerciseAliases } from "@/components/Exercises/forms/Exercis
 import { ExerciseEquipmentSelect } from "@/components/Exercises/forms/ExerciseEquipmentSelect";
 import { ExerciseName } from "@/components/Exercises/forms/ExerciseName";
 import { ExerciseSelect } from "@/components/Exercises/forms/ExerciseSelect";
-import { alternativeNameValidator, categoryValidator, nameValidator } from "@/components/Exercises/forms/yupValidators";
+import {
+    alternativeNameValidator,
+    authorValidator,
+    categoryValidator,
+    nameValidator
+} from "@/components/Exercises/forms/yupValidators";
 import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery, } from "@/components/Exercises/queries";
 import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
+import { useProfileQuery } from "@/components/User";
 import { useAppForm } from "@/core/forms/appForm";
 import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import React, { useEffect, useState } from "react";
@@ -20,12 +26,24 @@ import * as yup from "yup";
 interface Step1Values {
     nameEn: string,
     newAlternativeNameEn: AliasItem[],
+    author: string,
     // the empty string stands in for "not picked yet", MUI selects don't accept null
     category: number | '',
     equipment: number[],
 }
 
-export const Step1Basics = ({ onContinue }: StepProps) => {
+/** Waits for the profile, the username is the default author */
+export const Step1Basics = (props: StepProps) => {
+    const profileQuery = useProfileQuery();
+
+    if (profileQuery.isLoading) {
+        return <LoadingWidget />;
+    }
+
+    return <Step1BasicsForm {...props} username={profileQuery.data?.username ?? ''} />;
+};
+
+const Step1BasicsForm = ({ onContinue, username }: StepProps & { username: string }) => {
     const [t] = useTranslation();
     const [state, dispatch] = useExerciseSubmissionStateValue();
     const [primaryMuscles, setPrimaryMuscles] = useState<number[]>(state.muscles);
@@ -48,6 +66,7 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
     const validationSchema = yup.object({
         nameEn: nameValidator(),
         newAlternativeNameEn: alternativeNameValidator(),
+        author: authorValidator(),
         category: categoryValidator(),
     });
 
@@ -55,6 +74,7 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
         nameEn: state.nameEn,
         // The alias field and its validator work with objects, the state keeps plain strings
         newAlternativeNameEn: state.alternativeNamesEn.map(alias => ({ alias })),
+        author: state.author !== '' ? state.author : username,
         category: state.category !== null ? state.category : '',
         equipment: state.equipment,
     };
@@ -66,6 +86,7 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
             dispatch(exerciseReducer.setNameEn(value.nameEn));
             dispatch(exerciseReducer.setCategory(value.category as number));
             dispatch(exerciseReducer.setAlternativeNamesEn(value.newAlternativeNameEn.map(item => item.alias)));
+            dispatch(exerciseReducer.setAuthor(value.author.trim()));
             dispatch(exerciseReducer.setEquipment(value.equipment));
 
             onContinue!();
@@ -77,6 +98,13 @@ export const Step1Basics = ({ onContinue }: StepProps) => {
             <Stack spacing={2}>
                 <form.AppField name="nameEn">{() => <ExerciseName />}</form.AppField>
                 <form.AppField name="newAlternativeNameEn">{() => <ExerciseAliases />}</form.AppField>
+                <form.AppField name="author">
+                    {field => <field.WgerTextField
+                        title={t('licenses.authors')}
+                        variant="standard"
+                        helperText={t('exercises.authorHelpText')}
+                    />}
+                </form.AppField>
 
                 {categoryQuery.isLoading
                     ? <Box> <LoadingWidget /> </Box>

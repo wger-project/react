@@ -9,6 +9,7 @@ import {
     testMuscleRectusAbdominis
 } from "@/tests/exerciseTestdata";
 import { testRoutine1, testRoutineDayData1 } from "@/tests/workoutRoutinesTestData";
+import i18n from "i18next";
 import { DateTime } from "luxon";
 
 describe('Routine model tests', () => {
@@ -55,7 +56,7 @@ describe('Routine model tests', () => {
         // Assert
         expect(duration.days).toEqual(1);
         expect(duration.weeks).toEqual(0);
-        expect(durationText).toEqual('durationWeeksDays');
+        expect(durationText).toEqual('durationWeeks, durationDays');
     });
 
     test('correctly calculates the routine duration - exactly one week', () => {
@@ -85,7 +86,23 @@ describe('Routine model tests', () => {
         // Assert
         expect(duration.days).toEqual(2);
         expect(duration.weeks).toEqual(1);
-        expect(durationText).toEqual('durationWeeksDays');
+        expect(durationText).toEqual('durationWeeks, durationDays');
+    });
+
+    test('passes the numeric weeks and days as plural counts', () => {
+        // Arrange
+        routine.start = new Date('2025-01-01');
+        routine.end = new Date('2025-01-16');
+        const translate = vi.spyOn(i18n, 't');
+
+        // Act
+        const durationText = routine.durationText;
+
+        // Assert
+        expect(durationText).toEqual('durationWeeks, durationDays');
+        expect(translate).toHaveBeenCalledWith('durationWeeks', { count: 2 });
+        expect(translate).toHaveBeenCalledWith('durationDays', { count: 1 });
+        translate.mockRestore();
     });
 
     test('correctly returns all the trained muscles', () => {

@@ -116,7 +116,7 @@ const SessionFormFields = (
     const validationSchema = yup.object({
         notes: yup
             .string()
-            .max(NOTES_MAX_LENGTH, t('forms.maxLength', { chars: NOTES_MAX_LENGTH })),
+            .max(NOTES_MAX_LENGTH, t('forms.maxLength', { count: NOTES_MAX_LENGTH })),
         date: yup
             .date()
             .required(),

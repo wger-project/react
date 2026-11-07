@@ -66,7 +66,8 @@
         "step1HeaderBasics": "Conceptos básicos en inglés",
         "variations": "Variacións",
         "notEnoughRightsHeader": "Non podes contribuir con exercicios",
-        "notEnoughRights": "Só podes contribuír exercicios se a túa conta ten máis de {{days}} días e verificaches o teu correo electrónico",
+        "notEnoughRights_one": "Só podes contribuír exercicios se a túa conta ten máis de {{count}} día e verificaches o teu correo electrónico",
+        "notEnoughRights_other": "Só podes contribuír exercicios se a túa conta ten máis de {{count}} días e verificaches o teu correo electrónico",
         "muscles": "Músculos",
         "secondaryMuscles": "Músculos secundarios"
     },

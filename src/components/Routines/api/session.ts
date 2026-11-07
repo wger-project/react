@@ -79,6 +79,18 @@ export const addSession = async (session: WorkoutSession): Promise<WorkoutSessio
     return new WorkoutSessionAdapter().fromJson(response.data);
 };
 
+/*
+ * Delete a session. The server deletes the logs that belong to it as well.
+ */
+export const deleteSession = async (id: string): Promise<number> => {
+    const response = await axios.delete(
+        makeUrl(ApiPath.SESSION, { id: id }),
+        { headers: makeHeader() }
+    );
+
+    return response.status;
+};
+
 export const editSession = async (session: WorkoutSession): Promise<WorkoutSession> => {
     const response = await axios.patch(
         makeUrl(ApiPath.SESSION, { id: session.id! }),
