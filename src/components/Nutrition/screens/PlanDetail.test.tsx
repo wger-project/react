@@ -4,9 +4,12 @@ import { PlanDetail } from "@/components/Nutrition/screens/PlanDetail";
 import { useFetchNutritionalPlanQuery } from "@/components/Nutrition/queries";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { TEST_NUTRITIONAL_PLAN_1 } from "@/tests/nutritionTestdata";
+import { useBodyWeightCategoryQuery, useBodyWeightQuery, useDisplayWeightUnit } from "@/components/Measurements";
+import { testBodyWeightCategory, testWeightEntries } from "@/tests/weight/testData";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Nutrition/queries");
+vi.mock("@/components/Measurements/queries/bodyWeight");
 vi.useFakeTimers();
 
 const queryClient = new QueryClient();
@@ -18,6 +21,9 @@ describe("Test the PlanDetail component", () => {
             isSuccess: true,
             data: TEST_NUTRITIONAL_PLAN_1
         }));
+        (useBodyWeightQuery as Mock).mockReturnValue({ isSuccess: true, data: testWeightEntries });
+        (useBodyWeightCategoryQuery as Mock).mockReturnValue({ isSuccess: true, data: testBodyWeightCategory });
+        (useDisplayWeightUnit as Mock).mockReturnValue('kg');
 
         vi.setSystemTime(new Date('2023-07-01').getTime());
     });
