@@ -1,9 +1,9 @@
 import { Stack, Typography } from "@mui/material";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
-import { SessionForm } from "@/components/Routines/widgets/forms/SessionForm";
+import { SessionForm, SessionFormHandle } from "@/components/Routines/widgets/forms/SessionForm";
 import { SessionLogsForm } from "@/components/Routines/widgets/forms/SessionLogsForm";
 import { DateTime } from "luxon";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { makeLink, WgerLink } from "@/core/lib/url";
@@ -16,6 +16,8 @@ export const SessionAdd = () => {
     // edits it, the other writes its logs into it. Another date has its own
     // sessions, so the pick doesn't travel along
     const [chosenSessionId, setChosenSessionId] = useState<string | null>(null);
+    // One save button for both forms: the logs form saves the session through it first
+    const sessionFormRef = useRef<SessionFormHandle>(null);
 
     const selectDate = (date: DateTime) => {
         setSelectedDate(date);
@@ -36,8 +38,9 @@ export const SessionAdd = () => {
         title={t('routines.addWeightLog')}
         backToUrl={makeLink(WgerLink.ROUTINE_DETAIL, i18n.language, { id: routineId })}
         mainContent={
-            <Stack>
+            <Stack spacing={2}>
                 <SessionForm
+                    ref={sessionFormRef}
                     routineId={routineId}
                     dayId={dayId}
                     selectedDate={selectedDate}
@@ -46,15 +49,18 @@ export const SessionAdd = () => {
                     setChosenSessionId={setChosenSessionId}
                 />
 
-                <Typography variant={"h5"}>{t('exercises.exercises')}</Typography>
-                <Typography variant={"body2"}>
-                    {t('routines.impressionHelpText')}
-                </Typography>
+                <Stack>
+                    <Typography variant={"h5"}>{t('exercises.exercises')}</Typography>
+                    <Typography variant={"body2"} color="text.secondary">
+                        {t('routines.impressionHelpText')}
+                    </Typography>
+                </Stack>
                 <SessionLogsForm
                     routineId={routineId}
                     dayId={dayId}
                     selectedDate={selectedDate}
                     chosenSessionId={chosenSessionId}
+                    saveSession={() => sessionFormRef.current?.submit() ?? Promise.resolve(false)}
                 />
             </Stack>
         }

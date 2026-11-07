@@ -7,25 +7,28 @@ import {
 } from "@/components/Routines/models/WorkoutSession";
 import { useAddSessionQuery, useEditSessionQuery, useSessionOfDay } from "@/components/Routines/queries";
 import { useAppForm } from "@/core/forms/appForm";
-import { defaultsKey, fieldError, submitHandler, yupSchema } from "@/core/forms/formUtils";
-import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
+import { defaultsKey, fieldError, yupSchema } from "@/core/forms/formUtils";
 import { dateLocale } from "@/core/lib/date";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Add, SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
 import {
     Button,
-    ButtonGroup,
+    FormLabel,
     List,
     ListItem,
     ListItemButton,
     ListItemIcon,
     ListItemText,
+    Stack,
+    ToggleButton,
+    ToggleButtonGroup,
     Typography
 } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { DatePicker, LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { DateTime } from "luxon";
-import React from 'react';
+import React, { Ref, useImperativeHandle, useRef } from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from 'yup';
 
@@ -35,7 +38,13 @@ interface SessionFormProps {
     selectedDate: DateTime,
     setSelectedDate: (date: DateTime) => void,
     chosenSessionId: string | null,
-    setChosenSessionId: (id: string | null) => void
+    setChosenSessionId: (id: string | null) => void,
+    ref?: Ref<SessionFormHandle>,
+}
+
+export interface SessionFormHandle {
+    /** Validates and saves the session: the id it is stored under, false if it was not saved */
+    submit: () => Promise<string | null | false>,
 }
 
 interface SessionFormValues {
@@ -50,6 +59,17 @@ interface SessionFormValues {
  * already has sessions */
 const NEW_SESSION = 'new';
 
+/**
+ * A day can hold several sessions. One is edited right away, more than one
+ * has to be picked apart by the user first, otherwise the form would either
+ * edit an arbitrary one or add yet another next to them
+ */
+export const sessionNeedsChoice = (
+    sessions: WorkoutSession[],
+    session: WorkoutSession | undefined,
+    chosenSessionId: string | null
+) => sessions.length > 1 && session === undefined && chosenSessionId !== NEW_SESSION;
+
 export const SessionForm = (
     {
         dayId,
@@ -57,7 +77,8 @@ export const SessionForm = (
         selectedDate,
         setSelectedDate,
         chosenSessionId,
-        setChosenSessionId
+        setChosenSessionId,
+        ref
     }: SessionFormProps) => {
 
     const { sessions, session, isLoading: isLoadingSessions } = useSessionOfDay(
@@ -67,15 +88,13 @@ export const SessionForm = (
         chosenSessionId
     );
 
-    // A day can hold several sessions. One is edited right away, more than one
-    // has to be picked apart by the user first, otherwise the form would either
-    // edit an arbitrary one or add yet another next to them
-    const needsChoice = sessions.length > 1 && session === undefined && chosenSessionId !== NEW_SESSION;
+    const needsChoice = sessionNeedsChoice(sessions, session, chosenSessionId);
 
     // The form freezes its default values, so a session that arrives or changes
     // later gets a fresh form via the key
     return <SessionFormFields
         key={defaultsKey(session?.id)}
+        ref={ref}
         dayId={dayId}
         routineId={routineId}
         selectedDate={selectedDate}
@@ -99,6 +118,7 @@ const SessionFormFields = (
         session,
         needsChoice,
         isLoadingSessions,
+        ref,
     }: Omit<SessionFormProps, 'chosenSessionId'> & {
         sessions: WorkoutSession[],
         session: WorkoutSession | undefined,
@@ -111,7 +131,8 @@ const SessionFormFields = (
     const addSessionQuery = useAddSessionQuery();
     const editSessionQuery = useEditSessionQuery();
 
-    const isLoading = addSessionQuery.isPending || editSessionQuery.isPending || isLoadingSessions;
+    // Where onSubmit stored the session, read by the handle once the submit is through
+    const savedId = useRef<string | null | false>(false);
 
     const validationSchema = yup.object({
         notes: yup
@@ -167,18 +188,69 @@ const SessionFormFields = (
 
             if (session !== undefined) {
                 await editSessionQuery.mutateAsync(draft);
+                savedId.current = session.id;
             } else {
                 // Keep editing what was just added, a second submit would
                 // otherwise write another session
                 const added = await addSessionQuery.mutateAsync(draft);
+                savedId.current = added?.id ?? null;
                 setChosenSessionId(added?.id ?? null);
             }
         },
     });
 
+    // The screen has one save button for the session and its logs
+    useImperativeHandle(ref, () => ({
+        submit: async () => {
+            if (needsChoice || isLoadingSessions) {
+                return false;
+            }
+            savedId.current = false;
+            try {
+                await form.handleSubmit();
+            } catch {
+                // The mutation's error is shown by FormQueryErrors
+                return false;
+            }
+            return savedId.current;
+        }
+    }), [form, needsChoice, isLoadingSessions]);
+
+
+    const impressions = [
+        { value: IMPRESSION_BAD, label: t('routines.impressionBad'), icon: <SentimentVeryDissatisfied /> },
+        { value: IMPRESSION_NEUTRAL, label: t('routines.impressionNeutral'), icon: <SentimentNeutral /> },
+        { value: IMPRESSION_GOOD, label: t('routines.impressionGood'), icon: <SentimentSatisfiedAlt /> },
+    ];
+
+    const timeField = (name: 'start' | 'end', label: string) =>
+        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
+            <form.Field name={name}>
+                {field => <TimePicker
+                    label={label}
+                    name={field.name}
+                    value={field.state.value}
+                    onChange={(newValue) => {
+                        if (newValue) {
+                            field.handleChange(newValue);
+                        }
+                    }}
+                    slotProps={{
+                        textField: {
+                            variant: "standard",
+                            fullWidth: true,
+                            onBlur: field.handleBlur,
+                            error: fieldError(field) !== undefined,
+                            helperText: fieldError(field)
+                        }
+                    }}
+                />}
+            </form.Field>
+        </LocalizationProvider>;
 
     return (
-        <form onSubmit={submitHandler(form)}>
+        // Saved through the handle, Enter in a field must not save the session alone
+        <form onSubmit={event => event.preventDefault()}>
             <Grid container spacing={2}>
                 <Grid size={{ xs: 12, sm: 6 }}>
                     <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
@@ -212,7 +284,7 @@ const SessionFormFields = (
                 </Grid>
 
                 {needsChoice ? <Grid size={12}>
-                    <Typography variant={"body1"} sx={{ mt: 2 }}>
+                    <Typography variant={"body1"}>
                         {t('routines.multipleSessions')}
                     </Typography>
                     <List>
@@ -234,119 +306,58 @@ const SessionFormFields = (
                     </List>
                 </Grid> : <>
                     <Grid size={{ xs: 6, sm: 3 }}>
-                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
-                            <form.Field name="start">
-                                {field => <TimePicker
-                                    label={t('start')}
-                                    name={field.name}
-                                    value={field.state.value}
-                                    onChange={(newValue) => {
-                                        if (newValue) {
-                                            field.handleChange(newValue);
-                                        }
-                                    }}
-                                    slotProps={{
-                                        textField: {
-                                            variant: "standard",
-                                            fullWidth: true,
-                                            onBlur: field.handleBlur,
-                                            error: fieldError(field) !== undefined,
-                                            helperText: fieldError(field)
-                                        }
-                                    }}
-                                />}
-                            </form.Field>
-                        </LocalizationProvider>
+                        {timeField('start', t('start'))}
                     </Grid>
                     <Grid size={{ xs: 6, sm: 3 }}>
-                        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
-                            <form.Field name="end">
-                                {field => <TimePicker
-                                    label={t('end')}
-                                    name={field.name}
-                                    value={field.state.value}
-                                    onChange={(newValue) => {
-                                        if (newValue) {
-                                            field.handleChange(newValue);
-                                        }
-                                    }}
-                                    slotProps={{
-                                        textField: {
-                                            variant: "standard",
-                                            fullWidth: true,
-                                            onBlur: field.handleBlur,
-                                            error: fieldError(field) !== undefined,
-                                            helperText: fieldError(field)
-                                        }
-                                    }}
-                                />}
-                            </form.Field>
-                        </LocalizationProvider>
+                        {timeField('end', t('end'))}
                     </Grid>
                     <Grid size={12}>
                         <form.AppField name="notes">
-                            {field => <field.WgerTextField variant="standard"
+                            {field => <field.WgerTextField
+                                variant="standard"
                                 title={t('notes')}
                                 fieldProps={{ multiline: true, rows: 4 }}
                             />}
                         </form.AppField>
                     </Grid>
-
                     <Grid size={12}>
-                        <Typography variant="caption">{t('routines.impression')}</Typography>
                         <form.Field name="impression">
-                            {field => <ButtonGroup
-                                fullWidth
-                                color="primary"
-                            >
-                                <Button
+                            {field => <Stack>
+                                <FormLabel id="session-impression" sx={{ typography: 'caption' }}>
+                                    {t('routines.impression')}
+                                </FormLabel>
+                                <ToggleButtonGroup
+                                    exclusive
+                                    fullWidth
                                     size="small"
-                                    color="info"
-                                    variant={field.state.value === IMPRESSION_BAD ? 'contained' : 'outlined'}
-                                    onClick={() => field.handleChange(IMPRESSION_BAD)}
+                                    color="primary"
+                                    aria-labelledby="session-impression"
+                                    value={field.state.value}
+                                    onChange={(_, value: string | null) => {
+                                        // Clicking the active one again would empty it
+                                        if (value !== null) {
+                                            field.handleChange(value);
+                                        }
+                                    }}
                                 >
-                                    <SentimentVeryDissatisfied />
-                                    {t('routines.impressionBad')}
-                                </Button>
-                                <Button
-                                    size="small"
-                                    color="info"
-                                    variant={field.state.value === IMPRESSION_NEUTRAL ? 'contained' : 'outlined'}
-                                    onClick={() => field.handleChange(IMPRESSION_NEUTRAL)}
-                                >
-                                    <SentimentNeutral />
-                                    {t('routines.impressionNeutral')}
-                                </Button>
-                                <Button
-                                    size="small"
-                                    color="info"
-                                    variant={field.state.value === IMPRESSION_GOOD ? 'contained' : 'outlined'}
-                                    onClick={() => field.handleChange(IMPRESSION_GOOD)}
-                                >
-                                    <SentimentSatisfiedAlt />
-                                    {t('routines.impressionGood')}
-                                </Button>
-
-                            </ButtonGroup>}
+                                    {impressions.map(impression =>
+                                        <ToggleButton
+                                            key={impression.value}
+                                            value={impression.value}
+                                            sx={{ gap: 1 }}
+                                        >
+                                            {impression.icon}
+                                            {impression.label}
+                                        </ToggleButton>
+                                    )}
+                                </ToggleButtonGroup>
+                            </Stack>}
                         </form.Field>
                     </Grid>
-                    <Grid size={12}>
-                        <FormQueryErrors mutationQuery={addSessionQuery} />
-                        <FormQueryErrors mutationQuery={editSessionQuery} />
-                    </Grid>
-                    <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
-                        <Button
-                            disabled={isLoading}
-                            color="primary"
-                            variant="contained"
-                            type="submit"
-                            sx={{ mt: 2 }}>
-                            {t('submit')}
-                        </Button>
-                    </Grid>
-
                 </>}
             </Grid>
+            <FormQueryErrors mutationQuery={addSessionQuery} />
+            <FormQueryErrors mutationQuery={editSessionQuery} />
         </form>
     );
 };

@@ -13,6 +13,7 @@ import {
     useRoutineLogQuery,
     useSessionOfDay
 } from "@/components/Routines/queries";
+import { sessionNeedsChoice } from "@/components/Routines/widgets/forms/SessionForm";
 import {
     logsPayload,
     plannedLogs,
@@ -22,13 +23,35 @@ import { useAppForm } from "@/core/forms/appForm";
 import { defaultsKey, submitHandler, yupSchema } from "@/core/forms/formUtils";
 import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "@/core/lib/consts";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
-import { SwapHoriz } from "@mui/icons-material";
+import { ChatBubble, ChatBubbleOutlineOutlined, MoreVert, SwapHoriz } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { Alert, Button, IconButton, InputAdornment, MenuItem, Snackbar, TextField, Typography } from "@mui/material";
-import Grid from '@mui/material/Grid';
+import {
+    Alert,
+    Button,
+    Box,
+    CardActions,
+    CardHeader,
+    IconButton,
+    InputAdornment,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Paper,
+    Snackbar,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography
+} from "@mui/material";
 import { DateTime } from "luxon";
-import React, { useRef, useState } from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 
@@ -37,16 +60,24 @@ interface SessionLogsFormProps {
     routineId: number,
     selectedDate: DateTime,
     chosenSessionId: string | null,
+    /** Saves the session the logs go into: its id, false if it was not saved */
+    saveSession: () => Promise<string | null | false>,
 }
 
-export const SessionLogsForm = ({ dayId, routineId, selectedDate, chosenSessionId }: SessionLogsFormProps) => {
+export const SessionLogsForm = (
+    {
+        dayId,
+        routineId,
+        selectedDate,
+        chosenSessionId,
+        saveSession
+    }: SessionLogsFormProps) => {
 
     const { t, i18n } = useTranslation();
     const routineQuery = useRoutineDetailQuery(routineId);
-    // The session the form above works on, so the logs end up in the one the
-    // user has in front of them. Without it the server would sort them into a
-    // session by their time, which on a day with several of them is a guess
-    const { session } = useSessionOfDay(routineId, dayId, selectedDate, chosenSessionId);
+    // Until the user picked one of the day's sessions there is nothing to save into
+    const { sessions, session } = useSessionOfDay(routineId, dayId, selectedDate, chosenSessionId);
+    const needsChoice = sessionNeedsChoice(sessions, session, chosenSessionId);
     const languageQuery = useLanguageQuery();
 
     let language = undefined;
@@ -75,7 +106,8 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate, chosenSessionI
             dayId={dayId}
             routineId={routineId}
             selectedDate={selectedDate}
-            sessionId={session?.id}
+            saveSession={saveSession}
+            needsChoice={needsChoice}
             iteration={iteration}
             language={language}
             defaultLogs={defaultLogs}
@@ -83,15 +115,26 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate, chosenSessionI
     </>);
 };
 
-const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteration, language, defaultLogs }: {
-    dayId: number,
-    routineId: number,
-    selectedDate: DateTime,
-    sessionId: string | null | undefined,
-    iteration: number | null,
-    language: Language | undefined,
-    defaultLogs: LogEntryForm[],
-}) => {
+const SessionLogsFields = (
+    {
+        dayId,
+        routineId,
+        selectedDate,
+        saveSession,
+        needsChoice,
+        iteration,
+        language,
+        defaultLogs
+    }: {
+        dayId: number,
+        routineId: number,
+        selectedDate: DateTime,
+        saveSession: () => Promise<string | null | false>,
+        needsChoice: boolean,
+        iteration: number | null,
+        language: Language | undefined,
+        defaultLogs: LogEntryForm[],
+    }) => {
 
     const { t } = useTranslation();
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -99,6 +142,10 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
     const logsQuery = useRoutineLogQuery(routineId);
     const handleSnackbarClose = () => setSnackbarOpen(false);
     const [exerciseIdToSwap, setExerciseIdToSwap] = useState<number | null>(null);
+    // The exercise card whose action menu is open
+    const [menu, setMenu] = useState<{ anchor: HTMLElement, exerciseId: number } | null>(null);
+    // Sets whose note field the user opened; a set with a note always shows it
+    const [openNotes, setOpenNotes] = useState<Set<string>>(new Set());
 
     // Most recent note per exercise from the days before the one being logged
     const lastNoteByExercise = new Map<number, string>();
@@ -136,13 +183,24 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
     });
 
     const handleSubmit = async (values: SessionLogsFormValues) => {
-        await addLogsQuery.mutateAsync(logsPayload(values.logs, {
+        // The session first, so the logs end up in the one the user has in front
+        // of them. Without its id the server would sort them into a session by
+        // their time, which on a day with several of them is a guess
+        const sessionId = await saveSession();
+        if (sessionId === false) {
+            return;
+        }
+
+        const payload = logsPayload(values.logs, {
             date: selectedDate,
             sessionId,
             iteration,
             dayId,
             routineId,
-        }));
+        });
+        if (payload.length > 0) {
+            await addLogsQuery.mutateAsync(payload);
+        }
         setSnackbarOpen(true);
     };
 
@@ -179,169 +237,259 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
         setExerciseIdToSwap(null);
     };
 
+    const toggleNote = (clientKey: string) => setOpenNotes(prev => {
+        const next = new Set(prev);
+        if (next.has(clientKey)) {
+            next.delete(clientKey);
+        } else {
+            next.add(clientKey);
+        }
+        return next;
+    });
+
+    const numberFieldProps = (adornment: React.ReactNode, label: string) => ({
+        variant: "standard" as const,
+        slotProps: {
+            input: {
+                endAdornment: <InputAdornment position="end">
+                    <Typography variant={'caption'}>{adornment}</Typography>
+                </InputAdornment>
+            },
+            htmlInput: {
+                inputMode: 'decimal' as const,
+                'aria-label': label,
+            }
+        }
+    });
+
     return (<>
         <form onSubmit={submitHandler(form)}>
             {/* The rows read every value of every log, which an array field does
               * not re-render for: it only follows the array's length */}
             <form.Subscribe selector={state => state.values.logs}>
-                {logs => logs.map((log, index) => (
-                    <Grid container key={log.clientKey} spacing={1} sx={{ mt: 2 }}>
+                {logs => <Stack spacing={2} sx={{ mt: 2 }}>
+                    {groupByExercise(logs).map(group => {
+                        const exerciseId = group.exercise.id!;
+                        const last = group.entries[group.entries.length - 1];
+                        const lastNote = lastNoteByExercise.get(exerciseId);
 
-                        {/* Only show the exercise name the first time it appears */}
-                        {(index === 0 || logs[index - 1].exercise!.id !== log.exercise!.id) && <>
-                            <Grid size={12}>
-                                {exerciseIdToSwap !== log.exercise!.id &&
-                                    <Typography variant="h6">
-                                        {log.exercise?.getTranslation(language).name}
-                                    </Typography>}
+                        return <Box component="section" key={group.entries[0].log.clientKey}>
+                            <CardHeader
+                                sx={{ px: 1 }}
+                                title={exerciseIdToSwap === exerciseId
+                                    ? <NameAutocompleter callback={handleCallback} />
+                                    : group.exercise.getTranslation(language).name}
+                                subheader={lastNote ? t('routines.lastSession', { note: lastNote }) : undefined}
+                                slotProps={{ title: { variant: 'h6' } }}
+                                action={<IconButton
+                                    aria-label={t('actions')}
+                                    onClick={event => setMenu({ anchor: event.currentTarget, exerciseId })}
+                                >
+                                    <MoreVert />
+                                </IconButton>}
+                            />
+                            <TableContainer>
+                                {/* Fixed columns, so the inputs shrink on a phone instead of
+                                  * pushing the note and delete buttons out of view */}
+                                <Table
+                                    size="small"
+                                    sx={{
+                                        tableLayout: 'fixed',
+                                        // No row lines and light underlines, the columns carry the structure
+                                        '& .MuiTableCell-root': { px: { xs: 0.5, sm: 1 }, borderBottom: 'none' },
+                                        '& .MuiInput-underline:not(.Mui-error):before': { borderBottomColor: 'grey.400' },
+                                        '& th': { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
+                                    }}
+                                >
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell align="center" sx={{ width: 32 }}>#</TableCell>
+                                            <TableCell>{t('server.repetitions')}</TableCell>
+                                            <TableCell>{t('weight')}</TableCell>
+                                            <TableCell>{t('routines.rir')}</TableCell>
+                                            <TableCell sx={{ width: 72 }}>
+                                                <span hidden>{t('actions')}</span>
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {group.entries.map(({ log, index }, setIndex) => {
+                                            const setLabel = t('routines.setNr', { number: setIndex + 1 });
+                                            const hasNote = log.notes !== '';
+                                            const showNote = hasNote || openNotes.has(log.clientKey);
 
-                                {exerciseIdToSwap === log.exercise!.id &&
-                                    <NameAutocompleter callback={handleCallback} />}
-
-                            </Grid>
-                            <Grid size={12}>
+                                            return <Fragment key={log.clientKey}>
+                                                <TableRow>
+                                                    <TableCell align="center">
+                                                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                                            {setIndex + 1}
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <form.AppField name={`logs[${index}].repetitions`}>
+                                                            {field => <field.WgerTextField
+                                                                title=""
+                                                                fieldProps={numberFieldProps(
+                                                                    // Only show reps that are not "repetitions"
+                                                                    log.repetitionsUnit?.id !== REP_UNIT_REPETITIONS
+                                                                        ? log.repetitionsUnit?.name
+                                                                        : null,
+                                                                    `${setLabel}: ${t('server.repetitions')}`
+                                                                )}
+                                                            />}
+                                                        </form.AppField>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <form.AppField name={`logs[${index}].weight`}>
+                                                            {field => <field.WgerTextField
+                                                                title=""
+                                                                fieldProps={numberFieldProps(
+                                                                    log.weightUnit?.name,
+                                                                    `${setLabel}: ${t('weight')}`
+                                                                )}
+                                                            />}
+                                                        </form.AppField>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <form.Field name={`logs[${index}].rir`}>
+                                                            {field => <TextField
+                                                                fullWidth
+                                                                select
+                                                                variant="standard"
+                                                                name={field.name}
+                                                                value={field.state.value}
+                                                                onChange={event => field.handleChange(event.target.value)}
+                                                                onBlur={field.handleBlur}
+                                                                slotProps={{
+                                                                    select: {
+                                                                        SelectDisplayProps: {
+                                                                            'aria-label': `${setLabel}: ${t('routines.rir')}`
+                                                                        }
+                                                                    }
+                                                                }}
+                                                            >
+                                                                {RIR_VALUES_SELECT.map((option) => (
+                                                                    <MenuItem key={option.value} value={option.value}>
+                                                                        {option.label}
+                                                                    </MenuItem>
+                                                                ))}
+                                                            </TextField>}
+                                                        </form.Field>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Stack direction="row">
+                                                            <IconButton
+                                                                size="small"
+                                                                aria-label={`${setLabel}: ${t('notes')}`}
+                                                                aria-expanded={showNote}
+                                                                color={hasNote ? 'primary' : 'default'}
+                                                                // A filled note stays open, it would be saved unseen
+                                                                onClick={() => !hasNote && toggleNote(log.clientKey)}
+                                                            >
+                                                                {hasNote ? <ChatBubble /> :
+                                                                    <ChatBubbleOutlineOutlined />}
+                                                            </IconButton>
+                                                            <IconButton
+                                                                size="small"
+                                                                aria-label={`${setLabel}: ${t('delete')}`}
+                                                                onClick={() => form.removeFieldValue('logs', index)}
+                                                            >
+                                                                <DeleteIcon />
+                                                            </IconButton>
+                                                        </Stack>
+                                                    </TableCell>
+                                                </TableRow>
+                                                {showNote && <TableRow>
+                                                    <TableCell />
+                                                    <TableCell colSpan={4} sx={{ pt: 0 }}>
+                                                        <form.AppField name={`logs[${index}].notes`}>
+                                                            {field => <field.WgerTextField
+                                                                title=""
+                                                                fieldProps={{
+                                                                    variant: "standard",
+                                                                    multiline: true,
+                                                                    placeholder: t('notes'),
+                                                                    autoFocus: !hasNote,
+                                                                    slotProps: {
+                                                                        htmlInput: { 'aria-label': `${setLabel}: ${t('notes')}` }
+                                                                    }
+                                                                }}
+                                                            />}
+                                                        </form.AppField>
+                                                    </TableCell>
+                                                </TableRow>}
+                                            </Fragment>;
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <CardActions sx={{ px: 0 }}>
                                 <Button
                                     type="button"
                                     size="small"
-                                    // One more set of the same exercise, prefilled like the one it duplicates
-                                    onClick={() => form.insertFieldValue('logs', index, {
-                                        ...log,
+                                    startIcon={<AddIcon />}
+                                    // One more set after the last one, prefilled like it
+                                    onClick={() => form.insertFieldValue('logs', last.index + 1, {
+                                        ...last.log,
+                                        notes: '',
                                         clientKey: `extra-${extraLogKey.current++}`,
                                     })}
                                 >
-                                    <AddIcon />
-                                    {t('routines.addAdditionalLog')}
+                                    {t('routines.addSet')}
                                 </Button>
-                                <Button
-                                    type="button"
-                                    size="small"
-                                    onClick={() => {
-                                        if (exerciseIdToSwap === log.exercise!.id) {
-                                            setExerciseIdToSwap(null);
-                                        } else {
-                                            setExerciseIdToSwap(log.exercise!.id);
-                                        }
-                                    }}
-                                >
-                                    <SwapHoriz />
-                                    {t('exercises.swapExercise')}
-                                </Button>
-                                <Button
-                                    type="button"
-                                    size="small"
-                                    onClick={() => form.setFieldValue(
-                                        'logs',
-                                        logs.filter(l => l.exercise!.id !== log.exercise!.id)
-                                    )}
-                                >
-                                    <DeleteIcon />
-                                    {t('delete')}
-                                </Button>
-
-                            </Grid>
-                        </>}
-                        <Grid size={4}>
-                            <form.AppField name={`logs[${index}].repetitions`}>
-                                {field => <field.WgerTextField variant="standard"
-                                                               title={t('server.repetitions')}
-                                                               fieldProps={{
-                                                                   slotProps: {
-                                                                       input: {
-                                                                           endAdornment:
-                                                                               <InputAdornment position="end">
-                                                                                   {/* Only show reps that are not "repetitions" */}
-                                                                                   {log.repetitionsUnit?.id !== REP_UNIT_REPETITIONS
-                                                                                       ?
-                                                                                       <Typography variant={'caption'}>
-                                                                                           {log.repetitionsUnit?.name}
-                                                                                       </Typography>
-                                                                                       : null}
-                                                                               </InputAdornment>
-                                                                       },
-                                                                       htmlInput: {
-                                                                           inputMode: 'decimal'
-                                                                       }
-                                                                   }
-                                                               }}
-                                />}
-                            </form.AppField>
-                        </Grid>
-                        <Grid size={4}>
-                            <form.AppField name={`logs[${index}].weight`}>
-                                {field => <field.WgerTextField variant="standard"
-                                                               title={t('weight')}
-                                                               fieldProps={{
-                                                                   slotProps: {
-                                                                       input: {
-                                                                           endAdornment:
-                                                                               <InputAdornment position="end">
-                                                                                   <Typography variant={'caption'}>
-                                                                                       {log.weightUnit?.name}
-                                                                                   </Typography>
-                                                                               </InputAdornment>
-                                                                       },
-                                                                       htmlInput: {
-                                                                           inputMode: 'decimal'
-                                                                       }
-                                                                   }
-                                                               }}
-                                />}
-                            </form.AppField>
-                        </Grid>
-
-                        <Grid size={3}>
-                            <form.Field name={`logs[${index}].rir`}>
-                                {field => <TextField
-                                    fullWidth
-                                    select
-                                    label={t('routines.rir')}
-                                    variant="standard"
-                                    name={field.name}
-                                    value={field.state.value}
-                                    onChange={event => field.handleChange(event.target.value)}
-                                    onBlur={field.handleBlur}
-                                >
-                                    {RIR_VALUES_SELECT.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>}
-                            </form.Field>
-                        </Grid>
-                        <Grid size={1}>
-                            <IconButton size={"small"} onClick={() => form.removeFieldValue('logs', index)}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </Grid>
-                        <Grid size={11}>
-                            <form.AppField name={`logs[${index}].notes`}>
-                                {field => <field.WgerTextField variant="standard"
-                                                               title={t('notes')}
-                                                               helperText={lastNoteByExercise.get(log.exercise?.id ?? 0)
-                                                                   ? t('routines.lastSession', { note: lastNoteByExercise.get(log.exercise?.id ?? 0) })
-                                                                   : undefined}
-                                                               fieldProps={{ multiline: true }}
-                                />}
-                            </form.AppField>
-                        </Grid>
-                    </Grid>
-                ))}
+                            </CardActions>
+                        </Box>;
+                    })}
+                </Stack>}
             </form.Subscribe>
-            <Grid container spacing={2}>
-                <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
-                    <form.Subscribe selector={state => ({ isValid: state.isValid, isSubmitting: state.isSubmitting })}>
-                        {({ isValid, isSubmitting }) => <Button
-                            color="primary"
-                            disabled={!isValid || isSubmitting || addLogsQuery.isPending}
-                            variant="contained"
-                            type="submit"
-                            sx={{ mt: 2 }}>
-                            {t('submit')}
-                        </Button>}
-                    </form.Subscribe>
-                </Grid>
-            </Grid>
+
+            <Menu
+                anchorEl={menu?.anchor}
+                open={menu !== null}
+                onClose={() => setMenu(null)}
+            >
+                <MenuItem onClick={() => {
+                    setExerciseIdToSwap(exerciseIdToSwap === menu!.exerciseId ? null : menu!.exerciseId);
+                    setMenu(null);
+                }}>
+                    <ListItemIcon><SwapHoriz /></ListItemIcon>
+                    <ListItemText>{t('exercises.swapExercise')}</ListItemText>
+                </MenuItem>
+                <MenuItem onClick={() => {
+                    form.setFieldValue(
+                        'logs',
+                        form.state.values.logs.filter(l => l.exercise!.id !== menu!.exerciseId)
+                    );
+                    setMenu(null);
+                }}>
+                    <ListItemIcon><DeleteIcon /></ListItemIcon>
+                    <ListItemText>{t('delete')}</ListItemText>
+                </MenuItem>
+            </Menu>
+
+            {/* Stays in view, so saving doesn't need a scroll to the end of a long day */}
+            <Paper
+                elevation={3}
+                sx={{
+                    position: 'sticky',
+                    bottom: 0,
+                    zIndex: 'appBar',
+                    mt: 2,
+                    p: 1.5,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                }}
+            >
+                <form.Subscribe selector={state => ({ isValid: state.isValid, isSubmitting: state.isSubmitting })}>
+                    {({ isValid, isSubmitting }) => <Button
+                        color="primary"
+                        disabled={!isValid || isSubmitting || addLogsQuery.isPending || needsChoice}
+                        variant="contained"
+                        type="submit">
+                        {t('save')}
+                    </Button>}
+                </form.Subscribe>
+            </Paper>
         </form>
         <Snackbar
             open={snackbarOpen}
@@ -354,3 +502,17 @@ const SessionLogsFields = ({ dayId, routineId, selectedDate, sessionId, iteratio
         </Snackbar>
     </>);
 };
+
+/** Consecutive sets of the same exercise, each with its position in the form's list */
+function groupByExercise(logs: LogEntryForm[]) {
+    const groups: { exercise: Exercise, entries: { log: LogEntryForm, index: number }[] }[] = [];
+    logs.forEach((log, index) => {
+        const current = groups[groups.length - 1];
+        if (current !== undefined && current.exercise.id === log.exercise!.id) {
+            current.entries.push({ log, index });
+        } else {
+            groups.push({ exercise: log.exercise!, entries: [{ log, index }] });
+        }
+    });
+    return groups;
+}
