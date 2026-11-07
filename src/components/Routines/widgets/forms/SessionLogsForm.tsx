@@ -12,7 +12,7 @@ import {
     useRoutineDetailQuery,
     useSessionOfDay
 } from "@/components/Routines/queries";
-import { sessionNeedsChoice } from "@/components/Routines/widgets/forms/SessionForm";
+import { sessionNeedsChoice } from "./SessionForm";
 import {
     isFilledIn,
     logsPayload,
@@ -76,9 +76,13 @@ export const SessionLogsForm = (
 
     const { t, i18n } = useTranslation();
     const routineQuery = useRoutineDetailQuery(routineId);
-    // Until the user picked one of the day's sessions there is nothing to save into
-    const { sessions, session } = useSessionOfDay(routineId, dayId, selectedDate, chosenSessionId);
-    const needsChoice = sessionNeedsChoice(sessions, session, chosenSessionId);
+    // Until the day's sessions are loaded and one is picked there is nothing to save into
+    const {
+        sessions,
+        session,
+        isLoading: isLoadingSessions
+    } = useSessionOfDay(routineId, dayId, selectedDate, chosenSessionId);
+    const canSave = !isLoadingSessions && !sessionNeedsChoice(sessions, session, chosenSessionId);
     const languageQuery = useLanguageQuery();
 
     let language = undefined;
@@ -108,7 +112,7 @@ export const SessionLogsForm = (
             routineId={routineId}
             selectedDate={selectedDate}
             saveSession={saveSession}
-            needsChoice={needsChoice}
+            canSave={canSave}
             iteration={iteration}
             language={language}
             defaultLogs={defaultLogs}
@@ -122,7 +126,7 @@ const SessionLogsFields = (
         routineId,
         selectedDate,
         saveSession,
-        needsChoice,
+        canSave,
         iteration,
         language,
         defaultLogs
@@ -131,7 +135,7 @@ const SessionLogsFields = (
         routineId: number,
         selectedDate: DateTime,
         saveSession: () => Promise<string | null | false>,
-        needsChoice: boolean,
+        canSave: boolean,
         iteration: number | null,
         language: Language | undefined,
         defaultLogs: LogEntryForm[],
@@ -305,9 +309,7 @@ const SessionLogsFields = (
                                             <TableCell>{t('server.repetitions')}</TableCell>
                                             <TableCell>{t('weight')}</TableCell>
                                             <TableCell>{t('routines.rir')}</TableCell>
-                                            <TableCell sx={{ width: 72 }}>
-                                                <span hidden>{t('actions')}</span>
-                                            </TableCell>
+                                            <TableCell sx={{ width: 72 }} aria-label={t('actions')} />
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -490,7 +492,7 @@ const SessionLogsFields = (
                 <form.Subscribe selector={state => ({ isValid: state.isValid, isSubmitting: state.isSubmitting })}>
                     {({ isValid, isSubmitting }) => <Button
                         color="primary"
-                        disabled={!isValid || isSubmitting || addLogsQuery.isPending || needsChoice}
+                        disabled={!isValid || isSubmitting || addLogsQuery.isPending || !canSave}
                         variant="contained"
                         type="submit">
                         {t('save')}

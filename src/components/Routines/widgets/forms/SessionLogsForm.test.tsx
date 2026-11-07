@@ -350,6 +350,25 @@ describe('SessionLogsForm', () => {
         expect(screen.queryByText('success')).not.toBeInTheDocument();
     });
 
+    test('can not save while the day\'s sessions are loading', async () => {
+        mockUseSessionOfDay.mockReturnValue({
+            sessions: [],
+            session: undefined,
+            isLoading: true,
+            isSuccess: false,
+        });
+
+        render(<SessionLogsForm
+            dayId={5}
+            routineId={1}
+            selectedDate={DateTime.now()}
+            chosenSessionId={null}
+            saveSession={mockSaveSession}
+        />);
+
+        expect(screen.getByRole('button', { name: /^save$/i })).toBeDisabled();
+    });
+
     test('can not save while the user still has to pick one of the day\'s sessions', async () => {
         mockUseSessionOfDay.mockReturnValue({
             sessions: [testWorkoutSession, new WorkoutSession({ ...testWorkoutSession, id: 'other' })],
