@@ -57,10 +57,21 @@ export const addNutritionalDiaryEntry = async (diaryEntry: DiaryEntry): Promise<
     return DiaryEntry.fromJson(response.data);
 };
 
+export type DiaryEntryEditPayload = {
+    amount: number;
+    datetime: string;
+    weight_unit: number | null;
+};
+
 export const editNutritionalDiaryEntry = async (diaryEntry: DiaryEntry): Promise<DiaryEntry> => {
+    const payload: DiaryEntryEditPayload = {
+        amount: diaryEntry.amount,
+        datetime: diaryEntry.datetime.toISOString(),
+        weight_unit: diaryEntry.weightUnitId,
+    };
     const response = await axios.patch(
         makeUrl(ApiPath.NUTRITIONAL_DIARY, { id: diaryEntry.id! }),
-        diaryEntry.toJson(),
+        payload,
         { headers: makeHeader() }
     );
 
