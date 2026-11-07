@@ -8,8 +8,8 @@ import { Routine } from "@/components/Routines/models/Routine";
 import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
 import { RoutineLogData, RoutineLogDataAdapter } from "@/components/Routines/models/RoutineLogData";
 import { ResponseType } from "@/core/api/responseType";
-import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
-import { fetchPaginated } from "@/core/lib/requests";
+import { ApiPath } from "@/core/lib/consts";
+import { fetchAll } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import axios from 'axios';
 
@@ -116,13 +116,11 @@ export const processRoutine = async (id: number): Promise<Routine> => {
  * Note: this returns all the data, including all sub-objects
  */
 export const getRoutines = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false, limit: API_MAX_PAGE_SIZE } });
+    const ids = await fetchAll(makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false } }), json => json.id as number);
 
     const out: Routine[] = [];
-    for await (const page of fetchPaginated(url, makeHeader())) {
-        for (const routineData of page as Routine[]) {
-            out.push(await processRoutine(routineData.id!));
-        }
+    for (const id of ids) {
+        out.push(await processRoutine(id));
     }
     return out;
 };
@@ -156,25 +154,17 @@ export const getRoutine = async (id: number): Promise<Routine> => {
  *
  * Note: strictly only the routine data, no days or any other sub-objects
  */
-const getRoutinesFromUrl = async (url: string): Promise<Routine[]> => {
-    const out: Routine[] = [];
-    for await (const page of fetchPaginated(url, makeHeader())) {
-        out.push(...page.map(routineData => Routine.fromJson(routineData)));
-    }
-    return out;
-};
-
 export const getRoutinesShallow = async (): Promise<Routine[]> => {
-    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false, limit: API_MAX_PAGE_SIZE } });
-    return (await getRoutinesFromUrl(url)).filter(routine => routine.isNotTemplate);
+    const url = makeUrl(ApiPath.ROUTINE, { query: { 'is_public': false } });
+    return (await fetchAll(url, Routine.fromJson)).filter(routine => routine.isNotTemplate);
 };
 
 export const getPrivateTemplatesShallow = async (): Promise<Routine[]> => {
-    return await getRoutinesFromUrl(makeUrl(ApiPath.PRIVATE_TEMPLATE, { query: { limit: API_MAX_PAGE_SIZE } }));
+    return await fetchAll(makeUrl(ApiPath.PRIVATE_TEMPLATE), Routine.fromJson);
 };
 
 export const getPublicTemplatesShallow = async (): Promise<Routine[]> => {
-    return await getRoutinesFromUrl(makeUrl(ApiPath.PUBLIC_TEMPLATE, { query: { limit: API_MAX_PAGE_SIZE } }));
+    return await fetchAll(makeUrl(ApiPath.PUBLIC_TEMPLATE), Routine.fromJson);
 };
 
 export const addRoutine = async (routine: Routine): Promise<Routine> => {

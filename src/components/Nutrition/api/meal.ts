@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { ApiMealType, Meal } from "@/components/Nutrition/models/meal";
-import { ApiMealItemType, MealItem } from "@/components/Nutrition/models/mealItem";
+import { Meal } from "@/components/Nutrition/models/meal";
+import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { getIngredients } from "@/components/Nutrition/api/ingredient";
-import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
-import { fetchPaginated } from "@/core/lib/requests";
+import { ApiPath } from "@/core/lib/consts";
+import { fetchAll } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 
 
@@ -36,27 +36,11 @@ export const deleteMeal = async (id: string): Promise<void> => {
 
 export const getMealsForPlan = async (planId: string): Promise<Meal[]> => {
 
-    const meals: Meal[] = [];
-    for await (const page of fetchPaginated(makeUrl(ApiPath.MEAL, {
-        query: {
-            plan: planId,
-            limit: API_MAX_PAGE_SIZE
-        }
-    }))) {
-        meals.push(...(page as ApiMealType[]).map((meal) => Meal.fromJson(meal)));
-    }
+    const meals = await fetchAll(makeUrl(ApiPath.MEAL, { query: { plan: planId } }), Meal.fromJson);
     for (const meal of meals) {
         const ingredientIds: number[] = [];
 
-        const items: MealItem[] = [];
-        for await (const page of fetchPaginated(makeUrl(ApiPath.MEAL_ITEM, {
-            query: {
-                meal: meal.id,
-                limit: API_MAX_PAGE_SIZE
-            }
-        }))) {
-            items.push(...(page as ApiMealItemType[]).map((item) => MealItem.fromJson(item)));
-        }
+        const items = await fetchAll(makeUrl(ApiPath.MEAL_ITEM, { query: { meal: meal.id } }), MealItem.fromJson);
 
         for (const item of items) {
             ingredientIds.push(item.ingredientId);

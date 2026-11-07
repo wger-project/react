@@ -1,8 +1,8 @@
 import { attachExercises } from "@/components/Routines/api/workoutLogs";
-import { WorkoutLog, WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
+import { WorkoutLogAdapter } from "@/components/Routines/models/WorkoutLog";
 import { WorkoutSession, WorkoutSessionAdapter } from "@/components/Routines/models/WorkoutSession";
-import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
-import { fetchPaginated } from "@/core/lib/requests";
+import { ApiPath } from "@/core/lib/consts";
+import { fetchAll } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import axios from 'axios';
 
@@ -35,38 +35,23 @@ export const getSessions = async (options?: SessionQueryOptions): Promise<Workou
 
     const sessionAdapter = new WorkoutSessionAdapter();
     const logAdapter = new WorkoutLogAdapter();
-    const result: WorkoutSession[] = [];
-    const logs: WorkoutLog[] = [];
 
     // Fetch all logs first
-    for await (const logPage of fetchPaginated(
-        makeUrl(
-            ApiPath.WORKOUT_LOG,
-            { query: { limit: API_MAX_PAGE_SIZE, ...filtersetQueryLogs } }
-        ),
-        makeHeader()
-    )) {
-        for (const logData of logPage) {
-            logs.push(logAdapter.fromJson(logData));
-        }
-    }
+    const logs = await fetchAll(
+        makeUrl(ApiPath.WORKOUT_LOG, { query: filtersetQueryLogs }),
+        json => logAdapter.fromJson(json)
+    );
 
     await attachExercises(logs);
 
-    for await (const sessionPage of fetchPaginated(
-        makeUrl(
-            ApiPath.SESSION,
-            { query: { limit: API_MAX_PAGE_SIZE, ...filtersetQuerySessions } }
-        ), makeHeader()
-    )) {
-        for (const sessionData of sessionPage) {
-            const session = sessionAdapter.fromJson(sessionData);
+    return await fetchAll(
+        makeUrl(ApiPath.SESSION, { query: filtersetQuerySessions }),
+        json => {
+            const session = sessionAdapter.fromJson(json);
             session.logs = logs.filter(log => log.sessionId === session.id);
-            result.push(session);
+            return session;
         }
-    }
-
-    return result;
+    );
 };
 
 export const addSession = async (session: WorkoutSession): Promise<WorkoutSession> => {
