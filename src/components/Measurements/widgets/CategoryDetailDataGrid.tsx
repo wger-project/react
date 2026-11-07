@@ -3,13 +3,11 @@ import { valueOnly, valueWithUnit } from "@/components/Measurements/charts/forma
 import { MeasurementCategory } from "@/components/Measurements/models/Category";
 import { limitsSchema } from "@/components/Measurements/widgets/limitsSchema";
 import { collectValidationErrors } from "@/core/lib/forms";
-import {
-    MEASUREMENT_SOURCE_CALCULATED,
-    MeasurementEntry
-} from "@/components/Measurements/models/Entry";
+import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { useDeleteMeasurementEntryQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
 import { luxonDateTimeToLocale } from "@/core/lib/date";
+import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
 import CancelIcon from "@mui/icons-material/Close";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import CloudSyncIcon from "@mui/icons-material/CloudSync";
@@ -55,7 +53,7 @@ const buildRows = (
             value: row.entry.valueIn(unit, categoryUnit),
             notes: row.entry.notes,
             isEditable: row.entry.isEditable,
-            source: row.entry.source,
+            isImported: row.entry.isImported,
             change: +row.change.toFixed(2),
             totalChange: +row.totalChange.toFixed(2),
             days: +row.days.toFixed(1),
@@ -103,7 +101,8 @@ export const CategoryDetailDataGrid = (props: {
     const updateEntryQuery = useEditMeasurementEntryQuery();
     const deleteEntryQuery = useDeleteMeasurementEntryQuery();
     const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-    const [editError, setEditError] = useState<string | null>(null);
+    const [notice, setNotice] = useState<string | null>(null);
+    const [importedToDelete, setImportedToDelete] = useState<GridRowModel | null>(null);
 
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
@@ -112,16 +111,23 @@ export const CategoryDetailDataGrid = (props: {
         }
     };
 
-    const handleEditClick = (id: GridRowId) => () => {
-        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    const handleEditClick = (row: GridRowModel) => () => {
+        setRowModesModel({ ...rowModesModel, [row.id]: { mode: GridRowModes.Edit } });
+        if (row.isImported) {
+            setNotice(t('syncedEntryOverwriteWarning'));
+        }
     };
 
     const handleSaveClick = (id: GridRowId) => () => {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
     };
 
-    const handleDeleteClick = (id: GridRowId) => async () => {
-        deleteEntryQuery.mutate(id.toString());
+    const handleDeleteClick = (row: GridRowModel) => async () => {
+        if (row.isImported) {
+            setImportedToDelete(row);
+            return;
+        }
+        deleteEntryQuery.mutate(row.id.toString());
     };
 
     const handleCancelClick = (id: GridRowId) => () => {
@@ -177,10 +183,10 @@ export const CategoryDetailDataGrid = (props: {
         const response = (error as any)?.response?.data;
         const validationErrors = collectValidationErrors(response);
         if (validationErrors.length > 0) {
-            setEditError(validationErrors.join(', '));
+            setNotice(validationErrors.join(', '));
             return;
         }
-        setEditError(error instanceof Error ? error.message : String(error));
+        setNotice(error instanceof Error ? error.message : String(error));
     };
 
     const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
@@ -251,24 +257,17 @@ export const CategoryDetailDataGrid = (props: {
             field: 'actions',
             type: 'actions',
             headerName: t('actions'),
-            width: 100,
+            width: 130,
             cellClassName: 'actions',
             getActions: ({ id, row }) => {
-                // Entries the user did not write offer no actions. Who keeps
-                // them differs: an import is changed in the app it came from,
-                // a calculated value is the server's and changes with what it
+                // A calculated value is the server's and changes with what it
                 // is computed from
                 if (!row.isEditable) {
-                    const isCalculated = row.source === MEASUREMENT_SOURCE_CALCULATED;
-                    const info = isCalculated
-                        ? t('measurements.calculations.entryInfo')
-                        : t('syncedEntryInfo');
+                    const info = t('measurements.calculations.entryInfo');
                     return [
                         <GridActionsCellItem
-                            key="synced"
-                            icon={<Tooltip title={info}>
-                                {isCalculated ? <CalculateIcon /> : <CloudSyncIcon />}
-                            </Tooltip>}
+                            key="calculated"
+                            icon={<Tooltip title={info}><CalculateIcon /></Tooltip>}
                             label={info}
                             color="inherit"
                             // a badge, not a button: disabled drops the click
@@ -301,23 +300,39 @@ export const CategoryDetailDataGrid = (props: {
                     ];
                 }
 
-                return [
+                const actions = [
                     <GridActionsCellItem
                         key="edit"
                         icon={<EditIcon />}
                         label={t('edit')}
                         className="textPrimary"
-                        onClick={handleEditClick(id)}
+                        onClick={handleEditClick(row)}
                         color="inherit"
                     />,
                     <GridActionsCellItem
                         key="delete"
                         icon={<DeleteIcon />}
                         label={t('delete')}
-                        onClick={handleDeleteClick(id)}
+                        onClick={handleDeleteClick(row)}
                         color="inherit"
                     />,
                 ];
+
+                if (row.isImported) {
+                    const info = t('syncedEntryOverwriteWarning');
+                    actions.unshift(
+                        <GridActionsCellItem
+                            key="synced"
+                            icon={<Tooltip title={info}><CloudSyncIcon /></Tooltip>}
+                            label={info}
+                            color="inherit"
+                            disabled
+                            style={{ pointerEvents: 'auto', cursor: 'default' }}
+                        />,
+                    );
+                }
+
+                return actions;
             },
         },
     ];
@@ -349,10 +364,19 @@ export const CategoryDetailDataGrid = (props: {
         />
     </Box>
         <Snackbar
-            open={editError !== null}
+            open={notice !== null}
             autoHideDuration={4000}
-            onClose={() => setEditError(null)}
-            message={editError}
+            onClose={() => setNotice(null)}
+            message={notice}
+        />
+        <DeleteConfirmationModal
+            title={t('deleteConfirmation', {
+                name: valueWithUnit(importedToDelete?.value ?? 0, unit, i18n.language),
+            })}
+            message={t('syncedEntryOverwriteWarning')}
+            isOpen={importedToDelete !== null}
+            closeFn={() => setImportedToDelete(null)}
+            deleteFn={() => deleteEntryQuery.mutate(importedToDelete!.id.toString())}
         />
     </>;
 };

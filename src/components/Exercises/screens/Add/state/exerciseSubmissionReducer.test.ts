@@ -4,6 +4,7 @@ import {
     reset,
     setAlternativeNamesEn,
     setAlternativeNamesI18n,
+    setAuthor,
     setCategory,
     setDescriptionEn,
     setDescriptionI18n,
@@ -48,6 +49,7 @@ describe("exerciseSubmissionReducer - action creators", () => {
 
     test.each([
         ["setNameEn", setNameEn, "Bench Press", SetExerciseSubmissionState.SET_NAME_EN],
+        ["setAuthor", setAuthor, "Jane Doe", SetExerciseSubmissionState.SET_AUTHOR],
         ["setDescriptionEn", setDescriptionEn, "A description", SetExerciseSubmissionState.SET_DESCRIPTION_EN],
         ["setNameI18n", setNameI18n, "Bankdrücken", SetExerciseSubmissionState.SET_NAME_I18N],
         ["setDescriptionI18n", setDescriptionI18n, "Eine Beschreibung", SetExerciseSubmissionState.SET_DESCRIPTION_I18N],
@@ -162,6 +164,12 @@ describe("exerciseSubmissionReducer - reducer", () => {
         expect(next.nameEn).toBe("Squat");
         expect(next.descriptionEn).toBe(baseState.descriptionEn);
         expect(next).not.toBe(baseState);
+    });
+
+    test("SET_AUTHOR updates only author", () => {
+        const next = exerciseSubmissionReducer(baseState, setAuthor("Jane Doe"));
+        expect(next.author).toBe("Jane Doe");
+        expect(next.nameEn).toBe(baseState.nameEn);
     });
 
     test("SET_DESCRIPTION_EN updates only descriptionEn", () => {

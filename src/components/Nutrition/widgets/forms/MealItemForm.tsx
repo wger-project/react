@@ -1,4 +1,4 @@
-import { Button, InputAdornment, MenuItem, Select, Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { MealItem } from "@/components/Nutrition/models/mealItem";
 import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
@@ -7,15 +7,13 @@ import {
     useDeleteMealItemQuery,
     useEditMealItemQuery,
 } from "@/components/Nutrition/queries";
-import { IngredientAutocompleter } from "@/components/Nutrition/widgets/IngredientAutocompleter";
+import { IngredientAmountFields } from "@/components/Nutrition/widgets/forms/IngredientAmountFields";
 import { useAppForm } from "@/core/forms/appForm";
 import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
-
-const GRAM_UNIT_VALUE = 'g';
 
 type MealItemFormProps =
     | { planId: string; item: MealItem; closeFn?: () => void; mealId?: string }
@@ -36,7 +34,6 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
 
     const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(item?.ingredient ?? null);
     const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(item?.weightUnit ?? null);
-    const [weightUnits, setWeightUnits] = useState<NutritionWeightUnit[]>(item?.ingredient?.weightUnits ?? []);
 
     // The dialog closes only once the server took the change, so a rejected
     // write is shown instead of disappearing with it
@@ -60,15 +57,6 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
             .number()
             .required(t('forms.fieldRequired')),
     });
-
-    const handleUnitChange = (value: string) => {
-        if (value === GRAM_UNIT_VALUE) {
-            setSelectedUnit(null);
-        } else {
-            const unit = weightUnits.find(u => u.id === Number(value));
-            setSelectedUnit(unit ?? null);
-        }
-    };
 
     const defaultValues: MealItemFormValues = {
         amount: String(item ? item.amount : 0),
@@ -114,50 +102,29 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
     return (
         <form onSubmit={submitHandler(form)}>
             <Stack spacing={2}>
-                <IngredientAutocompleter
-                    callback={(value: Ingredient | null) => {
-                        form.setFieldValue('ingredient', value ? value.id : null);
-                        setSelectedIngredient(value);
-                        setWeightUnits(value?.weightUnits ?? []);
-                        setSelectedUnit(null);
-                    }}
-                    initialIngredient={item ? item.ingredient : null}
-                />
-                <form.AppField name="amount">
-                    {field => <field.WgerTextField
-                        title={'amount'}
-                        fieldProps={{
-                            slotProps: {
-                                input: {
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            {weightUnits.length > 0 ? (
-                                                <Select
-                                                    variant="standard"
-                                                    disableUnderline
-                                                    value={selectedUnit?.id?.toString() ?? GRAM_UNIT_VALUE}
-                                                    onChange={(e) => handleUnitChange(e.target.value)}
-                                                >
-                                                    <MenuItem value={GRAM_UNIT_VALUE}>
-                                                        {t('nutrition.gramShort')}
-                                                    </MenuItem>
-                                                    {weightUnits.map(unit => (
-                                                        <MenuItem key={unit.id} value={unit.id.toString()}>
-                                                            {unit.name} ({unit.grams}g)
-                                                        </MenuItem>
-                                                    ))}
-                                                </Select>
-                                            ) : (
-                                                t('nutrition.gramShort')
-                                            )}
-                                        </InputAdornment>
-                                    )
-                                },
-                                htmlInput: { inputMode: 'decimal' }
-                            },
+                <form.Subscribe selector={state => state.values.amount}>
+                    {amount => <IngredientAmountFields
+                        ingredient={selectedIngredient}
+                        onIngredientChange={(value: Ingredient | null) => {
+                            form.setFieldValue('ingredient', value ? value.id : null);
+                            setSelectedIngredient(value);
                         }}
+                        weightUnit={selectedUnit}
+                        onWeightUnitChange={setSelectedUnit}
+                        amount={Number(amount)}
+                        renderAmountField={endAdornment => <form.AppField name="amount">
+                            {field => <field.WgerTextField
+                                title={'amount'}
+                                fieldProps={{
+                                    slotProps: {
+                                        input: { endAdornment },
+                                        htmlInput: { inputMode: 'decimal' }
+                                    },
+                                }}
+                            />}
+                        </form.AppField>}
                     />}
-                </form.AppField>
+                </form.Subscribe>
 
                 <FormQueryErrors mutationQuery={item ? editMealItemQuery : addMealItemQuery} />
                 <FormQueryErrors mutationQuery={deleteMealItemQuery} />

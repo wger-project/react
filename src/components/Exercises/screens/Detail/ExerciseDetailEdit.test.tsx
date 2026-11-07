@@ -43,6 +43,14 @@ vi.mock("@/components/User/queries/permission");
 vi.mock("@/components/User/queries/profile");
 vi.mock("@/components/Exercises/queries");
 
+const grantPermissions = (...granted: WgerPermissions[]) => {
+    (usePermissionQuery as Mock).mockImplementation((permission: WgerPermissions) => ({
+        isLoading: false,
+        isSuccess: true,
+        data: granted.includes(permission)
+    }));
+};
+
 const asPromiseHookResult = <T extends object>(value: T): T => {
     return Object.assign(Promise.resolve(value), value) as unknown as T;
 };
@@ -224,6 +232,7 @@ describe("Exercise translation edit tests", () => {
 
     test('removes an existing alias when only its X is clicked', async () => {
         const user = userEvent.setup();
+        grantPermissions(WgerPermissions.DELETE_EXERCISE);
 
         render(
             <QueryClientProvider client={testQueryClient}>
@@ -250,6 +259,7 @@ describe("Exercise translation edit tests", () => {
     test('correctly updates the aliases', async () => {
         // Arrange
         const user = userEvent.setup();
+        grantPermissions(WgerPermissions.DELETE_EXERCISE);
 
         // Act
         render(
@@ -280,10 +290,70 @@ describe("Exercise translation edit tests", () => {
     });
 
 
+    test('saved aliases can not be removed without the delete permission', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <ExerciseDetailEdit
+                    exerciseId={345}
+                    language={testLanguageGerman}
+                />
+            </QueryClientProvider>
+        );
+
+        // Assert - no delete icon on the saved aliases
+        const saved = screen.getByText('Beinverdicker').closest('.MuiChip-root') as HTMLElement;
+        expect(within(saved).queryByTestId('CancelIcon')).not.toBeInTheDocument();
+
+        // Backspace in the empty input doesn't remove them either
+        const aliasInput = screen.getByRole('combobox');
+        await user.click(aliasInput);
+        await user.keyboard('{Backspace}{Backspace}');
+        expect(screen.getByText('Königsübung')).toBeInTheDocument();
+        expect(screen.getByText('Beinverdicker')).toBeInTheDocument();
+
+        await user.click(screen.getByText('save'));
+        await waitFor(() => expect(editTranslationMutateMock).toHaveBeenCalled());
+        expect(deleteAliasMutateMock).not.toHaveBeenCalled();
+    });
+
+    test('new aliases can be removed without the delete permission', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <ExerciseDetailEdit
+                    exerciseId={345}
+                    language={testLanguageGerman}
+                />
+            </QueryClientProvider>
+        );
+        const aliasInput = screen.getByRole('combobox');
+        await user.click(aliasInput);
+        await user.type(aliasInput, 'another name');
+        await user.keyboard('{enter}');
+
+        const added = screen.getByRole('button', { name: 'another name' });
+        await user.click(within(added).getByTestId('CancelIcon'));
+
+        // Assert
+        expect(screen.queryByText('another name')).not.toBeInTheDocument();
+        await user.click(screen.getByText('save'));
+        await waitFor(() => expect(editTranslationMutateMock).toHaveBeenCalled());
+        expect(postAliasMutateMock).not.toHaveBeenCalled();
+        expect(deleteAliasMutateMock).not.toHaveBeenCalled();
+    });
+
     test('creates a new translation if the language is not available', async () => {
         // Arrange
         const user = userEvent.setup();
-        const description = "Le sanglier d'Europe est une espèce de mammifères de la famille des Suidés";
+        const description = "Le sanglier d'Europe est une espèce de mammifères de la famille des Suidés, très répandue "
+            + "dans les forêts du continent, où il vit en groupes et se nourrit surtout de plantes et de racines.";
         addTranslationMutateMock.mockResolvedValue(new Translation({
             id: 300,
             uuid: '409f4b97-a56d-4852-85b2-834ba18b7ccc',

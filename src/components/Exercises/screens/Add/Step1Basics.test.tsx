@@ -3,10 +3,12 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Step1Basics } from "@/components/Exercises/screens/Add/Step1Basics";
 import { useCategoriesQuery, useEquipmentQuery, useMusclesQuery } from "@/components/Exercises/queries";
+import { useProfileQuery } from "@/components/User";
 import React from "react";
 import { ExerciseSubmissionStateProvider } from "@/components/Exercises/screens/Add/state";
 import {
     setAlternativeNamesEn,
+    setAuthor,
     setCategory,
     setEquipment,
     setNameEn,
@@ -15,11 +17,13 @@ import {
 } from "@/components/Exercises/screens/Add/state/exerciseSubmissionReducer";
 import type { Mock } from 'vitest';
 import { testCategories, testEquipment, testMuscles } from "@/tests/exerciseTestdata";
+import { testProfileDataVerified } from "@/tests/userTestdata";
 
 // It seems we run into a timeout when running the tests on GitHub actions
 vi.setConfig({ testTimeout: 15000 });
 
 vi.mock("@/components/Exercises/queries");
+vi.mock("@/components/User/queries/profile");
 vi.mock("@/components/Exercises/screens/Add/state/exerciseSubmissionReducer", async () => {
     const originalModule = await vi.importActual<typeof import("@/components/Exercises/screens/Add/state/exerciseSubmissionReducer")>("@/components/Exercises/screens/Add/state/exerciseSubmissionReducer");
     return {
@@ -28,6 +32,7 @@ vi.mock("@/components/Exercises/screens/Add/state/exerciseSubmissionReducer", as
         setNameEn: vi.fn(),
         setCategory: vi.fn(),
         setAlternativeNamesEn: vi.fn(),
+        setAuthor: vi.fn(),
         setEquipment: vi.fn(),
         setPrimaryMuscles: vi.fn(),
         setSecondaryMuscles: vi.fn()
@@ -37,6 +42,7 @@ vi.mock("@/components/Exercises/screens/Add/state/exerciseSubmissionReducer", as
 const mockedUseCategoriesQuery = useCategoriesQuery as Mock;
 const mockedMuscleQuery = useMusclesQuery as Mock;
 const mockedUseEquipmentQuery = useEquipmentQuery as Mock;
+const mockedUseProfileQuery = useProfileQuery as Mock;
 
 
 describe("<Step1Basics />", () => {
@@ -50,6 +56,9 @@ describe("<Step1Basics />", () => {
         ));
         mockedUseEquipmentQuery.mockImplementation(() => (
             { isLoading: false, data: testEquipment }
+        ));
+        mockedUseProfileQuery.mockImplementation(() => (
+            { isLoading: false, data: testProfileDataVerified }
         ));
     });
 
@@ -127,6 +136,7 @@ describe("<Step1Basics />", () => {
         expect(setSecondaryMuscles).toHaveBeenNthCalledWith(1, []);
         expect(setSecondaryMuscles).toHaveBeenNthCalledWith(2, [4]);
         expect(setNameEn).toHaveBeenCalledWith('Biceps enlarger');
+        expect(setAuthor).toHaveBeenCalledWith('admin');
         expect(setCategory).toHaveBeenCalledWith(1);
         expect(setAlternativeNamesEn).toHaveBeenCalledWith([
             'Biceps enlarger 2000',
@@ -158,5 +168,45 @@ describe("<Step1Basics />", () => {
         // Assert
         expect(await screen.findByText('forms.minLength')).toBeInTheDocument();
         expect(mockOnContinue).not.toHaveBeenCalled();
+    });
+
+    test("the author is prefilled with the username and explained", () => {
+        const queryClient = new QueryClient();
+        render(
+            <ExerciseSubmissionStateProvider>
+                <QueryClientProvider client={queryClient}>
+                    <Step1Basics onContinue={vi.fn()} />
+                </QueryClientProvider>
+            </ExerciseSubmissionStateProvider>
+        );
+
+        expect(screen.getByLabelText("licenses.authors")).toHaveValue('admin');
+        expect(screen.getByText("exercises.authorHelpText")).toBeInTheDocument();
+    });
+
+    test("an empty author blocks the step", async () => {
+        // Arrange
+        const user = userEvent.setup();
+        const mockOnContinue = vi.fn();
+        const queryClient = new QueryClient();
+        render(
+            <ExerciseSubmissionStateProvider>
+                <QueryClientProvider client={queryClient}>
+                    <Step1Basics onContinue={mockOnContinue} />
+                </QueryClientProvider>
+            </ExerciseSubmissionStateProvider>
+        );
+
+        // Act
+        await user.type(screen.getByLabelText("name"), 'Biceps enlarger');
+        await user.click(screen.getByLabelText('category'));
+        await user.click(screen.getByText('Arms'));
+        await user.clear(screen.getByLabelText("licenses.authors"));
+        await user.click(screen.getByText('continue'));
+
+        // Assert
+        expect(await screen.findByText('forms.fieldRequired')).toBeInTheDocument();
+        expect(mockOnContinue).not.toHaveBeenCalled();
+        expect(setAuthor).not.toHaveBeenCalled();
     });
 });

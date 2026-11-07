@@ -1,6 +1,6 @@
 import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { API_RESULTS_PAGE_SIZE, ApiPath, LANGUAGE_SHORT_ENGLISH } from "@/core/lib/consts";
-import { fetchPaginated } from "@/core/lib/requests";
+import { fetchAll } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 import { SearchLanguageFilter } from '@/core/ui/Widgets/SearchLanguageFilter';
 import { ApiIngredientType, NutriScoreValue } from '@/types';
@@ -42,16 +42,7 @@ export const getIngredients = async (ids: number[]): Promise<Ingredient[]> => {
 
 
     const url = makeUrl(ApiPath.INGREDIENTINFO_PATH, { query: { id__in: ids.join(',') } });
-    const out: Ingredient[] = [];
-
-    // Collect all the ingredients
-    for await (const page of fetchPaginated(url, makeHeader())) {
-        for (const logData of page) {
-            out.push(Ingredient.fromJson(logData));
-        }
-    }
-
-    return out;
+    return await fetchAll(url, Ingredient.fromJson);
 };
 
 

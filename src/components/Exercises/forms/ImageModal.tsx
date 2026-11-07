@@ -100,6 +100,7 @@ const ImageForm = ({ image, onSubmit, submitLabel }: Pick<ImageFormModalProps, '
                             {field => <field.WgerTextField
                                 title={t('licenses.authors')}
                                 variant="standard"
+                                helperText={t('licenses.authorsHelper')}
                             />}
                         </form.AppField>
                         <form.AppField name="authorUrl">

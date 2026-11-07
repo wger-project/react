@@ -20,7 +20,7 @@ import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
 import i18n from "@/i18n";
 import { TFunction } from "i18next";
 import { DateTime } from "luxon";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { dateLocale, dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
 import * as yup from 'yup';
@@ -67,8 +67,8 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
         description: yup
             .string()
             .required()
-            .max(25, t('forms.maxLength', { chars: '25' }))
-            .min(3, t('forms.minLength', { chars: '3' })),
+            .max(25, t('forms.maxLength', { count: 25 }))
+            .min(3, t('forms.minLength', { count: 3 })),
         onlyLogging: yup
             .boolean(),
         goalEnergy: yup
@@ -124,7 +124,13 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
 
     const form = useAppForm({
         defaultValues,
-        validators: { onChange: yupSchema<PlanFormValues>(validationSchema) },
+        validators: {
+            // Disabled goals are cleared from the payload, so their hidden values
+            // must not prevent the rest of the plan from being saved.
+            onChange: yupSchema<PlanFormValues>(useGoals ? validationSchema : validationSchema.omit([
+                'goalEnergy', 'goalProtein', 'goalCarbohydrates', 'goalFiber', 'goalFat',
+            ])),
+        },
         onSubmit: async ({ value }) => {
             // A goal counts only while the goals are switched on
             const goal = (entered: string): number | null =>
@@ -160,6 +166,12 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             }
         },
     });
+
+    useEffect(() => {
+        // Clear stale goal errors when the fields are hidden, and restore
+        // validation when the user enables their existing goals again.
+        void form.validate('change');
+    }, [form, useGoals]);
 
     /** A goal in kcal or grams; with an energy factor the field shows what the grams amount to */
     const goalField = (name: GoalName, energyFactor?: number) => (

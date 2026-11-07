@@ -82,7 +82,8 @@ describe("Test the add exercise step 3 component", () => {
     // The yup validator requires at least 40 characters, so any happy-path test
     // has to fill the markdown editor before submitting.
     const VALID_DESCRIPTION =
-        "This is a long enough description for the exercise that satisfies the minimum length validator.";
+        "Stand upright with your feet shoulder-width apart and hold the dumbbells at your sides. "
+        + "Slowly curl both weights up to your shoulders, then lower them again under control.";
 
     async function fillDescription(user: ReturnType<typeof userEvent.setup>, value: string) {
         // The MarkdownEditor TextField uses t('useMarkdownHint') as placeholder;

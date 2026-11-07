@@ -21,6 +21,9 @@ import {
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Routines/queries");
+vi.mock('@/components/User/queries/profile', () => ({
+    useProfileQuery: () => ({ isLoading: false, data: { useMetric: true } }),
+}));
 
 const queryClient = new QueryClient();
 

@@ -2,6 +2,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MeasurementEntry } from "@/components/Measurements";
+import { deleteSession } from "@/components/Routines/api/session";
 import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { testQueryClient } from "@/tests/queryClient";
 import { makeWeightEntry } from "@/tests/weight/testData";
@@ -14,6 +15,7 @@ import { DayProps } from './CalendarComponent';
 import Entries from './Entries';
 
 vi.mock("@/components/Measurements/api/bodyWeight");
+vi.mock("@/components/Routines/api/session");
 vi.mock('@/components/User/queries/profile', () => ({
     useProfileQuery: () => ({ isLoading: false, data: { useMetric: true } }),
 }));
@@ -127,6 +129,51 @@ describe('Entries Component', () => {
         expect(screen.getAllByText('Squats').length).toBe(testWorkoutLogs.length);
         expect(screen.getByText(/^8 × 80/)).toBeInTheDocument();
         expect(screen.getByText(/^8 × 82.5/)).toBeInTheDocument();
+    });
+
+    test('Deletes a workout session after confirming', async () => {
+        const session = new WorkoutSession({ ...testWorkoutSession, logs: testWorkoutLogs });
+        const propsWithSession = {
+            ...defaultProps,
+            workoutSessions: [session]
+        };
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithSession} />
+            </QueryClientProvider>
+        );
+
+        const user = userEvent.setup();
+        await user.click(screen.getByRole('button', { name: 'delete' }));
+
+        // Nothing is deleted until the user confirms
+        expect(screen.getByText('routines.deleteSessionInfo')).toBeInTheDocument();
+        expect(deleteSession).not.toHaveBeenCalled();
+
+        await user.click(screen.getByRole('button', { name: 'delete' }));
+
+        expect(deleteSession).toHaveBeenCalledTimes(1);
+        expect(deleteSession).toHaveBeenCalledWith(session.id);
+    });
+
+    test('Does not delete a workout session when the dialog is closed', async () => {
+        const propsWithSession = {
+            ...defaultProps,
+            workoutSessions: [new WorkoutSession({ ...testWorkoutSession, logs: testWorkoutLogs })]
+        };
+
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <Entries selectedDay={propsWithSession} />
+            </QueryClientProvider>
+        );
+
+        const user = userEvent.setup();
+        await user.click(screen.getByRole('button', { name: 'delete' }));
+        await user.click(screen.getByRole('button', { name: 'close' }));
+
+        expect(deleteSession).not.toHaveBeenCalled();
     });
 
     test('Shows every session of the day', async () => {

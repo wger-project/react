@@ -18,6 +18,7 @@ import {
 } from "@mui/x-data-grid";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Exercise } from "@/components/Exercises";
+import { useDisplayWeightUnit } from "@/components/Measurements";
 import { RIR_VALUES_SELECT_LIST } from "@/components/Routines/models/BaseConfig";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "@/components/Routines/queries";
@@ -36,8 +37,9 @@ import {
 } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { generateChartColors } from "@/core/lib/colors";
-import { PAGINATION_OPTIONS } from "@/core/lib/consts";
+import { PAGINATION_OPTIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/core/lib/consts";
 import { dateToLocale, luxonDateTimeToLocale } from "@/core/lib/date";
+import { convertWeight, WeightUnit } from "@/core/lib/weightUnit";
 
 
 export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logEntries: WorkoutLog[] | undefined }) => {
@@ -243,13 +245,18 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
  * Format the log entries so that they can be passed to the chart
  *
  * This is mostly due to the time, which needs to be a number to be shown
- * in the scatter plot
+ * in the scatter plot. Weights logged in kg or lb are converted to the unit
+ * the chart is drawn in, other units are passed through unchanged.
  */
-const formatData = (data: WorkoutLog[]) =>
+export const formatData = (data: WorkoutLog[], unit: WeightUnit) =>
     data.map((log) => {
+        const logUnit: WeightUnit | null = log.weightUnitId === WEIGHT_UNIT_KG
+            ? 'kg'
+            : log.weightUnitId === WEIGHT_UNIT_LB ? 'lb' : null;
+
         return {
             id: log.id,
-            value: log.weight,
+            value: log.weight !== null && logUnit !== null ? convertWeight(log.weight, logUnit, unit) : log.weight,
             time: log.date.getTime(),
             entry: log,
         };
@@ -279,6 +286,9 @@ const ExerciseLogTooltip = ({ active, payload }: TooltipContentProps<ValueType, 
 };
 
 export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
+    const { t } = useTranslation();
+    const weightUnit = useDisplayWeightUnit();
+    const weightUnitLabel = t(weightUnit === 'lb' ? 'server.lb' : 'server.kg');
 
     // Group by rep count
     //
@@ -306,12 +316,12 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
                     domain={["auto", "auto"]}
                     dataKey="value"
                     name="Value"
-                    unit="kg"
+                    unit={weightUnitLabel}
                 />
 
                 {Array.from(result).map(([key, value]) => {
                         const color = colorGenerator.next().value!;
-                        const formattedData = formatData(value);
+                        const formattedData = formatData(value, weightUnit);
 
                         return <Scatter
                             key={key}

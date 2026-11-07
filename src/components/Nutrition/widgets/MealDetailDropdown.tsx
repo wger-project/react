@@ -61,7 +61,7 @@ export const MealDetailDropdown = (props: {
     const handleOpenDeleteModal = () => setOpenDeleteModal(true);
     const handleCloseDeleteModal = () => setOpenDeleteModal(false);
 
-    const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    const handleCloseSnackbar = (event?: React.SyntheticEvent | Event | null, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }

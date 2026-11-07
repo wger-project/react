@@ -160,7 +160,14 @@ describe("Test the PlanForm component", () => {
         }), expect.anything());
     });
 
-    test('Switching the goals back off clears them from the payload', async () => {
+    test.each([
+        ['goalEnergy', '2500'],
+        ['goalEnergy', '7000'],
+        ['goalProtein', '-1'],
+        ['goalCarbohydrates', 'invalid'],
+        ['goalFiber', '0'],
+        ['goalFat', '501'],
+    ])('Switching the goals back off clears %s = %s from the payload', async (field, value) => {
 
         // Arrange
         const user = userEvent.setup();
@@ -173,7 +180,7 @@ describe("Test the PlanForm component", () => {
         );
         const goalsSwitch = screen.getByRole('switch', { name: 'nutrition.useGoalsHelpText' });
         await user.click(goalsSwitch);
-        await user.type(screen.getByLabelText('nutrition.goalEnergy'), '2500');
+        await user.type(screen.getByLabelText(`nutrition.${field}`), value);
         await user.click(goalsSwitch);
         await user.click(screen.getByRole('button', { name: 'submit' }));
 
@@ -186,6 +193,55 @@ describe("Test the PlanForm component", () => {
             goalFat: null,
             goalFiber: null,
         }), expect.anything());
+    });
+
+    test('Switching goals back on keeps their values and validates them', async () => {
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <PlanForm />
+            </QueryClientProvider>
+        );
+        const goalsSwitch = screen.getByRole('switch', { name: 'nutrition.useGoalsHelpText' });
+        await user.click(goalsSwitch);
+        await user.type(screen.getByLabelText('nutrition.goalEnergy'), '7000');
+        await user.click(goalsSwitch);
+        await user.click(goalsSwitch);
+
+        expect(screen.getByLabelText('nutrition.goalEnergy')).toHaveValue('7000');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(addMutate).not.toHaveBeenCalled();
+
+        await user.clear(screen.getByLabelText('nutrition.goalEnergy'));
+        await user.type(screen.getByLabelText('nutrition.goalEnergy'), '2500');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(addMutate).toHaveBeenCalledWith(expect.objectContaining({
+            goalEnergy: 2500,
+        }), expect.anything());
+    });
+
+    test('An existing plan can be saved after disabling invalid goals', async () => {
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={queryClient}>
+                <PlanForm plan={TEST_NUTRITIONAL_PLAN_1} />
+            </QueryClientProvider>
+        );
+        const goalsSwitch = screen.getByRole('switch', { name: 'nutrition.useGoalsHelpText' });
+        await user.click(goalsSwitch);
+        await user.type(screen.getByLabelText('nutrition.goalProtein'), '-1');
+        await user.click(goalsSwitch);
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+
+        expect(editMutate).toHaveBeenCalledWith(expect.objectContaining({
+            id: TEST_NUTRITIONAL_PLAN_1.id,
+            goalEnergy: null,
+            goalProtein: null,
+            goalCarbohydrates: null,
+            goalFat: null,
+            goalFiber: null,
+        }), expect.anything());
+        expect(addMutate).not.toHaveBeenCalled();
     });
 
     test.each([

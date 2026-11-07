@@ -1,5 +1,5 @@
 import * as exerciseService from "@/components/Exercises/api/exercise";
-import { addSession, editSession, getSessions, searchSessions } from "@/components/Routines/api/session";
+import { addSession, deleteSession, editSession, getSessions, searchSessions } from "@/components/Routines/api/session";
 import { WorkoutSession } from "@/components/Routines/models/WorkoutSession";
 import { testExerciseBenchPress, testExerciseSquats } from "@/tests/exerciseTestdata";
 import axios from "axios";
@@ -264,5 +264,16 @@ describe("Session service tests", () => {
             datetime_end: null,
         });
         expect(result.notes).toBe("edited");
+    });
+
+    test('deleteSession DELETEs /workoutsession/<id>/', async () => {
+        (axios.delete as Mock).mockResolvedValue({ status: 204 });
+
+        const result = await deleteSession(SESSION_UUID);
+
+        expect(axios.delete).toHaveBeenCalledTimes(1);
+        const [url] = (axios.delete as Mock).mock.calls[0];
+        expect(url).toMatch(new RegExp(`/api/v2/workoutsession/${SESSION_UUID}/$`));
+        expect(result).toBe(204);
     });
 });

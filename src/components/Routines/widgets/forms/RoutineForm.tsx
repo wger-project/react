@@ -73,11 +73,11 @@ export const RoutineForm = ({
         name: yup
             .string()
             .required()
-            .max(NAME_MAX_LENGTH, t('forms.maxLength', { chars: NAME_MAX_LENGTH }))
-            .min(NAME_MIN_LENGTH, t('forms.minLength', { chars: NAME_MIN_LENGTH })),
+            .max(NAME_MAX_LENGTH, t('forms.maxLength', { count: NAME_MAX_LENGTH }))
+            .min(NAME_MIN_LENGTH, t('forms.minLength', { count: NAME_MIN_LENGTH })),
         description: yup
             .string()
-            .max(DESCRIPTION_MAX_LENGTH, t('forms.maxLength', { chars: DESCRIPTION_MAX_LENGTH })),
+            .max(DESCRIPTION_MAX_LENGTH, t('forms.maxLength', { count: DESCRIPTION_MAX_LENGTH })),
         start: yup
             .date()
             .required(),
@@ -90,7 +90,7 @@ export const RoutineForm = ({
             )
             .test(
                 'hasMinimumDuration',
-                t('routines.minLengthRoutine', { number: MIN_WORKOUT_DURATION }),
+                t('routines.minLengthRoutine', { count: MIN_WORKOUT_DURATION }),
                 function (value) {
                     const startDate = this.parent.start;
                     if (startDate && value) {
@@ -104,7 +104,7 @@ export const RoutineForm = ({
             )
             .test(
                 'hasMaximumDuration',
-                t('routines.maxLengthRoutine', { number: MAX_WORKOUT_DURATION }),
+                t('routines.maxLengthRoutine', { count: MAX_WORKOUT_DURATION }),
                 function (value) {
                     const startDate = this.parent.start;
                     if (startDate && value) {
@@ -236,10 +236,8 @@ export const RoutineForm = ({
                         textAlign: "center"
                     }}
                 >
-                    {durationDays === 0 ? t('durationWeeks', { number: durationWeeks }) : t('durationWeeksDays', {
-                        nrWeeks: durationWeeks,
-                        nrDays: durationDays
-                    })}
+                    {t('durationWeeks', { count: durationWeeks })}
+                    {durationDays > 0 && `, ${t('durationDays', { count: durationDays })}`}
                 </Grid>
                 <Grid size={12}>
                     <form.Field name="fitInWeek">

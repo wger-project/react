@@ -17,12 +17,14 @@ export class MeasurementEntry {
     ) {
     }
 
-    /**
-     * Only what the user wrote themselves is theirs to change: an imported
-     * entry belongs to the app it came from, a calculated one to the server
-     */
+    /** A calculated entry belongs to the server, the API refuses changes to it */
     get isEditable(): boolean {
-        return this.source === 'user';
+        return this.source !== MEASUREMENT_SOURCE_CALCULATED;
+    }
+
+    /** Written by another app, which can overwrite what the user changes here */
+    get isImported(): boolean {
+        return this.source !== 'user' && this.isEditable;
     }
 
     /**

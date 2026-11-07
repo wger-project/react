@@ -36,7 +36,7 @@
         "basics": "Cơ bản bài tập",
         "equipment": "Thiết bị",
         "step1HeaderBasics": "Tên đơn giản trong tiếng Anh",
-        "notEnoughRights": "Bạn chỉ có thể đóng góp các bài tập nếu tài khoản của bạn tạo được nhiều hơn {{days}} ngày và đã xác nhận email",
+        "notEnoughRights_other": "Bạn chỉ có thể đóng góp các bài tập nếu tài khoản của bạn tạo được nhiều hơn {{count}} ngày và đã xác nhận email",
         "successfullyUpdated": "Bài tập đã được cập nhật. Bởi vì cache nên sẽ mất chút thời gian để thay đổi được cập nhật trên ứng dụng.",
         "exerciseNotTranslated": "Không có dịch",
         "replacements": "Các bài tập thay thế",
