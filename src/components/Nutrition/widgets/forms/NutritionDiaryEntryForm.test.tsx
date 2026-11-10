@@ -1,5 +1,6 @@
 import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import {
     useAddDiaryEntryQuery,
     useDeleteDiaryEntryQuery,
@@ -10,11 +11,12 @@ import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/Nu
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
 import { mutateMock } from "@/tests/mutationMock";
 import { TEST_DIARY_ENTRY_1 } from "@/tests/nutritionDiaryTestdata";
-import { TEST_MEAL_1, TEST_MEAL_2 } from "@/tests/nutritionTestdata";
+import { TEST_MEAL_1, TEST_MEAL_2, TEST_WEIGHT_UNIT_SLICE } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from '@testing-library/react';
 import userEvent, { UserEvent } from "@testing-library/user-event";
 import React from 'react';
+import { Settings } from 'luxon';
 import type { Mock } from 'vitest';
 
 vi.mock('@/components/Nutrition/queries');
@@ -62,6 +64,115 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         (useSearchIngredientQuery as Mock).mockImplementation(() => searchIngredient);
     });
 
+    test.each([
+        ['2026-10-25T00:30:15.123Z', '25', '2026-10-25T00:30:15.123Z'],
+        ['2026-10-25T01:30:15.123Z', '25', '2026-10-25T01:30:15.123Z'],
+        ['2026-10-25T00:30:15.123Z', '26', '2026-10-26T01:30:15.123Z'],
+    ])('calendar selection preserves the intended instant (%s, day %s)', async (initial, day, expected) => {
+        const previousZone = Settings.defaultZone;
+        Settings.defaultZone = 'Europe/Berlin';
+        try {
+            const user = userEvent.setup();
+            const entry = DiaryEntry.clone(TEST_DIARY_ENTRY_1, { datetime: new Date(initial) });
+            render(<NutritionDiaryEntryForm planId={entry.planId} entry={entry} />);
+            await user.click(screen.getByRole('button', { name: /choose date/i }));
+            await user.click(await screen.findByRole('gridcell', { name: day }));
+            const accept = screen.queryByRole('button', { name: 'OK' });
+            if (accept) await user.click(accept);
+            await user.click(screen.getByRole('button', { name: 'submit' }));
+            expect(mutateEditMock).toHaveBeenCalledOnce();
+            const saved = mutateEditMock.mock.calls[0][0] as DiaryEntry;
+            expect(saved.datetime.toISOString()).toBe(expected);
+            expect(entry.datetime.toISOString()).toBe(initial);
+        } finally {
+            Settings.defaultZone = previousZone;
+        }
+    });
+
+
+    test('clearing a serving unit saves null without mutating the source entry', async () => {
+        const user = userEvent.setup();
+        const entry = DiaryEntry.clone(TEST_DIARY_ENTRY_1, {
+            ingredient: new Ingredient({ ...TEST_INGREDIENT_1, weightUnits: [TEST_WEIGHT_UNIT_SLICE] }),
+            weightUnit: TEST_WEIGHT_UNIT_SLICE,
+        });
+        render(<NutritionDiaryEntryForm planId={entry.planId} entry={entry} closeFn={closeFnMock} />);
+        await user.click(screen.getByRole('button', { name: 'nutrition.gramShort' }));
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(mutateEditMock).toHaveBeenCalledWith(expect.objectContaining({
+            weightUnitId: null, weightUnit: null, ingredientId: entry.ingredientId,
+        }), expect.anything());
+        expect(entry.weightUnitId).toBe(TEST_WEIGHT_UNIT_SLICE.id);
+        expect(entry.weightUnit).toBe(TEST_WEIGHT_UNIT_SLICE);
+    });
+
+    test.each([null, TEST_INGREDIENT_1])('unresolved servings are not displayed as grams (%s)', async ingredient => {
+        const user = userEvent.setup();
+        const entry = DiaryEntry.clone(TEST_DIARY_ENTRY_1, {
+            ingredient, weightUnit: null, weightUnitId: 987,
+        });
+        render(<NutritionDiaryEntryForm planId={entry.planId} entry={entry} />);
+        expect(screen.getByText('nutrition.unavailableWeightUnit')).toBeInTheDocument();
+        expect(screen.queryByTestId('macros-summary')).not.toBeInTheDocument();
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(mutateEditMock).toHaveBeenLastCalledWith(expect.objectContaining({ weightUnitId: 987 }), expect.anything());
+        await user.click(screen.getByRole('button', { name: 'nutrition.gramShort' }));
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(mutateEditMock).toHaveBeenLastCalledWith(expect.objectContaining({ weightUnitId: null }), expect.anything());
+    });
+
+    test('closing a draft leaves the cached entry unchanged', async () => {
+        const user = userEvent.setup();
+        const entry = DiaryEntry.clone(TEST_DIARY_ENTRY_1);
+        render(<NutritionDiaryEntryForm planId={entry.planId} entry={entry} closeFn={closeFnMock} />);
+        await user.clear(screen.getByLabelText('amount'));
+        await user.type(screen.getByLabelText('amount'), '80.5');
+        await user.click(screen.getByRole('button', { name: 'close' }));
+        expect(entry.amount).toBe(120);
+        expect(mutateEditMock).not.toHaveBeenCalled();
+        expect(closeFnMock).toHaveBeenCalledOnce();
+    });
+
+    test.each(['1', '1000', '80.55', '80,55'])('accepts portion %s', async value => {
+        const user = userEvent.setup();
+        render(<NutritionDiaryEntryForm planId={TEST_DIARY_ENTRY_1.planId} entry={TEST_DIARY_ENTRY_1} />);
+        await user.clear(screen.getByLabelText('amount'));
+        await user.type(screen.getByLabelText('amount'), value);
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(mutateEditMock).toHaveBeenCalledWith(expect.objectContaining({
+            amount: Number(value.replace(',', '.')),
+        }), expect.anything());
+    });
+
+    test.each(['0.99', '1000.01', '1.001'])('rejects portion %s', async value => {
+        const user = userEvent.setup();
+        render(<NutritionDiaryEntryForm planId={TEST_DIARY_ENTRY_1.planId} entry={TEST_DIARY_ENTRY_1} />);
+        await user.clear(screen.getByLabelText('amount'));
+        await user.type(screen.getByLabelText('amount'), value);
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(mutateEditMock).not.toHaveBeenCalled();
+    });
+
+    test('a pending save disables resubmission', () => {
+        (useEditDiaryEntryQuery as Mock).mockReturnValue({ mutate: mutateEditMock, isPending: true });
+        render(<NutritionDiaryEntryForm planId={TEST_DIARY_ENTRY_1.planId} entry={TEST_DIARY_ENTRY_1} closeFn={closeFnMock} />);
+        expect(screen.getByRole('button', { name: 'submit' })).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'close' })).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'delete' })).toBeDisabled();
+    });
+
+    test('a failed write leaves the form open and displays the error', async () => {
+        const user = userEvent.setup();
+        (useEditDiaryEntryQuery as Mock).mockReturnValue({
+            mutate: vi.fn(), isError: true, error: { message: 'Unable to save', response: { data: {} } },
+        });
+        render(<NutritionDiaryEntryForm planId={TEST_DIARY_ENTRY_1.planId}
+            entry={TEST_DIARY_ENTRY_1} closeFn={closeFnMock} />);
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(closeFnMock).not.toHaveBeenCalled();
+        expect(screen.getByRole('alert')).toHaveTextContent('Unable to save');
+        expect(screen.getByLabelText('amount')).toBeInTheDocument();
+    });
 
     test('A new entry should be added - no meal', async () => {
         // Arrange
@@ -133,7 +244,10 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                                          closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await fillInEntry(user, '1001 Nacht Haferbrei');
+        expect(screen.queryByRole('button', { name: 'nutrition.changeIngredient' })).not.toBeInTheDocument();
+        await user.clear(screen.getByLabelText('amount'));
+        await user.type(screen.getByLabelText('amount'), '80,5');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
 
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
@@ -141,11 +255,10 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(mutateEditMock).toHaveBeenCalledWith(
             expect.objectContaining({
                 id: 'dddddddd-0000-0000-0000-000000000042',
-                amount: 120,
+                amount: 80.5,
                 mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
-                planId: 'aaaaaaaa-0000-0000-0000-000000000123',
-                // The newly selected ingredient, not the entry's original one
-                ingredientId: 102,
+                planId: TEST_DIARY_ENTRY_1.planId,
+                ingredientId: 101,
             })
             , expect.anything());
     });
@@ -180,7 +293,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
             , expect.anything());
     });
 
-    test('Editing shows the entry\'s meal preselected when meals are passed', async () => {
+    test('Editing preserves the meal without offering a meal selector', async () => {
         // Arrange
         const user = userEvent.setup();
 
@@ -193,7 +306,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         );
 
         // Assert - the meal the entry belongs to is selected, not an empty field
-        expect(screen.getByDisplayValue('Second breakfast')).toBeInTheDocument();
+        expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
 
         // Submitting keeps that meal
         await user.click(screen.getByRole('button', { name: 'submit' }));
@@ -234,7 +347,7 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                                          closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await fillInEntry(user, '1001 Nacht Haferbrei');
+        await user.click(screen.getByRole('button', { name: 'submit' }));
 
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
@@ -242,11 +355,10 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         expect(mutateEditMock).toHaveBeenCalledWith(
             expect.objectContaining({
                 id: 'dddddddd-0000-0000-0000-000000000042',
-                planId: 'aaaaaaaa-0000-0000-0000-000000000123',
-                mealId: 'bbbbbbbb-0000-0000-0000-000000000456',
+                planId: TEST_DIARY_ENTRY_1.planId,
+                mealId: TEST_DIARY_ENTRY_1.mealId,
                 amount: 120,
-                // The newly selected ingredient, not the entry's original one
-                ingredientId: 102,
+                ingredientId: 101,
                 weightUnitId: null,
             })
             , expect.anything());
