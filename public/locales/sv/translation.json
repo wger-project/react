@@ -23,7 +23,8 @@
         "originalTitle": "Titel",
         "authors": "Upphovspersoner",
         "authorProfile": "Länk till upphovspersonens webbplats eller profil, om sådan finns",
-        "derivativeSourceUrlHelper": "En bearbetning bygger på ett tidigare verk men innehåller också tillräckligt mycket nytt, kreativt innehåll för att ha ett eget upphovsrättsligt skydd."
+        "derivativeSourceUrlHelper": "En bearbetning bygger på ett tidigare verk men innehåller också tillräckligt mycket nytt, kreativt innehåll för att ha ett eget upphovsrättsligt skydd.",
+        "authorsHelper": "Lämna tomt om det är ditt eget foto. Då används ditt användarnamn."
     },
     "workout": "Träningspass",
     "loading": "Laddar...",
@@ -97,7 +98,15 @@
         "imageIsAiGenerated": "Bilden har skapats med AI",
         "dropOrClickImage": "Släpp en bild här eller klicka för att välja",
         "addImage": "Lägg till bild",
-        "swapExercise": "Byt övning"
+        "swapExercise": "Byt övning",
+        "personalExercisesWarningTitle": "Lägg inte till personliga övningar",
+        "personalExercisesWarningBody": "Övningar läggs till i den gemensamma databasen och är synliga för alla användare. Lägg bara till allmänna övningar som är användbara för alla. Övningar som skapas enbart för att få en import från en annan app att fungera kommer att tas bort.",
+        "submitAuthorNotice": "Övningen publiceras under licensen CC BY-SA 4.0 med angivande av upphovspersonen ovan.",
+        "authorHelpText": "Visas som övningens upphovsperson (CC BY-SA 4.0). Ändra bara detta om du inte är upphovspersonen.",
+        "editAuthorNotice": "Ändringar publiceras under licensen CC BY-SA 4.0 och ditt användarnamn läggs till bland övningens upphovspersoner.",
+        "contentLicense": "Innehållet på den här sidan är tillgängligt under <0>licensen CC BY-SA 4</0>.",
+        "authorsList": "Upphovspersoner: {{authors}}",
+        "lastUpdate": "Senast uppdaterad: {{date}}"
     },
     "description": "Beskrivning",
     "translation": "Översättning",
@@ -121,7 +130,9 @@
         "enterNumber": "Ange ett giltigt tal",
         "enterInteger": "Ange ett heltal",
         "maxLessThanMin": "Maximivärdet måste vara större än minimivärdet",
-        "endBeforeStart": "Slutvärdet får inte ligga före startvärdet"
+        "endBeforeStart": "Slutvärdet får inte ligga före startvärdet",
+        "minWords_one": "Ange minst {{count}} ord",
+        "minWords_other": "Ange minst {{count}} ord"
     },
     "name": "Namn",
     "category": "Kategori",
@@ -267,7 +278,9 @@
             "edt": "Träning med ökande arbetstäthet",
             "rft": "Omgångar på tid",
             "afap": "Så snabbt som möjligt"
-        }
+        },
+        "notesNeedValues": "Ange repetitioner, vikt eller repetitioner i reserv (RiR). Annars sparas varken setet eller anteckningen.",
+        "deleteSessionInfo": "Detta tar bort träningspasset och alla set som har loggats i det"
     },
     "editName": "Redigera {{name}}",
     "start": "Start",
@@ -330,7 +343,8 @@
         "logThisMeal": "Logga den här måltiden som den är i kostdagboken",
         "logThisMealItem": "Logga det här livsmedlet som det är i kostdagboken",
         "valueRemaining": "kvar",
-        "valueTooMany": "för mycket"
+        "valueTooMany": "för mycket",
+        "changeIngredient": "Välj ett annat livsmedel"
     },
     "bmi": {
         "result": "Ditt BMI är {{value}}",
@@ -517,5 +531,6 @@
     },
     "calendar": "Kalender",
     "entries": "Poster",
-    "no_entries_for_day": "Inga poster för den här dagen"
+    "no_entries_for_day": "Inga poster för den här dagen",
+    "syncedEntryOverwriteWarning": "Ändringar i den här posten kan skrivas över av appen som den kommer från"
 }
