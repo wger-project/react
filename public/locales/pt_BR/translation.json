@@ -67,7 +67,7 @@
         "operation": "Operação",
         "step": "Etapa",
         "requirements": "Requerimento",
-        "requirementsHelpText": "Selecione os resultados do treino (de registros anteriores) que devem ser atendidos para que esta regra entre em vigor",
+        "requirementsHelpText": "Selecione os resultados do treino (de registros anteriores) que devem ser atingidos para que esta regra entre em vigor. As regras comparam com o valor planejado, e as variantes de \"limite superior\" com o máximo planejado. Para uma progressão dupla, limite o peso em \"Repetições (limite superior)\" e exija todas as séries.",
         "repeat": "Repetir regra",
         "repeatHelpText": "Marque a caixa de seleção se desejar que esta regra continue a ser aplicada aos treinos subsequentes até que você defina uma nova",
         "markAsTemplate": "Gerenciar modelo",
@@ -105,9 +105,16 @@
         "exerciseNotAvailable": "Erro ao carregar exercício",
         "iterationNr": "Iteração {{number}}",
         "otherLoggedExercises": "Outros exercícios registrados",
-        "multipleSessions": "Mais de uma sessão foi registrada neste dia, escolha qual editar.",
-        "newSession": "Nova sessão de treinamento",
-        "changeSession": "Escolha outra sessão"
+        "multipleSessions": "Mais de uma sessão foi registrada neste dia. Selecione aquela que deseja editar",
+        "newSession": "Nova sessão",
+        "changeSession": "Escolha outra sessão",
+        "analytics": {
+            "title": "Análise de exercícios",
+            "menu": "Opções de rotina",
+            "description": "Seu histórico de exercícios em todas as rotinas e sessões.",
+            "exercise": "Exercício",
+            "metric": "Métricas"
+        }
     },
     "server": {
         "glutes": "Glúteos",
@@ -174,26 +181,29 @@
         "unitFormHelpText": "A unidade na qual a categoria será medida, como cm ou %",
         "measurements": "Medições",
         "deleteInfo": "Isso excluirá a categoria, bem como todas as suas entradas",
-        "reorderCategories": "Reordenar categorías",
-        "deleteInfoGroup": "Isso eliminará o grupo assim como todos os seus componentes e entradas",
-        "metricType": "Tipo de métrica",
-        "chartType": "Tipo de gráfico",
+        "reorderCategories": "Reordenar categorias",
+        "deleteInfoGroup": "Isso excluirá o grupo, bem como todos os seus componentes e suas entradas",
+        "metricType": "Tipo de métricas",
+        "chartType": "Tipo de gráficos",
         "chartTypes": {
             "auto": "Automático",
             "line": "Linha",
             "bar": "Barras",
             "delta": "Mudar",
-            "distribution": "Distribuição"
+            "distribution": "Distribuição",
+            "heatmap": "Mapa de calor"
         },
         "trends": {
             "reactive": "Reativo",
-            "balanced": "Balanciado"
+            "balanced": "Equilibrado"
         },
         "chartAverageWindowDays_one": "{{count}} dia",
+        "chartAverageWindowDays_many": "{{count}} dias",
         "chartAverageWindowDays_other": "{{count}} dias",
         "distributionMedian": "Mediana",
-        "distributionLatest": "Recente",
+        "distributionLatest": "Mais recente",
         "distributionDayCount_one": "{{count}} dia",
+        "distributionDayCount_many": "{{count}} dias",
         "distributionDayCount_other": "{{count}} dias",
         "noGroup": "Sem grupo",
         "metricTypes": {
@@ -204,8 +214,13 @@
             "blood_pressure_systolic": "Sistólica",
             "blood_pressure_diastolic": "Diastólico",
             "heart_rate": "Frequência cardíaca",
-            "resting_heart_rate": "Frequência cardíaca em repouso"
-        }
+            "resting_heart_rate": "Frequência cardíaca em repouso",
+            "body_weight": "Peso corporal",
+            "lean_body_mass": "Massa corporal magra"
+        },
+        "chartTrend": "Linha de tendências",
+        "chartAverageWindow": "Acima da média",
+        "partOfGroup": "Parte do grupo"
     },
     "category": "Categoria",
     "success": "Concluído com Sucesso!",
@@ -410,7 +425,7 @@
     "durationDays_one": "{{count}} dia",
     "durationDays_many": "{{count}} dias",
     "durationDays_other": "{{count}} dias",
-    "start": "Iniciar",
+    "start": "Início",
     "end": "Fim",
     "dashboard": {
         "customizeDashboard": "Personalizar painel",
