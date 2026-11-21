@@ -24,6 +24,9 @@ const queryClient = new QueryClient({
 
     defaultOptions: {
         queries: {
+            // Let the route error boundary replace otherwise blank pages when an
+            // initial request fails (for example, with a 403 response).
+            throwOnError: true,
             // Don't retry client errors (e.g. a 404 for a deleted/stale resource), they
             // won't succeed on a retry and only delay surfacing the result
             retry: (failureCount, error) => {
