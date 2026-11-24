@@ -16,9 +16,11 @@ type IngredientAmountFieldsProps = {
     ingredient: Ingredient | null,
     onIngredientChange: (ingredient: Ingredient | null) => void,
     weightUnit: NutritionWeightUnit | null,
+    weightUnitId?: number | null,
     onWeightUnitChange: (unit: NutritionWeightUnit | null) => void,
     amount: number,
     ingredientError?: string,
+    ingredientReadOnly?: boolean,
 
     /** Renders the form's bound amount field with the given end adornment */
     renderAmountField: (endAdornment: React.ReactNode) => React.ReactNode,
@@ -34,6 +36,7 @@ export const IngredientAmountFields = (props: IngredientAmountFieldsProps) => {
     const [t] = useTranslation();
     const { ingredient, weightUnit, onWeightUnitChange } = props;
     const weightUnits = ingredient?.weightUnits ?? [];
+    const unresolvedUnit = props.weightUnitId != null && weightUnit === null;
 
     const changeIngredient = (value: Ingredient | null) => {
         props.onIngredientChange(value);
@@ -41,11 +44,14 @@ export const IngredientAmountFields = (props: IngredientAmountFieldsProps) => {
     };
 
     const endAdornment = <InputAdornment position="end">
-        {weightUnit === null ? t('nutrition.gramShort') : `× ${weightUnit.name}`}
+        {unresolvedUnit ? t('nutrition.unavailableWeightUnit')
+            : weightUnit === null ? t('nutrition.gramShort') : `× ${weightUnit.name}`}
     </InputAdornment>;
 
     return <>
-        {ingredient === null
+        {ingredient === null && props.ingredientReadOnly
+            ? <Typography>…</Typography>
+            : ingredient === null
             ? <>
                 <IngredientAutocompleter callback={changeIngredient} />
                 {props.ingredientError !== undefined && (
@@ -54,18 +60,19 @@ export const IngredientAmountFields = (props: IngredientAmountFieldsProps) => {
                     </div>
                 )}
             </>
-            : <SelectedIngredient ingredient={ingredient} onClear={() => changeIngredient(null)} />
+            : <SelectedIngredient ingredient={ingredient}
+                                  onClear={props.ingredientReadOnly ? undefined : () => changeIngredient(null)} />
         }
 
         {props.renderAmountField(endAdornment)}
 
-        {weightUnits.length > 0 && (
+        {(weightUnits.length > 0 || unresolvedUnit) && (
             <Stack direction="row" useFlexGap sx={{ gap: 1, overflowX: 'auto', pb: 0.5 }}>
                 <Chip
                     label={t('nutrition.gramShort')}
-                    aria-pressed={weightUnit === null}
-                    color={weightUnit === null ? 'primary' : 'default'}
-                    variant={weightUnit === null ? 'filled' : 'outlined'}
+                    aria-pressed={weightUnit === null && !unresolvedUnit}
+                    color={weightUnit === null && !unresolvedUnit ? 'primary' : 'default'}
+                    variant={weightUnit === null && !unresolvedUnit ? 'filled' : 'outlined'}
                     onClick={() => onWeightUnitChange(null)}
                 />
                 {weightUnits.map(unit => {
@@ -82,7 +89,7 @@ export const IngredientAmountFields = (props: IngredientAmountFieldsProps) => {
             </Stack>
         )}
 
-        {ingredient !== null && props.amount > 0 && (
+        {ingredient !== null && !unresolvedUnit && props.amount > 0 && (
             <MacrosSummary
                 values={NutritionalValues.fromIngredient(ingredient, props.amount, weightUnit)}
                 grams={weightUnit === null ? null : props.amount * weightUnit.grams}
@@ -91,7 +98,7 @@ export const IngredientAmountFields = (props: IngredientAmountFieldsProps) => {
     </>;
 };
 
-const SelectedIngredient = (props: { ingredient: Ingredient, onClear: () => void }) => {
+const SelectedIngredient = (props: { ingredient: Ingredient, onClear?: () => void }) => {
     const [t, i18n] = useTranslation();
     const { ingredient } = props;
 
@@ -115,9 +122,9 @@ const SelectedIngredient = (props: { ingredient: Ingredient, onClear: () => void
         >
             <InfoOutlinedIcon />
         </IconButton>
-        <IconButton aria-label={t('nutrition.changeIngredient')} onClick={props.onClear}>
+        {props.onClear && <IconButton aria-label={t('nutrition.changeIngredient')} onClick={props.onClear}>
             <CloseIcon />
-        </IconButton>
+        </IconButton>}
     </Stack>;
 };
 
