@@ -7,6 +7,7 @@ import { makeWeightEntry, testBodyWeightCategory } from "@/tests/weight/testData
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
+import i18n from "i18next";
 import React from 'react';
 import type { Mock } from 'vitest';
 
@@ -281,25 +282,32 @@ describe('CategoryDetailDataGrid', () => {
             expect(submitted.extraData.unit).toBe('kg');
         });
 
-        test('reads a decimal comma in the value cell', async () => {
+        test('shows and reads the value with a decimal comma in german', async () => {
             const user = userEvent.setup();
             const mutateEditMock = vi.fn();
             (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({
                 mutate: mutateEditMock,
                 mutateAsync: mutateEditMock
             }));
-            renderGrid([makeWeightEntry(new Date('2021/12/10'), 90, { id: ENTRY_UUID_1, unit: 'lb' })]);
+            await i18n.changeLanguage('de');
 
-            await screen.findByText(/40[.,]82/);
-            await user.click(screen.getByRole('button', { name: /edit/i }));
+            try {
+                renderGrid([makeWeightEntry(new Date('2021/12/10'), 90, { id: ENTRY_UUID_1, unit: 'lb' })]);
 
-            const valueInput = screen.getByRole('textbox', { name: 'value' });
-            await user.clear(valueInput);
-            await user.type(valueInput, '41,5');
-            await user.click(screen.getByRole('button', { name: /save/i }));
+                await screen.findByText('40,82 kg');
+                await user.click(screen.getByRole('button', { name: /edit/i }));
 
-            const submitted = mutateEditMock.mock.calls[0][0] as MeasurementEntry;
-            expect(submitted.value).toBe(41.5);
+                const valueInput = screen.getByRole('textbox', { name: 'value' });
+                expect(valueInput).toHaveValue('40,82');
+                await user.clear(valueInput);
+                await user.type(valueInput, '41,5');
+                await user.click(screen.getByRole('button', { name: /save/i }));
+
+                const submitted = mutateEditMock.mock.calls[0][0] as MeasurementEntry;
+                expect(submitted.value).toBe(41.5);
+            } finally {
+                await i18n.changeLanguage('en');
+            }
         });
 
         test('implausible inline edits are rejected and the row stays editable', async () => {

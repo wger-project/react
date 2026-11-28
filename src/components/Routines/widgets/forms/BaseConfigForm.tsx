@@ -137,7 +137,7 @@ export const SlotBaseConfigValueField = (props: {
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
     const isInt = ['sets', 'max-sets', 'rest', 'max-rest'].includes(props.type);
-    const isValid = isInt ? Number.isInteger : (num: number) => !Number.isNaN(num);
+    const isValid = isInt ? Number.isInteger : Number.isFinite;
 
     let title = '';
     switch (props.type) {

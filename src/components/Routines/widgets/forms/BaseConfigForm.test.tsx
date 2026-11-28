@@ -187,6 +187,20 @@ describe('EntryDetailsField Component', () => {
         expect(await screen.findByText('forms.enterInteger')).toBeInTheDocument();
         expect(addMutation).not.toHaveBeenCalledWith(expect.objectContaining({ value: 2.5 }));
     });
+
+    test('refuses an infinite value', async () => {
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <SlotBaseConfigValueField routineId={routineId} slotEntryId={slotEntryId} type="weight" />
+            </QueryClientProvider>
+        );
+
+        await user.type(screen.getByTestId('weight-field'), 'Infinity');
+
+        expect(await screen.findByText('forms.enterNumber')).toBeInTheDocument();
+        expect(addMutation).not.toHaveBeenCalled();
+    });
 });
 
 describe('ConfigDetailsRequirementsField', () => {
