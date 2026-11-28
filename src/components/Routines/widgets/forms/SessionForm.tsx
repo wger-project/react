@@ -8,7 +8,7 @@ import {
 import { useAddSessionQuery, useEditSessionQuery, useSessionOfDay } from "@/components/Routines/queries";
 import { useAppForm } from "@/core/forms/appForm";
 import { defaultsKey, fieldError, yupSchema } from "@/core/forms/formUtils";
-import { dateLocale } from "@/core/lib/date";
+import { formatLocale } from "@/core/lib/locale";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Add, SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
 import {
@@ -224,7 +224,7 @@ const SessionFormFields = (
     ];
 
     const timeField = (name: 'start' | 'end', label: string) =>
-        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
+        <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={formatLocale(i18n.language)}>
             <form.Field name={name}>
                 {field => <TimePicker
                     label={label}
@@ -253,7 +253,7 @@ const SessionFormFields = (
         <form onSubmit={event => event.preventDefault()}>
             <Grid container spacing={2}>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
+                    <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={formatLocale(i18n.language)}>
                         <form.Field name="date">
                             {field => <DatePicker
                                 value={selectedDate}

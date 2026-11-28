@@ -1,6 +1,7 @@
 import { limitsFor, MetricType } from "@/components/Measurements/models/Category";
-import { TFunction } from "i18next";
-import * as yup from 'yup';
+import { numberDecimalLocale } from "@/core/lib/numbers";
+import i18n, { TFunction } from "i18next";
+import { localeNumber } from "@/core/forms/formUtils";
 
 /**
  * The yup rule for a value of this metric type: the bounds from limitsFor,
@@ -18,10 +19,12 @@ export function limitsSchema(
 ) {
     const limits = limitsFor(type, unit);
     const label = unitLabel ?? unit ?? '';
-    const suffixed = (value: number) => (label ? `${value} ${label}` : String(value));
+    const suffixed = (value: number) => {
+        const number = numberDecimalLocale(value, i18n.language);
+        return label ? `${number} ${label}` : number;
+    };
 
-    return yup
-        .number()
+    return localeNumber()
         .typeError(t('forms.fieldRequired'))
         .required(t('forms.fieldRequired'))
         .min(limits.min, t('forms.minValue', { value: suffixed(limits.min) }))

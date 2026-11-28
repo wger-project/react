@@ -14,6 +14,7 @@ import {
 import { EntryDateTimeField } from "@/components/Measurements/widgets/EntryDateTimeField";
 import { useAppForm } from "@/core/forms/appForm";
 import { yupSchema, submitHandler } from "@/core/forms/formUtils";
+import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
 import { useTranslation } from "react-i18next";
 import * as yup from 'yup';
 
@@ -62,7 +63,7 @@ export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
 
     const initialDate = entry ? entry.date : new Date();
     const defaultValues: EntryFormValues = {
-        value: String(entry ? entry.value : 0),
+        value: formatNumberInput(entry ? entry.value : 0),
         date: initialDate,
         notes: entry ? entry.notes : "",
     };
@@ -75,7 +76,7 @@ export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
             if (values.date === null) {
                 return;
             }
-            const value = Number(values.value);
+            const value = parseNumberLocale(values.value);
 
             // The form closes only once the server took the entry, so a
             // rejected write is shown instead of disappearing with it
@@ -103,10 +104,7 @@ export const EntryForm = ({ entry, closeFn, category }: EntryFormProps) => {
                 <form.AppField name="value">
                     {field => <field.WgerTextField
                         title={t('value')}
-                        fieldProps={{
-                            type: 'number',
-                            slotProps: { htmlInput: { inputMode: 'decimal' } },
-                        }}
+                        fieldProps={{ slotProps: { htmlInput: { inputMode: 'decimal' } } }}
                     />}
                 </form.AppField>
                 <EntryDateTimeField
@@ -183,7 +181,7 @@ export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
                     null,
                     child.id!,
                     date,
-                    Number(values.values[child.id!]),
+                    parseNumberLocale(values.values[child.id!]),
                     '',
                 )),
                 { onSuccess: () => closeFn?.() }
@@ -201,10 +199,7 @@ export const GroupEntryForm = ({ group, closeFn }: GroupEntryFormProps) => {
                     <form.AppField key={child.id} name={`values.${child.id}`}>
                         {field => <field.WgerTextField
                             title={`${categoryDisplayName(child, t)} (${child.unit || group.unit})`}
-                            fieldProps={{
-                                type: 'number',
-                                slotProps: { htmlInput: { inputMode: 'decimal' } },
-                            }}
+                            fieldProps={{ slotProps: { htmlInput: { inputMode: 'decimal' } } }}
                         />}
                     </form.AppField>
                 )}

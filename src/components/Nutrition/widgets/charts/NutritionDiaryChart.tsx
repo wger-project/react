@@ -68,6 +68,7 @@ export const NutritionDiaryChart = ({ showPlanned, planned, today, avg7Days }: N
                 type="number"
                 orientation="left"
                 unit={t('nutrition.gramShort')}
+                tickFormatter={value => numberLocale(value, i18n.language)}
             />
             <Tooltip
                 formatter={(value) => typeof value === 'number' ? numberLocale(value, i18n.language) : String(value ?? '')} />

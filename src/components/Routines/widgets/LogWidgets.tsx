@@ -6,14 +6,16 @@ import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "@/components/R
 import { generateChartColors } from "@/core/lib/colors";
 import { PAGINATION_OPTIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/core/lib/consts";
 import { dateToLocale, luxonDateTimeToLocale } from "@/core/lib/date";
+import { numberDecimalLocale } from "@/core/lib/numbers";
 import { convertWeight, WeightUnit } from "@/core/lib/weightUnit";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
+import { renderLocaleNumberEditCell } from "@/core/ui/Widgets/LocaleNumberEditCell";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ChatBubbleOutlineOutlined from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { Box, Card, CardContent, Tooltip as MuiTooltip, Typography } from '@mui/material';
+import { Box, Card, CardContent, Snackbar, Tooltip as MuiTooltip, Typography } from '@mui/material';
 import Grid from "@mui/material/Grid";
 import {
     DataGrid,
@@ -27,12 +29,15 @@ import {
     GridRowModesModel,
     GridRowsProp
 } from "@mui/x-data-grid";
+import i18n from "i18next";
 import { DateTime } from "luxon";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { CartesianGrid, Legend, Scatter, ScatterChart, Tooltip, TooltipContentProps, XAxis, YAxis } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
+
+const formatNumberCell = (value?: number | null) => value == null ? '' : numberDecimalLocale(value, i18n.language);
 
 export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logEntries: WorkoutLog[] | undefined }) => {
     const { t } = useTranslation();
@@ -53,6 +58,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
 
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+    const [notice, setNotice] = React.useState<string | null>(null);
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -86,6 +92,12 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
     };
 
     const processRowUpdate = (newRow: GridRowModel) => {
+
+        // Text the editor could not read; saving it would clear the value.
+        // Throwing keeps the row in edit mode so it can be corrected
+        if (Number.isNaN(newRow.repetitions) || Number.isNaN(newRow.weight)) {
+            throw new Error(t('forms.enterNumber'));
+        }
 
         const log = newRow.entry;
         if (log !== undefined) {
@@ -127,6 +139,8 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
             type: 'number',
             disableColumnMenu: true,
             editable: true,
+            renderEditCell: renderLocaleNumberEditCell,
+            valueFormatter: formatNumberCell,
             headerName: t('routines.reps'),
         },
         {
@@ -134,6 +148,8 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
             type: 'number',
             disableColumnMenu: true,
             editable: true,
+            renderEditCell: renderLocaleNumberEditCell,
+            valueFormatter: formatNumberCell,
             headerName: t('weight'),
         },
         {
@@ -243,6 +259,13 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
                     onRowModesModelChange={handleRowModesModelChange}
                     onRowEditStop={handleRowEditStop}
                     processRowUpdate={processRowUpdate}
+                    onProcessRowUpdateError={(error: Error) => setNotice(error.message)}
+                />
+                <Snackbar
+                    open={notice !== null}
+                    autoHideDuration={4000}
+                    onClose={() => setNotice(null)}
+                    message={notice}
                 />
 
             </Grid>
@@ -288,7 +311,7 @@ const ExerciseLogTooltip = ({ active, payload }: TooltipContentProps<ValueType, 
                 </Typography>
 
                 <Typography variant="body2">
-                    {payload?.[1].payload?.entry.repetitions} × {payload?.[1].value}{payload?.[1].unit}{rir}
+                    {formatNumberCell(payload?.[1].payload?.entry.repetitions)} × {formatNumberCell(payload?.[1].value as number)}{payload?.[1].unit}{rir}
                 </Typography>
             </CardContent>
         </Card>;
@@ -328,6 +351,7 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
                     dataKey="value"
                     name="Value"
                     unit={weightUnitLabel}
+                    tickFormatter={value => numberDecimalLocale(value, i18n.language)}
                 />
 
                 {Array.from(result).map(([key, value]) => {

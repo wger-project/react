@@ -1,5 +1,6 @@
 import { Routine } from "@/components/Routines/models/Routine";
 import { LogEntryForm } from "@/components/Routines/models/WorkoutLog";
+import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
 import { DateTime } from "luxon";
 
 export interface SessionLogsFormValues {
@@ -36,9 +37,9 @@ export function plannedLogs(routine: Routine, dayId: number, date: Date): {
 
                         rir: !hasNoIterationData && config.rir !== null ? config.rir : '',
                         rirTarget: !hasNoIterationData && config.rir !== null ? config.rir : '',
-                        repetitions: !hasNoIterationData && config.repetitions !== null ? config.repetitions : '',
+                        repetitions: !hasNoIterationData ? formatNumberInput(config.repetitions) : '',
                         repetitionsTarget: !hasNoIterationData && config.repetitions !== null ? config.repetitions : '',
-                        weight: !hasNoIterationData && config.weight !== null ? config.weight : '',
+                        weight: !hasNoIterationData ? formatNumberInput(config.weight) : '',
                         weightTarget: !hasNoIterationData && config.weight !== null ? config.weight : '',
                         notes: ''
                     });
@@ -57,6 +58,9 @@ interface PayloadContext {
     dayId: number,
     routineId: number,
 }
+
+/** A value the user may have typed, read in the page language */
+const typedNumber = (value: number | string) => typeof value === 'string' ? parseNumberLocale(value) : value;
 
 /** Whether the set has a value, sets without one are not saved */
 export const isFilledIn = (log: LogEntryForm) => log.rir !== '' || log.repetitions !== '' || log.weight !== '';
@@ -81,13 +85,13 @@ export function logsPayload(logs: LogEntryForm[], { date, sessionId, iteration, 
 
                 // eslint-disable-next-line camelcase
                 repetitions_unit: l.repetitionsUnit?.id,
-                repetitions: l.repetitions !== '' ? l.repetitions : null,
+                repetitions: l.repetitions !== '' ? typedNumber(l.repetitions) : null,
                 // eslint-disable-next-line camelcase
                 repetitions_target: l.repetitionsTarget !== '' ? l.repetitionsTarget : null,
 
                 // eslint-disable-next-line camelcase
                 weight_unit: l.weightUnit?.id,
-                weight: l.weight !== '' ? l.weight : null,
+                weight: l.weight !== '' ? typedNumber(l.weight) : null,
                 // eslint-disable-next-line camelcase
                 weight_target: l.weightTarget !== '' ? l.weightTarget : null,
 

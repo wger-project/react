@@ -7,6 +7,7 @@ import { makeWeightEntry, testBodyWeightCategory } from "@/tests/weight/testData
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
+import i18n from "i18next";
 import React from 'react';
 import type { Mock } from 'vitest';
 
@@ -270,7 +271,7 @@ describe('CategoryDetailDataGrid', () => {
 
             // the typed value is in the unit the grid shows, not the one the
             // entry was stored in
-            const valueInput = screen.getByRole('spinbutton');
+            const valueInput = screen.getByRole('textbox', { name: 'value' });
             await user.clear(valueInput);
             await user.type(valueInput, '41');
             await user.click(screen.getByRole('button', { name: /save/i }));
@@ -279,6 +280,34 @@ describe('CategoryDetailDataGrid', () => {
             const submitted = mutateEditMock.mock.calls[0][0] as MeasurementEntry;
             expect(Number(submitted.value)).toBe(41);
             expect(submitted.extraData.unit).toBe('kg');
+        });
+
+        test('shows and reads the value with a decimal comma in german', async () => {
+            const user = userEvent.setup();
+            const mutateEditMock = vi.fn();
+            (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({
+                mutate: mutateEditMock,
+                mutateAsync: mutateEditMock
+            }));
+            await i18n.changeLanguage('de');
+
+            try {
+                renderGrid([makeWeightEntry(new Date('2021/12/10'), 90, { id: ENTRY_UUID_1, unit: 'lb' })]);
+
+                await screen.findByText('40,82 kg');
+                await user.click(screen.getByRole('button', { name: /edit/i }));
+
+                const valueInput = screen.getByRole('textbox', { name: 'value' });
+                expect(valueInput).toHaveValue('40,82');
+                await user.clear(valueInput);
+                await user.type(valueInput, '41,5');
+                await user.click(screen.getByRole('button', { name: /save/i }));
+
+                const submitted = mutateEditMock.mock.calls[0][0] as MeasurementEntry;
+                expect(submitted.value).toBe(41.5);
+            } finally {
+                await i18n.changeLanguage('en');
+            }
         });
 
         test('implausible inline edits are rejected and the row stays editable', async () => {
@@ -293,7 +322,7 @@ describe('CategoryDetailDataGrid', () => {
             await screen.findByText('80 kg');
             await user.click(screen.getByRole('button', { name: /edit/i }));
 
-            const valueInput = screen.getByRole('spinbutton');
+            const valueInput = screen.getByRole('textbox', { name: 'value' });
             await user.clear(valueInput);
             await user.type(valueInput, '5000');
             await user.click(screen.getByRole('button', { name: /save/i }));
@@ -301,7 +330,7 @@ describe('CategoryDetailDataGrid', () => {
             // nothing is saved, the error shows up and the cell stays editable
             expect(mutateEditMock).not.toHaveBeenCalled();
             expect(await screen.findByText('forms.maxValue')).toBeInTheDocument();
-            expect(screen.getByRole('spinbutton')).toBeInTheDocument();
+            expect(screen.getByRole('textbox', { name: 'value' })).toBeInTheDocument();
 
             // correcting the value saves normally
             await user.clear(valueInput);
@@ -325,7 +354,7 @@ describe('CategoryDetailDataGrid', () => {
             await screen.findByText('80 kg');
             await user.click(screen.getByRole('button', { name: /edit/i }));
 
-            const valueInput = screen.getByRole('spinbutton');
+            const valueInput = screen.getByRole('textbox', { name: 'value' });
             await user.clear(valueInput);
             await user.type(valueInput, '90');
             await user.click(screen.getByRole('button', { name: /save/i }));

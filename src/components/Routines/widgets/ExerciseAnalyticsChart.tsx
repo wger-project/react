@@ -4,6 +4,7 @@ import {
 import { AnalyticsSeries, AnalyticsUnit } from "@/components/Routines/models/analytics";
 import { dateToLocale } from "@/core/lib/date";
 import { LIST_OF_COLORS8 } from "@/core/lib/consts";
+import { numberDecimalLocale } from "@/core/lib/numbers";
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
@@ -23,7 +24,7 @@ export const ExerciseAnalyticsChart = (props: {
         reps: t('routines.reps'),
         seconds: t('server.seconds'),
     }[props.unit];
-    const number = (value: number) => value.toLocaleString(i18n.language, { maximumFractionDigits: 2 });
+    const number = (value: number) => numberDecimalLocale(value, i18n.language);
     const data = useMemo(() => {
         const days = new Map<number, Record<string, number>>();
         for (const series of props.series) {

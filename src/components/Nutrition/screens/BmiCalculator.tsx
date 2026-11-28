@@ -8,6 +8,7 @@ import {
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { useProfileQuery } from "@/components/User";
+import { formatNumberInput, numberDecimalLocale, parseNumberLocale } from "@/core/lib/numbers";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Area, AreaChart, CartesianGrid, ReferenceDot, Tooltip, XAxis, YAxis, } from "recharts";
@@ -25,7 +26,7 @@ const getRangeColor = (name: string) => {
 };
 
 export const BmiCalculator = () => {
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
 
     // Only the most recent entry is used to prefill the field; a year back is
     // generous for that and keeps the query bounded
@@ -35,19 +36,22 @@ export const BmiCalculator = () => {
     // Entries without their own unit fall back to the one of the category
     const categoryUnit = categoryQuery.data?.unit ?? 'kg';
 
-    const [height, setHeight] = useState<number | null>();
-    const [weight, setWeight] = useState<number | null>();
+    // What the user typed, read in the page language below
+    const [heightText, setHeightText] = useState('');
+    const [weightText, setWeightText] = useState('');
+    const height = parseNumberLocale(heightText);
+    const weight = parseNumberLocale(weightText);
 
     // Set default weight from last weight entry, the BMI is always computed in kg
     useEffect(() => {
         if (weightQuery.data && weightQuery.data.length > 0) {
-            setWeight(weightQuery.data[0].valueIn('kg', categoryUnit));
+            setWeightText(formatNumberInput(weightQuery.data[0].valueIn('kg', categoryUnit)));
         }
     }, [weightQuery.data, categoryUnit]);
 
     useEffect(() => {
         if (profileQuery.data?.height) {
-            setHeight(profileQuery.data.height);
+            setHeightText(formatNumberInput(profileQuery.data.height));
         }
     }, [profileQuery.data]);
 
@@ -110,9 +114,8 @@ export const BmiCalculator = () => {
                                     input: { endAdornment: <Typography>{t('cm')}</Typography> },
                                     htmlInput: { inputMode: 'decimal' }
                                 }}
-                                type="number"
-                                value={height ?? ""}
-                                onChange={(e) => setHeight(parseFloat(e.target.value))}
+                                value={heightText}
+                                onChange={(e) => setHeightText(e.target.value)}
                             />
                         </Grid>
                         <Grid size={{ xs: 12, sm: 6 }}>
@@ -123,16 +126,15 @@ export const BmiCalculator = () => {
                                     htmlInput: { inputMode: 'decimal' }
                                 }}
                                 fullWidth
-                                type="number"
-                                value={weight ?? ""}
-                                onChange={(e) => setWeight(parseFloat(e.target.value))}
+                                value={weightText}
+                                onChange={(e) => setWeightText(e.target.value)}
                             />
                         </Grid>
                     </Grid>
 
 
                     {bmi !== null && <Typography variant="h6">
-                        {t('bmi.result', { value: bmi.toFixed(1) })}
+                        {t('bmi.result', { value: numberDecimalLocale(bmi, i18n.language, 1, 1) })}
                     </Typography>
                     }
                     <AreaChart data={chartData} responsive width="100%" height={400}>
@@ -167,8 +169,8 @@ export const BmiCalculator = () => {
 
                         {bmi !== null &&
                             <ReferenceDot
-                                x={height!}
-                                y={weight!}
+                                x={height}
+                                y={weight}
                                 r={8}
                                 fill="black"
                                 stroke="none"

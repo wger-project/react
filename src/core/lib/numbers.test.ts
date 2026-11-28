@@ -1,4 +1,4 @@
-import { numberGramLocale, numberLocale } from './numbers';
+import { formatNumberInput, numberDecimalLocale, numberGramLocale, numberLocale, parseNumberLocale } from './numbers';
 
 describe('test the numberLocale function', () => {
     test('groups the thousands and drops the decimals in the english locale', () => {
@@ -51,5 +51,100 @@ describe('test the numberGramLocale function', () => {
     test('formats zero with the gram unit', () => {
         const result = numberGramLocale(0, 'de-DE');
         expect(result).toBe('0 g');
+    });
+});
+
+describe('test the numberDecimalLocale function', () => {
+    test('pads to the minimum number of decimals', () => {
+        expect(numberDecimalLocale(17, 'de', 1, 1)).toBe('17,0');
+        expect(numberDecimalLocale(1.5, 'en', 2, 2)).toBe('1.50');
+    });
+
+    test('drops trailing zeros without a minimum', () => {
+        expect(numberDecimalLocale(17, 'de', 1)).toBe('17');
+    });
+});
+
+describe('test the parseNumberLocale function', () => {
+    test.each([
+        ['80,5', 'de', 80.5],
+        ['1.234,5', 'de', 1234.5],
+        ['1.234', 'de', 1234],
+        ['1.234.567', 'de', 1234567],
+        ['12.345', 'de', 12345],
+        ['-1.234', 'de', -1234],
+        ['80.5', 'en', 80.5],
+        ['1,234.5', 'en', 1234.5],
+        ['1,234', 'en', 1234],
+        ['1 234,5', 'fr', 1234.5],
+        ["1'234.5", 'de-CH', 1234.5],
+        ['٨٠٫٥', 'ar-EG', 80.5],
+        [' 80,5 ', 'de', 80.5],
+        ['-2,5', 'de', -2.5],
+        ['80', 'de', 80],
+    ])('reads %j in %s as %d', (text, locale, expected) => {
+        expect(parseNumberLocale(text, locale)).toBe(expected);
+    });
+
+    test.each([
+        ['80.5', 'de', 80.5],
+        ['80.25', 'de', 80.25],
+        ['0.1234', 'de', 0.1234],
+        ['80,5', 'en', 80.5],
+        ['80.5', 'ar-EG', 80.5],
+        ['0.125', 'de', 0.125],
+        ['-0.125', 'de', -0.125],
+        ['.125', 'de', 0.125],
+        ['0,125', 'en', 0.125],
+        ['1234.567', 'de', 1234.567],
+    ])('reads the single separator in %j as decimal separator in %s', (text, locale, expected) => {
+        expect(parseNumberLocale(text, locale)).toBe(expected);
+    });
+
+    test.each(['', '  ', 'abc', '2,5kg', '80,5,5'])('returns NaN for %j', text => {
+        expect(parseNumberLocale(text, 'de')).toBeNaN();
+    });
+});
+
+describe('test the formatNumberInput function', () => {
+    test('uses the decimal comma and no grouping in the german locale', () => {
+        expect(formatNumberInput(1234.5, 'de')).toBe('1234,5');
+    });
+
+    test('keeps every fraction digit', () => {
+        expect(formatNumberInput(0.125, 'en')).toBe('0.125');
+    });
+
+    test('returns an empty string for missing values', () => {
+        expect(formatNumberInput(null, 'de')).toBe('');
+        expect(formatNumberInput(undefined, 'de')).toBe('');
+    });
+
+    test.each([80.5, 1234.5, 0.125, 1.234, 2])('reads its own output for %d back', num => {
+        for (const locale of ['de', 'en', 'fr', 'de-CH', 'ar-EG']) {
+            expect(parseNumberLocale(formatNumberInput(num, locale), locale)).toBe(num);
+        }
+    });
+});
+
+describe('the region of the browser', () => {
+    beforeEach(() => {
+        vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['de-CH']);
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    test('formats, fills in and reads a plain language with it', () => {
+        const swiss = (1234.5).toLocaleString('de-CH');
+
+        expect(numberDecimalLocale(1234.5, 'de')).toBe(swiss);
+        expect(formatNumberInput(1234.5, 'de')).toBe('1234.5');
+        expect(parseNumberLocale(swiss, 'de')).toBe(1234.5);
+    });
+
+    test('leaves a locale that has a region alone', () => {
+        expect(numberDecimalLocale(1234.5, 'de-DE')).toBe('1.234,5');
     });
 });

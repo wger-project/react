@@ -11,7 +11,9 @@ import {
     RuleRequirements,
     StepType
 } from "@/components/Routines/models/BaseConfig";
+import { localeNumber } from "@/core/forms/formUtils";
 import { ApiPath } from "@/core/lib/consts";
+import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
 import { TFunction } from "i18next";
 import * as yup from "yup";
 
@@ -60,8 +62,8 @@ export function progressionEntries(
             id: config.id,
             idMax: configMax === undefined ? null : configMax.id,
             iteration: iteration,
-            value: String(config.value),
-            valueMax: configMax === undefined ? '' : String(configMax.value),
+            value: formatNumberInput(config.value),
+            valueMax: configMax === undefined ? '' : formatNumberInput(configMax.value),
             operation: config.operation,
             operationMax: configMax === undefined ? OPERATION_REPLACE : config.operation,
             step: config.step,
@@ -81,7 +83,7 @@ export const progressionSchema = (t: TFunction) => yup.object({
             iteration: yup.number().required(),
 
             // Conditionally apply integer validation e.g. for sets
-            value: yup.number()
+            value: localeNumber()
                 .when('forceInteger', {
                     is: true,
                     then: schema => schema.integer(t('forms.enterInteger')).typeError(t('forms.enterNumber')),
@@ -90,7 +92,7 @@ export const progressionSchema = (t: TFunction) => yup.object({
 
             // only check that the max number is higher when replacing. In other cases allow the max
             // weight to e.g. increase less than the min weight
-            valueMax: yup.number().typeError(t('forms.enterNumber')).nullable()
+            valueMax: localeNumber().typeError(t('forms.enterNumber')).nullable()
                 .when('forceInteger', {
                     is: true,
                     then: schema => schema.integer(t('forms.enterInteger')).typeError(t('forms.enterNumber')),
@@ -187,7 +189,7 @@ export function progressionPayload(
     const params = (entry: BaseConfigEntryForm, value: number | string, step: StepType): AddBaseConfigParams => ({
         // eslint-disable-next-line camelcase
         slot_entry: slotEntryId,
-        value: value as number,
+        value: typeof value === 'string' ? parseNumberLocale(value) : value,
         iteration: entry.iteration,
         operation: entry.operation,
         step: step,

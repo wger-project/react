@@ -55,7 +55,7 @@ export const getRoutineLogs = async (id: number, options?
 
 /* Logs across all routines, including entries without a routine. */
 export const getWorkoutLogs = async (options?
-: { loadExercises?: boolean, filtersetQuery?: object }): Promise<WorkoutLog[]> => {
+                                     : { loadExercises?: boolean, filtersetQuery?: object }): Promise<WorkoutLog[]> => {
     const { loadExercises = false, filtersetQuery = {} } = options || {};
 
     const adapter = new WorkoutLogAdapter();

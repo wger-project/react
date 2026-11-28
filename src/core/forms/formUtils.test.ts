@@ -1,5 +1,13 @@
+import {
+    fieldError,
+    fieldErrorMessage,
+    localeNumber,
+    setServerError,
+    submitHandler,
+    yupSchema
+} from "@/core/forms/formUtils";
 import type { AnyFieldApi, AnyFormApi } from "@tanstack/react-form";
-import { fieldError, fieldErrorMessage, setServerError, submitHandler, yupSchema } from "@/core/forms/formUtils";
+import i18n from "i18next";
 import * as yup from "yup";
 
 /** Runs the adapted schema and returns the issues, or none when it passes */
@@ -72,6 +80,27 @@ describe('yupSchema', () => {
         });
 
         expect(() => validate(schema, { name: 'x' })).toThrow(TypeError);
+    });
+});
+
+describe('localeNumber', () => {
+    afterEach(async () => {
+        await i18n.changeLanguage('en');
+    });
+
+    test('reads a decimal comma in german', async () => {
+        await i18n.changeLanguage('de');
+
+        expect(localeNumber().validateSync('80,5')).toBe(80.5);
+        expect(localeNumber().validateSync('1.234,5')).toBe(1234.5);
+    });
+
+    test('rejects text that is no number', () => {
+        expect(() => localeNumber().typeError('not a number').validateSync('heavy')).toThrow('not a number');
+    });
+
+    test('leaves numbers alone', () => {
+        expect(localeNumber().validateSync(80.5)).toBe(80.5);
     });
 });
 

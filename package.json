@@ -37,6 +37,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@hello-pangea/dnd": "^18.0.1",
+    "@internationalized/number": "^3.6.9",
     "@mui/icons-material": "^9.6.0",
     "@mui/material": "^9.6.0",
     "@mui/system": "^9.6.0",

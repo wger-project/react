@@ -32,6 +32,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { generateChartColors } from "@/core/lib/colors";
+import { numberDecimalLocale } from "@/core/lib/numbers";
 import { makeLink, WgerLink } from "@/core/lib/url";
 
 
@@ -115,6 +116,11 @@ export const WorkoutStats = () => {
 
     const chartData = formatStatsData(statsData);
 
+    // Intensity is a ratio, the other stats are counts and kilos
+    const statDecimals = selectedValueType === StatType.Intensity ? 2 : 0;
+    const statValue = (value?: number) =>
+        value == null ? '' : numberDecimalLocale(value, i18n.language, statDecimals, statDecimals);
+
     const renderStatistics = () => {
 
         return (
@@ -137,7 +143,7 @@ export const WorkoutStats = () => {
                                     <TableCell
                                         key={header}
                                         sx={{ textAlign: 'right', }}
-                                    >{row.values[index]?.toFixed(selectedValueType === StatType.Intensity ? 2 : 0) || ""}
+                                    >{statValue(row.values[index])}
                                     </TableCell>
                                 ))}
                             </TableRow>
@@ -154,7 +160,7 @@ export const WorkoutStats = () => {
                                                backgroundColor: theme.palette.grey.A200,
                                                textAlign: 'right',
                                            }}>
-                                    {statsData.totals[header?.toString()]?.toFixed(selectedValueType === StatType.Intensity ? 2 : 0)}
+                                    {statValue(statsData.totals[header?.toString()])}
                                 </TableCell>
                             ))}
                         </TableRow>}
@@ -211,9 +217,9 @@ export const WorkoutStats = () => {
                         <LineChart width="100%" height="100%" responsive>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="category" type="category" allowDuplicatedCategory={false} />
-                            <YAxis dataKey="value" />
+                            <YAxis dataKey="value" tickFormatter={value => numberDecimalLocale(value, i18n.language)} />
                             <Tooltip
-                                formatter={(value) => typeof value === 'number' ? (Number.isInteger(value) ? value.toFixed(0) : value.toFixed(2)) : String(value ?? '')} />
+                                formatter={(value) => typeof value === 'number' ? numberDecimalLocale(value, i18n.language) : String(value ?? '')} />
                             <Legend
                                 layout={"vertical"}
                                 verticalAlign="middle"

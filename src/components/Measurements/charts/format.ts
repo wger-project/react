@@ -1,4 +1,5 @@
 import { dateToLocale } from "@/core/lib/date";
+import { formatLocale } from "@/core/lib/locale";
 import { numberDecimalLocale } from "@/core/lib/numbers";
 
 /** Whether the points fall into more than one calendar year */
@@ -35,7 +36,7 @@ export const hoursAndMinutes = (minutes: number, locale: string): string => {
     const rounded = Math.round(minutes);
     const absolute = Math.abs(rounded);
 
-    return (rounded < 0 ? '-' : '') + new Intl.DurationFormat(locale, {
+    return (rounded < 0 ? '-' : '') + new Intl.DurationFormat(formatLocale(locale), {
         style: 'digital',
         secondsDisplay: 'auto',
     }).format({ hours: Math.floor(absolute / 60), minutes: absolute % 60 });

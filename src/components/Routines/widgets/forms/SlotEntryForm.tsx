@@ -6,6 +6,7 @@ import {
 } from "@/components/Routines/queries";
 import { useEditProfileQuery, useProfileQuery } from "@/components/User";
 import { DEBOUNCE_ROUTINE_FORMS } from "@/core/lib/consts";
+import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
 import { LoadingProgressIcon } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { MenuItem, TextField } from "@mui/material";
@@ -176,14 +177,15 @@ export const SlotEntryRoundingField = (props: SlotEntryRoundingFieldProps) => {
     const editSlotEntryQuery = useEditSlotEntryQuery(props.routineId);
     const editProfileQuery = useEditProfileQuery();
 
-    const [value, setValue] = useState<string | number | null>(props.initialValue === null ? '' : props.initialValue);
+    const [value, setValue] = useState(formatNumberInput(props.initialValue));
 
     // Hold the latest save logic in a ref so the debounced wrapper always
     // uses current props/queries instead of values captured on first render.
     const saveRef = useRef<(newValue: string) => void>(() => {
     });
     saveRef.current = (newValue: string) => {
-        const parsedValue = isNaN(Number(newValue)) ? null : parseFloat(newValue);
+        const parsed = parseNumberLocale(newValue);
+        const parsedValue = Number.isNaN(parsed) ? null : parsed;
 
         const data = props.rounding === 'weight'
             ? { weightRounding: parsedValue }

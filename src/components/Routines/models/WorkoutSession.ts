@@ -1,7 +1,7 @@
 import { Day } from "@/components/Routines/models/Day";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
-import i18n from 'i18next';
 import { Adapter } from "@/core/lib/Adapter";
+import i18n from 'i18next';
 
 export const NOTES_MAX_LENGTH = 1000 as const;
 
@@ -61,10 +61,6 @@ export class WorkoutSession {
         }
     }
 
-    toJson() {
-        return new WorkoutSessionAdapter().toJson(this);
-    }
-
     get textRepresentation(): string {
         const format = (date: Date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const time = this.datetimeEnd
@@ -75,6 +71,10 @@ export class WorkoutSession {
 
 
         return `${this.impressionString} ${time} ${notes}`;
+    }
+
+    toJson() {
+        return new WorkoutSessionAdapter().toJson(this);
     }
 }
 
