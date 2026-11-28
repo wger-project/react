@@ -17,7 +17,11 @@ export default defineConfig({
         ],
         "transComponents": [
             "Trans"
-        ]
+        ],
+        // Keep the file's order and indentation; dynamic keys (`chartTypes.${x}`) aren't found in the source
+        "sort": false,
+        "indentation": 4,
+        "removeUnusedKeys": false
     },
     "types": {
         "input": [
