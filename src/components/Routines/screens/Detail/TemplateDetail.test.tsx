@@ -7,7 +7,7 @@ import { getLanguages } from "@/components/Exercises/api/language";
 import { getRoutine } from "@/components/Routines/api/routine";
 import { testLanguages } from "@/tests/exerciseTestdata";
 import { getTestQueryClient } from "@/tests/queryClient";
-import { testRoutine1 } from "@/tests/workoutRoutinesTestData";
+import { testPrivateTemplate1 } from "@/tests/workoutRoutinesTestData";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Exercises/api/language");
@@ -16,11 +16,11 @@ vi.mock("@/components/Routines/api/routine");
 describe("Smoke tests the TemplateDetail component", () => {
 
     beforeEach(() => {
-        (getRoutine as Mock).mockResolvedValue(testRoutine1);
+        (getRoutine as Mock).mockResolvedValue(testPrivateTemplate1);
         (getLanguages as Mock).mockResolvedValue(testLanguages);
     });
 
-    test('renders all public templates', async () => {
+    test('renders the detail page of a template', async () => {
 
         // Act
         render(
@@ -38,9 +38,10 @@ describe("Smoke tests the TemplateDetail component", () => {
             expect(getRoutine).toHaveBeenCalledTimes(1);
         });
         await waitFor(() => {
-            expect(screen.getByText('Test routine 1')).toBeInTheDocument();
+            expect(screen.getByText('private template 1')).toBeInTheDocument();
         });
-        expect(screen.getByText('Full body routine')).toBeInTheDocument();
+        expect(screen.getByText('lorem ipsum')).toBeInTheDocument();
+        // A private template, the public ones get their own title
         expect(screen.getByText('routines.template')).toBeInTheDocument();
         expect(screen.getByText('routines.copyAndUseTemplate')).toBeInTheDocument();
     });

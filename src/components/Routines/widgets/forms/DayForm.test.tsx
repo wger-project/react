@@ -1,5 +1,5 @@
 import { QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import { useProfileQuery } from "@/components/User";
 import { DayForm } from "@/components/Routines/widgets/forms/DayForm";
@@ -81,6 +81,29 @@ describe('Tests for the DayForm', () => {
                 description: 'New description',
                 isRest: false,
                 needLogsToAdvance: false
+            })
+        );
+    });
+
+    test('the type and the logs switch are sent along', async () => {
+
+        // Act: the test day's name is over the length limit, so it has to go first
+        renderWidget();
+        const nameInput = screen.getByRole('textbox', { name: /name/i });
+        await user.clear(nameInput);
+        await user.type(nameInput, 'Leg day');
+        await user.click(screen.getByRole('combobox', { name: /routines\.set\.type/i }));
+        await user.click(screen.getByRole('option', { name: /amrap/i }));
+        await user.click(screen.getByRole('switch', { name: /routines\.needslogstoadvance/i }));
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        // Assert
+        await waitFor(() => expect(mockEditDay).toHaveBeenCalledTimes(1));
+        expect(mockEditDay).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: 5,
+                type: 'amrap',
+                needLogsToAdvance: true,
             })
         );
     });

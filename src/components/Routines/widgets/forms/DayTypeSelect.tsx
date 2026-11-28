@@ -1,16 +1,12 @@
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
-import { useField } from "formik";
+import { useFieldContext } from "@/core/forms/formContexts";
 import { useTranslation } from "react-i18next";
 
-interface DayTypeSelectProps {
-    fieldName: string,
-    title: string,
-}
-
-export const DayTypeSelect = (props: DayTypeSelectProps) => {
+/** The type of a day, bound to the form field it is rendered in via form.AppField */
+export const DayTypeSelect = () => {
     const { t } = useTranslation();
-    const [field] = useField(props.fieldName);
+    const field = useFieldContext<string>();
     const options = [
         {
             value: 'custom',
@@ -53,7 +49,10 @@ export const DayTypeSelect = (props: DayTypeSelectProps) => {
             select
             label={t('routines.set.type')}
             variant="standard"
-            {...field}
+            name={field.name}
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value)}
+            onBlur={field.handleBlur}
         >
             {options!.map((option) => (
                 <MenuItem key={option.value} value={option.value}>

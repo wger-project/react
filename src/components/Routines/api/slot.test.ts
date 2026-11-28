@@ -25,9 +25,11 @@ describe("Slot service tests", () => {
 
         const result = await addSlot(slot);
 
+        // The body is asserted literally, using slot.toJson() here would compare the
+        // serializer against itself
         expect(axios.post).toHaveBeenCalledWith(
             makeUrl(ApiPath.SLOT),
-            slot.toJson(),
+            { day: 1, order: 1, comment: 'test', config: null },
             { headers: makeHeader() }
         );
         expect(result).toStrictEqual(new Slot({ id: 123, dayId: 1, order: 1, comment: 'test', config: null }));
@@ -49,7 +51,7 @@ describe("Slot service tests", () => {
 
         expect(axios.patch).toHaveBeenCalledWith(
             makeUrl(ApiPath.SLOT, { id: 123 }),
-            slot.toJson(),
+            { day: 1, order: 1, comment: 'foo', config: null },
             { headers: makeHeader() }
         );
         expect(result).toStrictEqual(new Slot({ id: 123, dayId: 1, order: 1, comment: 'foo', config: null }));

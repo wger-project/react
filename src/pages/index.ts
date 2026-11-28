@@ -6,6 +6,7 @@ export { CaloriesCalculator } from './CaloriesCalculator';
 export { Equipments } from './Equipments';
 export { Ingredients } from './Ingredients';
 export { Login } from './Login';
+export { MeasurementDetail } from './MeasurementDetail';
 export { Preferences } from './Preferences';
 export { ApiPage } from './ApiPage';
 export { WeightOverview } from './WeightOverview';

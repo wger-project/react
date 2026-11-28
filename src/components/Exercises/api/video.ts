@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { ExerciseVideo, ExerciseVideoAdapter } from "@/components/Exercises/models/video";
 import { makeHeader, makeUrl } from "@/core/lib/url";
+import axios from 'axios';
 
 export const VIDEO_PATH = 'video';
 
@@ -18,17 +18,17 @@ export type PostExerciseVideoParams = {
  * @returns {Promise<ExerciseVideo>} - A promise that resolves to the uploaded ExerciseVideo object
  */
 export const postExerciseVideo = async ({
-    exerciseId,
-    author,
-    video,
-}: PostExerciseVideoParams): Promise<ExerciseVideo> => {
+                                            exerciseId,
+                                            author,
+                                            video,
+                                        }: PostExerciseVideoParams): Promise<ExerciseVideo> => {
     const url = makeUrl(VIDEO_PATH);
     const headers = makeHeader();
     headers['Content-Type'] = 'multipart/form-data';
 
     const response = await axios.post(
         url,
-        // eslint-disable-next-line camelcase
+
         { exercise: exerciseId, license_author: author, video: video },
         { headers: headers }
     );

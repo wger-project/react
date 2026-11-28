@@ -81,6 +81,20 @@ describe('NutritionalValues', () => {
         expect(values.percent.fat).toBeCloseTo(27.2727, 2);
     });
 
+    test('the percentages are zero when there is no energy to relate them to', () => {
+        // A plan can have a goal for single macros only
+        const values = new NutritionalValues({
+            energy: 0,
+            protein: 150,
+            carbohydrates: 0,
+            fat: 0
+        });
+
+        expect(values.percent.protein).toBe(0);
+        expect(values.percent.carbohydrates).toBe(0);
+        expect(values.percent.fat).toBe(0);
+    });
+
     test('the g-per-body-kg is correctly calculated', () => {
         const values = new NutritionalValues({
             protein: 150,

@@ -19,6 +19,8 @@ describe("userTrophies service tests", () => {
         const url = (axios.get as Mock).mock.calls[0][0] as string;
         expect(url).toMatch(/\/api\/v2\/user-trophy\//);
         expect(url).toContain("limit=");
+        // Hidden trophies must not show up in the user's list
+        expect(url).toContain("trophy__is_hidden=false");
         expect(result).toHaveLength(1);
         expect(result[0]).toBeInstanceOf(UserTrophy);
         expect(result[0].id).toBe(1);

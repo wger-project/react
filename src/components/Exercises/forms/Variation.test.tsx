@@ -1,10 +1,6 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { EditExerciseVariation } from "@/components/Exercises/forms/Variation";
 import { useEditExerciseQuery, useExercisesQuery } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
-import React from "react";
 import {
     testExerciseBenchPress,
     testExerciseCrunches,
@@ -13,6 +9,10 @@ import {
     testExerciseSquats,
 } from "@/tests/exerciseTestdata";
 import { testProfileDataVerified } from "@/tests/userTestdata";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import React from "react";
 import type { Mock } from "vitest";
 
 vi.mock("@/components/Exercises/queries");
@@ -82,9 +82,9 @@ describe("EditExerciseVariation", () => {
             expect(editMutateMock).toHaveBeenCalledWith({
                 id: SQUATS_ID,
                 data: {
-                    // eslint-disable-next-line camelcase
+
                     variation_group: SKULL_CRUSHER_GROUP,
-                    // eslint-disable-next-line camelcase
+
                     license_author: testProfileDataVerified.username,
                 },
             });
@@ -106,9 +106,9 @@ describe("EditExerciseVariation", () => {
             expect(editMutateMock).toHaveBeenCalledWith({
                 id: SQUATS_ID,
                 data: {
-                    // eslint-disable-next-line camelcase
+
                     variation_group: null,
-                    // eslint-disable-next-line camelcase
+
                     license_author: testProfileDataVerified.username,
                 },
             });
@@ -128,9 +128,9 @@ describe("EditExerciseVariation", () => {
         expect(editMutateMock).toHaveBeenNthCalledWith(1, {
             id: SQUATS_ID,
             data: {
-                // eslint-disable-next-line camelcase
+
                 variation_group: FIXED_UUID,
-                // eslint-disable-next-line camelcase
+
                 license_author: testProfileDataVerified.username,
             },
         });
@@ -138,9 +138,9 @@ describe("EditExerciseVariation", () => {
         expect(editMutateMock).toHaveBeenNthCalledWith(2, {
             id: CRUNCHES_ID,
             data: {
-                // eslint-disable-next-line camelcase
+
                 variation_group: FIXED_UUID,
-                // eslint-disable-next-line camelcase
+
                 license_author: testProfileDataVerified.username,
             },
         });

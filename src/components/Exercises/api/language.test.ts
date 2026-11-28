@@ -10,7 +10,7 @@ describe("Language service tests", () => {
     test('GET language entries', async () => {
 
         // Arrange
-        const muscleResponse = {
+        const languageResponse = {
             count: 3,
             next: null,
             previous: null,
@@ -34,11 +34,12 @@ describe("Language service tests", () => {
         };
 
         // Act
-        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: muscleResponse }));
+        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: languageResponse }));
         const result = await getLanguages();
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
+        expect((axios.get as Mock).mock.calls[0][0]).toContain("limit=999");
         expect(result).toStrictEqual([
             new Language(1, "de", "Deutsch"),
             new Language(2, "en", "English"),

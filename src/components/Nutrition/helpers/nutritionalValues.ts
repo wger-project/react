@@ -41,6 +41,12 @@ export class NutritionalValues {
     }
 
     get percent() {
+        // Plans can have goals for single macros only, in which case there is no
+        // energy to relate them to
+        if (this.energy <= 0) {
+            return { protein: 0, carbohydrates: 0, fat: 0 };
+        }
+
         return {
             protein: this.protein > 0 ? this.protein * ENERGY_FACTOR.protein / this.energy * 100 : 0,
             carbohydrates: this.carbohydrates > 0 ? this.carbohydrates * ENERGY_FACTOR.carbohydrates / this.energy * 100 : 0,

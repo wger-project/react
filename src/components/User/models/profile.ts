@@ -2,12 +2,13 @@
 
 import { Adapter } from "@/core/lib/Adapter";
 
+// Note that the email is read-only in the API, it is managed via allauth
 export interface EditProfileParams {
-    email: string,
     height: number,
     weight_unit: 'kg' | 'lb',
     weightRounding: number | null,
     repetitionsRounding: number | null,
+    time_zone: string,
 }
 
 export class Profile {
@@ -20,6 +21,7 @@ export class Profile {
     public height: number;
     public weightRounding: number | null;
     public repetitionsRounding: number | null;
+    public timeZone: string;
 
     constructor(data: {
         username: string,
@@ -31,6 +33,7 @@ export class Profile {
         height: number,
         weightRounding: number | null,
         repetitionsRounding: number | null,
+        timeZone: string,
     }) {
         this.username = data.username;
         this.email = data.email;
@@ -41,6 +44,7 @@ export class Profile {
         this.height = data.height;
         this.weightRounding = data.weightRounding;
         this.repetitionsRounding = data.repetitionsRounding;
+        this.timeZone = data.timeZone;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -65,6 +69,7 @@ class ProfileAdapter implements Adapter<Profile> {
         height: item.height,
         weightRounding: item.weight_rounding !== null ? parseFloat(item.weight_rounding) : null,
         repetitionsRounding: item.repetitions_rounding !== null ? parseFloat(item.repetitions_rounding) : null,
+        timeZone: item.time_zone ?? '',
     });
 
 
@@ -74,6 +79,7 @@ class ProfileAdapter implements Adapter<Profile> {
         weight_unit: item.useMetric ? 'kg' : 'lb',
         weight_rounding: item.weightRounding,
         repetitions_rounding: item.repetitionsRounding,
+        time_zone: item.timeZone,
     });
 }
 

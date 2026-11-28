@@ -1,8 +1,19 @@
+import { Exercise } from "@/components/Exercises";
+import { useDisplayWeightUnit } from "@/components/Measurements";
+import { RIR_VALUES_SELECT_LIST } from "@/components/Routines/models/BaseConfig";
+import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
+import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "@/components/Routines/queries";
+import { generateChartColors } from "@/core/lib/colors";
+import { PAGINATION_OPTIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/core/lib/consts";
+import { dateToLocale, luxonDateTimeToLocale } from "@/core/lib/date";
+import { convertWeight, WeightUnit } from "@/core/lib/weightUnit";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import CancelIcon from "@mui/icons-material/Cancel";
+import ChatBubbleOutlineOutlined from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { Box, Card, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Tooltip as MuiTooltip, Typography } from '@mui/material';
 import Grid from "@mui/material/Grid";
 import {
     DataGrid,
@@ -16,28 +27,11 @@ import {
     GridRowModesModel,
     GridRowsProp
 } from "@mui/x-data-grid";
-import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { Exercise } from "@/components/Exercises";
-import { RIR_VALUES_SELECT_LIST } from "@/components/Routines/models/BaseConfig";
-import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
-import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "@/components/Routines/queries";
 import { DateTime } from "luxon";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import {
-    CartesianGrid,
-    Legend,
-    Scatter,
-    ScatterChart,
-    Tooltip,
-    TooltipContentProps,
-    XAxis,
-    YAxis
-} from "recharts";
+import { CartesianGrid, Legend, Scatter, ScatterChart, Tooltip, TooltipContentProps, XAxis, YAxis } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
-import { generateChartColors } from "@/core/lib/colors";
-import { PAGINATION_OPTIONS } from "@/core/lib/consts";
-import { dateToLocale, luxonDateTimeToLocale } from "@/core/lib/date";
 
 
 export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logEntries: WorkoutLog[] | undefined }) => {
@@ -52,6 +46,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
         repetitions: logEntry.repetitions,
         weight: logEntry.weight,
         rir: logEntry.rir,
+        notes: logEntry.notes,
         entry: logEntry
     }));
 
@@ -74,7 +69,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
     };
 
     const handleDeleteClick = (id: GridRowId) => () => {
-        deleteLogQuery.mutate(id as number);
+        deleteLogQuery.mutate(id.toString());
         setRows(rows.filter((row) => row.id !== id));
     };
 
@@ -98,6 +93,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
             log.repetitions = newRow.repetitions;
             log.weight = newRow.weight;
             log.rir = newRow.rir;
+            log.notes = newRow.notes;
 
             editLogQuery.mutate(log);
         }
@@ -154,6 +150,23 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
             valueOptions: RIR_VALUES_SELECT_LIST,
         },
         {
+            field: 'notes',
+            type: 'string',
+            width: 90,
+            align: 'center',
+            headerAlign: 'center',
+            sortable: false,
+            disableColumnMenu: true,
+            editable: true,
+            headerName: t('notes'),
+            // The full text doesn't fit the column, it is in the tooltip
+            renderCell: ({ value }) => value
+                ? <MuiTooltip title={value} slotProps={{ tooltip: { sx: { whiteSpace: 'pre-line' } } }}>
+                    <ChatBubbleOutlineOutlined fontSize="small" color="action" sx={{ verticalAlign: 'middle' }} />
+                </MuiTooltip>
+                : null,
+        },
+        {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
@@ -165,11 +178,13 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
                 if (isInEditMode) {
                     return [
                         <GridActionsCellItem
+                            key="save"
                             icon={<SaveIcon sx={{ color: 'primary.main' }} />}
                             label={t('save')}
                             onClick={handleSaveClick(id)}
                         />,
                         <GridActionsCellItem
+                            key="cancel"
                             icon={<CancelIcon />}
                             label={t('cancel')}
                             className="textPrimary"
@@ -181,6 +196,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
 
                 return [
                     <GridActionsCellItem
+                        key="edit"
                         icon={<EditIcon />}
                         label={t('edit')}
                         className="textPrimary"
@@ -188,6 +204,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
                         color="inherit"
                     />,
                     <GridActionsCellItem
+                        key="delete"
                         icon={<DeleteIcon />}
                         label={t('delete')}
                         onClick={handleDeleteClick(id)}
@@ -239,13 +256,18 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
  * Format the log entries so that they can be passed to the chart
  *
  * This is mostly due to the time, which needs to be a number to be shown
- * in the scatter plot
+ * in the scatter plot. Weights logged in kg or lb are converted to the unit
+ * the chart is drawn in, other units are passed through unchanged.
  */
-const formatData = (data: WorkoutLog[]) =>
+export const formatData = (data: WorkoutLog[], unit: WeightUnit) =>
     data.map((log) => {
+        const logUnit: WeightUnit | null = log.weightUnitId === WEIGHT_UNIT_KG
+            ? 'kg'
+            : log.weightUnitId === WEIGHT_UNIT_LB ? 'lb' : null;
+
         return {
             id: log.id,
-            value: log.weight,
+            value: log.weight !== null && logUnit !== null ? convertWeight(log.weight, logUnit, unit) : log.weight,
             time: log.date.getTime(),
             entry: log,
         };
@@ -275,6 +297,9 @@ const ExerciseLogTooltip = ({ active, payload }: TooltipContentProps<ValueType, 
 };
 
 export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
+    const { t } = useTranslation();
+    const weightUnit = useDisplayWeightUnit();
+    const weightUnitLabel = t(weightUnit === 'lb' ? 'server.lb' : 'server.kg');
 
     // Group by rep count
     //
@@ -302,12 +327,12 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
                     domain={["auto", "auto"]}
                     dataKey="value"
                     name="Value"
-                    unit="kg"
+                    unit={weightUnitLabel}
                 />
 
                 {Array.from(result).map(([key, value]) => {
                         const color = colorGenerator.next().value!;
-                        const formattedData = formatData(value);
+                    const formattedData = formatData(value, weightUnit);
 
                         return <Scatter
                             key={key}

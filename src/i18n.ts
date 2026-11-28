@@ -2,12 +2,12 @@ import { IS_PROD } from "@/config";
 import i18n from "i18next";
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
-import common from "@/locales/en/translation.json";
+import type common from "@/locales/en/translation.json";
 import { initReactI18next } from "react-i18next";
 
 export const resources = {
     en: {
-        common,
+        common: null as unknown as typeof common,
     },
 } as const;
 
@@ -30,6 +30,9 @@ i18n
         },
 
         fallbackLng: 'en',
+
+        // Weblate can write untranslated plural forms as empty strings
+        returnEmptyString: false,
 
         //lng: "de",
         // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources

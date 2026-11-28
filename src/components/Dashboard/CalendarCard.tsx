@@ -10,7 +10,7 @@ export const CalendarCard = () => {
 
     return (
         <DashboardCard title={t("calendar")}>
-            <CalendarComponent showBorder={false} />
+            <CalendarComponent isStandalone={false} />
         </DashboardCard>
     );
 };

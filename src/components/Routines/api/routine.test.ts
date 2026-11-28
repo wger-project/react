@@ -1,4 +1,5 @@
-import { getExercise } from "@/components/Exercises/api/exercise";
+import { getExercisesByIds } from "@/components/Exercises/api/exercise";
+import { Exercise } from "@/components/Exercises/models/exercise";
 import {
     addRoutine,
     deleteRoutine,
@@ -13,14 +14,12 @@ import {
     getRoutineStatisticsData,
     getRoutineStructure,
 } from "@/components/Routines/api/routine";
-import { getRoutineLogs } from "@/components/Routines/api/workoutLogs";
 import { getRoutineRepUnits, getRoutineWeightUnits } from "@/components/Routines/api/workoutUnits";
 import { Day } from "@/components/Routines/models/Day";
 import { RoutineStatsData } from "@/components/Routines/models/LogStats";
 import { Routine } from "@/components/Routines/models/Routine";
 import { SetConfigData } from "@/components/Routines/models/SetConfigData";
-import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
-import { testExerciseBenchPress, testExerciseCurls } from "@/tests/exerciseTestdata";
+import { testExerciseBenchPress, testExerciseCurls, testExerciseSquats } from "@/tests/exerciseTestdata";
 import {
     responseAddRoutine,
     responseApiWorkoutRoutine,
@@ -29,11 +28,13 @@ import {
     responsePrivateTemplate,
     responsePublicTemplate,
     responseRoutineDayData,
+    responseRoutineDayDataIterationGap,
     responseRoutineLogData,
-    responseRoutineLogs,
+    responseRoutineLogDataWithLogs,
     responseRoutinesShallowWithTemplate,
     responseRoutineStats,
     responseRoutineStructure,
+    responseRoutineStructureIterationGap,
     responseSingleRoutineDetail,
     testRepUnit1,
     testRepUnit2,
@@ -43,6 +44,7 @@ import {
 import axios from "axios";
 
 import type { Mock } from 'vitest';
+import { yyyymmddToDate } from "@/core/lib/date";
 
 vi.mock("axios");
 vi.mock("@/components/Routines/api/workoutUnits");
@@ -71,8 +73,8 @@ describe("workout routine service tests", () => {
                 name: 'My first routine!',
                 description: 'Well rounded full body routine',
                 created: new Date("2022-01-01T12:34:30+01:00"),
-                start: new Date("2024-03-01T00:00:00.000Z"),
-                end: new Date("2024-04-30T00:00:00.000Z"),
+                start: yyyymmddToDate("2024-03-01"),
+                end: yyyymmddToDate("2024-04-30"),
                 fitInWeek: false,
             }),
             new Routine({
@@ -80,8 +82,8 @@ describe("workout routine service tests", () => {
                 name: 'Beach body',
                 description: 'Train only arms and chest, no legs!!!',
                 created: new Date("2023-01-01T17:22:22+02:00"),
-                start: new Date("2024-03-01T00:00:00.000Z"),
-                end: new Date("2024-04-30T00:00:00.000Z"),
+                start: yyyymmddToDate("2024-03-01"),
+                end: yyyymmddToDate("2024-04-30"),
                 fitInWeek: false,
             }),
         ]);
@@ -100,55 +102,7 @@ describe("workout routine service tests", () => {
     });
 
 
-    test('GET the routine logs', async () => {
-
-        // Arrange
-        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: responseRoutineLogs }));
-        (getRoutineRepUnits as Mock).mockImplementation(() => Promise.resolve([testRepUnit1, testRepUnit2]));
-        (getRoutineWeightUnits as Mock).mockImplementation(() => Promise.resolve([testWeightUnit1, testWeightUnit2]));
-
-        // Act
-        const result = await getRoutineLogs(1);
-
-        // Assert
-        expect(axios.get).toHaveBeenCalledTimes(1);
-        expect(result).toStrictEqual([
-            new WorkoutLog({
-                id: 2,
-                routineId: 1,
-                date: new Date("2023-05-10"),
-                iteration: 1,
-                exerciseId: 100,
-                slotEntryId: 2,
-                repetitionsUnitId: 1,
-                repetitions: 12,
-                repetitionsTarget: 12,
-                weight: 10.00,
-                weightUnitId: 1,
-                rir: null,
-                repetitionsUnit: testRepUnit1,
-                weightUnit: testWeightUnit1,
-            }),
-
-            new WorkoutLog({
-                id: 1,
-                routineId: 1,
-                date: new Date("2023-05-13"),
-                iteration: 1,
-                exerciseId: 100,
-                slotEntryId: 2,
-                repetitionsUnitId: 1,
-                repetitions: 10,
-                weight: 20,
-                weightTarget: 20,
-                weightUnitId: 1,
-                rir: 1.5,
-                rirTarget: 1,
-                repetitionsUnit: testRepUnit1,
-                weightUnit: testWeightUnit1,
-            }),
-        ]);
-    });
+    // Note: getRoutineLogs itself lives in workoutLogs.ts and is tested there
 
     test('GET the routine day data', async () => {
         // Arrange
@@ -161,7 +115,7 @@ describe("workout routine service tests", () => {
         expect(axios.get).toHaveBeenCalledTimes(1);
 
         expect(result[0].iteration).toStrictEqual(42);
-        expect(result[0].date).toStrictEqual(new Date('2024-04-01'));
+        expect(result[0].date).toStrictEqual(yyyymmddToDate('2024-04-01'));
         expect(result[0].label).toStrictEqual('first label');
         expect(result[0].day).toStrictEqual(
             new Day({
@@ -278,8 +232,8 @@ describe("workout routine service tests", () => {
         const routine = new Routine({
             name: 'New plan',
             description: 'desc',
-            start: new Date('2024-08-01'),
-            end: new Date('2024-09-01'),
+            start: yyyymmddToDate('2024-08-01'),
+            end: yyyymmddToDate('2024-09-01'),
             fitInWeek: true,
         });
         (axios.post as Mock).mockResolvedValue({ data: responseAddRoutine });
@@ -295,7 +249,7 @@ describe("workout routine service tests", () => {
             description: 'desc',
             start: '2024-08-01',
             end: '2024-09-01',
-            // eslint-disable-next-line camelcase
+
             fit_in_week: true,
         });
         expect(result).toBeInstanceOf(Routine);
@@ -307,8 +261,8 @@ describe("workout routine service tests", () => {
             id: 42,
             name: 'Edited',
             description: 'updated description',
-            start: new Date('2024-08-01'),
-            end: new Date('2024-09-01'),
+            start: yyyymmddToDate('2024-08-01'),
+            end: yyyymmddToDate('2024-09-01'),
         });
         (axios.patch as Mock).mockResolvedValue({ data: responseEditRoutine });
 
@@ -364,6 +318,19 @@ describe("workout routine service tests", () => {
         expect(result[0].logs).toEqual([]);
     });
 
+    test('getRoutineLogData loads the exercises the logs point to', async () => {
+        (axios.get as Mock).mockResolvedValue({ data: responseRoutineLogDataWithLogs });
+        (getExercisesByIds as Mock).mockResolvedValue([testExerciseSquats, testExerciseCurls]);
+
+        const result = await getRoutineLogData(1);
+
+        // The exercises are loaded in one request and assigned to their logs. Note
+        // that the second one is not part of the routine's structure.
+        expect(getExercisesByIds).toHaveBeenCalledWith([345, 3]);
+        expect(result[0].logs[0].exerciseObj).toEqual(testExerciseSquats);
+        expect(result[0].logs[1].exerciseObj).toEqual(testExerciseCurls);
+    });
+
     test('getRoutine assembles detail + structure + dayData + units into a single Routine', async () => {
         // processRoutine fans out to several endpoints. Route the axios.get mock
         // by URL so each call returns the right fixture.
@@ -380,9 +347,7 @@ describe("workout routine service tests", () => {
         (getRoutineRepUnits as Mock).mockResolvedValue([testRepUnit1, testRepUnit2]);
         (getRoutineWeightUnits as Mock).mockResolvedValue([testWeightUnit1, testWeightUnit2]);
         // The dayData fixture references exercise ids 9 and 12 - return a stub for each.
-        (getExercise as Mock).mockImplementation((id: number) =>
-            Promise.resolve(id === 9 ? testExerciseBenchPress : testExerciseCurls)
-        );
+        (getExercisesByIds as Mock).mockResolvedValue([testExerciseBenchPress, testExerciseCurls]);
 
         const result = await getRoutine(1);
 
@@ -399,6 +364,67 @@ describe("workout routine service tests", () => {
         // Unit lookups happened too
         expect(getRoutineRepUnits).toHaveBeenCalled();
         expect(getRoutineWeightUnits).toHaveBeenCalled();
+    });
+
+    test('getRoutine tolerates missing exercises and still loads the routine', async () => {
+        (axios.get as Mock).mockImplementation((url: string) => {
+            if (url.includes("date-sequence-display")) {
+                return Promise.resolve({ data: responseRoutineDayData });
+            }
+            if (url.includes("structure")) {
+                return Promise.resolve({ data: responseRoutineStructure });
+            }
+            return Promise.resolve({ data: responseSingleRoutineDetail });
+        });
+        (getRoutineRepUnits as Mock).mockResolvedValue([testRepUnit1, testRepUnit2]);
+        (getRoutineWeightUnits as Mock).mockResolvedValue([testWeightUnit1, testWeightUnit2]);
+        // The routine references exercises 9 and 12; only 9 still exists (12 is stale/deleted)
+        const benchPress9 = new Exercise({ ...testExerciseBenchPress, id: 9 });
+        (getExercisesByIds as Mock).mockResolvedValue([benchPress9]);
+
+        const result = await getRoutine(1);
+
+        // The whole routine still loads instead of failing because of the missing exercise
+        expect(result).toBeInstanceOf(Routine);
+        expect(result.dayData.length).toBe(responseRoutineDayData.length);
+
+        const setConfigs = result.dayData.flatMap(d => d.slots).flatMap(s => s.setConfigs);
+        const loaded = setConfigs.filter(sc => sc.exerciseId === 9);
+        const missing = setConfigs.filter(sc => sc.exerciseId === 12);
+        expect(loaded.length).toBeGreaterThan(0);
+        expect(loaded.every(sc => sc.exercise === benchPress9)).toBe(true);
+        expect(missing.length).toBeGreaterThan(0);
+        expect(missing.every(sc => sc.exercise === undefined)).toBe(true);
+
+        // The missing exercise must not leak into the array the UI iterates as a non-null Exercise
+        const slotExercises = result.dayData.flatMap(d => d.slots).flatMap(s => s.exercises);
+        expect(slotExercises).not.toContain(undefined);
+    });
+
+    test('loads the exercises of days that never reach a first iteration', async () => {
+        (axios.get as Mock).mockImplementation((url: string) => {
+            if (url.includes("date-sequence-display")) {
+                return Promise.resolve({ data: responseRoutineDayDataIterationGap });
+            }
+            if (url.includes("structure")) {
+                return Promise.resolve({ data: responseRoutineStructureIterationGap });
+            }
+            return Promise.resolve({ data: responseSingleRoutineDetail });
+        });
+        (getRoutineRepUnits as Mock).mockResolvedValue([testRepUnit1, testRepUnit2]);
+        (getRoutineWeightUnits as Mock).mockResolvedValue([testWeightUnit1, testWeightUnit2]);
+
+        // Behave like the API and only hand back what was actually requested
+        const catalogue = [testExerciseBenchPress, testExerciseCurls];
+        (getExercisesByIds as Mock).mockImplementation((ids: number[]) =>
+            Promise.resolve(catalogue.filter(exercise => ids.includes(exercise.id!)))
+        );
+
+        const result = await getRoutine(1);
+
+        // The pull day only exists in the structure, its exercise must be requested anyway
+        expect(getExercisesByIds).toHaveBeenCalledWith([2, 3]);
+        expect(result.days[1].slots[0].entries[0].exercise).toBe(testExerciseCurls);
     });
 
     test('getRoutineStatisticsData hits the stats endpoint and returns RoutineStatsData', async () => {

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import { getIngredients } from "@/components/Nutrition/api/ingredient";
-import { API_MAX_PAGE_SIZE, ApiPath } from "@/core/lib/consts";
-import { fetchPaginated } from "@/core/lib/requests";
+import { ApiPath } from "@/core/lib/consts";
+import { fetchAll } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 
 
@@ -13,19 +13,7 @@ export type NutritionalDiaryEntriesOptions = {
 export const getNutritionalDiaryEntries = async (options?: NutritionalDiaryEntriesOptions): Promise<DiaryEntry[]> => {
     const { filtersetQuery = {} } = options || {};
 
-    const url = makeUrl(ApiPath.NUTRITIONAL_DIARY, {
-        query: {
-            limit: API_MAX_PAGE_SIZE,
-            ...filtersetQuery
-        }
-    });
-    const out: DiaryEntry[] = [];
-
-    for await (const page of fetchPaginated(url, makeHeader())) {
-        for (const logData of page) {
-            out.push(DiaryEntry.fromJson(logData));
-        }
-    }
+    const out = await fetchAll(makeUrl(ApiPath.NUTRITIONAL_DIARY, { query: filtersetQuery }), DiaryEntry.fromJson);
 
     if (out.length === 0) {
         return out;
@@ -67,7 +55,7 @@ export const editNutritionalDiaryEntry = async (diaryEntry: DiaryEntry): Promise
     return DiaryEntry.fromJson(response.data);
 };
 
-export const deleteNutritionalDiaryEntry = async (id: number): Promise<void> => {
+export const deleteNutritionalDiaryEntry = async (id: string): Promise<void> => {
     await axios.delete(
         makeUrl(ApiPath.NUTRITIONAL_DIARY, { id: id }),
         { headers: makeHeader() },

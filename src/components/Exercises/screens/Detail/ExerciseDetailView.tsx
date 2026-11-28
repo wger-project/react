@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
-import { PaddingBox } from "@/components/Exercises/screens/Detail/ExerciseDetails";
+import { PaddingBox } from "@/components/Exercises/widgets/PaddingBox";
 import { OverviewCard } from "@/components/Exercises/screens/Detail/OverviewCard";
 import { SideGallery, SideVideoGallery } from "@/components/Exercises/screens/Detail/SideGallery";
 import { Exercise } from "@/components/Exercises/models/exercise";
@@ -10,7 +10,7 @@ import { Note } from "@/components/Exercises/models/note";
 import { MuscleOverview } from "@/components/Muscles/MuscleOverview";
 import { useCanContributeExercises } from "@/components/User";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { dateTimeToLocale } from "@/core/lib/date";
 
 
@@ -102,7 +102,7 @@ export const ExerciseDetailView = ({
                     </>}
 
                 <Typography variant="h5">{t("exercises.description")}</Typography>
-                <div dangerouslySetInnerHTML={{ __html: currentTranslation?.description! }} />
+                <div dangerouslySetInnerHTML={{ __html: currentTranslation?.description ?? "" }} />
                 <PaddingBox />
 
                 {currentTranslation?.notes.length > 0 && <Typography variant="h5">{t("exercises.notes")}</Typography>}
@@ -134,7 +134,7 @@ export const ExerciseDetailView = ({
                             md: 3
                         }}>
                         <div>
-                            <div style={{ ...muscleLegendStyle, backgroundColor: '#fc0000' }}></div>
+                            <div style={{ ...muscleLegendStyle, backgroundColor: '#fc0000' }} />
                             <b style={{ marginLeft: 8, verticalAlign: 'middle' }}>
                                 {t("exercises.primaryMuscles")}
                             </b>
@@ -167,7 +167,7 @@ export const ExerciseDetailView = ({
                             md: 3
                         }}>
                         <div>
-                            <div style={{ ...muscleLegendStyle, backgroundColor: '#f57900' }}></div>
+                            <div style={{ ...muscleLegendStyle, backgroundColor: '#f57900' }} />
                             <b style={{ marginLeft: 8, verticalAlign: 'middle' }}>
                                 {t("exercises.secondaryMuscles")}
                             </b>
@@ -257,11 +257,14 @@ export const ExerciseDetailView = ({
                     variant="caption"
                     sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
                 >
-                    <i className="fa-brands fa-creative-commons" style={{ fontSize: 20 }}></i>
-                    The content on this page is available under the
-                    <a href="https://creativecommons.org/licenses/by-sa/4.0/deed">
-                        CC BY-SA 4 License
-                    </a>.
+                    <i className="fa-brands fa-creative-commons" style={{ fontSize: 20 }} />
+                    <span>
+                        <Trans
+                            i18nKey="exercises.contentLicense"
+                            components={[<a key="license"
+                                            href="https://creativecommons.org/licenses/by-sa/4.0/deed" />]}
+                        />
+                    </span>
                 </Typography>
 
                 <Typography
@@ -269,8 +272,8 @@ export const ExerciseDetailView = ({
                     sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}
                 >
                     <>
-                        Authors: {exercise.authors.join(", ")}<br />
-                        Last update: {dateTimeToLocale(exercise.lastUpdateGlobal)}
+                        {t('exercises.authorsList', { authors: exercise.authors.join(", ") })}<br />
+                        {t('exercises.lastUpdate', { date: dateTimeToLocale(exercise.lastUpdateGlobal) })}
                     </>
                 </Typography>
             </Grid>

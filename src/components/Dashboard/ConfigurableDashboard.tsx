@@ -139,13 +139,17 @@ export const loadDashboardState = (): DashboardState | null => {
             out.selectedWidgetIds = AVAILABLE_WIDGETS.map((w) => w.id).filter((id) => !out.hiddenWidgetIds.includes(id));
         }
 
-        // -> remove unknown ids from the layout
-        for (const bp of BREAKPOINTS) {
-            const arr = (out.layouts as ResponsiveLayouts)[bp] as Layout | undefined;
-            if (Array.isArray(arr)) {
-                (out.layouts as ResponsiveLayouts)[bp] = arr.filter(
-                    (item: LayoutItem) => item && allowedWidgets.has(String(item.i))
-                );
+        // -> remove unknown ids from the layout. A state without layouts is kept as
+        //    it is, they get regenerated from the defaults, but the widget selection
+        //    of the user must not be thrown away with them.
+        if (out.layouts && typeof out.layouts === 'object') {
+            for (const bp of BREAKPOINTS) {
+                const arr = (out.layouts as ResponsiveLayouts)[bp] as Layout | undefined;
+                if (Array.isArray(arr)) {
+                    (out.layouts as ResponsiveLayouts)[bp] = arr.filter(
+                        (item: LayoutItem) => item && allowedWidgets.has(String(item.i))
+                    );
+                }
             }
         }
 

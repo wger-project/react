@@ -1,9 +1,10 @@
 import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { PSEUDO_MEAL_ID } from "@/components/Nutrition/models/consts";
 import { Meal } from "@/components/Nutrition/models/meal";
 import { ApiNutritionalPlanType } from "@/types";
 import { Adapter } from "@/core/lib/Adapter";
-import { dateToYYYYMMDD, isSameDay } from "@/core/lib/date";
+import { dateToYYYYMMDD, isSameDay, yyyymmddToDate } from "@/core/lib/date";
 
 /* eslint-disable camelcase */
 
@@ -12,11 +13,8 @@ export type GroupedDiaryEntries = {
     nutritionalValues: NutritionalValues;
 }
 
-export const PSEUDO_MEAL_ID = -1;
-
-
 type NutritionalPlanConstructorParams = {
-    id?: number | null,
+    id?: string | null,
     creationDate?: Date,
     start?: Date,
     end?: Date | null,
@@ -33,7 +31,7 @@ type NutritionalPlanConstructorParams = {
 
 
 export class NutritionalPlan {
-    id: number | null;
+    id: string | null;
     creationDate: Date;
     start: Date;
     end: Date | null;
@@ -111,10 +109,14 @@ export class NutritionalPlan {
      * If no entries are available, the function returns an empty NutritionalValues object.
      */
     get loggedNutritionalValues7DayAvg(): NutritionalValues {
-        const today = new Date();
-        const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+        // The window ends with today, entries logged for a future date must not
+        // count towards the average (the sum is always divided by 7 days).
+        const endOfToday = new Date();
+        endOfToday.setHours(23, 59, 59, 999);
+        const sevenDaysAgo = new Date(endOfToday.getTime() - 7 * 24 * 60 * 60 * 1000);
+
         const out = this.getNutritionalValuesFromDiaryEntries(
-            this.diaryEntries.filter(entry => entry.datetime >= sevenDaysAgo)
+            this.diaryEntries.filter(entry => entry.datetime >= sevenDaysAgo && entry.datetime <= endOfToday)
         );
 
         out.energy = out.energy / 7;
@@ -142,7 +144,9 @@ export class NutritionalPlan {
     get groupDiaryEntries(): Map<string, GroupedDiaryEntries> {
 
         return this.diaryEntries.reduce((map, entry) => {
-            const dateKey = entry.datetime.toISOString().split('T')[0]; // Use ISO string format as the key
+            // Group by the local calendar day: toISOString would group by the UTC
+            // day, moving e.g. late-night entries to another date
+            const dateKey = dateToYYYYMMDD(entry.datetime);
             const entriesForDay = map.get(dateKey) || { entries: [], nutritionalValues: new NutritionalValues() };
             entriesForDay.entries.push(entry);
             entriesForDay.nutritionalValues.add(entry.nutritionalValues);
@@ -220,9 +224,9 @@ export class NutritionalPlanAdapter implements Adapter<NutritionalPlan> {
     fromJson(item: ApiNutritionalPlanType) {
         return new NutritionalPlan({
             id: item.id,
-            creationDate: new Date(item.creation_date),
-            start: new Date(item.start),
-            end: item.end !== null ? new Date(item.end) : null,
+            creationDate: yyyymmddToDate(item.creation_date),
+            start: yyyymmddToDate(item.start),
+            end: item.end !== null ? yyyymmddToDate(item.end) : null,
             description: item.description,
             onlyLogging: item.only_logging,
             goalEnergy: item.goal_energy,
@@ -247,9 +251,10 @@ export class NutritionalPlanAdapter implements Adapter<NutritionalPlan> {
             goal_protein: item.goalProtein,
             goal_carbohydrates: item.goalCarbohydrates,
             goal_fiber: item.goalFiber,
-            goal_sodium: item.goalSodium,
             goal_fat: item.goalFat,
-            goal_fats_saturated: item.goalFatsSaturated,
+            // goal_sodium and goal_fats_saturated are intentionally omitted: this frontend
+            // has no UI for them and reads them as null, so sending them would wipe values
+            // set elsewhere (e.g. the mobile app). PATCH leaves omitted fields untouched.
         };
     }
 }

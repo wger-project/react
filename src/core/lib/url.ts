@@ -4,7 +4,7 @@ import i18n from "@/i18n";
 import slug from "slug";
 
 interface makeUrlInterface {
-    id?: number,
+    id?: number | string,
     server?: string,
     objectMethod?: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -56,6 +56,7 @@ export enum WgerLink {
 
     // Routines
     ROUTINE_OVERVIEW,
+    EXERCISE_ANALYTICS,
     ROUTINE_DETAIL,
     ROUTINE_EDIT,
     ROUTINE_DETAIL_TABLE,
@@ -100,7 +101,7 @@ export enum WgerLink {
     TROPHIES,
 }
 
-type UrlParams = { id: number, id2?: number, slug?: string, date?: string };
+type UrlParams = { id: number | string, id2?: number | string, slug?: string, date?: string };
 
 
 /*
@@ -116,6 +117,8 @@ export function makeLink(link: WgerLink, language?: string, params?: UrlParams):
         // Workout routines
         case WgerLink.ROUTINE_OVERVIEW:
             return `/${language}/routine/overview`;
+        case WgerLink.EXERCISE_ANALYTICS:
+            return `/${language}/routine/analytics`;
         case WgerLink.ROUTINE_DETAIL:
             return `/${language}/routine/${params!.id}/view`;
         case WgerLink.ROUTINE_DETAIL_TABLE:
@@ -240,7 +243,7 @@ export function makeHeader(token?: string) {
     }
 
     const csrfCookie = getCookie(DJANGO_CSRF_COOKIE);
-    if (IS_PROD && csrfCookie != undefined) {
+    if (IS_PROD && csrfCookie != null) {
         out['X-CSRFToken'] = csrfCookie;
     }
     return out;

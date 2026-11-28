@@ -1,13 +1,16 @@
+import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import {
     useAddDiaryEntryQuery,
+    useDeleteDiaryEntryQuery,
     useEditDiaryEntryQuery,
     useSearchIngredientQuery
 } from "@/components/Nutrition/queries";
 import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
-import { searchIngredient } from "@/components/Nutrition/api/ingredient";
 import { TEST_INGREDIENT_1, TEST_INGREDIENT_2 } from "@/tests/ingredientTestdata";
+import { mutateMock } from "@/tests/mutationMock";
 import { TEST_DIARY_ENTRY_1 } from "@/tests/nutritionDiaryTestdata";
+import { TEST_MEAL_1, TEST_MEAL_2 } from "@/tests/nutritionTestdata";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from '@testing-library/react';
 import userEvent, { UserEvent } from "@testing-library/user-event";
@@ -17,19 +20,20 @@ import type { Mock } from 'vitest';
 vi.mock('@/components/Nutrition/queries');
 vi.mock("@/components/Nutrition/api/ingredient");
 
-async function fillInEntry(user: UserEvent) {
+async function fillInEntry(user: UserEvent, ingredientName: string) {
+    // An already selected ingredient is shown instead of the search
+    const clearButton = screen.queryByRole('button', { name: 'nutrition.changeIngredient' });
+    if (clearButton !== null) {
+        await user.click(clearButton);
+    }
+
     const autocomplete = screen.getByTestId('autocomplete');
     const input = within(autocomplete).getByRole('combobox');
     await user.click(autocomplete);
     await user.type(input, 'Bagu');
 
-    // Wait for the debounced search results to render in the dropdown
-    // before navigating to them with the keyboard.
-    await screen.findByText('0% fat Greek style yogurt');
-
-    // Select the first result
-    await user.click(input);
-    await user.keyboard('{ArrowDown}{Enter}');
+    // Wait for the debounced search results, then pick one by name
+    await user.click(await screen.findByText(ingredientName));
 
     const amountInput = screen.getByLabelText('amount');
     await user.clear(amountInput);
@@ -40,17 +44,20 @@ async function fillInEntry(user: UserEvent) {
 
 describe('Test the NutritionDiaryEntryForm component', () => {
     const queryClient = new QueryClient();
-    let mutateAddMock = vi.fn();
-    let mutateEditMock = vi.fn();
+    let mutateAddMock = mutateMock();
+    let mutateEditMock = mutateMock();
+    let mutateDeleteMock = mutateMock();
     let closeFnMock = vi.fn();
 
     beforeEach(() => {
-        mutateAddMock = vi.fn();
-        mutateEditMock = vi.fn();
+        mutateAddMock = mutateMock();
+        mutateEditMock = mutateMock();
+        mutateDeleteMock = mutateMock();
         closeFnMock = vi.fn();
 
         (useEditDiaryEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
         (useAddDiaryEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateAddMock }));
+        (useDeleteDiaryEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateDeleteMock }));
         (searchIngredient as Mock).mockImplementation(() => Promise.resolve([TEST_INGREDIENT_1, TEST_INGREDIENT_2]));
         (useSearchIngredientQuery as Mock).mockImplementation(() => searchIngredient);
     });
@@ -63,13 +70,13 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <NutritionDiaryEntryForm planId={123} closeFn={closeFnMock} />
+                <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123" closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await fillInEntry(user);
+        await fillInEntry(user, '0% fat Greek style yogurt');
 
         // Assert
-        expect(screen.getByDisplayValue('0% fat Greek style yogurt')).toBeInTheDocument();
+        expect(within(screen.getByTestId('selected-ingredient')).getByText('0% fat Greek style yogurt')).toBeInTheDocument();
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateEditMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
@@ -78,11 +85,11 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                 amount: 120,
                 datetime: expect.any(Date),
                 ingredientId: 101,
-                planId: 123,
+                planId: 'aaaaaaaa-0000-0000-0000-000000000123',
                 mealId: null,
                 weightUnitId: null,
             })
-        );
+            , expect.anything());
     });
     test('A new entry should be added - passing meal ID', async () => {
         // Arrange
@@ -91,13 +98,14 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <NutritionDiaryEntryForm planId={123} mealId={456} closeFn={closeFnMock} />
+                <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123"
+                                         mealId="bbbbbbbb-0000-0000-0000-000000000456" closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await fillInEntry(user);
+        await fillInEntry(user, '0% fat Greek style yogurt');
 
         // Assert
-        expect(screen.getByDisplayValue('0% fat Greek style yogurt')).toBeInTheDocument();
+        expect(within(screen.getByTestId('selected-ingredient')).getByText('0% fat Greek style yogurt')).toBeInTheDocument();
         expect(screen.getByDisplayValue('120')).toBeInTheDocument();
         expect(mutateEditMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
@@ -106,12 +114,12 @@ describe('Test the NutritionDiaryEntryForm component', () => {
                 amount: 120,
                 datetime: expect.any(Date),
                 ingredientId: 101,
-                planId: 123,
-                mealId: 456,
+                planId: 'aaaaaaaa-0000-0000-0000-000000000123',
+                mealId: 'bbbbbbbb-0000-0000-0000-000000000456',
                 weightUnitId: null,
 
             })
-        );
+            , expect.anything());
     });
 
     test('An existing diary entry should be edited', async () => {
@@ -121,23 +129,97 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <NutritionDiaryEntryForm planId={123} entry={TEST_DIARY_ENTRY_1} closeFn={closeFnMock} />
+                <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123" entry={TEST_DIARY_ENTRY_1}
+                                         closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await fillInEntry(user);
+        await fillInEntry(user, '1001 Nacht Haferbrei');
 
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
         expect(mutateEditMock).toHaveBeenCalledWith(
             expect.objectContaining({
-                id: 42,
+                id: 'dddddddd-0000-0000-0000-000000000042',
                 amount: 120,
-                mealId: 78,
-                planId: 123,
-                ingredientId: 101,
+                mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
+                planId: 'aaaaaaaa-0000-0000-0000-000000000123',
+                // The newly selected ingredient, not the entry's original one
+                ingredientId: 102,
             })
+            , expect.anything());
+    });
+
+    test('The form is prefilled with the entry data when editing', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123" entry={TEST_DIARY_ENTRY_1}
+                                         closeFn={closeFnMock} />
+            </QueryClientProvider>
         );
+
+        // Assert - ingredient and amount are prefilled
+        expect(within(screen.getByTestId('selected-ingredient')).getByText('0% fat Greek style yogurt')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('120')).toBeInTheDocument();
+
+        // Submitting without changes keeps the entry's data
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(mutateAddMock).not.toHaveBeenCalled();
+        expect(mutateEditMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: 'dddddddd-0000-0000-0000-000000000042',
+                amount: 120,
+                ingredientId: 101,
+                mealId: 'bbbbbbbb-0000-0000-0000-000000000078',
+                datetime: TEST_DIARY_ENTRY_1.datetime,
+            })
+            , expect.anything());
+    });
+
+    test('Editing shows the entry\'s meal preselected when meals are passed', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123" entry={TEST_DIARY_ENTRY_1}
+                                         meals={[TEST_MEAL_1, TEST_MEAL_2]} closeFn={closeFnMock} />
+            </QueryClientProvider>
+        );
+
+        // Assert - the meal the entry belongs to is selected, not an empty field
+        expect(screen.getByDisplayValue('Second breakfast')).toBeInTheDocument();
+
+        // Submitting keeps that meal
+        await user.click(screen.getByRole('button', { name: 'submit' }));
+        expect(mutateEditMock).toHaveBeenCalledWith(
+            expect.objectContaining({ mealId: 'bbbbbbbb-0000-0000-0000-000000000078' })
+            , expect.anything());
+    });
+
+    test('An existing diary entry should be deleted', async () => {
+        // Arrange
+        const user = userEvent.setup();
+
+        // Act
+        render(
+            <QueryClientProvider client={queryClient}>
+                <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123" entry={TEST_DIARY_ENTRY_1}
+                                         closeFn={closeFnMock} />
+            </QueryClientProvider>
+        );
+        await user.click(screen.getByRole('button', { name: 'delete' }));
+
+        // Assert
+        expect(mutateAddMock).not.toHaveBeenCalled();
+        expect(mutateEditMock).not.toHaveBeenCalled();
+        expect(closeFnMock).toHaveBeenCalled();
+        expect(mutateDeleteMock).toHaveBeenCalledWith('dddddddd-0000-0000-0000-000000000042', expect.anything());
     });
 
     test('An existing diary entry should be edited - passing a meal Id', async () => {
@@ -147,23 +229,26 @@ describe('Test the NutritionDiaryEntryForm component', () => {
         // Act
         render(
             <QueryClientProvider client={queryClient}>
-                <NutritionDiaryEntryForm planId={123} mealId={456} entry={TEST_DIARY_ENTRY_1} closeFn={closeFnMock} />
+                <NutritionDiaryEntryForm planId="aaaaaaaa-0000-0000-0000-000000000123"
+                                         mealId="bbbbbbbb-0000-0000-0000-000000000456" entry={TEST_DIARY_ENTRY_1}
+                                         closeFn={closeFnMock} />
             </QueryClientProvider>
         );
-        await fillInEntry(user);
+        await fillInEntry(user, '1001 Nacht Haferbrei');
 
         // Assert
         expect(mutateAddMock).not.toHaveBeenCalled();
         expect(closeFnMock).toHaveBeenCalled();
         expect(mutateEditMock).toHaveBeenCalledWith(
             expect.objectContaining({
-                id: 42,
-                planId: 123,
-                mealId: 456,
+                id: 'dddddddd-0000-0000-0000-000000000042',
+                planId: 'aaaaaaaa-0000-0000-0000-000000000123',
+                mealId: 'bbbbbbbb-0000-0000-0000-000000000456',
                 amount: 120,
-                ingredientId: 101,
+                // The newly selected ingredient, not the entry's original one
+                ingredientId: 102,
                 weightUnitId: null,
             })
-        );
+            , expect.anything());
     });
 });

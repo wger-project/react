@@ -44,9 +44,9 @@ import {
 } from "@/components/Routines/queries";
 import {
     useAddMaxNrOfSetsConfigQuery,
+    useDeleteMaxNrOfSetsConfigQuery,
     useEditMaxNrOfSetsConfigQuery
 } from "@/components/Routines/queries/configs";
-import { useFormikContext } from "formik";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEBOUNCE_ROUTINE_FORMS } from "@/core/lib/consts";
@@ -82,7 +82,7 @@ export const QUERY_MAP: { [key: string]: any } = {
     'max-sets': {
         edit: useEditMaxNrOfSetsConfigQuery,
         add: useAddMaxNrOfSetsConfigQuery,
-        delete: useAddMaxRepsConfigQuery
+        delete: useDeleteMaxNrOfSetsConfigQuery
     },
     'rest': {
         edit: useEditRestConfigQuery,
@@ -219,7 +219,7 @@ export const SlotBaseConfigValueField = (props: {
         <TextField
             slotProps={{
                 input: { endAdornment: isPending && <LoadingProgressIcon /> },
-                htmlInput: { "data-testid": `${props.type}-field` },
+                htmlInput: { "data-testid": `${props.type}-field`, inputMode: isInt ? 'numeric' : 'decimal' },
             }}
             label={title}
             value={value}
@@ -234,38 +234,60 @@ export const SlotBaseConfigValueField = (props: {
 };
 
 
+/** Rules that gate the same field on the bottom and the top of its range */
+const RANGE_COUNTERPART: Partial<Record<RequirementsType, RequirementsType>> = {
+    'weight': 'max_weight',
+    'max_weight': 'weight',
+    'repetitions': 'max_repetitions',
+    'max_repetitions': 'repetitions',
+};
+
 export const ConfigDetailsRequirementsField = (props: {
-    fieldName: string,
     values: RequirementsType[],
+    allSets: boolean,
+    /** Called with the selection once the user saves the menu */
+    onChange: (values: RequirementsType[], allSets: boolean) => void,
     disabled?: boolean
 }) => {
 
-    const { setFieldValue } = useFormikContext();
     const { t } = useTranslation();
     const disable = props.disabled ?? false;
 
     const [selectedElements, setSelectedElements] = useState<RequirementsType[]>(props.values);
+    const [allSets, setAllSets] = useState<boolean>(props.allSets);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleSelection = (value: RequirementsType) => {
-        // if the value is not in selectedElements, add it
-        if (!selectedElements.includes(value)) {
-            setSelectedElements([...selectedElements, value]);
-        } else {
-            setSelectedElements(selectedElements.filter((e) => e !== value));
+        // if the value is not in selectedElements, add it and drop the other
+        // end of its range, the top already implies the bottom
+        const selection = selectedElements.includes(value)
+            ? selectedElements.filter((e) => e !== value)
+            : [...selectedElements.filter((e) => e !== RANGE_COUNTERPART[value]), value];
+        setSelectedElements(selection);
+
+        // "All sets" only means something together with rules
+        if (selection.length === 0) {
+            setAllSets(false);
         }
     };
 
-    const handleSubmit = async () => {
-        await setFieldValue(props.fieldName, selectedElements);
+    const handleSubmit = () => {
+        props.onChange(selectedElements, allSets);
         setAnchorEl(null);
+    };
+
+    const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
+        // The parent may have reset the values since the menu was last saved
+        setSelectedElements(props.values);
+        setAllSets(props.allSets);
+        setAnchorEl(event.currentTarget);
     };
 
 
     return <>
         <IconButton
             disabled={disable}
-            onClick={(event) => setAnchorEl(event.currentTarget)}
+            onClick={handleOpen}
         >
             {anchorEl ? <ArrowDropUpIcon fontSize="small" /> : <SettingsIcon fontSize="small" />}
         </IconButton>
@@ -274,19 +296,33 @@ export const ConfigDetailsRequirementsField = (props: {
             open={Boolean(anchorEl)}
             onClose={() => setAnchorEl(null)}
         >
-            {...REQUIREMENTS_VALUES.map((e, index) => <MenuItem
-                key={index}
-                onClick={() => handleSelection(e as unknown as RequirementsType)}>
+            {...REQUIREMENTS_VALUES.map((e) => <MenuItem
+                key={e}
+                onClick={() => handleSelection(e)}>
                 <ListItemIcon>
-                    {selectedElements.includes(e as unknown as RequirementsType)
+                    {selectedElements.includes(e)
                         ? <CheckBoxIcon fontSize="small" />
                         : <CheckBoxOutlineBlank fontSize="small" />
                     }
                 </ListItemIcon>
                 <ListItemText>
-                    {e}
+                    {t(`routines.requirementRules.${e}`)}
                 </ListItemText>
             </MenuItem>)}
+            <Divider />
+            <MenuItem
+                disabled={selectedElements.length === 0}
+                onClick={() => setAllSets(!allSets)}>
+                <ListItemIcon>
+                    {allSets
+                        ? <CheckBoxIcon fontSize="small" />
+                        : <CheckBoxOutlineBlank fontSize="small" />
+                    }
+                </ListItemIcon>
+                <ListItemText>
+                    {t('routines.requirementsAllSets')}
+                </ListItemText>
+            </MenuItem>
             <Divider />
             <MenuItem>
 

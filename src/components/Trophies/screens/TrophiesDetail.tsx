@@ -20,7 +20,7 @@ export const TrophiesDetail = () => {
 
     return <WgerContainerFullWidth title={t('trophies.trophies')}>
         <Grid container spacing={2}>
-            {planQuery.data!.map((trophyProgression) => (
+            {(planQuery.data ?? []).map((trophyProgression) => (
                 <Grid size={{ xs: 12, sm: 4, md: 3, lg: 3, xl: 2 }} key={trophyProgression.trophy.uuid}>
                     <TrophyProgressCard key={trophyProgression.trophy.uuid} trophyProgression={trophyProgression} />
                 </Grid>

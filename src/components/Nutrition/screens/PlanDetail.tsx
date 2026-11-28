@@ -11,6 +11,7 @@ import { AddNutritionDiaryEntryFab } from "@/components/Nutrition/widgets/Fab";
 import { MealForm } from "@/components/Nutrition/widgets/forms/MealForm";
 import { MealDetail } from "@/components/Nutrition/widgets/MealDetail";
 import { NutritionalValuesTable } from "@/components/Nutrition/widgets/NutritionalValuesTable";
+import { PlanWeightChart } from "@/components/Nutrition/widgets/charts/PlanWeightChart";
 import { PlanDetailDropdown } from "@/components/Nutrition/widgets/PlanDetailDropdown";
 import { PlanSidebar } from "@/components/Nutrition/widgets/PlanSidebar";
 import React, { useState } from "react";
@@ -21,9 +22,9 @@ import { useParams } from "react-router-dom";
 export const PlanDetail = () => {
     const [t] = useTranslation();
     const params = useParams<{ planId: string }>();
-    const planId = parseInt(params.planId ?? '');
-    if (Number.isNaN(planId)) {
-        return <p>Please pass an integer as the nutritional plan id.</p>;
+    const planId = params.planId ?? '';
+    if (planId === '') {
+        return <p>Please pass a UUID as the nutritional plan id.</p>;
     }
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -92,6 +93,7 @@ export const PlanDetail = () => {
                     logged={plan.groupDiaryEntries}
                     planned={plan.plannedNutritionalValues}
                 />
+                <PlanWeightChart plan={plan} />
             </Stack>
         </>}
         sideBar={<PlanSidebar plan={plan} />}

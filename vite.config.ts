@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
-import eslintPlugin from 'vite-plugin-eslint';
+import eslintPlugin from '@nabla/vite-plugin-eslint';
+import pkg from './package.json' with { type: 'json' };
 
 export default defineConfig(({ mode }) => {
     const isTest = mode === 'test' || process.env.VITEST;
@@ -11,8 +12,9 @@ export default defineConfig(({ mode }) => {
         build: {
             outDir: 'build',
             sourcemap: true,
-            rollupOptions: {
+            rolldownOptions: {
                 output: {
+                    postBanner: `/*! ${pkg.name} ${pkg.version} */`,
                     entryFileNames: 'main.js',
                     chunkFileNames: 'chunks/[name]-[hash].js',
                     assetFileNames: 'assets/[name][extname]',
@@ -28,10 +30,10 @@ export default defineConfig(({ mode }) => {
                 jsxImportSource: '@emotion/react',
             }),
             // The eslint plugin adds noise to test output and isn't needed during tests.
+            // @nabla lints every file Vite processes; shouldLint restricts it to our
+            // own src/ js/jsx/ts/tsx (the old plugin's `include` glob), skipping deps.
             ...(isTest ? [] : [eslintPlugin({
-                cache: false,
-                include: ['./src/**/*.js', './src/**/*.jsx', './src/**/*.ts', './src/**/*.tsx'],
-                exclude: [],
+                shouldLint: path => /\/src\/.*\.[jt]sx?(\?|$)/.test(path),
             })]),
         ],
         test: {
@@ -39,11 +41,44 @@ export default defineConfig(({ mode }) => {
             globals: true,
             setupFiles: './src/tests/setup.ts',
             testTimeout: 15000,
-            include: ['src/**/*.{test,spec}.{ts,tsx}'],
             css: false,
             pool: 'threads',
             maxWorkers: '50%',
-            minWorkers: 1,
+
+            // Note: `include` lives in the projects (extends merges arrays, a
+            // root-level include would make both projects run everything)
+            projects: [
+                {
+                    extends: true,
+                    test: {
+                        name: 'default',
+                        include: ['src/**/*.{test,spec}.{ts,tsx}'],
+                        exclude: ['src/core/lib/date.test.ts'],
+                    },
+                },
+                {
+                    extends: true,
+                    test: {
+                        name: 'timezones',
+                        // These tests re-run themselves under several TZ values.
+                        // They need child processes: assigning process.env.TZ at
+                        // runtime only resets the cached timezone on a process
+                        // main thread, worker threads keep the old one.
+                        include: ['src/core/lib/date.test.ts'],
+                        pool: 'forks',
+                    },
+                },
+            ],
+
+            server: {
+                deps: {
+                    // @mui/material@9.1+ imports react-transition-group/TransitionGroupContext
+                    // (a pseudo-directory resolved via its package.json "module" field). Loaded
+                    // externally via native ESM, that directory import fails; inlining @mui/material
+                    // routes it through Vite's resolver, which honors the "module" field.
+                    inline: ['@mui/material'],
+                },
+            },
 
             coverage: {
                 provider: 'v8',
@@ -61,13 +96,11 @@ export default defineConfig(({ mode }) => {
                         include: [
                             '@mui/material',
                             '@mui/icons-material',
-                            '@mui/lab',
                             '@mui/x-data-grid',
                             '@mui/x-date-pickers',
                             '@emotion/react',
                             '@emotion/styled',
                             'recharts',
-                            'formik',
                             'react-i18next',
                             'react-router-dom',
                             '@tanstack/react-query',

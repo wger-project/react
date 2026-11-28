@@ -1,9 +1,9 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { EditExerciseMuscle } from "@/components/Exercises/forms/Muscle";
 import { useEditExerciseQuery, useMusclesQuery } from "@/components/Exercises/queries";
-import React from "react";
 import { testMuscles } from "@/tests/exerciseTestdata";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import React from "react";
 import type { Mock } from "vitest";
 
 vi.mock("@/components/Exercises/queries");
@@ -72,7 +72,7 @@ describe("Test the widget to live edit the muscles", () => {
         await user.click(shoulders);
         expect(editMutateMock).toHaveBeenCalledWith({
             id: 1234,
-            // eslint-disable-next-line camelcase
+
             data: { muscles_secondary: [1, 2, 3] },
         });
     });

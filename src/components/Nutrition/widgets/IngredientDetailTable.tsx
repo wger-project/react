@@ -1,50 +1,80 @@
 import PhotoIcon from "@mui/icons-material/Photo";
-import { Avatar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Avatar, Collapse, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
+import { Meal } from "@/components/Nutrition/models/meal";
 import { MealItem } from "@/components/Nutrition/models/mealItem";
+import { NutritionDiaryEntryForm } from "@/components/Nutrition/widgets/forms/NutritionDiaryEntryForm";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { numberGramLocale, numberLocale } from "@/core/lib/numbers";
 
-const IngredientTableRow = (props: { item: MealItem | DiaryEntry }) => {
+const IngredientTableRow = (props: { item: MealItem | DiaryEntry, planId?: string, meals?: Meal[] }) => {
     const [t, i18n] = useTranslation();
+    const [expandForm, setExpandForm] = useState(false);
 
-    return <TableRow key={props.item.id}>
-        <TableCell sx={{ paddingX: 1 }}>
-            <Avatar
-                alt={props.item.ingredient?.name}
-                src={props.item.ingredient?.image?.url}
-                sx={{ width: 45, height: 45 }}
-            >
-                <PhotoIcon />
-            </Avatar>
+    const isEditable = props.planId !== undefined && props.item instanceof DiaryEntry;
+    const handleToggleForm = () => {
+        if (isEditable) {
+            setExpandForm(!expandForm);
+        }
+    };
+    const clickableSx = isEditable ? { '&:hover': { cursor: 'pointer' } } : {};
 
-        </TableCell>
-        <TableCell sx={{ paddingX: 1 }}>
-            {props.item.amountString} {props.item.ingredient?.name}
-        </TableCell>
-        <TableCell align={'right'} sx={{ paddingX: 1 }}>
-            {t('nutrition.valueEnergyKcalKj', {
-                kcal: numberLocale(props.item.nutritionalValues.energy, i18n.language),
-                kj: numberLocale(props.item.nutritionalValues.energyKj, i18n.language)
-            })}
-        </TableCell>
-        <TableCell align="right" sx={{ paddingX: 1 }}>
-            {numberGramLocale(props.item.nutritionalValues.protein, i18n.language)}
-        </TableCell>
-        <TableCell align="right" sx={{ paddingX: 1 }}>
-            {numberGramLocale(props.item.nutritionalValues.carbohydrates, i18n.language)}
-        </TableCell>
-        <TableCell align="right" sx={{ paddingX: 1 }}>
-            {numberGramLocale(props.item.nutritionalValues.fat, i18n.language)}
-        </TableCell>
-    </TableRow>;
+    return <>
+        <TableRow key={props.item.id}>
+            <TableCell onClick={handleToggleForm} sx={{ paddingX: 1, ...clickableSx }}>
+                <Avatar
+                    alt={props.item.ingredient?.name}
+                    src={props.item.ingredient?.image?.url}
+                    sx={{ width: 45, height: 45 }}
+                >
+                    <PhotoIcon />
+                </Avatar>
+
+            </TableCell>
+            <TableCell onClick={handleToggleForm} sx={{ paddingX: 1, ...clickableSx }}>
+                {props.item.amountString} {props.item.ingredient?.name}
+            </TableCell>
+            <TableCell align={'right'} sx={{ paddingX: 1 }}>
+                {t('nutrition.valueEnergyKcalKj', {
+                    kcal: numberLocale(props.item.nutritionalValues.energy, i18n.language),
+                    kj: numberLocale(props.item.nutritionalValues.energyKj, i18n.language)
+                })}
+            </TableCell>
+            <TableCell align="right" sx={{ paddingX: 1 }}>
+                {numberGramLocale(props.item.nutritionalValues.protein, i18n.language)}
+            </TableCell>
+            <TableCell align="right" sx={{ paddingX: 1 }}>
+                {numberGramLocale(props.item.nutritionalValues.carbohydrates, i18n.language)}
+            </TableCell>
+            <TableCell align="right" sx={{ paddingX: 1 }}>
+                {numberGramLocale(props.item.nutritionalValues.fat, i18n.language)}
+            </TableCell>
+        </TableRow>
+        {isEditable && <TableRow>
+            <TableCell colSpan={6} sx={{ paddingY: 0, ...(expandForm ? {} : { borderBottom: 'none' }) }}>
+                <Collapse in={expandForm} timeout="auto" unmountOnExit sx={{ paddingY: 2 }}>
+                    <NutritionDiaryEntryForm
+                        planId={props.planId!}
+                        entry={props.item as DiaryEntry}
+                        meals={props.meals}
+                        closeFn={() => setExpandForm(false)}
+                    />
+                </Collapse>
+            </TableCell>
+        </TableRow>}
+    </>;
 };
 
 export const IngredientDetailTable = (props: {
     items: MealItem[] | DiaryEntry[],
     values: NutritionalValues,
-    showSum: boolean
+    showSum: boolean,
+    // When given, diary entry rows can be expanded to an edit form
+    planId?: string,
+    // When given, the edit form lets the user move the entry to another meal
+    meals?: Meal[]
 }) => {
     const [t, i18n] = useTranslation();
 
@@ -52,8 +82,8 @@ export const IngredientDetailTable = (props: {
         <Table>
             <TableHead>
                 <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
+                    <TableCell />
+                    <TableCell />
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.energy')}</TableCell>
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.protein')}</TableCell>
                     <TableCell align={'right'} sx={{ paddingX: 1 }}>{t('nutrition.carbohydrates')}</TableCell>
@@ -62,7 +92,7 @@ export const IngredientDetailTable = (props: {
             </TableHead>
             <TableBody>
                 {props.items.map((item) => (
-                    <IngredientTableRow item={item} key={item.id} />
+                    <IngredientTableRow item={item} planId={props.planId} meals={props.meals} key={item.id} />
                 ))}
                 {props.showSum && <TableRow>
                     <TableCell sx={{ paddingX: 1 }}> </TableCell>

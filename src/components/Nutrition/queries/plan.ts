@@ -8,14 +8,34 @@ import {
     getNutritionalPlanFull,
     getNutritionalPlansSparse
 } from "@/components/Nutrition/api/nutritionalPlan";
+import { PlanPeriod } from "@/components/Measurements";
 import { QueryKey } from "@/core/lib/consts";
-import { dateToYYYYMMDD } from "@/core/lib/date";
+import { useTranslation } from "react-i18next";
 
-export function useFetchNutritionalPlansQuery() {
+export function useFetchNutritionalPlansQuery(enabled = true) {
     return useQuery({
         queryKey: [QueryKey.NUTRITIONAL_PLANS],
-        queryFn: () => getNutritionalPlansSparse()
+        queryFn: () => getNutritionalPlansSparse(),
+        enabled: enabled,
     });
+}
+
+/**
+ * The plans as periods a measurement chart can shade, newest first. A plan
+ * without an end date is still running, so its period reaches up to now.
+ *
+ * Pass enabled=false where the metric has nothing to do with nutrition, so
+ * those charts do not fetch the plans at all.
+ */
+export function useNutritionPlanPeriods(enabled = true): PlanPeriod[] {
+    const [t] = useTranslation();
+    const query = useFetchNutritionalPlansQuery(enabled);
+
+    return (query.data ?? []).map(plan => ({
+        start: plan.start.getTime(),
+        end: (plan.end ?? new Date()).getTime(),
+        name: plan.description !== '' ? plan.description : t('nutrition.plan'),
+    }));
 }
 
 
@@ -26,7 +46,7 @@ export function useFetchLastNutritionalPlanQuery() {
     });
 }
 
-export function useFetchNutritionalPlanQuery(planId: number) {
+export function useFetchNutritionalPlanQuery(planId: string) {
     return useQuery({
         queryKey: [QueryKey.NUTRITIONAL_PLAN, planId],
         queryFn: () => getNutritionalPlanFull(planId)
@@ -37,10 +57,13 @@ export function useFetchNutritionalPlanQuery(planId: number) {
  * Fetches the full nutritional plan (meals, etc.), but only the diary entries for
  * the given date
  */
-export function useFetchNutritionalPlanDateQuery(planId: number | null, dateStr: string, enabled = true) {
+export function useFetchNutritionalPlanDateQuery(planId: string | null, dateStr: string, enabled = true) {
     return useQuery({
         queryKey: [QueryKey.NUTRITIONAL_PLAN, planId, dateStr],
-        queryFn: () => getNutritionalPlanFull(planId, { filtersetQueryLogs: { "datetime__eq": dateToYYYYMMDD(new Date(dateStr)) } }),
+        // dateStr already is a YYYY-MM-DD string (from the URL), pass it through
+        // as-is: round-tripping it through new Date() would parse it as UTC
+        // midnight and shift the day in timezones behind UTC
+        queryFn: () => getNutritionalPlanFull(planId, { filtersetQueryLogs: { "datetime__eq": dateStr } }),
         enabled: enabled,
     });
 }
@@ -61,11 +84,11 @@ export const useAddNutritionalPlanQuery = () => {
     });
 };
 
-export const useDeleteNutritionalPlanQuery = (id: number) => {
+export const useDeleteNutritionalPlanQuery = (id: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (id: number) => deleteNutritionalPlan(id),
+        mutationFn: (id: string) => deleteNutritionalPlan(id),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QueryKey.NUTRITIONAL_PLANS,]
@@ -76,7 +99,7 @@ export const useDeleteNutritionalPlanQuery = (id: number) => {
         }
     });
 };
-export const useEditNutritionalPlanQuery = (id: number) => {
+export const useEditNutritionalPlanQuery = (id: string) => {
     const queryClient = useQueryClient();
 
     return useMutation({

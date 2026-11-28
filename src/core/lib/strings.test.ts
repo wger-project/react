@@ -15,11 +15,11 @@ describe("slugify utilities", () => {
     });
 
     test('parenthesis', () => {
-        expect(makeServerKey('Test(123)')).toEqual('test_123_');
+        expect(makeServerKey('Test(1)(2)')).toEqual('test_1__2_');
     });
 
     test('dash', () => {
-        expect(makeServerKey('Test-123')).toEqual('test_123');
+        expect(makeServerKey('Test-123-456')).toEqual('test_123_456');
     });
 
     test('special chars are kept', () => {

@@ -4,12 +4,12 @@ import { GroupedDiaryEntries } from "@/components/Nutrition/models/nutritionalPl
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { dateToLocale } from "@/core/lib/date";
+import { dateToLocale, yyyymmddToDate } from "@/core/lib/date";
 import { numberLocale } from "@/core/lib/numbers";
 import { makeLink, WgerLink } from "@/core/lib/url";
 
 export const DiaryOverview = (props: {
-    planId: number,
+    planId: string,
     logged: Map<string, GroupedDiaryEntries>,
     planned: NutritionalValues
 }) => {
@@ -27,21 +27,21 @@ export const DiaryOverview = (props: {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {Array.from(props.logged).map(([key]) =>
+                {Array.from(props.logged).map(([key, diaryEntries]) =>
                     <TableRow key={key}>
                         <TableCell>
                             <Link
                                 to={makeLink(WgerLink.NUTRITION_DIARY, i18n.language, { id: props.planId, date: key })}>
-                                {dateToLocale(new Date(key))}
+                                {dateToLocale(yyyymmddToDate(key))}
                             </Link>
                         </TableCell>
                         <TableCell align="right">
                             {t('nutrition.valueEnergyKcal',
-                                { value: numberLocale(props.logged.get(key)?.nutritionalValues.energy!, i18n.language) }
+                                { value: numberLocale(diaryEntries.nutritionalValues.energy, i18n.language) }
                             )}
                         </TableCell>
                         <TableCell align="right">
-                            {numberLocale(props.logged.get(key)?.nutritionalValues.energy! - props.planned.energy, i18n.language)}
+                            {numberLocale(diaryEntries.nutritionalValues.energy - props.planned.energy, i18n.language)}
                         </TableCell>
                     </TableRow>)
                 }

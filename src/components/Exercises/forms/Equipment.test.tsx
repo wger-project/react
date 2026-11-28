@@ -1,11 +1,11 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { EditExerciseEquipment } from "@/components/Exercises/forms/Equipment";
 import { useEditExerciseQuery, useEquipmentQuery } from "@/components/Exercises/queries";
 import { useProfileQuery } from "@/components/User";
-import React from "react";
 import { testEquipment } from "@/tests/exerciseTestdata";
 import { testProfileDataVerified } from "@/tests/userTestdata";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import React from "react";
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/User/queries/profile");
@@ -56,7 +56,7 @@ describe("Test the edit widget to live edit the equipment", () => {
 
         expect(editMutateMock).toHaveBeenCalledWith({
             id: 100,
-            // eslint-disable-next-line camelcase
+
             data: { equipment: [1, 2, 42], license_author: "admin" },
         });
     });
@@ -85,7 +85,7 @@ describe("Test the edit widget to live edit the equipment", () => {
 
         expect(editMutateMock).toHaveBeenCalledWith({
             id: 100,
-            // eslint-disable-next-line camelcase
+
             data: { equipment: [1], license_author: "admin" },
         });
     });

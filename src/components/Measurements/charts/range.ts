@@ -1,0 +1,112 @@
+import { ChartPoint } from "@/components/Measurements/charts/series";
+import { AVERAGE_WINDOWS } from "@/components/Measurements/models/Category";
+
+/**
+ * How far back the charts go, in the order the selector offers them: widest
+ * first, narrowing left to right, like the flutter app.
+ */
+export const CHART_RANGES = ['all', 'lastYear', 'last3Months', 'lastMonth', 'lastWeek'] as const;
+export type ChartRange = typeof CHART_RANGES[number];
+
+/**
+ * The range the charts cover until the user picks another one.
+ */
+export const DEFAULT_CHART_RANGE: ChartRange = 'lastMonth';
+
+import { DAY_MS } from "@/core/lib/date";
+
+const DAYS: Record<ChartRange, number | null> = {
+    all: null,
+    lastYear: 365,
+    last3Months: 90,
+    lastMonth: 30,
+    // Six, not seven: the cutoff lands six days back, so the window is today
+    // plus the six days before it, i.e. one week of calendar days
+    lastWeek: 6,
+};
+
+/**
+ * The instant a range starts at, null for the full history.
+ *
+ * The bound the other cutoffs are derived from, not one to cut a view at: it
+ * moves with the clock, so the day it lands on would be half in and half out.
+ * Views cut at displayCutoffFor.
+ */
+export const cutoffFor = (range: ChartRange, now: Date = new Date()): Date | null => {
+    const days = DAYS[range];
+
+    return days === null ? null : new Date(now.getTime() - days * DAY_MS);
+};
+
+/**
+ * Days fetched beyond the cutoff, so the moving average of the first days in
+ * range averages the days before them instead of starting over at the cutoff.
+ *
+ * The largest window a category can be set to, rather than its own: this ends
+ * up in a query key, so deriving it from the setting would refetch whenever
+ * the setting changes.
+ */
+const AVERAGE_LEAD_DAYS = Math.max(...AVERAGE_WINDOWS);
+
+/**
+ * The cutoff minus a lead, rounded down to midnight.
+ *
+ * The rounding is deliberate: these end up in query keys, and a bound derived
+ * from the current instant would differ on every render and refetch forever.
+ */
+const cutoffAtMidnight = (range: ChartRange, now: Date, leadDays: number): Date | null => {
+    const cutoff = cutoffFor(range, now);
+    if (cutoff === null) {
+        return null;
+    }
+
+    const lead = new Date(cutoff.getTime() - leadDays * DAY_MS);
+
+    return new Date(lead.getFullYear(), lead.getMonth(), lead.getDate());
+};
+
+/** Oldest entry to fetch for a range, null for the full history */
+export const fetchCutoffFor = (range: ChartRange, now: Date = new Date()): Date | null =>
+    cutoffAtMidnight(range, now, AVERAGE_LEAD_DAYS);
+
+/**
+ * The day a range starts on, null for the full history: the range itself, with
+ * no lead.
+ *
+ * Where every view of a range is cut, so that the chart, the table and the
+ * histogram agree on the day at its edge: it is in whole or not at all. The
+ * reads that cannot be trimmed afterwards use it as well, i.e. the counted
+ * values behind the histogram: they carry no date, so a read with the average
+ * lead would bin a month and a half into a chart labelled one month.
+ */
+export const displayCutoffFor = (range: ChartRange, now: Date = new Date()): Date | null =>
+    cutoffAtMidnight(range, now, 0);
+
+/**
+ * Entry filter that fetches only what a range needs, empty for the full
+ * history. The server has an index on (category, date), so this is cheaper
+ * than fetching everything and filtering here.
+ */
+export const entryFilterFor = (range: ChartRange, now: Date = new Date()): object => {
+    const cutoff = fetchCutoffFor(range, now);
+
+    return cutoff === null ? {} : { "date__gte": cutoff.toISOString() };
+};
+
+/** Filter for the reads that summarise exactly the range, see displayCutoffFor */
+export const displayFilterFor = (range: ChartRange, now: Date = new Date()): object => {
+    const cutoff = displayCutoffFor(range, now);
+
+    return cutoff === null ? {} : { "date__gte": cutoff.toISOString() };
+};
+
+/**
+ * The points from the cutoff on; a null cutoff covers the full history.
+ *
+ * A condensed point sits at the start of its bucket, so the bucket the cutoff
+ * falls into drops out whole rather than half: at a week bucket that is up to
+ * a week of readings the range technically covers. Deliberate, a part bucket
+ * drawn next to full ones reads as a real dip.
+ */
+export const pointsSince = (points: ChartPoint[], cutoff: Date | null): ChartPoint[] =>
+    cutoff === null ? points : points.filter(point => point.date >= cutoff.getTime());

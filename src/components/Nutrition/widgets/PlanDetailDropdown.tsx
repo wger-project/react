@@ -1,6 +1,7 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import { Button, Menu, MenuItem } from "@mui/material";
 import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import { useDeleteNutritionalPlanQuery } from "@/components/Nutrition/queries";
@@ -53,6 +54,7 @@ export const PlanDetailDropdown = (props: { plan: NutritionalPlan }) => {
     const handleCloseDeleteModal = () => setOpenDeleteModal(false);
 
     return <>
+        <FormQueryErrorsSnackbar mutationQuery={deletePlanQuery} />
         <Button onClick={handleClick}>
             <MenuIcon />
         </Button>

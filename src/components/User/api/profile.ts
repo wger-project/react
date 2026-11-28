@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { EditProfileParams, Profile } from "@/components/User/models/profile";
 import { ApiPath } from "@/core/lib/consts";
 import { makeHeader, makeUrl } from "@/core/lib/url";
+import axios from 'axios';
 
 export const API_PROFILE_PATH = 'userprofile';
 
@@ -33,13 +33,13 @@ export const editProfile = async (data: Partial<EditProfileParams>): Promise<Pro
     const { weightRounding, repetitionsRounding, ...rest } = data;
     const payload = {
         ...rest,
-        // eslint-disable-next-line camelcase
+
         ...(weightRounding !== undefined && { weight_rounding: weightRounding }),
-        // eslint-disable-next-line camelcase
-        ...(repetitionsRounding !== undefined && { repetition_rounding: repetitionsRounding }),
+
+        ...(repetitionsRounding !== undefined && { repetitions_rounding: repetitionsRounding }),
     };
 
-    const response = await axios.post(
+    const response = await axios.patch(
         makeUrl(ApiPath.API_PROFILE_PATH),
         payload,
         { headers: makeHeader() }

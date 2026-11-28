@@ -16,6 +16,14 @@ describe('test the collectValidationErrors function', () => {
         });
         expect(result).toStrictEqual(['main.sub-list: This is a list']);
     });
+    test('correctly collects all errors from nested objects', () => {
+        const result = collectValidationErrors({
+            "translations": {
+                "1": { "language": ["Wrong language"] }
+            },
+        });
+        expect(result).toStrictEqual(['translations.1.language: Wrong language']);
+    });
     test('correctly collects all errors from strings', () => {
         const result = collectValidationErrors({
             "language": "This is not a list",

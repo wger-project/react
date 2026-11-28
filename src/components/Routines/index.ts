@@ -17,6 +17,7 @@ export { WorkoutStats } from "./screens/Detail/WorkoutStats";
 export { PrivateTemplateOverview } from "./screens/Overview/PrivateTemplateOverview";
 export { PublicTemplateOverview } from "./screens/Overview/PublicTemplateOverview";
 export { RoutineOverview } from "./screens/Overview/RoutineOverview";
+export { ExerciseAnalytics } from "./screens/Overview/ExerciseAnalytics";
 
 // Models
 export {
@@ -39,14 +40,12 @@ export { SlotEntry } from "./models/SlotEntry";
 export { WeightUnit, WeightUnitAdapter } from "./models/WeightUnit";
 export { WorkoutLog, WorkoutLogAdapter } from "./models/WorkoutLog";
 export {
-    type AddSessionParams,
-    type EditSessionParams,
     WorkoutSession,
     WorkoutSessionAdapter,
 } from "./models/WorkoutSession";
 
 // Query hooks
-export { useActiveRoutineQuery, useSessionsQuery } from "./queries";
+export { useActiveRoutineQuery, useDeleteSessionQuery, useSessionsQuery } from "./queries";
 
 // Widgets
 export { SetConfigDataDetails } from "./widgets/RoutineDetailsCard";

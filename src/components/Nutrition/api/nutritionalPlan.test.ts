@@ -1,5 +1,5 @@
-import axios from "axios";
-import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
+import { getMealsForPlan } from "@/components/Nutrition/api/meal";
+import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutritionalDiary";
 import {
     addNutritionalPlan,
     deleteNutritionalPlan,
@@ -8,14 +8,17 @@ import {
     getNutritionalPlanFull,
     getNutritionalPlansSparse,
 } from "@/components/Nutrition/api/nutritionalPlan";
-import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutritionalDiary";
-import { getMealsForPlan } from "@/components/Nutrition/api/meal";
+import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import {
+    RESPONSE_MEAL_UUID,
+    RESPONSE_PLAN_UUID,
     responseEmptyPlanList,
     responseNutritionalPlanDetail,
     responseSinglePlanList,
 } from "@/tests/nutritionTestdata";
+import axios from "axios";
 import type { Mock } from 'vitest';
+import { yyyymmddToDate } from "@/core/lib/date";
 
 vi.mock("axios");
 vi.mock("@/components/Nutrition/api/meal");
@@ -37,13 +40,17 @@ describe("Nutritional plan service tests", () => {
 
     test('GET plans - sparse', async () => {
 
+        const PLAN_UUID_A = 'aaaaaaaa-0000-0000-0000-000000072559';
+        const PLAN_UUID_B = 'aaaaaaaa-0000-0000-0000-000000060131';
+        const PLAN_UUID_C = 'aaaaaaaa-0000-0000-0000-000000024752';
+
         const planResponse = {
             count: 2,
             next: null,
             previous: null,
             results: [
                 {
-                    "id": 72559,
+                    "id": PLAN_UUID_A,
                     "creation_date": "2023-05-26",
                     "start": "2023-06-01",
                     "end": "2023-06-30",
@@ -51,7 +58,7 @@ describe("Nutritional plan service tests", () => {
                     "only_logging": true,
                 },
                 {
-                    "id": 60131,
+                    "id": PLAN_UUID_B,
                     "creation_date": "2022-06-01",
                     "start": "2022-06-01",
                     "end": null,
@@ -59,7 +66,7 @@ describe("Nutritional plan service tests", () => {
                     "only_logging": false,
                 },
                 {
-                    "id": 24752,
+                    "id": PLAN_UUID_C,
                     "creation_date": "2023-08-01",
                     "start": "2023-08-01",
                     "end": "2023-08-31",
@@ -76,24 +83,24 @@ describe("Nutritional plan service tests", () => {
 
         expect(result).toStrictEqual([
             new NutritionalPlan({
-                id: 72559,
-                creationDate: new Date('2023-05-26'),
-                start: new Date('2023-06-01'),
-                end: new Date('2023-06-30'),
+                id: PLAN_UUID_A,
+                creationDate: yyyymmddToDate('2023-05-26'),
+                start: yyyymmddToDate('2023-06-01'),
+                end: yyyymmddToDate('2023-06-30'),
                 description: 'first plan',
                 onlyLogging: true
             }),
             new NutritionalPlan({
-                id: 60131,
-                creationDate: new Date('2022-06-01'),
+                id: PLAN_UUID_B,
+                creationDate: yyyymmddToDate('2022-06-01'),
                 description: '',
                 onlyLogging: false
             }),
             new NutritionalPlan({
-                id: 24752,
-                creationDate: new Date('2023-08-01'),
-                start: new Date('2023-08-01'),
-                end: new Date('2023-08-31'),
+                id: PLAN_UUID_C,
+                creationDate: yyyymmddToDate('2023-08-01'),
+                start: yyyymmddToDate('2023-08-01'),
+                end: yyyymmddToDate('2023-08-31'),
                 description: '',
                 onlyLogging: false
             }),
@@ -125,11 +132,11 @@ describe("Nutritional plan service tests", () => {
         const result = await getLastNutritionalPlan();
 
         expect(result).toBeInstanceOf(NutritionalPlan);
-        expect(result!.id).toBe(101);
-        expect(getMealsForPlan).toHaveBeenCalledWith(101);
+        expect(result!.id).toBe(RESPONSE_PLAN_UUID);
+        expect(getMealsForPlan).toHaveBeenCalledWith(RESPONSE_PLAN_UUID);
         // Diary entries are filtered by plan id
         expect(getNutritionalDiaryEntries).toHaveBeenCalledWith({
-            filtersetQuery: { plan: 101 },
+            filtersetQuery: { plan: RESPONSE_PLAN_UUID },
         });
     });
 
@@ -142,24 +149,25 @@ describe("Nutritional plan service tests", () => {
     });
 
     test('getNutritionalPlanFull wires meals back to their diary entries by mealId', async () => {
-        // Two diary entries, one for meal 78 and one for an unrelated meal
+        const OTHER_MEAL_UUID = 'bbbbbbbb-0000-0000-0000-000000000099';
+        // Two diary entries, one for the matching meal and one for an unrelated meal
         const diaryEntries = [
-            { mealId: 78 },
-            { mealId: 99 },
-            { mealId: 78 },
+            { mealId: RESPONSE_MEAL_UUID },
+            { mealId: OTHER_MEAL_UUID },
+            { mealId: RESPONSE_MEAL_UUID },
         ];
-        const meals = [{ id: 78, diaryEntries: [] as { mealId: number }[] }];
+        const meals = [{ id: RESPONSE_MEAL_UUID, diaryEntries: [] as { mealId: string }[] }];
 
         (axios.get as Mock).mockResolvedValue({ data: responseNutritionalPlanDetail });
         (getMealsForPlan as Mock).mockResolvedValue(meals);
         (getNutritionalDiaryEntries as Mock).mockResolvedValue(diaryEntries);
 
-        const result = await getNutritionalPlanFull(101);
+        const result = await getNutritionalPlanFull(RESPONSE_PLAN_UUID);
 
         expect(result).not.toBeNull();
         // The meal collected only the entries that match its id
         expect(meals[0].diaryEntries).toHaveLength(2);
-        expect(meals[0].diaryEntries.every(e => e.mealId === 78)).toBe(true);
+        expect(meals[0].diaryEntries.every(e => e.mealId === RESPONSE_MEAL_UUID)).toBe(true);
         // Both data sources are wired into the plan
         expect(result!.diaryEntries).toBe(diaryEntries);
         expect(result!.meals).toBe(meals);
@@ -170,18 +178,18 @@ describe("Nutritional plan service tests", () => {
         (getMealsForPlan as Mock).mockResolvedValue([]);
         (getNutritionalDiaryEntries as Mock).mockResolvedValue([]);
 
-        await getNutritionalPlanFull(101, { filtersetQueryLogs: { datetime__date: "2024-08-01" } });
+        await getNutritionalPlanFull(RESPONSE_PLAN_UUID, { filtersetQueryLogs: { datetime__date: "2024-08-01" } });
 
         expect(getNutritionalDiaryEntries).toHaveBeenCalledWith({
-            filtersetQuery: { plan: 101, datetime__date: "2024-08-01" },
+            filtersetQuery: { plan: RESPONSE_PLAN_UUID, datetime__date: "2024-08-01" },
         });
     });
 
     test('addNutritionalPlan POSTs the serialized plan and returns the parsed plan', async () => {
         const plan = new NutritionalPlan({
             description: "summer body",
-            start: new Date("2024-06-01"),
-            end: new Date("2024-08-31"),
+            start: yyyymmddToDate("2024-06-01"),
+            end: yyyymmddToDate("2024-08-31"),
             onlyLogging: false,
             goalEnergy: 2200,
         });
@@ -196,22 +204,22 @@ describe("Nutritional plan service tests", () => {
             description: "summer body",
             start: "2024-06-01",
             end: "2024-08-31",
-            // eslint-disable-next-line camelcase
+
             only_logging: false,
-            // eslint-disable-next-line camelcase
+
             goal_energy: 2200,
         });
         expect(body).not.toHaveProperty("id");
         expect(result).toBeInstanceOf(NutritionalPlan);
-        expect(result.id).toBe(101);
+        expect(result.id).toBe(RESPONSE_PLAN_UUID);
     });
 
     test('editNutritionalPlan PATCHes /nutritionplan/<id>/', async () => {
         const plan = new NutritionalPlan({
-            id: 101,
+            id: RESPONSE_PLAN_UUID,
             description: "edited",
-            start: new Date("2024-06-01"),
-            end: new Date("2024-08-31"),
+            start: yyyymmddToDate("2024-06-01"),
+            end: yyyymmddToDate("2024-08-31"),
         });
         (axios.patch as Mock).mockResolvedValue({
             data: { ...responseNutritionalPlanDetail, description: "edited" },
@@ -221,18 +229,18 @@ describe("Nutritional plan service tests", () => {
 
         expect(axios.patch).toHaveBeenCalledTimes(1);
         const [url, body] = (axios.patch as Mock).mock.calls[0];
-        expect(url).toMatch(/\/api\/v2\/nutritionplan\/101\/$/);
-        expect(body).toMatchObject({ id: 101, description: "edited" });
+        expect(url).toMatch(new RegExp(`/api/v2/nutritionplan/${RESPONSE_PLAN_UUID}/$`));
+        expect(body).toMatchObject({ id: RESPONSE_PLAN_UUID, description: "edited" });
         expect(result.description).toBe("edited");
     });
 
     test('deleteNutritionalPlan DELETEs /nutritionplan/<id>/', async () => {
         (axios.delete as Mock).mockResolvedValue({ status: 204 });
 
-        await deleteNutritionalPlan(101);
+        await deleteNutritionalPlan(RESPONSE_PLAN_UUID);
 
         expect(axios.delete).toHaveBeenCalledWith(
-            expect.stringMatching(/\/api\/v2\/nutritionplan\/101\/$/),
+            expect.stringMatching(new RegExp(`/api/v2/nutritionplan/${RESPONSE_PLAN_UUID}/$`)),
             expect.anything()
         );
     });

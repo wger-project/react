@@ -1,6 +1,10 @@
-import { BodyWeight } from "@/components/Weight";
+import { BodyWeight } from "@/components/Measurements";
+import { useNutritionPlanPeriods } from "@/components/Nutrition";
 import React from 'react';
 
+/** Reads the plans the weight chart shades */
 export const WeightOverview = () => {
-    return <BodyWeight />;
+    const planPeriods = useNutritionPlanPeriods();
+
+    return <BodyWeight planPeriods={planPeriods} />;
 };

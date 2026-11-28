@@ -1,28 +1,30 @@
 import { FormControl, FormHelperText, InputLabel, Select } from "@mui/material";
-import { useField } from "formik";
+import { useFieldContext } from "@/core/forms/formContexts";
+import { fieldError } from "@/core/forms/formUtils";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
+/** Bound to the form field it is rendered in via form.AppField */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function ExerciseSelect(props: { fieldName: string, options: any }) {
+export function ExerciseSelect(props: { options: any }) {
     const [t] = useTranslation();
-    const [field, meta] = useField(props.fieldName);
+    const field = useFieldContext<number | ''>();
+    const error = fieldError(field);
 
     return <FormControl fullWidth>
         <InputLabel id="label-category">{t("category")}</InputLabel>
         <Select
             labelId="label-category"
             id="category"
+            name={field.name}
             label={t("category")}
-            error={meta.touched && Boolean(meta.error)}
-            {...field}
+            error={error !== undefined}
+            value={field.state.value}
+            onChange={event => field.handleChange(event.target.value as number | '')}
+            onBlur={field.handleBlur}
         >
             {props.options}
         </Select>
-        {
-            meta.touched
-            && Boolean(meta.error)
-            && <FormHelperText error>{meta.error}</FormHelperText>
-        }
+        {error !== undefined && <FormHelperText error>{error}</FormHelperText>}
     </FormControl>;
 }

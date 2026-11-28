@@ -4,6 +4,7 @@
     "cm": "cm",
     "date": "Data",
     "timeOfDay": "Hora do dia",
+    "off": "Desligado",
     "submit": "Submeter",
     "edit": "Editar",
     "editName": "Editar {{name}}",
@@ -53,7 +54,9 @@
         "step1HeaderBasics": "Conceitos básicos em inglês",
         "variations": "Variações",
         "notEnoughRightsHeader": "Não podes contribuir com exercícios",
-        "notEnoughRights": "Só podes contribuir com exercícios se a tua conta tiver mais de {{days}} dias e o email estiver verificado",
+        "notEnoughRights_one": "Só podes contribuir com exercícios se a tua conta tiver mais de {{count}} dia e o email estiver verificado",
+        "notEnoughRights_many": "Só podes contribuir com exercícios se a tua conta tiver mais de {{count}} dias e o email estiver verificado",
+        "notEnoughRights_other": "Só podes contribuir com exercícios se a tua conta tiver mais de {{count}} dias e o email estiver verificado",
         "muscles": "Músculos",
         "secondaryMuscles": "Músculos secundários",
         "whatVariationsExist": "Que variações deste exercício existem, se houver?",
@@ -93,7 +96,14 @@
         "imageStyleLowPoly": "Roldana baixa",
         "imageStyleOther": "Outro",
         "imageDetails": "Detalhes da imagem",
-        "swapExercise": "Trocar exercício"
+        "swapExercise": "Trocar exercício",
+        "replacementCannotBeSame": "O exercício substituto não pode ser o mesmo que está a ser eliminado.",
+        "transferMediaLabel": "Transferir os meios para o exercício de substituição",
+        "transferTranslationsLabel": "Transferir traduções para a substituição (ignora os idiomas já presentes)",
+        "exactMatch": "Correspondência exata",
+        "imageIsAiGenerated": "A imagem foi gerada por IA",
+        "dropOrClickImage": "Arraste uma imagem para aqui ou clique para selecionar",
+        "addImage": "Adicionar imagem"
     },
     "nutrition": {
         "plans": "Planos alimentares",
@@ -145,7 +155,15 @@
         "logThisMeal": "Regista esta refeição tal como está no diário alimentar",
         "logThisMealItem": "Regista este ingrediente tal como está no diário alimentar",
         "valueRemaining": "restam",
-        "valueTooMany": "demasiadas"
+        "valueTooMany": "demasiadas",
+        "languageFilterCurrentOnly": "Apenas no idioma atual ({{lang}})",
+        "languageFilterCurrentAndEnglish": "Idioma atual ({{lang}}) e Inglês",
+        "languageFilterAll": "Todas as idiomas",
+        "filterVegan": "Vegano",
+        "filterVegetarian": "Vegetariano",
+        "filterNutriscore": "Filtro Nutri-Score",
+        "filterNutriscoreNoFilter": "Sem filtro",
+        "filterNutriscoreOrBetter": "{{grade}} ou melhor"
     },
     "bmi": {
         "calculator": "Calculadora de IMC",
@@ -172,8 +190,12 @@
         "valueTooShort": "O valor é muito curto",
         "valueTooLong": "O valor é muito longo",
         "fieldRequired": "Campo obrigatório",
-        "maxLength": "Insere menos de {{chars}} caracteres",
-        "minLength": "Insere mais de {{chars}} caracteres",
+        "maxLength_one": "Insere menos de {{count}} caractere",
+        "maxLength_many": "Insere menos de {{count}} caracteres",
+        "maxLength_other": "Insere menos de {{count}} caracteres",
+        "minLength_one": "Insere mais de {{count}} caractere",
+        "minLength_many": "Insere mais de {{count}} caracteres",
+        "minLength_other": "Insere mais de {{count}} caracteres",
         "minValue": "O valor tem de ser maior que {{value}}",
         "maxValue": "O valor tem de ser menor que {{value}}",
         "maxLessThanMin": "O valor máximo tem de ser maior que o mínimo",
@@ -186,8 +208,12 @@
     "save": "Guardar",
     "min": "Mín",
     "max": "Máx",
-    "durationWeeks": "{{number}} semanas",
-    "durationWeeksDays": "{{nrWeeks}} semanas, {{nrDays}} dias",
+    "durationWeeks_one": "{{count}} semana",
+    "durationWeeks_many": "{{count}} semanas",
+    "durationWeeks_other": "{{count}} semanas",
+    "durationDays_one": "{{count}} dia",
+    "durationDays_many": "{{count}} dias",
+    "durationDays_other": "{{count}} dias",
     "videos": "Vídeos",
     "undo": "Desfazer",
     "successfullyDeleted": "Eliminado com sucesso",
@@ -208,14 +234,18 @@
         "workoutNr": "Treino nº {{number}}",
         "weekNr": "Semana {{number}}",
         "backToRoutine": "Voltar à rotina",
-        "minLengthRoutine": "A rotina tem de ter pelo menos {{number}} semanas",
-        "maxLengthRoutine": "A rotina pode ter no máximo {{number}} semanas",
+        "minLengthRoutine_one": "A rotina tem de ter pelo menos {{count}} semana",
+        "minLengthRoutine_many": "A rotina tem de ter pelo menos {{count}} semanas",
+        "minLengthRoutine_other": "A rotina tem de ter pelo menos {{count}} semanas",
+        "maxLengthRoutine_one": "A rotina pode ter no máximo {{count}} semana",
+        "maxLengthRoutine_many": "A rotina pode ter no máximo {{count}} semanas",
+        "maxLengthRoutine_other": "A rotina pode ter no máximo {{count}} semanas",
         "resultingRoutine": "Rotina resultante",
         "addDay": "Adicionar dia de treino",
         "deleteDayConfirmation": "Isto vai apagar todas as séries, exercícios e regras de progressão",
         "routineHasNoDays": "A rotina não tem dias",
         "setHasNoExercises": "Esta série não tem exercícios",
-        "fitDaysInWeek": "Ajustar dias por semana",
+        "fitDaysInWeek": "Horário semanal fixo",
         "fitDaysInWeekHelpText": "Esta opção define como os dias de treino são distribuídos nas semanas. Se estiver ativa, os dias repetem-se semanalmente (ex: seg, qua, sex). Se estiver desligada, os dias seguem em sequência, mesmo que mudem de semana.",
         "needsLogsToAdvance": "Precisa de registos para avançar",
         "needsLogsToAdvanceHelpText": "Se ativares isto, só avanças para o próximo treino se registares o atual. Caso contrário, avança automaticamente.",
@@ -277,9 +307,28 @@
             "myo": "MYO",
             "partial": "Parcial",
             "forced": "Forçado",
-            "tut": "TUT",
-            "iso": "ISO",
-            "jump": "Salto"
+            "tut": "Tempo sob tensão",
+            "iso": "Contração isométrica",
+            "jump": "Salto",
+            "warmup": "Aquecimento"
+        },
+        "addSet": "Adicionar conjunto",
+        "setNr": "Conjunto {{number}}",
+        "day": {
+            "custom": "Personalizado",
+            "enom": "A cada minuto, em ponto",
+            "amrap": "O maior número de séries possível",
+            "hiit": "Treino de intervalos de alta intensidade",
+            "tabata": "Tabata",
+            "edt": "Treino de densidade crescente",
+            "rft": "Séries contra o relógio",
+            "afap": "O mais rápido possível"
+        },
+        "iterationNr": "Iteração {{number}}",
+        "exerciseNotAvailable": "Erro ao carregar exercício",
+        "analytics": {
+            "title": "Análise de exercícios",
+            "menu": "Opções de rotina"
         }
     },
     "measurements": {
@@ -330,5 +379,25 @@
     "entries": "Registos",
     "no_entries_for_day": "Sem registos neste dia",
     "private": "Privado",
-    "public": "Público"
+    "public": "Público",
+    "dashboard": {
+        "customizeDashboard": "Personalizar painel",
+        "dragWidgetsHelp": "Arraste os widgets para reposicioná-los ou redimensioná-los usando o canto inferior direito.",
+        "resetLayout": "Restaurar o layout padrão"
+    },
+    "core": {
+        "customize": "Personalizar",
+        "exitEditMode": "Sair do modo edição"
+    },
+    "trophies": {
+        "trophies": "Troféus"
+    },
+    "preview": "pré-visualizar",
+    "useMarkdownHint": "Pode utilizar Markdown básico para formatar o texto: *itálico*, **negrito**, - lista",
+    "currentTrend": "Tendência atual",
+    "mean": "Média",
+    "trend": "Tendência",
+    "variance": "Variação",
+    "totalChange": "Variação total",
+    "syncedEntryInfo": "Este registo foi sincronizado de uma aplicação de saúde e só pode ser alterada nela"
 }

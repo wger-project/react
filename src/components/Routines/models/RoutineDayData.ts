@@ -1,6 +1,7 @@
 import { Day } from "@/components/Routines/models/Day";
 import { SlotData, SlotDataAdapter } from "@/components/Routines/models/SlotData";
 import { Adapter } from "@/core/lib/Adapter";
+import { yyyymmddToDate } from "@/core/lib/date";
 
 export class RoutineDayData {
 
@@ -27,7 +28,7 @@ class RoutineDayDataAdapter implements Adapter<RoutineDayData> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromJson = (item: any) => new RoutineDayData(
         item.iteration,
-        new Date(item.date),
+        yyyymmddToDate(item.date),
         item.label,
         item.day != null ? Day.fromJson(item.day) : null,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

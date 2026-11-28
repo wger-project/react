@@ -1,5 +1,3 @@
-import { WgerContainerFullWidth } from "@/core/ui/Widgets/Container";
-import { RenderLoadingQuery } from "@/core/ui/Widgets/RenderLoadingQuery";
 import { getLanguageByShortName, Language, useLanguageQuery } from "@/components/Exercises";
 import { Day } from "@/components/Routines/models/Day";
 import { Routine } from "@/components/Routines/models/Routine";
@@ -9,10 +7,13 @@ import { SlotEntry } from "@/components/Routines/models/SlotEntry";
 import { WorkoutLog } from "@/components/Routines/models/WorkoutLog";
 import { useRoutineDetailQuery, useRoutineLogData } from "@/components/Routines/queries";
 import { makeLink, WgerLink } from "@/core/lib/url";
+import { WgerContainerFullWidth } from "@/core/ui/Widgets/Container";
+import { RenderLoadingQuery } from "@/core/ui/Widgets/RenderLoadingQuery";
 import FlagCircleIcon from '@mui/icons-material/FlagCircle';
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import SouthEastIcon from "@mui/icons-material/SouthEast";
 import {
+    Box,
     Container,
     FormControlLabel,
     Stack,
@@ -58,6 +59,16 @@ const StyledContainer = styled(Container)({
         backgroundColor: 'white',
     }
 });
+
+// The surrounding Stack turns this into a flex item, which blockifies inline-flex to flex.
+// The cell's text-align can then no longer center the content, hence justifyContent.
+const loggedValueSx = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    whiteSpace: 'nowrap',
+    gap: '2px',
+} as const;
 
 
 export const RoutineDetailsTable = () => {
@@ -159,7 +170,7 @@ export const RoutineTable = (props: {
             {iterations.map((iteration) => {
 
                 const out = iteration === 1
-                    ? <TableCell className={classes.stickyColumn}></TableCell>
+                    ? <TableCell className={classes.stickyColumn} />
                     : null;
 
                 return <React.Fragment key={`header-${iteration}`}>
@@ -178,14 +189,16 @@ export const RoutineTable = (props: {
         return <TableRow>
             {iterations.map((iteration) => {
                 const placeholder = iteration === 1
-                    ? <TableCell className={classes.stickyColumn}></TableCell>
+                    ? <TableCell className={classes.stickyColumn} />
                     : null;
 
                 return <React.Fragment key={`header-iteration-${iteration}`}>
                     {placeholder}
                     <TableCell colSpan={5}>
                         <Typography variant={'h6'}>
-                            {t('routines.weekNr', { number: iteration })}
+                            {props.routine.isWeeklyCycle
+                                ? t('routines.weekNr', { number: iteration })
+                                : t('routines.iterationNr', { number: iteration })}
                         </Typography>
                     </TableCell>
                 </React.Fragment>;
@@ -269,45 +282,44 @@ export const RoutineTable = (props: {
                 const logs = iterationLogs.filter((log) => log.slotEntryId === slotEntry.id);
 
                 return <React.Fragment key={iteration}>
+                    <TableCell align={'center'} sx={{ verticalAlign: "top" }} />
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
-                    </TableCell>
-                    <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
-                        {logs.map((log, index) =>
-                            <Stack key={index}>
-                                <span>
+                        {logs.map((log) =>
+                            <Stack key={log.id}>
+                                <Box component="span" sx={loggedValueSx}>
                                     {log.repetitions ?? '-/-'}
                                     {getComparisonIcon(log.repetitions, setConfig?.repetitions, setConfig?.maxRepetitions)}
-                                </span>
+                                </Box>
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
-                        {logs.map((log, index) =>
-                            <Stack key={index}>
-                                <span>
+                        {logs.map((log) =>
+                            <Stack key={log.id}>
+                                <Box component="span" sx={loggedValueSx}>
                                     {log.weight ?? '-/-'}
                                     {getComparisonIcon(log.weight, setConfig?.weight, setConfig?.maxWeight)}
-                                </span>
+                                </Box>
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
-                        {logs.map((log, index) =>
-                            <Stack key={index}>
-                                <span>
+                        {logs.map((log) =>
+                            <Stack key={log.id}>
+                                <Box component="span" sx={loggedValueSx}>
                                     {log.restTime ?? '-/-'}
                                     {getComparisonIcon(log.restTime, setConfig?.restTime, setConfig?.maxRestTime)}
-                                </span>
+                                </Box>
                             </Stack>
                         )}
                     </TableCell>
                     <TableCell align={'center'} sx={{ verticalAlign: "top" }}>
-                        {logs.map((log, index) =>
-                            <Stack key={index}>
-                                <span>
+                        {logs.map((log) =>
+                            <Stack key={log.id}>
+                                <Box component="span" sx={loggedValueSx}>
                                     {log.rir ?? '-/-'}
                                     {getComparisonIcon(log.rir, setConfig?.rir, setConfig?.maxRir, false)}
-                                </span>
+                                </Box>
                             </Stack>
                         )}
                     </TableCell>
@@ -327,14 +339,14 @@ export const RoutineTable = (props: {
                         >
                             <b>{day.displayName}</b>
                         </TableCell>
-                        <TableCell sx={{ backgroundColor: theme.palette.action.hover }} colSpan={5 * iterations.length}>
-                        </TableCell>
+                        <TableCell sx={{ backgroundColor: theme.palette.action.hover }}
+                                   colSpan={5 * iterations.length} />
                     </TableRow>
 
-                    {day.slots.map((slot, slotIndex) => {
-                        return <React.Fragment key={slotIndex}>
-                            {slot.entries.map((slotEntry, configIndex) => {
-                                return <React.Fragment key={configIndex}>
+                    {day.slots.map((slot) => {
+                        return <React.Fragment key={slot.id}>
+                            {slot.entries.map((slotEntry) => {
+                                return <React.Fragment key={slotEntry.id}>
                                     {getTableRowPlanned(slotEntry, day)}
                                     {showLogs && getTableRowLogged(slotEntry, day)}
                                 </React.Fragment>;

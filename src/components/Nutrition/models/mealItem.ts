@@ -7,8 +7,8 @@ import { Adapter } from "@/core/lib/Adapter";
 import { numberGramLocale } from "@/core/lib/numbers";
 
 export interface ApiMealItemType {
-    id: number,
-    meal: number,
+    id: string,
+    meal: string,
     ingredient: number,
     weight_unit: number,
     order: number,
@@ -16,8 +16,8 @@ export interface ApiMealItemType {
 }
 
 export type MealItemConstructorParams = {
-    id?: number;
-    mealId: number;
+    id?: string;
+    mealId: string;
     amount: number;
     order: number;
 
@@ -29,8 +29,8 @@ export type MealItemConstructorParams = {
 };
 
 export class MealItem {
-    public id?: number | null;
-    public mealId: number;
+    public id?: string | null;
+    public mealId: string;
     public ingredientId: number;
     public weightUnitId: number | null;
     public amount: number;
@@ -76,8 +76,11 @@ export class MealItem {
     }
 
     static clone(other: MealItem, overrides?: Partial<MealItemConstructorParams>): MealItem {
-        const ingredient = overrides?.ingredient ?? other.ingredient;
-        const weightUnit = overrides?.weightUnit ?? other.weightUnit;
+        // Nullable overrides need an explicit undefined check: with ?? an
+        // explicit null (e.g. resetting the weight unit back to gram) would be
+        // treated as "not passed" and the old value would win
+        const ingredient = overrides?.ingredient !== undefined ? overrides.ingredient : other.ingredient;
+        const weightUnit = overrides?.weightUnit !== undefined ? overrides.weightUnit : other.weightUnit;
 
         return new MealItem({
             id: overrides?.id ?? (other.id ?? undefined),
@@ -86,12 +89,14 @@ export class MealItem {
             order: overrides?.order ?? other.order,
             ingredientId: ingredient ? ingredient.id : (overrides?.ingredientId ?? other.ingredientId),
             ingredient,
-            weightUnitId: weightUnit ? weightUnit.id : (overrides?.weightUnitId ?? other.weightUnitId),
+            weightUnitId: weightUnit
+                ? weightUnit.id
+                : (overrides?.weightUnitId !== undefined ? overrides.weightUnitId : other.weightUnitId),
             weightUnit,
         });
     }
 
-    diaryEntry(planId: number, date?: Date): DiaryEntry {
+    diaryEntry(planId: string, date?: Date): DiaryEntry {
         return new DiaryEntry({
             mealId: this.mealId,
             planId: planId,

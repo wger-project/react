@@ -1,26 +1,12 @@
-import axios from 'axios';
 import { Exercise, ExerciseAdapter } from "@/components/Exercises/models/exercise";
 import { Translation, TranslationAdapter } from "@/components/Exercises/models/translation";
+import { ResponseType } from "@/core/api/responseType";
 import { ENGLISH_LANGUAGE_CODE, LANGUAGE_SHORT_ENGLISH } from "@/core/lib/consts";
 import { makeHeader, makeUrl } from "@/core/lib/url";
-import { ResponseType } from "@/core/api/responseType";
 import { SearchLanguageFilter } from '@/core/ui/Widgets/SearchLanguageFilter';
+import axios from 'axios';
 
-export const EXERCISE_PATH = 'exercise';
 export const EXERCISE_TRANSLATION_PATH = 'exercise-translation';
-
-
-/*
- * Fetch all exercise translations for a given exercise base
- */
-export const getExerciseTranslations = async (id: number): Promise<Translation[]> => {
-    const url = makeUrl(EXERCISE_PATH, { query: { exercise: id } });
-    const { data } = await axios.get<ResponseType<Translation>>(url, {
-        headers: makeHeader(),
-    });
-    const adapter = new TranslationAdapter();
-    return data.results.map(e => adapter.fromJson(e));
-};
 
 
 /*
@@ -79,7 +65,7 @@ export const addTranslation = async (params: AddTranslationParams): Promise<Tran
         language: languageId,
         name: name,
         description_source: descriptionSource,
-        // eslint-disable-next-line camelcase
+
         license_author: author
     };
     const response = await axios.post(url, baseData, {

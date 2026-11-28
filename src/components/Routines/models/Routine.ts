@@ -3,7 +3,7 @@ import { RoutineDayData } from "@/components/Routines/models/RoutineDayData";
 import i18n from 'i18next';
 import { DateTime } from "luxon";
 import { Adapter } from "@/core/lib/Adapter";
-import { dateToYYYYMMDD, isSameDay } from "@/core/lib/date";
+import { dateToYYYYMMDD, isSameDay, yyyymmddToDate } from "@/core/lib/date";
 
 export const NAME_MIN_LENGTH = 3;
 export const NAME_MAX_LENGTH = 25;
@@ -87,6 +87,31 @@ export class Routine {
         return unique;
     }
 
+    /*
+     * Pairs every day of the structure with its data for the current iteration.
+     *
+     * The structure decides which days a routine has, the sequence only adds the
+     * calculated values. It can be missing entries for a day, e.g. while an
+     * earlier day waits for logs or towards the end of the routine.
+     */
+    get daysCurrentIteration(): { day: Day, dayData: RoutineDayData | null }[] {
+        const iteration = this.getIteration() ?? 1;
+
+        return [...this.days]
+            .sort((a, b) => a.order - b.order)
+            .map(day => {
+                const entries = this.dayData.filter(
+                    dayData => dayData.iteration === iteration && dayData.day?.id === day.id
+                );
+
+                // With a fixed weekly schedule the same day occurs several times
+                // per iteration, prefer today's entry so it can be marked as such
+                const today = entries.find(dayData => isSameDay(dayData.date, new Date()));
+
+                return { day: day, dayData: today ?? entries[0] ?? null };
+            });
+    }
+
     get groupedDayDataByIteration() {
         const groupedDayData: { [key: number]: RoutineDayData[] } = {};
         for (const dayData of this.dayData) {
@@ -110,10 +135,9 @@ export class Routine {
         const durationDays = this.duration.days;
         const durationWeeks = this.duration.weeks;
 
-        return durationDays === 0 ? i18n.t('durationWeeks', { number: durationWeeks }) : i18n.t('durationWeeksDays', {
-            nrWeeks: durationWeeks,
-            nrDays: durationDays
-        });
+        const weeksText = i18n.t('durationWeeks', { count: durationWeeks });
+
+        return durationDays === 0 ? weeksText : `${weeksText}, ${i18n.t('durationDays', { count: durationDays })}`;
     }
 
     get mainMuscles() {
@@ -135,6 +159,14 @@ export class Routine {
      */
     get cycleLength() {
         return this.dayDataCurrentIteration.length;
+    }
+
+    /*
+     * Whether one iteration of the routine spans a full calendar week, in which
+     * case iterations can be labelled as weeks.
+     */
+    get isWeeklyCycle() {
+        return this.cycleLength === 7;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -209,8 +241,8 @@ class RoutineAdapter implements Adapter<Routine> {
             name: item.name,
             description: item.description,
             created: new Date(item.created),
-            start: new Date(item.start),
-            end: new Date(item.end),
+            start: yyyymmddToDate(item.start),
+            end: yyyymmddToDate(item.end),
             fitInWeek: item.fit_in_week,
             isTemplate: item.is_template,
             isPublic: item.is_public,

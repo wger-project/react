@@ -28,7 +28,7 @@ export interface HeadProp {
     languages: Language[]
     changeLanguage: (lang: Language) => void,
     language: Language | undefined // language displayed in the head since it's not found in the translations
-    setEditMode: Function,
+    setEditMode: (editMode: boolean) => void,
     editMode: boolean
 }
 

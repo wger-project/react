@@ -4,11 +4,15 @@ import { TEST_MEAL_1 } from "@/tests/nutritionTestdata";
 
 describe('Test the meal model', () => {
 
+    // Meals and plans are identified by uuids, not by numeric ids
+    const MEAL_UUID = 'bbbbbbbb-0000-0000-0000-000000000111';
+    const PLAN_UUID = 'aaaaaaaa-0000-0000-0000-000000001234';
+
     test('correctly creates a meal from the API response', () => {
         // Arrange
         const apiResponse = {
-            id: 111,
-            plan: 1234,
+            id: MEAL_UUID,
+            plan: PLAN_UUID,
             order: 22,
             time: '22:31',
             name: 'bla bla'
@@ -18,8 +22,8 @@ describe('Test the meal model', () => {
         const meal = Meal.fromJson(apiResponse);
 
         // Assert
-        expect(meal.id).toBe(111);
-        expect(meal.planId).toBe(1234);
+        expect(meal.id).toBe(MEAL_UUID);
+        expect(meal.planId).toBe(PLAN_UUID);
         expect(meal.order).toBe(22);
         expect(meal.name).toBe('bla bla');
         expect(meal.timeHHMMLocale).toBe('10:31 PM');
@@ -28,8 +32,8 @@ describe('Test the meal model', () => {
     test('correctly creates a meal from the API response - no time', () => {
         // Arrange
         const apiResponse = {
-            id: 111,
-            plan: 1234,
+            id: MEAL_UUID,
+            plan: PLAN_UUID,
             order: 22,
             time: null,
             name: 'bla bla'
@@ -48,7 +52,23 @@ describe('Test the meal model', () => {
         const json = TEST_MEAL_1.toJson();
 
         // Assert
-        expect(json.time).toBe('12:30');
+        expect(json).toEqual({
+            id: 'bbbbbbbb-0000-0000-0000-000000000078',
+            plan: 'aaaaaaaa-0000-0000-0000-000000000123',
+            name: 'Second breakfast',
+            order: 2,
+            time: '12:30',
+        });
+    });
+
+    test('omits the id for a meal that was not saved yet', () => {
+
+        // Act
+        const json = new Meal({ planId: 'aaaaaaaa-0000-0000-0000-000000000123', name: 'new meal' }).toJson();
+
+        // Assert
+        expect(json).not.toHaveProperty('id');
+        expect(json.plan).toBe('aaaaaaaa-0000-0000-0000-000000000123');
     });
 
 });

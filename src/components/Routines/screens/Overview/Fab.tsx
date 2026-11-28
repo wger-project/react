@@ -1,5 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Fab } from "@mui/material";
+import { WgerFab } from "@/core/ui/Widgets/Fab";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { RoutineForm } from "@/components/Routines/widgets/forms/RoutineForm";
 import React from "react";
@@ -15,18 +15,9 @@ export const AddRoutineFab = () => {
 
     return (
         <div>
-            <Fab
-                color="secondary"
-                aria-label="add"
-                onClick={handleOpenModal}
-                sx={{
-                    position: 'fixed',
-                    bottom: '5rem',
-                    right: (theme) => `max(${theme.spacing(2)}, calc((100vw - ${theme.breakpoints.values.lg}px) / 2 + ${theme.spacing(2)}))`,
-                    zIndex: 9,
-                }}>
+            <WgerFab onClick={handleOpenModal}>
                 <AddIcon />
-            </Fab>
+            </WgerFab>
             <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
                 <RoutineForm closeFn={handleCloseModal} />
             </WgerModal>
@@ -43,18 +34,9 @@ export const AddPublicTemplateFab = () => {
 
     return (
         <div>
-            <Fab
-                color="secondary"
-                aria-label="add"
-                onClick={handleOpenModal}
-                sx={{
-                    position: 'fixed',
-                    bottom: '5rem',
-                    right: (theme) => `max(${theme.spacing(2)}, calc((100vw - ${theme.breakpoints.values.lg}px) / 2 + ${theme.spacing(2)}))`,
-                    zIndex: 9,
-                }}>
+            <WgerFab onClick={handleOpenModal}>
                 <AddIcon />
-            </Fab>
+            </WgerFab>
             <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
                 <RoutineForm closeFn={handleCloseModal} isTemplate={true} isPublicTemplate={true} />
             </WgerModal>
@@ -71,18 +53,9 @@ export const AddPrivateTemplateFab = () => {
 
     return (
         <div>
-            <Fab
-                color="secondary"
-                aria-label="add"
-                onClick={handleOpenModal}
-                sx={{
-                    position: 'fixed',
-                    bottom: '5rem',
-                    right: (theme) => `max(${theme.spacing(2)}, calc((100vw - ${theme.breakpoints.values.lg}px) / 2 + ${theme.spacing(2)}))`,
-                    zIndex: 9,
-                }}>
+            <WgerFab onClick={handleOpenModal}>
                 <AddIcon />
-            </Fab>
+            </WgerFab>
             <WgerModal title={t('add')} isOpen={openModal} closeFn={handleCloseModal}>
                 <RoutineForm closeFn={handleCloseModal} isTemplate={true} isPublicTemplate={false} />
             </WgerModal>

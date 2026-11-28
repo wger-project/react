@@ -4,6 +4,7 @@ import {
     editExercise,
     getExercise,
     getExercises,
+    getExercisesByIds,
     getExercisesForVariation,
     processExerciseApiData
 } from "@/components/Exercises/api/exercise";
@@ -21,15 +22,37 @@ describe("Exercise service API tests", () => {
 
     test('GET exercise data entries', async () => {
 
-        // Arrange
-        (axios.get as Mock).mockImplementation(() => Promise.resolve({ data: responseApiExerciseInfo }));
+        // Arrange (next: null so the paginated fetch stops after the first page)
+        (axios.get as Mock).mockResolvedValue({ data: { ...responseApiExerciseInfo, next: null } });
 
         // Act
         const result = await getExercises();
 
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
+        const url = (axios.get as Mock).mock.calls[0][0] as string;
+        expect(url).toContain("limit=300");
         expect(result).toEqual([testApiExercise1]);
+    });
+
+    test('getExercises follows pagination and accumulates every page', async () => {
+
+        // Arrange: a first page that points to a second, then a final page
+        (axios.get as Mock)
+            .mockResolvedValueOnce({
+                data: {
+                    ...responseApiExerciseInfo,
+                    next: 'http://localhost:8000/api/v2/exerciseinfo/?limit=300&offset=300',
+                },
+            })
+            .mockResolvedValueOnce({ data: { ...responseApiExerciseInfo, next: null } });
+
+        // Act
+        const result = await getExercises();
+
+        // Assert: both pages were fetched and their results combined
+        expect(axios.get).toHaveBeenCalledTimes(2);
+        expect(result).toEqual([testApiExercise1, testApiExercise1]);
     });
 
     test('GET exercise data for single entry', async () => {
@@ -43,6 +66,26 @@ describe("Exercise service API tests", () => {
         // Assert
         expect(axios.get).toHaveBeenCalledTimes(1);
         expect(result).toEqual(testApiExercise1);
+    });
+
+    test('getExercisesByIds returns [] for an empty id list without calling the API', async () => {
+        const result = await getExercisesByIds([]);
+
+        expect(result).toEqual([]);
+        expect(axios.get).not.toHaveBeenCalled();
+    });
+
+    test('getExercisesByIds queries by id__in and parses the results', async () => {
+        // next: null so the paginated fetch stops after the first page
+        (axios.get as Mock).mockResolvedValue({ data: { ...responseApiExerciseInfo, next: null } });
+
+        const result = await getExercisesByIds([345, 999]);
+
+        const url = (axios.get as Mock).mock.calls[0][0] as string;
+        expect(url).toContain("/api/v2/exerciseinfo/");
+        expect(url).toContain("id__in=345");
+        // A requested id that no longer exists is simply absent from the result
+        expect(result).toEqual([testApiExercise1]);
     });
 
     test('EDIT an existing exercise', async () => {
@@ -68,7 +111,7 @@ describe("Exercise service API tests", () => {
                 category: 3,
                 equipment: [1, 2],
                 muscles: [3, 4],
-                // eslint-disable-next-line camelcase
+
                 muscles_secondary: [9]
             }
         );
@@ -174,22 +217,22 @@ describe("Exercise service API tests", () => {
             category: 3,
             equipment: [1, 2],
             muscles: [3, 4],
-            // eslint-disable-next-line camelcase
+
             muscles_secondary: [9],
-            // eslint-disable-next-line camelcase
+
             license_author: "alice",
-            // eslint-disable-next-line camelcase
+
             variation_group: "group-uuid",
-            // eslint-disable-next-line camelcase
+
             variations_connect_to: 42,
         });
         expect(payload.translations).toHaveLength(1);
         expect(payload.translations[0]).toMatchObject({
             name: "Squats",
-            // eslint-disable-next-line camelcase
+
             description_source: "Do a squat",
             language: 2,
-            // eslint-disable-next-line camelcase
+
             license_author: "alice",
             aliases: [{ alias: "Knee bender" }],
             comments: [{ comment: "keep back straight" }],
@@ -213,11 +256,11 @@ describe("Exercise service API tests", () => {
 
         const [, payload] = (axios.post as Mock).mock.calls[0];
         expect(payload).toMatchObject({
-            // eslint-disable-next-line camelcase
+
             license_author: "",
-            // eslint-disable-next-line camelcase
+
             variation_group: null,
-            // eslint-disable-next-line camelcase
+
             variations_connect_to: null,
         });
         // Aliases and comments default to empty arrays

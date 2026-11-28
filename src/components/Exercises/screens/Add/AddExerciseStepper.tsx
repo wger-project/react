@@ -1,13 +1,24 @@
-import { Box, Container, Stack, Step, StepContent, StepLabel, Stepper, Typography, } from "@mui/material";
+import * as exerciseState from "@/components/Exercises/screens/Add/state";
 import { Step1Basics } from "@/components/Exercises/screens/Add/Step1Basics";
 import { Step2Variations } from "@/components/Exercises/screens/Add/Step2Variations";
 import { Step3Description } from "@/components/Exercises/screens/Add/Step3Description";
 import { Step4Translations } from "@/components/Exercises/screens/Add/Step4Translations";
 import { Step5Images } from "@/components/Exercises/screens/Add/Step5Images";
 import { Step6Overview } from "@/components/Exercises/screens/Add/Step6Overview";
+import {
+    Alert,
+    AlertTitle,
+    Box,
+    Container,
+    Stack,
+    Step,
+    StepContent,
+    StepLabel,
+    Stepper,
+    Typography,
+} from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import * as exerciseState from "@/components/Exercises/screens/Add/state";
 
 export type StepProps = {
     onContinue?: () => void;
@@ -34,6 +45,10 @@ export const AddExerciseStepper = () => {
                         {t("exercises.contributeExercise")}
                     </Typography>
                 </Stack>
+                <Alert severity="warning" variant="filled" sx={{ mb: 2 }}>
+                    <AlertTitle>{t("exercises.personalExercisesWarningTitle")}</AlertTitle>
+                    {t("exercises.personalExercisesWarningBody")}
+                </Alert>
                 <Box>
                     <Stepper activeStep={activeStep} orientation="vertical">
                         <Step key={1}>

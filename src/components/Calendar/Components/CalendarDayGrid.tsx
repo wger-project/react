@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import Grid from "@mui/material/Grid";
 import React from 'react';
 import { useTranslation } from "react-i18next";
-import { DayProps } from "./CalendarComponent";
+import type { DayProps } from "./CalendarComponent";
 import CalendarDay from './CalendarDay';
 
 interface CalendarDayGridProps {
@@ -27,16 +27,17 @@ const CalendarDayGrid: React.FC<CalendarDayGridProps> = ({
 
     return (
         <Grid container spacing={1} rowSpacing={2}>
-            {weekDays.map((day, index) => (
-                <Grid size={12 / 7} key={`weekday-${index}`}>
+            {weekDays.map((day) => (
+                <Grid size={12 / 7} key={`weekday-${day}`}>
                     <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
                         {day}
                     </Typography>
                 </Grid>
             ))}
 
-            {days.map((day, index) => (
-                <Grid size={12 / 7} key={`day-${index}`} sx={{ display: 'flex', justifyContent: 'center' }}>
+            {days.map((day) => (
+                <Grid size={12 / 7} key={`day-${day.date.toISOString()}`}
+                      sx={{ display: 'flex', justifyContent: 'center' }}>
                     <CalendarDay
                         day={day}
                         currentMonth={currentMonth}

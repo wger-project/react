@@ -1,18 +1,58 @@
-import { WgerTextField } from "@/core/forms/WgerTextField";
-import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
-import { Exercise, getLanguageByShortName, NameAutocompleter, useLanguageQuery } from "@/components/Exercises";
+import {
+    Exercise,
+    getLanguageByShortName,
+    Language,
+    NameAutocompleter,
+    useLanguageQuery
+} from "@/components/Exercises";
 import { RIR_VALUES_SELECT } from "@/components/Routines/models/BaseConfig";
 import { LogEntryForm } from "@/components/Routines/models/WorkoutLog";
-import { useAddRoutineLogsQuery, useRoutineDetailQuery } from "@/components/Routines/queries";
+import {
+    useAddRoutineLogsQuery,
+    useRoutineDetailQuery,
+    useSessionOfDay
+} from "@/components/Routines/queries";
+import { sessionNeedsChoice } from "./SessionForm";
+import {
+    isFilledIn,
+    logsPayload,
+    plannedLogs,
+    SessionLogsFormValues
+} from "@/components/Routines/widgets/forms/sessionLogsFormData";
+import { useAppForm } from "@/core/forms/appForm";
+import { defaultsKey, submitHandler, yupSchema } from "@/core/forms/formUtils";
 import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "@/core/lib/consts";
-import { SwapHoriz } from "@mui/icons-material";
+import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
+import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
+import { ChatBubble, ChatBubbleOutlineOutlined, MoreVert, SwapHoriz } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { Alert, Button, IconButton, InputAdornment, MenuItem, Snackbar, TextField, Typography } from "@mui/material";
-import Grid from '@mui/material/Grid';
-import { FieldArray, Form, Formik, FormikProps } from "formik";
+import {
+    Alert,
+    Box,
+    Button,
+    CardActions,
+    CardHeader,
+    IconButton,
+    InputAdornment,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Paper,
+    Snackbar,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography
+} from "@mui/material";
 import { DateTime } from "luxon";
-import React, { useState } from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 
@@ -20,17 +60,30 @@ interface SessionLogsFormProps {
     dayId: number,
     routineId: number,
     selectedDate: DateTime,
+    chosenSessionId: string | null,
+    /** Saves the session the logs go into: its id, false if it was not saved */
+    saveSession: () => Promise<string | null | false>,
 }
 
-export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsFormProps) => {
+export const SessionLogsForm = (
+    {
+        dayId,
+        routineId,
+        selectedDate,
+        chosenSessionId,
+        saveSession
+    }: SessionLogsFormProps) => {
 
     const { t, i18n } = useTranslation();
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
     const routineQuery = useRoutineDetailQuery(routineId);
-    const addLogsQuery = useAddRoutineLogsQuery(routineId);
+    // Until the day's sessions are loaded and one is picked there is nothing to save into
+    const {
+        sessions,
+        session,
+        isLoading: isLoadingSessions
+    } = useSessionOfDay(routineId, dayId, selectedDate, chosenSessionId);
+    const canSave = !isLoadingSessions && !sessionNeedsChoice(sessions, session, chosenSessionId);
     const languageQuery = useLanguageQuery();
-    const handleSnackbarClose = () => setSnackbarOpen(false);
-    const [exerciseIdToSwap, setExerciseIdToSwap] = useState<number | null>(null);
 
     let language = undefined;
     if (languageQuery.isSuccess) {
@@ -44,65 +97,129 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
         return <LoadingPlaceholder />;
     }
 
-    const routine = routineQuery.data!;
-    const iterationDayData = routine?.getDayData(dayId, selectedDate.toJSDate()) ?? [];
-    const hasNoIterationData = iterationDayData.length === 0;
+    const { logs: defaultLogs, iteration } = plannedLogs(routineQuery.data!, dayId, selectedDate.toJSDate());
+
+    return (<>
+        {iteration === null &&
+            <Alert severity={'info'} sx={{ marginTop: 2 }}>{t('routines.weightLogNotPlanned')}</Alert>
+        }
+
+        {/* The form freezes its default values, so a changed plan for the day
+          * gets a fresh form via the key */}
+        <SessionLogsFields
+            key={defaultsKey(defaultLogs.map(log => [log.clientKey, log.repetitions, log.weight, log.rir]))}
+            dayId={dayId}
+            routineId={routineId}
+            selectedDate={selectedDate}
+            saveSession={saveSession}
+            canSave={canSave}
+            iteration={iteration}
+            language={language}
+            defaultLogs={defaultLogs}
+        />
+    </>);
+};
+
+const SessionLogsFields = (
+    {
+        dayId,
+        routineId,
+        selectedDate,
+        saveSession,
+        canSave,
+        iteration,
+        language,
+        defaultLogs
+    }: {
+        dayId: number,
+        routineId: number,
+        selectedDate: DateTime,
+        saveSession: () => Promise<string | null | false>,
+        canSave: boolean,
+        iteration: number | null,
+        language: Language | undefined,
+        defaultLogs: LogEntryForm[],
+    }) => {
+
+    const { t } = useTranslation();
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const addLogsQuery = useAddRoutineLogsQuery(routineId);
+    const handleSnackbarClose = () => setSnackbarOpen(false);
+    const [exerciseIdToSwap, setExerciseIdToSwap] = useState<number | null>(null);
+    // The exercise card whose action menu is open
+    const [menu, setMenu] = useState<{ anchor: HTMLElement, exerciseId: number } | null>(null);
+    // Sets whose note field the user opened; a set with a note always shows it
+    const [openNotes, setOpenNotes] = useState<Set<string>>(new Set());
+    // Sets already saved for a day: another save must not post them again
+    const [saved, setSaved] = useState<{ day: string | null, keys: Set<string> }>({ day: null, keys: new Set() });
+    const day = selectedDate.toISODate();
+    const savedKeys = saved.day === day ? saved.keys : new Set<string>();
+
+    // Counter for the keys of the logs the user adds on top of the planned ones
+    const extraLogKey = useRef(0);
 
     const validationSchema = yup.object({
         logs: yup.array().of(
             yup.object().shape({
                 rir: yup.number().nullable(),
                 repetitions: yup.number().typeError(t('forms.enterNumber')).nullable(),
-                weight: yup.number().typeError(t('forms.enterNumber')).nullable()
+                weight: yup.number().typeError(t('forms.enterNumber')).nullable(),
+                // Sets without values are not saved, so neither would their note
+                notes: yup.string().test(
+                    'notes-need-values',
+                    t('routines.notesNeedValues'),
+                    // Empty fields arrive here as undefined, see yupSchema
+                    (value, context) => !value
+                        || context.parent.repetitions !== undefined
+                        || context.parent.weight !== undefined
+                        || context.parent.rir !== undefined
+                ),
             })
         ),
     });
 
-    const handleSubmit = async (values: { logs: LogEntryForm[] }) => {
-        const iteration = hasNoIterationData ? null : iterationDayData[0].iteration;
-        const data = values.logs
-            .filter(l => l.rir !== '' || l.repetitions !== '' || l.weight !== '')
-            .map(l => ({
-                    date: selectedDate.toISO(),
-                    iteration: iteration,
-                    exercise: l.exercise?.id,
-                    day: dayId,
-                    routine: routineId,
-                    // eslint-disable-next-line camelcase
-                    slot_entry: l.slotEntry,
+    const handleSubmit = async (values: SessionLogsFormValues) => {
+        // The session first, so the logs end up in the one the user has in front
+        // of them. Without its id the server would sort them into a session by
+        // their time, which on a day with several of them is a guess
+        const sessionId = await saveSession();
+        if (sessionId === false) {
+            return;
+        }
 
-                    rir: l.rir !== '' ? l.rir : null,
-                    // eslint-disable-next-line camelcase
-                    rir_target: l.rirTarget !== '' ? l.rirTarget : null,
-
-                    // eslint-disable-next-line camelcase
-                    repetitions_unit: l.repetitionsUnit?.id,
-                    repetitions: l.repetitions !== '' ? l.repetitions : null,
-                    // eslint-disable-next-line camelcase
-                    repetitions_target: l.repetitionsTarget !== '' ? l.repetitionsTarget : null,
-
-                    // eslint-disable-next-line camelcase
-                    weight_unit: l.weightUnit?.id,
-                    weight: l.weight !== '' ? l.weight : null,
-                    // eslint-disable-next-line camelcase
-                    weight_target: l.weightTarget !== '' ? l.weightTarget : null,
-                }
-            ));
-
-        await addLogsQuery.mutateAsync(data);
+        const toSave = values.logs.filter(log => isFilledIn(log) && !savedKeys.has(log.clientKey));
+        const payload = logsPayload(toSave, {
+            date: selectedDate,
+            sessionId,
+            iteration,
+            dayId,
+            routineId,
+        });
+        if (payload.length > 0) {
+            try {
+                await addLogsQuery.mutateAsync(payload);
+            } catch {
+                // Shown by FormQueryErrors
+                return;
+            }
+            setSaved({ day, keys: new Set([...savedKeys, ...toSave.map(log => log.clientKey)]) });
+        }
         setSnackbarOpen(true);
     };
 
-    const handleCallback = async (exercise: Exercise | null, formik: FormikProps<{
-        logs: LogEntryForm[]
-    }>) => {
+    const form = useAppForm({
+        defaultValues: { logs: defaultLogs } as SessionLogsFormValues,
+        validators: { onChange: yupSchema<SessionLogsFormValues>(validationSchema) },
+        onSubmit: async ({ value }) => handleSubmit(value),
+    });
 
+    const handleCallback = (exercise: Exercise | null) => {
         if (exercise === null) {
             return;
         }
 
-        const updatedLogs = formik.values.logs.map((log) => {
-            if (exerciseIdToSwap === log.exercise!.id) {
+        const updatedLogs = form.state.values.logs.map((log) => {
+            if (exerciseIdToSwap === log.exercise!.id && !savedKeys.has(log.clientKey)) {
                 // Empty the rest of the values, this is a new exercise not in the routine
                 return {
                     ...log,
@@ -112,207 +229,277 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
                     repetitionsTarget: '',
                     rir: '',
                     rirTarget: '',
+                    notes: '',
                     exercise: exercise,
                 };
             }
             return log;
         });
 
-        await formik.setValues({
-            ...formik.values,
-            logs: updatedLogs
-        });
-
+        form.setFieldValue('logs', updatedLogs);
         setExerciseIdToSwap(null);
     };
 
-    // Compute initial values
-    const initialValues = {
-        logs: [] as LogEntryForm[]
-    };
+    const toggleNote = (clientKey: string) => setOpenNotes(prev => {
+        const next = new Set(prev);
+        if (next.has(clientKey)) {
+            next.delete(clientKey);
+        } else {
+            next.add(clientKey);
+        }
+        return next;
+    });
 
-    const dayDataList = hasNoIterationData ? routine.dayDataCurrentIteration.filter(dayData => dayData.day?.id === dayId) : iterationDayData;
-
-    for (const dayData of dayDataList) {
-        for (const slot of dayData.slots) {
-            for (const config of slot.setConfigs) {
-                for (let i = 0; i < config.nrOfSets; i++) {
-
-                    initialValues.logs.push({
-                        exercise: config.exercise!,
-                        repetitionsUnit: config.repetitionsUnit!,
-                        weightUnit: config.weightUnit!,
-                        slotEntry: config.slotEntryId,
-
-                        rir: !hasNoIterationData && config.rir !== null ? config.rir : '',
-                        rirTarget: !hasNoIterationData && config.rir !== null ? config.rir : '',
-                        repetitions: !hasNoIterationData && config.repetitions !== null ? config.repetitions : '',
-                        repetitionsTarget: !hasNoIterationData && config.repetitions !== null ? config.repetitions : '',
-                        weight: !hasNoIterationData && config.weight !== null ? config.weight : '',
-                        weightTarget: !hasNoIterationData && config.weight !== null ? config.weight : ''
-                    });
-                }
+    const numberFieldProps = (adornment: React.ReactNode, label: string, disabled: boolean) => ({
+        variant: "standard" as const,
+        disabled,
+        slotProps: {
+            input: {
+                endAdornment: <InputAdornment position="end">
+                    <Typography variant={'caption'}>{adornment}</Typography>
+                </InputAdornment>
+            },
+            htmlInput: {
+                inputMode: 'decimal' as const,
+                'aria-label': label,
             }
         }
-    }
+    });
 
     return (<>
-        {hasNoIterationData &&
-            <Alert severity={'info'} sx={{ marginTop: 2 }}>{t('routines.weightLogNotPlanned')}</Alert>
-        }
+        <form onSubmit={submitHandler(form)}>
+            {/* The rows read every value of every log, which an array field does
+              * not re-render for: it only follows the array's length */}
+            <form.Subscribe selector={state => state.values.logs}>
+                {logs => <Stack spacing={2} sx={{ mt: 2 }}>
+                    {groupByExercise(logs).map(group => {
+                        const exerciseId = group.exercise.id!;
+                        const last = group.entries[group.entries.length - 1];
 
+                        return <Box component="section" key={group.entries[0].log.clientKey}>
+                            <CardHeader
+                                sx={{ px: 1 }}
+                                title={exerciseIdToSwap === exerciseId
+                                    ? <NameAutocompleter callback={handleCallback} />
+                                    : group.exercise.getTranslation(language).name}
+                                slotProps={{ title: { variant: 'h6' } }}
+                                action={<IconButton
+                                    aria-label={t('actions')}
+                                    onClick={event => setMenu({ anchor: event.currentTarget, exerciseId })}
+                                >
+                                    <MoreVert />
+                                </IconButton>}
+                            />
+                            <TableContainer>
+                                {/* Fixed columns, so the inputs shrink on a phone instead of
+                                  * pushing the note and delete buttons out of view */}
+                                <Table
+                                    size="small"
+                                    sx={{
+                                        tableLayout: 'fixed',
+                                        // No row lines and light underlines, the columns carry the structure
+                                        '& .MuiTableCell-root': { px: { xs: 0.5, sm: 1 }, borderBottom: 'none' },
+                                        '& .MuiInput-underline:not(.Mui-error):before': { borderBottomColor: 'grey.400' },
+                                        '& th': { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
+                                    }}
+                                >
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell align="center" sx={{ width: 32 }}>#</TableCell>
+                                            <TableCell>{t('server.repetitions')}</TableCell>
+                                            <TableCell>{t('weight')}</TableCell>
+                                            <TableCell>{t('routines.rir')}</TableCell>
+                                            <TableCell sx={{ width: 72 }} aria-label={t('actions')} />
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {group.entries.map(({ log, index }, setIndex) => {
+                                            const setLabel = t('routines.setNr', { number: setIndex + 1 });
+                                            const hasNote = log.notes !== '';
+                                            const showNote = hasNote || openNotes.has(log.clientKey);
+                                            const isSaved = savedKeys.has(log.clientKey);
 
-        <Formik
-            enableReinitialize
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-        >
-            {formik => (
-                <Form>
-                    <FieldArray name={"logs"}>
-                        {({ insert, remove }) => (<>
+                                            return <Fragment key={log.clientKey}>
+                                                <TableRow>
+                                                    <TableCell align="center">
+                                                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                                            {setIndex + 1}
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <form.AppField name={`logs[${index}].repetitions`}>
+                                                            {field => <field.WgerTextField
+                                                                title=""
+                                                                fieldProps={numberFieldProps(
+                                                                    // Only show reps that are not "repetitions"
+                                                                    log.repetitionsUnit?.id !== REP_UNIT_REPETITIONS
+                                                                        ? log.repetitionsUnit?.name
+                                                                        : null,
+                                                                    `${setLabel}: ${t('server.repetitions')}`,
+                                                                    isSaved
+                                                                )}
+                                                            />}
+                                                        </form.AppField>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <form.AppField name={`logs[${index}].weight`}>
+                                                            {field => <field.WgerTextField
+                                                                title=""
+                                                                fieldProps={numberFieldProps(
+                                                                    log.weightUnit?.name,
+                                                                    `${setLabel}: ${t('weight')}`,
+                                                                    isSaved
+                                                                )}
+                                                            />}
+                                                        </form.AppField>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <form.Field name={`logs[${index}].rir`}>
+                                                            {field => <TextField
+                                                                fullWidth
+                                                                select
+                                                                disabled={isSaved}
+                                                                variant="standard"
+                                                                name={field.name}
+                                                                value={field.state.value}
+                                                                onChange={event => field.handleChange(event.target.value)}
+                                                                onBlur={field.handleBlur}
+                                                                slotProps={{
+                                                                    select: {
+                                                                        SelectDisplayProps: {
+                                                                            'aria-label': `${setLabel}: ${t('routines.rir')}`
+                                                                        }
+                                                                    }
+                                                                }}
+                                                            >
+                                                                {RIR_VALUES_SELECT.map((option) => (
+                                                                    <MenuItem key={option.value} value={option.value}>
+                                                                        {option.label}
+                                                                    </MenuItem>
+                                                                ))}
+                                                            </TextField>}
+                                                        </form.Field>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Stack direction="row">
+                                                            <IconButton
+                                                                size="small"
+                                                                disabled={isSaved}
+                                                                aria-label={`${setLabel}: ${t('notes')}`}
+                                                                aria-expanded={showNote}
+                                                                color={hasNote ? 'primary' : 'default'}
+                                                                // A filled note stays open, it would be saved unseen
+                                                                onClick={() => !hasNote && toggleNote(log.clientKey)}
+                                                            >
+                                                                {hasNote ? <ChatBubble /> :
+                                                                    <ChatBubbleOutlineOutlined />}
+                                                            </IconButton>
+                                                            <IconButton
+                                                                size="small"
+                                                                disabled={isSaved}
+                                                                aria-label={`${setLabel}: ${t('delete')}`}
+                                                                onClick={() => form.removeFieldValue('logs', index)}
+                                                            >
+                                                                <DeleteIcon />
+                                                            </IconButton>
+                                                        </Stack>
+                                                    </TableCell>
+                                                </TableRow>
+                                                {showNote && <TableRow>
+                                                    <TableCell />
+                                                    <TableCell colSpan={4} sx={{ pt: 0 }}>
+                                                        <form.AppField name={`logs[${index}].notes`}>
+                                                            {field => <field.WgerTextField
+                                                                title=""
+                                                                fieldProps={{
+                                                                    variant: "standard",
+                                                                    multiline: true,
+                                                                    disabled: isSaved,
+                                                                    placeholder: t('notes'),
+                                                                    autoFocus: !hasNote,
+                                                                    slotProps: {
+                                                                        htmlInput: { 'aria-label': `${setLabel}: ${t('notes')}` }
+                                                                    }
+                                                                }}
+                                                            />}
+                                                        </form.AppField>
+                                                    </TableCell>
+                                                </TableRow>}
+                                            </Fragment>;
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <CardActions sx={{ px: 0 }}>
+                                <Button
+                                    type="button"
+                                    size="small"
+                                    startIcon={<AddIcon />}
+                                    // One more set after the last one, prefilled like it
+                                    onClick={() => form.insertFieldValue('logs', last.index + 1, {
+                                        ...last.log,
+                                        notes: '',
+                                        clientKey: `extra-${extraLogKey.current++}`,
+                                    })}
+                                >
+                                    {t('routines.addSet')}
+                                </Button>
+                            </CardActions>
+                        </Box>;
+                    })}
+                </Stack>}
+            </form.Subscribe>
 
-                                {formik.values.logs.map((log, index) => (
-                                    <Grid container key={index} spacing={1} sx={{ mt: 2 }}>
+            <Menu
+                anchorEl={menu?.anchor}
+                open={menu !== null}
+                onClose={() => setMenu(null)}
+            >
+                <MenuItem onClick={() => {
+                    setExerciseIdToSwap(exerciseIdToSwap === menu!.exerciseId ? null : menu!.exerciseId);
+                    setMenu(null);
+                }}>
+                    <ListItemIcon><SwapHoriz /></ListItemIcon>
+                    <ListItemText>{t('exercises.swapExercise')}</ListItemText>
+                </MenuItem>
+                <MenuItem onClick={() => {
+                    form.setFieldValue(
+                        'logs',
+                        form.state.values.logs.filter(l => l.exercise!.id !== menu!.exerciseId)
+                    );
+                    setMenu(null);
+                }}>
+                    <ListItemIcon><DeleteIcon /></ListItemIcon>
+                    <ListItemText>{t('delete')}</ListItemText>
+                </MenuItem>
+            </Menu>
 
-                                        {/* Only show the exercise name the first time it appears */}
-                                        {(index === 0 || (index > 0 && formik.values.logs[index - 1].exercise!.id != formik.values.logs[index].exercise!.id)) && <>
-                                            <Grid size={12}>
-                                                {exerciseIdToSwap !== formik.values.logs[index].exercise!.id &&
-                                                    <Typography variant="h6">
-                                                        {formik.values.logs[index].exercise?.getTranslation(language).name}
-                                                    </Typography>}
+            <FormQueryErrors mutationQuery={addLogsQuery} />
 
-                                                {exerciseIdToSwap === formik.values.logs[index].exercise!.id &&
-                                                    <NameAutocompleter
-                                                        callback={(searchResponse) => handleCallback(searchResponse, formik)}
-                                                    />}
-
-                                            </Grid>
-                                            <Grid size={12}>
-                                                <Button
-                                                    type="button"
-                                                    size="small"
-                                                    onClick={() => insert(index, {
-                                                        exercise: formik.values.logs[index].exercise,
-                                                        repetitions: formik.values.logs[index].repetitions,
-                                                        weight: formik.values.logs[index].weight
-                                                    })}
-                                                >
-                                                    <AddIcon />
-                                                    {t('routines.addAdditionalLog')}
-                                                </Button>
-                                                <Button
-                                                    type="button"
-                                                    size="small"
-                                                    onClick={() => {
-                                                        if (exerciseIdToSwap === formik.values.logs[index].exercise!.id) {
-                                                            setExerciseIdToSwap(null);
-                                                        } else {
-                                                            setExerciseIdToSwap(formik.values.logs[index].exercise!.id);
-                                                        }
-                                                    }}
-                                                >
-                                                    <SwapHoriz />
-                                                    {t('exercises.swapExercise')}
-                                                </Button>
-                                                <Button
-                                                    type="button"
-                                                    size="small"
-                                                    onClick={async () => await formik.setValues({
-                                                        ...formik.values,
-                                                        logs: formik.values.logs.filter(l => l.exercise!.id !== formik.values.logs[index].exercise!.id)
-                                                    })}
-                                                >
-                                                    <DeleteIcon />
-                                                    {t('delete')}
-                                                </Button>
-
-                                            </Grid>
-                                        </>}
-                                        <Grid size={4}>
-                                            <WgerTextField
-                                                fieldName={`logs.${index}.repetitions`}
-                                                title={t('server.repetitions')}
-                                                fieldProps={{
-                                                    slotProps: {
-                                                        input: {
-                                                            endAdornment:
-                                                                <InputAdornment position="end">
-                                                                    {/* Only show reps that are not "repetitions" */}
-                                                                    {formik.values.logs[index].repetitionsUnit?.id !== REP_UNIT_REPETITIONS
-                                                                        ? <Typography variant={'caption'}>
-                                                                            {formik.values.logs[index].repetitionsUnit?.name}
-                                                                        </Typography>
-                                                                        : null}
-                                                                </InputAdornment>
-
-                                                        }
-                                                    }
-                                                }}
-                                            />
-                                        </Grid>
-                                        <Grid size={4}>
-                                            <WgerTextField
-                                                fieldName={`logs.${index}.weight`}
-                                                title={t('weight')}
-                                                fieldProps={{
-                                                    slotProps: {
-                                                        input: {
-                                                            endAdornment:
-                                                                <InputAdornment position="end">
-                                                                    <Typography variant={'caption'}>
-                                                                        {formik.values.logs[index].weightUnit?.name}
-                                                                    </Typography>
-                                                                </InputAdornment>
-                                                        }
-                                                    }
-                                                }}
-                                            />
-                                        </Grid>
-
-                                        <Grid size={3}>
-                                            <TextField
-                                                fullWidth
-                                                select
-                                                label={t('routines.rir')}
-                                                variant="standard"
-                                                {...formik.getFieldProps(`logs.${index}.rir`)}
-                                            >
-                                                {RIR_VALUES_SELECT.map((option) => (
-                                                    <MenuItem key={option.value} value={option.value}>
-                                                        {option.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </TextField>
-                                        </Grid>
-                                        <Grid size={1}>
-                                            <IconButton size={"small"} onClick={() => remove(index)}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Grid>
-                                    </Grid>
-                                ))}
-                            </>
-                        )}
-                    </FieldArray>
-                    <Grid container spacing={2}>
-                        <Grid size={12} sx={{ display: "flex", justifyContent: "end" }}>
-                            <Button
-                                color="primary"
-                                // disabled={!formik.isValid || formik.isSubmitting || !formik.dirty}
-                                disabled={!formik.isValid || formik.isSubmitting || addLogsQuery.isPending}
-                                variant="contained"
-                                type="submit"
-                                sx={{ mt: 2 }}>
-                                {t('submit')}
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Form>
-            )}
-        </Formik>
+            {/* Stays in view, so saving doesn't need a scroll to the end of a long day */}
+            <Paper
+                elevation={3}
+                sx={{
+                    position: 'sticky',
+                    bottom: 0,
+                    zIndex: 'appBar',
+                    mt: 2,
+                    p: 1.5,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                }}
+            >
+                <form.Subscribe selector={state => ({ isValid: state.isValid, isSubmitting: state.isSubmitting })}>
+                    {({ isValid, isSubmitting }) => <Button
+                        color="primary"
+                        disabled={!isValid || isSubmitting || addLogsQuery.isPending || !canSave}
+                        variant="contained"
+                        type="submit">
+                        {t('save')}
+                    </Button>}
+                </form.Subscribe>
+            </Paper>
+        </form>
         <Snackbar
             open={snackbarOpen}
             autoHideDuration={SNACKBAR_AUTO_HIDE_DURATION}
@@ -324,3 +511,17 @@ export const SessionLogsForm = ({ dayId, routineId, selectedDate }: SessionLogsF
         </Snackbar>
     </>);
 };
+
+/** Consecutive sets of the same exercise, each with its position in the form's list */
+function groupByExercise(logs: LogEntryForm[]) {
+    const groups: { exercise: Exercise, entries: { log: LogEntryForm, index: number }[] }[] = [];
+    logs.forEach((log, index) => {
+        const current = groups[groups.length - 1];
+        if (current !== undefined && current.exercise.id === log.exercise!.id) {
+            current.entries.push({ log, index });
+        } else {
+            groups.push({ exercise: log.exercise!, entries: [{ log, index }] });
+        }
+    });
+    return groups;
+}

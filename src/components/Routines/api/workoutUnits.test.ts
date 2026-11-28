@@ -23,7 +23,7 @@ describe("workoutUnits service tests", () => {
 
         expect(axios.get).toHaveBeenCalledTimes(1);
         const [url] = (axios.get as Mock).mock.calls[0];
-        expect(url).toMatch(/\/api\/v2\/setting-repetitionunit\/$/);
+        expect(url).toMatch(/\/api\/v2\/setting-repetitionunit\/\?limit=999$/);
         expect(result).toHaveLength(2);
         expect(result[0]).toBeInstanceOf(RepetitionUnit);
         expect(result[0]).toEqual(new RepetitionUnit(1, "Repetitions"));
@@ -37,7 +37,7 @@ describe("workoutUnits service tests", () => {
 
         expect(axios.get).toHaveBeenCalledTimes(1);
         const [url] = (axios.get as Mock).mock.calls[0];
-        expect(url).toMatch(/\/api\/v2\/setting-weightunit\/$/);
+        expect(url).toMatch(/\/api\/v2\/setting-weightunit\/\?limit=999$/);
         expect(result).toHaveLength(2);
         expect(result[0]).toBeInstanceOf(WeightUnit);
         expect(result[0]).toEqual(new WeightUnit(1, "kg"));

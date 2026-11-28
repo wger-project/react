@@ -15,8 +15,11 @@ export const TrophiesCard = () => {
         return <LoadingPlaceholder />;
     }
 
-    return trophiesQuery.data !== null
-        ? <TrophiesCardContent trophies={trophiesQuery.data!} />
+    // PR trophies have their own treatment and are kept out of this widget
+    const trophies = (trophiesQuery.data ?? []).filter((userTrophy) => userTrophy.trophy.type !== 'pr');
+
+    return trophies.length > 0
+        ? <TrophiesCardContent trophies={trophies} />
         : <EmptyTrophiesCardContent />;
 };
 
@@ -43,8 +46,10 @@ function TrophiesCardContent(props: { trophies: UserTrophy[] }) {
     >
         <Box sx={{ overflowX: 'auto', width: '100%' }}>
             <Stack direction="row" spacing={3} sx={{ display: 'flex' }}>
+                {/* Keyed by the user-trophy row: repeatable trophies can
+                  * legitimately award the same trophy more than once */}
                 {props.trophies.map((userTrophy) => (
-                    <Tooltip title={tooltipWidget(userTrophy.trophy.description)} arrow key={userTrophy.trophy.uuid}>
+                    <Tooltip title={tooltipWidget(userTrophy.trophy.description)} arrow key={userTrophy.id}>
                         <Card sx={{ width: 80, flex: '0 0 auto', boxShadow: 'none' }}>
                             <CardMedia
                                 component="img"

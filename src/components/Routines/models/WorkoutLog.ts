@@ -6,6 +6,7 @@ import { WeightUnit } from "@/components/Routines/models/WeightUnit";
 import { Adapter } from "@/core/lib/Adapter";
 
 export interface LogEntryForm {
+    clientKey: string;
     exercise: Exercise | null;
     repetitionsUnit: RepetitionUnit | null;
     weightUnit: WeightUnit | null;
@@ -16,16 +17,17 @@ export interface LogEntryForm {
     repetitionsTarget: number | string | null;
     weight: number | string;
     weightTarget: number | string | null;
+    notes: string;
 }
 
 
 export class WorkoutLog {
-    public id: number;
+    public id: string;
     public date: Date;
     public iteration: number | null;
     public exerciseId: number;
     public slotEntryId: number | null;
-    public sessionId: number | null;
+    public sessionId: string | null;
     public routineId: number | null;
 
     public repetitionUnitObj: RepetitionUnit | null;
@@ -44,15 +46,16 @@ export class WorkoutLog {
     public restTime: number | null;
     public restTimeTarget: number | null;
 
+    public notes: string | null;
 
     public exerciseObj?: Exercise;
 
     constructor(data: {
-        id: number;
+        id: string;
         date: Date | string;
         iteration: number | null;
         slotEntryId: number | null;
-        sessionId?: number | null;
+        sessionId?: string | null;
         routineId?: number | null;
 
         exercise?: Exercise;
@@ -72,33 +75,39 @@ export class WorkoutLog {
         rirTarget?: number | null;
 
         restTime?: number | null;
-        restTimeTarget?: number | null
+        restTimeTarget?: number | null;
+
+        notes?: string | null;
     }) {
+        // Note that all of these use ?? and not ||: zero is a meaningful value here.
+        // Training to failure is 0 RiR, a bodyweight exercise has a weight of 0 and
+        // supersets are done with no rest in between.
         this.id = data.id;
         this.date = typeof data.date === 'string' ? new Date(data.date) : data.date;
         this.iteration = data.iteration;
         this.slotEntryId = data.slotEntryId;
-        this.sessionId = data.sessionId || null;
-        this.routineId = data.routineId || null;
+        this.sessionId = data.sessionId ?? null;
+        this.routineId = data.routineId ?? null;
 
         this.exerciseObj = data.exercise;
         this.exerciseId = data.exerciseId;
 
-        this.repetitionUnitObj = data.repetitionsUnit || null;
-        this.repetitionUnitId = data.repetitionsUnitId || null;
+        this.repetitionUnitObj = data.repetitionsUnit ?? null;
+        this.repetitionUnitId = data.repetitionsUnitId ?? null;
         this.repetitions = data.repetitions;
-        this.repetitionsTarget = data.repetitionsTarget || null;
+        this.repetitionsTarget = data.repetitionsTarget ?? null;
 
-        this.weightUnitObj = data.weightUnit || null;
-        this.weightUnitId = data.weightUnitId || null;
+        this.weightUnitObj = data.weightUnit ?? null;
+        this.weightUnitId = data.weightUnitId ?? null;
         this.weight = data.weight;
-        this.weightTarget = data.weightTarget || null;
+        this.weightTarget = data.weightTarget ?? null;
 
         this.rir = data.rir;
-        this.rirTarget = data.rirTarget || null;
+        this.rirTarget = data.rirTarget ?? null;
 
-        this.restTime = data.restTime || null;
-        this.restTimeTarget = data.restTimeTarget || null;
+        this.restTime = data.restTime ?? null;
+        this.restTimeTarget = data.restTimeTarget ?? null;
+        this.notes = data.notes || null;
     }
 
     get rirString(): string {
@@ -131,7 +140,8 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
             rirTarget: item.rir_target === null ? null : Number.parseFloat(item.rir_target),
 
             restTime: item.rest,
-            restTimeTarget: item.rest_target
+            restTimeTarget: item.rest_target,
+            notes: item.notes || null
         });
 
     toJson = (item: WorkoutLog) => ({
@@ -140,6 +150,7 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         date: item.date.toISOString(),
         slot_entry: item.slotEntryId,
         exercise: item.exerciseId,
+        session: item.sessionId,
         routine: item.routineId,
 
         repetitions_unit: item.repetitionUnitId,
@@ -154,6 +165,7 @@ export class WorkoutLogAdapter implements Adapter<WorkoutLog> {
         rir_target: item.rirTarget,
 
         rest: item.restTime,
-        rest_target: item.restTimeTarget
+        rest_target: item.restTimeTarget,
+        notes: item.notes || null
     });
 }

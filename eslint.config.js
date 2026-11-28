@@ -1,22 +1,27 @@
 // @ts-check
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import reactPlugin from 'eslint-plugin-react';
+import reactPlugin from '@eslint-react/eslint-plugin';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import importPlugin from 'eslint-plugin-import';
-// import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
+import stylisticPlugin from '@stylistic/eslint-plugin';
+import importPlugin from 'eslint-plugin-import-x';
 
 // Domains with a public surface (`index.ts`). Other code must import via the
 // domain root, never via internal sub-paths.
 const DOMAINS = [
     'Exercises',
     'Routines',
-    'Weight',
     'Nutrition',
     'Measurements',
     'Trophies',
     'User',
 ];
+
+// The key must not import the values: nutrition reads measurements, not the
+// other way round, or the two form a module initialisation cycle.
+const FORBIDDEN_DEPENDENCIES = {
+    Measurements: ['Nutrition'],
+};
 
 const restrictAllDomains = {
     "patterns": [{
@@ -32,12 +37,18 @@ const domainOverrides = DOMAINS.map(domain => ({
     files: [`src/components/${domain}/**/*.{ts,tsx}`],
     rules: {
         "no-restricted-imports": ["error", {
-            "patterns": [{
-                "group": DOMAINS
-                    .filter(d => d !== domain)
-                    .map(d => `@/components/${d}/*`),
-                "message": `Import other domains via their public surface (e.g. '@/components/${DOMAINS[0]}'), not internal sub-paths.`,
-            }]
+            "patterns": [
+                {
+                    "group": DOMAINS
+                        .filter(d => d !== domain)
+                        .map(d => `@/components/${d}/*`),
+                    "message": `Import other domains via their public surface (e.g. '@/components/${DOMAINS[0]}'), not internal sub-paths.`,
+                },
+                ...(FORBIDDEN_DEPENDENCIES[domain] ?? []).map(target => ({
+                    "group": [`@/components/${target}`, `@/components/${target}/*`],
+                    "message": `${domain} must not import ${target}: the dependency runs the other way. Take what you need as a prop, from the page that composes both.`,
+                })),
+            ]
         }],
     }
 }));
@@ -48,20 +59,31 @@ export default tseslint.config(
     {
         files: ['**/*.{js,jsx,ts,tsx}'],
         plugins: {
-            'react': reactPlugin,
+            '@eslint-react': reactPlugin,
             'react-hooks': reactHooksPlugin,
-            'import': importPlugin,
-            //'jsx-a11y': jsxA11yPlugin
+            '@stylistic': stylisticPlugin,
+            'import-x': importPlugin,
         },
         rules: {
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'warn',
+
+            // React rules. Duplicate JSX props need no rule here: tsc already
+            // rejects them (TS17001).
+            '@eslint-react/no-missing-key': 'error',
+            '@eslint-react/dom-no-unsafe-target-blank': 'error',
+            '@eslint-react/no-nested-component-definitions': 'error',
+            '@eslint-react/no-array-index-key': 'warn',
+            '@eslint-react/jsx-no-children-prop': 'error',
+            '@eslint-react/dom-no-void-elements-with-children': 'error',
+            '@stylistic/jsx-self-closing-comp': 'error',
+
+            // Core JS hygiene.
+            'eqeqeq': ['error', 'smart'],
+            'no-var': 'error',
+            'prefer-const': 'error',
+            'no-console': ['warn', {allow: ['warn', 'error']}],
         },
-        settings: {
-            react: {
-                version: 'detect'
-            }
-        }
     },
 
     {
@@ -82,7 +104,7 @@ export default tseslint.config(
                 }
             ],
             // Auto-fixable: consolidates multiple imports from the same module.
-            "import/no-duplicates": ["error"],
+            "import-x/no-duplicates": ["error"],
             // Domain boundary: consumers must import via the public surface
             // (index.ts), not internal sub-paths.
             "no-restricted-imports": ["error", restrictAllDomains],
@@ -110,6 +132,9 @@ export default tseslint.config(
         ],
         rules: {
             "no-restricted-imports": "off",
+            "no-console": "off",
+            // API adapters and test fixtures mirror the backend's snake_case field names
+            "camelcase": "off",
         }
     },
     {

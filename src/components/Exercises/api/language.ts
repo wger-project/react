@@ -1,8 +1,8 @@
-import axios from 'axios';
 import { Language, LanguageAdapter } from "@/components/Exercises/models/language";
-import { ApiLanguageType } from '@/types';
-import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ResponseType } from "@/core/api/responseType";
+import { makeHeader, makeUrl } from "@/core/lib/url";
+import { ApiLanguageType } from '@/types';
+import axios from 'axios';
 
 export const API_LANGUAGE_PATH = 'language';
 
@@ -11,7 +11,7 @@ export const API_LANGUAGE_PATH = 'language';
  * Fetch all languages
  */
 export const getLanguages = async (): Promise<Language[]> => {
-    const url = makeUrl(API_LANGUAGE_PATH);
+    const url = makeUrl(API_LANGUAGE_PATH, { query: { limit: 999 } });
     const { data: receivedLanguages } = await axios.get<ResponseType<ApiLanguageType>>(url, {
         headers: makeHeader(),
     });

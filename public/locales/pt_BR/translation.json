@@ -20,8 +20,12 @@
         "restTime": "Tempo de descanso",
         "workoutNr": "Treino Nr. {{number}}",
         "backToRoutine": "Voltar para a rotina",
-        "minLengthRoutine": "A rotina precisa durar pelo menos {{number}} semanas",
-        "maxLengthRoutine": "A rotina pode durar no máximo {{number}} semanas",
+        "minLengthRoutine_one": "A rotina precisa durar pelo menos {{count}} semana",
+        "minLengthRoutine_many": "A rotina precisa durar pelo menos {{count}} semanas",
+        "minLengthRoutine_other": "A rotina precisa durar pelo menos {{count}} semanas",
+        "maxLengthRoutine_one": "A rotina pode durar no máximo {{count}} semana",
+        "maxLengthRoutine_many": "A rotina pode durar no máximo {{count}} semanas",
+        "maxLengthRoutine_other": "A rotina pode durar no máximo {{count}} semanas",
         "resultingRoutine": "Rotina resultante",
         "deleteDayConfirmation": "Isso removerá todas as séries, exercícios e regras de progressão",
         "routineHasNoDays": "A rotina não tem dias",
@@ -63,7 +67,7 @@
         "operation": "Operação",
         "step": "Etapa",
         "requirements": "Requerimento",
-        "requirementsHelpText": "Selecione os resultados do treino (de registros anteriores) que devem ser atendidos para que esta regra entre em vigor",
+        "requirementsHelpText": "Selecione os resultados do treino (de registros anteriores) que devem ser atingidos para que esta regra entre em vigor. As regras comparam com o valor planejado, e as variantes de \"limite superior\" com o máximo planejado. Para uma progressão dupla, limite o peso em \"Repetições (limite superior)\" e exija todas as séries.",
         "repeat": "Repetir regra",
         "repeatHelpText": "Marque a caixa de seleção se desejar que esta regra continue a ser aplicada aos treinos subsequentes até que você defina uma nova",
         "markAsTemplate": "Gerenciar modelo",
@@ -97,7 +101,20 @@
             "tabata": "Tabata"
         },
         "addSet": "Adicionar série",
-        "setNr": "Série {{number}}"
+        "setNr": "Série {{number}}",
+        "exerciseNotAvailable": "Erro ao carregar exercício",
+        "iterationNr": "Iteração {{number}}",
+        "otherLoggedExercises": "Outros exercícios registrados",
+        "multipleSessions": "Mais de uma sessão foi registrada neste dia. Selecione aquela que deseja editar",
+        "newSession": "Nova sessão",
+        "changeSession": "Escolha outra sessão",
+        "analytics": {
+            "title": "Análise de exercícios",
+            "menu": "Opções de rotina",
+            "description": "Seu histórico de exercícios em todas as rotinas e sessões.",
+            "exercise": "Exercício",
+            "metric": "Métricas"
+        }
     },
     "server": {
         "glutes": "Glúteos",
@@ -139,9 +156,13 @@
         "legs": "Pernas"
     },
     "forms": {
-        "maxLength": "Insira menos de {{chars}} caracteres",
+        "maxLength_one": "Insira menos de {{count}} caractere",
+        "maxLength_many": "Insira menos de {{count}} caracteres",
+        "maxLength_other": "Insira menos de {{count}} caracteres",
         "minValue": "O valor desse campo deve ser maior que {{value}}",
-        "minLength": "Insira mais de {{chars}} caracteres",
+        "minLength_one": "Insira mais de {{count}} caractere",
+        "minLength_many": "Insira mais de {{count}} caracteres",
+        "minLength_other": "Insira mais de {{count}} caracteres",
         "maxValue": "O valor desse campo deve ser menor que {{value}}",
         "valueTooShort": "O valor é muito pequeno",
         "supportedImageFormats": "Apenas são suportados arquivos JPEG, PNG, WEBP e AVIF com menos de 20Mb",
@@ -159,10 +180,50 @@
     "measurements": {
         "unitFormHelpText": "A unidade na qual a categoria será medida, como cm ou %",
         "measurements": "Medições",
-        "deleteInfo": "Isso excluirá a categoria, bem como todas as suas entradas"
+        "deleteInfo": "Isso excluirá a categoria, bem como todas as suas entradas",
+        "reorderCategories": "Reordenar categorias",
+        "deleteInfoGroup": "Isso excluirá o grupo, bem como todos os seus componentes e suas entradas",
+        "metricType": "Tipo de métricas",
+        "chartType": "Tipo de gráficos",
+        "chartTypes": {
+            "auto": "Automático",
+            "line": "Linha",
+            "bar": "Barras",
+            "delta": "Mudar",
+            "distribution": "Distribuição",
+            "heatmap": "Mapa de calor"
+        },
+        "trends": {
+            "reactive": "Reativo",
+            "balanced": "Equilibrado"
+        },
+        "chartAverageWindowDays_one": "{{count}} dia",
+        "chartAverageWindowDays_many": "{{count}} dias",
+        "chartAverageWindowDays_other": "{{count}} dias",
+        "distributionMedian": "Mediana",
+        "distributionLatest": "Mais recente",
+        "distributionDayCount_one": "{{count}} dia",
+        "distributionDayCount_many": "{{count}} dias",
+        "distributionDayCount_other": "{{count}} dias",
+        "noGroup": "Sem grupo",
+        "metricTypes": {
+            "custom": "Customizado",
+            "body_fat": "Gordura corporal",
+            "height": "Altura",
+            "blood_pressure": "Pressão arterial",
+            "blood_pressure_systolic": "Sistólica",
+            "blood_pressure_diastolic": "Diastólico",
+            "heart_rate": "Frequência cardíaca",
+            "resting_heart_rate": "Frequência cardíaca em repouso",
+            "body_weight": "Peso corporal",
+            "lean_body_mass": "Massa corporal magra"
+        },
+        "chartTrend": "Linha de tendências",
+        "chartAverageWindow": "Acima da média",
+        "partOfGroup": "Parte do grupo"
     },
     "category": "Categoria",
-    "success": "Sucesso!",
+    "success": "Concluído com Sucesso!",
     "English": "Inglês",
     "save": "Salvar",
     "videos": "Vídeos",
@@ -175,7 +236,9 @@
     "language": "Linguagem",
     "noResultsDescription": "Não foram encontrados resultados para essa consulta, considere a possibilidade de reduzir o número de filtros.",
     "exercises": {
-        "notEnoughRights": "Apenas é possível contribuir com exercícios se sua conta tiver mais de {{days}} dias e você tiver verificado seu e-mail",
+        "notEnoughRights_one": "Você só pode contribuir com exercícios se sua conta tiver mais de {{count}} dia e seu e-mail tiver sido verificado",
+        "notEnoughRights_many": "Você só pode contribuir com exercícios se sua conta tiver mais de {{count}} dias e seu e-mail tiver sido verificado",
+        "notEnoughRights_other": "Você só pode contribuir com exercícios se sua conta tiver mais de {{count}} dias e seu e-mail tiver sido verificado",
         "notEnoughRightsHeader": "Você não pode contribuir com exercícios",
         "translateExerciseNow": "Traduza este exercício agora",
         "alternativeNames": "Nomes alternativos",
@@ -227,7 +290,10 @@
         "exactMatch": "Correspondência exata",
         "replacementCannotBeSame": "O exercício substituto não pode ser o mesmo que está sendo excluído.",
         "transferMediaLabel": "Transfira os meios de comunicação para o exercício de substituição",
-        "transferTranslationsLabel": "Transferir traduções para o idioma substituto (ignora idiomas já presentes)"
+        "transferTranslationsLabel": "Transferir traduções para o idioma substituto (ignora idiomas já presentes)",
+        "imageIsAiGenerated": "A imagem foi gerada com IA",
+        "dropOrClickImage": "Arraste e solte uma imagem aqui ou clique para selecionar",
+        "addImage": "Adicionar imagem"
     },
     "notes": "Comentários",
     "value": "Valor",
@@ -245,6 +311,7 @@
     "delete": "Excluir",
     "weight": "Peso",
     "date": "Data",
+    "off": "Desligado",
     "submit": "Enviar",
     "edit": "Editar",
     "add": "Adicionar",
@@ -322,7 +389,6 @@
         "filterVegan": "Vegano",
         "filterVegetarian": "Vegetariano",
         "filterNutriscore": "Filtro Nutri-Score",
-        "filterNutriscoreOff": "Desligado",
         "filterNutriscoreNoFilter": "Sem filtro",
         "filterNutriscoreOrBetter": "{{grade}} ou melhor"
     },
@@ -353,9 +419,13 @@
     "undo": "Desfazer",
     "public": "Público",
     "private": "Privado",
-    "durationWeeks": "{{number}} semanas",
-    "durationWeeksDays": "{{nrWeeks}} semanas, {{nrDays}} dias",
-    "start": "Iniciar",
+    "durationWeeks_one": "{{count}} semana",
+    "durationWeeks_many": "{{count}} semanas",
+    "durationWeeks_other": "{{count}} semanas",
+    "durationDays_one": "{{count}} dia",
+    "durationDays_many": "{{count}} dias",
+    "durationDays_other": "{{count}} dias",
+    "start": "Início",
     "end": "Fim",
     "dashboard": {
         "customizeDashboard": "Personalizar painel",
@@ -375,5 +445,6 @@
     "currentTrend": "Tendência atual",
     "mean": "Significar",
     "trend": "Tendência",
-    "variance": "Variância"
+    "variance": "Variância",
+    "syncedEntryInfo": "Este registro foi sincronizado a partir de um aplicativo de saúde e só pode ser alterado nele."
 }

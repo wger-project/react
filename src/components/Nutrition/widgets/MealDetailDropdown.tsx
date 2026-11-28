@@ -5,6 +5,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Alert, IconButton, Menu, MenuItem, Snackbar } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import { WgerModal } from "@/core/ui/Modals/WgerModal";
 import { Meal } from "@/components/Nutrition/models/meal";
 import { useDeleteMealQuery } from "@/components/Nutrition/queries";
@@ -17,7 +18,7 @@ import { SNACKBAR_AUTO_HIDE_DURATION } from "@/core/lib/consts";
 
 export const MealDetailDropdown = (props: {
     meal: Meal,
-    planId: number,
+    planId: string,
     onlyLogging: boolean,
     isExpanded: boolean,
     handleExpanded: () => void,
@@ -60,7 +61,7 @@ export const MealDetailDropdown = (props: {
     const handleOpenDeleteModal = () => setOpenDeleteModal(true);
     const handleCloseDeleteModal = () => setOpenDeleteModal(false);
 
-    const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    const handleCloseSnackbar = (event?: React.SyntheticEvent | Event | null, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
@@ -76,6 +77,8 @@ export const MealDetailDropdown = (props: {
 
 
     return <>
+        <FormQueryErrorsSnackbar mutationQuery={deleteMealQuery} />
+        <FormQueryErrorsSnackbar mutationQuery={addDiaryEntriesQuery} />
         {props.meal.isRealMeal && !props.onlyLogging && <Tooltip title={t('nutrition.logThisMeal')}>
             <IconButton aria-label="settings" onClick={handleAddDiaryEntry}>
                 <HistoryEduIcon />

@@ -10,6 +10,7 @@ export const testProfileDataVerified = new Profile({
     height: 180,
     weightRounding: null,
     repetitionsRounding: null,
+    timeZone: '',
 });
 
 export const testProfileDataNotVerified = new Profile({
@@ -22,22 +23,23 @@ export const testProfileDataNotVerified = new Profile({
     height: 180,
     weightRounding: null,
     repetitionsRounding: null,
+    timeZone: '',
 });
 
 export const testProfileApiResponse = {
     username: 'admin',
     email: 'root@example.com',
-    // eslint-disable-next-line camelcase
+
     email_verified: true,
-    // eslint-disable-next-line camelcase
+
     date_joined: "2022-04-27 17:52:38.867000+00:00",
-    // eslint-disable-next-line camelcase
+
     is_trustworthy: true,
-    // eslint-disable-next-line camelcase
+
     weight_unit: 'kg',
     height: 180,
-    // eslint-disable-next-line camelcase
+
     weight_rounding: null,
-    // eslint-disable-next-line camelcase
+
     repetitions_rounding: null,
 };

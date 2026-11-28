@@ -16,7 +16,7 @@ import Grid from '@mui/material/Grid';
 import ImageList from "@mui/material/ImageList";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
+import type { StepProps } from "@/components/Exercises/screens/Add/AddExerciseStepper";
 import {
     useAddExerciseFullQuery,
     useAddExerciseImageQuery,
@@ -25,9 +25,8 @@ import {
     useLanguageQuery,
     useMusclesQuery
 } from "@/components/Exercises/queries";
-import { useProfileQuery } from "@/components/User";
 import Markdown from 'markdown-to-jsx';
-import React from "react";
+import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useExerciseSubmissionStateValue } from "@/components/Exercises/screens/Add/state";
@@ -44,7 +43,6 @@ export const Step6Overview = ({ onBack }: StepProps) => {
     const languageQuery = useLanguageQuery();
     const musclesQuery = useMusclesQuery();
     const equipmentQuery = useEquipmentQuery();
-    const profileQuery = useProfileQuery();
 
     const addExerciseSubmissionMutation = useAddExerciseFullQuery();
     const addImageMutation = useAddExerciseImageQuery();
@@ -59,7 +57,7 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                 muscleIds: state.muscles,
                 secondaryMuscleIds: state.musclesSecondary,
             },
-            author: profileQuery.data!.username,
+            author: state.author,
             variationGroup: state.variationGroup,
             variationsConnectTo: state.newVariationExerciseId,
             translations: [
@@ -128,6 +126,10 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                             <TableCell>{state.alternativeNamesEn.join(", ")}</TableCell>
                         </TableRow>
                         <TableRow>
+                            <TableCell>{t('licenses.authors')}</TableCell>
+                            <TableCell>{state.author}</TableCell>
+                        </TableRow>
+                        <TableRow>
                             <TableCell>{t('description')}</TableCell>
                             <TableCell>
                                 <Markdown options={MarkdownOptions}>
@@ -137,7 +139,8 @@ export const Step6Overview = ({ onBack }: StepProps) => {
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('exercises.notes')}</TableCell>
-                            <TableCell>{state.notesEn.map(note => <>{note}<br /></>)}</TableCell>
+                            <TableCell>{state.notesEn.map(note => <Fragment
+                                key={note}>{note}<br /></Fragment>)}</TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell>{t('category')}</TableCell>
@@ -213,7 +216,8 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
                                 <TableRow>
                                     <TableCell>{t('exercises.notes')}</TableCell>
-                                    <TableCell>{state.notesI18n.map(note => <>{note}<br /></>)}</TableCell>
+                                    <TableCell>{state.notesI18n.map(note => <Fragment
+                                        key={note}>{note}<br /></Fragment>)}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -223,7 +227,8 @@ export const Step6Overview = ({ onBack }: StepProps) => {
 
             <Box sx={{ mt: 2 }}>
                 {addExerciseSubmissionMutation.isIdle && <Alert severity="info">
-                    {t('exercises.checkInformationBeforeSubmitting')}
+                    {t('exercises.checkInformationBeforeSubmitting')}<br />
+                    {t('exercises.submitAuthorNotice')}
                 </Alert>}
 
                 {addExerciseSubmissionMutation.isSuccess && <Alert severity="success">

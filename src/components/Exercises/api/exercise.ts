@@ -1,7 +1,8 @@
-import axios from 'axios';
 import { Exercise, ExerciseAdapter } from "@/components/Exercises/models/exercise";
-import { makeHeader, makeUrl } from "@/core/lib/url";
 import { ResponseType } from "@/core/api/responseType";
+import { fetchPaginated } from "@/core/lib/requests";
+import { makeHeader, makeUrl } from "@/core/lib/url";
+import axios from 'axios';
 
 export const EXERCISE_INFO_PATH = 'exerciseinfo';
 export const EXERCISE_PATH = 'exercise';
@@ -31,13 +32,13 @@ export function processExerciseApiData(data: any): Exercise[] {
  * Fetch all exercise bases
  */
 export const getExercises = async (): Promise<Exercise[]> => {
-    const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 900 } });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const response = await axios.get<ResponseType<any>>(url, {
-        headers: makeHeader(),
-    });
+    const url = makeUrl(EXERCISE_INFO_PATH, { query: { limit: 300 } });
+    const out: Exercise[] = [];
+    for await (const page of fetchPaginated(url, makeHeader())) {
+        out.push(...processExerciseApiData({ results: page }));
+    }
 
-    return processExerciseApiData(response.data);
+    return out;
 };
 
 
@@ -53,6 +54,50 @@ export const getExercise = async (id: number): Promise<Exercise> => {
     });
 
     return adapter.fromJson(response.data);
+};
+
+
+/*
+ * Fetch several exercises by ID in a single request.
+ *
+ * Unknown or stale IDs are simply absent from the result instead of making the
+ * whole call fail, which keeps a routine, log or plan loadable.
+ */
+export const getExercisesByIds = async (ids: number[]): Promise<Exercise[]> => {
+
+    // An empty id__in would be ignored by the API and return everything, so bail out early
+    if (ids.length === 0) {
+        return [];
+    }
+
+    const url = makeUrl(EXERCISE_INFO_PATH, { query: { id__in: ids.join(',') } });
+    const out: Exercise[] = [];
+    for await (const page of fetchPaginated(url, makeHeader())) {
+        out.push(...processExerciseApiData({ results: page }));
+    }
+
+    return out;
+};
+
+
+/*
+ * Fetch exercises by their uuid, the id that is the same on every instance
+ *
+ * The API filters one uuid at a time (no uuid__in), so this asks for them in
+ * parallel. A uuid the instance does not know is left out of the result.
+ */
+export const getExercisesByUuids = async (uuids: string[]): Promise<Exercise[]> => {
+    const responses = await Promise.all(uuids.map(uuid =>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        axios.get<ResponseType<any>>(
+            makeUrl(EXERCISE_INFO_PATH, { query: { uuid: uuid } }),
+            { headers: makeHeader() },
+        )
+    ));
+
+    return responses.flatMap(response => processExerciseApiData({
+        results: response.data.results,
+    }));
 };
 
 

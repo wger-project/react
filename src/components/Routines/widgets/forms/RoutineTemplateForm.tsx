@@ -2,6 +2,7 @@ import { FormControlLabel, Stack, Switch, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import { Routine } from "@/components/Routines/models/Routine";
 import { useEditRoutineQuery } from "@/components/Routines/queries/routines";
+import { FormQueryErrorsSnackbar } from "@/core/ui/Widgets/FormError";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
 
@@ -39,6 +40,7 @@ export const RoutineTemplateForm = (props: { routine: Routine }) => {
 
     return (
         <Grid container spacing={2}>
+            <FormQueryErrorsSnackbar mutationQuery={editRoutineQuery} />
             <Grid size={12}>
                 <Stack>
                     <FormControlLabel

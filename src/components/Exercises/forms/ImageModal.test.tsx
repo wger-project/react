@@ -129,4 +129,25 @@ describe("ImageFormModal", () => {
         expect(screen.getByText("exercises.dropOrClickImage")).toBeInTheDocument();
         expect(screen.getByTestId("submit-edit-image-form")).toBeDisabled();
     });
+
+    test("the typed license fields are passed to submit", async () => {
+        const user = userEvent.setup();
+        const onSubmit = vi.fn();
+        render(
+            <ImageFormModal open={true} onClose={vi.fn()} image={editingImage} onSubmit={onSubmit} submitLabel="Save" />
+        );
+
+        await user.type(screen.getByLabelText("licenses.authors"), "Jane Doe");
+        await user.type(screen.getByLabelText("licenses.authorProfile"), "https://example.com/jane");
+        await user.click(screen.getByTestId("submit-edit-image-form"));
+
+        expect(onSubmit).toHaveBeenCalledTimes(1);
+        const submittedValues = onSubmit.mock.calls[0][0] as ImageFormData;
+        expect(submittedValues.title).toBe("An existing image");
+        expect(submittedValues.author).toBe("Jane Doe");
+        expect(submittedValues.authorUrl).toBe("https://example.com/jane");
+        // Editing keeps the stored image when no new file is picked
+        expect(submittedValues.file).toBeUndefined();
+        expect(submittedValues.url).toBe("https://example.com/squat.jpg");
+    });
 });

@@ -1,8 +1,6 @@
-import axios from 'axios';
 import { Category, CategoryAdapter } from "@/components/Exercises/models/category";
-import { ApiCategoryType } from '@/types';
-import { makeHeader, makeUrl } from "@/core/lib/url";
-import { ResponseType } from "@/core/api/responseType";
+import { fetchAll } from "@/core/lib/requests";
+import { makeUrl } from "@/core/lib/url";
 
 export const CATEGORY_PATH = 'exercisecategory';
 
@@ -11,11 +9,7 @@ export const CATEGORY_PATH = 'exercisecategory';
  * Fetch all categories
  */
 export const getCategories = async (): Promise<Category[]> => {
-    const url = makeUrl(CATEGORY_PATH);
-    const { data: receivedCategories } = await axios.get<ResponseType<ApiCategoryType>>(url, {
-        headers: makeHeader(),
-    });
     const adapter = new CategoryAdapter();
-    return receivedCategories.results.map(c => adapter.fromJson(c));
+    return await fetchAll(makeUrl(CATEGORY_PATH), json => adapter.fromJson(json));
 };
 

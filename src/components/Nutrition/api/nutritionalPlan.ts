@@ -4,6 +4,7 @@ import { getNutritionalDiaryEntries } from "@/components/Nutrition/api/nutrition
 import { getMealsForPlan } from "@/components/Nutrition/api/meal";
 import { ResponseType } from "@/core/api/responseType";
 import { ApiNutritionalPlanType } from '@/types';
+import { fetchAll } from "@/core/lib/requests";
 import { makeHeader, makeUrl } from "@/core/lib/url";
 
 export const API_NUTRITIONAL_PLAN_PATH = 'nutritionplan';
@@ -13,11 +14,7 @@ export type NutritionalPlanOptions = {
 }
 
 export const getNutritionalPlansSparse = async (): Promise<NutritionalPlan[]> => {
-    const { data: receivedPlans } = await axios.get<ResponseType<ApiNutritionalPlanType>>(
-        makeUrl(API_NUTRITIONAL_PLAN_PATH),
-        { headers: makeHeader() },
-    );
-    return receivedPlans.results.map((plan) => nutritionalPlanAdapter.fromJson(plan));
+    return await fetchAll(makeUrl(API_NUTRITIONAL_PLAN_PATH), json => nutritionalPlanAdapter.fromJson(json));
 };
 
 export const getLastNutritionalPlan = async (): Promise<NutritionalPlan | null> => {
@@ -33,7 +30,7 @@ export const getLastNutritionalPlan = async (): Promise<NutritionalPlan | null> 
     return await getNutritionalPlanFull(receivedPlan.results[0].id);
 };
 
-export const getNutritionalPlanFull = async (id: number | null, options?: NutritionalPlanOptions): Promise<NutritionalPlan | null> => {
+export const getNutritionalPlanFull = async (id: string | null, options?: NutritionalPlanOptions): Promise<NutritionalPlan | null> => {
     if (id === null) {
         return null;
     }
@@ -81,7 +78,7 @@ export const editNutritionalPlan = async (plan: NutritionalPlan): Promise<Nutrit
     return nutritionalPlanAdapter.fromJson(response.data);
 };
 
-export const deleteNutritionalPlan = async (id: number): Promise<void> => {
+export const deleteNutritionalPlan = async (id: string): Promise<void> => {
     await axios.delete(
         makeUrl(API_NUTRITIONAL_PLAN_PATH, { id: id }),
         { headers: makeHeader() },

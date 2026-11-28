@@ -1,20 +1,27 @@
+import { searchExerciseTranslations } from "@/components/Exercises/api/exerciseTranslation";
+import { Exercise } from "@/components/Exercises/models/exercise";
 import {
     NameAutocompleter,
     STORAGE_KEY_EXERCISE_EXACT_MATCH,
     STORAGE_KEY_EXERCISE_LANGUAGE
 } from "@/components/Exercises/widgets/Filter/NameAutocompleter";
-import { Exercise } from "@/components/Exercises/models/exercise";
-import { searchExerciseTranslations } from "@/components/Exercises/api/exerciseTranslation";
+import { useLanguageQuery, useSearchExerciseTranslationsQuery } from "@/components/Exercises/queries";
+import { testLanguages } from "@/tests/exerciseTestdata";
 import { searchResponse } from "@/tests/exercises/searchResponse";
 import { testQueryClient } from "@/tests/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
 import React from 'react';
 
 import type { Mock } from 'vitest';
 
 vi.mock("@/components/Exercises/api/exerciseTranslation");
+vi.mock("@/components/Exercises/queries");
+
+const mockedSearchExerciseTranslations = searchExerciseTranslations as Mock;
+const mockedUseLanguageQuery = useLanguageQuery as Mock;
+const mockedUseSearchExerciseTranslationsQuery = useSearchExerciseTranslationsQuery as Mock;
 const mockCallback = vi.fn();
 
 function renderAutocompleter() {
@@ -31,7 +38,9 @@ describe("Test the NameAutocompleter component", () => {
     beforeEach(() => {
         localStorage.clear();
         testQueryClient.clear();
-        (searchExerciseTranslations as Mock).mockImplementation(() => Promise.resolve(searchResponse));
+        mockedSearchExerciseTranslations.mockImplementation(() => Promise.resolve(searchResponse));
+        mockedUseSearchExerciseTranslationsQuery.mockImplementation(() => mockedSearchExerciseTranslations);
+        mockedUseLanguageQuery.mockImplementation(() => ({ isSuccess: true, data: testLanguages }));
     });
 
     test('renders correct results', async () => {
@@ -94,43 +103,53 @@ describe("Test the NameAutocompleter component", () => {
     });
 
     test('filter popup opens when TuneIcon is clicked', async () => {
+        const user = userEvent.setup();
 
         // Act
         renderAutocompleter();
-        const filterButton = screen.getByLabelText('Toggle filters');
+        expect(screen.queryByText('exercises.exactMatch')).not.toBeInTheDocument();
+        await user.click(screen.getByLabelText('Toggle filters'));
 
-        // Assert - button exists and is clickable
-        expect(filterButton).toBeInTheDocument();
-        expect(filterButton).not.toBeDisabled();
-
-        // Click the filter button
-        await act(async () => {
-            fireEvent.click(filterButton);
-        });
-
-        // Assert - TuneIcon button was clicked successfully
-        expect(filterButton).toBeInTheDocument();
+        // Assert - the popover shows the language filter and the exact match switch
+        expect(await screen.findByText('exercises.exactMatch')).toBeInTheDocument();
+        expect(screen.getByRole('combobox', { name: 'language' })).toBeInTheDocument();
     });
 
     test('exact match toggle saves to localStorage', async () => {
 
         // Arrange
-        localStorage.clear();
+        const user = userEvent.setup();
         localStorage.setItem(STORAGE_KEY_EXERCISE_EXACT_MATCH, 'false');
 
         // Act
         renderAutocompleter();
-
-        // Directly set localStorage as if user toggled
-        localStorage.setItem(STORAGE_KEY_EXERCISE_EXACT_MATCH, 'true');
+        await user.click(screen.getByLabelText('Toggle filters'));
+        const exactMatchSwitch = await screen.findByRole('switch');
+        expect(exactMatchSwitch).not.toBeChecked();
+        await user.click(exactMatchSwitch);
 
         // Assert
+        expect(exactMatchSwitch).toBeChecked();
         expect(localStorage.getItem(STORAGE_KEY_EXERCISE_EXACT_MATCH)).toBe('true');
     });
 
-    test('language filter saves to localStorage when component renders', async () => {
+    test('changing the language filter saves it to localStorage', async () => {
+
+        // Arrange
         const user = userEvent.setup();
-        localStorage.clear();
+
+        // Act
+        renderAutocompleter();
+        await user.click(screen.getByLabelText('Toggle filters'));
+        await user.click(await screen.findByRole('combobox', { name: 'language' }));
+        await user.click(screen.getByRole('option', { name: 'nutrition.languageFilterAll' }));
+
+        // Assert
+        expect(localStorage.getItem(STORAGE_KEY_EXERCISE_LANGUAGE)).toBe('all');
+    });
+
+    test('the search uses the default language filter when nothing is stored', async () => {
+        const user = userEvent.setup();
 
         renderAutocompleter();
 
@@ -139,10 +158,11 @@ describe("Test the NameAutocompleter component", () => {
         const input = within(autocomplete).getByRole('combobox');
         await user.type(input, 'test');
 
+        // The test i18n runs in english, so only the current language is searched
         await waitFor(() => expect(searchExerciseTranslations).toHaveBeenCalledWith(
             'test',
-            expect.any(String),
-            expect.any(String),
+            'en',
+            'current',
             false
         ));
     });

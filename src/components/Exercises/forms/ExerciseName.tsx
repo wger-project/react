@@ -1,19 +1,25 @@
 import { useTranslation } from "react-i18next";
 import { TextField } from "@mui/material";
+import { useFieldContext } from "@/core/forms/formContexts";
+import { fieldError } from "@/core/forms/formUtils";
 import React from "react";
-import { useField } from "formik";
 
-export function ExerciseName(props: { fieldName: string }) {
+/** Bound to the form field it is rendered in via form.AppField */
+export function ExerciseName() {
     const [t] = useTranslation();
-    const [field, meta] = useField(props.fieldName);
+    const field = useFieldContext<string>();
+    const error = fieldError(field);
 
     return <TextField
         fullWidth
-        id={props.fieldName}
+        id={field.name}
+        name={field.name}
         label={t("name")}
         variant="standard"
-        error={meta.touched && Boolean(meta.error)}
-        helperText={meta.touched && meta.error}
-        {...field}
+        value={field.state.value}
+        onChange={event => field.handleChange(event.target.value)}
+        onBlur={field.handleBlur}
+        error={error !== undefined}
+        helperText={error}
     />;
 }

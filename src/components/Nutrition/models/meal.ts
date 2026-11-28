@@ -1,13 +1,13 @@
 import { NutritionalValues } from "@/components/Nutrition/helpers/nutritionalValues";
 import { DiaryEntry } from "@/components/Nutrition/models/diaryEntry";
 import { MealItem } from "@/components/Nutrition/models/mealItem";
-import { PSEUDO_MEAL_ID } from "@/components/Nutrition/models/nutritionalPlan";
+import { PSEUDO_MEAL_ID } from "@/components/Nutrition/models/consts";
 import { Adapter } from "@/core/lib/Adapter";
 import { dateTimeToHHMM, dateTimeToLocaleHHMM, HHMMToDateTime, isSameDay } from "@/core/lib/date";
 
 export interface ApiMealType {
-    id: number,
-    plan: number,
+    id: string,
+    plan: string,
     order: number,
     time: string | null,
     name: string
@@ -15,8 +15,8 @@ export interface ApiMealType {
 
 
 export type MealConstructorParams = {
-    id?: number | null;
-    planId?: number | null;
+    id?: string | null;
+    planId?: string | null;
     order?: number;
     time?: Date | null;
     name: string;
@@ -26,8 +26,8 @@ export type MealConstructorParams = {
 
 export class Meal {
 
-    public id: number | null = null;
-    public planId: number | null = null;
+    public id: string | null = null;
+    public planId: string | null = null;
     public order: number;
     public time: Date | null = null;
     public name: string;

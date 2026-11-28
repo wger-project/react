@@ -95,7 +95,7 @@ const ExerciseInfoListItem = ({
                         {exercises.map((base) =>
                             base.mainImage
                                 ? <Avatar key={base.id} src={base.mainImage.url} />
-                                : <Avatar key={base.id} children={<PhotoIcon />} />
+                                : <Avatar key={base.id}><PhotoIcon /></Avatar>
                         )}
                     </AvatarGroup>
                 </ListItemIcon>
@@ -143,14 +143,17 @@ export function VariationSelect({
     const [searchTerm, setSearchTerms] = useState<string>('');
 
     // Group exercises by variationId
-    let allExercises: Exercise[] = [];
     let exercises: Exercise[] = [];
     let groupedExercises = new Map<string, Exercise[]>();
     if (exercisesQuery.isSuccess) {
-        allExercises = exercisesQuery.data;
+        let allExercises: Exercise[] = exercisesQuery.data;
 
         if (searchTerm !== '') {
-            allExercises = allExercises.filter((base) => base.getTranslation().name.toLowerCase().includes(searchTerm.toLowerCase()));
+            const term = searchTerm.toLowerCase();
+            allExercises = allExercises.filter((base) =>
+                base.translations.some((translation) =>
+                    translation.name.toLowerCase().includes(term)
+                    || translation.aliases.some((alias) => alias.alias.toLowerCase().includes(term))));
         }
 
         // Group first (including current exercise, so groups show all members)

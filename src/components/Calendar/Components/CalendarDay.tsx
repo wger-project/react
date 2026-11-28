@@ -1,7 +1,7 @@
 import { useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 import { dateToYYYYMMDD, isSameDay } from "@/core/lib/date";
-import { DayProps } from "./CalendarComponent";
+import type { DayProps } from "./CalendarComponent";
 
 interface CalendarDayProps {
     day: DayProps;
@@ -42,7 +42,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({ day, currentMonth, currentDat
     const hasDayEntry = () => {
         return day.measurements.length > 0 ||
             day.weightEntry !== undefined ||
-            day.workoutSession !== undefined;
+            day.workoutSessions.length > 0;
     };
 
     const handleClick = () => {
