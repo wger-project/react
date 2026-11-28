@@ -1,4 +1,4 @@
-import { formatNumberInput, numberGramLocale, numberLocale, parseNumberLocale } from './numbers';
+import { formatNumberInput, numberDecimalLocale, numberGramLocale, numberLocale, parseNumberLocale } from './numbers';
 
 describe('test the numberLocale function', () => {
     test('groups the thousands and drops the decimals in the english locale', () => {
@@ -113,5 +113,27 @@ describe('test the formatNumberInput function', () => {
         for (const locale of ['de', 'en', 'fr', 'de-CH', 'ar-EG']) {
             expect(parseNumberLocale(formatNumberInput(num, locale), locale)).toBe(num);
         }
+    });
+});
+
+describe('the region of the browser', () => {
+    beforeEach(() => {
+        vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['de-CH']);
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    test('formats, fills in and reads a plain language with it', () => {
+        const swiss = (1234.5).toLocaleString('de-CH');
+
+        expect(numberDecimalLocale(1234.5, 'de')).toBe(swiss);
+        expect(formatNumberInput(1234.5, 'de')).toBe('1234.5');
+        expect(parseNumberLocale(swiss, 'de')).toBe(1234.5);
+    });
+
+    test('leaves a locale that has a region alone', () => {
+        expect(numberDecimalLocale(1234.5, 'de-DE')).toBe('1.234,5');
     });
 });

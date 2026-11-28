@@ -7,6 +7,7 @@ import { MeasurementEntry } from "@/components/Measurements/models/Entry";
 import { useDeleteMeasurementEntryQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
 import { luxonDateTimeToLocale } from "@/core/lib/date";
+import { numberDecimalLocale } from "@/core/lib/numbers";
 import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
 import { renderLocaleNumberEditCell } from "@/core/ui/Widgets/LocaleNumberEditCell";
 import CancelIcon from "@mui/icons-material/Close";
@@ -247,6 +248,7 @@ export const CategoryDetailDataGrid = (props: {
             type: 'number',
             width: 100,
             editable: false,
+            valueFormatter: (value?: number) => value == null ? '' : numberDecimalLocale(value, i18n.language),
         },
         {
             field: 'notes',

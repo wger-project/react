@@ -6,6 +6,7 @@ import { useDeleteRoutineLogQuery, useEditRoutineLogQuery } from "@/components/R
 import { generateChartColors } from "@/core/lib/colors";
 import { PAGINATION_OPTIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/core/lib/consts";
 import { dateToLocale, luxonDateTimeToLocale } from "@/core/lib/date";
+import { numberDecimalLocale } from "@/core/lib/numbers";
 import { convertWeight, WeightUnit } from "@/core/lib/weightUnit";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { renderLocaleNumberEditCell } from "@/core/ui/Widgets/LocaleNumberEditCell";
@@ -28,12 +29,15 @@ import {
     GridRowModesModel,
     GridRowsProp
 } from "@mui/x-data-grid";
+import i18n from "i18next";
 import { DateTime } from "luxon";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { CartesianGrid, Legend, Scatter, ScatterChart, Tooltip, TooltipContentProps, XAxis, YAxis } from "recharts";
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
+
+const formatNumberCell = (value?: number | null) => value == null ? '' : numberDecimalLocale(value, i18n.language);
 
 export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logEntries: WorkoutLog[] | undefined }) => {
     const { t } = useTranslation();
@@ -136,6 +140,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
             disableColumnMenu: true,
             editable: true,
             renderEditCell: renderLocaleNumberEditCell,
+            valueFormatter: formatNumberCell,
             headerName: t('routines.reps'),
         },
         {
@@ -144,6 +149,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
             disableColumnMenu: true,
             editable: true,
             renderEditCell: renderLocaleNumberEditCell,
+            valueFormatter: formatNumberCell,
             headerName: t('weight'),
         },
         {
