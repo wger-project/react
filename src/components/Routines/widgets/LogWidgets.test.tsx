@@ -81,6 +81,44 @@ describe('ExerciseLog', () => {
         expect(mockEditMutate).toHaveBeenCalled();
     });
 
+    test('reads a decimal comma in the weight cell', async () => {
+        render(
+            <ExerciseLog
+                exercise={testExerciseBenchPress}
+                routineId={mockRoutineId}
+                logEntries={testWorkoutLogs}
+            />
+        );
+
+        await user.click(screen.getAllByRole('button', { name: /edit/i })[0]);
+        const weightInput = screen.getByRole('textbox', { name: 'weight' });
+        await user.clear(weightInput);
+        await user.type(weightInput, '82,5');
+        await user.click(screen.getAllByRole('button', { name: /save/i })[0]);
+
+        expect(mockEditMutate).toHaveBeenCalledWith(expect.objectContaining({ weight: 82.5 }));
+    });
+
+    test('keeps a weight it cannot read in edit mode instead of clearing it', async () => {
+        render(
+            <ExerciseLog
+                exercise={testExerciseBenchPress}
+                routineId={mockRoutineId}
+                logEntries={testWorkoutLogs}
+            />
+        );
+
+        await user.click(screen.getAllByRole('button', { name: /edit/i })[0]);
+        const weightInput = screen.getByRole('textbox', { name: 'weight' });
+        await user.clear(weightInput);
+        await user.type(weightInput, 'heavy');
+        await user.click(screen.getAllByRole('button', { name: /save/i })[0]);
+
+        expect(mockEditMutate).not.toHaveBeenCalled();
+        expect(await screen.findByText('forms.enterNumber')).toBeInTheDocument();
+        expect(screen.getByRole('textbox', { name: 'weight' })).toBeInTheDocument();
+    });
+
     test('shows the note of a log in a tooltip', async () => {
         const logs = [
             new WorkoutLog({ ...testWorkoutLogs[0], notes: 'Grip slipped' }),

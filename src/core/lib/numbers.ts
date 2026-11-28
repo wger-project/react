@@ -53,14 +53,18 @@ export function numberLbLocale(num: number, locale: string) {
     return numberUnitLocale(num, locale, LocaleUnit.LB);
 }
 
-// One '.' or ',' that is not followed by exactly three digits, e.g. "80.5"
-const SINGLE_DECIMAL_SEPARATOR = /^[^.,]*[.,](\d{0,2}|\d{4,})$/;
+// Text with exactly one '.' or ','
+const SINGLE_SEPARATOR = /^([^.,]*)[.,]([^.,]*)$/;
+// What a thousands group needs around it: 1–3 digits without a leading zero, then exactly three
+const GROUP_BEFORE = /^[+-]?[1-9]\d{0,2}$/;
+const GROUP_AFTER = /^\d{3}$/;
 
 /*
  * Reads a number typed in the locale (default: page language with the
  * browser's region, as for dates), NaN if the text is none. A single dot or
- * comma counts as decimal separator in every locale, so "80.5" stays 80.5 in
- * German, while "1.234" there is still 1234
+ * comma counts as decimal separator in every locale unless it could be a
+ * thousands separator, so "80.5" and "0.125" stay decimals in German, while
+ * "1.234" there is still 1234
  */
 export function parseNumberLocale(text: string, locale: string | undefined = dateLocale()): number {
     const trimmed = text.trim();
@@ -68,7 +72,8 @@ export function parseNumberLocale(text: string, locale: string | undefined = dat
         return NaN;
     }
 
-    if (SINGLE_DECIMAL_SEPARATOR.test(trimmed)) {
+    const single = SINGLE_SEPARATOR.exec(trimmed);
+    if (single && !(GROUP_BEFORE.test(single[1].trim()) && GROUP_AFTER.test(single[2].trim()))) {
         const decimal = new Intl.NumberFormat(locale).formatToParts(1.5).find(p => p.type === 'decimal')?.value ?? '.';
         return new NumberParser(locale).parse(trimmed.replace(/[.,]/, decimal));
     }

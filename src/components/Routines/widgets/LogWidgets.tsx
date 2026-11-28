@@ -14,7 +14,7 @@ import ChatBubbleOutlineOutlined from "@mui/icons-material/ChatBubbleOutlineOutl
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { Box, Card, CardContent, Tooltip as MuiTooltip, Typography } from '@mui/material';
+import { Box, Card, CardContent, Snackbar, Tooltip as MuiTooltip, Typography } from '@mui/material';
 import Grid from "@mui/material/Grid";
 import {
     DataGrid,
@@ -54,6 +54,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
 
     const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
+    const [notice, setNotice] = React.useState<string | null>(null);
 
     const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
         if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -87,6 +88,12 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
     };
 
     const processRowUpdate = (newRow: GridRowModel) => {
+
+        // Text the editor could not read; saving it would clear the value.
+        // Throwing keeps the row in edit mode so it can be corrected
+        if (Number.isNaN(newRow.repetitions) || Number.isNaN(newRow.weight)) {
+            throw new Error(t('forms.enterNumber'));
+        }
 
         const log = newRow.entry;
         if (log !== undefined) {
@@ -246,6 +253,13 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
                     onRowModesModelChange={handleRowModesModelChange}
                     onRowEditStop={handleRowEditStop}
                     processRowUpdate={processRowUpdate}
+                    onProcessRowUpdateError={(error: Error) => setNotice(error.message)}
+                />
+                <Snackbar
+                    open={notice !== null}
+                    autoHideDuration={4000}
+                    onClose={() => setNotice(null)}
+                    message={notice}
                 />
 
             </Grid>

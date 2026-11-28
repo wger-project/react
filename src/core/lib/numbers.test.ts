@@ -60,6 +60,8 @@ describe('test the parseNumberLocale function', () => {
         ['1.234,5', 'de', 1234.5],
         ['1.234', 'de', 1234],
         ['1.234.567', 'de', 1234567],
+        ['12.345', 'de', 12345],
+        ['-1.234', 'de', -1234],
         ['80.5', 'en', 80.5],
         ['1,234.5', 'en', 1234.5],
         ['1,234', 'en', 1234],
@@ -79,6 +81,11 @@ describe('test the parseNumberLocale function', () => {
         ['0.1234', 'de', 0.1234],
         ['80,5', 'en', 80.5],
         ['80.5', 'ar-EG', 80.5],
+        ['0.125', 'de', 0.125],
+        ['-0.125', 'de', -0.125],
+        ['.125', 'de', 0.125],
+        ['0,125', 'en', 0.125],
+        ['1234.567', 'de', 1234.567],
     ])('reads the single separator in %j as decimal separator in %s', (text, locale, expected) => {
         expect(parseNumberLocale(text, locale)).toBe(expected);
     });
