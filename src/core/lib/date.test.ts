@@ -1,4 +1,4 @@
-import { dateLocale, dateTimeToHHMM, dateToRelative, dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
+import { formatLocale, dateTimeToHHMM, dateToRelative, dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
 
 /*
  * All date helpers must behave the same in every timezone, so the whole suite
@@ -109,20 +109,20 @@ describe.each([
     });
 });
 
-describe('dateLocale', () => {
+describe('formatLocale', () => {
 
     test('a bare page language takes the region from the browser', () => {
-        expect(dateLocale('en', ['de-DE', 'en-NZ', 'en-US'])).toBe('en-NZ');
-        expect(dateLocale('de', ['de-AT'])).toBe('de-AT');
+        expect(formatLocale('en', ['de-DE', 'en-NZ', 'en-US'])).toBe('en-NZ');
+        expect(formatLocale('de', ['de-AT'])).toBe('de-AT');
     });
 
     test('a page language with a region is kept', () => {
-        expect(dateLocale('en-GB', ['en-NZ'])).toBe('en-GB');
-        expect(dateLocale('zh-Hans', ['zh-CN'])).toBe('zh-Hans');
+        expect(formatLocale('en-GB', ['en-NZ'])).toBe('en-GB');
+        expect(formatLocale('zh-Hans', ['zh-CN'])).toBe('zh-Hans');
     });
 
     test('without a matching browser language the page language is used', () => {
-        expect(dateLocale('en', ['de-DE', 'en'])).toBe('en');
-        expect(dateLocale('en', ['eu-ES'])).toBe('en');
+        expect(formatLocale('en', ['de-DE', 'en'])).toBe('en');
+        expect(formatLocale('en', ['eu-ES'])).toBe('en');
     });
 });

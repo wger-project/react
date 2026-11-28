@@ -11,7 +11,7 @@ import { IngredientAmountFields } from "@/components/Nutrition/widgets/forms/Ing
 import { useAppForm } from "@/core/forms/appForm";
 import { fieldError, localeNumber, submitHandler, yupSchema } from "@/core/forms/formUtils";
 import { formatNumberInput, numberLocale, parseNumberLocale } from "@/core/lib/numbers";
-import { dateLocale, dateToYYYYMMDD } from "@/core/lib/date";
+import { formatLocale, dateToYYYYMMDD } from "@/core/lib/date";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Autocomplete, Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -165,7 +165,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                         />
                     )}
                 />}
-                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={dateLocale(i18n.language)}>
+                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale={formatLocale(i18n.language)}>
 
                     <DateTimePicker
                         label={t('date')}
