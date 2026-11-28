@@ -1,5 +1,5 @@
-import i18n from 'i18next';
 import { DateTime, DateTimeFormatOptions } from "luxon";
+import { formatLocale } from './locale';
 
 
 /** Milliseconds in a day. Only for durations; a calendar day can be 23 or 25 hours long */
@@ -82,20 +82,6 @@ export function yyyymmddToDate(dateStr: string): Date {
     return new Date(year, month - 1, day);
 }
 
-
-/*
- * The locale dates and numbers are formatted and read in: the page language,
- * with the browser's region when the language has none (page "en", browser
- * "en-NZ" -> "en-NZ")
- */
-export function formatLocale(language: string | undefined = i18n.language, preferred: readonly string[] = navigator.languages) {
-    if (!language || language.includes('-')) {
-        return language;
-    }
-
-    const prefix = `${language.toLowerCase()}-`;
-    return preferred.find(l => l.toLowerCase().startsWith(prefix)) ?? language;
-}
 
 /*
  * Returns the localized time from a date object

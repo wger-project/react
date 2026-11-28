@@ -1,6 +1,6 @@
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import { formatLocale } from "@/core/lib/date";
+import { formatLocale } from "@/core/lib/locale";
 import { DateTime } from "luxon";
 import React from 'react';
 import { useTranslation } from "react-i18next";

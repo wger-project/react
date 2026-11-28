@@ -8,7 +8,7 @@ import {
 import { useAddSessionQuery, useEditSessionQuery, useSessionOfDay } from "@/components/Routines/queries";
 import { useAppForm } from "@/core/forms/appForm";
 import { defaultsKey, fieldError, yupSchema } from "@/core/forms/formUtils";
-import { formatLocale } from "@/core/lib/date";
+import { formatLocale } from "@/core/lib/locale";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Add, SentimentNeutral, SentimentSatisfiedAlt, SentimentVeryDissatisfied } from "@mui/icons-material";
 import {

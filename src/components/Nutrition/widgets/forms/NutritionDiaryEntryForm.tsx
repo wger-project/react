@@ -11,7 +11,8 @@ import { IngredientAmountFields } from "@/components/Nutrition/widgets/forms/Ing
 import { useAppForm } from "@/core/forms/appForm";
 import { fieldError, localeNumber, submitHandler, yupSchema } from "@/core/forms/formUtils";
 import { formatNumberInput, numberLocale, parseNumberLocale } from "@/core/lib/numbers";
-import { formatLocale, dateToYYYYMMDD } from "@/core/lib/date";
+import { dateToYYYYMMDD } from "@/core/lib/date";
+import { formatLocale } from "@/core/lib/locale";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Autocomplete, Button, Stack, TextField } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";

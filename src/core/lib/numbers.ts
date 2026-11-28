@@ -1,5 +1,5 @@
 import { NumberParser } from '@internationalized/number';
-import { formatLocale } from './date';
+import { formatLocale } from './locale';
 
 export enum LocaleUnit {
     GRAM = 'gram',

@@ -23,7 +23,8 @@ import { TFunction } from "i18next";
 import { DateTime } from "luxon";
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { formatLocale, dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
+import { dateToYYYYMMDD, yyyymmddToDate } from "@/core/lib/date";
+import { formatLocale } from "@/core/lib/locale";
 import * as yup from 'yup';
 
 interface PlanFormProps {

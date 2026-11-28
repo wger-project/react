@@ -6,7 +6,7 @@ import { useAddMealQuery, useEditMealQuery } from "@/components/Nutrition/querie
 import { useAppForm } from "@/core/forms/appForm";
 import { yupSchema, submitHandler } from "@/core/forms/formUtils";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
-import { formatLocale } from "@/core/lib/date";
+import { formatLocale } from "@/core/lib/locale";
 import { DateTime } from "luxon";
 import React from 'react';
 import { useTranslation } from "react-i18next";

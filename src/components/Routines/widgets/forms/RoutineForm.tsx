@@ -11,7 +11,7 @@ import { SlotEntryRoundingField } from "@/components/Routines/widgets/forms/Slot
 import { useProfileQuery } from "@/components/User";
 import { useAppForm } from "@/core/forms/appForm";
 import { fieldError, submitHandler, yupSchema } from "@/core/forms/formUtils";
-import { formatLocale } from "@/core/lib/date";
+import { formatLocale } from "@/core/lib/locale";
 import { makeLink, WgerLink } from "@/core/lib/url";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutlined";
