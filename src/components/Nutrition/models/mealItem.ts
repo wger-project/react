@@ -4,7 +4,7 @@ import { Ingredient } from "@/components/Nutrition/models/Ingredient";
 import { NutritionWeightUnit } from "@/components/Nutrition/models/weightUnit";
 import i18n from "@/i18n";
 import { Adapter } from "@/core/lib/Adapter";
-import { numberGramLocale } from "@/core/lib/numbers";
+import { numberGramLocale, numberLocale } from "@/core/lib/numbers";
 
 export interface ApiMealItemType {
     id: string,
@@ -58,7 +58,7 @@ export class MealItem {
 
     get amountString(): string {
         if (this.weightUnit) {
-            return `${this.amount.toFixed()} × ${this.weightUnit.name}`;
+            return `${numberLocale(this.amount, i18n.language)} × ${this.weightUnit.name}`;
         }
         return numberGramLocale(this.amount, i18n.language);
     }

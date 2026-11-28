@@ -54,6 +54,17 @@ describe('test the numberGramLocale function', () => {
     });
 });
 
+describe('test the numberDecimalLocale function', () => {
+    test('pads to the minimum number of decimals', () => {
+        expect(numberDecimalLocale(17, 'de', 1, 1)).toBe('17,0');
+        expect(numberDecimalLocale(1.5, 'en', 2, 2)).toBe('1.50');
+    });
+
+    test('drops trailing zeros without a minimum', () => {
+        expect(numberDecimalLocale(17, 'de', 1)).toBe('17');
+    });
+});
+
 describe('test the parseNumberLocale function', () => {
     test.each([
         ['80,5', 'de', 80.5],

@@ -10,7 +10,7 @@ import {
 import { IngredientAmountFields } from "@/components/Nutrition/widgets/forms/IngredientAmountFields";
 import { useAppForm } from "@/core/forms/appForm";
 import { fieldError, localeNumber, submitHandler, yupSchema } from "@/core/forms/formUtils";
-import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
+import { formatNumberInput, numberLocale, parseNumberLocale } from "@/core/lib/numbers";
 import { dateLocale, dateToYYYYMMDD } from "@/core/lib/date";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Autocomplete, Button, Stack, TextField } from "@mui/material";
@@ -54,7 +54,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
     const validationSchema = yup.object({
         amount: localeNumber()
             .required(t('forms.fieldRequired'))
-            .max(1000, t('forms.maxValue', { value: '1000' }))
+            .max(1000, t('forms.maxValue', { value: numberLocale(1000, i18n.language) }))
             .min(1, t('forms.minValue', { value: '1' })),
         ingredient: yup
             .number()

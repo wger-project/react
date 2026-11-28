@@ -24,10 +24,13 @@ export function numberLocale(num: number, locale: string) {
 /*
  * Formats a number, localised, with up to [maxDecimals] fraction digits. The
  * default keeps as many as the server stores, and few enough to hide the
- * artefacts of summing floats
+ * artefacts of summing floats. [minDecimals] pads, e.g. a BMI of 17 as "17.0"
  */
-export function numberDecimalLocale(num: number, locale: string, maxDecimals: number = 2) {
-    return num.toLocaleString(dateLocale(locale), { maximumFractionDigits: maxDecimals });
+export function numberDecimalLocale(num: number, locale: string, maxDecimals: number = 2, minDecimals: number = 0) {
+    return num.toLocaleString(dateLocale(locale), {
+        minimumFractionDigits: minDecimals,
+        maximumFractionDigits: maxDecimals,
+    });
 }
 
 /*

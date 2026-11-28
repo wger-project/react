@@ -8,7 +8,7 @@ import {
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { WgerContainerRightSidebar } from "@/core/ui/Widgets/Container";
 import { useProfileQuery } from "@/components/User";
-import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
+import { formatNumberInput, numberDecimalLocale, parseNumberLocale } from "@/core/lib/numbers";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Area, AreaChart, CartesianGrid, ReferenceDot, Tooltip, XAxis, YAxis, } from "recharts";
@@ -26,7 +26,7 @@ const getRangeColor = (name: string) => {
 };
 
 export const BmiCalculator = () => {
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
 
     // Only the most recent entry is used to prefill the field; a year back is
     // generous for that and keeps the query bounded
@@ -134,7 +134,7 @@ export const BmiCalculator = () => {
 
 
                     {bmi !== null && <Typography variant="h6">
-                        {t('bmi.result', { value: bmi.toFixed(1) })}
+                        {t('bmi.result', { value: numberDecimalLocale(bmi, i18n.language, 1, 1) })}
                     </Typography>
                     }
                     <AreaChart data={chartData} responsive width="100%" height={400}>

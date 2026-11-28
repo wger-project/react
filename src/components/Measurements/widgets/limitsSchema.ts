@@ -1,5 +1,6 @@
 import { limitsFor, MetricType } from "@/components/Measurements/models/Category";
-import { TFunction } from "i18next";
+import { numberDecimalLocale } from "@/core/lib/numbers";
+import i18n, { TFunction } from "i18next";
 import { localeNumber } from "@/core/forms/formUtils";
 
 /**
@@ -18,7 +19,10 @@ export function limitsSchema(
 ) {
     const limits = limitsFor(type, unit);
     const label = unitLabel ?? unit ?? '';
-    const suffixed = (value: number) => (label ? `${value} ${label}` : String(value));
+    const suffixed = (value: number) => {
+        const number = numberDecimalLocale(value, i18n.language);
+        return label ? `${number} ${label}` : number;
+    };
 
     return localeNumber()
         .typeError(t('forms.fieldRequired'))

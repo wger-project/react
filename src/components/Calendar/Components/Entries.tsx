@@ -1,6 +1,7 @@
 import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Measurements";
 import { useDeleteSessionQuery, WorkoutSession } from "@/components/Routines";
 import { dateToLocale } from "@/core/lib/date";
+import { numberDecimalLocale } from "@/core/lib/numbers";
 import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -26,7 +27,7 @@ interface LogProps {
 }
 
 const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
     const displayWeightUnit = useDisplayWeightUnit();
     // Entries without their own unit fall back to the one of the category
     const categoryUnit = useBodyWeightCategoryQuery().data?.unit ?? 'kg';
@@ -76,7 +77,7 @@ const Entries: React.FC<LogProps> = ({ selectedDay, isStandalone }) => {
                         <ListItem>
                             <ListItemText
                                 primary={t("weight")}
-                                secondary={`${selectedDay.weightEntry.valueIn(displayWeightUnit, categoryUnit).toFixed(1)} ${t(`server.${displayWeightUnit}`)}`}
+                                secondary={`${numberDecimalLocale(selectedDay.weightEntry.valueIn(displayWeightUnit, categoryUnit), i18n.language, 1, 1)} ${t(`server.${displayWeightUnit}`)}`}
                                 sx={{ pl: 2 }}
                             />
                         </ListItem>}

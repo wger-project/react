@@ -17,7 +17,7 @@ import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/components/Nutrition/queries";
 import { useAppForm } from "@/core/forms/appForm";
 import { yupSchema, fieldError, localeNumber, submitHandler } from "@/core/forms/formUtils";
-import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
+import { formatNumberInput, numberLocale, parseNumberLocale } from "@/core/lib/numbers";
 import i18n from "@/i18n";
 import { TFunction } from "i18next";
 import { DateTime } from "luxon";
@@ -50,7 +50,7 @@ type GoalName = 'goalEnergy' | 'goalProtein' | 'goalCarbohydrates' | 'goalFiber'
 
 /** The energy a macro goal amounts to, shown in front of it; fibre has none, so its zero always shows */
 const energyOf = (goal: string, factor: number, t: TFunction) =>
-    goal !== '' || factor === 0 ? t('nutrition.valueEnergyKcal', { value: parseNumberLocale(goal) * factor }) : '';
+    goal !== '' || factor === 0 ? t('nutrition.valueEnergyKcal', { value: numberLocale(parseNumberLocale(goal) * factor, i18n.language) }) : '';
 
 export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
 
@@ -72,7 +72,9 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
         goalEnergy: localeNumber()
             .notRequired()
             .positive()
-            .max(6000, t('forms.maxValue', { value: '6000kcal' })),
+            .max(6000, t('forms.maxValue', {
+                value: t('nutrition.valueEnergyKcal', { value: numberLocale(6000, i18n.language) }),
+            })),
         goalProtein: localeNumber()
             .notRequired()
             .positive()

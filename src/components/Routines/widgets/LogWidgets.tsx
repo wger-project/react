@@ -311,7 +311,7 @@ const ExerciseLogTooltip = ({ active, payload }: TooltipContentProps<ValueType, 
                 </Typography>
 
                 <Typography variant="body2">
-                    {payload?.[1].payload?.entry.repetitions} × {payload?.[1].value}{payload?.[1].unit}{rir}
+                    {formatNumberCell(payload?.[1].payload?.entry.repetitions)} × {formatNumberCell(payload?.[1].value as number)}{payload?.[1].unit}{rir}
                 </Typography>
             </CardContent>
         </Card>;
@@ -351,6 +351,7 @@ export const TimeSeriesChart = (props: { data: WorkoutLog[] }) => {
                     dataKey="value"
                     name="Value"
                     unit={weightUnitLabel}
+                    tickFormatter={value => numberDecimalLocale(value, i18n.language)}
                 />
 
                 {Array.from(result).map(([key, value]) => {

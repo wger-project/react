@@ -10,7 +10,7 @@ import {
 import { IngredientAmountFields } from "@/components/Nutrition/widgets/forms/IngredientAmountFields";
 import { useAppForm } from "@/core/forms/appForm";
 import { localeNumber, yupSchema, submitHandler } from "@/core/forms/formUtils";
-import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
+import { formatNumberInput, numberLocale, parseNumberLocale } from "@/core/lib/numbers";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -28,7 +28,7 @@ interface MealItemFormValues {
 
 export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProps) => {
 
-    const [t] = useTranslation();
+    const [t, i18n] = useTranslation();
     const addMealItemQuery = useAddMealItemQuery(planId);
     const editMealItemQuery = useEditMealItemQuery(planId);
     const deleteMealItemQuery = useDeleteMealItemQuery(planId);
@@ -51,7 +51,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
     const validationSchema = yup.object({
         amount: localeNumber()
             .required(t('forms.fieldRequired'))
-            .max(1000, t('forms.maxValue', { value: '1000' }))
+            .max(1000, t('forms.maxValue', { value: numberLocale(1000, i18n.language) }))
             .min(1, t('forms.minValue', { value: '1' })),
         ingredient: yup
             .number()
