@@ -2,6 +2,7 @@ import { MeasurementEntry } from "@/components/Measurements";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from "@testing-library/user-event";
+import i18n from "i18next";
 import { useProfileQuery } from "@/components/User";
 import { WeightForm } from "@/components/Measurements/widgets/WeightForm";
 import { useAddMeasurementEntryQuery, useEditMeasurementEntryQuery } from "@/components/Measurements/queries";
@@ -99,6 +100,32 @@ describe("Test WeightForm component", () => {
 
         // ...and does not mutate the passed-in entry (it comes from the query cache)
         expect(weightEntry.value).toBe(80);
+    });
+
+    test('shows and reads the weight with a decimal comma in german', async () => {
+        const user = userEvent.setup();
+        const mutateEditMock = vi.fn();
+        (useEditMeasurementEntryQuery as Mock).mockImplementation(() => ({ mutate: mutateEditMock }));
+        await i18n.changeLanguage('de');
+
+        try {
+            render(
+                <QueryClientProvider client={testQueryClient}>
+                    <WeightForm weightEntry={makeWeightEntry(new Date('2022-02-28'), 80.5, { id: ENTRY_UUID })} />
+                </QueryClientProvider>
+            );
+            const weightInput = await screen.findByLabelText('weight');
+            expect(weightInput).toHaveValue('80,5');
+
+            await user.clear(weightInput);
+            await user.type(weightInput, '82,3');
+            await user.click(screen.getByRole('button', { name: 'submit' }));
+
+            await waitFor(() => expect(mutateEditMock).toHaveBeenCalled());
+            expect((mutateEditMock.mock.calls[0][0] as MeasurementEntry).value).toBe(82.3);
+        } finally {
+            await i18n.changeLanguage('en');
+        }
     });
 
     test('Creating a new weight entry', async () => {

@@ -1,3 +1,6 @@
+import { NumberParser } from '@internationalized/number';
+import i18n from 'i18next';
+
 export enum LocaleUnit {
     GRAM = 'gram',
     KG = 'kilogram',
@@ -48,4 +51,37 @@ export function numberKgLocale(num: number, locale: string) {
 
 export function numberLbLocale(num: number, locale: string) {
     return numberUnitLocale(num, locale, LocaleUnit.LB);
+}
+
+// One '.' or ',' that is not followed by exactly three digits, e.g. "80.5"
+const SINGLE_DECIMAL_SEPARATOR = /^[^.,]*[.,](\d{0,2}|\d{4,})$/;
+
+/*
+ * Reads a number typed in the locale, NaN if the text is none. A single dot or
+ * comma counts as decimal separator in every locale, so "80.5" stays 80.5 in
+ * German, while "1.234" there is still 1234
+ */
+export function parseNumberLocale(text: string, locale: string | undefined = i18n.language): number {
+    const trimmed = text.trim();
+    if (trimmed === '') {
+        return NaN;
+    }
+
+    if (SINGLE_DECIMAL_SEPARATOR.test(trimmed)) {
+        const decimal = new Intl.NumberFormat(locale).formatToParts(1.5).find(p => p.type === 'decimal')?.value ?? '.';
+        return new NumberParser(locale).parse(trimmed.replace(/[.,]/, decimal));
+    }
+
+    return new NumberParser(locale).parse(trimmed);
+}
+
+/*
+ * Formats a number for a text field the user edits, so that parseNumberLocale
+ * reads it back: localised decimal separator, no grouping
+ */
+export function formatNumberInput(num: number | null | undefined, locale: string | undefined = i18n.language): string {
+    if (num === null || num === undefined || Number.isNaN(num)) {
+        return '';
+    }
+    return num.toLocaleString(locale, { useGrouping: false, maximumFractionDigits: 20 });
 }

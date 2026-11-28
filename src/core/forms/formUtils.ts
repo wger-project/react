@@ -1,6 +1,7 @@
 import type { AnyFieldApi, AnyFormApi, StandardSchemaV1 } from "@tanstack/react-form";
 import type { FormEvent } from "react";
-import { AnySchema, ValidationError } from "yup";
+import { parseNumberLocale } from "@/core/lib/numbers";
+import { AnySchema, number, ValidationError } from "yup";
 
 interface Issue {
     message: string,
@@ -115,3 +116,8 @@ export function submitHandler(form: AnyFormApi) {
  * remounts it with fresh defaults, which is what enableReinitialize did.
  */
 export const defaultsKey = (...parts: unknown[]): string => JSON.stringify(parts);
+
+/** yup.number() for text the user typed, read in the page language */
+export const localeNumber = () => number().transform(
+    (value, original) => typeof original === 'string' ? parseNumberLocale(original) : value
+);

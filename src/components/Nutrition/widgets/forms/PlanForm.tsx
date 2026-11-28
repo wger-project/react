@@ -16,7 +16,8 @@ import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { NutritionalPlan } from "@/components/Nutrition/models/nutritionalPlan";
 import { useAddNutritionalPlanQuery, useEditNutritionalPlanQuery } from "@/components/Nutrition/queries";
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema, fieldError, submitHandler } from "@/core/forms/formUtils";
+import { yupSchema, fieldError, localeNumber, submitHandler } from "@/core/forms/formUtils";
+import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
 import i18n from "@/i18n";
 import { TFunction } from "i18next";
 import { DateTime } from "luxon";
@@ -45,14 +46,11 @@ interface PlanFormValues {
     goalFat: string,
 }
 
-const goalString = (goal: number | null | undefined): string =>
-    goal === null || goal === undefined ? '' : String(goal);
-
 type GoalName = 'goalEnergy' | 'goalProtein' | 'goalCarbohydrates' | 'goalFiber' | 'goalFat';
 
 /** The energy a macro goal amounts to, shown in front of it; fibre has none, so its zero always shows */
 const energyOf = (goal: string, factor: number, t: TFunction) =>
-    goal !== '' || factor === 0 ? t('nutrition.valueEnergyKcal', { value: Number(goal) * factor }) : '';
+    goal !== '' || factor === 0 ? t('nutrition.valueEnergyKcal', { value: parseNumberLocale(goal) * factor }) : '';
 
 export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
 
@@ -71,28 +69,23 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
             .min(3, t('forms.minLength', { count: 3 })),
         onlyLogging: yup
             .boolean(),
-        goalEnergy: yup
-            .number()
+        goalEnergy: localeNumber()
             .notRequired()
             .positive()
             .max(6000, t('forms.maxValue', { value: '6000kcal' })),
-        goalProtein: yup
-            .number()
+        goalProtein: localeNumber()
             .notRequired()
             .positive()
             .max(500, t('forms.maxValue', { value: '500' })),
-        goalCarbohydrates: yup
-            .number()
+        goalCarbohydrates: localeNumber()
             .notRequired()
             .positive() // TODO: allow 0 but not negative
             .max(750, t('forms.maxValue', { value: '750' })),
-        goalFiber: yup
-            .number()
+        goalFiber: localeNumber()
             .notRequired()
             .positive()
             .max(500, t('forms.maxValue', { value: '500' })),
-        goalFat: yup
-            .number()
+        goalFat: localeNumber()
             .notRequired()
             .positive()
             .max(500, t('forms.maxValue', { value: '500' })),
@@ -115,11 +108,11 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
         end: plan && plan.end !== null ? dateToYYYYMMDD(plan.end) : null,
 
         onlyLogging: plan ? plan.onlyLogging : true,
-        goalEnergy: goalString(plan?.goalEnergy),
-        goalProtein: goalString(plan?.goalProtein),
-        goalCarbohydrates: goalString(plan?.goalCarbohydrates),
-        goalFiber: goalString(plan?.goalFiber),
-        goalFat: goalString(plan?.goalFat),
+        goalEnergy: formatNumberInput(plan?.goalEnergy),
+        goalProtein: formatNumberInput(plan?.goalProtein),
+        goalCarbohydrates: formatNumberInput(plan?.goalCarbohydrates),
+        goalFiber: formatNumberInput(plan?.goalFiber),
+        goalFat: formatNumberInput(plan?.goalFat),
     };
 
     const form = useAppForm({
@@ -134,7 +127,7 @@ export const PlanForm = ({ plan, closeFn }: PlanFormProps) => {
         onSubmit: async ({ value }) => {
             // A goal counts only while the goals are switched on
             const goal = (entered: string): number | null =>
-                useGoals && entered !== '' ? Number(entered) : null;
+                useGoals && entered !== '' ? parseNumberLocale(entered) : null;
 
             const newPlan = new NutritionalPlan({
 

@@ -160,6 +160,33 @@ describe('EntryDetailsField Component', () => {
             });
         });
     });
+
+    test('reads a decimal comma instead of cutting it off', async () => {
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <SlotBaseConfigValueField routineId={routineId} slotEntryId={slotEntryId} type="weight" />
+            </QueryClientProvider>
+        );
+
+        await user.type(screen.getByTestId('weight-field'), '2,5');
+
+        await waitFor(() => expect(addMutation).toHaveBeenLastCalledWith(expect.objectContaining({ value: 2.5 })));
+    });
+
+    test('refuses a decimal for an integer field', async () => {
+        const user = userEvent.setup();
+        render(
+            <QueryClientProvider client={testQueryClient}>
+                <SlotBaseConfigValueField routineId={routineId} slotEntryId={slotEntryId} type="sets" />
+            </QueryClientProvider>
+        );
+
+        await user.type(screen.getByTestId('sets-field'), '2,5');
+
+        expect(await screen.findByText('forms.enterInteger')).toBeInTheDocument();
+        expect(addMutation).not.toHaveBeenCalledWith(expect.objectContaining({ value: 2.5 }));
+    });
 });
 
 describe('ConfigDetailsRequirementsField', () => {

@@ -11,7 +11,8 @@ import { weightUnitOf } from "@/components/Measurements/models/bodyWeight";
 import { useBodyWeightCategoryQuery, useDisplayWeightUnit } from "@/components/Measurements/queries/bodyWeight";
 import { useProfileQuery } from "@/components/User";
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema, submitHandler } from "@/core/forms/formUtils";
+import { localeNumber, yupSchema, submitHandler } from "@/core/forms/formUtils";
+import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
 import { WeightUnit } from "@/core/lib/weightUnit";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { EntryDateTimeField } from "@/components/Measurements/widgets/EntryDateTimeField";
@@ -62,8 +63,7 @@ const WeightFormFields = ({ category, displayUnit, weightEntry, closeFn }: Weigh
         date: yup.date().nullable().required(t('forms.fieldRequired')),
         unit: yup.string().oneOf(['kg', 'lb']),
         // The bounds follow the unit the value is typed in
-        weight: yup
-            .number()
+        weight: localeNumber()
             .when('unit', {
                 is: 'lb',
                 then: () => limitsSchema(METRIC_TYPE_BODY_WEIGHT, 'lb', t, t('server.lb')),
@@ -74,7 +74,7 @@ const WeightFormFields = ({ category, displayUnit, weightEntry, closeFn }: Weigh
     const initialDate = weightEntry ? weightEntry.date : new Date();
     const defaultValues: WeightFormValues = {
         // when editing, show the value in the unit it was entered in
-        weight: String(weightEntry ? weightEntry.value : 0),
+        weight: formatNumberInput(weightEntry ? weightEntry.value : 0),
         unit: weightEntry ? weightUnitOf(weightEntry, category.unit) : displayUnit,
         date: initialDate,
     };
@@ -87,7 +87,7 @@ const WeightFormFields = ({ category, displayUnit, weightEntry, closeFn }: Weigh
             if (value.date === null) {
                 return;
             }
-            const weight = Number(value.weight);
+            const weight = parseNumberLocale(value.weight);
 
             // The form closes only once the server took the entry, so a
             // rejected write is shown instead of disappearing with it

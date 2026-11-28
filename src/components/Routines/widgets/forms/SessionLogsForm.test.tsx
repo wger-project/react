@@ -78,8 +78,8 @@ describe('SessionLogsForm', () => {
         };
         const updatedData = {
             ...originalData,
-            repetitions: "17",
-            weight: "42",
+            repetitions: 17,
+            weight: 42,
         };
 
         // Act

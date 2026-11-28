@@ -144,7 +144,7 @@ describe('Tests for the ProgressionForm', () => {
                         "requirements": { "rules": [], "all_sets": false },
                         "slot_entry": 10,
                         "step": "abs",
-                        "value": "7"
+                        "value": 7
                     }, {
                         "id": 457,
                         "iteration": 2,
@@ -153,7 +153,7 @@ describe('Tests for the ProgressionForm', () => {
                         "requirements": { "rules": [], "all_sets": false },
                         "slot_entry": 10,
                         "step": "abs",
-                        "value": "2"
+                        "value": 2
                     }]
                 },
                 "values": {
@@ -168,7 +168,7 @@ describe('Tests for the ProgressionForm', () => {
                         "requirements": { "rules": [], "all_sets": false },
                         "slot_entry": 10,
                         "step": "abs",
-                        "value": "5"
+                        "value": 5
                     }, {
                         "id": 456,
                         "iteration": 2,
@@ -177,7 +177,7 @@ describe('Tests for the ProgressionForm', () => {
                         "requirements": { "rules": [], "all_sets": false },
                         "slot_entry": 10,
                         "step": "abs",
-                        "value": "1"
+                        "value": 1
                     }]
                 }
             }
@@ -205,7 +205,7 @@ describe('Tests for the ProgressionForm', () => {
             "requirements": { "rules": [], "all_sets": false },
             "slot_entry": 10,
             "step": "abs",
-            "value": "9"
+            "value": 9
         }]);
         // The new entry has no id yet, so it must not show up in the edit list
         expect(payload.values.toEdit.map((entry: { id: number }) => entry.id)).toEqual([123, 456]);

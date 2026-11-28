@@ -60,8 +60,8 @@ describe('BmiCalculator', () => {
 
         // 55 kg / 1.80 m² = 16.975...
         expect(screen.getByText('BMI: 17.0')).toBeInTheDocument();
-        expect(screen.getByLabelText('weight')).toHaveValue(55);
-        expect(screen.getByLabelText('height')).toHaveValue(180);
+        expect(screen.getByLabelText('weight')).toHaveValue('55');
+        expect(screen.getByLabelText('height')).toHaveValue('180');
     });
 
     it('converts an entry stored in pounds to kg', async () => {
@@ -74,7 +74,7 @@ describe('BmiCalculator', () => {
         render(<BmiCalculator />, { wrapper });
 
         // 121 lb are 54.88 kg, which gives a BMI of 16.938...
-        expect(screen.getByLabelText('weight')).toHaveValue(54.88);
+        expect(screen.getByLabelText('weight')).toHaveValue('54.88');
         expect(screen.getByText('BMI: 16.9')).toBeInTheDocument();
     });
 

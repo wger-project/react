@@ -9,7 +9,8 @@ import {
 } from "@/components/Nutrition/queries";
 import { IngredientAmountFields } from "@/components/Nutrition/widgets/forms/IngredientAmountFields";
 import { useAppForm } from "@/core/forms/appForm";
-import { yupSchema, submitHandler } from "@/core/forms/formUtils";
+import { localeNumber, yupSchema, submitHandler } from "@/core/forms/formUtils";
+import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
@@ -48,8 +49,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
     };
 
     const validationSchema = yup.object({
-        amount: yup
-            .number()
+        amount: localeNumber()
             .required(t('forms.fieldRequired'))
             .max(1000, t('forms.maxValue', { value: '1000' }))
             .min(1, t('forms.minValue', { value: '1' })),
@@ -59,7 +59,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
     });
 
     const defaultValues: MealItemFormValues = {
-        amount: String(item ? item.amount : 0),
+        amount: formatNumberInput(item ? item.amount : 0),
         ingredient: item ? item.ingredientId : null,
     };
 
@@ -73,7 +73,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
             }
 
             // Just to make sure we get a number
-            const newAmount = Math.round(Number(value.amount));
+            const newAmount = Math.round(parseNumberLocale(value.amount));
 
             if (item) {
                 // Edit
@@ -111,7 +111,7 @@ export const MealItemForm = ({ planId, item, mealId, closeFn }: MealItemFormProp
                         }}
                         weightUnit={selectedUnit}
                         onWeightUnitChange={setSelectedUnit}
-                        amount={Number(amount)}
+                        amount={parseNumberLocale(amount)}
                         renderAmountField={endAdornment => <form.AppField name="amount">
                             {field => <field.WgerTextField
                                 title={'amount'}

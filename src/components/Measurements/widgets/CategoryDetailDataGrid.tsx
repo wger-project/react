@@ -8,6 +8,7 @@ import { useDeleteMeasurementEntryQuery, useEditMeasurementEntryQuery } from "@/
 import { PAGINATION_OPTIONS } from "@/core/lib/consts";
 import { luxonDateTimeToLocale } from "@/core/lib/date";
 import { DeleteConfirmationModal } from "@/core/ui/Modals/DeleteConfirmationModal";
+import { renderLocaleNumberEditCell } from "@/core/ui/Widgets/LocaleNumberEditCell";
 import CancelIcon from "@mui/icons-material/Close";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import CloudSyncIcon from "@mui/icons-material/CloudSync";
@@ -201,6 +202,7 @@ export const CategoryDetailDataGrid = (props: {
             // wide enough for a grouped number plus its unit
             width: 120,
             editable: true,
+            renderEditCell: renderLocaleNumberEditCell,
             valueFormatter: (value?: number) => value == null
                 ? ''
                 : valueWithUnit(value, unit, i18n.language),

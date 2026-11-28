@@ -51,6 +51,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEBOUNCE_ROUTINE_FORMS } from "@/core/lib/consts";
 import { errorsToString } from "@/core/lib/forms";
+import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const QUERY_MAP: { [key: string]: any } = {
@@ -131,12 +132,12 @@ export const SlotBaseConfigValueField = (props: {
     const addQueryHook = addQuery(props.routineId);
     const deleteQueryHook = deleteQuery(props.routineId);
 
-    const [value, setValue] = useState(props.config?.value || '');
+    const [value, setValue] = useState(props.config?.value ? formatNumberInput(props.config.value) : '');
     const [manualValidationError, setManualValidationError] = useState<string | null>(null);
     const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
     const isInt = ['sets', 'max-sets', 'rest', 'max-rest'].includes(props.type);
-    const parseFunction = isInt ? parseInt : parseFloat;
+    const isValid = isInt ? Number.isInteger : (num: number) => !Number.isNaN(num);
 
     let title = '';
     switch (props.type) {
@@ -177,7 +178,7 @@ export const SlotBaseConfigValueField = (props: {
         const data = {
             // eslint-disable-next-line camelcase
             slot_entry: props.slotEntryId,
-            value: parseFunction(value),
+            value: parseNumberLocale(value),
         };
 
         if (value === '' && props.config) {
@@ -198,7 +199,7 @@ export const SlotBaseConfigValueField = (props: {
     const onChange = (text: string) => {
         setValue(text);
 
-        if (text !== '' && Number.isNaN(parseFunction(text))) {
+        if (text !== '' && !isValid(parseNumberLocale(text))) {
             setManualValidationError(t(isInt ? 'forms.enterInteger' : 'forms.enterNumber'));
             return;
         } else {

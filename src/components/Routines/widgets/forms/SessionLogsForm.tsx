@@ -20,7 +20,7 @@ import {
     SessionLogsFormValues
 } from "@/components/Routines/widgets/forms/sessionLogsFormData";
 import { useAppForm } from "@/core/forms/appForm";
-import { defaultsKey, submitHandler, yupSchema } from "@/core/forms/formUtils";
+import { defaultsKey, localeNumber, submitHandler, yupSchema } from "@/core/forms/formUtils";
 import { REP_UNIT_REPETITIONS, SNACKBAR_AUTO_HIDE_DURATION } from "@/core/lib/consts";
 import { LoadingPlaceholder } from "@/core/ui/LoadingWidget/LoadingWidget";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
@@ -162,8 +162,8 @@ const SessionLogsFields = (
         logs: yup.array().of(
             yup.object().shape({
                 rir: yup.number().nullable(),
-                repetitions: yup.number().typeError(t('forms.enterNumber')).nullable(),
-                weight: yup.number().typeError(t('forms.enterNumber')).nullable(),
+                repetitions: localeNumber().typeError(t('forms.enterNumber')).nullable(),
+                weight: localeNumber().typeError(t('forms.enterNumber')).nullable(),
                 // Sets without values are not saved, so neither would their note
                 notes: yup.string().test(
                     'notes-need-values',

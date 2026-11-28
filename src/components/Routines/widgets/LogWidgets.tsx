@@ -8,6 +8,7 @@ import { PAGINATION_OPTIONS, WEIGHT_UNIT_KG, WEIGHT_UNIT_LB } from "@/core/lib/c
 import { dateToLocale, luxonDateTimeToLocale } from "@/core/lib/date";
 import { convertWeight, WeightUnit } from "@/core/lib/weightUnit";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
+import { renderLocaleNumberEditCell } from "@/core/ui/Widgets/LocaleNumberEditCell";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ChatBubbleOutlineOutlined from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -127,6 +128,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
             type: 'number',
             disableColumnMenu: true,
             editable: true,
+            renderEditCell: renderLocaleNumberEditCell,
             headerName: t('routines.reps'),
         },
         {
@@ -134,6 +136,7 @@ export const ExerciseLog = (props: { exercise: Exercise, routineId: number, logE
             type: 'number',
             disableColumnMenu: true,
             editable: true,
+            renderEditCell: renderLocaleNumberEditCell,
             headerName: t('weight'),
         },
         {

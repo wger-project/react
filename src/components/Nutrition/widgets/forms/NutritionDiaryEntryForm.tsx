@@ -9,7 +9,8 @@ import {
 } from "@/components/Nutrition/queries";
 import { IngredientAmountFields } from "@/components/Nutrition/widgets/forms/IngredientAmountFields";
 import { useAppForm } from "@/core/forms/appForm";
-import { fieldError, submitHandler, yupSchema } from "@/core/forms/formUtils";
+import { fieldError, localeNumber, submitHandler, yupSchema } from "@/core/forms/formUtils";
+import { formatNumberInput, parseNumberLocale } from "@/core/lib/numbers";
 import { dateLocale, dateToYYYYMMDD } from "@/core/lib/date";
 import { FormQueryErrors } from "@/core/ui/Widgets/FormError";
 import { Autocomplete, Button, Stack, TextField } from "@mui/material";
@@ -51,8 +52,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
     const [selectedUnit, setSelectedUnit] = useState<NutritionWeightUnit | null>(entry?.weightUnit ?? null);
 
     const validationSchema = yup.object({
-        amount: yup
-            .number()
+        amount: localeNumber()
             .required(t('forms.fieldRequired'))
             .max(1000, t('forms.maxValue', { value: '1000' }))
             .min(1, t('forms.minValue', { value: '1' })),
@@ -80,7 +80,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
 
     const defaultValues: DiaryEntryFormValues = {
         datetime: entry ? entry.datetime : new Date(),
-        amount: String(entry ? entry.amount : 0),
+        amount: formatNumberInput(entry ? entry.amount : 0),
         ingredient: entry ? entry.ingredientId : null,
     };
 
@@ -93,8 +93,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                 return;
             }
 
-            // Make sure "amount" is a number
-            const newAmount = Number(value.amount);
+            const newAmount = parseNumberLocale(value.amount);
 
             if (entry) {
                 // Edit
@@ -138,7 +137,7 @@ export const NutritionDiaryEntryForm = ({ planId, entry, mealId, meals, closeFn 
                             ingredientError={fieldError(field)}
                             weightUnit={selectedUnit}
                             onWeightUnitChange={setSelectedUnit}
-                            amount={Number(amount)}
+                            amount={parseNumberLocale(amount)}
                             renderAmountField={endAdornment => <form.AppField name="amount">
                                 {amountField => <amountField.WgerTextField
                                     title={'amount'}
